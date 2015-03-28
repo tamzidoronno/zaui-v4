@@ -340,7 +340,7 @@ app.Hotelbooking = {
         thundashop.Ajax.postWithCallBack(event, function(data) {
             if(data === "ok") {
                 
-                thundashop.common.goToPage(pageId+"&subpage=summary&partner=true");
+                thundashop.common.goToPage(pageId);
             } else {
                 alert('Can not check in');
             }

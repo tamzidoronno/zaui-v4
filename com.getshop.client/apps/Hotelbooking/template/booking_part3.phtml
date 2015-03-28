@@ -11,14 +11,14 @@ $periode = $this->__w("night");
     <? $this->includefile("pricesummary"); ?>
     <div class="booking_contact_data">
         <?
+        $partnertype = "regular_customer";
+            $this->includefile("visitorinformation");
+        
         if($this->partnerShipChecked()) {
             $bookdata = $this->getBookingData();
-            $partnertype = "";
-            if(isset($bookdata['partner_type'])) {
-                $partnertype = $bookdata['partner_type'];
-            }
+            $partnertype = $this->getAdditionalInfo()->partnerType;
             ?>
-        <bR><br>
+            <bR><br>
             <h1><? echo $this->__w("PARTNERSHIP CODE"); ?></h1><div class="seperator"></div>
             
             <div>
@@ -36,28 +36,28 @@ $periode = $this->__w("night");
             ?>
                 <div class="col-33">
                     <span class="contact_text"><? echo $this->__w("Enter your reference number"); ?></span>
-                    <span class="contact_input"><input type="text" gsname="referenceNumber" value="<? echo $this->getPost("referenceNumber"); ?>" class="<? echo $this->validateInput("referenceNumber"); ?>"></span>
+                    <span class="contact_input"><input type="text" gsname="referenceNumber" value="<? echo $this->getPost("referenceNumber"); ?>" class="<? echo $this->validateReferenceKey(); ?>"></span>
 
                     <?
-                    if($this->validateInput("referenceNumber")) {
+                    if($this->validateReferenceKey()) {
                         echo "* " . $this->__w("Your reference number is not correct.");
                     }
                     ?>
                 </div>
+                <div style='clear:both'></div>
+
             <? } ?>
             <br>
             <?
             if($partnertype == "new") {
                 $this->includefile("bookingadditionalinfo");
             }
-        } else {
-            $partnertype = "regular_customer";
         }
         
         if($partnertype) {
-            $this->includefile("visitorinformation");
             if(!$this->partnerShipChecked()) {
                 ?>
+            
                 <div class="summary_heading">
                     <div class="spacer"></div>
                     <h1>

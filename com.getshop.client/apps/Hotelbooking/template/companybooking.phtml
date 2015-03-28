@@ -3,7 +3,20 @@ $time = time();
 $dates = array();
 $time = time();
 
-$alreadySelected = $this->getBookedPartnerDays();
+/* @var $this \ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
+$bookingData = $this->getBookingData();
+$alreadySelected= array();
+
+foreach($bookingData->references as $references) {
+    /* @var $references core_hotelbookingmanager_BookingReference */
+    $start = strtotime($references->startDate);
+    $end = strtotime($references->endDate);
+    for($i = $start; $i < ($end+86400); $i = $i + 86400) {
+        $day = date("z", $i)+1;
+        $alreadySelected[] = $day . "-" . date("Y", $i);
+    }
+}
+
 
 for($i = 0; $i < 18; $i++) {
     $year = date("Y", $time);
@@ -69,5 +82,7 @@ echo "<div style='clear:both;'></div>";
     }
     ?>
 </select>
-<br><br>
+
+
+
 <div class="continue_to_summary" summarypage='<? echo $this->getConfig()->summaryPage; ?>' nextpage="" >Fortsett</div>

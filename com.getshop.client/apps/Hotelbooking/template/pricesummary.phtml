@@ -39,7 +39,7 @@ $bookTime = $this->__w("Booked time periode");
         }
         $text = $cartItem->count . " " . $nightTextToPrint . " " . $inText . " " . strtolower($product->name);
         if($this->partnerShipChecked()) {
-            $text .= " (" . date("d-m-Y", $partnerReservations[$i]->start) . " - " . date("d-m-Y", $partnerReservations[$i]->end) . ")";
+//            $text .= " (" . date("d-m-Y", $partnerReservations[$i]->start) . " - " . date("d-m-Y", $partnerReservations[$i]->end) . ")";
         }
         $text .= "<br>";
         

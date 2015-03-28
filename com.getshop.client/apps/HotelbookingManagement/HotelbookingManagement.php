@@ -19,14 +19,14 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     }
     
     public function getEndDate() {
-        if(isset($_POST['data'])) {
+        if(isset($_POST['data']['enddate'])) {
             return strtotime($_POST['data']['enddate']);
         }
         return time()+86400;
     }
     
     public function getStartDate() {
-        if(isset($_POST['data'])) {
+        if(isset($_POST['data']['startdate'])) {
             return strtotime($_POST['data']['startdate']);
         }
         return time();
@@ -84,7 +84,6 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     function printResevationRow($reservation,$allUsers,$rooms) {
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
         echo "Booked for: " . $reservation->startDate . " - " . $reservation->endDate . "<br>";
-        echo "Booked at: " . $reservation->rowCreatedDate . "<br>";
         $bookedRooms = $reservation->roomsReserved;
         echo "<br>";
         echo "Room booked<br>";
@@ -100,6 +99,35 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $refId = $_POST['data']['refId'];
         $room = $_POST['data']['room'];
         $this->getApi()->getHotelBookingManager()->tempGrantAccess($refId, $room);
+    }
+    
+    public function updateBookingPrice() {
+        $id = $_POST['data']['bookingid'];
+        $price = $_POST['data']['price'];
+        $price = str_replace(",", ".", $price);
+        $bookingData = $this->getApi()->getHotelBookingManager()->getUserBookingData($id);
+        $bookingData->bookingPrice = $price;
+        $this->getApi()->getHotelBookingManager()->updateUserBookingData($bookingData);
+    }
+    
+    public function showBookingInformation() {
+        $id = $_POST['data']['bookingid'];
+        $bookingData = $this->getApi()->getHotelBookingManager()->getUserBookingData($id);
+        $product = $this->getApi()->getProductManager()->getProduct($bookingData->additonalInformation->roomProductId);
+        
+        echo "<div style='padding: 10px;'>";
+        if($bookingData->additonalInformation->isPartner) {
+            echo "Price:<br> <input type='text' value='".round($bookingData->bookingPrice,2)."' class='bookingprice' bookingid='$id'>";
+            echo "<input type='button' value='Update price' class='updatebookingprice'>";
+            echo "<br><br>";
+        }
+        echo "<b>room type:</b> " . $product->name . "<br>";
+        echo "<bR>";
+        echo "<b>Booked dates</b><BR>";
+        foreach($bookingData->references as $reference) {
+            echo "&nbsp;&nbsp;&nbsp;" . $reference->startDate . " - " . $reference->endDate."<BR>";
+        }
+        echo "</div>";
     }
     
     public function displayRoomAvailability() {
@@ -215,7 +243,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     }
        
     public function activateBooking() {
-        $this->getApi()->getHotelBookingManager()->confirmReservation($_POST['data']['referenceid']);
+        $id = $_POST['data']['bookingid'];
+        $bdata = $this->getApi()->getHotelBookingManager()->getUserBookingData($id);
+        $bdata->active = "true";
+        $this->getApi()->getHotelBookingManager()->updateUserBookingData($bdata);
     }
     
     public function deleteType() {
@@ -281,8 +312,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     }
     
     public function stopReference() {
-        $stoppedDate = date("M d, Y h:m:s A", strtotime($_POST['data']['stopDate']));
-        $this->getApi()->getHotelBookingManager()->stopReservation($_POST['data']['refid']);
+        $id = $_POST['data']['bookingid'];
+        $bdata = $this->getApi()->getHotelBookingManager()->getUserBookingData($id);
+        $bdata->active = "false";
+        $this->getApi()->getHotelBookingManager()->updateUserBookingData($bdata);
     }
     
     public function getStarted() {

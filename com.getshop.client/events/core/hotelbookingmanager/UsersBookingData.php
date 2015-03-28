@@ -19,6 +19,9 @@ class core_hotelbookingmanager_UsersBookingData extends core_common_DataCommon  
 	public $active;
 
 	/** @var String */
+	public $bookingPrice;
+
+	/** @var String */
 	public $sessionId;
 
 }

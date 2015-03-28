@@ -31,6 +31,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $progressivePriceModel;
 
 	/** @var String */
+	public $dynamicPriceInPercent;
+
+	/** @var String */
 	public $prices;
 
 	/** @var String */

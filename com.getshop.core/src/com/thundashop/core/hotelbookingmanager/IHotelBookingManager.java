@@ -135,6 +135,9 @@ public interface IHotelBookingManager {
     @Administrator
     public void updateUserBookingData(UsersBookingData userdata) throws ErrorException;
     
+    @Administrator
+    public UsersBookingData getUserBookingData(String id);
+    
     public UsersBookingData getCurrentUserBookingData();
     
     public List<ArxLogEntry> getArxLog() throws ErrorException;

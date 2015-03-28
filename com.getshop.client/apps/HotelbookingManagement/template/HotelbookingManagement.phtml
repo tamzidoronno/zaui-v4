@@ -30,7 +30,11 @@ if(isset($_POST['data']['updated'])) {
         <input type="text" gsname="enddate" value='<? echo date("d-m-Y", $this->getEndDate()); ?>'> 
     <input type="button" gstype="submit" value="Oppdater">
     </div>
-    <? $this->displayRoomAvailability(); ?>
+    <? 
+    if(isset($_POST['data']['startDate'])) {
+        $this->displayRoomAvailability(); 
+    }
+    ?>
 <br>
 <div style="clear:both;"></div>
 <br>
@@ -52,38 +56,66 @@ Existing booking references
         </thead>
         <tbody>
         <?
-        $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
-        foreach($reservations as $reservation) {
-            $roomarray = array();
-            /* $rooms \core_hotelbookingmanager_Room[] */
-            foreach($reservation->roomsReserved as $roomsReserved) {
-                $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$roomsReserved->roomId'>" . $rooms[$roomsReserved->roomId]->roomName . "</span>";
-            }
-
-            $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
-            $alreadyConfirmed = $reservation->confirmed;
-            
-            /* @var $reservation \core_hotelbookingmanager_BookingReference */
-            echo "<tr reservation='".$reservation->bookingReference."'>";
-            echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
-            echo "<td style='text-align:center;' valign='top'>"
-            . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>";
-
-            echo "</td>";
-            echo "<td valign='top'></td>";
-            echo "<td valign='top'>";
-            foreach($reservation->roomsReserved as $reservedRoom) {
-                /* @var $reservedRoom \core_hotelbookingmanager_RoomInformation */
-                foreach($reservedRoom->visitors as $visitor) {
-                    echo "rom: ". $rooms[$reservedRoom->roomId]->roomName. "&nbsp;" . $visitor->name  . ", " . $visitor->phone . "<bR>";
+        $bookingData = $this->getApi()->getHotelBookingManager()->getAllUsersBookingData();
+        foreach($bookingData as $bdata) {
+            /* @var $bdata \core_hotelbookingmanager_UsersBookingData */
+            foreach($bdata->references as $reservation) {
+                if($bdata->sessionId) {
+                    //Only display completed reservations.
+                    continue;
                 }
+                
+                $roomarray = array();
+                /* $rooms \core_hotelbookingmanager_Room[] */
+                foreach($reservation->roomsReserved as $roomsReserved) {
+                    $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$roomsReserved->roomId'>" . $rooms[$roomsReserved->roomId]->roomName . "</span>";
+                }
+
+                $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
+                $alreadyConfirmed = $reservation->confirmed;
+
+                /* @var $reservation \core_hotelbookingmanager_BookingReference */
+                echo "<tr reservation='".$reservation->bookingReference."'>";
+                echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
+                echo "<td style='text-align:left;' valign='top'>"
+                . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>";
+
+                if($bdata->additonalInformation->isPartner) {
+                    if(!$bdata->active) {
+                        echo "&nbsp;&nbsp;&nbsp;<i class='fa fa-play go_live' bookingid='".$bdata->id."'></i>";
+                    } else {
+                        echo "&nbsp;&nbsp;&nbsp;<i class='fa fa-stop stop_reference_action' bookingid='".$bdata->id."'></i>";
+                    }
+                }
+                echo "&nbsp;&nbsp;&nbsp;<i class='fa fa-info-circle' booking-id='".$bdata->id."'></i>";
+                
+                echo "</td>";
+                echo "<td valign='top'>".$bdata->rowCreatedDate."</td>";
+                echo "<td valign='top'>";
+                foreach($reservation->roomsReserved as $reservedRoom) {
+                    /* @var $reservedRoom \core_hotelbookingmanager_RoomInformation */
+                    foreach($reservedRoom->visitors as $visitor) {
+                        echo "rom: ". $rooms[$reservedRoom->roomId]->roomName. "&nbsp;" . $visitor->name  . ", " . $visitor->phone . "<bR>";
+                    }
+                }
+                echo "</td>";
+                echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->startDate)) . "</td>";
+                echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->endDate)) . "</td>";
+                echo "<td align='center'>";
+                if($bdata->additonalInformation->isPartner) {
+                    echo "-";
+                } else {
+                    if($bdata->payedFor) {
+                        echo "Yes";
+                    } else {
+                        echo "No";
+                    }
+                }
+                
+                echo "</td>";
+                echo "</tr>";
+                break;
             }
-            echo "</td>";
-            echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->startDate)) . "</td>";
-            echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->endDate)) . "</td>";
-            echo "<td align='center'>";
-            echo "</td>";
-            echo "</tr>";
         }
         ?>
         </tbody>

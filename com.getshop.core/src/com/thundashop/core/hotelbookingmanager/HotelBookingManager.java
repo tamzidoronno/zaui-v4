@@ -675,6 +675,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if(!bdata.active) {
                 continue;
             }
+            if(bdata.sessionId != null && !bdata.sessionId.isEmpty()) {
+                continue;
+            }
             references.add(bdata);
         }
         return references;
@@ -782,6 +785,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Order order = orderManager.createOrderForUser(user.id);
         bookingData.sessionId = "";
         bookingData.orderIds.add(order.id);
+        bookingData.bookingPrice = order.cart.getItems().get(0).getProduct().price;
+        if(bookingData.additonalInformation.isPartner) {
+            bookingData.active = false;
+        }
         saveObject(bookingData);
         return order.id;
     }
@@ -808,7 +815,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         saveObject(userdata);
     }
 
-    private UsersBookingData getUserBookingData(String id) {
+    @Override
+    public UsersBookingData getUserBookingData(String id) {
         for(UsersBookingData bdata : usersBookingData) {
             if(bdata.id.equals(id)) {
                 return bdata;

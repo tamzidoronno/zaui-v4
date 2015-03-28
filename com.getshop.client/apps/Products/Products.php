@@ -78,6 +78,7 @@ class Products extends \WebshopApplication implements \Application {
         $product->taxgroup = $_POST['taxgroup'];
         $product->stockQuantity = $_POST['stockQuantity'];
         $product->progressivePriceModel = $_POST['isProgressive'];
+        $product->dynamicPriceInPercent = $_POST['dynamicPriceInPercent'];
         $product->accountingSystemId = $_POST['accountingSystemId'];
         
         

@@ -743,7 +743,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             boolean found = false;
             for (ProductDynamicPrice iprice : product.prices) {
                 if (i >= iprice.from && i <= iprice.to ) {
-                     totalPrice += iprice.price;
+                     totalPrice += getPriceForDynamicProductItem(item, iprice);
                      found = true;
                 }
             }
@@ -761,13 +761,24 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (ProductDynamicPrice iprice : product.prices) {
             int count = item.getCount();
             if (count >= iprice.from && count <= iprice.to ) {
-                 return iprice.price;
+                 return getPriceForDynamicProductItem(item, iprice);
             }
         }
         
         return productManager.getPrice(item.getProduct().id, item.getVariations());
     }
 
+    private double getPriceForDynamicProductItem(CartItem item, ProductDynamicPrice price) {
+        Product product = item.getProduct();
+        if (product.dynamicPriceInPercent) {
+            double retPrice = productManager.getPrice(product.id, item.getVariations());
+            double discount = retPrice * price.price/100;
+            return retPrice - discount;
+        } else {
+            return price.price;
+        }
+    }
+    
     @Override
     public List<Order> getOrdersNotTransferredToAccountingSystem() {
         List<Order> allOrders = getOrders(new ArrayList(), null, null);

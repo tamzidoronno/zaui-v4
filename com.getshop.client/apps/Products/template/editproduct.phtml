@@ -41,6 +41,17 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
                                 ?>
                                 Off<i class="fa <? echo $faclass; ?>"></i>On
                             </div>
+                            <br/>
+                            <div style="position: relative; width: 929px; height: 50px; padding-top: 18px;">
+                                <span class="title"><?php echo $this->__f("Is values below entered in discount-percentage?"); ?></span>
+                                <div class="gss_onoff" gs_model="productmodel" gs_model_attr="dynamicPriceInPercent">
+                                    <?
+                                    $faclass = $product->dynamicPriceInPercent ? "fa-toggle-on" : "fa-toggle-off";
+                                    ?>
+                                    Off<i class="fa <? echo $faclass; ?>"></i>On
+                                </div>    
+                            </div>
+                            
                         </div>
                         <?
                         echo "<table><th>".$this->__f("From")."</th><th>".$this->__f("To")."</th><th>".$this->__f("Price")."</th>";

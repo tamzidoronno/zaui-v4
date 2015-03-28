@@ -35,6 +35,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public double discountedPrice;
     
     public boolean progressivePriceModel = false;
+    public boolean dynamicPriceInPercent = false;
     
     public List<ProductDynamicPrice> prices = new ArrayList();
     public double campaign_price;

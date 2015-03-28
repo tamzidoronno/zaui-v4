@@ -105,7 +105,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $additonal->needHandicap = true;
         }
 
-        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $type);
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $type, $additonal);
     }
     
     function fetchAppids($cells, $apps) {
@@ -405,10 +405,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if(!$count) {
             $count = $_POST['data']['count'];
         }
-        $bookingData = $this->getBookingData();
         $start = $this->getStart();
         $end = $this->getEnd();
-        $additional = $this->getAdditionalInfo();
         $this->getApi()->getHotelBookingManager()->reserveRoom($start, $end, $count);
         $this->invalidateBookingData();
     }
@@ -420,6 +418,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $additional = $this->getAdditionalInfo();
         $additional->roomProductId = $productId;
         $this->getManager()->updateAdditionalInformation($additional);
+        //To trigger a new reservation.
+        $this->updateRoomCount($this->getRoomCount());
         $this->invalidateBookingData();
     }
 
@@ -654,7 +654,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function checkAvailabilityOnRange($start, $end, $productId) {
         $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
-        return $this->getApi()->getHotelBookingManager()->checkAvailable($start, $end, $productId);
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($start, $end, $productId, $additional);
     }
 
     public function validateBookingData() {
@@ -704,12 +704,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return;
         }
         
-        $bookingData = $this->getBookingData();
-        
-        $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additional = $this->getAdditionalInfo();
         if($additional->partnerType == "new") {
             $user = $this->createUser();
-            $referenceKey = $user->referenceKey;
+            $additional->customerReference = $user->referenceKey;
+            $this->getManager()->updateAdditionalInformation($additional);
         }
         
         $this->getManager()->completeOrder();

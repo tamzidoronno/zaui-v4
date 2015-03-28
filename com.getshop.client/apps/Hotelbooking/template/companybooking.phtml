@@ -72,6 +72,7 @@ for($i = 0; $i < 18; $i++) {
 }
 echo "<div style='clear:both;'></div>";
 ?>
+<div class="col-50">
 <? echo $this->__w("Room type"); ?><br>
 <select class='company_room_selection'>
     <?
@@ -82,7 +83,10 @@ echo "<div style='clear:both;'></div>";
     }
     ?>
 </select>
+</div>
 
-
-
-<div class="continue_to_summary" summarypage='<? echo $this->getConfig()->summaryPage; ?>' nextpage="" >Fortsett</div>
+<div class="col-50">'
+    <br>
+    <div class="continue_to_summary" summarypage='<? echo $this->getConfig()->summaryPage; ?>' nextpage="" >Fortsett</div>
+</div>
+<div style='clear:both;'></div>

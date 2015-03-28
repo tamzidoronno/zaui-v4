@@ -16,6 +16,7 @@
 .Hotelbooking .company_calendar .caldate.checkbox input { margin: 0px; padding: 0px; height: 15px; margin-top: 5px;}
 .Hotelbooking .outer_company_calendar {  padding-right: 10px; padding-bottom: 10px; box-sizing: border-box; width:25%; display:inline-block; }
 .Hotelbooking .continue_to_summary {margin-right: 10px; }
+.Hotelbooking .company_room_selection { width: 100%; }
 .Hotelbooking .company_calendar .caldate.selected { background-color:#267426; color:#fff; }
 .gsarea[area="body"] a.partnerlink { text-decoration: none !important; color:#bbb; }
 

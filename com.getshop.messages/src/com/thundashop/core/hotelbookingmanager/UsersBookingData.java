@@ -11,7 +11,6 @@ public class UsersBookingData extends DataCommon {
     public boolean payedFor = false;
     public boolean partnerReference = false;
     public List<String> orderIds = new ArrayList();
-    public String roomProductId = null;
     public boolean active = true;
     public String sessionId = "";
 }

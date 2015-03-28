@@ -23,13 +23,12 @@ public class APIHotelBookingManager {
      * @return Number of avilable rooms. -1, the date is set before todays date, -2 end date is before the start date.
      * @throws ErrorException
      */
-     public java.lang.Integer checkAvailable(long startDate, long endDate, java.lang.String type, com.thundashop.core.hotelbookingmanager.AdditionalBookingInformation additional)  throws Exception  {
+     public java.lang.Integer checkAvailable(long startDate, long endDate, java.lang.String productId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("startDate",new Gson().toJson(startDate));
           gs_json_object_data.args.put("endDate",new Gson().toJson(endDate));
-          gs_json_object_data.args.put("type",new Gson().toJson(type));
-          gs_json_object_data.args.put("additional",new Gson().toJson(additional));
+          gs_json_object_data.args.put("productId",new Gson().toJson(productId));
           gs_json_object_data.method = "checkAvailable";
           gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -111,15 +110,26 @@ public class APIHotelBookingManager {
      }
 
      /**
+     * Get all references
+     * @return
+     * @throws ErrorException
+     */
+     public void clearBookingReservation()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "clearBookingReservation";
+          gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * Add new room to the manager.
      * @param room
      * @throws ErrorException
      */
-     public java.lang.String completeOrder(java.lang.String referenceKey, boolean partner)  throws Exception  {
+     public java.lang.String completeOrder()  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("referenceKey",new Gson().toJson(referenceKey));
-          gs_json_object_data.args.put("partner",new Gson().toJson(partner));
           gs_json_object_data.method = "completeOrder";
           gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -446,14 +456,12 @@ public class APIHotelBookingManager {
      * @param count The number of rooms to book.
      * @throws ErrorException
      */
-     public void reserveRoom(java.lang.String roomProductId, long startDate, long endDate, java.lang.Integer count, com.thundashop.core.hotelbookingmanager.AdditionalBookingInformation additionalInfo)  throws Exception  {
+     public void reserveRoom(long startDate, long endDate, java.lang.Integer count)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("roomProductId",new Gson().toJson(roomProductId));
           gs_json_object_data.args.put("startDate",new Gson().toJson(startDate));
           gs_json_object_data.args.put("endDate",new Gson().toJson(endDate));
           gs_json_object_data.args.put("count",new Gson().toJson(count));
-          gs_json_object_data.args.put("additionalInfo",new Gson().toJson(additionalInfo));
           gs_json_object_data.method = "reserveRoom";
           gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -542,6 +550,20 @@ public class APIHotelBookingManager {
           gs_json_object_data.args.put("reference",new Gson().toJson(reference));
           gs_json_object_data.args.put("roomId",new Gson().toJson(roomId));
           gs_json_object_data.method = "tempGrantAccess";
+          gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Get all references
+     * @return
+     * @throws ErrorException
+     */
+     public void updateAdditionalInformation(com.thundashop.core.hotelbookingmanager.AdditionalBookingInformation info)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("info",new Gson().toJson(info));
+          gs_json_object_data.method = "updateAdditionalInformation";
           gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
           String result = transport.send(gs_json_object_data);
      }

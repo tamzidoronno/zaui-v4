@@ -1,5 +1,5 @@
 <?php
-class core_hotelbookingmanager_AdditionalBookingInformation extends core_common_DataCommon  {
+class core_hotelbookingmanager_AdditionalBookingInformation {
 	/** @var String */
 	public $numberOfParkingLots;
 
@@ -14,6 +14,15 @@ class core_hotelbookingmanager_AdditionalBookingInformation extends core_common_
 
 	/** @var String */
 	public $autoStart;
+
+	/** @var String */
+	public $isPartner;
+
+	/** @var String */
+	public $roomProductId;
+
+	/** @var String */
+	public $partnerType;
 
 }
 ?>

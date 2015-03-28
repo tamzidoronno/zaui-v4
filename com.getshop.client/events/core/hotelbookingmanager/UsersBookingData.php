@@ -16,12 +16,6 @@ class core_hotelbookingmanager_UsersBookingData extends core_common_DataCommon  
 	public $orderIds;
 
 	/** @var String */
-	public $roomProductId;
-
-	/** @var String */
-	public $roomPrice;
-
-	/** @var String */
 	public $active;
 
 	/** @var String */

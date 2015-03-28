@@ -19,7 +19,7 @@ public interface IHotelBookingManager {
      * @return Number of avilable rooms. -1, the date is set before todays date, -2 end date is before the start date.
      * @throws ErrorException 
      */
-    public Integer checkAvailable(long startDate, long endDate, String type, AdditionalBookingInformation additional) throws ErrorException;
+    public Integer checkAvailable(long startDate, long endDate, String productId) throws ErrorException;
     
     /**
      * 
@@ -29,7 +29,7 @@ public interface IHotelBookingManager {
      * @param count The number of rooms to book.
      * @throws ErrorException 
      */
-    public void reserveRoom(String roomProductId, long startDate, long endDate, Integer count, AdditionalBookingInformation additionalInfo) throws ErrorException;
+    public void reserveRoom(long startDate, long endDate, Integer count) throws ErrorException;
     
     public GlobalBookingSettings getBookingConfiguration() throws ErrorException;
     
@@ -52,7 +52,7 @@ public interface IHotelBookingManager {
     
     public String getEmailMessage(String language) throws ErrorException;
     
-    public String completeOrder(String referenceKey, boolean partner);
+    public String completeOrder();
     
     /**
      * Change a room for a reference.
@@ -137,6 +137,8 @@ public interface IHotelBookingManager {
     public void checkForArxTransfer() throws ErrorException;
     public void checkForWelcomeMessagesToSend() throws ErrorException;
     public void checkForOrdersToGenerate() throws ErrorException;
+    public void updateAdditionalInformation(AdditionalBookingInformation info) throws ErrorException;
+    public void clearBookingReservation();
 
     public String getUserIdForRoom(String roomNumber) ;
 }

@@ -94,6 +94,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     
     @Override
     public List<UsersBookingData> getAllUsersBookingData() {
+        for(UsersBookingData bdata : usersBookingData) {
+            finalize(bdata);
+        }
         return usersBookingData;
     }
     
@@ -351,8 +354,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         
-        
-        for(UsersBookingData bdata : getAllActiveUserBookings()) {
+        List<UsersBookingData> allbdata = getAllActiveUserBookings();
+        for(UsersBookingData bdata : allbdata) {
             if(bdata.sentWelcomeMessages) {
                 continue;
             }

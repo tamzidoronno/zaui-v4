@@ -82,6 +82,15 @@ $periode = $this->__w("night");
                 echo $this->__w("Failed to reserve room... please contact us.");
             } else {
                 ?>
+            <label style='padding: 5px;'>
+                <input type='checkbox' class='checklicenagreement' gsname='userData][checklicenagreement]' <? if($this->getPost("checklicenagreement") == "true") { echo "CHECKED"; } ?>> Jeg har lest og akseptert <a href='/scripts/whcontract.php' class='gs_ignorenavigate' target='_new'>avtalevilkårene</a> for leie hos Wilhelmsen House.
+                <?
+                if($this->validateInput("checklicenagreement")) {
+                    echo "<div style='color:red; padding-left: 10px'>* Du må godta avtalevilkårene først.</div>";
+                }
+                ?>
+            </label>
+            
                 <div style="text-align:right;">
                     <?
                     if(!$this->partnerShipChecked()) {
@@ -89,7 +98,13 @@ $periode = $this->__w("night");
                             echo '<div class="continue_to_cart_button common_input" gstype="submit">'.$continueCartButtonText.'</div>';
                         }
                     } else {
-                        echo '<div class="complete_partner_checkout">'.$this->__w("Complete").'</div>';
+                        $display = true;
+                        if($this->getBookingData()->additonalInformation->partnerType == "new" && !$this->getCustomerType()) {
+                            $display = false;
+                        }
+                        if($display) {
+                            echo '<div class="complete_partner_checkout">'.$this->__w("Complete").'</div>';
+                        }
                     }
                     ?>
                 </div>

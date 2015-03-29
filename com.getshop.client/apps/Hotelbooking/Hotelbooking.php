@@ -188,6 +188,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return "invalid";
         }
         
+        if($name == "checklicenagreement" && $data['checklicenagreement'] == "false") {
+            return "invalid";
+        }
+        
         return "";
     }
     
@@ -666,6 +670,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
         
         foreach($bookingData->references[0]->roomsReserved as $roomReserved) {
+            if(!isset($roomReserved->visitors[0])) {
+                return false;
+            }
             foreach($roomReserved->visitors[0] as $key => $val) {
                 if($this->validateVisitor($key, $roomReserved->visitors[0])) {
                     return false;

@@ -1,6 +1,6 @@
 .Hotelbooking .bookingbox .heading { border-bottom: solid 1px; font-size: 16px; display:block; width: 100%; text-align:center; margin-bottom: 20px;  margin-top: 20px;  padding-bottom: 20px; }
 .Hotelbooking .room_selection { width:100%; background-color:#FFF; padding: 5px;height:30px; border: solid 1px; line-height: 30px; }
-.Hotelbooking .date_selection_room { box-sizing: border-box; border: solid 1px #b0bda4; margin:0px; width: 235px; color:#000; font-size: 14px; height: 30px; line-height: 30px; padding-left: 5px; }
+.Hotelbooking .date_selection_room { box-sizing: border-box; border: solid 1px #b0bda4; margin:0px; width: 170px; color:#000; font-size: 14px; height: 30px; line-height: 30px; padding-left: 5px; }
 .Hotelbooking .fa-calendar { margin: 3px; cursor:pointer; }
 .Hotelbooking .check_available_button, .Hotelbooking .continue_to_cart_button,.Hotelbooking .continue_to_summary,.Hotelbooking .complete_partner_checkout { color:#FFF; text-align: center; background-color:#d2684f; cursor: pointer; height: 29px; line-height: 29px; }
 .Hotelbooking .continue_button { display:block;  width: 175px;text-align: center; background-color:#d2684f; padding:3px; cursor: pointer; padding-top: 7px;  padding-bottom: 7px; }
@@ -54,9 +54,10 @@
 .Hotelbooking .summary_heading { text-transform: uppercase; }
 .Hotelbooking .referencecheckline { padding-bottom: 20px; padding-top: 3px; display: inline-block; padding-left: 20px; }
 .Hotelbooking .included_all_rooms { padding-bottom: 20px; }
-.Hotelbooking .bookingcol { position: relative; width: 220px; }
+.Hotelbooking .bookingcol { position: relative; width: 205px !important; }
 .Hotelbooking .calbackground { position: absolute; right: 12px; bottom: 0px; text-align: center; z-index: 2; }
 .Hotelbooking .calbackground i { width: 25px; height: 30px; text-align: center;  line-height: 30px; color:#000; margin:0px; }
+.Hotelbooking .room_selection_col { width: 380px !important; }
 
 .Hotelbooking .no_room_available { font-size: 22px; text-align: center; }
 .Hotelbooking .room_selection_2 .price_box { float:right;display:inline-block; width: 30%;  }

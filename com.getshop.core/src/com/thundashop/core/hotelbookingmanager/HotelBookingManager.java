@@ -358,9 +358,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
             
             for(BookingReference reference : bdata.references) {
-                if(!bdata.payedFor) {
+                if((!bdata.additonalInformation.isPartner && bdata.payedFor)) {
                     continue;
                 }
+                if(!bdata.active) {
+                    continue;
+                }
+                
                 if(!reference.sentWelcomeMessages) {
                     System.out.println("Welcome message needs to be sent for: " + reference.bookingReference);
                     for(RoomInformation room : reference.roomsReserved) {
@@ -374,6 +378,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     reference.sentWelcomeMessages = true;
                     saveObject(bdata);
                 }
+                break;
             }
         }
     }
@@ -494,6 +499,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     private String formatMessage(BookingReference reference, String message, String roomName, Integer code, String name) throws ErrorException {
        UsersBookingData bdata = getBookingDataFromReferenceId(reference.bookingReference);
+       String stayPeriods = "";
+       
+       for(BookingReference ref : bdata.references) {
+           String start = formatDate(ref.startDate);
+           String end = formatDate(ref.endDate);
+           stayPeriods += start + " - " + end + "<br>";
+       }
+       
        if (code != null) {
             message = message.replaceAll("\\{code\\}", code + "");
         }
@@ -509,23 +522,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             endMinute = "0" + endMinute;
         }
         
-        String startday = new SimpleDateFormat("d").format(reference.startDate);
-        String startmonth = new SimpleDateFormat("M").format(reference.startDate);
-        String startyear = new SimpleDateFormat("y").format(reference.startDate);
-        String endday = new SimpleDateFormat("d").format(reference.endDate);
-        String endmonth = new SimpleDateFormat("M").format(reference.endDate);
-        String endyear = new SimpleDateFormat("y").format(reference.endDate);
-        
-        if(startday.length() == 1) { startday = "0" + startday; }
-        if(startmonth.length() == 1) { startmonth = "0" + startmonth; }
-        if(startyear.length() == 1) { startyear = "0" + startyear; }
-        if(endday.length() == 1) { endday = "0" + endday; }
-        if(endmonth.length() == 1) { endmonth = "0" + endmonth; }
-        if(endyear.length() == 1) { endyear = "0" + endyear; }
+        String startDateString = formatDate(reference.startDate);
+        String endDateString = formatDate(reference.endDate);
         
         message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("H:").format(reference.startDate) + startMinute);
-        message = message.replaceAll("\\{checkin_date\\}", startday + "-" + startmonth + "-" + startyear);
-        message = message.replaceAll("\\{checkout_date\\}",  endday + "-" + endmonth + "-" + endyear);
+        message = message.replaceAll("\\{checkin_date\\}", startDateString);
+        message = message.replaceAll("\\{checkout_date\\}",  endDateString);
+        message = message.replaceAll("\\{stayPeriods\\}",  stayPeriods);
         message = message.replaceAll("\\{checkout_time\\}", new SimpleDateFormat("H:").format(reference.endDate) + endMinute);
         message = message.replaceAll("\\{name\\}", name);
         message = message.replaceAll("\\{referenceNumber\\}", reference.bookingReference + "");
@@ -561,6 +564,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         room.isClean = false;
         String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
         messageManager.sendSms(visitor.phone, message);
+        String copyadress = "toreplaced@test.no";       
+        messageManager.sendMail(visitor.email,visitor.name, room.roomName + " er nå klart / " + room.roomName + " is now ready.", origMessage,  copyadress, copyadress);
     }
     
     private List<Room> getAvailableRooms(String roomProductId, long startDate, long endDate) {
@@ -853,6 +858,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 room.isClean = true;
             }
         }
+    }
+
+    private String formatDate(Date startDate) {
+        String startday = new SimpleDateFormat("d").format(startDate);
+        String startmonth = new SimpleDateFormat("M").format(startDate);
+        String startyear = new SimpleDateFormat("y").format(startDate);
+        if(startday.length() == 1) { startday = "0" + startday; }
+        if(startmonth.length() == 1) { startmonth = "0" + startmonth; }
+        if(startyear.length() == 1) { startyear = "0" + startyear; }
+        return startday + "-" + startmonth + "-" + startyear;
     }
 
 }

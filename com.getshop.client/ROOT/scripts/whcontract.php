@@ -4,7 +4,11 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
 $mgr = $factory->getApi()->getHotelBookingManager();
-$data = $mgr->getCurrentUserBookingData();
+if(isset($_GET['id'])) {
+    $data = $mgr->getUserBookingData($_GET['id']);
+} else {
+    $data = $mgr->getCurrentUserBookingData();
+}
 $rooms = $mgr->getAllRooms();
 $roomArray=array();
 foreach($rooms as $room) {
@@ -20,10 +24,10 @@ $roomCount = 0;
 foreach($data->references as $reference) {
     foreach($reference->roomsReserved as $room) {
         $roomCount++;
-        $vars['roomNumbers'] .= $roomArray[$room->roomId]->roomName . ",";
+        $roomNames[$roomArray[$room->roomId]->roomName] = "";
     }
-    $vars['roomNumbers'] = substr($vars['roomNumbers'], 0,-1);
 }
+$vars['roomNumbers'] = join(", ", array_keys($roomNames));
 $vars['site'] = "www.wh.no";
 $vars['periods'] = "";
 $vars['roomcount'] = $roomCount;
@@ -51,7 +55,7 @@ Leietaker: [renter]
 
 
 2. LEIEOBJEKT OG OVERTAKELSE
-Wilhelmsen House, Halfdan Wilhelmsens alle 22, 3116 Tønsberg, leilighet nummer <u>[roomNumbers]</u>
+Wilhelmsen House, Halfdan Wilhelmsens alle 22, 3116 Tønsberg, leilighet nummer: <u>[roomNumbers]</u>
 
 Leieobjektet overtas fullt møblert i vanlig ryddet og rengjort stand. Leieobjektet aksepteres for øvrig \"som den er\" i samsvar med informasjon, tegninger og bilder på [site]. Leietaker har ikke rett til å bytte leieobjekt, og må akseptere mindre avvik fra oppgitt informasjon om leieobjektet.
 

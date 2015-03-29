@@ -122,6 +122,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
             echo "<br><br>";
         }
         echo "<b>room type:</b> " . $product->name . "<br>";
+        echo "<br><b>Contract:</b> <a href='/scripts/whcontract.php?id=$id' class='gs_ignorenavigate' target='_new'>Open</a><br>";
         echo "<bR>";
         echo "<b>Booked dates</b><BR>";
         foreach($bookingData->references as $reference) {

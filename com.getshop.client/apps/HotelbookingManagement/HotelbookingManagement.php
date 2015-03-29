@@ -239,7 +239,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     
     public function removeBookingReference() {
         $id = $_POST['data']['id'];
-        $this->getApi()->getHotelBookingManager()->deleteReference($id);
+        $this->getApi()->getHotelBookingManager()->deleteUserBookingData($id);
     }
        
     public function activateBooking() {

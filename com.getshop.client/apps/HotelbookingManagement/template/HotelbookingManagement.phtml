@@ -78,7 +78,7 @@ Existing booking references
                 echo "<tr reservation='".$reservation->bookingReference."'>";
                 echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
                 echo "<td style='text-align:left;' valign='top'>"
-                . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>";
+                . "<i style='cursor:pointer' refid='".$bdata->id."' class='fa fa-trash-o delete_reference'></i>";
 
                 if($bdata->additonalInformation->isPartner) {
                     if(!$bdata->active) {

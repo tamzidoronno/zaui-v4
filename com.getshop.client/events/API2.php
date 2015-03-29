@@ -1807,6 +1807,21 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function deleteUserBookingData($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "deleteUserBookingData";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
 	* @return List
 	* @throws ErrorException
 	*/

@@ -602,11 +602,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         if(reservation.partnerReference) {
             reservation.payedFor = true;
+            saveObject(reservation);
         } else {
             if(!reservation.orderIds.isEmpty()) {
                 Order order = orderManager.getOrder(reservation.orderIds.get(0));
                 if(order.status == Order.Status.PAYMENT_COMPLETED) {
                     reservation.payedFor = true;
+                    saveObject(reservation);
                 }
             }
         }

@@ -22,9 +22,6 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $confirmed;
 
 	/** @var String */
-	public $sentWelcomeMessages;
-
-	/** @var String */
 	public $sentCheckInMessages;
 
 	/** @var String */

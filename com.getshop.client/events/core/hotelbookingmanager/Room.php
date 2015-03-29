@@ -4,9 +4,6 @@ class core_hotelbookingmanager_Room extends core_common_DataCommon  {
 	public $productId;
 
 	/** @var String */
-	public $currentCode;
-
-	/** @var String */
 	public $roomName;
 
 	/** @var String */
@@ -25,7 +22,7 @@ class core_hotelbookingmanager_Room extends core_common_DataCommon  {
 	public $suitedForLongTerm;
 
 	/** @var String */
-	public $lockId;
+	public $cleaningDates;
 
 }
 ?>

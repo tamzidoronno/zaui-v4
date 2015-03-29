@@ -8,14 +8,12 @@ import java.util.Random;
 
 public class Room extends DataCommon {
     public String productId;
-    public String currentCode;
     public String roomName;
     public Boolean isActive = true;
     public Boolean isClean = false;
     public BookingReference lastReservation = null;
     public Boolean isHandicap = false;
     public Boolean suitedForLongTerm = false;
+    public List<Date> cleaningDates = new ArrayList();
     
-    //Identify what lock is connected to this room.
-    public String lockId;
 }

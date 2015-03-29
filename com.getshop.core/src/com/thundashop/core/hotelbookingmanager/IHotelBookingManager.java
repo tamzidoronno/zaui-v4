@@ -82,7 +82,6 @@ public interface IHotelBookingManager {
      * @return
      * @throws ErrorException 
      */
-    @Administrator
     public List<Room> getAllRooms() throws ErrorException;
     
     /**

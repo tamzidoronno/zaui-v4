@@ -246,7 +246,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 return a.roomName.compareTo(b.roomName);
             }
         });
-        
+        for(Room room : rooms) {
+            finalizeRoom(room);
+        }
         return rooms;
     }
 
@@ -296,6 +298,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public void markRoomAsReady(String roomId) throws ErrorException {
         Room room = getRoom(roomId);
         room.isClean = true;
+        room.cleaningDates.add(new Date());
         saveObject(room);
     }
 
@@ -555,6 +558,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         String origMessage = arxSettings.smsReadyNO;
         Room room = getRoom(roomInfo.roomId);
         Visitors visitor = roomInfo.visitors.get(0);
+        room.isClean = false;
         String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
         messageManager.sendSms(visitor.phone, message);
     }
@@ -834,6 +838,21 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         return null;
+    }
+
+    private void finalizeRoom(Room room) {
+        Calendar todayCal = Calendar.getInstance();
+        todayCal.setTime(new Date());
+        
+        String today = todayCal.get(Calendar.DAY_OF_YEAR) + "-" + todayCal.get(Calendar.YEAR);
+        for(Date d : room.cleaningDates) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(d);
+            String cleanedDay = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
+            if(cleanedDay.equals(today)) {
+                room.isClean = true;
+            }
+        }
     }
 
 }

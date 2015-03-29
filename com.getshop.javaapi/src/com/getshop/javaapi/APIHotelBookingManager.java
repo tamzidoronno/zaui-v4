@@ -159,6 +159,20 @@ public class APIHotelBookingManager {
      * @return
      * @throws ErrorException
      */
+     public void deleteUserBookingData(java.lang.String id)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("id",new Gson().toJson(id));
+          gs_json_object_data.method = "deleteUserBookingData";
+          gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Get all references
+     * @return
+     * @throws ErrorException
+     */
      public java.util.List getAllActiveUserBookings()  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();

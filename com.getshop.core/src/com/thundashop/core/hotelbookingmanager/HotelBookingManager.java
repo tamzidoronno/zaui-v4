@@ -900,4 +900,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return result;
     }
 
+    @Override
+    public void deleteUserBookingData(String id) throws ErrorException {
+        UsersBookingData toDelete = getUserBookingData(id);
+        usersBookingData.remove(toDelete);
+        deleteObject(toDelete);
+    }
+
 }

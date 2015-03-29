@@ -138,6 +138,9 @@ public interface IHotelBookingManager {
     public void updateUserBookingData(UsersBookingData userdata) throws ErrorException;
     
     @Administrator
+    public void deleteUserBookingData(String id) throws ErrorException;
+    
+    @Administrator
     public UsersBookingData getUserBookingData(String id);
     
     public UsersBookingData getCurrentUserBookingData();

@@ -92,8 +92,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
     }
     
+    /**
+     * This returns all the bookings that is, be careful since it also returns bookings that is under completion as well, and session orders.
+     * 
+     * If not completed orders or session orders are not need use getAllActiveUserBookings() instead!!!
+     * 
+     * @return 
+     */
+
     @Override
     public List<UsersBookingData> getAllUsersBookingData() {
+        
         for(UsersBookingData bdata : usersBookingData) {
             finalize(bdata);
         }
@@ -623,7 +632,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     public String getUserIdForRoom(String roomNumber) {
-        for(UsersBookingData bdata : getAllUsersBookingData()) {
+        for(UsersBookingData bdata : getAllActiveUserBookings()) {
             for (BookingReference ref : bdata.references) {
                 if (!ref.isActive()) {
                     continue;
@@ -675,7 +684,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public List<UsersBookingData> getAllReservationsArx() throws ErrorException {
         lastPulled = new Date();
         List<UsersBookingData> references = new ArrayList();
-        for(UsersBookingData bdata : getAllUsersBookingData()) {
+        for(UsersBookingData bdata : getAllActiveUserBookings()) {
             if(!bdata.payedFor && !bdata.additonalInformation.isPartner) {
                 continue;
             }
@@ -868,18 +877,22 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return startday + "-" + startmonth + "-" + startyear;
     }
 
-    private List<UsersBookingData> getAllActiveUserBookings() {
+    /**
+     * This returns all the bookings that is active per today, and excludes those not completed.
+     * @return 
+     */
+    public List<UsersBookingData> getAllActiveUserBookings() {
         List<UsersBookingData> data = getAllUsersBookingData();
         List<UsersBookingData> result  = new ArrayList();
         
         for(UsersBookingData bdata : data) {
+            if(bdata.sessionId != null && !bdata.sessionId.isEmpty()) {
+                continue;
+            }
             if(!bdata.payedFor && !bdata.additonalInformation.isPartner) {
                 continue;
             }
             if(!bdata.active) {
-                continue;
-            }
-            if(bdata.sessionId != null && !bdata.sessionId.isEmpty()) {
                 continue;
             }
             result.add(bdata);

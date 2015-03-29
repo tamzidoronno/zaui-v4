@@ -7,7 +7,7 @@ namespace ns_020b57c2_8f80_46e1_a420_cb163f4fb2d2;
 /* @var $api \GetShopApi */
 $api = $this->getApi();
 $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
-$reservations = $this->getApi()->getHotelBookingManager()->getAllUsersBookingData();
+$reservations = $this->getApi()->getHotelBookingManager()->getAllActiveUserBookings();
 $orders = $api->getOrderManager()->getAllOrdersOnProduct("8dd279a2-4949-45ce-83c5-1d329f938179");
 
 $roomlist = array();
@@ -56,9 +56,6 @@ function printCleaningRows($bookingData, $roomlist, $interval, $orders, $api) {
             }
         }
         foreach ($bookingData as $bdata) {
-            if (!$bdata->payedFor) {
-                continue;
-            }
             foreach ($bdata->references as $reservation) {
                 $startDate = strtotime($reservation->startDate);
                 $endDate = strtotime($reservation->endDate);
@@ -106,9 +103,6 @@ function printGuestTable($bookingData, $roomlist, $arriving) {
     echo "<th align='left' width='20%'>Action</th>";
     echo "<th align='left'>Name of guest</th>";
     foreach ($bookingData as $bdata) {
-        if (!$bdata->payedFor) {
-            continue;
-        }
         foreach ($bdata->references as $reservation) {
             if ($arriving) {
                 $startdate = strtotime($reservation->startDate);

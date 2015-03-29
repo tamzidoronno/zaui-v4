@@ -130,6 +130,9 @@ public interface IHotelBookingManager {
 
     @Editor
     public List<UsersBookingData> getAllUsersBookingData();
+
+    @Editor
+    public List<UsersBookingData> getAllActiveUserBookings();
     
     @Administrator
     public void updateUserBookingData(UsersBookingData userdata) throws ErrorException;

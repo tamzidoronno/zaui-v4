@@ -1811,6 +1811,20 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
+	public function getAllActiveUserBookings() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllActiveUserBookings";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return List
+	* @throws ErrorException
+	*/
+
 	public function getAllReservations() {
 	     $data = array();
 	     $data['args'] = array();
@@ -3270,6 +3284,22 @@ class APIOrderManager {
 	     $data['args'] = array();
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getOrderByincrementOrderId";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Fetch a single order based on its id.
+	* @param orderId
+	* @return core_ordermanager_data_Order
+	* @throws ErrorException
+	*/
+
+	public function getOrderSecure($orderId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data["method"] = "getOrderSecure";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
 	}

@@ -695,9 +695,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             }
             if(!$additional->customerReference && $partnerType == "existing") {
                 return false;
-                if($this->validateReferenceKey()) {
-                    return false;
-                }
+            }
+            if($this->validateReferenceKey() && $partnerType == "existing") {
+                return false;
             }
         }
         

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsersBookingData extends DataCommon {
-    
+    public boolean sentWelcomeMessages = false;
     public List<BookingReference> references = new ArrayList();
     AdditionalBookingInformation additonalInformation;
     public boolean payedFor = false;

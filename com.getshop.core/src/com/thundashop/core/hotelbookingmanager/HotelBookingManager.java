@@ -352,34 +352,23 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         
         
-        for(UsersBookingData bdata : getAllUsersBookingData()) {
-            if(!bdata.payedFor && !bdata.additonalInformation.isPartner) {
+        for(UsersBookingData bdata : getAllActiveUserBookings()) {
+            if(bdata.sentWelcomeMessages) {
                 continue;
             }
             
-            for(BookingReference reference : bdata.references) {
-                if((!bdata.additonalInformation.isPartner && bdata.payedFor)) {
-                    continue;
-                }
-                if(!bdata.active) {
-                    continue;
-                }
-                
-                if(!reference.sentWelcomeMessages) {
-                    System.out.println("Welcome message needs to be sent for: " + reference.bookingReference);
-                    for(RoomInformation room : reference.roomsReserved) {
-                        Visitors visitor = room.visitors.get(0);
-                        String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                        String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                        String sms = formatMessage(reference, arxSettings.smsWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                        sendEmail(visitor, title, message);
-                        sendSms(visitor,sms);
-                    }
-                    reference.sentWelcomeMessages = true;
-                    saveObject(bdata);
-                }
-                break;
+            BookingReference reference = bdata.references.get(0);
+            for(RoomInformation room : reference.roomsReserved) {
+                Visitors visitor = room.visitors.get(0);
+                String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                String sms = formatMessage(reference, arxSettings.smsWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                sendEmail(visitor, title, message);
+                sendSms(visitor,sms);
             }
+            bdata.sentWelcomeMessages = true;
+            saveObject(bdata);
+            
         }
     }
 
@@ -565,7 +554,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
         messageManager.sendSms(visitor.phone, message);
         String copyadress = "toreplaced@test.no";       
-        messageManager.sendMail(visitor.email,visitor.name, room.roomName + " er nå klart / " + room.roomName + " is now ready.", origMessage,  copyadress, copyadress);
+        messageManager.sendMail(visitor.email,visitor.name, room.roomName + " er nå klart / " + room.roomName + " is now ready.", message,  copyadress, copyadress);
     }
     
     private List<Room> getAvailableRooms(String roomProductId, long startDate, long endDate) {
@@ -868,6 +857,25 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if(startmonth.length() == 1) { startmonth = "0" + startmonth; }
         if(startyear.length() == 1) { startyear = "0" + startyear; }
         return startday + "-" + startmonth + "-" + startyear;
+    }
+
+    private List<UsersBookingData> getAllActiveUserBookings() {
+        List<UsersBookingData> data = getAllUsersBookingData();
+        List<UsersBookingData> result  = new ArrayList();
+        
+        for(UsersBookingData bdata : data) {
+            if(!bdata.payedFor && !bdata.additonalInformation.isPartner) {
+                continue;
+            }
+            if(!bdata.active) {
+                continue;
+            }
+            if(bdata.sessionId != null && !bdata.sessionId.isEmpty()) {
+                continue;
+            }
+            result.add(bdata);
+        }
+        return result;
     }
 
 }

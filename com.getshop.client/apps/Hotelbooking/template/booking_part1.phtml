@@ -21,8 +21,8 @@ if(isset($_GET['pagenumber'])) {
             ?>
 
 
-
-            <span class='bookingcol datecol'>
+<div class='frontpagebookingrow'>
+            <span class='bookingcol datecol'><br>
                 <span class='ordernowtextbutton'>Bestill nå
                     <i class='fa fa-arrow-right' style='float:right;'></i>
                 </span>
@@ -57,12 +57,13 @@ if(isset($_GET['pagenumber'])) {
                     ?>
                 </select>
             </span>
+        </div>
             <span class='bookingcol'>
                 <br>
                 <div class='check_available_button' nextpage="<? echo $this->getConfig()->continuePage; ?>"><? echo $this->__w("Continue"); ?></div>
             </span>
 
-            <div style='padding-top:20px;'>
+            <div>
                 <span class='error_on_check date_before_start'>
                     <? echo $this->__f("Sorry, but the start date is before todays date."); ?>
                 </span>

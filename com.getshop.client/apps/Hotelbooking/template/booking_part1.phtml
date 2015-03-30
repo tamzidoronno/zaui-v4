@@ -22,6 +22,11 @@ if(isset($_GET['pagenumber'])) {
 
 
 
+            <span class='bookingcol datecol'>
+                <span class='ordernowtextbutton'>Bestill nå
+                    <i class='fa fa-arrow-right' style='float:right;'></i>
+                </span>
+            </span>
             <span class='bookingcol datecol firstcalcol'>
             <? echo $checkintext; ?><br>
                 <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='start_date'>
@@ -34,7 +39,7 @@ if(isset($_GET['pagenumber'])) {
                     <span class='calbackground end_cal'><i class='fa fa-calendar'></i></span>
                 </span>
             </span>
-            <span class='bookingcol room_selection_col'>
+            <span class='bookingcol room_selection_col' style="display:none;">
                 <? echo $roomtypetext; ?>
                 <select class='room_selection'>
                     <?

@@ -175,7 +175,7 @@ class Menu extends \SystemApplication implements \Application {
             $pageId = $entry->pageId;
 
             $fontAwesome = "";
-            if (isset($entry->fontAwsomeIcon) && $entry->fontAwsomeIcon)  {
+            if (isset($entry->fontAwsomeIcon) && trim($entry->fontAwsomeIcon))  {
                 $fontAwesome = "<i class='fa ".$entry->fontAwsomeIcon."'></i> ";
             }
             $activate = $this->getPage()->getId() == $pageId ? "active" : "";

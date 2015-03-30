@@ -19,6 +19,21 @@
 .Hotelbooking .company_room_selection { width: 100%; }
 .Hotelbooking .company_calendar .caldate.selected { background-color:#267426; color:#fff; }
 .gsarea[area="body"] a.partnerlink { text-decoration: none !important; color:#bbb; }
+.Hotelbooking .ordernowtextbutton { font-size: 20px;
+display: inline-block;
+margin-top: 18px;
+height: 31px;
+border: solid 1px;
+width: 100%;
+line-height: 21px;
+/* background-color: #fff; */
+/* color: #000; */
+padding: 5px;
+box-sizing: border-box;
+background-color: #dce7e8;
+text-align: center;
+color: #000;
+}
 
 .Hotelbooking .boxontop { width: 100%; position:absolute; height: 200px; }
 .Hotelbooking .bookingbox { box-sizing:border-box;-moz-box-sizing:border-box; width: 350px; height: 65px;  }

@@ -1,5 +1,5 @@
 body {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-family: 'Arial', sans-serif !important;
     font-size: 14px;
     color : #333 !important;
     background-color:#666 !important;
@@ -10,9 +10,6 @@ body {
     margin: auto;
     width: 1160px;
 }
-.gs_page_width {
-}
-
 .shop_button {
     color: #FFF;
     background-color: black;
@@ -23,6 +20,8 @@ body {
 .gsarea[area="header"] .Menu a div {
     line-height: 20px;
 }
+.gsrotatearrow { color:#e8dbcb; }
+
 .gsarea[area="header"] .Menu a div {
     line-height: 20px;
 }
@@ -68,9 +67,11 @@ body {
 }
 
 .gsarea[area="header"] .Menu .entry .entries .entry {
-    background-color: rgba(255,255,255,0.8);
-    border-bottom: solid 1px #FFF;
+    background-color: rgba(255,255,255,1);
+    border-bottom: solid 1px #e8e8e8;
     padding: 8px;
+    height: 20px;
+    width: 200px;
 }
 
 .Facebook .newsentry {
@@ -83,8 +84,6 @@ body {
 }
 
 .Hotelbooking .to_checkout { padding-bottom: 40px; }
-h1,h2,h3,h4,h5 { font-family: 'Droid Serif', serif; }
-h1 { font-size: 24px; }
 
 .Hotelbooking .calendar.left .cal_header { background-color: #b9c4a9; border: solid 1px #b9c4a9;}
 .Hotelbooking .calendar.right .cal_header { background-color: #bec3cc; border: solid 1px #bec3cc;}
@@ -96,7 +95,7 @@ h1 { font-size: 24px; }
 .Facebook .newsentry .message { font-size: 14px; color: #333; overflow: hidden; line-height: 16px; }
 .MailChimp .incorrectinput { color:#fda0a0; }
 .MailChimp .emailAdded { color:#51bf78; }
-.Menu .menuentries.horizontal .entries .entries { z-index: 3; }
+.Menu .menuentries.horizontal .entries .entries { z-index: 3; box-shadow: 0px 0px 2px #efefef; }
 
 .gsarea[area="footer"] .gsinner { background-color:#373d3d; padding-top: 42px; }
 

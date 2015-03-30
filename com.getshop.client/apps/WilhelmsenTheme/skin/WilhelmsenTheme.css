@@ -9,6 +9,7 @@ body {
 .gs_page_width {
     margin: auto;
     width: 1160px;
+    background-color:#fff;
 }
 .shop_button {
     color: #FFF;

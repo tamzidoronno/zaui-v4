@@ -39,7 +39,11 @@ $bookTime = $this->__w("Booked time periode");
         }
         $text = $cartItem->count . " " . $nightTextToPrint . " " . $inText . " " . strtolower($product->name);
         if($this->partnerShipChecked()) {
-//            $text .= " (" . date("d-m-Y", $partnerReservations[$i]->start) . " - " . date("d-m-Y", $partnerReservations[$i]->end) . ")";
+             $text .=  "<br>&nbsp;&nbsp;&nbsp;<b>For følgende opphold</b>";
+            foreach($this->getBookingData()->references as $partnerReservations) {
+                $text .= "<br>";
+                $text .=  "&nbsp;&nbsp;&nbsp;" . date("d-m-Y", strtotime($partnerReservations->startDate)) . " - " . date("d-m-Y", strtotime($partnerReservations->endDate));
+            }
         }
         $text .= "<br>";
         
@@ -74,7 +78,7 @@ $bookTime = $this->__w("Booked time periode");
         $totalDiff = number_format((float) $totalDiff, 2, '.', '');
         echo "<div class='price_row'>";
         echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $totalDiff . " kr</span></span>";
-        echo "Rabatt for lengere opphold ($percentage%)";
+        echo "Rabatt på oppholdet ($percentage%)";
         echo "</div>";
         $total += $totalDiff;
     }

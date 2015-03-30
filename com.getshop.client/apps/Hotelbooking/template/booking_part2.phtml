@@ -214,7 +214,7 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
                 if($price != $progressivePrice) {
                     $percentage = (double)100-(($progressivePrice/$price)*100);
                     $percentage = round($percentage, 1);
-                    echo "<br><span style='font-size: 12px;font-weight:normal; margin-top: 5px; display:inline-block;'>$percentage% avslag</span>";
+                    echo "<br><span style='font-size: 12px;font-weight:normal; margin-top: 5px; display:inline-block;'>$percentage% avslag fra ".$product->price."kr</span>";
                 }
             }
         }

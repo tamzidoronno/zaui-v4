@@ -1,6 +1,9 @@
 <?php
 class core_hotelbookingmanager_UsersBookingData extends core_common_DataCommon  {
 	/** @var String */
+	public $sentWelcomeMessages;
+
+	/** @var String */
 	public $references;
 
 	/** @var core_hotelbookingmanager_AdditionalBookingInformation */
@@ -17,6 +20,9 @@ class core_hotelbookingmanager_UsersBookingData extends core_common_DataCommon  
 
 	/** @var String */
 	public $active;
+
+	/** @var String */
+	public $bookingPrice;
 
 	/** @var String */
 	public $sessionId;

@@ -815,4 +815,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         return result;
     }
+
+    @Override
+    public Order getOrderSecure(String orderId) throws ErrorException {
+        return orders.get(orderId);
+    }
 }

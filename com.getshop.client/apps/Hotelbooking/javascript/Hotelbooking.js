@@ -106,6 +106,8 @@ app.Hotelbooking = {
         });
 
         data['customer_type'] = $('.booking_contact_data [gsname="userData][customer_type]"]:checked').val();
+        data['userData][checklicenagreement]'] = $('.checklicenagreement').is(':checked');
+        console.log(data);
         var event = thundashop.Ajax.createEvent('', 'setBookingData', $(this), data);
         var gsname = $(this).attr('gsname');
         if (gsname === "mvaregistered" || gsname === "userData][customer_type]" || gsname === "partner_type") {
@@ -363,6 +365,7 @@ app.Hotelbooking = {
         $(document).on('change', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
         $(document).on('blur', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
         $(document).on('blur', '.Hotelbooking .booking_contact_data input', app.Hotelbooking.saveCurrentData);
+        $(document).on('click', '.Hotelbooking .checklicenagreement', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);
         $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
         $(document).on('click', '.Hotelbooking .searchexisting', app.Hotelbooking.searchExistingButton);

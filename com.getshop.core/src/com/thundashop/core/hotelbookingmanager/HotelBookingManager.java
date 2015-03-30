@@ -92,8 +92,20 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
     }
     
+    /**
+     * This returns all the bookings that is, be careful since it also returns bookings that is under completion as well, and session orders.
+     * 
+     * If not completed orders or session orders are not need use getAllActiveUserBookings() instead!!!
+     * 
+     * @return 
+     */
+
     @Override
     public List<UsersBookingData> getAllUsersBookingData() {
+        
+        for(UsersBookingData bdata : usersBookingData) {
+            finalize(bdata);
+        }
         return usersBookingData;
     }
     
@@ -246,7 +258,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 return a.roomName.compareTo(b.roomName);
             }
         });
-        
+        for(Room room : rooms) {
+            finalizeRoom(room);
+        }
         return rooms;
     }
 
@@ -296,6 +310,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public void markRoomAsReady(String roomId) throws ErrorException {
         Room room = getRoom(roomId);
         room.isClean = true;
+        room.cleaningDates.add(new Date());
         saveObject(room);
     }
 
@@ -348,30 +363,24 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         
-        
-        for(UsersBookingData bdata : getAllUsersBookingData()) {
-            if(!bdata.payedFor && !bdata.additonalInformation.isPartner) {
+        List<UsersBookingData> allbdata = getAllActiveUserBookings();
+        for(UsersBookingData bdata : allbdata) {
+            if(bdata.sentWelcomeMessages) {
                 continue;
             }
             
-            for(BookingReference reference : bdata.references) {
-                if(!bdata.payedFor) {
-                    continue;
-                }
-                if(!reference.sentWelcomeMessages) {
-                    System.out.println("Welcome message needs to be sent for: " + reference.bookingReference);
-                    for(RoomInformation room : reference.roomsReserved) {
-                        Visitors visitor = room.visitors.get(0);
-                        String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                        String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                        String sms = formatMessage(reference, arxSettings.smsWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                        sendEmail(visitor, title, message);
-                        sendSms(visitor,sms);
-                    }
-                    reference.sentWelcomeMessages = true;
-                    saveObject(bdata);
-                }
+            BookingReference reference = bdata.references.get(0);
+            for(RoomInformation room : reference.roomsReserved) {
+                Visitors visitor = room.visitors.get(0);
+                String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                String sms = formatMessage(reference, arxSettings.smsWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                sendEmail(visitor, title, message);
+                sendSms(visitor,sms);
             }
+            bdata.sentWelcomeMessages = true;
+            saveObject(bdata);
+            
         }
     }
 
@@ -491,6 +500,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     private String formatMessage(BookingReference reference, String message, String roomName, Integer code, String name) throws ErrorException {
        UsersBookingData bdata = getBookingDataFromReferenceId(reference.bookingReference);
+       String stayPeriods = "";
+       
+       for(BookingReference ref : bdata.references) {
+           String start = formatDate(ref.startDate);
+           String end = formatDate(ref.endDate);
+           stayPeriods += start + " - " + end + "<br>";
+       }
+       
        if (code != null) {
             message = message.replaceAll("\\{code\\}", code + "");
         }
@@ -506,23 +523,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             endMinute = "0" + endMinute;
         }
         
-        String startday = new SimpleDateFormat("d").format(reference.startDate);
-        String startmonth = new SimpleDateFormat("M").format(reference.startDate);
-        String startyear = new SimpleDateFormat("y").format(reference.startDate);
-        String endday = new SimpleDateFormat("d").format(reference.endDate);
-        String endmonth = new SimpleDateFormat("M").format(reference.endDate);
-        String endyear = new SimpleDateFormat("y").format(reference.endDate);
-        
-        if(startday.length() == 1) { startday = "0" + startday; }
-        if(startmonth.length() == 1) { startmonth = "0" + startmonth; }
-        if(startyear.length() == 1) { startyear = "0" + startyear; }
-        if(endday.length() == 1) { endday = "0" + endday; }
-        if(endmonth.length() == 1) { endmonth = "0" + endmonth; }
-        if(endyear.length() == 1) { endyear = "0" + endyear; }
+        String startDateString = formatDate(reference.startDate);
+        String endDateString = formatDate(reference.endDate);
         
         message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("H:").format(reference.startDate) + startMinute);
-        message = message.replaceAll("\\{checkin_date\\}", startday + "-" + startmonth + "-" + startyear);
-        message = message.replaceAll("\\{checkout_date\\}",  endday + "-" + endmonth + "-" + endyear);
+        message = message.replaceAll("\\{checkin_date\\}", startDateString);
+        message = message.replaceAll("\\{checkout_date\\}",  endDateString);
+        message = message.replaceAll("\\{stayPeriods\\}",  stayPeriods);
         message = message.replaceAll("\\{checkout_time\\}", new SimpleDateFormat("H:").format(reference.endDate) + endMinute);
         message = message.replaceAll("\\{name\\}", name);
         message = message.replaceAll("\\{referenceNumber\\}", reference.bookingReference + "");
@@ -555,8 +562,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         String origMessage = arxSettings.smsReadyNO;
         Room room = getRoom(roomInfo.roomId);
         Visitors visitor = roomInfo.visitors.get(0);
+        room.isClean = false;
         String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
         messageManager.sendSms(visitor.phone, message);
+        String copyadress = "toreplaced@test.no";       
+        messageManager.sendMail(visitor.email,visitor.name, room.roomName + " er nå klart / " + room.roomName + " is now ready.", message,  copyadress, copyadress);
     }
     
     private List<Room> getAvailableRooms(String roomProductId, long startDate, long endDate) {
@@ -604,11 +614,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         if(reservation.partnerReference) {
             reservation.payedFor = true;
+            saveObject(reservation);
         } else {
             if(!reservation.orderIds.isEmpty()) {
-                Order order = orderManager.getOrder(reservation.orderIds.get(0));
-                if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                    reservation.payedFor = true;
+                try {
+                    Order order = orderManager.getOrderSecure(reservation.orderIds.get(0));
+                    if(order != null && order.status == Order.Status.PAYMENT_COMPLETED) {
+                        reservation.payedFor = true;
+                        saveObject(reservation);
+                    }
+                }catch(Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -616,7 +632,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     public String getUserIdForRoom(String roomNumber) {
-        for(UsersBookingData bdata : getAllUsersBookingData()) {
+        for(UsersBookingData bdata : getAllActiveUserBookings()) {
             for (BookingReference ref : bdata.references) {
                 if (!ref.isActive()) {
                     continue;
@@ -668,11 +684,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public List<UsersBookingData> getAllReservationsArx() throws ErrorException {
         lastPulled = new Date();
         List<UsersBookingData> references = new ArrayList();
-        for(UsersBookingData bdata : getAllUsersBookingData()) {
+        for(UsersBookingData bdata : getAllActiveUserBookings()) {
             if(!bdata.payedFor && !bdata.additonalInformation.isPartner) {
                 continue;
             }
             if(!bdata.active) {
+                continue;
+            }
+            if(bdata.sessionId != null && !bdata.sessionId.isEmpty()) {
                 continue;
             }
             references.add(bdata);
@@ -782,6 +801,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Order order = orderManager.createOrderForUser(user.id);
         bookingData.sessionId = "";
         bookingData.orderIds.add(order.id);
+        bookingData.bookingPrice = order.cart.getItems().get(0).getProduct().price;
+        if(bookingData.additonalInformation.isPartner) {
+            bookingData.active = false;
+        }
         saveObject(bookingData);
         return order.id;
     }
@@ -808,7 +831,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         saveObject(userdata);
     }
 
-    private UsersBookingData getUserBookingData(String id) {
+    @Override
+    public UsersBookingData getUserBookingData(String id) {
         for(UsersBookingData bdata : usersBookingData) {
             if(bdata.id.equals(id)) {
                 return bdata;
@@ -826,6 +850,61 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         return null;
+    }
+
+    private void finalizeRoom(Room room) {
+        Calendar todayCal = Calendar.getInstance();
+        todayCal.setTime(new Date());
+        
+        String today = todayCal.get(Calendar.DAY_OF_YEAR) + "-" + todayCal.get(Calendar.YEAR);
+        for(Date d : room.cleaningDates) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(d);
+            String cleanedDay = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
+            if(cleanedDay.equals(today)) {
+                room.isClean = true;
+            }
+        }
+    }
+
+    private String formatDate(Date startDate) {
+        String startday = new SimpleDateFormat("d").format(startDate);
+        String startmonth = new SimpleDateFormat("M").format(startDate);
+        String startyear = new SimpleDateFormat("y").format(startDate);
+        if(startday.length() == 1) { startday = "0" + startday; }
+        if(startmonth.length() == 1) { startmonth = "0" + startmonth; }
+        if(startyear.length() == 1) { startyear = "0" + startyear; }
+        return startday + "-" + startmonth + "-" + startyear;
+    }
+
+    /**
+     * This returns all the bookings that is active per today, and excludes those not completed.
+     * @return 
+     */
+    public List<UsersBookingData> getAllActiveUserBookings() {
+        List<UsersBookingData> data = getAllUsersBookingData();
+        List<UsersBookingData> result  = new ArrayList();
+        
+        for(UsersBookingData bdata : data) {
+            if(bdata.sessionId != null && !bdata.sessionId.isEmpty()) {
+                continue;
+            }
+            if(!bdata.payedFor && !bdata.additonalInformation.isPartner) {
+                continue;
+            }
+            if(!bdata.active) {
+                continue;
+            }
+            result.add(bdata);
+        }
+        return result;
+    }
+
+    @Override
+    public void deleteUserBookingData(String id) throws ErrorException {
+        UsersBookingData toDelete = getUserBookingData(id);
+        usersBookingData.remove(toDelete);
+        deleteObject(toDelete);
     }
 
 }

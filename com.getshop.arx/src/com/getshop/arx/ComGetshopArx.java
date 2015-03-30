@@ -50,15 +50,21 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
  */
 public class ComGetshopArx {
 
-    private String hostname = "https://192.168.1.110:5002/arx/import";
+    private String hostname = "https://92.220.61.142:5002/arx/import";
+    private String apiAddress = "www.getshop.com";
+    private Integer backendport = 3224;
+    
+//    private String hostname = "https://192.168.1.103:5002/arx/import";
+//    private Integer backendport = 25554;
+//    private String apiAddress = "localhost";
+    
+    
     private String username = "master";
     private String password = "master";
 
-    private String apiAddress = "localhost";
     private String apiUsername = "kai@getshop.com";
     private String apiPassword = "g4kkg4kk";
-    private String website = "wilhelmsenhouse.getshop.com";
-    private Integer backendport = 25554;
+    private String website = "wh.no";
     private boolean notifiedGetshop = false;
     
     /**

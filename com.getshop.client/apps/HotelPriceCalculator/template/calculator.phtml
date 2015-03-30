@@ -7,7 +7,7 @@ echo $this->__w("Apartment / room");
 <select class="selectroom">
     <? 
     foreach($roomProductIds as $id) { 
-        echo "<option value='$id'>" . $this->getApi()->getProductManager()->getProduct($id)->price . " NOK " . $this->getApi()->getProductManager()->getProduct($id)->name . "</option>";
+        echo "<option value='$id'>" . $this->getApi()->getProductManager()->getProduct($id)->name . "</option>";
     }
 ?>
 </select>

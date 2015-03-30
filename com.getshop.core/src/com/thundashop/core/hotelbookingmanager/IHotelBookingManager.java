@@ -82,7 +82,6 @@ public interface IHotelBookingManager {
      * @return
      * @throws ErrorException 
      */
-    @Administrator
     public List<Room> getAllRooms() throws ErrorException;
     
     /**
@@ -131,9 +130,18 @@ public interface IHotelBookingManager {
 
     @Editor
     public List<UsersBookingData> getAllUsersBookingData();
+
+    @Editor
+    public List<UsersBookingData> getAllActiveUserBookings();
     
     @Administrator
     public void updateUserBookingData(UsersBookingData userdata) throws ErrorException;
+    
+    @Administrator
+    public void deleteUserBookingData(String id) throws ErrorException;
+    
+    @Administrator
+    public UsersBookingData getUserBookingData(String id);
     
     public UsersBookingData getCurrentUserBookingData();
     

@@ -1807,6 +1807,35 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function deleteUserBookingData($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "deleteUserBookingData";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllActiveUserBookings() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllActiveUserBookings";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
 	* @return List
 	* @throws ErrorException
 	*/
@@ -1979,6 +2008,21 @@ class APIHotelBookingManager {
 	     $data["method"] = "getRoomProductIds";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return core_hotelbookingmanager_UsersBookingData
+	* @throws ErrorException
+	*/
+
+	public function getUserBookingData($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getUserBookingData";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_UsersBookingData(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3255,6 +3299,22 @@ class APIOrderManager {
 	     $data['args'] = array();
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getOrderByincrementOrderId";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Fetch a single order based on its id.
+	* @param orderId
+	* @return core_ordermanager_data_Order
+	* @throws ErrorException
+	*/
+
+	public function getOrderSecure($orderId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data["method"] = "getOrderSecure";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
 	}

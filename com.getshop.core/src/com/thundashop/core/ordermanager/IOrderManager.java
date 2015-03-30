@@ -5,6 +5,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.Internal;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
@@ -61,6 +62,9 @@ public interface IOrderManager {
      */
     
     public Order getOrder(String orderId) throws ErrorException;
+    
+    @Internal
+    public Order getOrderSecure(String orderId) throws ErrorException;
     
     /**
      * Got a reference number for the order, fetch it from here.

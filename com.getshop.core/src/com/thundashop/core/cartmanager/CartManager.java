@@ -1,7 +1,6 @@
 package com.thundashop.core.cartmanager;
 
 import com.getshop.scope.GetShopSession;
-import com.google.gson.Gson;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
@@ -18,9 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *

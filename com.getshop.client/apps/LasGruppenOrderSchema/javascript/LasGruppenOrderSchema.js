@@ -274,7 +274,7 @@ app.LasGruppenOrderSchema = {
             if ($('#signature').is(':checked')) {
                 app.LasGruppenOrderSchema.saveData(this, function() {
                     window.location = "/scripts/downloadPdfLasGruppen.php";
-                    app.LasGruppenOrderSchema.goToNextPage(pageNumber, me);
+                    app.LasGruppenOrderSchema.goToNextPage(6, me);
                 }, true);
                 
                 return;

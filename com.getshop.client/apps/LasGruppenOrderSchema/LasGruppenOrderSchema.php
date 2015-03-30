@@ -46,7 +46,10 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
         $attachments = $this->getAttachments();
         
-        $this->sendMail("system@certego.no", $attachments);
+        if ($_POST['data']['page4']['securitytype'] != "signature") {
+            $this->sendMail("system@certego.no", $attachments);
+        }
+        
         if (isset($_POST['data']['page4']['emailCopy']) && $_POST['data']['page4']['emailCopy']) {
             $this->sendMail($_POST['data']['page4']['emailCopy'], $attachments);
         }
@@ -54,14 +57,20 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     
     private function getAttachments() {
         $address = LasGruppenOrderSchema::$url."/scripts/generatePdfLasgruppen.php?id=" . session_id();
+        $sessionId = session_id();
         session_write_close();
         $content = $this->getApi()->getUtilManager()->getBase64EncodedPDFWebPage($address);
+        
+        session_id($sessionId);
+        session_start();
+        session_id($sessionId);
+        
         $attachments = [];
         $attachments['bestilling.pdf'] = $content;
         return $attachments;
     }
     
     private function sendMail($mailAddress, $attachments) {
-        $this->getApi()->getMessageManager()->sendMailWithAttachments($mailAddress, $mailAddress, "Bestilling fra Certego", "", "Certego", "no_replay@certego.no", $attachments);
+        $this->getApi()->getMessageManager()->sendMailWithAttachments($mailAddress, $mailAddress, "Bestilling fra Certego", "", "certego@getshop.com", "Certego AS", $attachments);
     }
 }

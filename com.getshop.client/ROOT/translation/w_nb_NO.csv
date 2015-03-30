@@ -42,7 +42,7 @@ Background color inner;-;Indre bakgrundsfarge
 Background color outer;-;Ytre bakgrundsfarge
 Background image / styling;-;Bakgrunnsbilde / Styling
 Birth Date;-;Fødselsdato
-Birth date (mm.dd.yy);-;Fødselsdato (mm.dd.åå)
+Birth date (mm.dd.yy);-;Fødselsdato (dd.mm.åå)
 Body title;-;Tittel
 Booked time periode;-;Booket tidsperiode
 Booking;-;Påmelding

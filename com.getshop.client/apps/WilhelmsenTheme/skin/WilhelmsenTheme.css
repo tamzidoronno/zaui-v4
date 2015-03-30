@@ -1,21 +1,16 @@
-@font-face {
-    font-family: "Open Sans 2";
-    src: url(/fonts/opensans/OpenSans-Regular.ttf) format("truetype");
-}
-@font-face {
-    font-family: "Museo700-Regular";
-    src: url(/fonts/Museo700-Regular.ttf) format("truetype");
-}
-
 body {
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 14px;
-    color : #333;
+    color : #333 !important;
+    background-color:#666 !important;
+    background: url(http://wilhelmsenhouse.no/wordpress/wp-content/themes/sohohotel-child/images/text_bg.png) no-repeat fixed center 120px;
 }
 
 .gs_page_width {
-    margin: 0 auto;
-    width: 1000px;
+    margin: auto;
+    width: 1160px;
+}
+.gs_page_width {
 }
 
 .shop_button {
@@ -103,7 +98,7 @@ h1 { font-size: 24px; }
 .MailChimp .emailAdded { color:#51bf78; }
 .Menu .menuentries.horizontal .entries .entries { z-index: 3; }
 
-.gsarea[area="footer"] { background-color:#373d3d; padding-top: 42px; }
+.gsarea[area="footer"] .gsinner { background-color:#373d3d; padding-top: 42px; }
 
 .HotelPriceCalculator .selectroom { width: 100%; background-color: #FFF; padding: 5px; }
 

@@ -18,4 +18,5 @@ public class GlobalBookingSettings extends DataCommon {
     public String companyPage = "";
     public String continuePage = "";
     public String summaryPage = "";
+    public String flexProductId = "";
 }

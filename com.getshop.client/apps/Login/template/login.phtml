@@ -24,7 +24,7 @@ if ($this->isLoggedIn()) {
 
 <div class='login_content'>
     <div class="loginform inner <? echo $notloggedInClass; ?>">
-        <form method="POST" action="" name="loginform" class="loginform">
+        <form method="POST" action="" name="loginform" class="loginform loginuserpasswordform">
             <? if ($this->errorMessage != "") { ?>
                 <div><? echo $this->errorMessage; ?></div>
 <? } ?>
@@ -42,7 +42,7 @@ if ($this->isLoggedIn()) {
         </form>
     
 
-        <span class="recoverpasswordholder">
+        <span class="recoverpasswordholder" style='display:none;'>
 
             <div class="recover_section_outer" step='1'>
                 <div class="recover_section">

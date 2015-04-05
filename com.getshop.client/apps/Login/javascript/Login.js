@@ -60,11 +60,18 @@ app.Login = {
         $(this).closest("form").submit();
     },
    
+   showRecoverPassword : function() {
+       $('.Login .loginuserpasswordform').hide();
+       $('.Login .recoverpasswordholder').show();
+       
+   },
+   
     initEvents : function() {
         $(document).on('click','.Login #recoverinputbutton',app.Login.sendResetCode);
         $(document).on('click','.Login #resetpasswordbutton',app.Login.resetPassword);
         $(document).on('click','.Login .loginform .tstextfield[name="password"]',app.Login.checkEnter);
         $(document).on('click','.Login .loginbutton',app.Login.doLogin);
+        $(document).on('click','.Login .recoverpassword',app.Login.showRecoverPassword);
     }
 
 }

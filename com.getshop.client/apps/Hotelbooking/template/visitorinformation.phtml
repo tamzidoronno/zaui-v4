@@ -28,8 +28,8 @@ foreach($reservedRooms as $reservedRoom) {
     
     ?>
     <div class='col-33'>
-        <span class='contact_text'><? echo $this->__w("Name"); ?></span>
-        <span class='contact_input'><input type='text' gsname='room][<? echo $roomId; ?>][name]' value='<? echo $name ?>' class='<? echo $this->validateVisitor("name",$visitor); ?>'>
+        <span class='contact_text'>* <? echo $this->__w("Name"); ?></span>
+        <span class='contact_input'><input type='text' gsname='room][<? echo $roomId; ?>][name]' value='<? echo $name ?>' class='<? echo $this->validateVisitor("name",$visitor); ?>' placeholder="Ola Norman">
         <? 
         if($this->validateVisitor("name",$visitor)) {
             echo "* " . $this->__w("Your name is not valid, it need to consist of first and last name.");
@@ -38,8 +38,9 @@ foreach($reservedRooms as $reservedRoom) {
         </span>
     </div>
     <div class='col-33'>
-        <span class='contact_text'><? echo $this->__w("Phone"); ?></span>
-        <span class='contact_input'><input type='text' gsname='room][<? echo $roomId; ?>][phone]' value='<? echo $phone; ?>'  class='<? echo $this->validateVisitor("phone",$visitor); ?>'></span>
+        <span class='contact_text'>* Mobil telefon</span>
+        <span class='contact_input'><input type='text' gsname='room][<? echo $roomId; ?>][phone]' value='<? echo $phone; ?>'  class='<? echo $this->validateVisitor("phone",$visitor); ?>' placeholder="4521887"></span>
+        Adgangskoden til døren blir tilsendt dette nummeret
         <? 
         if($this->validateVisitor("phone",$visitor)) {
             echo "* " . $this->__w("Phone number need to be a valid mobile number.");
@@ -47,8 +48,8 @@ foreach($reservedRooms as $reservedRoom) {
         ?>
     </div>
     <div class='col-33'>
-        <span class='contact_text'><? echo $this->__w("Email"); ?></span>
-        <span class='contact_input'><input type='text' gsname='room][<? echo $roomId; ?>][email]' value='<? echo $email; ?>'  class='<? echo $this->validateVisitor("email",$visitor); ?>'></span>
+        <span class='contact_text'>* <? echo $this->__w("Email"); ?></span>
+        <span class='contact_input'><input type='text' gsname='room][<? echo $roomId; ?>][email]' value='<? echo $email; ?>'  class='<? echo $this->validateVisitor("email",$visitor); ?>'  placeholder="din@epost.no"></span>
         <? 
         if($this->validateVisitor("email",$visitor)) {
             echo "* " . $this->__w("The email address is not valid.");
@@ -60,3 +61,7 @@ foreach($reservedRooms as $reservedRoom) {
     $i++;
 }
 ?>
+<br>
+<div style="padding-left:10px;">
+    * Følgende felt er påkrevd
+</div>

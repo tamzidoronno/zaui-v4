@@ -13,6 +13,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     var $config;
     var $parkingProduct = null;
     var $validationNeeded = null;
+    var $failedLogon = false;
 
     function __construct() {
         
@@ -28,8 +29,16 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     
     public function getDayCount() {
         $bookingData = $this->getBookingData();
-        $reference = $bookingData->references[0];
-        return round((strtotime($reference->endDate) - strtotime($reference->startDate))/86400);
+        $count = 0;
+        foreach($bookingData->references as $reference) {
+            $count += round((strtotime($reference->endDate) - strtotime($reference->startDate))/86400);
+        }
+        return $count;
+    }
+    
+    public function getFlexProduct() {
+        $settings = $this->getApi()->getHotelBookingManager()->getBookingConfiguration();
+        return $this->getApi()->getProductManager()->getProduct($settings->flexProductId);
     }
     
     public function getCustomerType() {
@@ -57,6 +66,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $settings->companyPage = $_POST['data']['companyPage'];
         $settings->continuePage = $_POST['data']['contine_page'];
         $settings->maxRentalDays = $_POST['data']['max_rental_days'];
+        $settings->flexProductId = $_POST['data']['flex_product_id'];
         $this->getFactory()->getApi()->getHotelBookingManager()->setBookingConfiguration($settings);
     }
     
@@ -83,7 +93,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     public function getPartnerText() {
-        $partnerText = $this->__w("* Maximum number of days of rental is {maxDays} days, if you need an extended stay or have a partnership deal with us, click <a href='?page={partnerPage}' class='partnerlink'>here</a> to use our specially designed form for that.");
+        $partnerText = $this->__w("* If you want to order for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental.");
         $partnerText = str_replace("{partnerPage}", $this->getConfig()->companyPage, $partnerText);
         $partnerText = str_replace("{maxDays}", $this->getConfig()->maxRentalDays, $partnerText);
         return $partnerText;
@@ -183,6 +193,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return "";
         }
         
+        if($name == "username" && $this->getFailedLogon()) {
+            return "invalid";
+        }
+        
         $data = $this->getUserData();
         if(!$data[$name]) {
             return "invalid";
@@ -270,19 +284,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function render() {
-        //this variable is set from $this->complete*Checkout()
+        //this variable is set from $this->completeRegularCheckout()
         if (isset($_GET['orderProcessed'])) {
-            if($this->partnerShipChecked()) {
-                echo "<h1 style='text-align:center;text-transform:uppercase;'>";
-                if($this->failedReservation) {
-                    echo $this->__w("Something went wrong while ordering, please contact us");
-                } else {
-                    echo $this->__w("Your reservations has now been completed");
-                }
-                echo "</h1>";
-            } else {
-                $this->completeCheckout();
-            }
+            $this->completeCheckout();
             return;
         }
         
@@ -456,6 +460,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->invalidateBookingData();
     }
 
+    public function updateNeedFlex() {
+        $additional = $this->getAdditionalInfo();
+        if($_POST['data']['need'] == "true") {
+            $additional->needFlexPricing = true;
+        } else {
+            $additional->needFlexPricing = false;
+        }
+        $this->getManager()->updateAdditionalInformation($additional);
+        $this->invalidateBookingData();
+    }
+
     public function getRoomCount() {
         return sizeof($this->getBookingData()->references[0]->roomsReserved);
     }
@@ -602,6 +617,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->getAdditionalInfo()->needHandicap;
     }
 
+    public function getNeedFlexPrice() {
+        if(isset($this->getAdditionalInfo()->needFlexPricing)) {
+            return $this->getAdditionalInfo()->needFlexPricing;
+        }
+        return false;
+    }
+
     public function hasErrors() {
         return $this->invalid;
     }
@@ -626,6 +648,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return sizeof($payment) > 0;
     }
     
+    function randomPassword() {
+        $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 8; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+    }
+    
     public function createUser() {
         $data = $this->getBookingData();
         $userData = $this->getUserData();
@@ -645,7 +678,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $user = new \core_usermanager_data_User();
         $user->emailAddress = $email;
         $user->birthDay = $userData['birthday'];
-        $user->password = "dfsafasd#¤#cvsdfgdfasdfasf";
+        $user->password = $this->randomPassword();
         $user->fullName = $name;
         $user->cellPhone = $phone;
         $user->address = $address;
@@ -685,50 +718,37 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 return false;
             }
         }
-        
-        $additional = $bookingData->additonalInformation;
-        
-        if($this->partnerShipChecked()) {
-            $partnerType = $additional->partnerType;
-            if(!$partnerType) {
-                return false;
-            }
-            if(!$additional->customerReference && $partnerType == "existing") {
-                return false;
-            }
-            if($this->validateReferenceKey() && $partnerType == "existing") {
-                return false;
-            }
-        }
-        
-       
         return true;
     }
-
-    public function completePartnerCheckout() {
-        $valid = $this->validateBookingData();
-        if(!$valid) {
-            return;
-        }
-        
-        $additional = $this->getAdditionalInfo();
-        if($additional->partnerType == "new") {
-            $user = $this->createUser();
-            $additional->customerReference = $user->referenceKey;
-            $this->getManager()->updateAdditionalInformation($additional);
-        }
-        
-        $this->getManager()->completeOrder();
-        $_GET['orderProcessed'] = true;
+    
+    public function setFailedLogon($val) {
+        $this->failedLogon = $val;
+    }
+    
+    public function getFailedLogon() {
+        return $this->failedLogon;
     }
     
     public function completeRegularCheckout() {
         $valid = $this->validateBookingData();
+        $data = $this->getBookingData();
+        
+        $userData = $this->getUserData();
+        
         if(!$valid) {
             return;
         }
         
-        $user = $this->createUser();
+        if($userData['customer_type'] == "existing") {
+            $user = $this->getApi()->getUserManager()->logOn($userData['username'], $userData['password']);
+            if(!$user) {
+                $this->setFailedLogon(true);
+                return;
+            }
+        } else {
+            $user = $this->createUser();
+        }
+        
         $additional = $this->getAdditionalInfo();
         $additional->customerReference = $user->referenceKey;
         $this->getManager()->updateAdditionalInformation($additional);
@@ -742,6 +762,18 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
         $payment = null;
 
+        if($this->failedReservation) {
+            echo $this->__w("Something went wrong while ordering, please contact us");
+            return;
+        }
+            
+        if($this->isPartnershipBooking()) {
+            echo "<h1 style='text-align:center;text-transform:uppercase;'>";
+            echo $this->__w("Your reservations has now been completed");
+            echo "</h1>";
+            return;
+        }
+        
         foreach ($cartManager->getPaymentApplications() as $paymenti) {
             if ($paymenti->applicationSettings->id === "def1e922-972f-4557-a315-a751a9b9eff1") {
                 $payment = $paymenti;
@@ -816,7 +848,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $infodata;
     }
 
-    public function partnerShipChecked() {
+    public function isPartnershipBooking() {
         if(isset($this->getAdditionalInfo()->isPartner)) {
             return $this->getAdditionalInfo()->isPartner;
         }

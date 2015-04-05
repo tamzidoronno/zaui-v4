@@ -1,5 +1,4 @@
 ###### framework ######
-* Minimum rental periode is {days};-;* Minimum periode for leie er {days}
 A application for selecting applications;-;En applikasjon for å velge applikasjoner
 A bookingform can be connected to the page its added to, meaning that the content of this page is the content that are being sold, not an event or course itself.;-;En booking form kan bli tilkoblet siden den er lagt til på, det betyr at innholdet på denne siden er innholdet som blir solgt, og ikke en event eller selve kurset
 A dashboad application;-;En dashboad applikasjon

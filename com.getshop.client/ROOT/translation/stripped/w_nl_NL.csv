@@ -1,6 +1,6 @@
 ###### framework ######
 * Can pay with Visa/MasterCard trough PayPal;-;
-* Maximum number of days of rental is {maxDays} days, if you need an extended stay or have a partnership deal with us, click <a href='?page={partnerPage}' class='partnerlink'>here</a> to use our specially designed form for that.;-;
+* If you want to order for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental.;-;
 * PayOnDelivery fee;-;
 * The rooms are being billed monthly in advanced;-;
 0-100 km/h;-;
@@ -166,7 +166,6 @@ Other operations;-;
 Outer background;-;
 PARTNERSHIP CODE;-;
 PRICE PER NIGHT;-;
-Parking slot;-;
 Pay on pickup;-;
 Payment fee;-;
 Phone number need to be a valid mobile number.;-;
@@ -263,7 +262,6 @@ Upload and manipulate on images or add this to be able to search for professiona
 Visitor information;-;
 Waiting list;-;
 We;-;
-We are sorry, but there is not enough available rooms for your selection, please select a different one.;-;
 Welcome to my page;-;
 When do you check in?;-;
 When do you check out?;-;
@@ -280,11 +278,7 @@ Your you for your order;-;
 available room;-;
 available rooms;-;
 course;-;
-day;-;
-days;-;
 forgot?;-;
-month;-;
-months;-;
 night;-;
 nights;-;
 orgnummer;-;

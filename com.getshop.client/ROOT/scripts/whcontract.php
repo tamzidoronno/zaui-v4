@@ -9,25 +9,20 @@ if(isset($_GET['id'])) {
 } else {
     $data = $mgr->getCurrentUserBookingData();
 }
-$rooms = $mgr->getAllRooms();
-$roomArray=array();
-foreach($rooms as $room) {
-    $roomArray[$room->id] = $room;
-}
-
-$vars = array();
-$vars['rental'] = "Wilhelmsen House";
-$vars['renter'] = $data->references[0]->roomsReserved[0]->visitors[0]->name;
-$vars['roomNumbers'] ="";
-
 $roomCount = 0;
 foreach($data->references as $reference) {
     foreach($reference->roomsReserved as $room) {
         $roomCount++;
-        $roomNames[$roomArray[$room->roomId]->roomName] = "";
     }
 }
-$vars['roomNumbers'] = join(", ", array_keys($roomNames));
+
+$room = $factory->getApi()->getProductManager()->getProduct($data->additonalInformation->roomProductId);
+
+$vars = array();
+$vars['rental'] = "WILHELMSEN HOUSE AS<br>Halfdan Wilhelmsens alle 22<br>3116 TØNSBERG<br>912 999 688 MVA";
+$vars['renter'] = $data->references[0]->roomsReserved[0]->visitors[0]->name;
+$vars['roomNumbers'] ="";
+$vars['roomName'] = $room->name;
 $vars['site'] = "www.wh.no";
 $vars['periods'] = "";
 $vars['roomcount'] = $roomCount;
@@ -41,21 +36,27 @@ $vars['days'] = ceil($days);
 if($data->bookingPrice == 0) {
     $cart = $factory->getApi()->getCartManager();
     $vars['total'] = $cart->getCartTotalAmount();
-    $vars['price'] = $cart->getCart()->items[0]->product->price * $roomCount;
+    $vars['singleprice'] = $cart->getCart()->items[0]->product->price;
 } else {
-    $vars['price'] = $data->bookingPrice;
+    $vars['singleprice'] = $data->bookingPrice;
+    $vars['total'] = $data->bookingPrice * $days;
 }
-$vars['total'] = $vars['price'] * $vars['days'];
+
+ $vars['total'] = round( $vars['total'], 2);
+ $vars['singleprice'] = round( $vars['singleprice'], 2);
 
 $textNo = "UTLEIE AV OVERNATTINGSHYBEL
 
 1. PARTER
-Utleier: [rental]
 Leietaker: [renter]
+
+Utleier: 
+[rental]
+
 
 
 2. LEIEOBJEKT OG OVERTAKELSE
-Wilhelmsen House, Halfdan Wilhelmsens alle 22, 3116 Tønsberg, leilighet nummer: <u>[roomNumbers]</u>
+Wilhelmsen House, Halfdan Wilhelmsens alle 22, 3116 Tønsberg, leilighet type: <u>[roomName]</u>
 
 Leieobjektet overtas fullt møblert i vanlig ryddet og rengjort stand. Leieobjektet aksepteres for øvrig \"som den er\" i samsvar med informasjon, tegninger og bilder på [site]. Leietaker har ikke rett til å bytte leieobjekt, og må akseptere mindre avvik fra oppgitt informasjon om leieobjektet.
 
@@ -63,7 +64,7 @@ Leieobjektet overtas fullt møblert i vanlig ryddet og rengjort stand. Leieobjek
 [periods]
 
 4. BETALING AV LEIE
-Leieavgift: [price] per dag (inkl mva). Total leie utgjør kr [total].
+Leieavgift: [singleprice] per dag (inkl mva). Total leie utgjør kr [total].
 
 [startShortRental] 
 Leietaker har oppgitt informasjon om bankkort til Utleier på [site] ved inngåelse av leieavtalen. Utleier gis adgang til å sperre av tilstrekkelig beløp gjennom bankkortet til dekning av fullt leiebeløp. Når leieperioden er avsluttet, har Utleier rett til å trekke full leieavgift fra oppgitt bankkort.

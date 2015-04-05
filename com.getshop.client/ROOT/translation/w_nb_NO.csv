@@ -1,6 +1,6 @@
 ###### framework ######
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
-* Maximum number of days of rental is {maxDays} days, if you need an extended stay or have a partnership deal with us, click <a href='?page={partnerPage}' class='partnerlink'>here</a> to use our specially designed form for that.;-;* Maksimum antall dager du kan leie er {maxDays} dager, hvis du har behov for et lengere opphold enn dette, eventuelt periodisk leie, trykk <a href='?page={partnerPage}' class='partnerlink'>her</a> for å legge inn en bestilling via vårt partner booking skjema.
+* If you want to order for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental.;-;Skal du leie for mer enn {maxDays}, trykk <a href='?page={partnerPage}' class='partnerlink'>her</a> for langtidsleie.
 * PayOnDelivery fee;-;Gebyr henting 
 * The rooms are being billed monthly in advanced;-;* Rommene blir forhånds fakturert hver påbegynte måned.
 0-100 km/h;-;0-100 km/h
@@ -244,7 +244,6 @@ Our local time is:;-;Vår lokale tid er
 Outer background;-;Ytre bakgrunn
 PARTNERSHIP CODE;-;AVTALE KODE
 PRICE PER NIGHT;-;PRIS PR NATT
-Parking slot;-;Parkeringsplasser
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
 Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
@@ -406,7 +405,6 @@ Visitor information;-;Besøksinformasjon
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 We;-;On
-We are sorry, but there is not enough available rooms for your selection, please select a different one.;-;Vi beklager, men vi har ikke nok tilgjengelige rom ut fra ditt valg, du må velge et annet type rom.
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
 Welcome to my page;-;Velkommen til min side
@@ -438,8 +436,6 @@ available room;-;tilgjengelige rom
 available rooms;-;tilgjengelige rom
 change;-;endre
 course;-;kurs
-day;-;dag
-days;-;dager
 description;-;Beskrivelse
 email;-;E-post
 forgot?;-;Glemt?
@@ -447,8 +443,6 @@ if we dont answer, please leave your email here and we will return your message 
 included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn
-month;-;måned
-months;-;måneder
 night;-;natt
 nights;-;netter
 org;-;Firma

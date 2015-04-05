@@ -7,6 +7,9 @@ class core_hotelbookingmanager_AdditionalBookingInformation {
 	public $needHandicap;
 
 	/** @var String */
+	public $needFlexPricing;
+
+	/** @var String */
 	public $customerReference;
 
 	/** @var String */

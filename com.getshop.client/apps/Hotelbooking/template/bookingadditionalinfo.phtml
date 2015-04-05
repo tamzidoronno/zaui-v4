@@ -2,37 +2,57 @@
 <div style="padding-bottom:10px;">
     <input type="radio" name="customer_type" gsname="userData][customer_type]" value="private" <? if ($this->getCustomerType() == "private") echo "CHECKED"; ?>> Privatperson
     <input type="radio" name="customer_type" gsname="userData][customer_type]" value="company" <? if ($this->getCustomerType() == "company") echo "CHECKED"; ?>> Firma
+    <input type="radio" name="customer_type" gsname="userData][customer_type]" value="existing" <? if ($this->getCustomerType() == "existing") echo "CHECKED"; ?>> Eksisterende kunde
 </div>
 <div class="common_input">
     <?
-    $text = $this->__w("Birth date (mm.dd.yy)");
-    if ($this->getCustomerType() == "company") {
-        $text = $this->__w("Organisation number") ;
-    }
-    
-    if($this->getCustomerType()) {
-    ?>
-
+    if($this->getCustomerType() == "existing") {
+        ?>
+        <div class='col-50'>
+            <? echo $this->__w("Email") . " (<a href=''>glemt passord</a>)"; ?>
+            <span class='contact_input'><input type='text' gsname="userData][username]" value='<? echo $this->getPost("username"); ?>' class='<? echo $this->validateInput("username"); ?>'></span>
+            <? if($this->validateInput("username")) {
+                echo "<div style='padding-top: 10px;'>* Din epost eller passord er feil, prøv på nytt eller trykk på glemt passord.</div>";
+            }
+            ?>
+        </div>
+        <div class='col-50'>
+            <? echo $this->__w("Password"); ?>
+            <span class='contact_input'><input type='password' gsname="userData][password]" value='<? echo $this->getPost("password"); ?>' class='<? echo $this->validateInput("password"); ?>'></span>
+        </div>
+    <div style='clear:both;'></div>
+        <div style="padding:10px; margin-bottom: 20px">
+            <a href=""></a>
+        </div>
+        <?
+    } else if($this->getCustomerType()) {
+        $text = $this->__w("Birth date (mm.dd.yy)");
+        $birthdayPlaceholder = "13.06.84";
+        if ($this->getCustomerType() == "company") {
+            $text = $this->__w("Organisation number") ;
+            $birthdayPlaceholder = "912999688";
+        }
+        ?>
         <div class='col-50'>
             <?
             echo "<span class='common_text company'>" . $text . "</span>";
             ?>
-            <span class='contact_input'><input type='text' gsname="userData][birthday]" value='<? echo $this->getPost("birthday"); ?>' class='<? echo $this->validateInput("birthday"); ?>'></span>
+            <span class='contact_input'><input type='text' gsname="userData][birthday]" value='<? echo $this->getPost("birthday"); ?>' class='<? echo $this->validateInput("birthday"); ?>' placeholder="<? echo $birthdayPlaceholder; ?>"></span>
         </div>
 
         <div class='col-50'>
             <? echo $this->__w("Address"); ?>
-            <span class='contact_input'><input type='text' gsname="userData][address]" value='<? echo $this->getPost("address"); ?>' class='<? echo $this->validateInput("address"); ?>'></span>
+            <span class='contact_input'><input type='text' gsname="userData][address]" value='<? echo $this->getPost("address"); ?>' class='<? echo $this->validateInput("address"); ?>' placeholder="Nedre langgate 3A"></span>
         </div>
         <div class="row_seperator"></div>
 
         <div class='col-50'>
             <? echo $this->__w("Postal code"); ?>
-            <span class='contact_input'><input type='text' gsname='userData][postal_code]' value='<? echo $this->getPost("postal_code"); ?>' class='<? echo $this->validateInput("postal_code"); ?>'></span>
+            <span class='contact_input'><input type='text' gsname='userData][postal_code]' value='<? echo $this->getPost("postal_code"); ?>' class='<? echo $this->validateInput("postal_code"); ?>'  placeholder="3320"></span>
         </div>
         <div class='col-50'>
             <? echo $this->__w("Postal place"); ?>
-            <span class='contact_input'><input type='text' gsname='userData][city]' value='<? echo $this->getPost("city"); ?>' class='<? echo $this->validateInput("city"); ?>'></span>
+            <span class='contact_input'><input type='text' gsname='userData][city]' value='<? echo $this->getPost("city"); ?>' class='<? echo $this->validateInput("city"); ?>'  placeholder="Tønsberg"></span>
         </div>
     <? } ?>
     <div class="row_seperator"></div>

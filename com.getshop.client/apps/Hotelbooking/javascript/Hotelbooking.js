@@ -95,6 +95,9 @@ app.Hotelbooking = {
         thundashop.Ajax.doJavascriptNavigation("pagenumber=" + pagenumber, null, true);
     },
     saveCurrentData: function () {
+        if($(this).hasClass('checkNeedFlex')) {
+            return;
+        }
         var data = {};
         $('.booking_contact_data').find('[gsname]').each(function () {
             if($(this).is(':radio') && !$(this).is(':checked')) {
@@ -107,7 +110,7 @@ app.Hotelbooking = {
 
         data['customer_type'] = $('.booking_contact_data [gsname="userData][customer_type]"]:checked').val();
         data['userData][checklicenagreement]'] = $('.checklicenagreement').is(':checked');
-        console.log(data);
+
         var event = thundashop.Ajax.createEvent('', 'setBookingData', $(this), data);
         var gsname = $(this).attr('gsname');
         if (gsname === "mvaregistered" || gsname === "userData][customer_type]" || gsname === "partner_type") {
@@ -117,6 +120,15 @@ app.Hotelbooking = {
             });
         }
     },
+    
+    updateNeedFlex : function() {
+        var need = $(this).is(':checked');
+        var event = thundashop.Ajax.createEvent("", "updateNeedFlex", $(this), {
+            "need": need
+        });
+        thundashop.Ajax.post(event);
+    },
+    
     changeToPartnership: function () {
         if (!$('[gsname="partnershipdeal"]').is(":checked")) {
             $('input[gsname="referencenumber"]').val('');
@@ -366,6 +378,7 @@ app.Hotelbooking = {
         $(document).on('blur', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
         $(document).on('blur', '.Hotelbooking .booking_contact_data input', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking .checklicenagreement', app.Hotelbooking.saveCurrentData);
+        $(document).on('click', '.Hotelbooking .checkNeedFlex', app.Hotelbooking.updateNeedFlex);
         $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);
         $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
         $(document).on('click', '.Hotelbooking .searchexisting', app.Hotelbooking.searchExistingButton);

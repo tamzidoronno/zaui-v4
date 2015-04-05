@@ -4,112 +4,74 @@ $continueCartButtonText = $this->__w("Continue to payment");
 $roomTaxPrice = $this->__w("{percentage}% taxes on room");
 $cleaningTaxPrice = $this->__w("{percentage}% taxes on cleaning");
 $periode = $this->__w("night");
-?>
+$flexProduct = $this->getFlexProduct();
 
+$flexPrice = $this->getDayCount() * $flexProduct->price;
+?>
 <br>
 <div class="bookingsummary" gstype="form"  method="completeRegularCheckout">
     <? $this->includefile("pricesummary"); ?>
     <div class="booking_contact_data">
         <?
-        $partnertype = "regular_customer";
-            $this->includefile("visitorinformation");
-        
-        if($this->partnerShipChecked()) {
-            $bookdata = $this->getBookingData();
-            $partnertype = $this->getAdditionalInfo()->partnerType;
-            ?>
-            <bR><br>
-            <h1><? echo $this->__w("PARTNERSHIP CODE"); ?></h1><div class="seperator"></div>
-            
-            <div>
-                <label>
-                    <input type='radio' gsname='partner_type' name='partner_type' value='existing' <? if($partnertype == "existing") { echo "CHECKED"; } ?>><? echo $this->__w("I have a partnership code"); ?>
-                </label>
-                <label>
-                    <input type='radio' gsname='partner_type' name='partner_type' value='new' <? if($partnertype == "new") { echo "CHECKED"; } ?>><? echo $this->__w("I want to become a partnership member"); ?>
-                </label>
-            </div>
-            <br>
-            
-            <? 
-            if($partnertype == "existing") {
-            ?>
-                <div class="col-33">
-                    <span class="contact_text"><? echo $this->__w("Enter your reference number"); ?></span>
-                    <span class="contact_input"><input type="text" gsname="referenceNumber" value="<? echo $this->getPost("referenceNumber"); ?>" class="<? echo $this->validateReferenceKey(); ?>"></span>
+        $this->includefile("visitorinformation");
+        ?>
 
-                    <?
-                    if($this->validateReferenceKey()) {
-                        echo "* " . $this->__w("Your reference number is not correct.");
-                    }
-                    ?>
-                </div>
-                <div style='clear:both'></div>
+        <div class="summary_heading">
+            <div class="spacer"></div>
+            <h1>
+                <? echo $this->__w("Additional contact data"); ?>
+            </h1>
+            <div class="seperator"></div>
+        </div>
+        <?
+        $this->includefile("bookingadditionalinfo");
 
-            <? } ?>
-            <br>
-            <?
-            if($partnertype == "new") {
-                $this->includefile("bookingadditionalinfo");
+        if ($this->hasErrors()) {
+            echo "<div>";
+            echo $this->__w("All fields are required, please fill in the fields in red.");
+            foreach ($this->errors as $error) {
+                echo "<div>" . $error . "</div>";
             }
+            echo "</div>";
         }
+
         
-        if($partnertype) {
-            if(!$this->partnerShipChecked()) {
-                ?>
-            
-                <div class="summary_heading">
-                    <div class="spacer"></div>
-                    <h1>
-                        <? echo $this->__w("Additional contact data"); ?>
-                    </h1>
-                    <div class="seperator"></div>
-                </div>
-                <?
-                $this->includefile("bookingadditionalinfo");
-            }
-
-            if ($this->hasErrors()) {
-                echo "<div>";
-                echo $this->__w("All fields are required, please fill in the fields in red.");
-                foreach ($this->errors as $error) {
-                    echo "<div>" . $error . "</div>";
-                }
-                echo "</div>";
-            }
-
+        if($this->getPost("customer_type")) {
             if ($this->checkFailedReservation()) {
                 echo $this->__w("Failed to reserve room... please contact us.");
             } else {
                 ?>
-            <label style='padding: 5px;'>
-                <input type='checkbox' class='checklicenagreement' gsname='userData][checklicenagreement]' <? if($this->getPost("checklicenagreement") == "true") { echo "CHECKED"; } ?>> Jeg har lest og akseptert <a href='/scripts/whcontract.php' class='gs_ignorenavigate' target='_new'>avtalevilkårene</a> for leie hos Wilhelmsen House.
-                <?
-                if($this->validateInput("checklicenagreement")) {
-                    echo "<div style='color:red; padding-left: 10px'>* Du må godta avtalevilkårene først.</div>";
-                }
-                ?>
-            </label>
-            
+            <div>
+                <label style='padding: 5px;'>
+                    <input type='checkbox' class='checkNeedFlex' gsname='userData][needFlex]' <?
+                    if ($this->getNeedFlexPrice()) {
+                        echo "CHECKED";
+                    }
+                    ?>> Jeg ønsker fleksibel booking (<? echo $flexPrice; ?> kr i tillegg inklusiv moms).
+                </label>
+            </div>
+            <div>
+                <label style='padding: 5px;'>
+                    <input type='checkbox' class='checklicenagreement' gsname='userData][checklicenagreement]' <?
+                    if ($this->getPost("checklicenagreement") == "true") {
+                        echo "CHECKED";
+                    }
+                    ?>> Jeg har lest og akseptert <a href='/scripts/whcontract.php' class='gs_ignorenavigate' target='_new'>avtalevilkårene</a> for leie hos Wilhelmsen House.
+                           <?
+                           if ($this->validateInput("checklicenagreement")) {
+                               echo "<div style='color:red; padding-left: 10px'>* Du må godta avtalevilkårene først.</div>";
+                           }
+                           ?>
+                </label>
+            </div>
                 <div style="text-align:right;">
                     <?
-                    if(!$this->partnerShipChecked()) {
-                        if($this->getCustomerType()) {
-                            echo '<div class="continue_to_cart_button common_input" gstype="submit">'.$continueCartButtonText.'</div>';
-                        }
-                    } else {
-                        $display = true;
-                        if($this->getBookingData()->additonalInformation->partnerType == "new" && !$this->getCustomerType()) {
-                            $display = false;
-                        }
-                        if($display) {
-                            echo '<div class="complete_partner_checkout">'.$this->__w("Complete").'</div>';
-                        }
-                    }
+                    echo '<div class="continue_to_cart_button common_input" gstype="submit">' . $continueCartButtonText . '</div>';
                     ?>
                 </div>
-            <? } ?>
         <? } ?>
+    <? } ?>
     </div>
 </div>
+<br>
 <div style='clear:both;'></div>

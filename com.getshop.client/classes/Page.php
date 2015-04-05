@@ -350,6 +350,10 @@ class Page {
             echo "<a href='" . $cell->link . "'>";
         }
         
+        if(!$this->hasPermissionsOnCell($cell)) {
+            return;
+        }
+        
         if ($this->factory->isMobile()) {
             if ($cell->hideOnMobile && !$this->factory->isEditorMode()) {
                 return false;
@@ -455,7 +459,12 @@ class Page {
             $keepMobile = "data-keepOnMobile='false'";
         }
         
-        echo "<div $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        $permissions = "";
+        if($this->factory->isEditorMode()) {
+            $permissions = "data-settings='".json_encode($cell->settings) . "'";
+        }
+        
+        echo "<div $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
         if ($this->factory->isMobile() && $gsrowmode == "") {
             $this->printMobileAdminMenu($depth, $cell);
@@ -549,6 +558,42 @@ class Page {
             <div class='gstabmenu'>
                 <span class='tabbtn' target='css'><? echo $this->factory->__w("Css"); ?></span>
                 <span class='tabbtn' target='background'><? echo $this->factory->__w("Styling"); ?></span>
+                <span class='tabbtn' target='cellsettings'><? echo $this->factory->__w("Settings"); ?></span>
+            </div>
+            <div class='gspage' target='cellsettings' style='padding: 10px;'>
+                <div>
+                    <label><? echo $this->factory->__w("Display this cell when logged on (it will always be visible for administrators)"); ?>
+                        <span class='gscssinput'>
+                            <input type='checkbox' gsname='displayWhenLoggedOn'> 
+                        </span>
+                    </label>
+                </div>
+                <div style='clear:both;'></div>
+                <br>
+                <div>
+                    <label><? echo $this->factory->__w("Display this cell when logged out"); ?>
+                        <span class='gscssinput'>
+                            <input type='checkbox' gsname='displayWhenLoggedOut'> 
+                        </span>
+                    </label>
+                </div>
+                <div style='clear:both;'></div>
+                <br>
+                <div>
+                    <label>
+                        <? echo $this->factory->__w("User level for cell"); ?>
+                        
+                        <span class='gscssinput'>
+                            <select gsname='editorLevel'>
+                                <option value='0'>Everyone</option>
+                                <option value='10'>Users</option>
+                                <option value='50'>Editors</option>
+                                <option value='100'>Administrators</option>
+                            </select>
+                        </span>
+                    </label>
+                </div>
+                <div style='clear:both;'></div>
             </div>
             <div class='gspage' target='css'>
                 <div id="cellcsseditor" style="width:500px; height: 400px;">
@@ -1552,6 +1597,29 @@ class Page {
 
                 </div>
         <?
+    }
+
+    public function hasPermissionsOnCell($cell) {
+        $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        if($user && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            return true;
+        }
+        
+        if($user && !$cell->settings->displayWhenLoggedOn) {
+            return false;
+        }
+        if(!$user && !$cell->settings->displayWhenLoggedOut) {
+            return false;
+        }
+        
+        if($cell->settings->editorLevel == 0) {
+            return true;
+        }
+        
+        if($user && $user->type >= $cell->settings->editorLevel) {
+            return true;
+        }
+        return false;
     }
 
 }

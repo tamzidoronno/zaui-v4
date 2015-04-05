@@ -9,6 +9,7 @@ import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
+import com.thundashop.core.pagemanager.data.PageCellSettings;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
@@ -559,6 +560,14 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         PageCell cellToChange = page.getCell(cell.cellId);
         cellToChange.overWrite(cell);
+        saveObject(page);
+    }
+
+    @Override
+    public void savePageCellSettings(String pageId, String cellId, PageCellSettings settings) {
+        Page page = getPage(pageId);
+        PageCell cell = page.getCell(cellId);
+        cell.settings = settings;
         saveObject(page);
     }
 }

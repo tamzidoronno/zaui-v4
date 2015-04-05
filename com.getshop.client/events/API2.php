@@ -4034,6 +4034,24 @@ class APIPageManager {
 	}
 
 	/**
+	* Add application
+	* @param id
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function savePageCellSettings($pageId, $cellId, $core_pagemanager_data_PageCellSettings) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data['args']["core_pagemanager_data_PageCellSettings"] = json_encode($this->transport->object_unset_nulls($core_pagemanager_data_PageCellSettings));
+	     $data["method"] = "savePageCellSettings";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Set the carousel configuration.
 	* @param pageId
 	* @return void

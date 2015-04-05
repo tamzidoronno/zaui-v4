@@ -48,6 +48,9 @@ public class PageCell implements Serializable {
     public int outerWidthWithMargins = -1;
     public boolean keepOriginalLayoutOnMobile = false;
     
+    //Permissions.
+    public PageCellSettings settings = new PageCellSettings();
+    
     
     public void overWrite(PageCell cell) {
         styles = cell.styles;

@@ -148,6 +148,11 @@ class ApplicationManager extends FactoryBase {
             }
         }
         
+        if(isset($_POST['data']['settings'])) {
+            $settings = $_POST['data']['settings'];
+            $this->getApi()->getPageManager()->savePageCellSettings($pageid, $cellid, $settings);
+        }
+        
     }
     
     function saveBackgroundImage() {

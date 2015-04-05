@@ -947,11 +947,28 @@ thundashop.framework = {
 
         styles = styles.replace(".gscell_" + incrementcellid + ".gscell", ".gscell_{incrementcellid}.gscell");
         styles = styles.replace(".gscell_" + incrementcellid + ".gsinner", ".gscell_{incrementcellid}.gsinner");
+        
+        var settings = {};
+        var settingsPage = $('.gspage[target="cellsettings"]');
+        settingsPage.find("[gsname]").each(function() {
+            var name = $(this).attr('gsname');
+            if($(this).is(':checkbox')) {
+               if($(this).is(':checked')) {
+                   settings[name] = true;
+               } else {
+                   settings[name] = false;
+               }
+            } else {
+                 settings[name] = $(this).val();
+            }
+        });
+        
 
         var data = {
             "cellid": cellid,
             "styles": styles,
             "colsizes": colsizes,
+            "settings" : settings,
             "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked')
         };
         var event = thundashop.Ajax.createEvent('', 'saveColChanges', $(this), data);
@@ -1045,6 +1062,23 @@ thundashop.framework = {
         if(cell.attr('data-keeponmobile') === "true") {
             $('.gskeepOriginalLayout').attr('checked','checked');
         }
+        
+        //Loading permission object.
+        var settings = JSON.parse(cell.attr('data-settings'));
+        var settingsPage = $('.gspage[target="cellsettings"]');
+        settingsPage.find("[gsname]").each(function() {
+            var name = $(this).attr('gsname');
+            if($(this).is(':checkbox')) {
+               if(settings[name]) {
+                   $(this).attr('checked','cheked');
+               } else {
+                   $(this).attr('checked',null);
+               }
+            } else {
+                $(this).val(settings[name]);
+            }
+        });
+        
         resizingpanel.attr('cellid', cellid);
         $('.gscellsettingspanel').fadeOut();
         var offset = thundashop.framework.originObject.offset();

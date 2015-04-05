@@ -81,7 +81,6 @@ Click next to select shipping options;-;Trykk neste for å velge en betalings me
 Comments;-;Kommentarer
 Company;-;Selskap
 Company name;-;Firmanavn
-Complete;-;Fullfør
 Completed;-;Gjennomført
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
@@ -132,7 +131,6 @@ Embed your own code into the page;-;Embed din egen kode på websiden
 End date;-;Slutt dato
 Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
-Enter your reference number;-;Skriv inn din avtalekode
 Fade;-;Fade
 Failed;-;Feilet
 Failed to reserve room... please contact us.;-;Det oppstod en feil ved reservasjon av rommene, vennligst kontakt oss.
@@ -152,9 +150,7 @@ Hide on mobile;-;Ikke vis på mobilen
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
-I have a partnership code;-;Jeg har en avtalekode
 I need a handicap room;-;Tilpasset handicap
-I want to become a partnership member;-;Jeg ønsker å få en partneravtale
 Image;-;Bilde
 Included in all rooms:;-;Inkludert i alle rom:
 Information;-;Informasjon
@@ -242,7 +238,6 @@ Other attributes;-;Andre attributter
 Other operations;-;Andre operasjoner
 Our local time is:;-;Vår lokale tid er
 Outer background;-;Ytre bakgrunn
-PARTNERSHIP CODE;-;AVTALE KODE
 PRICE PER NIGHT;-;PRIS PR NATT
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
@@ -428,7 +423,6 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
-Your reference number is not correct.;-;Din avtalekode er ikke gyldig
 Your reservations has now been completed;-;Din reservasjon er nå registrert.
 Your savings;-;Du sparer
 Your you for your order;-;Deg du for dine ordrer

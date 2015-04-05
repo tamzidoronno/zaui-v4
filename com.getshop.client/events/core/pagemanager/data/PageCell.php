@@ -57,5 +57,8 @@ class core_pagemanager_data_PageCell {
 	/** @var String */
 	public $keepOriginalLayoutOnMobile;
 
+	/** @var core_pagemanager_data_PageCellSettings */
+	public $settings;
+
 }
 ?>

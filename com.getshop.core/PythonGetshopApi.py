@@ -4154,6 +4154,35 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def savePageCellSettings(self, pageId, cellId, settings):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(settings,GetShopBaseClass): 
+      args["settings"]=json.dumps(settings.__dict__)
+    else:
+      try:
+        args["settings"]=json.dumps(settings)
+      except (ValueError, AttributeError):
+        args["settings"]=settings
+    data = EmptyClass()
+    data.args = args
+    data.method = "savePageCellSettings"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def setCarouselConfig(self, pageId, cellId, config):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 

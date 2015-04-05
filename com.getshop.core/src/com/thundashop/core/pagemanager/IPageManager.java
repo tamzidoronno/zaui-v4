@@ -5,6 +5,7 @@ import com.thundashop.core.pagemanager.data.CarouselConfig;
 import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
+import com.thundashop.core.pagemanager.data.PageCellSettings;
 import com.thundashop.core.pagemanager.data.PageLayout;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,15 @@ public interface IPageManager {
      */
     @Administrator
     public void updateCellLayout(List<Integer> layout, String pageId, String cellId);
+    
+    /**
+     * Add application
+     * @param id
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void savePageCellSettings(String pageId, String cellId, PageCellSettings settings);
     
     /**
      * Add application

@@ -135,9 +135,6 @@ h1 {
 .header .Login .form .tstextfield { height: 18px; font-size: 13px; width: 100px;} 
 .header .Login .form .recoverpassword { position:absolute;left:5px;bottom:5px;cursor:pointer; } 
 .Login .heading { font-size:16px; font-weight: bold; }
-.Login .recover_section { margin-bottom: 20px; padding-left: 10px; }
-.Login .recoverpasswordholder { display: inline-block; position: relative; margin-left: 100px; width: 800px; }
-.Login .recoverinput { font-size:16px; width: 770px; font-weight: bold; }
 .header .Login .form .button { position:absolute; right: 5px; top: 48px; } 
 .header .Login .form .button ins { width: 50px;} 
 .header .Login .inner .entry { 

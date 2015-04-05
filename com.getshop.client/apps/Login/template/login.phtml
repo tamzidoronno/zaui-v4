@@ -24,7 +24,7 @@ if ($this->isLoggedIn()) {
 
 <div class='login_content'>
     <div class="loginform inner <? echo $notloggedInClass; ?>">
-        <form method="POST" action="/?page=login" name="loginform" class="loginform">
+        <form method="POST" action="" name="loginform" class="loginform">
             <? if ($this->errorMessage != "") { ?>
                 <div><? echo $this->errorMessage; ?></div>
 <? } ?>
@@ -41,6 +41,42 @@ if ($this->isLoggedIn()) {
 <? } ?>
         </form>
     
+
+        <span class="recoverpasswordholder">
+
+            <div class="recover_section_outer" step='1'>
+                <div class="recover_section">
+                    <div class="heading">1. <?php echo $this->__w("Please enter your email address:"); ?></div>
+                    <br><br>
+                    <input type="txt" class="recoverinput" id="recoverpasswordemail">
+                    <input type="button" class="recoverinput" id="recoverinputbutton" value="<?php echo $this->__w("Send me a code"); ?>">
+                </div>
+            </div>
+
+            <div class="recover_section_outer disabled" step='2'>
+                <div class="recover_section">
+                    <div class="heading">2. <?php echo $this->__w("Enter a new password."); ?></div>
+                    <bR>
+                    
+                    <label>
+                        <?php echo $this->__w("Enter the code sent to your email."); ?>
+                        <input type="txt" class="recoverinput" id="recoverpasswordcode">
+                    </label>
+                    
+                    <label><? echo $this->__w("New password"); ?>
+                        <input type="password" class="recoverinput" id="newpassword">
+                    </label>
+                    <label><? echo $this->__w("Repeat new password"); ?>
+                        <input type="password" class="recoverinput" id="repeat_newpassword">
+                    </label>
+                    <input type="button" class="recoverinput" id="resetpasswordbutton" value="<?php echo $this->__w("Change password"); ?>">
+                </div>
+            </div>
+            
+            <div style='clear:both;'></div>
+        </span>
+
+
     <?
     if (Login::getUserObject()) { 
             $this->includefile("useraccount");

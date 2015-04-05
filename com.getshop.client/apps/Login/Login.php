@@ -30,16 +30,24 @@ class Login extends \SystemApplication implements \Application {
                 return;
             }
             
-            $userLoggedIn = $this->getApi()->getUserManager()->logOn($_POST['username'], $_POST['password']);
-            
-            if ($userLoggedIn != null && isset($userLoggedIn)) {
-                unset($_SESSION['tempaddress']);
-                $_SESSION['loggedin'] = serialize($userLoggedIn);
-                // Need to refresh the page in order to make sure that all data is loaded.
-                // This login is after data has been initialized to factory.
-                header("location: index.php?page=".$this->getFactory()->getStoreConfiguration()->homePage);
-            } 
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $this->doLogin($username, $password);
         }
+    }
+    
+    private function doLogin($username, $password) {
+        $userLoggedIn = $this->getApi()->getUserManager()->logOn($username, $password);
+
+        if ($userLoggedIn != null && isset($userLoggedIn)) {
+            unset($_SESSION['tempaddress']);
+            $_SESSION['loggedin'] = serialize($userLoggedIn);
+            // Need to refresh the page in order to make sure that all data is loaded.
+            // This login is after data has been initialized to factory.
+            $page = $_SERVER['PHP_SELF'];
+            header("Refresh:0");
+            exit(0);
+        }         
     }
     
     public function render() {
@@ -49,12 +57,16 @@ class Login extends \SystemApplication implements \Application {
     
     public function sendConfirmation() {
         $email = $_POST['data']['email'];
+        $result = $this->getApi()->getUserManager()->sendResetCode($this->__f("Your reset code"), $this->__f("Reset code is"), $email);
         
-        $this->getApi()->getUserManager()->sendResetCode($this->__f("Your reset code"), $this->__f("Reset code is"), $email);
-        if(stristr($answer->className, "ResetCodeSent")) {
-            $result['error'] = "0";
+        $retval = array();
+        $retval['code'] = $result;
+        if($result != 0) {
+            $retval['msg'] = $this->__w("Sorry, this user does not exists, are you sure this is the correct username / email?");
+        } else {
+            $retval['msg'] = $this->__w("An email has been sent with a code to use in step 2.");
         }
-        echo json_encode($result);
+        echo json_encode($retval);
     }
     
     public function sendResetPassword() {
@@ -65,8 +77,19 @@ class Login extends \SystemApplication implements \Application {
         $resetCode = $confirmCode;
         $email = $email;
         $newPassword = $password;
-        $this->getApi()->getUserManager()->resetPassword($resetCode, $email, $newPassword);
-        $result['error'] = 0;
+        $code = $this->getApi()->getUserManager()->resetPassword($resetCode, $email, $newPassword);
+        $result['code'] = $code;
+        if($code == 1) {
+            $result['msg'] = $this->__w("Email is incorrect");
+        }
+        if($code == 2) {
+            $result['msg'] = $this->__w("Invalid reset code.");
+        }
+        
+        if($code == 0) {
+            $this->doLogin($email, $password);
+        }
+        
         echo json_encode($result);
     }
     

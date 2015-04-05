@@ -36,6 +36,12 @@
     display: none;
 }
 
+.Login .recover_section_outer.disabled { color:rgba(0,0,0,0.1); }
+.Login .recover_section_outer.disabled input { color:rgba(0,0,0,0.1); }
+
+.Login .recover_section_outer { width: 33.3%; float:left; box-sizing: border-box; padding: 10px; }
+.Login .recover_section { padding: 10px; }
+.Login .recover_section input { display:block; height: 30px;  width: 100%;  box-sizing: border-box; margin-bottom: 5px; }
 .Login .form {
     margin-top: 20px;
 }

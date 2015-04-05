@@ -6640,7 +6640,7 @@ class APIUserManager {
 	* @param title The title of the message to attach to the reset code.
 	* @param text The text to attach to the mail being sent with the reset code.
 	* @param username The username to identify the user, the email address is the most common username.
-	* @return void
+	* @return Integer
 	* @throws ErrorException
 	*/
 

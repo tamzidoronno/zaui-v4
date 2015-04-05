@@ -1,82 +1,72 @@
-thundashop.app.login = {};
-thundashop.app.login.resetPassword = function(target) {
-    var app = target.closest('.Login');
-    var email = app.find('#recoverpasswordemail').val();
-    var confirmCode = app.find('#recoverpasswordcode').val();
-    var newPass = app.find('#newpassword').val();
-    var repeatPass = app.find('#repeat_newpassword').val();
-    if(newPass.trim().length == 0) {
-        thundashop.Ajax.showErrorMessage("<div class='errorform '>"+__w("Password cannot be empty")+"</div>");
-        return;
-    }
-    if(newPass != repeatPass) {
-        thundashop.Ajax.showErrorMessage("<div class='errorform '>"+__w("Password does not match, please re enter password")+"</div>");
-        return;
-    }
+app.Login = {
     
-    var data = {
-        "confirmCode" : confirmCode,
-        "newPassword" : newPass,
-        "email" : email
+    sendResetCode : function() {
+        if($('.recover_section_outer[step="1"]').hasClass('disabled')) {
+            return;
+        }
+
+        var email = $('.Login').find('#recoverpasswordemail').val();
+        var event = thundashop.Ajax.createEvent("AppName", "sendConfirmation", $('.Login'), {"email" : email});
+        var result = thundashop.Ajax.postWithCallBack(event, function(result) {
+            result = JSON.parse(result);
+            if(result.code === 0) {
+                $('.recover_section_outer[step="1"]').addClass('disabled');
+                $('.recover_section_outer[step="2"]').removeClass('disabled');
+            }
+            thundashop.Ajax.showErrorMessage("<div class='errorform '>" + result.msg + "</div>");
+
+
+        });
+    },
+    resetPassword : function() {
+        var app = $(this).closest('.Login');
+        var email = app.find('#recoverpasswordemail').val();
+        var confirmCode = app.find('#recoverpasswordcode').val();
+        var newPass = app.find('#newpassword').val();
+        var repeatPass = app.find('#repeat_newpassword').val();
+        if(newPass.trim().length == 0) {
+            thundashop.Ajax.showErrorMessage("<div class='errorform '>"+__w("Password cannot be empty")+"</div>");
+            return;
+        }
+        if(newPass != repeatPass) {
+            thundashop.Ajax.showErrorMessage("<div class='errorform '>"+__w("Password does not match, please re enter password")+"</div>");
+            return;
+        }
+
+        var data = {
+            "confirmCode" : confirmCode,
+            "newPassword" : newPass,
+            "email" : email
+        }
+
+        var event = thundashop.Ajax.createEvent("Event", "sendResetPassword", $(this), data);
+        var result = thundashop.Ajax.postWithCallBack(event, function(result) {
+            if(!result) {
+                location.reload();
+                return;
+            }
+            result = jQuery.parseJSON(result);
+            thundashop.Ajax.showErrorMessage("<div class='errorform '>" + result.msg + "</div>");
+        });
+    },
+   
+    checkEnter : function(e) {
+        if(e.keyCode == 13) {
+            $(this).closest('form').find('#loginbutton').click();
+        }
+    },
+   
+    doLogin : function() {
+        $(this).closest("form").submit();
+    },
+   
+    initEvents : function() {
+        $(document).on('click','.Login #recoverinputbutton',app.Login.sendResetCode);
+        $(document).on('click','.Login #resetpasswordbutton',app.Login.resetPassword);
+        $(document).on('click','.Login .loginform .tstextfield[name="password"]',app.Login.checkEnter);
+        $(document).on('click','.Login .loginbutton',app.Login.doLogin);
     }
-    
-    var event = thundashop.Ajax.createEvent("Event", "sendResetPassword", target, data);
-    var result = thundashop.Ajax.postSynchron(event);
-    result = jQuery.parseJSON(result);
-    if(result.error == 0) {
-        thundashop.common.Alert(__w("Password has been updated"), __w("Password has been successfully updated"));
-        thundashop.common.hideInformationBox(null);
-    } else {
-        thundashop.Ajax.showErrorMessage("<div class='errorform '>" + result.error + "</div>");
-    }
+
 }
 
-$('.header .loginform .entry').live('click', function() {
-    $('.header .loginform .form').slideToggle('slow');
-});
-
-$('.header .loginform .tstextfield[name="password"]').live('keyup', function(e) {
-    if(e.keyCode == 13) {
-        $(this).closest('form').find('#loginbutton').click();
-    }
-});
-
-$('.loginform #loginbutton').live('click', function(e) {
-    $(this).closest("form").submit();
-})
-
-$('.middle .loginform .tstextfield[name="password"]').live('keyup', function(e) {
-    if(e.keyCode == 13) {
-        $(this).closest('form').find('#loginbutton').click();
-    }
-});
-
-$('.Login #recoverinputbutton').live('click', function(e) {
-    var email = $(e.target).closest('.Login').find('#recoverpasswordemail').val();
-    var event = thundashop.Ajax.createEvent("AppName", "sendConfirmation", $('.Login'), {"email" : email});
-    var result = thundashop.Ajax.postSynchron(event);
-    result = jQuery.parseJSON(result);
-    if(result.error === "0") {
-        thundashop.common.Alert(__w("Email sent"), __w("An email has been sent to you with the confirmation code."));
-    } else {
-        thundashop.Ajax.showErrorMessage("<div class='errorform '>" + result.error + "</div>");
-    }
-});
-
-$('.Login input').live('keydown', function(e) {
-    if (e.keyCode == 13) {
-        $(this).closest('form').submit();
-    }
-});
-
-$('.Login .loginbutton').live('click', function(e) {
-    $(this).closest('form').submit();
-});
-$('.Login .recoverpassword').live('click', function(e) {
-    var event = thundashop.Ajax.createEvent("", "recoverPassword", $(this), null);
-    thundashop.common.showInformationBox(event, '');
-});
-$('.Login #resetpasswordbutton').live('click', function(e) {
-    thundashop.app.login.resetPassword($(e.target));
-});
-
+app.Login.initEvents();

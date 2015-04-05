@@ -314,22 +314,26 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     @Override
-    public void sendResetCode(String title, String text, String email) throws ErrorException {
+    public Integer sendResetCode(String title, String text, String email) throws ErrorException {
         if (email == null || title == null || text == null) {
             throw new ErrorException(77);
+        }
+        
+        if(email.isEmpty()) {
+            return 1;
         }
 
         UserStoreCollection users = getUserStoreCollection(storeId);
         List<User> allUsers = users.getAllUsers();
         User toReset = null;
         for (User user : allUsers) {
-            if (user.username.equalsIgnoreCase(email)) {
+            if (user.username.equalsIgnoreCase(email) || user.emailAddress.equalsIgnoreCase(email)) {
                 toReset = user;
             }
         }
 
         if (toReset == null) {
-            throw new ErrorException(76);
+            return 1;
         }
 
         toReset.resetCode = (int) (Math.random() * 1000000);
@@ -338,28 +342,31 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (mailfactory != null) {
             mailfactory.send("recover@getshop.com", email, title, text);
         }
+        return 0;
     }
 
     @Override
-    public void resetPassword(Integer resetCode, String username, String newPassword) throws ErrorException {
+    public Integer resetPassword(Integer resetCode, String username, String newPassword) throws ErrorException {
         UserStoreCollection users = getUserStoreCollection(storeId);
         List<User> allUsers = users.getAllUsers();
         User toReset = null;
         for (User user : allUsers) {
-            if (user.username.equalsIgnoreCase(username)) {
+            if (user.username.equalsIgnoreCase(username) || user.emailAddress.equalsIgnoreCase(username)) {
                 toReset = user;
             }
         }
         if (toReset == null) {
-            throw new ErrorException(76);
-        } else {
-            if (toReset.resetCode != resetCode) {
-                throw new ErrorException(78);
-            }
-
-            toReset.password = encryptPassword(newPassword);
-            databaseSaver.saveObject(toReset, credentials);
+            return 1;
         }
+        
+        if (toReset.resetCode != resetCode) {
+            return 2;
+        }
+
+        toReset.password = encryptPassword(newPassword);
+        databaseSaver.saveObject(toReset, credentials);
+
+        return 0;
     }
 
     @Override

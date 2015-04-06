@@ -6,6 +6,7 @@ $cleaningTaxPrice = $this->__w("{percentage}% taxes on cleaning");
 $periode = $this->__w("night");
 $flexProduct = $this->getFlexProduct();
 
+$loggedOn = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
 $flexPrice = $this->getDayCount() * $flexProduct->price;
 ?>
 <br>
@@ -14,29 +15,22 @@ $flexPrice = $this->getDayCount() * $flexProduct->price;
     <div class="booking_contact_data">
         <?
         $this->includefile("visitorinformation");
-        ?>
 
-        <div class="summary_heading">
-            <div class="spacer"></div>
-            <h1>
-                <? echo $this->__w("Additional contact data"); ?>
-            </h1>
-            <div class="seperator"></div>
-        </div>
-        <?
-        $this->includefile("bookingadditionalinfo");
+        if(!$loggedOn) {
+            $this->includefile("bookingadditionalinfo");
 
-        if ($this->hasErrors()) {
-            echo "<div>";
-            echo $this->__w("All fields are required, please fill in the fields in red.");
-            foreach ($this->errors as $error) {
-                echo "<div>" . $error . "</div>";
+            if ($this->hasErrors()) {
+                echo "<div>";
+                echo $this->__w("All fields are required, please fill in the fields in red.");
+                foreach ($this->errors as $error) {
+                    echo "<div>" . $error . "</div>";
+                }
+                echo "</div>";
             }
-            echo "</div>";
         }
 
         
-        if($this->getPost("customer_type")) {
+        if($this->getPost("customer_type") || $loggedOn) {
             if ($this->checkFailedReservation()) {
                 echo $this->__w("Failed to reserve room... please contact us.");
             } else {

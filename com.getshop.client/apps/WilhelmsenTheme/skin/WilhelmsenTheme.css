@@ -107,3 +107,8 @@ text-align: center;
 background-color: #d2684f;
 padding: 3px;
 cursor: pointer; text-transform: uppercase; margin-top: 2px; }
+
+.Login .loginform .loginform { width: 320px; display:inline-block; }
+.Login .login_content { text-align: center; }
+
+.Login .gs_button { border-radius: 0px; }

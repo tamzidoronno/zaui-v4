@@ -1835,6 +1835,23 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	*
+	* @param roomType
+	* @param startDate The first day unix timestamp.
+	* @param endDate The last day unix timestamp.
+	* @param count The number of rooms to book.
+	* @throws ErrorException
+	*/
+
+	public function getAllBookingsForUser() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllBookingsForUser";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all references
 	* @return List
 	* @throws ErrorException
@@ -6582,7 +6599,7 @@ class APIUserManager {
 	* @param resetCode The code sent by sendResetCode call.
 	* @param username The username for the user to update, the email address is the most common username.
 	* @param newPassword The new password to send as plain text.
-	* @return void
+	* @return Integer
 	* @throws ErrorException
 	*/
 

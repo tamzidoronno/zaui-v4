@@ -1,4 +1,12 @@
 
+<div class="summary_heading">
+    <div class="spacer"></div>
+    <h1>
+        <? echo $this->__w("Additional contact data"); ?>
+    </h1>
+    <div class="seperator"></div>
+</div>
+
 <div style="padding-bottom:10px;">
     <input type="radio" name="customer_type" gsname="userData][customer_type]" value="private" <? if ($this->getCustomerType() == "private") echo "CHECKED"; ?>> Privatperson
     <input type="radio" name="customer_type" gsname="userData][customer_type]" value="company" <? if ($this->getCustomerType() == "company") echo "CHECKED"; ?>> Firma

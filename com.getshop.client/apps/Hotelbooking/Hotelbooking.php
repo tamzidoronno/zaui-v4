@@ -739,14 +739,18 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return;
         }
         
-        if($userData['customer_type'] == "existing") {
-            $user = $this->getApi()->getUserManager()->logOn($userData['username'], $userData['password']);
-            if(!$user) {
-                $this->setFailedLogon(true);
-                return;
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        
+        if(!$user) {
+            if($userData['customer_type'] == "existing") {
+                $user = $this->getApi()->getUserManager()->logOn($userData['username'], $userData['password']);
+                if(!$user) {
+                    $this->setFailedLogon(true);
+                    return;
+                }
+            } else {
+                $user = $this->createUser();
             }
-        } else {
-            $user = $this->createUser();
         }
         
         $additional = $this->getAdditionalInfo();

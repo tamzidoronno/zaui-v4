@@ -352,8 +352,11 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
         ?>
     </style>
 </div>
-<? if (isset($_GET['logout'])) { ?>
-    <script>window.location.reload()</script>
+<? if (isset($_GET['logout'])) { 
+    $factory->getApi()->getUserManager()->logout();
+    session_destroy();
+    ?>
+    <script>window.location.href = "/"; </script>
 <? } ?>    
     
 <?

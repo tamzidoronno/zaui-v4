@@ -434,9 +434,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.cart = cart.clone();
         order.reference = cart.reference;
         
-        if (order.cart == null || order.cart.address == null) {
-            throw new ErrorException(53);
-        }
+        //What about orders that is not supposed to be sent, why an address then?
+//        if (order.cart == null || order.cart.address == null) {
+//            throw new ErrorException(53);
+//        }
         
         finalizeCart(order.cart);
         

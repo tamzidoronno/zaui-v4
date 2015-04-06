@@ -33,6 +33,8 @@ public interface IHotelBookingManager {
     
     public GlobalBookingSettings getBookingConfiguration() throws ErrorException;
     
+    public List<UsersBookingData> getAllBookingsForUser();
+    
     /**
      * Add new room to the manager.
      * @param room

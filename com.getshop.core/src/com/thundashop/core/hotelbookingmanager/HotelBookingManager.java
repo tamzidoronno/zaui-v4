@@ -914,4 +914,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         deleteObject(toDelete);
     }
 
+    @Override
+    public List<UsersBookingData> getAllBookingsForUser() {
+        List<UsersBookingData> added = new ArrayList();
+        for(UsersBookingData bdata : usersBookingData) {
+            if(bdata.additonalInformation != null && 
+                    bdata.additonalInformation.userId != null &&
+                    bdata.additonalInformation.userId.equals(getSession().currentUser.id)) {
+                added.add(bdata);
+            }
+        }
+        
+        return added;
+    }
+
 }

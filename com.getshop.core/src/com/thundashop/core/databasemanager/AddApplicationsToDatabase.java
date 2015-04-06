@@ -53,124 +53,29 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application lasgruppen = createSettings("LasGruppenOrderSchema",
-                "7004f275-a10f-4857-8255-843c2c7fb3ab",
+        Application hotelusers = createSettings("HotelUsers",
+                "037663a4-6e54-4c63-a54d-9f9dbf91d973",
                 allowed2,
                 "",
-                Application.Type.Marketing, false);
-        lasgruppen.isPublic = false;
-        lasgruppen.isFrontend = true;
-        lasgruppen.moduleId = "other";
-        lasgruppen.allowedStoreIds = new ArrayList();
-        lasgruppen.allowedStoreIds.add("1e647711-6624-40fd-807e-7673250accc4");
-        apps.add(lasgruppen);
-        
-//        Application wilhelmsenHouseVisma = createSettings("WilhelmsenHouseVisma",
-//                "37d409be-1207-45e8-bf3b-6465442b58d9",
-//                allowed2,
-//                "",
-//                Application.Type.Webshop, false);
-//        wilhelmsenHouseVisma.isPublic = false;
-//        wilhelmsenHouseVisma.isFrontend = false;
-//        wilhelmsenHouseVisma.allowedStoreIds = new ArrayList();
-//        wilhelmsenHouseVisma.allowedStoreIds.add("123865ea-3232-4b3b-9136-7df23cf896c6");
-//        wilhelmsenHouseVisma.moduleId = "WebShop";
-//        
-//        apps.add(wilhelmsenHouseVisma);
-        
-//        netAxept.moduleId = "WebShop";
-//        netAxept.activeAppOnModuleActivation = false;
-//        netAxept.isFrontend = false;
-//        apps.add(netAxept);
-        
-//        Application button = createSettings("Button",
-//                "2996287a-c23e-41ad-a801-c77502372789",
-//                allowed2,
-//                "",
-//                Application.Type.Webshop, false);
-//        button.isPublic = true;
-//        button.moduleId = "cms";
-//        button.isFrontend = true;
-//        button.activeAppOnModuleActivation = false;
-//        apps.add(button);
-//
-//     Application applicationpromotor = createSettings(
-//                "ApplicationPromotor",
-//                "b6b0d74f-c802-401e-9bb7-facf3e420f61",
-//                allowed,
-//                "",
-//                Application.Type.Webshop, true);
-//        applicationpromotor.isPublic = true;
-//        applicationpromotor.defaultActivate = true;
-//        applicationpromotor.moduleId = "hidden";
-//        apps.add(applicationpromotor);
+                Application.Type.Webshop, false);
+        hotelusers.isPublic = false;
+        hotelusers.isFrontend = true;
+        hotelusers.moduleId = "other";
+        hotelusers.allowedStoreIds = new ArrayList();
+        hotelusers.allowedStoreIds.add("123865ea-3232-4b3b-9136-7df23cf896c6");
+        apps.add(hotelusers);
 
-//        Application getShopAdmin = createSettings(
-//                "GetShopAdmin",
-//                "d315510d-198f-4c16-beef-54f979be58cf",
-//                allowed,
-//                "",
-//                Application.Type.Webshop, true);
-//        getShopAdmin.isPublic = true;
-//        getShopAdmin.defaultActivate = true;
-//        getShopAdmin.moduleId = "hidden";
-//        apps.add(getShopAdmin);
-//        
-//        ApplicationSettings sedoxLogin = createSettings(
-//                "SedoxLogin",
-//                "05b2baef-5fba-4f01-9fcb-04a8c80b2907",
-//                allowed2,
-//                "",
-//                ApplicationSettings.Type.Webshop, false);
-//        sedoxLogin.isPublic = false;
-//        sedoxLogin.allowedStoreIds = new ArrayList();
-//        sedoxLogin.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-//        apps.add(sedoxLogin);
-//        
-//        ApplicationSettings sedoxHeaderApp = createSettings(
-//                "SedoxHeaderApp",
-//                "264b0edf-b654-4ce0-9be2-0ebb3d2887af",
-//                new ArrayList(),
-//                "",
-//                ApplicationSettings.Type.Webshop, false);
-//        sedoxHeaderApp.isPublic = false;
-//        sedoxHeaderApp.allowedStoreIds = new ArrayList();
-//        sedoxHeaderApp.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-//        apps.add(sedoxHeaderApp);
-//        
-//        
-//        ApplicationSettings sedoxAdmin = createSettings(
-//                "SedoxAdmin",
-//                "e22e25dd-8000-471c-89a3-6927d932165e",
-//                allowed,
-//                "",
-//                ApplicationSettings.Type.Webshop, false);
-//        sedoxAdmin.isPublic = false;
-//        sedoxAdmin.allowedStoreIds = new ArrayList();
-//        sedoxAdmin.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-//        apps.add(sedoxAdmin);
-//        
-//        ApplicationSettings sedoxProductView = createSettings(
-//                "SedoxProductView",
-//                "23fac58b-5066-4222-860c-a9e88196b8a1",
-//                allowed,
-//                "",
-//                ApplicationSettings.Type.Webshop, false);
-//        sedoxProductView.isPublic = false;
-//        sedoxProductView.allowedStoreIds = new ArrayList();
-//        sedoxProductView.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-//        apps.add(sedoxProductView);
-//        
-//        ApplicationSettings sedoxUserPanel = createSettings(
-//                "SedoxUserPanel",
-//                "32b5f680-dd8d-11e3-8b68-0800200c9a66",
-//                allowed,
-//                "",
-//                ApplicationSettings.Type.Webshop, false);
-//        sedoxUserPanel.isPublic = false;
-//        sedoxUserPanel.allowedStoreIds = new ArrayList();
-//        sedoxUserPanel.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-//        apps.add(sedoxUserPanel);
+        Application logout = createSettings("Logout",
+                "681e581f-3abb-448d-b935-fb8af9327821",
+                allowed2,
+                "",
+                Application.Type.Webshop, false);
+        logout.isPublic = true;
+        logout.isFrontend = true;
+        logout.moduleId = "other";
+        logout.allowedStoreIds = new ArrayList();
+        apps.add(logout);
+        
         return apps;
     }
 

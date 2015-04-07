@@ -1,6 +1,6 @@
 ###### framework ######
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
-* If you want to order for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental.;-;Skal du leie for mer enn {maxDays}, trykk <a href='?page={partnerPage}' class='partnerlink'>her</a> for langtidsleie.
+* If you want to order for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental.;-;Skal du leie for mer enn {maxDays} dager, trykk <a href='?page={partnerPage}' class='partnerlink'>her</a> for langtidsleie.
 * PayOnDelivery fee;-;Gebyr henting 
 * The rooms are being billed monthly in advanced;-;* Rommene blir forhånds fakturert hver påbegynte måned.
 0-100 km/h;-;0-100 km/h

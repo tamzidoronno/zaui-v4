@@ -95,8 +95,8 @@ $api = $factory->getApi();
         <td colspan='2'><img src='<? echo $path . "mainimg2.png"; ?>'></td>
     </tr>
     <tr style='background-color:#000000; color:#e1d3c3'>
-        <td width='30%'>&nbsp;</td>
-        <td width='70%'>
+        <td width='33%'>&nbsp;</td>
+        <td width='67%'>
             <br>
             <br>
             <div style='font-size: 20px;'>NÅR DU TRENGER ROM</div><br>
@@ -113,7 +113,7 @@ $api = $factory->getApi();
             <br>
             - for å møte andre<br>
             <br>
-            for den gode samtalen<br>
+            - for den gode samtalen<br>
             <br>
             - for hygge
             <bR>

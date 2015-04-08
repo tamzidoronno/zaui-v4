@@ -2,14 +2,11 @@ body {
     font-family: 'Arial', sans-serif !important;
     font-size: 14px;
     color : #333 !important;
-    background-color:#666 !important;
-    background: url(http://wilhelmsenhouse.no/wordpress/wp-content/themes/sohohotel-child/images/text_bg.png) no-repeat fixed center 120px;
 }
 
 .gs_page_width {
     margin: auto;
     width: 1160px;
-    background-color:#fff;
 }
 .shop_button {
     color: #FFF;
@@ -45,7 +42,7 @@ body {
 
 
 .gsarea[area="header"] .Menu a div {
-    color: #1c1c1c;
+    color: #e2d2be;
     font-size: 12px;
     line-height: 32px;
     letter-spacing: 1.2px;
@@ -67,6 +64,9 @@ body {
     padding-right: 5px;
 }
 
+.gsarea[area="header"] .Menu .entry .entries a div {
+    color:#000 !important;
+}
 .gsarea[area="header"] .Menu .entry .entries .entry {
     background-color: rgba(255,255,255,1);
     border-bottom: solid 1px #e8e8e8;

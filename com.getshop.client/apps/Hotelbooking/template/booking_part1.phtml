@@ -22,11 +22,6 @@ if(isset($_GET['pagenumber'])) {
 
 
 <div class='frontpagebookingrow'>
-            <span class='bookingcol datecol'><br>
-                <span class='ordernowtextbutton'>Bestill nå
-                    <i class='fa fa-arrow-right' style='float:right;'></i>
-                </span>
-            </span>
             <span class='bookingcol datecol firstcalcol'>
             <? echo $checkintext; ?><br>
                 <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='start_date'>
@@ -57,12 +52,12 @@ if(isset($_GET['pagenumber'])) {
                     ?>
                 </select>
             </span>
-        </div>
-            <span class='bookingcol'>
-                <br>
-                <div class='check_available_button' nextpage="<? echo $this->getConfig()->continuePage; ?>"><? echo $this->__w("Continue"); ?></div>
+            <span class='bookingcol checkroomcol'>
+                <div class='check_available_button' nextpage="<? echo $this->getConfig()->continuePage; ?>"><? echo $this->__w("Check price"); ?></div>
             </span>
-
+   <div style='clear:both;'></div>
+        </div>
+ 
             <div>
                 <span class='error_on_check date_before_start'>
                     <? echo $this->__f("Sorry, but the start date is before todays date."); ?>
@@ -71,7 +66,7 @@ if(isset($_GET['pagenumber'])) {
                     <? echo $this->__f("Sorry, but the start date is before todays date."); ?>
                 </span>
             </div>
-            <div style='clear:both;'></div>
+            
             <div style='padding-top: 20px;'>
                 <? 
                     $partnerText = $this->getPartnerText();

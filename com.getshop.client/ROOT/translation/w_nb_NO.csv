@@ -53,8 +53,9 @@ Button;-;Knapp
 By calendar;-;Som kalendar
 By list;-;Som Liste
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
-CHECK IN;-;SJEKK INN
-CHECK OUT;-;SJEKK UT
+CHECK IN;-;Ankomst
+CHECK OUT;-;Avreise
+Check price;-;Sjekk pris
 CONTINUE;-;FORTSETT
 Cancel order;-;Kanselert ordre
 Candidate name;-;Navn

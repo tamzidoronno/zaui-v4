@@ -4,6 +4,8 @@ RewriteEngine On
 RewriteBase /
 ErrorDocument 404 /
 
+RewriteRule ^(bosch)/([^?]*)$ auth.php?path=$1&path2=$2 [L]
+
 RewriteRule ^/?generatePDF.php$ - [L]
 RewriteRule ^/?filedownload.php$ - [L]
 

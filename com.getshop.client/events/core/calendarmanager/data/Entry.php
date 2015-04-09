@@ -31,6 +31,9 @@ class core_calendarmanager_data_Entry {
 	public $lockedForSignup;
 
 	/** @var String */
+	public $deffered;
+
+	/** @var String */
 	public $linkToPage;
 
 	/** @var String */

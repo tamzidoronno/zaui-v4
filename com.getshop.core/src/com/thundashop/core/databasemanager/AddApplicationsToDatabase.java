@@ -56,15 +56,15 @@ public class AddApplicationsToDatabase {
         allowed2.add("xlarge");
 
         ApplicationSettings embedCode = createSettings(
-                "SjoTunetTheme",
-                "06321eda-afaa-4e91-8ca7-67d342dbd1ea",
+                "ProMeisterBosch",
+                "8cc26060-eef2-48ac-8174-914f533dc7ed",
                 allowed2,
                 "",
-                ApplicationSettings.Type.Theme, false);
+                ApplicationSettings.Type.Webshop, false);
         embedCode.isPublic = false;
         embedCode.isResponsive = true;
         embedCode.allowedStoreIds = new ArrayList();
-        embedCode.allowedStoreIds.add("7e5f8591-88a6-4396-a78b-c017ec489246");
+        embedCode.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
         apps.add(embedCode);
 
 //        

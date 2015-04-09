@@ -1,0 +1,39 @@
+<div class='adminsettings'>
+    Hvilken kurs gjelder denne?<br/>
+    <select class='courseselector'>
+        <?
+        echo "<option>Please select</option>";
+        foreach ($this->courses as $course) {
+            $selected = "";
+            if ($this->getCurrentCourse() == $course) {
+                $selected = 'selected="true"';
+            }
+            echo "<option $selected value='$course'>$course</option>";
+        }
+        ?>
+    </select>
+    
+    
+    <select class='hours'>
+        <?
+        echo "<option>Please select</option>";
+        for ($i=1; $i<10; $i++) {
+            $selected = $this->getCurrentHours() == $i ? "selected='true'" : "";
+            echo "<option $selected value='$i'>$i</option>";
+        }
+        ?>
+    </select>
+    
+    <hr/>
+    Påmeldte:
+    <?
+    $customers = $this->getAllCustomers();
+    foreach ($customers as $customer) {
+        echo "<div>";
+        echo $customer->fullName. ", Username: ".$customer->username.", Pincode: ".$customer->password.", Time remaining: ".@$customer->secondsRemaining;
+        echo "</div>";
+    }
+//    print_r($customers);
+    ?>
+    
+</div>

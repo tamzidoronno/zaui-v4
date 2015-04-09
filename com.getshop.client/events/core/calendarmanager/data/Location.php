@@ -24,5 +24,11 @@ class core_calendarmanager_data_Location extends core_common_DataCommon  {
 	/** @var String */
 	public $other;
 
+	/** @var String */
+	public $lon;
+
+	/** @var String */
+	public $lat;
+
 }
 ?>

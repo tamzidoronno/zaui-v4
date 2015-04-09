@@ -742,14 +742,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $isvalid = true;
         $this->errors = array();
         $numberOfDays = $this->getDayCount();
-        if (((int) $count < (int) $this->getRoomCount())) {
-            $errorText = $this->__w("We are sorry, but there is not enough available rooms for your selection, please select a different one.");
-            if ($this->getServiceType() == "storage") {
-                $errorText = $this->__w("Sorry, we are out of this type of storage, please select a different one.");
-            }
-            $this->errors[] = $errorText;
-            $isvalid = false;
-        }
+
         if ((int) $this->getMinumRental() > (int) $numberOfDays) {
             if (!$this->getServiceType() == "storage") {
                 $errorText = $this->__w("Sorry, your rental is too short, it has to be longer then {days} days of rental.");

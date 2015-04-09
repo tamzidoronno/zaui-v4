@@ -127,9 +127,6 @@ if ($this->getServiceType() == "storage") {
             $selectedclass = "selected";
         }
         $disabled = "";
-        if ($avroom <= 0) {
-            $selectedclass .= " disabled";
-        }
         $images = $product->imagesAdded;
 
         $foundroom = true;
@@ -164,33 +161,17 @@ if ($this->getServiceType() == "storage") {
             echo "<span class='rebated_product'> (-" . (100 - (int) (($product->price / $product->original_price) * 100)) . "%)</span>";
         }
         echo "</span>";
-        if ($avroom <= 0) {
-            echo "<span class='sold_out'>" . $this->__w("Sold out") . "</span>";
-        } else {
-            echo "<span class='selectbutton' gstype='clicksubmit' method='changeProduct' gsname='productid' gsvalue='" . $product->id . "'>" . $selectRoomButton . "</span>";
-        }
+        echo "<span class='selectbutton' gstype='clicksubmit' method='changeProduct' gsname='productid' gsvalue='" . $product->id . "'>" . $selectRoomButton . "</span>";
         echo "</span>";
         echo "<div style='clear:both;'></div>";
-        echo "<span class='available_rooms'>";
-        echo $avroom;
-        if ($avroom > 1) {
-            echo " " . $this->__w("available rooms");
-        } else {
-            echo " " . $this->__w("available room");
-        }
-        echo "</span>";
+        
         echo "</div>";
     }
-    if (!$foundroom) {
-        echo "<div class='no_room_available'>" . $this->__w("No rooms are available for this time periode.") . "</div>";
-        echo "<script>$('.room_selection_2').hide();</script>";
-    } else {
-        if (!$this->errors) {
-            ?>
-            <div class="to_checkout">
-                <a href='?page=<? echo $this->getPage()->id; ?>&subpage=summary'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
-            </div>
-        <? } ?>
+    if (!$this->errors) {
+        ?>
+        <div class="to_checkout">
+            <a href='?page=<? echo $this->getPage()->id; ?>&subpage=summary'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
+        </div>
     <? } ?>
 </div>
 <div style="clear:both;"></div>

@@ -217,14 +217,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $title = $this->__w("Thank you for your booking a storage room at") . " " . $this->getProjectName() . ".";
         }
         echo "<br><br>";
-        echo "<h1>" . $title . "</h1>";
-        if ($this->getServiceType() == "hotel") {
-            $stay = $this->__w("A confirmation email has been sent to your email. Enjoy your stay at {hotel}.");
-            $stay = str_replace("{hotel}", $this->getProjectName(), $stay);
-            echo $stay;
-        } else {
-            echo $this->__w("A confirmation email has been sent to your email, and your storage room has been reserved. Please note that the storage room might not be final and could be changed to a different one with the same size if needed.");
-        }
+        echo "<h1>Takk for din bestilling av lagerbod.</h1> Vi har mottatt dine ønsker og tar kontakt snarest mulig.<br>";
+        echo "En epost med mer detaljer er på vei!";
         echo "<br><br><br><br>";
     }
 

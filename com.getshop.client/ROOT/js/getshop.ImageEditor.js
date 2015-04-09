@@ -375,7 +375,6 @@ getshop.ImageEditor.prototype = {
     },
     
     addMenuEntry: function(text, classes, func, size) {
-        console.log(this.config);
         var disableAspectRatio = this.createMenuEntry(__f(text), classes);
         var menuEntry = this.addEntryToMenu(disableAspectRatio, size);
         menuEntry.click(func);
@@ -705,13 +704,13 @@ getshop.ImageEditor.prototype = {
             this.initialRotating = true;
             this.rotateImageInitially();
         } else {
-            var doCompression = this.imageJustRotated === true ? false : true;
-            if(!this.config.cropDisabled) {
-                this.refeshCropArea(doCompression);
-            }
             this.imageJustRotated = null;
         }
         
+        var doCompression = this.imageJustRotated === true ? false : true;
+        if(!this.config.cropDisabled) {
+            this.refeshCropArea(doCompression);
+        }
         
         if (firstTimeLoaded && !this.initialRotating || addText) {
             this.initialRotating = null;
@@ -799,6 +798,10 @@ getshop.ImageEditor.prototype = {
         var aspectRatio = false;
 
         this.removeCropping();
+        
+        if (this.config.originalSize === "true")
+            return;
+        
         var crops = this.config.crops;
 
         if (doCompression) {

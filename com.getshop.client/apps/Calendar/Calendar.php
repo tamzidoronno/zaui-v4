@@ -249,6 +249,8 @@ class Calendar extends MarketingApplication implements Application {
         $location->emailAddress = $_POST['data']['locationEmail'];
         $location->mobile = $_POST['data']['locationCellPhone'];
         $location->other = $_POST['data']['otherinformation'];
+        $location->lon = $_POST['data']['lon'];
+        $location->lat = $_POST['data']['lat'];
         
         
         $groups = $this->getApi()->getUserManager()->getAllGroups();
@@ -394,6 +396,11 @@ class Calendar extends MarketingApplication implements Application {
         $entry->linkToPage = $_POST['data']['linkToPage'];
         $entry->lockedForSignup = $_POST['data']['lockedForSignup'];
         $entry->eventHelder = $_POST['data']['eventHelder'];
+        $entry->deffered = $_POST['data']['deffered'];
+        
+        if ($entry->deffered === "true") {
+            $entry->lockedForSignup = true;
+        }
         
         return $entry;
     }
@@ -870,5 +877,47 @@ class Calendar extends MarketingApplication implements Application {
         
         $this->setConfigurationSetting("comment_".$location->id, $textComments);
     }
+    
+    public function showCheckList() {
+        $this->includefile("checklist");
+    }
+    
+    public function saveCheckList() {
+        for ($i=1; $i <= 8; $i++) {
+            $listName = "checklist_$i";
+            $this->setConfigurationSetting($listName.$_POST['data']['entryId'], $_POST['data'][$listName]);
+        }
+        
+        if ($_POST['data']['comment']) {
+            $comments = $this->getComments($_POST['data']['entryId']);
+            
+            $comment = new checkListComment();
+            $comment->userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+            $comment->date = date("Y-m-d H:i:s");
+            $comment->comment = $_POST['data']['comment'];
+            $comment->commentId = uniqid();
+            
+            $comments[] = $comment;
+            
+            $json = json_encode($comments);
+            $this->setConfigurationSetting("comments_".$_POST['data']['entryId'], $json);
+        }
+    }
+    
+    public function getComments($entryId) {
+        $jsonCommand = $this->getConfigurationSetting("comments_".$_POST['data']['entryId']);
+        if ($jsonCommand) {
+            return json_decode($jsonCommand);
+        }
+        
+        return [];
+    }
+}
+
+class checkListComment {
+    public $commentId;
+    public $userId;
+    public $date;
+    public $omment;
 }
 ?>

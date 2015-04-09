@@ -62,7 +62,9 @@ app.Calendar = {
             contactPerson: $('#contactPerson').val(),
             locationEmail: $('#locationEmail').val(),
             locationCellPhone: $('#locationCellPhone').val(),
-            otherinformation: $('#otherinformation').val()
+            otherinformation: $('#otherinformation').val(),
+            lon: $('#location_lon').val(),
+            lat: $('#location_lat').val()
         }
 
         $('.groupinformation').each(function() {
@@ -95,6 +97,8 @@ Calendar = {
         $(document).on('click', '.Calendar .calendar_locationarea_save', Calendar.saveLocationArea);
         
         $(document).on('click', '.Calendar .delete_comment', Calendar.deleteComment);
+        $(document).on('click', '.Calendar .showCheckList', Calendar.showCheckList);
+        $(document).on('click', '.Calendar .saveCheckList', Calendar.saveCheckList);
         $(document).on('click', '.Calendar .createforperiod .gs_button', Calendar.createPeriode);
         $(document).on('click', '.Calendar .diplomasettings .deletediploma', Calendar.deletePeriod);
         $(document).on('click', '.Calendar .diplomasettings .removesignature', Calendar.removesignature);
@@ -102,6 +106,39 @@ Calendar = {
         $(document).on('change', '.Calendar .diplomasettings input#diploma_background', Calendar.addBackground);
         $(document).on('change', '.Calendar .diplomasettings input#textColor', Calendar.setTextColorDiploma);
         $(document).on('click', '.Calendar .list_showextrainformation', Calendar.showListExtraInformation);
+    },
+    saveCheckList: function() {
+        var me = this;
+        var data = {
+            entryId : $(this).attr('entryid'),
+            checklist_1 : $('#checklist_1').is(':checked'),
+            checklist_2 : $('#checklist_2').is(':checked'),
+            checklist_3 : $('#checklist_3').is(':checked'),
+            checklist_4 : $('#checklist_4').is(':checked'),
+            checklist_5 : $('#checklist_5').is(':checked'),
+            checklist_6 : $('#checklist_6').is(':checked'),
+            checklist_7 : $('#checklist_7').is(':checked'),
+            checklist_8 : $('#checklist_8').is(':checked'),
+            comment : $('#checklist_comment').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent("", "saveCheckList", $(this), data);
+        thundashop.Ajax.post(event, function() {
+            alert('Saved');
+            Calendar.showCheckList(data.entryId, me);
+        });
+    },
+    showCheckList: function(entryiId, target) {
+        var me = this;
+        if (typeof(target) !== "undefined") {
+            me = target;
+        }
+        var entryId = $(this).attr('entryid') ? $(this).attr('entryid') : entryiId;
+        var data = {
+            entryId : entryId
+        };
+        var event = thundashop.Ajax.createEvent("", "showCheckList", $(me), data);
+        thundashop.common.showInformationBox(event, "Checklist");
     },
     showListExtraInformation: function() {
         var entryId = $(this).attr('entry_id');
@@ -409,6 +446,7 @@ $('.Calendar .addevent #save').live('click', function() {
     data.eventdescription = $('#eventdescription').val();
     data.linkToPage = $('#linkToPage').attr('pageid');
     data.locationId = $('#location').val();
+    data.deffered = $('#deffered').is(":checked");
     data.extraText = $('#extraText').val();
     data.extraDays = extraDaysData;
     data.lockedForSignup = $('#lockEvent').is(":checked");

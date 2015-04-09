@@ -134,3 +134,114 @@ html {
 .lang_inner .language_selection a {
     margin-right: 5px;
 }
+
+
+@media screen and (max-width:800px) {
+    table { width: 100% !important; }
+    table td { width: 100%; }
+    .gs_col { width: 100% !important; }
+    .gs_margin_left { margin-left: 0px; padding-left: 0px; }
+    .gs_margin_right { margin-right: 0px; padding-right: 0px !important; }
+    .Footer { width: inherit; }
+    .Banner img,
+    .Banner .banner,
+    .Banner .bannerslider,
+    .Banner { height: auto !important; width: 100%; }
+    .gs_col { margin: 0px; box-sizing: content-box !important; }
+    #webshop_logo { max-width: 450px; }
+    .mainarea .applicationarea { margin-bottom: 20px; }
+    .gs_outer.footer .applicationarea { margin-left: 10px; margin-right: 10px;}
+    
+    .gs_outer.footer { height: 150px; overflow: hidden;}
+    .gs_outer.header { height: 206px; }    
+    
+    .lang_inner { width: 100%; }
+
+    .gs_inner { width: 100%;  }
+    .gs_outer.header .gs_inner {
+        width: 100%;
+        background-size: 1px 206px;
+    }
+    .skelholder[page="a2bb626b-2248-4066-9d4a-17ee55c9e323"] .gs_col.c1 { display:none; }
+    
+    .GoogleMaps { height: 200px; }
+    .gs_outer.header,
+    .gs_outer.header .gs_inner,
+    #apparea-header {
+        min-height: 125px;
+        height: 125px;
+        padding: 0px;
+    }
+    #webshop_logo { max-height: 155px; height: 115px; padding-left: 20px; padding-right: 20px; }
+    
+    .Login {
+        display: none;
+    }
+    
+
+    .mainarea .gs_inner {
+        padding-top: inherit;
+    }
+    
+    .ContentManager img {
+        width: auto !important; height: auto !important; max-width:100% !important;
+    }
+    
+    .mainarea .gs_inner .applicationarea  {
+        min-height: inherit;
+    }
+    
+    .skeleton3 .c2 {display:none; }
+    
+    .Logo {
+        display: block;
+    }
+    
+    
+    .TopMenu .mobile_button {
+        border: solid 2px #FFF;
+        padding: 5px;
+        color: #FFF;
+        font-size: 20px;
+    }
+    
+    .TopMenu .subentries li {
+        border-bottom: solid 0px;
+    }
+    
+    .TopMenu .entry a {
+        color: #FFF !important;
+    }
+    .TopMenu .entry {
+        height: inherit;
+        
+    }
+    .TopMenu {
+        top: 60px !important;
+        right: inherit !important;
+        left: 145px !important;
+        bottom: inherit !important;
+    }
+    
+    .TopMenu .subentries { display:block; position: initial; border: solid 0px; }
+    .TopMenu .subentries .entry { background-color: #af231d !important; }
+    
+    .mainarea .gs_inner .applicationarea {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+    
+    iframe {
+        width: 100% !important;
+    }
+    .breadcrumb-menu { 
+        background-color: #af231d;
+        overflow: hidden;
+        width: 300px;
+        
+        left: -134px;
+        position: absolute;
+        top: 39px;
+    }
+}
+

@@ -112,6 +112,8 @@ Conversion rate addition;-;Tillegg til valutta omregning
 Cookie warning;-;Cookie advarsel
 Count;-;Antall
 Coupon name;-;Kupong navn
+Course materials / computers;-;Undervisningutstyr, projector, komponenter, etc
+Coursediplom;-;Sendt kursbevis
 Create;-;Opprett
 Create a new product;-;Opprett et nytt produkt
 Create a new user;-;Opprett en ny bruker
@@ -138,6 +140,7 @@ Customers;-;Kunder
 Deactivate Deepfreeze;-;Deaktivert deepfreeze
 Default on, turn off if you dont want to show the full description.;-;Standard på, skru denne av dersom du ønsker å vise full beskrivelse.
 Default price;-;Ordinær pris
+Deffered;-;Utsatt
 Delete;-;Slett
 Delete my store;-;Slett min butikk
 Delete pages by dragging the menu entry to the garbage box.;-;Slett sider med å dra et menyvalg hit.
@@ -173,8 +176,11 @@ Enter an address to your favicon.;-;Skriv inn en adresse til ditt favicon
 Enter the name of the page;-;Gi nytt navn for siden
 Enter the terms and condition text in the field below.;-;Skriv inn brukervilkårene i boksen under.
 Error;-;Feil
+Ev elearning;-;Utsendt elerning
 Event;-;Kurs
 Event calendar;-;Event kalender
+Event holder decieded;-;Avklart kursvert
+Event materials ordered;-;Kursmateriell bestilt / underlag
 Everyone;-;Alle
 Everyone will be able to access and see this menu entry.;-;Alle vil være i stand til å aksesere og se dette meny innlegget.
 Expiration date;-;Utløps dato
@@ -229,12 +235,14 @@ Keep track of your products, orders, pages, etc with this application. Generate 
 Keep your customers up to date of what events you are hosting with this application;-;Hold dine kunder oppdatert med hvilken events du holder med denne applikasjonen
 Last hour of the day that people should be able to make a booking (example: 23);-;Siste time på dagen noen skal kan legge inn en book (eksempel: 23)
 Last logged on;-;Sist logget på
+Learningobject;-;Øvelsesobjekt
 Left Menu;-;Venstremeny
 Lets you easily connect to paypal, and give your customers option to pay using paypal.;-;Gir deg muligheten for at dine brukere kan benytte seg av paypal.
 Link;-;Link
 Link to booking schema.;-;Hvis link til påmeldings skjema
 Link to menu;-;Link til meny
 Link to page;-;Link til side
+Lunch;-;Bestillt mat / lunch
 Mail;-;E-post
 MailManager;-;Epost behandler
 Manually select a color;-;Manuelt velg en farge
@@ -296,6 +304,7 @@ Page view summary;-;Sidevisning oppsummering.
 Page views;-;Side visninger
 Payment application;-;Betalings applikasjon
 Paypal address;-;Paypal adresse
+Pens;-;Penner
 Percentage price;-;Prosent pris
 Place;-;Sted
 Please click on 'Add new top level variation' above;-;Vennligst tryll på 'Legg til ny topp nivå variasjon' over.
@@ -329,6 +338,7 @@ Reset code is;-;Gjensettelse kode er
 Restrict to administrators;-;Kun administrators har adgang
 Restrict to administrators and editors;-;Sett restriksjoner til administratorer og editorer.
 Return stock if order is canceled?;-;Returner til lager hvis kanselert?
+Room booked;-;Bestillt lokale
 SMS From;-;SMS Fra
 SMS Text;-;SMS Melding
 Sandbox;-;Sandbox

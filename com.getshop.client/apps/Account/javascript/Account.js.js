@@ -32,7 +32,8 @@ thundashop.app.account.registerUser = function(target) {
         userlevel : userlevel,
         birthDay : birthDay,
         companyName : companyName,
-        cellPhone : cellPhone
+        cellPhone : cellPhone,
+        isprivateperson : $('#isprivateperson').val()
         
     });
     thundashop.Ajax.postSynchronWithReprint(event);

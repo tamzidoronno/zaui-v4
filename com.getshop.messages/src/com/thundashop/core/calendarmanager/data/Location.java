@@ -22,4 +22,6 @@ public class Location extends DataCommon {
     public String emailAddress = "";
     public String mobile = "";
     public String other = "";
+    public Double lon;
+    public Double lat;
 }

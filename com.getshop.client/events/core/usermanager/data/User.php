@@ -52,6 +52,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	public $key;
 
 	/** @var String */
+	public $group;
+
+	/** @var String */
 	public $userAgent;
 
 	/** @var String */

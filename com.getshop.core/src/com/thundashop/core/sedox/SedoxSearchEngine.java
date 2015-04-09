@@ -29,6 +29,9 @@ public class SedoxSearchEngine {
         Set<SedoxProduct> retProducts = new TreeSet<>();
         
         for (SedoxProduct product : products) {
+            if (product.id.equals(searchString) || inFileId(product, searchString)) {
+                retProducts.add(product);
+            }
             if (!product.saleAble  && (currentUser == null || currentUser.type < 100)) {
                 continue;
             }
@@ -107,5 +110,22 @@ public class SedoxSearchEngine {
         
         page.pageNumber = 1;
         return page;
+    }
+
+    private boolean inFileId(SedoxProduct product, String searchString) {
+        int searchId = 0;
+        try {
+            searchId = Integer.parseInt(searchString);
+        } catch (Exception ex) {
+            return false;
+        }
+        
+        for (SedoxBinaryFile file : product.binaryFiles) {
+            if (file.id == searchId) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

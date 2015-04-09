@@ -7,7 +7,8 @@ Enter email/name of the user: <input type='textfield' id='searchfield'>
             $name = $user->fullName;
             $email = $user->emailAddress;
             $id = $user->id;
-            echo "<div userId='$id' class='userentrysearch'>$name - $email</div>";
+            $magicPen = "<a href='/impersonate.php?userId=$id'><i class='fa fa-magic'></i></a>";
+            echo "<div userId='$id' class='userentrysearch'> $magicPen $name - $email</div>";
         }
     }
     ?>

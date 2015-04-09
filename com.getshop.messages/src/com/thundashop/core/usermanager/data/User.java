@@ -54,10 +54,12 @@ public class User extends DataCommon implements Comparable<User> {
     
     public String key;
     
+    public String group;
+    
     public String userAgent;
     public boolean hasChrome;
 	
-	public boolean isTransferredToAccountSystem = false;
+    public boolean isTransferredToAccountSystem = false;
     
     public String referenceKey = "";
     

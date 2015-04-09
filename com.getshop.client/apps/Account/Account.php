@@ -113,6 +113,7 @@ class Account extends \SystemApplication implements \Application {
         $user->id = $user_id;
         $user->emailAddressToInvoice = isset($_POST['data']['invoiceemail']) ? $_POST['data']['invoiceemail'] : "";
         $user->fullName = $name;
+        $user->isPrivatePerson = $_POST['data']['isprivateperson'] == "true" ? "true" : "false";
         $user->username = $email;
         $user->emailAddress = $email;
         $user->address = $this->getApiObject()->core_usermanager_data_Address();

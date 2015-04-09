@@ -1,0 +1,84 @@
+<div class='pro_bosch_signon_form'>
+    <?
+    $groups = $this->getApi()->getUserManager()->getAllGroups();
+
+    if ($groups != null) {
+        shuffle($groups);
+    }
+
+    if ($groups != null && is_array($groups) && count($groups) > 0 && !$this->getCurrentGroup()) {
+        if (isset($_GET['entry'])) {
+            $_SESSION['entry'] = $_GET['entry'];
+        }
+
+        echo "<div class='groupselection'>";
+        echo $this->__w("Please select department");
+        echo "<br><br>";
+
+        foreach ($groups as $group) {
+            $id = $group->id;
+            echo "<div groupid='$id' class='selectbox'>";
+            $imageId = $group->imageId;
+            if ($imageId == "") {
+                echo $group->groupName;
+            } else {
+                echo "<img src='displayImage.php?id=$imageId'/>";
+            }
+            echo "</div>";
+        }
+        echo "</div>";
+    } else {
+        foreach ($groups as $group) {
+            if ($group->id == $this->getCurrentGroup()) {
+                echo "<div class='selected'>";
+                $imageId = $group->imageId;
+
+                if ($imageId == "") {
+                    echo $group->groupName;
+                } else {
+                    echo "<img src='displayImage.php?id=$imageId'/>";
+                }
+                echo "<div class='changeit'>" . $this->__w("change") . "</div>";
+                echo "</div>";
+            }
+        }
+
+        ?>
+        <table id="bookingtable" allowadd="<? echo ($allowAdd == true) ? "true" : "false"; ?>">
+            <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="name" type='textfield'/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("email", 'contact'); ?></td><td><input id="email" type='textfield'/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="invoiceemail" type='textfield'/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("phone", 'contact'); ?></td><td><input id="cellphone" type='textfield'/></td></tr>
+            <tr style="display:none;"><td class="col1"><?php echo $this->__w("orgnummer"); ?></td>
+                <td>
+                    <input class="<? echo $updateClass; ?>" id="birthday" type='textfield' disabled/>
+                </td>
+            </tr>
+            <tr>
+                <td><? echo $this->__w("Company"); ?></td>
+                <td>
+                    <input type="text" placeholder="" class="search_company">
+                    <div class="search_result_area"></div>
+                </td>
+            </tr>
+            <tr><td class="col1"></td><td><div class="companyinformation"><? echo $this->__w("Search for the company you want to enter by clicking the button above, and this box will be filled automatically."); ?></div></td></tr>
+            <tr>
+                <td colspan="2" align="right">
+                    <div class="button savebosch">
+                        <div class="rightglare"></div>
+                        <div class="filler"></div>
+                        <ins class="send_email" id="send_email">
+                            <?
+                                echo $this->__w("Place order");
+                            ?>
+                        </ins>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+    <?
+
+    }
+    ?>
+</div>

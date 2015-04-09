@@ -23,8 +23,19 @@
             $fullName = "<span class='showUserInformationSedox' userid='$userId'>".$this->getFullName($sedoxProduct)." ($balance) </span>";
             $date = $sedoxProduct->rowCreatedDate;
             $goto = "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?page=productview&productId=$id'><i class='fa fa-arrow-right'></i></a>";
-            $start = $sedoxProduct->started ? "Stop" : "Start";
-            $start = "<a class='$start' href='?page=$pageId&action=$start&file=$id'>$start</a>";
+            $start = "Start";
+            $starta = "Start";
+
+            if ($sedoxProduct->started) {
+                $starta = "Stop";
+                $start = "Stop";
+                $startedByUser = $this->getApi()->getUserManager()->getUserById($sedoxProduct->startedByUserId);
+                if ($startedByUser != null) {
+                    $time = $sedoxProduct->startedDate;
+                    $start = "<span title=\"Started by $startedByUser->fullName<br/> Time: $time\">Stop</span>";
+                }
+            }
+            $start = "<a class='$start' href='?page=$pageId&action=$starta&file=$id'>$start</a>";
             $status = "";
             
             if (array_key_exists("purchaseOnlyForCustomer", $sedoxProduct->states)) {

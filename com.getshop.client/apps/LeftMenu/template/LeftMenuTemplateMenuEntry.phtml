@@ -20,8 +20,11 @@ $setting = $this->getConfigurationSetting("disableedit");
 if($event == "renameEntry" && $postedId == $entry->id) {
     $rename = true; //Someone wants to rename this entry.
 }
+
+$showShow = $this->shouldShow($entry) ? "" : "style='display: none;'";
+$plusIcon = $this->isCollapsingActivated() ? "<i class='fa fa-plus-circle'></i> " : "";
 ?>
-<div class="menu_<?php echo $dept; echo " "; echo $isLastInLeft; echo " "; echo "topleveldepth_".$this->getTopLevelDepth();?>">
+<div <? echo $showShow; ?> class="menu_<?php echo $dept; echo " "; echo $isLastInLeft; echo " "; echo "topleveldepth_".$this->getTopLevelDepth();?>" toplevel='<? echo $this->getTopLevelDepth(); ?>'>
     <?php
     $leftMenuConfig = $menu->getFactory()->getStyleSheet()->getLeftMenuSkinSettings();
     if ($menu->getSkinVariable("canUploadIcons")) {
@@ -67,8 +70,8 @@ if($event == "renameEntry" && $postedId == $entry->id) {
                 
             }
             
-            if (!$url) {
-                echo "<div class='menuName'>" . $entry->name . "</div>";
+            if (!$url || ($this->isCollapsingActivated() && $dept == 0)) {
+                echo "<div class='menuName'>" .$plusIcon. $entry->name . "</div>";
             } else {
                 echo "<a ajaxlink='".$link."' href='$url' class='".$active."' $hardlink><div class='menuName'>" . $entry->name . "</div></a>";
             }

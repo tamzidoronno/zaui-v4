@@ -14,4 +14,11 @@ import java.util.UUID;
 public class Group extends DataCommon {
     public String groupName = "";
     public String imageId = "";
+
+    @Override
+    public String toString() {
+        return "Name: " + groupName + " id: " + id + " image: " + imageId;
+    }
+    
+    
 }

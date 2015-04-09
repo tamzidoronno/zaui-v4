@@ -483,6 +483,14 @@ html {
     top: 0px;
 }
 
+.LeftMenu .menuName i {
+    font-size: 13px;
+}
+
+.LeftMenu .menu_0 {
+    cursor: pointer;
+}
+
 .LeftMenu .menu_1 .menuEntry,  
 .LeftMenu .menu_0 {
     background-color: inherit;

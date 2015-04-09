@@ -23,6 +23,7 @@ RewriteRule ^(documentation)($|/) - [L]
 RewriteRule ^(external)($|/) - [L]
 RewriteRule ^(scripts)($|/) - [L]
 
+RewriteRule ^sitemap2.xml$ sitemap.php [L]
 RewriteRule ^sitemap.xml$ sitemap.php [L]
 RewriteRule ^favicon.ico$ favicon.php [L]
 

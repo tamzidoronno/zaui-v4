@@ -4,7 +4,7 @@ namespace ns_8cc26060_eef2_48ac_8174_914f533dc7ed;
 class ProMeisterBosch extends \ApplicationBase implements \Application {
     private $company;
     
-    public $courses = ['Opel Insignia Sports Tourer'];
+    public $courses = ['Opel_Insignia_Sports_Tourer'];
     
     public function getDescription() {
         return "A bosch application for ProMeister";

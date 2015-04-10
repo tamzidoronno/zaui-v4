@@ -39,10 +39,10 @@ $prefix = $this->getPrefix();
         'adjust' : '<? echo $adjust; ?>',
         'originalSize' : '<? echo $originalSize; ?>',
         'link' : '<? echo $link; ?>',
-        'rotation' : '<? echo $rotation ?>',
-        'textFields' : '<? echo $textFields ?>'
+        'rotation' : <? echo $rotation ?>,
+        'textFields' : <? echo $textFields ?>
     }
-
+    
     var div = $('#imagedisplayer');
     
     var imageDisplayer = new getshop.ImageEditor(div, config, appId);

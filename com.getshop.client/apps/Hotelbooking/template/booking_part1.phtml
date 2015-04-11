@@ -85,7 +85,6 @@ if(isset($_GET['pagenumber'])) {
             month = "0" + month;
         }
         $('#end_date').val((moment(date).get('date')+1) + "." + month + "." + moment(date).get('year'));
-//        console.log("Selected date: " + dateText + "; input's current value: " + this.value + " epoch time: " + ts);
       }
     });
     $('.Hotelbooking #end_date').datepicker({ dateFormat: "dd.mm.yy" });

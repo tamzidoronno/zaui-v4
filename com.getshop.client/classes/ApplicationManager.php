@@ -111,6 +111,8 @@ class ApplicationManager extends FactoryBase {
         $config->type = $_POST['data']['type'];
         $config->heightMobile = $_POST['data']['heightMobile'];
         $config->displayNumbersOnDots = false;
+        $config->keepAspect = $_POST['data']['keepAspect'];
+        $config->windowWidth = $_POST['data']['windowWidth'];
         if($_POST['data']['carouselnumber'] == "true") {
             $config->displayNumbersOnDots = true;
         }

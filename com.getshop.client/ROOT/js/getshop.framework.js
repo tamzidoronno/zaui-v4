@@ -600,6 +600,8 @@ thundashop.framework = {
             carouselnumber: $(this).closest('.carouselsettingspanel').find('.gscarouselnumberconfig').is(':checked'),
             avoidrotate: $(this).closest('.carouselsettingspanel').find('.gsavoidrotate').is(':checked'),
             gsnavonmouseover: $(this).closest('.carouselsettingspanel').find('.gsnavonmouseover').is(':checked'),
+            keepAspect: $(this).closest('.carouselsettingspanel').find('.gskeepaspect').is(':checked'),
+            windowWidth: $(window).width(),
         }
 
         data['outerWidth'] = $('.gscontainercell[cellid="' + data['cellid'] + '"] .gsinner').outerWidth();

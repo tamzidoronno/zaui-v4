@@ -322,6 +322,16 @@ class Page {
                     ?>
                     <td align="right"><input type="checkbox" class="gsnavonmouseover" <? echo $displayNumbers; ?>></td>
                 </tr>
+                <tr>
+                    <td><? echo $this->factory->__w("Keep aspect ratio"); ?></td>
+                    <?
+                    $keepAspect= "";
+                    if($cell->carouselConfig->keepAspect) {
+                        $keepAspect = "CHECKED";
+                    }
+                    ?>
+                    <td align="right"><input type="checkbox" class="gskeepaspect" <? echo $keepAspect; ?>></td>
+                </tr>
             </table>
             <br>
             <input style="width: 100%;" class="savecarouselconfig" type="button" value="<? echo $this->factory->__w("Save settings"); ?>">
@@ -872,6 +882,19 @@ class Page {
         if ($this->factory->isMobile() || $this->editCarouselForMobile()) {
             $height = $config->heightMobile;
         }
+        
+        if($config->keepAspect) {
+            ?>
+            <script>
+            var aspectRatio = <? echo $config->height / $config->windowWidth; ?>;
+            var newHeight = $(window).width() * aspectRatio;
+            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').height(newHeight);
+            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').height(newHeight);
+            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').css('min-height',newHeight);
+            </script>
+            <?
+        }
+        
         ?>
         <script>
             var cellid = "<? echo $cell->cellId; ?>";

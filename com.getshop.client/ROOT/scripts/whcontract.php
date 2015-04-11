@@ -45,78 +45,91 @@ if($data->bookingPrice == 0) {
  $vars['total'] = round( $vars['total'], 2);
  $vars['singleprice'] = round( $vars['singleprice'], 2);
 
-$textNo = "UTLEIE AV OVERNATTINGSHYBEL
+$textNo = "VILKÅR FOR BRUK AV OVERNATTINGSHYBEL
+
+Dette dokumentet innebærer overlevering av tjenesten ved at eieren gir kunden rett til tilgang til overnattingshybelen i det angitte tidsrommet og på de angitte betingelser. 
+
 
 1. PARTER
-Leietaker: [renter]
+Eier: Halvdan Wilhelmsens Allé 22 AS
+Kunde: [renter]
 
-Utleier: 
-[rental]
+2. OVERNATTINGSHYBEL OG OVERLEVERING
+Wilhelmsen House, Halfdan Wilhelmsens alle 22, 3116 Tønsberg, leilighet nummer [____]
 
+Overnattingshybelen overtas fullt møblert i vanlig ryddet og rengjort stand. Overnattingshybelen aksepteres for øvrig "som den er" i samsvar med informasjon, tegninger og bilder på www.wh.no. Kunden har ikke rett til å bytte overnattingshybelen, og må akseptere mindre avvik fra oppgitt informasjon om overnattingshybelen.
 
+3. BRUKSPERIODE
+Kunden har krysset av på www.wh.no for om avtalen er ansett som kortidsbruk eller langtidsbruk. Denne avtalen er [kortidsbruk/langtidsbruk].
 
-2. LEIEOBJEKT OG OVERTAKELSE
-Wilhelmsen House, Halfdan Wilhelmsens alle 22, 3116 Tønsberg, leilighet type: <u>[roomName]</u>
+Bruksperioden er som valgt av kunden på www.wh.no og er bindende. Det er ikke anledning til å si opp avtalen før utløpet med mindre punkt 10 får anvendelse. 
 
-Leieobjektet overtas fullt møblert i vanlig ryddet og rengjort stand. Leieobjektet aksepteres for øvrig \"som den er\" i samsvar med informasjon, tegninger og bilder på [site]. Leietaker har ikke rett til å bytte leieobjekt, og må akseptere mindre avvik fra oppgitt informasjon om leieobjektet.
+Overnattingshybelen står tilgjengelig for bruk tidligst kl 15 på avtalt startdato for bruksperioden.
 
-3. LEIEPERIODE
-[periods]
+4. BETALING 
+Betaling: [_____] per dag (inkl mva). Total betaling utgjør kr [_____].
 
-4. BETALING AV LEIE
-Leieavgift: [singleprice] per dag (inkl mva). Total leie utgjør kr [total].
+Korttidsbruk: 
+Kunden betaler forskuddsvis gjennom betalingsfortalen på www.wh.no. 
 
-[startShortRental] 
-Leietaker har oppgitt informasjon om bankkort til Utleier på [site] ved inngåelse av leieavtalen. Utleier gis adgang til å sperre av tilstrekkelig beløp gjennom bankkortet til dekning av fullt leiebeløp. Når leieperioden er avsluttet, har Utleier rett til å trekke full leieavgift fra oppgitt bankkort.
-[endShortRental] 
+Landtidsbruk:  
+Kunden betaler forskuddsvis for den første og de to siste kalendermånedene i den bestilte bruksperioden gjennom betalingsportalen på www.wh.no. Deretter faktureres kunden månedsvis den første i hver måned for én måneds bruk av overnattingshybelen. Betaling for de to siste kalendermånedene vil avregnes mot forskuddet fra første innbetaling.
 
-[startLongRental] 
-Leietaker har oppgitt informasjon om bankkort til Utleier på [site] ved inngåelse av leieavtalen. Utleier har adgang til å sperre av tilstrekkelig beløp gjennom bankkortet til dekning av 60 dagers leie ad gangen. Utleier har adgang til å trekke leieavgift fra Leietakers bankkort etter 30 dager til dekning av påløpt leieperiode.
-[endLongRental] 
+Kunden er innforstått med at adgangskoden blir deaktivert dersom kunden ikke bidrar til oppfyllelse av sine forpliktelser etter dette punktet. 
 
-Leietaker er innforstått med at adgangskoden blir deaktivert dersom leietaker ikke bidrar til oppfyllelse av sine forpliktelser etter dette punktet. 
+5. KUNDENS PLIKTER
+Overnattingshybelen kan bare benyttes til beboelse og overnatting, og kan bare benyttes av kunden.
 
-5. LEIETAKERS PLIKTER
-Leieobjektet kan bare benyttes til beboelse og overnatting, og kan bare benyttes av leietaker.
+Kunden plikter å ivareta overnattingshybelen og fellesarealer med tilbørlig aktsomhet og i alminnelig god stand. Kunden må for øvrig opptre i samsvar med de til enhver tid gjeldende husordensregler, se www.wh.no.
 
-Leietaker plikter å ivareta leieobjektet med tilbørlig aktsomhet og i alminnelig god stand. Leietaker må for øvrig opptre i samsvar med husordensregler, se [site].
+Kunden skal varsle eier umiddelbart dersom det oppdages skade på eiendommen. 
 
-Leietaker skal varsle utleier umiddelbart dersom det oppdages skade på eiendommen. 
+Kunden skal gi eier adgang til overnattingshybelen for rengjøring etter punkt 6 og for øvrig nødvendig vedlikehold.
 
-Leietaker skal la Utleier får adgang til utleieobjektet for rengjøring etter punkt 6
+6. EIERENS PLIKTER
+Eieren skal sørge for rengjøring av overnattingshybelen hver femte dag. Kunden skal også rengjøre ved fraflytting av overnattingshybelen.
 
-6. UTLEIERS ANSVAR
-Utleier skal sørge for rengjøring av leieobjektet hver femte dag. Utleier skal rengjøre ved fraflytting av leieobjektet.
-
-Utleier skal holde leieobjektet forsikret. Utleier bærer for øvrig intet ansvar for skader, kostnader eller tap som måtte oppstå ved innbrudd, brann, røykutvikling, strømavbrudd, vannskade eller av andre årsaker. Leietaker er i denne forbindelse innforstått med at utleier skal holdes skadesløs.
+Eieren skal holde overnattingshybelen forsikret. Eieren bærer for øvrig intet ansvar for skader, kostnader eller tap som måtte oppstå ved innbrudd, brann, røykutvikling, strømavbrudd, vannskade eller av andre årsaker. Kunden er i denne forbindelse innforstått med at eieren skal holdes skadesløs.
 
 7. MISLIGHOLD
-Dersom leietaker påfører leieobjektet skade, skal utleier varsles umiddelbart. Utleier vil utbedre forholdet til leietakers kostnad.
+Dersom overnattingshybelen ikke er i samsvar med avtalte vilkår, skal kunden gi beskjed til eieren innen rimelig tid etter at forholdet blir oppdaget. Forsinket reklamasjon medfører tap av eventuelle misligholdssanksjoner. 
 
-Dersom leietaker misligholder sin plikt etter punkt 4, blir leietakers adgangskode deaktivert. Utleier kan kaste ut leietaker 3 dager etter at koden er blitt deaktivert såfremt leietaker ikke har rettet opp misligholdet. 
+Dersom kunden påfører overnattingshybelen skade, skal eieren varsles umiddelbart. Eieren vil utbedre forholdet til kundens kostnad. Dette vil bli fakturert særskilt.
 
-Dersom Leietaker misligholder sine plikter etter punkt 5, kan Utleier kaste ut Leietaker med 5 dagers varsel dersom forholdet ikke rettes opp umiddelbart. 
+Dersom kunden misligholder sin plikt etter punkt 4, blir kundens adgangskode deaktivert. Eieren kan kaste ut kunden 2 dager etter at koden er blitt deaktivert såfremt kunden ikke har rettet opp misligholdet. 
 
-Ved gjentatte brudd på denne avtalen kan utleier si opp avtalen med 10 dagers varsel.
+Dersom kunden misligholder sine plikter etter punkt 5, kan eieren kaste ut kunden med 4 dagers varsel dersom forholdet ikke rettes opp umiddelbart. 
+
+Ved gjentatte brudd på denne avtalen kan eieren si opp avtalen med 10 dagers varsel.
+
 
 8. FRAFLYTTING
-Leietaker plikter å flytte fra leieobjektet senest kl 12 den siste dagen av leieperioden. Leietaker skal ta med seg alle personlige eiendeler ved fraflytting av leieobjektet. 
+Kunden plikter å flytte fra overnattingshybelen senest kl 12 den siste dagen av bruksperioden. Kunden skal ta med seg alle personlige eiendeler ved fraflytting. 
 
-Dersom leietaker ikke flytter frivillig, vil utleier sørge for utflytting av leietaker.
-
-Utleier får håndpant i alle eiendeler som legges igjen i leieobjektet tilfaller utleier. Dersom utleier vurderer eiendelene å ha begrenset økonomisk verdi, står utleier fritt til å kaste eiendelene uten varsel.
+Kunden aksepterer at eieren får håndpant i alle eiendeler som legges igjen i overnattingshybelen. Dersom eieren vurderer at eiendelene har begrenset økonomisk verdi, står eieren fritt til å kaste eiendelene uten varsel.
 
 9. DIVERSE
-Husleieloven har ikke anvendelse på dette leieforholdet, jfr. husleieloven § 1-1 fjerde ledd.
+Husleieloven har ikke anvendelse på dette avtaleforholdet, jfr. husleieloven § 1-1 fjerde ledd.
 
-Leietaker vedtar at tvangsfravikelse kan gjennomføres etter tvangsfullbyrdelsesloven § 13-2 tredje ledd alternativ a.
+Kunden vedtar at tvangsfravikelse kan gjennomføres etter tvangsfullbyrdelsesloven § 13-2 tredje ledd alternativ a.
 
-Leietaker vedtar at tvangsfravikelse kan gjennomføres etter tvangsfullbyrdelsesloven § 13-2 tredje ledd alternativ b.
+Kunden vedtar at tvangsfravikelse kan gjennomføres etter tvangsfullbyrdelsesloven § 13-2 tredje ledd alternativ b.
+
+Ettersom levering anses å finne sted ved endelig bestilling og oversendelse av avtalen, får ikke reglene om avbestilling etter forbrukerkjøpsloven § 41 anvendelse på avtaleforholdet. 
+
+Ettersom avtalen faller inn under angrerettloven § 22 bokstav m), får ikke regler om angrerett anvendelse på avtaleforholdet.
+
+10.  SÆRSKILT OM OPPSIGELSE VED VALG AV FLEKSILØSNING 
+Dersom kunden har inngått avtale om langtidsbruk over 3 kalendermåneder og har krysset av for fleksiløsning, kan kunden si opp avtalen med 2 måneders skriftlig varsel. Dersom avtalen sies opp, vil betaling for resten av bruksperioden dekkes av innbetalt forskudd. 
+
+Det løper en særskilt avgift for fleksiløsning som fremkommer av totalprisen i punkt 4.
+
 
 
 
 Sign: 
-Dette dokumentet anses elektronisk signert på vegne av leietaker.";
+Dette dokumentet anses elektronisk signert på vegne av kunden.
+";
 
 foreach($vars as $key => $val) {
     $textNo = str_replace("[$key]", $val, $textNo);

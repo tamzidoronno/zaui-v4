@@ -21,5 +21,11 @@ class core_pagemanager_data_CarouselConfig {
 	/** @var String */
 	public $navigateOnMouseOver;
 
+	/** @var String */
+	public $keepAspect;
+
+	/** @var String */
+	public $windowWidth;
+
 }
 ?>

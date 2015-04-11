@@ -144,6 +144,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/jquery.form.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jcrop/js/jquery.Jcrop.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="/js/colresize.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="/js/moments.js"></script>';
         
         // Photoswipe
         echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/photoswipe.css">';

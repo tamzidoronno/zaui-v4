@@ -7,7 +7,8 @@ body {
 
 .gs_page_width {
     margin: auto;
-    width: 1160px;
+    max-width: 1160px;
+    min-width: 1024px;
 }
 .shop_button {
     color: #FFF;

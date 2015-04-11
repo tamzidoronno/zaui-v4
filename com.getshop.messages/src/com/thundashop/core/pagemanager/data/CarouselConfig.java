@@ -8,4 +8,6 @@ public class CarouselConfig {
     public Boolean displayNumbersOnDots = false;
     public Boolean avoidRotate = false;
     public Boolean navigateOnMouseOver = false;
+    public Boolean keepAspect = false;
+    public Integer windowWidth = -1;
 }

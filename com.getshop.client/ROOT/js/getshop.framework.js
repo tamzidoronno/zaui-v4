@@ -613,6 +613,9 @@ thundashop.framework = {
     showCarouselSettings: function () {
         var cellid = $(this).closest('.gscontainercell').attr('cellid');
         var panel = $(this).closest('.gscontainercell').find('.carouselsettingspanel');
+        if(panel.find('.gskeepaspect').is(':checked')) {
+            panel.find('.gscarouselheight').val($(this).closest('.gscontainercell').height());
+        }
         panel.css('left', $(this).offset().left);
         panel.css('top', $(this).parent().position().top);
         panel.attr('cellid', cellid);

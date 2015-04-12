@@ -274,10 +274,24 @@ class Page {
                 <i class="fa fa-close gs_closecarouselsettings"></i>
             </div>
             <b><? echo $this->factory->__w("Container operations"); ?></b><br>
+            
+            <?
+            $options = array();
+            $options["slideleft"] = $this->factory->__w("Slide left");
+            $options["slideright"] = $this->factory->__w("Slide right");
+            $options["fade"] = $this->factory->__w("Fade");
+            ?>
+            
             <select style="width: 100%;" class="gscarouseltype">
-                <option value='slideleft'><? echo $this->factory->__w("Slide left"); ?></option>
-                <option value='slideright'><? echo $this->factory->__w("Slide right"); ?></option>
-                <option value='fade'><? echo $this->factory->__w("Fade"); ?></option>
+                <? 
+                foreach($options as $key => $val) {
+                    $selected = "";
+                    if($cell->carouselConfig->type == $key) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='$key' $selected>$val</option>";
+                }
+                ?>
             </select>
             <table width="100%">
                 <tr>

@@ -1561,6 +1561,20 @@ class APIGetShop {
 	}
 
 	/**
+	* Create a new webpage
+	* @return void
+	*/
+
+	public function saveSmsCallback($core_getshop_data_SmsResponse) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_getshop_data_SmsResponse"] = json_encode($this->transport->object_unset_nulls($core_getshop_data_SmsResponse));
+	     $data["method"] = "saveSmsCallback";
+	     $data["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	*
 	* @param ids
 	* @throws ErrorException
@@ -2945,6 +2959,26 @@ class APIMessageManager {
 	     $data['args']["fromName"] = json_encode($this->transport->object_unset_nulls($fromName));
 	     $data['args']["attachments"] = json_encode($this->transport->object_unset_nulls($attachments));
 	     $data["method"] = "sendMailWithAttachments";
+	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get how many messages a user has sent.
+	*
+	* @param year
+	* @param month
+	* @return void
+	*/
+
+	public function updateSmsStatus($status, $messageId, $timestamp, $charge) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["status"] = json_encode($this->transport->object_unset_nulls($status));
+	     $data['args']["messageId"] = json_encode($this->transport->object_unset_nulls($messageId));
+	     $data['args']["timestamp"] = json_encode($this->transport->object_unset_nulls($timestamp));
+	     $data['args']["charge"] = json_encode($this->transport->object_unset_nulls($charge));
+	     $data["method"] = "updateSmsStatus";
 	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
 	     return $this->transport->sendMessage($data);
 	}

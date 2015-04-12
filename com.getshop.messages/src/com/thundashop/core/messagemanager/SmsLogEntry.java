@@ -6,10 +6,14 @@ import java.util.Date;
 public class SmsLogEntry extends DataCommon {
     public String to = "";
     public String message = "";
-    public String clicatellSenderResponse = "";
+    public String responseCode = "";
+    public String errorCode = "";
     public String apiId = "";
     public String prefix = "";
     public Date date = new Date();
-    public Long delivered;
-    public Integer status;
+    public Date delivered = null;
+    public String status = null;
+    public String from;
+    public String msgId;
+    public String network;
 }

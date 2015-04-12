@@ -1644,6 +1644,21 @@ class GetShop(object):
     data.interfaceName = "core.getshop.IGetShop"
     return self.communicationHelper.sendMessage(data)
 
+  def saveSmsCallback(self, smsResponses):
+    args = collections.OrderedDict()
+    if isinstance(smsResponses,GetShopBaseClass): 
+      args["smsResponses"]=json.dumps(smsResponses.__dict__)
+    else:
+      try:
+        args["smsResponses"]=json.dumps(smsResponses)
+      except (ValueError, AttributeError):
+        args["smsResponses"]=smsResponses
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveSmsCallback"
+    data.interfaceName = "core.getshop.IGetShop"
+    return self.communicationHelper.sendMessage(data)
+
   def setApplicationList(self, ids, partnerId, password):
     args = collections.OrderedDict()
     if isinstance(ids,GetShopBaseClass): 
@@ -2981,6 +2996,42 @@ class MessageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "sendMailWithAttachments"
+    data.interfaceName = "core.messagemanager.IMessageManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def updateSmsStatus(self, status, messageId, timestamp, charge):
+    args = collections.OrderedDict()
+    if isinstance(status,GetShopBaseClass): 
+      args["status"]=json.dumps(status.__dict__)
+    else:
+      try:
+        args["status"]=json.dumps(status)
+      except (ValueError, AttributeError):
+        args["status"]=status
+    if isinstance(messageId,GetShopBaseClass): 
+      args["messageId"]=json.dumps(messageId.__dict__)
+    else:
+      try:
+        args["messageId"]=json.dumps(messageId)
+      except (ValueError, AttributeError):
+        args["messageId"]=messageId
+    if isinstance(timestamp,GetShopBaseClass): 
+      args["timestamp"]=json.dumps(timestamp.__dict__)
+    else:
+      try:
+        args["timestamp"]=json.dumps(timestamp)
+      except (ValueError, AttributeError):
+        args["timestamp"]=timestamp
+    if isinstance(charge,GetShopBaseClass): 
+      args["charge"]=json.dumps(charge.__dict__)
+    else:
+      try:
+        args["charge"]=json.dumps(charge)
+      except (ValueError, AttributeError):
+        args["charge"]=charge
+    data = EmptyClass()
+    data.args = args
+    data.method = "updateSmsStatus"
     data.interfaceName = "core.messagemanager.IMessageManager"
     return self.communicationHelper.sendMessage(data)
 

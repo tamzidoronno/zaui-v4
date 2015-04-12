@@ -5,6 +5,7 @@
 package com.thundashop.core.messagemanager;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
@@ -119,13 +120,11 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         InputStream is = null;
         DataInputStream dis;
         try {
-            message = URLEncoder.encode(message, "ISO-8859-1");
-            String urlString = "http://api.clickatell.com/http/sendmsg?user="+username+"&password="+password+"&callback=3&api_id="+apiId+"&concat=3&to="+prefix+to;
-            if(from != null && !from.isEmpty()) {
-                urlString += "&from="+from;
+            message = URLEncoder.encode(message, "UTF-8");
+            if(from == null || from.isEmpty()) {
+                from = "GetShop";
             }
-            urlString += "&text="+message;
-            
+            String urlString = "https://rest.nexmo.com/sms/json?api_key=cffe6fd9&api_secret=9509ef6b&client-ref="+storeId+"&status-report-req=1&from="+from+"&to="+prefix+to+"&text="+message;
             url = new URL(urlString);
             dis = new DataInputStream(new BufferedInputStream(is));
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -136,16 +135,22 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
                 content += inputLine;
             in.close();
             
-            SmsLogEntry entry = new SmsLogEntry();
-            entry.clicatellSenderResponse = content;
-            entry.message = message;
-            entry.to = to;
-            entry.apiId = apiId;
-            entry.prefix = prefix;
+            Gson gson = new Gson();
+            NexmoResponse response = gson.fromJson(content, NexmoResponse.class);
             
-            this.messageManager.saveToLog(entry);
-            
-            if(!content.trim().startsWith("ID:")) {
+            if(response.messages.size() > 0) {
+                SmsLogEntry entry = new SmsLogEntry();
+                entry.responseCode = response.messages.get(0).status;
+                entry.message = message;
+                entry.to = to;
+                entry.apiId = apiId;
+                entry.prefix = prefix;
+                entry.from = from;
+                entry.network = response.messages.get(0).network;
+                entry.msgId = response.messages.get(0).msgId;
+                
+                this.messageManager.saveToLog(entry);
+            } else {
                 logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message);
                 System.out.println(content);
                 return;

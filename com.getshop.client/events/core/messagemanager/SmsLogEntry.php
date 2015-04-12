@@ -7,7 +7,10 @@ class core_messagemanager_SmsLogEntry extends core_common_DataCommon  {
 	public $message;
 
 	/** @var String */
-	public $clicatellSenderResponse;
+	public $responseCode;
+
+	/** @var String */
+	public $errCode;
 
 	/** @var String */
 	public $apiId;
@@ -17,6 +20,21 @@ class core_messagemanager_SmsLogEntry extends core_common_DataCommon  {
 
 	/** @var String */
 	public $date;
+
+	/** @var String */
+	public $delivered;
+
+	/** @var String */
+	public $status;
+
+	/** @var String */
+	public $from;
+
+	/** @var String */
+	public $msgId;
+
+	/** @var String */
+	public $network;
 
 }
 ?>

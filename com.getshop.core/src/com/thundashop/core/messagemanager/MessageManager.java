@@ -8,11 +8,14 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.GetShop;
+import com.thundashop.core.getshop.data.SmsResponse;
 import com.thundashop.core.storemanager.StorePool;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -64,6 +67,9 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     
     @Autowired
     private StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    private GetShop getShop;
     
     @PostConstruct
     public void createSmsFactory() {
@@ -181,16 +187,17 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
     @Override
     public List<SmsLogEntry> getSmsLog() {
+        for(SmsLogEntry entry : smsLogEntries) {
+            if(entry.status == null && entry.msgId != null) {
+                SmsResponse response = getShop.getSmsResponse(entry.msgId);
+                if(response != null) {
+                    entry.errorCode = response.errCode;
+                    entry.delivered = response.deliveryTime;
+                    saveObject(entry);
+                }
+            }
+        }
         return smsLogEntries;
     }
 
-    @Override
-    public void updateSmsStatus(Integer status, String messageId, Long timestamp, Double charge) {
-        for(SmsLogEntry entry : smsLogEntries) {
-            if(entry.clicatellSenderResponse.contains(messageId)) {
-                entry.status = status;
-                entry.delivered = timestamp;
-            }
-        }
-    }
 }

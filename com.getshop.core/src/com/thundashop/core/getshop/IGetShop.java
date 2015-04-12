@@ -4,11 +4,13 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.PartnerData;
+import com.thundashop.core.getshop.data.SmsResponse;
 import com.thundashop.core.getshop.data.StartData;
 import com.thundashop.core.getshop.data.StoreCreatedData;
 import com.thundashop.core.getshop.data.WebPageData;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.User;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -72,6 +74,8 @@ public interface IGetShop {
      * @return 
      */
     public Store createWebPage(WebPageData webpageData) throws ErrorException;
+    
+    public void saveSmsCallback(SmsResponse smsResponses);
     
     public String startStoreFromStore(StartData startData);
 }

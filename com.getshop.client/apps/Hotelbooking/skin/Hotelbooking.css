@@ -91,7 +91,7 @@ position: relative;
 .Hotelbooking .right_aligned_price { float:right; }
 .Hotelbooking .section.even { background-color:#E8DCCC; }
 .Hotelbooking .section.inner { max-width: 1160px; margin: auto; padding-top:20px; padding-bottom: 20px; }
-.Hotelbooking .summary_total { border-top: solid 1px #E8DCCC; border-bottom: solid 1px #E8DCCC; margin-top: 10px; padding-top: 5px; padding-bottom: 5px; font-weight:bold; }
+.Hotelbooking .summary_total { border-top: solid 1px #c9b9a3; border-bottom: solid 1px #c9b9a3; margin-top: 10px; padding-top: 5px; padding-bottom: 5px; font-weight:bold; }
 .Hotelbooking .price_row { padding: 3px; }
 .Hotelbooking .bookingsummary input { border: solid 1px #c9b9a3; border-radius: 2px; padding: 3px; }
 .Hotelbooking .invalid { background-color:#ffd9d9; }

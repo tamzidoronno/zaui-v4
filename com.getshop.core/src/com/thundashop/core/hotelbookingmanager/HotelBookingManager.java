@@ -548,9 +548,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         User user = userManager.getUserByReference(bdata.additonalInformation.customerReference);
         if (user != null) {
             message = message.replaceAll("\\{email\\}", user.emailAddress);
-            message = message.replaceAll("\\{address\\}", user.address.address);
-            message = message.replaceAll("\\{postCode\\}", user.address.postCode);
-            message = message.replaceAll("\\{city\\}", user.address.city);
+            if(user.address != null) {
+                message = message.replaceAll("\\{address\\}", user.address.address);
+                message = message.replaceAll("\\{postCode\\}", user.address.postCode);
+                message = message.replaceAll("\\{city\\}", user.address.city);
+            } else {
+                message = message.replaceAll("\\{address\\}", "");
+                message = message.replaceAll("\\{postCode\\}", "");
+                message = message.replaceAll("\\{city\\}", "");
+            }
         }
             
         return message;

@@ -15,7 +15,9 @@ class Clickatell extends \MarketingApplication implements \Application {
     public function postProcess() {
         
     }
-    
+    public function renderDashBoardWidget() {
+        $this->includefile("dashboardwidget");
+    }
     public function preProcess() {
         
     }

@@ -2875,6 +2875,28 @@ class APIMessageManager {
 	}
 
 	/**
+	* Sending a mail with attachments,
+	*
+	* Map<Key, Value> - Key = FileName in attchments, Value = Base64 encoded stuff
+	*
+	* @param to
+	* @param toName
+	* @param subject
+	* @param content
+	* @param from
+	* @param fromName
+	* @param attachments
+	*/
+
+	public function getSmsLog() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getSmsLog";
+	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Send a mail.
 	* @param to The address to send to
 	* @param toName The name of the one receiving it.

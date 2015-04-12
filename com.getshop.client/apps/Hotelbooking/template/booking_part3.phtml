@@ -24,7 +24,9 @@ $flexPrice = $this->getDayCount() * $flexProduct->price;
     <div class="booking_contact_data section even">
         <div class="section inner">
             <?
-            $this->includefile("bookingadditionalinfo");
+            if(!ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
+                $this->includefile("bookingadditionalinfo");
+            }
 
             if ($this->hasErrors()) {
                 echo "<div>";

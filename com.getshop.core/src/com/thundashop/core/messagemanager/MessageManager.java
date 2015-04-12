@@ -21,7 +21,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -41,6 +43,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     
     private SubscribedToAirgram airgramSubscriptions = new SubscribedToAirgram();
     private CollectedEmails collectedEmails = new CollectedEmails();
+    private List<SmsLogEntry> smsLogEntries = new ArrayList();
 
     private SMSFactory smsFactory;
     
@@ -64,7 +67,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     
     @PostConstruct
     public void createSmsFactory() {
-        smsFactory = new SMSFactoryImpl(logger, database, frameworkConfig, databaseSaver, storeManager, storeApplicationPool);
+        smsFactory = new SMSFactoryImpl(logger, database, frameworkConfig, databaseSaver, storeManager, storeApplicationPool, this);
         smsFactory.setStoreId(storeId);
     }
 
@@ -86,6 +89,9 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             }
             if (dataCommon instanceof CollectedEmails) {
                 collectedEmails = (CollectedEmails) dataCommon;
+            }
+            if(dataCommon instanceof SmsLogEntry) {
+                smsLogEntries.add((SmsLogEntry)dataCommon);
             }
         }
     }
@@ -132,6 +138,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     }
 
     public void sendSms(String to, String message) {
+        smsFactory.setMessageManager(this);
         smsFactory.send("", to, message);
     }
 
@@ -164,5 +171,16 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    void saveToLog(SmsLogEntry entry) {
+        entry.storeId = storeId;
+        databaseSaver.saveObject(entry, credentials);
+        smsLogEntries.add(entry);
+    }
+
+    @Override
+    public List<SmsLogEntry> getSmsLog() {
+        return smsLogEntries;
     }
 }

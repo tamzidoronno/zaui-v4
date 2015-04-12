@@ -2869,6 +2869,14 @@ class MessageManager(object):
     data.interfaceName = "core.messagemanager.IMessageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getSmsLog(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSmsLog"
+    data.interfaceName = "core.messagemanager.IMessageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def sendMail(self, to, toName, subject, content, fromm, fromName):
     args = collections.OrderedDict()
     if isinstance(to,GetShopBaseClass): 

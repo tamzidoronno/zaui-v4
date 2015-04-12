@@ -49,15 +49,17 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     private FrameworkConfig frameworkConfig;
     private DatabaseSaver databaseSaver;
     private StorePool storeManager;
+    private MessageManager messageManager;
     private StoreApplicationPool storeApplicationPool;
     private String username;
     private String apiId;
     private String password;
     private String prefix;
 
-    public SMSFactoryImpl(Logger logger, Database database, FrameworkConfig frameworkConfig, DatabaseSaver databaseSaver, StorePool storeManager, StoreApplicationPool storeApplicationPool) {
+    public SMSFactoryImpl(Logger logger, Database database, FrameworkConfig frameworkConfig, DatabaseSaver databaseSaver, StorePool storeManager, StoreApplicationPool storeApplicationPool, MessageManager messageManager) {
         this.logger = logger;
         this.database = database;
+        this.messageManager = messageManager;
         this.frameworkConfig = frameworkConfig;
         this.databaseSaver = databaseSaver;
         this.storeManager = storeManager;
@@ -95,6 +97,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.password = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("password");
         impl.prefix = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("numberprefix");
         impl.from = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("from");
+        impl.messageManager = messageManager;
         
         new Thread(impl).start();
     }
@@ -133,11 +136,21 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
                 content += inputLine;
             in.close();
             
+            SmsLogEntry entry = new SmsLogEntry();
+            entry.clicatellSenderResponse = content;
+            entry.message = message;
+            entry.to = to;
+            entry.apiId = apiId;
+            entry.prefix = prefix;
+            
+            this.messageManager.saveToLog(entry);
+            
             if(!content.trim().startsWith("ID:")) {
                 logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message);
                 System.out.println(content);
                 return;
             }
+            
         } catch (IOException ex) {
             logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message, ex);
             return;
@@ -180,5 +193,10 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         }
         
         return count;
+    }
+
+    @Override
+    public void setMessageManager(MessageManager manager) {
+        this.messageManager = manager;
     }
 }

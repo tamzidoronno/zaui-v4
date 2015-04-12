@@ -53,4 +53,6 @@ public interface IMessageManager  {
     
     public void collectEmail(String email);
     
+    public void updateSmsStatus(Integer status, String messageId, Long timestamp, Double charge);
+    
 }

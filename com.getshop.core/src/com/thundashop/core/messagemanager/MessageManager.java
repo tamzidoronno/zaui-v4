@@ -183,4 +183,14 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     public List<SmsLogEntry> getSmsLog() {
         return smsLogEntries;
     }
+
+    @Override
+    public void updateSmsStatus(Integer status, String messageId, Long timestamp, Double charge) {
+        for(SmsLogEntry entry : smsLogEntries) {
+            if(entry.clicatellSenderResponse.contains(messageId)) {
+                entry.status = status;
+                entry.delivered = timestamp;
+            }
+        }
+    }
 }

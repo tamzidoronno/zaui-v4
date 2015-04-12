@@ -10,4 +10,6 @@ public class SmsLogEntry extends DataCommon {
     public String apiId = "";
     public String prefix = "";
     public Date date = new Date();
+    public Long delivered;
+    public Integer status;
 }

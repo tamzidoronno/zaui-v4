@@ -120,7 +120,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         DataInputStream dis;
         try {
             message = URLEncoder.encode(message, "ISO-8859-1");
-            String urlString = "http://api.clickatell.com/http/sendmsg?user="+username+"&password="+password+"&api_id="+apiId+"&concat=3&to="+prefix+to;
+            String urlString = "http://api.clickatell.com/http/sendmsg?user="+username+"&password="+password+"&callback=3&api_id="+apiId+"&concat=3&to="+prefix+to;
             if(from != null && !from.isEmpty()) {
                 urlString += "&from="+from;
             }

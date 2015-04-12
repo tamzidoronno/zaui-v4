@@ -2,7 +2,7 @@
 
 include '../loader.php';
 
-$api_id = $_GET['apid_id'];
+$sender = $_GET['apid_id'];
 $apiMsgId = $_GET['apiMsgId'];
 $cliMsgId = $_GET['cliMsgId'];
 $timestamp = (int)$_GET['timestamp'];

@@ -153,25 +153,40 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public void reserveRoom(long startDate, long endDate, Integer count) throws ErrorException {
+    public Integer reserveRoom(long startDate, long endDate, Integer count) throws ErrorException {
         AdditionalBookingInformation additional = getCurrentUserBookingData().additonalInformation;
-        List<Room> availableRoom = getAvailableRooms(additional.roomProductId, startDate, endDate);
+        List<String> roomProductIds = getAllRoomProductIds();
+        
+        boolean found = false;
         List<Room> roomsToBook = new ArrayList();
-        for(Room room : availableRoom) {
-            
-            if(additional.needHandicap && !room.isHandicap) {
-                continue;
+        for(String otherProductId : roomProductIds) {
+            List<Room> availableRoom = getAvailableRooms(additional.roomProductId, startDate, endDate);
+            roomsToBook = new ArrayList();
+            for(Room room : availableRoom) {
+
+                if(additional.needHandicap && !room.isHandicap) {
+                    continue;
+                }
+
+                roomsToBook.add(room);
+                if(roomsToBook.size() == count) {
+                    break;
+                }
             }
-            
-            roomsToBook.add(room);
-            if(roomsToBook.size() == count) {
+
+            if(roomsToBook.size() < count) {
+                additional.roomProductId = otherProductId;
+            } else {
+                found = true;
                 break;
             }
         }
         
-        if(roomsToBook.size() < count) {
-            throw new ErrorException(1032);
+        if(!found) {
+            //All rooms are taken in this periode. :(
+            return -1;
         }
+        
         
         Date start = new Date(startDate * 1000);
         Calendar cal = Calendar.getInstance();
@@ -203,6 +218,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         bookingData.references.add(reference);
         saveObject(bookingData);
+        return 1;
     }
 
     private int genereateReferenceId() throws ErrorException {
@@ -932,6 +948,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         
         return added;
+    }
+
+    private List<String> getAllRoomProductIds() {
+        HashMap<String, String> ids = new HashMap();
+        for(Room room : getAllRooms()) {
+            ids.put(room.productId, "");
+        }
+        
+        return new ArrayList(ids.keySet());
     }
 
 }

@@ -9,61 +9,69 @@ $flexProduct = $this->getFlexProduct();
 $loggedOn = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
 $flexPrice = $this->getDayCount() * $flexProduct->price;
 ?>
-<br>
 <div class="bookingsummary" gstype="form"  method="completeRegularCheckout">
-    <? $this->includefile("pricesummary"); ?>
-    <div class="booking_contact_data">
-        <?
-        $this->includefile("visitorinformation");
+    <div class="section even">
+        <div class="section inner">
+            <? $this->includefile("pricesummary"); ?>
+        </div>
+    </div>
+    <div class="section odd">
+        <div class="section inner">
+            <? $this->includefile("visitorinformation"); ?>
+        </div>
+    </div>
 
-        $this->includefile("bookingadditionalinfo");
+    <div class="booking_contact_data section even">
+        <div class="section inner">
+            <?
+            $this->includefile("bookingadditionalinfo");
 
-        if ($this->hasErrors()) {
-            echo "<div>";
-            echo $this->__w("All fields are required, please fill in the fields in red.");
-            foreach ($this->errors as $error) {
-                echo "<div>" . $error . "</div>";
+            if ($this->hasErrors()) {
+                echo "<div>";
+                echo $this->__w("All fields are required, please fill in the fields in red.");
+                foreach ($this->errors as $error) {
+                    echo "<div>" . $error . "</div>";
+                }
+                echo "</div>";
             }
-            echo "</div>";
-        }
 
-        
-        if($this->getPost("customer_type") || $loggedOn) {
-            if ($this->checkFailedReservation()) {
-                echo $this->__w("Failed to reserve room... please contact us.");
-            } else {
-                ?>
-            <div>
-                <label style='padding: 5px;'>
-                    <input type='checkbox' class='checkNeedFlex' gsname='userData][needFlex]' <?
-                    if ($this->getNeedFlexPrice()) {
-                        echo "CHECKED";
-                    }
-                    ?>> Jeg ønsker fleksibel booking (<? echo $flexPrice; ?> kr i tillegg inklusiv moms).
-                </label>
-            </div>
-            <div>
-                <label style='padding: 5px;'>
-                    <input type='checkbox' class='checklicenagreement' gsname='userData][checklicenagreement]' <?
-                    if ($this->getPost("checklicenagreement") == "true") {
-                        echo "CHECKED";
-                    }
-                    ?>> Jeg har lest og akseptert <a href='/scripts/whcontract.php' class='gs_ignorenavigate' target='_new'>avtalevilkårene</a> for leie hos Wilhelmsen House.
-                           <?
-                           if ($this->validateInput("checklicenagreement")) {
-                               echo "<div style='color:red; padding-left: 10px'>* Du må godta avtalevilkårene først.</div>";
-                           }
-                           ?>
-                </label>
-            </div>
-                <div style="text-align:right;">
-                    <?
-                    echo '<div class="continue_to_cart_button common_input" gstype="submit">' . $continueCartButtonText . '</div>';
+
+            if($this->getPost("customer_type") || $loggedOn) {
+                if ($this->checkFailedReservation()) {
+                    echo $this->__w("Failed to reserve room... please contact us.");
+                } else {
                     ?>
+                <div>
+                    <label style='padding: 5px;'>
+                        <input type='checkbox' class='checkNeedFlex' gsname='userData][needFlex]' <?
+                        if ($this->getNeedFlexPrice()) {
+                            echo "CHECKED";
+                        }
+                        ?>> Jeg ønsker fleksibel booking (<? echo $flexPrice; ?> kr i tillegg inklusiv moms).
+                    </label>
                 </div>
+                <div>
+                    <label style='padding: 5px;'>
+                        <input type='checkbox' class='checklicenagreement' gsname='userData][checklicenagreement]' <?
+                        if ($this->getPost("checklicenagreement") == "true") {
+                            echo "CHECKED";
+                        }
+                        ?>> Jeg har lest og akseptert <a href='/scripts/whcontract.php' class='gs_ignorenavigate' target='_new'>avtalevilkårene</a> for leie hos Wilhelmsen House.
+                               <?
+                               if ($this->validateInput("checklicenagreement")) {
+                                   echo "<div style='color:red; padding-left: 10px'>* Du må godta avtalevilkårene først.</div>";
+                               }
+                               ?>
+                    </label>
+                </div>
+                    <div style="text-align:right;">
+                        <?
+                        echo '<div class="continue_to_cart_button common_input" gstype="submit">' . $continueCartButtonText . '</div>';
+                        ?>
+                    </div>
+            <? } ?>
         <? } ?>
-    <? } ?>
+        </div>
     </div>
 </div>
-<br>
 <div style='clear:both;'></div>

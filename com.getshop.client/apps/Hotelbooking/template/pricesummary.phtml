@@ -13,17 +13,7 @@ $flexProduct = $this->getFlexProduct();
         <h1><? echo $this->__w("Summary"); ?></h1>
     </div>
     <div class="seperator"></div>
-    <? if(!$this->isPartnershipBooking()) { ?>
-        <div class='price_row'>
-            <? echo $bookTime; ?>
-            <span class='right_aligned_price'>
-                <?
-                echo date("d. M Y", $this->getStart()) . " " . $this->__w("to") . " " . date("d. M Y", $this->getEnd());
-                ?>
-            </span>
-        </div>
     <?
-    }
     $total = 0;
     $totalDiff = 0;
     $cart = $this->getApi()->getCartManager()->getCart();
@@ -40,17 +30,14 @@ $flexProduct = $this->getFlexProduct();
             $nightTextToPrint = $nightsText;
         }
         $text = $cartItem->count . " " . $nightTextToPrint . " " . $inText . " " . strtolower($product->name);
+        
+        $text .= " - " . date("d.m.Y", strtotime($cartItem->startDate)) . " " . $this->__w("to") . " " . date("d.m.Y", strtotime($cartItem->endDate));
+
+        
         if($product->id == $flexProduct->id) {
             $text = "Tillegg for flexibel leie";
         }
 
-        if($this->isPartnershipBooking()) {
-             $text .=  "<br>&nbsp;&nbsp;&nbsp;<b>For følgende opphold</b>";
-            foreach($this->getBookingData()->references as $partnerReservations) {
-                $text .= "<br>";
-                $text .=  "&nbsp;&nbsp;&nbsp;" . date("d-m-Y", strtotime($partnerReservations->startDate)) . " - " . date("d-m-Y", strtotime($partnerReservations->endDate));
-            }
-        }
         $text .= "<br>";
         
         $price = $cartItem->product->original_price * $cartItem->count;

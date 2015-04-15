@@ -7,6 +7,7 @@ package com.thundashop.core.cartmanager.data;
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +22,8 @@ public class CartItem implements Serializable {
     private Product product;
     
     private int count = 0;
+    public Date startDate;
+    public Date endDate;
 
     CartItem() {
     }

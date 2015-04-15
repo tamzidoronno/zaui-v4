@@ -787,21 +787,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         UsersBookingData bookingData = getCurrentUserBookingData();
         cartManager.clear();
         int totalNights = 0;
-        if(bookingData.additonalInformation.isPartner) {
-            int count = 0;
-            for(BookingReference reference : bookingData.references) {
-                count += reference.getNumberOfNights();
-                totalNights += reference.getNumberOfNights();
-            }
-            cartManager.addProductItem(bookingData.additonalInformation.roomProductId, count);
-            
-        } else {
-            for(BookingReference reference : bookingData.references) {
-                totalNights += reference.getNumberOfNights();
-                for(int i = 0; i < reference.roomsReserved.size(); i++) {
-                    int count = reference.getNumberOfNights();
-                    cartManager.addProductItem(bookingData.additonalInformation.roomProductId, count);
-                }
+        
+        for(BookingReference reference : bookingData.references) {
+            totalNights += reference.getNumberOfNights();
+            for(int i = 0; i < reference.roomsReserved.size(); i++) {
+                int count = reference.getNumberOfNights();
+                CartItem cartItem = cartManager.addProductItem(bookingData.additonalInformation.roomProductId, count);
+                cartItem.startDate = reference.startDate;
+                cartItem.endDate = reference.endDate;
+                
             }
         }
         

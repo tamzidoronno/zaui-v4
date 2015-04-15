@@ -971,7 +971,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             
             if(bdata.started != null && !bdata.sessionId.isEmpty()) {
                 long diff = (new Date().getTime() - bdata.started.getTime())/1000;
-                System.out.println("Time diff: " + diff);
                 if(diff > 3600) {
                     //Booking session timed out.
                     remove = true;

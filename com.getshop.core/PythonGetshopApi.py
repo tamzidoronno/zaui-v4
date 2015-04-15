@@ -2755,6 +2755,14 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def checkForRecurringPayments(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "checkForRecurringPayments"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def createOrder(self, address):
     args = collections.OrderedDict()
     if isinstance(address,GetShopBaseClass): 
@@ -2946,6 +2954,28 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "setAllOrdersAsTransferedToAccountSystem"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setExpiryDate(self, orderId, date):
+    args = collections.OrderedDict()
+    if isinstance(orderId,GetShopBaseClass): 
+      args["orderId"]=json.dumps(orderId.__dict__)
+    else:
+      try:
+        args["orderId"]=json.dumps(orderId)
+      except (ValueError, AttributeError):
+        args["orderId"]=orderId
+    if isinstance(date,GetShopBaseClass): 
+      args["date"]=json.dumps(date.__dict__)
+    else:
+      try:
+        args["date"]=json.dumps(date)
+      except (ValueError, AttributeError):
+        args["date"]=date
+    data = EmptyClass()
+    data.args = args
+    data.method = "setExpiryDate"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 

@@ -31,6 +31,15 @@ class core_ordermanager_data_Order extends core_common_DataCommon  {
 	public $createdDate;
 
 	/** @var String */
+	public $expiryDate;
+
+	/** @var String */
+	public $recurringDays;
+
+	/** @var String */
+	public $recurringMonths;
+
+	/** @var String */
 	public $userId;
 
 	/** @var String */

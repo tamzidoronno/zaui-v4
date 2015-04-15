@@ -7,6 +7,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -134,4 +135,22 @@ public interface IOrderManager {
 
 	@Administrator
 	public void setAllOrdersAsTransferedToAccountSystem() throws ErrorException;
+	
+	/**
+	 * Checks if there is any orders that has expired.
+	 * 
+	 * @throws ErrorException 
+	 */
+	@Administrator
+	public void checkForRecurringPayments() throws ErrorException;
+	
+	/**
+	 * Set an expiry date for an order.
+	 * 
+	 * @param orderId
+	 * @param date
+	 * @throws ErrorException 
+	 */
+	@Administrator
+	public void setExpiryDate(String orderId, Date date) throws ErrorException;
 }

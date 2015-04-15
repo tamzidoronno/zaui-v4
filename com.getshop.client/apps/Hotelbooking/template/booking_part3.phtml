@@ -16,6 +16,9 @@ if ($this->getServiceType() == "storage") {
     $inText = "";
     $periode = $this->__w("month");
     $bookTime = $this->__w("Rental time periode");
+    if ($this->getServiceType() == "storage") {
+        $bookTime = $this->__w("Your rental periode starts from");
+    }
     $vistorInfoText = $this->__w("Contact information");
 }
 ?>
@@ -26,7 +29,14 @@ if ($this->getServiceType() == "storage") {
         <div class='summary_heading'><? echo $this->__w("Summary"); ?></div>
         <div class='price_row'>
             <? echo $bookTime; ?>
-            <span class='right_aligned_price'><? echo date("d. M Y", $this->getStart()) . " " . $this->__w("to") . " " . date("d. M Y", $this->getEnd()); ?></span>
+            <span class='right_aligned_price'><?
+                if ($this->getServiceType() == "storage") {
+                    echo date("d. M Y", $this->getStart()); 
+                } else {
+                    echo date("d. M Y", $this->getStart()) . " " . $this->__w("to") . " " . date("d. M Y", $this->getEnd()); 
+                }
+                
+            ?></span>
         </div>
 
         <?
@@ -44,7 +54,7 @@ if ($this->getServiceType() == "storage") {
                 if($cartItem->count > 1) {
                     $nightTextToPrint = $nightsText;
                 }
-                $text = $cartItem->count . " " . $nightTextToPrint . " " . $inText . " " . strtolower($product->name)  . "<br>";
+                $text = $cartItem->count . " x " . $nightTextToPrint . " " . $inText . " " . strtolower($product->name)  . "<br>";
             }
             $price = $cartItem->product->price * $cartItem->count;
             $total += $price;

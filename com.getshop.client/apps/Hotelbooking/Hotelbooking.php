@@ -99,14 +99,14 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $type);
     }
 
-    function getDayCount() {
-        if ($this->getServiceType() == "storage") {
+    function getDayCount($realDayCount=false) {
+        if ($realDayCount && $this->getServiceType() == "storage") {
             $d1 = $this->getStart();
-            $d2 = $this->getEnd();
+            $d2 = $this->getEnd($realDayCount);
             $min_date = min($d1, $d2);
             $max_date = max($d1, $d2);
             $i = 1;
-
+            
             while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
                 $i++;
             }
@@ -147,7 +147,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $_SESSION['hotelbooking']['start'];
     }
 
-    public function getEnd() {
+    public function getEnd($realEndCount=false) {
+        // End-date is always x number of days after startdate when servicetype = storage
+        if ($realEndCount && $this->getServiceType() == "storage") {
+            $_SESSION['hotelbooking']['end'] = $this->getStart() + (($this->getMinumRental()-1)*60*60*24);
+            return $_SESSION['hotelbooking']['end'];
+        }
+        
         return $_SESSION['hotelbooking']['end'];
     }
 
@@ -431,35 +437,14 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $cartmgr = $this->getApi()->getCartManager();
             $cartmgr->setReference($reference);
             
-            if ($this->partnerShipChecked()) {
-                $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($this->getReferenceKey());
+            if ($this->getServiceType() == "storage") {
+                for ($i = 0; $i < $this->getDayCount(true); $i++) {
+                    $order = $this->createOrder();
+                }
             } else {
-                $address = $this->getApiObject()->core_usermanager_data_Address();
-                $address->fullName = $_POST['data']['name_1'];
-                $address->city = $_POST['data']['city'];
-                $address->postCode = $_POST['data']['postal_code'];
-                $address->address = $_POST['data']['address'];
-                $address->phone = $_POST['data']['phone_1'];
-
-                $user = new \core_usermanager_data_User();
-                $user->emailAddress = $_POST['data']['email'];
-                $user->birthDay = $_POST['data']['birthday'];
-                $user->password = "dfsafasd#¤#cvsdfgdfasdfasf";
-                $user->fullName = $_POST['data']['name_1'];
-                $user->cellPhone = $_POST['data']['phone_1'];
-                $user->address = $address;
-                if (isset($_POST['data']['mvaregistered'])) {
-                    $user->mvaRegistered = $_POST['data']['mvaregistered'];
-                } else {
-                    $user->mvaRegistered = "true";
-                }
-                if ($this->isCompany()) {
-                    $user->isPrivatePerson = "false";
-                }
-                $user = $this->getApi()->getUserManager()->createUser($user);
-
-                $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
+                $order = $this->createOrder();
             }
+            
             
             if(isset($_POST['data']['heardaboutus'])) {
                 $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
@@ -468,6 +453,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
                 $this->stopImpersionation();
             }
+            
+            $this->setExpirationDate($order);
             
             $_GET['orderProcessed'] = true;
             $_GET['orderId'] = $order->id;
@@ -775,6 +762,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function requestAdminRights() {
         $this->requestAdminRight("UserManager", "getAllUsers", $this->__o("This app need to be able to get the users to check if it has a reference number."));
+        $this->requestAdminRight("OrderManager", "setExpiryDate", $this->__o("It needs to be able to set a Order expiry date so it can uses the recurring functionality"));
     }
 
     public function includeEcommerceTransaction() {
@@ -837,6 +825,52 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             
             $mgr->addProduct($this->getParkingProduct()->id, $this->getDayCount(), null);
         }
+    }
+
+    public function setExpirationDate($order) {
+        // Sets expiry date of order that has been created.
+        $this->startAdminImpersonation("OrderManager", "setExpiryDate");
+        $expiryDate = date('M d, Y h:m:s A', strtotime("-15 days", strtotime("+".$this->getDayCount(true)." months", $this->getStart())));
+        $this->getApi()->getOrderManager()->setExpiryDate($order->id,  $expiryDate);
+        $this->stopImpersionation();
+    }
+
+    public function createUser() {
+        $address = $this->getApiObject()->core_usermanager_data_Address();
+        $address->fullName = $_POST['data']['name_1'];
+        $address->city = $_POST['data']['city'];
+        $address->postCode = $_POST['data']['postal_code'];
+        $address->address = $_POST['data']['address'];
+        $address->phone = $_POST['data']['phone_1'];
+
+        $user = new \core_usermanager_data_User();
+        $user->emailAddress = $_POST['data']['email'];
+        $user->birthDay = $_POST['data']['birthday'];
+        $user->password = "dfsafasd#¤#cvsdfgdfasdfasf";
+        $user->fullName = $_POST['data']['name_1'];
+        $user->cellPhone = $_POST['data']['phone_1'];
+        $user->address = $address;
+        return $user;
+    }
+
+    public function createOrder() {
+        if ($this->partnerShipChecked()) {
+            $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($this->getReferenceKey());
+        } else {
+            $user = $this->createUser();
+            if (isset($_POST['data']['mvaregistered'])) {
+                $user->mvaRegistered = $_POST['data']['mvaregistered'];
+            } else {
+                $user->mvaRegistered = "true";
+            }
+            if ($this->isCompany()) {
+                $user->isPrivatePerson = "false";
+            }
+            $user = $this->getApi()->getUserManager()->createUser($user);
+
+            $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
+        }
+        return $order;
     }
 
 }

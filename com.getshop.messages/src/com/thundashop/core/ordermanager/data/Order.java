@@ -4,10 +4,12 @@
  */
 package com.thundashop.core.ordermanager.data;
 
+import com.google.gson.Gson;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.DataCommon;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  *
@@ -23,6 +25,18 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String trackingNumber = "";
     public long incrementOrderId = 0;
     public String reference = "";
+
+	public Order jsonClone() {
+		Gson gson = new Gson();
+		String gsonOrder = gson.toJson(this);
+		Order orderNew = gson.fromJson(gsonOrder, Order.class);
+		orderNew.id = UUID.randomUUID().toString();
+		orderNew.expiryDate = null;
+		orderNew.rowCreatedDate = new Date();
+		orderNew.triedTransferredToAccountingSystem = false;
+		orderNew.transferedToAccountingSystem = false;
+		return orderNew;
+	}
     
     public static class Status  {
         public static int CREATED = 1;
@@ -35,7 +49,19 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
     
     public Date createdDate = new Date();
+	
+	/** 
+	 * This expiry date is used for recurring 
+	 * orders. 
+	 * Orders that has an expiry date will automatically be renewed with 
+	 * a new order when it expires.
+	 */
+	public Date expiryDate;
     
+	public Integer recurringDays;
+	
+	public Integer recurringMonths = 1;
+	
     /**
      * The users id for whom placed the order
      * if order is created without user been logged in, this

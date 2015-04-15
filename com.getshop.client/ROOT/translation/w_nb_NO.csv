@@ -312,6 +312,7 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
+Your rental periode starts from;-;Din leieperiode starter fom
 available room;-;tilgjengelige rom
 available rooms;-;tilgjengelige rom
 change;-;endre
@@ -319,11 +320,9 @@ course;-;kurs
 day;-;dag
 days;-;dager
 description;-;Beskrivelse
-each cleaning;-;per vask
 email;-;E-post
 forgot?;-;Glemt?
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
-in;-;i
 included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn

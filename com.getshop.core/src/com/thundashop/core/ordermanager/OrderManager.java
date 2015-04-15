@@ -1,5 +1,6 @@
 package com.thundashop.core.ordermanager;
 
+import com.google.gson.Gson;
 import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.cartmanager.CartManager;
@@ -398,8 +399,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         finalizeCart(order.cart);
         
-        incrementingOrderId++;
-        order.incrementOrderId = incrementingOrderId;
+        setIncrementalOrderId(order);
         return order;
     }
 
@@ -480,5 +480,60 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 			order.transferedToAccountingSystem = true;
 			saveObject(order);
 		}
+	}
+
+	@Override
+	public void checkForRecurringPayments() throws ErrorException {
+		Date today = new Date();
+		
+		// Need to make a second list to avoid concurrent modifications problems.
+		List<String> ordersToRenew = new ArrayList();
+		for (Order order : orders.values()) {
+			if (order.expiryDate != null) {
+				System.out.println("Found one order that is not expired: " + order.expiryDate);
+				if (today.after(order.expiryDate)) {
+					ordersToRenew.add(order.id);
+				}
+			}
+		}
+		
+		for (String orderId : ordersToRenew) {
+			Order order = orders.get(orderId);
+			renewOrder(order);
+		}
+	}
+
+	@Override
+	public void setExpiryDate(String orderId, Date date) throws ErrorException {
+		Order order = orders.get(orderId);
+		if (order != null) {
+			order.expiryDate = date;
+			saveObject(order);
+		}
+	}
+
+	private void renewOrder(Order order) throws ErrorException {
+		Order copiedOrder = order.jsonClone();
+		Calendar cal = Calendar.getInstance(); 
+		cal.setTime(order.expiryDate);
+		
+		if (copiedOrder.recurringMonths != null) {
+			cal.add(Calendar.MONTH, copiedOrder.recurringMonths);
+			copiedOrder.expiryDate = cal.getTime();
+		} else if(copiedOrder.recurringDays != null) {
+			cal.add(Calendar.DATE, copiedOrder.recurringDays);
+			copiedOrder.expiryDate = cal.getTime();
+		} 
+		
+		setIncrementalOrderId(copiedOrder);
+		saveOrder(copiedOrder);
+		
+		order.expiryDate = null;
+		saveOrder(order);
+	}
+
+	private void setIncrementalOrderId(Order order) {
+		incrementingOrderId++;
+        order.incrementOrderId = incrementingOrderId;
 	}
 }

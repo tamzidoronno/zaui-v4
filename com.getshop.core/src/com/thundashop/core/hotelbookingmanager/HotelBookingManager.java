@@ -766,6 +766,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public UsersBookingData getCurrentUserBookingData() {
         UsersBookingData tempData = null;
+        removeExpiredBooking();
         for(UsersBookingData bdata : getAllUsersBookingData()) {
             if(bdata.sessionId.equals(getSession().id)) {
                 tempData = bdata;
@@ -774,6 +775,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if(tempData == null) {
             tempData = new UsersBookingData();
             tempData.sessionId = getSession().id;
+            tempData.started = new Date();
             usersBookingData.add(tempData);
         }
         
@@ -959,4 +961,30 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return new ArrayList(ids.keySet());
     }
 
+    private void removeExpiredBooking() {
+        List<UsersBookingData> bdataToRemove = new ArrayList();
+        for(UsersBookingData bdata : usersBookingData) {
+            boolean remove = false;
+            if(bdata.started == null && !bdata.sessionId.isEmpty()) {
+                remove = true;
+            }
+            
+            if(bdata.started != null && !bdata.sessionId.isEmpty()) {
+                long diff = (new Date().getTime() - bdata.started.getTime())/1000;
+                System.out.println("Time diff: " + diff);
+                if(diff > 3600) {
+                    //Booking session timed out.
+                    remove = true;
+                }
+            }
+            if(remove) {
+                bdataToRemove.add(bdata);
+            }
+        }
+        
+        for(UsersBookingData toRemove : bdataToRemove) {
+            usersBookingData.remove(toRemove);
+            deleteObject(toRemove);
+        }    
+    }
 }

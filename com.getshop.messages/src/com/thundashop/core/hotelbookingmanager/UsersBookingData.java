@@ -2,6 +2,7 @@ package com.thundashop.core.hotelbookingmanager;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UsersBookingData extends DataCommon {
@@ -14,4 +15,5 @@ public class UsersBookingData extends DataCommon {
     public boolean active = true;
     public double bookingPrice = 0.0;
     public String sessionId = "";
+    public Date started;
 }

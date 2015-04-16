@@ -42,16 +42,21 @@ $flexPrice = $this->getDayCount() * $flexProduct->price;
                 if ($this->checkFailedReservation()) {
                     echo $this->__w("Failed to reserve room... please contact us.");
                 } else {
+                    
+                if (!$this->isPartnershipBooking()) {
                     ?>
-                <div>
-                    <label style='padding: 5px;'>
-                        <input type='checkbox' class='checkNeedFlex' gsname='userData][needFlex]' <?
-                        if ($this->getNeedFlexPrice()) {
-                            echo "CHECKED";
-                        }
-                        ?>> Jeg ønsker fleksibel booking (<? echo $flexPrice; ?> kr i tillegg inklusiv moms).
-                    </label>
-                </div>
+            
+                    <div>
+                        <label style='padding: 5px;'>
+                            <input type='checkbox' class='checkNeedFlex' gsname='userData][needFlex]' <?
+                            if ($this->getNeedFlexPrice()) {
+                                echo "CHECKED";
+                            }
+                            ?>>
+                            Jeg ønsker fleksibel booking (<? echo $flexPrice; ?> kr i tillegg inklusiv moms).
+                        </label>
+                    </div>
+                <? } ?>
                 <div>
                     <label style='padding: 5px;'>
                         <input type='checkbox' class='checklicenagreement' gsname='userData][checklicenagreement]' <?

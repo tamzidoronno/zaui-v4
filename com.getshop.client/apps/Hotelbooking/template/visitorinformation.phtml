@@ -28,7 +28,7 @@ foreach($reservedRooms as $reservedRoom) {
     
     ?>
     <div class='col-33'>
-        <span class='contact_text'>* <? echo $this->__w("Name"); ?></span>
+        <span class='contact_text'>* <? echo $this->__w("Full name"); ?></span>
         <span class='contact_input'><input type='text' gsname='room][<? echo $roomId; ?>][name]' value='<? echo $name ?>' class='<? echo $this->validateVisitor("name",$visitor); ?>' placeholder="Ola Norman">
         <? 
         if($this->validateVisitor("name",$visitor)) {

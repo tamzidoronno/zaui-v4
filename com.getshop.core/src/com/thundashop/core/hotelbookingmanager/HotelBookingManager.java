@@ -814,6 +814,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 cartItem.startDate = reference.startDate;
                 cartItem.endDate = reference.endDate;
                 
+                double newPrice = getPriceBasedOnDateForBooking(cartItem, reference);
+                if (newPrice != cartItem.getProduct().price) {
+                    cartItem.getProduct().discountedPrice = newPrice;
+                    cartManager.saveCartItem(cartItem);
+                }
             }
         }
         
@@ -997,5 +1002,22 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             usersBookingData.remove(toRemove);
             deleteObject(toRemove);
         }    
+    }
+
+    private double getPriceBasedOnDateForBooking(CartItem cartItem, BookingReference reference) {
+        double summary = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(reference.startDate);
+        
+        DatePricedLibrary lib = new DatePricedLibrary();
+        
+        for (int i = 0; i<cartItem.getCount(); i++) {
+            Date checkDate = cal.getTime();
+            summary += lib.getPrice(cartItem, checkDate);
+            cal.add(Calendar.DATE, 1);
+        }
+        
+        double average = summary/cartItem.getCount();
+        return average;
     }
 }

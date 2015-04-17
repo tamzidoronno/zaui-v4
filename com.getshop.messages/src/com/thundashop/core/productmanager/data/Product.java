@@ -34,6 +34,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
 
     public double discountedPrice;
     
+    public Double overriddenPrice;
+    
     public boolean progressivePriceModel = false;
     public boolean dynamicPriceInPercent = false;
     
@@ -174,9 +176,14 @@ public class Product extends DataCommon implements Comparable<Product>  {
             }
         }
     
+        if (this.overriddenPrice != null) {
+            return overriddenPrice;
+        }
+        
         if (this.discountedPrice > 0) {
             return this.discountedPrice;
         }
+        
         
         return retprice;
     }

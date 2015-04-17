@@ -262,4 +262,8 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
     }
 
+    public void saveCartItem(CartItem cartItem) {
+        getCart().saveCartItem(cartItem);
+    }
+
 }

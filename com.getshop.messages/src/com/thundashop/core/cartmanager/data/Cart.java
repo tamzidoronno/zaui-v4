@@ -8,9 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.ordermanager.data.Shipping;
 import com.thundashop.core.productmanager.data.Product;
-import com.thundashop.core.productmanager.data.ProductDynamicPrice;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
@@ -234,5 +232,19 @@ public class Cart extends DataCommon {
         }
         
         return retTaxes;
+    }
+
+    public void saveCartItem(CartItem cartItem) {
+        List<CartItem> newList = new ArrayList();
+        
+        for (CartItem item : items) {
+            if (item.getCartItemId().equals(cartItem.getCartItemId())) {
+                newList.add(cartItem);
+            } else {
+                newList.add(item);
+            }
+        }
+        
+        items = newList;
     }
 }

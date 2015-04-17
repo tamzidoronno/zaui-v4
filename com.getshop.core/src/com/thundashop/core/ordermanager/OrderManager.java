@@ -772,7 +772,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private double getPriceForDynamicProductItem(CartItem item, ProductDynamicPrice price) {
         Product product = item.getProduct();
         if (product.dynamicPriceInPercent) {
-            double retPrice = productManager.getPrice(product.id, item.getVariations());
+            double retPrice = item.getProduct().getPrice(null);
             double discount = retPrice * price.price/100;
             return retPrice - discount;
         } else {

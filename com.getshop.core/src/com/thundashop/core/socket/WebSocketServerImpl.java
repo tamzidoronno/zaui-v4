@@ -63,5 +63,10 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
-    
+
+    public void sendMessage(String message) {
+        for (WebSocket webSocket : clients.keySet()) {
+            webSocket.send(message);
+        }
+    }
 }

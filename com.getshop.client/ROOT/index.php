@@ -95,12 +95,6 @@ if (isset($_GET['logonwithkey'])) {
 
 $factory = IocContainer::getFactorySingelton();
 
-if(isset($_GET['setLanguage'])) {
-    $_SESSION['language_selected'] = $_GET['setLanguage'];
-     $factory->getApi()->getStoreManager()->setSessionLanguage($_GET['setLanguage']);
-     $factory->reloadStoreObject();
-    $factory->loadLanguage();
-}
 if (@$factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings->isResponsive) {
     echo '<meta name="viewport" content="initial-scale=1.0,width=device-width,user-scalable=no;">';
     echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';
@@ -183,7 +177,14 @@ if(isset($factory->getSettings()->languages)) {
 
         <title><?php echo $title; ?></title>
     </head>
-    <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
+    <?
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        $userId = "";
+        if ($user != null) {
+            $userId = $user->id;
+        }
+    ?>
+    <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>" currentUserId="<? echo $userId; ?>">
         <? if (@$factory->getStore()->isDeepFreezed) { ?>
             <div class='deepfreezedActivated'><? echo $factory->__f("Warning! this store will automatically be reset to original state each hour") ?></div>
         <? } ?>

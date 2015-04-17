@@ -1,0 +1,51 @@
+.ProMeisterBosch .adminsettings {
+    border-top: solid 1px #DDD;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.ProMeisterBosch  {
+    text-align: center;
+}
+.ProMeisterBosch .pro_bosch_signon_form  {
+    display: inline-block;
+    width: 353px;
+    text-align: left;
+}
+
+
+.ProMeisterBosch .groupselection img {
+    width: 300px;
+    border: solid 1px #DDD; 
+    margin: 10px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.ProMeisterBosch .selected {
+    text-align: center;
+}
+.ProMeisterBosch .selected img {
+    height: 50px;
+}
+.ProMeisterBosch .selected .changeit {
+    display: inline-block;
+    border: solid 1px;
+    line-height: 50px;
+    vertical-align: top;
+    margin-left: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer;
+}
+
+.ProMeisterBosch .search_result_area {
+    height: 200px;
+    overflow-y: scroll;
+    width: 500px;
+    position: absolute;
+    background-color: #FFF;
+    border: solid 1px #ddd;
+    z-index: 3;
+    display: none;
+}

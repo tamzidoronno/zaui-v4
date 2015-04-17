@@ -174,9 +174,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         //First make sure there is enough rooms available.
         RoomType roomtype = getRoomType(roomType);
         Integer availableRooms = checkAvailable(startDate, endDate, roomtype.name);
-        if (availableRooms < count) {
-            return "-1";
-        }
 
         Date start = new Date(startDate * 1000);
         Calendar cal = Calendar.getInstance();
@@ -301,6 +298,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if (room.roomType == null || !room.roomType.equals(roomTypeId)) {
                 continue;
             }
+            if (room.isAvilable(startDate, endDate)) {
+                return room;
+            }
+        }
+        
+        for (Room room : rooms.values()) {
             if (room.isAvilable(startDate, endDate)) {
                 return room;
             }

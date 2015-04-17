@@ -253,10 +253,12 @@ class Factory extends FactoryBase {
     }
 
     public function start($loadPages = true) {
+        $this->setLanguage();
         $this->setScopeId();
         $this->errors = array();
         $this->showNotExistsMessage();
-
+        
+        
         if ($loadPages) {
             $this->initPage();
             $this->read_csv_translation();
@@ -768,6 +770,15 @@ class Factory extends FactoryBase {
             $translation = $_SESSION['language_selected'];
         }
         return $translation;
+    }
+
+    public function setLanguage() {
+        if(isset($_GET['setLanguage'])) {
+            $_SESSION['language_selected'] = $_GET['setLanguage'];
+            $this->getApi()->getStoreManager()->setSessionLanguage($_GET['setLanguage']);
+            $this->reloadStoreObject();
+            $this->loadLanguage();
+       }
     }
 
 }

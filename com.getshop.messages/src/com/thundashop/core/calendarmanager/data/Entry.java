@@ -32,6 +32,7 @@ public class Entry implements Serializable, Comparable<Entry> {
     
     public boolean needConfirmation = false;
     public boolean lockedForSignup = false;
+    public boolean deffered = false;
     
     public String linkToPage = "";
     public String description;
@@ -82,6 +83,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.title = entry.title;
         this.dropDiploma = entry.dropDiploma;
         this.color = entry.color;
+        this.deffered = entry.deffered;
         this.year = entry.year;
         this.eventHelder = entry.eventHelder;
         this.month = entry.month;

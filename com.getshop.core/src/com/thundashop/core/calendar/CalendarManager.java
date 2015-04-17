@@ -577,6 +577,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId, String attachment, String filename) throws ErrorException {
+        
         ReminderHistory smsHistory = createReminderHistory(text, subject, eventId, byEmail);
         ReminderHistory emailHistory = createReminderHistory(text, subject, eventId, byEmail);
 
@@ -585,14 +586,17 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         for (String userId : users) {
             UserManager usrmgr = getManager(UserManager.class);
             User user = usrmgr.getUserById(userId);
-
+            
+            Entry entry = getEntry(eventId);
+            String mutatedText = text;
+            mutatedText = mutateText("", mutatedText, entry, user);
             if (byEmail) {
                 if (files != null) {
-                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddress, subject, text, files, true);
-                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddressToInvoice, subject, text, files, true);
+                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddress, subject, mutatedText, files, true);
+                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText, files, true);
                 } else {
-                    mailFactory.send(getFromAddress(null), user.emailAddress, subject, text);
-                    mailFactory.send(getFromAddress(null), user.emailAddressToInvoice, subject, text);
+                    mailFactory.send(getFromAddress(null), user.emailAddress, subject, mutatedText);
+                    mailFactory.send(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText);
                 }
 
                 emailHistory.users.add(user);
@@ -601,7 +605,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             if (bySMS) {
                 HashMap<String, Setting> settings = getSettings("Booking");
                 String from = settings.get("smsfrom").value;
-                String message = text;
+                String message = mutatedText;
                 String phoneNumber = user.cellPhone;
                 smsFactory.send(from, phoneNumber, message);
                 smsHistory.users.add(user);
@@ -1272,8 +1276,33 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public LocationArea getEntriesByPosition(LocationPoint pointFromDevice) throws ErrorException {
         savePoint(pointFromDevice);
-        LocationArea foundArea = null;
         
+        PageManager pageManager = getManager(PageManager.class);
+        HashMap<String, Setting> settings = pageManager.getSecuredSettingsInternal("Settings");
+        if (settings.get("promeisterAppBasedOnDistanceInsteadOfRegion") != null && settings.get("promeisterAppBasedOnDistanceInsteadOfRegion").value.equals("true")) {
+            return getEntriesBasedOnDistance(pointFromDevice);
+        } else {
+            return getRegionsList(pointFromDevice);
+        }
+    }
+    
+    private LocationArea getEntriesBasedOnDistance(LocationPoint pointFromDevice) throws ErrorException {
+        LocationArea area = new LocationArea();
+        area.name = "Distance";
+        for (Month month : getMonths()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    finalizeEntry(entry);
+                    area.entries.add(entry);
+                }
+            }
+        }
+        
+        return area;
+    }
+    
+    private LocationArea getRegionsList(LocationPoint pointFromDevice) throws ErrorException {
+        LocationArea foundArea = null;
         Point point = new Point((int)pointFromDevice.x, (int)pointFromDevice.y);
         for (LocationArea area : areas.values()) {
             if (area.contains(point)) {

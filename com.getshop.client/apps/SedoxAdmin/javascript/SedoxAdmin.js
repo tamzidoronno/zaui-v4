@@ -1,3 +1,153 @@
+SedoxWebSocketListener = function(address) {
+    this.sentMessages =  [];
+    this.address = address;
+};
+
+SedoxWebSocketListener.prototype = {
+    websocket: null,
+    connectionEstablished: null,
+    transferCompleted: null,
+    transferStarted: null,
+    shouldConnect: true,
+    
+    connect: function() {
+        if (!this.shouldConnect)
+            return;
+        
+        this.shouldConnect = false;
+        this.connectedCalled = true;
+        var me = this;
+        if (this.connectionEstablished === null) {
+            this.fireDisconnectedEvent();
+        }
+        var address = "ws://"+this.address+":31330/";
+        this.socket = new WebSocket(address);
+        this.socket.onopen = $.proxy(this.connected, this);
+        this.socket.onclose = function() {
+            me.disconnected();
+        };
+        this.socket.onmessage = function(msg) {
+            me.handleMessage(msg);
+        };
+    },
+            
+    handleMessage: function(msg) {
+//        console.log(msg);
+        var dataObject = JSON.parse(msg.data);
+        if (dataObject) {
+            if (dataObject.userId === $('body').attr('currentuserid')) {
+                return;
+            }
+        }
+        
+        if (dataObject.action === "startstoptoggled" && $('#pageid').val() === "83a088e9-9770-4433-b091-1df3afce8d6d") {
+            thundashop.common.goToPage("83a088e9-9770-4433-b091-1df3afce8d6d");
+        }
+        
+        if (dataObject.action === "startstoptoggled" && $('#pageid').val() === "productview") {
+            if (window.location.href.indexOf(dataObject.productId) > 0) {
+                thundashop.common.goToPage("productview&productId="+dataObject.productId);
+            }
+        }
+        
+    },
+            
+    reconnect: function() {
+        var me = this;
+        this.shouldConnect = true;
+        exec = function() {
+            me.connect();
+        };
+        setTimeout(exec, 300);
+    },
+            
+    initializeStore: function() {
+        if (this.socket.OPEN)
+            this.socket.send('initstore:'+this.address);
+    },
+            
+    connected: function() {
+        this.initializeStore();
+        this.fireConnectedEvent();
+        this.connectionEstablished = true;
+    },
+            
+    disconnected: function() {
+        this.sentMessages = []; 
+        this.fireDisconnectedEvent();
+        this.connectionEstablished = false;
+        this.reconnect();
+    },
+            
+    fireDisconnectedEvent: function() {
+        if (this.connectionEstablished === null || this.connectionEstablished && typeof(this.disconnectedCallback) === "function") {
+            if (this.disconnectedCallback) {
+                this.disconnectedCallback();
+            }
+        }
+    },
+            
+    fireConnectedEvent: function() {
+        if (this.connectionEstablished === null || !this.connectionEstablished && typeof(this.connectedCallback) === "function") {
+            if (this.connectedCallback) {
+                this.connectedCallback();
+            }
+        }
+    },
+            
+    setDisconnectedEvent: function(callback) {
+        this.disconnectedCallback = callback;
+    },
+            
+    setConnectedEvent: function(callback) {
+        this.connectedCallback = callback;
+    },
+        
+    send: function(message, silent) {
+        var deferred = $.Deferred();
+        message.messageId = this.makeid();
+        deferred.messageId = message.messageId;
+        messageJson = JSON.stringify(message);
+        if (this.sentMessages.length === 0 && this.transferStarted && silent !== true) {
+            this.transferStarted();
+        }
+        this.sentMessages.push(deferred);
+        if (this.socket.OPEN) {
+            try {
+                this.socket.send(messageJson);
+            } catch (e) {
+                this.getMessage(deferred.messageId);
+                deferred.resolve(null);
+                if (this.sentMessages.length === 0 && this.transferCompleted) {
+                   this.transferCompleted();
+                }
+            }
+        }
+           
+        return deferred;
+    },
+
+    getMessage: function(id) {
+        for (i=0;i<this.sentMessages.length; i++) {
+            if (this.sentMessages[i].messageId === id) {
+                var message = this.sentMessages[i];
+                this.sentMessages.splice(i, 1);
+                return message;
+            }
+        }
+    },
+            
+    makeid :  function () {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( var i=0; i < 35; i++ )
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
+};
+
 app.SedoxAdmin = {
     init: function() {
         $(document).on('click', '.SedoxAdmin .sedox_admin_topmenu .entry', app.SedoxAdmin.topMenuClicked);
@@ -13,6 +163,14 @@ app.SedoxAdmin = {
         $(document).on('click', '.SedoxAdmin i.removeuser', app.SedoxAdmin.removeUserFromMaster);
         $(document).on('click', '.SedoxAdmin .showuser', app.SedoxAdmin.changeToUser);
         $(document).on('change', '.SedoxAdmin #togglepassiveslave', app.SedoxAdmin.togglePassiveChanged);
+        
+        $(document).ready(function() {
+            if ($('body').attr('editormode') === "true") {
+                app.SedoxAdmin.webSocketListener = new SedoxWebSocketListener(window.location.host);
+                app.SedoxAdmin.webSocketListener.connect();
+            }    
+        });
+        
     },
             
     togglePassiveChanged: function() {
@@ -145,17 +303,23 @@ app.SedoxAdmin = {
         })
     },
             
-    updateInfoBox: function(userId) {
+    updateInfoBox: function(userId, isapp) {
         var data = {
             userId: userId
         }
         
-        var event = thundashop.Ajax.createEvent("", "showUserInformation", $('.SedoxAdmin'), data);
+        sapp = $('.SedoxAdmin:not("#informationbox") .applicationinner');
+       
+        if ($('.SedoxAdmin:not("#informationbox")').length === 0) {
+            sapp = isapp;
+        }
+       
+        var event = thundashop.Ajax.createEvent("", "showUserInformation", sapp, data);
         thundashop.common.showInformationBox(event, "User information");
     },
             
     showUserInformation: function() {
-        app.SedoxAdmin.updateInfoBox($(this).attr('userId'));
+        app.SedoxAdmin.updateInfoBox($(this).attr('userId'), this);
     },
     searchUsers: function() {
         var data = {

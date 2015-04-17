@@ -60,10 +60,10 @@
     display: inline-block;
 }
 
-.SedoxAdmin .listview .filelistrow .col1 { width: 60px; }
-.SedoxAdmin .listview .filelistrow .col2 { width: 450px; }
+.SedoxAdmin .listview .filelistrow .col1 { width: 80px; }
+.SedoxAdmin .listview .filelistrow .col2 { width: 350px; }
 .SedoxAdmin .listview .filelistrow .col3 { width: 200px; }
-.SedoxAdmin .listview .filelistrow .col4 { width: 150px; }
+.SedoxAdmin .listview .filelistrow .col4 { width: 250px; }
 
 .SedoxAdmin .listview .filelistrow .col5 .Start { color: red; }
 .SedoxAdmin .listview .filelistrow .col5 .Stop { color: green; }

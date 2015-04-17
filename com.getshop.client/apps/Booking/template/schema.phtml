@@ -79,12 +79,13 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                 <tr><td><? echo $this->__w("Company"); ?></td><td>
                         <input type="text" placeholder="" class="search_company">
                         <span class="search_result_area"></span>
-                    </td></tr>
+                    </td>
+                </tr>
                 <tr style="display:none;"><td class="col1"><?php echo $this->__w("orgnummer"); ?></td>
                     <td>
                         <input orgLength="<? echo $this->getOrgNumberLength(); ?>" onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="birthday" type='textfield' disabled/>
                     </td>
-                </tr>
+                </tr>                
                 <? if (!$companyRemote) { ?>
                     <tr><td class="col1"><?php echo $this->__w("org", 'contact'); ?></td><td><input id="company" type='textfield'/></td></tr>
                 <? } else { ?>

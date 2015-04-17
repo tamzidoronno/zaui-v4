@@ -135,10 +135,16 @@ public class StorePool {
         if (store == null) {
             webAddress = webAddress.replace(".local.", ".");
             webAddress = webAddress.replace(".mpal.", ".");
+            webAddress = webAddress.replace(".old.", ".");
             webAddress = webAddress.replace(".dev.", ".");
             store = getStoreByWebaddress(webAddress);
         }
         
+        
+        if (store == null && webAddress.contains("old.")) {
+            webAddress = webAddress.replace("old.", "");
+            store = getStoreByWebaddress(webAddress);
+        }
         
         if (store == null && webAddress.contains("www.")) {
             webAddress = webAddress.replace("www.", "");

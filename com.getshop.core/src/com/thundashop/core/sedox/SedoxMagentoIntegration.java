@@ -34,6 +34,27 @@ public class SedoxMagentoIntegration {
 
     }
 
+    private String getGroup(String groupId) {
+
+        String groupName = "";
+        if (groupId != null && !groupId.isEmpty()) {
+            groupName = groupId.equals("1") ?  "General	General Customer" : groupName;
+            groupName = groupId.equals("0") ?  "NOT LOGGED IN" : groupName;
+            groupName = groupId.equals("3") ?  "Sedox 100" : groupName;
+            groupName = groupId.equals("2") ?  "Sedox 120" : groupName;
+            groupName = groupId.equals("31") ?  "Sedox 150" : groupName;
+            groupName = groupId.equals("33") ?  "Sedox 50" : groupName;
+            groupName = groupId.equals("4") ?  "Sedox 70" : groupName;
+            groupName = groupId.equals("34") ?  "Sedox 80 (10×70)" : groupName;
+            groupName = groupId.equals("37") ?  "Sedox NO 120" : groupName;
+            groupName = groupId.equals("35") ?  "Sedox NO 200" : groupName;
+            groupName = groupId.equals("39") ?  "Sedox NO 70" : groupName;
+            groupName = groupId.equals("40") ?  "Subdealer 150" : groupName;
+        }
+        
+        return groupName;
+    }
+
     public static class Order {
 
         public Integer orderId;
@@ -50,6 +71,7 @@ public class SedoxMagentoIntegration {
         public String name;
         public String emailAddress;
         public String phone;
+        public String group;
     }
     
     private static String code = "asdfae4r209345ui1ojt1jkl3541iou45h12k34jh12kl5jh36kl1h346kl1j346h134789hasdihASKDFJQWKERv89ah123NEøæå";
@@ -63,6 +85,7 @@ public class SedoxMagentoIntegration {
 
             MagentoUser magentoUser = new MagentoUser();
             magentoUser.name = result.get("firstname") + " " + result.get("lastname");
+            magentoUser.group = getGroup(result.get("group_id"));
             Object phoneObject = port.getPhoneNumber(code, userId);
             if (phoneObject != null) {
                 magentoUser.phone = phoneObject.toString();

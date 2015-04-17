@@ -140,7 +140,17 @@ public class ManagerBase {
             return "";
         }
 
-        return name.replace(" ", "_").replace("&", "_").replace("/", "_").replace("\\", "_").toLowerCase();
+        String newAddress =
+            name.replace(" ", "_")
+                .replace("&", "_")
+                .replace("/", "_")
+                .replace("\\", "_")
+                .replace("\"", "_")
+                .replace("'", "_")
+                .replace("?", "")
+                .toLowerCase();
+
+        return newAddress;
     }
 
     public void onEvent(String eventName, String eventReferance) throws ErrorException {

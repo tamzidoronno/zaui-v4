@@ -13,6 +13,7 @@ $badCustomer = $sedoxUser->badCustomer ? "checked='checked'" : "";
 <div class="useroverview" userid="<? echo $userid; ?>">
     Id: <? echo $userid; ?>
     <br> Name: <? echo $user->fullName; ?>
+    <br> Group: <? echo $user->group; ?>
     <br> Email: <? echo $user->emailAddress; ?>
     <br> Current balance: <? echo $sedoxUser->creditAccount->balance; ?>
     <br> Allow negative credit: <input id="allownegativecredit" userId="<? echo $user->id; ?>" type="checkbox" <? echo $checked; ?> />

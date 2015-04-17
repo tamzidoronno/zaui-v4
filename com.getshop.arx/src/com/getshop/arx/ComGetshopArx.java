@@ -36,6 +36,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -59,8 +60,8 @@ public class ComGetshopArx {
 //    private String apiAddress = "localhost";
     
     
-    private String username = "master";
-    private String password = "master";
+    private String username = "wh,";
+    private String password = "fsdu_nerdDDe234vcozs";
 
     private String apiUsername = "kai@getshop.com";
     private String apiPassword = "g4kkg4kk";
@@ -114,6 +115,12 @@ public class ComGetshopArx {
             allRooms.put(room.id, room);
         }
         
+        
+        grantAccessToHotel(bookingData);
+        grantAccessToRoom(bookingData, allRooms);
+    }
+
+    private void grantAccessToRoom(List<UsersBookingData> bookingData, Map<String, Room> allRooms) throws Exception {
         for(UsersBookingData bdata : bookingData) {
             for (BookingReference reference : bdata.references) {
                 //No need to check / update arx on reservation not valid for the time span.
@@ -128,8 +135,7 @@ public class ComGetshopArx {
                     }
 
                     Room roomGranted = allRooms.get(roomInfo.roomId);
-                    if(roomInfo.roomState == RoomInfoState.externalDoorGranted && !roomGranted.isClean) {
-                        //The user has access to external doors, but cant get access to the room since it is not clean yet. 
+                    if(!roomGranted.isClean) {
                         continue;
                     }
 
@@ -138,27 +144,67 @@ public class ComGetshopArx {
                         continue;
                     }
 
-                    if(roomGranted.isClean || roomInfo.roomState == RoomInfoState.regrantAccess) {
-                        roomInfo.roomState = RoomInfoState.accessGranted;
-                        user.doorsToAccess.add(roomGranted.roomName);
-                        addToLog(user.firstName + " - " + user.lastName + " gained access to room: " + roomGranted.roomName);
-                    } else {
-                        addToLog(user.firstName + " - " + user.lastName + " got access to external doors.. wating for clean room.");
-                        roomInfo.roomState = RoomInfoState.externalDoorGranted;
-                    }
+                    roomInfo.roomState = RoomInfoState.accessGranted;
+                    user.doorsToAccess.add(roomGranted.roomName);
                     count++;
 
-                    if(!sendUserToArx(user)) {
-                        //Not able to upload to arx... action is needed.
-                        notifyGetshopDown(user);
-                        try { Thread.sleep(1*1000*60); }catch(Exception e) {}
-                    } else {
-                        notifyGetShopUp();
-                        notifyUserAboutUpdate(reference, roomInfo, user.code);
-                        api.getHotelBookingManager().updateUserBookingData(bdata);
-                    }
+                    updateArx(user, reference, roomInfo, bdata);
                 }
             }
+        }
+    }
+
+    private void grantAccessToHotel(List<UsersBookingData> bookingData) throws Exception {
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 7);
+        cal.set(Calendar.MINUTE, 1);
+        cal.set(Calendar.SECOND, 1);
+        Date morning = cal.getTime();
+        
+        for(UsersBookingData bdata : bookingData) {
+            for (BookingReference reference : bdata.references) {
+                //No need to check / update arx on reservation not valid for the time span.
+                if (reference.isEnded() || (!reference.isStarted() && !reference.isToday())) {
+                    continue;
+                }
+                
+                //Only grant access in the morning.
+                if(new Date().before(morning)) {
+                    continue;
+                }
+
+                int count = 0;
+                for(RoomInformation roomInfo : reference.roomsReserved) {
+                    if(roomInfo.roomState == RoomInfoState.externalDoorGranted || roomInfo.roomState == RoomInfoState.externalDoorGranted) {
+                        continue;
+                    }
+
+                    ArxUser user = createArxUser(roomInfo, reference, count);
+                    if(user == null) {
+                        continue;
+                    }
+
+                    roomInfo.roomState = RoomInfoState.externalDoorGranted;
+                    user.doorsToAccess.add("ytterdorer");
+                    count++;
+
+                    updateArx(user, reference, roomInfo, bdata);
+                }
+            }
+        }
+    }
+
+    private void updateArx(ArxUser user, BookingReference reference, RoomInformation roomInfo, UsersBookingData bdata) throws Exception {
+        if(!sendUserToArx(user)) {
+            //Not able to upload to arx... action is needed.
+            notifyGetshopDown(user);
+            try { Thread.sleep(1*1000*60); }catch(Exception e) {}
+        } else {
+            notifyGetShopUp();
+            notifyUserAboutUpdate(reference, roomInfo, user.code);
+            api.getHotelBookingManager().updateUserBookingData(bdata);
         }
     }
 
@@ -324,19 +370,12 @@ public class ComGetshopArx {
     }
 
     private void notifyUserAboutUpdate(BookingReference reference, RoomInformation roomInfo, Integer code) throws Exception {
-        if(roomInfo.roomState == RoomInfoState.accessGranted) {
-            addToLog("Notifying user about room: state, " + roomInfo.roomState + " roomid: " + roomInfo.roomId + ", name: " + roomInfo.visitors.get(0).name + " (" + roomInfo.visitors.get(0).phone + ")");
-            api.getHotelBookingManager().notifyUserAboutRoom(reference, roomInfo, code);
-        }
+        addToLog("Notifying user about room: state, " + roomInfo.roomState + " roomid: " + roomInfo.roomId + ", name: " + roomInfo.visitors.get(0).name + " (" + roomInfo.visitors.get(0).phone + ")");
+        api.getHotelBookingManager().notifyUserAboutRoom(reference, roomInfo, code);
     }
 
     private ArxUser createArxUser(RoomInformation roomInfo, BookingReference reference, int count) {
-        Random randomGenerator = new Random();
-        int code = 0;
-        do {
-            code = randomGenerator.nextInt(9999);
-        }while(code < 1000);
-
+        
         if(roomInfo.visitors.isEmpty()) {
             addToLog("No visitors on reference: " + reference.bookingReference);
             return null;
@@ -350,7 +389,7 @@ public class ComGetshopArx {
         user.id = reference.bookingReference + "-" + count;
         user.startDate = reference.startDate;
         user.endDate = reference.endDate;
-        user.code = code;
+        user.code = roomInfo.code;
         user.doorsToAccess.add("Ytterdører");
         user.reference = reference.bookingReference + "";
         addToLog("Generating arx user: " + user.firstName + " - " + user.lastName + " : " + user.startDate + " - " + user.endDate);

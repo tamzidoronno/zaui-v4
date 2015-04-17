@@ -213,8 +213,8 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
                 echo "<span class='price_box'><span class='price_text'>" . $progressivePrice . ",-";
                 if($price != $progressivePrice) {
                     $percentage = (double)100-(($progressivePrice/$price)*100);
-                    $percentage = round($percentage, 1);
-                    echo "<br><span style='font-size: 12px;font-weight:normal; margin-top: 5px; display:inline-block;'>$percentage% avslag fra ".$product->price."kr</span>";
+                    $percentage = $price - $progressivePrice;
+                    echo "<br><span style='font-size: 12px;font-weight:normal; margin-top: 5px; display:inline-block;'>$percentage kr avslag fra ".$product->price."kr</span>";
                 }
             }
         }
@@ -246,7 +246,7 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
         if($avroomHandicap) {
             echo ", <i class='fa fa-wheelchair' title='".$handicapText."'></i> " . $handicapText;
         }
-        
+        echo ", " . $product->sku;
         echo "</span>";
         echo "</div>";
     }
@@ -257,7 +257,7 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
         if (!$this->errors) {
             ?>
     <div class='included_all_rooms'>
-        <? echo $this->__w("Included in all rooms:"); ?> <i class="fa fa-wifi"></i> WI-FI
+       <i class="fa fa-wifi"></i> WI-FI <? echo $this->__w("included in all rooms"); ?> 
     </div>
     </div>
         <div class="to_checkout">

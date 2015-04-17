@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -213,6 +214,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         reference.roomsReserved = new ArrayList();
         for(Room room : roomsToBook) {
             RoomInformation info = new RoomInformation();
+            Random r = new Random();
+            int Low = 1000;
+            int High = 10000;
+            info.code = r.nextInt(High-Low) + Low;
             info.roomId = room.id;
             reference.roomsReserved.add(info);
         }
@@ -581,14 +586,27 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     
     @Override
     public void notifyUserAboutRoom(BookingReference reference, RoomInformation roomInfo, Integer code) throws ErrorException {
-        String origMessage = arxSettings.smsReadyNO;
-        Room room = getRoom(roomInfo.roomId);
-        Visitors visitor = roomInfo.visitors.get(0);
-        room.isClean = false;
-        String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
-        messageManager.sendSms(visitor.phone, message);
-        String copyadress = "toreplaced@test.no";       
-        messageManager.sendMail(visitor.email,visitor.name, room.roomName + " er nå klart / " + room.roomName + " is now ready.", message,  copyadress, copyadress);
+
+        if(roomInfo.roomState == RoomInformation.RoomInfoState.externalDoorGranted) {
+            String origMessage = arxSettings.smsWelcomeNO;
+            Room room = getRoom(roomInfo.roomId);
+            Visitors visitor = roomInfo.visitors.get(0);
+            room.isClean = false;
+            String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
+            messageManager.sendSms(visitor.phone, message);
+            
+        }
+        
+        if(roomInfo.roomState == RoomInformation.RoomInfoState.accessGranted) {
+            String origMessage = arxSettings.smsReadyNO;
+            Room room = getRoom(roomInfo.roomId);
+            Visitors visitor = roomInfo.visitors.get(0);
+            room.isClean = false;
+            String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
+            messageManager.sendSms(visitor.phone, message);
+            String copyadress = "toreplaced@test.no";       
+            messageManager.sendMail(visitor.email,visitor.name, room.roomName + " er nå klart / " + room.roomName + " is now ready.", message,  copyadress, copyadress);
+        }
     }
     
     private List<Room> getAvailableRooms(String roomProductId, long startDate, long endDate) {

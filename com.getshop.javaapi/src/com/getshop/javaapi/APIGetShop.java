@@ -127,6 +127,19 @@ public class APIGetShop {
      }
 
      /**
+     * Create a new webpage
+     * @return
+     */
+     public void saveSmsCallback(com.thundashop.core.getshop.data.SmsResponse smsResponses)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("smsResponses",new Gson().toJson(smsResponses));
+          gs_json_object_data.method = "saveSmsCallback";
+          gs_json_object_data.interfaceName = "core.getshop.IGetShop";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      *
      * @param ids
      * @throws ErrorException

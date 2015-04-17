@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class RoomInformation implements Serializable {
     
@@ -15,6 +16,7 @@ public class RoomInformation implements Serializable {
         public static Integer accessGranted = 3;
     }
     
+    public Integer code = -1;
     public String roomId = "";
     public List<Visitors> visitors = new ArrayList();
     public int roomState = 0;

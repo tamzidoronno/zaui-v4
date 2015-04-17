@@ -13,4 +13,5 @@ public interface SMSFactory {
     public int messageCount(int year, int month);
 
     public void setStoreId(String storeId);
+    public void setMessageManager(MessageManager manager);
 }

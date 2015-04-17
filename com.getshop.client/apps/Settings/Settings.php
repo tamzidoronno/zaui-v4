@@ -81,12 +81,14 @@ class Settings extends \SystemApplication implements \Application {
     }
 
     public function saveStoreSettings() {
+        echo "Setting : " .  $_POST['uniqueusersonemail'];
         $storeSettings = $this->getFactory()->getStoreConfiguration();
         $storeSettings->emailAdress = $_POST['emailaddress'];
         $this->getApi()->getStoreManager()->saveStore($storeSettings);
         
         $this->setConfigurationSetting("language", $_POST['language']);
         $this->setConfigurationSetting("title", $_POST['title']);
+        $this->setConfigurationSetting("uniqueusersonemail", $_POST['uniqueusersonemail']);
         $this->getApi()->getStoreManager()->setPrimaryDomainName($_POST['url']);
         $this->setConfigurationSetting("currencycode", "NOK");
     }

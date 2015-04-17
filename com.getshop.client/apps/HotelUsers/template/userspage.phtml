@@ -37,8 +37,7 @@ if(!$booking) {
             echo "<td>" . sizeof($reference->roomsReserved) . " x " . $api->getProductManager()->getProduct($productId)->name . "<br>";
             foreach($reference->roomsReserved as $reserved) {
                 foreach($reserved->visitors as $visitor) {
-                    echo "&nbsp;&nbsp;&nbsp;<span style='color:#bbb;'>" .  $visitor->name . ", tlf: " . $visitor->phone . ", epost: " . $visitor->email . "</span>";
-//                    print_r($visitor);
+                    echo "&nbsp;&nbsp;&nbsp;<span style='color:#837f7a;'>" .  $visitor->name . ", tlf: " . $visitor->phone . ", epost: " . $visitor->email . "</span>";
                 }
             }
             echo "</td>";

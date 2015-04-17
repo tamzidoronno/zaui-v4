@@ -5,6 +5,7 @@
 package com.thundashop.core.messagemanager;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
@@ -49,15 +50,17 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     private FrameworkConfig frameworkConfig;
     private DatabaseSaver databaseSaver;
     private StorePool storeManager;
+    private MessageManager messageManager;
     private StoreApplicationPool storeApplicationPool;
     private String username;
     private String apiId;
     private String password;
     private String prefix;
 
-    public SMSFactoryImpl(Logger logger, Database database, FrameworkConfig frameworkConfig, DatabaseSaver databaseSaver, StorePool storeManager, StoreApplicationPool storeApplicationPool) {
+    public SMSFactoryImpl(Logger logger, Database database, FrameworkConfig frameworkConfig, DatabaseSaver databaseSaver, StorePool storeManager, StoreApplicationPool storeApplicationPool, MessageManager messageManager) {
         this.logger = logger;
         this.database = database;
+        this.messageManager = messageManager;
         this.frameworkConfig = frameworkConfig;
         this.databaseSaver = databaseSaver;
         this.storeManager = storeManager;
@@ -95,6 +98,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.password = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("password");
         impl.prefix = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("numberprefix");
         impl.from = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("from");
+        impl.messageManager = messageManager;
         
         new Thread(impl).start();
     }
@@ -116,13 +120,11 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         InputStream is = null;
         DataInputStream dis;
         try {
-            message = URLEncoder.encode(message, "ISO-8859-1");
-            String urlString = "http://api.clickatell.com/http/sendmsg?user="+username+"&password="+password+"&api_id="+apiId+"&concat=3&to="+prefix+to;
-            if(from != null && !from.isEmpty()) {
-                urlString += "&from="+from;
+            message = URLEncoder.encode(message, "UTF-8");
+            if(from == null || from.isEmpty()) {
+                from = "GetShop";
             }
-            urlString += "&text="+message;
-            
+            String urlString = "https://rest.nexmo.com/sms/json?api_key=cffe6fd9&api_secret=9509ef6b&client-ref="+storeId+"&status-report-req=1&from="+from+"&to="+prefix+to+"&text="+message;
             url = new URL(urlString);
             dis = new DataInputStream(new BufferedInputStream(is));
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -133,11 +135,27 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
                 content += inputLine;
             in.close();
             
-            if(!content.trim().startsWith("ID:")) {
+            Gson gson = new Gson();
+            NexmoResponse response = gson.fromJson(content, NexmoResponse.class);
+            
+            if(response.messages.size() > 0) {
+                SmsLogEntry entry = new SmsLogEntry();
+                entry.responseCode = response.messages.get(0).status;
+                entry.message = message;
+                entry.to = to;
+                entry.apiId = apiId;
+                entry.prefix = prefix;
+                entry.from = from;
+                entry.network = response.messages.get(0).network;
+                entry.msgId = response.messages.get(0).msgId;
+                
+                this.messageManager.saveToLog(entry);
+            } else {
                 logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message);
                 System.out.println(content);
                 return;
             }
+            
         } catch (IOException ex) {
             logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message, ex);
             return;
@@ -180,5 +198,10 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         }
         
         return count;
+    }
+
+    @Override
+    public void setMessageManager(MessageManager manager) {
+        this.messageManager = manager;
     }
 }

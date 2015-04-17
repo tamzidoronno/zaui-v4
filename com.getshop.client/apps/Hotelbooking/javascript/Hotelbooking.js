@@ -99,7 +99,7 @@ app.Hotelbooking = {
             return;
         }
         var data = {};
-        $('.booking_contact_data').find('[gsname]').each(function () {
+        $('.bookingsummary').find('[gsname]').each(function () {
             if($(this).is(':radio') && !$(this).is(':checked')) {
                 return;
             }
@@ -376,7 +376,7 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .parking_option', app.Hotelbooking.updateParking);
         $(document).on('change', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
         $(document).on('blur', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
-        $(document).on('blur', '.Hotelbooking .booking_contact_data input', app.Hotelbooking.saveCurrentData);
+        $(document).on('blur', '.Hotelbooking .bookingsummary input', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking .checklicenagreement', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking .checkNeedFlex', app.Hotelbooking.updateNeedFlex);
         $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);

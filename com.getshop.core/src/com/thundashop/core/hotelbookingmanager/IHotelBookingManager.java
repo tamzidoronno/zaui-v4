@@ -29,7 +29,7 @@ public interface IHotelBookingManager {
      * @param count The number of rooms to book.
      * @throws ErrorException 
      */
-    public void reserveRoom(long startDate, long endDate, Integer count) throws ErrorException;
+    public Integer reserveRoom(long startDate, long endDate, Integer count) throws ErrorException;
     
     public GlobalBookingSettings getBookingConfiguration() throws ErrorException;
     

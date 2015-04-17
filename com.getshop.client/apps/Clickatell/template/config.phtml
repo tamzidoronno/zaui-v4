@@ -60,3 +60,245 @@
     
 </div>
 
+<div class='gss_settings_content'>
+    <div>LOG</div>
+    <?
+    /* @var $this \ns_12fecb30_4e5c_49d8_aa3b_73f37f0712ee\Clickatell */
+    $api = $this->getApi();
+    $log = $api->getMessageManager()->getSmsLog();
+    if(!$log) {
+        echo "No sms'es sent yet";
+    } else {
+        ?>
+    <table width="100%">
+        <tr>
+            <td width="20%">Date</td>
+            <td>To</td>
+            <td>Msg</td>
+            <td>Response</td>
+            <td>Delivery time</td>
+        </tr>
+        <? foreach($log as $entry) {
+            $msg = urldecode($entry->message);
+            $msg = htmlentities($msg);
+//            $msg = urlencode($msg);
+            $responseMsg = $entry->responseCode;
+            if($responseMsg == "0") {
+                $responseMsg = "to delivery";
+            }
+            $sentMsg = $entry->errorCode;
+            if($sentMsg == "0") {
+                $sentMsg = "received";
+            }
+            
+            echo "<tr>";
+            echo "<td>" . $entry->date . "</td>";
+            echo "<td>" . $entry->to . "</td>";
+            echo "<td><span title=\"$msg\">" . substr($msg, 0, 100)  . "</span></td>";
+            echo "<td>" . $responseMsg  . " -> " . $sentMsg . "</td>";
+            echo "<td>" . $entry->delivered . "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    }
+    ?>
+</div>
+    <div class='gss_settings_content'>
+    Delivery receipt msg (code number two)
+    <table>
+        <thead>
+            <tr>
+                <th><span>Code</span></th> 
+                <th><span>Error Text</span></th>
+                <th><span>Meaning</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>Success</td>
+                <td>The
+                    message was successfully accepted for delivery by Nexmo</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Throttled</td>
+                <td>You
+                    have exceeded the submission capacity allowed on this account, please 
+                    back-off and retry</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Missing params</td>
+                <td>Your
+                    request is incomplete and missing some mandatory parameters</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Invalid params</td>
+                <td>The value of one or more parameters is invalid</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Invalid credentials</td>
+                <td>The api_key / api_secret you supplied is either invalid or disabled</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Internal error</td>
+                <td>An
+                    error has occurred in the Nexmo platform whilst processing this message</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Invalid message</td>
+                <td>The
+                    Nexmo platform was unable to process this message, for example, an 
+                    un-recognized number prefix or the number is not whitelisted if your account is new </td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Number barred</td>
+                <td>The number you are trying to submit to is blacklisted and may not 
+                    receive messages</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Partner account barred</td>
+                <td>The api_key you supplied is for an account that has been barred 
+                    from submitting messages</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Partner quota exceeded</td>
+                <td>Your pre-pay account does not have sufficient credit to process this
+                    message</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Account not enabled for REST</td>
+                <td>This account is not provisioned for REST submission, you should use 
+                    SMPP instead</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>Message too long</td>
+                <td>Applies&nbsp;to Binary submissions, where the length of the UDH and the message body combined exceed 140 octets</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>Communication Failed</td>
+                <td>Message was not submitted because there was a communication failure</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>Invalid Signature</td>
+                <td>Message was not submitted due to a verification failure in the submitted signature</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>Invalid sender address</td>
+                <td>The sender address (from parameter) was not allowed for this message. Restrictions may apply depending on the destination see our <a href="https://help.nexmo.com/hc/en-us/sections/200622473-Country-Specific-Features-and-Restrictions">FAQs</a></td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>Invalid TTL</td>
+                <td>The ttl parameter values is invalid</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td>Facility not allowed</td>
+                <td>Your request makes use of a facility that is not enabled on your account</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td>Invalid Message class</td>
+                <td>The message class value supplied was out of range (0 - 3)</td>
+            </tr>
+
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <br>
+
+    Delivery receipt msg (code number two)
+    <table>
+        <thead>
+            <tr>
+                <th><span>Error</span></th> 
+                <th><span>Meaning</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>Delivered</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Unknown</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Absent Subscriber - Temporary</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Absent Subscriber - Permanent</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Call barred by user</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Portability Error</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Anti-Spam Rejection</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Handset Busy</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Network Error</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Illegal Number</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Invalid Message</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Unroutable</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>Destination Un-Reachable</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>Subscriber Age Restriction</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>Number Blocked by Carrier</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>Pre-Paid - Insufficent funds</td>
+            </tr>
+            <tr>
+                <td>99</td>
+                <td>General Error</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -256,7 +256,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     
     
     public function getProductId() {
-        return $this->getAdditionalInfo()->roomProductId;
+        if($this->getAdditionalInfo()) {
+            return $this->getAdditionalInfo()->roomProductId;
+        }
+        
+        $productId = $this->getHotelRooms()[0]->id;
+        $this->changeProduct($productId);
+        return $productId;
     }
 
     public function getProduct() {
@@ -264,10 +270,16 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function getStart() {
+        if(!isset($this->getBookingData()->references[0])) {
+            return time();
+        }
         return strtotime($this->getBookingData()->references[0]->startDate);
     }
 
     public function getEnd($realEndCount=false) {
+        if(!isset($this->getBookingData()->references[0])) {
+            return time()+86400;
+        }
         return strtotime($this->getBookingData()->references[0]->endDate);
     }
     
@@ -358,8 +370,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $text = $this->__w("When do you check out?");
         }
         //Guess navigating between months was a bad idea, why do something that does not look good design wise.
-//        echo "<div class='cal_header cal_nav' type='$id' year='$year' month='$month'><i class='fa fa-arrow-left calnav' style='float:left;cursor:pointer;' navigation='prev'></i>" . $monthText . "<i class='fa fa-arrow-right calnav' style='float:right;cursor:pointer;' navigation='next'></i></div>";
-        echo "<div class='cal_header' type='$id' year='$year' month='$month'>$text</div>";
+        echo $text;
+        echo "<div class='cal_header cal_nav' type='$id' year='$year' month='$month'><i class='fa fa-arrow-left calnav' style='float:left;cursor:pointer;' navigation='prev'></i>" . $monthText . "<i class='fa fa-arrow-right calnav' style='float:right;cursor:pointer;' navigation='next'></i></div>";
+//        echo "<div class='cal_header' type='$id' year='$year' month='$month'>$text</div>";
         echo "<div class='calspacing'></div>";
         echo "<table width='100%' class='booking_table' cellspacing='0' cellpadding='0'>";
         echo "<tr>";
@@ -424,6 +437,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $productId = $_POST['data']['productid'];
         }
         $additional = $this->getAdditionalInfo();
+        if(!$additional) {
+            $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        }
         $additional->roomProductId = $productId;
         $this->getManager()->updateAdditionalInformation($additional);
         //To trigger a new reservation.
@@ -472,6 +488,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function getRoomCount() {
+        if(!isset($this->getBookingData()->references[0])) {
+            return 1;
+        }
         return sizeof($this->getBookingData()->references[0]->roomsReserved);
     }
     
@@ -614,7 +633,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function getNeedHandicap() {
-        return $this->getAdditionalInfo()->needHandicap;
+        if($this->getAdditionalInfo()) {
+            return $this->getAdditionalInfo()->needHandicap;
+        }
+        return false;
     }
 
     public function getNeedFlexPrice() {

@@ -18,6 +18,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Partner;
 import com.thundashop.core.getshop.data.PartnerData;
+import com.thundashop.core.getshop.data.SmsResponse;
 import com.thundashop.core.getshop.data.StartData;
 import com.thundashop.core.getshop.data.WebPageData;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -30,9 +31,11 @@ import com.thundashop.core.usermanager.data.User;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,7 @@ public class GetShop extends ManagerBase implements IGetShop {
 
     private HashMap<String, List<Partner>> partners;
     private HashMap<String, PartnerData> partnerData = new HashMap();
+    private ConcurrentHashMap<String, SmsResponse> smsResponses = new ConcurrentHashMap();
 
     
     @Autowired
@@ -89,6 +93,10 @@ public class GetShop extends ManagerBase implements IGetShop {
             if(obj instanceof PartnerData) {
                 PartnerData pdata = (PartnerData)obj;
                 partnerData.put(pdata.partnerId, pdata);
+            }
+            if(obj instanceof SmsResponse) {
+                SmsResponse pdata = (SmsResponse)obj;
+                smsResponses.put(pdata.id, pdata);
             }
         }
     }
@@ -524,5 +532,16 @@ public class GetShop extends ManagerBase implements IGetShop {
         
         mailFactory.send("post@getshop.com", "canada@getshop.com", "Your GetShop account is ready", emailTemplate);
         mailFactory.send("post@getshop.com", startData.email, "Your GetShop account is ready", emailTemplate);
+    }
+
+    @Override
+    public void saveSmsCallback(SmsResponse response) {
+        smsResponses.put(response.id, response);
+        response.storeId = "all";
+        saveObject(response);
+    }
+
+    public SmsResponse getSmsResponse(String msgId) {
+        return smsResponses.get(msgId);
     }
 }

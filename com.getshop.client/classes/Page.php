@@ -274,10 +274,24 @@ class Page {
                 <i class="fa fa-close gs_closecarouselsettings"></i>
             </div>
             <b><? echo $this->factory->__w("Container operations"); ?></b><br>
+            
+            <?
+            $options = array();
+            $options["slideleft"] = $this->factory->__w("Slide left");
+            $options["slideright"] = $this->factory->__w("Slide right");
+            $options["fade"] = $this->factory->__w("Fade");
+            ?>
+            
             <select style="width: 100%;" class="gscarouseltype">
-                <option value='slideleft'><? echo $this->factory->__w("Slide left"); ?></option>
-                <option value='slideright'><? echo $this->factory->__w("Slide right"); ?></option>
-                <option value='fade'><? echo $this->factory->__w("Fade"); ?></option>
+                <? 
+                foreach($options as $key => $val) {
+                    $selected = "";
+                    if($cell->carouselConfig->type == $key) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='$key' $selected>$val</option>";
+                }
+                ?>
             </select>
             <table width="100%">
                 <tr>
@@ -321,6 +335,16 @@ class Page {
                     }
                     ?>
                     <td align="right"><input type="checkbox" class="gsnavonmouseover" <? echo $displayNumbers; ?>></td>
+                </tr>
+                <tr>
+                    <td><? echo $this->factory->__w("Keep aspect ratio"); ?></td>
+                    <?
+                    $keepAspect= "";
+                    if($cell->carouselConfig->keepAspect) {
+                        $keepAspect = "CHECKED";
+                    }
+                    ?>
+                    <td align="right"><input type="checkbox" class="gskeepaspect" <? echo $keepAspect; ?>></td>
                 </tr>
             </table>
             <br>
@@ -872,6 +896,19 @@ class Page {
         if ($this->factory->isMobile() || $this->editCarouselForMobile()) {
             $height = $config->heightMobile;
         }
+        
+        if($config->keepAspect) {
+            ?>
+            <script>
+            var aspectRatio = <? echo $config->height / $config->windowWidth; ?>;
+            var newHeight = $(window).width() * aspectRatio;
+            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').height(newHeight);
+            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').height(newHeight);
+            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').css('min-height',newHeight);
+            </script>
+            <?
+        }
+        
         ?>
         <script>
             var cellid = "<? echo $cell->cellId; ?>";

@@ -10,6 +10,7 @@ h1 {
 .gscontainercell .gsdepth_0.gsrow { padding: 0px !important; margin: 0px !important; }
 .gsselectedcarouselrow { opacity: 1 !important; z-index: 1 !important; }
 .gsvisualizeedit { border-color:red; }
+.ui-tooltip { z-index: 111113; }
 .gsaddcontent i {
     -webkit-transition: opacity .15s ease-in-out;
     -moz-transition: opacity .15s ease-in-out;

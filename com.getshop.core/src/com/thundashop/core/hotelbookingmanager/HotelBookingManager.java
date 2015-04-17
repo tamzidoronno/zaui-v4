@@ -153,25 +153,40 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public void reserveRoom(long startDate, long endDate, Integer count) throws ErrorException {
+    public Integer reserveRoom(long startDate, long endDate, Integer count) throws ErrorException {
         AdditionalBookingInformation additional = getCurrentUserBookingData().additonalInformation;
-        List<Room> availableRoom = getAvailableRooms(additional.roomProductId, startDate, endDate);
+        List<String> roomProductIds = getAllRoomProductIds();
+        
+        boolean found = false;
         List<Room> roomsToBook = new ArrayList();
-        for(Room room : availableRoom) {
-            
-            if(additional.needHandicap && !room.isHandicap) {
-                continue;
+        for(String otherProductId : roomProductIds) {
+            List<Room> availableRoom = getAvailableRooms(additional.roomProductId, startDate, endDate);
+            roomsToBook = new ArrayList();
+            for(Room room : availableRoom) {
+
+                if(additional.needHandicap && !room.isHandicap) {
+                    continue;
+                }
+
+                roomsToBook.add(room);
+                if(roomsToBook.size() == count) {
+                    break;
+                }
             }
-            
-            roomsToBook.add(room);
-            if(roomsToBook.size() == count) {
+
+            if(roomsToBook.size() < count) {
+                additional.roomProductId = otherProductId;
+            } else {
+                found = true;
                 break;
             }
         }
         
-        if(roomsToBook.size() < count) {
-            throw new ErrorException(1032);
+        if(!found) {
+            //All rooms are taken in this periode. :(
+            return -1;
         }
+        
         
         Date start = new Date(startDate * 1000);
         Calendar cal = Calendar.getInstance();
@@ -203,6 +218,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         bookingData.references.add(reference);
         saveObject(bookingData);
+        return 1;
     }
 
     private int genereateReferenceId() throws ErrorException {
@@ -548,9 +564,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         User user = userManager.getUserByReference(bdata.additonalInformation.customerReference);
         if (user != null) {
             message = message.replaceAll("\\{email\\}", user.emailAddress);
-            message = message.replaceAll("\\{address\\}", user.address.address);
-            message = message.replaceAll("\\{postCode\\}", user.address.postCode);
-            message = message.replaceAll("\\{city\\}", user.address.city);
+            if(user.address != null) {
+                message = message.replaceAll("\\{address\\}", user.address.address);
+                message = message.replaceAll("\\{postCode\\}", user.address.postCode);
+                message = message.replaceAll("\\{city\\}", user.address.city);
+            } else {
+                message = message.replaceAll("\\{address\\}", "");
+                message = message.replaceAll("\\{postCode\\}", "");
+                message = message.replaceAll("\\{city\\}", "");
+            }
         }
             
         return message;
@@ -744,6 +766,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public UsersBookingData getCurrentUserBookingData() {
         UsersBookingData tempData = null;
+        removeExpiredBooking();
         for(UsersBookingData bdata : getAllUsersBookingData()) {
             if(bdata.sessionId.equals(getSession().id)) {
                 tempData = bdata;
@@ -752,6 +775,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if(tempData == null) {
             tempData = new UsersBookingData();
             tempData.sessionId = getSession().id;
+            tempData.started = new Date();
             usersBookingData.add(tempData);
         }
         
@@ -763,21 +787,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         UsersBookingData bookingData = getCurrentUserBookingData();
         cartManager.clear();
         int totalNights = 0;
-        if(bookingData.additonalInformation.isPartner) {
-            int count = 0;
-            for(BookingReference reference : bookingData.references) {
-                count += reference.getNumberOfNights();
-                totalNights += reference.getNumberOfNights();
-            }
-            cartManager.addProductItem(bookingData.additonalInformation.roomProductId, count);
-            
-        } else {
-            for(BookingReference reference : bookingData.references) {
-                totalNights += reference.getNumberOfNights();
-                for(int i = 0; i < reference.roomsReserved.size(); i++) {
-                    int count = reference.getNumberOfNights();
-                    cartManager.addProductItem(bookingData.additonalInformation.roomProductId, count);
-                }
+        
+        for(BookingReference reference : bookingData.references) {
+            totalNights += reference.getNumberOfNights();
+            for(int i = 0; i < reference.roomsReserved.size(); i++) {
+                int count = reference.getNumberOfNights();
+                CartItem cartItem = cartManager.addProductItem(bookingData.additonalInformation.roomProductId, count);
+                cartItem.startDate = reference.startDate;
+                cartItem.endDate = reference.endDate;
+                
             }
         }
         
@@ -928,4 +946,38 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return added;
     }
 
+    private List<String> getAllRoomProductIds() {
+        HashMap<String, String> ids = new HashMap();
+        for(Room room : getAllRooms()) {
+            ids.put(room.productId, "");
+        }
+        
+        return new ArrayList(ids.keySet());
+    }
+
+    private void removeExpiredBooking() {
+        List<UsersBookingData> bdataToRemove = new ArrayList();
+        for(UsersBookingData bdata : usersBookingData) {
+            boolean remove = false;
+            if(bdata.started == null && !bdata.sessionId.isEmpty()) {
+                remove = true;
+            }
+            
+            if(bdata.started != null && !bdata.sessionId.isEmpty()) {
+                long diff = (new Date().getTime() - bdata.started.getTime())/1000;
+                if(diff > 3600) {
+                    //Booking session timed out.
+                    remove = true;
+                }
+            }
+            if(remove) {
+                bdataToRemove.add(bdata);
+            }
+        }
+        
+        for(UsersBookingData toRemove : bdataToRemove) {
+            usersBookingData.remove(toRemove);
+            deleteObject(toRemove);
+        }    
+    }
 }

@@ -600,6 +600,8 @@ thundashop.framework = {
             carouselnumber: $(this).closest('.carouselsettingspanel').find('.gscarouselnumberconfig').is(':checked'),
             avoidrotate: $(this).closest('.carouselsettingspanel').find('.gsavoidrotate').is(':checked'),
             gsnavonmouseover: $(this).closest('.carouselsettingspanel').find('.gsnavonmouseover').is(':checked'),
+            keepAspect: $(this).closest('.carouselsettingspanel').find('.gskeepaspect').is(':checked'),
+            windowWidth: $(window).width(),
         }
 
         data['outerWidth'] = $('.gscontainercell[cellid="' + data['cellid'] + '"] .gsinner').outerWidth();
@@ -611,6 +613,9 @@ thundashop.framework = {
     showCarouselSettings: function () {
         var cellid = $(this).closest('.gscontainercell').attr('cellid');
         var panel = $(this).closest('.gscontainercell').find('.carouselsettingspanel');
+        if(panel.find('.gskeepaspect').is(':checked')) {
+            panel.find('.gscarouselheight').val($(this).closest('.gscontainercell').height());
+        }
         panel.css('left', $(this).offset().left);
         panel.css('top', $(this).parent().position().top);
         panel.attr('cellid', cellid);

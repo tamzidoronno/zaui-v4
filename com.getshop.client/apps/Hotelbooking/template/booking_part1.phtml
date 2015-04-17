@@ -77,7 +77,16 @@ if(isset($_GET['pagenumber'])) {
     </div>
 </div>
 <script>
-    $('.Hotelbooking #start_date').datepicker({ dateFormat: "dd.mm.yy", minDate : 0 });
+    $('.Hotelbooking #start_date').datepicker({ dateFormat: "dd.mm.yy", minDate : 0,
+    onSelect: function(dateText) {
+        var date = moment(dateText, "DD.MM.YYYY");
+        var month = (moment(date).get('month')+1);
+        if(month < 10) {
+            month = "0" + month;
+        }
+        $('#end_date').val((moment(date).get('date')+1) + "." + month + "." + moment(date).get('year'));
+      }
+    });
     $('.Hotelbooking #end_date').datepicker({ dateFormat: "dd.mm.yy" });
     $('.Hotelbooking .end_cal').on('click', function() { $('.Hotelbooking #end_date').focus(); });
     $('.Hotelbooking .start_cal').on('click', function() { $('.Hotelbooking #start_date').focus(); });

@@ -1,8 +1,10 @@
 package com.thundashop.core.messagemanager;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.common.GetShopApi;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +37,9 @@ public interface IMessageManager  {
      * @param attachments 
      */
     public void sendMailWithAttachments(String to, String toName, String subject, String content, String from, String fromName, HashMap<String,String> attachments);
+    
+    @Administrator
+    public List<SmsLogEntry> getSmsLog();
     
     /**
      * Get how many messages a user has sent.

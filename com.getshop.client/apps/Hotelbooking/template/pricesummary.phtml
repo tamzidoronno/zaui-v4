@@ -13,17 +13,7 @@ $flexProduct = $this->getFlexProduct();
         <h1><? echo $this->__w("Summary"); ?></h1>
     </div>
     <div class="seperator"></div>
-    <? if(!$this->isPartnershipBooking()) { ?>
-        <div class='price_row'>
-            <? echo $bookTime; ?>
-            <span class='right_aligned_price'>
-                <?
-                echo date("d. M Y", $this->getStart()) . " " . $this->__w("to") . " " . date("d. M Y", $this->getEnd());
-                ?>
-            </span>
-        </div>
     <?
-    }
     $total = 0;
     $totalDiff = 0;
     $cart = $this->getApi()->getCartManager()->getCart();
@@ -32,6 +22,30 @@ $flexProduct = $this->getFlexProduct();
 
     
     $i = 0;
+    
+    $totalOrignalPrice = 0;
+    $totalDiscountedPrice = 0;
+    
+    foreach ($cart->items as $cartItem) {
+        $totalDiscountedPrice += $cartItem->product->price * $cartItem->count;
+        $totalOrignalPrice += $cartItem->product->original_price * $cartItem->count;    
+    }
+    
+    echo "<div style='border-bottom: solid 1px #c9b9a3; padding-bottom: 5px; margin-bottom: 5px;'>";
+    $totalDiff = $totalDiscountedPrice - $totalOrignalPrice;
+    if ($totalDiff < 0) {
+        $percentage = (double)($totalDiscountedPrice/$totalOrignalPrice)*100;
+        $percentage = 100 - $percentage;
+        $percentage = round($percentage, 1);
+
+        $totalDiff = number_format((float) $totalDiff, 2, '.', '');
+        echo "<div class='price_row'>";
+        echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $totalDiff*-1 . " kr</span></span>";
+        echo "Rabatt på oppholdet ($percentage%)";
+        echo "</div>";
+    }
+    echo "</div>";
+    
     foreach ($cart->items as $cartItem) {
         /* @var $cartItem core_cartmanager_data_CartItem */
         $product = $cartItem->product;
@@ -40,54 +54,35 @@ $flexProduct = $this->getFlexProduct();
             $nightTextToPrint = $nightsText;
         }
         $text = $cartItem->count . " " . $nightTextToPrint . " " . $inText . " " . strtolower($product->name);
+        
+        $text .= " - " . date("d.m.Y", strtotime($cartItem->startDate)) . " " . $this->__w("to") . " " . date("d.m.Y", strtotime($cartItem->endDate));
+
+        $discountedPrice = $cartItem->product->price * $cartItem->count;
+        
         if($product->id == $flexProduct->id) {
             $text = "Tillegg for flexibel leie";
         }
 
-        if($this->isPartnershipBooking()) {
-             $text .=  "<br>&nbsp;&nbsp;&nbsp;<b>For følgende opphold</b>";
-            foreach($this->getBookingData()->references as $partnerReservations) {
-                $text .= "<br>";
-                $text .=  "&nbsp;&nbsp;&nbsp;" . date("d-m-Y", strtotime($partnerReservations->startDate)) . " - " . date("d-m-Y", strtotime($partnerReservations->endDate));
-            }
-        }
         $text .= "<br>";
         
-        $price = $cartItem->product->original_price * $cartItem->count;
-        $originalPrice = $price;
-        $discountedPrice = $cartItem->product->price * $cartItem->count;
-        $originalDiscountPrice = $discountedPrice;
-        $diff = $discountedPrice - $price;
-        $totalDiff += $diff;
         if ($product->taxGroupObject) {
             $taxgroup = $product->taxGroupObject->taxRate;
             if (!isset($taxes[$taxgroup])) {
                 $taxes[$taxgroup] = 0;
             }
-            $taxes[$taxgroup] += $discountedPrice * ($taxgroup / 100);
-            $price -= $discountedPrice * ($taxgroup / 100);
-        }
-        $total += $price;
-        $price = number_format((float) $price, 2, '.', '');
+            $nettoDiscounted = $discountedPrice / (1+($taxgroup / 100));
+            $taxes[$taxgroup] += $discountedPrice - $nettoDiscounted;
+        } 
+       
         echo "<div class='price_row'>";
-        echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $price . " kr</span></span>";
+        echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . number_format((float) $nettoDiscounted, 2, '.', '') . " kr</span></span>";
         echo $text;
         echo "</div>";
+        $total += $nettoDiscounted;
         $i++;
     }
-    if ($totalDiff < 0) {
-        $percentage = (double)($originalDiscountPrice/$originalPrice)*100;
-        $percentage = 100 - $percentage;
-        $percentage = round($percentage, 1);
-
-        $totalDiff = number_format((float) $totalDiff, 2, '.', '');
-        echo "<div class='price_row'>";
-        echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $totalDiff . " kr</span></span>";
-        echo "Rabatt på oppholdet ($percentage%)";
-        echo "</div>";
-        $total += $totalDiff;
-    }
-
+    
+  
     foreach ($taxes as $taxgroup => $value) {
         $value = number_format((float) $value, 2, '.', '');
         echo "<div class='price_row'>";
@@ -96,6 +91,7 @@ $flexProduct = $this->getFlexProduct();
         echo "</div>";
         $total += $value;
     }
+    
     
     $total = number_format((float) $total, 2, '.', '');
 

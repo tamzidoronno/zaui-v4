@@ -9,12 +9,14 @@
     $difference = $datetime1->diff($datetime2);
     $days = $difference->days;
 
+    $this->getApi()->getHotelBookingManager()->setCart($product->id, $days, strtotime($start), strtotime($end));
     $mgr = $this->getApi()->getCartManager();
-    $mgr->clear();
-    $mgr->addProduct($product->id, $days, []);
     $cart = $mgr->getCart();
-    $price = $cart->items[0]->product->price * $days;
+    $price = $this->getApi()->getCartManager()->getCartTotalAmount();
     $origprice = $cart->items[0]->product->original_price * $days;
+    if($origprice < $price) {
+        $origprice = $price;
+    }
     $discount = $origprice - $price;
 ?>
 <table width="100%">
@@ -34,10 +36,12 @@
         <td><? echo $this->__w("Discounted price"); ?></td>
         <td>Kr <? echo $price; ?></td>
     </tr>
-    <tr>
-        <td><? echo $this->__w("Your savings"); ?></td>
-        <td>Kr <? echo $discount; ?> (<? echo round((1-($price/$origprice))*100,1) . "%"; ?>)</td>
-    </tr>
+    <? if($discount > 50) { ?>
+        <tr>
+            <td><? echo $this->__w("Your savings"); ?></td>
+            <td>Kr <? echo $discount; ?> (<? echo round((1-($price/$origprice))*100,1) . "%"; ?>)</td>
+        </tr>
+    <? } ?>
     <tr>
         <td><? echo $this->__w("Average price"); ?></td>
         <td>Kr <? echo round($price / $days,2); ?></td>

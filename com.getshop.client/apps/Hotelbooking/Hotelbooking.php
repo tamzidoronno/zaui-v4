@@ -170,10 +170,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     
     function calculateProgressivePrice($productId) {
         $dayCount = $this->getDayCount();
-        $cartMgr = $this->getApi()->getCartManager();
-        $cartMgr->clear();
-        $cartMgr->addProductItem($productId, $dayCount);
-        return $cartMgr->getCartTotalAmount() / $dayCount;
+        $this->getApi()->getHotelBookingManager()->setCart($productId, $dayCount, $this->getStart(), $this->getEnd());
+        return $this->getApi()->getCartManager()->getCartTotalAmount() / $dayCount;
     }
     
     function validateReferenceKey() {

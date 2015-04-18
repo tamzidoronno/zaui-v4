@@ -601,6 +601,26 @@ public class APIHotelBookingManager {
      }
 
      /**
+     *
+     * @param roomType
+     * @param startDate The first day unix timestamp.
+     * @param endDate The last day unix timestamp.
+     * @param count The number of rooms to book.
+     * @throws ErrorException
+     */
+     public void setCart(java.lang.String productId, java.lang.Integer count, java.util.Date startDate, java.util.Date endDate)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("productId",new Gson().toJson(productId));
+          gs_json_object_data.args.put("count",new Gson().toJson(count));
+          gs_json_object_data.args.put("startDate",new Gson().toJson(startDate));
+          gs_json_object_data.args.put("endDate",new Gson().toJson(endDate));
+          gs_json_object_data.method = "setCart";
+          gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * Get all references
      * @return
      * @throws ErrorException

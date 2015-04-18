@@ -28,6 +28,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $discountedPrice;
 
 	/** @var String */
+	public $overriddenPrice;
+
+	/** @var String */
 	public $progressivePriceModel;
 
 	/** @var String */

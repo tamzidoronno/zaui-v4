@@ -6,6 +6,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.OrderManager;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,6 +35,8 @@ public interface IHotelBookingManager {
     public GlobalBookingSettings getBookingConfiguration() throws ErrorException;
     
     public List<UsersBookingData> getAllBookingsForUser();
+    
+    public void setCart(String productId, Integer count, long startDate, long endDate);
     
     /**
      * Add new room to the manager.

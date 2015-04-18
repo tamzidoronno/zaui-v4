@@ -189,18 +189,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         
         
-        Date start = new Date(startDate * 1000);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
-        cal.set(Calendar.HOUR_OF_DAY, 15);
-        cal.set(Calendar.MINUTE, 0);
-        start = cal.getTime();
-
-        Date end = new Date(endDate * 1000);
-        cal.setTime(end);
-        cal.set(Calendar.HOUR_OF_DAY, 12);
-        cal.set(Calendar.MINUTE, 0);
-        end = cal.getTime();
+        Date start = convertStartDate(startDate);
+        Date end = convertEndDate(endDate);
 
         UsersBookingData bookingData = getCurrentUserBookingData();
         if(!bookingData.additonalInformation.isPartner) {
@@ -806,19 +796,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         cartManager.clear();
         int totalNights = 0;
         
+        Boolean longTerm = bookingData.additonalInformation.isPartner;
+        
         for(BookingReference reference : bookingData.references) {
             totalNights += reference.getNumberOfNights();
             for(int i = 0; i < reference.roomsReserved.size(); i++) {
                 int count = reference.getNumberOfNights();
-                CartItem cartItem = cartManager.addProductItem(bookingData.additonalInformation.roomProductId, count);
-                cartItem.startDate = reference.startDate;
-                cartItem.endDate = reference.endDate;
-                
-                double newPrice = getPriceBasedOnDateForBooking(cartItem, reference);
-                if (newPrice != cartItem.getProduct().price) {
-                    cartItem.getProduct().discountedPrice = newPrice;
-                    cartManager.saveCartItem(cartItem);
-                }
+                addCartItem(count, reference.startDate, reference.endDate, bookingData.additonalInformation.roomProductId, longTerm);
             }
         }
         
@@ -1004,10 +988,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }    
     }
 
-    private double getPriceBasedOnDateForBooking(CartItem cartItem, BookingReference reference) {
+    private double getPriceBasedOnDateForBooking(CartItem cartItem, Date startDate) {
         double summary = 0;
         Calendar cal = Calendar.getInstance();
-        cal.setTime(reference.startDate);
+        cal.setTime(startDate);
         
         DatePricedLibrary lib = new DatePricedLibrary();
         
@@ -1019,5 +1003,46 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         double average = summary/cartItem.getCount();
         return average;
+    }
+
+    @Override
+    public void setCart(String productId, Integer count, long startDate, long endDate) {
+        cartManager.clear();
+        Date start = convertStartDate(startDate);
+        Date end = convertEndDate(endDate);
+        addCartItem(count, start, end, productId, false);
+    }
+
+    private void addCartItem(int count, Date startDate, Date endDate, String productId, boolean longTerm) {
+        CartItem cartItem = cartManager.addProductItem(productId, count);
+            cartItem.startDate = startDate;
+            cartItem.endDate = endDate;
+            if(!longTerm) {
+                double newPrice = getPriceBasedOnDateForBooking(cartItem, startDate);
+                if (newPrice != cartItem.getProduct().price) {
+                    cartItem.getProduct().discountedPrice = newPrice;
+                    cartManager.saveCartItem(cartItem);
+                }
+            }
+    }
+
+    private Date convertStartDate(long startDate) {
+        Date start = new Date(startDate * 1000);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        cal.set(Calendar.HOUR_OF_DAY, 15);
+        cal.set(Calendar.MINUTE, 0);
+        start = cal.getTime();
+        return start;
+    }
+
+    private Date convertEndDate(long endDate) {
+        Date end = new Date(endDate * 1000);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(end);
+        cal.set(Calendar.HOUR_OF_DAY, 12);
+        cal.set(Calendar.MINUTE, 0);
+        end = cal.getTime();
+        return end;
     }
 }

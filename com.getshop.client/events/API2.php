@@ -2220,6 +2220,27 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	*
+	* @param roomType
+	* @param startDate The first day unix timestamp.
+	* @param endDate The last day unix timestamp.
+	* @param count The number of rooms to book.
+	* @throws ErrorException
+	*/
+
+	public function setCart($productId, $count, $startDate, $endDate) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data["method"] = "setCart";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all references
 	* @return void
 	* @throws ErrorException
@@ -2959,26 +2980,6 @@ class APIMessageManager {
 	     $data['args']["fromName"] = json_encode($this->transport->object_unset_nulls($fromName));
 	     $data['args']["attachments"] = json_encode($this->transport->object_unset_nulls($attachments));
 	     $data["method"] = "sendMailWithAttachments";
-	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Get how many messages a user has sent.
-	*
-	* @param year
-	* @param month
-	* @return void
-	*/
-
-	public function updateSmsStatus($status, $messageId, $timestamp, $charge) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["status"] = json_encode($this->transport->object_unset_nulls($status));
-	     $data['args']["messageId"] = json_encode($this->transport->object_unset_nulls($messageId));
-	     $data['args']["timestamp"] = json_encode($this->transport->object_unset_nulls($timestamp));
-	     $data['args']["charge"] = json_encode($this->transport->object_unset_nulls($charge));
-	     $data["method"] = "updateSmsStatus";
 	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
 	     return $this->transport->sendMessage($data);
 	}

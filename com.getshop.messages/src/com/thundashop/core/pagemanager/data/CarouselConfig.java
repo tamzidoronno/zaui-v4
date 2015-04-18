@@ -10,4 +10,5 @@ public class CarouselConfig {
     public Boolean navigateOnMouseOver = false;
     public Boolean keepAspect = false;
     public Integer windowWidth = -1;
+    public Integer innerWidth = -1;
 }

@@ -608,7 +608,7 @@ public class APIHotelBookingManager {
      * @param count The number of rooms to book.
      * @throws ErrorException
      */
-     public void setCart(java.lang.String productId, java.lang.Integer count, java.util.Date startDate, java.util.Date endDate)  throws Exception  {
+     public void setCart(java.lang.String productId, java.lang.Integer count, long startDate, long endDate)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("productId",new Gson().toJson(productId));

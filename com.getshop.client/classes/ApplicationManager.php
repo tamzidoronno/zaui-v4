@@ -113,6 +113,8 @@ class ApplicationManager extends FactoryBase {
         $config->displayNumbersOnDots = false;
         $config->keepAspect = $_POST['data']['keepAspect'];
         $config->windowWidth = $_POST['data']['windowWidth'];
+        $config->innerWidth = $_POST['data']['innerWidth'];
+        
         if($_POST['data']['carouselnumber'] == "true") {
             $config->displayNumbersOnDots = true;
         }

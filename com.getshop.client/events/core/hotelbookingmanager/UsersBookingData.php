@@ -30,5 +30,8 @@ class core_hotelbookingmanager_UsersBookingData extends core_common_DataCommon  
 	/** @var String */
 	public $started;
 
+	/** @var String */
+	public $completed;
+
 }
 ?>

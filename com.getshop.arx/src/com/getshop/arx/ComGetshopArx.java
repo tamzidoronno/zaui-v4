@@ -116,8 +116,8 @@ public class ComGetshopArx {
         }
         
         
-        grantAccessToHotel(bookingData);
         grantAccessToRoom(bookingData, allRooms);
+        grantAccessToHotel(bookingData);
     }
 
     private void grantAccessToRoom(List<UsersBookingData> bookingData, Map<String, Room> allRooms) throws Exception {
@@ -147,7 +147,7 @@ public class ComGetshopArx {
                     roomInfo.roomState = RoomInfoState.accessGranted;
                     user.doorsToAccess.add(roomGranted.roomName);
                     count++;
-
+                    System.out.println("Room is clean: " + roomGranted.roomName);
                     updateArx(user, reference, roomInfo, bdata);
                 }
             }
@@ -177,7 +177,7 @@ public class ComGetshopArx {
 
                 int count = 0;
                 for(RoomInformation roomInfo : reference.roomsReserved) {
-                    if(roomInfo.roomState == RoomInfoState.externalDoorGranted || roomInfo.roomState == RoomInfoState.externalDoorGranted) {
+                    if(roomInfo.roomState == RoomInfoState.externalDoorGranted || roomInfo.roomState == RoomInfoState.accessGranted) {
                         continue;
                     }
 

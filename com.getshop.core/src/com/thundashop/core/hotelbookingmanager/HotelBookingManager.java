@@ -2,6 +2,7 @@ package com.thundashop.core.hotelbookingmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -82,7 +83,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }            
             if (dbobj instanceof BookingReference) {
                 deleteObject(dbobj);
-            }            
+            }
             if (dbobj instanceof GlobalBookingSettings) {
                 if(settings.id != null && !settings.id.isEmpty()) {
                     deleteObject(dbobj);
@@ -385,9 +386,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 Visitors visitor = room.visitors.get(0);
                 String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
                 String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                String sms = formatMessage(reference, arxSettings.smsWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
                 sendEmail(visitor, title, message);
-                sendSms(visitor,sms);
             }
             bdata.sentWelcomeMessages = true;
             saveObject(bdata);
@@ -720,7 +719,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if(!bdata.active) {
                 continue;
             }
-            if(bdata.sessionId != null && !bdata.sessionId.isEmpty()) {
+            if(!bdata.completed) {
                 continue;
             }
             references.add(bdata);
@@ -809,6 +808,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if(bookingData.additonalInformation.needFlexPricing) {
             cartManager.addProductItem(settings.flexProductId, totalNights);
         }
+        
+        if(bookingData.completed && longTerm) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH);
+
+            prepareCartForMonthlyInvoice(year, month, 3);
+        }
+        
     }
 
     @Override
@@ -828,14 +837,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         UsersBookingData bookingData = getCurrentUserBookingData();
         User user = userManager.getUserByReference(bookingData.additonalInformation.customerReference);
         bookingData.additonalInformation.userId = user.id;
+        bookingData.completed = true;
         updateCart();
+        
         Order order = orderManager.createOrderForUser(user.id);
-        bookingData.sessionId = "";
-        bookingData.orderIds.add(order.id);
         bookingData.bookingPrice = order.cart.getItems().get(0).getProduct().price;
-        if(bookingData.additonalInformation.isPartner) {
-            bookingData.active = false;
-        }
+        bookingData.sessionId = "";
         saveObject(bookingData);
         return order.id;
     }
@@ -966,11 +973,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         List<UsersBookingData> bdataToRemove = new ArrayList();
         for(UsersBookingData bdata : usersBookingData) {
             boolean remove = false;
-            if(bdata.started == null && !bdata.sessionId.isEmpty()) {
+            if(bdata.started == null && !bdata.completed) {
                 remove = true;
             }
             
-            if(bdata.started != null && !bdata.sessionId.isEmpty()) {
+            if(bdata.started != null && !bdata.completed) {
                 long diff = (new Date().getTime() - bdata.started.getTime())/1000;
                 if(diff > 3600) {
                     //Booking session timed out.
@@ -1044,5 +1051,56 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         cal.set(Calendar.MINUTE, 0);
         end = cal.getTime();
         return end;
+    }
+
+    private int getNumberOfNightsInMonth(CartItem item, int year, int month) {
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(item.startDate);
+        int nights = 0;
+        while(true) {
+            if(cal.getTime().after(item.endDate)) {
+                break;
+            }
+            
+            if(cal.get(Calendar.MONTH) != month || cal.get(Calendar.YEAR) != year) {
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                continue;
+            }
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            nights++;
+        }
+        
+        return nights;
+    }
+
+    /**
+     * 
+     * @param year The year you want to invlice.
+     * @param month The month you would like to create an invoice for
+     * @param numberOfMonths Include more then one month? Used to invoice three first months.
+     */
+    private void prepareCartForMonthlyInvoice(int year, int month, int numberOfMonths) {
+        //Create update cart with the three first months.
+        Cart cart = cartManager.getCart();
+
+        List<String> itemsToRemove = new ArrayList();
+        for(CartItem item : cart.getItems()) {
+            int nightsInMonth = 0;
+            for(int i = 0; i < numberOfMonths;i++) {
+                nightsInMonth += getNumberOfNightsInMonth(item, year, month+i);
+            }
+            System.out.println("Nights in month:" + nightsInMonth);
+            if(nightsInMonth > 0) {
+                item.setCount(nightsInMonth);
+                cart.saveCartItem(item);
+            } else {
+                itemsToRemove.add(item.getCartItemId());
+            }
+        }
+
+        for(String itemId : itemsToRemove) {
+            cart.removeItem(itemId);
+        }    
     }
 }

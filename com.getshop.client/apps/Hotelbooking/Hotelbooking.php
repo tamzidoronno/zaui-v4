@@ -793,13 +793,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             echo $this->__w("Something went wrong while ordering, please contact us");
             return;
         }
-            
-        if($this->isPartnershipBooking()) {
-            echo "<h1 style='text-align:center;text-transform:uppercase;'>";
-            echo $this->__w("Your reservations has now been completed");
-            echo "</h1>";
-            return;
-        }
         
         foreach ($cartManager->getPaymentApplications() as $paymenti) {
             if ($paymenti->applicationSettings->id === "def1e922-972f-4557-a315-a751a9b9eff1") {

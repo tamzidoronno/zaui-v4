@@ -602,6 +602,7 @@ thundashop.framework = {
             gsnavonmouseover: $(this).closest('.carouselsettingspanel').find('.gsnavonmouseover').is(':checked'),
             keepAspect: $(this).closest('.carouselsettingspanel').find('.gskeepaspect').is(':checked'),
             windowWidth: $(window).width(),
+            innerWidth: $('.gs_page_width').width(),
         }
 
         data['outerWidth'] = $('.gscontainercell[cellid="' + data['cellid'] + '"] .gsinner').outerWidth();

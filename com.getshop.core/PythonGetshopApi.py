@@ -2252,6 +2252,42 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setCart(self, productId, count, startDate, endDate):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(count,GetShopBaseClass): 
+      args["count"]=json.dumps(count.__dict__)
+    else:
+      try:
+        args["count"]=json.dumps(count)
+      except (ValueError, AttributeError):
+        args["count"]=count
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
+    else:
+      try:
+        args["startDate"]=json.dumps(startDate)
+      except (ValueError, AttributeError):
+        args["startDate"]=startDate
+    if isinstance(endDate,GetShopBaseClass): 
+      args["endDate"]=json.dumps(endDate.__dict__)
+    else:
+      try:
+        args["endDate"]=json.dumps(endDate)
+      except (ValueError, AttributeError):
+        args["endDate"]=endDate
+    data = EmptyClass()
+    data.args = args
+    data.method = "setCart"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def setVismaConfiguration(self, settings):
     args = collections.OrderedDict()
     if isinstance(settings,GetShopBaseClass): 
@@ -2996,42 +3032,6 @@ class MessageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "sendMailWithAttachments"
-    data.interfaceName = "core.messagemanager.IMessageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def updateSmsStatus(self, status, messageId, timestamp, charge):
-    args = collections.OrderedDict()
-    if isinstance(status,GetShopBaseClass): 
-      args["status"]=json.dumps(status.__dict__)
-    else:
-      try:
-        args["status"]=json.dumps(status)
-      except (ValueError, AttributeError):
-        args["status"]=status
-    if isinstance(messageId,GetShopBaseClass): 
-      args["messageId"]=json.dumps(messageId.__dict__)
-    else:
-      try:
-        args["messageId"]=json.dumps(messageId)
-      except (ValueError, AttributeError):
-        args["messageId"]=messageId
-    if isinstance(timestamp,GetShopBaseClass): 
-      args["timestamp"]=json.dumps(timestamp.__dict__)
-    else:
-      try:
-        args["timestamp"]=json.dumps(timestamp)
-      except (ValueError, AttributeError):
-        args["timestamp"]=timestamp
-    if isinstance(charge,GetShopBaseClass): 
-      args["charge"]=json.dumps(charge.__dict__)
-    else:
-      try:
-        args["charge"]=json.dumps(charge)
-      except (ValueError, AttributeError):
-        args["charge"]=charge
-    data = EmptyClass()
-    data.args = args
-    data.method = "updateSmsStatus"
     data.interfaceName = "core.messagemanager.IMessageManager"
     return self.communicationHelper.sendMessage(data)
 

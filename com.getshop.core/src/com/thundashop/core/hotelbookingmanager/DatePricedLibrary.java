@@ -22,10 +22,18 @@ public class DatePricedLibrary {
 
     public DatePricedLibrary() {
         Calendar cal = Calendar.getInstance();
-        cal.set(2015, 3, 18);
+        cal.set(2015, 6, 17);
+        dates.add(cal.getTime());
+        cal.set(2015, 6, 18);
+        dates.add(cal.getTime());
+        cal.set(2015, 6, 19);
         dates.add(cal.getTime());
         
-        cal.set(2015, 3, 20);
+        cal.set(2015, 4, 29);
+        dates.add(cal.getTime());
+        cal.set(2015, 4, 30);
+        dates.add(cal.getTime());
+        cal.set(2015, 4, 31);
         dates.add(cal.getTime());
     }
     

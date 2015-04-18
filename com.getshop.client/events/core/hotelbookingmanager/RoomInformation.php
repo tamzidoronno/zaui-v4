@@ -1,6 +1,9 @@
 <?php
 class core_hotelbookingmanager_RoomInformation {
 	/** @var String */
+	public $code;
+
+	/** @var String */
 	public $roomId;
 
 	/** @var String */

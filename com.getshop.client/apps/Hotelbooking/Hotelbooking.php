@@ -93,9 +93,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     public function getPartnerText() {
-        $partnerText = $this->__w("* If you want to order for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental.");
+        $partnerText = $this->__w("Skal du leie for mer enn {maxDays} dager, trykk <a href='?page={partnerPage}' class='partnerlink'>here</a> for langtidsleie");
         $partnerText = str_replace("{partnerPage}", $this->getConfig()->companyPage, $partnerText);
         $partnerText = str_replace("{maxDays}", $this->getConfig()->maxRentalDays, $partnerText);
+        
+        $partnerText .= ", for priser på langtidsleie prøv vår <a href='/priskalkulator.html' class='partnerlink'>priskalkulator</a>.";
+        
         return $partnerText;
     }
     
@@ -167,10 +170,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     
     function calculateProgressivePrice($productId) {
         $dayCount = $this->getDayCount();
-        $cartMgr = $this->getApi()->getCartManager();
-        $cartMgr->clear();
-        $cartMgr->addProductItem($productId, $dayCount);
-        return $cartMgr->getCartTotalAmount() / $dayCount;
+        $this->getApi()->getHotelBookingManager()->setCart($productId, $dayCount, $this->getStart(), $this->getEnd());
+        return $this->getApi()->getCartManager()->getCartTotalAmount() / $dayCount;
     }
     
     function validateReferenceKey() {
@@ -259,8 +260,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if($this->getAdditionalInfo()) {
             return $this->getAdditionalInfo()->roomProductId;
         }
-        
-        $productId = $this->getHotelRooms()[0]->id;
+        $rooms = $this->getHotelRooms();
+        $productId = $rooms[0]->id;
         $this->changeProduct($productId);
         return $productId;
     }
@@ -790,13 +791,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
         if($this->failedReservation) {
             echo $this->__w("Something went wrong while ordering, please contact us");
-            return;
-        }
-            
-        if($this->isPartnershipBooking()) {
-            echo "<h1 style='text-align:center;text-transform:uppercase;'>";
-            echo $this->__w("Your reservations has now been completed");
-            echo "</h1>";
             return;
         }
         

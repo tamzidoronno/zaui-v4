@@ -10,7 +10,7 @@ class core_messagemanager_SmsLogEntry extends core_common_DataCommon  {
 	public $responseCode;
 
 	/** @var String */
-	public $errCode;
+	public $errorCode;
 
 	/** @var String */
 	public $apiId;

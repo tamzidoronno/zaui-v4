@@ -128,23 +128,4 @@ public class APIMessageManager {
           String result = transport.send(gs_json_object_data);
      }
 
-     /**
-     * Get how many messages a user has sent.
-     *
-     * @param year
-     * @param month
-     * @return
-     */
-     public void updateSmsStatus(java.lang.String status, java.lang.String messageId, java.lang.Long timestamp, java.lang.Double charge)  throws Exception  {
-          JsonObject2 gs_json_object_data = new JsonObject2();
-          gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("status",new Gson().toJson(status));
-          gs_json_object_data.args.put("messageId",new Gson().toJson(messageId));
-          gs_json_object_data.args.put("timestamp",new Gson().toJson(timestamp));
-          gs_json_object_data.args.put("charge",new Gson().toJson(charge));
-          gs_json_object_data.method = "updateSmsStatus";
-          gs_json_object_data.interfaceName = "core.messagemanager.IMessageManager";
-          String result = transport.send(gs_json_object_data);
-     }
-
 }

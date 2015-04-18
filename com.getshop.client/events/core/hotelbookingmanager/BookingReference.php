@@ -1,5 +1,5 @@
 <?php
-class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  {
+class core_hotelbookingmanager_BookingReference {
 	/** @var String */
 	public $bookingReference;
 

@@ -12,5 +12,11 @@ class core_cartmanager_data_CartItem {
 	/** @var String */
 	public $count;
 
+	/** @var String */
+	public $startDate;
+
+	/** @var String */
+	public $endDate;
+
 }
 ?>

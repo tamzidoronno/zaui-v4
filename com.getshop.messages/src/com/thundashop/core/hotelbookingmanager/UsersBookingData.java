@@ -16,4 +16,5 @@ public class UsersBookingData extends DataCommon {
     public double bookingPrice = 0.0;
     public String sessionId = "";
     public Date started;
+    boolean completed = false;
 }

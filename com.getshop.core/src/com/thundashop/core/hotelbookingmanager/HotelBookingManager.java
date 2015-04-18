@@ -2,6 +2,7 @@ package com.thundashop.core.hotelbookingmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -83,9 +84,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
             if (dbobj instanceof ArxSettings) {
                 arxSettings = (ArxSettings) dbobj;
-            }            
-            if (dbobj instanceof BookingReference) {
-                deleteObject(dbobj);
             }            
             if (dbobj instanceof GlobalBookingSettings) {
                 if(settings.id != null && !settings.id.isEmpty()) {
@@ -193,18 +191,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         
         
-        Date start = new Date(startDate * 1000);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
-        cal.set(Calendar.HOUR_OF_DAY, 15);
-        cal.set(Calendar.MINUTE, 0);
-        start = cal.getTime();
-
-        Date end = new Date(endDate * 1000);
-        cal.setTime(end);
-        cal.set(Calendar.HOUR_OF_DAY, 12);
-        cal.set(Calendar.MINUTE, 0);
-        end = cal.getTime();
+        Date start = convertStartDate(startDate);
+        Date end = convertEndDate(endDate);
 
         UsersBookingData bookingData = getCurrentUserBookingData();
         if(!bookingData.additonalInformation.isPartner) {
@@ -399,8 +387,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 Visitors visitor = room.visitors.get(0);
                 String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
                 String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
+
                 String sms = formatMessage(reference, arxSettings.smsWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                sendEmail(visitor, title, message, reference);
+                sendEmail(visitor, title, message, bdata);
                 sendSms(visitor,sms);
             }
             bdata.sentWelcomeMessages = true;
@@ -691,11 +680,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return "";
     }
     
-    private void sendEmail(Visitors visitor, String title, String message, BookingReference reference) {        
+    private void sendEmail(Visitors visitor, String title, String message, UsersBookingData bdata) {        
         String msg = "Sending mail to " + visitor.email + " title: " + title + " message: " + message;
         
         HashMap<String, String> attachments = new HashMap();
-        attachInvioce(attachments, reference);
+        attachInvioce(attachments, bdata);
         
         String copyadress = "toreplaced@test.no";       
 //        String copyadress = getSettings("Settings").get("mainemailaddress").value;
@@ -737,7 +726,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if(!bdata.active) {
                 continue;
             }
-            if(bdata.sessionId != null && !bdata.sessionId.isEmpty()) {
+            if(!bdata.completed) {
                 continue;
             }
             references.add(bdata);
@@ -813,25 +802,29 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         cartManager.clear();
         int totalNights = 0;
         
+        Boolean longTerm = bookingData.additonalInformation.isPartner;
+        
         for(BookingReference reference : bookingData.references) {
             totalNights += reference.getNumberOfNights();
             for(int i = 0; i < reference.roomsReserved.size(); i++) {
                 int count = reference.getNumberOfNights();
-                CartItem cartItem = cartManager.addProductItem(bookingData.additonalInformation.roomProductId, count);
-                cartItem.startDate = reference.startDate;
-                cartItem.endDate = reference.endDate;
-                
-                double newPrice = getPriceBasedOnDateForBooking(cartItem, reference);
-                if (newPrice != cartItem.getProduct().price) {
-                    cartItem.getProduct().discountedPrice = newPrice;
-                    cartManager.saveCartItem(cartItem);
-                }
+                addCartItem(count, reference.startDate, reference.endDate, bookingData.additonalInformation.roomProductId, longTerm);
             }
         }
         
         if(bookingData.additonalInformation.needFlexPricing) {
             cartManager.addProductItem(settings.flexProductId, totalNights);
         }
+        
+        if(bookingData.completed && longTerm) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH);
+
+            prepareCartForMonthlyInvoice(year, month, 3);
+        }
+        
     }
 
     @Override
@@ -851,14 +844,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         UsersBookingData bookingData = getCurrentUserBookingData();
         User user = userManager.getUserByReference(bookingData.additonalInformation.customerReference);
         bookingData.additonalInformation.userId = user.id;
+        bookingData.completed = true;
         updateCart();
+        
         Order order = orderManager.createOrderForUser(user.id);
-        bookingData.sessionId = "";
-        bookingData.orderIds.add(order.id);
         bookingData.bookingPrice = order.cart.getItems().get(0).getProduct().price;
-        if(bookingData.additonalInformation.isPartner) {
-            bookingData.active = false;
-        }
+        bookingData.sessionId = "";
         saveObject(bookingData);
         return order.id;
     }
@@ -989,11 +980,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         List<UsersBookingData> bdataToRemove = new ArrayList();
         for(UsersBookingData bdata : usersBookingData) {
             boolean remove = false;
-            if(bdata.started == null && !bdata.sessionId.isEmpty()) {
+            if(bdata.started == null && !bdata.completed) {
                 remove = true;
             }
             
-            if(bdata.started != null && !bdata.sessionId.isEmpty()) {
+            if(bdata.started != null && !bdata.completed) {
                 long diff = (new Date().getTime() - bdata.started.getTime())/1000;
                 if(diff > 3600) {
                     //Booking session timed out.
@@ -1011,10 +1002,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }    
     }
 
-    private double getPriceBasedOnDateForBooking(CartItem cartItem, BookingReference reference) {
+    private double getPriceBasedOnDateForBooking(CartItem cartItem, Date startDate) {
         double summary = 0;
         Calendar cal = Calendar.getInstance();
-        cal.setTime(reference.startDate);
+        cal.setTime(startDate);
         
         DatePricedLibrary lib = new DatePricedLibrary();
         
@@ -1028,13 +1019,107 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return average;
     }
 
-    private void attachInvioce(HashMap<String, String> attachments, BookingReference reference) {
-        Order order = orderManager.getOrderByReference(reference.id);
-        if (order != null) {
-            String invoice = invoiceManager.getBase64EncodedInvoice(order.id);
-            if (invoice != null && !invoice.isEmpty()) {
-                attachments.put("Kvittering.pdf", invoice);
+
+    private void attachInvioce(HashMap<String, String> attachments, UsersBookingData data) {
+        if (data.orderIds == null || data.orderIds.size() == 0) {
+            return;
+        }
+        
+        String invoice = invoiceManager.getBase64EncodedInvoice(data.orderIds.iterator().next());
+        if (invoice != null && !invoice.isEmpty()) {
+            attachments.put("Kvittering.pdf", invoice);
+        }
+    }
+
+    @Override
+    public void setCart(String productId, Integer count, long startDate, long endDate) {
+        cartManager.clear();
+        Date start = convertStartDate(startDate);
+        Date end = convertEndDate(endDate);
+        addCartItem(count, start, end, productId, false);
+    }
+
+    private void addCartItem(int count, Date startDate, Date endDate, String productId, boolean longTerm) {
+        CartItem cartItem = cartManager.addProductItem(productId, count);
+            cartItem.startDate = startDate;
+            cartItem.endDate = endDate;
+            if(!longTerm) {
+                double newPrice = getPriceBasedOnDateForBooking(cartItem, startDate);
+                if (newPrice != cartItem.getProduct().price) {
+                    cartItem.getProduct().discountedPrice = newPrice;
+                    cartManager.saveCartItem(cartItem);
+                }
+            }
+    }
+
+    private Date convertStartDate(long startDate) {
+        Date start = new Date(startDate * 1000);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        cal.set(Calendar.HOUR_OF_DAY, 15);
+        cal.set(Calendar.MINUTE, 0);
+        start = cal.getTime();
+        return start;
+    }
+
+    private Date convertEndDate(long endDate) {
+        Date end = new Date(endDate * 1000);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(end);
+        cal.set(Calendar.HOUR_OF_DAY, 12);
+        cal.set(Calendar.MINUTE, 0);
+        end = cal.getTime();
+        return end;
+    }
+
+    private int getNumberOfNightsInMonth(CartItem item, int year, int month) {
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(item.startDate);
+        int nights = 0;
+        while(true) {
+            if(cal.getTime().after(item.endDate)) {
+                break;
+            }
+            
+            if(cal.get(Calendar.MONTH) != month || cal.get(Calendar.YEAR) != year) {
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                continue;
+            }
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            nights++;
+        }
+        
+        return nights;
+    }
+
+    /**
+     * 
+     * @param year The year you want to invlice.
+     * @param month The month you would like to create an invoice for
+     * @param numberOfMonths Include more then one month? Used to invoice three first months.
+     */
+    private void prepareCartForMonthlyInvoice(int year, int month, int numberOfMonths) {
+        //Create update cart with the three first months.
+        Cart cart = cartManager.getCart();
+
+        List<String> itemsToRemove = new ArrayList();
+        for(CartItem item : cart.getItems()) {
+            int nightsInMonth = 0;
+            for(int i = 0; i < numberOfMonths;i++) {
+                nightsInMonth += getNumberOfNightsInMonth(item, year, month+i);
+            }
+            System.out.println("Nights in month:" + nightsInMonth);
+            if(nightsInMonth > 0) {
+                item.setCount(nightsInMonth);
+                cart.saveCartItem(item);
+            } else {
+                itemsToRemove.add(item.getCartItemId());
             }
         }
+
+        for(String itemId : itemsToRemove) {
+            cart.removeItem(itemId);
+        }    
     }
 }

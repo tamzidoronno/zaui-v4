@@ -8,7 +8,7 @@ body {
 .gs_page_width {
     margin: auto;
     max-width: 1160px;
-    min-width: 1024px;
+    min-width: 1000px;
 }
 .shop_button {
     color: #FFF;
@@ -115,3 +115,5 @@ cursor: pointer; text-transform: uppercase; margin-top: 2px; }
 .Login .login_content { text-align: center; }
 
 .Login .gs_button { border-radius: 0px; }
+
+.gsarea[area="footer"] .gs_page_width { padding-left: 20px; padding-right: 20px; }

@@ -27,5 +27,8 @@ class core_pagemanager_data_CarouselConfig {
 	/** @var String */
 	public $windowWidth;
 
+	/** @var String */
+	public $innerWidth;
+
 }
 ?>

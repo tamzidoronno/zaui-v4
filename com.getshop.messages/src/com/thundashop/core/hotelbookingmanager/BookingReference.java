@@ -1,6 +1,7 @@
 package com.thundashop.core.hotelbookingmanager;
 
 import com.thundashop.core.common.DataCommon;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class BookingReference extends DataCommon {
+public class BookingReference implements Serializable {
     public int bookingReference;
     public Date startDate;
     public Date endDate;

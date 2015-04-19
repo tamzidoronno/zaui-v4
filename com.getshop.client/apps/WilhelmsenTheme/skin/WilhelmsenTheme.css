@@ -9,6 +9,8 @@ body {
     margin: auto;
     max-width: 1160px;
     min-width: 1000px;
+    padding-left: 10px;
+    padding-right: 25px;
 }
 .shop_button {
     color: #FFF;
@@ -105,6 +107,8 @@ body {
 
 .HotelPriceCalculator .selectroom { width: 100%; background-color: #FFF; padding: 5px; }
 
+
+
 .HotelPriceCalculator .check_price_button { color: #FFF;
 text-align: center;
 background-color: #ab8936;
@@ -116,4 +120,4 @@ cursor: pointer; text-transform: uppercase; margin-top: 2px; }
 
 .Login .gs_button { border-radius: 0px; }
 
-.gsarea[area="footer"] .gs_page_width { padding-left: 20px; padding-right: 20px; }
+.gsarea[area="footer"] .gs_page_width { padding-left: 20px; padding-right: 40px; }

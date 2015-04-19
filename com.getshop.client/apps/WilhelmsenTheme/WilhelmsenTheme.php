@@ -21,7 +21,7 @@ class WilhelmsenTheme extends \ThemeApplication implements \Application {
     }
     
     public function addScripts() {
-        echo "\n" . "<link href='http://fonts.googleapis.com/css?family=Petit+Formal+Script' rel='stylesheet' type='text/css'>";
+        echo "\n" . "<link href='https://fonts.googleapis.com/css?family=Petit+Formal+Script' rel='stylesheet' type='text/css'>";
     }
 
     

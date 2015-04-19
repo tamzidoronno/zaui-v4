@@ -60,6 +60,7 @@ position: relative;
 .Hotelbooking .calendar.right .cal_field.selected { background-color: #b4bac4; }
 .Hotelbooking .calendar.left .cal_field.selected { background-color: #b9c4a9; }
 .Hotelbooking .top_cal_header { border-bottom: solid 1px rgba(0,0,0,0.2) !important; }
+.Hotelbooking .cal_header .fa {   width: 20px;   height: 20px;   line-height: 16px; }
 .Hotelbooking .booking_count_box td { font-size: 18px; font-weight: bold; }
 .Hotelbooking .booking_count_box td.checkininfo { font-size: 14px; font-weight: normal; }
 .Hotelbooking .booking_count_box input { border: solid 1px #BDC7D8; width: 40px; margin-left: 20px; }

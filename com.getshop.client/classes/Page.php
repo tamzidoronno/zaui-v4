@@ -917,6 +917,14 @@ class Page {
                 var top = $(this).position().top;
                 var newLeft = left * innerWidthChange;
                 var newTop = top * innerWidthChange;
+                
+                if(top < 0) {
+                    top = 0;
+                }
+                if((newLeft + $(this).width()) > $(window).width()) {
+                    newLeft = $(window).width() - (newLeft + $(this).width());
+                }
+                
                 $(this).css('left',newLeft);
                 $(this).css('top',newTop);
             });

@@ -605,6 +605,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             Room room = getRoom(roomInfo.roomId);
             Visitors visitor = roomInfo.visitors.get(0);
             room.isClean = false;
+            saveRoom(room);
+            
             String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
             messageManager.sendSms(visitor.phone, message);
             String copyadress = "toreplaced@test.no";       
@@ -864,6 +866,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         updateCart();
         
         Order order = orderManager.createOrderForUser(user.id);
+        bookingData.orderIds.add(order.id);
         bookingData.bookingPrice = order.cart.getItems().get(0).getProduct().price;
         bookingData.sessionId = "";
         saveObject(bookingData);

@@ -818,11 +818,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         for(BookingReference reference : bookingData.references) {
             totalNights += reference.getNumberOfNights();
-            for(int i = 0; i < reference.roomsReserved.size(); i++) {
+            for(RoomInformation roomInfo : reference.roomsReserved) {
                 int count = reference.getNumberOfNights();
-                addCartItem(count, reference.startDate, reference.endDate, bookingData.additonalInformation.roomProductId, longTerm);
+                CartItem cartItem = addCartItem(count, reference.startDate, reference.endDate, bookingData.additonalInformation.roomProductId, longTerm);
+                roomInfo.cartItemId = cartItem.getCartItemId();
             }
+            
         }
+        
+        saveObject(bookingData);
         
         if(bookingData.additonalInformation.needFlexPricing) {
             cartManager.addProductItem(settings.flexProductId, totalNights);
@@ -1051,7 +1055,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         addCartItem(count, start, end, productId, false);
     }
 
-    private void addCartItem(int count, Date startDate, Date endDate, String productId, boolean longTerm) {
+    private CartItem addCartItem(int count, Date startDate, Date endDate, String productId, boolean longTerm) {
         CartItem cartItem = cartManager.addProductItem(productId, count);
             cartItem.startDate = startDate;
             cartItem.endDate = endDate;
@@ -1062,6 +1066,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     cartManager.saveCartItem(cartItem);
                 }
             }
+            
+        return cartItem;
     }
 
     private Date convertStartDate(long startDate) {

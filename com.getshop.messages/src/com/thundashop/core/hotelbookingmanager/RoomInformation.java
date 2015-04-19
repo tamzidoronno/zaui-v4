@@ -20,4 +20,5 @@ public class RoomInformation implements Serializable {
     public String roomId = "";
     public List<Visitors> visitors = new ArrayList();
     public int roomState = 0;
+    public String cartItemId = "";
 }

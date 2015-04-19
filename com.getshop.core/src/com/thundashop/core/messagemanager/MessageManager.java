@@ -171,7 +171,6 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             }
             
             mailFactory.sendWithAttachments(from, to, subject, content, files, true);
-        
         } catch (FileNotFoundException ex) {
             java.util.logging.Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

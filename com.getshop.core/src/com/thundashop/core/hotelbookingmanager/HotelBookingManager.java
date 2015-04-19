@@ -13,6 +13,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -67,6 +68,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Autowired
     private ProductManager productManager;
     
+    @Autowired
+    private InvoiceManager invoiceManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dbobj : data.data) {
@@ -81,9 +85,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if (dbobj instanceof ArxSettings) {
                 arxSettings = (ArxSettings) dbobj;
             }            
-            if (dbobj instanceof BookingReference) {
-                deleteObject(dbobj);
-            }
             if (dbobj instanceof GlobalBookingSettings) {
                 if(settings.id != null && !settings.id.isEmpty()) {
                     deleteObject(dbobj);
@@ -386,7 +387,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 Visitors visitor = room.visitors.get(0);
                 String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
                 String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                sendEmail(visitor, title, message);
+
+                String sms = formatMessage(reference, arxSettings.smsWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                sendEmail(visitor, title, message, bdata);
+                sendSms(visitor,sms);
             }
             bdata.sentWelcomeMessages = true;
             saveObject(bdata);
@@ -676,13 +680,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return "";
     }
     
-    private void sendEmail(Visitors visitor, String title, String message) {
+    private void sendEmail(Visitors visitor, String title, String message, UsersBookingData bdata) {        
         String msg = "Sending mail to " + visitor.email + " title: " + title + " message: " + message;
-            
-         String copyadress = "toreplaced@test.no";       
-//        String copyadress = getSettings("Settings").get("mainemailaddress").value;
         
-        messageManager.sendMail(visitor.email, visitor.name, title, message, copyadress, copyadress);
+        HashMap<String, String> attachments = new HashMap();
+        attachInvioce(attachments, bdata);
+        
+        String copyadress = "toreplaced@test.no";       
+//        String copyadress = getSettings("Settings").get("mainemailaddress").value;
+
+        messageManager.sendMailWithAttachments(visitor.email, visitor.name, title, message, copyadress, copyadress, attachments);
         ArxLogEntry newEntry = new ArxLogEntry();
         newEntry.message = msg;
         saveObject(newEntry);
@@ -1010,6 +1017,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         double average = summary/cartItem.getCount();
         return average;
+    }
+
+
+    private void attachInvioce(HashMap<String, String> attachments, UsersBookingData data) {
+        if (data.orderIds == null || data.orderIds.size() == 0) {
+            return;
+        }
+        
+        String invoice = invoiceManager.getBase64EncodedInvoice(data.orderIds.iterator().next());
+        if (invoice != null && !invoice.isEmpty()) {
+            attachments.put("Kvittering.pdf", invoice);
+        }
     }
 
     @Override

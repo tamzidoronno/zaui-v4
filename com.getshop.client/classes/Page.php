@@ -931,6 +931,20 @@ class Page {
             
             </script>
             <?
+        } else if($this->factory->isMobile()) {
+            ?>
+            <script>
+                $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').find('.gsfloatingframe').each(function() {
+                    var left = $(this).position().left;
+                    var aspectRatio = $(window).width() / 620;
+                    left = left * aspectRatio;
+                    if(left + $(this).width() > $(window).width()) {
+                        left = $(window).width() - ($(this).width());
+                    }
+                    $(this).css('left',left);
+                });
+            </script>
+            <?
         }
         
         ?>

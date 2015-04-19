@@ -62,6 +62,8 @@ a.partnerlink { text-decoration: none !important; color:#ab8936 !important; }
     display:none;
     
 }
+.gscontainercell[cellid="dc51baff-075e-41d4-ac43-219dff2a900e"] { font-family: 'Petit Formal Script', cursive  !important; text-shadow: 2px 2px 2px rgba(0,0,0,0.2); }
+
 .applicationarea[appid="e902ee7d-e634-4629-8d24-972caf9fd396"] .imagecontainer img {   
     width: 60px;
     top: -260px;

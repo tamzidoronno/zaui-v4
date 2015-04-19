@@ -860,6 +860,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         updateCart();
         
         Order order = orderManager.createOrderForUser(user.id);
+        bookingData.orderIds.add(order.id);
         bookingData.bookingPrice = order.cart.getItems().get(0).getProduct().price;
         bookingData.sessionId = "";
         saveObject(bookingData);

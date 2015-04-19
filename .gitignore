@@ -38,6 +38,7 @@ com.getshop.syncclient/build.xml
 com.getshop.combined/build.xml
 com.getshop.syncserver/nbproject/private/config.properties
 com.getshop.core/secret.txt
+com.getshop.core/html/tmp
 
 com.getshop.core/PythonGetshopApi.pyc
 com.getshop.core/config.txt
@@ -90,3 +91,11 @@ fuck/
 apitodb.json
 com.getshop.remote/startlog.txt
 com.getshop.client/etc/config.txt
+/com.getshop.crawler/nbproject/private/
+/com.getshop.crawler/build/
+/com.getshop.arx/nbproject/private/
+/com.getshop.VismaWilhelmsenHouse/nbproject/private/
+/com.getshop.VismaWilhelmsenHouse/build/
+/com.getshop.mecatv/MecaTV/nbproject/private/
+/com.getshop.VismaWilhelmsenHouse/dist/
+/nbproject/private/

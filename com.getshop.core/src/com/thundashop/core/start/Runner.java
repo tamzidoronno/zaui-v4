@@ -9,6 +9,12 @@ import com.thundashop.core.socket.WebInterface2;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import java.io.PrintWriter;
 import java.util.UUID;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.java_websocket.server.WebSocketServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -24,7 +30,7 @@ public class Runner {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException, Exception {  
-        
+
         java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
         java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
 
@@ -54,5 +60,21 @@ public class Runner {
         new WebInterface2(log, storePool, port); //Version 2.        
         
         context.getBean(WebSocketServerImpl.class).start();
+        startJettyServer();
+    }
+
+    private static void startJettyServer() throws InterruptedException, Exception {
+      
+        Server server = new Server(8080);
+ 
+        ResourceHandler resource_handler = new ResourceHandler();
+        resource_handler.setDirectoriesListed(true);
+        resource_handler.setWelcomeFiles(new String[]{ "index.html" });
+        resource_handler.setResourceBase("html");
+        server.setHandler(resource_handler);
+ 
+        server.start();
+        server.join();
+
     }
 }

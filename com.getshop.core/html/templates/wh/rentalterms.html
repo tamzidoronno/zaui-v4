@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+            .col1 {
+                width: 480px;
+                padding: 50px;
+                border-right: solid 1px;
+                box-sizing: border-box;
+            }
+
+            body,
+            html {
+                margin: 0px;
+                padding:  0px;
+                font-size: 18px;
+            }
+
+            @page {
+                color:#000;
+            }
+
+            .page {
+                box-sizing: border-box;
+                position: relative;
+                color:#000;
+                width: 1060px;
+                box-sizing: border-box;
+            }
+
+            .title {
+                margin-top: 50px;
+                font-size: 20px;
+                font-weight: bold;
+            }
+            
+            .page_inner .title:first-child {
+                margin-top: 0px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="page">
+            <div class="page_inner">
+                <div class="col1">
+                    <div class="title">AVTALE FOR BRUK AV OVERNATTINGSHYBEL</div>
+
+                    <div class="title">1. PARTER</div>
+                    Tilbyder: Wilhelmsen House AS (WH)
+                    <br/>Kunde: {CUSTOMER.NAME}
+
+                    <div class="title">2. OVERNATTINGSHYBEL </div>
+                    Wilhelmsen House, Halfdan Wilhelmsens allé 22, 3116 Tønsberg, leilighetskategori {ROOM.TYPE}
+                    <br/>
+                    <br/>Oversendelse av denne avtalen anses som overlevering av tjenesten.
+                    <br/>
+                    <br/>Overnattingshybelen aksepteres "som den er" i samsvar med informasjon, tegninger og bilder på www.wh.no. Kunden må akseptere mindre avvik fra oppgitt informasjon om overnattingshybelen.
+
+                    <div class="title">3. BRUKSPERIODE </div>
+                    Start: {BOOKING.START}
+                    <br/>Slutt: {BOOKING.END}
+                    <br/>Bruksperiode: {BOOKING.PERIOD}
+                    <br/>
+                    <br/>Denne avtalen gjelder {BOOKING.SHORTORLONG}
+
+                    <div class="title">4. BETALING </div>
+                    Betaling: {ORDER.PRICEPRDAY} per dag (inkl mva). 
+                    <br/>Total betaling i samsvar med bruksperioden angitt i punkt 3 utgjør kr {ORDER.PRICE} (inkl mva).
+                    <br/>
+                    <br/>Korttidsbruk: 
+                    <br/>Kunden betaler hele beløpet forskuddsvis. 
+                    <br/>
+                    <br/>Landtidsbruk:  
+                    <br/>Kunden betaler forskuddsvis for de tre første kalendermånedene i den bestilte bruksperioden. Deretter faktureres kunden forskuddsvis per måned. Betalingsforpliktelsen forfaller senest 5 dager før den første kalenderdag i neste måned. 
+                    <br/>
+                    <br/>WH forbeholder seg rett til å justere prisene som følge av endrede kostnader ved økte skatter og avgifter eller andre forhold utenfor WHs kontroll. Slike prisjusteringer skal varsles, og skal ikke tre i kraft før 1 måned etter varselet.
+ 
+                    <div class="title">5. KUNDENS DISPONERING AV OVERNATTINGSHYBLENE</div>
+                    Overnattingshybelen kan bare benyttes til beboelse og overnatting, og kan bare benyttes av kunden. WH forbeholder seg retten til å nekte innsjekking av personer under 18 år.
+                    <br/>
+                    <br/>Innsjekking kan tidligst finne sted kl 15 på avtalt startdato for bruksperioden. Utsjekking må finne sted innen kl 12. Kunden skal ta med seg alle personlige eiendeler ved utsjekking. 
+                    <br/>
+                    <br/>Kunden plikter å ivareta overnattingshybelen og fellesarealer med tilbørlig aktsomhet og i alminnelig god stand. Kunden er ansvarlig for å forebygge brann ved bruk av overnattingshybelen, og forplikter å sette seg inn i branninstrukser som er plassert i hver overnattingshybel. Kunden må for øvrig opptre i samsvar med de til enhver tid gjeldende husordensregler, se www.wh.no. Husordensreglene er vedlagt denne avtalen.
+                    <br/>
+                    <br/>Kunden skal varsle WH umiddelbart dersom det oppdages skade på eiendommen. 
+                    <br/>
+                    <br/>Kunden skal gi WH adgang til overnattingshybelen for rengjøring etter punkt 6 og for øvrig nødvendig vedlikehold.
+
+                    <div class="title">6. WHs PLIKTER</div>
+                    WH skal sørge for rengjøring av overnattingshybelen hver femte kalenderdag. WH skal også sørge for rengjøring ved enhver utsjekking av overnattingshybelen.
+                    <br/>
+                    <br/>WH skal holde overnattingshybelen forsikret. WH bærer for øvrig intet ansvar for skader, kostnader eller tap som måtte oppstå ved innbrudd, brann, røykutvikling, strømavbrudd, vannskade eller av andre årsaker. Kunden er i denne forbindelse innforstått med at WH skal holdes skadesløs.
+
+                    <div class="title">7. OPPSIGELSE</div>
+                    Dersom kunden har valgt korttidsbruk, er avtaleperioden bindende med mindre det er betalt for fleksiløsning. 
+                    <br/>
+                    <br/> Dersom kunden har valgt langtidsbruk, kan avtalen sies opp med 3 kalendermåneders varsel fra første dag i neste kalendermåned etter varselsdatoen.
+                    <div class="title">8. MISLIGHOLD</div>
+                    Dersom overnattingshybelen ikke er i samsvar med avtalte vilkår, skal kunden gi beskjed til WH innen rimelig tid etter at forholdet blir oppdaget. Forsinket reklamasjon medfører tap av eventuelle misligholdssanksjoner. 
+
+                    <br/>Dersom kunden påfører overnattingshybelen skade, vil WH utbedre forholdet til kundens kostnad. Det er forbudt å røyke i overnattingshybler, og hver overtredelse medfører gebyr på kr 1 500. 
+                    <br/>
+                    <br/>Dersom kunden misligholder sine forpliktelser etter avtalen, kan WH deaktivere kundens adgangskode og fullføre utsjekking av kunden 5 dager at WH har sendt varsel om mislighold. 
+                    <br/>
+                    <br/>Ved vesentlig mislighold av avtalen kan WH terminere avtalen og iverksette utsjekking med umiddelbar virkning. Betalingsmislighold og bruk i strid med avtalen anses som vesentlig mislighold.
+                    <br/>
+                    <br/>Kunden aksepterer at WH får håndpant i alle eiendeler som legges igjen i overnattingshybelen. Dersom WH vurderer at eiendelene har begrenset økonomisk verdi, står WH fritt til å kaste eiendelene uten varsel.
+
+                    <div class="title">9. DIVERSE</div>
+                    Husleieloven har ikke anvendelse på dette avtaleforholdet, jfr. husleieloven § 1-1 fjerde ledd.
+                    <br/>
+                    <br/>Kunden vedtar at tvangsfravikelse kan gjennomføres etter tvangsfullbyrdelsesloven § 13-2 tredje ledd alternativ a.
+                    <br/>
+                    <br/>Kunden vedtar at tvangsfravikelse kan gjennomføres etter tvangsfullbyrdelsesloven § 13-2 tredje ledd alternativ b.
+                    <br/>
+                    <br/>Ettersom levering anses å finne sted ved endelig bestilling og oversendelse av avtalen, får ikke reglene om avbestilling etter forbrukerkjøpsloven § 41 anvendelse på avtaleforholdet. 
+                    <br/>
+                    <br/>Ettersom avtalen faller inn under angrerettloven § 22 bokstav m), får ikke regler om angrerett anvendelse på avtaleforholdet.
+                    <br/>
+                    <br/>Det er ikke tillatt fremleie av overnattingshybelen.
+
+                    <div class="title">10.  FLEKSILØSNING VED KORTTIDSBRUK</div>
+                    Dersom kunden har valgt fleksiløsning, kan avtaler med korttidsbruk sies opp med 1 kalenderdags varsel. 
+                    <br/>
+                    <br/>Varselet må sendes til post@wh.no og må særskilt angi hvilke dager som avbestilles.
+                    <br/>
+                    <br/>Ved slik avbestilling vil WH tilbakebetale innbetalt forskudd for avbestilt bruk innen 30 dager. 
+                    <br/>
+                    <br/>
+                    <br/>Sign: 
+                    <br/>Dette dokumentet anses elektronisk signert på vegne av kunden.        
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

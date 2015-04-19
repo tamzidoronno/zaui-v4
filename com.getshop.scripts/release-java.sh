@@ -20,6 +20,9 @@ echo -e "Uploading api file"
 sftp -b batchfile2 naxa@backend20.getshop.com &> /dev/null
 rm -rf batchfile2
 
+echo -e "Synching PDF Html template files"
+rsync --delete -avz ../com.getshop.core/html/templates naxa@backend20.getshop.com:dist/html/ &> /dev/null;
+
 echo -e "Restarting java!";
 ssh -T naxa@backend20.getshop.com << EOF &> /dev/null;
 

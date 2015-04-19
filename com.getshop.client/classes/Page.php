@@ -917,14 +917,14 @@ class Page {
                 var top = $(this).position().top;
                 var newLeft = left * innerWidthChange;
                 var newTop = top * innerWidthChange;
-                
+
                 if(top < 0) {
                     top = 0;
                 }
                 if((newLeft + $(this).width()) > $(window).width()) {
                     newLeft = $(window).width() - (newLeft + $(this).width());
                 }
-                
+
                 $(this).css('left',newLeft);
                 $(this).css('top',newTop);
             });
@@ -935,13 +935,14 @@ class Page {
             ?>
             <script>
                 $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').find('.gsfloatingframe').each(function() {
-                    var left = $(this).position().left;
-                    var aspectRatio = $(window).width() / 620;
-                    left = left * aspectRatio;
-                    if(left + $(this).width() > $(window).width()) {
-                        left = $(window).width() - ($(this).width());
-                    }
-                    $(this).css('left',left);
+                    var element = $(this);
+                    setTimeout(function() {
+                        var left = element.position().left;
+                        if((left + element.width()) > $(window).width()) {
+                            left = $(window).width() - (element.width());
+                        }
+                        element.css('left',left);
+                    }, "500");
                 });
             </script>
             <?

@@ -398,10 +398,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 Visitors visitor = room.visitors.get(0);
                 String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
                 String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
-
-                String sms = formatMessage(reference, arxSettings.smsWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                sendEmail(visitor, title, message, bdata);
-                sendSms(visitor,sms);
+                try {
+                    sendEmail(visitor, title, message, bdata);
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
             bdata.sentWelcomeMessages = true;
             saveObject(bdata);

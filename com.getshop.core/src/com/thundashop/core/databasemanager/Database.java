@@ -156,7 +156,7 @@ public class Database {
                 try {
                     Class.forName(className);
                 } catch (ClassNotFoundException ex) {
-                    logger.warning(this, "Database object has references to object that does not exists: " + className + " collection: " + collection.getName() + " manager: " + collection.getDB().getName());
+//                    logger.warning(this, "Database object has references to object that does not exists: " + className + " collection: " + collection.getName() + " manager: " + collection.getDB().getName());
                     continue;
                 }
             }
@@ -166,6 +166,8 @@ public class Database {
                 if (dataCommon.deleted == null) {
                     all.add(dataCommon);
                 }
+            } catch (ClassCastException ex) {
+                // Nothing to do, the class probably been deleted but not the data in database.
             } catch (Exception ex) {
                 System.out.println("Figure out this : " + collection.getName() + " " + collection.getDB().getName());
                 System.out.println(dbObject);

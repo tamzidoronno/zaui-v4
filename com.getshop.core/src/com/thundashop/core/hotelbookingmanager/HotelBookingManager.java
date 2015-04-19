@@ -1,6 +1,7 @@
 package com.thundashop.core.hotelbookingmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.google.api.client.util.Charsets;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -17,6 +18,12 @@ import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.utils.UtilManager;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -70,6 +78,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     
     @Autowired
     private InvoiceManager invoiceManager;
+    
+    @Autowired
+    private UtilManager utilManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -394,7 +405,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
             bdata.sentWelcomeMessages = true;
             saveObject(bdata);
-            
         }
     }
 
@@ -685,6 +695,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         HashMap<String, String> attachments = new HashMap();
         attachInvioce(attachments, bdata);
+        attachRentalTerms(attachments, bdata, visitor);
+        attachHouseRules(attachments);
         
         String copyadress = "toreplaced@test.no";       
 //        String copyadress = getSettings("Settings").get("mainemailaddress").value;
@@ -1121,5 +1133,37 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         for(String itemId : itemsToRemove) {
             cart.removeItem(itemId);
         }    
+    }
+    
+    private void attachHouseRules(HashMap<String, String> attachments) {
+        String base64Encoded = utilManager.getBase64EncodedPDFWebPageWithBorders("http://localhost:8080/templates/wh/houserules.html");
+        attachments.put("husregler.pdf", base64Encoded);
+    }
+    
+    private void attachRentalTerms(HashMap<String, String> attachments, UsersBookingData bdata, Visitors visitor) {
+        try {
+            String text = new String(Files.readAllBytes(Paths.get("html/templates/wh/rentalterms.html")), StandardCharsets.UTF_8);
+
+            String uuid = UUID.randomUUID().toString();
+            text = text.replace("{CUSTOMER.NAME}", visitor.name);
+            text = text.replace("{ROOM.TYPE}", "");
+            text = text.replace("{BOOKING.START}", "");
+            text = text.replace("{BOOKING.END}", "");
+            text = text.replace("{BOOKING.PERIOD}", "");
+            text = text.replace("{BOOKING.SHORTORLONG}", "");
+            text = text.replace("{ORDER.PRICE}", "");
+            text = text.replace("{ORDER.PRICEPRDAY}", "");
+
+
+            String path = "tmp/"+uuid+".html";
+            String file = "html/"+path;
+            Files.write(Paths.get(file), text.getBytes());
+
+            String base64Encoded = utilManager.getBase64EncodedPDFWebPageWithBorders("http://localhost:8080/"+path);
+            new File(file).delete();
+            attachments.put("leievilkår.pdf", base64Encoded);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

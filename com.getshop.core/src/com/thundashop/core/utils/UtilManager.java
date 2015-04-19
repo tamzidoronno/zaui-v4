@@ -69,7 +69,6 @@ public class UtilManager extends ManagerBase implements IUtilManager {
 
     @Override
     public String getBase64EncodedPDFWebPage(String urlToPage) {
-        System.out.println(urlToPage);
         String tmpPdfName = "/tmp/"+UUID.randomUUID().toString() + ".pdf";
         boolean executed = executeCommand("/usr/local/bin/wkhtmltopdf.sh " + urlToPage + " " + tmpPdfName);
         
@@ -94,33 +93,45 @@ public class UtilManager extends ManagerBase implements IUtilManager {
         }
     }
     
-    private boolean executeCommand(String command) {
+    public String getBase64EncodedPDFWebPageWithBorders(String urlToPage) {
+        String tmpPdfName = "/tmp/"+UUID.randomUUID().toString() + ".pdf";
+        boolean executed = executeCommand("/usr/local/bin/wkhtmltopdfwithborders.sh " + urlToPage + " " + tmpPdfName);
         
+        if (!executed) {
+            executed = executeCommand("wkhtmltopdf " + urlToPage + " " + tmpPdfName);
+        }
+        
+        if (!executed) {
+            throw new ErrorException(1033);
+        }
+        
+        File file = new File(tmpPdfName);
+        byte[] bytes;
+        try {
+            bytes = InvoiceManager.loadFile(file);
+            byte[] encoded = Base64.encodeBase64(bytes);
+            String encodedString = new String(encoded);
+            file.delete();
+            return encodedString;
+        } catch (IOException ex) {
+            throw new ErrorException(1033);
+        }
+    }
+    
+    private boolean executeCommand(String command) {
         try {
             Process p = Runtime.getRuntime().exec(command);
-            
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-            
-//            System.out.println("=== 1 =====");
             String d = "";
-            while ((d = stdInput.readLine()) != null) {
-//                System.out.println(d);
-            }
-            
-//            System.out.println("=====");
             
             boolean ok = true;
             while ((d = stdError.readLine()) != null) {
-                System.out.println(d);
                 if (d.contains("error"))
                     ok = false;
             }
             
             return ok;
         } catch (IOException e) {
-            System.out.println("exception happened - here's what I know: ");
-            e.printStackTrace();
             return false;
         }
     }

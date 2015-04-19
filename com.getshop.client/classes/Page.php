@@ -897,7 +897,7 @@ class Page {
             $height = $config->heightMobile;
         }
         
-        if($config->keepAspect) {
+        if($config->keepAspect && !$this->factory->isMobile()) {
             ?>
             <script>
             var origWindowWidth = <? echo $config->windowWidth; ?>;

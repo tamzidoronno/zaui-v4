@@ -55,8 +55,8 @@ if(isset($_GET['pagenumber'])) {
             <span class='bookingcol checkroomcol'>
                 <div class='check_available_button' nextpage="<? echo $this->getConfig()->continuePage; ?>"><? echo $this->__w("Check price"); ?></div>
             </span>
-   <div style='clear:both;'></div>
         </div>
+        <div style='clear:both;'></div>
  
             <div>
                 <span class='error_on_check date_before_start'>
@@ -67,7 +67,7 @@ if(isset($_GET['pagenumber'])) {
                 </span>
             </div>
             
-            <div style='padding-top: 20px;'>
+            <div style='padding-top: 10px;clear:both;'>
                 <? 
                     $partnerText = $this->getPartnerText();
                     echo $this->__w($partnerText); 

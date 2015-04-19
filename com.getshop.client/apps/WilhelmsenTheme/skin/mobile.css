@@ -1,15 +1,7 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : Feb 4, 2015, 8:38:37 AM
-    Author     : boggi
-*/
+
 
 body {
-    
+
 }
 
 .gs_page_width {
@@ -21,181 +13,6 @@ body {
     margin-left: 0px;
     margin-right: 0px;
 }
-
-.gs_page_width.gscell_70,
-.gs_page_width.gscell_5 {
-    margin-left: 0px;
-    margin-right: 0px;
-}
-
-/* box1 */
-.gscell_53 .gsinner,
-.gscell_55 .gsinner,
-.gscell_56 .gsinner {
-    background-color: #EEE;
-}
-
-.gscell_53 .gsinner {
-    margin-top: 20px;
-}
-
-.gscell_56 .gsinner {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-/* box2 */
-.gscell_47 .gsinner,
-.gscell_49 .gsinner,
-.gscell_50 .gsinner {
-    background-color: #EEE;
-}
-
-.gscell_47 .gsinner {
-    margin-top: 20px;
-}
-
-.gscell_50 .gsinner {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-/* box 3 */
-.gscell_41 .gsinner,
-.gscell_43 .gsinner,
-.gscell_44 .gsinner {
-    background-color: #EEE;
-}
-
-.gscell_41 .gsinner {
-    margin-top: 20px;
-}
-
-.gscell_44 .gsinner {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-
-/* box 3 */
-.gscell_284 .gsinner,
-.gscell_285 .gsinner,
-.gscell_312 .gsinner,
-.gscell_313 .gsinner {
-    background-color: #EEE;
-}
-
-.gscell_284 .gsinner {
-    margin-top: 20px;
-}
-
-.gscell_313 .gsinner {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-/* box 3 */
-.gscell_288 .gsinner,
-.gscell_289 .gsinner,
-.gscell_314 .gsinner,
-.gscell_315 .gsinner {
-    background-color: #EEE;
-}
-
-.gscell_288 .gsinner {
-    margin-top: 20px;
-}
-
-.gscell_315 .gsinner {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-/* box 3 */
-.gscell_292 .gsinner,
-.gscell_293 .gsinner,
-.gscell_316 .gsinner,
-.gscell_317 .gsinner {
-    background-color: #EEE;
-}
-
-.gscell_292 .gsinner {
-    margin-top: 20px;
-}
-
-.gscell_317 .gsinner {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-/* box 3 */
-.gscell_306 .gsinner,
-.gscell_310 .gsinner,
-.gscell_318 .gsinner,
-.gscell_319 .gsinner {
-    background-color: #EEE;
-}
-
-.gscell_306 .gsinner {
-    margin-top: 20px;
-}
-
-.gscell_319 .gsinner {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-/* box 3 */
-.gscell_304 .gsinner,
-.gscell_305 .gsinner,
-.gscell_320 .gsinner,
-.gscell_321 .gsinner {
-    background-color: #EEE;
-}
-
-.gscell_304 .gsinner {
-    margin-top: 20px;
-}
-
-.gscell_321 .gsinner {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-/* box 3 */
-.gscell_300 .gsinner,
-.gscell_301 .gsinner,
-.gscell_322 .gsinner,
-.gscell_323 .gsinner {
-    background-color: #EEE;
-}
-
-.gscell_300 .gsinner {
-    margin-top: 20px;
-}
-
-.gscell_323 .gsinner {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-/* other */
-.gscell_183 .gsinner,
-.gscell_185 .gsinner,
-.gscell_186 .gsinner {
-    background-color: #EEE;
-    padding: 20px;
-}
-
-.gscell_187 .gsinner {
-    margin-top: 20px;
-}
-.gscell_187 .gsinner,
-.gscell_188 .gsinner {
-    background-color: #EEE;
-    padding: 20px;
-}
-
 
 .Facebook {
     background-color: #EEE;
@@ -234,3 +51,28 @@ text-align: center;
 background-color: #d2684f;
 padding: 3px;
 cursor: pointer; text-transform: uppercase; margin-top: 2px; }
+a.partnerlink { text-decoration: none !important; color:#ab8936 !important; }
+
+.applicationarea[appid="04c38913-be56-4b4f-b6e5-8a39758e64ff"] img {
+    width: 80px !important;
+    height: auto !important;
+    padding: 30px;
+}
+.applicationarea[appid="05930ce6-6aa0-4f8f-bdad-e1c4b7cee986"] .imagecontainer img {
+    display:none;
+    
+}
+.applicationarea[appid="e902ee7d-e634-4629-8d24-972caf9fd396"] .imagecontainer img {   
+    width: 60px;
+    top: -260px;
+    right: 6px;
+}
+
+.gscell_1274.gsuicell { margin-left: 0px !important; }
+
+.gscell_499.gsuicell.gsinner { padding: 10px !important; }
+
+.Hotelbooking .checkroomcol .check_available_button { width: 150% !important; }
+.Hotelbooking .bookingcol .fa-calendar { color:#000 !important; }
+.Hotelbooking .calbackground { bottom: -1px !important; }
+.Hotelbooking .bookingsummary { padding-right: 40px; }

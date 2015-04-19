@@ -12,6 +12,8 @@ body {
     padding-left: 10px;
     padding-right: 25px;
 }
+.gsarea[area="body"] a.partnerlink { text-decoration: none !important; color:#ab8936; }
+
 .shop_button {
     color: #FFF;
     background-color: black;

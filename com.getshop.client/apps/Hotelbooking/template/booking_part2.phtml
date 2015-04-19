@@ -163,7 +163,17 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
         
         echo "<div class='room_selection_2 product $selectedclass'>";
         if($this->getFactory()->isMobile()) {
-            echo "<div class='name' ><span class='price_box'><span class='price_text' style='float:right;'>" . $product->price . ",-</span></span>";
+            $progressivePrice = $this->calculateProgressivePrice($product->id);
+            $progressivePrice = round($progressivePrice,2);
+            $price = $product->price;
+            if($price != $progressivePrice) {
+                $percentage = $price - $progressivePrice;
+                if($percentage > 50) {
+                    echo "<span style='font-size: 12px; display:inline-block;position: absolute;right: 5px;top: 26px;color: #bbb;font-weight: bold;'>$percentage kr rabatt fra ".$product->price.",-</span>";
+                }
+            }
+                
+            echo "<div class='name' ><span class='price_box'><span class='price_text' style='float:right;'>" . $progressivePrice . ",-</span></span>";
             echo "<i class='fa fa-info-circle' style='cursor:pointer' data-productid='".$product->id."'></i> " . $product->name . "</div>";
         }
         

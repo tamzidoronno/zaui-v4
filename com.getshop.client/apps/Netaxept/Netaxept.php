@@ -33,7 +33,7 @@ class Netaxept extends \PaymentApplication implements \Application {
 
     public function getWsdl() {
         $wsdl = "https://epayment.nets.eu/Netaxept.svc?wsdl";
-        if ($this->getConfigurationSetting("debugmode")) {
+        if ($this->getConfigurationSetting("debugmode") != "false") {
             $wsdl = "https://test.epayment.nets.eu/Netaxept.svc?wsdl";
         }
         return $wsdl;

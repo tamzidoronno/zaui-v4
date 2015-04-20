@@ -1970,6 +1970,20 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return String
+	* @throws ErrorException
+	*/
+
+	public function getCurrentRentalTermsContract() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getCurrentRentalTermsContract";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
 	* @return core_hotelbookingmanager_UsersBookingData
 	* @throws ErrorException
 	*/

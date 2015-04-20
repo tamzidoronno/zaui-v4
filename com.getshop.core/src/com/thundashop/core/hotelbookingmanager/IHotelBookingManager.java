@@ -160,4 +160,6 @@ public interface IHotelBookingManager {
     public void clearBookingReservation();
 
     public String getUserIdForRoom(String roomNumber) ;
+    
+    public String getCurrentRentalTermsContract();
 }

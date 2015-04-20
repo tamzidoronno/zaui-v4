@@ -12,5 +12,8 @@ class core_hotelbookingmanager_RoomInformation {
 	/** @var String */
 	public $roomState;
 
+	/** @var String */
+	public $cartItemId;
+
 }
 ?>

@@ -1245,7 +1245,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         String orderLine = "";
         
         for (BookingReference ref : bdata.references) {
-            orderLine += "<br/>Insjekk: " + ref.startDate + "<br/> Utsjekk: " + ref.endDate + "<br/>";
+            orderLine += "<br/>Innsjekk: " + ref.startDate + "<br/> Utsjekk: " + ref.endDate + "<br/>";
         }
         
         return orderLine;

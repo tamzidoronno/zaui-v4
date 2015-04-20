@@ -157,6 +157,7 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
             $selectedclass .= " disabled";
         }
         $images = $product->imagesAdded;
+        $mainImage = $product->mainImage;
 
         
         $foundroom = true;
@@ -182,12 +183,12 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
         /* @var $product core_productmanager_data_Product */
         echo "<span class='firstbox selection_box' productid='" . $product->id . "'>";
         if (sizeof($images) > 0 && $this->getConfig()->roomThumbNails) {
-            $size = getimagesize("../uploadedfiles/" . $images[0]);
+            $size = getimagesize("../uploadedfiles/" . $mainImage);
             echo "<span class='gsgalleryroot'>";
-            echo '<span img="displayImage.php?id=' . $images[0] . '" class="gsgallery" width="'.$size[0].'" height="'.$size[1].'" index="0"><img class="imagepreview" src="displayImage.php?id=' . $images[0] . '"></span>';
+            echo '<span img="displayImage.php?id=' . $mainImage . '" class="gsgallery" width="'.$size[0].'" height="'.$size[1].'" index="0"><img class="imagepreview" src="displayImage.php?id=' . $mainImage . '"></span>';
             echo "<span class='hotelthumbnails'>";
             foreach ($images as $index => $image) {
-                if ($index == 0) {
+                if($image == $mainImage) {
                     continue;
                 }
                 $size = getimagesize("../uploadedfiles/" . $image);

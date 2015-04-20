@@ -819,7 +819,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         Boolean longTerm = bookingData.additonalInformation.isPartner;
         
+        Date firstDate = null;
         for(BookingReference reference : bookingData.references) {
+            if(firstDate == null || firstDate.after(reference.startDate)) {
+                firstDate = reference.startDate;
+            }
             totalNights += reference.getNumberOfNights();
             for(RoomInformation roomInfo : reference.roomsReserved) {
                 int count = reference.getNumberOfNights();
@@ -837,7 +841,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         if(bookingData.completed && longTerm) {
             Calendar cal = Calendar.getInstance();
-            cal.setTime(new Date());
+            cal.setTime(firstDate);
             int year = cal.get(Calendar.YEAR);
             int month = cal.get(Calendar.MONTH);
 

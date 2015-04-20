@@ -297,9 +297,14 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function render() {
+        if (isset($_GET['repayOrderId']) && $_GET['repayOrderId']) {
+            $this->repayOrder();
+            return;
+        }
+        
         //this variable is set from $this->completeRegularCheckout()
         if (isset($_GET['orderProcessed'])) {
-            $this->completeCheckout();
+            $this->completeCheckout(false);
             return;
         }
         
@@ -316,6 +321,15 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         } else {
             echo "Page not configured";
         }
+    }
+    
+    private function repayOrder() {
+        $_GET['orderId'] = $_GET['repayOrderId'];
+        echo "<center><br/><br/><br/>";
+        echo "<h1>Vennligst vent, du blir nå overført til betalingsvinduet.</h1>";
+        echo "<br/><br/><br/><br/></center>";
+        
+        $this->completeCheckout(true);
     }
 
     public function updateCalendarDate() {
@@ -785,7 +799,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $_GET['orderId'] = $orderId;
     }
     
-    public function completeCheckout() {
+    public function completeCheckout($rePay = false) {
         $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
         $payment = null;
 
@@ -801,8 +815,16 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
 
         if ($payment) {
-            //Orderid is set in $this->continueToPayment()
+            if($rePay) {
+                $this->startAdminImpersonation("OrderManager", "getOrder");
+            }
+            
             $payment->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
+            
+            if($rePay) {
+                $this->stopImpersionation();
+            }
+            
             $payment->initPaymentMethod();
             $payment->preProcess();
         }
@@ -875,5 +897,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return false;
     }
 
+    public function requestAdminRights() {
+        $this->requestAdminRight("OrderManager", "getOrder", "Needs it to get Orders if repay of order is initiated");
+    }
 }
 ?>

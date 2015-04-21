@@ -7,12 +7,6 @@ $selectRoomButton = $this->__w("SELECT ROOM");
 $selectedRoomButton = $this->__w("SELECTED ROOM");
 $headingtext = $this->__w("You have selected the following duration for your stay");
     
-if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
-    echo $this->getPartnerText();
-    echo "<br><bR>";
-    echo "<br><bR>";
-    return;
-}
 ?>
 <div class="top_row_container">
     <div class='title'><h1><? echo $headingtext; ?></h1></div>
@@ -116,6 +110,18 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
     }
     ?>
 </div>
+
+ <?
+ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
+    echo "<br><bR>";
+    echo $this->getPartnerText();
+    echo "<br><bR>";
+    echo "<br><bR>";
+    return;
+}
+
+?>
+
 <div class="bottom_row_container">
     <div class='title'>
         <h1>

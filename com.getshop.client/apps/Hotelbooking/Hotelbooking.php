@@ -336,12 +336,15 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $type = $_POST['data']['type'];
         $time = $_POST['data']['time'];
         if ($type == "startDate") {
-            if ($time > $this->getEnd()) {
+            if (($time+86400) > $this->getEnd()) {
                 $this->setEndDate($time + 86400);
             }
             $this->setStartDate($time);
         }
         if ($type == "endDate") {
+            if (($time-86400) < $this->getStart()) {
+                $this->setStartDate($time - 86400);
+            }
             $this->setEndDate($time);
         }
     }
@@ -410,20 +413,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                     $class = "selected";
                 }
                 $aftertime = strtotime($year . "-" . $month . "-" . $day);
-                if ($checkbefore) {
-                    if ($checkbefore > $aftertime || (date("d", $checkbefore) == date("d", $aftertime) && date("m", $checkbefore) == date("m", $aftertime))) {
-                        $class .= " disabled";
-                    }
-                }
 
                 if ($aftertime < (time() - 86400)) {
                     $class .= " disabled";
-                }
-
-                if ($id == "startDate") {
-                    if ($aftertime > (time() + ($this->getStartMaxDays() * 86400))) {
-                        $class .= " disabled";
-                    }
                 }
 
                 $fieldtime = strtotime($year . "-" . $month . "-" . $day);

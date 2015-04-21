@@ -18,22 +18,24 @@ import java.util.List;
 public class DatePricedLibrary {
     private List<Date> dates = new ArrayList();
     
-    private double extra = 400;
+    private double extra = 500;
 
     public DatePricedLibrary() {
         Calendar cal = Calendar.getInstance();
+        cal.set(2015, 6, 16);
+        dates.add(cal.getTime());
         cal.set(2015, 6, 17);
         dates.add(cal.getTime());
         cal.set(2015, 6, 18);
         dates.add(cal.getTime());
-        cal.set(2015, 6, 19);
-        dates.add(cal.getTime());
         
-        cal.set(2015, 4, 29);
+        cal.set(2015, 6, 9);
         dates.add(cal.getTime());
-        cal.set(2015, 4, 30);
+        cal.set(2015, 6, 10);
         dates.add(cal.getTime());
-        cal.set(2015, 4, 31);
+        cal.set(2015, 6, 11);
+        dates.add(cal.getTime());
+        cal.set(2015, 6, 12);
         dates.add(cal.getTime());
     }
     

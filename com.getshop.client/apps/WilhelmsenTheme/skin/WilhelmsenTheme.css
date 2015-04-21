@@ -123,3 +123,87 @@ cursor: pointer; text-transform: uppercase; margin-top: 2px; }
 .Login .gs_button { border-radius: 0px; }
 
 .gsarea[area="footer"] .gs_page_width { padding-left: 20px; padding-right: 40px; }
+
+
+/* Global css */
+.shop_button {
+    border-radius:0px;
+    line-height: 24px;
+    height: 24px;
+    background:none;
+    background-color:#000;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+h1,h2,h3 { margin-top: 10px; margin-bottom: 10px; font-weight: 100; }
+h1 { text-transform: uppercase; }
+
+.gsbody_inner[pageId='1e84a862-0203-4110-8e95-ad850d7499ba'] .gscarouseldots {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 0px;
+}
+.gsbody_inner[pageId='1e84a862-0203-4110-8e95-ad850d7499ba'] .gscarouseldots i .gscarouselnumber {
+    left: 0px;
+    top: 6px;
+    font-size: 16px;
+    width: 30px;
+    text-align: center;
+}
+.gsbody_inner[pageId='1e84a862-0203-4110-8e95-ad850d7499ba'] .gscarouseldots i {
+    position: absolute;
+    font-size: 30px;
+    color: red;
+    opacity: 1;
+    width: 30px;
+}
+.gscontainercell[cellid='710f21de-a137-4ccb-8284-1c720c1acc89'] .gscarouseldots i:nth-child(1) {
+    top: 335px;
+    left: 580px;
+}
+
+.gscontainercell[cellid='710f21de-a137-4ccb-8284-1c720c1acc89'] .gscarouseldots i:nth-child(2) {
+    top: 250px;
+    left: 60px;
+}
+
+.gscontainercell[cellid='710f21de-a137-4ccb-8284-1c720c1acc89'] .gscarouseldots i:nth-child(3) {
+    top: 330px;
+    left: 315px;
+}
+
+.gscontainercell[cellid='710f21de-a137-4ccb-8284-1c720c1acc89'] .gscarouseldots i:nth-child(4) {
+    top: 150px;
+    left: 285px;
+}
+
+/* slider 2 at overview page */
+.gscontainercell[cellid='d307faa5-c686-415d-b6af-9ff168b7f5e1'] .gscarouseldots i:nth-child(1) {
+    top: 100px;
+    left: 870px;
+}
+
+.gscontainercell[cellid='d307faa5-c686-415d-b6af-9ff168b7f5e1'] .gscarouseldots i:nth-child(2) {
+    top: 250px;
+    left: 560px;
+}
+
+.gscontainercell[cellid='d307faa5-c686-415d-b6af-9ff168b7f5e1'] .gscarouseldots i:nth-child(3) {
+    top: 100px;
+    left: 530px;
+}
+.gsarea[area='header'] .Menu a div { font-size: 14px; }
+.gsbody_inner[pageid="ae06b7c5-f749-4575-afb4-7d6dce73e6c9"] .shop_button { margin-top: 10px; width: 290px; padding-top: 5px; padding-bottom: 5px;}
+.gsbody_inner[pageid="ae06b7c5-f749-4575-afb4-7d6dce73e6c9"] .ContentManager .content { min-height: 25px !important; }
+
+.Hotelbooking .frontpagebookingrow { background-color:#000; height: 55px; color:#E8DCCC; }
+.Hotelbooking .check_available_button {height: 25px;
+line-height: 25px;
+position: absolute;
+top: 20px;
+width: 130px; }
+body { font-size: 12px; line-height: 18px; background-color:#E8DCCC; }

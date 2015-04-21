@@ -25,6 +25,9 @@ class core_ordermanager_data_Order extends core_common_DataCommon  {
 	public $transferredToAccountingSystem;
 
 	/** @var String */
+	public $testOrder;
+
+	/** @var String */
 	public $createdDate;
 
 	/** @var String */

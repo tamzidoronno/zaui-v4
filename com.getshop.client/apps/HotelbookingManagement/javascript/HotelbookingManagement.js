@@ -118,6 +118,17 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .tempgrantaccess', app.HotelbookingManagement.tempGrantAccess);
         $(document).on('click', '.HotelbookingManagement .fa-info-circle', app.HotelbookingManagement.showBookingInformation);
         $(document).on('click', '.HotelbookingManagement .updatebookingprice', app.HotelbookingManagement.updateBookingPrice);
+        $(document).on('click', '.HotelbookingManagement .markaspayedfor', app.HotelbookingManagement.markAsPayedFor);
+    },
+    
+    markAsPayedFor : function() {
+        var id = $(this).attr('bdata-id');
+        var data = {
+            "id" : id
+        };
+        var event = thundashop.Ajax.createEvent('','markAsPayed',$(this), data);
+        thundashop.Ajax.post(event);
+        thundashop.common.hideInformationBox();
     },
     
     updateBookingPrice : function() {

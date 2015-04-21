@@ -1,0 +1,24 @@
+<?
+$id = $_POST['data']['bookingid'];
+$bookingData = $this->getApi()->getHotelBookingManager()->getUserBookingData($id);
+$product = $this->getApi()->getProductManager()->getProduct($bookingData->additonalInformation->roomProductId);
+
+echo "<div style='padding: 10px;'>";
+if($bookingData->additonalInformation->isPartner) {
+    echo "Price:<br> <input type='text' value='".round($bookingData->bookingPrice,2)."' class='bookingprice' bookingid='$id'>";
+    echo "<input type='button' value='Update price' class='updatebookingprice'>";
+    echo "<br><br>";
+}
+echo "<b>room type:</b> " . $product->name . "<br>";
+echo "<br><b>Contract:</b> <a href='/scripts/whcontract.php?id=$id' class='gs_ignorenavigate' target='_new'>Open</a><br>";
+if(!$bookingData->payedFor) {
+    echo "<br><b>Payed for:</b> <span class='markaspayedfor' bdata-id='$id' tyle='cursor:pointer;'>Mark as payed for (for testing)</span><br>";
+}
+echo "<bR>";
+echo "<b>Booked dates</b><BR>";
+foreach($bookingData->references as $reference) {
+    echo "&nbsp;&nbsp;&nbsp;" . $reference->startDate . " - " . $reference->endDate."<BR>";
+}
+echo "</div>";
+
+?>

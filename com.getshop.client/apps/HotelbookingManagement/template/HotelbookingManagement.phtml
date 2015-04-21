@@ -102,16 +102,11 @@ Existing booking references
                 echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->startDate)) . "</td>";
                 echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->endDate)) . "</td>";
                 echo "<td align='center'>";
-                if($bdata->additonalInformation->isPartner) {
-                    echo "-";
+                if($bdata->payedFor) {
+                    echo "Yes";
                 } else {
-                    if($bdata->payedFor) {
-                        echo "Yes";
-                    } else {
-                        echo "No";
-                    }
+                    echo "No";
                 }
-                
                 echo "</td>";
                 echo "</tr>";
                 break;

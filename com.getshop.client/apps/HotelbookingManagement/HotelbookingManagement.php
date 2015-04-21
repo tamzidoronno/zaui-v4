@@ -111,24 +111,12 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     }
     
     public function showBookingInformation() {
-        $id = $_POST['data']['bookingid'];
-        $bookingData = $this->getApi()->getHotelBookingManager()->getUserBookingData($id);
-        $product = $this->getApi()->getProductManager()->getProduct($bookingData->additonalInformation->roomProductId);
-        
-        echo "<div style='padding: 10px;'>";
-        if($bookingData->additonalInformation->isPartner) {
-            echo "Price:<br> <input type='text' value='".round($bookingData->bookingPrice,2)."' class='bookingprice' bookingid='$id'>";
-            echo "<input type='button' value='Update price' class='updatebookingprice'>";
-            echo "<br><br>";
-        }
-        echo "<b>room type:</b> " . $product->name . "<br>";
-        echo "<br><b>Contract:</b> <a href='/scripts/whcontract.php?id=$id' class='gs_ignorenavigate' target='_new'>Open</a><br>";
-        echo "<bR>";
-        echo "<b>Booked dates</b><BR>";
-        foreach($bookingData->references as $reference) {
-            echo "&nbsp;&nbsp;&nbsp;" . $reference->startDate . " - " . $reference->endDate."<BR>";
-        }
-        echo "</div>";
+        $this->includefile("userbookinginfo");
+    }
+    
+    public function markAsPayed() {
+        $id = $_POST['data']['id'];
+        $this->getApi()->getHotelBookingManager()->markAsPayedForTest($id);
     }
     
     public function displayRoomAvailability() {

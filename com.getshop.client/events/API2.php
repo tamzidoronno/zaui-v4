@@ -2108,6 +2108,21 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
+	public function markAsPayedForTest($userBookingDataId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userBookingDataId"] = json_encode($this->transport->object_unset_nulls($userBookingDataId));
+	     $data["method"] = "markAsPayedForTest";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function markRoomAsReady($roomId) {
 	     $data = array();
 	     $data['args'] = array();

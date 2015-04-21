@@ -159,6 +159,9 @@ public interface IHotelBookingManager {
     public void updateAdditionalInformation(AdditionalBookingInformation info) throws ErrorException;
     public void clearBookingReservation();
 
+    @Administrator
+    public void markAsPayedForTest(String userBookingDataId);
+    
     public String getUserIdForRoom(String roomNumber) ;
     
     public String getCurrentRentalTermsContract();

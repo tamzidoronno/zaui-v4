@@ -1302,4 +1302,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
        
         return ""+bdata.bookingPrice;
     }
+
+    @Override
+    public void markAsPayedForTest(String userBookingDataId) {
+        UsersBookingData bdata = getUserBookingData(userBookingDataId);
+        String orderId = bdata.orderIds.get(0);
+        Order order = orderManager.getOrder(orderId);
+        order.testOrder = true;
+        order.status = Order.Status.PAYMENT_COMPLETED;
+        orderManager.saveOrder(order);
+    }
 }

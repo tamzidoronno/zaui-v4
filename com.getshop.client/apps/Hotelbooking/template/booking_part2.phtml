@@ -211,7 +211,11 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
         echo "<span class='secondbox selection_box'>";
         
         echo "<div><i class='fa fa-user'></i></div>";
-        echo "<div class='personalcount'>2x</div>";
+        if($product->id == "248ec601-ee7a-4d3a-8644-be4de68b2412") {
+            echo "<div class='personalcount'>4x</div>";
+        } else {
+            echo "<div class='personalcount'>2x</div>";
+        }
         
         echo "</span>";
         

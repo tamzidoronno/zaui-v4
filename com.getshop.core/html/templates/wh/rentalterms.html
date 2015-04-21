@@ -12,12 +12,12 @@ and open the template in the editor.
 
         <style>
             .col1 {
-                width: 480px;
-                padding: 50px;
-                border-right: solid 1px;
-                box-sizing: border-box;
+               
             }
 
+            .col2 {
+                page-break-before:always;
+            }
             body,
             html {
                 margin: 0px;
@@ -46,12 +46,15 @@ and open the template in the editor.
             .page_inner .title:first-child {
                 margin-top: 0px;
             }
+            
+            table tr {page-break-inside: avoid}
 
         </style>
     </head>
     <body>
         <div class="page">
             <div class="page_inner">
+                
                 <div class="col1">
                     <div class="title">AVTALE FOR BRUK AV OVERNATTINGSHYBEL</div>
 
@@ -60,16 +63,14 @@ and open the template in the editor.
                     <br/>Kunde: {CUSTOMER.NAME}
 
                     <div class="title">2. OVERNATTINGSHYBEL </div>
-                    Wilhelmsen House, Halfdan Wilhelmsens allé 22, 3116 Tønsberg, leilighetskategori {ROOM.TYPE}
+                    Wilhelmsen House, Halfdan Wilhelmsens allé 22, 3116 Tønsberg, leilighetskategori "{ROOM.TYPE}"
                     <br/>
                     <br/>Oversendelse av denne avtalen anses som overlevering av tjenesten.
                     <br/>
                     <br/>Overnattingshybelen aksepteres "som den er" i samsvar med informasjon, tegninger og bilder på www.wh.no. Kunden må akseptere mindre avvik fra oppgitt informasjon om overnattingshybelen.
 
                     <div class="title">3. BRUKSPERIODE </div>
-                    Start: {BOOKING.START}
-                    <br/>Slutt: {BOOKING.END}
-                    <br/>Bruksperiode: {BOOKING.PERIOD}
+                    {BOOKING.ORDERLINES}
                     <br/>
                     <br/>Denne avtalen gjelder {BOOKING.SHORTORLONG}
 
@@ -84,7 +85,7 @@ and open the template in the editor.
                     <br/>Kunden betaler forskuddsvis for de tre første kalendermånedene i den bestilte bruksperioden. Deretter faktureres kunden forskuddsvis per måned. Betalingsforpliktelsen forfaller senest 5 dager før den første kalenderdag i neste måned. 
                     <br/>
                     <br/>WH forbeholder seg rett til å justere prisene som følge av endrede kostnader ved økte skatter og avgifter eller andre forhold utenfor WHs kontroll. Slike prisjusteringer skal varsles, og skal ikke tre i kraft før 1 måned etter varselet.
- 
+
                     <div class="title">5. KUNDENS DISPONERING AV OVERNATTINGSHYBLENE</div>
                     Overnattingshybelen kan bare benyttes til beboelse og overnatting, og kan bare benyttes av kunden. WH forbeholder seg retten til å nekte innsjekking av personer under 18 år.
                     <br/>
@@ -139,6 +140,97 @@ and open the template in the editor.
                     <br/>
                     <br/>Sign: 
                     <br/>Dette dokumentet anses elektronisk signert på vegne av kunden.        
+                </div>
+
+
+                <div class="col2">
+                    <div class="title">AGREEMENT FOR ACCOMMODATION</div>
+
+                    <div class="title">1. PARTIES</div>
+                    Provider: Wilhelmsen House AS (WH)
+                    <br/>Customer: {CUSTOMER.NAME}
+
+                    <div class="title">2. ACCOMMODATION</div>
+                    Wilhelmsen House, Halfdan Wilhelmsens allé 22, 3116 Tønsberg, room category "{ROOM.TYPE}"
+                    <br/>
+                    <br/>Submission of this Agreement will be considered as handover of the service.
+                    <br/>
+                    <br/>The accommodation is accepted "as is" and in accordance with information, floor plan and photos on www.wh.no. The customer accepts minor deviations from specified information about the accommodation.
+
+                    <div class="title">3. PERIOD OF USE</div>
+                    {BOOKING.ORDERLINES}
+                    <br/>
+                    <br/>This Agreement is for {BOOKING.SHORTORLONG_EN}.
+
+                    <div class="title">4. PAYMENT</div>
+                    Payment: {ORDER.PRICEPRDAY} per day (including VAT). 
+                    <br/>Total payment according to article 3 above amounts to NOK {ORDER.PRICE} (including VAT).
+                    <br/>
+                    <br/>Short-term use: 
+                    <br/>The total amount for the period of use shall be paid in advance by the customer.
+                    <br/> 
+                    <br/>Long-term use:  
+                    <br/>The customer shall pay in advance for the first three calendar months of the booked period, after which the customer shall pay in advance of each month. Payment is due no later than five days before the first calendar day of the following month.
+                    <br/>
+                    <br/>WH has the right to adjust prices due to an increase in taxes or charges or other circumstances beyond WH's control. Such price adjustments shall be notified to the customer and shall not enter into force until one month after the notification.
+
+
+                    <div class="title">5. THE CUSTOMER'S USE OF THE ACCOMMODATION</div>
+                    The accommodation can only be used for housing, and can only be used by the customer. WH may refuse persons less than 18 years old from checking in. 
+                    <br/>
+                    <br/>Check-in can at the earliest take place at 15 p.m. on the agreed start date. Check-out must take place before 12 p.m. The customer shall not leave any personal belongings when checking out.
+                    <br/>
+                    <br/>The accommodation and the common areas shall be treated with due care and maintained in a general good condition by the customer. The customer shall be familiar with the fire instructions found in the accommodation. The customer shall act in accordance with the applicable house rules, available at www.wh.no. The House Rules are attached to this Agreement.
+                    <br/>
+                    <br/>The customer shall notify WH immediately in the event of any damage discovered on the property.
+                    <br/>
+                    <br/>The customer shall provide WH with access for cleaning in accordance with article 6, and otherwise for all necessary maintenance.
+
+                    <div class="title">6. WH'S OBLIGATIONS</div>
+                    WH shall ensure cleaning of the accommodation every fifth calendar day. WH shall also ensure cleaning of the accommodation at check-out.
+                    <br/>
+                    <br/>WH shall provide insurance for the accommodation. WH carries otherwise no liability for damages, costs or losses that may arise from burglary, fire, smoke, power outage, water damage or other reasons. The customer accepts that WH in such circumstances shall be indemnified.
+
+                    <div class="title">7. TERMINATION</div>
+                    If the customer has booked the accommodation for short-term use, the period stated in this agreement is fixed unless the customer has paid for a flex solution.
+                    <br/>
+                    <br/>If the customer has booked the accommodation for long-term use , the customer can terminate the agreement after notifying the provider three calendar   months in advance, counting from  the first day of the following month after the notification date.
+
+                    <div class="title">8. BREACH OF THE AGREEMENT</div>
+                    If the accommodation is not in accordance with the terms agreed, the customer shall notify WH within a reasonable time after the breach is discovered. Delayed notification of breach result in loss of any remedies for breach of agreement.
+                    <br/>
+                    <br/>If any damages of the accommodation are caused by the customer, WH has the right to rectify the damage at the customer's expense. It is forbidden to smoke in Wilhelmsen House, and every infringement of the ban on smoking results in a fee of NOK 1.500.
+                    <br/>
+                    <br/>If the customer does not comply with the customer's obligations in this Agreement, WH can, five days after a written notice of breach, deactivate the customer's access code and carry out a check-out of the customer. 
+                    <br/>
+                    <br/>If there is a material breach of the agreement, WH may terminate the agreement and carry out check-out with immediate effect. Default of payment and use of the accommodation in violation of the terms of the agreement is considered a material breach.
+                    <br/>
+                    <br/>The customer agrees that WH gets a pledge in all assets that are left in the accommodation after check-out. If WH considers these assets to have limited economic value, WH may get rid of these possessions without further notice.
+
+                    <div class="title">9. MISCELLANEOUS</div>
+                    The Norwegian Tenancy Act does not apply to this agreement, ref. the Norwegian Tenancy Act section 1-1 fourth paragraph.
+                    <br/>
+                    <br/>The customer accepts that an eviction can be carried out according to the Norwegian Enforcement Act section 13‑2 third paragraph litra a.
+                    <br/>
+                    <br/>The customer accepts that an eviction can be carried out in accordance with the Norwegian Enforcement Act section 13-2 third paragraph litra b.
+                    <br/>
+                    <br/>Since delivery is deemed to take place when submitting a final order and submission of the Agreement, the rules regarding the right to cancellation in the Norwegian Consumer Law section 41 shall not apply to this agreement.
+                    <br/>
+                    <br/>As the Norwegian Cancellation Act section 22 litra m) is applicable, the rules on the right of withdrawal from the agreement do not apply to the agreement.
+                    <br/>
+                    <br/>Sublease of the accommodation is not permitted. 
+
+                    <div class="title">10. FLEX SOLUTION ON SHORT-TERM USE</div>
+                    If the customer has selected the flex solution, agreements of short-term use can be terminated after one day's notice.
+                    <br/>
+                    <br/>Such a notification shall be sent to post@wh.no and must specify the dates the cancellation is applicable to. 
+                    <br/>
+                    <br/>Upon such cancellation WH will, within 30 days, pay back any prepaid payments for the rental period that has been cancelled.  
+                    <br/>
+                    <br/>In case of doubt or discrepancies, the Norwegian version shall prevail.
+                    <br/>
+                    <br/>Sign :
+                    <br/>This document is considered electronically signed on behalf of the customer.
                 </div>
             </div>
         </div>

@@ -13,6 +13,8 @@ public class UsersBookingData extends DataCommon {
     public boolean partnerReference = false;
     public List<String> orderIds = new ArrayList();
     public boolean active = true;
+    
+    /* Average price each day */
     public double bookingPrice = 0.0;
     public String sessionId = "";
     public Date started;

@@ -16,6 +16,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.UtilManager;
@@ -698,7 +699,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         HashMap<String, String> attachments = new HashMap();
         attachInvioce(attachments, bdata);
-        attachRentalTerms(attachments, bdata, visitor);
+        attachRentalTerms(attachments, bdata);
         attachHouseRules(attachments);
         
         String copyadress = "toreplaced@test.no";       
@@ -830,7 +831,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 CartItem cartItem = addCartItem(count, reference.startDate, reference.endDate, bookingData.additonalInformation.roomProductId, longTerm);
                 roomInfo.cartItemId = cartItem.getCartItemId();
             }
-            
         }
         
         saveObject(bookingData);
@@ -1154,19 +1154,47 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         attachments.put("husregler.pdf", base64Encoded);
     }
     
-    private void attachRentalTerms(HashMap<String, String> attachments, UsersBookingData bdata, Visitors visitor) {
+    private void attachRentalTerms(HashMap<String, String> attachments, UsersBookingData bdata) {
+        String base64Encoded = getBase64EncodedRentalContract(bdata);
+        
+        if (base64Encoded != null)
+            attachments.put("leievilkår.pdf", base64Encoded);
+    }
+
+    private String getVisistorNameFromBookingData(UsersBookingData bdata) {
+        if (bdata.references != null && bdata.references.size() > 0) {
+            BookingReference reference = bdata.references.get(0);
+            if (reference.roomsReserved != null && reference.roomsReserved.size() > 0) {
+                RoomInformation roomInfo = reference.roomsReserved.get(0);
+                if (roomInfo.visitors != null && roomInfo.visitors.size() > 0) {
+                    Visitors visitor = roomInfo.visitors.get(0);
+                    return visitor.name;
+                }
+            }
+        }
+        
+        return "";
+    }
+    
+    private String getBase64EncodedRentalContract(UsersBookingData bdata) {
+        String vistorsName = getVisistorNameFromBookingData(bdata);
+        String roomType = getRoomTypeFromBookingData(bdata);
+        String bookingOrderLines = getBookingOrderlinesFromBookingData(bdata);
+        String longTerm = getBookingTypeFromUserBookingData(bdata); 
+        String price = getOrderPriceFromUserBookingData(bdata);
+        String avgprice = getAveragePriceBasedOnUserBooking(bdata);
+        
         try {
             String text = new String(Files.readAllBytes(Paths.get("html/templates/wh/rentalterms.html")), StandardCharsets.UTF_8);
 
             String uuid = UUID.randomUUID().toString();
-            text = text.replace("{CUSTOMER.NAME}", visitor.name);
-            text = text.replace("{ROOM.TYPE}", "");
-            text = text.replace("{BOOKING.START}", "");
-            text = text.replace("{BOOKING.END}", "");
-            text = text.replace("{BOOKING.PERIOD}", "");
-            text = text.replace("{BOOKING.SHORTORLONG}", "");
-            text = text.replace("{ORDER.PRICE}", "");
-            text = text.replace("{ORDER.PRICEPRDAY}", "");
+            text = text.replace("{CUSTOMER.NAME}", vistorsName);
+            text = text.replace("{ROOM.TYPE}", roomType);
+            text = text.replace("{BOOKING.ORDERLINES}", bookingOrderLines);
+            text = text.replace("{BOOKING.SHORTORLONG}", longTerm);
+            text = text.replace("{BOOKING.SHORTORLONG_EN}", longTerm.equals("kortidsbruk") ? "short-term use" : "long-term use");
+            text = text.replace("{ORDER.PRICE}", price);
+            text = text.replace("{ORDER.PRICEPRDAY}", ""+avgprice);
 
 
             String path = "tmp/"+uuid+".html";
@@ -1175,9 +1203,103 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
             String base64Encoded = utilManager.getBase64EncodedPDFWebPageWithBorders("http://localhost:8080/"+path);
             new File(file).delete();
-            attachments.put("leievilkår.pdf", base64Encoded);
+            
+            return base64Encoded;
+            
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        
+        return null;
+    }
+    
+    @Override
+    public String getCurrentRentalTermsContract() {
+        UsersBookingData bdata = getCurrentUserBookingData();
+        if (bdata == null) {
+            return "";
+        }
+        
+        String contact = getBase64EncodedRentalContract(bdata);
+        if (contact == null) {
+            return "";
+        }
+        
+        return contact;
+    }
+
+    private String getRoomTypeFromBookingData(UsersBookingData bdata) {
+        if (bdata == null) {
+            return "";
+        }
+        
+        Product product = productManager.getProduct(bdata.additonalInformation.roomProductId);
+        if (product != null) {
+            return product.name;
+        }
+        
+        return "";
+    }
+
+    private String getBookingOrderlinesFromBookingData(UsersBookingData bdata) {
+        String orderLine = "";
+        
+        for (BookingReference ref : bdata.references) {
+            orderLine += "<br/>Innsjekk: " + ref.startDate + "<br/> Utsjekk: " + ref.endDate + "<br/>";
+        }
+        
+        return orderLine;
+    }
+
+    private String getBookingTypeFromUserBookingData(UsersBookingData bdata) {
+        if (bdata == null) {
+            return "";
+        }
+        
+        if (bdata.additonalInformation == null) {
+            return "";
+        }
+        
+        if (bdata.additonalInformation.isPartner == null || !bdata.additonalInformation.isPartner) {
+            return "kortidsbruk";
+        }
+        
+        return "langtidsbruk";
+    }
+
+    private String getOrderPriceFromUserBookingData(UsersBookingData bdata) {
+        if (bdata == null) {
+            return "";
+        }
+        
+        if (bdata.orderIds == null) {
+            return "";
+        }
+        
+        if (bdata.orderIds.size() == 0) {
+            return "" + cartManager.getCart().getTotal(false);
+        }
+        
+        double totalPrice = 0;
+        for (String orderId : bdata.orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            if (order != null) {
+                totalPrice  += orderManager.getTotalAmount(order);
+            }
+        }
+        
+        return ""+totalPrice;
+    }
+
+    private String getAveragePriceBasedOnUserBooking(UsersBookingData bdata) {
+        if (bdata == null) {
+            return "";
+        }
+        
+        if (bdata.orderIds == null || bdata.orderIds.size() == 0) {
+            return ""+cartManager.getSumOfAllProductsPrices(bdata.additonalInformation.isPartner != null && bdata.additonalInformation.isPartner);
+        }
+       
+        return ""+bdata.bookingPrice;
     }
 }

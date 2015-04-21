@@ -266,4 +266,30 @@ public class CartManager extends ManagerBase implements ICartManager {
         getCart().saveCartItem(cartItem);
     }
 
+    public double getSumOfAllProductsPrices(boolean isPartner) {
+        Cart cart = getCart();
+        double price = 0;
+        
+        if (!isPartner) {
+            for (CartItem cartItem : cart.getItems()) {
+                price += cartItem.getProduct().price;
+            }
+        } else {
+            for (CartItem cartItem : cart.getItems()) {
+                double rowPrice = cartItem.getProduct().price * cartItem.getCount();
+                rowPrice = Math.round(rowPrice * 100.0) / 100.0;
+                price += rowPrice;
+            }
+
+            int i = 0;
+            for (CartItem cartItem : cart.getItems()) {
+                i += cartItem.getCount();
+            }
+
+            return price/i;
+        }
+        
+        return price;
+    }
+
 }

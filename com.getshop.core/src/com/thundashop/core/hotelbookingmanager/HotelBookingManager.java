@@ -959,7 +959,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if(bdata.sessionId != null && !bdata.sessionId.isEmpty()) {
                 continue;
             }
-            if(!bdata.payedFor && !bdata.additonalInformation.isPartner) {
+            if(!bdata.payedFor) {
                 continue;
             }
             if(!bdata.active) {

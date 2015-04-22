@@ -169,11 +169,16 @@ class Contact extends \WebshopApplication implements \Application {
         $this->config = $this->getFactory()->getStoreConfiguration();
         $fields = $this->getFields();
         $content = "";
+        $replyAddress = "noreply@getshop.com";
+        
         foreach($_POST['data']['field'] as $field => $val) {
             if(!isset($fields[$field])) {
                 continue;
             }
             $content .= $fields[$field].": " . $val . "<br>";
+            if ($field == "email") {
+                $replyAddress = $val;
+            }
         }
         
         $content .= "<br><br>".$this->__w("Message").":<br>" . $_POST['data']['field']['content'];
@@ -183,7 +188,7 @@ class Contact extends \WebshopApplication implements \Application {
 
         $to = $this->getEmail();
         
-        $this->getApi()->getMessageManager()->sendMail($to, "Webshop owner", $title, $content, "noreply@gethsop.com", "GetShop Backend");
+        $this->getApi()->getMessageManager()->sendMail($to, "Webshop owner", $title, $content, $replyAddress, "GetShop");
     }
     
 }

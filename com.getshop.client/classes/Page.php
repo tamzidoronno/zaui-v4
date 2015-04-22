@@ -53,7 +53,7 @@ class Page {
             echo "</div>";
         }
         
-        echo "<div class='gsbody_inner $editormodeclass' pageId='" . $this->getId() . "' gspagetype='$gs_page_type'>";
+        echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
             

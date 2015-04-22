@@ -102,6 +102,24 @@ app.HotelbookingManagement = {
             alert('Grant access sent, it can take up to one minute before access has been granted.');
         });
     },
+    updatecontactinfo : function() {
+        var row = $(this).closest('tr');
+        var data = {
+            "roomid" : row.attr('roomid'),
+            "bookinguserinfo" : row.attr('bookinguserinfo'),
+            "referenceid" : row.attr('referenceid'),
+            "visitor" : {
+                "name" : row.find('[name="name"]').val(),
+                "phone" : row.find('[name="phone"]').val(),
+                "email" : row.find('[name="email"]').val()
+            }
+        }
+        
+        var event = thundashop.Ajax.createEvent('','updateContactInfo',$(this), data);
+        thundashop.Ajax.post(event, function() {
+            thundashop.common.Alert('Success','User has been updated');
+        }, false);
+    },
     initEvents : function() {
         $(document).on('click', '.HotelbookingManagement .edit_type', app.HotelbookingManagement.loadEditType);
         $(document).on('click', '.HotelbookingManagement .delete_type', app.HotelbookingManagement.deleteType);
@@ -119,6 +137,7 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .fa-info-circle', app.HotelbookingManagement.showBookingInformation);
         $(document).on('click', '.HotelbookingManagement .updatebookingprice', app.HotelbookingManagement.updateBookingPrice);
         $(document).on('click', '.HotelbookingManagement .markaspayedfor', app.HotelbookingManagement.markAsPayedFor);
+        $(document).on('click', '.HotelbookingManagement .updatecontactinfo', app.HotelbookingManagement.updatecontactinfo);
     },
     
     markAsPayedFor : function() {

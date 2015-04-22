@@ -2333,6 +2333,24 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function updateBookingInformation($vistors, $userBookingId, $roomId, $referenceId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["vistors"] = json_encode($this->transport->object_unset_nulls($vistors));
+	     $data['args']["userBookingId"] = json_encode($this->transport->object_unset_nulls($userBookingId));
+	     $data['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
+	     $data["method"] = "updateBookingInformation";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Add new room to the manager.
 	* @param room
 	* @throws ErrorException

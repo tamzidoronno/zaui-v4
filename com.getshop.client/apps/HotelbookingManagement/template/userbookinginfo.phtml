@@ -1,5 +1,6 @@
 <?
 $id = $_POST['data']['bookingid'];
+/* @var $bookingData core_hotelbookingmanager_UsersBookingData */
 $bookingData = $this->getApi()->getHotelBookingManager()->getUserBookingData($id);
 $product = $this->getApi()->getProductManager()->getProduct($bookingData->additonalInformation->roomProductId);
 
@@ -20,5 +21,25 @@ foreach($bookingData->references as $reference) {
     echo "&nbsp;&nbsp;&nbsp;" . $reference->startDate . " - " . $reference->endDate."<BR>";
 }
 echo "</div>";
-
 ?>
+
+Rooms :
+<div style='padding: 20px;'>
+<table>
+<?
+foreach($bookingData->references as $reference) {
+    /* @var $reference core_hotelbookingmanager_BookingReference */
+    foreach($reference->roomsReserved as $room) {
+        /* @var $room core_hotelbookingmanager_RoomInformation */
+        foreach($room->visitors as $visitor) {
+            echo "<tr roomid='$room->roomId' bookinguserinfo='$bookingData->id' referenceid='$reference->bookingReference'>";
+            echo "<td><input type='text' value='".$visitor->name."' name='name'></td>";
+            echo "<td><input type='text' value='".$visitor->phone."' name='phone'></td>";
+            echo "<td><input type='text' value='".$visitor->email."' name='email'><input type='button' value='Update' class='updatecontactinfo'></td>";
+            echo "</tr>";
+        }
+    }
+}
+?>
+</table>
+</div>

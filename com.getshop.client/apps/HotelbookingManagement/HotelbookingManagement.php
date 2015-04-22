@@ -32,6 +32,23 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return time();
     }
     
+    public function updateContactInfo() {
+        $roomid = $_POST['data']['roomid'];
+        $bookinguserinfo = $_POST['data']['bookinguserinfo'];
+        $referenceid = $_POST['data']['referenceid'];
+        $visitor = $_POST['data']['visitor'];
+        
+        $toupdate = new \core_hotelbookingmanager_Visitors();
+        $toupdate->email = $visitor['email'];
+        $toupdate->phone = $visitor['phone'];
+        $toupdate->name = $visitor['name'];
+        
+        $visitors = array();
+        $visitors[] = $toupdate;
+        
+        $this->getApi()->getHotelBookingManager()->updateBookingInformation($visitors, $bookinguserinfo, $roomid, $referenceid);
+    }
+    
     public function displayRoomBoxInfo() {
         echo "<span style='padding:10px; display:inline-block;'>";
         $selectedStart = strtotime($_POST['data']['startDate']);

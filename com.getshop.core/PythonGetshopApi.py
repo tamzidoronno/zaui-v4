@@ -2378,6 +2378,42 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def updateBookingInformation(self, vistors, userBookingId, roomId, referenceId):
+    args = collections.OrderedDict()
+    if isinstance(vistors,GetShopBaseClass): 
+      args["vistors"]=json.dumps(vistors.__dict__)
+    else:
+      try:
+        args["vistors"]=json.dumps(vistors)
+      except (ValueError, AttributeError):
+        args["vistors"]=vistors
+    if isinstance(userBookingId,GetShopBaseClass): 
+      args["userBookingId"]=json.dumps(userBookingId.__dict__)
+    else:
+      try:
+        args["userBookingId"]=json.dumps(userBookingId)
+      except (ValueError, AttributeError):
+        args["userBookingId"]=userBookingId
+    if isinstance(roomId,GetShopBaseClass): 
+      args["roomId"]=json.dumps(roomId.__dict__)
+    else:
+      try:
+        args["roomId"]=json.dumps(roomId)
+      except (ValueError, AttributeError):
+        args["roomId"]=roomId
+    if isinstance(referenceId,GetShopBaseClass): 
+      args["referenceId"]=json.dumps(referenceId.__dict__)
+    else:
+      try:
+        args["referenceId"]=json.dumps(referenceId)
+      except (ValueError, AttributeError):
+        args["referenceId"]=referenceId
+    data = EmptyClass()
+    data.args = args
+    data.method = "updateBookingInformation"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def updateCart(self):
     args = collections.OrderedDict()
     data = EmptyClass()

@@ -711,6 +711,23 @@ public class APIHotelBookingManager {
      }
 
      /**
+     * Get all references
+     * @return
+     * @throws ErrorException
+     */
+     public void updateBookingInformation(java.util.List vistors, java.lang.String userBookingId, java.lang.String roomId, java.lang.Integer referenceId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("vistors",new Gson().toJson(vistors));
+          gs_json_object_data.args.put("userBookingId",new Gson().toJson(userBookingId));
+          gs_json_object_data.args.put("roomId",new Gson().toJson(roomId));
+          gs_json_object_data.args.put("referenceId",new Gson().toJson(referenceId));
+          gs_json_object_data.method = "updateBookingInformation";
+          gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * Add new room to the manager.
      * @param room
      * @throws ErrorException

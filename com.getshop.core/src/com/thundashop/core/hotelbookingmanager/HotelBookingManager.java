@@ -1315,4 +1315,20 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         order.status = Order.Status.PAYMENT_COMPLETED;
         orderManager.saveOrder(order);
     }
+
+    @Override
+    public void updateBookingInformation(List<Visitors> vistors, String userBookingId, String roomId, Integer referenceId) {
+        UsersBookingData bdata = getUserBookingData(userBookingId);
+        for(BookingReference reference : bdata.references) {
+            if(reference.bookingReference == referenceId) {
+                for(RoomInformation room : reference.roomsReserved) {
+                    if(room.roomId.equals(roomId)) {
+                        room.visitors.clear();
+                        room.visitors.addAll(vistors);
+                    }
+                }
+            }
+        }
+        saveObject(bdata);
+    }
 }

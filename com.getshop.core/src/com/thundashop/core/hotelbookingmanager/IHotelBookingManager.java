@@ -162,6 +162,8 @@ public interface IHotelBookingManager {
     @Administrator
     public void markAsPayedForTest(String userBookingDataId);
     
+    public void updateBookingInformation(List<Visitors> vistors, String userBookingId, String roomId, Integer referenceId);
+    
     public String getUserIdForRoom(String roomNumber) ;
     
     public String getCurrentRentalTermsContract();

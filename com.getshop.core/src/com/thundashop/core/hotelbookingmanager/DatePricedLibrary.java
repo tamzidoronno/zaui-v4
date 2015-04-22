@@ -56,7 +56,9 @@ public class DatePricedLibrary {
             Date endDate = cal.getTime();
             
             if (date.after(startDate) && date.before(endDate)) {
-                return cartItem.getProduct().getPrice(null) + extra;
+                // Expensive family room.
+                double add = cartItem.getProduct().id.equals("248ec601-ee7a-4d3a-8644-be4de68b2412") ? 1805 : extra;
+                return cartItem.getProduct().getPrice(null) + add;
             }
         }
         

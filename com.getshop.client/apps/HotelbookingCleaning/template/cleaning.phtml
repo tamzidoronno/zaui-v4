@@ -9,7 +9,9 @@ $api = $this->getApi();
 $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
 $reservations = $this->getApi()->getHotelBookingManager()->getAllActiveUserBookings();
 $orders = $api->getOrderManager()->getAllOrdersOnProduct("8dd279a2-4949-45ce-83c5-1d329f938179");
-
+if(!$orders) {
+    $orders = array();
+}
 $roomlist = array();
 foreach ($rooms as $room) {
     $roomlist[$room->id] = $room;
@@ -39,6 +41,7 @@ function printCleaningRows($bookingData, $roomlist, $interval, $orders, $api) {
             if ($order->status != 7) {
                 continue;
             }
+            
             /* @var $order \ns_def1e922_972f_4557_a315_a751a9b9eff1\Order */
             $date = strtotime($order->createdDate);
             $hour = (int) date("H", $date);
@@ -60,6 +63,10 @@ function printCleaningRows($bookingData, $roomlist, $interval, $orders, $api) {
                 $startDate = strtotime($reservation->startDate);
                 $endDate = strtotime($reservation->endDate);
 
+                if($startDate > time()) {
+                    continue;
+                }
+                
                 if ($endDate < date(time() + (86400) * ($i - 1))) {
                     continue;
                 }

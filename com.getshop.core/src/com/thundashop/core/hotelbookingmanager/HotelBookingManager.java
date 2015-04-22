@@ -666,11 +666,23 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             reservation.payedFor = true;
             saveObject(reservation);
         } else {
-            if(!reservation.orderIds.isEmpty() && !reservation.payedFor) {
+            if(!reservation.orderIds.isEmpty() && (!reservation.payedFor || !reservation.captured)) {
                 try {
                     Order order = orderManager.getOrderSecure(reservation.orderIds.get(0));
+                    boolean needSaving = false;
                     if(order != null && order.status == Order.Status.PAYMENT_COMPLETED) {
+                        needSaving = true;
                         reservation.payedFor = true;
+                    }
+                    if(order.captured && !reservation.captured) {
+                        reservation.captured = true;
+                        needSaving = true;
+                    }
+                    if(order.testOrder && !reservation.testReservation) {
+                        reservation.testReservation = true;
+                        needSaving = true;
+                    }
+                    if(needSaving) {
                         saveObject(reservation);
                     }
                 }catch(Exception e) {

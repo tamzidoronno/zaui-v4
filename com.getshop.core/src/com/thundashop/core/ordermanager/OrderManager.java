@@ -826,7 +826,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public List<Order> getOrdersToCapture() throws ErrorException {
         List<Order> ordersToReturn = new ArrayList();
         for(Order order :orders.values()) {
-            if(order.status == Order.Status.PAYMENT_COMPLETED && !order.captured) {
+            if(order.status == Order.Status.PAYMENT_COMPLETED && !order.captured && !order.testOrder) {
                 ordersToReturn.add(order);
             }
         }

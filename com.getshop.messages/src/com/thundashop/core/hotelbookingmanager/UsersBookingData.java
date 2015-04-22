@@ -19,4 +19,6 @@ public class UsersBookingData extends DataCommon {
     public String sessionId = "";
     public Date started;
     boolean completed = false;
+    boolean captured = false;
+    boolean testReservation = false;
 }

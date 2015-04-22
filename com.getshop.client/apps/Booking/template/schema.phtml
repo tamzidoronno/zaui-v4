@@ -93,7 +93,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                 <? } ?>
 
                 <? if ($extradep) { ?>
-                    <tr><td class="col1"><? echo $this->getTextForExtraDep(); ?></td><td><input id="extradep" type='textfield'/></td></tr>
+                    <tr><td class="col1"><? echo $this->getTextForExtraDep(); ?></td><td><input id="extradep" checktype='<? echo $this->getCheckType(); ?>' type='textfield'/></td></tr>
                 <? } ?>
 
                 <? if (!$this->isConnectedToCurrentPage()) { ?> 

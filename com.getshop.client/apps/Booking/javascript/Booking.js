@@ -22,13 +22,41 @@ app.Booking = {
     showSettings: function (event, app) {
         var event = thundashop.Ajax.createEvent(null, "showSettings", app, {});
         thundashop.common.showInformationBox(event, __f("Settings"));
+    },
+    
+    checkGroupField: function() {
+        if ($('#extradep').size() === 1) {
+            var checkType = $('#extradep').attr('checktype');
+            var val = $('#extradep').val();
+            
+            
+            // MECA + OQ8
+            if (checkType == 2) {
+                if (val.length < 8 || val.length > 13) {
+                    return false;
+                }
+                
+                if (isNaN(val)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
     }
 };
 
 Booking = {
-    check: function (test) {
+    check: function (test, email) {
         if (!test || test == "")
             throw "empty";
+        
+        if (email) {
+            var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+            if (!re.test(test)) {
+                throw "emailVal";
+            }
+        }
     },
     bindEvents: function () {
         $(document).on('keyup', '.Booking #birthday.updateOnBlur', this.updateCompanyInformation);
@@ -168,6 +196,10 @@ $('.Booking .selected .changeit').live('click', function () {
 });
 
 $('.Booking .savebooking').live('click', function () {
+    if (!app.Booking.checkGroupField()) {
+        alert(__f('Please check your group id'));
+        return;
+    }
     var data = {}
     data.name = $('#name').val();
     data.email = $('#email').val();
@@ -198,7 +230,8 @@ $('.Booking .savebooking').live('click', function () {
 
     try {
         Booking.check(data.name);
-        Booking.check(data.email);
+        Booking.check(data.email, true);
+        Booking.check(data.invoiceemail, true);
         Booking.check(data.cellphone);
 
         if (allowAdd) {
@@ -206,7 +239,11 @@ $('.Booking .savebooking').live('click', function () {
             Booking.check(data.time);
         }
     } catch (error) {
-        thundashop.common.Alert(__w('Stop'), __w('All fields are required'), true);
+        if (error === "emailVal") {
+            thundashop.common.Alert(__w('Stop'), __w('Please check your email addresses'), true);
+        } else {
+            thundashop.common.Alert(__w('Stop'), __w('All fields are required'), true);
+        }
         return;
     }
 

@@ -149,7 +149,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         
-        List<Room> allRoomsOnProduct = findAllRoomsOnProduct(productId);
+        List<Room> allRoomsOnProduct = findAllRoomsOnProduct(productId, additional.isPartner);
         
         Integer count = 0;
         for(Room room : allRoomsOnProduct) {
@@ -482,10 +482,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
     
     
-    private List<Room> findAllRoomsOnProduct(String productId) {
+    private List<Room> findAllRoomsOnProduct(String productId, boolean longTerm) {
         List<Room> allRooms = new ArrayList();
         for(Room room : rooms.values()) {
             if(room.productId.equals(productId)) {
+                if(!longTerm && room.suitedForLongTerm) {
+                    continue;
+                }
                 allRooms.add(room);
             }
         }
@@ -617,7 +620,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
     
     private List<Room> getAvailableRooms(String roomProductId, long startDate, long endDate) {
-        List<Room> allRooms = findAllRoomsOnProduct(roomProductId);
+        boolean longterm = getCurrentUserBookingData().additonalInformation.isPartner;
+        List<Room> allRooms = findAllRoomsOnProduct(roomProductId, longterm);
         List<Room> allRoomsToBook = new ArrayList();
         List<Room> shortTerm = new ArrayList();
         List<Room> longTerm = new ArrayList();
@@ -636,8 +640,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         
-        long diff = (endDate-startDate)/1000/86400;
-        if(diff > settings.longTermRentalDays) {
+        if(longterm) {
             allRoomsToBook.addAll(longTerm);
             allRoomsToBook.addAll(shortTerm);
         } else {

@@ -67,9 +67,13 @@ public class AllaBolagSearchEngine implements CompanySearchEngine {
 
     @Override
     public List<Company> search(String search) {
+        
         try {
             search = URLEncoder.encode(search, "UTF-8");
             String url = "http://www.allabolag.se/ws/BIWS/service.php?key="+key+"&type=find&query=jurnamn:"+search;
+            
+            search = search.replace("-", "");
+            search = search.replace(" ", "");
             String url2 = "http://www.allabolag.se/ws/BIWS/service.php?key="+key+"&type=find&query=nummer:"+search+"%20OR%20orgnr:"+search;
 
             Map<String, Company> companies = new HashMap();

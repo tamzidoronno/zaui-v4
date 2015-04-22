@@ -45,13 +45,16 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 /**
  *
  * @author boggi
  */
 public class ComGetshopArx {
 
-    private String hostname = "https://92.220.61.142:5002/arx/import";
+    private String hostname = "https://192.168.101.18:5002/arx/import";
     private String apiAddress = "www.getshop.com";
     private Integer backendport = 3224;
     
@@ -72,6 +75,11 @@ public class ComGetshopArx {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
+        
+        HttpParams my_httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(my_httpParams, 3000);
+        HttpConnectionParams.setSoTimeout(my_httpParams, 1);
+        
         ComGetshopArx arx = new ComGetshopArx();
         arx.start();
     }
@@ -121,13 +129,28 @@ public class ComGetshopArx {
     }
 
     private void grantAccessToRoom(List<UsersBookingData> bookingData, Map<String, Room> allRooms) throws Exception {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 7);
+        cal.set(Calendar.MINUTE, 1);
+        cal.set(Calendar.SECOND, 1);
+        Date morning = cal.getTime();
+        
         for(UsersBookingData bdata : bookingData) {
             for (BookingReference reference : bdata.references) {
                 //No need to check / update arx on reservation not valid for the time span.
-                if (reference.isEnded() || (!reference.isStarted() && !reference.isToday())) {
+                if (reference.isEnded()) {
                     continue;
                 }
 
+                if(reference.isToday() && new Date().before(morning)) {
+                    continue;
+                }
+                
+                if(!reference.isToday() && !reference.isStarted()) {
+                    continue;
+                }
+                
                 int count = 0;
                 for(RoomInformation roomInfo : reference.roomsReserved) {
                     if(roomInfo.roomState == RoomInfoState.accessGranted) {
@@ -265,6 +288,7 @@ public class ComGetshopArx {
         toPost += "</arxdata>";
 
         String result = httpLoginRequest(hostname, username, password, toPost);
+        System.out.println("Sent to arx");
         return result.equals("OK");
     }
 
@@ -275,6 +299,7 @@ public class ComGetshopArx {
         DefaultHttpClient client = new DefaultHttpClient();
         client = wrapClient(client);
         HttpResponse httpResponse;
+        
 
         HttpEntity entity;
         HttpPost request = new HttpPost(loginUrl);
@@ -295,8 +320,10 @@ public class ComGetshopArx {
         request.setEntity(reqEntity);
 
         try {
+            System.out.println("Now sending to arx");
             httpResponse = client.execute(request);
             entity = httpResponse.getEntity();
+            System.out.println("Done sending to arx");
 
             if (entity != null) {
                 InputStream instream = entity.getContent();

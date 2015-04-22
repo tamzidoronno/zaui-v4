@@ -821,4 +821,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public Order getOrderSecure(String orderId) throws ErrorException {
         return orders.get(orderId);
     }
+
+    @Override
+    public List<Order> getOrdersToCapture() throws ErrorException {
+        List<Order> ordersToReturn = new ArrayList();
+        for(Order order :orders.values()) {
+            if(order.status == Order.Status.PAYMENT_COMPLETED && !order.captured) {
+                ordersToReturn.add(order);
+            }
+        }
+        return ordersToReturn;
+    }
 }

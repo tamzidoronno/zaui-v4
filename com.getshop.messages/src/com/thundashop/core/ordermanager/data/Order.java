@@ -23,6 +23,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String reference = "";
     public boolean transferredToAccountingSystem = false;
     public boolean testOrder = false;
+    public boolean captured = false;
     
     public static class Status  {
         public static int CREATED = 1;

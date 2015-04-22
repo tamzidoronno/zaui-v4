@@ -178,5 +178,8 @@ public interface IOrderManager {
     public void logTransactionEntry(String orderId, String entry) throws ErrorException;
     
     
+    @Administrator
+    public List<Order> getOrdersToCapture() throws ErrorException;
+    
     public List<Order> getOrdersNotTransferredToAccountingSystem();
 }

@@ -17,4 +17,5 @@ public class Payment implements Serializable {
     public double paymentFee = 0D;
     public TaxGroup paymentFeeTaxGroup = null;
     public HashMap<Long, String> transactionLog = new HashMap();
+    public boolean captured = false;
 }

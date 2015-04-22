@@ -3477,6 +3477,22 @@ class APIOrderManager {
 	}
 
 	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return List
+	*/
+
+	public function getOrdersToCapture() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getOrdersToCapture";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Returns how many pages there is for this store with the given pagesize
 	* @return int
 	*/

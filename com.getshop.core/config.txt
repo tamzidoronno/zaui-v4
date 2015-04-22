@@ -1,1 +1,1 @@
-productionMode,true
+productionMode,false

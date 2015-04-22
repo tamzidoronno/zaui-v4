@@ -3496,6 +3496,14 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getOrdersToCapture(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getOrdersToCapture"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getPageCount(self, pageSize, searchWord):
     args = collections.OrderedDict()
     if isinstance(pageSize,GetShopBaseClass): 

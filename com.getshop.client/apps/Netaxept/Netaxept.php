@@ -137,7 +137,6 @@ class Netaxept extends \PaymentApplication implements \Application {
             $email = $user->emailAddress;
             $name = $user->fullName;
             $fromName = "Payment Handler";
-            $fromMail = $this->getFactory()->$this->getConfigurationSetting("mainemailaddress");
             if (isset($settings->emailpaymentfailedbody)) {
                 $emailbody = $settings->emailpaymentfailedbody->value;
                 $emailtitle = $settings->emailpaymentfailedtitle->value;
@@ -145,7 +144,7 @@ class Netaxept extends \PaymentApplication implements \Application {
                 $this->getApi()->getMessageManager()->sendMail($fromMail, $name, $emailtitle, $emailbody, $fromMail, $fromName);
             }
         } else {
-            $this->order->status = 4;
+            $this->order->captured = true;
             $this->getApi()->getOrderManager()->saveOrder($this->order);
         }
     }

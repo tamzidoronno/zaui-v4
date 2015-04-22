@@ -28,6 +28,9 @@ class core_ordermanager_data_Order extends core_common_DataCommon  {
 	public $testOrder;
 
 	/** @var String */
+	public $captured;
+
+	/** @var String */
 	public $createdDate;
 
 	/** @var String */

@@ -68,7 +68,7 @@ class GenerateReport {
             }
         }
         $rows = $this->convertToExcelCharSet($rows);
-        $this->printExcelHeader($entry->title. "_".date("Y-m-d").".xls");
+        $this->printExcelHeader($entry->title." ".$entry->year."-".sprintf("%02d", $entry->month)."-".sprintf("%02d", $entry->day).".xls");
         $export_file = "xlsfile://tmp/example.xls";
         $fp = fopen($export_file, "wb");
         if (!is_resource($fp)) {

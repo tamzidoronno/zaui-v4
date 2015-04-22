@@ -263,6 +263,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Collections.sort(retval,
                 new Comparator<RoomType>() {
                     public int compare(RoomType f1, RoomType f2) {
+                        if (f1 == null || f1.name == null || f2 == null || f2.name == null) {
+                            return 0;
+                        }
                         return f1.name.compareTo(f2.name);
                     }
                 });

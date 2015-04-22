@@ -79,10 +79,12 @@ $languages['fi_FI'] = "Finish";
     </div>
 
     
+    
     <div class="textfield gss_setting" id="uniqueusersonemail">
         <span class="title"><?php echo $this->__f("Force unique email addresses on users"); ?></span>
         <div class="gss_onoff" gs_model="storesettings" gs_model_attr="uniqueusersonemail">
-            <? echo $this->__f("Off"); ?><i class="fa fa-toggle-off"></i><? echo $this->__f("On"); ?>
+            <? $faclass = $this->getConfigurationSetting("uniqueusersonemail") == true ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
         </div>
         <div class="description">
             <?php echo $this->__("If the same email is entered, it is forced as the same user if existing."); ?>

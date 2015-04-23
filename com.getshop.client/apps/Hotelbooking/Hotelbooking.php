@@ -325,11 +325,22 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     
     private function repayOrder() {
         $_GET['orderId'] = $_GET['repayOrderId'];
-        echo "<center><br/><br/><br/>";
-        echo "<h1>Vennligst vent, du blir nå overført til betalingsvinduet.</h1>";
-        echo "<br/><br/><br/><br/></center>";
+        $this->startAdminImpersonation("OrderManager", "getOrder");
+        $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
+        $this->stopImpersionation();
         
-        $this->completeCheckout(true);
+        if ($order && $order->status == 7) {
+            echo "<center><br/><br/><br/>";
+            echo "<h1>Betalingen er allerede gjennomført for denne bestillingen.</h1>";
+            echo "<br/><br/><br/><br/></center>";
+        } else {
+            
+            echo "<center><br/><br/><br/>";
+            echo "<h1>Vennligst vent, du blir nå overført til betalingsvinduet.</h1>";
+            echo "<br/><br/><br/><br/></center>";
+
+            $this->completeCheckout(true);
+        }
     }
 
     public function updateCalendarDate() {
@@ -817,8 +828,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $this->stopImpersionation();
             }
             
-            $payment->initPaymentMethod();
-            $payment->preProcess();
+            if ($payment->order) {
+                $payment->initPaymentMethod();
+                $payment->preProcess();
+            }
         }
     }
 

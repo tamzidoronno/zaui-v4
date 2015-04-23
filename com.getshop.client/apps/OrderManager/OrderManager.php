@@ -118,6 +118,9 @@ class OrderManager extends \WebshopApplication implements \Application {
     
     public function updateOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['value']);
+        if(!$order->captured && $_POST['isCaptured']) {
+            $order->status = 7;
+        }
         $order->captured = $_POST['isCaptured'];
         $order->testOrder = $_POST['isTestOrder'];
         $this->getApi()->getOrderManager()->saveOrder($order);    

@@ -568,6 +568,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public Double getTotalSalesAmount(Integer year) {
         double amount = 0;
         for (Order order : orders.values()) {
+            
+            if (!order.useForStatistic()) {
+                continue;
+            }
+            
             if (year != null) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(order.createdDate);
@@ -578,7 +583,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             amount += cartManager.calculateTotalCost(order.cart);
         }
-        
+
         return amount;
     }
     
@@ -707,6 +712,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             cal.set(Calendar.MONTH, (i + 1));
             Date end = cal.getTime();
             for (Order order : orders.values()) {
+                if (!order.useForStatistic()) {
+                    continue;
+                }
                 if (order.rowCreatedDate.after(start) && order.rowCreatedDate.before(end)) {
                     weekData += cartManager.calculateTotalCost(order.cart);
                 }

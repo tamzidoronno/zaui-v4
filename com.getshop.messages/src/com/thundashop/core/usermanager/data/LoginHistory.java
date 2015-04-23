@@ -84,32 +84,4 @@ public class LoginHistory extends DataCommon {
             }
         }
     }
-
-    public void printIt() {
-        for (String userId : logins.keySet()) {
-            if (!userId.equals("e368ee9a-6f95-474c-a63c-5d3d27ae1550")) {
-                continue;
-            }
-            List<Date> dates = logins.get(userId);
-            System.out.println("User: " + userId);
-            
-            for (Date date : dates) {
-                System.out.println("  Date: " + date);
-            }
-        }
-        
-        for (String userId : loginUserList.keySet()) {
-            if (!userId.equals("e368ee9a-6f95-474c-a63c-5d3d27ae1550")) {
-                continue;
-            }
-            List<LoginSession> loginsessions = loginUserList.get(userId);
-            System.out.println("User: " + userId);
-            
-            for (LoginSession loginsession : loginsessions) {
-                System.out.println("  Date: " + loginsession.loginDate);
-                System.out.println("  Admin count: " + loginsession.userId + " " + loginsession.adminActionsCount);
-                System.out.println("  Editor count: " + loginsession.userId + " " + loginsession.editorActionsCount);
-            }
-        }
-    }
 }

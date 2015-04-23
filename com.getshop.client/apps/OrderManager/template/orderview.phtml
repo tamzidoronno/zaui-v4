@@ -68,3 +68,49 @@ $cart = $order->cart;
         <? echo $this->getApi()->getCartManager()->calculateTotalCost($cart); ?>
     </div>
 </div>
+<br/>
+<div class="gss_button" onclick="$('.gss_more_order_settings').slideDown();">
+    <? echo $this->__f("Show more settinsg"); ?>
+</div>
+<div class="gss_more_order_settings">
+    <center>
+        <font style="color: red; font-weight: bold;">
+        <?
+        echo $this->__f("Please be careful here, this settings should normally be updated automatically.");
+        ?>
+        </font>
+    </center>
+    
+    
+    <div class="textfield gss_setting"  id="isCaptured">
+        <span class="title"><?php echo $this->__f("Captured"); ?></span>
+        <?
+        $class = $order->captured ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <div class="gss_onoff" gs_model="ordermodel" gs_model_attr="isCaptured">
+            Off<i class="fa <? echo $class; ?>"></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("Is order captured?"); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="isTestOrder">
+        <span class="title"><?php echo $this->__f("Test order"); ?></span>
+        
+        <?
+        $class = $order->testOrder ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <div class="gss_onoff" gs_model="ordermodel" gs_model_attr="isTestOrder">
+            Off<i class="fa <? echo $class; ?>"></i>On
+        </div>
+        
+        <div class="description">
+            <?php echo $this->__("This is a test order, should not be accounted and is not part of the summaries."); ?>
+        </div>
+    </div>
+    
+    <div class="gss_button" gss_value="<? echo $order->id; ?>" gss_method="updateOrder" gss_model="ordermodel" gss_fragment="orderview" gss_view="gss_orderview">
+        <? echo $this->__f("Save"); ?>
+    </div>
+</div>

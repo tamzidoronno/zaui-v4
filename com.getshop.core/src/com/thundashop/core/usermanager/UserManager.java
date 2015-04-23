@@ -69,7 +69,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 }
                 if (dataCommon instanceof LoginHistory) {
                     loginHistory = (LoginHistory) dataCommon;
-                    loginHistory.printIt();
                 }
                 if (dataCommon instanceof Group) {
                     userStoreCollection.addGroup((Group)dataCommon);

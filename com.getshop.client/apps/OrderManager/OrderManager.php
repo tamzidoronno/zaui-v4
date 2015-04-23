@@ -116,6 +116,13 @@ class OrderManager extends \WebshopApplication implements \Application {
         $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
     }
     
+    public function updateOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['value']);
+        $order->captured = $_POST['isCaptured'];
+        $order->testOrder = $_POST['isTestOrder'];
+        $this->getApi()->getOrderManager()->saveOrder($order);    
+    }
+    
     public function showOrder() {
         
     }

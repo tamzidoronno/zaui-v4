@@ -95,3 +95,10 @@
     position: absolute;
     right: 10px;
 }
+
+.gss_more_order_settings {
+    padding: 20px;
+    display: none;
+    margin-top: 20px;
+    background-color: #EEE;
+}

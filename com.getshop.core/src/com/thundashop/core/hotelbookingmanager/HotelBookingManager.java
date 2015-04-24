@@ -95,7 +95,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 tmpLogEntries.add((ArxLogEntry) dbobj);
             }
             if (dbobj instanceof RoomType) {
-                roomTypes.put(dbobj.id, (RoomType) dbobj);
+                RoomType type = (RoomType) dbobj;
+                if (type.id.equals("2d6ab163-f6f5-41ba-89fd-5a148dcb871e"))
+                    continue;
+                       
+                System.out.println("id: "+ type.id + " name: " + type.name);
+                if (type.name == null) {
+                    type.name = "";
+                }
+                
+                roomTypes.put(dbobj.id, type);
             }
             if (dbobj instanceof BookingSettings) {
                 booksettings = (BookingSettings) dbobj;

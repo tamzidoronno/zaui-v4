@@ -84,6 +84,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
 
     private void saveOrderInternal(Order order) throws ErrorException {
+        
+        validatePaymentStatus(order);
+        
         User user = getSession().currentUser;
         if (user != null && order.userId == null) {
             order.userId = user.id;
@@ -568,6 +571,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public Double getTotalSalesAmount(Integer year) {
         double amount = 0;
         for (Order order : orders.values()) {
+            
+            if (!order.useForStatistic()) {
+                continue;
+            }
+            
             if (year != null) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(order.createdDate);
@@ -578,7 +586,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             amount += cartManager.calculateTotalCost(order.cart);
         }
-        
+
         return amount;
     }
     
@@ -707,6 +715,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             cal.set(Calendar.MONTH, (i + 1));
             Date end = cal.getTime();
             for (Order order : orders.values()) {
+                if (!order.useForStatistic()) {
+                    continue;
+                }
                 if (order.rowCreatedDate.after(start) && order.rowCreatedDate.before(end)) {
                     weekData += cartManager.calculateTotalCost(order.cart);
                 }
@@ -831,5 +842,25 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         return ordersToReturn;
+    }
+
+    private void validatePaymentStatus(Order order) {
+        Order inMemoryOrder = orders.get(order.id);
+        
+        if (inMemoryOrder == null) {
+            return;
+        }
+        
+        if (inMemoryOrder.status == Order.Status.PAYMENT_COMPLETED) {
+            if (order.status == Order.Status.WAITING_FOR_PAYMENT) {
+                throw new ErrorException(1034);
+            }
+            if (order.status == Order.Status.CREATED) {
+                throw new ErrorException(1034);
+            }
+            if (order.status == Order.Status.PAYMENT_FAILED) {
+                throw new ErrorException(1034);
+            }
+        }
     }
 }

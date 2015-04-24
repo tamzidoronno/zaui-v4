@@ -24,6 +24,18 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean transferredToAccountingSystem = false;
     public boolean testOrder = false;
     public boolean captured = false;
+
+    public boolean useForStatistic() {
+        if (status == Order.Status.CANCELED || status == Order.Status.PAYMENT_FAILED) {
+            return false;
+        }
+        
+        if (testOrder) {
+            return false;
+        }
+        
+        return true;
+    }
     
     public static class Status  {
         public static int CREATED = 1;

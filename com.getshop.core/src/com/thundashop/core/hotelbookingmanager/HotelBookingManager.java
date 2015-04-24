@@ -674,11 +674,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         needSaving = true;
                         reservation.payedFor = true;
                     }
-                    if(order.captured && !reservation.captured) {
+                    if(order != null && order.captured && !reservation.captured) {
                         reservation.captured = true;
                         needSaving = true;
                     }
-                    if(order.testOrder && !reservation.testReservation) {
+                    if(order != null && order.testOrder && !reservation.testReservation) {
                         reservation.testReservation = true;
                         needSaving = true;
                     }

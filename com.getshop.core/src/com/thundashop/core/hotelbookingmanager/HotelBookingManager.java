@@ -270,8 +270,20 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public void moveRoomOnReference(Integer reference, String oldRoom, String newRoomId) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void moveRoomOnReference(Integer referenceId, String oldRoom, String newRoomId) throws ErrorException {
+        for(UsersBookingData bdata : getAllUsersBookingData()) {
+            for(BookingReference reference : bdata.references) {
+                if(reference.bookingReference == referenceId) {
+                    for(RoomInformation reserved : reference.roomsReserved) {
+                        if(reserved.roomId.equals(oldRoom)) {
+                            reserved.forcedMoved = true;
+                            reserved.roomId = newRoomId;
+                            saveObject(bdata);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override

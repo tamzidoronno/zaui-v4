@@ -283,10 +283,17 @@ $headingtext = $this->__w("You have selected the following duration for your sta
        <i class="fa fa-wifi"></i> WI-FI <? echo $this->__w("included in all rooms"); ?> 
     </div>
     </div>
-        <div class="to_checkout">
-            <a href='?page=<? echo $this->getConfig()->summaryPage; ?>'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
-        </div>
-        <? } ?>
+<?
+        if ($this->getStart() < strtotime("01-05-2015")) {
+            echo "<center><h1>Beklager, men hotellet åpner ikek før 1. mai</h1></center><br><br>";
+        } else {
+            ?>
+            <div class="to_checkout">
+                <a href='?page=<? echo $this->getConfig()->summaryPage; ?>'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
+            </div>
+            <?
+        }
+    } ?>
     <? } ?>
 </div>
 <div style="clear:both;"></div>

@@ -129,6 +129,9 @@ class Page {
             $this->printMobileMenu($layout->areas->{'header'});
         }
         echo "</div>";
+        echo "<script>";
+        echo "$(function() { $('.pagetitle').html('".$this->factory->getPageTitle()."'); });";
+        echo "</script>";
     }
 
     private function printMobileHeader($headerCells) {

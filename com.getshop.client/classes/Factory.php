@@ -758,5 +758,20 @@ class Factory extends FactoryBase {
         return $this->languageCodes;
     }
 
+    public function getPageTitle() {
+        $javapage = $this->getPage()->javapage;
+        $settings = $this->getSettings();
+        $title = isset($settings->settings) ? $settings->settings->title->value : "";
+        
+
+        if($javapage->title) {
+            $title .= " - " . $this->getPage()->javapage->title;
+        }
+        if($javapage->overridePageTitle) {
+            $title = $javapage->overridePageTitle;
+        }
+        return $title;
+    }
+
 }
 ?>

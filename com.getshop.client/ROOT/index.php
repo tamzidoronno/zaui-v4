@@ -161,16 +161,7 @@ if(isset($factory->getSettings()->languages)) {
         $factory->showCssFiles();
 
         $factory->loadJavascriptFilesEditorMode();
-        $settings = $factory->getSettings();
-        $title = isset($settings->settings) ? $settings->settings->title->value : "";
-        
-
-        if($javapage->title) {
-            $title .= " - " . $factory->getPage()->javapage->title;
-        }
-        if($javapage->overridePageTitle) {
-            $title = $javapage->overridePageTitle;
-        }
+        $factory->getPageTitle();
         
         echo "<script>";
         if (isset($settings->fadein) && $settings->fadein == "true") {
@@ -183,7 +174,7 @@ if(isset($factory->getSettings()->languages)) {
 
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-        <title><?php echo $title; ?></title>
+        <title class='pagetitle'><?php echo $title; ?></title>
     <script>
      $(function() {
          if(typeof(CKEDITOR) !== "undefined") {

@@ -151,33 +151,33 @@ class Factory extends FactoryBase {
         // Photoswipe
         echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/photoswipe.css">';
         echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/default-skin/default-skin.css">';
-        echo "\n" . '<script src="/js/photoswipe/photoswipe.min.js"></script>';
-        echo "\n" . '<script src="/js/photoswipe/photoswipe-ui-default.min.js"></script>';
-        echo "\n" . '<script src="/js/getshop.photoswipe.js"></script>';        
+        echo "\n" . '<script async src="/js/photoswipe/photoswipe.min.js"></script>';
+        echo "\n" . '<script async src="/js/photoswipe/photoswipe-ui-default.min.js"></script>';
+        echo "\n" . '<script async src="/js/getshop.photoswipe.js"></script>';        
 
         echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.iframe-transport.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.fileupload.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.fileupload-ui.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.imageupload.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/PubSub.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/mutate.events.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/mutate.min.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.ApplicationManager.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.Administration.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.imageupload.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/PubSub.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/mutate.events.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/mutate.min.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.ApplicationManager.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.Administration.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.base64.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.framework.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.ImportApplication.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.Toolbox.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/datatables/jquery.dataTables.min.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/colorpicker/js/colorpicker.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery.applicationPicker.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.doImageUpload.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.rotate.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.PagePicker.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.Settings.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.framework.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.ImportApplication.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.Toolbox.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/datatables/jquery.dataTables.min.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/colorpicker/js/colorpicker.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/jquery.applicationPicker.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.doImageUpload.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.rotate.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.PagePicker.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.Settings.js"></script>';
 
 
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';

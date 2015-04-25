@@ -12,6 +12,7 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.hotelbookingmanager.BookingReference;
 import com.thundashop.core.hotelbookingmanager.Room;
 import com.thundashop.core.hotelbookingmanager.RoomInformation;
+import com.thundashop.core.hotelbookingmanager.UsersBookingData;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
@@ -92,12 +93,15 @@ public class Visma {
         for (Order order : ordersToTranser) {
             User user = api.getUserManager().getUserById(order.userId);
             if (!vismaSql.checkIfUserExists(user)) {
-                if (order.payment.paymentType.equals("ns_def1e922_972f_4557_a315_a751a9b9eff1\\Netaxept")) {
-                    usersToTransferCreditCard.put(user.id, user);
-                } else {
-                    usersToTransfer.put(user.id, user);
-                }
+                usersToTransfer.put(user.id, user);
             }
+        }
+        
+        for (Order order : ordersToTranserCreditCard) {
+            User user = api.getUserManager().getUserById(order.userId);
+            if (!vismaSql.checkIfUserExists(user)) {
+                usersToTransferCreditCard.put(user.id, user);
+            } 
         }
     }
 
@@ -110,7 +114,7 @@ public class Visma {
         
         for (Order order : ordersToTranser) {
             User user = api.getUserManager().getUserById(order.userId);
-            BookingReference reference = api.getHotelBookingManager().getReservationByReferenceId(Integer.valueOf(order.reference));
+            UsersBookingData data = api.getHotelBookingManager().getUserBookingDataByOrderId(order.id);
             
             String ordrehode = "H;"; // Fast H
             ordrehode += "1;"; // Fast 1 for salg
@@ -118,7 +122,7 @@ public class Visma {
             ordrehode += order.incrementOrderId + ";"; // GetShop ordre id
             ordrehode += user.customerId + ";"; // Kundenr 
             ordrehode += new SimpleDateFormat("yyyyMMdd").format(order.createdDate) + ";"; // Ordredato
-            ordrehode += new SimpleDateFormat("yyyyMMdd").format(reference.startDate) + ";"; // Leveringsdato
+            ordrehode += new SimpleDateFormat("yyyyMMdd").format(data.started)+ ";"; // Leveringsdato
             ordrehode += application.getSetting("paymentterm") + ";"; //Betalingsbetingelse
             ordrehode += application.getSetting("paymenttype") + ";"; //Betalingsmåte ( 10 = avtalegiro )
             ordrehode += ";"; // avgiftskode ( tom = bruk fra kunde )
@@ -135,7 +139,7 @@ public class Visma {
                 orderline += item.getCount() + ";"; // Antall mnder
                 orderline += item.getProduct().price + ";"; // Pris pr antall, hvis blank hentes pris fra Visma
                 orderline += ";"; // ikke i bruk
-                orderline += getRoomId(reference, item)+";"; // Hotel room id. hvordan finner man denne?
+                orderline += getRoomId(data, item)+";"; // Hotel room id. hvordan finner man denne?
                 orderline += ";"; // 
                 result += orderline + "\r\n";
             }
@@ -177,16 +181,18 @@ public class Visma {
         }
     }
 
-    private String getRoomId(BookingReference reference, CartItem item) throws Exception {
+    private String getRoomId(UsersBookingData data, CartItem item) throws Exception {
         if (item.getProduct() != null && item.getProduct().metaData != null && !item.getProduct().metaData.isEmpty()) {
             return item.getProduct().metaData;
         }
         
-        for (RoomInformation info : reference.roomsReserved) {
-            if (info.cartItemId.equals(item.getCartItemId())) {
-                Room room = api.getHotelBookingManager().getRoom(info.roomId);
-                if (room != null) {
-                    return room.roomName;
+        for (BookingReference reference : data.references) {
+            for (RoomInformation info : reference.roomsReserved) {
+                if (info.cartItemId.equals(item.getCartItemId())) {
+                    Room room = api.getHotelBookingManager().getRoom(info.roomId);
+                    if (room != null) {
+                        return room.roomName;
+                    }
                 }
             }
         }
@@ -215,14 +221,9 @@ public class Visma {
         result += "\r\n";
         
         for (Order order : ordersToTranserCreditCard) {
-            BookingReference reference;
-            try {
-                reference = api.getHotelBookingManager().getReservationByReferenceId(Integer.valueOf(order.reference));
-            } catch (com.google.gson.JsonSyntaxException ex) {
-                continue;
-            }
-            
             User user = api.getUserManager().getUserById(order.userId);
+            
+            UsersBookingData data = api.getHotelBookingManager().getUserBookingDataByOrderId(order.id);
             
             String textDesc = "GetShop order: "+ order.incrementOrderId; 
             result += "L;"; //Fixed value L
@@ -246,7 +247,7 @@ public class Visma {
                 result += getProductDebitNumber(item.getProduct())+";"; // Credit account
                 result += getProductTotalAmount(item)+";"; // Total amount
                 result += ";"; // R3 Oppdrag ID
-                result += getRoomId(reference, item)+";"; // R4 Gjenstand ID
+                result += getRoomId(data, item)+";"; // R4 Gjenstand ID
                 result += textDesc;
                 result += "\r\n";
             }

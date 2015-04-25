@@ -63,4 +63,22 @@ app.OrderManager = {
         chart.draw(data, options);
     }   
 };
+
+app.OrderManager.gssinterface = {
+    showOrder: function(orderId) {
+        getshop.Settings.showSettings();
+        getshop.Settings.setApplicationId('27716a58-0749-4601-a1bc-051a43a16d14', function () {
+            var data = {
+                gss_fragment: 'orderview',
+                gss_view: 'gss_orderview',
+                gss_value: orderId
+            }
+
+            getshop.Settings.post({}, "gs_show_fragment", data);
+            app.OrderManager.showOrder();
+        });
+    }
+}
+
+
 app.OrderManager.init();

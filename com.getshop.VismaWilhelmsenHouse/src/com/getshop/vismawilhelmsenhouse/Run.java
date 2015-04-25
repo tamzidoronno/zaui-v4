@@ -16,10 +16,10 @@ import java.util.UUID;
 public class Run {
     private boolean local = true;
     private Integer backendport = 3224;
-    private String apiAddress = "backend20.getshop.com";
-    private String apiUsername = "kai@getshop.com";
-    private String apiPassword = "g4kkg4kk";
-    private String website = "20164.getshop.com";
+    private String apiAddress;
+    private String apiUsername;
+    private String apiPassword;
+    private String website;
     
     private String vismaPassword;
     /**
@@ -44,7 +44,7 @@ public class Run {
             apiAddress = "backend20.getshop.com";
             apiUsername = "kai@getshop.com";
             apiPassword = "g4kkg4kk";
-            website = "20164.getshop.com"; 
+            website = "www.wh.no"; 
             vismaPassword = "4748311484";
         }
     }

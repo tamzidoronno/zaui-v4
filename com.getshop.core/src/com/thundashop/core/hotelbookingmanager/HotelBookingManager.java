@@ -1354,4 +1354,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         saveObject(bdata);
     }
+
+    @Override
+    public UsersBookingData getUserBookingDataByOrderId(String orderId) {
+        for (UsersBookingData data : usersBookingData) {
+            if (data.orderIds.contains(orderId)) {
+                return data;
+            }
+        }
+        
+        return null;
+    }
 }

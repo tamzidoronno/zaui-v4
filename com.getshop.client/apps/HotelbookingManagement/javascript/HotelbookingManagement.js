@@ -138,6 +138,22 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .updatebookingprice', app.HotelbookingManagement.updateBookingPrice);
         $(document).on('click', '.HotelbookingManagement .markaspayedfor', app.HotelbookingManagement.markAsPayedFor);
         $(document).on('click', '.HotelbookingManagement .updatecontactinfo', app.HotelbookingManagement.updatecontactinfo);
+        $(document).on('click', '.HotelbookingManagement .changeroombutton', app.HotelbookingManagement.changeRoom);
+    },
+    
+    changeRoom : function() {
+        var row = $(this).closest('tr');
+        var data = {
+            "oldroom" : row.attr('roomid'),
+            "bookinguserinfo" : row.attr('bookinguserinfo'),
+            "referenceid" : row.attr('referenceid'),
+            "roomId" : row.find('.roomSelected').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent('','changeRoom',$(this), data);
+        thundashop.Ajax.post(event, function() {
+            thundashop.common.Alert('Success','User has been updated');
+        }, false);
     },
     
     markAsPayedFor : function() {

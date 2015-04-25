@@ -32,6 +32,13 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return time();
     }
     
+    public function changeRoom() {
+        $reference = $_POST['data']['referenceid'];
+        $newRoomId = $_POST['data']['roomId'];
+        $oldRoom = $_POST['data']['oldroom'];
+        $this->getApi()->getHotelBookingManager()->moveRoomOnReference($reference, $oldRoom, $newRoomId);
+    }
+    
     public function updateContactInfo() {
         $roomid = $_POST['data']['roomid'];
         $bookinguserinfo = $_POST['data']['bookinguserinfo'];

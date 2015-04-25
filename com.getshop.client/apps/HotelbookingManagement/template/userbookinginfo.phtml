@@ -1,8 +1,15 @@
 <?
+/* @var $this ns_15e67fa1_c862_4bc3_9b17_dfd818f30712\HotelbookingManagement */
 $id = $_POST['data']['bookingid'];
 /* @var $bookingData core_hotelbookingmanager_UsersBookingData */
 $bookingData = $this->getApi()->getHotelBookingManager()->getUserBookingData($id);
 $product = $this->getApi()->getProductManager()->getProduct($bookingData->additonalInformation->roomProductId);
+$rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
+$allRooms = array();
+foreach($rooms as $room) {
+    $allRooms[$room->id] = $room;
+}
+
 
 echo "<div style='padding: 10px;'>";
 if($bookingData->additonalInformation->isPartner) {
@@ -31,6 +38,19 @@ foreach($bookingData->references as $reference) {
     /* @var $reference core_hotelbookingmanager_BookingReference */
     foreach($reference->roomsReserved as $room) {
         /* @var $room core_hotelbookingmanager_RoomInformation */
+        echo "<tr roomid='$room->roomId' bookinguserinfo='$bookingData->id' referenceid='$reference->bookingReference'>";
+        echo "<td>";
+        echo "<select class='roomSelected'>";
+        foreach($allRooms as $roomId => $roomListEntry) {
+            $selected = "";
+            if($roomId == $room->roomId) {
+                $selected = " SELECTED";
+            }
+            
+            echo "<option value='$roomId' $selected>".$roomListEntry->roomName . "</option>";
+        }
+        echo "</select> <input type='button' value='Endre rom' class='changeroombutton'>";
+        echo "</td></tr>";
         foreach($room->visitors as $visitor) {
             echo "<tr roomid='$room->roomId' bookinguserinfo='$bookingData->id' referenceid='$reference->bookingReference'>";
             echo "<td><input type='text' value='".$visitor->name."' name='name'></td>";

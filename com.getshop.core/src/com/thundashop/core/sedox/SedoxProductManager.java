@@ -1418,4 +1418,35 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         notifyOnSocket(product);
     }
 
+    @Override
+    public void transferCreditToSlave(String slaveId, double amount) throws ErrorException {
+        User user = getSession().currentUser;
+        if (user == null) {
+            throw new ErrorException(26);
+        }
+        
+        SedoxUser sedoxMaster = getSedoxUserAccount();
+        
+        if(sedoxMaster.creditAccount.getBalance() < amount) {
+            throw new ErrorException(102);
+        }
+        
+        List<SedoxUser> slaveUsers = getSlaves(user.id);
+        for (SedoxUser slaveUser : slaveUsers) {
+            if (slaveUser.id.equals(slaveId)) {
+                SedoxCreditOrder sedoxSlaveCreditOrder = new SedoxCreditOrder();
+                sedoxSlaveCreditOrder.amount = amount;
+                slaveUser.addCreditOrderUpdate(sedoxSlaveCreditOrder, "Transfered credit from " + user.fullName);
+                databaseSaver.saveObject(slaveUser, credentials);
+                
+                User islaveUser = getGetshopUser(slaveUser.id);
+                SedoxCreditOrder sedoxCreditOrder = new SedoxCreditOrder();
+                sedoxCreditOrder.amount = amount * -1;
+                sedoxMaster.addCreditOrderUpdate(sedoxCreditOrder, "Transfered credit to " + islaveUser.fullName);
+                databaseSaver.saveObject(sedoxMaster, credentials); 
+            }
+        }
+    }
+
+    
 }

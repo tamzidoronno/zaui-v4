@@ -1,0 +1,15 @@
+<?
+$slaveUser = $this->getApi()->getUserManager()->getUserById($_POST['data']['slaveId']);
+
+?>
+<div class="transferCredit">
+    
+    You currently have <? echo $this->getCreditAccountBalance(); ?> credit(s).
+    <br/> How much do you want to transfer to <? echo $slaveUser->fullName; ?>
+    <br/>
+    <br/> <input type="text" id="creditToTransfer" />
+    <br/>
+    <br/>
+    <div slaveId="<? echo $_POST['data']['slaveId']; ?>" class="transferCreditButton sedox_button green">Transfer</div
+
+</div>

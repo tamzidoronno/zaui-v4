@@ -7,7 +7,7 @@
     <div class='details geninfotop'>
         <table>
             <tr><td style='width: 120px;'><b>Name:</b></td><td style='width: 200px;'><? echo $this->getApi()->getUserManager()->getLoggedOnUser()->fullName; ?></td>  <td style='width: 150px;'><b>Remaining credit:</b></td><td><? echo $this->getCreditAccountBalance(); ?></td>  </tr>
-            <tr><td><b>Files uploaded:</b></td><td><? echo $this->getFileCount(); ?></td> <td><b>Slaves:</b></td><td>0</td></tr>
+            <tr><td><b>Files uploaded:</b></td><td><? echo $this->getFileCount(); ?></td> <td><b>Slaves:</b></td><td><? echo count($this->getSlaves()); ?></td></tr>
         </table>
     </div>
 </div>
@@ -164,6 +164,7 @@
                         <div class='col col1'><? echo $slave->slaveIncome; ?></div>
                         <div class='col col2'><? echo $user->fullName; ?></div>
                         <div class='col col3'><div userid="<? echo $slave->id; ?>" class="show_slave_credit_history"><? echo $slave->creditAccount->balance; ?> </div></div>
+                        <div class='col col4'><div slaveId="<? echo $slave->id; ?>" masterId="<? echo $user->id;?>" class="transferCreditToSlave">Transfer credit</div></div>
                     </div>                
                     <?
                 }

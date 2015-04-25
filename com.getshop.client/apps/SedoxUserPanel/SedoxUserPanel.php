@@ -66,6 +66,10 @@ class SedoxUserPanel extends \ApplicationBase implements \Application {
         return $productsConnected;
     }
 
+    public function transferCreditToSlave() {
+        $this->getApi()->getSedoxProductManager()->transferCreditToSlave($_POST['data']['slaveId'], $_POST['data']['amount']);
+    }
+    
     public function getCreditAccountBalance() {
         return $this->getSedoxUserAccount()->creditAccount->balance;
     }
@@ -187,6 +191,11 @@ class SedoxUserPanel extends \ApplicationBase implements \Application {
     public function showFullDownloadHistory() {
 	$this->includefile("fulldownloadhistory");
     }
+    
+    public function showTransferCredit() {
+        $this->includefile("transferCredit");
+    }
+    
 }
 
 ?>

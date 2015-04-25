@@ -25,7 +25,60 @@ app.SedoxUserPanel = {
         
         $(document).on('click', '.SedoxUserPanel .show_slave_credit_history', this.showSlaveCreditHistory);
         $(document).on('click', '.SedoxUserPanel .fa-expand', this.expandBox);
+        
+        $(document).on('click', '.SedoxUserPanel .transferCreditToSlave', this.showTransferCreditToSlave);
+        $(document).on('click', '.SedoxUserPanel .transferCreditButton', this.doTransferCredit);
     },
+    
+    doTransferCredit: function() {
+        var creditAmount = $('#creditToTransfer').val();
+        
+        if (creditAmount === "") {
+            alert('Can not be blank.');
+            return;
+        }
+        if (isNaN(creditAmount)) {
+            alert('Only numbers valid here');
+            return;
+        }
+        
+        creditAmount = parseInt(creditAmount);
+        
+        if (creditAmount === 0) {
+            alert('Must be more then 0 credit.');
+            return;
+        }
+        
+        if (creditAmount < 0) {
+            alert('Do you think you can transfer a negative amount of credit to your slave?');
+            return;
+        }
+        
+        var data = {
+            amount : creditAmount,
+            slaveId : $(this).attr('slaveId')
+        };
+        
+        var me = this;
+        var event = thundashop.Ajax.createEvent(null, "transferCreditToSlave", this, data);
+        thundashop.Ajax.post(event, function() {
+            var event = thundashop.Ajax.createEvent(null, "showTransferCredit", me, data);
+            thundashop.common.showInformationBox(event, 'Transfer credit to slave');
+            
+            thundashop.common.Alert("Credit transferred", "You have transferred the credit now", false);
+        });
+    },
+    
+    showTransferCreditToSlave: function() {
+        var data = {
+            masterId : $(this).attr('masterId'),
+            slaveId : $(this).attr('slaveId')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "showTransferCredit", this, data);
+        thundashop.common.showInformationBox(event, 'Transfer credit to slave');
+    },
+    
     expandBox: function() {
 	var box = $(this).closest('.sedox_box');
 	

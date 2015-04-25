@@ -5358,6 +5358,28 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def transferCreditToSlave(self, slaveId, amount):
+    args = collections.OrderedDict()
+    if isinstance(slaveId,GetShopBaseClass): 
+      args["slaveId"]=json.dumps(slaveId.__dict__)
+    else:
+      try:
+        args["slaveId"]=json.dumps(slaveId)
+      except (ValueError, AttributeError):
+        args["slaveId"]=slaveId
+    if isinstance(amount,GetShopBaseClass): 
+      args["amount"]=json.dumps(amount.__dict__)
+    else:
+      try:
+        args["amount"]=json.dumps(amount)
+      except (ValueError, AttributeError):
+        args["amount"]=amount
+    data = EmptyClass()
+    data.args = args
+    data.method = "transferCreditToSlave"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
 class StoreManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper

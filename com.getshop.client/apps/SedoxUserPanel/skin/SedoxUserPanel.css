@@ -162,6 +162,21 @@
     color: blue;
 }
 
+.SedoxUserPanel.informationboxbackground .slave_credit_history .col1 {
+    padding-left: 0px;
+    width: 180px !important;
+}
+
+.SedoxUserPanel.informationboxbackground .slave_credit_history .col3 {
+    width: 500px;
+}
+.SedoxUserPanel.informationboxbackground .slave_credit_history .col2 {
+    width: 170px !important;
+}
+
+.SedoxUserPanel.informationboxbackground .slave_credit_history .col4 {
+    width: 80px
+}
 .SedoxUserPanel .slave_credit_history {
     padding: 20px;
     font-size: 14px;
@@ -186,4 +201,14 @@
 
 .informationbox.SedoxUserPanel .credithistory .row .col3 {
     width: 100px;
+}
+
+.SedoxUserPanel .transferCreditToSlave {
+    color: blue;
+    cursor: pointer;
+}
+
+.SedoxUserPanel .transferCredit {
+    padding: 20px;
+    font-size: 16px;
 }

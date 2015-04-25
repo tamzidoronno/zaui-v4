@@ -139,8 +139,11 @@ public interface ISedoxProductManager  {
     @Administrator
     public void toggleBadCustomer(String userId, boolean badCustomer) throws ErrorException;
 	
-	public List<SedoxProduct> getLatestProductsList(int count) throws ErrorException;
-	
-	@Customer
-	public void addReference(String productId, String reference) throws ErrorException;
+    public List<SedoxProduct> getLatestProductsList(int count) throws ErrorException;
+
+    @Customer
+    public void addReference(String productId, String reference) throws ErrorException;
+
+    @Customer
+    public void transferCreditToSlave(String slaveId, double amount) throws ErrorException;
 }

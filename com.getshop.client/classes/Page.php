@@ -900,35 +900,36 @@ class Page {
         if($config->keepAspect && !$this->factory->isMobile()) {
             ?>
             <script>
-            var origWindowWidth = <? echo $config->windowWidth; ?>;
-            var origHeight = <? echo $config->height; ?>;
-            var innerWidth = <? echo $config->innerWidth; ?>;
-            
-            var aspectRatio =  origHeight / origWindowWidth;
-            var newHeight = $(window).width() * aspectRatio;
-            var innerWidthChange = $('.gs_page_width').width() / innerWidth;
-            
-            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').height(newHeight);
-            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').height(newHeight);
-            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').css('min-height',newHeight);
-            
-            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').find('.gsfloatingframe').each(function() {
-                var left = $(this).position().left;
-                var top = $(this).position().top;
-                var newLeft = left * innerWidthChange;
-                var newTop = top * innerWidthChange;
+                $(function() {
+                    var origWindowWidth = <? echo $config->windowWidth; ?>;
+                    var origHeight = <? echo $config->height; ?>;
+                    var innerWidth = <? echo $config->innerWidth; ?>;
 
-                if(top < 0) {
-                    top = 0;
-                }
-                if((newLeft + $(this).width()) > $(window).width()) {
-                    newLeft = $(window).width() - (newLeft + $(this).width());
-                }
+                    var aspectRatio =  origHeight / origWindowWidth;
+                    var newHeight = $(window).width() * aspectRatio;
+                    var innerWidthChange = $('.gs_page_width').width() / innerWidth;
 
-                $(this).css('left',newLeft);
-                $(this).css('top',newTop);
-            });
-            
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').height(newHeight);
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').height(newHeight);
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').css('min-height',newHeight);
+
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').find('.gsfloatingframe').each(function() {
+                        var left = $(this).position().left;
+                        var top = $(this).position().top;
+                        var newLeft = left * innerWidthChange;
+                        var newTop = top * innerWidthChange;
+
+                        if(top < 0) {
+                            top = 0;
+                        }
+                        if((newLeft + $(this).width()) > $(window).width()) {
+                            newLeft = $(window).width() - (newLeft + $(this).width());
+                        }
+
+                        $(this).css('left',newLeft);
+                        $(this).css('top',newTop);
+                    });
+                });
             </script>
             <?
         } else if($this->factory->isMobile()) {

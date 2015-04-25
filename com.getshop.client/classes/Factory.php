@@ -20,7 +20,9 @@ class Factory extends FactoryBase {
     public $javaPage;
     private $storeSettings;
     private $language;
-
+    
+    public $productionMode = true;
+    
     /** @var $translation GetShopTranslation */
     public $translation;
 

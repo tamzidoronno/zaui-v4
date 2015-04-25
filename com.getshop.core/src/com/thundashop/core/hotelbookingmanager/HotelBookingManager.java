@@ -1,7 +1,6 @@
 package com.thundashop.core.hotelbookingmanager;
 
 import com.getshop.scope.GetShopSession;
-import com.google.api.client.util.Charsets;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;

@@ -75,19 +75,6 @@ if(isset($_GET['setLanguage'])) {
 }
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<div class="mask" id="fullscreenmask"></div>
-<div class="upload_information_panel" ></div>
-<div class="informationbox-outer">
-    <div id="informationbox-holder">
-        <div class='fa fa-times-circle' id="infomrationboxclosebutton"></div>
-        <div id="informationboxmiddle">
-            <div id="informationboxtitle"></div>
-            <div id="informationbox" class="informationbox"></div>
-        </div>
-    </div>
-</div>
-
-
 <?
 
 if (isset($_GET['logonwithkey'])) {
@@ -101,7 +88,6 @@ if (isset($_GET['logonwithkey'])) {
 
 
 $factory = IocContainer::getFactorySingelton();
-include_once("js/photoswipe/photoswiperoot.html");
 
 if (@$factory->isMobile()) {
     echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
@@ -184,7 +170,21 @@ if(isset($factory->getSettings()->languages)) {
     <script>CKEDITOR.dtd.$removeEmpty['span'] = false;</script>
     </head>
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
+        
+        <div class="mask" id="fullscreenmask"></div>
+        <div class="upload_information_panel" ></div>
+        <div class="informationbox-outer">
+            <div id="informationbox-holder">
+                <div class='fa fa-times-circle' id="infomrationboxclosebutton"></div>
+                <div id="informationboxmiddle">
+                    <div id="informationboxtitle"></div>
+                    <div id="informationbox" class="informationbox"></div>
+                </div>
+            </div>
+        </div>        
+        
         <?
+            include_once("js/photoswipe/photoswiperoot.html");
             $factory->printTemplateFunctions();
         ?>
         

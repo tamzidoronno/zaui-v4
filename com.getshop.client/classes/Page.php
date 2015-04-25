@@ -951,14 +951,16 @@ class Page {
         
         ?>
         <script>
-            var cellid = "<? echo $cell->cellId; ?>";
-        <? if ($doCarousel) { ?>
-                thundashop.framework.activateCarousel($(".gsrotating[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);
-        <? } else { ?>
-                if (!thundashop.framework.activeContainerCellId[cellid]) {
-                    thundashop.framework.setActiveContainerCellId('<? echo $cell->cells[0]->cellId; ?>', cellid);
-                }
-        <? } ?>
+            $(function() {
+                var cellid = "<? echo $cell->cellId; ?>";
+                <? if ($doCarousel) { ?>
+                        thundashop.framework.activateCarousel($(".gsrotating[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);
+                <? } else { ?>
+                        if (!thundashop.framework.activeContainerCellId[cellid]) {
+                            thundashop.framework.setActiveContainerCellId('<? echo $cell->cells[0]->cellId; ?>', cellid);
+                        }
+                <? } ?>
+            })
         </script>
 
         <style>

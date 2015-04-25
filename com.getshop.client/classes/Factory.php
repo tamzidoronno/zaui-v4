@@ -132,21 +132,21 @@ class Factory extends FactoryBase {
         echo "<script>GetShop = {}; scopeid='$scopid'</script>";
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery-1.9.0.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/watch.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/watch.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery-migrate-1.2.1.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.placeholder.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Namespace.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Ajax.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Common.js#28374518123481"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Skeleton.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.ImageEditor.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.BigStock.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.Model.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery.history.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery.form.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jcrop/js/jquery.Jcrop.min.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="/js/colresize.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="/js/moments.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.ImageEditor.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.BigStock.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.Model.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/jquery.history.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/jquery.form.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/jcrop/js/jquery.Jcrop.min.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="/js/colresize.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="/js/moments.js"></script>';
         
         // Photoswipe
         echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/photoswipe.css">';
@@ -155,11 +155,11 @@ class Factory extends FactoryBase {
         echo "\n" . '<script async src="/js/photoswipe/photoswipe-ui-default.min.js"></script>';
         echo "\n" . '<script async src="/js/getshop.photoswipe.js"></script>';        
 
-        echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery.iframe-transport.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery.fileupload.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery.fileupload-ui.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/jquery.iframe-transport.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/jquery.fileupload.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/jquery.fileupload-ui.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/getshop.imageupload.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/PubSub.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/mutate.events.js"></script>';

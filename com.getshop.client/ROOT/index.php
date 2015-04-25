@@ -154,8 +154,12 @@ if(isset($factory->getSettings()->languages)) {
 
         $factory->loadJavascriptFilesEditorMode();
         $settings = $factory->getSettings();
-        $title = isset($settings->title) ? $settings->title->value : "";
+        $title = isset($settings->settings) ? $settings->settings->title->value : "";
 
+        if($factory->getPage()->javapage->title) {
+            $title .= " - " . $factory->getPage()->javapage->title;
+        }
+        
         echo "<script>";
         if (isset($settings->fadein) && $settings->fadein == "true") {
             echo "hasFadeInEffect = true";

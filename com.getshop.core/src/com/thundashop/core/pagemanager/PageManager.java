@@ -4,6 +4,8 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.listmanager.ListManager;
+import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.data.CarouselConfig;
 import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.FloatingData;
@@ -41,7 +43,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Autowired
     private StoreApplicationInstancePool storeApplicationPool;
 
-    @Override
+    @Autowired
+    private ListManager listManager;
+    
     public Page createPage() throws ErrorException {
         return createPage(null);
     }
@@ -109,14 +113,19 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
 
 //        page.dumpLayout();        
-        return finalizePage(page);
-
+        page = finalizePage(page);
+        return page;
     }
 
     private Page finalizePage(Page page) {
         page.finalizePage(commonPageData);
         addProductAppIfNeeded(page);
         addProductDetailsIfNeeded(page);
+        
+        Entry entry = listManager.findEntryByPageId(page.id);
+        if(entry != null) {
+            page.title = entry.name;
+        }
         
         List<PageCell> cellsWithoutIncrementalId = page.getCellsFlatList().stream()
                 .filter(cell -> cell.incrementalCellId == null)

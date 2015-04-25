@@ -167,4 +167,7 @@ public interface IHotelBookingManager {
     public String getUserIdForRoom(String roomNumber) ;
     
     public String getCurrentRentalTermsContract();
+    
+    @Administrator
+    public UsersBookingData getUserBookingDataByOrderId(String orderId);
 }

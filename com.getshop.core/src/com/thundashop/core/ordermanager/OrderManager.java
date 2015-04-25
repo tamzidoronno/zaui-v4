@@ -797,7 +797,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> notTransferred = new ArrayList();
         
         for (Order order : allOrders) {
-            if (!order.transferredToAccountingSystem && order.status == Order.Status.PAYMENT_COMPLETED) {
+            if (order.testOrder) {
+                continue;
+            }
+            
+            if (!order.transferredToAccountingSystem && order.status == Order.Status.PAYMENT_COMPLETED && order.captured) {
                 notTransferred.add(order);
             }
             

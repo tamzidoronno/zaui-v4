@@ -29,6 +29,10 @@ public class Page extends DataCommon implements Cloneable {
     public String title;
     public String customCss = "";
     
+    public String metaKeywords = "";
+    public String metaTitle = "";
+    public String overridePageTitle = "";
+    
     public Page() {
     }
     

@@ -138,8 +138,17 @@ if(isset($factory->getSettings()->languages)) {
             <link rel="stylesheet" type="text/css" href="ie8plus.css" />
         <![endif]-->
 
+        <?
+        $javapage = $factory->getPage()->javapage;
+        ?>
+        
         <meta http-equiv="Cache-control" content="public">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        
+        <meta name="description" content="<? echo $javapage->description; ?>">
+        <meta name="keywords" content="<? echo $javapage->metaKeywords; ?>">
+        <meta name="title" content="<? echo $javapage->metaTitle; ?>">
+        
         <?php
         $html = init($factory);
         $pageDescription = $factory->getPage()->javapage->description;
@@ -147,7 +156,6 @@ if(isset($factory->getSettings()->languages)) {
             echo '<link rel="shortcut icon" href="favicon.ico" type="image/png">';
             echo '<link rel="shortcut icon" type="image/png" href="favicon.ico" />';
         }
-        echo "<meta name=\"description\" content=\"$pageDescription\">";
 
         $factory->loadJavascriptFiles();
         $factory->showCssFiles();
@@ -155,9 +163,13 @@ if(isset($factory->getSettings()->languages)) {
         $factory->loadJavascriptFilesEditorMode();
         $settings = $factory->getSettings();
         $title = isset($settings->settings) ? $settings->settings->title->value : "";
+        
 
-        if($factory->getPage()->javapage->title) {
+        if($javapage->title) {
             $title .= " - " . $factory->getPage()->javapage->title;
+        }
+        if($javapage->overridePageTitle) {
+            $title = $javapage->overridePageTitle;
         }
         
         echo "<script>";

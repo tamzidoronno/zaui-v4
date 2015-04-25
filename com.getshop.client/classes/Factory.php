@@ -139,7 +139,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.Ajax.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Common.js#28374518123481"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Skeleton.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.ImageEditor.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/getshop.ImageEditor.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/getshop.BigStock.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/getshop.Model.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/jquery.history.js"></script>';

@@ -170,7 +170,7 @@ if(isset($factory->getSettings()->languages)) {
         <title><?php echo $title; ?></title>
     <script>
      $(function() {
-         if(CKEDITOR !== undefined) {
+         if(typeof(CKEDITOR) !== "undefined") {
             CKEDITOR.dtd.$removeEmpty['span'] = false;
         }
      });

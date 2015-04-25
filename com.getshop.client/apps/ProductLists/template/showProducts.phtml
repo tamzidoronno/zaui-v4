@@ -93,7 +93,8 @@ if($this->getFactory()->isMobile()) {
     ?>
 </div>
 <script>
-    $(document).ready(function() {
+    $(function() {
+        alert('test');
         var innerWidth = $('.products.grid_view[listid="<? echo $this->getConfigurationSetting("productlist"); ?>"]').innerWidth();
         var columnSize = Math.floor(innerWidth/<? echo $columnSize; ?>);
         var totalSize = columnSize * <? echo $columnSize; ?>;

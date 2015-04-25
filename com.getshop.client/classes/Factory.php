@@ -158,7 +158,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/jquery.iframe-transport.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/jquery.fileupload.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/jquery.fileupload.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/jquery.fileupload-ui.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.imageupload.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/PubSub.js"></script>';

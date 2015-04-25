@@ -765,7 +765,7 @@ class Factory extends FactoryBase {
         
 
         if($javapage->title) {
-            $title .= " - " . $this->getPage()->javapage->title;
+            $title = $this->getPage()->javapage->title . " - " . $title;
         }
         if($javapage->overridePageTitle) {
             $title = $javapage->overridePageTitle;

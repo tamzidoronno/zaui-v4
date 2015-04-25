@@ -2072,6 +2072,21 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return core_hotelbookingmanager_UsersBookingData
+	* @throws ErrorException
+	*/
+
+	public function getUserBookingDataByOrderId($orderId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data["method"] = "getUserBookingDataByOrderId";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_UsersBookingData(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Get all references
 	* @return String
 	* @throws ErrorException
 	*/

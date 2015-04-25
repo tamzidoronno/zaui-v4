@@ -138,6 +138,7 @@ if(isset($factory->getSettings()->languages)) {
             <link rel="stylesheet" type="text/css" href="ie8plus.css" />
         <![endif]-->
 
+        <meta http-equiv="Cache-control" content="public">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <?php
         $html = init($factory);

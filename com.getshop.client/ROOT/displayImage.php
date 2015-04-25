@@ -50,9 +50,8 @@ ob_end_clean();
 $HashID = md5($PageContent);
  
 header("Content-type: image/png");
-header("Cache-Control: max-age=86400, pre-check=86400");
-header("Pragma: private");
-header("Expires: " . @date(DATE_RFC822,@strtotime(" 2 day")));
+header("Cache-Control: max-age=86400");
+header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
 header('ETag: ' . $HashID);
 
 

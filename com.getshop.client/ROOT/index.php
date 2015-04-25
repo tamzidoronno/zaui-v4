@@ -74,7 +74,7 @@ if(isset($_GET['setLanguage'])) {
     $_SESSION['language_selected'] = $_GET['setLanguage'];
 }
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+?><!DOCTYPE html>
 <?
 
 if (isset($_GET['logonwithkey'])) {

@@ -139,7 +139,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.Ajax.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Common.js#28374518123481"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Skeleton.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.ImageEditor.js"></script>';
+        echo "\n" . '<script async type="text/javascript" src="js/getshop.ImageEditor.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/getshop.BigStock.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/getshop.Model.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/jquery.history.js"></script>';
@@ -160,7 +160,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script async type="text/javascript" src="js/jquery.iframe-transport.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/jquery.fileupload.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/jquery.fileupload-ui.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.imageupload.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/getshop.imageupload.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/PubSub.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/mutate.events.js"></script>';
         echo "\n" . '<script async type="text/javascript" src="js/mutate.min.js"></script>';

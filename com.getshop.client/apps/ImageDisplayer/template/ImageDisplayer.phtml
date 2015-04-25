@@ -71,10 +71,6 @@ if($originalSize == "true") {
             holder.html(image);
         }
     </script>
-<? } else { ?>
-    <script>
-        var appId = '<? echo $this->getConfiguration()->id; ?>';
-        app.ImageDisplayer.showText(appId, <? echo $texts; ?>);
-    </script>
-<? } ?>
+<? }
+?>
 

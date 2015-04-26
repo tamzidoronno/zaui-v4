@@ -45,6 +45,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         public static int CANCELED = 5;
         public static int SENT = 6;
         public static int PAYMENT_COMPLETED = 7;
+        public static int COLLECTION_FAILED = 8;
     }
     
     public Date createdDate = new Date();

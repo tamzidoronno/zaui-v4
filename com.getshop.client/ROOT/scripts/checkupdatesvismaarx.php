@@ -6,12 +6,22 @@ $user = $factory->getApi()->getUserManager()->logOn($_GET['user'], $_GET['passwo
 $factory->getApi()->getHotelBookingManager()->checkForWelcomeMessagesToSend();
 
 $orders = $factory->getApi()->getOrderManager()->getOrdersToCapture();
-//print_r($orders);
-foreach($orders as $order) {
-    $app = new \ns_def1e922_972f_4557_a315_a751a9b9eff1\Netaxept();
-    $app->order = $order;
-    $app->setOrderId($order->id);
-    $app->collectOrder();
+
+$cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
+$payment = null;
+foreach ($cartManager->getPaymentApplications() as $paymenti) {
+    if ($paymenti->applicationSettings->id === "def1e922-972f-4557-a315-a751a9b9eff1") {
+        $payment = $paymenti;
+    }
+}
+
+if($payment != null) {
+    foreach($orders as $order) {
+        echo "Collection order: " . $order->id . "<br>";
+        $payment->order = $order;
+        $payment->setOrderId($order->id);
+        $payment->collectOrder();
+    }
 }
 
 echo "done";

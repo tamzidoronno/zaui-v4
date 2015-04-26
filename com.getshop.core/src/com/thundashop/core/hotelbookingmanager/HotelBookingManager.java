@@ -393,6 +393,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public void checkForWelcomeMessagesToSend() throws ErrorException {
         
+        
+        if(lastPulled == null) {
+            lastPulled = new Date();
+        }
+        
         if(lastPulled != null) {
             if (new Date().getTime() - lastPulled.getTime() >= 5*60*1000) {
                 warnAboutArxDown();

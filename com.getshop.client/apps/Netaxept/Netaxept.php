@@ -33,7 +33,7 @@ class Netaxept extends \PaymentApplication implements \Application {
 
     public function getWsdl() {
         $wsdl = "https://epayment.nets.eu/Netaxept.svc?wsdl";
-        if ($this->getConfigurationSetting("debugmode") != "false") {
+        if ($this->getConfigurationSetting("debugmode") != "false" || !$this->getFactory()->productionMode) {
             $wsdl = "https://test.epayment.nets.eu/Netaxept.svc?wsdl";
         }
         return $wsdl;
@@ -44,6 +44,11 @@ class Netaxept extends \PaymentApplication implements \Application {
         if (!$id) {
             echo "Merchant id is missing";
         }
+        
+        if(!$this->getFactory()->productionMode) {
+            $id = "12001627";
+        }
+        
         return $id;
     }
 
@@ -53,6 +58,11 @@ class Netaxept extends \PaymentApplication implements \Application {
         if (!$token) {
             echo "Token is missing";
         }
+        
+        if(!$this->getFactory()->productionMode) {
+            $token = "3n+Z/6D";
+        }
+        
         return $token;
     }
 
@@ -126,8 +136,7 @@ class Netaxept extends \PaymentApplication implements \Application {
     public function collectOrder() {
         $order = $this->order;
         $orderId = $this->order->id;
-        $amount = $this->getAmount();
-        
+        $amount = $this->getApi()->getOrderManager()->getTotalAmount($this->getOrder()) * 100;
         
         /* var $order \core_ordermanager_data_Order */
         $result = $this->processPayment($amount, $order->paymentTransactionId, $orderId, "CAPTURE");
@@ -143,6 +152,8 @@ class Netaxept extends \PaymentApplication implements \Application {
                 $this->getApi()->getMessageManager()->sendMail($email, $name, $emailtitle, $emailbody, $fromMail, $fromName);
                 $this->getApi()->getMessageManager()->sendMail($fromMail, $name, $emailtitle, $emailbody, $fromMail, $fromName);
             }
+            $this->order->status = 8;
+            $this->getApi()->getOrderManager()->saveOrder($this->order);
         } else {
             $this->order->captured = true;
             $this->getApi()->getOrderManager()->saveOrder($this->order);
@@ -202,7 +213,7 @@ class Netaxept extends \PaymentApplication implements \Application {
 
     public function getTerminal() {
         $terminal = "https://epayment.nets.eu/terminal/default.aspx";
-        if ($this->getConfigurationSetting("debugmode") == "true") {
+        if ($this->getConfigurationSetting("debugmode") == "true" || !$this->getFactory()->productionMode) {
             $terminal = "https://test.epayment.nets.eu/terminal/default.aspx";
         }
         return $terminal;
@@ -288,12 +299,13 @@ class Netaxept extends \PaymentApplication implements \Application {
             "merchantId" => $this->getMerchantId(),
             "request" => $ProcessRequest
         );
-
+        
         try {
             $logentry = $ProcessRequest->Description . " : " . $ProcessRequest->Operation . " : " . $ProcessRequest->TransactionAmount . " : " . $ProcessRequest->TransactionId;
             $this->getApi()->getOrderManager()->logTransactionEntry($orderId, $logentry);
 
-            $client = new \SoapClient($this->getWsdl(), array('trace' => true, 'exceptions' => true));
+            $wsdl = $this->getWsdl();
+            $client = new \SoapClient($wsdl, array('trace' => true, 'exceptions' => true));
             $OutputParametersOfProcess = $client->__call('Process', array("parameters" => $InputParametersOfProcess));
             $result = $OutputParametersOfProcess->ProcessResult;
             $this->logTransaction($result, $orderId);

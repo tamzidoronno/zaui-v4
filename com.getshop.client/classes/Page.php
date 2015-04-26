@@ -910,6 +910,10 @@ class Page {
 
                     var aspectRatio =  origHeight / origWindowWidth;
                     var newHeight = $(window).width() * aspectRatio;
+                    var heightDiff = 1 - (newHeight / origHeight);
+                    console.log(heightDiff);
+                    console.log(newHeight);
+//                    alert(heightDiff);
                     var innerWidthChange = $('.gs_page_width').width() / innerWidth;
 
                     $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').height(newHeight);
@@ -917,20 +921,22 @@ class Page {
                     $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').css('min-height',newHeight);
 
                     $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').find('.gsfloatingframe').each(function() {
+                        
+                        //Calculate left position
                         var left = $(this).position().left;
-                        var top = $(this).position().top;
                         var newLeft = left * innerWidthChange;
-                        var newTop = top * innerWidthChange;
-
-                        if(top < 0) {
-                            top = 0;
-                        }
                         if((newLeft + $(this).width()) > $(window).width()) {
-                            newLeft = $(window).width() - (newLeft + $(this).width());
+                            newLeft = $('.gs_page_width').width() - $(this).width();
                         }
-
                         $(this).css('left',newLeft);
-                        $(this).css('top',newTop);
+                        
+                        
+                        //Calculate top postion
+                        var curTop = $(this).position().top;
+                        if(heightDiff > 0) {
+                            curTop *= heightDiff;
+                        }
+                        $(this).css('top',curTop);
                     });
                 });
             </script>

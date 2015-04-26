@@ -435,8 +435,8 @@ thundashop.framework = {
     saveFloating: function (cell) {
         var data = {
             cellid: cell.children('.gscell').attr('cellid'),
-            left: cell.position().left,
-            top: cell.position().top,
+            left: parseInt(cell.position().left),
+            top: parseInt(cell.position().top),
             width: cell.width(),
             height: cell.height()
         };

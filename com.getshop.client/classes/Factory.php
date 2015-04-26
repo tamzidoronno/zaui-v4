@@ -21,7 +21,7 @@ class Factory extends FactoryBase {
     private $storeSettings;
     private $language;
     
-    public $productionMode = false;
+    public $productionMode = true;
     
     /** @var $translation GetShopTranslation */
     public $translation;

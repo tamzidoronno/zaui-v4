@@ -63,7 +63,7 @@ function printCleaningRows($bookingData, $roomlist, $interval, $orders, $api) {
                 $startDate = strtotime($reservation->startDate);
                 $endDate = strtotime($reservation->endDate);
 
-                if($startDate > time()) {
+                if($startDate > ($day-86400)) {
                     continue;
                 }
                 

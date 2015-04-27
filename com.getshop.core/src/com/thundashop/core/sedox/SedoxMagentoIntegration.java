@@ -72,13 +72,14 @@ public class SedoxMagentoIntegration {
         public String emailAddress;
         public String phone;
         public String group;
+        public String companyName = "";
     }
     
     private static String code = "asdfae4r209345ui1ojt1jkl3541iou45h12k34jh12kl5jh36kl1h346kl1j346h134789hasdihASKDFJQWKERv89ah123NEøæå";
 
 
     public MagentoUser getUserInformation(int userId) {
-        try {
+        try { 
             SedoxApiServiceLocator locator = new SedoxApiServiceLocator();
             SedoxApiPort port = locator.getSedoxApiPort();
             HashMap<String, String> result = (HashMap) port.getUserData(code, userId);
@@ -91,6 +92,7 @@ public class SedoxMagentoIntegration {
                 magentoUser.phone = phoneObject.toString();
             }
             magentoUser.emailAddress = result.get("email");
+            magentoUser.companyName = result.get("companyName");
             return magentoUser;
         } catch (Exception ex) {
             ex.printStackTrace();

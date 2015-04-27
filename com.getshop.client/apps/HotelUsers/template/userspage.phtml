@@ -1,10 +1,16 @@
 
 <h1><i class='fa fa-bed'></i> Dine registrerte opphold</h1>
+<b style="font-size: 20px;">PS: Rom nummeret kan endres over tid</b>
 <hr>
 <?
 /* @var $api GetShopApi */
 $api = $this->getApi();
 $booking = $api->getHotelBookingManager()->getAllBookingsForUser();
+$rooms = $api->getHotelBookingManager()->getAllRooms();
+$roomList = array();
+foreach($rooms as $room) {
+    $roomList[$room->id] = $room;
+}
 
 if(!$booking) {
     echo "No booking reservations found for you.";
@@ -15,7 +21,6 @@ if(!$booking) {
     echo "<td>Betalt</td>";
     echo "<td>Innsjekk</td>";
     echo "<td>Utsjekk</td>";
-    echo "<td>Romtype</td>";
     echo "</tr>";
     echo "</thead>";
     
@@ -26,24 +31,27 @@ if(!$booking) {
         foreach($bdata->references as $reference) {
             /* @var $reference core_hotelbookingmanager_BookingReference */
             echo "<tr>";
-            echo "<td>";
+            echo "<td valign='top'>";
             if($bdata->payedFor) {
                 echo "<i class='fa fa-check'>";
             } else {
                 echo "<i class='fa fa-times'>";
             }
             echo "</td>";
-            echo "<td>" . date("d-m-Y H:s", strtotime($reference->startDate)) . "</td><td>" . date("d-m-Y H:s", strtotime($reference->endDate)) . "</td>";
+            echo "<td valign='top'>" . date("d-m-Y H:s", strtotime($reference->startDate)) . "</td><td valign='top'>" . date("d-m-Y H:s", strtotime($reference->endDate)) . "</td>";
             echo "<td>" . sizeof($reference->roomsReserved) . " x " . $api->getProductManager()->getProduct($productId)->name . "<br>";
             foreach($reference->roomsReserved as $reserved) {
                 foreach($reserved->visitors as $visitor) {
-                    echo "&nbsp;&nbsp;&nbsp;<span style='color:#837f7a;'>" .  $visitor->name . ", tlf: " . $visitor->phone . ", epost: " . $visitor->email . "</span>";
+                    echo "<span>Registrert rom (kan bli endret) : <b>". $roomList[$reserved->roomId]->roomName . "</b>&nbsp;&nbsp;&nbsp;Kontakt person : <b>" .  $visitor->name . "</b>, tlf: <b>" . $visitor->phone . "</b>, epost: " . $visitor->email . "</span><br>";
                 }
             }
             echo "</td>";
             echo "</tr>";
+            echo "<tr><td>&nbsp;</td></tr>";
         }
     }
     echo "</table>";
+    echo "<br>";
+    echo "<br>";
 }
 ?>

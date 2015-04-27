@@ -20,8 +20,22 @@ if($bookingData->additonalInformation->isPartner) {
 echo "<b>room type:</b> " . $product->name . "<br>";
 echo "<br><b>Contract:</b> <a href='/scripts/whcontract.php?id=$id' class='gs_ignorenavigate' target='_new'>Open</a><br>";
 if(!$bookingData->payedFor) {
-    echo "<br><b>Payed for:</b> <span class='markaspayedfor' bdata-id='$id' tyle='cursor:pointer;'>Mark as payed for (for testing)</span><br>";
+    echo "<br><b>Payed for:</b> <span class='markaspayedfor' bdata-id='$id' style='cursor:pointer;'>Mark as payed for (for testing)</span><br>";
 }
+echo "<b>Booked by:</b> <a style='cursor:pointer;' onClick=\"thundashop.common.hideInformationBox();app.Users.gssinterface.showUser('".$bookingData->additonalInformation->userId."')\">open user</a><br>";
+echo "<b>Payment links:</b>";
+echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+foreach($bookingData->orderIds as $orderId) {
+     echo "<a target='_new' href='http://".$_SERVER['SERVER_NAME'] . "?page=8d7776e2-2632-4ab9-bd01-86ac2d07899f&repayOrderId=$orderId"."'> open link</a>, ";
+}
+echo "<br>";
+echo "<b>Orders:</b>";
+echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+foreach($bookingData->orderIds as $orderId) {
+     echo "<a style='cursor:pointer;' onClick=\"thundashop.common.hideInformationBox();app.OrderManager.gssinterface.showOrder('".$orderId."')\"> open order</a>, ";
+}
+echo "<bR>";
+echo "<bR>";
 echo "<bR>";
 echo "<b>Booked dates</b><BR>";
 foreach($bookingData->references as $reference) {

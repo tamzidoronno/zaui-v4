@@ -3,6 +3,7 @@ package com.thundashop.core.usermanager;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.thundashop.core.applications.GetShopApplicationPool;
+import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -62,7 +63,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public GetShop getShop;
     
     @Autowired
-    public GetShopApplicationPool applicationPool;
+    public StoreApplicationPool applicationPool;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -728,7 +729,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private boolean forceUniqueEmailAddress(User user) throws ErrorException {
-        Application settingsApplication = applicationPool.get("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
         
         if (settingsApplication == null) {
             return false;

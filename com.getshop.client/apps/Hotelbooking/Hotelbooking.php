@@ -14,7 +14,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     var $parkingProduct = null;
     var $validationNeeded = null;
     var $failedLogon = false;
-
+    
+    
     function __construct() {
         
     }
@@ -468,18 +469,14 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     public function setStartDate($start) {
         $end = $this->getEnd();
         $count = $this->getRoomCount();
-        $additional = $this->getAdditionalInfo();
-        $productId = $this->getProductId();
-        $this->getApi()->getHotelBookingManager()->reserveRoom($start, $end, $count);
+        $this->availableRooms = $this->getApi()->getHotelBookingManager()->reserveRoom($start, $end, $count);
         $this->invalidateBookingData();
     }
 
     public function setEndDate($end) {
         $start = $this->getStart();
         $count = $this->getRoomCount();
-        $additional = $this->getAdditionalInfo();
-        $productId = $this->getProductId();
-        $this->getApi()->getHotelBookingManager()->reserveRoom($start, $end, $count);
+        $this->availableRooms = $this->getApi()->getHotelBookingManager()->reserveRoom($start, $end, $count);
         $this->invalidateBookingData();
     }
     
@@ -551,7 +548,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                         $endDay++;
                     }
                     $end = strtotime("1 Jan " . ($end[1]) . " +" . ($endDay) . " day");
-                    if(!$this->checkAvailabilityOnRange($start, $end, $productId)) {
+                    if(!$this->checkAvailabilityOnRange($start, $end, $productId, $additional)) {
                         $text = $this->__w("Sorry, we do not have any room available between {start} and {end} of this type. Try another one.");
                         $text = str_replace("{start}", date("d-m-Y", $start),$text);
                         $text = str_replace("{end}", date("d-m-Y", $end), $text);
@@ -729,8 +726,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->getApi()->getUserManager()->createUser($user);
     }
 
-    public function checkAvailabilityOnRange($start, $end, $productId) {
-        $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
+    public function checkAvailabilityOnRange($start, $end, $productId, $additional) {
         return $this->getApi()->getHotelBookingManager()->checkAvailable($start, $end, $productId, $additional);
     }
 
@@ -798,6 +794,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->getManager()->updateAdditionalInformation($additional);
         
         $orderId = $this->getApi()->getHotelBookingManager()->completeOrder();
+        if($orderId == "-1") {
+            echo "En feil oppstod under booking av rom, prøv å bestille på nytt, kontakt oss hvis problemet vedvarer.";
+        }
         $_GET['orderProcessed'] = true;
         $_GET['orderId'] = $orderId;
     }

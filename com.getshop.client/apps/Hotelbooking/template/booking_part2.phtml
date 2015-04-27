@@ -143,6 +143,7 @@ $headingtext = $this->__w("You have selected the following duration for your sta
     <?
     $products = $this->getHotelRooms();
     $foundroom = 0;
+    $atleastOne = false;
     foreach ($products as $product) {
         $selectedclass = "";
         $avroom = $this->getNumberOfAvailableRooms($product->id);
@@ -251,6 +252,7 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         if ($avroom <= 0) {
             echo "<span class='sold_out'>" . $this->__w("Sold out") . "</span>";
         } else {
+            $atleastOne= true;
             $text = $selectRoomButton;
             if($selectedclass) {
                 $text = $selectedRoomButton;
@@ -286,7 +288,7 @@ $headingtext = $this->__w("You have selected the following duration for your sta
 <?
         if ($this->getStart() < strtotime("01-05-2015")) {
             echo "<center><h1>Beklager, men hotellet åpner ikke før 1. mai</h1></center><br><br>";
-        } else {
+        } else if($atleastOne) {
             ?>
             <div class="to_checkout">
                 <a href='?page=<? echo $this->getConfig()->summaryPage; ?>'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>

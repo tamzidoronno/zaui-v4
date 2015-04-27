@@ -162,7 +162,7 @@ public class ComGetshopArx {
                         continue;
                     }
 
-                    ArxUser user = createArxUser(roomInfo, reference, count);
+                    ArxUser user = createArxUser(roomInfo, reference, count, true);
                     if(user == null) {
                         continue;
                     }
@@ -204,7 +204,7 @@ public class ComGetshopArx {
                         continue;
                     }
 
-                    ArxUser user = createArxUser(roomInfo, reference, count);
+                    ArxUser user = createArxUser(roomInfo, reference, count, false);
                     if(user == null) {
                         continue;
                     }
@@ -401,7 +401,7 @@ public class ComGetshopArx {
         api.getHotelBookingManager().notifyUserAboutRoom(reference, roomInfo, code);
     }
 
-    private ArxUser createArxUser(RoomInformation roomInfo, BookingReference reference, int count) {
+    private ArxUser createArxUser(RoomInformation roomInfo, BookingReference reference, int count, boolean instantAccess) {
         
         if(roomInfo.visitors.isEmpty()) {
             addToLog("No visitors on reference: " + reference.bookingReference);
@@ -416,6 +416,9 @@ public class ComGetshopArx {
         user.id = reference.bookingReference + "-" + count;
         user.startDate = reference.startDate;
         user.endDate = reference.endDate;
+        if(instantAccess && new Date().before(reference.startDate)) {
+            user.startDate = new Date();
+        }
         user.code = roomInfo.code;
         user.doorsToAccess.add("Ytterdører");
         user.reference = reference.bookingReference + "";

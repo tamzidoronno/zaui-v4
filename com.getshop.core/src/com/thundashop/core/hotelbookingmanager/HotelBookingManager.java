@@ -200,12 +200,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         
-        if(!found) {
-            //All rooms are taken in this periode. :(
-            return -1;
-        }
-        
-        
         Date start = convertStartDate(startDate);
         Date end = convertEndDate(endDate);
 
@@ -858,7 +852,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         cartManager.clear();
         int totalNights = 0;
         
-        Boolean longTerm = bookingData.additonalInformation.isPartner;
+        Boolean longTerm = false;
+        if(bookingData.additonalInformation != null) {
+            longTerm = bookingData.additonalInformation.isPartner;
+        }
         
         Date firstDate = null;
         for(BookingReference reference : bookingData.references) {
@@ -905,6 +902,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public String completeOrder() {
         UsersBookingData bookingData = getCurrentUserBookingData();
+        
+        if(bookingData.additonalInformation == null) {
+            return "-1";
+        }
+        if(bookingData.references == null || bookingData.references.isEmpty()) {
+            return "-1";
+        }
+        if(bookingData.additonalInformation.roomProductId == null) {
+            return "-1";
+        }
+        
         User user = userManager.getUserByReference(bookingData.additonalInformation.customerReference);
         bookingData.additonalInformation.userId = user.id;
         bookingData.completed = true;

@@ -93,7 +93,11 @@ class StyleSheet {
         echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/layout.css">';
         echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/breadcrumb.css">';
 
-        $this->includeApplications();
+        if($this->factory->productionMode) {
+            echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="loadappcss.php">';
+        } else {
+            $this->includeApplications();
+        }
     }
 
     public function setThemeVariablesToApplications() {

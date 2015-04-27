@@ -74,20 +74,7 @@ if(isset($_GET['setLanguage'])) {
     $_SESSION['language_selected'] = $_GET['setLanguage'];
 }
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<div class="mask" id="fullscreenmask"></div>
-<div class="upload_information_panel" ></div>
-<div class="informationbox-outer">
-    <div id="informationbox-holder">
-        <div class='fa fa-times-circle' id="infomrationboxclosebutton"></div>
-        <div id="informationboxmiddle">
-            <div id="informationboxtitle"></div>
-            <div id="informationbox" class="informationbox"></div>
-        </div>
-    </div>
-</div>
-
-
+?><!DOCTYPE html>
 <?
 
 if (isset($_GET['logonwithkey'])) {
@@ -101,7 +88,6 @@ if (isset($_GET['logonwithkey'])) {
 
 
 $factory = IocContainer::getFactorySingelton();
-include_once("js/photoswipe/photoswiperoot.html");
 
 if (@$factory->isMobile()) {
     echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
@@ -152,7 +138,17 @@ if(isset($factory->getSettings()->languages)) {
             <link rel="stylesheet" type="text/css" href="ie8plus.css" />
         <![endif]-->
 
+        <?
+        $javapage = $factory->getPage()->javapage;
+        ?>
+        
+        <meta http-equiv="Cache-control" content="public">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        
+        <meta name="description" content="<? echo $javapage->description; ?>">
+        <meta name="keywords" content="<? echo $javapage->metaKeywords; ?>">
+        <meta name="title" content="<? echo $javapage->metaTitle; ?>">
+        
         <?php
         $html = init($factory);
         $pageDescription = $factory->getPage()->javapage->description;
@@ -160,15 +156,13 @@ if(isset($factory->getSettings()->languages)) {
             echo '<link rel="shortcut icon" href="favicon.ico" type="image/png">';
             echo '<link rel="shortcut icon" type="image/png" href="favicon.ico" />';
         }
-        echo "<meta name=\"description\" content=\"$pageDescription\">";
 
         $factory->loadJavascriptFiles();
         $factory->showCssFiles();
 
         $factory->loadJavascriptFilesEditorMode();
-        $settings = $factory->getSettings();
-        $title = isset($settings->title) ? $settings->title->value : "";
-
+        $factory->getPageTitle();
+        
         echo "<script>";
         if (isset($settings->fadein) && $settings->fadein == "true") {
             echo "hasFadeInEffect = true";
@@ -180,11 +174,31 @@ if(isset($factory->getSettings()->languages)) {
 
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-        <title><?php echo $title; ?></title>
-    <script>CKEDITOR.dtd.$removeEmpty['span'] = false;</script>
+        <title class='pagetitle'><?php echo $title; ?></title>
+    <script>
+     $(function() {
+         if(typeof(CKEDITOR) !== "undefined") {
+            CKEDITOR.dtd.$removeEmpty['span'] = false;
+        }
+     });
+    </script>
     </head>
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
+        
+        <div class="mask" id="fullscreenmask"></div>
+        <div class="upload_information_panel" ></div>
+        <div class="informationbox-outer">
+            <div id="informationbox-holder">
+                <div class='fa fa-times-circle' id="infomrationboxclosebutton"></div>
+                <div id="informationboxmiddle">
+                    <div id="informationboxtitle"></div>
+                    <div id="informationbox" class="informationbox"></div>
+                </div>
+            </div>
+        </div>        
+        
         <?
+            include_once("js/photoswipe/photoswiperoot.html");
             $factory->printTemplateFunctions();
         ?>
         

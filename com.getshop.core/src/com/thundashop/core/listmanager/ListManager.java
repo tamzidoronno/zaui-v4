@@ -657,4 +657,8 @@ public class ListManager extends ManagerBase implements IListManager {
 		list.name = "Menu "+(getAllListsByType(ListType.MENU.toString()).size() + 1);
 		saveList(menuApplicationId);
 	}   
+
+    public Entry findEntryByPageId(String id) {
+        return getEntryByPageId(id);
+    }
 }

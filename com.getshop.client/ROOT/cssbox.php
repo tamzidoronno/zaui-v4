@@ -52,7 +52,27 @@ $factory->loadJavascriptFiles();
         </div>
         <div id="global_color_css_editor"></div>
     </div>
-    <textarea id="page_description"><? echo $factory->getPage()->javapage->description; ?></textarea>    
+    <div id="page_description" style='padding: 10px;'>
+        <div>
+            <div>Page title</div>
+             <textarea class='pagetitle' style='width:90%; height: 50px;'><? echo $factory->getPage()->javapage->overridePageTitle; ?></textarea>    
+        </div>
+        <br>
+        <div>
+            <div>Meta title</div>
+             <textarea class='metatitle' style='width:90%; height: 50px;'><? echo $factory->getPage()->javapage->metaTitle; ?></textarea>    
+        </div>
+        <br>
+        <div>
+            <div>Meta keywords</div>
+             <textarea class='metakeywords' style='width:90%; height: 50px;'><? echo $factory->getPage()->javapage->metaKeywords; ?></textarea>    
+        </div>
+        <br>
+        <div>
+            <div>Meta description</div>
+             <textarea class='metadescription' style='width:90%; height: 50px;'><? echo $factory->getPage()->javapage->description; ?></textarea>    
+        </div>
+        
 </body>
 
 <textarea contenteditable="true" id="styles" class="textbox" style="width:100%; height:100%;"><? echo $factory->getStore()->configuration->customCss; ?></textarea>
@@ -93,7 +113,10 @@ $factory->loadJavascriptFiles();
             "global_css": global_css.getSession().getValue(),
             "selected_color_template" : $('#gscolortemplateselection').val(),
             "color_templates": colorstyles,
-            "page_text": $('#page_description').val()
+            "metaDesc": $('.metadescription').val(),
+            "metaTitle": $('.metatitle').val(),
+            "pageTitle": $('.pagetitle').val(),
+            "metaKeywords": $('.metakeywords').val()
         }
 
         var event = thundashop.Ajax.createEvent('', 'savePageDetails', $(this), data);

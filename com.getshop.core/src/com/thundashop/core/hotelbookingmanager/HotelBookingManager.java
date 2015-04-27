@@ -1,7 +1,6 @@
 package com.thundashop.core.hotelbookingmanager;
 
 import com.getshop.scope.GetShopSession;
-import com.google.api.client.util.Charsets;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -153,6 +152,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         Integer count = 0;
         for(Room room : allRoomsOnProduct) {
+            if(!room.isActive) {
+                continue;
+            }
+            
             if(!takenRooms.contains(room.id)) {
                 if(additional.needHandicap) {
                     if(room.isHandicap) {
@@ -390,6 +393,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public void checkForWelcomeMessagesToSend() throws ErrorException {
         
+        
+        if(lastPulled == null) {
+            lastPulled = new Date();
+        }
+        
         if(lastPulled != null) {
             if (new Date().getTime() - lastPulled.getTime() >= 5*60*1000) {
                 warnAboutArxDown();
@@ -520,6 +528,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
 
     private boolean isAvailable(Room room, long startDate, long endDate) {
+        
+        if(!room.isActive) {
+            return false;
+        }
+        
         for(UsersBookingData bdata : getAllUsersBookingData()) {
             if(!bdata.active) {
                 continue;
@@ -1000,6 +1013,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public void deleteUserBookingData(String id) throws ErrorException {
         UsersBookingData toDelete = getUserBookingData(id);
+        if(toDelete.orderIds != null) {
+            for(String orderId : toDelete.orderIds) {
+                Order order = orderManager.getOrderSecure(orderId);
+                if(order.status != Order.Status.COMPLETED && order.status != Order.Status.PAYMENT_COMPLETED) {
+                    order.status = Order.Status.CANCELED;
+                }
+            }
+        }
+        
         usersBookingData.remove(toDelete);
         deleteObject(toDelete);
     }

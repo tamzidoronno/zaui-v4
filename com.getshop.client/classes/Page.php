@@ -129,6 +129,9 @@ class Page {
             $this->printMobileMenu($layout->areas->{'header'});
         }
         echo "</div>";
+        echo "<script>";
+        echo "$(function() { $('.pagetitle').html('".$this->factory->getPageTitle()."'); });";
+        echo "</script>";
     }
 
     private function printMobileHeader($headerCells) {
@@ -900,35 +903,42 @@ class Page {
         if($config->keepAspect && !$this->factory->isMobile()) {
             ?>
             <script>
-            var origWindowWidth = <? echo $config->windowWidth; ?>;
-            var origHeight = <? echo $config->height; ?>;
-            var innerWidth = <? echo $config->innerWidth; ?>;
-            
-            var aspectRatio =  origHeight / origWindowWidth;
-            var newHeight = $(window).width() * aspectRatio;
-            var innerWidthChange = $('.gs_page_width').width() / innerWidth;
-            
-            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').height(newHeight);
-            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').height(newHeight);
-            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').css('min-height',newHeight);
-            
-            $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').find('.gsfloatingframe').each(function() {
-                var left = $(this).position().left;
-                var top = $(this).position().top;
-                var newLeft = left * innerWidthChange;
-                var newTop = top * innerWidthChange;
+                $(function() {
+                    var origWindowWidth = <? echo $config->windowWidth; ?>;
+                    var origHeight = <? echo $config->height; ?>;
+                    var innerWidth = <? echo $config->innerWidth; ?>;
 
-                if(top < 0) {
-                    top = 0;
-                }
-                if((newLeft + $(this).width()) > $(window).width()) {
-                    newLeft = $(window).width() - (newLeft + $(this).width());
-                }
+                    var aspectRatio =  origHeight / origWindowWidth;
+                    var newHeight = $(window).width() * aspectRatio;
+                    var heightDiff = 1 - (newHeight / origHeight);
+                    console.log(heightDiff);
+                    console.log(newHeight);
+//                    alert(heightDiff);
+                    var innerWidthChange = $('.gs_page_width').width() / innerWidth;
 
-                $(this).css('left',newLeft);
-                $(this).css('top',newTop);
-            });
-            
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').height(newHeight);
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').height(newHeight);
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').css('min-height',newHeight);
+
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').find('.gsfloatingframe').each(function() {
+                        
+                        //Calculate left position
+                        var left = $(this).position().left;
+                        var newLeft = left * innerWidthChange;
+                        if((newLeft + $(this).width()) > $(window).width()) {
+                            newLeft = $('.gs_page_width').width() - $(this).width();
+                        }
+                        $(this).css('left',newLeft);
+                        
+                        
+                        //Calculate top postion
+                        var curTop = $(this).position().top;
+                        if(heightDiff > 0) {
+                            curTop *= heightDiff;
+                        }
+                        $(this).css('top',curTop);
+                    });
+                });
             </script>
             <?
         } else if($this->factory->isMobile()) {
@@ -950,14 +960,16 @@ class Page {
         
         ?>
         <script>
-            var cellid = "<? echo $cell->cellId; ?>";
-        <? if ($doCarousel) { ?>
-                thundashop.framework.activateCarousel($(".gsrotating[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);
-        <? } else { ?>
-                if (!thundashop.framework.activeContainerCellId[cellid]) {
-                    thundashop.framework.setActiveContainerCellId('<? echo $cell->cells[0]->cellId; ?>', cellid);
-                }
-        <? } ?>
+            $(function() {
+                var cellid = "<? echo $cell->cellId; ?>";
+                <? if ($doCarousel) { ?>
+                        thundashop.framework.activateCarousel($(".gsrotating[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);
+                <? } else { ?>
+                        if (!thundashop.framework.activeContainerCellId[cellid]) {
+                            thundashop.framework.setActiveContainerCellId('<? echo $cell->cells[0]->cellId; ?>', cellid);
+                        }
+                <? } ?>
+            })
         </script>
 
         <style>

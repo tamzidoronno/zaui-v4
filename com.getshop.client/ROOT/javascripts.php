@@ -28,7 +28,7 @@ foreach ($apps as $app) {
             $extraJavascript = $appInstance->includeExtraJavascript();
             if (is_array($extraJavascript)) {
                 foreach ($extraJavascript as $extraJavascript) {
-                    echo "<script src='$extraJavascript'></script>";
+                    echo "<script async src='$extraJavascript'></script>";
                 }
             }
         }
@@ -45,7 +45,7 @@ foreach ($apps as $app) {
                 $filecontent = file_get_contents($javascriptFolder . "/" . $entry);
                 $fileName = "javascripts/" . $namespace . "_" . $entry;
                 @file_put_contents($fileName, $filecontent);
-                echo '<script type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
+                echo '<script async type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
                 echo "<script>";
                     echo 'if (typeof(getshop) === "undefined") { getshop = {}; }';
                     echo 'if (typeof(getshop.gs_loaded_javascripts) === "undefined") { getshop.gs_loaded_javascripts = []; }';

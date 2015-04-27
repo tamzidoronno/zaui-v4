@@ -7,6 +7,9 @@ class core_hotelbookingmanager_RoomInformation {
 	public $roomId;
 
 	/** @var String */
+	public $forcedMoved;
+
+	/** @var String */
 	public $visitors;
 
 	/** @var String */

@@ -300,6 +300,14 @@ class ApplicationManager extends FactoryBase {
         unset($_SESSION['gscolorselection']);
         
         $this->getApi()->getStoreManager()->saveStore($store->configuration);
+        
+        /* @var $javapage core_pagemanager_data_Page */
+        $javapage = $this->getFactory()->getPage()->javapage;
+        $javapage->metaKeywords = $_POST['data']['metaKeywords'];
+        $javapage->metaTitle = $_POST['data']['metaTitle'];
+        $javapage->overridePageTitle = $_POST['data']['pageTitle'];
+        $javapage->description = $_POST['data']['metaDesc'];
+        $this->getApi()->getPageManager()->savePage($javapage);
     }
 
     function validateArea($areas, $area, $size, $type, $app = null) {

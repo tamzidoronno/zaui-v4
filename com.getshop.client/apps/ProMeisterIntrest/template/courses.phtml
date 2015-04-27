@@ -1,0 +1,12 @@
+<?
+/* @var $this ns_59b96c13_e34b_44ea_9552_cb5247ce1ea3\ProMeisterIntrest */
+$list= $this->getApi()->getListManager()->getList("71544ed8-406d-4496-baf2-b569975ebb20");
+$courses = $list[0]->subentries;
+
+echo $this->__f("Please select course you wish to show intrest for.");
+foreach ($courses as $course) {
+    $id = $course->id;
+    echo "<div class='course' entryId='$id'>".$course->name."</div>";
+}
+
+?>

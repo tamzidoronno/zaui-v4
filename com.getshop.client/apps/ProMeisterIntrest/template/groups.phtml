@@ -1,0 +1,28 @@
+<?
+$groups = $this->getApi()->getUserManager()->getAllGroups();
+
+if ($groups != null) {
+    shuffle($groups);
+}
+
+echo $this->__w("Please select department");
+echo "<br/>";
+?>
+
+
+<div class="group">
+<?
+foreach ($groups as $group) {
+    $id = $group->id;
+    echo "<div groupid='$id' class='selectbox'>";
+        $imageId = $group->imageId;
+        if ($imageId == "") {
+            echo $group->groupName;
+        } else {
+            echo "<img src='displayImage.php?id=$imageId'/>";
+        }
+    echo "</div>";
+}
+?>
+    
+</div>

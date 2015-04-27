@@ -1,0 +1,82 @@
+.ProMeisterIntrest .course {
+    padding: 5px;
+    border-bottom: solid 1px #DDD;
+    cursor: pointer;
+}
+
+.ProMeisterIntrest .course:last-child {
+    border-bottom: solid 0px #DDD;
+}
+
+.ProMeisterIntrest .course:hover {
+    background-color: #EEE;
+}
+
+.ProMeisterIntrest .selectbox {
+    padding: 5px;
+    margin: 10px;
+    border: solid 1px #DDD;
+    text-align: center;
+    height: 50px;
+    cursor: pointer;
+}
+
+.ProMeisterIntrest .selectbox:hover {
+    background-color: #EEE;
+}
+
+.ProMeisterIntrest .selectbox img {
+    height: 50px;
+}
+
+.ProMeisterIntrest .find_company_for_selection {
+    width: 175px;
+    text-align: center;
+    color: #000;
+}
+
+.ProMeisterIntrest .search_result_area .select_searched_company {
+    float: right;
+}
+.ProMeisterIntrest .search_result_area {
+    color: #333;
+    background-color:#FFF;
+    display: none;
+    position:absolute;
+    width:400px;
+    z-index:3;
+    max-height: 150px;
+    overflow:auto;
+    
+    left: 130px;
+    top: 144px;
+}
+.ProMeisterIntrest .search_for_company_brreg {
+    width: 27px;
+}
+
+.ProMeisterIntrest .toggleUserId {
+    cursor: pointer; 
+    padding-top: 3px; 
+    padding-bottom: 3px;
+    width: 30px; 
+    text-align: center;
+}
+
+.ProMeisterIntrest {
+    min-height: 425px;
+    width: 530px;
+}
+
+.ProMeisterIntrest table td.col1 {
+    width: 200px;
+}
+
+.ProMeisterIntrest table td input {
+    width: 320px;
+}
+
+.ProMeisterIntrest .search_result_area {
+    border: solid 1px #DDD;
+    padding: 10px;
+}

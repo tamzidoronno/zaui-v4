@@ -56,14 +56,15 @@ public class AddApplicationsToDatabase {
         allowed2.add("xlarge");
 
         ApplicationSettings embedCode = createSettings(
-                "ProMeisterBosch",
-                "8cc26060-eef2-48ac-8174-914f533dc7ed",
+                "ProMeisterIntrest",
+                "59b96c13-e34b-44ea-9552-cb5247ce1ea3",
                 allowed2,
                 "",
                 ApplicationSettings.Type.Webshop, false);
         embedCode.isPublic = false;
         embedCode.isResponsive = true;
         embedCode.allowedStoreIds = new ArrayList();
+        embedCode.allowedStoreIds.add("d27d81b9-52e9-4508-8f4c-afffa2458488");
         embedCode.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
         apps.add(embedCode);
 

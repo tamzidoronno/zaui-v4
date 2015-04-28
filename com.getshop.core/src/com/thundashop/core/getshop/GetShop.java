@@ -451,6 +451,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         emailTemplate += "            <br/> ";
         emailTemplate += "            <br/> <b>Ditt nettsted er nå klart</b>";
         emailTemplate += "            <br/> Addresse: http://"+newAddress;
+        emailTemplate += "            <br/> Admin login : http://"+newAddress + "/login.php";
         emailTemplate += "            <br/> Brukernavn: " + startData.email;
         emailTemplate += "            <br/> Passord: " + startData.password;
         emailTemplate += "            <br/> ";
@@ -504,6 +505,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         emailTemplate += "            <br/> ";
         emailTemplate += "            <br/> <b>Your ecommerce is ready</b>";
         emailTemplate += "            <br/> Address: http://"+newAddress;
+        emailTemplate += "            <br/> Admin login : http://"+newAddress + "/login.php";
         emailTemplate += "            <br/> Username: " + startData.email;
         emailTemplate += "            <br/> Password: " + startData.password;
         emailTemplate += "            <br/> ";

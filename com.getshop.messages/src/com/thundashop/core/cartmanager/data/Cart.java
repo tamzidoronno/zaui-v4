@@ -247,4 +247,11 @@ public class Cart extends DataCommon {
         
         items = newList;
     }
+
+    public void updatePrice(String cartItemId, double price) {
+        CartItem cartItem = getCartItem(cartItemId);
+        if (cartItem != null) {
+            cartItem.getProduct().price = price;
+        }
+    }
 }

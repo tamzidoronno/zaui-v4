@@ -20,11 +20,14 @@
     width: 200px;
 }
 
+.gss_order_col.gss_col_4 {
+    width: 50px;
+}
 .gss_order_col.gss_col_3 {
     width: 100px;
 }
 .gss_order_col.gss_col_2 {
-    width: 900px;
+    width: 850px;
 }
 .gss_order_col.gss_col_1 {
     width: 100px;
@@ -101,4 +104,15 @@
     display: none;
     margin-top: 20px;
     background-color: #EEE;
+}
+
+.gss_orderview_available_payments {
+    display: none;
+    padding-top: 10px;
+}
+
+.gss_orderview_available_payments .gss_order_view_select_payement_method {
+    padding: 5px;
+    border: solid 1px #EEE;
+    cursor: pointer;
 }

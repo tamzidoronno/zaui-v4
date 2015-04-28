@@ -124,4 +124,6 @@ public interface IStoreApplicationPool {
      * @return 
      */
     public List<Application> getShippingApplications();
+    
+    public List<Application> getActivatedPaymentApplications();
 }

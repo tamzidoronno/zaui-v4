@@ -867,4 +867,36 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
     }
+    
+    @Override
+    public void changeOrderType(String orderId, String paymentTypeId) {
+        Order order = getOrder(orderId);
+        if (order == null) {
+            return;
+        }
+        
+        Application app = storeApplicationPool.getApplication(paymentTypeId);
+        
+        if (app != null) {
+            order.changePaymentType(app);
+            saveObject(order);
+        }
+    }
+
+  
+    @Override
+    public void updatePriceForOrderLine(String cartItemId, String orderId, double price) {
+        Order order = getOrder(orderId);
+        if (order == null) {
+            return;
+        }
+        
+        if (order.status == Order.Status.PAYMENT_COMPLETED) {
+            return;
+        }
+        
+        order.updatePrice(cartItemId, price);
+        saveOrder(order);
+    }
+
 }

@@ -382,4 +382,11 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         return rows;
     }
 
+    @Override
+    public List<Application> getActivatedPaymentApplications() {
+        return getApplications().stream()
+                .filter(app -> app.type.equals(Application.Type.Payment))
+                .collect(Collectors.toList());
+    }
+
 }

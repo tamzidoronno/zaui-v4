@@ -129,6 +129,25 @@ class OrderManager extends \WebshopApplication implements \Application {
     public function showOrder() {
         
     }
+    
+    public function canChangeOrder($order) {
+        $paymentCompleted = 7;
+        return $order->status != $paymentCompleted;
+    }
+    
+    public function updateOrderLine() {
+        $this->getApi()->getOrderManager()->updatePriceForOrderLine($_POST['cartItemId'], $_POST['value'], $_POST['price']);
+    }
+    
+    public function changePaymentType() {
+        $this->getApi()->getOrderManager()->changeOrderType($_POST['value'], $_POST['newPayemntIdType']);
+    }
+    
+    public function markOrderAsPaid() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['value']);
+        $order->status = 7;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
 }
 
 ?>

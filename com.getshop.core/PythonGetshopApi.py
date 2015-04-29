@@ -3324,6 +3324,28 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def changeOrderType(self, orderId, paymentTypeId):
+    args = collections.OrderedDict()
+    if isinstance(orderId,GetShopBaseClass): 
+      args["orderId"]=json.dumps(orderId.__dict__)
+    else:
+      try:
+        args["orderId"]=json.dumps(orderId)
+      except (ValueError, AttributeError):
+        args["orderId"]=orderId
+    if isinstance(paymentTypeId,GetShopBaseClass): 
+      args["paymentTypeId"]=json.dumps(paymentTypeId.__dict__)
+    else:
+      try:
+        args["paymentTypeId"]=json.dumps(paymentTypeId)
+      except (ValueError, AttributeError):
+        args["paymentTypeId"]=paymentTypeId
+    data = EmptyClass()
+    data.args = args
+    data.method = "changeOrderType"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def createOrder(self, address):
     args = collections.OrderedDict()
     if isinstance(address,GetShopBaseClass): 
@@ -3707,6 +3729,35 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "setOrderStatus"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def updatePriceForOrderLine(self, cartItemId, orderId, price):
+    args = collections.OrderedDict()
+    if isinstance(cartItemId,GetShopBaseClass): 
+      args["cartItemId"]=json.dumps(cartItemId.__dict__)
+    else:
+      try:
+        args["cartItemId"]=json.dumps(cartItemId)
+      except (ValueError, AttributeError):
+        args["cartItemId"]=cartItemId
+    if isinstance(orderId,GetShopBaseClass): 
+      args["orderId"]=json.dumps(orderId.__dict__)
+    else:
+      try:
+        args["orderId"]=json.dumps(orderId)
+      except (ValueError, AttributeError):
+        args["orderId"]=orderId
+    if isinstance(price,GetShopBaseClass): 
+      args["price"]=json.dumps(price.__dict__)
+    else:
+      try:
+        args["price"]=json.dumps(price)
+      except (ValueError, AttributeError):
+        args["price"]=price
+    data = EmptyClass()
+    data.args = args
+    data.method = "updatePriceForOrderLine"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -6119,6 +6170,14 @@ class StoreApplicationPool(object):
     data = EmptyClass()
     data.args = args
     data.method = "getActivatedModules"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getActivatedPaymentApplications(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getActivatedPaymentApplications"
     data.interfaceName = "core.applications.IStoreApplicationPool"
     return self.communicationHelper.sendMessage(data)
 

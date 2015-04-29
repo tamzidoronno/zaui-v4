@@ -18,10 +18,16 @@ echo "<div class='gss_order_col gss_col_3'>" . $this->__f("Price") . "</div>";
 echo "</div>";
 
 foreach ($orders as $order) {
+    
+    $orderPaid = $order->status == 7 ? "<i style='color: green;' class='fa fa-check' title='Paid'></i>" : "" ;
+    $orderPaid = $order->status == 5 ? "<i style='color: blue;' class='fa fa-times' title='Cancled'></i>" : $orderPaid ;
+    $orderPaid = $order->status == 3 ? "<i style='color: red;' class='fa fa-frown-o' title='Paiment failed'></i>" : $orderPaid ;
+    $orderPaid = $order->status == 2 ? "<i style='color: #c18800;' class='fa fa-circle-o-notch' title='Waiting for payment'></i>" : $orderPaid ;
     echo "<div class='gss_overview_order' gss_view='gss_orderview' gss_fragment='orderview' gss_method='showOrder' gss_value='$order->id'>";
     echo "<div class='gss_order_col gss_col_1'>$order->incrementOrderId</div>";
     echo "<div class='gss_order_col gss_col_2'>" . $order->cart->address->fullName . "</div>";
     echo "<div class='gss_order_col gss_col_3'>" . $this->getApi()->getCartManager()->calculateTotalCost($order->cart) . "</div>";
+    echo "<div class='gss_order_col gss_col_4'>$orderPaid</div>";
     echo "</div>";
 }
 ?>

@@ -182,4 +182,10 @@ public interface IOrderManager {
     public List<Order> getOrdersToCapture() throws ErrorException;
     
     public List<Order> getOrdersNotTransferredToAccountingSystem();
+    
+    @Administrator
+    public void updatePriceForOrderLine(String cartItemId, String orderId, double price);
+    
+    @Administrator
+    public void changeOrderType(String orderId, String paymentTypeId);
 }

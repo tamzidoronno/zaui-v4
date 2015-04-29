@@ -4,10 +4,13 @@
  */
 package com.thundashop.core.ordermanager.data;
 
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.DataCommon;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -24,6 +27,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean transferredToAccountingSystem = false;
     public boolean testOrder = false;
     public boolean captured = false;
+    public List<OrderLog> logLines = new ArrayList();
 
     public boolean useForStatistic() {
         if (status == Order.Status.CANCELED || status == Order.Status.PAYMENT_FAILED) {
@@ -35,6 +39,14 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         
         return true;
+    }
+
+    public void changePaymentType(Application paymentApplication) {
+        if (payment == null) {
+            payment = new Payment();
+        }
+        
+        payment.paymentType = "ns_"+paymentApplication.id.replace("-", "_")+"\\"+paymentApplication.appName;
     }
     
     public static class Status  {
@@ -91,5 +103,18 @@ public class Order extends DataCommon implements Comparable<Order> {
             return 0;
         }
         return createdDate.compareTo(o.createdDate);
+    }
+    
+    public void updatePrice(String cartItemId, double price) {
+        if (cart.getCartItem(cartItemId) == null) {
+            return;
+        }
+        
+        double oldPrice = cart.getCartItem(cartItemId).getProduct().price;
+        cart.updatePrice(cartItemId, price);
+        
+        OrderLog log = new OrderLog();
+        log.userId = userId;
+        log.description = "CartItem price changed price from " + oldPrice + " to " + price;
     }
 } 

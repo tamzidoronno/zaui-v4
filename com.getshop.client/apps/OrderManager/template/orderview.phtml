@@ -13,6 +13,8 @@ if (!$order) {
     return;
 }
 
+$canChangeOrder = $this->canChangeOrder($order);
+
 $orderStatusText = "";
 $orderStatusText = $order->status == 1 ? $this->__f("Created") : $orderStatusText;
 $orderStatusText = $order->status == 2 ? $this->__f("Waiting for payment") : $orderStatusText;
@@ -25,7 +27,7 @@ $orderStatusText = $order->status == 7 ? $this->__f("Payment completed") : $orde
         
 $cart = $order->cart;
 ?>
-<div class='orderoverview'>
+<div class='orderoverview' orderId='<? echo $_POST['value']; ?>'>
     <div class='customerdetails'>
         <?
         $address = $order->cart->address;
@@ -38,8 +40,31 @@ $cart = $order->cart;
         <div class='gss_label_content'><? echo $address->phone; ?></div>
         <div class='gss_label'><? echo $this->__f("Order date"); ?></div>
         <div class='gss_label_content'><? echo $order->createdDate; ?></div>
-        <div class='gss_label'><? echo $this->__f("Order status"); ?></div>
-        <div class='gss_label_content'><? echo $orderStatusText; ?></div>
+        
+        <div class='gss_label'><? echo $this->__f("Payment"); ?></div>
+        <div class='gss_label_content'>
+            <?
+            $changeText = $canChangeOrder ? "<i class='fa fa-edit gss_changePaymentType'></i> " : "";
+            $paymentApp = new $order->payment->paymentType();
+            echo $changeText.$paymentApp->getName();
+            echo "<br/>";
+            echo $orderStatusText; ?>
+            
+            <div class="gss_orderview_available_payments">
+                <?
+                $paymentsApplications= $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+                foreach ($paymentsApplications as $app) {
+                    $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+                    $id = $app->id;
+                    if ($appInstance) {
+                        echo "<div class='gss_order_view_select_payement_method' payementMethodId='$id'>".$appInstance->getName()."</div>";
+                    }
+                }
+                ?>
+            </div>
+        </div>
+        
+        
         <div class='gss_label'><? echo $this->__f("Shipping"); ?></div>
         <div class='gss_label_content'>
             <? 
@@ -56,8 +81,9 @@ $cart = $order->cart;
     <?
     foreach ($cart->items as $cartItem) {
 //        echo "<div class='gss_label_content'>";
+        $editButton = $canChangeOrder ? "<i class='fa fa-edit gss_changeOrderLine'></i>" : "";
         $metaText = $cartItem->product->metaData ? " ( " .$cartItem->product->metaData." )" : "";
-        echo "<div class='gss_order_line'>".$cartItem->count." x ".$cartItem->product->name." $metaText<span class='gss_order_line_price'>".$cartItem->product->price."</span></div>";
+        echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>".$cartItem->count." x ".$cartItem->product->name." $metaText<span class='gss_order_line_price'>".$cartItem->product->price." $editButton</span></div>";
 //        echo "</div>";
     }
     ?>
@@ -72,6 +98,16 @@ $cart = $order->cart;
 <div class="gss_button" onclick="$('.gss_more_order_settings').slideDown();">
     <? echo $this->__f("Show more settinsg"); ?>
 </div>
+
+<?
+if ($canChangeOrder) {
+?>
+    <div orderId='<? echo $order->id; ?>' class="gss_button gss_mark_order_as_paid">
+        <? echo $this->__f("Mark order as paid"); ?>
+    </div>
+<?
+}
+?>
 <div class="gss_more_order_settings">
     <center>
         <font style="color: red; font-weight: bold;">

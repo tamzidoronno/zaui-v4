@@ -518,68 +518,32 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function doPartnerBooking() {
-        $days = $_POST['data']['days'];
-        $year = date("Y", time());
-        $productId = $_POST['data']['product'];
-        
+         $productId = $_POST['data']['product'];
         $this->getManager()->clearBookingReservation();
+        $reservations = $this->getPartnerResevations();
         
         $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
         $additional->isPartner = true;
         $additional->roomProductId = $productId;
-        $this->getManager()->updateAdditionalInformation($additional);
-        
-        $dateRange = [];
-        $reservations = array();
         $errors = false;
-        for($j = 0; $j < 2; $j++) {
-            for($i = 1; $i <= 365; $i++) {
-                $offset = date("$i-$year");
-                if(in_array($offset, $days)) {
-                    $dateRange[] = $offset;
-                } else if(sizeof($dateRange) > 0) {
-                    $start = $dateRange[0];
-                    $start = explode("-", $start);
-                    $start = strtotime("1 Jan " . ($start[1]) . " +" . ($start[0]-1) . " day");
-                    $end = $dateRange[sizeof($dateRange)-1];
-                    $end = explode("-", $end);
-                    $endDay = $end[0]-1;
-                    if(sizeof($dateRange) == 1) {
-                        $endDay++;
-                    }
-                    $end = strtotime("1 Jan " . ($end[1]) . " +" . ($endDay) . " day");
-                    if(!$this->checkAvailabilityOnRange($start, $end, $productId, $additional)) {
-                        $text = $this->__w("Sorry, we do not have any room available between {start} and {end} of this type. Try another one.");
-                        $text = str_replace("{start}", date("d-m-Y", $start),$text);
-                        $text = str_replace("{end}", date("d-m-Y", $end), $text);
-                        echo $text . "<br>";
-                        $errors = true;
-                    } else {
-                        $toReserve = new \stdClass();
-                        $count = sizeof($dateRange)-1;
-                        if($count == 0) {
-                            $count = 1;
-                        }
-                        $toReserve->start = $start;
-                        $toReserve->end = $end;
-                        $toReserve->count = $count;
-                        $reservations[] = $toReserve;
-                    }
-                    $dateRange = [];
-                }
+        foreach($reservations as $reservation) {
+            $count = $this->checkAvailabilityOnRange($reservation->start, $reservation->end, $productId, $additional);
+            if(!$count) {
+                echo "Failed to load " . $reservation->start . " - " . $reservation->end . "<br>";
+                $errors = true;
             }
-            $year++;
         }
-        if(!$errors) {
-            
-            foreach($reservations as $reservation) {
+        
+        if (!$errors) {
+            $this->getManager()->updateAdditionalInformation($additional);
+            foreach ($reservations as $reservation) {
                 $this->getManager()->reserveRoom($reservation->start, $reservation->end, 1);
             }
-            
+
             echo "ok";
         }
     }
-    
+
     public function hasAvailableParkingSpots() {
         $spots = $this->getApi()->getHotelBookingManager()->checkAvailableParkingSpots($this->getStart(), $this->getEnd());
         return $spots;
@@ -904,5 +868,51 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     public function requestAdminRights() {
         $this->requestAdminRight("OrderManager", "getOrder", "Needs it to get Orders if repay of order is initiated");
     }
+
+    public function getPartnerResevations() {
+        
+        $days = $_POST['data']['days'];
+        $year = date("Y", time());
+        
+        $dateRange = [];
+        $reservations = array();
+        $errors = false;
+        $lowestCount = 10000;
+        for ($j = 0; $j < 2; $j++) {
+            for ($i = 1; $i <= 365; $i++) {
+                $offset = date("$i-$year");
+                if (in_array($offset, $days)) {
+                    $dateRange[] = $offset;
+                } else if (sizeof($dateRange) > 0) {
+                    $start = $dateRange[0];
+                    $start = explode("-", $start);
+                    $start = strtotime("1 Jan " . ($start[1]) . " +" . ($start[0] - 1) . " day");
+                    $end = $dateRange[sizeof($dateRange) - 1];
+                    $end = explode("-", $end);
+                    $endDay = $end[0] - 1;
+                    if (sizeof($dateRange) == 1) {
+                        $endDay++;
+                    }
+                    $end = strtotime("1 Jan " . ($end[1]) . " +" . ($endDay) . " day");
+                    
+                    $toReserve = new \stdClass();
+                    $count = sizeof($dateRange) - 1;
+                    if ($count == 0) {
+                        $count = 1;
+                    }
+                    $toReserve->start = $start;
+                    $toReserve->end = $end;
+                    $toReserve->count = $count;
+                    $reservations[] = $toReserve;
+
+                    $dateRange = [];
+                }
+            }
+            $year++;
+        }
+        
+        return $reservations;
+    }
+
 }
 ?>

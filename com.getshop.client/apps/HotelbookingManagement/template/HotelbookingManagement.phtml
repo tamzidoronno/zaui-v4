@@ -71,7 +71,6 @@ Existing booking references
                     $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$roomsReserved->roomId'>" . $rooms[$roomsReserved->roomId]->roomName . "</span>";
                 }
 
-                $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
                 $alreadyConfirmed = $reservation->confirmed;
 
                 /* @var $reservation \core_hotelbookingmanager_BookingReference */
@@ -131,7 +130,9 @@ Existing booking references
     $('#datatableadmin').DataTable({
             "bJQueryUI": true,
             "aLengthMenu": [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
-            "iDisplayLength": 1000
+            "iDisplayLength": 1000,
+            "aaSorting": []
+            
         });
 </script>
 <br>

@@ -120,6 +120,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         for(UsersBookingData bdata : usersBookingData) {
             finalize(bdata);
         }
+        
+        Collections.sort(usersBookingData, (UsersBookingData s1, UsersBookingData s2) ->{
+            if(s1.rowCreatedDate.before(s2.rowCreatedDate)) {
+                return 1;
+            }
+            return -1;
+        });
+        
         return usersBookingData;
     }
     
@@ -829,21 +837,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public UsersBookingData getCurrentUserBookingData() {
-        UsersBookingData tempData = null;
-        removeExpiredBooking();
-        for(UsersBookingData bdata : getAllUsersBookingData()) {
-            if(bdata.sessionId.equals(getSession().id)) {
-                tempData = bdata;
-            }
-        }
-        if(tempData == null) {
-            tempData = new UsersBookingData();
-            tempData.sessionId = getSession().id;
-            tempData.started = new Date();
-            usersBookingData.add(tempData);
-        }
-        
-        return tempData;
+        return getAllCurrentUserBookingData().get(0);
     }
 
     @Override
@@ -1395,5 +1389,26 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         
         return null;
+    }
+
+    @Override
+    public List<UsersBookingData> getAllCurrentUserBookingData() {
+        List<UsersBookingData> allUserBookingData = new ArrayList();
+        UsersBookingData tempData = null;
+        removeExpiredBooking();
+        for(UsersBookingData bdata : getAllUsersBookingData()) {
+            if(bdata.sessionId.equals(getSession().id)) {
+                allUserBookingData.add(bdata);
+            }
+        }
+        if(allUserBookingData.isEmpty()) {
+            tempData = new UsersBookingData();
+            tempData.sessionId = getSession().id;
+            tempData.started = new Date();
+            usersBookingData.add(tempData);
+            allUserBookingData.add(tempData);
+        }
+        
+        return allUserBookingData;
     }
 }

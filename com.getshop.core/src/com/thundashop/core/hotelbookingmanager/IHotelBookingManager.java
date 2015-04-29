@@ -150,6 +150,8 @@ public interface IHotelBookingManager {
     
     public UsersBookingData getCurrentUserBookingData();
     
+    public List<UsersBookingData> getAllCurrentUserBookingData();
+    
     public List<ArxLogEntry> getArxLog() throws ErrorException;
     
     public void checkForVismaTransfer() throws ErrorException;

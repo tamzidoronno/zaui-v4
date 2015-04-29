@@ -89,7 +89,7 @@ public interface IOrderManager {
      * @return
      * @throws ErrorException 
      */
-    @Administrator
+    @Editor
     public List<Order> getAllOrdersOnProduct(String productId) throws ErrorException;
     
     /**

@@ -60,6 +60,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "<span style='padding:10px; display:inline-block;'>";
         $selectedStart = strtotime($_POST['data']['startDate']);
         $selectedEnd = strtotime($_POST['data']['endDate']);
+        $selectedRoomId = $_POST['data']['room'];
         $users = $this->getApi()->getUserManager()->getAllUsers();
         $allUsers = array();
         foreach($users as $user) {
@@ -97,7 +98,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
             if($selectedStart > $reservationStop) {
                 continue;
             }
-            $this->printResevationRow($reservation, $allUsers, $allRooms);
+            $this->printResevationRow($reservation, $allUsers, $allRooms, $selectedRoomId);
         }
         echo "</span>";
     }
@@ -105,16 +106,16 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     /**
      * @param core_hotelbookingmanager_BookingReference $reservation
      */
-    function printResevationRow($reservation,$allUsers,$rooms) {
+    function printResevationRow($reservation,$allUsers,$rooms, $selectedRoomId) {
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
         echo "Booked for: " . $reservation->startDate . " - " . $reservation->endDate . "<br>";
         $bookedRooms = $reservation->roomsReserved;
-        echo "<br>";
-        echo "Room booked<br>";
         foreach($bookedRooms as $bookedRoom) {
-            echo "&nbsp;&nbsp;&nbsp;" . $rooms[$bookedRoom->roomId]->roomName;
+            if($bookedRoom->roomId != $selectedRoomId) {
+                continue;
+            }
             $vistor = $bookedRoom->visitors[0];
-            echo " - " . $vistor->name . " - " . $vistor->phone . " - " . $vistor->email . " - <span style='color:#fff; cursor:pointer;' class='tempgrantaccess' roomId='".$bookedRoom->roomId."' refid='".$reservation->bookingReference."'>Temporary grant access</span><br>";
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;" . $vistor->name . " - " . $vistor->phone . " - " . $vistor->email . " - <span style='color:#fff; cursor:pointer;' class='tempgrantaccess' roomId='".$bookedRoom->roomId."' refid='".$reservation->bookingReference."'>Temporary grant access</span><br>";
             echo "<br>";
         }
     }

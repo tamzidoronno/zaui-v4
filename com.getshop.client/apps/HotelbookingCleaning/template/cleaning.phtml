@@ -17,6 +17,7 @@ foreach ($rooms as $room) {
     $roomlist[$room->id] = $room;
 }
 
+
 echo "<br><br>";
 echo "<h1>Guests arriving today</h1>";
 printGuestTable($reservations, $roomlist, true);
@@ -62,34 +63,31 @@ function printCleaningRows($bookingData, $roomlist, $interval, $orders, $api) {
             foreach ($bdata->references as $reservation) {
                 $startDate = strtotime($reservation->startDate);
                 $endDate = strtotime($reservation->endDate);
-
-                if($startDate > ($day-86400)) {
-                    continue;
-                }
                 
-                if ($endDate < date(time() + (86400) * ($i - 1))) {
-                    continue;
-                }
+                $toDay = $day-86400;
+                $toMorrow = $day+86400;
+                
+                if($startDate > $toDay && $endDate < $toMorrow) {
+                    $diff = ceil(($day - $startDate) / 86400) - 1;
+                    $doPrint = false;
+                    $icon = "";
+                    if ($diff % $interval == 0 && $diff != 0) {
+                        $doPrint = true;
+                        $icon = "<i class='fa fa-refresh'></i>";
+                    }
+                    if (date("y-m-d", $day) == date("y-m-d", $endDate)) {
+                        $doPrint = true;
+                        $icon = "<i class='fa fa-sign-out'></i>";
+                    }
+                    if (date("y-m-d", $day) == date("y-m-d", $endDate)) {
+                        $doPrint = true;
+                        $icon = "<i class='fa fa-sign-out'></i>";
+                    }
 
-                $diff = ceil(($day - $startDate) / 86400) - 1;
-                $doPrint = false;
-                $icon = "";
-                if ($diff % $interval == 0 && $diff != 0) {
-                    $doPrint = true;
-                    $icon = "<i class='fa fa-refresh'></i>";
-                }
-                if (date("y-m-d", $day) == date("y-m-d", $endDate)) {
-                    $doPrint = true;
-                    $icon = "<i class='fa fa-sign-out'></i>";
-                }
-                if (date("y-m-d", $day) == date("y-m-d", $endDate)) {
-                    $doPrint = true;
-                    $icon = "<i class='fa fa-sign-out'></i>";
-                }
-
-                if ($doPrint) {
-                    foreach ($reservation->roomsReserved as $resroom) {
-                        echo "$icon <span title='" . $resroom->visitors[0]->phone . "'>" . $roomlist[$resroom->roomId]->roomName . " - " . $resroom->visitors[0]->name . "</span><br>";
+                    if ($doPrint) {
+                        foreach ($reservation->roomsReserved as $resroom) {
+                            echo "$icon <span title='" . $resroom->visitors[0]->phone . "'>" . $roomlist[$resroom->roomId]->roomName . " - " . $resroom->visitors[0]->name . "</span><br>";
+                        }
                     }
                 }
             }

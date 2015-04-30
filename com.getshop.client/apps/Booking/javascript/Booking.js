@@ -32,7 +32,7 @@ app.Booking = {
             
             // MECA + OQ8
             if (checkType == 2) {
-                if (val.length < 8 || val.length > 13) {
+                if (val.length < 7 || val.length > 13) {
                     return false;
                 }
                 

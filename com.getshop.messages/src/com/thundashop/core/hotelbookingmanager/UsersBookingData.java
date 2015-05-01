@@ -8,11 +8,12 @@ import java.util.List;
 public class UsersBookingData extends DataCommon {
     public boolean sentWelcomeMessages = false;
     public List<BookingReference> references = new ArrayList();
-    AdditionalBookingInformation additonalInformation;
+    AdditionalBookingInformation additonalInformation = new AdditionalBookingInformation();
     public boolean payedFor = false;
     public boolean partnerReference = false;
     public List<String> orderIds = new ArrayList();
     public boolean active = true;
+    public boolean paymentTypeInvoice = false;
     
     /* Average price each day */
     public double bookingPrice = 0.0;

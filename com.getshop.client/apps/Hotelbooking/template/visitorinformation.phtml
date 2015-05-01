@@ -1,4 +1,6 @@
-
+<?
+/* @var $this \ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
+?>
 <div class='summary_heading'>
     <div class="spacer"></div>
     <h1>
@@ -7,58 +9,67 @@
     <div class="seperator"></div>
 </div>
 <?
-$reservedRooms = $this->getRoomsReserved();
-$i = 1;
-foreach($reservedRooms as $reservedRoom) {
-    if ($this->getRoomCount() > 1) {
-        $var = $this->__w("Contact person for room no. {count}");
-        $var = str_replace("{count}", $i, $var);
-        echo "<div class='visitor_heading'>$var</div>";
+
+$bookingDatas = $this->getManager()->getAllCurrentUserBookingData();
+$rooms = $this->getHotelRooms();
+foreach($bookingDatas as $bookingData) {
+    /* @var $bookingData core_hotelbookingmanager_UsersBookingData */
+    if(sizeof($bookingDatas) > 1) {
+        echo "<h2>Besøkende for " . $this->getApi()->getProductManager()->getProduct($bookingData->additonalInformation->roomProductId)->name . "</h2>";
     }
-    
-    $roomId = $reservedRoom->roomId;
-    $name = ""; $phone = ""; $email = "";
-    $visitor = new core_hotelbookingmanager_Visitors();
-    if(isset($reservedRoom->visitors[0])) {
-        $visitor = $reservedRoom->visitors[0];
-        $name = $visitor->name;
-        $phone = $visitor->phone;
-        $email = $visitor->email;
+    $reservedRooms = $bookingData->references[0]->roomsReserved;
+    $i = 1;
+    foreach($reservedRooms as $reservedRoom) {
+        if ($this->getRoomCount() > 1) {
+            $var = $this->__w("Contact person for room no. {count}");
+            $var = str_replace("{count}", $i, $var);
+            echo "<div class='visitor_heading'>$var</div>";
+        }
+
+        $roomId = $reservedRoom->roomId;
+        $name = ""; $phone = ""; $email = "";
+        $visitor = new core_hotelbookingmanager_Visitors();
+        if(isset($reservedRoom->visitors[0])) {
+            $visitor = $reservedRoom->visitors[0];
+            $name = $visitor->name;
+            $phone = $visitor->phone;
+            $email = $visitor->email;
+        }
+
+        ?>
+        <div class='col-33'>
+            <span class='contact_text'>* <? echo $this->__w("Full name"); ?></span>
+            <span class='contact_input'><input type='text' gsname='room][<? echo $bookingData->id; ?>][<? echo $roomId; ?>][name]' value='<? echo $name ?>' class='<? echo $this->validateVisitor("name",$visitor); ?>' placeholder="Ola Norman">
+            <? 
+            if($this->validateVisitor("name",$visitor)) {
+                echo "* " . $this->__w("Your name is not valid, it need to consist of first and last name.");
+            }
+            ?>
+            </span>
+        </div>
+        <div class='col-33'>
+            <span class='contact_text'>* Mobil telefon</span>
+            <span class='contact_input'><input type='text' gsname='room][<? echo $bookingData->id; ?>][<? echo $roomId; ?>][phone]' value='<? echo $phone; ?>'  class='<? echo $this->validateVisitor("phone",$visitor); ?>' placeholder="4521887"></span>
+            Adgangskoden til døren blir tilsendt dette nummeret
+            <? 
+            if($this->validateVisitor("phone",$visitor)) {
+                echo "* " . $this->__w("Phone number need to be a valid mobile number.");
+            }
+            ?>
+        </div>
+        <div class='col-33'>
+            <span class='contact_text'>* <? echo $this->__w("Email"); ?></span>
+            <span class='contact_input'><input type='text' gsname='room][<? echo $bookingData->id; ?>][<? echo $roomId; ?>][email]' value='<? echo $email; ?>'  class='<? echo $this->validateVisitor("email",$visitor); ?>'  placeholder="din@epost.no"></span>
+            <? 
+            if($this->validateVisitor("email",$visitor)) {
+                echo "* " . $this->__w("The email address is not valid.");
+            }
+            ?>
+        </div>
+        <div class="row_seperator"></div>
+        <?
+        $i++;
     }
-    
-    ?>
-    <div class='col-33'>
-        <span class='contact_text'>* <? echo $this->__w("Full name"); ?></span>
-        <span class='contact_input'><input type='text' gsname='room][<? echo $roomId; ?>][name]' value='<? echo $name ?>' class='<? echo $this->validateVisitor("name",$visitor); ?>' placeholder="Ola Norman">
-        <? 
-        if($this->validateVisitor("name",$visitor)) {
-            echo "* " . $this->__w("Your name is not valid, it need to consist of first and last name.");
-        }
-        ?>
-        </span>
-    </div>
-    <div class='col-33'>
-        <span class='contact_text'>* Mobil telefon</span>
-        <span class='contact_input'><input type='text' gsname='room][<? echo $roomId; ?>][phone]' value='<? echo $phone; ?>'  class='<? echo $this->validateVisitor("phone",$visitor); ?>' placeholder="4521887"></span>
-        Adgangskoden til døren blir tilsendt dette nummeret
-        <? 
-        if($this->validateVisitor("phone",$visitor)) {
-            echo "* " . $this->__w("Phone number need to be a valid mobile number.");
-        }
-        ?>
-    </div>
-    <div class='col-33'>
-        <span class='contact_text'>* <? echo $this->__w("Email"); ?></span>
-        <span class='contact_input'><input type='text' gsname='room][<? echo $roomId; ?>][email]' value='<? echo $email; ?>'  class='<? echo $this->validateVisitor("email",$visitor); ?>'  placeholder="din@epost.no"></span>
-        <? 
-        if($this->validateVisitor("email",$visitor)) {
-            echo "* " . $this->__w("The email address is not valid.");
-        }
-        ?>
-    </div>
-    <div class="row_seperator"></div>
-    <?
-    $i++;
 }
 ?>
 <br>

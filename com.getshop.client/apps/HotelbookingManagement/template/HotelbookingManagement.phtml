@@ -102,13 +102,17 @@ Existing booking references
                 echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->endDate)) . "</td>";
                 echo "<td align='center'>";
                 if(!$bdata->testReservation) {
-                    if($bdata->payedFor) {
-                        echo "Yes";
+                    if (!$bdata->paymentTypeInvoice) {
+                        if($bdata->payedFor) {
+                            echo "Yes";
+                        } else {
+                            echo "No";
+                        }
+                        if(!$bdata->captured && $bdata->payedFor) {
+                            echo ", need capture";
+                        }
                     } else {
-                        echo "No";
-                    }
-                    if(!$bdata->captured && $bdata->payedFor) {
-                        echo ", need capture";
+                        echo "Invoice";
                     }
                 } else {
                     echo "test, order";

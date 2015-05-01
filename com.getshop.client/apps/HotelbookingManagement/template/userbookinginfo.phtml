@@ -6,6 +6,9 @@ $bookingData = $this->getApi()->getHotelBookingManager()->getUserBookingData($id
 $product = $this->getApi()->getProductManager()->getProduct($bookingData->additonalInformation->roomProductId);
 $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
 $allRooms = array();
+$user = $this->getApi()->getUserManager()->getUserById($bookingData->additonalInformation->userId);
+
+
 foreach($rooms as $room) {
     $allRooms[$room->id] = $room;
 }
@@ -22,7 +25,7 @@ echo "<br><b>Contract:</b> <a href='/scripts/whcontract.php?id=$id' class='gs_ig
 if(!$bookingData->payedFor) {
     echo "<br><b>Payed for:</b> <span class='markaspayedfor' bdata-id='$id' style='cursor:pointer;'>Mark as payed for (for testing)</span><br>";
 }
-echo "<b>Booked by:</b> <a style='cursor:pointer;' onClick=\"thundashop.common.hideInformationBox();app.Users.gssinterface.showUser('".$bookingData->additonalInformation->userId."')\">open user</a><br>";
+echo "<b>Booked by:</b> <a style='cursor:pointer;' onClick=\"thundashop.common.hideInformationBox();app.Users.gssinterface.showUser('".$user->id."')\">" .$user->fullName . ", open user</a><br>";
 echo "<b>Payment links:</b>";
 echo "&nbsp;&nbsp;&nbsp;&nbsp;";
 foreach($bookingData->orderIds as $orderId) {
@@ -50,10 +53,14 @@ Rooms :
 <?
 foreach($bookingData->references as $reference) {
     /* @var $reference core_hotelbookingmanager_BookingReference */
+    if(sizeof($bookingData->references) > 1) {
+        echo "<tr><td colspan='3'>" . $reference->startDate . " - " . $reference->endDate."</td></tr>";
+    }
+
     foreach($reference->roomsReserved as $room) {
         /* @var $room core_hotelbookingmanager_RoomInformation */
         echo "<tr roomid='$room->roomId' bookinguserinfo='$bookingData->id' referenceid='$reference->bookingReference'>";
-        echo "<td>";
+        echo "<td colspan='3'>";
         echo "<select class='roomSelected'>";
         foreach($allRooms as $roomId => $roomListEntry) {
             $selected = "";
@@ -63,16 +70,25 @@ foreach($bookingData->references as $reference) {
             
             echo "<option value='$roomId' $selected>".$roomListEntry->roomName . "</option>";
         }
-        echo "</select> <input type='button' value='Endre rom' class='changeroombutton'>";
+        echo "</select> <input type='button' value='Change room' class='changeroombutton'> ";
         echo "</td></tr>";
         foreach($room->visitors as $visitor) {
             echo "<tr roomid='$room->roomId' bookinguserinfo='$bookingData->id' referenceid='$reference->bookingReference'>";
-            echo "<td><input type='text' value='".$visitor->name."' name='name'></td>";
-            echo "<td><input type='text' value='".$visitor->phone."' name='phone'></td>";
-            echo "<td><input type='text' value='".$visitor->email."' name='email'><input type='button' value='Update' class='updatecontactinfo'></td>";
+            echo "<td width='10%'><input type='text' value='".$visitor->name."' name='name'></td>";
+            echo "<td width='10%'><input type='text' value='".$visitor->phone."' name='phone'></td>";
+            echo "<td width='80%'><input type='text' value='".$visitor->email."' name='email'><input type='button' value='Update' class='updatecontactinfo'></td>";
             echo "</tr>";
         }
+        echo "<tr><td colspan='3'><input type='button' value='Remove room ".$allRooms[$room->roomId]->roomName." from order' class='deleteroom' data-roomid='".$room->roomId."' data-reference='".$reference->bookingReference."' data-bdata='".$bookingData->id."'></td></tr>";
+        
+        if(sizeof($reference->roomsReserved) > 1) {
+            echo "<tr><td>&nbsp;</td></tr>";
+        }
     }
+    
+     if(sizeof($bookingData->references) > 1) {
+         echo "<tr><td><br></td></tr>";
+     }
 }
 ?>
 </table>

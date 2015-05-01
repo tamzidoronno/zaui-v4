@@ -8,6 +8,7 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
+import com.thundashop.core.hotelbookingmanager.UsersBookingData;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.start.Runner;
@@ -254,7 +255,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (getSession() == null) {
             return collection.getAllUsers();
         }
-        return collection.filterUsers(getSession().currentUser, allUsers);
+        List<User> result = collection.filterUsers(getSession().currentUser, allUsers);
+        
+        Collections.sort(result, (User s1, User s2) ->{
+            if (s1 == null || s1.fullName == null || s2 == null || s2.fullName == null) {
+                return 0;
+            }
+            return s1.fullName.compareTo(s2.fullName);
+        });
+        
+        
+        return result;
     }
 
     @Override

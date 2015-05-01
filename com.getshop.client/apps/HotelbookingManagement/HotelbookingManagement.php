@@ -18,6 +18,13 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return "left";
     }
     
+    public function removeRoomFromOrder() {
+        $bdata = $_POST['data']['bdata'];
+        $roomid = $_POST['data']['roomid'];
+        $reference = $_POST['data']['reference'];
+        $this->getApi()->getHotelBookingManager()->removeRoomFromOrder($reference, $roomid, $bdata);
+    }
+    
     public function getEndDate() {
         if(isset($_POST['data']['enddate'])) {
             return strtotime($_POST['data']['enddate']);

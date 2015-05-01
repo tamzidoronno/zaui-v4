@@ -122,6 +122,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         
         Collections.sort(usersBookingData, (UsersBookingData s1, UsersBookingData s2) ->{
+            if (s1 == null || s1.rowCreatedDate == null || s2 == null || s2.rowCreatedDate == null) {
+                return 0;
+            }
+
             if(s1.rowCreatedDate.before(s2.rowCreatedDate)) {
                 return 1;
             }
@@ -178,15 +182,31 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return count;
     }
 
+    
+    @Override
+    public Integer reserveRoomAdvanced(long startDate, long endDate, Integer count, AdditionalBookingInformation additional, String bdataId) throws ErrorException {
+        UsersBookingData bookingData = getUserBookingData(bdataId);
+        bookingData.additonalInformation = additional;
+        return reserveRoomWithUserBookingData(startDate, endDate, count, bookingData);
+    }
+    
     @Override
     public Integer reserveRoom(long startDate, long endDate, Integer count) throws ErrorException {
         AdditionalBookingInformation additional = getCurrentUserBookingData().additonalInformation;
-        List<String> roomProductIds = getAllRoomProductIds();
+        clearBookingReservation();
+        UsersBookingData bookingData = getCurrentUserBookingData();
+        bookingData.additonalInformation = additional;
         
+        return reserveRoomWithUserBookingData(startDate, endDate, count, bookingData);        
+    }
+
+    private Integer reserveRoomWithUserBookingData(long startDate, long endDate, Integer count, UsersBookingData bookingData) throws ErrorException {
+        AdditionalBookingInformation additional = bookingData.additonalInformation;
+        List<String> roomProductIds = getAllRoomProductIds();
         boolean found = false;
         List<Room> roomsToBook = new ArrayList();
         for(String otherProductId : roomProductIds) {
-            List<Room> availableRoom = getAvailableRooms(additional.roomProductId, startDate, endDate);
+            List<Room> availableRoom = getAvailableRooms(additional, startDate, endDate);
             roomsToBook = new ArrayList();
             for(Room room : availableRoom) {
 
@@ -211,8 +231,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Date start = convertStartDate(startDate);
         Date end = convertEndDate(endDate);
 
-        UsersBookingData bookingData = getCurrentUserBookingData();
-        if(!bookingData.additonalInformation.isPartner) {
+        if(!additional.isPartner) {
             bookingData.references = new ArrayList();
         }
 
@@ -646,9 +665,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
     }
     
-    private List<Room> getAvailableRooms(String roomProductId, long startDate, long endDate) {
-        boolean longterm = getCurrentUserBookingData().additonalInformation.isPartner;
-        List<Room> allRooms = findAllRoomsOnProduct(roomProductId, longterm);
+    private List<Room> getAvailableRooms(AdditionalBookingInformation additional, long startDate, long endDate) {
+        boolean longterm = additional.isPartner;
+        List<Room> allRooms = findAllRoomsOnProduct(additional.roomProductId, longterm);
         List<Room> allRoomsToBook = new ArrayList();
         List<Room> shortTerm = new ArrayList();
         List<Room> longTerm = new ArrayList();
@@ -667,14 +686,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         
-        if(longterm) {
-            allRoomsToBook.addAll(longTerm);
-            allRoomsToBook.addAll(shortTerm);
-        } else {
-            allRoomsToBook.addAll(shortTerm);
-            allRoomsToBook.addAll(longTerm);
-        }
-        
+
+        allRoomsToBook.addAll(shortTerm);
+        allRoomsToBook.addAll(longTerm);
         allRoomsToBook.addAll(HandicapRoom);
         
         return allRoomsToBook;
@@ -693,28 +707,52 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             reservation.payedFor = true;
             saveObject(reservation);
         } else {
-            if(!reservation.orderIds.isEmpty() && (!reservation.payedFor || !reservation.captured)) {
-                try {
-                    Order order = orderManager.getOrderSecure(reservation.orderIds.get(0));
-                    boolean needSaving = false;
-                    if(order != null && order.status == Order.Status.PAYMENT_COMPLETED) {
-                        needSaving = true;
-                        reservation.payedFor = true;
-                    }
-                    if(order != null && order.captured && !reservation.captured) {
-                        reservation.captured = true;
-                        needSaving = true;
-                    }
-                    if(order != null && order.testOrder && !reservation.testReservation) {
-                        reservation.testReservation = true;
-                        needSaving = true;
-                    }
-                    if(needSaving) {
-                        saveObject(reservation);
-                    }
-                }catch(Exception e) {
-                    e.printStackTrace();
+            try {
+
+
+                Order order = null;
+
+                if (reservation.orderIds.size() > 0) {
+                    order = orderManager.getOrderSecure(reservation.orderIds.get(0));
                 }
+
+                boolean needSaving = false;
+
+                // Set Invoice
+                if (order != null && order.payment != null && order.payment.paymentType != null && order.payment.paymentType.equals("ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment") && !reservation.paymentTypeInvoice) {
+                    reservation.paymentTypeInvoice = true;
+                    needSaving = true;
+                }
+
+                // Set Invoice
+                if (order != null && order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.equals("ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment") && reservation.paymentTypeInvoice) {
+                    reservation.paymentTypeInvoice = false;
+                    needSaving = true;
+                }
+
+                if(order != null && !reservation.payedFor && order.status == Order.Status.PAYMENT_COMPLETED) {
+                    needSaving = true;
+                    reservation.payedFor = true;
+                }
+
+                if(order != null && reservation.payedFor && order.status != Order.Status.PAYMENT_COMPLETED) {
+                    needSaving = true;
+                    reservation.payedFor = false;
+                }
+
+                if(order != null && order.captured && !reservation.captured) {
+                    reservation.captured = true;
+                    needSaving = true;
+                }
+                if(order != null && order.testOrder && !reservation.testReservation) {
+                    reservation.testReservation = true;
+                    needSaving = true;
+                }
+                if(needSaving) {
+                    saveObject(reservation);
+                }
+            }catch(Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -842,48 +880,49 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public void updateCart() {
-        UsersBookingData bookingData = getCurrentUserBookingData();
+        List<UsersBookingData> bookingDatas = getAllCurrentUserBookingData();
         cartManager.clear();
-        int totalNights = 0;
-        
-        Boolean longTerm = false;
-        if(bookingData.additonalInformation != null) {
-            longTerm = bookingData.additonalInformation.isPartner;
-        }
-        
-        Date firstDate = null;
-        for(BookingReference reference : bookingData.references) {
-            if(firstDate == null || firstDate.after(reference.startDate)) {
-                firstDate = reference.startDate;
-            }
-            totalNights += reference.getNumberOfNights();
-            for(RoomInformation roomInfo : reference.roomsReserved) {
-                int count = reference.getNumberOfNights();
-                CartItem cartItem = addCartItem(count, reference.startDate, reference.endDate, bookingData.additonalInformation.roomProductId, longTerm);
-                roomInfo.cartItemId = cartItem.getCartItemId();
-            }
-        }
-        
-        saveObject(bookingData);
-        
-        if(bookingData.additonalInformation.needFlexPricing) {
-            cartManager.addProductItem(settings.flexProductId, totalNights);
-        }
-        
-        if(bookingData.completed && longTerm) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(firstDate);
-            int year = cal.get(Calendar.YEAR);
-            int month = cal.get(Calendar.MONTH);
+        for(UsersBookingData bookingData : bookingDatas) {
+            int totalNights = 0;
 
-            prepareCartForMonthlyInvoice(year, month, 3);
+            Boolean longTerm = false;
+            if(bookingData.additonalInformation != null) {
+                longTerm = bookingData.additonalInformation.isPartner;
+            }
+
+            Date firstDate = null;
+            for(BookingReference reference : bookingData.references) {
+                if(firstDate == null || firstDate.after(reference.startDate)) {
+                    firstDate = reference.startDate;
+                }
+                totalNights += reference.getNumberOfNights();
+                for(RoomInformation roomInfo : reference.roomsReserved) {
+                    int count = reference.getNumberOfNights();
+                    CartItem cartItem = addCartItem(count, reference.startDate, reference.endDate, bookingData.additonalInformation.roomProductId, longTerm);
+                    roomInfo.cartItemId = cartItem.getCartItemId();
+                }
+            }
+
+            saveObject(bookingData);
+
+            if(bookingData.additonalInformation.needFlexPricing) {
+                cartManager.addProductItem(settings.flexProductId, totalNights);
+            }
+
+            if(bookingData.completed && longTerm) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(firstDate);
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+
+                prepareCartForMonthlyInvoice(year, month, 3);
+            }
         }
-        
     }
 
     @Override
-    public void setVistorData(HashMap<Integer, List<Visitors>> data) throws ErrorException {
-        UsersBookingData bookingdata = getCurrentUserBookingData();
+    public void setVistorData(String bdataId, HashMap<Integer, List<Visitors>> data) throws ErrorException {
+        UsersBookingData bookingdata = getUserBookingData(bdataId);
         for(Integer roomIndex : data.keySet()) {
             for(BookingReference reference : bookingdata.references) {
                 reference.roomsReserved.get(roomIndex).visitors.clear();
@@ -894,29 +933,35 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public String completeOrder() {
-        UsersBookingData bookingData = getCurrentUserBookingData();
+    public String completeOrder(String userId) {
+        List<UsersBookingData> bookingDatas = getAllCurrentUserBookingData();
+        User user = userManager.getUserById(userId);
         
-        if(bookingData.additonalInformation == null) {
-            return "-1";
-        }
-        if(bookingData.references == null || bookingData.references.isEmpty()) {
-            return "-1";
-        }
-        if(bookingData.additonalInformation.roomProductId == null) {
-            return "-1";
+        for(UsersBookingData bookingData : bookingDatas) {
+            if(bookingData.additonalInformation == null) {
+                return "-1";
+            }
+            if(bookingData.references == null || bookingData.references.isEmpty()) {
+                return "-1";
+            }
+            if(bookingData.additonalInformation.roomProductId == null) {
+                return "-1";
+            }
+            
+            bookingData.additonalInformation.userId = user.id;
+            bookingData.completed = true;
         }
         
-        User user = userManager.getUserByReference(bookingData.additonalInformation.customerReference);
-        bookingData.additonalInformation.userId = user.id;
-        bookingData.completed = true;
+        
         updateCart();
-        
         Order order = orderManager.createOrderForUser(user.id);
-        bookingData.orderIds.add(order.id);
-        bookingData.bookingPrice = order.cart.getItems().get(0).getProduct().price;
-        bookingData.sessionId = "";
-        saveObject(bookingData);
+        
+        for(UsersBookingData bookingData : bookingDatas) {
+            bookingData.orderIds.add(order.id);
+            bookingData.bookingPrice = order.cart.getItems().get(0).getProduct().price;
+            bookingData.sessionId = "";
+            saveObject(bookingData);
+        }
         return order.id;
     }
 
@@ -930,9 +975,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public void clearBookingReservation() {
-        UsersBookingData bookingData = getCurrentUserBookingData();
-        bookingData.references.clear();
-        saveObject(bookingData);
+        List<UsersBookingData> bookingData = getAllCurrentUserBookingData();
+        usersBookingData.removeAll(bookingData);
+        for(UsersBookingData bdata : bookingData) {
+            deleteObject(bdata);
+        }
     }
 
     @Override
@@ -1402,13 +1449,44 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         if(allUserBookingData.isEmpty()) {
-            tempData = new UsersBookingData();
-            tempData.sessionId = getSession().id;
-            tempData.started = new Date();
-            usersBookingData.add(tempData);
-            allUserBookingData.add(tempData);
+            allUserBookingData.add(createNewUserBookingData());
         }
         
         return allUserBookingData;
     }
+
+    private UsersBookingData createNewUserBookingData() {
+        UsersBookingData tempData = new UsersBookingData();
+        tempData.sessionId = getSession().id;
+        tempData.started = new Date();
+        usersBookingData.add(tempData);
+        saveObject(tempData);
+        return tempData;
+    }
+
+    @Override
+    public UsersBookingData startUserBookingData() {
+        return createNewUserBookingData();
+    }
+
+    @Override
+    public void removeRoomFromOrder(Integer reference, String room, String bdata) throws ErrorException {
+        UsersBookingData toremoveon = getUserBookingData(bdata);
+        for(BookingReference breference : toremoveon.references) {
+            if(breference.bookingReference == reference) {
+                RoomInformation toremove = null;
+                for(RoomInformation roomInfo : breference.roomsReserved) {
+                    if(roomInfo.roomId.equals(room)) {
+                        toremove = roomInfo;
+                    }
+                }
+                
+                if(toremove != null) {
+                    breference.roomsReserved.remove(toremove);
+                    saveObject(toremoveon);
+                }
+            }
+        }
+    }
+
 }

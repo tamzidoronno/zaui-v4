@@ -1,8 +1,8 @@
-
+<? /* @var $this \ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */ ?>
 <div class="summary_heading">
     <div class="spacer"></div>
     <h1>
-        <? echo $this->__w("Additional contact data"); ?>
+        <? echo $this->__w("Invoice information"); ?>
     </h1>
     <div class="seperator"></div>
 </div>
@@ -14,31 +14,48 @@
 </div>
 <div class="common_input">
     <?
-    if($this->getCustomerType() == "existing") {
-        ?>
-        <div class='col-50'>
+    if ($this->getCustomerType() == "existing") {
+        if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            $allUsers = $this->getApi()->getUserManager()->getAllUsers();
+            echo "<select class='existinguserid'>";
+            echo "<option value=''>Select a user</option>";
+            foreach ($allUsers as $user) {
+                $SELECTED = "";
+                if($this->getPost("username") == $user->id) {
+                    $SELECTED = "SELECTED";
+                }
+                echo "<option value='" . $user->id . "' $SELECTED>" . $user->fullName . "</option>";
+            }
+            echo "</select>";
+        } else {
+            ?>
+            <div class='col-50'>
             <? echo $this->__w("Email") . " (<a href=''>glemt passord</a>)"; ?>
             <span class='contact_input'><input type='text' gsname="userData][username]" value='<? echo $this->getPost("username"); ?>' class='<? echo $this->validateInput("username"); ?>'></span>
-            <? if($this->validateInput("username")) {
+            <?
+            if ($this->validateInput("username")) {
                 echo "<div style='padding-top: 10px;'>* Din epost eller passord er feil, prøv på nytt eller trykk på glemt passord.</div>";
             }
             ?>
-        </div>
-        <div class='col-50'>
-            <? echo $this->__w("Password"); ?>
-            <span class='contact_input'><input type='password' gsname="userData][password]" value='<? echo $this->getPost("password"); ?>' class='<? echo $this->validateInput("password"); ?>'></span>
-        </div>
+            </div>
+            <div class='col-50'>
+                <? echo $this->__w("Password"); ?>
+                <span class='contact_input'><input type='password' gsname="userData][password]" value='<? echo $this->getPost("password"); ?>' class='<? echo $this->validateInput("password"); ?>'></span>
+            </div>
+        <? } ?>
     <div style='clear:both;'></div>
-        <div style="padding:10px; margin-bottom: 20px">
-            <a href=""></a>
-        </div>
-        <?
-    } else if($this->getCustomerType()) {
+    <div style="padding:10px; margin-bottom: 20px">
+        <a href=""></a>
+    </div>
+    <?
+    } else if ($this->getCustomerType()) {
         $text = $this->__w("Birth date (mm.dd.yy)");
+        $nameText = $this->__w("Name of the one ordering");
         $birthdayPlaceholder = "13.06.84";
         if ($this->getCustomerType() == "company") {
-            $text = $this->__w("Organisation number") ;
+            $text = $this->__w("Organisation number");
             $birthdayPlaceholder = "912999688";
+            $nameText = $this->__w("Company name");
         }
         ?>
         <div class='col-50'>
@@ -61,6 +78,15 @@
         <div class='col-50'>
             <? echo $this->__w("Postal place"); ?>
             <span class='contact_input'><input type='text' gsname='userData][city]' value='<? echo $this->getPost("city"); ?>' class='<? echo $this->validateInput("city"); ?>'  placeholder="Tønsberg"></span>
+        </div>
+
+        <div class='col-50'>
+            <? echo $nameText; ?>
+            <span class='contact_input'><input type='text' gsname='userData][users_name]' value='<? echo $this->getPost("users_name"); ?>' class='<? echo $this->validateInput("users_name"); ?>'  placeholder="Navn"></span>
+        </div>
+        <div class='col-50'>
+            <? echo $this->__w("Bestillers epost"); ?>
+            <span class='contact_input'><input type='text' gsname='userData][users_email]' value='<? echo $this->getPost("users_email"); ?>' class='<? echo $this->validateInput("users_email"); ?>'  placeholder="din@epost.no"></span>
         </div>
     <? } ?>
     <div class="row_seperator"></div>

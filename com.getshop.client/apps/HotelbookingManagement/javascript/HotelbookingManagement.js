@@ -120,6 +120,27 @@ app.HotelbookingManagement = {
             thundashop.common.Alert('Success','User has been updated');
         }, false);
     },
+    
+    removeRoomFromOrder : function() {
+        var confirmed = confirm("Are you sure you want to remove this room?");
+        if(!confirmed) {
+            return;
+        }
+        var data = {
+            reference : $(this).attr('data-reference'),
+            roomid :  $(this).attr('data-roomid'),
+            bdata :  $(this).attr('data-bdata')
+        };
+        var btn = $(this);
+        
+        var event = thundashop.Ajax.createEvent('','removeRoomFromOrder',$(this),data);
+        thundashop.Ajax.post(event, function() {
+            thundashop.common.Alert('Success','Room has been removed');
+            $('tr[roomid="' + data.roomid + '"]').remove();
+            btn.hide();
+        });
+    },
+    
     initEvents : function() {
         $(document).on('click', '.HotelbookingManagement .edit_type', app.HotelbookingManagement.loadEditType);
         $(document).on('click', '.HotelbookingManagement .delete_type', app.HotelbookingManagement.deleteType);
@@ -139,6 +160,7 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .markaspayedfor', app.HotelbookingManagement.markAsPayedFor);
         $(document).on('click', '.HotelbookingManagement .updatecontactinfo', app.HotelbookingManagement.updatecontactinfo);
         $(document).on('click', '.HotelbookingManagement .changeroombutton', app.HotelbookingManagement.changeRoom);
+        $(document).on('click', '.HotelbookingManagement .deleteroom', app.HotelbookingManagement.removeRoomFromOrder);
     },
     
     changeRoom : function() {

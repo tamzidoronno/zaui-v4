@@ -15,7 +15,7 @@ foreach ($result as $productId => $count) {
                 echo $this->__f("Sold out");
             } else {
                 echo "<select data-productid='".$product->id."' class='roomselection'>";
-                for ($i=0; $i < $count; $i++) {
+                for ($i=0; $i <= $count; $i++) {
                     echo "<option>$i</option>";
                 }
                 echo "</select>";    

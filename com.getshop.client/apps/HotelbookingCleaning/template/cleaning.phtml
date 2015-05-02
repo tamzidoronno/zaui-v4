@@ -211,4 +211,31 @@ function printIntervalCleaning($reservations, $roomlist, $scope) {
     }
 }
 ?>
+<br>
+
+<h1>Total room overview</h1>
+Click on the room you want to mark as ready
+<style>
+    .room_not_clean { color:red !important; }
+    .room_clean { color:green !important; }
+</style>
+
+<?
+echo "<table>";
+echo "<tr>";
+foreach($roomlist as $room) {
+    if($room->roomName == "201" || $room->roomName == "301") {
+        echo "</tr><tr>";
+    }
+    
+    $cleaned = "room_not_clean";
+    if($room->isClean) {
+        $cleaned = "room_clean";
+    } 
+    
+    echo "<td style='font-size: 20px;padding: 7px;cursor:pointer;' class='$cleaned markroomasready' roomId='".$room->id."'>" . $room->roomName . "</td>";
+}
+echo "</tr></table>";
+
+?>
 <br><br><br>

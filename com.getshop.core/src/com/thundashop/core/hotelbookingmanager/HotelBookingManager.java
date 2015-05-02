@@ -829,7 +829,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             references.add(bdata);
         }
         
-        
+        checkForMoveToCleanRoom(references);
         
         return references;
     }
@@ -1131,7 +1131,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     remove = true;
                 }
                 if(!bdata.payedFor && diff > 14400 && !bdata.avoidAutoDelete && !bdata.paymentTypeInvoice) {
-//                    remove = true;
+                    remove = true;
                 }
             }
             
@@ -1517,6 +1517,36 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         UsersBookingData bdata = getUserBookingData(bdataId);
         bdata.avoidAutoDelete = !bdata.avoidAutoDelete;
         saveObject(bdata);
+    }
+
+    private void checkForMoveToCleanRoom(List<UsersBookingData> references) {
+        for(UsersBookingData bdata : references) {
+            boolean needSaving = false;
+            for(BookingReference reference : bdata.references) {
+                if(!reference.isToday()) {
+                    continue;
+                }
+                for(RoomInformation roomInfo : reference.roomsReserved) {
+                    Room room = getRoom(roomInfo.roomId);
+                    if(!room.isClean) {
+                        System.out.println(room.roomName + " is not clean, trying to find a different one for it");
+                        if(bdata.additonalInformation != null) {
+                            List<Room> availableRooms = getAvailableRooms(bdata.additonalInformation, reference.startDate.getTime()/1000, reference.endDate.getTime()/1000);
+                            for(Room availableRoom : availableRooms) {
+                                if(availableRoom.isClean) {
+                                    roomInfo.roomId = availableRoom.id;
+                                    needSaving = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if(needSaving) {
+                    saveObject(bdata);
+                }
+            }
+        }
     }
 
 }

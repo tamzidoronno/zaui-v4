@@ -646,6 +646,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             Room room = getRoom(roomInfo.roomId);
             Visitors visitor = roomInfo.visitors.get(0);
             room.isClean = false;
+            room.lastMarkedAsDirty = new Date();
             String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
             messageManager.sendSms(visitor.phone, message);
             
@@ -1022,6 +1023,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             String cleanedDay = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
             if(cleanedDay.equals(today)) {
                 room.isClean = true;
+            }
+            
+            if(room.lastMarkedAsDirty != null) {
+                Calendar lastMarkedDirty = Calendar.getInstance();
+                lastMarkedDirty.setTime(room.lastMarkedAsDirty);
+                String lastMarkedString = lastMarkedDirty.get(Calendar.DAY_OF_YEAR) + "-" + lastMarkedDirty.get(Calendar.YEAR);
+                if(lastMarkedString.equals(today)) {
+                    room.isClean = true;
+                }
             }
         }
     }

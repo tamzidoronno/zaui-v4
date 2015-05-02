@@ -1520,10 +1520,22 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     private void checkForMoveToCleanRoom(List<UsersBookingData> references) {
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 3);
+        cal.set(Calendar.MINUTE, 1);
+        cal.set(Calendar.SECOND, 1);
+        Date night = cal.getTime();
+        
+        if(new Date().after(night)) {
+            return;
+        }
+        
         for(UsersBookingData bdata : references) {
             boolean needSaving = false;
             for(BookingReference reference : bdata.references) {
-                if(!reference.isToday()) {
+                if(!reference.isToday() && reference.isStarted()) {
                     continue;
                 }
                 for(RoomInformation roomInfo : reference.roomsReserved) {

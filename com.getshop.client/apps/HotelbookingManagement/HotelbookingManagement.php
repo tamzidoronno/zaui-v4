@@ -14,6 +14,11 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return "HotelbookingManagement";
     }
     
+    public function toggleautodelete() {
+        $id = $_POST['data']['bdataid'];
+        $this->getApi()->getHotelBookingManager()->toggleAvoidAutoDelete($id);
+    }
+    
     public function getAvailablePositions() {
         return "left";
     }

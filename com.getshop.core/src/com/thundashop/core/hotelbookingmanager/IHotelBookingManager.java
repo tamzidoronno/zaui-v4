@@ -75,6 +75,9 @@ public interface IHotelBookingManager {
     @Administrator
     public void removeRoomFromOrder(Integer reference, String room, String bdata) throws ErrorException;
     
+    @Administrator
+    public void toggleAvoidAutoDelete(String bdataId);
+    
     /**
      * Change a room for a reference.
      * @param reference

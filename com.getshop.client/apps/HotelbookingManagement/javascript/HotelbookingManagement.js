@@ -161,8 +161,17 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .updatecontactinfo', app.HotelbookingManagement.updatecontactinfo);
         $(document).on('click', '.HotelbookingManagement .changeroombutton', app.HotelbookingManagement.changeRoom);
         $(document).on('click', '.HotelbookingManagement .deleteroom', app.HotelbookingManagement.removeRoomFromOrder);
+        $(document).on('click', '.HotelbookingManagement .toggleautodelete', app.HotelbookingManagement.toggleautodelete);
     },
-    
+    toggleautodelete : function() {
+        var button = $(this);
+        var event = thundashop.Ajax.createEvent('','toggleautodelete',$(this), {
+            "bdataid" : $(this).attr('bdataid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            button.css('color','green');
+        });
+    },
     changeRoom : function() {
         var row = $(this).closest('tr');
         var data = {

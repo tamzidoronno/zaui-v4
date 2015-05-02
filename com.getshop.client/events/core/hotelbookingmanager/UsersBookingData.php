@@ -42,5 +42,8 @@ class core_hotelbookingmanager_UsersBookingData extends core_common_DataCommon  
 	/** @var String */
 	public $testReservation;
 
+	/** @var String */
+	public $avoidAutoDelete;
+
 }
 ?>

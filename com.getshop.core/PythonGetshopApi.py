@@ -2480,6 +2480,21 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def toggleAvoidAutoDelete(self, bdataId):
+    args = collections.OrderedDict()
+    if isinstance(bdataId,GetShopBaseClass): 
+      args["bdataId"]=json.dumps(bdataId.__dict__)
+    else:
+      try:
+        args["bdataId"]=json.dumps(bdataId)
+      except (ValueError, AttributeError):
+        args["bdataId"]=bdataId
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleAvoidAutoDelete"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def updateAdditionalInformation(self, info):
     args = collections.OrderedDict()
     if isinstance(info,GetShopBaseClass): 

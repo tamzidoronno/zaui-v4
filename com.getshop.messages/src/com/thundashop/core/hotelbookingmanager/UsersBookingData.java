@@ -22,4 +22,5 @@ public class UsersBookingData extends DataCommon {
     boolean completed = false;
     boolean captured = false;
     boolean testReservation = false;
+    boolean avoidAutoDelete = false;
 }

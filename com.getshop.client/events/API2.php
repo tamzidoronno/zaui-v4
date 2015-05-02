@@ -2405,6 +2405,21 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function toggleAvoidAutoDelete($bdataId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["bdataId"] = json_encode($this->transport->object_unset_nulls($bdataId));
+	     $data["method"] = "toggleAvoidAutoDelete";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all references
 	* @return void
 	* @throws ErrorException

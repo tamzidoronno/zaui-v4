@@ -828,6 +828,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
             references.add(bdata);
         }
+        
+        
+        
         return references;
     }
 
@@ -951,6 +954,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             
             bookingData.additonalInformation.userId = user.id;
             bookingData.completed = true;
+            
+            if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isAdministrator()) {
+                bookingData.avoidAutoDelete = true;
+            }
+            
         }
         
         
@@ -1116,13 +1124,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 remove = true;
             }
             
-            if(bdata.started != null && !bdata.completed) {
+            if(bdata.started != null) {
                 long diff = (new Date().getTime() - bdata.started.getTime())/1000;
-                if(diff > 3600) {
+                if(!bdata.completed && (diff > 3600)) {
                     //Booking session timed out.
                     remove = true;
                 }
+                if(!bdata.payedFor && diff > 14400 && !bdata.avoidAutoDelete && !bdata.paymentTypeInvoice) {
+//                    remove = true;
+                }
             }
+            
+            
             if(remove) {
                 bdataToRemove.add(bdata);
             }
@@ -1497,6 +1510,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 }
             }
         }
+    }
+
+    @Override
+    public void toggleAvoidAutoDelete(String bdataId) {
+        UsersBookingData bdata = getUserBookingData(bdataId);
+        bdata.avoidAutoDelete = !bdata.avoidAutoDelete;
+        saveObject(bdata);
     }
 
 }

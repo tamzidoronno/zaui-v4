@@ -1066,7 +1066,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if(bdata.sessionId != null && !bdata.sessionId.isEmpty()) {
                 continue;
             }
-            if(!bdata.payedFor) {
+            if(!bdata.payedFor && !bdata.paymentTypeInvoice) {
                 continue;
             }
             if(!bdata.active) {

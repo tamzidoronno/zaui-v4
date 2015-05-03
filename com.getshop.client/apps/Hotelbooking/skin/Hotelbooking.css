@@ -2,7 +2,7 @@
 .Hotelbooking .room_selection { width:100%; background-color:#FFF; padding: 5px;height:30px; border: solid 1px; line-height: 30px; }
 .Hotelbooking .date_selection_room { box-sizing: border-box; border: solid 1px #d9dadb; margin:0px; width: 130px; color:#000; font-size: 14px; height: 23px; line-height: 23px; padding-left: 5px; border-radius: 3px;}
 .Hotelbooking .fa-calendar { margin: 3px; cursor:pointer; }
-.Hotelbooking .check_available_button, .Hotelbooking .continue_to_cart_button,.Hotelbooking .continue_to_summary,.Hotelbooking .complete_partner_checkout { color:#FFF; text-align: center; background-color:#ab8936; cursor: pointer; height: 29px; line-height: 29px; }
+.Hotelbooking .check_available_button, .Hotelbooking .continue_to_cart_button,.Hotelbooking .continue_to_signup, .Hotelbooking .continue_to_summary,.Hotelbooking .complete_partner_checkout { color:#FFF; text-align: center; background-color:#ab8936; cursor: pointer; height: 29px; line-height: 29px; }
 .Hotelbooking .continue_button { display:block;  width: 175px;text-align: center; background-color:#d2684f; padding:3px; cursor: pointer; padding-top: 7px;  padding-bottom: 7px; }
 .Hotelbooking .title { text-transform: uppercase; padding-top: 20px; padding-bottom: 20px; }
 .Hotelbooking .company_cal_header { display:block; text-align: center; border-bottom: solid 1px #837f7a; height: 30px; line-height: 30px; }
@@ -194,3 +194,30 @@ top: 20px;
 background-color:#ab8936 !important;
 width: 130px; }
 body { font-size: 12px; line-height: 18px;  }
+
+
+.Hotelbooking .partner_room_select_box {
+    width: 20%;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 10px;
+    vertical-align: top;
+    text-align: center;
+}
+
+.Hotelbooking .partner_room_select_box .imagebox {
+    height: 150px;
+    background-size: cover;
+    margin-bottom: 10px;
+}
+.Hotelbooking .partner_room_select_box .Hotelbooking .partner_room_select_box {
+    border: solid 1px;
+}
+.Hotelbooking .partner_room_select_box img {
+    display: inline-block;
+    width: 100%;
+}
+
+.Hotelbooking .partner_room_select_box select {
+    width: 100%;
+}

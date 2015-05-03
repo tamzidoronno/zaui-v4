@@ -72,21 +72,12 @@ for($i = 0; $i < 12; $i++) {
 }
 echo "<div style='clear:both;'></div>";
 ?>
-<div class="col-50">
-<? echo $this->__w("Room type"); ?><br>
-<select class='company_room_selection'>
-    <?
-    $products = $this->getHotelRooms();
-    $foundroom = 0;
-    foreach ($products as $product) {
-        echo "<option value='".$product->id."'>".  $product->price . " NOK ". $product->name . "</option>";
-    }
-    ?>
-</select>
-</div>
 
-<div class="col-50">'
-    <br>
-    <div class="continue_to_summary" summarypage='<? echo $this->getConfig()->summaryPage; ?>' nextpage="" >Fortsett</div>
-</div>
+<br/>
+<div class="continue_to_summary" nextpage="" >Sjekk tilgjengelighet</div>
 <div style='clear:both;'></div>
+</br>
+</br>
+<div class='hotel_booking_partner_availability'>
+    
+</div>

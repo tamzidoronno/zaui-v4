@@ -1796,9 +1796,10 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function completeOrder() {
+	public function completeOrder($userId) {
 	     $data = array();
 	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $data["method"] = "completeOrder";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
@@ -1849,7 +1850,7 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	*
+	* Adds multiple bookings.
 	* @param roomType
 	* @param startDate The first day unix timestamp.
 	* @param endDate The last day unix timestamp.
@@ -1861,6 +1862,20 @@ class APIHotelBookingManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getAllBookingsForUser";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllCurrentUserBookingData() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllCurrentUserBookingData";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -1952,7 +1967,7 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	*
+	* Adds multiple bookings.
 	* @param roomType
 	* @param startDate The first day unix timestamp.
 	* @param endDate The last day unix timestamp.
@@ -2199,6 +2214,23 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function removeRoomFromOrder($reference, $room, $bdata) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
+	     $data['args']["room"] = json_encode($this->transport->object_unset_nulls($room));
+	     $data['args']["bdata"] = json_encode($this->transport->object_unset_nulls($bdata));
+	     $data["method"] = "removeRoomFromOrder";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	*
 	* @param roomType
 	* @param startDate The first day unix timestamp.
@@ -2214,6 +2246,28 @@ class APIHotelBookingManager {
 	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
 	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
 	     $data["method"] = "reserveRoom";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Adds multiple bookings.
+	* @param roomType
+	* @param startDate The first day unix timestamp.
+	* @param endDate The last day unix timestamp.
+	* @param count The number of rooms to book.
+	* @throws ErrorException
+	*/
+
+	public function reserveRoomAdvanced($startDate, $endDate, $count, $core_hotelbookingmanager_AdditionalBookingInformation, $userBookingDataId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
+	     $data['args']["core_hotelbookingmanager_AdditionalBookingInformation"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_AdditionalBookingInformation));
+	     $data['args']["userBookingDataId"] = json_encode($this->transport->object_unset_nulls($userBookingDataId));
+	     $data["method"] = "reserveRoomAdvanced";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -2264,7 +2318,7 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	*
+	* Adds multiple bookings.
 	* @param roomType
 	* @param startDate The first day unix timestamp.
 	* @param endDate The last day unix timestamp.
@@ -2305,13 +2359,31 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function setVistorData($visitors) {
+	public function setVistorData($bdataId, $visitors) {
 	     $data = array();
 	     $data['args'] = array();
+	     $data['args']["bdataId"] = json_encode($this->transport->object_unset_nulls($bdataId));
 	     $data['args']["visitors"] = json_encode($this->transport->object_unset_nulls($visitors));
 	     $data["method"] = "setVistorData";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Adds multiple bookings.
+	* @param roomType
+	* @param startDate The first day unix timestamp.
+	* @param endDate The last day unix timestamp.
+	* @param count The number of rooms to book.
+	* @throws ErrorException
+	*/
+
+	public function startUserBookingData() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "startUserBookingData";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_UsersBookingData(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2328,6 +2400,21 @@ class APIHotelBookingManager {
 	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
 	     $data['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
 	     $data["method"] = "tempGrantAccess";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function toggleAvoidAutoDelete($bdataId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["bdataId"] = json_encode($this->transport->object_unset_nulls($bdataId));
+	     $data["method"] = "toggleAvoidAutoDelete";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}

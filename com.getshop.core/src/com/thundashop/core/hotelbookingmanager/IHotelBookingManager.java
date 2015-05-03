@@ -32,6 +32,18 @@ public interface IHotelBookingManager {
      */
     public Integer reserveRoom(long startDate, long endDate, Integer count) throws ErrorException;
     
+    /**
+     * Adds multiple bookings.
+     * @param roomType
+     * @param startDate The first day unix timestamp.
+     * @param endDate The last day unix timestamp.
+     * @param count The number of rooms to book.
+     * @throws ErrorException 
+     */
+    public Integer reserveRoomAdvanced(long startDate, long endDate, Integer count, AdditionalBookingInformation additional, String userBookingDataId) throws ErrorException;
+    
+    public UsersBookingData startUserBookingData();
+    
     public GlobalBookingSettings getBookingConfiguration() throws ErrorException;
     
     public List<UsersBookingData> getAllBookingsForUser();
@@ -53,11 +65,18 @@ public interface IHotelBookingManager {
     
     public void updateCart();
     
-    public void setVistorData(HashMap<Integer,List<Visitors>> visitors) throws ErrorException;
+    public void setVistorData(String bdataId, HashMap<Integer,List<Visitors>> visitors) throws ErrorException;
     
     public String getEmailMessage(String language) throws ErrorException;
     
-    public String completeOrder();
+    public String completeOrder(String userId);
+    
+
+    @Administrator
+    public void removeRoomFromOrder(Integer reference, String room, String bdata) throws ErrorException;
+    
+    @Administrator
+    public void toggleAvoidAutoDelete(String bdataId);
     
     /**
      * Change a room for a reference.

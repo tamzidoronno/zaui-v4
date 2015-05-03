@@ -236,6 +236,7 @@ app.Hotelbooking = {
                     $('.Hotelbooking input[gsname="userData][address]"]').val(data.forretningsadr);
                     $('.Hotelbooking input[gsname="userData][postal_code]"]').val(data.forradrpostnr);
                     $('.Hotelbooking input[gsname="userData][city]"]').val(data.forradrpoststed);
+                    $('.Hotelbooking input[gsname="userData][users_name]"]').val(data.navn);
                 }
             });
         }
@@ -313,6 +314,7 @@ app.Hotelbooking = {
                 $(this).removeClass('selected');
             }
         });
+        $('.hotel_booking_partner_availability').html('');
     },
     
     selectDay : function() {
@@ -330,11 +332,11 @@ app.Hotelbooking = {
         } else {
             $(this).addClass('selected');
         }
+        $('.hotel_booking_partner_availability').html('');
     },
     
-    continueToSummary : function() {
+    createNumberOfPartnerDays : function() {
         var days = [];
-        
         $('.caldate').each(function() {
             if($(this).hasClass('selected')) {
                 var day = $(this).attr('day');
@@ -342,7 +344,15 @@ app.Hotelbooking = {
                 days.push(day + "-" + year);
             }
         });
-        var pageId = $(this).attr('summarypage');
+        return days;
+    },
+    
+    continueToSummary : function() {
+        var days = app.Hotelbooking.createNumberOfPartnerDays();
+                
+        if(days.length == 0) {
+            alert('Du må velge minimum 1 dag');
+        }
         
         var data = {
             "days" : days,
@@ -352,17 +362,58 @@ app.Hotelbooking = {
         var event = thundashop.Ajax.createEvent('','doPartnerBooking',$(this), data);
         
         thundashop.Ajax.postWithCallBack(event, function(data) {
-            if(data === "ok") {
-                
-                thundashop.common.goToPage(pageId);
-            } else {
-                alert('Can not check in');
-            }
+            $('.Hotelbooking .hotel_booking_partner_availability').html(data);
         });
     },
     complete_partner_checkout: function() {
         var event = thundashop.Ajax.createEvent('','completePartnerCheckout',$(this),{});
         thundashop.Ajax.post(event);
+    },
+    
+    continueToSignupPartner: function() {
+        var days = app.Hotelbooking.createNumberOfPartnerDays();
+        
+        var selectionBoxes = {};
+        var found = false;
+        
+        $('.Hotelbooking .roomselection').each(function() {
+            var count = parseInt($(this).val());
+            selectionBoxes[$(this).attr('data-productid')] = count;
+            if(count > 0) {
+                found = true;
+            }
+        });
+        
+        if(days.length == 0) {
+            alert('Du må velge minimum 1 dag');
+            return;
+        }
+        if(!found) {
+            alert('Du må minimum velge èt rom');
+            return;
+        }
+        
+        var data = {
+            "days" : days,
+            "rooms" : selectionBoxes
+        }
+        
+        var pageId = $(this).attr('summarypage');
+        
+        var event = thundashop.Ajax.createEvent('','doPartnerReservations',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            thundashop.common.goToPage(pageId);
+        });
+    },
+    
+    setUserIdToUpdate : function() {
+        var id = $(this).val();
+        var event = thundashop.Ajax.createEvent('','setBookingUserName',$(this), {
+            "username" : id
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            
+        });
     },
     
     initEvents: function () {
@@ -393,8 +444,10 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .monthcheckbox', app.Hotelbooking.selectMonth);
         $(document).on('click', '.Hotelbooking .caldate', app.Hotelbooking.selectDay);
         $(document).on('click', '.Hotelbooking .continue_to_summary', app.Hotelbooking.continueToSummary);
+        $(document).on('click', '.Hotelbooking .continue_to_signup', app.Hotelbooking.continueToSignupPartner);
         $(document).on('click', '.Hotelbooking .complete_partner_checkout', app.Hotelbooking.complete_partner_checkout);
         $(document).on('change', '.Hotelbooking .weekcheckbox', app.Hotelbooking.weekCheckBox);
+        $(document).on('change', '.Hotelbooking .existinguserid', app.Hotelbooking.setUserIdToUpdate);
         $(document).on('click', '.Hotelbooking .continue_to_cart_button', app.Hotelbooking.animateNext);
         $(document).on('mouseover', '.Hotelbooking .room_selection_2 .fa-info-circle', this.showToolTip);
         $(document).on('mouseout', '.Hotelbooking .room_selection_2 .fa-info-circle', this.hideToolTip);

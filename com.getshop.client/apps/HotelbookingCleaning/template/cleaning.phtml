@@ -64,30 +64,31 @@ function printCleaningRows($bookingData, $roomlist, $interval, $orders, $api) {
                 $startDate = strtotime($reservation->startDate);
                 $endDate = strtotime($reservation->endDate);
                 
-                $toDay = $day-86400;
-                $toMorrow = $day+86400;
+                //If reservation is in the future, and not this today.
+                if(($startDate > $day) && (date("y-m-d", $day) != date("y-m-d", $startDate))) {
+                    continue;
+                }
                 
-                if($startDate > $toDay && $endDate < $toMorrow) {
-                    $diff = ceil(($day - $startDate) / 86400) - 1;
-                    $doPrint = false;
-                    $icon = "";
-                    if ($diff % $interval == 0 && $diff != 0) {
-                        $doPrint = true;
-                        $icon = "<i class='fa fa-refresh'></i>";
-                    }
-                    if (date("y-m-d", $day) == date("y-m-d", $endDate)) {
-                        $doPrint = true;
-                        $icon = "<i class='fa fa-sign-out'></i>";
-                    }
-                    if (date("y-m-d", $day) == date("y-m-d", $endDate)) {
-                        $doPrint = true;
-                        $icon = "<i class='fa fa-sign-out'></i>";
-                    }
+                //If reservation has been, and not this today.
+                if(($endDate < $day) && (date("y-m-d", $day) != date("y-m-d", $endDate))) {
+                    continue;
+                }
+                
+                $diff = ceil(($day - $startDate) / 86400) - 1;
+                $doPrint = false;
+                $icon = "";
+                if ($diff % $interval == 0 && $diff != 0) {
+                    $doPrint = true;
+                    $icon = "<i class='fa fa-refresh'></i>";
+                }
+                if (date("y-m-d", $day) == date("y-m-d", $endDate)) {
+                    $doPrint = true;
+                    $icon = "<i class='fa fa-sign-out'></i>";
+                }
 
-                    if ($doPrint) {
-                        foreach ($reservation->roomsReserved as $resroom) {
-                            echo "$icon <span title='" . $resroom->visitors[0]->phone . "'>" . $roomlist[$resroom->roomId]->roomName . " - " . $resroom->visitors[0]->name . "</span><br>";
-                        }
+                if ($doPrint) {
+                    foreach ($reservation->roomsReserved as $resroom) {
+                        echo "$icon <span title='" . $resroom->visitors[0]->phone . "'>" . $roomlist[$resroom->roomId]->roomName . " - " . $resroom->visitors[0]->name . "</span><br>";
                     }
                 }
             }
@@ -209,5 +210,32 @@ function printIntervalCleaning($reservations, $roomlist, $scope) {
         echo "</div>";
     }
 }
+?>
+<br>
+
+<h1>Total room overview</h1>
+Click on the room you want to mark as ready
+<style>
+    .room_not_clean { color:red !important; }
+    .room_clean { color:green !important; }
+</style>
+
+<?
+echo "<table>";
+echo "<tr>";
+foreach($roomlist as $room) {
+    if($room->roomName == "201" || $room->roomName == "301") {
+        echo "</tr><tr>";
+    }
+    
+    $cleaned = "room_not_clean";
+    if($room->isClean) {
+        $cleaned = "room_clean";
+    } 
+    
+    echo "<td style='font-size: 20px;padding: 7px;cursor:pointer;' class='$cleaned markroomasready' roomId='".$room->id."'>" . $room->roomName . "</td>";
+}
+echo "</tr></table>";
+
 ?>
 <br><br><br>

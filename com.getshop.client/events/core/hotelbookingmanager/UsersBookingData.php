@@ -22,6 +22,9 @@ class core_hotelbookingmanager_UsersBookingData extends core_common_DataCommon  
 	public $active;
 
 	/** @var String */
+	public $paymentTypeInvoice;
+
+	/** @var String */
 	public $bookingPrice;
 
 	/** @var String */
@@ -38,6 +41,9 @@ class core_hotelbookingmanager_UsersBookingData extends core_common_DataCommon  
 
 	/** @var String */
 	public $testReservation;
+
+	/** @var String */
+	public $avoidAutoDelete;
 
 }
 ?>

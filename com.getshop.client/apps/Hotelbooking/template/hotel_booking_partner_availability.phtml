@@ -1,0 +1,32 @@
+<?
+/* @var $this ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
+$result = $this->getPartnerBookingResult();
+
+echo "<h1>Velg antall rom som du ønsker å bestille</h1>";
+
+foreach ($result as $productId => $count) {
+    $product = $this->getApi()->getProductManager()->getProduct($productId);
+    
+    echo "<div class='partner_room_select_box'>";
+        echo "<div class='partner_room_select_box_innner'>";
+            echo "<h2>$product->name</h2>";
+            echo "<div class='imagebox' style='background-image: url(\"/displayImage.php?id=$product->mainImage\");'> </div>";
+            if ($count == 0) {
+                echo $this->__f("Sold out");
+            } else {
+                echo "<select data-productid='".$product->id."' class='roomselection'>";
+                for ($i=0; $i <= $count; $i++) {
+                    echo "<option>$i</option>";
+                }
+                echo "</select>";    
+            }
+
+        echo "</div>";
+    echo "</div>";
+}
+?>
+<br/>
+<br/>
+<div class='continue_to_signup' summarypage='<? echo $this->getConfig()->summaryPage; ?>'>Fortsett</div>
+<br/>    
+<br/>    

@@ -11,6 +11,12 @@ foreach($rooms as $room) {
 }
 $rooms = $newRoom;
 
+$users = $this->getApi()->getUserManager()->getAllUsers();
+$allUsers = [];
+foreach($users as $user) {
+    $allUsers[$user->id] = $user;
+}
+
 if(isset($_POST['data']['updated'])) { 
     echo "<span class='updatedtext' style='float:right;'>Data har blitt oppdatert.</span>";
     ?>
@@ -91,24 +97,36 @@ Existing booking references
                 echo "</td>";
                 echo "<td valign='top'>".$bdata->rowCreatedDate."</td>";
                 echo "<td valign='top'>";
+                /* @var $user \core_usermanager_data_User */
+                $user = $allUsers[$bdata->additonalInformation->userId];
+                $title = "";
                 foreach($reservation->roomsReserved as $reservedRoom) {
                     /* @var $reservedRoom \core_hotelbookingmanager_RoomInformation */
                     foreach($reservedRoom->visitors as $visitor) {
-                        echo "rom: ". $rooms[$reservedRoom->roomId]->roomName. "&nbsp;" . $visitor->name  . ", " . $visitor->phone . "<bR>";
+                        $title .= $rooms[$reservedRoom->roomId]->roomName. " - " . $visitor->name  . ", " . $visitor->phone. ", " . $visitor->email . "<bR>";
                     }
                 }
+                echo "<span title='$title'>" . sizeof($reservation->roomsReserved) . " room by " . $user->fullName . ", " . $user->cellPhone . "</span>";
                 echo "</td>";
                 echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->startDate)) . "</td>";
                 echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->endDate)) . "</td>";
                 echo "<td align='center'>";
                 if(!$bdata->testReservation) {
-                    if($bdata->payedFor) {
-                        echo "Yes";
+                    if (!$bdata->paymentTypeInvoice) {
+                        if($bdata->payedFor) {
+                            echo "Yes";
+                        } else {
+                            if($bdata->avoidAutoDelete) {
+                                echo "<span class='toggleautodelete' style='color:green'  bdataid='".$bdata->id."'>No</span>";
+                            } else {
+                                echo "<span class='toggleautodelete' bdataid='".$bdata->id."'>No</span>";
+                            }
+                        }
+                        if(!$bdata->captured && $bdata->payedFor) {
+                            echo ", need capture";
+                        }
                     } else {
-                        echo "No";
-                    }
-                    if(!$bdata->captured && $bdata->payedFor) {
-                        echo ", need capture";
+                        echo "Invoice";
                     }
                 } else {
                     echo "test, order";

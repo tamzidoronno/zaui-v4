@@ -1482,15 +1482,23 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         for(BookingReference breference : toremoveon.references) {
             if(breference.bookingReference == reference) {
                 RoomInformation toremove = null;
+                String cartItemToRemove = null;
                 for(RoomInformation roomInfo : breference.roomsReserved) {
                     if(roomInfo.roomId.equals(room)) {
                         toremove = roomInfo;
+                        cartItemToRemove = roomInfo.cartItemId;
                     }
                 }
                 
                 if(toremove != null) {
                     breference.roomsReserved.remove(toremove);
                     saveObject(toremoveon);
+                }
+                
+                for(String orderId : toremoveon.orderIds) {
+                    Order order = orderManager.getOrderSecure(orderId);
+                    order.cart.removeItem(cartItemToRemove);
+                    orderManager.saveOrder(order);
                 }
             }
         }

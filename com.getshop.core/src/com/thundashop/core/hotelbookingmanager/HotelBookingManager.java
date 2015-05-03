@@ -302,6 +302,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         if(reserved.roomId.equals(oldRoom)) {
                             reserved.forcedMoved = true;
                             reserved.roomId = newRoomId;
+                            if(reserved.roomState != RoomInformation.RoomInfoState.initial) {
+                                reserved.roomState = RoomInformation.RoomInfoState.externalDoorGranted;
+                            }
+                            
                             saveObject(bdata);
                         }
                     }

@@ -645,11 +645,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             String origMessage = arxSettings.smsWelcomeNO;
             Room room = getRoom(roomInfo.roomId);
             Visitors visitor = roomInfo.visitors.get(0);
-            room.isClean = false;
-            room.lastMarkedAsDirty = new Date();
             String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
             messageManager.sendSms(visitor.phone, message);
-            
         }
         
         if(roomInfo.roomState == RoomInformation.RoomInfoState.accessGranted) {
@@ -657,6 +654,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             Room room = getRoom(roomInfo.roomId);
             Visitors visitor = roomInfo.visitors.get(0);
             room.isClean = false;
+            room.lastMarkedAsDirty = new Date();
             saveRoom(room);
             
             String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
@@ -815,22 +813,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public List<UsersBookingData> getAllReservationsArx() throws ErrorException {
         lastPulled = new Date();
-        List<UsersBookingData> references = new ArrayList();
-        for(UsersBookingData bdata : getAllActiveUserBookings()) {
-            if(!bdata.payedFor && !bdata.additonalInformation.isPartner) {
-                continue;
-            }
-            if(!bdata.active) {
-                continue;
-            }
-            if(!bdata.completed) {
-                continue;
-            }
-            references.add(bdata);
-        }
-        
+        List<UsersBookingData> references  = getAllActiveUserBookings();
         checkForMoveToCleanRoom(references);
-        
         return references;
     }
 
@@ -1520,18 +1504,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     private void checkForMoveToCleanRoom(List<UsersBookingData> references) {
-        
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.set(Calendar.HOUR_OF_DAY, 3);
-        cal.set(Calendar.MINUTE, 1);
-        cal.set(Calendar.SECOND, 1);
-        Date night = cal.getTime();
-        
-        if(new Date().after(night)) {
-            return;
-        }
-        
         for(UsersBookingData bdata : references) {
             boolean needSaving = false;
             for(BookingReference reference : bdata.references) {
@@ -1542,6 +1514,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     if(roomInfo.forcedMoved) {
                         continue;
                     }
+                    
+                    if(roomInfo.roomState != RoomInformation.RoomInfoState.initial) {
+                        continue;
+                    }
+                    
                     Room room = getRoom(roomInfo.roomId);
                     if(!room.isClean) {
                         System.out.println(room.roomName + " is not clean, trying to find a different one for it");

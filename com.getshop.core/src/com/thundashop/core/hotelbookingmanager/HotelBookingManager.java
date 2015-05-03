@@ -1539,6 +1539,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     continue;
                 }
                 for(RoomInformation roomInfo : reference.roomsReserved) {
+                    if(roomInfo.forcedMoved) {
+                        continue;
+                    }
                     Room room = getRoom(roomInfo.roomId);
                     if(!room.isClean) {
                         System.out.println(room.roomName + " is not clean, trying to find a different one for it");

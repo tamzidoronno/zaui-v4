@@ -210,7 +210,6 @@ public class ComGetshopArx {
                     }
 
                     roomInfo.roomState = RoomInfoState.externalDoorGranted;
-                    user.doorsToAccess.add("Ytterdører hotell");
                     count++;
 
                     updateArx(user, reference, roomInfo, bdata);

@@ -23,6 +23,7 @@ $orderStatusText = $order->status == 4 ? $this->__f("Completed") : $orderStatusT
 $orderStatusText = $order->status == 5 ? $this->__f("Canceled") : $orderStatusText;
 $orderStatusText = $order->status == 6 ? $this->__f("Sent") : $orderStatusText;
 $orderStatusText = $order->status == 7 ? $this->__f("Payment completed") : $orderStatusText;
+$orderStatusText = $order->status == 8 ? $this->__f("Capture failed") : $orderStatusText;
         
         
 $cart = $order->cart;

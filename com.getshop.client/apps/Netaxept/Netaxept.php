@@ -135,6 +135,15 @@ class Netaxept extends \PaymentApplication implements \Application {
 
     public function collectOrder() {
         $order = $this->order;
+        
+        if (!$this->isOrderPaidByThisPaymentMethod()) {
+            return;
+        }
+        
+        if ($this->order->testOrder) {
+            return;
+        }
+        
         $orderId = $this->order->id;
         $amount = $this->getApi()->getOrderManager()->getTotalAmount($this->getOrder()) * 100;
         
@@ -367,6 +376,22 @@ class Netaxept extends \PaymentApplication implements \Application {
             $this->order->status = $status;
             $this->getApi()->getOrderManager()->saveOrder($this->order);
         }
+    }
+
+    public function isOrderPaidByThisPaymentMethod() {
+        if (!$this->order) {
+            return false;
+        }
+        
+        if (!$this->order->payment) {
+            return false;
+        }
+        
+        if ($this->order->payment->paymentType != "ns_def1e922_972f_4557_a315_a751a9b9eff1\Netaxept") {
+            return false;
+        }
+        
+        return true;
     }
 
 }

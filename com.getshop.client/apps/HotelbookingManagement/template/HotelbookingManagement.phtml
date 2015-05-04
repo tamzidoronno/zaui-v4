@@ -85,13 +85,6 @@ Existing booking references
                 echo "<td style='text-align:left;' valign='top'>"
                 . "<i style='cursor:pointer' refid='".$bdata->id."' class='fa fa-trash-o delete_reference'></i>";
 
-                if($bdata->additonalInformation->isPartner) {
-                    if(!$bdata->active) {
-                        echo "&nbsp;&nbsp;&nbsp;<i class='fa fa-play go_live' bookingid='".$bdata->id."'></i>";
-                    } else {
-                        echo "&nbsp;&nbsp;&nbsp;<i class='fa fa-stop stop_reference_action' bookingid='".$bdata->id."'></i>";
-                    }
-                }
                 echo "&nbsp;&nbsp;&nbsp;<i class='fa fa-info-circle' booking-id='".$bdata->id."'></i> ";
                 
                 echo "</td>";

@@ -1532,17 +1532,23 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     }
                     
                     Room room = getRoom(roomInfo.roomId);
-                    if(!room.isClean) {
+                    if(!room.isClean || !room.isActive) {
                         System.out.println(room.roomName + " is not clean, trying to find a different one for it");
+                        boolean foundMove = false;
                         if(bdata.additonalInformation != null) {
                             List<Room> availableRooms = getAvailableRooms(bdata.additonalInformation, reference.startDate.getTime()/1000, reference.endDate.getTime()/1000);
                             for(Room availableRoom : availableRooms) {
                                 if(availableRoom.isClean) {
                                     roomInfo.roomId = availableRoom.id;
                                     needSaving = true;
+                                    foundMove = true;
                                     break;
                                 }
                             }
+                        }
+
+                        if(!foundMove && !room.isActive) {
+                            messageManager.sendMail("post@getshop.com", "GetShop Support", "Not able to find room for disabled room", "Room: " + room.roomName + " has no where to be put after disabling.", "post@getshop.com", "post@getshop.com");
                         }
                     }
                 }
@@ -1552,5 +1558,4 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
     }
-
 }

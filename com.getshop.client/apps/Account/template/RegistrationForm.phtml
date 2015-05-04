@@ -65,7 +65,7 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
             <input type="txt" id="email" value="<?php echo $email; ?>"></input>
         </td>
     </tr>
-    <? if (isset($user) && isset($user->emailAddressToInvoice) && $user->emailAddressToInvoice != "") { ?>
+    <? if (isset($user) && isset($user->emailAddressToInvoice)) { ?>
         <tr>
             <td class="col1">
                 <?php echo $this->__w("Invoice email"); ?>

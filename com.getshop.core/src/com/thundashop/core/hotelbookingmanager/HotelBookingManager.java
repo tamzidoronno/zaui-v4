@@ -1519,7 +1519,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         for(UsersBookingData bdata : references) {
             boolean needSaving = false;
             for(BookingReference reference : bdata.references) {
-                if(!reference.isToday() && reference.isStarted()) {
+                if(!reference.isToday() && !reference.isStarted()) {
                     continue;
                 }
                 for(RoomInformation roomInfo : reference.roomsReserved) {
@@ -1547,8 +1547,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                             }
                         }
 
-                        if(!foundMove && !room.isActive) {
-                            messageManager.sendMail("post@getshop.com", "GetShop Support", "Not able to find room for disabled room", "Room: " + room.roomName + " has no where to be put after disabling.", "post@getshop.com", "post@getshop.com");
+                        if(!foundMove && !room.isActive && !room.warnedAboutNotMove) {
+                            room.warnedAboutNotMove = true;
+                            needSaving = true;
+                            messageManager.sendMail("post@getshop.com", "GetShop Support", "Not able to find room for disabled room", "Room: " + room.roomName + " has no where to be put after disabling, reference: " + reference.bookingReference + ".", "post@getshop.com", "post@getshop.com");
                         }
                     }
                 }

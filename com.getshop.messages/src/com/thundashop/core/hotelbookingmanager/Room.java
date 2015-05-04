@@ -16,4 +16,5 @@ public class Room extends DataCommon {
     public Boolean suitedForLongTerm = false;
     public List<Date> cleaningDates = new ArrayList();
     public Date lastMarkedAsDirty;
+    boolean warnedAboutNotMove = false;
 }

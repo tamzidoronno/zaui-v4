@@ -116,8 +116,8 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
     
     public function getPrefix() {
         $prefix = "";
-        if($this->getFactory()->getMainLanguage() != $this->getFactory()->getSelectedLanguage()) {
-            $prefix = "_" . $this->getFactory()->getSelectedLanguage();
+        if($this->getFactory()->getMainLanguage() != $this->getFactory()->getSelectedTranslation()) {
+            $prefix = "_" . $this->getFactory()->getSelectedTranslation();
         }
         return $prefix;
     }
@@ -144,6 +144,7 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
 
     public function getTranslatedConfigurationSettings($name) {
         $prefix = $this->getPrefix();
+        
         if($this->getConfigurationSetting($name.$prefix)) {
             return $this->getConfigurationSetting($name.$prefix);
         }

@@ -53,28 +53,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application hotelusers = createSettings("HotelUsers",
-                "037663a4-6e54-4c63-a54d-9f9dbf91d973",
+            Application hotelusers = createSettings("GoogleRemarketing",
+                "5eda7754-932f-4108-8952-94d66becf3f2",
                 allowed2,
                 "",
-                Application.Type.Webshop, false);
-        hotelusers.isPublic = false;
-        hotelusers.isFrontend = true;
-        hotelusers.moduleId = "other";
+                Application.Type.Marketing, false);
+        hotelusers.isPublic = true;
+        hotelusers.isFrontend = false;
+        hotelusers.moduleId = "Marketing";
         hotelusers.allowedStoreIds = new ArrayList();
-        hotelusers.allowedStoreIds.add("123865ea-3232-4b3b-9136-7df23cf896c6");
+        
         apps.add(hotelusers);
-
-        Application logout = createSettings("Logout",
-                "681e581f-3abb-448d-b935-fb8af9327821",
-                allowed2,
-                "",
-                Application.Type.Webshop, false);
-        logout.isPublic = true;
-        logout.isFrontend = true;
-        logout.moduleId = "other";
-        logout.allowedStoreIds = new ArrayList();
-        apps.add(logout);
         
         return apps;
     }

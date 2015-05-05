@@ -42,22 +42,12 @@ class Page {
             $editormodeclass = "gseditormode";
         }
 
-        $languages = $this->factory->getLanguageCodes();
-        if (count($languages)) {
-            $mainLangCode = $this->factory->getMainLanguage();
-            echo "<div class='gs_language_selection'>";
-            echo "<a href='?setLanguage=$mainLangCode'><div class='gs_language_code gs_lang_code_$mainLangCode'>".$mainLangCode."</div></a>";
-            foreach ($languages as $lang) {
-                echo "<a href='?setLanguage=$lang'><div class='gs_language_code gs_lang_code_$lang'>".$lang."</div></a>";
-            }
-            echo "</div>";
-        }
+        
         
         echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
-            
-            $edited = $this->printArea($layout->areas->{'header'});
+            $edited = $this->printArea($layout->areas->{'header'}, true);
             $editingHeader = false;
             if ($edited) {
                 $editingHeader = true;
@@ -372,7 +362,7 @@ class Page {
         }
     }
 
-    function printCell($cell, $count, $depth, $totalcells, $edit, $parent) {
+    function printCell($cell, $count, $depth, $totalcells, $edit, $parent, $header=false) {
         if(!$this->factory->isEditorMode() && $cell->link) {
             echo "<a href='" . $cell->link . "'>";
         }
@@ -493,6 +483,7 @@ class Page {
         
         echo "<div $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
+        
         if ($this->factory->isMobile() && $gsrowmode == "") {
             $this->printMobileAdminMenu($depth, $cell);
         }
@@ -511,6 +502,10 @@ class Page {
 
         echo "<div $innerstyles class='$gscellinner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
+        if ($header && $depth == 0 && $count == 0) {
+            $this->printLanguageSelection();
+        }
+        
         if($this->factory->isEditorMode()) {
             $this->printCellBox($edit, $cell, $parent, $depth);
         }
@@ -989,7 +984,7 @@ class Page {
         <?
     }
 
-    public function printArea($rowsToPrint) {
+    public function printArea($rowsToPrint, $header=false) {
         $count = 0;
         $editedCellid = null;
         $printed = false;
@@ -1011,7 +1006,7 @@ class Page {
                 echo "</div></div>";
                 $this->printEasyRowMode($row);
             }
-            $this->printCell($row, $count, 0, 0, $isedit, null);
+            $this->printCell($row, $count, 0, 0, $isedit, null, $header);
             if ($isedit) {
                 echo "<div class='gseditrowseperator'><div class='gseditrowseperatorinnerbottom'></div></div>";
             }
@@ -1708,6 +1703,19 @@ class Page {
             return true;
         }
         return false;
+    }
+
+    public function printLanguageSelection() {
+        $languages = $this->factory->getLanguageCodes();
+        if (count($languages)) {
+            $mainLangCode = $this->factory->getMainLanguage();
+            echo "<div class='gs_language_selection'>";
+            echo "<a href='?setLanguage=$mainLangCode'><div class='gs_language_code gs_lang_code_$mainLangCode'>".$mainLangCode."</div></a>";
+            foreach ($languages as $lang) {
+                echo "<a href='?setLanguage=$lang'><div class='gs_language_code gs_lang_code_$lang'>".$lang."</div></a>";
+            }
+            echo "</div>";
+        }
     }
 
 }

@@ -712,13 +712,13 @@ class Factory extends FactoryBase {
         $translation = $this->getSelectedLanguage();
         $this->translation = new GetShopTranslation();
 
-        if (isset($_GET['setLanguage'])) {
-            $translation = $_GET['setLanguage'];
-            $_SESSION['language_selected'] = $translation;
-            $this->getApi()->getStoreManager()->setSessionLanguage($translation);
-        } else if (isset($_SESSION['language_selected'])) {
-            $translation = $_SESSION['language_selected'];
-        }
+//        if (isset($_GET['setLanguage'])) {
+//            $translation = $_GET['setLanguage'];
+//            $_SESSION['language_selected'] = $translation;
+//            $this->getApi()->getStoreManager()->setSessionLanguage($translation);
+//        } else if (isset($_SESSION['language_selected'])) {
+//            $translation = $_SESSION['language_selected'];
+//        }
         return $translation;
     }
 
@@ -771,6 +771,16 @@ class Factory extends FactoryBase {
             $title = $javapage->overridePageTitle;
         }
         return $title;
+    }
+
+    public function renderBottom() {
+        $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
+        foreach ($apps as $app) {
+            $appInstance = $this->getApplicationPool()->createInstace($app);
+            if ($appInstance) {
+                $appInstance->renderBottom();
+            }
+        }
     }
 
 }

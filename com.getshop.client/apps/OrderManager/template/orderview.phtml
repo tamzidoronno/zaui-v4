@@ -46,9 +46,14 @@ $cart = $order->cart;
         <div class='gss_label_content'>
             <?
             $changeText = $canChangeOrder ? "<i class='fa fa-edit gss_changePaymentType'></i> " : "";
-            $paymentApp = new $order->payment->paymentType();
-            echo $changeText.$paymentApp->getName();
-            echo "<br/>";
+            if ($order->payment->paymentType) {
+                $paymentApp = new $order->payment->paymentType();
+                echo $changeText.$paymentApp->getName();
+                echo "<br/>";
+            }
+            
+            
+
             echo $orderStatusText; ?>
             
             <div class="gss_orderview_available_payments">

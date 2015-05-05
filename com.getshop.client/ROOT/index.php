@@ -70,10 +70,6 @@ function init($factory) {
 
 include '../loader.php';
 
-if(isset($_GET['setLanguage'])) {
-    $_SESSION['language_selected'] = $_GET['setLanguage'];
-}
-
 ?><!DOCTYPE html>
 <?
 
@@ -106,16 +102,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     }
     $_SESSION['checkifloggedout'] = true;
 }
-if(isset($factory->getSettings()->languages)) {
-    $languages = json_decode($factory->getSettings()->languages->value);
-    if (is_array($languages)) {
-        echo "<span class='language_selection'>";
-        foreach($languages as $val) {
-            echo "<a href='/?setLanguage=$val'><img src='skin/default/images/languages/$val.png'></a>";
-        }
-        echo "</span>";
-    }
-}
+
 
 ?>
 
@@ -269,6 +256,10 @@ if(isset($factory->getSettings()->languages)) {
         
         <div class="gs_overlay_row_highlighter gs_overlay_row_highlighter_top"></div>
         <div class="gs_overlay_row_highlighter gs_overlay_row_highlighter_bottom"></div>
+        
+        <?
+        $factory->renderBottom();
+        ?>
     </body>
 </html>
 

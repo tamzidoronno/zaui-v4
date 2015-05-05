@@ -712,13 +712,13 @@ class Factory extends FactoryBase {
         $translation = $this->getSelectedLanguage();
         $this->translation = new GetShopTranslation();
 
-        if (isset($_GET['setLanguage'])) {
-            $translation = $_GET['setLanguage'];
-            $_SESSION['language_selected'] = $translation;
-            $this->getApi()->getStoreManager()->setSessionLanguage($translation);
-        } else if (isset($_SESSION['language_selected'])) {
-            $translation = $_SESSION['language_selected'];
-        }
+//        if (isset($_GET['setLanguage'])) {
+//            $translation = $_GET['setLanguage'];
+//            $_SESSION['language_selected'] = $translation;
+//            $this->getApi()->getStoreManager()->setSessionLanguage($translation);
+//        } else if (isset($_SESSION['language_selected'])) {
+//            $translation = $_SESSION['language_selected'];
+//        }
         return $translation;
     }
 

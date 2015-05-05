@@ -70,10 +70,6 @@ function init($factory) {
 
 include '../loader.php';
 
-if(isset($_GET['setLanguage'])) {
-//    $_SESSION['language_selected'] = $_GET['setLanguage'];
-}
-
 ?><!DOCTYPE html>
 <?
 

@@ -269,6 +269,10 @@ if(isset($factory->getSettings()->languages)) {
         
         <div class="gs_overlay_row_highlighter gs_overlay_row_highlighter_top"></div>
         <div class="gs_overlay_row_highlighter gs_overlay_row_highlighter_bottom"></div>
+        
+        <?
+        $factory->renderBottom();
+        ?>
     </body>
 </html>
 

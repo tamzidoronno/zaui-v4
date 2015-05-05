@@ -773,5 +773,15 @@ class Factory extends FactoryBase {
         return $title;
     }
 
+    public function renderBottom() {
+        $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
+        foreach ($apps as $app) {
+            $appInstance = $this->getApplicationPool()->createInstace($app);
+            if ($appInstance) {
+                $appInstance->renderBottom();
+            }
+        }
+    }
+
 }
 ?>

@@ -133,7 +133,7 @@ class FactoryBase {
     }
 
     public function __w($string, $app = null) {
-        return $this->getFactory()->translateKey($string);
+        return $this->__($string);
     }
 
     /**

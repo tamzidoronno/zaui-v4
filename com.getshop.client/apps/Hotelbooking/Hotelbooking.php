@@ -758,7 +758,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         
         $userData = $this->getUserData();
         if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
-            if(!$userData['username']) {
+            if($userData['customer_type'] == "existing" && (!isset($userData['username']) || !$userData['username'])) {
                 return false;
             }
         } else {

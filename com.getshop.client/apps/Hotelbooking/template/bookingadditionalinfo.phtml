@@ -88,6 +88,38 @@
             <? echo $this->__w("Bestillers epost"); ?>
             <span class='contact_input'><input type='text' gsname='userData][users_email]' value='<? echo $this->getPost("users_email"); ?>' class='<? echo $this->validateInput("users_email"); ?>'  placeholder="din@epost.no"></span>
         </div>
-    <? } ?>
+        
+        <? 
+        if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+        ?>
+            <h1 style='margin-top:50px;'>Admin choices</h1>
+            <div class='col-33'>
+                <? echo $this->__w("Billing period"); ?>
+                <span class='contact_input'><select type='text' gsname='userData][overridetype]' value='<? echo $this->getPost("city"); ?>' class='<? echo $this->validateInput("billingtype"); ?>' style='width:100%;'>
+                        <option value='standard'>Standard</option>
+                        <option value='monthly'>Monthly</option>
+                        <option value='total'>Total</option>
+                    </select>
+                </span>
+            </div>
+           <div class='col-33'>
+                <? echo $this->__w("Billing type"); ?>
+                <span class='contact_input'>
+                    <span class='contact_input'><select type='text' gsname='userData][invoice_type]' value='<? echo $this->getPost("city"); ?>' class='<? echo $this->validateInput("invoice_type"); ?>' style='width:100%;'>
+                            <option value='creditcard'>Credit card</option>
+                            <option value='invoice'>Invoice</option>
+                        </select>
+                    </span>
+                </span>
+            </div>
+           <div class='col-33'>
+                <? echo "Override price (leave empty for default)"; ?>
+                <span class='contact_input'><input type='text' gsname='userData][overrideprice]' value='<? echo $this->getPost("users_name"); ?>' class='<? echo $this->validateInput("overrideprice"); ?>'  placeholder="500"></span>
+            </div>
+    <div class="row_seperator"></div>
+            
+        <?
+        }
+    } ?>
     <div class="row_seperator"></div>
 </div>

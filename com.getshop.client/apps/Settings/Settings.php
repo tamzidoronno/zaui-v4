@@ -61,6 +61,13 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("languages", $languages);
     }
 
+    public function getMainMobilePhone() {
+        if (isset($this->getFactory()->getStoreConfiguration()->phoneNumber)) {
+            return $this->getFactory()->getStoreConfiguration()->phoneNumber;
+        }
+        return "";
+    }
+    
     public function getMainEmailAddress() {
         if (isset($this->getFactory()->getStoreConfiguration()->emailAdress)) {
             return $this->getFactory()->getStoreConfiguration()->emailAdress;
@@ -84,6 +91,7 @@ class Settings extends \SystemApplication implements \Application {
         echo "Setting : " .  $_POST['uniqueusersonemail'];
         $storeSettings = $this->getFactory()->getStoreConfiguration();
         $storeSettings->emailAdress = $_POST['emailaddress'];
+        $storeSettings->phoneNumber = $_POST['phoneNumber'];
         $this->getApi()->getStoreManager()->saveStore($storeSettings);
         
         $this->setConfigurationSetting("language", $_POST['language']);

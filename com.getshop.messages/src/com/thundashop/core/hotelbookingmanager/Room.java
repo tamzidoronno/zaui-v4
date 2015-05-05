@@ -11,6 +11,8 @@ public class Room extends DataCommon {
     public String roomName;
     public Boolean isActive = true;
     public Boolean isClean = false;
+    //Flag to display if cleaners need to attend this room.
+    public Boolean needCleaning = false;
     public BookingReference lastReservation = null;
     public Boolean isHandicap = false;
     public Boolean suitedForLongTerm = false;

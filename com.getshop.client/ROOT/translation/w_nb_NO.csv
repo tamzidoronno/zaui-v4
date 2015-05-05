@@ -1,8 +1,6 @@
 ###### framework ######
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
-* If you want to order for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental.;-;Skal du leie for mer enn {maxDays} dager, trykk <a href='?page={partnerPage}' class='partnerlink'>her</a> for langtidsleie.
 * PayOnDelivery fee;-;Gebyr henting 
-You pay up front for the first three months, then you are billed in advanced for the next months of your stay.;-;Du forskuddsbetaler for de første 3 månedene, og blir deretter forhåndsfakturert månedlig i resten av oppholdet ditt.
 0-100 km/h;-;0-100 km/h
 100% width;-;100% bredde
 A confirmation email has been sent to your email.;-;En bekreftelse er sendt til din e-post.
@@ -22,13 +20,12 @@ Add text to your page with one of the best text editors on the web for manipulat
 Add this to the header or to the body to make a new login form, can be added anywhere on the page.;-;Legge denne i headeren eller på hoveddelen av siden for å lage en ny pålogginsområde. 
 Add this to the page and you can allow your customers to search for products.;-;Legg til et produktsøk på siden din, og du gir deretter dine kunder mulighet til å søke opp dine produkter.
 Add youtube vidoes to your page. Just search for the video you want to add and click add.;-;Legg inn youtube videor på websiden din. Bare søk etter den filmen du ønsker og trykk på legg til.
-Additional contact data;-;Ekstra kontaktinformasjon
 Address;-;Adresse
 All fields are required;-;Alle felt er påkrevd
 All fields are required, please fill in the fields in red.;-;Alle felt er påkrevd, vennligst fyll ut felter i rødt.
 All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
-An email has been sent to you with the confirmation code.;-;En godkjennings kode er sendt til din epost.
+An email has been sent with a code to use in step 2.;-;En epost har blitt sendt til deg som kan benyttes i steg 2.s
 Apartment / room;-;Apartment / rom
 Application;-;Applikasjoner
 Apply coupon;-;Bruk kupong
@@ -55,7 +52,6 @@ By list;-;Som Liste
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
 CHECK IN;-;Ankomst
 CHECK OUT;-;Avreise
-Check price;-;Sjekk pris
 CONTINUE;-;FORTSETT
 Cancel order;-;Kanselert ordre
 Candidate name;-;Navn
@@ -75,6 +71,7 @@ Check in;-;Innsjekk
 Check in date;-;Dato for innsjekk
 Check out;-;Utsjekk
 Check out date;-;Dato for utsjekk
+Check price;-;Sjekk pris
 Checkout;-;Utsjekking
 Choose;-;Velg
 City;-;By
@@ -126,10 +123,11 @@ Ecommerce settings;-;Netthandel instillinger
 Edit row;-;Editer raden
 Email;-;Epost
 Email address;-;Epost adresse
-Email sent;-;Epost sendt
+Email is incorrect;-;E-posten er feil
 Email to this address;-;E-post til denne adressen
 Embed your own code into the page;-;Embed din egen kode på websiden
 End date;-;Slutt dato
+Enter a new password.;-;Skriv inn ditt nye passord
 Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
 Fade;-;Fade
@@ -153,7 +151,6 @@ I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
 I need a handicap room;-;Tilpasset handicap
 Image;-;Bilde
-included in all rooms;-;inkludert i alle rom
 Information;-;Informasjon
 Inner background;-;Indre bakgrunn
 Insert column;-;Sett inn kolonne
@@ -162,7 +159,9 @@ Insert column to the right;-;Legg inn en kolonne til høyre
 Insert row;-;Sett inn rad
 Invalid email address;-;Ugyldig epost adresse
 Invalid payment method;-;Ugyldig betalings metode
+Invalid reset code.;-;Ugyldig tilbakestillings kode
 Invoice email;-;Epost Teknisk Leder
+Invoice information;-;Faktura informasjon
 InvoicePayment;-;Faktura
 Is private person;-;Er privat person
 It's all about selling products online, GetShop is where you start!;-;Det handler å selge produkter online, GetShop er hvor du starter!
@@ -170,6 +169,7 @@ Items;-;Varer
 January;-;Januar
 July;-;Juli
 June;-;Juni
+Keep aspect ratio;-;Behold aspect ratio
 Keep original layout in mobile view.;-;Behold original layout på mobilen
 Leave label open;-;La teksten stå åpen
 Left spacing;-;Venstre spacing
@@ -204,6 +204,7 @@ My account;-;Min konto
 My images speeks for itself;-;Mine bilder snakker for seg selv
 My name is:;-;Mitt navn er
 Name;-;Navn
+Name of the one ordering;-;Navn på person som bestiller
 Navigate on cell;-;Naviger på cellen
 Navigate on mouseover;-;Naviger når musen er over
 New message;-;Ny melding
@@ -243,8 +244,6 @@ PRICE PER NIGHT;-;PRIS PR NATT
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
 Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
-Password has been successfully updated;-;Passordet har blitt oppdatert.
-Password has been updated;-;Passordet har blitt oppdatert.
 Password missmatch;-;Passordene stemmer ikke oversens
 Pay on pickup;-;Betal ved levering
 Payment;-;Betaling
@@ -292,6 +291,7 @@ Reminder;-;Påminnelse
 Reminder sent by email;-;En påmindelse har blitt sendt per epost.
 Remove item;-;Fjern vare
 Remove selected tab;-;Fjern valgte tab
+Repeat new password;-;Gjenta passord
 Repeat password;-;Gjenta passord
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
@@ -335,7 +335,6 @@ Slide right;-;Slide til høyre
 Sold out;-;Utsolgt
 Something went wrong while ordering, please contact us;-;Noe gikk galt ved bestillingen, vennligst kontakt oss.
 Sorry;-;Beklager
-Sorry, we do not have any room available between {start} and {end} of this type. Try another one.;-;Beklager, men vi har ingen rom av denne typen tilgjengelig mellom {start} og {end}.
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
 Stage 2 (hp):;-;Stage 2 hp:
@@ -415,6 +414,7 @@ You are now in edit mode for this row, from this manipulate your row by adding m
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You have selected the following duration for your stay;-;Du har valgt følgende tidsperiode for besøket
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
+You pay up front for the first three months, then you are billed in advanced for the next months of your stay.;-;Du forskuddsbetaler for de første 3 månedene, og blir deretter forhåndsfakturert månedlig i resten av oppholdet ditt.
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 Your email;-;Din epost
 Your message has been delivered;-;Din melding har blitt sendt.
@@ -424,7 +424,6 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
-Your reservations has now been completed;-;Din reservasjon er nå registrert.
 Your savings;-;Du sparer
 Your you for your order;-;Deg du for dine ordrer
 available room;-;tilgjengelige rom
@@ -435,6 +434,7 @@ description;-;Beskrivelse
 email;-;E-post
 forgot?;-;Glemt?
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
+included in all rooms;-;inkludert i alle rom
 included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn

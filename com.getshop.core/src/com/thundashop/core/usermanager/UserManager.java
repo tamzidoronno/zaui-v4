@@ -740,6 +740,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private boolean forceUniqueEmailAddress(User user) throws ErrorException {
+        
+        if(user.emailAddress == null || user.emailAddress.isEmpty()) {
+            return false;
+        }
+        
         Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
         
         if (settingsApplication == null) {

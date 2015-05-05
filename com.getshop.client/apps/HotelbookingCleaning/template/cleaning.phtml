@@ -125,7 +125,7 @@ function printGuestTable($bookingData, $roomlist, $arriving) {
                 echo "</td>";
                 echo "<td>";
                 foreach ($reservation->roomsReserved as $reservedRoom) {
-                    if ($roomlist[$reservedRoom->roomId]->isClean || (isset($reservation->isApprovedForCheckIn->{$reservedRoom->roomId}) && $reservation->isApprovedForCheckIn->{$reservedRoom->roomId} && $arriving)) {
+                    if (!$roomlist[$reservedRoom->roomId]->needCleaning) {
                         echo "<span style='line-height: 20px;' class='alreadyready'>room is marked as ready</span>";
                     } else {
                         echo "<span style='line-height: 20px;' class='markroomasready' roomId='" . $reservedRoom->roomId . "'>Mark room as ready</span>";
@@ -189,7 +189,7 @@ function printIntervalCleaning($reservations, $roomlist, $scope) {
             echo "</td>";
             echo "<td>";
             foreach ($reservation->roomIds as $roomId) {
-                if ($roomlist[$roomId]->isClean || (isset($reservation->isApprovedForCheckIn->{$roomId}) && $reservation->isApprovedForCheckIn->{$roomId} && $arriving)) {
+                if (!$roomlist[$roomId]->needCleaning) {
                     echo "<span style='line-height: 20px;' class='alreadyready'>room is already ready</span>";
                 } else {
                     echo "<span style='line-height: 20px;' class='markroomasready' roomId='" . $roomId . "'>Mark room as ready</span>";

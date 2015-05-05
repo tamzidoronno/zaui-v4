@@ -12,6 +12,9 @@ class core_hotelbookingmanager_Room extends core_common_DataCommon  {
 	/** @var String */
 	public $isClean;
 
+	/** @var String */
+	public $needCleaning;
+
 	/** @var core_hotelbookingmanager_BookingReference */
 	public $lastReservation;
 
@@ -26,6 +29,9 @@ class core_hotelbookingmanager_Room extends core_common_DataCommon  {
 
 	/** @var String */
 	public $lastMarkedAsDirty;
+
+	/** @var String */
+	public $warnedAboutNotMove;
 
 }
 ?>

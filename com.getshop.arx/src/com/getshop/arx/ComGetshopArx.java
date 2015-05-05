@@ -54,9 +54,9 @@ import org.apache.http.params.HttpParams;
  */
 public class ComGetshopArx {
 
-    private String hostname = "https://192.168.101.18:5002/arx/import";
-    private String apiAddress = "www.getshop.com";
-    private Integer backendport = 3224;
+    private String hostname = "https://92.220.61.142:5002/arx/import";
+    private String apiAddress = "localhost";
+    private Integer backendport = 25554;
     
 //    private String hostname = "https://192.168.1.103:5002/arx/import";
 //    private Integer backendport = 25554;
@@ -210,7 +210,6 @@ public class ComGetshopArx {
                     }
 
                     roomInfo.roomState = RoomInfoState.externalDoorGranted;
-                    user.doorsToAccess.add("ytterdorer");
                     count++;
 
                     updateArx(user, reference, roomInfo, bdata);
@@ -420,7 +419,7 @@ public class ComGetshopArx {
             user.startDate = new Date();
         }
         user.code = roomInfo.code;
-        user.doorsToAccess.add("Ytterdører");
+        user.doorsToAccess.add("Ytterdører hotell");
         user.reference = reference.bookingReference + "";
         addToLog("Generating arx user: " + user.firstName + " - " + user.lastName + " : " + user.startDate + " - " + user.endDate);
         return user;

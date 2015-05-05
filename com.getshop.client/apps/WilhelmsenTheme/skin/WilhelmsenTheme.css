@@ -207,3 +207,26 @@ position: absolute;
 top: 20px;
 width: 130px; }
 body { font-size: 12px; line-height: 18px; background-color:#E8DCCC; }
+
+.gs_language_selection .gs_lang_code_nb_NO {
+    background-image: url('{IMAGEFOLDER}/flag_norwegian.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 35px;
+}
+
+.gs_language_selection .gs_lang_code_en_en {
+    background-image: url('{IMAGEFOLDER}/flag_english.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 30px;
+}
+.gs_language_selection {
+    border: solid 0px;
+    position: absolute;
+    right: 10px;
+}

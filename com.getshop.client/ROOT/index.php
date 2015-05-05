@@ -106,16 +106,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     }
     $_SESSION['checkifloggedout'] = true;
 }
-if(isset($factory->getSettings()->languages)) {
-    $languages = json_decode($factory->getSettings()->languages->value);
-    if (is_array($languages)) {
-        echo "<span class='language_selection'>";
-        foreach($languages as $val) {
-            echo "<a href='/?setLanguage=$val'><img src='skin/default/images/languages/$val.png'></a>";
-        }
-        echo "</span>";
-    }
-}
+
 
 ?>
 

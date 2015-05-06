@@ -8,13 +8,9 @@ import com.thundashop.core.common.ManagerBase;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,9 +26,11 @@ public class GetShopSessionScope implements Scope {
     public Object get(String name, ObjectFactory<?> objectFactory) {
         long threadId = Thread.currentThread().getId();
         String storeId = threadStoreIds.get(threadId);
+        
         if (storeId == null) {
             throw new NullPointerException("There is scoped bean created without being in a context of a store, object: " + name);
         }
+        
         String nameWithStoreId = name + "_" + storeId;
         
         if (!objectMap.containsKey(nameWithStoreId)) {
@@ -43,6 +41,12 @@ public class GetShopSessionScope implements Scope {
                     managerBase.storeId = storeId;
                     managerBase.initialize();
                 }
+                
+                if (object instanceof GetShopSessionObject) {
+                    GetShopSessionObject obj = (GetShopSessionObject) object;
+                    obj.storeId = storeId;
+                }
+                
                 objectMap.put(nameWithStoreId, object);
             } catch (BeansException exception) {
                 System.out.println("Got an bean exception ? ");

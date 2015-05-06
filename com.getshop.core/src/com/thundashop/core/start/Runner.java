@@ -9,13 +9,8 @@ import com.thundashop.core.socket.WebInterface2;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import java.io.PrintWriter;
 import java.util.UUID;
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.java_websocket.server.WebSocketServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -34,7 +29,7 @@ public class Runner {
         java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
         java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
 
-        PrintWriter out = new PrintWriter("secret.txt");
+        PrintWriter out = new PrintWriter("secret.txt") ;
         out.write(OVERALLPASSWORD+"\n");
         out.close();
 

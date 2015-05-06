@@ -4,7 +4,6 @@ Address;-;Straatnaam + huisnummer
 All fields are required;-;Alle velden zijn verplicht in te vullen
 All fields are required.;-;Alle velden moet ingevuld worden
 All orders;-;Alle bestellingen
-An email has been sent to you with the confirmation code.;-;Er is een email verzonden met je bevestigingscode
 Application;-;Applicatie 
 Apply coupon;-;Korting toevoegen
 April;-;April
@@ -35,7 +34,6 @@ Delete image;-;Verwijder afbeelding
 Did not find the specified company, please check your company number;-;De opgegeven firma werd niet gevonden, kijk het nummer nog eens na
 Download ebill;-;Download eBill
 Email;-;Email
-Email sent;-;Email verzonden
 End date;-;Einddatum
 Enter the code sent to your email.;-;Code invoeren die u per sms is gestuurd
 Failed;-;Mislukt
@@ -80,8 +78,6 @@ Our local time is:;-;Onze locale tijd is:
 Password;-;Wachtwoord
 Password cannot be empty;-;Wachtwoord veld mag niet leeg zijn
 Password does not match, please re enter password;-;Wachtwoorden komen niet overeen, gelieve nogmaals in te geven
-Password has been successfully updated;-;Wachtwoord succesvol geupdate
-Password has been updated;-;Wachtwoord geupdate
 Password missmatch;-;Wachtwoorden komen niet overeen
 Payment;-;Betaling
 Payment failed;-;Betaling niet gelukt

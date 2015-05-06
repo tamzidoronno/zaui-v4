@@ -650,7 +650,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             Room room = getRoom(roomInfo.roomId);
             Visitors visitor = roomInfo.visitors.get(0);
             String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
-            messageManager.sendSms(visitor.phone, message);
+            sendSms(visitor, message);
         }
         
         if(roomInfo.roomState == RoomInformation.RoomInfoState.accessGranted) {
@@ -661,10 +661,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             room.lastMarkedAsDirty = new Date();
             saveRoom(room);
             
+            String email = visitor.email;
+            String copyadress = storeManager.getMyStore().configuration.emailAdress;
+
+            
+            if(email == null || email.isEmpty()) {
+                email = copyadress;
+            }
+            
             String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
-            messageManager.sendSms(visitor.phone, message);
-            String copyadress = "toreplaced@test.no";       
-            messageManager.sendMail(visitor.email,visitor.name, room.roomName + " er nå klart / " + room.roomName + " is now ready.", message,  copyadress, copyadress);
+            sendSms(visitor, message);
+            messageManager.sendMail(email,visitor.name, room.roomName + " er nå klart / " + room.roomName + " is now ready.", message,  copyadress, copyadress);
         }
     }
     
@@ -783,34 +790,34 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         HashMap<String, String> attachments = new HashMap();
         attachInvioce(attachments, bdata);
         attachRentalTerms(attachments, bdata);
-        attachHouseRules(attachments);
+        try {
+            attachHouseRules(attachments);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
         
-        String copyadress = "toreplaced@test.no";       
-//        String copyadress = getSettings("Settings").get("mainemailaddress").value;
+        String email = visitor.email;
+        String copyadress = storeManager.getMyStore().configuration.emailAdress;       
+        
+        if(email == null || email.isEmpty()) {
+            email = copyadress;
+        }
 
-        messageManager.sendMailWithAttachments(visitor.email, visitor.name, title, message, copyadress, copyadress, attachments);
-        ArxLogEntry newEntry = new ArxLogEntry();
-        newEntry.message = msg;
-        saveObject(newEntry);
-        logEntries.add(newEntry);
+        messageManager.sendMailWithAttachments(email, visitor.name, title, message, copyadress, copyadress, attachments);
     }
 
     private void sendSms(Visitors visitor, String sms) {
         String msg = "";
         try {
-            msg = "Sending sms to " + visitor.phone + " title: " + visitor.name + " message: " + sms;
-            messageManager.sendSms(visitor.phone, sms);
-            ArxLogEntry newEntry = new ArxLogEntry();
-            newEntry.message = msg;
-            saveObject(newEntry);
+            String phone = visitor.phone;
+            if(phone == null || phone.isEmpty()) {
+                phone = storeManager.getMyStore().configuration.phoneNumber;
+            }
+            msg = "Sending sms to " + phone + " title: " + visitor.name + " message: " + sms;
+            messageManager.sendSms(phone, sms);
         }catch(Exception e) {
             msg = "Failed sending sms to " + visitor.phone + " title: " + visitor.name + " message: " + sms;
         }
-        
-        ArxLogEntry newEntry = new ArxLogEntry();
-        newEntry.message = msg;
-        saveObject(newEntry);
-        logEntries.add(newEntry);
         
     }
 
@@ -1013,24 +1020,35 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         todayCal.setTime(new Date());
         
         String today = todayCal.get(Calendar.DAY_OF_YEAR) + "-" + todayCal.get(Calendar.YEAR);
+        
+        if(room.isClean) {
+            room.needCleaning = false;
+            return;
+        }
+        
+        if(room.lastMarkedAsDirty != null) {
+            Calendar lastMarkedDirty = Calendar.getInstance();
+            lastMarkedDirty.setTime(room.lastMarkedAsDirty);
+            String lastMarkedString = lastMarkedDirty.get(Calendar.DAY_OF_YEAR) + "-" + lastMarkedDirty.get(Calendar.YEAR);
+            if(lastMarkedString.equals(today)) {
+                room.needCleaning = false;
+                return;
+            }
+        }
+        
         for(Date d : room.cleaningDates) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(d);
             String cleanedDay = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
             if(cleanedDay.equals(today)) {
-                room.isClean = true;
-            }
-            
-            if(room.lastMarkedAsDirty != null) {
-                Calendar lastMarkedDirty = Calendar.getInstance();
-                lastMarkedDirty.setTime(room.lastMarkedAsDirty);
-                String lastMarkedString = lastMarkedDirty.get(Calendar.DAY_OF_YEAR) + "-" + lastMarkedDirty.get(Calendar.YEAR);
-                if(lastMarkedString.equals(today)) {
-                    room.isClean = true;
-                }
+                room.needCleaning = false;
+                return;
             }
         }
+        
+        room.needCleaning = true;
     }
+    
 
     private String formatDate(Date startDate) {
         String startday = new SimpleDateFormat("d").format(startDate);

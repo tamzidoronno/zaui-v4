@@ -1,7 +1,10 @@
 ###### framework ######
+Bestillers epost;-;
 Display this cell when logged on (it will always be visible for administrators);-;
 Display this cell when logged out;-;
 Settings;-;
+Skal du leie for mer enn {maxDays} dager, trykk <a href='?page={partnerPage}' class='partnerlink'>her</a> for langtidsleie;-;
+Sorry, this user does not exists, are you sure this is the correct username / email?;-;
 User level for cell;-;
 
 

@@ -201,8 +201,14 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return "invalid";
         }
         
+        if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            if($name == "users_email") {
+                return "";
+            }
+        }
+        
         $data = $this->getUserData();
-        if(!$data[$name]) {
+        if(!isset($data[$name]) || !$data[$name]) {
             return "invalid";
         }
         
@@ -219,6 +225,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
         
         if(!$data->{$field}) {
+            if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+                if($field != "name") {
+                    return "";
+                }
+            }
+            
             return "invalid";
         }
         
@@ -895,6 +907,15 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
         if(isset($_POST['data']['referenceNumber'])) {
             $info->customerReference = $_POST['data']['referenceNumber'];
+        }
+        if(isset($_POST['data']['userdata']['overrideprice'])) {
+            $info->overridePrice = $_POST['data']['userdata']['overrideprice'];
+        }
+        if(isset($_POST['data']['userdata']['invoice_type'])) {
+            $info = $_POST['data']['userdata']['invoice_type'];
+        }
+        if(isset($_POST['data']['userdata']['overrideprice'])) {
+            $info->overridePrice = $_POST['data']['userdata']['overrideprice'];
         }
         
         $this->getManager()->updateAdditionalInformation($info);

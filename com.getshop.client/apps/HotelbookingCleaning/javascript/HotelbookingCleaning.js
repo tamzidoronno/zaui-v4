@@ -1,5 +1,9 @@
 app.HotelbookingCleaning = {
     markReady : function() {
+        var confirmed = confirm("Please confirm that this room has been cleaned.");
+        if(!confirmed) {
+            return;
+        }
         var data = {
             "roomId" : $(this).attr('roomId')
         }

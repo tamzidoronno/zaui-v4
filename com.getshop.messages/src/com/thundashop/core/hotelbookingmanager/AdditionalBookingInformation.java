@@ -12,4 +12,7 @@ public class AdditionalBookingInformation {
     public Boolean isPartner = false;
     public String roomProductId = null;
     public String partnerType = "";
+    public String invoicetype = "creditcard";
+    public String billingPeriode = "";
+    public Double overridePrice = null;
 }

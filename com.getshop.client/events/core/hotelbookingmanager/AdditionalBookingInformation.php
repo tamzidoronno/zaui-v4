@@ -27,5 +27,14 @@ class core_hotelbookingmanager_AdditionalBookingInformation {
 	/** @var String */
 	public $partnerType;
 
+	/** @var String */
+	public $invoicetype;
+
+	/** @var String */
+	public $billingPeriode;
+
+	/** @var String */
+	public $overridePrice;
+
 }
 ?>

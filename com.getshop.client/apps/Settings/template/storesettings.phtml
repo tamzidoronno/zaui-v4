@@ -62,6 +62,14 @@ $languages['fi_FI'] = "Finish";
         </div>
     </div>
 
+    <div class="textfield gss_setting"  id="mainmobilephone">
+        <span class="title"><?php echo $this->__f("Main mobile phone number"); ?></span>
+        <input type="textfield" gs_model='storesettings' gs_model_attr='phoneNumber' value="<? echo $this->getMainMobilePhone(); ?>">
+        <div class="description">
+            <?php echo $this->__("This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address."); ?>
+        </div>
+    </div>
+
     <div class="textfield gss_setting"  id="title">
         <span class="title"><?php echo $this->__("Title"); ?></span>
         <input type="textfield" gs_model='storesettings' gs_model_attr='title' value="<? echo $this->getTitle(); ?>">

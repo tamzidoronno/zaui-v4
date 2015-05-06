@@ -199,8 +199,16 @@ public class InvoiceGenerator {
         // Price bottom
         Double total = order.cart.getTotal(true)+order.cart.getShippingCost();
         String totalString = String.format("%.2f", total);
-        writeText(totalString.split("\\.")[0], 230, 45, false, 12);
-        writeText(totalString.split("\\.")[1], 310, 45, false, 12);
+        if(totalString.contains(".")) {
+            writeText(totalString.split("\\.")[0], 230, 45, false, 12);
+            writeText(totalString.split("\\.")[1], 310, 45, false, 12);
+        } else if(totalString.contains(",")) {
+            writeText(totalString.split(",")[0], 230, 45, false, 12);
+            writeText(totalString.split(",")[1], 310, 45, false, 12);
+        } else {
+            writeText(totalString, 230, 45, false, 12);
+            writeText("00", 310, 45, false, 12);
+        }
         writeText(totalString, 230, 308, false, 12);
         writeText(details.accountNumber, 400, 45, false, 12);
         

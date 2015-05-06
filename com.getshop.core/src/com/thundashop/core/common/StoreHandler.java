@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.common;
 
+import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.appmanager.data.ApiCallsInUse;
 import com.thundashop.core.appmanager.data.Application;
@@ -30,6 +31,7 @@ public class StoreHandler {
     private String storeId;
     private HashMap<String, Session> sessions = new HashMap();
     private GetShopSessionScope scope;
+    private ArrayList<GetShopSessionObject> sessionScopedBeans;
 
     public StoreHandler(String storeId) {
         this.storeId = storeId;
@@ -122,7 +124,6 @@ public class StoreHandler {
         try {
             ManagerBase manager = getManager(aClass);
             Object result = executeMethod.invoke(manager, argObjects);
-            manager.updateTranslation(result, true);
             return result;
         } catch (IllegalAccessException ex) {
             throw new ErrorException(84);
@@ -174,7 +175,18 @@ public class StoreHandler {
         for (ManagerBase base : messageHandler) {
             base.session = session;
         }
-
+        
+        // Set sessions for maps
+        try {
+            sessionScopedBeans = new ArrayList<>(AppContext.appContext.getBeansOfType(GetShopSessionObject.class).values());
+            for (GetShopSessionObject base : sessionScopedBeans) {
+                base.setSession(session);
+            }
+        } catch (BeansException ex) {
+            System.out.println("Throws bean exception?");
+        }
+        
+        
         try {
             session.currentUser = userManager.getLoggedOnUser();
         } catch (ErrorException ex) {
@@ -185,6 +197,9 @@ public class StoreHandler {
     private void clearSessionObject() {
         for (ManagerBase base : messageHandler) {
             base.session = null;
+        }
+        for (GetShopSessionObject base : sessionScopedBeans) {
+            base.clearSession();
         }
     }
 

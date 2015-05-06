@@ -409,6 +409,7 @@ class Factory extends FactoryBase {
     }
 
     public function run($json = false) {
+        $this->sendCurrentLanguage();
         $this->runPreprocess();
         $this->renderContent($json);
         $this->runPostProcess();
@@ -712,13 +713,12 @@ class Factory extends FactoryBase {
         $translation = $this->getSelectedLanguage();
         $this->translation = new GetShopTranslation();
 
-//        if (isset($_GET['setLanguage'])) {
-//            $translation = $_GET['setLanguage'];
-//            $_SESSION['language_selected'] = $translation;
-//            $this->getApi()->getStoreManager()->setSessionLanguage($translation);
-//        } else if (isset($_SESSION['language_selected'])) {
-//            $translation = $_SESSION['language_selected'];
-//        }
+        if (isset($_GET['setLanguage'])) {
+            $translation = $_GET['setLanguage'];
+            $_SESSION['language_selected'] = $translation;
+        } else if (isset($_SESSION['language_selected'])) {
+            $translation = $_SESSION['language_selected'];
+        }
         return $translation;
     }
 
@@ -780,6 +780,12 @@ class Factory extends FactoryBase {
             if ($appInstance) {
                 $appInstance->renderBottom();
             }
+        }
+    }
+
+    public function sendCurrentLanguage() {
+        if (isset($_SESSION['language_selected'])) {
+            $this->getApi()->getStoreManager()->setSessionLanguage($_SESSION['language_selected']);
         }
     }
 

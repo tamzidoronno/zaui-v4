@@ -1,21 +1,13 @@
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
- */
+ */ 
 package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSessionScope;
-import com.google.gson.Gson;
-import com.thundashop.app.contentmanager.data.ContentData;
-import com.thundashop.core.applications.StoreApplicationPool;
-import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.pagemanager.PageManager;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -139,7 +131,6 @@ public class ManagerBase {
     }
 
     public void saveObject(DataCommon data) throws ErrorException {
-        updateTranslation(data, false);
         data.storeId = storeId;
         databaseSaver.saveObject(data, credentials);
     }
@@ -155,40 +146,5 @@ public class ManagerBase {
 
     protected String getManagerSetting(String key) {
         return managerSettings.keys.get(key);
-    }
-
-    public void updateTranslation(Object data, boolean loading) {
-        StoreApplicationPool storeApplicationPool = (StoreApplicationPool)scope.getManagerBasedOnNameAndStoreId("scopedTarget.storeApplicationPool", storeId);
-        
-        // If there is no session there is most likely no translation to update?
-        if (getSession() == null || storeApplicationPool == null || data == null) {
-            return;
-        }
-
-        Application settingsApplication = storeApplicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
-        if (settingsApplication == null) {
-            return;
-        }
-       
-        
-        
-        HashMap<String, Setting> settings = settingsApplication.settings;
-        
-        if(settings != null && settings.containsKey("languages")) {
-            Gson sgon = new Gson();
-            Setting langsetting = settings.get("languages");
-            List<String> langcodes = sgon.fromJson(langsetting.value, ArrayList.class);
-            
-            if (langcodes == null) {
-                return;
-            }
-            
-            if(langcodes.size() > 0) {
-                TranslationHelper helper = new TranslationHelper(getSession().language, "nb_NO");
-                
-                helper.checkFields(data, loading);
-            }
-        }
-
     }
 }

@@ -1,6 +1,9 @@
 package com.thundashop.core.listmanager;
 
+import com.getshop.scope.GetShopDataMap;
+import com.getshop.scope.GetShopDataMapRepository;
 import com.getshop.scope.GetShopSession;
+import com.thundashop.app.contentmanager.data.ContentData;
 import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
@@ -30,7 +33,13 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class ListManager extends ManagerBase implements IListManager {
-    public Map<String, EntryList> allEntries = new HashMap();
+    private Map<String, EntryList> allEntries;
+    
+    @Autowired
+    public void createGetShopDataMaps(GetShopDataMapRepository<String, EntryList> repository) {
+        this.allEntries = repository.createNew(this);
+    }
+    
     private Integer currentUniqueCounter = -1;
     
     @Autowired
@@ -174,6 +183,7 @@ public class ListManager extends ManagerBase implements IListManager {
     private void saveList(String listId) throws ErrorException {
         EntryList entry = allEntries.get(listId);
         entry.storeId = storeId;
+        allEntries.put(listId, entry);
         saveToDatabase(entry);
     }
 

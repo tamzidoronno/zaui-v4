@@ -1,5 +1,6 @@
 package com.thundashop.core.productmanager;
 
+import com.getshop.scope.GetShopDataMapRepository;
 import com.thundashop.app.content.ContentManager;
 import com.thundashop.core.common.*;
 import com.thundashop.core.common.ExchangeConvert;
@@ -27,6 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,7 @@ public abstract class AProductManager extends ManagerBase {
 
     HashMap<String, ProductList> productList = new HashMap();
 
-    protected HashMap<String, Product> products = new HashMap();
+    public Map<String, Product> products;
     AttributeData pool = new AttributeData();
     AttributeSummary cachedResult;
     public ProductConfiguration productConfiguration = new ProductConfiguration();
@@ -52,6 +54,11 @@ public abstract class AProductManager extends ManagerBase {
 
     @Autowired
     public ListManager listManager;
+    
+    @Autowired
+    public void createProductMap(GetShopDataMapRepository<String, Product> repository) {
+        this.products = repository.createNew(this);
+    }
 
     protected Product finalize(Product product) throws ErrorException {
         if (product != null && product.pageId != null && product.page == null) {
@@ -98,6 +105,8 @@ public abstract class AProductManager extends ManagerBase {
                 product.imagesAdded.add(image.fileId);
             }
         }
+        
+//        updateTranslation(product);
         return product;
     }
 

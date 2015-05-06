@@ -3,10 +3,7 @@ namespace ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a;
 
 /*  @var $this \ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a/ImageDisplayer */
 
-$prefix = "";
-if($this->getFactory()->getMainLanguage() != $this->getFactory()->getSelectedLanguage()) {
-    $prefix = "_" . $this->getFactory()->getSelectedLanguage();
-}
+$prefix = $this->getPrefix();
 
 
 $link = $this->getConfigurationSetting("link".$prefix);

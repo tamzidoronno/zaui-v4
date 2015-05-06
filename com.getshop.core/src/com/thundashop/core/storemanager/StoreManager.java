@@ -56,7 +56,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         }
         
         Store store = getMyStore();
-        updateTranslation(store, false);
 
         store.configuration = config;
         store.registrationUser = null;

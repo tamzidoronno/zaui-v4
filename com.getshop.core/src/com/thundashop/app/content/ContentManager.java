@@ -1,5 +1,7 @@
 package com.thundashop.app.content;
 
+import com.getshop.scope.GetShopDataMap;
+import com.getshop.scope.GetShopDataMapRepository;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.app.contentmanager.data.ContentData;
 import com.thundashop.core.common.*;
@@ -18,8 +20,13 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class ContentManager extends ManagerBase implements IContentManager {
     private int id=1002;
+
+    private GetShopDataMap<String, ContentData> memory;
     
-    HashMap<String, ContentData> memory = new HashMap<String, ContentData>();
+    @Autowired
+    public void createGetShopDataMaps(GetShopDataMapRepository<String, ContentData> repository) {
+        this.memory = repository.createNew(this);
+    }
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -46,7 +53,7 @@ public class ContentManager extends ManagerBase implements IContentManager {
         
         data.content = content;
         saveObject(data);
-        memory.put(contentId,data);
+        memory.put(contentId, data);
     }
 
     @Override
@@ -66,7 +73,6 @@ public class ContentManager extends ManagerBase implements IContentManager {
     @Override
     public String getContent(String id) throws ErrorException {
         ContentData object = getContentData(id);
-        updateTranslation(object, true);
         return object.content;
     }
 
@@ -89,6 +95,5 @@ public class ContentManager extends ManagerBase implements IContentManager {
         }
         
         return memory.get(id);
-    }
-    
+    }   
 }

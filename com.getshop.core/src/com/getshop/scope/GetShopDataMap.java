@@ -134,7 +134,12 @@ public class GetShopDataMap<K, V>  implements Map<K,V>  {
         boolean saved = dataCommon.updateTranslation(currentLanguage);
         
         if (saved) {
-            if (parentManager != null && databaseSaver != null) {
+            if (parentManager != null 
+                    && databaseSaver != null 
+                    && dataCommon.storeId != null 
+                    && dataCommon.id != null 
+                    && !dataCommon.storeId.equals("") 
+                    && !dataCommon.id.equals("")) {
                 databaseSaver.saveObject(dataCommon, parentManager.credentials);
             }
         }

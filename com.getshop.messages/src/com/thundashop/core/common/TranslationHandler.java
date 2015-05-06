@@ -2,6 +2,7 @@
 package com.thundashop.core.common;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.MalformedJsonException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -93,7 +94,11 @@ public class TranslationHandler implements Serializable {
                 
                 
                 if (languageHasChanged && oldValueInCurrentLanguage != null) {
-                    field.set(this, gson.fromJson(oldValueInCurrentLanguage, field.getGenericType()));
+                    try {
+                        field.set(this, gson.fromJson(oldValueInCurrentLanguage, field.getGenericType()));
+                    } catch (Exception ex2) {
+                        // Not as Json ? We can not do anything with that.
+                    }
                     translationStrings.put("current_key_lang_"+field.getName(), language);
                 } 
                 
@@ -108,8 +113,6 @@ public class TranslationHandler implements Serializable {
                     field.set(this, gson.fromJson(newValueInCurrentLanguage, field.getGenericType()));
                     changed = true;
                 }
-
-
             }
         }
         

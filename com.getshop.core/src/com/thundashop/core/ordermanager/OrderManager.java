@@ -796,16 +796,31 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> allOrders = getOrders(new ArrayList(), null, null);
         List<Order> notTransferred = new ArrayList();
         
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.HOUR, -24);
+        Date twentyFourHoursAgo = cal.getTime();
+        
         for (Order order : allOrders) {
             if (order.testOrder) {
                 continue;
             }
             
-            if (!order.transferredToAccountingSystem && order.status == Order.Status.PAYMENT_COMPLETED && order.captured) {
+            if (order.transferredToAccountingSystem) {
+                continue;
+            }
+            
+            // We do not transfer order until them are atleast 
+            if (order.createdDate.after(twentyFourHoursAgo)) {
+                System.out.println("Skipping : " + order.incrementOrderId + " date: " + order.createdDate);
+                continue;
+            }
+            
+            if (order.status == Order.Status.PAYMENT_COMPLETED && order.captured) {
                 notTransferred.add(order);
             }
             
-            if (!order.transferredToAccountingSystem && order.payment != null && order.payment.paymentType.equals("ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment") && order.status == Order.Status.PAYMENT_COMPLETED) {
+            if (order.payment != null && order.payment.paymentType.equals("ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment") && order.status == Order.Status.PAYMENT_COMPLETED) {
                 notTransferred.add(order);
             }
         }

@@ -6,7 +6,12 @@ $priceText = $this->__w("PRICE PER NIGHT");
 $selectRoomButton = $this->__w("SELECT ROOM");
 $selectedRoomButton = $this->__w("SELECTED ROOM");
 $headingtext = $this->__w("You have selected the following duration for your stay");
-    
+
+
+$bdata = $this->getBookingData();
+if(!$bdata || sizeof($bdata->references) == 0) {
+    $this->checkavailability(time(), time()+86400);
+}
 ?>
 <div class="top_row_container">
     <div class='title'><h1><? echo $headingtext; ?></h1></div>

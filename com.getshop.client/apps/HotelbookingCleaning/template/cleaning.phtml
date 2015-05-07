@@ -20,10 +20,10 @@ foreach ($rooms as $room) {
 
 echo "<br><br>";
 echo "<h1>Guests arriving today</h1>";
-printGuestTable($reservations, $roomlist, true);
+printGuestTable($reservations, $roomlist, true,0);
 echo "<br><br>";
 echo "<h1>Guests leaving today</h1>";
-printGuestTable($reservations, $roomlist, false);
+printGuestTable($reservations, $roomlist, false,0);
 echo "<br><br>";
 printCleaningRows($reservations, $roomlist, 5, $orders, $api);
 
@@ -99,7 +99,7 @@ function printCleaningRows($bookingData, $roomlist, $interval, $orders, $api) {
     echo "</table>";
 }
 
-function printGuestTable($bookingData, $roomlist, $arriving) {
+function printGuestTable($bookingData, $roomlist, $arriving, $datediff) {
 
     $found = false;
     echo "<div style='background-color:#efefef; width:100%; padding:5px;'>";
@@ -115,7 +115,7 @@ function printGuestTable($bookingData, $roomlist, $arriving) {
             } else {
                 $startdate = strtotime($reservation->endDate);
             }
-            if (date("Ymd", time()) == date("Ymd", $startdate)) {
+            if (date("Ymd", time()+$datediff) == date("Ymd", $startdate)) {
                 $found = true;
                 echo "<tr>";
                 echo "<td valign='top' width='150'>";
@@ -236,6 +236,10 @@ foreach($roomlist as $room) {
     echo "<td style='font-size: 20px;padding: 7px;cursor:pointer;' class='$cleaned markroomasready' roomId='".$room->id."'>" . $room->roomName . "</td>";
 }
 echo "</tr></table>";
+echo "<br><br>";
+echo "<h1>Guests arriving tomorrow</h1>";
+printGuestTable($reservations, $roomlist, true,86400);
+
 
 ?>
 <br><br><br>

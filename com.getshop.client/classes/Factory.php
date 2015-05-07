@@ -786,6 +786,8 @@ class Factory extends FactoryBase {
     public function sendCurrentLanguage() {
         if (isset($_SESSION['language_selected'])) {
             $this->getApi()->getStoreManager()->setSessionLanguage($_SESSION['language_selected']);
+        } else {
+            $this->getApi()->getStoreManager()->setSessionLanguage(null);
         }
     }
 

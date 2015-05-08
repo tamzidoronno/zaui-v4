@@ -48,6 +48,16 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $reference = $_POST['data']['referenceid'];
         $newRoomId = $_POST['data']['roomId'];
         $oldRoom = $_POST['data']['oldroom'];
+        
+        $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
+        
+        foreach($rooms as $room) {
+            if($room->roomName == $newRoomId) {
+                $newRoomId = $room->id;
+                break;
+            }
+        }
+        
         $this->getApi()->getHotelBookingManager()->moveRoomOnReference($reference, $oldRoom, $newRoomId);
     }
     
@@ -66,6 +76,15 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $visitors[] = $toupdate;
         
         $this->getApi()->getHotelBookingManager()->updateBookingInformation($visitors, $bookinguserinfo, $roomid, $referenceid);
+    }
+    
+    public function extendStay() {
+        $data = $_POST['data'];
+        $reference = $_POST['data']['reference'];
+        $newdate = $_POST['data']['newdate'];
+        $bdataid = $_POST['data']['bdataid'];
+        
+        echo $this->getApi()->getHotelBookingManager()->extendStay($reference, strtotime($newdate), $bdataid);
     }
     
     public function displayRoomBoxInfo() {
@@ -198,7 +217,9 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $settings->emailWelcomeNO = $_POST['data']['arx_welcomeEmailNO'];
         $settings->emailWelcomeTitle = $_POST['data']['arx_welcomeemail_title'];
         $settings->emailWelcomeTitleNO = $_POST['data']['arx_welcomeemail_title_no'];
-
+        $settings->extendStay = $_POST['data']['extend_stay'];
+        $settings->extendStayNo = $_POST['data']['extend_stayNo'];
+        
         $this->setConfigurationSetting("arx_server", $settings->address);
         $this->setConfigurationSetting("arx_username", $settings->username);
         $this->setConfigurationSetting("arx_password", $settings->password);
@@ -211,6 +232,8 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("arx_welcomeEmailNO", $settings->emailWelcomeNO);
         $this->setConfigurationSetting("arx_welcomeemail_title", $settings->emailWelcomeTitle);
         $this->setConfigurationSetting("arx_welcomeemail_title_no", $settings->emailWelcomeTitleNO);
+        $this->setConfigurationSetting("extend_stay", $settings->extendStay);
+        $this->setConfigurationSetting("extend_stayNo", $settings->extendStayNo);
         
         $this->getApi()->getHotelBookingManager()->setArxConfiguration($settings);
     }

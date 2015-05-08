@@ -479,7 +479,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Date start = new Date(startDate * 1000);
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(start);
-        startCal.set(Calendar.HOUR_OF_DAY, 13);
+        startCal.set(Calendar.HOUR_OF_DAY, 15);
         startCal.set(Calendar.MINUTE, 0);
         startCal.set(Calendar.SECOND, 0);
         start = startCal.getTime();
@@ -490,7 +490,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Date end = new Date(endDate * 1000);
         Calendar endCal = Calendar.getInstance();
         endCal.setTime(end);
-        endCal.set(Calendar.HOUR_OF_DAY, 11);
+        endCal.set(Calendar.HOUR_OF_DAY, 12);
         endCal.set(Calendar.MINUTE, 0);
         endCal.set(Calendar.SECOND, 0);
         end = endCal.getTime();
@@ -673,6 +673,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             sendSms(visitor, message);
             messageManager.sendMail(email,visitor.name, room.roomName + " er nå klart / " + room.roomName + " is now ready.", message,  copyadress, copyadress);
         }
+        
+        if(roomInfo.roomState == RoomInformation.RoomInfoState.extendStay) {
+            Visitors visitor = roomInfo.visitors.get(0);
+            Room room = getRoom(roomInfo.roomId);
+            String msg = formatMessage(reference, arxSettings.extendStayNo, room.roomName, roomInfo.code, visitor.name);
+            sendSms(visitor, msg);
+        }
+        
     }
     
     private List<Room> getAvailableRooms(AdditionalBookingInformation additional, long startDate, long endDate) {
@@ -1577,5 +1585,76 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 }
             }
         }
+    }
+
+    @Override
+    public Integer extendStay(Integer reference, long newdate, String bdataid) {
+        UsersBookingData bookingdata = getUserBookingData(bdataid);
+        
+        Date newEndDate = getEndDate(newdate);
+        
+        for(BookingReference breference : bookingdata.references) {
+            if(breference.bookingReference == reference) {
+                if(newEndDate.before(breference.endDate)) {
+                    return -1;
+                }
+                
+                for(RoomInformation room : breference.roomsReserved) {
+                    if(!clearRoomForStay(room,breference.endDate, newEndDate, bookingdata.additonalInformation)) {
+                        return -1;
+                    }
+                }
+                for(RoomInformation room : breference.roomsReserved) {
+                    room.roomState = RoomInformation.RoomInfoState.extendStay;
+                }
+                
+                //Order need to be created here.
+                createExtendStayOrder(breference, newEndDate, bookingdata);
+
+                breference.endDate = newEndDate;
+                saveObject(bookingdata);
+            }
+            
+        }
+        return 1;
+    }
+
+    private boolean clearRoomForStay(RoomInformation room,Date endDate, Date newEndDate, AdditionalBookingInformation additional) {
+        for(UsersBookingData bdata : getAllActiveUserBookings()) {
+            for(BookingReference reference : bdata.references) {
+                if(!reference.isBetweenDates(endDate.getTime(), newEndDate.getTime())) {
+                    continue;
+                }
+                for(RoomInformation roominfo : reference.roomsReserved) {
+                    if(roominfo.roomId.equals(room.roomId)) {
+                        //This could automove later on.
+                        List<Room> freeRooms = getAvailableRooms(additional, endDate.getTime()/1000, newEndDate.getTime()/1000);
+                        if(freeRooms.isEmpty()) {
+                            return false;
+                        }
+                        else {
+                            roominfo.roomId = freeRooms.get(0).id;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+
+    private void createExtendStayOrder(BookingReference breference, Date newEndDate, UsersBookingData bookingdata) {
+        cartManager.clear();
+        final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+        int diffInDays = (int) ((newEndDate.getTime() - breference.endDate.getTime())/ DAY_IN_MILLIS );
+        cartManager.addProductItem(bookingdata.additonalInformation.roomProductId, diffInDays);
+        Order order = orderManager.createOrderForUser(bookingdata.additonalInformation.userId);
+        if(bookingdata.orderIds.size() > 0) {
+            Order lastOrder = orderManager.getOrderSecure(bookingdata.orderIds.get(0));
+            order.payment = lastOrder.payment;
+            orderManager.saveOrder(order);
+        }
+        bookingdata.orderIds.add(order.id);
+        saveObject(bookingdata);
     }
 }

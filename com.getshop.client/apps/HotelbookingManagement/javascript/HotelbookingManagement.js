@@ -161,7 +161,41 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .updatecontactinfo', app.HotelbookingManagement.updatecontactinfo);
         $(document).on('click', '.HotelbookingManagement .changeroombutton', app.HotelbookingManagement.changeRoom);
         $(document).on('click', '.HotelbookingManagement .deleteroom', app.HotelbookingManagement.removeRoomFromOrder);
+        $(document).on('click', '.HotelbookingManagement .extendstay', app.HotelbookingManagement.extendstay);
         $(document).on('click', '.HotelbookingManagement .toggleautodelete', app.HotelbookingManagement.toggleautodelete);
+    },
+    extendstay : function() {
+        var currentDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        var day = currentDate.getDate();
+        if(day < 10) {
+            day = "0" + day;
+        }
+        var month = currentDate.getMonth() + 1;
+        if(month < 10) {
+            month = "0" + month;
+        }
+        var year = currentDate.getFullYear();
+        var date = day + "-" + month + "-" + year;
+        var newdate = prompt("New check out date (dd-mm-yyyy)", date);
+        if(!newdate) {
+            return;
+        }
+        var data = {
+            "roomid" : $(this).attr('data-roomid'),
+            "reference" : $(this).attr('data-reference'),
+            "bdataid" : $(this).attr('data-bdataid'),
+            "newdate" : newdate
+        }
+        var event = thundashop.Ajax.createEvent('','extendStay',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(data) {
+            if(data === "1") {
+                thundashop.common.Alert('Success','Users stay has been extended to ' + newdate);
+                thundashop.framework.reprintPage();
+            } else {
+                alert('Not able to extend stay, there are not enough rooms.');
+            }
+        });
+        
     },
     toggleautodelete : function() {
         var button = $(this);
@@ -174,11 +208,12 @@ app.HotelbookingManagement = {
     },
     changeRoom : function() {
         var row = $(this).closest('tr');
+        var roomid = prompt("Please enter the new room number you want to move to", "101");
         var data = {
             "oldroom" : row.attr('roomid'),
             "bookinguserinfo" : row.attr('bookinguserinfo'),
             "referenceid" : row.attr('referenceid'),
-            "roomId" : row.find('.roomSelected').val()
+            "roomId" : roomid
         }
         
         var event = thundashop.Ajax.createEvent('','changeRoom',$(this), data);

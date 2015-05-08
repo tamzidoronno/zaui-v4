@@ -57,6 +57,7 @@ public class ComGetshopArx {
     private String hostname = "https://92.220.61.142:5002/arx/import";
     private String apiAddress = "localhost";
     private Integer backendport = 25554;
+    private boolean sendToArx = false;
     
 //    private String hostname = "https://192.168.1.103:5002/arx/import";
 //    private Integer backendport = 25554;
@@ -70,6 +71,7 @@ public class ComGetshopArx {
     private String apiPassword = "g4kkg4kk";
     private String website = "wh.no";
     private boolean notifiedGetshop = false;
+    private boolean updateArx = false;
     
     /**
      * @param args the command line arguments
@@ -153,13 +155,16 @@ public class ComGetshopArx {
                 
                 int count = 0;
                 for(RoomInformation roomInfo : reference.roomsReserved) {
-                    if(roomInfo.roomState == RoomInfoState.accessGranted) {
-                        continue;
-                    }
-
                     Room roomGranted = allRooms.get(roomInfo.roomId);
-                    if(!roomGranted.isClean) {
-                        continue;
+                    if(roomInfo.roomState != RoomInfoState.extendStay) {
+                        if(roomInfo.roomState == RoomInfoState.accessGranted) {
+                            continue;
+                        }
+                        if(!roomGranted.isClean) {
+                            continue;
+                        }
+                        System.out.println("Room is clean: " + roomGranted.roomName);
+                        roomInfo.roomState = RoomInfoState.accessGranted;
                     }
 
                     ArxUser user = createArxUser(roomInfo, reference, count, true);
@@ -167,10 +172,8 @@ public class ComGetshopArx {
                         continue;
                     }
 
-                    roomInfo.roomState = RoomInfoState.accessGranted;
                     user.doorsToAccess.add(roomGranted.roomName);
                     count++;
-                    System.out.println("Room is clean: " + roomGranted.roomName);
                     updateArx(user, reference, roomInfo, bdata);
                 }
             }
@@ -200,7 +203,7 @@ public class ComGetshopArx {
 
                 int count = 0;
                 for(RoomInformation roomInfo : reference.roomsReserved) {
-                    if(roomInfo.roomState == RoomInfoState.externalDoorGranted || roomInfo.roomState == RoomInfoState.accessGranted) {
+                    if(roomInfo.roomState != RoomInfoState.initial) {
                         continue;
                     }
 
@@ -226,11 +229,19 @@ public class ComGetshopArx {
         } else {
             notifyGetShopUp();
             notifyUserAboutUpdate(reference, roomInfo, user.code);
+            if(roomInfo.roomState == RoomInfoState.extendStay) {
+                roomInfo.roomState = RoomInfoState.accessGranted;
+            }
+            
             api.getHotelBookingManager().updateUserBookingData(bdata);
         }
     }
 
     private boolean sendUserToArx(ArxUser user) throws UnsupportedEncodingException {
+        if(!updateArx) {
+            return true;
+        }
+
         String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
         String firstName = new String(user.firstName.toString().getBytes("ISO-8859-1"), "UTF-8");
         String lastName = new String(user.lastName.toString().getBytes("ISO-8859-1"), "UTF-8");
@@ -285,10 +296,12 @@ public class ComGetshopArx {
         toPost += "</card>";
         toPost += "</cards>";
         toPost += "</arxdata>";
-
-        String result = httpLoginRequest(hostname, username, password, toPost);
-        System.out.println("Sent to arx");
-        return result.equals("OK");
+        if(sendToArx) {
+            String result = httpLoginRequest(hostname, username, password, toPost);
+            System.out.println("Sent to arx");
+            return result.equals("OK");
+        }
+        return true;
     }
 
     public String httpLoginRequest(String address, String username, String password, String content) {

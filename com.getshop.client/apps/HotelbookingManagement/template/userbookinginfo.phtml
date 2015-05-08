@@ -42,7 +42,7 @@ echo "<bR>";
 echo "<bR>";
 echo "<b>Booked dates</b><BR>";
 foreach($bookingData->references as $reference) {
-    echo "&nbsp;&nbsp;&nbsp;" . $reference->startDate . " - " . $reference->endDate."<BR>";
+    echo "&nbsp;&nbsp;&nbsp; " . $reference->startDate . " - " . $reference->endDate." - <a class='extendstay' data-bdataid='".$bookingData->id."' data-reference='".$reference->bookingReference."' style='cursor:pointer;'>extend stay</a><BR>";
 }
 echo "</div>";
 ?>
@@ -61,25 +61,17 @@ foreach($bookingData->references as $reference) {
         /* @var $room core_hotelbookingmanager_RoomInformation */
         echo "<tr roomid='$room->roomId' bookinguserinfo='$bookingData->id' referenceid='$reference->bookingReference'>";
         echo "<td colspan='3'>";
-        echo "<select class='roomSelected'>";
-        foreach($allRooms as $roomId => $roomListEntry) {
-            $selected = "";
-            if($roomId == $room->roomId) {
-                $selected = " SELECTED";
-            }
-            
-            echo "<option value='$roomId' $selected>".$roomListEntry->roomName . "</option>";
-        }
-        echo "</select> <input type='button' value='Change room' class='changeroombutton'> ";
+        echo "<input type='button' value='Change room' class='changeroombutton'> ";
+        echo "<input type='button' value='Remove room ".$allRooms[$room->roomId]->roomName." from order' class='deleteroom' data-roomid='".$room->roomId."' data-reference='".$reference->bookingReference."' data-bdata='".$bookingData->id."'>";
         echo "</td></tr>";
         foreach($room->visitors as $visitor) {
             echo "<tr roomid='$room->roomId' bookinguserinfo='$bookingData->id' referenceid='$reference->bookingReference'>";
             echo "<td width='10%'><input type='text' value='".$visitor->name."' name='name'></td>";
             echo "<td width='10%'><input type='text' value='".$visitor->phone."' name='phone'></td>";
-            echo "<td width='80%'><input type='text' value='".$visitor->email."' name='email'><input type='button' value='Update' class='updatecontactinfo'></td>";
+            echo "<td width='80%'><input type='text' value='".$visitor->email."' name='email'><input type='button' value='Update ".$allRooms[$room->roomId]->roomName."' class='updatecontactinfo'></td>";
             echo "</tr>";
         }
-        echo "<tr><td colspan='3'><input type='button' value='Remove room ".$allRooms[$room->roomId]->roomName." from order' class='deleteroom' data-roomid='".$room->roomId."' data-reference='".$reference->bookingReference."' data-bdata='".$bookingData->id."'></td></tr>";
+        echo "<tr><td colspan='3'></td></tr>";
         
         if(sizeof($reference->roomsReserved) > 1) {
             echo "<tr><td>&nbsp;</td></tr>";

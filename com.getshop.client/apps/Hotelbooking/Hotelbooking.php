@@ -163,7 +163,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
         if(!$end) {
             $end = strtotime($_POST['data']['stop']);
-        }
+            }
 
         $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
         $additional->roomProductId = $_POST['data']['roomProduct'];

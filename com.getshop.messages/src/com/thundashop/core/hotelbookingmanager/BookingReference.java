@@ -63,17 +63,8 @@ public class BookingReference implements Serializable {
     }
 
     public boolean isBetweenDates(long startDate, long endDate) {
-        Calendar calstart = Calendar.getInstance();
-        calstart.setTimeInMillis(startDate);
-        calstart.set(Calendar.HOUR_OF_DAY, 16);
-        calstart.set(Calendar.MINUTE, 00);
-        startDate = calstart.getTimeInMillis();
-        
-        Calendar calend = Calendar.getInstance();
-        calend.setTimeInMillis(endDate);
-        calend.set(Calendar.HOUR_OF_DAY, 11);
-        calend.set(Calendar.MINUTE, 00);
-        endDate = calend.getTimeInMillis();
+        startDate = convertToStartdate(startDate);
+        endDate = convertToEndDate(endDate);
         
         if((startDate >= this.startDate.getTime()) && (startDate < this.endDate.getTime())) {
             return true;
@@ -131,6 +122,24 @@ public class BookingReference implements Serializable {
         }
        
         return false;
+    }
+
+    private long convertToStartdate(long startDate) {
+        Calendar calstart = Calendar.getInstance();
+        calstart.setTimeInMillis(startDate);
+        calstart.set(Calendar.HOUR_OF_DAY, 16);
+        calstart.set(Calendar.MINUTE, 00);
+        startDate = calstart.getTimeInMillis();
+        return startDate;
+    }
+
+    private long convertToEndDate(long endDate) {
+        Calendar calend = Calendar.getInstance();
+        calend.setTimeInMillis(endDate);
+        calend.set(Calendar.HOUR_OF_DAY, 11);
+        calend.set(Calendar.MINUTE, 00);
+        endDate = calend.getTimeInMillis();
+        return endDate;
     }
 
 }

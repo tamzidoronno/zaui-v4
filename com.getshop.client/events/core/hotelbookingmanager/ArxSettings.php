@@ -36,5 +36,11 @@ class core_hotelbookingmanager_ArxSettings extends core_common_DataCommon  {
 	/** @var String */
 	public $emailWelcomeTitleNO;
 
+	/** @var String */
+	public $extendStay;
+
+	/** @var String */
+	public $extendStayNo;
+
 }
 ?>

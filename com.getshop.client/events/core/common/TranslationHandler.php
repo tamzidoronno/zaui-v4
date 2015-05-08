@@ -4,10 +4,7 @@ class core_common_TranslationHandler {
 	public $translationStrings;
 
 	/** @var String */
-	public $translationMaps;
-
-	/** @var String */
-	public $debug;
+	public $translationId;
 
 }
 ?>

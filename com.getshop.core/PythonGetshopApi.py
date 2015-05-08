@@ -1905,6 +1905,35 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def extendStay(self, reference, newdate, bdataid):
+    args = collections.OrderedDict()
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    if isinstance(newdate,GetShopBaseClass): 
+      args["newdate"]=json.dumps(newdate.__dict__)
+    else:
+      try:
+        args["newdate"]=json.dumps(newdate)
+      except (ValueError, AttributeError):
+        args["newdate"]=newdate
+    if isinstance(bdataid,GetShopBaseClass): 
+      args["bdataid"]=json.dumps(bdataid.__dict__)
+    else:
+      try:
+        args["bdataid"]=json.dumps(bdataid)
+      except (ValueError, AttributeError):
+        args["bdataid"]=bdataid
+    data = EmptyClass()
+    data.args = args
+    data.method = "extendStay"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getAllActiveUserBookings(self):
     args = collections.OrderedDict()
     data = EmptyClass()

@@ -1837,6 +1837,23 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return Integer
+	* @throws ErrorException
+	*/
+
+	public function extendStay($reference, $newdate, $bdataid) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
+	     $data['args']["newdate"] = json_encode($this->transport->object_unset_nulls($newdate));
+	     $data['args']["bdataid"] = json_encode($this->transport->object_unset_nulls($bdataid));
+	     $data["method"] = "extendStay";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
 	* @return List
 	* @throws ErrorException
 	*/

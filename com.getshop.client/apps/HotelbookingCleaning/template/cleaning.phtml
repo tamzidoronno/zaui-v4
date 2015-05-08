@@ -74,7 +74,7 @@ function printCleaningRows($bookingData, $roomlist, $interval, $orders, $api) {
                     continue;
                 }
                 
-                $diff = ceil(($day - $startDate) / 86400) - 1;
+                $diff = ceil(($day - $startDate) / 86400);
                 $doPrint = false;
                 $icon = "";
                 if ($diff % $interval == 0 && $diff != 0) {

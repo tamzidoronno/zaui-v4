@@ -167,6 +167,9 @@ public interface IHotelBookingManager {
     @Administrator
     public UsersBookingData getUserBookingData(String id);
     
+    @Administrator
+    public Integer extendStay(Integer reference, long newdate, String bdataid);
+    
     public UsersBookingData getCurrentUserBookingData();
     
     public List<UsersBookingData> getAllCurrentUserBookingData();

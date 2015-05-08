@@ -3,6 +3,7 @@ package com.getshop.arx;
 
 import com.getshop.javaapi.GetShopApi;
 import com.thundashop.core.hotelbookingmanager.Room;
+import com.thundashop.core.hotelbookingmanager.UsersBookingData;
 import com.thundashop.core.usermanager.data.User;
 import java.util.List;
 import java.util.UUID;
@@ -52,25 +53,10 @@ sessid = UUID.randomUUID().toString();
     private void doJob() throws Exception {
         connectToBackend();
         
-        List<Room> rooms = api.getHotelBookingManager().getAllRooms();
-        for(Room roomtocheck : rooms) {
-
-            if(roomtocheck.roomName.equals("102")) {
-                roomtocheck.isClean = false;
-            } else if(roomtocheck.roomName.equals("218")) {
-                roomtocheck.isClean = false;
-            } else if(roomtocheck.roomName.equals("307")) {
-                roomtocheck.isClean = false;
-            } else if(roomtocheck.roomName.equals("316")) {
-                roomtocheck.isClean = false;
-            } else if(roomtocheck.roomName.equals("302")) {
-                roomtocheck.isClean = false;
-            } else if(roomtocheck.roomName.equals("202")) {
-                roomtocheck.isClean = false;
-            } else {
-                roomtocheck.isClean = true;
-            }
-            api.getHotelBookingManager().saveRoom(roomtocheck);
-        }
+        UsersBookingData booking = api.getHotelBookingManager().getUserBookingData("353669a6-df33-4ec0-a9b9-2c032b26d642");
+        booking.orderIds.clear();
+        booking.orderIds.add("1cf4afd2-b89e-4500-bb75-32648d87d4e5");
+        booking.orderIds.add("6222251a-1892-4f25-ab3a-8731ffa2c4c0");
+        api.getHotelBookingManager().updateUserBookingData(booking);
     }
 }

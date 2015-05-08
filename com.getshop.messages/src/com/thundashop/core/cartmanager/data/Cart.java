@@ -148,7 +148,7 @@ public class Cart extends DataCommon {
 
     @Override
     public Cart clone() {
-        Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
+        Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().serializeNulls().disableInnerClassSerialization().create();
         String json = gson.toJson(this);
         Cart copied = gson.fromJson(json, Cart.class);
         return copied;

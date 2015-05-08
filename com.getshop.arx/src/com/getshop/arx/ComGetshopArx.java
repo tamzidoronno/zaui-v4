@@ -55,9 +55,8 @@ import org.apache.http.params.HttpParams;
 public class ComGetshopArx {
 
     private String hostname = "https://92.220.61.142:5002/arx/import";
-    private String apiAddress = "localhost";
-    private Integer backendport = 25554;
-    private boolean sendToArx = false;
+    private String apiAddress = "www.getshop.com";
+    private Integer backendport = 3224;
     
 //    private String hostname = "https://192.168.1.103:5002/arx/import";
 //    private Integer backendport = 25554;
@@ -296,12 +295,10 @@ public class ComGetshopArx {
         toPost += "</card>";
         toPost += "</cards>";
         toPost += "</arxdata>";
-        if(sendToArx) {
-            String result = httpLoginRequest(hostname, username, password, toPost);
-            System.out.println("Sent to arx");
-            return result.equals("OK");
-        }
-        return true;
+        
+        String result = httpLoginRequest(hostname, username, password, toPost);
+        System.out.println("Sent to arx");
+        return result.equals("OK");
     }
 
     public String httpLoginRequest(String address, String username, String password, String content) {

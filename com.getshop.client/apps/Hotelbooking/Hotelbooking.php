@@ -157,16 +157,19 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         echo "</span>";
     }
 
-    function checkavailability($start = false, $end = false) {
+    function checkavailability($start = false, $end = false, $productId = false) {
         if(!$start) {
             $start = strtotime($_POST['data']['start']);
         }
         if(!$end) {
             $end = strtotime($_POST['data']['stop']);
-            }
+        }
+        if(!$productId) {
+            $productId = $_POST['data']['roomProduct'];
+        }
 
         $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
-        $additional->roomProductId = $_POST['data']['roomProduct'];
+        $additional->roomProductId = $productId;
         $this->getManager()->updateAdditionalInformation($additional);
         $this->getManager()->reserveRoom($start, $end, 1);
     }

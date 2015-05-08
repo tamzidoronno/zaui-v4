@@ -10,7 +10,11 @@ $headingtext = $this->__w("You have selected the following duration for your sta
 
 $bdata = $this->getBookingData();
 if(!$bdata || sizeof($bdata->references) == 0) {
-    $this->checkavailability(time(), time()+86400);
+    $rooms = $this->getHotelRooms();
+    $start = date("d.m.Y", time());
+    $end = date("d.m.Y", time()+86400);
+    $this->checkavailability(time(), time()+86400, $rooms[0]->id);
+    $this->invalidateBookingData();
 }
 ?>
 <div class="top_row_container">

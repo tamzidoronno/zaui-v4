@@ -71,7 +71,7 @@ public class ComGetshopArx {
     private String apiPassword = "g4kkg4kk";
     private String website = "wh.no";
     private boolean notifiedGetshop = false;
-    private boolean updateArx = false;
+    private boolean updateArx = true;
     
     /**
      * @param args the command line arguments

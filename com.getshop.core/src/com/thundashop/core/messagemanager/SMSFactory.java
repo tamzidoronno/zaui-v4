@@ -14,4 +14,5 @@ public interface SMSFactory {
 
     public void setStoreId(String storeId);
     public void setMessageManager(MessageManager manager);
+    public void setPrefix(String prefix);
 }

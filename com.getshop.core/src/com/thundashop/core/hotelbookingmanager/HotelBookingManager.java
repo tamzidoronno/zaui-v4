@@ -442,8 +442,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             BookingReference reference = bdata.references.get(0);
             for(RoomInformation room : reference.roomsReserved) {
                 Visitors visitor = room.visitors.get(0);
-                String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                String origTitle = arxSettings.emailWelcomeTitleNO;
+                String origMessage = arxSettings.emailWelcomeNO;
+                
+                if(reference.language != null && reference.language.equals("en_en")) {
+                    origTitle = arxSettings.emailWelcomeTitle;
+                    origMessage = arxSettings.emailWelcome;
+                }
+                
+                String title = formatMessage(reference, origTitle, getRoom(room.roomId).roomName, 0, visitor.name);
+                String message = formatMessage(reference, origMessage, getRoom(room.roomId).roomName, 0, visitor.name);
                 try {
                     sendEmail(visitor, title, message, bdata);
                 }catch(Exception e) {
@@ -649,6 +657,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             String origMessage = arxSettings.smsWelcomeNO;
             Room room = getRoom(roomInfo.roomId);
             Visitors visitor = roomInfo.visitors.get(0);
+            
+            if(reference.language != null && reference.language.equals("en_en")) {
+                origMessage = arxSettings.smsWelcome;
+            }
+            
             String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
             sendSms(visitor, message);
         }
@@ -657,6 +670,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             String origMessage = arxSettings.smsReadyNO;
             Room room = getRoom(roomInfo.roomId);
             Visitors visitor = roomInfo.visitors.get(0);
+            if(reference.language != null && reference.language.equals("en_en")) {
+                origMessage = arxSettings.smsReady;
+            }
+            
             room.isClean = false;
             room.lastMarkedAsDirty = new Date();
             saveRoom(room);
@@ -677,7 +694,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if(roomInfo.roomState == RoomInformation.RoomInfoState.extendStay) {
             Visitors visitor = roomInfo.visitors.get(0);
             Room room = getRoom(roomInfo.roomId);
-            String msg = formatMessage(reference, arxSettings.extendStayNo, room.roomName, roomInfo.code, visitor.name);
+            String msgtosend = arxSettings.extendStayNo;
+            if(reference.language != null && reference.language.equals("en_en")) {
+                msgtosend = arxSettings.extendStay;
+            }
+            
+            String msg = formatMessage(reference, msgtosend, room.roomName, roomInfo.code, visitor.name);
             sendSms(visitor, msg);
         }
         
@@ -822,7 +844,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 phone = storeManager.getMyStore().configuration.phoneNumber;
             }
             msg = "Sending sms to " + phone + " title: " + visitor.name + " message: " + sms;
-            messageManager.sendSms(phone, sms);
+            messageManager.sendSms(phone, sms, visitor.prefix);
         }catch(Exception e) {
             msg = "Failed sending sms to " + visitor.phone + " title: " + visitor.name + " message: " + sms;
         }
@@ -960,6 +982,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             
             if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isAdministrator()) {
                 bookingData.avoidAutoDelete = true;
+            }
+            
+            for(BookingReference reference : bookingData.references) {
+                reference.language = getSession().language;
             }
             
         }

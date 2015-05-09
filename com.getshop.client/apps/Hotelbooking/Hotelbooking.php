@@ -878,6 +878,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                     $visitor->email = $visitorInfo['email'];
                     $visitor->phone = $visitorInfo['phone'];
                     $visitor->name = $visitorInfo['name'];
+                    $visitor->prefix = $visitorInfo['prefix'];
                     $vistitorsOnRoom = array();
                     $vistitorsOnRoom[] = $visitor;
                     $result->{$index} = $vistitorsOnRoom;
@@ -893,6 +894,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $this->getApi()->getHotelBookingManager()->setVistorData($bdataid, $result);
             }
         }
+        
         
         if(isset($_POST['data']['userData'])) {
             $oldData = $this->getUserData();

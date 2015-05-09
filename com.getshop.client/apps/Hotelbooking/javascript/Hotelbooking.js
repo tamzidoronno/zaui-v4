@@ -438,6 +438,7 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking input[gsname="partner_type"]', app.Hotelbooking.saveCurrentData);
         $(document).on('change', '.Hotelbooking select[gsname="userData][overridetype]"]', app.Hotelbooking.saveCurrentData);
         $(document).on('change', '.Hotelbooking select[gsname="userData][invoice_type]"]', app.Hotelbooking.saveCurrentData);
+        $(document).on('change', '.Hotelbooking .phoneprefix', app.Hotelbooking.saveCurrentData);
         $(document).on('keyup', '.Hotelbooking input[gsname="userData][postal_code]"]', app.Hotelbooking.updatePostalPlace);
         $(document).on('keyup', '.Hotelbooking input[gsname="userData][birthday]"]', app.Hotelbooking.updateBrreg);
         $(document).on('keyup', '.Hotelbooking .searchcustomerinput', app.Hotelbooking.searchCustomer);

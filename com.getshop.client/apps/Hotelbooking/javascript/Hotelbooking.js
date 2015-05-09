@@ -351,7 +351,7 @@ app.Hotelbooking = {
         var days = app.Hotelbooking.createNumberOfPartnerDays();
                 
         if(days.length == 0) {
-            alert('Du må velge minimum 1 dag');
+            alert(hotelbookingselectminoneday);
         }
         
         var data = {
@@ -389,7 +389,7 @@ app.Hotelbooking = {
             return;
         }
         if(!found) {
-            alert('Du må minimum velge èt rom');
+            alert(needtoselectatleastoneroom);
             return;
         }
         

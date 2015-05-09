@@ -8,9 +8,9 @@
 </div>
 
 <div style="padding-bottom:10px;">
-    <input type="radio" name="customer_type" gsname="userData][customer_type]" value="private" <? if ($this->getCustomerType() == "private") echo "CHECKED"; ?>> Privatperson
-    <input type="radio" name="customer_type" gsname="userData][customer_type]" value="company" <? if ($this->getCustomerType() == "company") echo "CHECKED"; ?>> Firma
-    <input type="radio" name="customer_type" gsname="userData][customer_type]" value="existing" <? if ($this->getCustomerType() == "existing") echo "CHECKED"; ?>> Eksisterende kunde
+    <input type="radio" name="customer_type" gsname="userData][customer_type]" value="private" <? if ($this->getCustomerType() == "private") echo "CHECKED"; ?>> <? echo $this->__w("Private person"); ?>
+    <input type="radio" name="customer_type" gsname="userData][customer_type]" value="company" <? if ($this->getCustomerType() == "company") echo "CHECKED"; ?>> <? echo $this->__w("Company"); ?>
+    <input type="radio" name="customer_type" gsname="userData][customer_type]" value="existing" <? if ($this->getCustomerType() == "existing") echo "CHECKED"; ?>> <? echo $this->__w("Existing customer"); ?>
 </div>
 <div class="common_input">
     <?
@@ -85,7 +85,7 @@
             <span class='contact_input'><input type='text' gsname='userData][users_name]' value='<? echo $this->getPost("users_name"); ?>' class='<? echo $this->validateInput("users_name"); ?>'  placeholder="Navn"></span>
         </div>
         <div class='col-50'>
-            <? echo $this->__w("Bestillers epost"); ?>
+            <? echo $this->__w("Bookers email"); ?>
             <span class='contact_input'><input type='text' gsname='userData][users_email]' value='<? echo $this->getPost("users_email"); ?>' class='<? echo $this->validateInput("users_email"); ?>'  placeholder="din@epost.no"></span>
         </div>
         

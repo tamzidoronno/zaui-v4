@@ -96,11 +96,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     public function getPartnerText() {
-        $partnerText = $this->__w("Skal du leie for mer enn {maxDays} dager, trykk <a href='?page={partnerPage}' class='partnerlink'>her</a> for langtidsleie");
+        $partnerText = $this->__w("Do you need a rental periode for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental");
         $partnerText = str_replace("{partnerPage}", $this->getConfig()->companyPage, $partnerText);
         $partnerText = str_replace("{maxDays}", $this->getConfig()->maxRentalDays, $partnerText);
         
-        $partnerText .= ", for priser på langtidsleie prøv vår <a href='/priskalkulator.html' class='partnerlink'>priskalkulator</a>.";
+        $partnerText .= $this->__w(", for prices, try our <a href='/priskalkulator.html' class='partnerlink'>price calculator</a>.");
         
         return $partnerText;
     }

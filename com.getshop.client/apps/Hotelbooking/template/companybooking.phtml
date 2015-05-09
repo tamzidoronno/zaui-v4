@@ -74,10 +74,15 @@ echo "<div style='clear:both;'></div>";
 ?>
 
 <br/>
-<div class="continue_to_summary" nextpage="" >Sjekk tilgjengelighet</div>
+<div class="continue_to_summary" nextpage="" ><? echo $this->__w("Check availability"); ?></div>
 <div style='clear:both;'></div>
 </br>
 </br>
 <div class='hotel_booking_partner_availability'>
     
 </div>
+
+<script>
+    hotelbookingselectminoneday = '<? echo $this->__w("You need to select one day at minimum"); ?>';
+    needtoselectatleastoneroom = '<? echo $this-__w("You need to select atleast one room"); ?>';
+</script>

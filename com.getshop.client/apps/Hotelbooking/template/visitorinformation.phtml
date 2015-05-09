@@ -48,9 +48,9 @@ foreach($bookingDatas as $bookingData) {
             </span>
         </div>
         <div class='col-33'>
-            <span class='contact_text'>* Mobil telefon</span>
+            <span class='contact_text'>* <? echo $this->__w("Mobile phone"); ?></span>
             <span class='contact_input'><input type='text' gsname='room][<? echo $bookingData->id; ?>][<? echo $roomId; ?>][phone]' value='<? echo $phone; ?>'  class='<? echo $this->validateVisitor("phone",$visitor); ?>' placeholder="4521887"></span>
-            Adgangskoden til døren blir tilsendt dette nummeret
+            <? echo $this->__w("The access code to the door will be sent to this phone number"); ?>
             <? 
             if($this->validateVisitor("phone",$visitor)) {
                 echo "* " . $this->__w("Phone number need to be a valid mobile number.");
@@ -74,5 +74,5 @@ foreach($bookingDatas as $bookingData) {
 ?>
 <br>
 <div style="padding-left:10px;">
-    * Følgende felt er påkrevd
+    * <? echo $this->__w("The following fields are required"); ?>
 </div>

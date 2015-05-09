@@ -53,7 +53,11 @@ $flexPrice = $this->getDayCount() * $flexProduct->price;
                                 echo "CHECKED";
                             }
                             ?>>
-                            Jeg ønsker muligheten for avbestilling (<? echo $flexPrice; ?> kr i tillegg inklusiv moms).
+                            <? 
+                                $text = $this->__w("I want the ability to cancel my booking ({price} kr in addition per night)");
+                                $text = str_replace("{price}", $flexPrice, $text);
+                                echo $text;
+                            ?>
                         </label>
                     </div>
                 <? } ?>
@@ -63,7 +67,7 @@ $flexPrice = $this->getDayCount() * $flexProduct->price;
                         if ($this->getPost("checklicenagreement") == "true") {
                             echo "CHECKED";
                         }
-                        ?>> Jeg har lest og akseptert <a href='/scripts/whcontract.php' class='gs_ignorenavigate' target='_new'>avtalevilkårene</a> for leie hos Wilhelmsen House.
+                        ?>> <? echo $this->__w("I accept the <a href='/scripts/whcontract.php' class='gs_ignorenavigate' target='_new'>terms and conditions</a> for room rental at Wilhelmsen House"); ?>
                                <?
                                if ($this->validateInput("checklicenagreement")) {
                                    echo "<div style='color:red; padding-left: 10px'>* Du må godta avtalevilkårene først.</div>";

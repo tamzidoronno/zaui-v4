@@ -183,7 +183,7 @@ position: relative;
     .Hotelbooking .frontpagebookingrow { height: inherit !important; }
     .Hotelbooking .phonevistiinfo td { display:block; }
     .Hotelbooking .phonevistiinfo td select { width:100%; }
-    .Hotelbooking .cal_header .fa { font-size: 20px; }
+    .Hotelbooking .cal_header .fa { font-size: 20px; width: 44px; height: 40px; }
 }
 
 

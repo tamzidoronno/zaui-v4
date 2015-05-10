@@ -428,7 +428,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $text = $this->__w("When do you check out?");
         }
         //Guess navigating between months was a bad idea, why do something that does not look good design wise.
-        echo $text;
+        echo "<div>" . $text . "</div>";
         echo "<div class='cal_header cal_nav' type='$id' year='$year' month='$month'><i class='fa fa-arrow-left calnav' style='float:left;cursor:pointer;' navigation='prev'></i>" . $monthText . "<i class='fa fa-arrow-right calnav' style='float:right;cursor:pointer;' navigation='next'></i></div>";
 //        echo "<div class='cal_header' type='$id' year='$year' month='$month'>$text</div>";
         echo "<div class='calspacing'></div>";

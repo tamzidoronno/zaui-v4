@@ -431,7 +431,7 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .checklicenagreement', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking .checkNeedFlex', app.Hotelbooking.updateNeedFlex);
         $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);
-        $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
+        $(document).on('click touchstart', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
         $(document).on('click', '.Hotelbooking .searchexisting', app.Hotelbooking.searchExistingButton);
         $(document).on('click', '.Hotelbooking input[gsname="mvaregistered"]', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="userData][customer_type]"]', app.Hotelbooking.saveCurrentData);

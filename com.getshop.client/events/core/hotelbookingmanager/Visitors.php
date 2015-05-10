@@ -12,8 +12,5 @@ class core_hotelbookingmanager_Visitors {
 	/** @var String */
 	public $email;
 
-	/** @var String */
-	public $language;
-
 }
 ?>

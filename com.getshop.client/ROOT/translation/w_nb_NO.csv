@@ -45,7 +45,6 @@ Birth Date;-;Fødselsdato
 Birth date (mm.dd.yy);-;Fødselsdato (dd.mm.åå)
 Body title;-;Tittel
 Booked time periode;-;Booket tidsperiode
-Bookers email;-;Bestillers epost
 Booking;-;Påmelding
 Bottom spacing;-;Nedre spacing
 BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Very simple to use and gets you started with visa payment immediatly;-;BrainTree er en internasjonal betalingsmetode som eies av PayPal. De tilbyr betaling med Visa, MasterCard, PayPal, osv. Veldig enkel å bruke og gir det mulighet til å ta imot betaling online med gang.
@@ -84,6 +83,7 @@ Click next to select shipping options;-;Trykk neste for å velge en betalings me
 Comments;-;Kommentarer
 Company;-;Selskap
 Company name;-;Firmanavn
+Companys email;-;Firma epost
 Completed;-;Gjennomført
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
@@ -305,6 +305,7 @@ Remove item;-;Fjern vare
 Remove selected tab;-;Fjern valgte tab
 Repeat new password;-;Gjenta passord
 Repeat password;-;Gjenta passord
+Required;-;Obligatorisk
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
 Room;-;Rom

@@ -203,7 +203,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if(!$this->validationNeeded) {
             return "";
         }
-        
+
         if($name == "username" && $this->getFailedLogon()) {
             return "invalid";
         }
@@ -782,6 +782,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             }
         } else {
             foreach($userData as $key => $val) {
+                if($key == "username" && $userData['customer_type'] != "existing") {
+                    continue;
+                }
+                if($key == "password" && $userData['customer_type'] != "existing") {
+                    continue;
+                }
                 if($this->validateInput($key)) {
                     return false;
                 }

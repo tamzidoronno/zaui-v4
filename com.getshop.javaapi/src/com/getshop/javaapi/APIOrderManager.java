@@ -382,10 +382,14 @@ public class APIOrderManager {
      * @param year
      * @return
      */
-     public java.lang.Double getTotalSalesAmount(java.lang.Integer year)  throws Exception  {
+     public java.lang.Double getTotalSalesAmount(java.lang.Integer year, java.lang.Integer month, java.lang.Integer week, java.lang.Integer day, java.lang.String type)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("year",new Gson().toJson(year));
+          gs_json_object_data.args.put("month",new Gson().toJson(month));
+          gs_json_object_data.args.put("week",new Gson().toJson(week));
+          gs_json_object_data.args.put("day",new Gson().toJson(day));
+          gs_json_object_data.args.put("type",new Gson().toJson(type));
           gs_json_object_data.method = "getTotalSalesAmount";
           gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
           String result = transport.send(gs_json_object_data);

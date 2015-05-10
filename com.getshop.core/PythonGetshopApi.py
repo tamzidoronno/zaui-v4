@@ -2083,6 +2083,42 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getStatistics(self, year, month, week, day):
+    args = collections.OrderedDict()
+    if isinstance(year,GetShopBaseClass): 
+      args["year"]=json.dumps(year.__dict__)
+    else:
+      try:
+        args["year"]=json.dumps(year)
+      except (ValueError, AttributeError):
+        args["year"]=year
+    if isinstance(month,GetShopBaseClass): 
+      args["month"]=json.dumps(month.__dict__)
+    else:
+      try:
+        args["month"]=json.dumps(month)
+      except (ValueError, AttributeError):
+        args["month"]=month
+    if isinstance(week,GetShopBaseClass): 
+      args["week"]=json.dumps(week.__dict__)
+    else:
+      try:
+        args["week"]=json.dumps(week)
+      except (ValueError, AttributeError):
+        args["week"]=week
+    if isinstance(day,GetShopBaseClass): 
+      args["day"]=json.dumps(day.__dict__)
+    else:
+      try:
+        args["day"]=json.dumps(day)
+      except (ValueError, AttributeError):
+        args["day"]=day
+    data = EmptyClass()
+    data.args = args
+    data.method = "getStatistics"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getUserBookingData(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 
@@ -3754,7 +3790,7 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
-  def getTotalSalesAmount(self, year):
+  def getTotalSalesAmount(self, year, month, week, day, type):
     args = collections.OrderedDict()
     if isinstance(year,GetShopBaseClass): 
       args["year"]=json.dumps(year.__dict__)
@@ -3763,6 +3799,34 @@ class OrderManager(object):
         args["year"]=json.dumps(year)
       except (ValueError, AttributeError):
         args["year"]=year
+    if isinstance(month,GetShopBaseClass): 
+      args["month"]=json.dumps(month.__dict__)
+    else:
+      try:
+        args["month"]=json.dumps(month)
+      except (ValueError, AttributeError):
+        args["month"]=month
+    if isinstance(week,GetShopBaseClass): 
+      args["week"]=json.dumps(week.__dict__)
+    else:
+      try:
+        args["week"]=json.dumps(week)
+      except (ValueError, AttributeError):
+        args["week"]=week
+    if isinstance(day,GetShopBaseClass): 
+      args["day"]=json.dumps(day.__dict__)
+    else:
+      try:
+        args["day"]=json.dumps(day)
+      except (ValueError, AttributeError):
+        args["day"]=day
+    if isinstance(type,GetShopBaseClass): 
+      args["type"]=json.dumps(type.__dict__)
+    else:
+      try:
+        args["type"]=json.dumps(type)
+      except (ValueError, AttributeError):
+        args["type"]=type
     data = EmptyClass()
     data.args = args
     data.method = "getTotalSalesAmount"

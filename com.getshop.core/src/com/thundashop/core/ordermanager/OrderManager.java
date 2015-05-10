@@ -568,7 +568,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     @Override
-    public Double getTotalSalesAmount(Integer year) {
+    public Double getTotalSalesAmount(Integer year, Integer month, Integer week, Integer day, String type) {
         double amount = 0;
         for (Order order : orders.values()) {
             
@@ -576,10 +576,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 continue;
             }
             
-            if (year != null) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(order.createdDate);
-                if (cal.get(Calendar.YEAR) != year) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(order.createdDate);
+            if (year != null && cal.get(Calendar.YEAR) != year) {
+                continue;
+            }
+            if (month != null && cal.get(Calendar.MONTH) != (month-1)) {
+                continue;
+            }
+            if (week != null && cal.get(Calendar.WEEK_OF_YEAR) != week) {
+                continue;
+            }
+            if (day != null && cal.get(Calendar.DAY_OF_YEAR) != day) {
+                continue;
+            }
+            
+            if(type != null) {
+                if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.equals(type)) {
                     continue;
                 }
             }

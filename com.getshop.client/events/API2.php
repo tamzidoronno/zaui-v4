@@ -2088,6 +2088,24 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function getStatistics($year, $month, $week, $day) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
+	     $data['args']["month"] = json_encode($this->transport->object_unset_nulls($month));
+	     $data['args']["week"] = json_encode($this->transport->object_unset_nulls($week));
+	     $data['args']["day"] = json_encode($this->transport->object_unset_nulls($day));
+	     $data["method"] = "getStatistics";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_Statistics(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Get all references
 	* @return core_hotelbookingmanager_UsersBookingData
 	* @throws ErrorException
@@ -3703,10 +3721,14 @@ class APIOrderManager {
 	* @return Double
 	*/
 
-	public function getTotalSalesAmount($year) {
+	public function getTotalSalesAmount($year, $month, $week, $day, $type) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
+	     $data['args']["month"] = json_encode($this->transport->object_unset_nulls($month));
+	     $data['args']["week"] = json_encode($this->transport->object_unset_nulls($week));
+	     $data['args']["day"] = json_encode($this->transport->object_unset_nulls($day));
+	     $data['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
 	     $data["method"] = "getTotalSalesAmount";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($data);

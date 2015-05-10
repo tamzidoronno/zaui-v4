@@ -1683,4 +1683,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         bookingdata.orderIds.add(order.id);
         saveObject(bookingdata);
     }
+
+    @Override
+    public Statistics getStatistics(Integer year, Integer month, Integer week, Integer day) {
+        List<UsersBookingData> bookingdatas = getAllActiveUserBookings();
+        Statistics result = new Statistics();
+        for(UsersBookingData bdata : bookingdatas) {
+            for(BookingReference reference : bdata.references) {
+                result.numberOfNights += (reference.getNumberOfNights(year,month,week, day) * reference.roomsReserved.size());
+                result.numberOfrooms += reference.roomsReserved.size();
+            }
+        }
+        
+        return result;
+    }
 }

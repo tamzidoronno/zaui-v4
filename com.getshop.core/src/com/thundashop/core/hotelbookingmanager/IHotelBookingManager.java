@@ -71,7 +71,9 @@ public interface IHotelBookingManager {
     
     public String completeOrder(String userId);
     
-
+    @Administrator
+    public Statistics getStatistics(Integer year, Integer month, Integer week, Integer day);
+    
     @Administrator
     public void removeRoomFromOrder(Integer reference, String room, String bdata) throws ErrorException;
     

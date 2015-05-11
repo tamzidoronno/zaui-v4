@@ -131,10 +131,10 @@ class ProMeisterBosch extends \ApplicationBase implements \Application {
         
         $body = "Hei ".$user->fullName;
         $body .= "<br/> ";
-        $body .= "<br/> Du kan starte kurs når som helst ved å gå til følgende addresse:";
+        $body .= "<br/> Du kan nå starte kurset ved å gå inn på følgende adresse:";
         $body .= "<br/> <a href='http://promeister.academy/bosch/$course/index.php'>http://promeister.academy/bosch/$course/index.php</a>";
         $body .= "<br/>";
-        $body .= "<br/> Når du logger inn har du ".$this->getCurrentHours()." timer på å fullføre, dette er aktive timer. Dersom du ønsker å ta en pause i leksjonenen kan du gjøre dette ved å logge inn. Du kan da fortsette på et seneretidspunk.";
+        $body .= "<br/> Du har ".$this->getCurrentHours()." timer til rådighet, og antall innlogginger er ubegrenset i perioden.";
         $body .= "<br/>";
         $body .= "<br/> Brukernavn: ".$user->username;
         $body .= "<br/> Pinkode: ".$user->password;

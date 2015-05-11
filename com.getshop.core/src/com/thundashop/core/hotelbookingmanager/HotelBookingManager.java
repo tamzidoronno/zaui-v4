@@ -566,7 +566,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             return false;
         }
         
-        for(UsersBookingData bdata : getAllUsersBookingData()) {
+        for(UsersBookingData bdata : getAllActiveUserBookings()) {
             if(!bdata.active) {
                 continue;
             }

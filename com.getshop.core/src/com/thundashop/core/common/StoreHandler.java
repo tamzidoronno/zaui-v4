@@ -6,6 +6,8 @@ package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thundashop.core.appmanager.data.ApiCallsInUse;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.usermanager.IUserManager;
@@ -54,6 +56,7 @@ public class StoreHandler {
             Object result = invokeMethod(executeMethod, aClass, argumentValues);
             logUserLevelActivity(userLevel);
             clearSessionObject();
+            result = cloneResult(result);
             return result;
         } catch (ErrorException ex) {
             if (ex.code == 26) {
@@ -363,5 +366,27 @@ public class StoreHandler {
         if (userLevel instanceof Administrator) {
             manager.markAdminActionExecuted();
         }
+    }
+
+    /**
+     * We need to clone the data before leaving this class. This class is considered threadsafe, and leaking
+     * live objects here is bad because they might be modified.
+     * 
+     * Ideal would have been to return a String instead of a cloned object.
+     * 
+     * @param <V>
+     * @param result
+     * @return 
+     */
+    private <V> V cloneResult(V result) {
+        if (result == null) {
+            return result;
+        }
+        
+        Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
+        String json = gson.toJson((Object) result);
+        V retObject = (V)gson.fromJson(json, result.getClass());
+        
+        return retObject;
     }
 }

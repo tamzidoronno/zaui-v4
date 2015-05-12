@@ -1,10 +1,10 @@
 <?php
 class core_hotelbookingmanager_Statistics {
 	/** @var String */
-	public $numberOfNights;
+	public $available;
 
 	/** @var String */
-	public $numberOfrooms;
+	public $rentalPrice;
 
 }
 ?>

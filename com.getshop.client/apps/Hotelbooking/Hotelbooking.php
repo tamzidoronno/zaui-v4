@@ -253,11 +253,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             }            
         }
         
+        
         if($field == "phone") {
-            if(!$this->startsWith($data->phone, "9") && !$this->startsWith($data->phone, "4")) {
+            $prefix = $data->prefix;
+            if(!$this->startsWith($data->phone, "9") && !$this->startsWith($data->phone, "4") && $prefix == "47") {
                 return "invalid";
             }
-            if(strlen($data->phone) != 8) {
+            if(strlen($data->phone) != 8 && $prefix == "47") {
                 return "invalid";
             }
         }

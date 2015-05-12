@@ -2083,36 +2083,29 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
-  def getStatistics(self, year, month, week, day):
+  def getStatistics(self, startDate, endDate, periodType):
     args = collections.OrderedDict()
-    if isinstance(year,GetShopBaseClass): 
-      args["year"]=json.dumps(year.__dict__)
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
     else:
       try:
-        args["year"]=json.dumps(year)
+        args["startDate"]=json.dumps(startDate)
       except (ValueError, AttributeError):
-        args["year"]=year
-    if isinstance(month,GetShopBaseClass): 
-      args["month"]=json.dumps(month.__dict__)
+        args["startDate"]=startDate
+    if isinstance(endDate,GetShopBaseClass): 
+      args["endDate"]=json.dumps(endDate.__dict__)
     else:
       try:
-        args["month"]=json.dumps(month)
+        args["endDate"]=json.dumps(endDate)
       except (ValueError, AttributeError):
-        args["month"]=month
-    if isinstance(week,GetShopBaseClass): 
-      args["week"]=json.dumps(week.__dict__)
+        args["endDate"]=endDate
+    if isinstance(periodType,GetShopBaseClass): 
+      args["periodType"]=json.dumps(periodType.__dict__)
     else:
       try:
-        args["week"]=json.dumps(week)
+        args["periodType"]=json.dumps(periodType)
       except (ValueError, AttributeError):
-        args["week"]=week
-    if isinstance(day,GetShopBaseClass): 
-      args["day"]=json.dumps(day.__dict__)
-    else:
-      try:
-        args["day"]=json.dumps(day)
-      except (ValueError, AttributeError):
-        args["day"]=day
+        args["periodType"]=periodType
     data = EmptyClass()
     data.args = args
     data.method = "getStatistics"

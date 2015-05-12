@@ -8,6 +8,7 @@ import com.thundashop.core.ordermanager.OrderManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @GetShopApi
@@ -72,7 +73,7 @@ public interface IHotelBookingManager {
     public String completeOrder(String userId);
     
     @Administrator
-    public Statistics getStatistics(Integer year, Integer month, Integer week, Integer day);
+    public LinkedHashMap<String, Statistics> getStatistics(long startDate, long endDate, String periodType);
     
     @Administrator
     public void removeRoomFromOrder(Integer reference, String room, String bdata) throws ErrorException;

@@ -2093,16 +2093,15 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function getStatistics($year, $month, $week, $day) {
+	public function getStatistics($startDate, $endDate, $periodType) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
-	     $data['args']["month"] = json_encode($this->transport->object_unset_nulls($month));
-	     $data['args']["week"] = json_encode($this->transport->object_unset_nulls($week));
-	     $data['args']["day"] = json_encode($this->transport->object_unset_nulls($day));
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data['args']["periodType"] = json_encode($this->transport->object_unset_nulls($periodType));
 	     $data["method"] = "getStatistics";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
-	     return $this->transport->cast(new core_hotelbookingmanager_Statistics(), $this->transport->sendMessage($data));
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

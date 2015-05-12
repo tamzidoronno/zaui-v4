@@ -19,3 +19,11 @@
 .HotelbookingManagement .roombox { display: inline-block; height: 30px; width: 100px; margin: 10px; float:left; border: solid 1px; text-align: center; line-height: 30px; color:#fff; }
 .HotelbookingManagement .roombox.notavailable { background-color:red; color:#fff; }
 .HotelbookingManagement .roombox.available { background-color:green; }
+.HotelbookingManagement .datetext {
+    -ms-transform: rotate(7deg); /* IE 9 */
+    -webkit-transform: rotate(7deg); /* Chrome, Safari, Opera */
+    transform: rotate(-45deg);
+    width: 16px;
+    float:left;
+    font-size: 10px;
+}

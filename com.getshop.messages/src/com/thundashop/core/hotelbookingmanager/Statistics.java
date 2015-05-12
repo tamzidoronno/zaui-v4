@@ -1,6 +1,10 @@
 package com.thundashop.core.hotelbookingmanager;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 public class Statistics {
-    public Integer numberOfNights = 0;
-    public Integer numberOfrooms = 0;
+    LinkedHashMap<Long, Boolean> available = new LinkedHashMap();
+    LinkedHashMap<Long, Double> rentalPrice = new LinkedHashMap();
+    
 }

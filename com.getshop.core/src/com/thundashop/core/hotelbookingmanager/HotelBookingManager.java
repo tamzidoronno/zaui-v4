@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -560,9 +561,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
 
-    private boolean isAvailable(Room room, long startDate, long endDate) {
+    private boolean isAvailable(Room room, long startDate, long endDate, boolean activeOnly) {
         
-        if(!room.isActive) {
+        if(!room.isActive && activeOnly) {
             return false;
         }
         
@@ -576,7 +577,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
             
             for(BookingReference reference : bdata.references) {
-                if(reference.isBetweenDates(startDate*1000, endDate*1000) && reference.getAllRooms().contains(room.id)) {
+                if(!reference.getAllRooms().contains(room.id)) {
+                    continue;
+                }
+                if(reference.isBetweenDates(startDate*1000, endDate*1000)) {
                     return false;
                 } 
             }
@@ -715,7 +719,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         
         for(Room room : allRooms) {
-            if(isAvailable(room, startDate, endDate)) {
+            if(isAvailable(room, startDate, endDate, true)) {
                 if(room.suitedForLongTerm) {
                     longTerm.add(room);
                 } else if(room.isHandicap) {
@@ -874,7 +878,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public boolean isRoomAvailable(String roomId, long startDate, long endDate) throws ErrorException {
         Room room = getRoom(roomId);
-        return isAvailable(room, startDate, endDate);
+        return isAvailable(room, startDate, endDate, true);
     }
 
     @Override
@@ -1685,14 +1689,25 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public Statistics getStatistics(Integer year, Integer month, Integer week, Integer day) {
-        List<UsersBookingData> bookingdatas = getAllActiveUserBookings();
-        Statistics result = new Statistics();
-        for(UsersBookingData bdata : bookingdatas) {
-            for(BookingReference reference : bdata.references) {
-                result.numberOfNights += (reference.getNumberOfNights(year,month,week, day) * reference.roomsReserved.size());
-                result.numberOfrooms += reference.roomsReserved.size();
+    public LinkedHashMap<String, Statistics> getStatistics(long startDate, long endDate, String periodType) {
+        LinkedHashMap<String, Statistics> result = new LinkedHashMap();
+
+        List<Room> allRooms = getAllRooms();
+        for(Room room : allRooms) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(startDate*1000);
+            Statistics stats = new Statistics();
+            while(true) {
+                long start = cal.getTimeInMillis()/1000;
+                long end = start + 86400;
+                stats.available.put(start, isAvailable(room, start, end, false));
+                
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                if(cal.getTimeInMillis() > (endDate * 1000)) {
+                    break;
+                }
             }
+            result.put(room.id, stats);
         }
         
         return result;

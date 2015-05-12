@@ -1,6 +1,7 @@
 ###### framework ######
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
 * PayOnDelivery fee;-;Gebyr henting 
+, for prices, try our <a href='/priskalkulator.html' class='partnerlink'>price calculator</a>.;-;, for priser på langtidsleie prøv vår <a href='/priskalkulator.html' class='partnerlink'>priskalkulator</a>.
 0-100 km/h;-;0-100 km/h
 100% width;-;100% bredde
 A confirmation email has been sent to your email.;-;En bekreftelse er sendt til din e-post.
@@ -38,6 +39,8 @@ Back to page;-;Tilbake til siden
 Background color inner;-;Indre bakgrundsfarge
 Background color outer;-;Ytre bakgrundsfarge
 Background image / styling;-;Bakgrunnsbilde / Styling
+Billing period;-;Faktura periode
+Billing type;-;Betalingstype
 Birth Date;-;Fødselsdato
 Birth date (mm.dd.yy);-;Fødselsdato (dd.mm.åå)
 Body title;-;Tittel
@@ -67,6 +70,7 @@ Change to row mode;-;Bytt til rad modus
 Change to tab mode;-;Bytt til tab modus
 Changes has been saved!;-;Innstillingene har blitt lagret!
 Chat with us;-;Chat med oss
+Check availability;-;Sjekk tilgjengelighet
 Check in;-;Innsjekk
 Check in date;-;Dato for innsjekk
 Check out;-;Utsjekk
@@ -79,6 +83,7 @@ Click next to select shipping options;-;Trykk neste for å velge en betalings me
 Comments;-;Kommentarer
 Company;-;Selskap
 Company name;-;Firmanavn
+Companys email;-;Firma epost
 Completed;-;Gjennomført
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
@@ -111,11 +116,13 @@ Delete image;-;Slett bilde
 Delete row;-;Slett raden
 Delete selected slide;-;Slett valgte slide
 Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
+Discount for stay;-;Rabatt på oppholdet
 Discounted price;-;Rabattert pris
 Display numbers on dots;-;Vis tall på dottene
 Display product lists in your webshop;-;Vis produkt lister i din nettbutikk.
 Disploma is disabled;-;Diploma er deaktivert
 Do not rotate;-;Ikke roter
+Do you need a rental periode for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental;-;Skal du leie for mer enn {maxDays} dager, trykk <a href='?page={partnerPage}' class='partnerlink'>her</a> for langtidsleie
 Done editing;-;Ferdig å editere
 Download as pdf;-;Last ned som PDF
 Download ebill;-;Last ned ebill
@@ -130,6 +137,7 @@ End date;-;Slutt dato
 Enter a new password.;-;Skriv inn ditt nye passord
 Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
+Existing customer;-;Eksisterende kunde
 Fade;-;Fade
 Failed;-;Feilet
 Failed to reserve room... please contact us.;-;Det oppstod en feil ved reservasjon av rommene, vennligst kontakt oss.
@@ -147,9 +155,11 @@ Height (px);-;Høyde (px)
 Height (px) mobile;-;Høyde (px) mobil
 Hide on mobile;-;Ikke vis på mobilen
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
+I accept the <a href='/scripts/whcontract.php' class='gs_ignorenavigate' target='_new'>terms and conditions</a> for room rental at Wilhelmsen House;-;Jeg har lest og akseptert <a href='/scripts/whcontract.php' class='gs_ignorenavigate' target='_new'>avtalevilkårene</a> for leie hos Wilhelmsen House.
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
 I need a handicap room;-;Tilpasset handicap
+I want the ability to cancel my booking ({price} kr in addition per night);-;Jeg ønsker muligheten for avbestilling ({price} kr i tillegg inklusiv moms).
 Image;-;Bilde
 Information;-;Informasjon
 Inner background;-;Indre bakgrunn
@@ -184,6 +194,7 @@ Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på ko
 Message;-;Melding
 Message from a customer;-;Melding fra en kunde
 Mo;-;Ma
+Mobile phone;-;Mobil tlf
 Mobile settings;-;Mobil instillinger
 Monday;-;Mandag
 More information;-;Mer informasjon
@@ -276,6 +287,7 @@ Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
 Private key is found in braintree account.;-;Den privat nøkkelen er noe du finner på kontoen din hos braintree.
+Private person;-;Privatperson
 Product List;-;Produktliste
 Product Search;-;Produkt søk
 Product view for your store.;-;Produkt visningen for din nettbutikk.
@@ -293,6 +305,7 @@ Remove item;-;Fjern vare
 Remove selected tab;-;Fjern valgte tab
 Repeat new password;-;Gjenta passord
 Repeat password;-;Gjenta passord
+Required;-;Obligatorisk
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
 Room;-;Rom
@@ -367,6 +380,7 @@ Thank you for subscribing to our newsletter, your email has been added;-;Takk fo
 Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;Takk for din bestilling, en epost har blitt sendt med fakturaen vedlagt. Vi sender bestillingen når vi har mottat betalingen.
 Thank you for your order.;-;Takk for din bestilling.
 Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
+The access code to the door will be sent to this phone number;-;Adgangskoden til døren blir tilsendt dette nummeret
 The carousel is not rotating while logged in as administrator.;-;Karusellen roterer ikke når man er logget inn som administrator.
 The company you have selected could not be found in brreg.;-;Firmaet du har valgt eksisterer ikke i brønnøysundregisteret.
 The email address is invalid.;-;Eposten din er ugyldig.
@@ -374,6 +388,7 @@ The email address is not valid.;-;E-post adressene er ikke gyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
 The email in invalid, please enter a valid email;-;Eposten er ikke gyldig, vennligst skriv inn en gyldig adresse.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
+The following fields are required;-;Følgende felt er påkrevd
 The newsletter application allowes you to send emails to all of your customers without. Create a news letter, select your customers and send.;-;Denne nyhetsbrev applikasjonen gjør det mulig for deg å sende epost til alle dine kunder. Opprett et nyhetsbrev og send det til dine registrerte kunder.
 The passwords does not match.;-;Passordet stemmer ikke overens.
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
@@ -414,6 +429,8 @@ You are now in edit mode for this row, from this manipulate your row by adding m
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You have selected the following duration for your stay;-;Du har valgt følgende tidsperiode for besøket
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
+You need to select atleast one room;-;Du må minimum velge èt rom
+You need to select one day at minimum;-;Du må velge minimum en dag.
 You pay up front for the first three months, then you are billed in advanced for the next months of your stay.;-;Du forskuddsbetaler for de første 3 månedene, og blir deretter forhåndsfakturert månedlig i resten av oppholdet ditt.
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 Your email;-;Din epost
@@ -436,6 +453,8 @@ forgot?;-;Glemt?
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
 included in all rooms;-;inkludert i alle rom
 included taxes;-;Inkludert mva
+kr discount of;-;kr avslag fra
+kr per night;-;kr per natt
 location;-;Sted
 login;-;logg inn
 night;-;natt
@@ -445,6 +464,7 @@ orgnummer;-;Org.nr.
 phone;-;Mob.Tlf.
 read;-;les
 select;-;velg
+square meter;-;kvm
 to;-;til
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
 with;-;med

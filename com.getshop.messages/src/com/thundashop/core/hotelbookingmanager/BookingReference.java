@@ -33,6 +33,43 @@ public class BookingReference implements Serializable {
          return (int)( (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))+1;
     }
     
+    public Integer getNumberOfNights(Integer year, Integer month, Integer week, Integer day) {
+         Calendar cal = Calendar.getInstance();
+         cal.setTime(startDate);
+         
+         Integer numberOfNights = 0;
+         while(true) {
+             if(cal.getTime().after(endDate)) {
+                break;
+             }
+             
+             
+             if(cal.get(Calendar.YEAR) != year) {
+                 cal.add(Calendar.DAY_OF_YEAR, 1);
+                continue;
+             }
+             
+             if(week != null && cal.get(Calendar.WEEK_OF_YEAR) != week) {
+                 cal.add(Calendar.DAY_OF_YEAR, 1);
+                 continue;
+             }
+             
+             if(month != null && cal.get(Calendar.MONTH) != (month-1)) {
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                continue;
+             }
+             
+             if(day != null && cal.get(Calendar.DAY_OF_YEAR) != day) {
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                continue;
+             }
+             
+             cal.add(Calendar.DAY_OF_YEAR, 1);
+             numberOfNights++;
+         }
+         return numberOfNights;
+    }
+    
     public boolean isToday() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
@@ -63,17 +100,8 @@ public class BookingReference implements Serializable {
     }
 
     public boolean isBetweenDates(long startDate, long endDate) {
-        Calendar calstart = Calendar.getInstance();
-        calstart.setTimeInMillis(startDate);
-        calstart.set(Calendar.HOUR_OF_DAY, 16);
-        calstart.set(Calendar.MINUTE, 00);
-        startDate = calstart.getTimeInMillis();
-        
-        Calendar calend = Calendar.getInstance();
-        calend.setTimeInMillis(endDate);
-        calend.set(Calendar.HOUR_OF_DAY, 11);
-        calend.set(Calendar.MINUTE, 00);
-        endDate = calend.getTimeInMillis();
+        startDate = convertToStartdate(startDate);
+        endDate = convertToEndDate(endDate);
         
         if((startDate >= this.startDate.getTime()) && (startDate < this.endDate.getTime())) {
             return true;
@@ -131,6 +159,50 @@ public class BookingReference implements Serializable {
         }
        
         return false;
+    }
+
+    private long convertToStartdate(long startDate) {
+        Calendar calstart = Calendar.getInstance();
+        calstart.setTimeInMillis(startDate);
+        calstart.set(Calendar.HOUR_OF_DAY, 16);
+        calstart.set(Calendar.MINUTE, 00);
+        startDate = calstart.getTimeInMillis();
+        return startDate;
+    }
+
+    private long convertToEndDate(long endDate) {
+        Calendar calend = Calendar.getInstance();
+        calend.setTimeInMillis(endDate);
+        calend.set(Calendar.HOUR_OF_DAY, 11);
+        calend.set(Calendar.MINUTE, 00);
+        endDate = calend.getTimeInMillis();
+        return endDate;
+    }
+
+    boolean isInPeriode(Integer year, Integer month, Integer week) {
+        Calendar startcal = Calendar.getInstance();
+        Calendar endcal = Calendar.getInstance();
+        
+        startcal.setTime(startDate);
+        endcal.setTime(endDate);
+        
+        if(startcal.get(Calendar.YEAR) < year && year > endcal.get(Calendar.YEAR)) {
+            return false;
+        }
+        
+        if(month != null) {
+            if(startcal.get(Calendar.MONTH) < month && month > endcal.get(Calendar.MONTH)) {
+                return false;
+            }
+        }
+        
+        if(week != null) {
+            if(startcal.get(Calendar.WEEK_OF_YEAR) < week && week > endcal.get(Calendar.WEEK_OF_YEAR)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
 }

@@ -48,6 +48,16 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $reference = $_POST['data']['referenceid'];
         $newRoomId = $_POST['data']['roomId'];
         $oldRoom = $_POST['data']['oldroom'];
+        
+        $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
+        
+        foreach($rooms as $room) {
+            if($room->roomName == $newRoomId) {
+                $newRoomId = $room->id;
+                break;
+            }
+        }
+        
         $this->getApi()->getHotelBookingManager()->moveRoomOnReference($reference, $oldRoom, $newRoomId);
     }
     
@@ -66,6 +76,15 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $visitors[] = $toupdate;
         
         $this->getApi()->getHotelBookingManager()->updateBookingInformation($visitors, $bookinguserinfo, $roomid, $referenceid);
+    }
+    
+    public function extendStay() {
+        $data = $_POST['data'];
+        $reference = $_POST['data']['reference'];
+        $newdate = $_POST['data']['newdate'];
+        $bdataid = $_POST['data']['bdataid'];
+        
+        echo $this->getApi()->getHotelBookingManager()->extendStay($reference, strtotime($newdate), $bdataid);
     }
     
     public function displayRoomBoxInfo() {
@@ -162,7 +181,9 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $totalavialable = 0;
         if(isset($_POST['data'])) {
             $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
+            $roomsArray = array();
             foreach($rooms as $room) {
+                $roomsArray[$room->id] = $room;
                 $avilableclass = "notavailable";
                 if($this->getApi()->getHotelBookingManager()->isRoomAvailable($room->id, $startDate, $endDate)) {
                     $avilableclass = "available";
@@ -175,7 +196,48 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
             }
         }
         echo "<div style='clear:both;'></div>";
-        echo "Total number of available rooms: $totalavialable";
+        echo "Total number of available rooms: $totalavialable<br>";
+        echo "<div style='overflow:auto; width: 1130px;'>";
+        echo "<div style='width: 15000px;padding-top: 50px;'>";
+        $stats = $this->getApi()->getHotelBookingManager()->getStatistics($startDate, $endDate, "");
+        $dateprinted = false;
+        foreach($stats as $roomId => $stat) {
+            if(!$dateprinted) {
+                $dateprinted = true;
+                echo "<div style='padding-left: 20px;'>";
+                foreach($stat->available as $day => $result) {
+                    echo "<div class='datetext'>";
+                    if(date('Y-m-d', $day) == date('Y-m-01', $day)) {
+                        echo "<span style='border-left: solid 0px;height: 1px; width: 1px;float:left;'></span>";
+                        echo "<b>";
+                    }
+                    echo date("d.m.Y", $day);
+                    if(date('Y-m-d', $day) == date('Y-m-01', $day)) {
+                        echo "</b>";
+                    }
+                    echo "</div>";
+                }
+                echo "</div>";
+            }
+            echo "<div style='clear:both;'>";
+            echo "<span style='float:left; font-size: 10px;height: 10px; line-height: 10px;'>" . $roomsArray[$roomId]->roomName ."</span>";
+            foreach($stat->available as $day => $result) {
+                
+                if(date('Y-m-d', $day) == date('Y-m-01', $day)) {
+                    echo "<span style='border-left: solid 1px;height: 11px; float:left;'></span>";
+                }
+                
+                if($result == 1) {
+                    echo "<span style='border-left: solid 1px #266408;border-top: solid 1px #266408; width: 15px;height: 10px;background-color:green;float:left;'></span>";
+                } else {
+                    echo "<span style='border-left: solid 1px #266408;border-top: solid 1px #266408; width: 15px;height: 10px;background-color:#7e0505;float:left;'></span>";
+                }
+            }
+            echo "</div>";
+        }
+        echo "</div>";
+        echo "</div>";
+        echo "</span>";
     }
     
     public function displayHotelBookingOverview() {
@@ -198,7 +260,9 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $settings->emailWelcomeNO = $_POST['data']['arx_welcomeEmailNO'];
         $settings->emailWelcomeTitle = $_POST['data']['arx_welcomeemail_title'];
         $settings->emailWelcomeTitleNO = $_POST['data']['arx_welcomeemail_title_no'];
-
+        $settings->extendStay = $_POST['data']['extend_stay'];
+        $settings->extendStayNo = $_POST['data']['extend_stayNo'];
+        
         $this->setConfigurationSetting("arx_server", $settings->address);
         $this->setConfigurationSetting("arx_username", $settings->username);
         $this->setConfigurationSetting("arx_password", $settings->password);
@@ -211,6 +275,8 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("arx_welcomeEmailNO", $settings->emailWelcomeNO);
         $this->setConfigurationSetting("arx_welcomeemail_title", $settings->emailWelcomeTitle);
         $this->setConfigurationSetting("arx_welcomeemail_title_no", $settings->emailWelcomeTitleNO);
+        $this->setConfigurationSetting("extend_stay", $settings->extendStay);
+        $this->setConfigurationSetting("extend_stayNo", $settings->extendStayNo);
         
         $this->getApi()->getHotelBookingManager()->setArxConfiguration($settings);
     }

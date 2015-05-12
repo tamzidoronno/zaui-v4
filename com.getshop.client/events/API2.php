@@ -1837,6 +1837,23 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return Integer
+	* @throws ErrorException
+	*/
+
+	public function extendStay($reference, $newdate, $bdataid) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
+	     $data['args']["newdate"] = json_encode($this->transport->object_unset_nulls($newdate));
+	     $data['args']["bdataid"] = json_encode($this->transport->object_unset_nulls($bdataid));
+	     $data["method"] = "extendStay";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
 	* @return List
 	* @throws ErrorException
 	*/
@@ -2066,6 +2083,23 @@ class APIHotelBookingManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getRoomProductIds";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function getStatistics($startDate, $endDate, $periodType) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data['args']["periodType"] = json_encode($this->transport->object_unset_nulls($periodType));
+	     $data["method"] = "getStatistics";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -3686,10 +3720,14 @@ class APIOrderManager {
 	* @return Double
 	*/
 
-	public function getTotalSalesAmount($year) {
+	public function getTotalSalesAmount($year, $month, $week, $day, $type) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
+	     $data['args']["month"] = json_encode($this->transport->object_unset_nulls($month));
+	     $data['args']["week"] = json_encode($this->transport->object_unset_nulls($week));
+	     $data['args']["day"] = json_encode($this->transport->object_unset_nulls($day));
+	     $data['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
 	     $data["method"] = "getTotalSalesAmount";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($data);

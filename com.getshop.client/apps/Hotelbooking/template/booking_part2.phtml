@@ -10,7 +10,11 @@ $headingtext = $this->__w("You have selected the following duration for your sta
 
 $bdata = $this->getBookingData();
 if(!$bdata || sizeof($bdata->references) == 0) {
-    $this->checkavailability(time(), time()+86400);
+    $rooms = $this->getHotelRooms();
+    $start = date("d.m.Y", time());
+    $end = date("d.m.Y", time()+86400);
+    $this->checkavailability(time(), time()+86400, $rooms[0]->id);
+    $this->invalidateBookingData();
 }
 ?>
 <div class="top_row_container">
@@ -242,7 +246,7 @@ if(!$bdata || sizeof($bdata->references) == 0) {
                     $percentage = (double)100-(($progressivePrice/$price)*100);
                     $percentage = $price - $progressivePrice;
                     if($percentage > 50) {
-                        echo "<br><span style='font-size: 12px;font-weight:normal; margin-top: 5px; display:inline-block;'>$percentage kr avslag fra ".$product->price."kr</span>";
+                        echo "<br><span style='font-size: 12px;font-weight:normal; margin-top: 5px; display:inline-block;'>$percentage ".$this->__w("kr discount of") . " ". $product->price."kr</span>";
                     }
                 }
             }
@@ -276,7 +280,7 @@ if(!$bdata || sizeof($bdata->references) == 0) {
         if($avroomHandicap) {
             echo ", <i class='fa fa-wheelchair' title='".$handicapText."'></i> " . $handicapText;
         }
-        echo ", " . $product->sku;
+        echo ", " . $product->sku . $this->__w("square meter");
         echo "</span>";
         echo "</div>";
     }

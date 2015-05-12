@@ -1905,6 +1905,35 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def extendStay(self, reference, newdate, bdataid):
+    args = collections.OrderedDict()
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    if isinstance(newdate,GetShopBaseClass): 
+      args["newdate"]=json.dumps(newdate.__dict__)
+    else:
+      try:
+        args["newdate"]=json.dumps(newdate)
+      except (ValueError, AttributeError):
+        args["newdate"]=newdate
+    if isinstance(bdataid,GetShopBaseClass): 
+      args["bdataid"]=json.dumps(bdataid.__dict__)
+    else:
+      try:
+        args["bdataid"]=json.dumps(bdataid)
+      except (ValueError, AttributeError):
+        args["bdataid"]=bdataid
+    data = EmptyClass()
+    data.args = args
+    data.method = "extendStay"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getAllActiveUserBookings(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -2051,6 +2080,35 @@ class HotelBookingManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getRoomProductIds"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getStatistics(self, startDate, endDate, periodType):
+    args = collections.OrderedDict()
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
+    else:
+      try:
+        args["startDate"]=json.dumps(startDate)
+      except (ValueError, AttributeError):
+        args["startDate"]=startDate
+    if isinstance(endDate,GetShopBaseClass): 
+      args["endDate"]=json.dumps(endDate.__dict__)
+    else:
+      try:
+        args["endDate"]=json.dumps(endDate)
+      except (ValueError, AttributeError):
+        args["endDate"]=endDate
+    if isinstance(periodType,GetShopBaseClass): 
+      args["periodType"]=json.dumps(periodType.__dict__)
+    else:
+      try:
+        args["periodType"]=json.dumps(periodType)
+      except (ValueError, AttributeError):
+        args["periodType"]=periodType
+    data = EmptyClass()
+    data.args = args
+    data.method = "getStatistics"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3725,7 +3783,7 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
-  def getTotalSalesAmount(self, year):
+  def getTotalSalesAmount(self, year, month, week, day, type):
     args = collections.OrderedDict()
     if isinstance(year,GetShopBaseClass): 
       args["year"]=json.dumps(year.__dict__)
@@ -3734,6 +3792,34 @@ class OrderManager(object):
         args["year"]=json.dumps(year)
       except (ValueError, AttributeError):
         args["year"]=year
+    if isinstance(month,GetShopBaseClass): 
+      args["month"]=json.dumps(month.__dict__)
+    else:
+      try:
+        args["month"]=json.dumps(month)
+      except (ValueError, AttributeError):
+        args["month"]=month
+    if isinstance(week,GetShopBaseClass): 
+      args["week"]=json.dumps(week.__dict__)
+    else:
+      try:
+        args["week"]=json.dumps(week)
+      except (ValueError, AttributeError):
+        args["week"]=week
+    if isinstance(day,GetShopBaseClass): 
+      args["day"]=json.dumps(day.__dict__)
+    else:
+      try:
+        args["day"]=json.dumps(day)
+      except (ValueError, AttributeError):
+        args["day"]=day
+    if isinstance(type,GetShopBaseClass): 
+      args["type"]=json.dumps(type.__dict__)
+    else:
+      try:
+        args["type"]=json.dumps(type)
+      except (ValueError, AttributeError):
+        args["type"]=type
     data = EmptyClass()
     data.args = args
     data.method = "getTotalSalesAmount"

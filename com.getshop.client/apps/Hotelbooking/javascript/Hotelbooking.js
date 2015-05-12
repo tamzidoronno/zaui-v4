@@ -351,7 +351,7 @@ app.Hotelbooking = {
         var days = app.Hotelbooking.createNumberOfPartnerDays();
                 
         if(days.length == 0) {
-            alert('Du må velge minimum 1 dag');
+            alert(hotelbookingselectminoneday);
         }
         
         var data = {
@@ -389,7 +389,7 @@ app.Hotelbooking = {
             return;
         }
         if(!found) {
-            alert('Du må minimum velge èt rom');
+            alert(needtoselectatleastoneroom);
             return;
         }
         
@@ -431,13 +431,14 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .checklicenagreement', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking .checkNeedFlex', app.Hotelbooking.updateNeedFlex);
         $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);
-        $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
+        $(document).on('click touchstart', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
         $(document).on('click', '.Hotelbooking .searchexisting', app.Hotelbooking.searchExistingButton);
         $(document).on('click', '.Hotelbooking input[gsname="mvaregistered"]', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="userData][customer_type]"]', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="partner_type"]', app.Hotelbooking.saveCurrentData);
         $(document).on('change', '.Hotelbooking select[gsname="userData][overridetype]"]', app.Hotelbooking.saveCurrentData);
         $(document).on('change', '.Hotelbooking select[gsname="userData][invoice_type]"]', app.Hotelbooking.saveCurrentData);
+        $(document).on('change', '.Hotelbooking .phoneprefix', app.Hotelbooking.saveCurrentData);
         $(document).on('keyup', '.Hotelbooking input[gsname="userData][postal_code]"]', app.Hotelbooking.updatePostalPlace);
         $(document).on('keyup', '.Hotelbooking input[gsname="userData][birthday]"]', app.Hotelbooking.updateBrreg);
         $(document).on('keyup', '.Hotelbooking .searchcustomerinput', app.Hotelbooking.searchCustomer);

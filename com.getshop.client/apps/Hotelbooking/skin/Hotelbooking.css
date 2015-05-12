@@ -181,6 +181,11 @@ position: relative;
     .Hotelbooking .tooltip { left: 30px !important; }
     .Hotelbooking .calbackground { right: 10px; bottom: 2px; }
     .Hotelbooking .frontpagebookingrow { height: inherit !important; }
+    .Hotelbooking .phonevistiinfo td { display:block; }
+    .Hotelbooking .phonevistiinfo td select { width:100%; }
+    .Hotelbooking .cal_header { position: relative; }
+    .Hotelbooking .cal_header .calnav.fa-arrow-left { position: absolute; left: 0px; font-size: 20px; padding: 20px; z-index: 1; top: -15px; padding-left: 10px; }
+    .Hotelbooking .cal_header .calnav.fa-arrow-right { position: absolute; right: 0px; font-size: 20px; padding: 20px; z-index: 1; top: -15px; padding-right: 10px; }
 }
 
 
@@ -221,3 +226,5 @@ body { font-size: 12px; line-height: 18px;  }
 .Hotelbooking .partner_room_select_box select {
     width: 100%;
 }
+
+.Hotelbooking .requiredfield { color:#aaa; }

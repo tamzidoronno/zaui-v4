@@ -96,11 +96,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     public function getPartnerText() {
-        $partnerText = $this->__w("Skal du leie for mer enn {maxDays} dager, trykk <a href='?page={partnerPage}' class='partnerlink'>her</a> for langtidsleie");
+        $partnerText = $this->__w("Do you need a rental periode for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental");
         $partnerText = str_replace("{partnerPage}", $this->getConfig()->companyPage, $partnerText);
         $partnerText = str_replace("{maxDays}", $this->getConfig()->maxRentalDays, $partnerText);
         
-        $partnerText .= ", for priser på langtidsleie prøv vår <a href='/priskalkulator.html' class='partnerlink'>priskalkulator</a>.";
+        $partnerText .= $this->__w(", for prices, try our <a href='/priskalkulator.html' class='partnerlink'>price calculator</a>.");
         
         return $partnerText;
     }
@@ -157,16 +157,19 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         echo "</span>";
     }
 
-    function checkavailability($start = false, $end = false) {
+    function checkavailability($start = false, $end = false, $productId = false) {
         if(!$start) {
             $start = strtotime($_POST['data']['start']);
         }
         if(!$end) {
             $end = strtotime($_POST['data']['stop']);
         }
+        if(!$productId) {
+            $productId = $_POST['data']['roomProduct'];
+        }
 
         $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
-        $additional->roomProductId = $_POST['data']['roomProduct'];
+        $additional->roomProductId = $productId;
         $this->getManager()->updateAdditionalInformation($additional);
         $this->getManager()->reserveRoom($start, $end, 1);
     }
@@ -200,7 +203,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if(!$this->validationNeeded) {
             return "";
         }
-        
+
         if($name == "username" && $this->getFailedLogon()) {
             return "invalid";
         }
@@ -250,11 +253,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             }            
         }
         
+        
         if($field == "phone") {
-            if(!$this->startsWith($data->phone, "9") && !$this->startsWith($data->phone, "4")) {
+            $prefix = $data->prefix;
+            if(!$this->startsWith($data->phone, "9") && !$this->startsWith($data->phone, "4") && $prefix == "47") {
                 return "invalid";
             }
-            if(strlen($data->phone) != 8) {
+            if(strlen($data->phone) != 8 && $prefix == "47") {
                 return "invalid";
             }
         }
@@ -425,7 +430,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $text = $this->__w("When do you check out?");
         }
         //Guess navigating between months was a bad idea, why do something that does not look good design wise.
-        echo $text;
+        echo "<div>" . $text . "</div>";
         echo "<div class='cal_header cal_nav' type='$id' year='$year' month='$month'><i class='fa fa-arrow-left calnav' style='float:left;cursor:pointer;' navigation='prev'></i>" . $monthText . "<i class='fa fa-arrow-right calnav' style='float:right;cursor:pointer;' navigation='next'></i></div>";
 //        echo "<div class='cal_header' type='$id' year='$year' month='$month'>$text</div>";
         echo "<div class='calspacing'></div>";
@@ -779,6 +784,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             }
         } else {
             foreach($userData as $key => $val) {
+                if($key == "username" && $userData['customer_type'] != "existing") {
+                    continue;
+                }
+                if($key == "password" && $userData['customer_type'] != "existing") {
+                    continue;
+                }
                 if($this->validateInput($key)) {
                     return false;
                 }
@@ -875,6 +886,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                     $visitor->email = $visitorInfo['email'];
                     $visitor->phone = $visitorInfo['phone'];
                     $visitor->name = $visitorInfo['name'];
+                    $visitor->prefix = $visitorInfo['prefix'];
                     $vistitorsOnRoom = array();
                     $vistitorsOnRoom[] = $visitor;
                     $result->{$index} = $vistitorsOnRoom;
@@ -890,6 +902,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $this->getApi()->getHotelBookingManager()->setVistorData($bdataid, $result);
             }
         }
+        
         
         if(isset($_POST['data']['userData'])) {
             $oldData = $this->getUserData();

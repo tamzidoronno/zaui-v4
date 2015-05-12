@@ -4,6 +4,9 @@ class core_hotelbookingmanager_Visitors {
 	public $name;
 
 	/** @var String */
+	public $prefix;
+
+	/** @var String */
 	public $phone;
 
 	/** @var String */

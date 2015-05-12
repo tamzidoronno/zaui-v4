@@ -41,7 +41,7 @@ $flexProduct = $this->getFlexProduct();
         $totalDiff = number_format((float) $totalDiff, 2, '.', '');
         echo "<div class='price_row'>";
         echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $totalDiff*-1 . " kr</span></span>";
-        echo "Rabatt på oppholdet ($percentage%)";
+        echo $this->__w("Discount for stay") . " ($percentage%)";
         echo "</div>";
     }
     echo "</div>";
@@ -99,7 +99,7 @@ $flexProduct = $this->getFlexProduct();
     $avgprice = "";
     if($numberOfNights > 0) {
         $avgprice = round(($total/$numberOfNights), 2);
-        $avgprice = " (" . $avgprice . " kr per natt)";
+        $avgprice = " (" . $avgprice . $this->__w("kr per night") . ")";
     }
     echo "<div class='price_summary'>" . $this->__w("Total price") . $avgprice  . "<span class='right_aligned_price'>" . $total . " kr" . "</span></div>";
     echo "</div>";

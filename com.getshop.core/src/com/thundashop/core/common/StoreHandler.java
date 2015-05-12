@@ -54,7 +54,7 @@ public class StoreHandler {
         try {
             Annotation userLevel = authenticateUserLevel(executeMethod, aClass);
             Object result = invokeMethod(executeMethod, aClass, argumentValues);
-            logUserLevelActivity(userLevel);
+//            logUserLevelActivity(userLevel);
             clearSessionObject();
             result = cloneResult(result);
             return result;

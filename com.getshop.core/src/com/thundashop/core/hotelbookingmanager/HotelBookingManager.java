@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -442,8 +443,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             BookingReference reference = bdata.references.get(0);
             for(RoomInformation room : reference.roomsReserved) {
                 Visitors visitor = room.visitors.get(0);
-                String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
-                String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                String origTitle = arxSettings.emailWelcomeTitleNO;
+                String origMessage = arxSettings.emailWelcomeNO;
+                
+                if(reference.language != null && reference.language.equals("en_en")) {
+                    origTitle = arxSettings.emailWelcomeTitle;
+                    origMessage = arxSettings.emailWelcome;
+                }
+                
+                String title = formatMessage(reference, origTitle, getRoom(room.roomId).roomName, 0, visitor.name);
+                String message = formatMessage(reference, origMessage, getRoom(room.roomId).roomName, 0, visitor.name);
                 try {
                     sendEmail(visitor, title, message, bdata);
                 }catch(Exception e) {
@@ -479,7 +488,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Date start = new Date(startDate * 1000);
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(start);
-        startCal.set(Calendar.HOUR_OF_DAY, 13);
+        startCal.set(Calendar.HOUR_OF_DAY, 15);
         startCal.set(Calendar.MINUTE, 0);
         startCal.set(Calendar.SECOND, 0);
         start = startCal.getTime();
@@ -490,7 +499,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Date end = new Date(endDate * 1000);
         Calendar endCal = Calendar.getInstance();
         endCal.setTime(end);
-        endCal.set(Calendar.HOUR_OF_DAY, 11);
+        endCal.set(Calendar.HOUR_OF_DAY, 12);
         endCal.set(Calendar.MINUTE, 0);
         endCal.set(Calendar.SECOND, 0);
         end = endCal.getTime();
@@ -552,13 +561,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
 
-    private boolean isAvailable(Room room, long startDate, long endDate) {
+    private boolean isAvailable(Room room, long startDate, long endDate, boolean activeOnly) {
         
-        if(!room.isActive) {
+        if(!room.isActive && activeOnly) {
             return false;
         }
         
-        for(UsersBookingData bdata : getAllUsersBookingData()) {
+        for(UsersBookingData bdata : getAllActiveUserBookings()) {
             if(!bdata.active) {
                 continue;
             }
@@ -568,7 +577,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
             
             for(BookingReference reference : bdata.references) {
-                if(reference.isBetweenDates(startDate*1000, endDate*1000) && reference.getAllRooms().contains(room.id)) {
+                if(!reference.getAllRooms().contains(room.id)) {
+                    continue;
+                }
+                if(reference.isBetweenDates(startDate*1000, endDate*1000)) {
                     return false;
                 } 
             }
@@ -649,6 +661,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             String origMessage = arxSettings.smsWelcomeNO;
             Room room = getRoom(roomInfo.roomId);
             Visitors visitor = roomInfo.visitors.get(0);
+            
+            if(reference.language != null && reference.language.equals("en_en")) {
+                origMessage = arxSettings.smsWelcome;
+            }
+            
             String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
             sendSms(visitor, message);
         }
@@ -657,6 +674,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             String origMessage = arxSettings.smsReadyNO;
             Room room = getRoom(roomInfo.roomId);
             Visitors visitor = roomInfo.visitors.get(0);
+            if(reference.language != null && reference.language.equals("en_en")) {
+                origMessage = arxSettings.smsReady;
+            }
+            
             room.isClean = false;
             room.lastMarkedAsDirty = new Date();
             saveRoom(room);
@@ -673,6 +694,19 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             sendSms(visitor, message);
             messageManager.sendMail(email,visitor.name, room.roomName + " er nå klart / " + room.roomName + " is now ready.", message,  copyadress, copyadress);
         }
+        
+        if(roomInfo.roomState == RoomInformation.RoomInfoState.extendStay) {
+            Visitors visitor = roomInfo.visitors.get(0);
+            Room room = getRoom(roomInfo.roomId);
+            String msgtosend = arxSettings.extendStayNo;
+            if(reference.language != null && reference.language.equals("en_en")) {
+                msgtosend = arxSettings.extendStay;
+            }
+            
+            String msg = formatMessage(reference, msgtosend, room.roomName, roomInfo.code, visitor.name);
+            sendSms(visitor, msg);
+        }
+        
     }
     
     private List<Room> getAvailableRooms(AdditionalBookingInformation additional, long startDate, long endDate) {
@@ -685,7 +719,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         
         for(Room room : allRooms) {
-            if(isAvailable(room, startDate, endDate)) {
+            if(isAvailable(room, startDate, endDate, true)) {
                 if(room.suitedForLongTerm) {
                     longTerm.add(room);
                 } else if(room.isHandicap) {
@@ -814,7 +848,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 phone = storeManager.getMyStore().configuration.phoneNumber;
             }
             msg = "Sending sms to " + phone + " title: " + visitor.name + " message: " + sms;
-            messageManager.sendSms(phone, sms);
+            messageManager.sendSms(phone, sms, visitor.prefix);
         }catch(Exception e) {
             msg = "Failed sending sms to " + visitor.phone + " title: " + visitor.name + " message: " + sms;
         }
@@ -844,7 +878,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public boolean isRoomAvailable(String roomId, long startDate, long endDate) throws ErrorException {
         Room room = getRoom(roomId);
-        return isAvailable(room, startDate, endDate);
+        return isAvailable(room, startDate, endDate, true);
     }
 
     @Override
@@ -952,6 +986,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             
             if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isAdministrator()) {
                 bookingData.avoidAutoDelete = true;
+            }
+            
+            for(BookingReference reference : bookingData.references) {
+                reference.language = getSession().language;
             }
             
         }
@@ -1577,5 +1615,101 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 }
             }
         }
+    }
+
+    @Override
+    public Integer extendStay(Integer reference, long newdate, String bdataid) {
+        UsersBookingData bookingdata = getUserBookingData(bdataid);
+        
+        Date newEndDate = getEndDate(newdate);
+        
+        for(BookingReference breference : bookingdata.references) {
+            if(breference.bookingReference == reference) {
+                if(newEndDate.before(breference.endDate)) {
+                    return -1;
+                }
+                
+                for(RoomInformation room : breference.roomsReserved) {
+                    if(!clearRoomForStay(room,breference.endDate, newEndDate, bookingdata.additonalInformation)) {
+                        return -1;
+                    }
+                }
+                for(RoomInformation room : breference.roomsReserved) {
+                    room.roomState = RoomInformation.RoomInfoState.extendStay;
+                }
+                
+                //Order need to be created here.
+                createExtendStayOrder(breference, newEndDate, bookingdata);
+
+                breference.endDate = newEndDate;
+                saveObject(bookingdata);
+            }
+            
+        }
+        return 1;
+    }
+
+    private boolean clearRoomForStay(RoomInformation room,Date endDate, Date newEndDate, AdditionalBookingInformation additional) {
+        for(UsersBookingData bdata : getAllActiveUserBookings()) {
+            for(BookingReference reference : bdata.references) {
+                if(!reference.isBetweenDates(endDate.getTime(), newEndDate.getTime())) {
+                    continue;
+                }
+                for(RoomInformation roominfo : reference.roomsReserved) {
+                    if(roominfo.roomId.equals(room.roomId)) {
+                        //This could automove later on.
+                        List<Room> freeRooms = getAvailableRooms(additional, endDate.getTime()/1000, newEndDate.getTime()/1000);
+                        if(freeRooms.isEmpty()) {
+                            return false;
+                        }
+                        else {
+                            roominfo.roomId = freeRooms.get(0).id;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+
+    private void createExtendStayOrder(BookingReference breference, Date newEndDate, UsersBookingData bookingdata) {
+        cartManager.clear();
+        final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+        int diffInDays = (int) ((newEndDate.getTime() - breference.endDate.getTime())/ DAY_IN_MILLIS );
+        cartManager.addProductItem(bookingdata.additonalInformation.roomProductId, diffInDays);
+        Order order = orderManager.createOrderForUser(bookingdata.additonalInformation.userId);
+        if(bookingdata.orderIds.size() > 0) {
+            Order lastOrder = orderManager.getOrderSecure(bookingdata.orderIds.get(0));
+            order.payment = lastOrder.payment;
+            orderManager.saveOrder(order);
+        }
+        bookingdata.orderIds.add(order.id);
+        saveObject(bookingdata);
+    }
+
+    @Override
+    public LinkedHashMap<String, Statistics> getStatistics(long startDate, long endDate, String periodType) {
+        LinkedHashMap<String, Statistics> result = new LinkedHashMap();
+
+        List<Room> allRooms = getAllRooms();
+        for(Room room : allRooms) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(startDate*1000);
+            Statistics stats = new Statistics();
+            while(true) {
+                long start = cal.getTimeInMillis()/1000;
+                long end = start + 86400;
+                stats.available.put(start, isAvailable(room, start, end, false));
+                
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                if(cal.getTimeInMillis() > (endDate * 1000)) {
+                    break;
+                }
+            }
+            result.put(room.id, stats);
+        }
+        
+        return result;
     }
 }

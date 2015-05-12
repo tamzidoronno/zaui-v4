@@ -96,7 +96,11 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.username = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("username");
         impl.apiId = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("apiid");
         impl.password = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("password");
-        impl.prefix = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("numberprefix");
+        if(prefix != null) {
+            impl.prefix = prefix;
+        } else {
+            impl.prefix = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("numberprefix");
+        }
         impl.from = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("from");
         impl.messageManager = messageManager;
         
@@ -106,7 +110,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     public void run() {
         
         if (!frameworkConfig.productionMode) {
-            System.out.println("Sent SMS [ to: " + to + ", from: " + from +", Message: " + message + " ]");
+            System.out.println("Sent SMS [ to: (" +prefix + ") " + to + ", from: " + from +", Message: " + message + " ]");
             return;
         }
         
@@ -203,5 +207,10 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     @Override
     public void setMessageManager(MessageManager manager) {
         this.messageManager = manager;
+    }
+
+    @Override
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 }

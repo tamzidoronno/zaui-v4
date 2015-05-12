@@ -8,6 +8,7 @@ import com.thundashop.core.ordermanager.OrderManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @GetShopApi
@@ -71,7 +72,9 @@ public interface IHotelBookingManager {
     
     public String completeOrder(String userId);
     
-
+    @Administrator
+    public LinkedHashMap<String, Statistics> getStatistics(long startDate, long endDate, String periodType);
+    
     @Administrator
     public void removeRoomFromOrder(Integer reference, String room, String bdata) throws ErrorException;
     
@@ -166,6 +169,9 @@ public interface IHotelBookingManager {
     
     @Administrator
     public UsersBookingData getUserBookingData(String id);
+    
+    @Administrator
+    public Integer extendStay(Integer reference, long newdate, String bdataid);
     
     public UsersBookingData getCurrentUserBookingData();
     

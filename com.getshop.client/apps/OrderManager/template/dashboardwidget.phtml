@@ -12,12 +12,12 @@
         echo $this->__f("Total orders") . ": " . count($this->getApi()->getOrderManager()->getOrders(null,null,null));
         $year = date("Y");
         
-        echo "<br/>".$this->__f("Sales ($year)") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount($year), 0);
+        echo "<br/>".$this->__f("Sales ($year)") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount($year,null,null,null,null), 0);
         $year--;
-        echo "<br/>".$this->__f("Sales ($year)") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount($year), 0);
+        echo "<br/>".$this->__f("Sales ($year)") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount($year,null,null,null,null), 0);
         $year--;
-        echo "<br/>".$this->__f("Sales ($year)") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount($year), 0);
-        echo "<div style='border-top: solid 1px #EEE;margin-top: 3px; padding-top: 3px;'>".$this->__f("Total sales") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount(null), 0)."</div>";
+        echo "<br/>".$this->__f("Sales ($year)") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount($year,null,null,null,null), 0);
+        echo "<div style='border-top: solid 1px #EEE;margin-top: 3px; padding-top: 3px;'>".$this->__f("Total sales") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount(null,null,null,null,null), 0)."</div>";
         ?>
     </div>
 </div>

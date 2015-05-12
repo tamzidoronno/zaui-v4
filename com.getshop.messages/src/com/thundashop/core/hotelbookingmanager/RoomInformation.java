@@ -14,6 +14,7 @@ public class RoomInformation implements Serializable {
         public static Integer externalDoorGranted = 1;
         public static Integer regrantAccess = 2;
         public static Integer accessGranted = 3;
+        public static Integer extendStay = 4;
     }
     
     public Integer code = -1;

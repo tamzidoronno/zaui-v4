@@ -15,4 +15,6 @@ public class ArxSettings extends DataCommon {
     public String emailWelcomeNO = "";
     public String emailWelcomeTitle = "";
     public String emailWelcomeTitleNO = "";
+    public String extendStay = "";
+    public String extendStayNo = "";
 }

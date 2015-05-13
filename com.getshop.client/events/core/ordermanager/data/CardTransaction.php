@@ -9,5 +9,8 @@ class core_ordermanager_data_CardTransaction {
 	/** @var String */
 	public $currency;
 
+	/** @var String */
+	public $microTransactionReference;
+
 }
 ?>

@@ -107,7 +107,7 @@ if ($order->transactions) {
     echo "<br/>";
     echo "<b>".$this->__f("Credit card transactions (registered)")."</b>:";
     foreach ($order->transactions as $transaction) {
-        echo "<div>&nbsp;&nbsp;Date: ".$transaction->date.", amount: ".$transaction->amount."</div>";
+        echo "<div>&nbsp;&nbsp;Date: ".$transaction->date.", amount: ".$transaction->amount." (".$transaction->microTransactionReference.")</div>";
     }
     echo "<br/><br/>";
 }

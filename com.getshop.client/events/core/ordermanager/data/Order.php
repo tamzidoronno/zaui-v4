@@ -31,6 +31,9 @@ class core_ordermanager_data_Order extends core_common_DataCommon  {
 	public $captured;
 
 	/** @var String */
+	public $transactions;
+
+	/** @var String */
 	public $logLines;
 
 	/** @var String */

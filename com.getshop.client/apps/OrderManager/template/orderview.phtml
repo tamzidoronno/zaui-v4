@@ -101,9 +101,24 @@ $cart = $order->cart;
     </div>
 </div>
 <br/>
+
+<?
+if ($order->transactions) {
+    echo "<br/>";
+    echo "<b>".$this->__f("Credit card transactions (registered)")."</b>:";
+    foreach ($order->transactions as $transaction) {
+        echo "<div>&nbsp;&nbsp;Date: ".$transaction->date.", amount: ".$transaction->amount."</div>";
+    }
+    echo "<br/><br/>";
+}
+?>
+
+&nbsp;
 <div class="gss_button" onclick="$('.gss_more_order_settings').slideDown();">
     <? echo $this->__f("Show more settinsg"); ?>
 </div>
+
+
 
 <?
 if ($canChangeOrder) {

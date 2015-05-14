@@ -289,5 +289,16 @@ public class CartManager extends ManagerBase implements ICartManager {
         
         return price;
     }
+    
+    @Override
+    public Integer calculateTotalCount(Cart cart) throws ErrorException {
+        int count = 0;
+        for(CartItem item : cart.getItems()) {
+            count += item.getCount();
+        }
+        
+        return count;
+    }
+
 
 }

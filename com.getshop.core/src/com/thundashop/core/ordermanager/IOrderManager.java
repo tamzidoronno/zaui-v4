@@ -7,9 +7,11 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Internal;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -168,6 +170,16 @@ public interface IOrderManager {
      */
     @Editor
     public Double getTotalSalesAmount(Integer year, Integer month, Integer week, Integer day, String type);
+    
+    /**
+     * Returns the total amount of sales for a given year. If you year is left blank you 
+     * will get the total amount for all years.
+     * 
+     * @param year
+     * @return 
+     */
+    @Editor
+    public HashMap<Long, SalesStats> getSalesStatistics(Long startDate, Long endDate, String type);
     
     @Editor
     public Map<String, List<Statistic>> getMostSoldProducts(int numberOfProducts);

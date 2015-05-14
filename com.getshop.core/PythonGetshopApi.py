@@ -1050,6 +1050,21 @@ class CartManager(object):
     data.interfaceName = "core.cartmanager.ICartManager"
     return self.communicationHelper.sendMessage(data)
 
+  def calculateTotalCount(self, cart):
+    args = collections.OrderedDict()
+    if isinstance(cart,GetShopBaseClass): 
+      args["cart"]=json.dumps(cart.__dict__)
+    else:
+      try:
+        args["cart"]=json.dumps(cart)
+      except (ValueError, AttributeError):
+        args["cart"]=cart
+    data = EmptyClass()
+    data.args = args
+    data.method = "calculateTotalCount"
+    data.interfaceName = "core.cartmanager.ICartManager"
+    return self.communicationHelper.sendMessage(data)
+
   def clear(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -3750,6 +3765,35 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getSalesNumber"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getSalesStatistics(self, startDate, endDate, type):
+    args = collections.OrderedDict()
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
+    else:
+      try:
+        args["startDate"]=json.dumps(startDate)
+      except (ValueError, AttributeError):
+        args["startDate"]=startDate
+    if isinstance(endDate,GetShopBaseClass): 
+      args["endDate"]=json.dumps(endDate.__dict__)
+    else:
+      try:
+        args["endDate"]=json.dumps(endDate)
+      except (ValueError, AttributeError):
+        args["endDate"]=endDate
+    if isinstance(type,GetShopBaseClass): 
+      args["type"]=json.dumps(type.__dict__)
+    else:
+      try:
+        args["type"]=json.dumps(type)
+      except (ValueError, AttributeError):
+        args["type"]=type
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSalesStatistics"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 

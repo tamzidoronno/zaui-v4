@@ -201,6 +201,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "<div style='width: 15000px;padding-top: 50px;'>";
         $stats = $this->getApi()->getHotelBookingManager()->getStatistics($startDate, $endDate, "");
         $dateprinted = false;
+        $taken = array();
         foreach($stats as $roomId => $stat) {
             if(!$dateprinted) {
                 $dateprinted = true;
@@ -226,10 +227,17 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
                 if(date('Y-m-d', $day) == date('Y-m-01', $day)) {
                     echo "<span style='border-left: solid 1px;height: 11px; float:left;'></span>";
                 }
+                if(!isset($taken[$day])) {
+                    $taken[$day] = 0;
+                }
+                if(!isset($prices[$day])) {
+                    $prices[$day] = 0;
+                }
                 
                 if($result == 1) {
                     echo "<span style='border-left: solid 1px #266408;border-top: solid 1px #266408; width: 15px;height: 10px;background-color:green;float:left;'></span>";
                 } else {
+                    $taken[$day]++;
                     echo "<span style='border-left: solid 1px #266408;border-top: solid 1px #266408; width: 15px;height: 10px;background-color:#7e0505;float:left;'></span>";
                 }
             }
@@ -237,7 +245,17 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         }
         echo "</div>";
         echo "</div>";
-        echo "</span>";
+        echo "<table>";
+        echo "<tr>";
+        echo "<td valign='top'>";
+        $this->printBookingInformation($stats);
+        echo "</td>";
+        echo "<td valign='top' style='padding-left: 40px;'>";
+        $this->printSalesInformation($stats);
+        echo "</td>";
+        echo "</tr>";
+        echo "</table>";
+        
     }
     
     public function displayHotelBookingOverview() {
@@ -520,5 +538,206 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "</td>";
         echo "</tr>";
     }
+
+    public function printBookingInformation($stats) {
+        $prices = array();
+        $taken = array();
+        
+        $budget = array();
+        $budget['04-2015'] = 0;
+        $budget['05-2015'] = 10;
+        $budget['06-2015'] = 40;
+        $budget['07-2015'] = 50;
+        
+        $rooms = sizeof($this->getApi()->getHotelBookingManager()->getAllRooms());
+
+        foreach($stats as $roomId => $stat) {
+            foreach($stat->rentalPrice as $day => $result) {
+                if(!isset($prices[$day])) {
+                    $prices[$day] = 0;
+                }
+                $prices[$day] += $result;
+            }
+            foreach($stat->available as $day => $result) {
+                if(!isset($taken[$day])) {
+                    $taken[$day] = 0;
+                }
+                if(!$result) {
+                    $taken[$day]++;
+                }
+            }
+        }
+        echo "<br><br><h1>Belegg kalender.</h1><br><br>";
+        
+        $matrix = array();
+        foreach($prices as $day => $result) {
+            $row = array();
+            $row[] = round($result,2);
+            if($taken[$day] > 0) {
+                $row[] = round($result/$taken[$day],2);
+            } else {
+                $row[] = 0;
+            }
+            
+            $row[] = $taken[$day];
+            $row[] = ($rooms-$taken[$day]);
+            
+            $matrix[$day] = $row;
+        }
+        
+        $roomsToEstimate = $rooms;
+        if($_POST['data']['periode'] == "weekly") {
+            $roomsToEstimate *= 7;
+        } else if($_POST['data']['periode'] == "monthly") {
+            $roomsToEstimate *= $number = cal_days_in_month(CAL_GREGORIAN, date("m", $day), date("Y", $day));
+        }
+        
+        echo "<table cellspacing='1' cellpadding='1' style='background-color:#efefef;' class='takentable'>";
+        echo "<tr style='background-color:#efefef;'>";
+        echo "<th align='left'>Dato</th>";
+        echo "<th align='left'>Total</th>";
+        echo "<th align='left'>Snitt pris</th>";
+        echo "<th align='left'>Rom leid ut</th>";
+        echo "<th align='left'>Ledige rom</th>";
+        echo "<th align='left'>Budsjett</th>";
+        echo "<th align='left'>Belegg</th>";
+        echo "</tr>";
+        $matrix = $this->convertMatrixToPeriode($matrix);
+        
+        foreach($matrix as $day => $row) {
+            echo "<tr>";
+            echo "<td>" . date("d.m.Y", $day) . "</td>";
+            foreach($row as $field) {
+                echo "<td style='background-color:#fff;'>" . $field . "</td>";
+            }
+            
+            if(!isset($budget[date("m-Y", $day)])) {
+                $budgetMnth = 70;
+            } else {
+                $budgetMnth = $budget[date("m-Y", $day)];
+            }
+            echo "<td>$budgetMnth%</td>";
+            $current = round(($row[2]/$roomsToEstimate)*100,1);
+            $style = "background-color:green; color:#fff;";
+            if($current < $budgetMnth) {
+                $style = "background-color:red; color:#fff;";
+            }
+            
+            
+            echo "<td style='text-align:center;$style'>$current%</td>";
+            
+            echo "</tr>";
+        }
+        
+        echo "</table>";
+        echo "<style>.takentable td { padding: 5px; padding-top: 2px; padding-bottom: 2px; } </style>";
+    }
+
+    public function printSalesInformation() {
+        
+        echo "<br><br><h1>Sale.</h1><br><br>";
+
+        echo "<table cellspacing='1' cellpadding='1' style='background-color:#efefef;' class='takentable'>";
+        echo "<tr style='background-color:#efefef;'>";
+        echo "<th align='left'>Date</th>";
+        echo "<th align='left'>Total</th>";
+        echo "<th align='left'>Credit card</th>";
+        echo "<th align='left'>Invoice</th>";
+        echo "<th align='left'>Nights</th>";
+        echo "<th align='left'>Avg. price</th>";
+        echo "<th align='left'>Orders</th>";
+        echo "<th align='left'>Avg. order</th>";
+        echo "</tr>";
+        
+        $salesInvoice = $this->getApi()->getOrderManager()->getSalesStatistics($this->getStartDate(), $this->getEndDate(), "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment");
+        $salesNetAxcept = $this->getApi()->getOrderManager()->getSalesStatistics($this->getStartDate(), $this->getEndDate(), "ns_def1e922_972f_4557_a315_a751a9b9eff1\Netaxept");
+        
+        $matrix = array();
+        foreach($salesInvoice as $day => $sold) {
+            $row = array();
+            $invoice = $salesInvoice->{$day}->totalAmount;
+            $creditcard = $salesNetAxcept->{$day}->totalAmount;
+            $total = $invoice + $creditcard;
+            
+            $row[] = $total;
+            $row[] = $creditcard;
+            $row[] = $invoice;
+            
+            $totalCount = $salesInvoice->{$day}->totalCount;
+            $totalCount += $salesNetAxcept->{$day}->totalCount;
+            $row[] = $totalCount;
+            if($totalCount > 0) {
+                $row[] = round($total / $totalCount, 2); 
+            } else {
+                $row[] = 0; 
+            }
+            $orders = $salesInvoice->{$day}->numberOfOrders;
+            $orders += $salesNetAxcept->{$day}->numberOfOrders;
+            $row[] = $orders;
+            if($orders > 0) {
+                $row[] = round($total / $orders, 2);
+            } else {
+                $row[] = 0;
+            }
+            
+            $matrix[$day] = $row;
+        }
+        $matrix = $this->convertMatrixToPeriode($matrix);
+        foreach($matrix as $day => $row) {
+            echo "<tr>";
+            echo "<td>" . date("d.m.Y", $day) . "</td>";
+            foreach($row as $field) {
+                echo "<td style='background-color:#fff;'>" . $field . "</td>";
+            }
+            echo "</tr>";
+        }
+            
+        echo "</table>";
+    }
+
+    public function convertMatrixToPeriode($matrix) {
+        $periode = $_POST['data']['periode'];
+        if($periode == "daily") {
+            return $matrix;
+        }
+        
+        $keys = array_keys($matrix);
+        if($periode == "weekly") {
+            $newMatrix = array();
+            foreach($matrix as $day => $row) {
+                foreach($row as $index => $field) {
+                    $newMatrixIndex = strtotime('last monday', $day);
+                    if(!isset($newMatrix[$newMatrixIndex])) {
+                        $newMatrix[$newMatrixIndex] = array();
+                    }
+                    if(!isset($newMatrix[$newMatrixIndex][$index])) {
+                        $newMatrix[$newMatrixIndex][$index] = 0;
+                    }
+                    $newMatrix[$newMatrixIndex][$index] += $field;
+                }
+            }
+            $matrix = $newMatrix;
+        }
+        
+        if($periode == "monthly") {
+            $newMatrix = array();
+            foreach($matrix as $day => $row) {
+                foreach($row as $index => $field) {
+                    $newMatrixIndex = strtotime('first day of this month', $day);
+                    if(!isset($newMatrix[$newMatrixIndex])) {
+                        $newMatrix[$newMatrixIndex] = array();
+                    }
+                    if(!isset($newMatrix[$newMatrixIndex][$index])) {
+                        $newMatrix[$newMatrixIndex][$index] = 0;
+                    }
+                    $newMatrix[$newMatrixIndex][$index] += $field;
+                }
+            }
+            $matrix = $newMatrix;
+        }
+        
+        return $matrix;
+    }
+
 }
 ?>

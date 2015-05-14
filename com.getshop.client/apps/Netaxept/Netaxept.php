@@ -30,7 +30,7 @@ class Netaxept extends \PaymentApplication implements \Application {
     public function postProcess() {
         
     }
-
+    
     public function getWsdl() {
         $wsdl = "https://epayment.nets.eu/Netaxept.svc?wsdl";
         if ($this->getConfigurationSetting("debugmode") != "false" || !$this->getFactory()->productionMode) {
@@ -394,6 +394,49 @@ class Netaxept extends \PaymentApplication implements \Application {
         return true;
     }
 
+    public function parseCsv() {
+
+        $lines = explode(PHP_EOL, $_POST['content']);
+        $array = array();
+        
+        echo "<div class='gss_settings_header'><i class='fa fa-check-circle'></i><div class='gss_settings_header_description'>Read CSV successfully<br/><br/>";
+
+        foreach ($lines as $line) {
+            $line = str_getcsv($line);
+            if ($line[0] == "Transaksjon") {
+                $orderId = $line[6];
+                $mictroTransactionId = $line[9];
+                
+                $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($orderId);
+                if ($order) {
+                    $found = false;
+                    
+                    foreach ($order->transactions as $transaction) {
+                        if ($transaction->microTransactionReference == $mictroTransactionId) {
+                            $found = true;
+                        }
+                    }
+                    
+                    if ($found) {
+                        continue;
+                    }
+                    
+                    $transaction = new \core_ordermanager_data_CardTransaction();
+                    $transaction->date = $this->formatTimeToJavaDate(strtotime($line[2]));
+                    $transaction->currency = $line[3];
+                    $transaction->amount = $line[4];
+                    $transaction->microTransactionReference = $mictroTransactionId;
+                    
+                    echo "<div>Order: ".$order->incrementOrderId." Amount: " . $transaction->amount."  Currency: ".$transaction->currency."</div>";
+                    $order->transactions[] = $transaction;
+                    $this->getApi()->getOrderManager()->saveOrder($order);
+                }
+            }
+        }
+        
+        echo '</div></div>';
+        
+    }
 }
 
 ?>

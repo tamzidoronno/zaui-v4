@@ -424,5 +424,9 @@ class ApplicationBase extends FactoryBase {
     public function gs_show_fragment() {
         $this->includefile($_POST['gss_fragment']);
     }
+    
+    public function formatTimeToJavaDate($time) {
+        return date("M d, Y h:m:s A", $time);
+    }
 }
 ?>

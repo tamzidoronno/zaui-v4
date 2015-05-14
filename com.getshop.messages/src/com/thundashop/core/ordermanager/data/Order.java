@@ -27,6 +27,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean transferredToAccountingSystem = false;
     public boolean testOrder = false;
     public boolean captured = false;
+    public List<CardTransaction> transactions = new ArrayList();
     public List<OrderLog> logLines = new ArrayList();
 
     public boolean useForStatistic() {

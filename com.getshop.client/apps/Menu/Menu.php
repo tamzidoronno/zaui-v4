@@ -68,6 +68,7 @@ class Menu extends \SystemApplication implements \Application {
             $entryItem->fontAwsomeIcon = $item->fontAwsomeIcon;
             $entryItem->userLevel = $item->userLevel;
             $entryItem->items = $this->createItems($item->subentries);
+            $entryItem->disabledLangues = $item->disabledLangues;
             $retItems[] = $entryItem;
         }
 
@@ -117,6 +118,14 @@ class Menu extends \SystemApplication implements \Application {
                 $entry->subentries[] = $this->convertToEntry($subitem);
             }
         }
+        
+        if (!isset($item['disabledLangues'])) {
+            $entry->disabledLangues = [];
+        } else {
+            echo "SET";
+            $entry->disabledLangues = $item['disabledLangues'];
+        }
+        
         return $entry;
 
     }
@@ -154,9 +163,21 @@ class Menu extends \SystemApplication implements \Application {
 
         return $entries;
     }
+    
+    private function isDisabledDueToLanaguage($entry) {
+        $selectedLanguage = $this->getFactory()->getSelectedTranslation(); 
+        foreach ($entry->disabledLangues as $key => $lang) {
+            if ($lang == $selectedLanguage) {
+                return true;
+            }
+        }
+            
+        return false;
+    }
 
     public function printEntries($entries, $level) {
         echo "<div class='entries'>";
+        
         foreach ($entries as $entry) {
             if (isset($entry->userLevel) && $entry->userLevel) {
                 $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
@@ -168,7 +189,10 @@ class Menu extends \SystemApplication implements \Application {
                     continue;
                 }
             } 
-            
+       
+            if ($this->isDisabledDueToLanaguage($entry)) {
+                continue;
+            }
             
             $name = $entry->name;
             $linkName = \GetShopHelper::makeSeoUrl($entry->name);
@@ -188,7 +212,6 @@ class Menu extends \SystemApplication implements \Application {
                     $activate = "active";
                 }
             }
-//            echo $_SERVER["REQUEST_URI"];
             
             echo "<div class='entry $activate'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
             if ($entry->subentries) {
@@ -210,6 +233,7 @@ class EntryItem {
     public $fontAwsomeIcon = "";
     public $userLevel;
     public $items;
+    public $disabledLangues;
 }
 
 class EntryList {

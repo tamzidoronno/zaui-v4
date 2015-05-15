@@ -8,6 +8,7 @@ import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +31,8 @@ public class Entry extends TranslationHandler implements Serializable {
     
     //Appended when fetching the list.
     public List<Entry> subentries;
+    
+    public List<String> disabledLangues = new ArrayList();
     
     @Transient
     //If you don't want it to use the default page type 1, then specify it here on creation.

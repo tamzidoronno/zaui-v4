@@ -14,9 +14,27 @@ getshop.MenuEditor = {
         $(document).on('click', ".Menu .mobilenavigatemenu .fa-navicon", getshop.MenuEditor.showMenu);
         $(document).on('click', ".Menu .cancel", getshop.MenuEditor.closeMenuEditor);
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
+        $(document).on('change', ".menu_item_language", getshop.MenuEditor.itemLanguageChanged);
     },
     showSubEntries : function() {
         $(this).children('.entries').show();
+    },
+    itemLanguageChanged: function() {
+        var checked = $(this).is(':checked');
+        var language = $(this).val();
+        var disabledLanguages = [];
+        for (var i in getshop.MenuEditor.activeItem.disabledLangues) {
+            var iLang = getshop.MenuEditor.activeItem.disabledLangues[i];
+            if (iLang != language) {
+                disabledLanguages.push(iLang);
+            }
+        }
+        
+        if (!checked) {
+            disabledLanguages.push(language);
+        }
+        
+        getshop.MenuEditor.activeItem.disabledLangues = disabledLanguages;
     },
     hideSubEntries : function() {
         $(this).children('.entries').hide();
@@ -171,7 +189,6 @@ getshop.MenuEditor = {
             
     refreshItemDetails: function() {
         if (!getshop.MenuEditor.activeItem) {
-            
             $('.iteminformation').show();
             $('.titleinformation').slideUp();
         } else {
@@ -201,6 +218,24 @@ getshop.MenuEditor = {
             } else if (userLevel === 90) {
                 $('#userlevel').val("admin");
             }
+            
+            $('.menu_item_language').each(function() {
+                var val = $(this).val();
+                var disabled = false;
+                
+                for (var i in getshop.MenuEditor.activeItem.disabledLangues) {
+                    var iLang = getshop.MenuEditor.activeItem.disabledLangues[i];
+                    if (iLang == val) {
+                        disabled = true;
+                    }
+                }
+                if (disabled) {
+                    $(this).removeAttr('checked');
+                } else {
+                    $(this).attr('checked', "checked");
+                }
+                
+            });
         }
         
     }

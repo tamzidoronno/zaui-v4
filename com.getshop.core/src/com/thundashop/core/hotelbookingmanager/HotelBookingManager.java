@@ -561,10 +561,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
 
-    private boolean isAvailable(Room room, long startDate, long endDate, boolean activeOnly) {
+    private UsersBookingData isAvailable(Room room, long startDate, long endDate, boolean activeOnly) {
         
         if(!room.isActive && activeOnly) {
-            return false;
+            return null;
         }
         
         for(UsersBookingData bdata : getAllActiveUserBookings()) {
@@ -581,12 +581,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     continue;
                 }
                 if(reference.isBetweenDates(startDate*1000, endDate*1000)) {
-                    return false;
+                    return bdata;
                 } 
             }
         }
         
-        return true;
+        return null;
     }
 
     private String formatMessage(BookingReference reference, String message, String roomName, Integer code, String name) throws ErrorException {
@@ -719,7 +719,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         
         for(Room room : allRooms) {
-            if(isAvailable(room, startDate, endDate, true)) {
+            if(isAvailable(room, startDate, endDate, true) == null) {
                 if(room.suitedForLongTerm) {
                     longTerm.add(room);
                 } else if(room.isHandicap) {
@@ -878,7 +878,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public boolean isRoomAvailable(String roomId, long startDate, long endDate) throws ErrorException {
         Room room = getRoom(roomId);
-        return isAvailable(room, startDate, endDate, true);
+        return isAvailable(room, startDate, endDate, true) == null;
     }
 
     @Override
@@ -1696,11 +1696,24 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         for(Room room : allRooms) {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(startDate*1000);
+            cal.set(Calendar.HOUR_OF_DAY, 10);
+            cal.set(Calendar.MILLISECOND, 10);
+            cal.set(Calendar.MINUTE, 10);
+            cal.set(Calendar.SECOND, 10);
+
+            
             Statistics stats = new Statistics();
             while(true) {
                 long start = cal.getTimeInMillis()/1000;
                 long end = start + 86400;
-                stats.available.put(start, isAvailable(room, start, end, false));
+                UsersBookingData bdata = isAvailable(room, start, end, false);
+                stats.available.put(start, bdata == null);
+                
+                if(bdata != null) {
+                    stats.rentalPrice.put(start, bdata.bookingPrice);
+                } else {
+                    stats.rentalPrice.put(start, 0.0);
+                }
                 
                 cal.add(Calendar.DAY_OF_YEAR, 1);
                 if(cal.getTimeInMillis() > (endDate * 1000)) {

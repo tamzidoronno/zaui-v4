@@ -34,6 +34,11 @@ if(isset($_POST['data']['updated'])) {
     <div gstype="form" method="displayHotelBookingOverview">
         <input type="text" gsname="startdate" value='<? echo date("d-m-Y", $this->getStartDate()); ?>'>
         <input type="text" gsname="enddate" value='<? echo date("d-m-Y", $this->getEndDate()); ?>'> 
+        <select gsname='periode'>
+            <option value='daily'>Daily</option>
+            <option value='weekly'>Weekly</option>
+            <option value='monthly'>Monthly</option>
+        </select>
     <input type="button" gstype="submit" value="Oppdater">
     </div>
     <? 
@@ -145,6 +150,9 @@ Existing booking references
             "aaSorting": []
             
         });
+        
+        $('input[gsname="startdate"]').datepicker({ dateFormat: "dd-mm-yy" });
+        $('input[gsname="enddate"]').datepicker({ dateFormat: "dd-mm-yy" });
 </script>
 <br>
 

@@ -10,8 +10,10 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.hotelbookingmanager.Statistics;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.ProductManager;
@@ -925,6 +927,56 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         order.updatePrice(cartItemId, price);
         saveOrder(order);
+    }
+
+    @Override
+    public HashMap<Long, SalesStats> getSalesStatistics(Long startDate, Long endDate, String type) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(startDate*1000);
+        cal.set(Calendar.HOUR_OF_DAY, 10);
+        cal.set(Calendar.MILLISECOND, 10);
+        cal.set(Calendar.MINUTE, 10);
+        cal.set(Calendar.SECOND, 10);
+        
+        Statistics stats = new Statistics();
+        LinkedHashMap<Long, SalesStats> result = new LinkedHashMap();
+        
+        while(true) {
+            Integer year = cal.get(Calendar.YEAR);
+            Integer day = cal.get(Calendar.DAY_OF_YEAR);
+            SalesStats salestat = new SalesStats();
+            for (Order order : orders.values()) {
+                if (!order.useForStatistic()) {
+                    continue;
+                }
+
+                Calendar cal2 = Calendar.getInstance();
+                cal2.setTime(order.createdDate);
+                if (cal2.get(Calendar.YEAR) != year) {
+                    continue;
+                }
+                if (cal2.get(Calendar.DAY_OF_YEAR) != day) {
+                    continue;
+                }
+
+                if(type != null) {
+                    if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.equals(type)) {
+                        continue;
+                    }
+                }
+
+                salestat.totalAmount += cartManager.calculateTotalCost(order.cart);
+                salestat.totalCount += cartManager.calculateTotalCount(order.cart);
+                salestat.numberOfOrders++;
+            }
+            
+            result.put(cal.getTimeInMillis()/1000, salestat);
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(cal.getTimeInMillis() > (endDate * 1000)) {
+                break;
+            }
+        }
+        return result;
     }
 
 }

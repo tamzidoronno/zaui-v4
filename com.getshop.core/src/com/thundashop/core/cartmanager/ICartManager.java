@@ -78,6 +78,8 @@ public interface ICartManager {
      */
     public Double calculateTotalCost(Cart cart) throws ErrorException;
     
+    public Integer calculateTotalCount(Cart cart) throws ErrorException;
+    
     
     /**
      * Set a new address to the current cart.

@@ -124,7 +124,6 @@ Display this cell when logged on (it will always be visible for administrators);
 Display this cell when logged out;-;
 Disploma is disabled;-;
 Do not rotate;-;
-Do you need a rental periode for more than {maxDays} days, click <a href='?page={partnerPage}' class='partnerlink'>here</a> for long term rental;-;
 Done editing;-;
 Download as pdf;-;
 Download ebill;-;
@@ -446,7 +445,10 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;
 Your personal information;-;
+Your post office;-;
+Your postal code;-;
 Your savings;-;
+Your street address;-;
 Your you for your order;-;
 available room;-;
 available rooms;-;

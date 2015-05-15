@@ -903,6 +903,19 @@ class APICartManager {
 	}
 
 	/**
+	* Send in a cart and you shall have the total price for all products.
+	*/
+
+	public function calculateTotalCount($core_cartmanager_data_Cart) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_cartmanager_data_Cart"] = json_encode($this->transport->object_unset_nulls($core_cartmanager_data_Cart));
+	     $data["method"] = "calculateTotalCount";
+	     $data["interfaceName"] = "core.cartmanager.ICartManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Clear the current shopping cart.
 	*/
 
@@ -3674,6 +3687,25 @@ class APIOrderManager {
 	     $data['args'] = array();
 	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
 	     $data["method"] = "getSalesNumber";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return HashMap
+	*/
+
+	public function getSalesStatistics($startDate, $endDate, $type) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $data["method"] = "getSalesStatistics";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($data);
 	}

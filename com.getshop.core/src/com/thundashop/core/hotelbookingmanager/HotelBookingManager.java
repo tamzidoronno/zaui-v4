@@ -441,24 +441,29 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
             
             BookingReference reference = bdata.references.get(0);
-            for(RoomInformation room : reference.roomsReserved) {
-                Visitors visitor = room.visitors.get(0);
-                String origTitle = arxSettings.emailWelcomeTitleNO;
-                String origMessage = arxSettings.emailWelcomeNO;
-                
-                if(reference.language != null && reference.language.equals("en_en")) {
-                    origTitle = arxSettings.emailWelcomeTitle;
-                    origMessage = arxSettings.emailWelcome;
-                }
-                
-                String title = formatMessage(reference, origTitle, getRoom(room.roomId).roomName, 0, visitor.name);
-                String message = formatMessage(reference, origMessage, getRoom(room.roomId).roomName, 0, visitor.name);
-                try {
-                    sendEmail(visitor, title, message, bdata);
-                }catch(Exception e) {
-                    e.printStackTrace();
-                }
+            
+            User user = userManager.getUserById(bdata.additonalInformation.userId);
+            
+            
+            String origTitle = arxSettings.emailWelcomeTitleNO;
+            String origMessage = arxSettings.emailWelcomeNO;
+
+            if(reference.language != null && reference.language.equals("en_en")) {
+                origTitle = arxSettings.emailWelcomeTitle;
+                origMessage = arxSettings.emailWelcome;
             }
+
+            String title = formatMessage(reference, origTitle, null, 0, user.fullName);
+            String message = formatMessage(reference, origMessage, null, 0, user.fullName);
+            
+            String copyadress = storeManager.getMyStore().configuration.emailAdress;                 
+            try {
+                sendEmail(user.emailAddress, user.fullName, title, message, bdata);
+                sendEmail(copyadress, user.fullName, title, message, bdata);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+                
             bdata.sentWelcomeMessages = true;
             saveObject(bdata);
         }
@@ -636,7 +641,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         message = message.replaceAll("\\{contacts\\}", contacts);
         
         message = message.replaceAll("\\{roomName\\}", productManager.getProduct(bdata.additonalInformation.roomProductId).name);
-        User user = userManager.getUserByReference(bdata.additonalInformation.customerReference);
+        User user = userManager.getUserById(bdata.additonalInformation.userId);
         if (user != null) {
             message = message.replaceAll("\\{email\\}", user.emailAddress);
             if(user.address != null) {
@@ -818,8 +823,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return "";
     }
     
-    private void sendEmail(Visitors visitor, String title, String message, UsersBookingData bdata) {        
-        String msg = "Sending mail to " + visitor.email + " title: " + title + " message: " + message;
+    private void sendEmail(String email, String name, String title, String message, UsersBookingData bdata) {        
+        String msg = "Sending mail to " + email + " title: " + title + " message: " + message;
         
         HashMap<String, String> attachments = new HashMap();
         attachInvioce(attachments, bdata);
@@ -830,14 +835,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             e.printStackTrace();
         }
         
-        String email = visitor.email;
         String copyadress = storeManager.getMyStore().configuration.emailAdress;       
         
         if(email == null || email.isEmpty()) {
             email = copyadress;
         }
 
-        messageManager.sendMailWithAttachments(email, visitor.name, title, message, copyadress, copyadress, attachments);
+        messageManager.sendMailWithAttachments(email, name, title, message, copyadress, copyadress, attachments);
     }
 
     private void sendSms(Visitors visitor, String sms) {

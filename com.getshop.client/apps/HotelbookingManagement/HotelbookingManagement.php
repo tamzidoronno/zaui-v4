@@ -23,6 +23,13 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return "left";
     }
     
+    public function makemonthly() {
+        $bdataid = $_POST['data']['bdataid'];
+        $reference = $_POST['data']['reference'];
+        $amount = $_POST['data']['amount'];
+        $this->getApi()->getHotelBookingManager()->makeMonthly($reference,$bdataid,$amount);
+    }
+    
     public function removeRoomFromOrder() {
         $bdata = $_POST['data']['bdata'];
         $roomid = $_POST['data']['roomid'];

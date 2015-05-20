@@ -23,4 +23,5 @@ public class UsersBookingData extends DataCommon {
     boolean captured = false;
     boolean testReservation = false;
     boolean avoidAutoDelete = false;
+    public Double monthlyPrice = -1.0;
 }

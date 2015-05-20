@@ -2201,6 +2201,35 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def makeMonthly(self, reference, bdata, amount):
+    args = collections.OrderedDict()
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    if isinstance(bdata,GetShopBaseClass): 
+      args["bdata"]=json.dumps(bdata.__dict__)
+    else:
+      try:
+        args["bdata"]=json.dumps(bdata)
+      except (ValueError, AttributeError):
+        args["bdata"]=bdata
+    if isinstance(amount,GetShopBaseClass): 
+      args["amount"]=json.dumps(amount.__dict__)
+    else:
+      try:
+        args["amount"]=json.dumps(amount)
+      except (ValueError, AttributeError):
+        args["amount"]=amount
+    data = EmptyClass()
+    data.args = args
+    data.method = "makeMonthly"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def markAsPayedForTest(self, userBookingDataId):
     args = collections.OrderedDict()
     if isinstance(userBookingDataId,GetShopBaseClass): 

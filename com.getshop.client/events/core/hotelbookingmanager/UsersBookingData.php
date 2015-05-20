@@ -45,5 +45,8 @@ class core_hotelbookingmanager_UsersBookingData extends core_common_DataCommon  
 	/** @var String */
 	public $avoidAutoDelete;
 
+	/** @var String */
+	public $monthlyPrice;
+
 }
 ?>

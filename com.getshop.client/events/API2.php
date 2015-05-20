@@ -2180,6 +2180,23 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function makeMonthly($reference, $bdata, $amount) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
+	     $data['args']["bdata"] = json_encode($this->transport->object_unset_nulls($bdata));
+	     $data['args']["amount"] = json_encode($this->transport->object_unset_nulls($amount));
+	     $data["method"] = "makeMonthly";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all references
 	* @return void
 	* @throws ErrorException

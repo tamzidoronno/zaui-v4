@@ -1303,6 +1303,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             System.out.println("Nights in month:" + nightsInMonth);
             if(nightsInMonth > 0) {
                 item.setCount(nightsInMonth);
+                
+                Calendar newEndDate = Calendar.getInstance();
+                newEndDate.setTime(item.startDate);
+                newEndDate.add(Calendar.DAY_OF_YEAR, nightsInMonth);
+                item.endDate = newEndDate.getTime();
+                
                 cart.saveCartItem(item);
             } else {
                 itemsToRemove.add(item.getCartItemId());
@@ -1724,5 +1730,48 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         
         return result;
+    }
+
+    @Override
+    public void makeMonthly(Integer reference, String bdata, Double amount) throws ErrorException {
+        UsersBookingData bookingdata = getUserBookingData(bdata);
+        bookingdata.monthlyPrice = amount;
+        saveObject(bookingdata);
+        
+        
+        for(String orderId : bookingdata.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            List<CartItem> items = order.cart.getItems();
+            HashMap<String, Integer> counter = new HashMap();
+            for(CartItem item : items) {
+                if(item.startDate == null) {
+                    continue;
+                }
+                
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(item.startDate);
+                double newPrice = 0.0;
+                while(true) {
+                    int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+                    double avgPrice = amount / daysInMonth;
+                    System.out.println(cal.getTime() + " : " + newPrice);
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                    
+                    if(cal.getTime().after(item.endDate)) {
+                        break;
+                    }
+                    newPrice += avgPrice;
+                }
+                
+                newPrice /= item.getCount();
+                order.updatePrice(item.getCartItemId(), newPrice);
+                
+                System.out.println("Total price: " + newPrice);
+            }
+            
+            
+        }
+        
     }
 }

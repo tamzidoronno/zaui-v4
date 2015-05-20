@@ -42,7 +42,7 @@ echo "<bR>";
 echo "<bR>";
 echo "<b>Booked dates</b><BR>";
 foreach($bookingData->references as $reference) {
-    echo "&nbsp;&nbsp;&nbsp; " . $reference->startDate . " - " . $reference->endDate." - <a class='extendstay' data-bdataid='".$bookingData->id."' data-reference='".$reference->bookingReference."' style='cursor:pointer;'>extend stay</a><BR>";
+    echo "&nbsp;&nbsp;&nbsp; " . $reference->startDate . " - " . $reference->endDate." - <a class='extendstay' data-bdataid='".$bookingData->id."' data-reference='".$reference->bookingReference."' style='cursor:pointer;'>extend stay</a> - <a class='makemonthly' data-bdataid='".$bookingData->id."' data-reference='".$reference->bookingReference."' style='cursor:pointer;'>make monthly<BR>";
 }
 echo "</div>";
 ?>

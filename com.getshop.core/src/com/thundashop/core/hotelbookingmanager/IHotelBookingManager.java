@@ -79,6 +79,9 @@ public interface IHotelBookingManager {
     public void removeRoomFromOrder(Integer reference, String room, String bdata) throws ErrorException;
     
     @Administrator
+    public void makeMonthly(Integer reference, String bdata, Double amount) throws ErrorException;
+    
+    @Administrator
     public void toggleAvoidAutoDelete(String bdataId);
     
     /**

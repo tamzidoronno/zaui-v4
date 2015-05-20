@@ -49,7 +49,10 @@ $bdata = $this->getApi()->getHotelBookingManager()->getAllUsersInPeriode($date, 
             $result .= "</div>";
             
         }
-        $toUse = $daysPeriode-1;
+        $toUse = $daysPeriode;
+        if($daysPeriode > 1) {
+            $toUse--;
+        }
         if($daysPeriode > $nights) {
             $toUse = $nights;
         }        

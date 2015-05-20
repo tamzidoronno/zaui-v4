@@ -65,6 +65,16 @@ public interface IOrderManager {
     
     public Order getOrder(String orderId) throws ErrorException;
     
+    /**
+     * Fetch a single order based on its id.
+     * @param orderId
+     * @return
+     * @throws ErrorException 
+     */
+    
+    @Administrator
+    public List<Order> getOrdersFromPeriode(long start, long end, boolean statistics) throws ErrorException;
+    
     @Internal
     public Order getOrderSecure(String orderId) throws ErrorException;
     

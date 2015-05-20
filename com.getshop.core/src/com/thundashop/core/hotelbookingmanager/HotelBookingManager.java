@@ -1683,7 +1683,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         cartManager.clear();
         final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
         int diffInDays = (int) ((newEndDate.getTime() - breference.endDate.getTime())/ DAY_IN_MILLIS );
-        cartManager.addProductItem(bookingdata.additonalInformation.roomProductId, diffInDays);
+        CartItem item = cartManager.addProductItem(bookingdata.additonalInformation.roomProductId, diffInDays);
+        item.startDate = breference.endDate;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(item.startDate);
+        cal.add(cal.DAY_OF_YEAR, diffInDays);
+        item.endDate = cal.getTime();
+        
         Order order = orderManager.createOrderForUser(bookingdata.additonalInformation.userId);
         if(bookingdata.orderIds.size() > 0) {
             Order lastOrder = orderManager.getOrderSecure(bookingdata.orderIds.get(0));
@@ -1773,5 +1780,21 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             
         }
         
+    }
+
+    @Override
+    public List<UsersBookingData> getAllUsersInPeriode(long startDate, long endDate) throws ErrorException {
+        List<UsersBookingData> active = getAllActiveUserBookings();
+        List<UsersBookingData> result = new ArrayList();
+        for(UsersBookingData bdata : active) {
+            for(BookingReference reference :bdata.references) {
+                if(reference.isBetweenDates(startDate*1000, endDate*1000)) {
+                    result.add(bdata);
+                    break;
+                }
+            }
+        }
+        
+        return result;
     }
 }

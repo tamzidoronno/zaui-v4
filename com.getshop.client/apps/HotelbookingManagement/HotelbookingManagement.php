@@ -546,6 +546,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "</tr>";
     }
 
+    public function bookingInformation() {
+        $this->includefile("bookinginformation");
+    }
+    
     public function printBookingInformation($stats) {
         $prices = array();
         $taken = array();
@@ -553,8 +557,14 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $budget = array();
         $budget['04-2015'] = 0;
         $budget['05-2015'] = 10;
-        $budget['06-2015'] = 40;
+        $budget['06-2015'] = 25;
         $budget['07-2015'] = 50;
+        $budget['07-2015'] = 45;
+        $budget['08-2015'] = 55;
+        $budget['09-2015'] = 55;
+        $budget['10-2015'] = 55;
+        $budget['11-2015'] = 55;
+        $budget['12-2015'] = 55;
         
         $rooms = sizeof($this->getApi()->getHotelBookingManager()->getAllRooms());
 
@@ -574,14 +584,14 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
                 }
             }
         }
-        echo "<br><br><h1>Belegg kalender.</h1><br><br>";
+        echo "<br><br><h1>Belegg for periode.</h1><br><br>";
         
         $matrix = array();
         foreach($prices as $day => $result) {
             $row = array();
-            $row[] = round($result,2);
+            $row[] = round($result);
             if($taken[$day] > 0) {
-                $row[] = round($result/$taken[$day],2);
+                $row[] = round($result/$taken[$day]);
             } else {
                 $row[] = 0;
             }
@@ -611,8 +621,9 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "</tr>";
         $matrix = $this->convertMatrixToPeriode($matrix);
         
+        $periode = $_POST['data']['periode'];
         foreach($matrix as $day => $row) {
-            echo "<tr>";
+            echo "<tr class='bookinginforow'  periode='$periode' date='".date("d.m.Y", $day)."'>";
             echo "<td>" . date("d.m.Y", $day) . "</td>";
             foreach($row as $field) {
                 echo "<td style='background-color:#fff;'>" . $field . "</td>";
@@ -636,13 +647,53 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
             echo "</tr>";
         }
         
+                
+        $total = array();
+        $days = 0;
+        
+        if($periode == "monthly") {
+            $days *= 30;
+        }
+        if($periode == "weekly") {
+            $days *= 7;
+        }
+        
+        foreach($matrix as $day => $row) {
+                $days++;
+            foreach($row as $index => $field) {
+                if(!isset($total[$index])) {
+                    $total[$index] = 0;
+                } 
+                 $total[$index] += $field;
+            }
+        }
+        echo "<tr bgcolor='#fff'>";
+        echo "<td>Sum</td>";
+        foreach($total as $index => $val) {
+            echo "<td>" . round($val) . "</td>";
+        }
+        echo "</tr>";
+        echo "<tr bgcolor='#fff'>";
+        echo "<td>Avg.</td>";
+        foreach($total as $index => $val) {
+            echo "<td>" . round($val/$days) . "</td>";
+        }
+        echo "</tr>";
+        
+        
         echo "</table>";
-        echo "<style>.takentable td { padding: 5px; padding-top: 2px; padding-bottom: 2px; } </style>";
+        echo "<style>.takentable td { padding: 5px; padding-top: 2px; padding-bottom: 2px; } .bookinginforow { cursor:pointer; } </style>";
     }
+    
+    public function salesInformation() {
+        $this->includefile("salesinfo");
+    }
+    
+    
 
     public function printSalesInformation() {
         
-        echo "<br><br><h1>Sale.</h1><br><br>";
+        echo "<br><br><h1>Income for periode</h1><br><br>";
 
         echo "<table cellspacing='1' cellpadding='1' style='background-color:#efefef;' class='takentable'>";
         echo "<tr style='background-color:#efefef;'>";
@@ -690,16 +741,49 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
             $matrix[$day] = $row;
         }
         $matrix = $this->convertMatrixToPeriode($matrix);
+        $periode = $_POST['data']['periode'];
         foreach($matrix as $day => $row) {
-            echo "<tr>";
+            echo "<tr class='salesrow' periode='$periode' date='".date("d.m.Y", $day)."'>";
             echo "<td>" . date("d.m.Y", $day) . "</td>";
             foreach($row as $field) {
-                echo "<td style='background-color:#fff;'>" . $field . "</td>";
+                echo "<td style='background-color:#fff;'>" . round($field) . "</td>";
             }
             echo "</tr>";
         }
+        
+        $total = array();
+        $days = 0;
+        foreach($matrix as $day => $row) {
+                $days++;
+            foreach($row as $index => $field) {
+                if(!isset($total[$index])) {
+                    $total[$index] = 0;
+                } 
+                 $total[$index] += $field;
+            }
+        }
+        if($periode == "monthly") {
+            $days *= 30;
+        }
+        if($periode == "weekly") {
+            $days *= 7;
+        }
+        
+        echo "<tr bgcolor='#fff'>";
+        echo "<td>Sum</td>";
+        foreach($total as $index => $val) {
+            echo "<td>" . round($val) . "</td>";
+        }
+        echo "</tr>";
+        echo "<tr bgcolor='#fff'>";
+        echo "<td>Avg.</td>";
+        foreach($total as $index => $val) {
+            echo "<td>" . round($val/$days) . "</td>";
+        }
+        echo "</tr>";
             
         echo "</table>";
+        echo "<style>.salesrow { cursor:pointer; }</style>";
     }
 
     public function convertMatrixToPeriode($matrix) {

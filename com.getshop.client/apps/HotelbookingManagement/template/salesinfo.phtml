@@ -1,0 +1,48 @@
+<?php
+echo "<div style='padding: 20px; color:#fff;'>";
+$date = strtotime($_POST['data']['date']);
+$periode = $_POST['data']['periode'];
+
+if($periode == "daily") {
+    $days = 1;
+}
+if($periode == "weekly") {
+    $days = 7;
+}
+if($periode == "monthly") {
+    $days = 31;
+}
+
+
+$orders = $this->getApi()->getOrderManager()->getOrdersFromPeriode($date, $date+(86400*$days), true);
+$sum = 0;
+foreach($orders as $order) {
+
+    $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+    $total = round($this->getApi()->getOrderManager()->getTotalAmount($order));
+    $sum += $total;
+
+    $result = "";
+    $nights = 0;
+    foreach($order->cart->items as $item) {
+        /* @var $item \core_cartmanager_data_CartItem */
+        $nights += $item->count;
+        if(!isset($item->startDate)) {
+            continue;
+        }
+        $start = $item->startDate;
+        $end = $item->endDate;
+        $result .= $start . " - " . $end . "<br>";
+    }
+
+    echo "$total NOK by " . $user->fullName .  ", $nights nights ordered at " .$order->rowCreatedDate. "<br>";
+    /* @var $order \core_ordermanager_data_Order */
+    echo "<div style='padding-left: 10px;padding-bottom: 10px; color:#bbb;'>";
+    echo $result;
+    echo "</div>";
+}
+echo "<hr>";
+echo "Total orders: $sum NOK";
+echo "<hr>";
+echo "</div>";
+?>

@@ -271,7 +271,7 @@ if(!$bdata || sizeof($bdata->references) == 0) {
         echo "</span>";
         echo "<div style='clear:both;'></div>";
         echo "<span class='available_rooms'>";
-        echo $avroom;
+        echo "<span class='avroomcounter'>" . $avroom . "</span>";
         if ($avroom > 1) {
             echo " " . $this->__w("available rooms");
         } else {
@@ -308,3 +308,24 @@ if(!$bdata || sizeof($bdata->references) == 0) {
     <? } ?>
 </div>
 <div style="clear:both;"></div>
+
+<script>
+    var totalCount = 0;
+    $('.avroomcounter').each(function() {
+        var count = parseInt($(this).html());
+        if(count > totalCount) {
+            totalCount = count;
+        }
+    });
+    var curval = $('.number_of_rooms').val();
+    $('.number_of_rooms').html('');
+    for(var i = 1; i <= totalCount; i++) {
+        $('.number_of_rooms').append('<option value="'+i+'">' + i + "</option>");
+        if(i === 10) {
+            break;
+        }
+    }
+    $('.number_of_rooms').val(curval);
+    
+    
+</script>

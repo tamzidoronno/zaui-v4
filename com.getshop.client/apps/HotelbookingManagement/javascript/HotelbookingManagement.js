@@ -164,6 +164,27 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .extendstay', app.HotelbookingManagement.extendstay);
         $(document).on('click', '.HotelbookingManagement .toggleautodelete', app.HotelbookingManagement.toggleautodelete);
         $(document).on('click', '.HotelbookingManagement .makemonthly', app.HotelbookingManagement.makemonthly);
+        $(document).on('click', '.HotelbookingManagement .salesrow', app.HotelbookingManagement.salesrow);
+        $(document).on('click', '.HotelbookingManagement .bookinginforow', app.HotelbookingManagement.bookinginforow);
+    },
+    bookinginforow : function() {
+        var data = {
+            date : $(this).attr('date'),
+            periode : $(this).attr('periode')
+        }
+        
+        var event = thundashop.Ajax.createEvent('','bookingInformation',$(this),data);
+        thundashop.common.showInformationBox(event,'Booking information for date: ' + data.date + ", periode: " + data.periode);
+    },
+    
+    salesrow : function() {
+        var data = {
+            date : $(this).attr('date'),
+            periode : $(this).attr('periode')
+        }
+        
+        var event = thundashop.Ajax.createEvent('','salesInformation',$(this),data);
+        thundashop.common.showInformationBox(event,'Sales information for date: ' + data.date + ", periode: " + data.periode);
     },
     
      makemonthly : function() {

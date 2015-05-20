@@ -1988,6 +1988,22 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
+	public function getAllUsersInPeriode($startDate, $endDate) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data["method"] = "getAllUsersInPeriode";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return List
+	* @throws ErrorException
+	*/
+
 	public function getArxLog() {
 	     $data = array();
 	     $data['args'] = array();
@@ -3640,6 +3656,24 @@ class APIOrderManager {
 	     $data['args']["page"] = json_encode($this->transport->object_unset_nulls($page));
 	     $data['args']["pageSize"] = json_encode($this->transport->object_unset_nulls($pageSize));
 	     $data["method"] = "getOrders";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Fetch a single order based on its id.
+	* @param orderId
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getOrdersFromPeriode($start, $end, $statistics) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $data['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $data['args']["statistics"] = json_encode($this->transport->object_unset_nulls($statistics));
+	     $data["method"] = "getOrdersFromPeriode";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($data);
 	}

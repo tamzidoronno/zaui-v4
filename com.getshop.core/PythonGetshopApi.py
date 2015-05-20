@@ -2013,6 +2013,28 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getAllUsersInPeriode(self, startDate, endDate):
+    args = collections.OrderedDict()
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
+    else:
+      try:
+        args["startDate"]=json.dumps(startDate)
+      except (ValueError, AttributeError):
+        args["startDate"]=startDate
+    if isinstance(endDate,GetShopBaseClass): 
+      args["endDate"]=json.dumps(endDate.__dict__)
+    else:
+      try:
+        args["endDate"]=json.dumps(endDate)
+      except (ValueError, AttributeError):
+        args["endDate"]=endDate
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllUsersInPeriode"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getArxLog(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -3741,6 +3763,35 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getOrders"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getOrdersFromPeriode(self, start, end, statistics):
+    args = collections.OrderedDict()
+    if isinstance(start,GetShopBaseClass): 
+      args["start"]=json.dumps(start.__dict__)
+    else:
+      try:
+        args["start"]=json.dumps(start)
+      except (ValueError, AttributeError):
+        args["start"]=start
+    if isinstance(end,GetShopBaseClass): 
+      args["end"]=json.dumps(end.__dict__)
+    else:
+      try:
+        args["end"]=json.dumps(end)
+      except (ValueError, AttributeError):
+        args["end"]=end
+    if isinstance(statistics,GetShopBaseClass): 
+      args["statistics"]=json.dumps(statistics.__dict__)
+    else:
+      try:
+        args["statistics"]=json.dumps(statistics)
+      except (ValueError, AttributeError):
+        args["statistics"]=statistics
+    data = EmptyClass()
+    data.args = args
+    data.method = "getOrdersFromPeriode"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 

@@ -27,6 +27,11 @@ if(isset($_POST['data']['updated'])) {
     </script>
     <?
 }
+
+$periods = array();
+$periods['daily'] = "Daily";
+$periods['weekly'] = "Weekly";
+$periods['monthly'] = "Monthly";
 ?>
 <br>
     
@@ -35,9 +40,16 @@ if(isset($_POST['data']['updated'])) {
         <input type="text" gsname="startdate" value='<? echo date("d-m-Y", $this->getStartDate()); ?>'>
         <input type="text" gsname="enddate" value='<? echo date("d-m-Y", $this->getEndDate()); ?>'> 
         <select gsname='periode'>
-            <option value='daily'>Daily</option>
-            <option value='weekly'>Weekly</option>
-            <option value='monthly'>Monthly</option>
+            <?
+            foreach($periods as $key => $periode) {
+                $selected = "";
+                if($_POST['data']['periode'] == $key) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$key' $selected>$periode</option>";
+            }
+            ?>
+            
         </select>
     <input type="button" gstype="submit" value="Oppdater">
     </div>
@@ -125,6 +137,9 @@ Existing booking references
                         }
                     } else {
                         echo "Invoice";
+                        if($bdata->payedFor) {
+                            echo " <span title='Transferred to visma'>(T)</span>";
+                        }
                     }
                 } else {
                     echo "test, order";

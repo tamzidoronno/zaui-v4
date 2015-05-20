@@ -130,6 +130,9 @@ public interface IHotelBookingManager {
     @Administrator
     public List<UsersBookingData> getAllReservationsArx() throws ErrorException;
     
+    @Administrator
+    public List<UsersBookingData> getAllUsersInPeriode(long startDate, long endDate) throws ErrorException;
+    
     
     @Administrator
     public void deleteReference(int reference) throws ErrorException;

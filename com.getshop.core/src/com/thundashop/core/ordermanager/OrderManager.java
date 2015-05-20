@@ -979,4 +979,30 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return result;
     }
 
+    @Override
+    public List<Order> getOrdersFromPeriode(long start, long end, boolean statistics) throws ErrorException {
+        List<Order> orderresult = new ArrayList();
+        
+        Calendar startDate = Calendar.getInstance();
+        startDate.setTimeInMillis(start*1000);
+        startDate.set(Calendar.HOUR_OF_DAY, 1);
+        startDate.set(Calendar.MINUTE, 1);
+        
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTimeInMillis(startDate.getTimeInMillis());
+        endDate.set(Calendar.HOUR_OF_DAY, 23);
+        endDate.set(Calendar.MINUTE, 59);
+        
+        for(Order order : orders.values()) {
+            if(!order.useForStatistic() && statistics) {
+                continue;
+            }
+            if(order.createdDate.after(startDate.getTime()) && order.createdDate.before(endDate.getTime())) {
+                orderresult.add(order);
+            }
+        }
+        
+        return orderresult;
+    }
+
 }

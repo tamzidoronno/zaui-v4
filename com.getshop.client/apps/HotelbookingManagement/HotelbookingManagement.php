@@ -651,13 +651,6 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $total = array();
         $days = 0;
         
-        if($periode == "monthly") {
-            $days *= 30;
-        }
-        if($periode == "weekly") {
-            $days *= 7;
-        }
-        
         foreach($matrix as $day => $row) {
                 $days++;
             foreach($row as $index => $field) {
@@ -761,12 +754,6 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
                 } 
                  $total[$index] += $field;
             }
-        }
-        if($periode == "monthly") {
-            $days *= 30;
-        }
-        if($periode == "weekly") {
-            $days *= 7;
         }
         
         echo "<tr bgcolor='#fff'>";

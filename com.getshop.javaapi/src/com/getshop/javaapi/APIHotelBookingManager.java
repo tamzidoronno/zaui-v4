@@ -567,6 +567,22 @@ public class APIHotelBookingManager {
      }
 
      /**
+     * Add new room to the manager.
+     * @param room
+     * @throws ErrorException
+     */
+     public void makeMonthly(java.lang.Integer reference, java.lang.String bdata, java.lang.Double amount)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("reference",new Gson().toJson(reference));
+          gs_json_object_data.args.put("bdata",new Gson().toJson(bdata));
+          gs_json_object_data.args.put("amount",new Gson().toJson(amount));
+          gs_json_object_data.method = "makeMonthly";
+          gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * Get all references
      * @return
      * @throws ErrorException

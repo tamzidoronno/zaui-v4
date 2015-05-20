@@ -682,7 +682,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         
         
         echo "</table>";
-        echo "<style>.takentable td { padding: 5px; padding-top: 2px; padding-bottom: 2px; } .bookinginforow { cursor:pointer; } </style>";
+        echo "<style>.takentable td { padding: 5px; padding-top: 2px; padding-bottom: 2px; } .bookinginforow { cursor:pointer; } </style>";
     }
     
     public function salesInformation() {

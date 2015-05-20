@@ -37,6 +37,9 @@ class core_listmanager_data_Entry extends core_common_TranslationHandler  {
 	public $subentries;
 
 	/** @var String */
+	public $disabledLangues;
+
+	/** @var String */
 	public $pageType;
 
 	/** @var String */

@@ -1,4 +1,5 @@
 <?
+/* @var $this ns_a11ac190_4f9a_11e3_8f96_0800200c9a66\Menu */
 /**
  * Template file for MenuEditor, this file holds the responsibility to 
  * show all configurator.
@@ -103,6 +104,26 @@ $menuLists = $this->getMenuLists();
                                     
                                         </td>
                                     </tr>
+                                    <?
+                                    $langCodes = $this->getFactory()->getLanguageCodes();
+                                    $mainLanguage = $this->getFactory()->getMainLanguage();
+                                    
+                                    if ($langCodes) {
+                                    ?>
+                                        <tr>
+                                            <td valign="top"><br/><? echo $this->__f("Languages");?></td>
+                                            <td>
+                                                <? 
+                                                    echo "<br/><input class='menu_item_language' style='width: 30px;' type='checkbox' value='$mainLanguage'/> $mainLanguage";    
+                                                    foreach ($langCodes as $langCode) {
+                                                        echo "<br/><input class='menu_item_language' style='width: 30px;' type='checkbox' value='$langCode'/> $langCode";    
+                                                    }
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    <?
+                                    }
+                                    ?>
                                 </table>
                             </div>
                             <div class="disabled"></div>

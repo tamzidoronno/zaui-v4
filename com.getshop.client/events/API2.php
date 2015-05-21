@@ -2074,6 +2074,20 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getInvoiceCustomers() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getInvoiceCustomers";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
 	* @return core_hotelbookingmanager_BookingReference
 	* @throws ErrorException
 	*/
@@ -2495,6 +2509,21 @@ class APIHotelBookingManager {
 	     $data['args'] = array();
 	     $data['args']["bdataId"] = json_encode($this->transport->object_unset_nulls($bdataId));
 	     $data["method"] = "toggleAvoidAutoDelete";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function toggleForInvoice($userId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data["method"] = "toggleForInvoice";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}

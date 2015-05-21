@@ -194,6 +194,12 @@ public interface IHotelBookingManager {
 
     @Administrator
     public void markAsPayedForTest(String userBookingDataId);
+
+    @Administrator
+    public void toggleForInvoice(String userId);
+    
+    @Administrator
+    public List<String> getInvoiceCustomers();
     
     public void updateBookingInformation(List<Visitors> vistors, String userBookingId, String roomId, Integer referenceId);
     

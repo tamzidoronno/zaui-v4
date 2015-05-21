@@ -2082,6 +2082,14 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getInvoiceCustomers(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getInvoiceCustomers"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getReservationByReferenceId(self, referenceId):
     args = collections.OrderedDict()
     if isinstance(referenceId,GetShopBaseClass): 
@@ -2616,6 +2624,21 @@ class HotelBookingManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "toggleAvoidAutoDelete"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def toggleForInvoice(self, userId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleForInvoice"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 

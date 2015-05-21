@@ -42,6 +42,28 @@ and open the template in the editor.
         <div class='disconnected'><div><img src='css/images/ajax-loader.gif'/><br><span id="waitingforconnection" translate="true">Venter på at tilkoblingen skal gjennopprettes</span></div></div>
         <div class='connecting'><div><img src='css/images/ajax-loader.gif'/><br><span id="connectorindicator" translate="true">Kobler til server</span></div></div>
         <div class='loading'><div><img src='css/images/ajax-loader.gif'/><br><span id="dataloader" translate="true">Laster data</span></div></div>
+        <div data-role="page" id="login">
+            <div data-role="header" data-theme="asd">
+                <img border="0" src="css/images/logo.png" class="logo"/>
+            </div>
+            
+            <div data-role="content">
+                <div translate="true" style="text-align: center;">
+                    Velkommen til ProMeister Academy, appen som gir deg kunnskapspåfylling med noen enkle tastetrykk.
+                </div>
+                <br/>
+                <div class="loginform">
+                    <span translate="true">Brukernavn</span>:
+                    <input id='login_username' placeholder="user@email.com"/>
+                    <span translate="true">Passord</span>:
+                    <input id='login_password' placeholder="*****"/>
+                    
+                </div>
+                <div class="pro_button" translate="true" id='app_login_button'>Logg inn</div>
+                <div style='text-align: center; color: #888; padding-top: 10px;'>........................
+                <br/><br/><div style='border: solid 1px #EEE; display: inline-block; padding: 15px;'>Ny bruker? - Opprett konto her</div></div>
+            </div>
+        </div>
         <div data-role="page" id="home">
             <div data-role="header" data-theme="asd">
                 <img border="0" src="css/images/logo.png" class="logo"/>
@@ -54,6 +76,7 @@ and open the template in the editor.
                         <div class='menu_entry newsbutton'><img  src="css/images/twittericon.png"/><div class='name' translate="true">Nyheter</div><div class='counter'>12</div></div>
                         <div class='menu_entry gotocourses'><img  src="css/images/haticon.png"/><div class='name' translate="true">Kurs oversikt</div></div>
                         <div class='menu_entry infobutton'><img  src="css/images/infoicon.png"/><div class='name' translate="true">Informasjon</div></div>
+                        <div class='menu_entry logoutbutton'><img  src="css/images/lockicon.png"/><div class='name' translate="true">Logg ut</div></div>
                     </div>
                 </div>
             </div>
@@ -169,62 +192,6 @@ and open the template in the editor.
                 <div class="newsentries"></div>
             </div>
 
-            <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
-                <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
-                    <ul>
-                        <li>
-                            <a class='backbutton' href="#" data-role="button" data-rel="back" translate="true">Tilbake</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div data-role="page" id="signup">
-            <div data-role="content" style="text-align:left">
-                <form>
-                    <div class="basic_signon_information">
-                        <label for="name"><span translate="true">Deltakers navn</span></label>
-                        <input type="text" data-clear-btn="true" name="text-6" id="name" value="" >
-                        <label for="email"><span translate="true">E-post deltaker</span></label>
-                        <input type="text" data-clear-btn="true" name="text-6" id="email" value="" >
-                        <label for="emailinvoice" translate="true">E-post teknisk leder</label>
-                        <input type="text" data-clear-btn="true" name="text-6" id="invoiceemail" value="" >
-                        <label for="phone" translate="true">Mob.Tlf.</label>
-                        <input type="text" data-clear-btn="true" name="text-6" id="phone" value="" >
-
-                        <div data-role="fieldcontain">
-                            <label for="select-native-1" translate="true">Velg kurs</label>
-                            <select name="select-native-1" id="select-native-1">
-                            </select>
-                        </div>
-
-                        <div data-role="fieldcontain">
-                            <label for="select-native-2" translate="true">Velg grossist</label>
-                            <select name="select-native-1" id="select-native-2"></select>
-                        </div>
-
-                        <div class="extrainformationforgroup">
-                            <label for="extrainformationforgroup"></label>
-                            <input type="text" data-clear-btn="true" name="text-6" id="extrainformationforgroup" value="" >    
-                        </div>
-
-
-                        <div class="availablepositions_course_selected"></div>
-                        <br>
-                        <a id="next_signon" href="#" data-role="button"><span translate="true">Neste</span></a>
-                    </div>
-                    <div class="signon_find_company">
-                        <label for="companyname" translate="true">Firmanavn</label>
-                        <input type="text" data-clear-btn="true" name="text-6" id="companyname" value="" >
-                        
-                        <a id="searchcompany" href="#" data-role="button" style="margin-bottom: 20px;"><span translate='true'>Søk</span></a>
-                        
-                        <div class="searchresult" translate="true">Skriv inn ditt firmanavn og trykk på søk, da vil resultatet vises her og du kan velge selskapet du tilhører.</div>
-                        <!--<a id="signon" href="#" data-role="button"><span>Meld på</span></a>-->
-                    </div>
-                </form>
-            </div>
             <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
                 <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
                     <ul>

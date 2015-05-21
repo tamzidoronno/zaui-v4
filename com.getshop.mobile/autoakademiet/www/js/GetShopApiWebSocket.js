@@ -941,6 +941,17 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'registerToken' : function(token, silent) {
+        data = {
+            args : {
+                token : JSON.stringify(token),
+            },
+            method: 'registerToken',
+            interfaceName: 'core.calendar.ICalendarManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'removeSignature' : function(userId,diplomId, silent) {
         data = {
             args : {
@@ -2860,6 +2871,55 @@ GetShopApiWebSocket.InvoiceManager.prototype = {
     },
 
 }
+GetShopApiWebSocket.PkkControlManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.PkkControlManager.prototype = {
+    'getPkkControlData' : function(licensePlate, silent) {
+        data = {
+            args : {
+                licensePlate : JSON.stringify(licensePlate),
+            },
+            method: 'getPkkControlData',
+            interfaceName: 'core.pkk.IPkkControlManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getPkkControls' : function(silent) {
+        data = {
+            args : {
+            },
+            method: 'getPkkControls',
+            interfaceName: 'core.pkk.IPkkControlManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'registerPkkControl' : function(data, silent) {
+        data = {
+            args : {
+                data : JSON.stringify(data),
+            },
+            method: 'registerPkkControl',
+            interfaceName: 'core.pkk.IPkkControlManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'removePkkControl' : function(id, silent) {
+        data = {
+            args : {
+                id : JSON.stringify(id),
+            },
+            method: 'removePkkControl',
+            interfaceName: 'core.pkk.IPkkControlManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+}
 GetShopApiWebSocket.ProductManager = function(communication) {
     this.communication = communication;
 }
@@ -3628,6 +3688,18 @@ GetShopApiWebSocket.SedoxProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'transferCreditToSlave' : function(slaveId,amount, silent) {
+        data = {
+            args : {
+                slaveId : JSON.stringify(slaveId),
+                amount : JSON.stringify(amount),
+            },
+            method: 'transferCreditToSlave',
+            interfaceName: 'core.sedox.ISedoxProductManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
 }
 GetShopApiWebSocket.StoreManager = function(communication) {
     this.communication = communication;
@@ -4286,6 +4358,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.OrderManager = new GetShopApiWebSocket.OrderManager(this);
     this.PageManager = new GetShopApiWebSocket.PageManager(this);
     this.InvoiceManager = new GetShopApiWebSocket.InvoiceManager(this);
+    this.PkkControlManager = new GetShopApiWebSocket.PkkControlManager(this);
     this.ProductManager = new GetShopApiWebSocket.ProductManager(this);
     this.ReportingManager = new GetShopApiWebSocket.ReportingManager(this);
     this.SedoxProductManager = new GetShopApiWebSocket.SedoxProductManager(this);

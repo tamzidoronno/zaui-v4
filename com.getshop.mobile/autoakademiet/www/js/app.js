@@ -4,6 +4,7 @@
  */
 
 App = {
+    loggedInUser: false,
     showingYear: 0,
     showingMonth: 0,
     startMonth: 0,
@@ -13,7 +14,7 @@ App = {
     token: "",
     firstConnected: false,
     numberOfMonthToShowInCalendar: 6,
-    lang: 'se',
+    lang: 'no',
     start: function () {
         this.setLanguageMode();
         this.getshopApi = new GetShopApiWebSocket(this.address);
@@ -30,7 +31,7 @@ App = {
             App.address = "promeisterse.getshop.com";
             App.appName = "ProMeisterAcademeySe";
         } else {
-            App.address = "mecademo.getshop.com";
+            App.address = "mecademo.local.getshop.com";
             App.appName = "ProMeisterAcademey";
         }
     },
@@ -264,25 +265,16 @@ App = {
         entryContainer.attr('entry', entry.entryId);
 
         entryContainer.tap(function () {
-            var pageId = 'daypage_' + $(this).attr('year') + "_" + $(this).attr('month') + "_" + $(this).attr('day');
+            var pageId = 'daypage_' + $(this).attr('year') + "_" + $(this).attr('month') + "_" + $(this).attr('day')+"_"+entry.entryId;
             var entryId = $(this).attr('entry');
             $.mobile.changePage("#" + pageId, {transition: 'slide' });
-            App.hideOtherEvents(entryId, pageId);
         });
         
         entryContainer.append(availableMark);
         
         return entryContainer;
     },
-    hideOtherEvents: function (entry, pageId) {
-        var page = $("#" + pageId);
-        this.showOtherEvents();
-        page.find('.kursentry').each(function () {
-            if ($(this).attr('id') !== entry) {
-                $(this).hide();
-            }
-        })
-    },
+
     showOtherEvents: function () {
         $(document).find('.kursentry').each(function () {
             $(this).show();
@@ -465,7 +457,16 @@ App = {
         $('.connecting').hide();
         this.monthIndex = 1;
         this.activateFilter("");
-        $.mobile.changePage('#home');
+        App.showFirstPage();
+        
+    },
+    showFirstPage: function() {
+        if (App.loggedInUser) {
+            $.mobile.changePage('#home');
+        } else {
+            $.mobile.changePage('#login');
+            App.doLogin(true);
+        }
     },
     transferCompleted: function () {
         $('.loading').hide();
@@ -525,8 +526,6 @@ App = {
                 var positions = $(this).find(':selected').attr('availablepositions');
                 App.showFreePositions(positions);
             });
-
-
         });
         this.getshopApi.UserManager.getAllGroups().done(function (groups) {
             $('#select-native-2').html("");
@@ -539,42 +538,6 @@ App = {
             });
             $('#select-native-2').selectmenu();
             $('#select-native-2').selectmenu('refresh', true);
-        });
-
-        $('#signup').on('pageshow', function () {
-            if (App.detached) {
-                $('#select-native-1').find('option').detach();
-                $('#select-native-1').append(App.detached);
-                App.detached = null;
-            }
-
-            if (App.filterToEntryId) {
-                var entryId = App.filterToEntryId;
-                App.detached = $('#select-native-1').find('option').detach();
-
-                var entryFound = false;
-                $(App.detached).each(function () {
-                    if ($(this).attr('value') === entryId) {
-                        entryFound = this;
-                    }
-                });
-
-                $('#select-native-1').append(entryFound);
-            }
-
-            $('#select-native-1').selectmenu('refresh', true);
-
-            var signOnButton = $('#signup a#signon span');
-
-            if ($('#select-native-1').find(':selected') && $('#select-native-1').find(':selected').length > 0) {
-                var positions = $('#select-native-1').find(':selected').attr('availablepositions')
-                App.showFreePositions(positions);
-            }
-
-            App.groupChanged();
-            
-            $('#signup .basic_signon_information').show();
-            $('#signup .signon_find_company').hide();
         });
     },
     nextClicked: function () {
@@ -688,76 +651,55 @@ App = {
         
         return true;
     },
-    
-    signOnClicked: function (vatNumber) {
-        var me = this;
-        var name = $('#name').val();
-        var email = $('#email').val();
-        var invoiceemail = $('#invoiceemail').val();
-        var phone = $('#phone').val();
-        var courseId = $('#select-native-1').find(':selected').val();
-        var groupId = $('#select-native-2').find(':selected').val()
-        var groupInformation = $('#extrainformationforgroup').val();
-        var positions = $('#select-native-1').find(':selected').attr('availablepositions');
+    doLogin: function(fromStorage) {
+        var loginButton = $('#login #app_login_button');
+        var oldButtonTextLogin = loginButton.html();
         
-        this.getshopApi.UtilManager.getCompanyFromBrReg(vatNumber).done(function (company) {
-            if (!company.name) {
-                alert(App.translateText('klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk'));
-                return;
-            }
-
-            var password = Math.floor(Math.random() * 90000) + 10000;
-            var user = {
-                fullName: name,
-                emailAddress: email,
-                type: 10,
-                password: password,
-                birthDay: vatNumber,
-                cellPhone: phone,
-                groups: [groupId],
-                company: company,
-                emailAddressToInvoice: invoiceemail,
-                referenceKey: groupInformation
-            };
-
-            me.getshopApi.UserManager.createUser(user).done(function (createUser) {
-                me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username, 'mobile').done(function () {
-                    if (positions <= 0) {
-                        alert(App.translateText('Du er nå meldt på ventelisten'));
-                    } else {
-                        alert(App.translateText('Du er nå påmeldt kurset'));
-                    }
-                    document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
-                });
-            });
-        });
-
-    },
-    goToCompanyFinding: function() {
-        if (!this.checkAllSignonFields()) {
-            return;
-        }
-        $('#signup .basic_signon_information').hide();
-        $('#signup .signon_find_company').show(); 
-        window.scrollTo(0,0);
-    },
-    searchForCompany: function() {
-        var me = this;
-        var text = $('#companyname').val();
-        this.getshopApi.UtilManager.getCompaniesFromBrReg(text).done(function(result) {
-            $('#signup .searchresult').html("");
-            if (!result.length) {
-                $('#signup .searchresult').html(App.translateText('Fant desverre ingen firma ved angitt søkeord, sjekk søkeordet og prøv igjen.'));
-                return;
-            } else {
-                $('#signup .searchresult').html("<center>"+App.translateText('Trykk på selskapet under for å velge det')+"</center><br/><br/>");
-            }
+        var username = $('#login_username').val();
+        var password = $('#login_password').val();
+        
+        $('#login_username').val("");
+        $('#login_password').val("");
+        
+        if (typeof(fromStorage) !== "undefined" && fromStorage === true) {
+            username = localStorage.getItem("username");
+            password = localStorage.getItem("password");
             
-            $(result).each(function() {
-                var result = '<div class="company_search_row_result" vatnumber="'+this.vatNumber+'">'+ this.name +' <span> ' + this.vatNumber + ' </span></div>';
-                $('#signup .searchresult').append(result);
-            });
+            if (typeof(username) === "undefined" || typeof(password) === "undefined" || !username || !password) {
+                return;
+            }
+        }
+        
+        loginButton.html('<i class="fa-li fa fa-spinner fa-spin"></i> ' + App.translateText("Logger inn... Vennligst vent"));
+        loginButton.addClass('disabled');
+        
+        
+        this.getshopApi.UserManager.logOn(username, password).done(function(result) {
+            if (result != null && typeof(result.errorCode) !== "undefined" && result.errorCode === 13) {
+                loginButton.html(App.translateText("Feil brukernavn eller passord"));
+                loginButton.removeClass("disabled");
+                setTimeout(function() {
+                    loginButton.html(oldButtonTextLogin);
+                }, 2000);
+                
+                return;
+            };
+            
+            localStorage.setItem("username", username);
+            localStorage.setItem("password", password);
+            App.loggedInUser = result;
+            loginButton.html(oldButtonTextLogin);
+            loginButton.removeClass("disabled");
+            App.reset();
+            
+            App.getshopApi.CalendarManager.registerToken(App.token).done(function() { } );
         });
+    },
+    doLogout: function() {
+        App.loggedInUser = false;
+        localStorage.setItem("username", "");
+        localStorage.setItem("password", "");
+        App.reset();
     },
     setupListeners: function () {
         var me = this;
@@ -771,8 +713,8 @@ App = {
             run();
         });
         
-        $('#signup #next_signon').click($.proxy(this.goToCompanyFinding, this));
-        $('#signup #searchcompany').click($.proxy(this.searchForCompany, this));
+        $('#login #app_login_button').click($.proxy(this.doLogin, this));
+        $('.logoutbutton').click($.proxy(this.doLogout, this));
         $('#next').click($.proxy(this.nextClicked, this));
         $('#prev').click($.proxy(this.prevClicked, this));
         $('#regions .region_failed').click($.proxy(this.checkGps, this));
@@ -1361,26 +1303,47 @@ App.Calendar.prototype = {
         var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
         return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
     },
+    signUpForEvent: function(entryId, waitinglist) {
+        var result = confirm(App.translateText("Du er i ferd med å melde deg på dette kurset, ved å trykke OK har du bekreftet ProMeister's brukervillkår og du har bli meldt på kurset"));
+        if (!result) {
+            return;
+        }
+        
+        var userId = App.loggedInUser.id;
+        var emailAddress = App.loggedInUser.emailAddress;
+        var password = localStorage.getItem("password");
+        
+        this.getshopApi.CalendarManager.addUserToEvent(userId, entryId, password, emailAddress, 'mobile').done(function () {
+            if (waitinglist) {
+                alert(App.translateText('Du er nå meldt på ventelisten'));
+            } else {
+                alert(App.translateText('Du er nå påmeldt kurset'));
+            }
+            document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
+        });
+    },
     createDayPages: function (data) {
-
+        var meCalendar = this;
         for (day in data.days) {
             if (data.days[day].entries && data.days[day].entries.length > 0) {
                 var entries = data.days[day].entries;
-                var pageId = 'daypage_' + this.year + '_' + this.month + '_' + day;
-
-                var page = $('#' + pageId);
-                if (page.length === 0) {
-                    page = $('#daycoursetemplate').clone();
-                    page.attr('id', pageId);
-                }
-
-                var pageContent = page.find('.innercontent');
-
-                pageContent.html("");
-                var currentDate = new Date();
-
+                
                 for (entryId in entries) {
                     var entry = entries[entryId];
+                    var pageId = 'daypage_' + this.year + '_' + this.month + '_' + day+"_"+entry.entryId;
+                    
+                    var page = $('#' + pageId);
+                    if (page.length === 0) {
+                        page = $('#daycoursetemplate').clone();
+                        page.attr('id', pageId);
+                    }
+
+                    var pageContent = page.find('.innercontent');
+
+                    pageContent.html("");
+                    var currentDate = new Date();
+
+                    
                     if (!entry.isOriginal) {
                         continue;
                     }
@@ -1442,21 +1405,19 @@ App.Calendar.prototype = {
                     }
 
                     if (availablePositions > 0 && !entry.lockedForSignup) {
-                        var linkToSignup = $("<a data-theme='a' entry='" + entry.entryId + "' data-role='button' data-inline='true' href='#signup'>" + App.translateText("Påmelding") + "</a>");
+                        var linkToSignup = $("<a data-theme='a' entry='" + entry.entryId + "' data-role='button' data-inline='true'>" + App.translateText("Påmelding") + "</a>");
                         buttons.append(linkToSignup);
                         linkToSignup.click(function () {
-                            App.filterToEntryId = $(this).attr('entry');
-                            App.filterWaitingList = false;
+                            App.calendar.signUpForEvent($(this).attr('entry'), false);
                         });
                         linkToSignup.button();
                     }
 
                     if (!inThePast && availablePositions <= 0 && !entry.lockedForSignup) {
-                        var linkToSignup = $("<a data-theme='a' entry='" + entry.entryId + "' data-role='button' data-inline='true' href='#signup'>" + App.translateText('Påmelding venteliste') + "</a>");
+                        var linkToSignup = $("<a data-theme='a' entry='" + entry.entryId + "' data-role='button' data-inline='true'>" + App.translateText('Påmelding venteliste') + "</a>");
                         buttons.append(linkToSignup);
                         linkToSignup.click(function () {
-                            App.filterToEntryId = $(this).attr('entry');
-                            App.filterWaitingList = true;
+                            App.calendar.signUpForEvent($(this).attr('entry'), true);
                         });
                         linkToSignup.button();
                     }
@@ -1464,14 +1425,16 @@ App.Calendar.prototype = {
 
 
                     pageContent.append(entryDetails);
-                }
-                page.append(pageContent);
+                
+                    page.append(pageContent);
 
-                App.doTranslationForDom(page);
-                $('html .ui-mobile-viewport').append(page);
+                    App.doTranslationForDom(page);
+                    $('html .ui-mobile-viewport').append(page);
+                }
             }
         }
     },
+   
     init: function () {
         this.createTable();
         this.loadData();

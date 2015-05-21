@@ -105,7 +105,6 @@ GetShop.Page.prototype = {
         if (appInstance.appSettingsId === "ab5378d0-9d6c-11e3-a5e2-0800200c9a66") {
             var calendarEventViewer = new GetShop.CalendarEventViewer(this.api, appInstance, this);
             calendarEventViewer.ready = function(content) {
-                console.log("Loaded: " + content);
                 dom.html(content);
             };
             calendarEventViewer.load();

@@ -1,0 +1,3 @@
+3.0.0
+
+This version is created to start experimenting with new and great functionallity.

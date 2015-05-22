@@ -7,6 +7,7 @@ package com.thundashop.core.websocket;
 import com.google.gson.Gson;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 
@@ -49,8 +50,12 @@ public class WebSocketClient {
         } else {
             String addr = ws.getRemoteSocketAddress().getAddress().toString();
             Object result = AppContext.storePool.ExecuteMethod(message, addr, sessionId);
-            String jsonResult = gson.toJson(result);
-            ws.send(jsonResult);
+            sendMessage(result);
         }
+    }
+
+    public void sendMessage(Object result) {
+        String jsonResult = gson.toJson(result);
+        ws.send(jsonResult);
     }
 }

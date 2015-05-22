@@ -1340,4 +1340,16 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private void savePoint(LocationPoint pointFromDevice) throws ErrorException {
         saveObject(pointFromDevice);
     }
+
+    @Override
+    public void registerToken(String token) throws ErrorException {
+        User user = getSession().currentUser;
+
+        if (user != null && token != null && !token.isEmpty()) {
+            UserManager userManager = getManager(UserManager.class);
+            User storedUser = userManager.getUserById(user.id);
+            storedUser.lastRegisteredToken = token;
+            userManager.saveUserDirect(storedUser);
+        }
+    }
 }

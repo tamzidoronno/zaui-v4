@@ -10,6 +10,7 @@ import com.thundashop.core.calendarmanager.data.LocationPoint;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -298,4 +299,7 @@ public interface ICalendarManager {
      * @return 
      */
     public LocationArea getEntriesByPosition(LocationPoint point) throws ErrorException;
+    
+    @Customer
+    public void registerToken(String token) throws ErrorException;
 }

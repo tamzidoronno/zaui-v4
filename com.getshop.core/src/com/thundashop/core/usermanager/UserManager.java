@@ -20,6 +20,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -732,5 +733,37 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 			// Optimistic saving of transferred.
 		}
 	}
+
+    private void cleanUpUsers() {
+        Map<String, Integer> accountCount = new HashMap();
+        
+        List<User> users = userStoreCollections.get(storeId).getAllUsers();
+        for (User user : users) {
+            if (user.emailAddress == null) {
+                System.out.println("User missing email address: " + user.fullName);
+                continue;
+            }
+            
+            Integer count = accountCount.get(user.emailAddress);
+            if (count == null) {
+                count = 0;
+            }
+            count++;
+            accountCount.put(user.emailAddress, count);
+        }
+        
+        int accountNeedCorrection = 0;
+        for (String email : accountCount.keySet()) {
+            System.out.println("");
+            System.out.println("Email: " + email);
+            for (User user : users) {
+                if (email.equals(user.emailAddress)) {
+                    System.out.println("   "+user.fullName + " mob: " + user.cellPhone);
+                }
+            }
+        }
+        
+        System.out.println("Correction number: " + accountNeedCorrection);
+    }
     
 }

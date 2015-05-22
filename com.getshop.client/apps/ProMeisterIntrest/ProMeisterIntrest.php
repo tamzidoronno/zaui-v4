@@ -105,7 +105,7 @@ class ProMeisterIntrest extends \ApplicationBase implements \Application {
         $content .= "<br/>";
         if ($company) {
             $content .= "<br/><b>Company</b>";
-            $content .= "<br/>orgnummer: ".$company->name;
+            $content .= "<br/>Company name: ".$company->name;
             $content .= "<br/>VatNumber: ".$company->vatNumber;
             $content .= "<br/>Address: ".$company->streetAddress;
             $content .= "<br/>Post code: ".$company->postnumber;

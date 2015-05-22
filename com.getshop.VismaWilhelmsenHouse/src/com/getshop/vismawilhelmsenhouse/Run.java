@@ -63,8 +63,12 @@ public class Run {
         } catch (Exception e) {
         }
 
+        CleanupOrderMess cleanUp = new CleanupOrderMess(api);
         Visma visma = new Visma(api, vismaPassword);
+        
+        cleanUp.cleanupOldOrders();
+        cleanUp.cleanUp();
         visma.parse();
+        api.getMessageManager().sendMail("post@getshop.com", "post@getshop.com", "Visma transfer success", "Transferred", "post@wh.no", "Wilhelmsen House");
     }
-
 }

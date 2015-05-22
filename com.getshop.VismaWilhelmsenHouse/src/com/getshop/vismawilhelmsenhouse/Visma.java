@@ -16,6 +16,8 @@ import com.thundashop.core.hotelbookingmanager.UsersBookingData;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
+import java.io.File;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -37,7 +39,6 @@ public class Visma {
     private final List<Order> ordersToTranserCreditCard = new ArrayList();
     private final List<Order> orderWithErrors = new ArrayList();
     private final Map<String, User> usersToTransfer = new HashMap();
-    private final Map<String, User> usersToTransferCreditCard = new HashMap();
     private final VismaSql vismaSql;
     private final Application application;
 
@@ -54,6 +55,8 @@ public class Visma {
         createEdiFile();
         createEdiFileCreditCard();
         handleOrdersWithErrors();
+        markOrdersAsTransferred();
+        System.out.println("Done");
     }
 
     private void fetchOrdersFromGetShop() throws Exception {
@@ -100,7 +103,7 @@ public class Visma {
         for (Order order : ordersToTranserCreditCard) {
             User user = api.getUserManager().getUserById(order.userId);
             if (!vismaSql.checkIfUserExists(user)) {
-                usersToTransferCreditCard.put(user.id, user);
+                usersToTransfer.put(user.id, user);
             } 
         }
     }
@@ -135,17 +138,30 @@ public class Visma {
                 orderline += ";"; // Avgiftskode ( hentes fra kunden )
                 
                 String productName = item.getProduct().name;
+                if (productName.length() > 48) {
+                    productName = productName.substring(0, 48);
+                }
+                productName = productName + getStay(item);
+                
+                System.out.println("Product name: " + productName);
                 orderline += productName + ";"; // Produkt beskrivelse
                 orderline += item.getCount() + ";"; // Antall mnder
-                orderline += item.getProduct().price + ";"; // Pris pr antall, hvis blank hentes pris fra Visma
+                orderline += getPriceExludedTaxes(item.getProduct()) + ";"; // Pris pr antall, hvis blank hentes pris fra Visma
                 orderline += ";"; // ikke i bruk
-                orderline += getRoomId(data, item)+";"; // Hotel room id. hvordan finner man denne?
+                String roomName = getRoomId(data, item);
+                orderline += roomName +";"; // R4 Gjenstand ID
                 orderline += ";"; // 
                 result += orderline + "\r\n";
             }
         }
         
-        Files.write(Paths.get(application.getSetting("vismafilelocation")+"OrdersrAct2.EDI"), result.getBytes());
+        if (!result.isEmpty()) {
+            String dateTime = new Date().toString().replace(" ", "_");
+            String path = application.getSetting("vismafilelocation")+File.separator+"ORDERSR"+File.separator+"WH_EDI_BY_INVOICE_"+dateTime+".EDI";
+            PrintWriter writer = new PrintWriter(path, "ISO-8859-1");
+            writer.print(result);
+            writer.close();    
+        }
     }
     
     private String getProductVismaProductId(CartItem cartItem) throws Exception {
@@ -186,6 +202,17 @@ public class Visma {
             return item.getProduct().metaData;
         }
         
+        List<String> roomIds = new ArrayList();
+        roomIds.add("7446dc62-64b3-435f-9e19-885875d00f9d");
+        roomIds.add("248ec601-ee7a-4d3a-8644-be4de68b2412");
+        roomIds.add("36d4ac16-a776-4030-839d-b47aa57f4000");
+        roomIds.add("1c4abb5a-ad84-493d-ab16-77812f07bd63");
+        roomIds.add("e6884627-977f-4c13-b0a2-e7c20ef49618");
+        
+        if (item.getProduct() != null && !roomIds.contains(item.getProduct().id)) {
+            return "";
+        }
+        
         for (BookingReference reference : data.references) {
             for (RoomInformation info : reference.roomsReserved) {
                 if (info.cartItemId.equals(item.getCartItemId())) {
@@ -197,22 +224,27 @@ public class Visma {
             }
         }
         
-        return "";
+        for (BookingReference reference : data.references) {
+            for (RoomInformation info : reference.roomsReserved) {
+                Room room = api.getHotelBookingManager().getRoom(info.roomId);
+                if (room != null) {
+                    return room.roomName;
+                }
+            }
+        }
+        
+        throw new NullPointerException("Need a room");
     }
 
     private void markOrdersAsTransferred(Order order) throws Exception {
         Order getShopOrder = api.getOrderManager().getOrder(order.id);
         getShopOrder.transferredToAccountingSystem = true;
         api.getOrderManager().saveOrder(getShopOrder);
+        System.out.println("Order exists");
     }
 
     private void createEdiFileCreditCard() throws Exception {
-        String result = "";
-        
-        for (User user : usersToTransferCreditCard.values()) {
-            result += getActor(user);
-        }
-        
+        String result = "";        
        
         result += "H;";
         result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";";
@@ -247,63 +279,91 @@ public class Visma {
                 result += getProductDebitNumber(item.getProduct())+";"; // Credit account
                 result += getProductTotalAmount(item)+";"; // Total amount
                 result += ";"; // R3 Oppdrag ID
-                result += getRoomId(data, item)+";"; // R4 Gjenstand ID
+                String roomName = getRoomId(data, item);
+                result += roomName +";"; // R4 Gjenstand ID
                 result += textDesc;
                 result += "\r\n";
             }
-            result += "\r\n";
             savePdfInvoice(order);
         }
         
-        Files.write(Paths.get(application.getSetting("vismafilelocation")+"OrdersrAct.EDI"), result.getBytes());
-        System.out.println(result);
+        if (!result.isEmpty()) {
+            String dateTime = new Date().toString().replace(" ", "_");
+            String path = application.getSetting("vismafilelocation")+File.separator+"DIRDEBR"+File.separator+"EDI_WH_BY_CREDITCARD_"+dateTime+".EDI";
+            PrintWriter writer = new PrintWriter(path, "ISO-8859-1");
+            writer.print(result);
+            writer.close();
+        }
+        
     }
 
+    private String getFormattedBirthDate(User user) {
+        Date date = null;
+        try {
+            if (user.birthDay.contains(".")) {
+                SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yy");
+                date = dt.parse(user.birthDay);
+            } else {
+                if (user.birthDay.length() == 6) {
+                    SimpleDateFormat dt = new SimpleDateFormat("ddMMyy");
+                    date = dt.parse(user.birthDay);
+                } else {
+                    SimpleDateFormat dt = new SimpleDateFormat("ddMMyy");
+                    date = dt.parse(user.birthDay);
+                }
+            }
+        } catch (Exception e) {
+            return "";
+        }
+        
+        if (date == null) {
+            return "";
+        }
+        
+        return new SimpleDateFormat("ddMMyyyy").format(date);
+    }
     private String getActor(User user) {
         String result = "A;"; //Fast A som forteller at det er Aktør
         result += user.customerId + ";"; //Kundenummer
-        result += user.fullName + ";"; //Kundenavn
-        result += user.address.address + ";"; //Kunde adresse 1
-        result += user.address.postCode + ";"; //Kunde Postnummer
-        result += user.address.city + ";"; //Kunde Poststed
-        result += user.emailAddress + ";"; //Kunde e-post
-        result += user.cellPhone + ";"; //Kunde mobil tlf.
-
+        result += formatNull(user.fullName) + ";"; //Kundenavn
+        result += formatNull(user.address.address) + ";"; //Kunde adresse 1
+        result += formatNull(user.address.postCode) + ";"; //Kunde Postnummer
+        result += formatNull(user.address.city) + ";"; //Kunde Poststed
+        result += formatNull(user.emailAddress) + ";"; //Kunde e-post
+        result += formatNull(user.cellPhone)+ ";"; //Kunde mobil tlf.
+        
         if (user.isPrivatePerson) {
-            Date date = null;
-            try {
-                if (user.birthDay.contains(".")) {
-                    SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yy");
-                    date = dt.parse(user.birthDay);
-                } else {
-                    if (user.birthDay.length() == 6) {
-                        SimpleDateFormat dt = new SimpleDateFormat("ddMMyy");
-                        date = dt.parse(user.birthDay);
-                    } else {
-                        SimpleDateFormat dt = new SimpleDateFormat("ddMMyy");
-                        date = dt.parse(user.birthDay);
-                    }
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            result += new SimpleDateFormat("ddMMyyyy").format(date) + ";"; //Kunde Org nr el fødselsnr.
+            result += getFormattedBirthDate(user)+";";
         } else {
             result += user.birthDay + ";"; //Kunde Org nr el fødselsnr.
         }
+        
         if (user.mvaRegistered) {
             result += "1;"; //Kunde avgiftskode hvis tom = mva pliktig
         } else {
             result += ";"; //ingen avgift.
         }
+        
         result += application.getSetting("paymentterm")+";"; //Betaling per 30 dag.
         result += application.getSetting("paymenttype")+";"; //Autogiro.
         result += "\r\n";
+        
+        int lenght = result.split(";").length;
+        if (lenght != 13) {
+            throw new RuntimeException("Wrong number of columns, expected 12, was " +  lenght);
+        } 
+        
         return result;
     }
 
     private String getProductDebitNumber(Product product) {
-        String accountId = application.getSetting("product_"+product.id+"_"+product.taxgroup);
+        
+        int taxGroup = product.taxgroup;
+        if (taxGroup == -1) {
+            taxGroup = 0;
+        }
+        
+        String accountId = application.getSetting("product_"+product.id+"_"+taxGroup);
         if (accountId != null && !accountId.isEmpty()) {
             return accountId;
         }
@@ -319,7 +379,60 @@ public class Visma {
         String base64 = api.getInvoiceManager().getBase64EncodedInvoice(order.id);
 //        System.out.println(base64);
         byte[] bytes = Base64.decodeBase64(base64);
-        String targetFile = application.getSetting("vismafilelocation") + order.incrementOrderId+".pdf";
+        String targetFile = application.getSetting("vismafilelocation")+File.separator+"FaxMail"+File.separator+"Invoice"+File.separator+ order.incrementOrderId+".pdf";
         Files.write(Paths.get(targetFile), bytes);
+    }
+
+    private void markOrdersAsTransferred() throws Exception {
+        for (Order order : ordersToTranser) {
+            Order latestOrder = api.getOrderManager().getOrder(order.id);
+            if (latestOrder != null) {
+                latestOrder.transferredToAccountingSystem = true;
+                api.getOrderManager().saveOrder(latestOrder);
+            }
+        }
+        
+        for (Order order : ordersToTranserCreditCard) {
+            Order latestOrder = api.getOrderManager().getOrder(order.id);
+            if (latestOrder != null) {
+                latestOrder.transferredToAccountingSystem = true;
+                api.getOrderManager().saveOrder(latestOrder);
+            }
+        }
+    }
+
+    private String getStay(CartItem item) {
+        if (item.startDate == null || item.endDate == null) {
+            return "";
+        }
+        
+        SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yy");
+        String startDate = dt.format(item.startDate);
+        String endDate = dt.format(item.endDate);
+        return " ("+startDate+"-"+endDate+")";
+    }
+
+    private String getPriceExludedTaxes(Product product) {
+        double price = product.price;
+        if (product.taxGroupObject != null && product.taxGroupObject.getTaxRate() > 0) {
+            double taxRate = product.taxGroupObject.getTaxRate() + 1;
+            double newRate = (price / taxRate);
+            String retValue = String.format("%.2f", newRate);
+            System.out.println("old: " + price + " new : " + retValue);
+            return retValue;    
+        }
+        
+        
+        return ""+price;
+        
+    }
+
+    
+    private String formatNull(String testoject) {
+        if (testoject == null) {
+            return "";
+        }
+        
+        return testoject;
     }
 }

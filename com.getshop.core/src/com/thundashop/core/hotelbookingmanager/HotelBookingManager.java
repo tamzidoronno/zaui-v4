@@ -842,7 +842,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         OrderManager ordermgr = getManager(OrderManager.class);
         UserManager usermgr = getManager(UserManager.class);
         Order order = ordermgr.getOrderByReference(reference.bookingReference + "");
-        if (order != null) {
+        if (order != null && order.cart.getItems().size() > 0) {
             message = message.replaceAll("\\{roomName\\}", order.cart.getItems().get(0).getProduct().name + "");
             User user = usermgr.getUserById(order.userId);
             if (user != null) {
@@ -903,7 +903,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public synchronized void checkForWelcomeMessagesToSend() throws ErrorException {
-
+        UserManager usermgr = getManager(UserManager.class);
+        OrderManager ordermgr = getManager(OrderManager.class);
+        
         for (BookingReference reference : getAllReservations()) {
             if (reference.sentWelcomeMessages.equals("true")) {
                 continue;
@@ -932,19 +934,19 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             String message = formatMessage(reference, getEmailMessage(reference.language), null, 0, reference.contact.names.get(0));
             String title = formatMessage(reference, getEmailTitle(reference.language), null, 0, reference.contact.names.get(0));
 
-            OrderManager ordermgr = getManager(OrderManager.class);
-            UserManager usermgr = getManager(UserManager.class);
+            
+            
             Order order = ordermgr.getOrderByReference(reference.bookingReference + "");
             if (order != null) {
                 User user = usermgr.getUserById(order.userId);
                 if (user != null) {
                     String copyadress = getSettings("Settings").get("mainemailaddress").value;
                     if (copyadress != null && !copyadress.isEmpty()) {
-                        getMsgManager().mailFactory.send(copyadress, user.emailAddress, title, message);
+                        sendMail(copyadress, user.emailAddress, title, message);
                         logMailSent(copyadress, "System owner", true, reference.bookingReference);
                         // Apperently Fastnames mailservers does not support to send two emails at the same time. Need to sleep a bit so the mailservers dont crashes.
                         try { Thread.sleep(1000); } catch (InterruptedException ex) {}
-                        getMsgManager().mailFactory.send(copyadress, copyadress, title, message);
+                        sendMail(copyadress, copyadress, title, message);
                         reference.sentWelcomeMessages = "true";
                         logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);
                         saveObject(reference);
@@ -953,6 +955,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
 
+    }
+    
+    private void sendMail(String copyadress, String to, String title, String message) {
+        MessageManager messageManager = getMsgManager();
+        
+        Map<String, String> files = new HashMap();
+        files.put("/opt/files/sem_lagerhotel_terms.pdf", "Leievilkår.pdf");
+        messageManager.mailFactory.sendWithAttachments(copyadress, to, title, message, files, false);
     }
 
     private void finalizeRoom(Room tmpRoom) throws ErrorException {

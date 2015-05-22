@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -176,6 +177,9 @@ public class InvoiceGenerator {
     }
     
     private void writeText( String text, int x, int y, boolean bold, int fontSize) throws IOException {
+        if (text == null) {
+            text = "";
+        }
         writeText(text, x, y, bold, fontSize, false);
     }
 
@@ -199,6 +203,7 @@ public class InvoiceGenerator {
         // Price bottom
         Double total = order.cart.getTotal(true)+order.cart.getShippingCost();
         String totalString = String.format("%.2f", total);
+        
         if(totalString.contains(".")) {
             writeText(totalString.split("\\.")[0], 230, 45, false, 12);
             writeText(totalString.split("\\.")[1], 310, 45, false, 12);
@@ -210,7 +215,14 @@ public class InvoiceGenerator {
             writeText("00", 310, 45, false, 12);
         }
         writeText(totalString, 230, 308, false, 12);
-        writeText(details.accountNumber, 400, 45, false, 12);
+        
+        if (order.status == Order.Status.PAYMENT_COMPLETED) {
+            writeText("-", 400, 45, false, 12);
+        } else {
+            writeText(details.accountNumber, 400, 45, false, 12);
+        }
+        
+        
         
         // Payment infomration
         lineHeight = 13;
@@ -253,6 +265,10 @@ public class InvoiceGenerator {
     }
     
     private String getDueDate() {
+        if (order.status == Order.Status.PAYMENT_COMPLETED) {
+            return "BETALT";
+        }
+        
         Calendar c = Calendar.getInstance();
         c.setTime(this.order.createdDate);
         c.add(Calendar.DATE, details.dueDays);
@@ -319,7 +335,10 @@ public class InvoiceGenerator {
             
             String name = cartItem.getProduct().name;
             
-            int linebreakchars = 50;
+            if (cartItem.startDate != null && cartItem.endDate != null) {
+                name += " " + formatDates(cartItem.startDate, cartItem.endDate);
+            }
+            int linebreakchars = 60;
             if (name.length() > linebreakchars) {
                 int rounds = name.length() / linebreakchars + 1;
                 for (int j=0; j<rounds; j++) {
@@ -338,7 +357,6 @@ public class InvoiceGenerator {
             }
             
         }
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private double getNetto() {
@@ -366,6 +384,14 @@ public class InvoiceGenerator {
         
         i++;
         writeText("Å Betale", 443, 404-(i*11), false, 9);
-        writeText(String.format("%.2f", (order.cart.getShippingCost() + order.cart.getTotal(true))), (int) 560, 404-(i*11), false, 9, true);
+        double total = order.cart.getShippingCost() + order.cart.getTotal(true);
+        writeText(String.format("%.2f", (total)), (int) 560, 404-(i*11), false, 9, true);
+    }
+
+    private String formatDates(Date startDate, Date endDate) {
+        SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yy");
+        String sstartDate = dt.format(startDate);
+        String sendDate = dt.format(endDate);
+        return "("+sstartDate+"-"+sendDate+")";
     }
 }

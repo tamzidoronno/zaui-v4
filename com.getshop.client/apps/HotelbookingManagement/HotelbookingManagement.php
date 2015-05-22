@@ -665,17 +665,28 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         foreach($total as $index => $val) {
             echo "<td>" . round($val) . "</td>";
         }
+        echo "<td></td>";
+        echo "<td></td>";
+        $res = (($total[2] / $roomsToEstimate)/ $days)*100;
+        $res = round($res, 1);
         echo "</tr>";
         echo "<tr bgcolor='#fff'>";
         echo "<td>Avg.</td>";
         foreach($total as $index => $val) {
             echo "<td>" . round($val/$days) . "</td>";
         }
+        echo "<td></td>";
+        echo "<td>$res%</td>";
         echo "</tr>";
         
         
         echo "</table>";
         echo "<style>.takentable td { padding: 5px; padding-top: 2px; padding-bottom: 2px; } .bookinginforow { cursor:pointer; } </style>";
+    }
+    
+    public function addUserForInvoice() {
+        $userId = $_POST['data']['userid'];
+        $this->getApi()->getHotelBookingManager()->toggleForInvoice($userId);
     }
     
     public function salesInformation() {

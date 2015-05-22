@@ -166,7 +166,26 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .makemonthly', app.HotelbookingManagement.makemonthly);
         $(document).on('click', '.HotelbookingManagement .salesrow', app.HotelbookingManagement.salesrow);
         $(document).on('click', '.HotelbookingManagement .bookinginforow', app.HotelbookingManagement.bookinginforow);
+        $(document).on('click', '.HotelbookingManagement .adduserforinvoice', app.HotelbookingManagement.adduserforinvoice);
+        $(document).on('click', '.HotelbookingManagement .deluserforinvoice', app.HotelbookingManagement.deluserforinvoice);
     },
+    
+    adduserforinvoice : function() {
+        var data = {
+            "userid" : $('.usertoaddtoinvoicelist').val()
+        }
+        var event = thundashop.Ajax.createEvent('','addUserForInvoice',$(this), data);
+        thundashop.Ajax.post(event);
+    },
+    
+    deluserforinvoice : function() {
+        var data = {
+            "userid" : $(this).attr('userid')
+        };
+        var event = thundashop.Ajax.createEvent('','addUserForInvoice',$(this), data);
+        thundashop.Ajax.post(event);
+    },
+    
     bookinginforow : function() {
         var data = {
             date : $(this).attr('date'),

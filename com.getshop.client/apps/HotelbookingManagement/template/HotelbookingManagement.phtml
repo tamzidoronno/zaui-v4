@@ -171,6 +171,31 @@ Existing booking references
 </script>
 <br>
 
+Invoice customers<br>
+<?
+$usermap = array();
+?>
+
+<select class="usertoaddtoinvoicelist">
+    <option value="">Select a user that should receive invoice instead of credit cards.</option>
+    <? 
+        $users = $this->getApi()->getUserManager()->getAllUsers(); 
+        foreach($users as $user) {
+            $usermap[$user->id] = $user;
+            echo "<option value='".$user->id."'>" . $user->fullName . " (" . $user->emailAddress . ")</option>";
+        }
+    ?>
+</select> <input type="button" value="Add user" class="adduserforinvoice">
+<hr>
+<?
+$existing = $this->getApi()->getHotelBookingManager()->getInvoiceCustomers();
+foreach($existing as $userId) {
+    echo "<i class='fa fa-trash-o deluserforinvoice' userid='".$userId."'></i>" . $usermap[$userId]->fullName . " (" . $usermap[$userId]->emailAddress . ")<br>";
+}
+?>
+
+<br><br><br>
+
 <? echo $this->__w("Add a room"); ?>
 <div gstype="form" method="addRoom">
     <input type="text" gsname="roomname" placeholder="Room name">

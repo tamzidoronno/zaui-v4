@@ -12,6 +12,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
@@ -53,6 +54,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     private boolean warnedAboutArxDown = false;
     private List<TempAccess> tempAccessList = new ArrayList();
     private List<UsersBookingData> usersBookingData = new ArrayList();
+    private InvoiceCustomers invoiceCustomers = new InvoiceCustomers();
 
     public List<ArxLogEntry> logEntries = new ArrayList();
     
@@ -96,6 +98,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
             if (dbobj instanceof ArxSettings) {
                 arxSettings = (ArxSettings) dbobj;
+            }            
+            if (dbobj instanceof InvoiceCustomers) {
+                invoiceCustomers = (InvoiceCustomers) dbobj;
             }            
             if (dbobj instanceof GlobalBookingSettings) {
                 if(settings.id != null && !settings.id.isEmpty()) {
@@ -1002,6 +1007,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         updateCart();
         Order order = orderManager.createOrderForUser(user.id);
         
+        if(invoiceCustomers.userIds.contains(user.id)) {
+            order.payment = new Payment();
+            order.payment.paymentType = "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment";
+            order.status = Order.Status.PAYMENT_COMPLETED;
+            saveObject(order);
+        }
+        
         for(UsersBookingData bookingData : bookingDatas) {
             bookingData.orderIds.add(order.id);
             bookingData.bookingPrice = order.cart.getItems().get(0).getProduct().price;
@@ -1800,5 +1812,20 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         
         return result;
+    }
+
+    @Override
+    public void toggleForInvoice(String userId) {
+        if(invoiceCustomers.userIds.contains(userId)) {
+            invoiceCustomers.userIds.remove(userId);
+        } else {
+            invoiceCustomers.userIds.add(userId);
+        }
+        saveObject(invoiceCustomers);
+    }
+
+    @Override
+    public List<String> getInvoiceCustomers() {
+        return invoiceCustomers.userIds;
     }
 }

@@ -867,9 +867,16 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $this->stopImpersionation();
             }
             
+            
             if ($payment->order) {
-                $payment->initPaymentMethod();
-                $payment->preProcess();
+                if ($payment->order->payment && $payment->order->payment->paymentType != "") {
+                    echo "<div style='text-align:center; padding: 50px;'>";
+                    echo "<h1>" . $this->__w("Thank you for your order.") . "</h1>";
+                    echo "</div>";
+                } else {
+                    $payment->initPaymentMethod();
+                    $payment->preProcess();
+                }
             }
         }
     }

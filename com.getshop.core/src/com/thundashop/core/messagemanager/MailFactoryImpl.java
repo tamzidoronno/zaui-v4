@@ -162,11 +162,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                     multipart.addBodyPart(messageBodyPart);
 
                     for (String file : files.keySet()) {
-                        DataSource source = new FileDataSource(file);
-                        messageBodyPart = new MimeBodyPart();
-                        messageBodyPart.setDataHandler(new DataHandler(source));
-                        messageBodyPart.setFileName(files.get(file));
-                        multipart.addBodyPart(messageBodyPart);
+                        if (new File(file).exists()) {
+                            DataSource source = new FileDataSource(file);
+                            messageBodyPart = new MimeBodyPart();
+                            messageBodyPart.setDataHandler(new DataHandler(source));
+                            messageBodyPart.setFileName(files.get(file));
+                            multipart.addBodyPart(messageBodyPart);    
+                        }
                     }
 
                     message.setContent(multipart);

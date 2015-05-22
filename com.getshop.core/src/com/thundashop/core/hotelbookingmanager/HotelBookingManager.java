@@ -942,11 +942,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 if (user != null) {
                     String copyadress = getSettings("Settings").get("mainemailaddress").value;
                     if (copyadress != null && !copyadress.isEmpty()) {
-                        sendMail(copyadress, user.emailAddress, title, message);
+                        sendMail(copyadress, user.emailAddress, title, message, user);
                         logMailSent(copyadress, "System owner", true, reference.bookingReference);
                         // Apperently Fastnames mailservers does not support to send two emails at the same time. Need to sleep a bit so the mailservers dont crashes.
                         try { Thread.sleep(1000); } catch (InterruptedException ex) {}
-                        sendMail(copyadress, copyadress, title, message);
+                        sendMail(copyadress, copyadress, title, message, user);
                         reference.sentWelcomeMessages = "true";
                         logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);
                         saveObject(reference);
@@ -957,11 +957,26 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     }
     
-    private void sendMail(String copyadress, String to, String title, String message) {
+    private void sendMail(String copyadress, String to, String title, String message, User user) {
         MessageManager messageManager = getMsgManager();
         
+        String extension = "";
+        if(user.isPrivatePerson) {
+            extension = "private";
+        } else {
+            if(user.mvaRegistered) {
+                extension = "company";
+            } else {
+                extension = "company_ex_taxes";
+            }
+        }
+        
         Map<String, String> files = new HashMap();
-        files.put("/opt/files/sem_lagerhotel_terms.pdf", "Leievilkår.pdf");
+        
+        if (!extension.isEmpty()) {
+            files.put("/opt/files/contract_"+extension+".pdf", "Leievilkår.pdf");
+        }
+        
         messageManager.mailFactory.sendWithAttachments(copyadress, to, title, message, files, false);
     }
 

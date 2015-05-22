@@ -137,8 +137,8 @@ public class StorePool {
         Store store = getStoreByWebaddress(webAddress);
         
         if (store == null) {
-            webAddress = webAddress.replace(".2.0.local.", ".2.0.");
-            webAddress = webAddress.replace(".2.0.mpal.", ".2.0.");
+            webAddress = webAddress.replace(".3.0.local.", ".3.0.");
+            webAddress = webAddress.replace(".3.0.mpal.", ".3.0.");
             webAddress = webAddress.replace(".local.", ".");
             webAddress = webAddress.replace(".mlocal.", ".");
             webAddress = webAddress.replace("gsmobile", "");

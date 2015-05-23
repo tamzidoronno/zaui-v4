@@ -10,7 +10,6 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.hotelbookingmanager.Statistics;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.SalesStats;
@@ -938,7 +937,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         cal.set(Calendar.MINUTE, 10);
         cal.set(Calendar.SECOND, 10);
         
-        Statistics stats = new Statistics();
         LinkedHashMap<Long, SalesStats> result = new LinkedHashMap();
         
         while(true) {

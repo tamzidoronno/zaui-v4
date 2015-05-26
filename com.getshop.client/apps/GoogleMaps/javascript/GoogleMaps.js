@@ -41,9 +41,12 @@ thundashop.app.GoogleMaps.prototype = {
     curSize: 0,
     waitForGoogleMapsToLoad: function(loaded) {
         var scope = this;
-        if (thundashop.app.GoogleMapsCommon === false && typeof(google.maps.DirectionsRenderer) !== "function") {
-            console.log(typeof(google.maps.DirectionsRenderer));
-            setTimeout(scope.waitForGoogleMapsToLoad, 100);
+        
+        if (thundashop.app.GoogleMapsCommon === false || typeof(google.maps.DirectionsRenderer) === "undefined") {
+            console.log("Waiting " + thundashop.app.GoogleMapsCommon + " " + google.maps.DirectionsRenderer);
+            setTimeout(function() {
+                scope.waitForGoogleMapsToLoad(loaded);
+            }, 100);
         } else {
             setTimeout(function() {
                 loaded.resolve();

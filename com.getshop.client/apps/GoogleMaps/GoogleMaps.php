@@ -41,7 +41,6 @@ class GoogleMaps extends \WebshopApplication implements \Application {
     
     public function includeExtraJavascript() {
         $array = array();
-        $array[] = "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=googleMapsInitialized";
         return $array;
     }
     

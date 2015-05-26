@@ -378,3 +378,5 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
 <script>
     google.load('visualization', '1.0', {'packages':['corechart']});
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=googleMapsInitialized"></script>

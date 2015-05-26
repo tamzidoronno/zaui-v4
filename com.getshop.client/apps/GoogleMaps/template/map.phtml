@@ -15,7 +15,24 @@ $config->{'container'} = "map_canvas_".$rand;
         $draggable = $config->{'draggable'};
     }
     ?>
-    var map = new thundashop.app.GoogleMaps( <? echo json_encode($config); ?>);
-    map.initialize(<? echo $draggable; ?>);
+        
+    gooleAppsLoadedDeffered = $.Deferred();
+    gooleAppsLoadedDeffered.done(function() {
+        var map = new thundashop.app.GoogleMaps( <? echo json_encode($config); ?>);
+        map.initialize(<? echo $draggable; ?>);    
+    });
+
+    var waitForGoogleMapsToLoad = function() {
+        if (typeof(thundashop.app.GoogleMaps) !== "function") {
+            setTimeout(waitForGoogleMapsToLoad, 100);
+        } else {
+            gooleAppsLoadedDeffered.resolve();
+        }
+    };
+     
+    $(document).ready(function() {
+        waitForGoogleMapsToLoad();
+    });
+    
 </script>
 <div class='googlemaptooltip' title='yup'></div>

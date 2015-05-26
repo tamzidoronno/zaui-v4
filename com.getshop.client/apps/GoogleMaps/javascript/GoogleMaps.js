@@ -41,7 +41,8 @@ thundashop.app.GoogleMaps.prototype = {
     curSize: 0,
     waitForGoogleMapsToLoad: function(loaded) {
         var scope = this;
-        if (thundashop.app.GoogleMapsCommon === false) {
+        if (thundashop.app.GoogleMapsCommon === false && typeof(google.maps.DirectionsRenderer) !== "function") {
+            console.log(typeof(google.maps.DirectionsRenderer));
             setTimeout(scope.waitForGoogleMapsToLoad, 100);
         } else {
             setTimeout(function() {

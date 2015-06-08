@@ -6,11 +6,14 @@
 package com.thundashop.core.meca.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.usermanager.data.Address;
 
 /**
  *
  * @author emil
  */
 public class Workshop extends DataCommon {
+    
+    private Address address;
     
 }

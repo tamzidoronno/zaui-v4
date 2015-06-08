@@ -6,9 +6,12 @@
 package com.thundashop.core.meca.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.List;
+import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -17,9 +20,12 @@ import org.mongodb.morphia.annotations.Reference;
 public class MecaUser extends DataCommon {
     
     private String userId;
+    @Embedded
     private List<Vehicle> vehicles = new ArrayList<Vehicle>();
     @Reference
     private Workshop workshop;
+    @Transient
+    private User getshopUser;
 
     public String getUserId() {
         return userId;
@@ -43,6 +49,14 @@ public class MecaUser extends DataCommon {
 
     public void setWorkshop(Workshop workshop) {
         this.workshop = workshop;
+    }
+
+    public User getGetshopUser() {
+        return getshopUser;
+    }
+
+    public void setGetshopUser(User getshopUser) {
+        this.getshopUser = getshopUser;
     }
     
     

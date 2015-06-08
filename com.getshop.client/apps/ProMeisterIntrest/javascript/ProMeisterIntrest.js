@@ -28,9 +28,6 @@ app.ProMeisterIntrest = {
         
         try {
             Booking.check(data.name);
-            Booking.check(data.email, true);
-            Booking.check(data.invoiceemail, true);
-            Booking.check(data.cellphone);
             Booking.check(data.vatNumber);
         } catch (error) {
             if (error === "emailVal") {

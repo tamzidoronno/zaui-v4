@@ -114,9 +114,6 @@ class ProMeisterIntrest extends \ApplicationBase implements \Application {
         
         $content .= "<br/>";
         $content .= "<br/>Deltagarens namn: ".$_POST['data']['name'];
-        $content .= "<br/>Deltagarens e-post: ".$_POST['data']['email'];
-        $content .= "<br/>Verkstadens e-post: ".$_POST['data']['invoiceemail'];
-        $content .= "<br/>Deltagarens mobiltelefon: ".$_POST['data']['cellphone'];
         $content .= "<br/>Kundnummer: ".$_POST['data']['extradep'];
         
         

@@ -6,11 +6,7 @@
 package com.thundashop.core.mecamanager;
 
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.meca.data.AddVehicleResult;
-import com.thundashop.core.meca.data.LoginResult;
-import com.thundashop.core.meca.data.PasswordChangeResult;
 import com.thundashop.core.meca.data.RPCResult;
-import com.thundashop.core.meca.data.RequestAccountResult;
 import com.thundashop.core.meca.data.Vehicle;
 
 /**

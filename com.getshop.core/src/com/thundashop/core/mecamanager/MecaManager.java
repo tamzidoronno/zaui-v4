@@ -7,15 +7,10 @@ package com.thundashop.core.mecamanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.meca.data.AddVehicleResult;
-import com.thundashop.core.meca.data.LoginResult;
 import com.thundashop.core.meca.data.MecaUser;
-import com.thundashop.core.meca.data.PasswordChangeResult;
 import com.thundashop.core.meca.data.RPCResult;
-import com.thundashop.core.meca.data.RequestAccountResult;
 import com.thundashop.core.meca.data.Vehicle;
 import com.thundashop.core.meca.data.Workshop;
 import com.thundashop.core.messagemanager.MessageManager;

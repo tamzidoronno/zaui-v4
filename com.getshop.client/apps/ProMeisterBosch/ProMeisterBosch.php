@@ -224,7 +224,7 @@ class ProMeisterBosch extends \ApplicationBase implements \Application {
 
     public function sendMailNorwegian($user) {
         $course = $user->referenceKey;
-        $subject = "Bestilling av ".$course;
+        $subject = $course;
         
         $body = "Hei ".$user->fullName;
         $body .= "<br/> ";

@@ -843,6 +843,21 @@ class APICalendarManager {
 	}
 
 	/**
+	* Get all entries in a region based on the point
+	* @param point
+	* @return void
+	*/
+
+	public function registerToken($token) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["token"] = json_encode($this->transport->object_unset_nulls($token));
+	     $data["method"] = "registerToken";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* return a list of entires that a specified user
 	* has been attending to
 	*/
@@ -5479,6 +5494,22 @@ class APIUserManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "cancelImpersonating";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function cleanUpUsers() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "cleanUpUsers";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}

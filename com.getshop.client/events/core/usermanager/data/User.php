@@ -6,6 +6,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	/** @var String */
 	public $privileges;
 
+	/** @var String */
+	public $lastRegisteredToken;
+
 	/** @var core_usermanager_data_Address */
 	public $address;
 

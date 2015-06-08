@@ -13,13 +13,25 @@
     text-align: left;
 }
 
+.ProMeisterBosch .groupselection .selectbox {
+    width: 300px;
+    border: solid 1px #DDD;
+    text-align: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.ProMeisterBosch .groupselection .selectbox:hover {
+    background-color: #EEE;
+}
 
 .ProMeisterBosch .groupselection img {
-    width: 300px;
-    border: solid 1px #DDD; 
-    margin: 10px;
+    width: auto;
+    
     padding: 5px;
     cursor: pointer;
+    max-height: 100px;
 }
 
 .ProMeisterBosch .selected {
@@ -40,7 +52,7 @@
 }
 
 .ProMeisterBosch .search_result_area {
-    height: 200px;
+    height: 110px;
     overflow-y: scroll;
     width: 324px;
     position: absolute;

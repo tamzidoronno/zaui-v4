@@ -126,24 +126,13 @@ class ProMeisterBosch extends \ApplicationBase implements \Application {
     }
     
     public function sendEmail($user) {
-        $course = $user->referenceKey;
-        $subject = "Bestilling av ".$course;
         
-        $body = "Hei ".$user->fullName;
-        $body .= "<br/> ";
-        $body .= "<br/> Du kan nå starte kurset ved å gå inn på følgende adresse:";
-        $body .= "<br/> <a href='http://promeister.academy/bosch/$course/index.php'>http://promeister.academy/bosch/$course/index.php</a>";
-        $body .= "<br/>";
-        $body .= "<br/> Du har ".$this->getCurrentHours()." timer til rådighet, og antall innlogginger er ubegrenset i perioden.";
-        $body .= "<br/>";
-        $body .= "<br/> Brukernavn: ".$user->username;
-        $body .= "<br/> Pinkode: ".$user->password;
-        $body .= "<br/>";
-        $body .= "<br/> Med Vennlig Hilsen";
-        $body .= "<br/> ProMeister Academy";
+        if ($this->getFactory()->getStore()->id == "d27d81b9-52e9-4508-8f4c-afffa2458488") {
+            $this->sendMailSwedish($user);
+        } else {
+            $this->sendMailNorwegian($user);
+        }
         
-        $this->getApi()->getMessageManager()->sendMail($user->emailAddress, $user->fullName, $subject, $body, "noreply@promeister.se", "GetShop");
-        $this->getApi()->getMessageManager()->sendMail($user->emailAddressToInvoice, $user->fullName, $subject, $body, "noreply@promeister.se", "GetShop");
     }
 
     public function getNextId() {
@@ -232,5 +221,51 @@ class ProMeisterBosch extends \ApplicationBase implements \Application {
         
         $this->setConfigurationSetting("customers", json_encode($saveUsers));
     }
+
+    public function sendMailNorwegian($user) {
+        $course = $user->referenceKey;
+        $subject = "Bestilling av ".$course;
+        
+        $body = "Hei ".$user->fullName;
+        $body .= "<br/> ";
+        $body .= "<br/> Du kan nå starte kurset ved å gå inn på følgende adresse:";
+        $body .= "<br/> <a href='http://promeister.academy/bosch/$course/index.php'>http://promeister.academy/bosch/$course/index.php</a>";
+        $body .= "<br/>";
+        $body .= "<br/> Du har ".$this->getCurrentHours()." timer til rådighet, og antall innlogginger er ubegrenset i perioden.";
+        $body .= "<br/>";
+        $body .= "<br/> Brukernavn: ".$user->username;
+        $body .= "<br/> Pinkode: ".$user->password;
+        $body .= "<br/>";
+        $body .= "<br/> Med Vennlig Hilsen";
+        $body .= "<br/> ProMeister Academy";
+        
+        $this->getApi()->getMessageManager()->sendMail($user->emailAddress, $user->fullName, $subject, $body, "noreply@promeister.com", "GetShop");
+        $this->getApi()->getMessageManager()->sendMail($user->emailAddressToInvoice, $user->fullName, $subject, $body, "noreply@promeister.com", "GetShop");
+    }
+
+    public function sendMailSwedish($user) {
+        $course = $user->referenceKey;
+        $subject = "Bestilling av ".$course;
+        
+        
+        
+        
+        $body = "Hej ".$user->fullName;
+        $body .= "<br/> ";
+        $body .= "<br/> Du kan nu starta utbildningen på följande adress:";
+        $body .= "<br/> <a href='http://www.promeisteracademy.se/bosch/$course/index.php'>http://www.promeisteracademy.se/bosch/$course/index.php</a>";
+        $body .= "<br/>";
+        $body .= "<br/> Du har ".$this->getCurrentHours()." timmars tillgång till utbildningen och kan logga ut och in så många gånger du vill. Tiden räknas bara så länge du är inloggad.";
+        $body .= "<br/>";
+        $body .= "<br/> Användarnamn: ".$user->username;
+        $body .= "<br/> Lösenord: ".$user->password;
+        $body .= "<br/>";
+        $body .= "<br/> Med Vänliga Hälsningar";
+        $body .= "<br/> ProMeister Academy";
+        
+        $this->getApi()->getMessageManager()->sendMail($user->emailAddress, $user->fullName, $subject, $body, "noreply@promeister.se", "ProMeister Academy");
+        $this->getApi()->getMessageManager()->sendMail($user->emailAddressToInvoice, $user->fullName, $subject, $body, "noreply@promeister.se", "ProMeister Academy");
+    }
+
 }
 ?>

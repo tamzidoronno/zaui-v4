@@ -1,0 +1,140 @@
+<div class="container mainview" ng-controller="GetShopRoomSetupController" >
+    <div ng-include="'partials/menu.html'"></div>
+
+    <div class="jumbotron">
+        <h1>Room configurations!</h1>
+        <p>
+            Please be careful for what you change here, this area should be pretty static but be aware that any changes can lead to unavailable rooms.
+        </p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <ul class="nav nav-pills">
+                        <li ng-repeat="obj in domains">
+                            <a ng-click="activateTab(obj.id)">{{obj.name}} </a>
+                        </li>
+                        <li role="presentation" ><a ng-click="activateTab('createNewDomain')">Create New Domain </a> </li>
+                    </ul>
+
+                    <div ng-repeat="obj in domains">
+                        
+                        <div ng-if="tabToShow == obj.id" >
+                            <br/>
+                            <div class="row">
+                                
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" style="height: 56px;">{{ obj.name }}
+                                        
+                                        <div class="btn-group pull-right" >
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                              Action <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                              <li><a href="#">Delete {{ obj.name }}</a></li>
+                                              <li><a href="#">Mark as unavailable</a></li>
+                                              <li><a href="#/roomsetup/manageroomtypes/{{obj.id}}">Manage roomtypes</a></li>
+                                              <li><a href="#">Add room</a></li>
+                                            </ul>
+                                          </div>
+                                        </div>
+                                        <div class="panel-body">
+                                            {{ obj.description }}
+                                            <br/>
+                                            <br/>
+                                            Number of rooms: 0
+                                            <br/>Disabled rooms: 0
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    
+                                    <div class="panel panel-default">
+                                        <!-- Default panel contents -->
+                                        <div class="panel-heading">Rooms in {{ obj.name }}</div>
+
+                                        <div class="panel-body">
+                                            <p>In the list below you see all the rooms that are setup under this domain.</p>
+                                        </div>
+
+                                        <!-- Table -->
+                                        <table class="table">
+                                            <tr>
+                                                <th>Room name</th>
+                                                <th>Size</th>
+                                                <th>Normal price</th>
+                                            </tr>
+                                            <tr>
+                                                <td>101</td>
+                                                <td>35kvm</td>
+                                                <td>577</td>
+                                            </tr>
+                                            <tr>
+                                                <td>102</td>
+                                                <td>35kvm</td>
+                                                <td>577</td>
+                                            </tr>
+                                            <tr>
+                                                <td>103</td>
+                                                <td>25kvm</td>
+                                                <td>577</td>
+                                            </tr>
+                                            <tr>
+                                                <td>104</td>
+                                                <td>35kvm</td>
+                                                <td>577</td>
+                                            </tr>
+                                            <tr>
+                                                <td>105</td>
+                                                <td>35kvm</td>
+                                                <td>577</td>
+                                            </tr>
+                                            <tr>
+                                                <td>106</td>
+                                                <td>25kvm</td>
+                                                <td>587</td>
+                                            </tr>
+                                            <tr>
+                                                <td>107</td>
+                                                <td>35kvm</td>
+                                                <td>577</td>
+                                            </tr>
+                                            <tr>
+                                                <td>108</td>
+                                                <td>35kvm</td>
+                                                <td>537</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div ng-if="tabToShow == 'createNewDomain'">
+                        <form ng-submit="createDomain(domainform)" name="domainform">
+                            <div class="form-group">
+                                <label for="inputEmail">Name of the domain</label>
+                                <input ng-model="domain.name" class="form-control" id="inputDomainName" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail">Description</label>
+                                <textarea ng-model="domain.description" class="form-control" id="inputDomainDescription" placeholder="Description"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Domain</button>
+                        </form>            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

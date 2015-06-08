@@ -77,7 +77,7 @@ app.ProMeisterBosch = {
         var event = thundashop.Ajax.createEvent(null, "signOn", this, data);
         event['synchron'] = true;
         thundashop.Ajax.postWithCallBack(event, function(response) {
-            $('.ProMeisterBosch').html("Takk for din påmelding, du er nå påmeldt. En epost med mer infromasjon er sendt til deg.");
+            $('.ProMeisterBosch').html(__f("Thank you for your order, a mail has been sent with more information."));
         });
         
     },

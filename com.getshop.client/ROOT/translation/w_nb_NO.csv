@@ -2,9 +2,7 @@
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
 * PayOnDelivery fee;-;Gebyr henting 
 0-100 km/h;-;0-100 km/h
-A confirmation email has been sent to your email, and your storage room has been reserved. Please note that the storage room might not be final and could be changed to a different one with the same size if needed.;-;En bekreftelses epost har blitt sendt til din epost og din bod har blitt reservert. Husk at boden din kan bli endret til en annen en med samme størrelse ved utlevering.
 A confirmation email has been sent to your email.;-;En bekreftelse er sendt til din e-post.
-A confirmation email has been sent to your email. Enjoy your stay at {hotel}.;-;En bekreftelse er sendt til din e-post. Ha et hyggelig opphold hos {hotel}.
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add a room;-;Legg til et rom
 Add more contacts;-;Legg til flere deltagere
@@ -130,7 +128,6 @@ New password;-;Nytt passord
 New room type;-;Ny rom type
 News paper;-;Avisen
 Next;-; Neste
-No rooms are available for this time periode.;-;Ingen rom er tilgjengelig i valgt tidsperiode.
 November;-;November
 Number of instances added;-;Antall av instanser lagt til
 Number of rooms;-;Antall rom
@@ -225,9 +222,7 @@ Sign up;-;Registrer deg
 Sign up for waiting list;-;Sett meg på venteliste
 Sign up with facebook;-;Logg inn me facebook
 Sign up with google;-;Logg inn med google
-Sold out;-;Utsolgt
 Sorry;-;Beklager
-Sorry, we are out of this type of storage, please select a different one.;-;Beklager, men vi har ikke flere av denne typen igjen, velg en annen en.
 Sorry, your rental is too short, it has to be longer then {days} days of rental.;-;Beklager, men din leieperiode er for kort, den må være lengere enn {days} dager.
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
@@ -288,7 +283,6 @@ Waiting for payment;-;Venter på betaling
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 We;-;On
-We are sorry, but there is not enough available rooms for your selection, please select a different one.;-;Vi beklager, men vi har ikke nok tilgjengelige rom ut fra ditt valg, du må velge et annet type rom.
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
 Welcome to my page;-;Velkommen til min side
@@ -313,8 +307,6 @@ Your order has now been completed and is waiting to be shipped.;-;Orderen din ha
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
 Your rental periode starts from;-;Din leieperiode starter fra og med
-available room;-;tilgjengelige rom
-available rooms;-;tilgjengelige rom
 change;-;endre
 course;-;kurs
 day;-;dag

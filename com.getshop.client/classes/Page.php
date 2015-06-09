@@ -483,7 +483,7 @@ class Page {
         
         $anchor = $cell->settings->anchor;
         if ($anchor) {
-            echo "<a id='$anchor' name='$anchor'>a</a>";
+            echo "<a id='$anchor' name='$anchor'></a>";
         }
         echo "<div anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 

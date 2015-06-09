@@ -71,7 +71,7 @@ public class GenerateJavascriptApi {
 
     private void generateJavascript() throws IOException, URISyntaxException {
         String javascriptFile = "";
-        javascriptFile += getHeader();
+        javascriptFile += getHeader() + "\n\n";
         
         String createManagers = "GetShopApiWebSocket.prototype.createManagers = function() {\n";
         for (Class clazz : interfaces) {
@@ -125,8 +125,10 @@ public class GenerateJavascriptApi {
 
         javascriptFile += "\n";
         javascriptFile += createManagers;
+
         
-        System.out.println(javascriptFile);
+        Files.write(Paths.get("/tmp/getshopapi.js"), javascriptFile.getBytes());
+        System.out.println("file stored in : /tmp/getshopapi.js" );
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, URISyntaxException {

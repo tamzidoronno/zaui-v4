@@ -8,6 +8,10 @@ body {
 .gsarea[area="body"] {
     margin-top: 100px;
 }
+.gsarea[area="footer"] {
+    background-color: #EEE;
+    padding-top: 20px;
+}
 .gsarea[area="header"] {
     position: fixed;
     height: 110px;

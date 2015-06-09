@@ -969,7 +969,7 @@ thundashop.framework = {
             }
         });
         
-
+        settings['anchor'] = $('#gs_settings_cell_anchor').val();
         var data = {
             "cellid": cellid,
             "styles": styles,
@@ -1043,6 +1043,7 @@ thundashop.framework = {
         return thundashop.framework.get_inherited_bg(jquery_object.parent());
     },
     showCellResizing: function () {
+        
         if (typeof (cssEditorForCell) !== "undefined") {
             cssEditorForCell.destroy();
             cssEditorForCell = null;
@@ -1068,6 +1069,8 @@ thundashop.framework = {
         if(cell.attr('data-keeponmobile') === "true") {
             $('.gskeepOriginalLayout').attr('checked','checked');
         }
+        
+        $('#gs_settings_cell_anchor').val(cell.attr('anchor'));
         
         //Loading permission object.
         var settings = JSON.parse(cell.attr('data-settings'));

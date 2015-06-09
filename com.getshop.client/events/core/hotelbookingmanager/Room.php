@@ -1,37 +1,19 @@
 <?php
 class core_hotelbookingmanager_Room extends core_common_DataCommon  {
 	/** @var String */
-	public $productId;
+	public $reservationParts;
 
 	/** @var String */
-	public $roomName;
+	public $domain;
 
 	/** @var String */
-	public $isActive;
+	public $name;
 
 	/** @var String */
-	public $isClean;
+	public $roomTypeId;
 
-	/** @var String */
-	public $needCleaning;
-
-	/** @var core_hotelbookingmanager_BookingReference */
-	public $lastReservation;
-
-	/** @var String */
-	public $isHandicap;
-
-	/** @var String */
-	public $suitedForLongTerm;
-
-	/** @var String */
-	public $cleaningDates;
-
-	/** @var String */
-	public $lastMarkedAsDirty;
-
-	/** @var String */
-	public $warnedAboutNotMove;
+	/** @var core_hotelbookingmanager_RoomType */
+	public $roomType;
 
 }
 ?>

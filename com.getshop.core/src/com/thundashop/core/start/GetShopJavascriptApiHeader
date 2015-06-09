@@ -9,6 +9,7 @@ GetShopApiWebSocket.prototype = {
     transferCompleted: null,
     transferStarted: null,
     shouldConnect: true,
+    sessionId: false,
     
     connect: function() {
         if (!this.shouldConnect)
@@ -32,7 +33,17 @@ GetShopApiWebSocket.prototype = {
         
         this.createManagers();
     },
-            
+    
+    guid: function() {
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
+    },
+
     handleMessage: function(msg) {
         var data = msg.data;
         var jsonObject = JSON.parse(data);
@@ -58,9 +69,24 @@ GetShopApiWebSocket.prototype = {
     },
             
     connected: function() {
+        this.setSessionId();
         this.initializeStore();
         this.fireConnectedEvent();
         this.connectionEstablished = true;
+    },
+    
+    setSessionId: function() {
+        if (sessionStorage.getItem("getshop.sessionId")) {
+            this.sessionId = sessionStorage.getItem("getshop.sessionId");
+        }
+        
+        if (!this.sessionId) {
+            this.sessionId = this.guid();
+            sessionStorage.setItem("getshop.sessionId", this.sessionId);
+        }
+        
+        if (this.socket.OPEN)
+            this.socket.send('sessionid:'+this.sessionId);
     },
             
     disconnected: function() {
@@ -103,8 +129,18 @@ GetShopApiWebSocket.prototype = {
             this.transferStarted();
         }
         this.sentMessages.push(deferred);
-        if (this.socket.OPEN)
-            this.socket.send(messageJson);
+        var sendFunc = function(messageJson, me) {
+            if (me.socket.readyState !== 1) {
+                setTimeout(function() {
+                    sendFunc(messageJson, me);
+                }, 50);
+            } else {
+                me.socket.send(messageJson);
+            }
+        }
+        
+        sendFunc(messageJson, this);
+        
         return deferred;
     },
 

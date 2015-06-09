@@ -44,14 +44,19 @@ public class WebSocketClient {
     }
     
     public void processMessage(String message) throws ErrorException {
-        
         if (message.length() > 8 && message.substring(0,9).equals("initstore")) {    
             storePool.initialize(message.substring(10), this.sessionId);
+        } else if (message.length() > 8 && message.substring(0,9).equals("sessionid")) {    
+            this.sessionId = message.substring(10);
         } else {
             String addr = ws.getRemoteSocketAddress().getAddress().toString();
             Object result = AppContext.storePool.ExecuteMethod(message, addr, sessionId);
-            String jsonResult = gson.toJson(result);
-            ws.send(jsonResult);
+            sendMessage(result);
         }
+    }
+    
+    public void sendMessage(Object result) {
+        String jsonResult = gson.toJson(result);
+        ws.send(jsonResult);
     }
 }

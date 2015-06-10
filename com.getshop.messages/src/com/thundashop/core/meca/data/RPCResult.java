@@ -8,7 +8,9 @@ package com.thundashop.core.meca.data;
 import java.io.Serializable;
 
 /**
- *
+ * Some sort of remote procedure call result that I will probably remove later
+ * in favor of plain data returns and using ErrorException for reporting problems.
+ * 
  * @author emil
  */
 public class RPCResult implements Serializable {

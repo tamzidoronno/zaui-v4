@@ -53,17 +53,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-            Application hotelusers = createSettings("GoogleRemarketing",
-                "5eda7754-932f-4108-8952-94d66becf3f2",
+        Application WhiteAndCleanTheme = createSettings("WhiteAndCleanTheme",
+                "cf1bf9b0-d8eb-4cc8-b464-b563373b7d1e",
                 allowed2,
                 "",
-                Application.Type.Marketing, false);
-        hotelusers.isPublic = true;
-        hotelusers.isFrontend = false;
-        hotelusers.moduleId = "Marketing";
-        hotelusers.allowedStoreIds = new ArrayList();
+                Application.Type.Theme, true);
+        WhiteAndCleanTheme.isPublic = true;
+        WhiteAndCleanTheme.isFrontend = false;
+        WhiteAndCleanTheme.moduleId = "Theme";
+        WhiteAndCleanTheme.allowedStoreIds = new ArrayList();
         
-        apps.add(hotelusers);
+        apps.add(WhiteAndCleanTheme);
         
         return apps;
     }

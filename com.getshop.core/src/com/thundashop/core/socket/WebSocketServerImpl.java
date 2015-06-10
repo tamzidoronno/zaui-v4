@@ -4,8 +4,15 @@
  */
 package com.thundashop.core.socket;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.ErrorMessage;
+import com.thundashop.core.common.JsonObject2;
+import com.thundashop.core.common.WebSocketReturnMessage;
 import com.thundashop.core.websocket.WebSocketClient;
+import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -55,8 +62,16 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
             try {
                 client.processMessage(message);
             } catch (ErrorException ex) {
-                // SEND BACK TO API.
-                ex.printStackTrace();
+                Gson gson = new GsonBuilder().serializeNulls().create();
+                Type type = new TypeToken<JsonObject2>() {}.getType();
+                JsonObject2 object = gson.fromJson(message, type);
+                
+                ErrorMessage msg = new ErrorMessage(ex);                
+                WebSocketReturnMessage returnmessage = new WebSocketReturnMessage();
+                returnmessage.messageId = object.messageId;
+                returnmessage.object = msg;
+
+                client.sendMessage(returnmessage);
             }
         }
     }

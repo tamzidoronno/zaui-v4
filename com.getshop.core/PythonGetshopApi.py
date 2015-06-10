@@ -1777,942 +1777,69 @@ class GetShopApplicationPool(object):
 class HotelBookingManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def checkAvailable(self, startDate, endDate, productId, additional):
+  def createDomain(self, name, description):
     args = collections.OrderedDict()
-    if isinstance(startDate,GetShopBaseClass): 
-      args["startDate"]=json.dumps(startDate.__dict__)
+    if isinstance(name,GetShopBaseClass): 
+      args["name"]=json.dumps(name.__dict__)
     else:
       try:
-        args["startDate"]=json.dumps(startDate)
+        args["name"]=json.dumps(name)
       except (ValueError, AttributeError):
-        args["startDate"]=startDate
-    if isinstance(endDate,GetShopBaseClass): 
-      args["endDate"]=json.dumps(endDate.__dict__)
+        args["name"]=name
+    if isinstance(description,GetShopBaseClass): 
+      args["description"]=json.dumps(description.__dict__)
     else:
       try:
-        args["endDate"]=json.dumps(endDate)
+        args["description"]=json.dumps(description)
       except (ValueError, AttributeError):
-        args["endDate"]=endDate
-    if isinstance(productId,GetShopBaseClass): 
-      args["productId"]=json.dumps(productId.__dict__)
-    else:
-      try:
-        args["productId"]=json.dumps(productId)
-      except (ValueError, AttributeError):
-        args["productId"]=productId
-    if isinstance(additional,GetShopBaseClass): 
-      args["additional"]=json.dumps(additional.__dict__)
-    else:
-      try:
-        args["additional"]=json.dumps(additional)
-      except (ValueError, AttributeError):
-        args["additional"]=additional
+        args["description"]=description
     data = EmptyClass()
     data.args = args
-    data.method = "checkAvailable"
+    data.method = "createDomain"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
-  def checkAvailableParkingSpots(self, startDate, endDate):
+  def createRoomType(self, domainId, name, price, size):
     args = collections.OrderedDict()
-    if isinstance(startDate,GetShopBaseClass): 
-      args["startDate"]=json.dumps(startDate.__dict__)
+    if isinstance(domainId,GetShopBaseClass): 
+      args["domainId"]=json.dumps(domainId.__dict__)
     else:
       try:
-        args["startDate"]=json.dumps(startDate)
+        args["domainId"]=json.dumps(domainId)
       except (ValueError, AttributeError):
-        args["startDate"]=startDate
-    if isinstance(endDate,GetShopBaseClass): 
-      args["endDate"]=json.dumps(endDate.__dict__)
+        args["domainId"]=domainId
+    if isinstance(name,GetShopBaseClass): 
+      args["name"]=json.dumps(name.__dict__)
     else:
       try:
-        args["endDate"]=json.dumps(endDate)
+        args["name"]=json.dumps(name)
       except (ValueError, AttributeError):
-        args["endDate"]=endDate
+        args["name"]=name
+    if isinstance(price,GetShopBaseClass): 
+      args["price"]=json.dumps(price.__dict__)
+    else:
+      try:
+        args["price"]=json.dumps(price)
+      except (ValueError, AttributeError):
+        args["price"]=price
+    if isinstance(size,GetShopBaseClass): 
+      args["size"]=json.dumps(size.__dict__)
+    else:
+      try:
+        args["size"]=json.dumps(size)
+      except (ValueError, AttributeError):
+        args["size"]=size
     data = EmptyClass()
     data.args = args
-    data.method = "checkAvailableParkingSpots"
+    data.method = "createRoomType"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
-  def checkForArxTransfer(self):
+  def getDomains(self):
     args = collections.OrderedDict()
     data = EmptyClass()
     data.args = args
-    data.method = "checkForArxTransfer"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def checkForOrdersToGenerate(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "checkForOrdersToGenerate"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def checkForVismaTransfer(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "checkForVismaTransfer"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def checkForWelcomeMessagesToSend(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "checkForWelcomeMessagesToSend"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def clearBookingReservation(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "clearBookingReservation"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def completeOrder(self, userId):
-    args = collections.OrderedDict()
-    if isinstance(userId,GetShopBaseClass): 
-      args["userId"]=json.dumps(userId.__dict__)
-    else:
-      try:
-        args["userId"]=json.dumps(userId)
-      except (ValueError, AttributeError):
-        args["userId"]=userId
-    data = EmptyClass()
-    data.args = args
-    data.method = "completeOrder"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def deleteReference(self, reference):
-    args = collections.OrderedDict()
-    if isinstance(reference,GetShopBaseClass): 
-      args["reference"]=json.dumps(reference.__dict__)
-    else:
-      try:
-        args["reference"]=json.dumps(reference)
-      except (ValueError, AttributeError):
-        args["reference"]=reference
-    data = EmptyClass()
-    data.args = args
-    data.method = "deleteReference"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def deleteUserBookingData(self, id):
-    args = collections.OrderedDict()
-    if isinstance(id,GetShopBaseClass): 
-      args["id"]=json.dumps(id.__dict__)
-    else:
-      try:
-        args["id"]=json.dumps(id)
-      except (ValueError, AttributeError):
-        args["id"]=id
-    data = EmptyClass()
-    data.args = args
-    data.method = "deleteUserBookingData"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def extendStay(self, reference, newdate, bdataid):
-    args = collections.OrderedDict()
-    if isinstance(reference,GetShopBaseClass): 
-      args["reference"]=json.dumps(reference.__dict__)
-    else:
-      try:
-        args["reference"]=json.dumps(reference)
-      except (ValueError, AttributeError):
-        args["reference"]=reference
-    if isinstance(newdate,GetShopBaseClass): 
-      args["newdate"]=json.dumps(newdate.__dict__)
-    else:
-      try:
-        args["newdate"]=json.dumps(newdate)
-      except (ValueError, AttributeError):
-        args["newdate"]=newdate
-    if isinstance(bdataid,GetShopBaseClass): 
-      args["bdataid"]=json.dumps(bdataid.__dict__)
-    else:
-      try:
-        args["bdataid"]=json.dumps(bdataid)
-      except (ValueError, AttributeError):
-        args["bdataid"]=bdataid
-    data = EmptyClass()
-    data.args = args
-    data.method = "extendStay"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllActiveUserBookings(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllActiveUserBookings"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllBookingsForUser(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllBookingsForUser"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllCurrentUserBookingData(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllCurrentUserBookingData"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllReservations(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllReservations"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllReservationsArx(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllReservationsArx"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllRooms(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllRooms"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllTempAccesses(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllTempAccesses"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllUsersBookingData(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllUsersBookingData"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllUsersInPeriode(self, startDate, endDate):
-    args = collections.OrderedDict()
-    if isinstance(startDate,GetShopBaseClass): 
-      args["startDate"]=json.dumps(startDate.__dict__)
-    else:
-      try:
-        args["startDate"]=json.dumps(startDate)
-      except (ValueError, AttributeError):
-        args["startDate"]=startDate
-    if isinstance(endDate,GetShopBaseClass): 
-      args["endDate"]=json.dumps(endDate.__dict__)
-    else:
-      try:
-        args["endDate"]=json.dumps(endDate)
-      except (ValueError, AttributeError):
-        args["endDate"]=endDate
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllUsersInPeriode"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getArxLog(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getArxLog"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getBookingConfiguration(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getBookingConfiguration"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getCurrentRentalTermsContract(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getCurrentRentalTermsContract"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getCurrentUserBookingData(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getCurrentUserBookingData"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getEmailMessage(self, language):
-    args = collections.OrderedDict()
-    if isinstance(language,GetShopBaseClass): 
-      args["language"]=json.dumps(language.__dict__)
-    else:
-      try:
-        args["language"]=json.dumps(language)
-      except (ValueError, AttributeError):
-        args["language"]=language
-    data = EmptyClass()
-    data.args = args
-    data.method = "getEmailMessage"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getInvoiceCustomers(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getInvoiceCustomers"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getReservationByReferenceId(self, referenceId):
-    args = collections.OrderedDict()
-    if isinstance(referenceId,GetShopBaseClass): 
-      args["referenceId"]=json.dumps(referenceId.__dict__)
-    else:
-      try:
-        args["referenceId"]=json.dumps(referenceId)
-      except (ValueError, AttributeError):
-        args["referenceId"]=referenceId
-    data = EmptyClass()
-    data.args = args
-    data.method = "getReservationByReferenceId"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getRoom(self, id):
-    args = collections.OrderedDict()
-    if isinstance(id,GetShopBaseClass): 
-      args["id"]=json.dumps(id.__dict__)
-    else:
-      try:
-        args["id"]=json.dumps(id)
-      except (ValueError, AttributeError):
-        args["id"]=id
-    data = EmptyClass()
-    data.args = args
-    data.method = "getRoom"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getRoomProductIds(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getRoomProductIds"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getStatistics(self, startDate, endDate, periodType):
-    args = collections.OrderedDict()
-    if isinstance(startDate,GetShopBaseClass): 
-      args["startDate"]=json.dumps(startDate.__dict__)
-    else:
-      try:
-        args["startDate"]=json.dumps(startDate)
-      except (ValueError, AttributeError):
-        args["startDate"]=startDate
-    if isinstance(endDate,GetShopBaseClass): 
-      args["endDate"]=json.dumps(endDate.__dict__)
-    else:
-      try:
-        args["endDate"]=json.dumps(endDate)
-      except (ValueError, AttributeError):
-        args["endDate"]=endDate
-    if isinstance(periodType,GetShopBaseClass): 
-      args["periodType"]=json.dumps(periodType.__dict__)
-    else:
-      try:
-        args["periodType"]=json.dumps(periodType)
-      except (ValueError, AttributeError):
-        args["periodType"]=periodType
-    data = EmptyClass()
-    data.args = args
-    data.method = "getStatistics"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getUserBookingData(self, id):
-    args = collections.OrderedDict()
-    if isinstance(id,GetShopBaseClass): 
-      args["id"]=json.dumps(id.__dict__)
-    else:
-      try:
-        args["id"]=json.dumps(id)
-      except (ValueError, AttributeError):
-        args["id"]=id
-    data = EmptyClass()
-    data.args = args
-    data.method = "getUserBookingData"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getUserBookingDataByOrderId(self, orderId):
-    args = collections.OrderedDict()
-    if isinstance(orderId,GetShopBaseClass): 
-      args["orderId"]=json.dumps(orderId.__dict__)
-    else:
-      try:
-        args["orderId"]=json.dumps(orderId)
-      except (ValueError, AttributeError):
-        args["orderId"]=orderId
-    data = EmptyClass()
-    data.args = args
-    data.method = "getUserBookingDataByOrderId"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getUserIdForRoom(self, roomNumber):
-    args = collections.OrderedDict()
-    if isinstance(roomNumber,GetShopBaseClass): 
-      args["roomNumber"]=json.dumps(roomNumber.__dict__)
-    else:
-      try:
-        args["roomNumber"]=json.dumps(roomNumber)
-      except (ValueError, AttributeError):
-        args["roomNumber"]=roomNumber
-    data = EmptyClass()
-    data.args = args
-    data.method = "getUserIdForRoom"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def isRoomAvailable(self, roomId, startDate, endDate):
-    args = collections.OrderedDict()
-    if isinstance(roomId,GetShopBaseClass): 
-      args["roomId"]=json.dumps(roomId.__dict__)
-    else:
-      try:
-        args["roomId"]=json.dumps(roomId)
-      except (ValueError, AttributeError):
-        args["roomId"]=roomId
-    if isinstance(startDate,GetShopBaseClass): 
-      args["startDate"]=json.dumps(startDate.__dict__)
-    else:
-      try:
-        args["startDate"]=json.dumps(startDate)
-      except (ValueError, AttributeError):
-        args["startDate"]=startDate
-    if isinstance(endDate,GetShopBaseClass): 
-      args["endDate"]=json.dumps(endDate.__dict__)
-    else:
-      try:
-        args["endDate"]=json.dumps(endDate)
-      except (ValueError, AttributeError):
-        args["endDate"]=endDate
-    data = EmptyClass()
-    data.args = args
-    data.method = "isRoomAvailable"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def makeMonthly(self, reference, bdata, amount):
-    args = collections.OrderedDict()
-    if isinstance(reference,GetShopBaseClass): 
-      args["reference"]=json.dumps(reference.__dict__)
-    else:
-      try:
-        args["reference"]=json.dumps(reference)
-      except (ValueError, AttributeError):
-        args["reference"]=reference
-    if isinstance(bdata,GetShopBaseClass): 
-      args["bdata"]=json.dumps(bdata.__dict__)
-    else:
-      try:
-        args["bdata"]=json.dumps(bdata)
-      except (ValueError, AttributeError):
-        args["bdata"]=bdata
-    if isinstance(amount,GetShopBaseClass): 
-      args["amount"]=json.dumps(amount.__dict__)
-    else:
-      try:
-        args["amount"]=json.dumps(amount)
-      except (ValueError, AttributeError):
-        args["amount"]=amount
-    data = EmptyClass()
-    data.args = args
-    data.method = "makeMonthly"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def markAsPayedForTest(self, userBookingDataId):
-    args = collections.OrderedDict()
-    if isinstance(userBookingDataId,GetShopBaseClass): 
-      args["userBookingDataId"]=json.dumps(userBookingDataId.__dict__)
-    else:
-      try:
-        args["userBookingDataId"]=json.dumps(userBookingDataId)
-      except (ValueError, AttributeError):
-        args["userBookingDataId"]=userBookingDataId
-    data = EmptyClass()
-    data.args = args
-    data.method = "markAsPayedForTest"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def markRoomAsReady(self, roomId):
-    args = collections.OrderedDict()
-    if isinstance(roomId,GetShopBaseClass): 
-      args["roomId"]=json.dumps(roomId.__dict__)
-    else:
-      try:
-        args["roomId"]=json.dumps(roomId)
-      except (ValueError, AttributeError):
-        args["roomId"]=roomId
-    data = EmptyClass()
-    data.args = args
-    data.method = "markRoomAsReady"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def moveRoomOnReference(self, reference, oldRoom, newRoomId):
-    args = collections.OrderedDict()
-    if isinstance(reference,GetShopBaseClass): 
-      args["reference"]=json.dumps(reference.__dict__)
-    else:
-      try:
-        args["reference"]=json.dumps(reference)
-      except (ValueError, AttributeError):
-        args["reference"]=reference
-    if isinstance(oldRoom,GetShopBaseClass): 
-      args["oldRoom"]=json.dumps(oldRoom.__dict__)
-    else:
-      try:
-        args["oldRoom"]=json.dumps(oldRoom)
-      except (ValueError, AttributeError):
-        args["oldRoom"]=oldRoom
-    if isinstance(newRoomId,GetShopBaseClass): 
-      args["newRoomId"]=json.dumps(newRoomId.__dict__)
-    else:
-      try:
-        args["newRoomId"]=json.dumps(newRoomId)
-      except (ValueError, AttributeError):
-        args["newRoomId"]=newRoomId
-    data = EmptyClass()
-    data.args = args
-    data.method = "moveRoomOnReference"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def notifyUserAboutRoom(self, reference, roomInfo, code):
-    args = collections.OrderedDict()
-    if isinstance(reference,GetShopBaseClass): 
-      args["reference"]=json.dumps(reference.__dict__)
-    else:
-      try:
-        args["reference"]=json.dumps(reference)
-      except (ValueError, AttributeError):
-        args["reference"]=reference
-    if isinstance(roomInfo,GetShopBaseClass): 
-      args["roomInfo"]=json.dumps(roomInfo.__dict__)
-    else:
-      try:
-        args["roomInfo"]=json.dumps(roomInfo)
-      except (ValueError, AttributeError):
-        args["roomInfo"]=roomInfo
-    if isinstance(code,GetShopBaseClass): 
-      args["code"]=json.dumps(code.__dict__)
-    else:
-      try:
-        args["code"]=json.dumps(code)
-      except (ValueError, AttributeError):
-        args["code"]=code
-    data = EmptyClass()
-    data.args = args
-    data.method = "notifyUserAboutRoom"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def removeRoom(self, id):
-    args = collections.OrderedDict()
-    if isinstance(id,GetShopBaseClass): 
-      args["id"]=json.dumps(id.__dict__)
-    else:
-      try:
-        args["id"]=json.dumps(id)
-      except (ValueError, AttributeError):
-        args["id"]=id
-    data = EmptyClass()
-    data.args = args
-    data.method = "removeRoom"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def removeRoomFromOrder(self, reference, room, bdata):
-    args = collections.OrderedDict()
-    if isinstance(reference,GetShopBaseClass): 
-      args["reference"]=json.dumps(reference.__dict__)
-    else:
-      try:
-        args["reference"]=json.dumps(reference)
-      except (ValueError, AttributeError):
-        args["reference"]=reference
-    if isinstance(room,GetShopBaseClass): 
-      args["room"]=json.dumps(room.__dict__)
-    else:
-      try:
-        args["room"]=json.dumps(room)
-      except (ValueError, AttributeError):
-        args["room"]=room
-    if isinstance(bdata,GetShopBaseClass): 
-      args["bdata"]=json.dumps(bdata.__dict__)
-    else:
-      try:
-        args["bdata"]=json.dumps(bdata)
-      except (ValueError, AttributeError):
-        args["bdata"]=bdata
-    data = EmptyClass()
-    data.args = args
-    data.method = "removeRoomFromOrder"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def reserveRoom(self, startDate, endDate, count):
-    args = collections.OrderedDict()
-    if isinstance(startDate,GetShopBaseClass): 
-      args["startDate"]=json.dumps(startDate.__dict__)
-    else:
-      try:
-        args["startDate"]=json.dumps(startDate)
-      except (ValueError, AttributeError):
-        args["startDate"]=startDate
-    if isinstance(endDate,GetShopBaseClass): 
-      args["endDate"]=json.dumps(endDate.__dict__)
-    else:
-      try:
-        args["endDate"]=json.dumps(endDate)
-      except (ValueError, AttributeError):
-        args["endDate"]=endDate
-    if isinstance(count,GetShopBaseClass): 
-      args["count"]=json.dumps(count.__dict__)
-    else:
-      try:
-        args["count"]=json.dumps(count)
-      except (ValueError, AttributeError):
-        args["count"]=count
-    data = EmptyClass()
-    data.args = args
-    data.method = "reserveRoom"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def reserveRoomAdvanced(self, startDate, endDate, count, additional, userBookingDataId):
-    args = collections.OrderedDict()
-    if isinstance(startDate,GetShopBaseClass): 
-      args["startDate"]=json.dumps(startDate.__dict__)
-    else:
-      try:
-        args["startDate"]=json.dumps(startDate)
-      except (ValueError, AttributeError):
-        args["startDate"]=startDate
-    if isinstance(endDate,GetShopBaseClass): 
-      args["endDate"]=json.dumps(endDate.__dict__)
-    else:
-      try:
-        args["endDate"]=json.dumps(endDate)
-      except (ValueError, AttributeError):
-        args["endDate"]=endDate
-    if isinstance(count,GetShopBaseClass): 
-      args["count"]=json.dumps(count.__dict__)
-    else:
-      try:
-        args["count"]=json.dumps(count)
-      except (ValueError, AttributeError):
-        args["count"]=count
-    if isinstance(additional,GetShopBaseClass): 
-      args["additional"]=json.dumps(additional.__dict__)
-    else:
-      try:
-        args["additional"]=json.dumps(additional)
-      except (ValueError, AttributeError):
-        args["additional"]=additional
-    if isinstance(userBookingDataId,GetShopBaseClass): 
-      args["userBookingDataId"]=json.dumps(userBookingDataId.__dict__)
-    else:
-      try:
-        args["userBookingDataId"]=json.dumps(userBookingDataId)
-      except (ValueError, AttributeError):
-        args["userBookingDataId"]=userBookingDataId
-    data = EmptyClass()
-    data.args = args
-    data.method = "reserveRoomAdvanced"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def saveRoom(self, room):
-    args = collections.OrderedDict()
-    if isinstance(room,GetShopBaseClass): 
-      args["room"]=json.dumps(room.__dict__)
-    else:
-      try:
-        args["room"]=json.dumps(room)
-      except (ValueError, AttributeError):
-        args["room"]=room
-    data = EmptyClass()
-    data.args = args
-    data.method = "saveRoom"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def setArxConfiguration(self, settings):
-    args = collections.OrderedDict()
-    if isinstance(settings,GetShopBaseClass): 
-      args["settings"]=json.dumps(settings.__dict__)
-    else:
-      try:
-        args["settings"]=json.dumps(settings)
-      except (ValueError, AttributeError):
-        args["settings"]=settings
-    data = EmptyClass()
-    data.args = args
-    data.method = "setArxConfiguration"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def setBookingConfiguration(self, settings):
-    args = collections.OrderedDict()
-    if isinstance(settings,GetShopBaseClass): 
-      args["settings"]=json.dumps(settings.__dict__)
-    else:
-      try:
-        args["settings"]=json.dumps(settings)
-      except (ValueError, AttributeError):
-        args["settings"]=settings
-    data = EmptyClass()
-    data.args = args
-    data.method = "setBookingConfiguration"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def setCart(self, productId, count, startDate, endDate):
-    args = collections.OrderedDict()
-    if isinstance(productId,GetShopBaseClass): 
-      args["productId"]=json.dumps(productId.__dict__)
-    else:
-      try:
-        args["productId"]=json.dumps(productId)
-      except (ValueError, AttributeError):
-        args["productId"]=productId
-    if isinstance(count,GetShopBaseClass): 
-      args["count"]=json.dumps(count.__dict__)
-    else:
-      try:
-        args["count"]=json.dumps(count)
-      except (ValueError, AttributeError):
-        args["count"]=count
-    if isinstance(startDate,GetShopBaseClass): 
-      args["startDate"]=json.dumps(startDate.__dict__)
-    else:
-      try:
-        args["startDate"]=json.dumps(startDate)
-      except (ValueError, AttributeError):
-        args["startDate"]=startDate
-    if isinstance(endDate,GetShopBaseClass): 
-      args["endDate"]=json.dumps(endDate.__dict__)
-    else:
-      try:
-        args["endDate"]=json.dumps(endDate)
-      except (ValueError, AttributeError):
-        args["endDate"]=endDate
-    data = EmptyClass()
-    data.args = args
-    data.method = "setCart"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def setVismaConfiguration(self, settings):
-    args = collections.OrderedDict()
-    if isinstance(settings,GetShopBaseClass): 
-      args["settings"]=json.dumps(settings.__dict__)
-    else:
-      try:
-        args["settings"]=json.dumps(settings)
-      except (ValueError, AttributeError):
-        args["settings"]=settings
-    data = EmptyClass()
-    data.args = args
-    data.method = "setVismaConfiguration"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def setVistorData(self, bdataId, visitors):
-    args = collections.OrderedDict()
-    if isinstance(bdataId,GetShopBaseClass): 
-      args["bdataId"]=json.dumps(bdataId.__dict__)
-    else:
-      try:
-        args["bdataId"]=json.dumps(bdataId)
-      except (ValueError, AttributeError):
-        args["bdataId"]=bdataId
-    if isinstance(visitors,GetShopBaseClass): 
-      args["visitors"]=json.dumps(visitors.__dict__)
-    else:
-      try:
-        args["visitors"]=json.dumps(visitors)
-      except (ValueError, AttributeError):
-        args["visitors"]=visitors
-    data = EmptyClass()
-    data.args = args
-    data.method = "setVistorData"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def startUserBookingData(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "startUserBookingData"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def tempGrantAccess(self, reference, roomId):
-    args = collections.OrderedDict()
-    if isinstance(reference,GetShopBaseClass): 
-      args["reference"]=json.dumps(reference.__dict__)
-    else:
-      try:
-        args["reference"]=json.dumps(reference)
-      except (ValueError, AttributeError):
-        args["reference"]=reference
-    if isinstance(roomId,GetShopBaseClass): 
-      args["roomId"]=json.dumps(roomId.__dict__)
-    else:
-      try:
-        args["roomId"]=json.dumps(roomId)
-      except (ValueError, AttributeError):
-        args["roomId"]=roomId
-    data = EmptyClass()
-    data.args = args
-    data.method = "tempGrantAccess"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def toggleAvoidAutoDelete(self, bdataId):
-    args = collections.OrderedDict()
-    if isinstance(bdataId,GetShopBaseClass): 
-      args["bdataId"]=json.dumps(bdataId.__dict__)
-    else:
-      try:
-        args["bdataId"]=json.dumps(bdataId)
-      except (ValueError, AttributeError):
-        args["bdataId"]=bdataId
-    data = EmptyClass()
-    data.args = args
-    data.method = "toggleAvoidAutoDelete"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def toggleForInvoice(self, userId):
-    args = collections.OrderedDict()
-    if isinstance(userId,GetShopBaseClass): 
-      args["userId"]=json.dumps(userId.__dict__)
-    else:
-      try:
-        args["userId"]=json.dumps(userId)
-      except (ValueError, AttributeError):
-        args["userId"]=userId
-    data = EmptyClass()
-    data.args = args
-    data.method = "toggleForInvoice"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def updateAdditionalInformation(self, info):
-    args = collections.OrderedDict()
-    if isinstance(info,GetShopBaseClass): 
-      args["info"]=json.dumps(info.__dict__)
-    else:
-      try:
-        args["info"]=json.dumps(info)
-      except (ValueError, AttributeError):
-        args["info"]=info
-    data = EmptyClass()
-    data.args = args
-    data.method = "updateAdditionalInformation"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def updateBookingInformation(self, vistors, userBookingId, roomId, referenceId):
-    args = collections.OrderedDict()
-    if isinstance(vistors,GetShopBaseClass): 
-      args["vistors"]=json.dumps(vistors.__dict__)
-    else:
-      try:
-        args["vistors"]=json.dumps(vistors)
-      except (ValueError, AttributeError):
-        args["vistors"]=vistors
-    if isinstance(userBookingId,GetShopBaseClass): 
-      args["userBookingId"]=json.dumps(userBookingId.__dict__)
-    else:
-      try:
-        args["userBookingId"]=json.dumps(userBookingId)
-      except (ValueError, AttributeError):
-        args["userBookingId"]=userBookingId
-    if isinstance(roomId,GetShopBaseClass): 
-      args["roomId"]=json.dumps(roomId.__dict__)
-    else:
-      try:
-        args["roomId"]=json.dumps(roomId)
-      except (ValueError, AttributeError):
-        args["roomId"]=roomId
-    if isinstance(referenceId,GetShopBaseClass): 
-      args["referenceId"]=json.dumps(referenceId.__dict__)
-    else:
-      try:
-        args["referenceId"]=json.dumps(referenceId)
-      except (ValueError, AttributeError):
-        args["referenceId"]=referenceId
-    data = EmptyClass()
-    data.args = args
-    data.method = "updateBookingInformation"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def updateCart(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "updateCart"
-    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def updateUserBookingData(self, userdata):
-    args = collections.OrderedDict()
-    if isinstance(userdata,GetShopBaseClass): 
-      args["userdata"]=json.dumps(userdata.__dict__)
-    else:
-      try:
-        args["userdata"]=json.dumps(userdata)
-      except (ValueError, AttributeError):
-        args["userdata"]=userdata
-    data = EmptyClass()
-    data.args = args
-    data.method = "updateUserBookingData"
+    data.method = "getDomains"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3216,6 +2343,32 @@ class LogoManager(object):
     data.args = args
     data.method = "setLogo"
     data.interfaceName = "app.logo.ILogoManager"
+    return self.communicationHelper.sendMessage(data)
+
+class MecaManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def createVechiel(self, vechiel):
+    args = collections.OrderedDict()
+    if isinstance(vechiel,GetShopBaseClass): 
+      args["vechiel"]=json.dumps(vechiel.__dict__)
+    else:
+      try:
+        args["vechiel"]=json.dumps(vechiel)
+      except (ValueError, AttributeError):
+        args["vechiel"]=vechiel
+    data = EmptyClass()
+    data.args = args
+    data.method = "createVechiel"
+    data.interfaceName = "core.meca.IMecaManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def helloWorld(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "helloWorld"
+    data.interfaceName = "core.meca.IMecaManager"
     return self.communicationHelper.sendMessage(data)
 
 class MessageManager(object):
@@ -7562,6 +6715,7 @@ class GetShopApi(object):
     self.LasGruppenPDFGenerator = LasGruppenPDFGenerator(self.communicationHelper)
     self.ListManager = ListManager(self.communicationHelper)
     self.LogoManager = LogoManager(self.communicationHelper)
+    self.MecaManager = MecaManager(self.communicationHelper)
     self.MessageManager = MessageManager(self.communicationHelper)
     self.MobileManager = MobileManager(self.communicationHelper)
     self.NewsLetterManager = NewsLetterManager(self.communicationHelper)

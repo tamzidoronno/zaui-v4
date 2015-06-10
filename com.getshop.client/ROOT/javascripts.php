@@ -21,6 +21,11 @@ if (!$factory->isEditorMode()) {
     $apps[] = $appSettings;
 }
 
+$theme = $factory->getApplicationPool()->getSelectedThemeApp();
+if ($theme) {    
+    $apps[] = $theme;
+}
+
 foreach ($apps as $app) {
     $appInstance = $factory->getApplicationPool()->createInstace($app);
     if ($appInstance) {

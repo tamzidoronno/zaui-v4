@@ -481,7 +481,11 @@ class Page {
             $permissions = "data-settings='".json_encode($cell->settings) . "'";
         }
         
-        echo "<div $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        $anchor = $cell->settings->anchor;
+        if ($anchor) {
+            echo "<a id='$anchor' name='$anchor'></a>";
+        }
+        echo "<div anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
         
         if ($this->factory->isMobile() && $gsrowmode == "") {
@@ -627,6 +631,9 @@ class Page {
                 <input type="checkbox" class='gskeepOriginalLayout'> <? echo $this->factory->__w("Keep original layout in mobile view."); ?>
                 <br><br>
                 <div class='gsoutercolorselectionpanel gsoutercolorselectionbg'>
+                    
+                    
+                    
                     <div class='gsheading'><? echo $this->factory->__w("Outer background"); ?></div>
                     <div class='gscolorselectionpanel' level=''>
                         <table width='100%'>
@@ -749,6 +756,21 @@ class Page {
                         </span>
                     </div>
                     <div style='clear:both;'></div>
+                </div>
+                <br/>
+                <br/>
+                <div class='gsheading'><? echo $this->factory->__w("Anchor"); ?></div>
+                <div class='gscolorselectionpanel' level=''>
+                    <table width='100%'>
+                        <tr>
+                            <td valign="top">
+                                <? echo $this->factory->__w("Enter anchor name"); ?>
+                            </td>
+                            <td align='right'>
+                                <input id="gs_settings_cell_anchor" type='text'/>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 

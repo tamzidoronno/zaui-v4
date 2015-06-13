@@ -311,4 +311,7 @@ public interface IUserManager {
      * @throws ErrorException 
      */
     public boolean isImpersonating() throws ErrorException;
+    
+    @Administrator
+    public void cleanUpUsers() throws ErrorException;
 }

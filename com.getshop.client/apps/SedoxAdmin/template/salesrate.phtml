@@ -1,0 +1,12 @@
+<?php
+$results = $this->getApi()->getSedoxProductManager()->getStatistic();
+
+echo "<div class='filecount'><table cellspacing='0' width='100%'>";
+    echo "<th>From";
+    echo "<th>To";
+    echo "<th>Count";
+foreach ($results as $res) {
+    echo "<tr><td>$res->startDate</td><td>$res->endDate</td><td>$res->count</td></tr>";
+}
+echo "</table></div>";
+?>

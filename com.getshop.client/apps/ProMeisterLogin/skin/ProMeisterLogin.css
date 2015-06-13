@@ -1,0 +1,84 @@
+
+.signupform_outer .hidebackground {
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 999;
+}
+.signupform_outer {
+    position: absolute; 
+    left: 50%;
+    top: 50px;
+}
+
+.signupform .signupform_content {
+    padding: 20px;
+    font-size: 16px;
+}
+.signupform {
+    position: relative; left: -50%; 
+    border: solid 3px #BBB;
+    width: 1000px;
+    min-height: 100px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 1000;
+    background-color: #FFF;
+    padding-bottom: 40px;
+}
+
+.signupform_close {
+    cursor: pointer;
+    background-image: url('Close.png');
+    width: 30px;
+    height: 30px;
+    background-size: 30px;
+    position: absolute;
+    right: -15px;
+    top: -15px;
+}
+
+
+.signupform_content input[type="password"],
+.signupform_content input[type="text"] {
+  padding: 10px;
+  border: solid 1px #dcdcdc;
+  transition: box-shadow 0.3s, border 0.3s;
+}
+.signupform_content input[type="password"]:focus,
+.signupform_content input[type="text"]:focus,
+.signupform_content input[type="password"].focus,
+.signupform_content input[type="text"].focus {
+  border: solid 1px #707070;
+  box-shadow: 0 0 5px 1px #969696;
+}
+
+.login_create_new_account,
+.gs_login_button {
+    background: rgb(201,222,150); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(57,130,53,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(201,222,150,1)), color-stop(44%,rgba(138,182,107,1)), color-stop(100%,rgba(57,130,53,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', endColorstr='#398235',GradientType=0 ); /* IE6-9 */
+    
+    color: #FFF;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    cursor: pointer;
+    border: solid 2px #EEE;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+
+.signup_step1 {
+    display: none;
+}

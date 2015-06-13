@@ -1,6 +1,7 @@
 package com.thundashop.core.usermanager;
 
 import com.google.gson.Gson;
+import com.thundashop.core.calendar.CalendarManager;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
@@ -20,7 +21,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -112,7 +112,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public User createUser(User user) throws ErrorException {
-		System.out.println("Userkey : " + user.referenceKey);
+        System.out.println("Userkey : " + user.referenceKey);
         if (getSession().currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }
@@ -381,13 +381,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public boolean isCaptain(String id) throws ErrorException {
-        
         User user = getUserById(id);
         if(user.fullName == null) {
             return false;
         }
-        
-        
         
         return user.fullName.equalsIgnoreCase("Jean-Luc Picard");
     }
@@ -399,6 +396,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user == null) {
             throw new ErrorException(26);
         }
+        
         logonEncrypted(user.username, user.password);
 
         user.key = null;
@@ -724,46 +722,27 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
 
-	public void markUserAsTransferredToVisma(User user) {
-		try {
-			User inMemUser = getUserById(user.id);
-			inMemUser.isTransferredToAccountSystem = true;
-			saveUser(inMemUser);
-		} catch (ErrorException ex) {
-			// Optimistic saving of transferred.
-		}
-	}
+    public void markUserAsTransferredToVisma(User user) {
+        try {
+            User inMemUser = getUserById(user.id);
+            inMemUser.isTransferredToAccountSystem = true;
+            saveUser(inMemUser);
+        } catch (ErrorException ex) {
+            // Optimistic saving of transferred.
+        }
+    }
 
-    private void cleanUpUsers() {
-        Map<String, Integer> accountCount = new HashMap();
+    @Override
+    public void cleanUpUsers() throws ErrorException {
+        UserCleaner cleaner = new UserCleaner(0);
         
         List<User> users = userStoreCollections.get(storeId).getAllUsers();
         for (User user : users) {
-            if (user.emailAddress == null) {
-                System.out.println("User missing email address: " + user.fullName);
-                continue;
-            }
-            
-            Integer count = accountCount.get(user.emailAddress);
-            if (count == null) {
-                count = 0;
-            }
-            count++;
-            accountCount.put(user.emailAddress, count);
+            cleaner.addUser(user);
         }
         
-        int accountNeedCorrection = 0;
-        for (String email : accountCount.keySet()) {
-            System.out.println("");
-            System.out.println("Email: " + email);
-            for (User user : users) {
-                if (email.equals(user.emailAddress)) {
-                    System.out.println("   "+user.fullName + " mob: " + user.cellPhone);
-                }
-            }
-        }
-        
-        System.out.println("Correction number: " + accountNeedCorrection);
+        CalendarManager calManager = getManager(CalendarManager.class);
+        cleaner.cleanNextLevel(this, calManager);
     }
     
 }

@@ -33,6 +33,9 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         if ($this->isUserSettings())
             $this->includefile("usersettings");
         
+        if ($this->isSalesRAte())
+            $this->includefile("salesrate");
+        
         echo "</div>";
     }
 
@@ -78,6 +81,10 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
     
     public function isUserSettings() {
         return isset($_SESSION['sedox_admin_subpage']) && $_SESSION['sedox_admin_subpage'] == "usersettings";
+    }
+    
+    public function isSalesRate() {
+        return isset($_SESSION['sedox_admin_subpage']) && $_SESSION['sedox_admin_subpage'] == "salesrate";
     }
     
     public function isSettingsView() {

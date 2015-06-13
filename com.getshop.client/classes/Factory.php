@@ -172,6 +172,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.rotate.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.PagePicker.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/lightbox.min.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/promeisterlogin.js"></script>';
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
         echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
 

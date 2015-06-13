@@ -302,4 +302,6 @@ public interface ICalendarManager {
     
     @Customer
     public void registerToken(String token) throws ErrorException;
+    
+    public List<Entry> getMyEvents();
 }

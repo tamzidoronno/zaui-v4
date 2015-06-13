@@ -59,6 +59,7 @@ public class Entry implements Serializable, Comparable<Entry> {
     public int year;
     public int month;
     public int day;
+    public boolean isInPast = false;
 
     public Entry() {
     }

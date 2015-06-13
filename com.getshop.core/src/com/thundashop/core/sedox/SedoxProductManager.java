@@ -1448,4 +1448,41 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
         }
     }   
+
+    @Override
+    public List<SedoxProductStatistic> getStatistic() {
+        Calendar nowCalendar = Calendar.getInstance();
+        nowCalendar.setTime(new Date());
+        nowCalendar.add(Calendar.MONTH, 1);
+        nowCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        nowCalendar.set(Calendar.HOUR, 0);
+        nowCalendar.set(Calendar.MINUTE, 59);
+        nowCalendar.set(Calendar.SECOND, 0);
+            
+            
+        List<SedoxProductStatistic> results = new ArrayList();
+        for (int i=1; i<50; i++) {
+            
+            SedoxProductStatistic statistic = new SedoxProductStatistic();
+            Date endDate = nowCalendar.getTime();
+            
+            
+            nowCalendar.add(Calendar.MONTH, -1);
+            Date startDate = nowCalendar.getTime();
+            
+            statistic.startDate = startDate;
+            statistic.endDate = endDate;
+            
+            for (SedoxProduct product : products) {
+                if (product.rowCreatedDate.after(startDate) && product.rowCreatedDate.before(endDate))
+                    statistic.count++;
+            }
+            
+            results.add(statistic);
+        }
+       
+        return results;
+    }
+
+    
 }

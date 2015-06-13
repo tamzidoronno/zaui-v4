@@ -87,5 +87,8 @@ class core_calendarmanager_data_Entry {
 	/** @var String */
 	public $day;
 
+	/** @var String */
+	public $isInPast;
+
 }
 ?>

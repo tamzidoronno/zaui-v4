@@ -124,7 +124,7 @@ class StyleSheet {
                 $done[] = $appSettingsId;
             }
         }
-
+        
         $this->doApp($themeApp->getApplicationSettings());
     }
 

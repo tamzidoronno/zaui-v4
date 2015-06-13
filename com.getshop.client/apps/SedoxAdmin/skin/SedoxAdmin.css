@@ -89,3 +89,10 @@
 .SedoxAdmin .slaveslist .col1 { width: 800px;}
 .SedoxAdmin .showuser { color: blue; cursor: pointer;}
 
+
+.SedoxAdmin .filecount able, .SedoxAdmin .filecount td, .SedoxAdmin .filecount th {
+    border-bottom: solid 1px #DDD;
+    padding: 5px;
+    text-align: center;
+}
+

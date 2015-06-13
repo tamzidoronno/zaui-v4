@@ -55,18 +55,18 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings embedCode = createSettings(
-                "ProMeisterIntrest",
-                "59b96c13-e34b-44ea-9552-cb5247ce1ea3",
+        ApplicationSettings proMeisterLogin = createSettings(
+                "ProMeisterLogin",
+                "2f98236f-b36d-4d5c-93c6-0ad99e5b3dc6",
                 allowed2,
                 "",
-                ApplicationSettings.Type.Webshop, false);
-        embedCode.isPublic = false;
-        embedCode.isResponsive = true;
-        embedCode.allowedStoreIds = new ArrayList();
-        embedCode.allowedStoreIds.add("d27d81b9-52e9-4508-8f4c-afffa2458488");
-        embedCode.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
-        apps.add(embedCode);
+                ApplicationSettings.Type.System, true);
+        proMeisterLogin.isPublic = false;
+        proMeisterLogin.isResponsive = true;
+        proMeisterLogin.allowedStoreIds = new ArrayList();
+        proMeisterLogin.allowedStoreIds.add("d27d81b9-52e9-4508-8f4c-afffa2458488");
+        proMeisterLogin.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
+        apps.add(proMeisterLogin);
 
 //        
 //        ApplicationSettings hotelvask = createSettings(
@@ -154,18 +154,18 @@ public class AddApplicationsToDatabase {
         credentials.storeid = "all";
 
         for (ApplicationSettings app : addApplications()) {
-            app.storeId = "all";
-
-            DataCommon data = null;
-            if (app.id != null) {
-                data = database.getObject(credentials, app.id);
-            }
-
-            if (data == null) {
+//            app.storeId = "all";
+//
+//            DataCommon data = null;
+//            if (app.id != null) {
+//                data = database.getObject(credentials, app.id);
+//            }
+//
+//            if (data == null) {
                 database.save(app, credentials);
-            } else {
-                System.out.println("Skipping " + app.appName + ", already exists");
-            }
+//            } else {
+//                System.out.println("Skipping " + app.appName + ", already exists");
+//            }
 
         }
     }

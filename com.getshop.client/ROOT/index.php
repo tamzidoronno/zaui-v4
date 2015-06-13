@@ -79,6 +79,9 @@ include '../loader.php';
         </div>
     </div>
 </div>
+
+
+
 <?
 $importApplication = new ImportApplication(null, null);
 $importApplication->showMenu();
@@ -95,6 +98,18 @@ if (isset($_GET['logonwithkey'])) {
 
 $factory = IocContainer::getFactorySingelton();
 
+$singletons = $factory->getApplicationPool()->getSingletonInstances();
+
+foreach ($singletons as $singleton) {
+    if ($singleton->getConfiguration()->appSettingsId == "2f98236f-b36d-4d5c-93c6-0ad99e5b3dc6") {
+        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
+        $singleton->render();
+    }
+}
+?>
+
+
+<?
 if (@$factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings->isResponsive) {
     echo '<meta name="viewport" content="initial-scale=1.0,width=device-width,user-scalable=no;">';
     echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';
@@ -328,3 +343,4 @@ if (isset($_GET['showlogin']) || $factory->isEditorMode()) {
 }
 
 ?>
+

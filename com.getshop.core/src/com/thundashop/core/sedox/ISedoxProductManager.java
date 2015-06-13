@@ -146,4 +146,7 @@ public interface ISedoxProductManager  {
 
     @Customer
     public void transferCreditToSlave(String slaveId, double amount) throws ErrorException;
+    
+    @Administrator
+    public List<SedoxProductStatistic> getStatistic();
 }

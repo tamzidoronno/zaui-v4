@@ -829,6 +829,20 @@ class APICalendarManager {
 	}
 
 	/**
+	* Get all entries in a region based on the point
+	* @param point
+	* @return List
+	*/
+
+	public function getMyEvents() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getMyEvents";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* return a list of entires that a specified user
 	* has been attending to
 	*/
@@ -4767,6 +4781,23 @@ class APISedoxProductManager {
 	     $data['args'] = array();
 	     $data['args']["masterUserId"] = json_encode($this->transport->object_unset_nulls($masterUserId));
 	     $data["method"] = "getSlaves";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getStatistic() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getStatistic";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
 	}

@@ -1000,6 +1000,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             entry.location = entry.locationObject.location;
             entry.locationExtended = entry.locationObject.locationExtra;
         }
+        entry.isInPast = entry.isInPast();
     }
 
     @Override
@@ -1351,5 +1352,50 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             storedUser.lastRegisteredToken = token;
             userManager.saveUserDirect(storedUser);
         }
+    }
+
+    public void replaceUserId(String clone, String newUserId) {
+        for (Month month : months.values()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    if (entry.dropDiploma.contains(clone)) {
+                        entry.dropDiploma.remove(clone);
+                        entry.dropDiploma.add(newUserId);
+                    }
+                    
+                    if (entry.attendees.contains(clone)) {
+                        entry.attendees.remove(clone);
+                        entry.attendees.add(newUserId);
+                    }
+                    
+                    if (entry.waitingList.contains(clone)) {
+                        entry.waitingList.remove(clone);
+                        entry.waitingList.add(newUserId);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<Entry> getMyEvents() {
+        List<Entry> entries = new ArrayList();
+        
+        if (getSession() == null || getSession().currentUser == null) {
+            return entries;
+        }
+        
+        for (Month month : months.values()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    if (entry.attendees.contains(getSession().currentUser.id)) {
+                        finalizeEntry(entry);
+                        entries.add(entry);
+                    }
+                }
+            }
+        }
+        
+        return entries;
     }
 }

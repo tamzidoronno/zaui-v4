@@ -860,6 +860,14 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getMyEvents(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getMyEvents"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getSignature(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 
@@ -872,6 +880,21 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getSignature"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def registerToken(self, token):
+    args = collections.OrderedDict()
+    if isinstance(token,GetShopBaseClass): 
+      args["token"]=json.dumps(token.__dict__)
+    else:
+      try:
+        args["token"]=json.dumps(token)
+      except (ValueError, AttributeError):
+        args["token"]=token
+    data = EmptyClass()
+    data.args = args
+    data.method = "registerToken"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -4947,6 +4970,14 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getStatistic(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getStatistic"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def login(self, emailAddress, password):
     args = collections.OrderedDict()
     if isinstance(emailAddress,GetShopBaseClass): 
@@ -5718,6 +5749,14 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "cancelImpersonating"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def cleanUpUsers(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "cleanUpUsers"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 

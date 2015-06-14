@@ -5,21 +5,27 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
 @GetShopSession
 public class HotelBookingManager extends ManagerBase implements IHotelBookingManager {
 
-    public List<Domain> domains = new ArrayList();
+    public Map<String, HotelDomainController> domains = new HashMap();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof Domain) {
-                domains.add((Domain)dataCommon);
+                Domain domain = (Domain)dataCommon;
+                domains.put(domain.id, createHotelBookingManager(domain));
             }
+        }
+        
+        for (HotelDomainController domainController : domains.values()) {
+            domainController.dataFromDatabase(data.data);
         }
     }   
 
@@ -29,25 +35,27 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         domain.name = name;
         domain.description = description;
         saveObject(domain);
-        domains.add(domain);
+        domains.put(domain.id, createHotelBookingManager(domain));
     }
 
     @Override
     public ArrayList<Domain> getDomains() {
-        return new ArrayList(domains);
+        return new ArrayList(domains.keySet());
     }
 
     @Override
     public RoomType createRoomType(String domainId, String name, double price, int size) {
-        Domain domain = getDomain(domainId);
-        if (domain != null) {
-//            return domain.createRoomType();
+        HotelDomainController domainController = domains.get(domainId);
+        if (domainController != null) {
+            return domainController.createRoom(name, price, size);
         }
         
         return null;
     }
 
-    private Domain getDomain(String domainId) {
-        return domains.stream().filter(o -> o.id.equals(domainId)).findFirst().orElse(null);
+
+    private HotelDomainController createHotelBookingManager(Domain domain) {
+        HotelDomainController controller = new HotelDomainController(domain, this);
+        return controller;
     }
 }

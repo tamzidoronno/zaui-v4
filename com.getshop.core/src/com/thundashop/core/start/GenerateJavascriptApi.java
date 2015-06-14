@@ -26,9 +26,9 @@ public class GenerateJavascriptApi {
 
     private List<Class> interfaces = new ArrayList();
 
-    public void start() throws ClassNotFoundException, IOException, URISyntaxException {
+    public void start(String fileName) throws ClassNotFoundException, IOException, URISyntaxException {
         loadInterfaces();
-        generateJavascript();
+        generateJavascript(fileName);
     }
 
     private void loadInterfaces() throws ClassNotFoundException {
@@ -69,7 +69,7 @@ public class GenerateJavascriptApi {
         return total;
     }
 
-    private void generateJavascript() throws IOException, URISyntaxException {
+    private void generateJavascript(String saveToFile) throws IOException, URISyntaxException {
         String javascriptFile = "";
         javascriptFile += getHeader() + "\n\n";
         
@@ -127,12 +127,17 @@ public class GenerateJavascriptApi {
         javascriptFile += createManagers;
 
         
-        Files.write(Paths.get("/tmp/getshopapi.js"), javascriptFile.getBytes());
-        System.out.println("file stored in : /tmp/getshopapi.js" );
+        Files.write(Paths.get(saveToFile), javascriptFile.getBytes());
+        System.out.println("file stored in : " +saveToFile );
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, URISyntaxException {
+        String fileName = "/tmp/getshopapi.js";
+        if (args.length > 0) {
+            fileName = args[0];
+        }
+        
         GenerateJavascriptApi generate = new GenerateJavascriptApi();
-        generate.start();
+        generate.start(fileName);
     }
 }

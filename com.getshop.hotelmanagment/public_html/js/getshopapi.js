@@ -6172,11 +6172,114 @@ GetShopApiWebSocket.HotelBookingManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'deleteDomain' : function(domainId, silent) {
+        data = {
+            args : {
+                domainId : JSON.stringify(domainId),
+            },
+            method: 'deleteDomain',
+            interfaceName: 'core.hotelbookingmanager.IHotelBookingManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'deleteRoom' : function(domainId,roomId, silent) {
+        data = {
+            args : {
+                domainId : JSON.stringify(domainId),
+                roomId : JSON.stringify(roomId),
+            },
+            method: 'deleteRoom',
+            interfaceName: 'core.hotelbookingmanager.IHotelBookingManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'deleteRoomType' : function(domainId,roomTypeId, silent) {
+        data = {
+            args : {
+                domainId : JSON.stringify(domainId),
+                roomTypeId : JSON.stringify(roomTypeId),
+            },
+            method: 'deleteRoomType',
+            interfaceName: 'core.hotelbookingmanager.IHotelBookingManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getDomain' : function(domainId, silent) {
+        data = {
+            args : {
+                domainId : JSON.stringify(domainId),
+            },
+            method: 'getDomain',
+            interfaceName: 'core.hotelbookingmanager.IHotelBookingManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'getDomains' : function(silent) {
         data = {
             args : {
             },
             method: 'getDomains',
+            interfaceName: 'core.hotelbookingmanager.IHotelBookingManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getRoom' : function(domainId,roomId, silent) {
+        data = {
+            args : {
+                domainId : JSON.stringify(domainId),
+                roomId : JSON.stringify(roomId),
+            },
+            method: 'getRoom',
+            interfaceName: 'core.hotelbookingmanager.IHotelBookingManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getRoomType' : function(domainId,roomTypeId, silent) {
+        data = {
+            args : {
+                domainId : JSON.stringify(domainId),
+                roomTypeId : JSON.stringify(roomTypeId),
+            },
+            method: 'getRoomType',
+            interfaceName: 'core.hotelbookingmanager.IHotelBookingManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getRoomTypes' : function(domainId, silent) {
+        data = {
+            args : {
+                domainId : JSON.stringify(domainId),
+            },
+            method: 'getRoomTypes',
+            interfaceName: 'core.hotelbookingmanager.IHotelBookingManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getRooms' : function(domainId, silent) {
+        data = {
+            args : {
+                domainId : JSON.stringify(domainId),
+            },
+            method: 'getRooms',
+            interfaceName: 'core.hotelbookingmanager.IHotelBookingManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'saveRoom' : function(room, silent) {
+        data = {
+            args : {
+                room : JSON.stringify(room),
+            },
+            method: 'saveRoom',
             interfaceName: 'core.hotelbookingmanager.IHotelBookingManager',
         };
         return this.communication.send(data, silent);

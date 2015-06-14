@@ -5,12 +5,13 @@
  */
 package com.thundashop.core.hotelbookingmanager;
 
-import com.thundashop.core.common.DataCommon;
-
 /**
  *
  * @author ktonder
  */
 public class RoomType extends DomainControlledObject {
+    public String name = "";
+    public double price = 0;
     public String productId;
+    public int size;
 }

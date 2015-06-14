@@ -34,10 +34,9 @@
                                               Action <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                              <li><a href="#">Delete {{ obj.name }}</a></li>
-                                              <li><a href="#">Mark as unavailable</a></li>
-                                              <li><a href="#/roomsetup/manageroomtypes/{{obj.id}}">Manage roomtypes</a></li>
-                                              <li><a href="#">Add room</a></li>
+                                                <li><a ng-click="deleteDomain(obj.id)" href="">Delete {{ obj.name }}</a></li>
+                                                <li><a href="#/roomsetup/manageroomtypes/{{obj.id}}">Manage roomtypes</a></li>
+                                                <li><a href="#/roomsetup/addroom/{{obj.id}}">Add room</a></li>
                                             </ul>
                                           </div>
                                         </div>
@@ -68,48 +67,31 @@
                                         <table class="table">
                                             <tr>
                                                 <th>Room name</th>
+                                                <th>Room type</th>
                                                 <th>Size</th>
                                                 <th>Normal price</th>
+                                                
+                                                <th width="50"></th>
+                                                <th width="50"></th>
                                             </tr>
-                                            <tr>
-                                                <td>101</td>
-                                                <td>35kvm</td>
-                                                <td>577</td>
-                                            </tr>
-                                            <tr>
-                                                <td>102</td>
-                                                <td>35kvm</td>
-                                                <td>577</td>
-                                            </tr>
-                                            <tr>
-                                                <td>103</td>
-                                                <td>25kvm</td>
-                                                <td>577</td>
-                                            </tr>
-                                            <tr>
-                                                <td>104</td>
-                                                <td>35kvm</td>
-                                                <td>577</td>
-                                            </tr>
-                                            <tr>
-                                                <td>105</td>
-                                                <td>35kvm</td>
-                                                <td>577</td>
-                                            </tr>
-                                            <tr>
-                                                <td>106</td>
-                                                <td>25kvm</td>
-                                                <td>587</td>
-                                            </tr>
-                                            <tr>
-                                                <td>107</td>
-                                                <td>35kvm</td>
-                                                <td>577</td>
-                                            </tr>
-                                            <tr>
-                                                <td>108</td>
-                                                <td>35kvm</td>
-                                                <td>537</td>
+                                            <tr ng-repeat="room in rooms">
+                                                <td>{{room.name}}</td>
+                                                <td>{{room.roomType.name}}</td>
+                                                <td>{{room.roomType.size}}</td>
+                                                <td>{{room.roomType.price}}</td>
+                                                
+                                                <td>
+                                                    <button ng-click="deleteRoom(room)" type="button" class="btn btn-default" aria-label="Left Align">
+                                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <a href="#/roomsetup/manageroomtypes/{{domainId}}/{{roomType.id}}">
+                                                        <button type="button" class="btn btn-default"  aria-label="Go to roomtype config">
+                                                            <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                                                        </button>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </table>
                                     </div>

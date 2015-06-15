@@ -54,15 +54,27 @@ app.Calendar = {
 Calendar = {
     animations: [],
     init: function() {
-        PubSub.subscribe('navigation_complete', this.checkScrolling, this);
-        PubSub.subscribe("setting_switch_toggled", this.onOffChanged, this);
-        $(document).on('click', '.selectlcoation', Calendar.showEditLocation);
-        $(document).on('click', '.calendar_location_save', app.Calendar.saveLocationConfiguration);
-        $(document).on('click', '.calendar_location_back', app.Calendar.showLocationsConfiguration);
-        $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
-        $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
-        $(document).on('click', '.Calendar .add_comment_to_event', Calendar.addCommentToEvent);
-        $(document).on('click', '.Calendar .delete_comment', Calendar.deleteComment);
+//        PubSub.subscribe('navigation_complete', this.checkScrolling, this);
+//        PubSub.subscribe("setting_switch_toggled", this.onOffChanged, this);
+//        $(document).on('click', '.selectlcoation', Calendar.showEditLocation);
+//        $(document).on('click', '.Calendar .goToMonth', Calendar.changeMonth);
+//        $(document).on('click', '.calendar_location_save', app.Calendar.saveLocationConfiguration);
+//        $(document).on('click', '.calendar_location_back', app.Calendar.showLocationsConfiguration);
+//        $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
+//        $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
+//        $(document).on('click', '.Calendar .add_comment_to_event', Calendar.addCommentToEvent);
+//        $(document).on('click', '.Calendar .delete_comment', Calendar.deleteComment);
+    },
+    changeMonth: function() {
+        var data= {
+            "year" : $(this).attr('year'),
+            "month" : $(this).attr('month')
+        }
+        var me = $(this);
+        var event = thundashop.Ajax.createEvent(null, 'changeToYear',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            me.
+        });
     },
     addCommentToEvent : function() {
         var text = $(this).closest('.comment_area').find('.comment_field').val();

@@ -1,7 +1,7 @@
 body {
     min-width: 1366px;
     border: solid 0px;
-    font-family: Ubuntu, sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 16px;
 }
 
@@ -43,7 +43,7 @@ body {
 .gsarea[area="header"] .Menu {
     right: 0px;
     position: absolute;
-    top: 50px;
+    top: 30px;
     /*bottom: 10px;*/
 }
 .gsarea[area="header"] .Menu .entry .entries {

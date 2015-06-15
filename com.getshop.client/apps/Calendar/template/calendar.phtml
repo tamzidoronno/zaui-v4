@@ -1,25 +1,8 @@
 <? 
 /* @var $this \ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
 $id = $this->getConfiguration()->id;
-$pageId = $this->getPage()->id;
-
-if ($this->isShowTabsForViewMode()) { ?>
-    <div class="calendar_tabs">
-        <a href="?page=<?echo $this->getPage()->id?>&asList=true"><div byname="list" class="calender_tab_entry"><? echo $this->__w("By list"); ?></div></a>
-        <a href="?page=<?echo $this->getPage()->id?>&asList=false"><div byname="calendar" class="calender_tab_entry"><? echo $this->__w("By calendar"); ?></div></a>
-    </div>
-<? }
-
-if ($this->asList()) {
 ?>
-<div class='calendar_tab_content_view' calendar_tab_name="list" >
-    <?
-    echo "<a href='/generatePDF.php?type=calendar&id=$id&page=$pageId'><div class='downloadpdf'>".$this->__w("Download as pdf")."</div></a>";
-    echo "<hr>";
-    $this->renderList();
-    ?>
-</div>
-<? } else { ?>
+
 <div class='calendar_tab_content_view' calendar_tab_name="calendar" >
     <?php
     
@@ -64,11 +47,11 @@ if ($this->asList()) {
 
             <tr class="calendar-row">
                 <td class="calendar-day-head" colspan="2" style="cursor: pointer">
-                    <a href="<?php echo $this->getPrevLink(); ?>">
+                    <div class="goToMonth" <?php echo $this->getPrevAttrs(); ?>>
                         <center>
                             <div class="left-arrow"></div>
                         </center>
-                    </a>
+                    </div>
                 </td>
                 <td class="calendar-day-head" colspan="5"><?php echo $monthname . " - " . $year ?></td>
                 <td class="calendar-day-head" style="cursor: pointer">
@@ -104,7 +87,7 @@ if ($this->asList()) {
                         if (isset($entry->isOriginal) && $entry->isOriginal > 0) {
                             $days = $this->getDaysCount($this->monthObject, $entry);
                             $eventColor = isset($entry->color) ? 'background-color: ' . $entry->color : $eventColor;
-                            $data .= "<div class='outerdiv'><div days='$days'>" . $entry->title . "</div></div>";
+                            $data .= "<div class='outerdiv'><div days='$days' id='$entry->entryId'>" . $entry->title . "</div></div>";
                         }
                     }
                 }
@@ -162,4 +145,3 @@ if ($this->asList()) {
     }
     ?>
 </div>
-<? } ?>

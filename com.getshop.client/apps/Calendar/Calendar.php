@@ -412,7 +412,7 @@ class Calendar extends MarketingApplication implements Application {
         $this->getApi()->getCalendarManager()->deleteEntry($_POST['data']['entryId']);
     }
     
-    public function getNextLink() {
+    public function getNextAttr() {
         $page = $this->getPage()->getId();
         $month = $this->month + 1;
         $year = $this->year;
@@ -420,7 +420,7 @@ class Calendar extends MarketingApplication implements Application {
             $month = 1;
             $year = $this->year + 1;
         }
-        return "?page=$page&year=$year&month=$month";
+        return "year='$year' month='$month'";
     }
     
     public function getPrevAttrs() {
@@ -760,6 +760,21 @@ class Calendar extends MarketingApplication implements Application {
         }
         
         return "";
+    }
+    
+    public function changeMonth() {
+        $_GET['year'] = $_POST['data']['year'];
+        $_GET['month'] = $_POST['data']['month'];
+        
+        $this->initializeDate();
+//        $this->setFilter();
+        $this->initMonth();
+
+        $this->includefile('calendar');
+    }
+    
+    public function renderEntry($entry) {
+        $this->includefile("dayview");
     }
 }
 ?>

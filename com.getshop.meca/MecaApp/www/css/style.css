@@ -1,1 +1,8 @@
 /* Empty. Add your own CSS if you like */
+.logo {
+    vertical-align: middle;
+}
+
+.icon-on {
+    color: green;
+}

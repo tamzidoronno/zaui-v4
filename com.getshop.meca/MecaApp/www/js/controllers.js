@@ -1,5 +1,7 @@
-angular.module('starter.controllers', [])
+angular.module('mecaApp.controllers', [])
 
+.controller('LoginCtrl', function($scope) {})
+.controller('RegisterCtrl', function($scope) {})
 .controller('DashCtrl', function($scope) {})
 
 .controller('ChatsCtrl', function($scope, Chats) {

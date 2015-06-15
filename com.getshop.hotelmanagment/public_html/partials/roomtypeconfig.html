@@ -1,0 +1,35 @@
+<div class="container mainview" ng-controller="GetShopRoomSetupController" >
+    <div ng-include="'partials/menu.html'"></div>
+    
+    <div class="panel-body">
+        <div class="well">
+            Change your roomtype settings here.
+        </div>
+        <form  ng-submit="createRoomType(roomtypeform)" name="roomtypeform">
+            <div class="form-group">
+                <label for="roomTypeName">Name of roomtype</label>
+                <input ng-model="roomtype.name" class="form-control" id="roomTypeName" placeholder="Single standard room">
+            </div>
+            <div class="form-group">
+                <label for="inputPrice">Price each night</label>
+                <input ng-model="roomtype.price" class="form-control" id="inputPrice" placeholder="249">
+            </div>
+            <div class="form-group">
+                <label for="inputPrice">Size</label>
+                <input ng-model="roomtype.size" class="form-control" id="inputPrice" placeholder="16">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+        
+        <br/>
+        <br/>
+        <div class="well">
+            Pictures
+        </div>
+        
+    </div>
+
+    
+
+</div>

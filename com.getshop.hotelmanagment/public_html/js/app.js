@@ -54,9 +54,25 @@ getShopHotelManagement.config(['$routeProvider',
         templateUrl: 'partials/roomsetup.html',
         controller: 'GetShopRoomSetupController'
       }).
+      when('/roomsetup/activetab/:domainId', {
+        templateUrl: 'partials/roomsetup.html',
+        controller: 'GetShopRoomSetupController'
+      }).
       when('/roomsetup/manageroomtypes/:id', {
         templateUrl: 'partials/roomtypes.html',
-        controller: 'GetShopRoomSetupController'
+        controller: 'GetShopRoomTypeController'
+      }).
+      when('/roomsetup/manageroomtypes/:id/:roomTypeId', {
+        templateUrl: 'partials/roomtypeconfig.html',
+        controller: 'GetShopRoomTypeController'
+      }).
+      when('/roomsetup/addroom/:domainId', {
+        templateUrl: 'partials/addroom.html',
+        controller: 'GetShopRoomController'
+      }).
+      when('/createReservation/:domainId', {
+        templateUrl: 'partials/reservation.html',
+        controller: 'GetShopReservationController'
       }).
       otherwise({
         redirectTo: '/mainview'

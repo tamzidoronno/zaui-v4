@@ -1,0 +1,25 @@
+<div class="container mainview" ng-controller="GetShopMainViewController" >
+    <div ng-include="'partials/menu.html'"></div>
+    
+    <div class="row">
+        <div class="col-md-12">
+        
+            <form  ng-submit="createRoom(createRoomForm)" name="createRoomForm">
+                <div class="form-group">
+                    <label for="inputEmail">Roomnumber</label>
+                    <input ng-model="room.roomNumber" class="form-control" id="inputEmail" placeholder="roomnumber">
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputEmail">Roomtype</label>
+                    <br/>
+                    <select ng-options="item as item.name for item in roomTypes" ng-model="room.roomType"></select>
+
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+        </div>
+    </div>
+    
+</div>

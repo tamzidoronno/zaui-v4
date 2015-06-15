@@ -8,13 +8,13 @@ package com.thundashop.core.hotelbookingmanager;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  *
  * @author ktonder
  */
 public class HotelDomainController {
-    
     private List<RoomType> roomTypes = new ArrayList();
     private List<Room> rooms = new ArrayList();
     private final Domain domain;
@@ -33,13 +33,19 @@ public class HotelDomainController {
             
             if (dataCommon instanceof RoomType)
                 roomTypes.add((RoomType)dataCommon);
+            
+            if (dataCommon instanceof Room)
+                rooms.add((Room)dataCommon);
         }
     }
 
-    public RoomType createRoom(String name, double price, int size) {
+    public RoomType createRoomType(String name, double price, int size) {
         RoomType roomType = new RoomType();
-        roomTypes.add(roomType);
+        roomType.name = name;
+        roomType.price = price;
+        roomType.size = size;
         saveObject(roomType);
+        roomTypes.add(roomType);
         return roomType; 
     }
 
@@ -55,5 +61,51 @@ public class HotelDomainController {
         }
         
         return false;
+    }
+
+    public Domain getDomain() {
+        return domain;
+    }
+
+    public List<RoomType> getRoomTypes() {
+        return roomTypes;
+    }
+
+    public void deleteRoomType(String roomTypeId) {
+        RoomType toRemove = roomTypes.stream().filter(o -> o.id.equals(roomTypeId)).findFirst().orElse(null);
+        if (toRemove != null) {
+            roomTypes.remove(toRemove);
+            hotelBookingManager.deleteObject(toRemove);
+        }
+    }
+
+    public RoomType getRoomType(String roomTypeId) {
+        return roomTypes.stream().filter(o -> o.id.equals(roomTypeId)).findFirst().orElse(null);
+    }
+
+    public void saveRoom(Room room) {
+        rooms.add(room);
+        saveObject(room);
+    }
+
+    public List<Room> getRooms() {
+        rooms.stream().forEach(o -> finalizeRoom(o));
+        return rooms;
+    }
+
+    public Room getRoom(String roomId) {
+        return rooms.stream().filter(o -> o.id.equals(roomId)).findFirst().orElse(null);
+    }
+
+    private void finalizeRoom(Room room) {
+        room.roomType = getRoomType(room.roomTypeId);
+    }
+
+    public void deleteRoom(String roomId) {
+        Room room = rooms.stream().filter(o -> o.id.equals(roomId)).findFirst().orElse(null);
+        if (room != null) {
+            rooms.remove(room);
+            hotelBookingManager.deleteObject(room);
+        }
     }
 }

@@ -1,0 +1,123 @@
+<div class="container mainview" ng-controller="GetShopMainViewController" >
+    <div ng-include="'partials/menu.html'"></div>
+
+
+    <div class="row">
+        <div class='col-sm-12'>
+            <div class="well">
+                Creating a reservation at {{ domainObj.name}}
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Billing information</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class='col-sm-6'>
+                    <div class="form-group">
+                        <label for="inputEmail">Name</label>
+                        <input type='text' class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputEmail">Street address</label>
+                        <input type='text' class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputEmail">Postcode</label>
+                        <input type='text' class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputEmail">City</label>
+                        <input type='text' class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputEmail">Cell phone number</label>
+                        <input type='text' class="form-control" />
+                    </div>
+                </div>
+
+                <div class='col-sm-6'>
+                    <div class="form-group">
+                        <label for="inputEmail">Email address</label>
+                        <input type='text' class="form-control" placeholder="your@email.com"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputEmail">Country</label>
+                        <br/>
+
+                        <select class="form-control" ng-model="type" ng-options="k as v for (k, v) in countries">
+                            <option value="">Select country</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comment">Comment:</label>
+                        <textarea class="form-control" rows="5" id="comment"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div style="height: 56px;" class="panel-heading">
+            Rooms    
+            <div  class="btn-group pull-right" role="group" aria-label="...">
+                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Add room</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add room(s)</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class='col-sm-6'>
+                            <label for="inputEmail">Checkin date</label>
+                            <input type='text' class="form-control" id='checkinDate' />
+                        </div>
+                        <div class='col-sm-6'>
+                            <label for="inputEmail">Checkout date</label>
+                            <input type='text' class="form-control" id='checkoutDate' />
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#checkinDate').datetimepicker();
+                                $('#checkoutDate').datetimepicker();
+                            });
+                        </script>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Available rooms</div>
+                                <div class="panel-body">
+                                    Please select date interval
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Add room</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

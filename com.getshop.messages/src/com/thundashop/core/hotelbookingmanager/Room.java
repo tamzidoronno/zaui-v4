@@ -5,7 +5,6 @@
  */
 package com.thundashop.core.hotelbookingmanager;
 
-import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,10 +14,9 @@ import org.mongodb.morphia.annotations.Transient;
  *
  * @author ktonder
  */
-public class Room extends DataCommon {
+public class Room extends DomainControlledObject {
     private List<ReservationPart> reservationParts = new ArrayList();
     
-    public String domain = "";
     public String name = "";
     public String roomTypeId = "";
     

@@ -1,5 +1,12 @@
 <div class="container mainview" ng-controller="GetShopRoomSetupController" >
     <div ng-include="'partials/menu.html'"></div>
+    
+    <div class="jumbotron">
+        <h1>{{domainObj.name}}</h1>
+        <p>
+            A hotel has one or more roomtypes. This is where you can add a roomtype, create one, price it, add pictures and etc. 
+        </p>
+    </div>
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -25,14 +32,6 @@
                     <input ng-model="roomtype.size" class="form-control" id="inputPrice" placeholder="16">
                 </div>
                 
-                <div class="form-group">
-                    <label for="inputEmail">Domain</label>
-                    <br/>
-                    <select ng-model="roomtype.domain" class="selectpicker">
-                        <option selected ng-repeat="obj in domains" value="{{obj.id}}">{{obj.name}}</option>
-                    </select>
-                </div>
-                
                 
                 <button type="submit" class="btn btn-primary">Add roomtype</button>
             </form>
@@ -44,8 +43,35 @@
             <h3 class="panel-title">Your room types</h3>
         </div>
         <div class="panel-body">
-            adsf
-            asdf
+            <table class="table">
+                <tr>
+                    
+                    <th>Room type name</th>
+                    <th>Size</th>
+                    <th>Price each night</th>
+                    <th width="50"></th>
+                    <th width="50"></th>
+                </tr>
+                <tr ng-repeat="roomType in roomTypes">
+                    
+                    <td>{{roomType.name}}</td>
+                    <td>{{roomType.size}}</td>
+                    <td>{{roomType.price}}</td>
+                    
+                    <td>
+                        <button ng-click="deleteRoomType(roomType.id)" type="button" class="btn btn-default" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
+                    </td>
+                    <td>
+                        <a href="#/roomsetup/manageroomtypes/{{domainId}}/{{roomType.id}}">
+                            <button type="button" class="btn btn-default"  aria-label="Go to roomtype config">
+                                <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 

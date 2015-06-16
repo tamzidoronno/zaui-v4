@@ -47,6 +47,9 @@ if ($_GET['file'] == 14)
 if ($_GET['file'] == 15)
     $file = "1.3 diagnose og maleteknikk.pdf";
 
+if ($_GET['file'] == 16)
+    $file = "5.6 CDP+ deltagere.pdf";
+
 if (!isset($file)) {
     return;
 }

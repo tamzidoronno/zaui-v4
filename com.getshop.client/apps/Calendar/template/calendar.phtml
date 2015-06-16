@@ -1,25 +1,9 @@
 <? 
 /* @var $this \ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
 $id = $this->getConfiguration()->id;
-$pageId = $this->getPage()->id;
-
-if ($this->isShowTabsForViewMode()) { ?>
-    <div class="calendar_tabs">
-        <a href="?page=<?echo $this->getPage()->id?>&asList=true"><div byname="list" class="calender_tab_entry"><? echo $this->__w("By list"); ?></div></a>
-        <a href="?page=<?echo $this->getPage()->id?>&asList=false"><div byname="calendar" class="calender_tab_entry"><? echo $this->__w("By calendar"); ?></div></a>
-    </div>
-<? }
-
-if ($this->asList()) {
+$pageId = "";
 ?>
-<div class='calendar_tab_content_view' calendar_tab_name="list" >
-    <?
-    echo "<a href='/generatePDF.php?type=calendar&id=$id&page=$pageId'><div class='downloadpdf'>".$this->__w("Download as pdf")."</div></a>";
-    echo "<hr>";
-    $this->renderList();
-    ?>
-</div>
-<? } else { ?>
+
 <div class='calendar_tab_content_view' calendar_tab_name="calendar" >
     <?php
     
@@ -41,7 +25,10 @@ if ($this->asList()) {
     $days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
     $days_in_this_week = 1;
     $day_counter = 0;
-
+    
+    if ($running_day == 0) {
+        $running_day = 7;
+    }
 
 //////////////////// This are added for the generate translation script to pick it up ///////////////
     $this->__w("January");
@@ -64,19 +51,19 @@ if ($this->asList()) {
 
             <tr class="calendar-row">
                 <td class="calendar-day-head" colspan="2" style="cursor: pointer">
-                    <a href="<?php echo $this->getPrevLink(); ?>">
+                    <div class="goToMonth" <?php echo $this->getPrevAttrs(); ?>>
                         <center>
                             <div class="left-arrow"></div>
                         </center>
-                    </a>
+                    </div>
                 </td>
                 <td class="calendar-day-head" colspan="5"><?php echo $monthname . " - " . $year ?></td>
                 <td class="calendar-day-head" style="cursor: pointer">
-                    <a href="<?php echo $this->getNextLink(); ?>">
+                    <div class="goToMonth" <?php echo $this->getNextAttr(); ?>>
                         <center>
                             <div class="right-arrow"></div>
                         </center>
-                    </a>
+                    </div>
                 </td>
             </tr>
             <?
@@ -104,7 +91,7 @@ if ($this->asList()) {
                         if (isset($entry->isOriginal) && $entry->isOriginal > 0) {
                             $days = $this->getDaysCount($this->monthObject, $entry);
                             $eventColor = isset($entry->color) ? 'background-color: ' . $entry->color : $eventColor;
-                            $data .= "<div class='outerdiv'><div days='$days'>" . $entry->title . "</div></div>";
+                            $data .= "<div class='outerdiv showentry'><div days='$days'>" . $entry->title . "</div></div>";
                         }
                     }
                 }
@@ -119,12 +106,11 @@ if ($this->asList()) {
                 }
 
                 $pageid = $this->getPage()->getId();
-                echo "<a href='?page=$pageid&day=$list_day&scroll_to_dayview=true'>";
                 echo "<div class='calendercontent'>";
                 echo "<div class='day-number'>$list_day</div>";
                 echo "<div class='content'>$data</div>";
+                
                 echo "</div>";
-                echo "</a>";
                 echo '</td>';
 
                 if ($running_day == 7) {
@@ -152,14 +138,14 @@ if ($this->asList()) {
 
             </tr></table>
     </div>
+    
 
     <script>
         Calendar.expandDays();
     </script>
+        
     <?
-    if (isset($this->day)) {
-        $this->includefile('day');
-    }
+    $this->renderEntry($entry);
     ?>
+    
 </div>
-<? } ?>

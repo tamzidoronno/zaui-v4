@@ -12,3 +12,28 @@ $(function() {
     }
   });
 });
+
+var isTop = true;
+$(window).scroll(function (event) {
+    var scroll = $(window).scrollTop();
+    if (scroll !== 0) {
+        if (isTop) {
+            isTop = false;
+            $('.gsdepth_0.gscount_0.gsrow img').animate({
+                height: 80
+            });
+            $('.gsarea[area="header"]').animate({
+                height: 80
+            });
+        }
+    } else {
+        $('.gsdepth_0.gscount_0.gsrow img').animate({
+            height: 150
+        });
+        $('.gsarea[area="header"]').animate({
+            height: 110
+        }, 20);
+        isTop = true;
+        
+    }
+});

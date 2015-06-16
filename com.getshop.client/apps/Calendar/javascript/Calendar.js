@@ -57,12 +57,46 @@ Calendar = {
         PubSub.subscribe('navigation_complete', this.checkScrolling, this);
         PubSub.subscribe("setting_switch_toggled", this.onOffChanged, this);
         $(document).on('click', '.selectlcoation', Calendar.showEditLocation);
+        $(document).on('click', '.Calendar .showentry', Calendar.showEntry);
+        $(document).on('click', '.Calendar .close_dayview', Calendar.closeDayView);
+        $(document).on('click', '.Calendar .goToMonth', Calendar.changeMonth);
         $(document).on('click', '.calendar_location_save', app.Calendar.saveLocationConfiguration);
         $(document).on('click', '.calendar_location_back', app.Calendar.showLocationsConfiguration);
         $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
         $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
         $(document).on('click', '.Calendar .add_comment_to_event', Calendar.addCommentToEvent);
         $(document).on('click', '.Calendar .delete_comment', Calendar.deleteComment);
+    },
+    closeDayView: function() {
+        $('.Calendar .day_entry_information').fadeOut();
+    },
+    showEntry: function() {
+        var cell = $(this).closest('td');
+        var table = cell.closest('table');
+        
+        $('.Calendar .day_entry_information').css('left', cell.position().left+'px');
+        $('.Calendar .day_entry_information').css('top', cell.position().top+'px');
+        $('.Calendar .day_entry_information').css('bottom', table.height()-cell.position().top+"px");
+        $('.Calendar .day_entry_information').css('right', table.height()-cell.position().top);
+        
+        $('.Calendar .day_entry_information').show();
+        $('.Calendar .day_entry_information').animate({
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0
+        }, 400);
+    },
+    changeMonth: function() {
+        var data= {
+            "year" : $(this).attr('year'),
+            "month" : $(this).attr('month')
+        }
+        var me = $(this);
+        var event = thundashop.Ajax.createEvent(null, 'changeMonth',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            me.closest('.Calendar').html(result);
+        });
     },
     addCommentToEvent : function() {
         var text = $(this).closest('.comment_area').find('.comment_field').val();

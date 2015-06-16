@@ -19,5 +19,7 @@ class WhiteAndCleanTheme extends \ThemeApplication implements \Application {
 
     function addScripts() {
         echo "<link href='http://fonts.googleapis.com/css?family=Indie+Flower|Roboto' rel='stylesheet' type='text/css'>";
+        echo "<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>";
+        
     }
 }

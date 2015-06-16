@@ -319,11 +319,7 @@ class Calendar extends MarketingApplication implements Application {
         $this->setFilter();
         $this->initMonth();
         
-        echo "<table><tr><td valign='top'>";
-        $this->showFilter();
-        echo "</td><td valign='top'>";
         $this->includefile('calendar');
-        echo "</td></tr></table>";
     }
     
     public function renderList($includeCss=false) {
@@ -416,7 +412,7 @@ class Calendar extends MarketingApplication implements Application {
         $this->getApi()->getCalendarManager()->deleteEntry($_POST['data']['entryId']);
     }
     
-    public function getNextLink() {
+    public function getNextAttr() {
         $page = $this->getPage()->getId();
         $month = $this->month + 1;
         $year = $this->year;
@@ -424,10 +420,10 @@ class Calendar extends MarketingApplication implements Application {
             $month = 1;
             $year = $this->year + 1;
         }
-        return "?page=$page&year=$year&month=$month";
+        return "year='$year' month='$month'";
     }
     
-    public function getPrevLink() {
+    public function getPrevAttrs() {
         $page = $this->getPage()->getId();
         $month = $this->month - 1;
         $year = $this->year;
@@ -435,7 +431,7 @@ class Calendar extends MarketingApplication implements Application {
             $month = 12;
             $year = $this->year - 1;
         }
-        return "?page=$page&year=$year&month=$month";
+        return "year='$year' month='$month'";
     }
 
     public function getAttendees($entry) {
@@ -764,6 +760,21 @@ class Calendar extends MarketingApplication implements Application {
         }
         
         return "";
+    }
+    
+    public function changeMonth() {
+        $_GET['year'] = $_POST['data']['year'];
+        $_GET['month'] = $_POST['data']['month'];
+        
+        $this->initializeDate();
+//        $this->setFilter();
+        $this->initMonth();
+
+        $this->includefile('calendar');
+    }
+    
+    public function renderEntry($entry) {
+        $this->includefile("dayview");
     }
 }
 ?>

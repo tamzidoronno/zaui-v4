@@ -883,6 +883,28 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def isUserOnEvent(self, userId, eventId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(eventId,GetShopBaseClass): 
+      args["eventId"]=json.dumps(eventId.__dict__)
+    else:
+      try:
+        args["eventId"]=json.dumps(eventId)
+      except (ValueError, AttributeError):
+        args["eventId"]=eventId
+    data = EmptyClass()
+    data.args = args
+    data.method = "isUserOnEvent"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def registerToken(self, token):
     args = collections.OrderedDict()
     if isinstance(token,GetShopBaseClass): 
@@ -5757,6 +5779,21 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "cleanUpUsers"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def createAndSendNewPassword(self, emailAddress):
+    args = collections.OrderedDict()
+    if isinstance(emailAddress,GetShopBaseClass): 
+      args["emailAddress"]=json.dumps(emailAddress.__dict__)
+    else:
+      try:
+        args["emailAddress"]=json.dumps(emailAddress)
+      except (ValueError, AttributeError):
+        args["emailAddress"]=emailAddress
+    data = EmptyClass()
+    data.args = args
+    data.method = "createAndSendNewPassword"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 

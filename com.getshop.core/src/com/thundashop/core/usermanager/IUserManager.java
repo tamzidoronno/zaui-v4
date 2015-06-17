@@ -314,4 +314,6 @@ public interface IUserManager {
     
     @Administrator
     public void cleanUpUsers() throws ErrorException;
+    
+    public boolean createAndSendNewPassword(String emailAddress) throws ErrorException;
 }

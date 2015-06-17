@@ -859,6 +859,22 @@ class APICalendarManager {
 	/**
 	* Get all entries in a region based on the point
 	* @param point
+	* @return boolean
+	*/
+
+	public function isUserOnEvent($userId, $eventId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $data["method"] = "isUserOnEvent";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all entries in a region based on the point
+	* @param point
 	* @return void
 	*/
 
@@ -5541,6 +5557,23 @@ class APIUserManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "cleanUpUsers";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return boolean
+	* @throws ErrorException
+	*/
+
+	public function createAndSendNewPassword($emailAddress) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["emailAddress"] = json_encode($this->transport->object_unset_nulls($emailAddress));
+	     $data["method"] = "createAndSendNewPassword";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}

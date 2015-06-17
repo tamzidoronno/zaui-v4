@@ -1398,4 +1398,14 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         
         return entries;
     }
+
+    @Override
+    public boolean isUserOnEvent(String userId, String eventId) throws ErrorException {
+        Entry entry = getEntry(eventId);
+        if (entry != null) {
+            return entry.attendees.contains(userId);
+        }
+        
+        return false;
+    }
 }

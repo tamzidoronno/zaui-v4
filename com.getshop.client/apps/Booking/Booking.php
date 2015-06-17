@@ -105,7 +105,15 @@ class Booking extends MarketingApplication implements Application {
     }
 
     public function render() {
-        $this->includefile('schema');
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() == null) {
+            $this->includefile("logininformation");
+        } else {
+            $this->includefile('confirmbooking');
+        }
+        
+        if ($this->hasReadAccess()) {
+            $this->includefile("overview");
+        }
     }
 
     public function createUser($data, $password) {
@@ -345,6 +353,21 @@ class Booking extends MarketingApplication implements Application {
         $this->setConfigurationSetting("invoiced", json_encode($invoiced));
     }
 
+    public function confirmBooking() {
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        if (!$user) {
+            echo __f("You need to be logged in to use this feature");
+            return;
+        }
+        
+        $_GET['entry'] = $_POST['data']['entryId'];
+        
+        if ($this->isConnectedToCurrentPage()) {
+            $this->getApi()->getCalendarManager()->addUserToPageEvent($user->id, $this->getConfiguration()->id);
+        } else {
+            $this->getApi()->getCalendarManager()->addUserToEvent($user->id, $_POST['data']['entryId'], "", $user->username, "webpage");
+        }
+    }
 }
 
 ?>

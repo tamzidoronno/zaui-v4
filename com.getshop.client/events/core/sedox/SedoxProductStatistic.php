@@ -1,10 +1,10 @@
 <?php
 class core_sedox_SedoxProductStatistic {
 	/** @var String */
-	public $year;
+	public $startDate;
 
 	/** @var String */
-	public $month;
+	public $endDate;
 
 	/** @var String */
 	public $count;

@@ -1,0 +1,28 @@
+<div class='signup_step3'>
+    <center>
+        <h1><? echo $this->__f("Find the company you work for"); ?></h1>
+        <div onclick='app.ProMeisterLogin.showStep2();' class="back_button"><? echo $this->__w("Back"); ?></div>
+        
+        <table valign="center">
+            <tr>
+                
+                <td>
+                    <input type="textfield" id="login_serach_company" placeholder="<? echo $this->__w("Company name"); ?>"/>
+                </td>
+                
+                <td>
+                    <div class="button login_searchCompany">
+                        <div class="rightglare"></div>
+                        <div class="filler"></div>
+                        <ins><? echo $this->__w("Search"); ?></ins>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        <div class="company_search_result">
+            
+        </div>
+
+    </center>
+</div>

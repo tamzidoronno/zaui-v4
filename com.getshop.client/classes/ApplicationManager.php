@@ -750,5 +750,76 @@ class ApplicationManager extends FactoryBase {
     public function activateAppArea() {
         $this->getApi()->getPageManager()->toggleBottomApplicationArea($this->getPage()->id, $_POST['data']['appArea']);
     }
+    
+    public function proLogin() {
+       $user = $this->getFactory()->getApi()->getUserManager()->logOn($_POST['data']['username'], $_POST['data']['password']);
+       
+       if ($user) {
+           \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($user);
+           echo "success";
+       } else {
+           echo "failed";
+       }
+    }
+    
+    public function proSearchCompany() {
+        
+        $result = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($_POST['data']['companyname']);
+        
+        if (!is_array($result) || sizeof($result) == 0) {
+            echo $this->__w("Could not find company");
+        }
+        
+        foreach ($result as $company) {
+            
+            
+            
+            $orgnr = $company->vatNumber;
+            $name = $company->name;
+            
+            echo "<div class='prologin_selectCompany'>";
+            echo "<div class='prologin_orgnr'>$orgnr</div>";
+            echo "<div class='prologin_compname'>$name</div>";
+            echo "<div class='prologin_select'><span class='gs_button small select_searched_company' orgnr='$orgnr'>" . $this->__w("select") . "</span></div>";
+            echo "</div>";
+        }
+        
+    }
+    
+    public function doesEmailExists() {
+        $exists = $this->getFactory()->getApi()->getUserManager()->doEmailExists($_POST['data']['username']);
+        
+        if ($exists) {
+            echo "false";
+        } else {
+            echo "ok";
+        }
+    }
+    
+    public function proMeisterCreateUser() {
+        $password = rand(11820, 98440);
+        
+        $user = $this->getApiObject()->core_usermanager_data_User();
+        $user->fullName = $_POST['data']['name'];
+        $user->emailAddress = $_POST['data']['email'];
+        $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
+        $user->type = 10;
+        $user->password = $password;
+        $user->company = $this->getFactory()->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['orgnr']);
+        $this->getApi()->getUserManager()->createUser($user);
+        $userLoggedOn = $this->getFactory()->getApi()->getUserManager()->logOn($user->emailAddress, $password);
+       
+       if ($userLoggedOn) {
+           \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($userLoggedOn);
+           echo "success";
+       } else {
+           echo "failed";
+       }
+    }
+    
+    public function proResetPassword() {
+        $res = $this->getFactory()->getApi()->getUserManager()->createAndSendNewPassword($_POST['data']['email']);
+        echo $res;
+    }
 }
 ?>

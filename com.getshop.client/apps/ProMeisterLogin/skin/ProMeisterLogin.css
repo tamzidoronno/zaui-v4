@@ -12,6 +12,7 @@
     position: absolute; 
     left: 50%;
     top: 50px;
+    display: none;
 }
 
 .signupform .signupform_content {
@@ -79,6 +80,57 @@
 }
 
 
-.signup_step1 {
+.signup_step1,
+.signup_step2,
+.signup_step3 {
     display: none;
+}
+
+.signup_step1 .groupselection {
+    border: solid 1px #DDD;
+    margin: 20px;
+    /*padding: 10px;*/
+    cursor: pointer;
+    background-color: #F9f9f9;
+}
+
+.signup_step1 .grouptitle {
+    padding: 5px;
+    background-color: #F1f1f1;
+}
+.signup_step1 .groupselection img {
+    margin: 10px;
+    max-width: 300px;
+    max-height: 100px;
+}
+
+.signup_step3 .prologin_selectCompany {
+    padding: 10px;
+    margin: 20px;
+    border: solid 1px #DDD;
+}
+
+
+.signup_step3 .prologin_compname {
+    display: inline-block;
+    width: 500px;
+}
+.signup_step3 .prologin_orgnr {
+    display: inline-block;
+    width: 150px;
+}
+
+.signup_step3 .prologin_select {
+    display: inline-block;
+    width: 150px;
+}
+
+.signup_step1 .back_button,
+.signup_step2 .back_button,
+.signup_step3 .back_button {
+    border: solid 1px #DDD;
+    padding: 10px;
+    margin: 20px;
+    cursor: pointer;
+    background-color: #F9F9F9;
 }

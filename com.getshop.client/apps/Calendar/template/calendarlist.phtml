@@ -63,9 +63,16 @@ foreach ($entries as $year => $months) {
                     $readMore = "<a href='$link'>" . $this->__f("Read more") . "</a>";
                 }
 
+                $loggedIn = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() == null ? false : true;
+                
                 $booking = "";
                 if (!$lockedForSignup && $bookingLink != "" && $availablePositions > 0) {
-                    $booking = "<a href='$bookingLink'><div style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div></a>";
+                    if ($loggedIn) {
+                        $booking = "<a href='$bookingLink'><div style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div></a>";
+                    } else {
+                        $booking = "<div onclick=\"app.ProMeisterLogin.show('$bookingLink');\" style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div>";
+                    }
+                    
                 }
                 if (!$lockedForSignup && $bookingLink != "" && $availablePositions <= 0 ) { 
                     $booking = "<a href='$bookingLink&waiting=true'><div style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list") . "</div></a>";

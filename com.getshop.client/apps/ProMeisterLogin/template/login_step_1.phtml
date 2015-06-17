@@ -1,0 +1,21 @@
+<?
+$groups = $this->getApi()->getUserManager()->getAllGroups();
+shuffle($groups);
+?>
+
+<div class='signup_step1'>
+    <center>
+    <?
+    echo "<h1>".$this->__w("Please select department")."</h1>";
+    ?>
+        <div onclick='app.ProMeisterLogin.showStep0();' class="back_button"><? echo $this->__w("Back"); ?></div>
+    <?
+    foreach ($groups as $group) {
+        echo "<div class='groupselection' groupId=$group->id>";
+        echo "<img src='displayImage.php?id=$group->imageId'/>";
+        echo "<div class='grouptitle'>".$group->groupName."</div>";
+        echo "</div>";
+    }
+    ?>
+    </center>
+</div>

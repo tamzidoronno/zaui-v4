@@ -154,13 +154,13 @@ public class AddApplicationsToDatabase {
         credentials.storeid = "all";
 
         for (ApplicationSettings app : addApplications()) {
-//            app.storeId = "all";
+            app.storeId = "all";
 //
 //            DataCommon data = null;
 //            if (app.id != null) {
 //                data = database.getObject(credentials, app.id);
 //            }
-//
+////
 //            if (data == null) {
                 database.save(app, credentials);
 //            } else {

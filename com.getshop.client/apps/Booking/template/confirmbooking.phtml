@@ -1,0 +1,33 @@
+<?
+/* @var $this \ns_74ea4e90_2d5a_4290_af0c_230a66e09c78\Booking */
+
+$user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+$entry = isset($_GET['entry']) ? $this->getFactory()->getApi()->getCalendarManager()->getEntry($_GET['entry']) : "";
+$alreadySignedUp = isset($_GET['entry']) ?  $this->getApi()->getCalendarManager()->isUserOnEvent($user->id, $entry->entryId) : false;
+
+
+?>
+
+<div class='confirm_booking'>
+    <? 
+    if (!$this->isConnectedToCurrentPage()) {
+        if ($alreadySignedUp) { ?>
+        <div class='booking_confirmed'><i class='fa fa-check'></i> <? echo $this->__f("You are attending to this event"); ?></div>
+        <? } ?>
+        <br/>
+        <div><? echo $this->__f("Please confirm!"); ?></div>
+        <div><? echo $this->__f("Event").": ".$entry->title; ?></div>
+        <div><? echo $this->__f("Date").": ".$entry->day."/".$entry->month."-".$entry->year; ?></div>
+        <div><? echo $this->__f("Location").": ".$entry->location; ?></div>
+        <div><? echo $entry->locationObject->locationExtra; ?></div>
+
+        <?
+
+    }
+    if (!$alreadySignedUp) {
+        ?>
+        <div class='shop_button confirm_booking_button' entryId='<? echo $entry->entryId; ?>'><? echo $this->__f("Yes, sign me up now!"); ?></div>
+        <?
+    }
+    ?>
+</div>

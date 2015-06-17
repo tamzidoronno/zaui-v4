@@ -304,4 +304,6 @@ public interface ICalendarManager {
     public void registerToken(String token) throws ErrorException;
     
     public List<Entry> getMyEvents();
+    
+    public boolean isUserOnEvent(String userId, String eventId) throws ErrorException;
 }

@@ -7,6 +7,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -744,5 +746,33 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         CalendarManager calManager = getManager(CalendarManager.class);
         cleaner.cleanNextLevel(this, calManager);
     }
-    
+
+    @Override
+    public boolean createAndSendNewPassword(String emailAddress) throws ErrorException {
+        User user = getUserByEmail(emailAddress);
+        if (user == null) {
+            return false;
+        }
+        
+        RandomString passwordGenerator = new RandomString(8);
+        String password = passwordGenerator.nextString();
+        
+        user.password = encryptPassword(password);
+        databaseSaver.saveObject(user, credentials);
+        
+        MessageManager man = getManager(MessageManager.class);
+        if (storeId.equals("d27d81b9-52e9-4508-8f4c-afffa2458488")) {
+            man.sendMail(user.emailAddress, user.fullName, "Reset av password", "", storeId, storeId);
+        } else {
+            String message = "Hei " + user.fullName;
+            message += "<br/>";
+            message += "<br/>Ditt passord har nå blitt og du kan logge inn med passordet: " + password;
+            message += "<br/>";
+            message += "<br/>Med Vennlig Hilsen";
+            message += "<br/>ProMeister Academy";
+            man.sendMail(user.emailAddress, user.fullName, "Reset av passord", message, "post@getshop.com", "GetShop");
+        }
+        
+        return true;
+    }    
 }

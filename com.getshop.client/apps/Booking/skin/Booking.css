@@ -106,3 +106,10 @@
     border: solid 1px #DDD;
     padding: 10px;
 }
+
+.Booking .show_login {
+    border: solid 1px #DDD;
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+}

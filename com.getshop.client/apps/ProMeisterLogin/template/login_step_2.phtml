@@ -1,0 +1,18 @@
+<div class='signup_step2'>
+    <center>
+        <h1><? echo $this->__f("Your personal information"); ?></h1>
+        <div onclick='app.ProMeisterLogin.showStep1();' class="back_button"><? echo $this->__w("Back"); ?></div>
+        <table>
+            <tr><td class="col1"><?php echo $this->__w("Your name"); ?></td><td><input id="name" type='textfield'/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("Your emailaddress"); ?></td><td><input id="email" type='textfield'/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="invoiceemail" type='textfield'/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("Your phonenumber"); ?></td><td><input id="cellphone" type='textfield'/></td></tr>
+        </table>
+        
+        <div class="button showstep3">
+            <div class="rightglare"></div>
+            <div class="filler"></div>
+            <ins class="send_email" id="send_email"><? echo $this->__w("Continue"); ?></ins>
+        </div>
+    </center>
+</div>

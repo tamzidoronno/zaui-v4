@@ -33,13 +33,37 @@
     <script id="login.html" type="text/ng-template">
       <ion-view title="Login">
         <ion-content>
-          Login page
-        </ion-content>
+          <div class="list list-inset">
+            <label class="item item-input">
+              <span class="input-label">Nettaddresse</span>
+              <input type="text">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Brukernavn</span>
+              <input type="text">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Passord</span>
+              <input type="password">
+            </label>
+          </div>
+          <div class="padding">
+            <button class="button button-block button-positive">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logg inn&nbsp;&nbsp;&nbsp;&nbsp;
+            </button>
+          </div>
+      </ion-content>
       </ion-view>
     </script>
     <script id="menu.html" type="text/ng-template">
       <ion-view title="Menu">
-        menu page
+        <div class="bar bar-header bar-light">
+          <button class="button button-clear icon-top ion-navicon">Instillinger</button>
+          <button class="button button-clear icon ion-navicon">Logg ut</button>
+        </div>
+        <ion-content>
+          menu page
+        </ion-content>
       </ion-view>
     </script>
     <script id="users.html" type="text/ng-template">

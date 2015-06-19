@@ -61,16 +61,35 @@
           <!--Big menu bar row-->
           <div class="row">
             <div class="col-25">
-              logo
+              <img src="img/getshop.png" />
             </div>
             <div class="col-25 col-offset-25">
-              <button class="button button-block button-clear high"><i class="icon ion-gear-b big-icon"></i><br>Instillinger</button>
+              <button class="button button-block button-clear button-dark high"><i class="icon ion-gear-b big-icon"></i><br>Instillinger</button>
             </div>
             <div class="col-25">
-              <button class="button button-block button-clear high"><i class="icon ion-key big-icon"></i><br>Logg ut</button>
+              <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-key big-icon"></i><br>Logg ut</button>
             </div>
           </div>
-            menu page
+
+          <!--Separator row-->
+          <div class="separator-15vh"></div>
+          <!--Two middle rows for menu items-->
+          <div class="row">
+            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-ios-cart big-icon"></i><br>Bestill</button>
+            <button class="button button-block button-clear button-dark high" ui-sref="doors"><i class="icon ion-locked big-icon"></i><br>Locks</button>
+            <button class="button button-block button-clear button-dark high" ui-sref="users"><i class="icon ion-person big-icon"></i><br>Brukere</button>
+          </div>
+          <div class="row">
+            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-cloud big-icon"></i><br>Cloud</button>
+            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-mic-a big-icon"></i><br>Feedback</button>
+            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-ios-paper big-icon"></i><br>Nyheter</button>
+          </div>
+          <!--Separator row-->
+          <div class="separator-15vh"></div>
+          <!--Row with number-->
+          <div class="row">
+            <div class="col col-33 col-offset-33 text-center">106</div>
+          </div>
         </ion-content>
       </ion-view>
     </script>

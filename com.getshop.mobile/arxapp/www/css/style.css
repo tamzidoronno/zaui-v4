@@ -10,3 +10,7 @@ button i.big-icon:before {
 button.high {
 	max-height:100px;
 }
+
+.separator-15vh {
+	height:15vh;
+}

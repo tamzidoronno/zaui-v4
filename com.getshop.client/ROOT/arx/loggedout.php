@@ -65,7 +65,6 @@ Created by GetShop<br> post@getshop.com <br>+47 940 10 704
     .inputbox input { width: 100%; border-radius: 3px; font-size: 20px; padding: 4px; border: solid 1px #e17f38; }
 </style>
 
-<span id="autofill">autofill</span>
 <script>
 $('.logonbutton').click( function() {
     $( "#logonform" ).submit();
@@ -74,10 +73,6 @@ $('.logonbutton').click( function() {
 $( "#logonform" ).submit(function( event ) {
     $('.logonbutton').html('<i class="fa fa-spin fa-spinner"></i>');
 });
-$( "#autofill" ).click(function( event ) {
-    $('input[name="hostname"]').val('92.220.61.142');
-    $('input[name="username"]').val('wh,');
-    $('input[name="password"]').val('fsdu_nerdDDe234vcozs');
-});
+
 </script>
 

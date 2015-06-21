@@ -20,7 +20,7 @@ if(!$result) {
     foreach($result as $res) {
         /* @var $res core_arx_AccessLog */
         echo "<div class='accesslogentry'>";
-        echo date("d-m-Y h:i:s", $res->timestamp/1000) . "<bR>";
+        echo date("d-m-Y H:i:s", $res->timestamp/1000) . "<bR>";
         echo $res->personName . " " . $res->card . "<br>";
         echo $res->type . "<br>";
         echo "</div>";

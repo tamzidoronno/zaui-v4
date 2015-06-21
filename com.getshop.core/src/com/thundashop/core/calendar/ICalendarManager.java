@@ -1,6 +1,7 @@
 package com.thundashop.core.calendar;
 
 import com.thundashop.core.calendarmanager.data.Entry;
+import com.thundashop.core.calendarmanager.data.Event;
 import com.thundashop.core.calendarmanager.data.EventPartitipated;
 import com.thundashop.core.calendarmanager.data.FilterResult;
 import com.thundashop.core.calendarmanager.data.Location;
@@ -260,5 +261,11 @@ public interface ICalendarManager {
     
     @Administrator
     public void addUserSilentlyToEvent(String eventId, String userId) throws ErrorException;
+
+    @Administrator
+    public void addEvent(Event event);
     
+    public Event getEvent(String eventId);
+    
+    public List<Event> getEvents();
 }

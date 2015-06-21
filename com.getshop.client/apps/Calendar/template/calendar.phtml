@@ -91,7 +91,8 @@ $pageId = "";
                         if (isset($entry->isOriginal) && $entry->isOriginal > 0) {
                             $days = $this->getDaysCount($this->monthObject, $entry);
                             $eventColor = isset($entry->color) ? 'background-color: ' . $entry->color : $eventColor;
-                            $data .= "<div class='outerdiv showentry'><div days='$days'>" . $entry->title . "</div></div>";
+                            $icon = $entry->event->iconImageId;
+                            $data .= "<div class='outerdiv showentry' entryId='$entry->entryId'><div days='$days'><img src='/displayImage.php?id=$icon'/></div></div>";
                         }
                     }
                 }
@@ -145,7 +146,9 @@ $pageId = "";
     </script>
         
     <?
-    $this->renderEntry($entry);
+    if (isset($entry)) {
+        $this->renderEntry($entry);
+    }
     ?>
     
 </div>

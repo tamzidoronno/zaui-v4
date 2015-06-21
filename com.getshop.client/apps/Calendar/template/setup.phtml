@@ -1,0 +1,31 @@
+<?
+/* @var $this ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
+$events = $this->getApi()->getCalendarManager()->getEvents();
+?>
+<div class="calender_setup">
+    <table class="eventsoverview">
+    <?
+    foreach ($events as $event) {
+        $name = $event->title;
+        $eventId = $event->id;
+        echo "<tr><td width='20'><i class='fa fa-trash deleteEvent' eventId='$eventId'/></td><td>$name</td><td width='20'><i class='fa fa-pencil edit_event' eventId='$eventId'></i></td></tr>";
+    }
+    ?>
+    </table>
+    <center>Add new</center>
+    <hr/>
+    <br/>
+    <div class="addNewEvent">
+        <input type="hidden" value="" id="create_event_eventId"/>
+        <table>
+            <tr><td>Name of event</td><td><input id="event_name" type="textfield"/></td></tr>
+            <tr><td>Number of participant</td><td><input id="participants" type="textfield"></input></td></tr>
+            <tr><td>Price adult</td><td><input id="priceAdults" type="textfield"></input></td></tr>
+            <tr><td>Price child</td><td><input id="priceChild" type="textfield"></input></td></tr>
+            <tr><td>Icon</td><td><input id="icon_file" type="file"/></td></tr>
+            <tr><td>Image</td><td><input id="image_file" type="file"/></td></tr>
+            <tr><td valign="top">Description</td><td><textarea id="event_description" style="width: 500px; height: 300px;"></textarea></td></tr>
+            <tr><td valign="top" colspan="2"><div class="shop_button save_event_button">Save</div></td></tr>
+        </table>
+    </div>
+</div>

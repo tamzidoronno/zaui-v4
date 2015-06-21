@@ -88,15 +88,17 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     display: inline-block;
     margin-left: 10px;
 }
+
+.Calendar .calendercontent .content .outerdiv div img {
+    max-width: 50px;
+    max-height: 50px;
+}
 .Calendar .calendercontent .content .outerdiv div { 
     margin-bottom: 3px; 
     color: #FFF; 
-
-    background-image: url('{IMAGEFOLDER}/red.png');
     width: 50px;
     height: 50px;
     font-size: 0px;
-    
     display: inline-block;
 }
 
@@ -425,15 +427,17 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     border: solid 1px;
     background-color: rgba(0,0,0,0.9);
     color: #FFF;
-    left: 0px;
-    top: 0px;
+    left: 10px;
+    top: 10px;
+    right: 10px;
     padding: 20px;
     display: none;
     overflow: hidden;
+    padding-bottom: 30px;
 }
 
 .Calendar .day_entry_information .content_image {
-    width: 420px;
+    width: 320px;
     display: inline-block;
     vertical-align: top;
     padding-left: 20px;
@@ -443,7 +447,7 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
 .Calendar .day_entry_information .content_information {
     display: inline-block;
     vertical-align: top;
-    width: 727px;
+    width: 580px;
     padding-left: 20px;
 }
 
@@ -456,4 +460,15 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     right: 20px;
     top: 20px;
     cursor: pointer;
+}
+
+.Calendar .calender_setup {
+    padding: 20px;
+}
+
+.Calendar .eventsoverview {
+    width: 100%;
+}
+.Calendar .eventsoverview td {
+    font-size: 16px;
 }

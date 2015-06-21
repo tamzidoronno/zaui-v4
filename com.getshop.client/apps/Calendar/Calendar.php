@@ -320,6 +320,9 @@ class Calendar extends MarketingApplication implements Application {
         $this->initMonth();
         
         $this->includefile('calendar');
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            $this->includefile("setup");
+        }
     }
     
     public function renderList($includeCss=false) {
@@ -365,17 +368,38 @@ class Calendar extends MarketingApplication implements Application {
     }
     
     private function populateEvent($entry) {
-        $entry->description = $_POST['data']['eventdescription'];
-        $entry->starttime = $_POST['data']['eventstart'];
-        $entry->stoptime = $_POST['data']['eventstop'];
-        $entry->maxAttendees = $_POST['data']['maxattendees'];
-        $entry->locationId = $_POST['data']['locationId'];
-        $entry->title = $_POST['data']['eventname'];
-        $entry->color = $_POST['data']['color'];
-        $entry->extraText = $_POST['data']['extraText'];
-        $entry->linkToPage = $_POST['data']['linkToPage'];
-        $entry->lockedForSignup = $_POST['data']['lockedForSignup'];
-        $entry->eventHelder = $_POST['data']['eventHelder'];
+        if (isset($_POST['data']['eventdescription']))
+            $entry->description = $_POST['data']['eventdescription'];
+        
+        if (isset($_POST['data']['eventstart']))
+            $entry->starttime = $_POST['data']['eventstart'];
+        
+        if (isset($_POST['data']['eventstop']))
+            $entry->stoptime = $_POST['data']['eventstop'];
+        
+        if (isset($_POST['data']['maxattendees']))
+            $entry->maxAttendees = $_POST['data']['maxattendees'];
+        
+        if (isset($_POST['data']['locationId']))
+            $entry->locationId = $_POST['data']['locationId'];
+        
+        if (isset($_POST['data']['eventname']))
+            $entry->title = $_POST['data']['eventname'];
+        
+        if (isset($_POST['data']['color']))
+            $entry->color = $_POST['data']['color'];
+        
+        if (isset($_POST['data']['extraText']))
+            $entry->extraText = $_POST['data']['extraText'];
+        
+        if (isset($_POST['data']['linkToPage']))
+            $entry->linkToPage = $_POST['data']['linkToPage'];
+        
+        if (isset($_POST['data']['lockedForSignup']))
+            $entry->lockedForSignup = $_POST['data']['lockedForSignup'];
+        
+        if (isset($_POST['data']['eventHelder']))
+            $entry->eventHelder = $_POST['data']['eventHelder'];
         
         return $entry;
     }
@@ -405,6 +429,7 @@ class Calendar extends MarketingApplication implements Application {
            }
         }
 
+        $entry->eventId = $_POST['data']['eventId'];
         $this->getApi()->getCalendarManager()->saveEntry($entry);
     }
     
@@ -767,14 +792,51 @@ class Calendar extends MarketingApplication implements Application {
         $_GET['month'] = $_POST['data']['month'];
         
         $this->initializeDate();
-//        $this->setFilter();
         $this->initMonth();
 
         $this->includefile('calendar');
     }
     
     public function renderEntry($entry) {
-        $this->includefile("dayview");
+        echo '<div class="day_entry_information"></div>';
+    }
+    
+    public function saveEvent() {
+        $event = new \core_calendarmanager_data_Event();
+        
+        if (isset($_POST['data']['eventId']) && $_POST['data']['eventId']) {
+            $event = $this->getApi()->getCalendarManager()->getEvent($_POST['data']['eventId']);
+        }
+        
+        $event->title = $_POST['data']['name'];
+        $event->capacity = $_POST['data']['participants'];
+        $event->description = $_POST['data']['event_description'];
+        $event->priceAdults = $_POST['data']['priceAdults'];
+        $event->priceChild = $_POST['data']['priceChild'];
+        $content = base64_decode($_POST['data']['iconBase64']);
+        if ($content && $_POST['data']['iconBase64'] != "false"){
+            $event->iconImageId = \FileUpload::storeFile($content);
+        } 
+        
+        $content2 = base64_decode($_POST['data']['imageBase64']);
+        if ($content2 && $_POST['data']['imageBase64'] != "false") {
+            $event->imageId = \FileUpload::storeFile($content2);
+        }
+        
+        
+        $this->getApi()->getCalendarManager()->addEvent($event);
+    }
+    
+    public function getEvent() {
+        $event = $this->getApi()->getCalendarManager()->getEvent($_POST['data']['eventId']);
+        echo json_encode($event);
+    }
+    
+    public function showEventNew() {
+        $this->includeFile("dayview");
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            $this->includefile("entrysettings");
+        }
     }
 }
 ?>

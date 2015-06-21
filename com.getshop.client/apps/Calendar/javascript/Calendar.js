@@ -4,22 +4,7 @@ app.Calendar = {
             draggable: true,
             application: application,
             title: __f("Settings"),
-            items: [
-                {
-                    icontype: "awesome",
-                    icon: "fa-gears",
-                    iconsize: "30",
-                    title: __f("Settings"),
-                    click: app.Calendar.showSettings
-                },
-                {
-                    icontype: "awesome",
-                    icon: "fa-location-arrow",
-                    iconsize: "30",
-                    title: __f("Locations"),
-                    click: app.Calendar.showLocationsConfiguration
-                }
-            ]
+            items: [ ]
         }
 
         var toolbox = new GetShopToolbox(config, application);
@@ -66,26 +51,62 @@ Calendar = {
         $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
         $(document).on('click', '.Calendar .add_comment_to_event', Calendar.addCommentToEvent);
         $(document).on('click', '.Calendar .delete_comment', Calendar.deleteComment);
+        $(document).on('click', '.Calendar .save_event_button', this.saveEvent);
+        $(document).on('click', '.Calendar .edit_event', this.editEvent);
+    },
+    
+    editEvent: function() {
+        var data = {
+            eventId : $(this).attr('eventId')
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "getEvent", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            var data = JSON.parse(result);
+            $('#event_name').val(data.title);
+            $('#participants').val(data.capacity);
+            $('#event_description').val(data.description);
+            $('#priceAdults').val(data.priceAdults);
+            $('#priceChild').val(data.priceChild);
+            $('#create_event_eventId').val(data.id);
+        });
+    },
+    
+    saveEvent: function() {
+        var me = this;
+        var data = {
+            name : $('#event_name').val(),
+            participants : $('#participants').val(),
+            event_description : $('#event_description').val(),
+            priceAdults : $('#priceAdults').val(),
+            priceChild : $('#priceChild').val(),
+            eventId : $('#create_event_eventId').val()
+        };
+        
+        GetShopUtil.readAsUrl("icon_file", function(res) {
+            data.iconBase64 = res;
+            GetShopUtil.readAsUrl("image_file", function(res) {
+                data.imageBase64 = res;
+                var event = thundashop.Ajax.createEvent(null, "saveEvent", me, data);
+                thundashop.Ajax.post(event);
+            });
+        })
+        
     },
     closeDayView: function() {
         $('.Calendar .day_entry_information').fadeOut();
     },
     showEntry: function() {
-        var cell = $(this).closest('td');
-        var table = cell.closest('table');
+        var container = $('.Calendar .day_entry_information');
+        var data =  {
+            entryId : $(this).attr('entryid')
+        }
         
-        $('.Calendar .day_entry_information').css('left', cell.position().left+'px');
-        $('.Calendar .day_entry_information').css('top', cell.position().top+'px');
-        $('.Calendar .day_entry_information').css('bottom', table.height()-cell.position().top+"px");
-        $('.Calendar .day_entry_information').css('right', table.height()-cell.position().top);
-        
-        $('.Calendar .day_entry_information').show();
-        $('.Calendar .day_entry_information').animate({
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0
-        }, 400);
+        var event = thundashop.Ajax.createEvent(null, "showEventNew", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            container.html(result);
+            container.show();
+        });
     },
     changeMonth: function() {
         var data= {
@@ -272,6 +293,7 @@ $('.Calendar .addevent #save').live('click', function() {
         entryid: $(this).attr('entryid')
     }
 
+    
     var extraDays = $(this).closest('.informationbox').find('.daytotal');
     var extraDaysData = [];
 
@@ -297,7 +319,7 @@ $('.Calendar .addevent #save').live('click', function() {
     data.extraDays = extraDaysData;
     data.lockedForSignup = $('#lockEvent').is(":checked");
     data.eventHelder = $('.eventhelder_selector').val();
-
+    data.eventId = $('#add_event_event_selector').val();
     data.color = Calendar.getHexColor();
 
     var event = thundashop.Ajax.createEvent('Calendar', 'registerEvent', $(this), data);
@@ -333,10 +355,13 @@ $('.Calendar .candidate_setting').live('click', function() {
 });
 
 $('.Calendar .deleteentry').live('click', function() {
-    var data = {};
-    data.entryId = $(this).attr('entryid');
-    var event = thundashop.Ajax.createEvent('Calendar', 'deleteEntry', $(this), data);
-    thundashop.Ajax.post(event);
+    var deleteEvent = confirm("Are you sure you want to delete this event?");
+    if (deleteEvent) {
+        var data = {};
+        data.entryId = $(this).attr('entryid');
+        var event = thundashop.Ajax.createEvent('Calendar', 'deleteEntry', $(this), data);
+        thundashop.Ajax.post(event);
+    }
 });
 
 $('.Calendar .editentry').live('click', function() {

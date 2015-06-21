@@ -389,6 +389,20 @@ class APICalendarManager {
 	* has been attending to
 	*/
 
+	public function addEvent($core_calendarmanager_data_Event) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_calendarmanager_data_Event"] = json_encode($this->transport->object_unset_nulls($core_calendarmanager_data_Event));
+	     $data["method"] = "addEvent";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
 	public function addUserSilentlyToEvent($eventId, $userId) {
 	     $data = array();
 	     $data['args'] = array();
@@ -621,6 +635,20 @@ class APICalendarManager {
 	* has been attending to
 	*/
 
+	public function getEvent($eventId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $data["method"] = "getEvent";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->cast(new core_calendarmanager_data_Event(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
 	public function getEventPartitipatedData($pageId) {
 	     $data = array();
 	     $data['args'] = array();
@@ -628,6 +656,19 @@ class APICalendarManager {
 	     $data["method"] = "getEventPartitipatedData";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->cast(new core_calendarmanager_data_EventPartitipated(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function getEvents() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getEvents";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

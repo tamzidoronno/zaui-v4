@@ -414,6 +414,21 @@ class BrainTreeManager(object):
 class CalendarManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def addEvent(self, event):
+    args = collections.OrderedDict()
+    if isinstance(event,GetShopBaseClass): 
+      args["event"]=json.dumps(event.__dict__)
+    else:
+      try:
+        args["event"]=json.dumps(event)
+      except (ValueError, AttributeError):
+        args["event"]=event
+    data = EmptyClass()
+    data.args = args
+    data.method = "addEvent"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addUserSilentlyToEvent(self, eventId, userId):
     args = collections.OrderedDict()
     if isinstance(eventId,GetShopBaseClass): 
@@ -687,6 +702,21 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getEvent(self, eventId):
+    args = collections.OrderedDict()
+    if isinstance(eventId,GetShopBaseClass): 
+      args["eventId"]=json.dumps(eventId.__dict__)
+    else:
+      try:
+        args["eventId"]=json.dumps(eventId)
+      except (ValueError, AttributeError):
+        args["eventId"]=eventId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getEvent"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getEventPartitipatedData(self, pageId):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
@@ -699,6 +729,14 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getEventPartitipatedData"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getEvents(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getEvents"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 

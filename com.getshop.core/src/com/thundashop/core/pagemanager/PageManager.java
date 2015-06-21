@@ -15,6 +15,7 @@ import com.thundashop.core.pagemanager.data.PageCellSettings;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
+import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -43,6 +44,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Autowired
     private StoreApplicationInstancePool storeApplicationPool;
 
+    @Autowired
+    private UserManager userManager;
+    
     @Autowired
     private ListManager listManager;
     
@@ -108,6 +112,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         createDefaultPages();
         Page page = pages.get(id);
 
+        if (page == null && userManager.getLoggedOnUser() != null && userManager.getLoggedOnUser().isAdministrator()) {
+            page = createPage(id);
+        }
+        
         if (page == null) {
             return null;
         }

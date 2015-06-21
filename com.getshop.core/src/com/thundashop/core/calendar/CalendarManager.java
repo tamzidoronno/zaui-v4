@@ -5,6 +5,7 @@ import com.thundashop.core.calendarmanager.data.AttendeeMetaInfo;
 import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.EntryComment;
+import com.thundashop.core.calendarmanager.data.Event;
 import com.thundashop.core.calendarmanager.data.EventPartitipated;
 import com.thundashop.core.calendarmanager.data.ExtraDay;
 import com.thundashop.core.calendarmanager.data.FilterResult;
@@ -42,6 +43,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
 
     private HashMap<String, Month> months = new HashMap();
     private HashMap<String, Location> locations = new HashMap();
+    private HashMap<String, Event> events = new HashMap();
     
     @Autowired
     public MailFactory mailFactory;
@@ -79,6 +81,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
             if (dataObject instanceof EventPartitipated) {
                 EventPartitipated evp = (EventPartitipated) dataObject;
                 eventData.put(evp.pageId, evp);
+            }
+            if (dataObject instanceof Event) {
+                Event event = (Event)dataObject;
+                events.put(event.id, event);
             }
             if (dataObject instanceof Signature) {
                 Signature signature = (Signature) dataObject;
@@ -913,6 +919,23 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
             entry.location = entry.locationObject.location;
             entry.locationExtended = entry.locationObject.locationExtra;
         }
+        
+        if (entry.eventId != null && !entry.eventId.isEmpty()) {
+            entry.event = events.get(entry.eventId);
+            entry.maxAttendees = entry.event.capacity;
+        }
+        
+        if (entry.isInPast()) {
+            entry.availableForBooking = false;
+        }
+        
+        if (entry.lockedForSignup) {
+            entry.availableForBooking = false;
+        }
+        
+        if (entry.attendees.size() >= entry.maxAttendees) {
+            entry.availableForBooking = false;
+        }
     }
 
     @Override
@@ -1096,5 +1119,21 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
 	private HashMap<String, Setting> getSettings(String booking) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
+
+    @Override
+    public void addEvent(Event event) {
+        saveObject(event);
+        events.put(event.id, event);
+    }
+
+    @Override
+    public List<Event> getEvents() {
+        return new ArrayList(events.values());
+    }
+
+    @Override
+    public Event getEvent(String eventId) {
+        return events.get(eventId);
+    }
 
 }

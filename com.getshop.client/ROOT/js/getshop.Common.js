@@ -1100,3 +1100,23 @@ $(document).on('click', '.gs_showPageLayoutSelection .option_entry', thundashop.
 $(document).on('click', '.layoutpreviewselection .layoutpreview', thundashop.common.selectPredefinedConent);
 
 $(document).on('click', '.gs_toggle_button', thundashop.common.gsToggleButton);
+
+
+GetShopUtil = {
+    readAsUrl : function(inputId, resFunction) {
+        var filesSelected = document.getElementById(inputId).files;
+	if (filesSelected.length > 0) {
+            var fileToLoad = filesSelected[0];
+            var fileReader = new FileReader();
+
+            fileReader.onload = function(fileLoadedEvent)  {
+                var res = fileLoadedEvent.target.result.split(',')[1];
+                resFunction(res);
+            };
+
+            fileReader.readAsDataURL(fileToLoad);
+	} else {
+            resFunction(false);
+        }
+    }
+}

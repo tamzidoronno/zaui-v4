@@ -1,282 +1,68 @@
 <?php
 namespace ns_74ea4e90_2d5a_4290_af0c_230a66e09c78;
-use \MarketingApplication;
-use \Application;
 
-class Booking extends MarketingApplication implements Application {
-    public $entries;
-    private $company;
-    
-    public function getAllowAdd() {
-        $settings = $this->getConfiguration()->settings;
-        if (isset($settings->allowadd)) {
-            return $settings->allowadd->value == "true";
-        }
-        return false;
-    }
-    
-    public function GetEntries() {
-        return $this->entries;
-    }
-    
-    function getAvailablePositions() {
-        return "middle";
-    }
+class Booking extends \MarketingApplication implements \Application {
     
     public function getDescription() {
-        return $this->__("give your customers ability to book into your events or appointments");
-    }
-    
-    public function getName() {
-        return $this->__("Booking");
-    }
-    
-    public function postProcess() {
-        
-    }
-    
-    public function renderConfig() {
-        $this->includefile('config');
-    }
-    
-    public function showSettings() {
-        $this->includefile('config');
+        return $this->__f("A booking application, used with the Calendar Application");
     }
 
-    public function getStarted() {
-        echo $this->__f("Create this application and start book events to given dates.");
+    public function getName() {
+        return $this->__f("Booking");
     }
-    
-    public function isGetCompanyInformationRemoteEnabled() {
-        return $this->getConfigurationSetting("useBrRegToGetCompanyInformation") == "true";
-    }
-    
-    public function preProcess() {
-        $this->entries = $this->getApi()->getCalendarManager()->getEntries((int)date('Y'), (int)date('m'), (int)date('d'), array());
-    }
-    
+
     public function render() {
-        $this->includefile('schema');
-    }
-    
-    public function createUser($data, $password) {
-        $user = $this->getApiObject()->core_usermanager_data_User();
-        $user->fullName =  $data['name'];
-        $user->emailAddress = $data['email'];
-        $user->type = 10;
-        $user->password = $password;
-        
-        if (isset($_POST['data']['invoiceemail'])) {
-            $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
+        if (isset($_GET['entryId'])) {
+            $_SESSION['entryId'] = $_GET['entryId'];
         }
         
-        $user->birthDay = isset($data['birthday']) ? $data['birthday'] : "";
-        if ($this->isGetCompanyInformationRemoteEnabled()) {
-            $this->setCompany($user->birthDay);
-            $user->company = $this->company;
-            $user->companyName = "";
-        } else {
-            $user->companyName = isset($data['company']) ? $data['company'] : "";
-        }
-        
-        $user->cellPhone = $data['cellphone'];
-        
-        if (isset($_SESSION['group'])) {
-            $user->groups = array();
-            $user->groups[] = $_SESSION['group'];
-        }
-        
-        return $this->getApi()->getUserManager()->createUser($user);
-    }
-    
-    
-    public function registerEvent($data) {
-        $password = rand(11820, 98440);
-        $user = $this->createUser($data, $password);
-        if ($this->isConnectedToCurrentPage()) {
-            $this->getApi()->getCalendarManager()->addUserToPageEvent($user->id, $this->getConfiguration()->id);
-        } else {
-            $this->getApi()->getCalendarManager()->addUserToEvent($user->id, $data['eventid'], $password, $user->username, "webpage");
-        }
-        unset($_SESSION['group']);
-    }
-    
-    private function registerCalenderEvent($data) {
-        if (isset($this->getConfiguration()->settings->description_for_allowaddon)) {
-            $text = $this->getConfiguration()->settings->description_for_allowaddon->value;
-        } else {
-            $text = " please configure this";
-        }
-        
-        if (isset($this->getConfiguration()->settings->location_for_allowaddon)) {
-            $location = $this->getConfiguration()->settings->location_for_allowaddon->value;
-        } else {
-            $location = " please configure this";
-        }
-        
-        $date = explode("/", $_POST['data']['date']);
-        $month = (int)$date[0];
-        $day = (int)$date[1];
-        $year = (int)$date[2];
-        $time = $_POST['data']['time'];
+        if (isset($_SESSION['entryId'])) 
+            $_GET['entryId'] = $_SESSION['entryId'];
                 
-        $event = $this->getApi()->getCalendarManager()->createEntry($year, $month, $day);
-        $event->title = "$time - $text";
-        $event->maxAttendees = 1;
-        $event->description = "";
-        $event->starttime = $time;
-        $event->location = $location;
-        $event->needConfirmation = true;
-        $event->color = "#018abd";
-        $this->getApi()->getCalendarManager()->saveEntry($event);
-        return $event;
+        $this->includefile("schema");
     }
     
-    private function sendMail($event, $user) {
-        $settings = $this->getConfiguration()->settings;
-        
-        if (!isset($settings->email_for_allowaddon)) {
-            return;
+    public function getAttendees($entry) {
+        if (count($entry->attendees) == 0) {
+            return array();
         }
         
-        $to = $settings->email_for_allowaddon->value;
-        if ($to == "" || $to == null) {
-            return;
+        if (!$this->hasReadAccess()) {
+            return $entry->attendees;
         }
         
-        $subject = "A new booking request needs to be confirmed";
-        $message = "<br>Title: ".$event->title;
-        $message .= "<br>Date: ".$event->day." / ".$event->month . " - ". $event->year;
-        $message .= "<br>Start: ".$event->starttime;
-        $message .= "<br>";
-        $message .= "<br>User details:";
-        $message .= "<br>Name: ".$user['name'];
-        $message .= "<br>Email: ".$user['email'];
-        $message .= "<br>Cellphone: ".$user['cellphone'];
-        $message .= "<br>";
-        $message .= "<br>Please log in to your webpage, go to the calander and confirm or delete the event";
+        return $this->getApi()->getUserManager()->getUserList($entry->attendees);
+    }
+    
+    public function getCountOfFreePositions($entry) {
+        $attendees = $this->getAttendees($entry);
+        return $entry->maxAttendees - count($attendees);
+    }
+    
+    public function getSummary() {
+        $entry = $this->getApi()->getCalendarManager()->getEntry($_POST['data']['entryId']);
         
-        $this->getApi()->getMessageManager()->sendMail($to, "Calander event request", $subject, $message, "post@getshop.com", "Getshop Calander");
-    }
-    
-    public function runRegisterEvent() {
-        $data['name'] = $_POST['data']['name'];
-        $data['email'] = $_POST['data']['email'];
-        $data['cellphone'] = $_POST['data']['cellphone'];
+        $adults = 0;
+        $children = 0;
         
-        if ($this->getAllowAdd()) {
-            $event = $this->registerCalenderEvent($data);
-            $data['eventid'] = $event->entryId;
-            $this->sendMail($event, $data);
-        } else {
-            $data['birthday'] = $_POST['data']['birthday'];
-            $data['company'] = $_POST['data']['company'];
-            $data['eventid'] = isset($_POST['data']['eventid']) ? $_POST['data']['eventid'] : ""; 
-        }
-        
-        $this->registerEvent($data);
-    }
-    
-    public function setGroup() {
-        $_SESSION['group'] = $_POST['data']['groupid'];
-    }
-    
-    public function unsetGroup() {
-        unset($_SESSION['group']);
-    }
-    
-    private function setCompany($orgNumber) {
-        $this->company = $this->getApi()->getUtilManager()->getCompanyFromBrReg($orgNumber);
-    }
-    
-    public function findCompanies() {
-        $name = $_POST['data']['name'];
-        $result = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($name);
-        echo "<table width='100%'>";
-        foreach($result as $orgnr => $name) {
-            echo "<tr orgnr='$orgnr' class='company_selection'>";
-            echo "<td>".$orgnr."</td>";
-            echo "<td class='selected_name'>".$name."</td>";
-            echo "<td><span class='gs_button small select_searched_company'>".$this->__w("select") . "</span></td>";
-            echo "</tr>";
-        }
-        echo "</table>";
-    }
-    
-    public function getCompanyInformation() {
-        $this->setCompany($_POST['data']['vatnumber']);
-        $this->includefile('company');
-    }
-    
-    public function getCompany() {
-        return $this->company;
-    }
-    
-    public function isInvoiceEmailActivated() {
-        return $this->getConfigurationSetting("addExtraEmailToBeSentTo") == "true";
-    }
-    
-    public function isConnectedToCurrentPage() {
-        return $this->getConfigurationSetting("connectedtopage") == "true";
-    }
-    
-    public function getUsersConnectedToSchema() {
-        return $this->getApi()->getUserManager()->getAllUsersWithCommentToApp($this->getConfiguration()->id);
-    }
-    
-    public function getComment($user) {
-        foreach ($user->comments as $comment) {
-            if ($comment->appId == $this->getConfiguration()->id) {
-                return $comment;
+        foreach ($_POST['data']['persons'] as $person) {
+            if ($person['children'] == "true") {
+                $children++;
+            } else {
+                $adults++;
             }
         }
-        return null;
+        
+        $priceAdults = $entry->event->priceAdults * $adults;
+        $priceChildren = $entry->event->priceChild * $children;
+        $total = $priceAdults + $priceChildren;
+        echo "<div class='booking_result'>";
+        echo "<div class='resultrow'><div class='summary_row_col1'></div><div class='summaryprice'>Pris</div></div>";
+        echo "<div class='resultrow'><div class='summary_row_col1'>Antall voksne: $adults </div><div class='summaryprice'>Kr $priceAdults,-</div></div>";
+        echo "<div class='resultrow'><div class='summary_row_col1'>Antall barn: $children </div><div class='summaryprice'>Kr $priceChildren,-</div></div>";
+        echo "<div class='resultrow sumup'><div class='summary_row_col1 '>Totalt </div><div class='summaryprice'>Kr $total,-</div></div>";
+        echo "<div>";
+        
     }
-    
-    public function markAsDone() {
-        $userId = $_POST['data']['userId'];
-        $user = $this->getApi()->getUserManager()->getUserById($userId);
-        $comment = $this->getComment($user);
-        $comment->extraInformation = "processed";
-        $this->getApi()->getUserManager()->addComment($userId, $comment);
-    }
-    
-    private function getInvoicedArray() {
-        $invoiced = $this->getConfigurationSetting("invoiced");
-        
-        if ($invoiced == null) {
-            $invoiced = new \stdClass();
-        } else {
-            $invoiced = json_decode($invoiced);
-        }
-        
-        if (!($invoiced instanceof \stdClass)) {
-            return new \stdClass();
-        }
-        
-        return $invoiced;
-    }
-    
-    public function isInvoiced($userId) {
-        $invoiced = $this->getInvoicedArray();
-        
-        if (!property_exists($invoiced, $userId)) {
-            return false;
-        }
-        
-        $value = $invoiced->{$userId};
-        return $value;
-    }
-    
-    public function toggleInvoiced() {
-        $userId = $_POST['data']['userId'];
-        $value = $this->isInvoiced($userId);
-        $invoiced = $this->getInvoicedArray();
-        
-        $invoiced->$userId = !$value;
-        $this->setConfigurationSetting("invoiced", json_encode($invoiced));
-    }
-    
-    
 }
 ?>

@@ -100,3 +100,87 @@
     width: 30px; 
     text-align: center;
 }
+.Booking .personrow .innercontent {
+    padding: 10px;
+    border: solid 1px #DDD;
+    background-color: #F9F9F9;
+}
+.Booking .personrow .personrow_col1 {
+    width: 100%;
+    display: inline-block;
+    
+}
+
+.Booking .booking_result {
+    border: solid 1px #DDD;
+    padding: 10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.Booking .personrow {
+    padding-top: 10px;
+    margin-top: 20px;
+    display: none;
+    
+}
+
+.Booking .resultrow:not(:first-child) {
+    border-bottom: solid 1px #DDD;
+}
+
+.Booking .resultrow.sumup {
+    border-bottom: solid 0px #DDD;
+}
+
+.Booking .resultrow .summary_row_col1 {
+    width: 400px;
+}
+
+.Booking .resultrow .summary_row_col1,
+.Booking .resultrow .summaryprice {
+    display: inline-block;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Booking .personrow input, .Booking .personrow textarea { 
+    padding: 9px; 
+    border: solid 1px #E5E5E5; 
+    outline: 0; 
+    font: normal 13px/100% Verdana, Tahoma, sans-serif; 
+    -webkit-box-sizing : border-box;‌​
+    -moz-box-sizing : border-box;
+    box-sizing : border-box;
+    width: 100%;
+    background: #FFFFFF; 
+    margin-bottom: 5px;
+} 
+   
+.Booking .personrow textarea { 
+    width: 100%; 
+    max-width: 90%; 
+    height: 150px; 
+    line-height: 150%; 
+} 
+   
+.Booking .personrow input:hover, .Booking .personrow textarea:hover, 
+.Booking .personrow input:focus, .Booking .personrow textarea:focus { 
+    border-color: #C9C9C9; 
+} 
+   

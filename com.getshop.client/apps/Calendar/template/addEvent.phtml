@@ -1,6 +1,5 @@
 <?php
-
-namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
+/* @var $this ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
 
 $entry = $this->currentEntry;
 if (!$entry)
@@ -19,83 +18,27 @@ $locked = isset($entry) && $entry->lockedForSignup ? ' checked ' : "";
 $entryid = isset($entry) ? $entry->entryId : '';
 $locations = $this->getApi()->getCalendarManager()->getAllLocations();
 
-if (!$locations) {
-    $locations = [];
-}
+$events = $this->getApi()->getCalendarManager()->getEvents();
+
 ?>
 
 <center>
     <div class='addevent'>
         <table>
-            <tr><td width="150"><?php echo $this->__("event_name"); ?></td><td><input id="eventname" type='textfield' value="<?php echo $eventname; ?>"/></td></tr>
-            <tr><td><?php echo $this->__("start", "common"); ?></td><td><input id="eventstart" type='textfield' value='<?php echo $start; ?>'/></td></tr>
-            <tr><td><?php echo $this->__("stop", "common"); ?></td><td><input id="eventstop" type='textfield' value='<?php echo $stop; ?>'/></td></tr>
-            <tr>
-                <td valign="top">Other days</td>
+            <tr><td width="150"><?php echo $this->__("event_name"); ?></td>
                 <td>
-                    <div id="extradaysdiv" style="position: relative;">
-                        <input id="extradays" type='textfield'/>
+                    <select id="add_event_event_selector">
                         <?
-                        if (!is_array($entry->otherDays))
-                            $entry->otherDays = array();
-                        foreach ($entry->otherDays as $otherDay) {
-                            /* @var $otherDay core_calendar_datamanager_ExtraDay */
-                            $day = $otherDay->day;
-                            $month = $otherDay->month;
-                            $year = $otherDay->year;
-                            $starttime = $otherDay->starttime;
-                            $stoptime = $otherDay->stoptime;
-                            ?>
-                            <div class="daytotal">
-                                <img class="removeday inline" src="/skin/default/images/closeinfobox.png" style="height: 15px; width: 15px; padding-top: 6px; margin-right: 5px; ">
-                                <div class="inline extradayelement" day="<? echo $day; ?>" month="<?php echo $month; ?>" year="<?php echo $year ?>" style="line-height: 29px; "><? echo "$day/$month/$year"; ?></div>
-                                <span style="position: absolute; right: 0px; display: inline-block;border-left: solid 1px #DDD; margin-left: 4px; padding-left: 5px;"> Clock: <input style="width: 55px; margin-left: 5px;" type='textfield' id="starttime" value="<?php echo $starttime; ?>"> - <input style="width: 55px; margin-left: 5px;" type='textfield' id="stoptime" value="<?php echo $stoptime; ?>"></span>
-                            </div>
-                        <?php } ?>
-                    </div>
-                </td>
-            </tr>
-            <tr><td><?php echo $this->__("max_atandees"); ?></td><td><input id="maxattendies" type='textfield' value='<?php echo $max; ?>'/></td></tr>
-            <tr><td><?php echo $this->__f("Extra text"); ?></td><td><input id="extraText" type='textfield' value='<?php echo $extraText; ?>'/></td></tr>
-            <tr><td><?php echo $this->__("Link to page"); ?></td><td><input class="pagepicker" pageId="<? echo $linkToPage; ?>" id="linkToPage" type='textfield' value='<?php echo $linkToPageText; ?>'/></td></tr>
-            <tr><td><?php echo $this->__("location", "common"); ?></td><td>
-                    <select id="location">
-                        <?php
-                        foreach ($locations as $location) {
-                            $name = $location->location;
-                            $selected = $location->id == $entry->locationObject->id ? "selected" : "";
-                            $id = $location->id;
-                            echo "<option $selected value='$id'>" . $name . "</option>";
+                        foreach ($events as $event) {
+                            echo "<option value='$event->id'>".$event->title."</option>";
                         }
                         ?>
                     </select>
                 </td>
             </tr>
-            <tr>
-                <td><? echo $this->__f("Event held by"); ?></td>
-                <td>
-                    <select style="width:100%;" class="eventhelder_selector" eventid="<? echo $entry->entryId; ?>">
-                        <?
-                        $allUsers = $this->getApi()->getUserManager()->getAllUsers();
-                        echo "<option value=''>" . $this->__f("Select event helder") . "</option>";
-                        foreach ($allUsers as $user) {
-                            if ($user->type > 90) {
-                                $selected = "";
-                                if ($entry->eventHelder == $user->id) {
-                                    $selected = "SELECTED";
-                                }
-                                echo "<option value='" . $user->id . "' $selected>" . $user->fullName . "</option>";
-                            }
-                        }
-                        ?>
-                    </select>
-                </td>
-
-            </tr>
-
-            <tr><td colspan="2"><?php echo $this->__("event_desc"); ?></td></tr>
-            <tr><td colspan="2"><textarea id="eventdescription" cols="50" rows="10"><?php echo $description; ?></textarea></td></tr>
-            <tr><td colspan="2"><div><input <? echo $locked; ?> style="width: 20px;" type="checkbox" id="lockEvent"/><?php echo $this->__("Lock event for signups"); ?></div></td></tr>
+            <tr><td><?php echo $this->__("start", "common"); ?></td><td><input id="eventstart" type='textfield' value='<?php echo $start; ?>' placeholder="08:00"/></td></tr>
+            <tr><td><?php echo $this->__("stop", "common"); ?></td><td><input id="eventstop" type='textfield' value='<?php echo $stop; ?>' placeholder="16:00"/></td></tr>
+            
             <tr><td colspan="2" align="right">
                     <div entryid="<?php echo $entryid; ?>" day="<?php echo $this->day; ?>" year="<?php echo $this->year; ?>" month="<?php echo $this->month; ?>" id="save" class="button">
                         <div class="rightglare"></div>

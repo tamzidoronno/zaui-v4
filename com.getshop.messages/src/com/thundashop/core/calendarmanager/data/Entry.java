@@ -36,6 +36,11 @@ public class Entry implements Serializable, Comparable<Entry> {
     public String linkToPage = "";
     public String description;
     public String starttime;
+
+    public String eventId = "";
+    
+    @Transient
+    public Event event; 
     
     public String extraText = "";
     
@@ -75,6 +80,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.starttime = entry.starttime;
         this.extraText = entry.extraText;
         this.stoptime = entry.stoptime;
+        this.eventId = entry.eventId;
         this.metaInfo = entry.metaInfo;
         this.location = entry.location;
         this.entryId = entry.entryId;

@@ -1,10 +1,7 @@
 <?php
-class core_hotelbookingmanager_Room extends core_common_DataCommon  {
+class core_hotelbookingmanager_Room extends core_hotelbookingmanager_DomainControlledObject  {
 	/** @var String */
 	public $reservationParts;
-
-	/** @var String */
-	public $domain;
 
 	/** @var String */
 	public $name;

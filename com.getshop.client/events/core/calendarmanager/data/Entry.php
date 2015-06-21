@@ -40,6 +40,12 @@ class core_calendarmanager_data_Entry {
 	public $starttime;
 
 	/** @var String */
+	public $eventId;
+
+	/** @var core_calendarmanager_data_Event */
+	public $event;
+
+	/** @var String */
 	public $extraText;
 
 	/** @var core_calendarmanager_data_Location */

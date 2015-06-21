@@ -274,6 +274,20 @@ class APICalendarManager {
 	* has been attending to
 	*/
 
+	public function addEvent($core_calendarmanager_data_Event) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_calendarmanager_data_Event"] = json_encode($this->transport->object_unset_nulls($core_calendarmanager_data_Event));
+	     $data["method"] = "addEvent";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
 	public function addUserSilentlyToEvent($eventId, $userId) {
 	     $data = array();
 	     $data['args'] = array();
@@ -506,6 +520,20 @@ class APICalendarManager {
 	* has been attending to
 	*/
 
+	public function getEvent($eventId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $data["method"] = "getEvent";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->cast(new core_calendarmanager_data_Event(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
 	public function getEventPartitipatedData($pageId) {
 	     $data = array();
 	     $data['args'] = array();
@@ -513,6 +541,19 @@ class APICalendarManager {
 	     $data["method"] = "getEventPartitipatedData";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->cast(new core_calendarmanager_data_EventPartitipated(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function getEvents() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getEvents";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**
@@ -1697,9 +1738,8 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	*
-	* @param name
-	* @param description
+	* A general Hotel Management stuff.
+	* @author ktonder
 	*/
 
 	public function createDomain($name, $description) {
@@ -1713,8 +1753,8 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	*
-	* @return core_hotelbookingmanager_RoomType
+	* A general Hotel Management stuff.
+	* @author ktonder
 	*/
 
 	public function createRoomType($domainId, $name, $price, $size) {
@@ -1730,6 +1770,64 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* A general Hotel Management stuff.
+	* @author ktonder
+	*/
+
+	public function deleteDomain($domainId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["domainId"] = json_encode($this->transport->object_unset_nulls($domainId));
+	     $data["method"] = "deleteDomain";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* A general Hotel Management stuff.
+	* @author ktonder
+	*/
+
+	public function deleteRoom($domainId, $roomId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["domainId"] = json_encode($this->transport->object_unset_nulls($domainId));
+	     $data['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $data["method"] = "deleteRoom";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* A general Hotel Management stuff.
+	* @author ktonder
+	*/
+
+	public function deleteRoomType($domainId, $roomTypeId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["domainId"] = json_encode($this->transport->object_unset_nulls($domainId));
+	     $data['args']["roomTypeId"] = json_encode($this->transport->object_unset_nulls($roomTypeId));
+	     $data["method"] = "deleteRoomType";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* A general Hotel Management stuff.
+	* @author ktonder
+	*/
+
+	public function getDomain($domainId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["domainId"] = json_encode($this->transport->object_unset_nulls($domainId));
+	     $data["method"] = "getDomain";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_Domain(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	*
 	* @return ArrayList
 	*/
@@ -1738,6 +1836,78 @@ class APIHotelBookingManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getDomains";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* A general Hotel Management stuff.
+	* @author ktonder
+	*/
+
+	public function getRoom($domainId, $roomId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["domainId"] = json_encode($this->transport->object_unset_nulls($domainId));
+	     $data['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $data["method"] = "getRoom";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_Room(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* A general Hotel Management stuff.
+	* @author ktonder
+	*/
+
+	public function getRoomType($domainId, $roomTypeId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["domainId"] = json_encode($this->transport->object_unset_nulls($domainId));
+	     $data['args']["roomTypeId"] = json_encode($this->transport->object_unset_nulls($roomTypeId));
+	     $data["method"] = "getRoomType";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_RoomType(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* A general Hotel Management stuff.
+	* @author ktonder
+	*/
+
+	public function getRoomTypes($domainId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["domainId"] = json_encode($this->transport->object_unset_nulls($domainId));
+	     $data["method"] = "getRoomTypes";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* A general Hotel Management stuff.
+	* @author ktonder
+	*/
+
+	public function getRooms($domainId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["domainId"] = json_encode($this->transport->object_unset_nulls($domainId));
+	     $data["method"] = "getRooms";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* A general Hotel Management stuff.
+	* @author ktonder
+	*/
+
+	public function saveRoom($core_hotelbookingmanager_Room) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_hotelbookingmanager_Room"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_Room));
+	     $data["method"] = "saveRoom";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -2276,39 +2446,73 @@ class APILogoManager {
 	}
 
 }
-class APIMecaManager {
+class APIMecaApi {
 
 	var $transport;
 	
-	function APIMecaManager($transport) {
+	function APIMecaApi($transport) {
 		$this->transport = $transport;
 	}
 
 	/**
 	*
-	* @author ktonder
+	* @author emil
 	*/
 
-	public function createVechiel($core_mecamanager_Vechiel) {
+	public function addVehicle($phoneNumber, $core_meca_data_Vehicle) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["core_mecamanager_Vechiel"] = json_encode($this->transport->object_unset_nulls($core_mecamanager_Vechiel));
-	     $data["method"] = "createVechiel";
-	     $data["interfaceName"] = "core.meca.IMecaManager";
-	     return $this->transport->sendMessage($data);
+	     $data['args']["phoneNumber"] = json_encode($this->transport->object_unset_nulls($phoneNumber));
+	     $data['args']["core_meca_data_Vehicle"] = json_encode($this->transport->object_unset_nulls($core_meca_data_Vehicle));
+	     $data["method"] = "addVehicle";
+	     $data["interfaceName"] = "core.mecamanager.IMecaApi";
+	     return $this->transport->cast(new core_meca_data_RPCResult(), $this->transport->sendMessage($data));
 	}
 
 	/**
 	*
-	* @author ktonder
+	* @author emil
 	*/
 
-	public function helloWorld() {
+	public function changePassword($phoneNumber, $oldPassword, $newPassword1, $newPassword2) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data["method"] = "helloWorld";
-	     $data["interfaceName"] = "core.meca.IMecaManager";
-	     return $this->transport->sendMessage($data);
+	     $data['args']["phoneNumber"] = json_encode($this->transport->object_unset_nulls($phoneNumber));
+	     $data['args']["oldPassword"] = json_encode($this->transport->object_unset_nulls($oldPassword));
+	     $data['args']["newPassword1"] = json_encode($this->transport->object_unset_nulls($newPassword1));
+	     $data['args']["newPassword2"] = json_encode($this->transport->object_unset_nulls($newPassword2));
+	     $data["method"] = "changePassword";
+	     $data["interfaceName"] = "core.mecamanager.IMecaApi";
+	     return $this->transport->cast(new core_meca_data_RPCResult(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author emil
+	*/
+
+	public function createAccount($phoneNumber) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["phoneNumber"] = json_encode($this->transport->object_unset_nulls($phoneNumber));
+	     $data["method"] = "createAccount";
+	     $data["interfaceName"] = "core.mecamanager.IMecaApi";
+	     return $this->transport->cast(new core_meca_data_RPCResult(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author emil
+	*/
+
+	public function login($phoneNumber, $password) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["phoneNumber"] = json_encode($this->transport->object_unset_nulls($phoneNumber));
+	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $data["method"] = "login";
+	     $data["interfaceName"] = "core.mecamanager.IMecaApi";
+	     return $this->transport->cast(new core_meca_data_RPCResult(), $this->transport->sendMessage($data));
 	}
 
 }
@@ -6540,10 +6744,10 @@ class GetShopApi {
            return new APILogoManager($this->transport);
       }
       /**
-      * @return MecaManager
+      * @return MecaApi
       */
-      public function getMecaManager() {
-           return new APIMecaManager($this->transport);
+      public function getMecaApi() {
+           return new APIMecaApi($this->transport);
       }
       /**
       * @return MessageManager

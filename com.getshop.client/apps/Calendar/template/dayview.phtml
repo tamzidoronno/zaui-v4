@@ -1,32 +1,43 @@
-<div class="day_entry_information">
-    <div class="close_dayview">
-        
-    </div>
-    <div class="content_image">
-        <img src="http://www.lold.org/uploads/2011/08/forrest-wallpaper.jpg" width="400" style="border: solid 5px #FFF;"/>
-    </div>
-    
-    <div class="content_information">
-        <div style="font-size: 30px; font-weight: bold; padding-bottom: 10px;">Stølstur Laupsaflyane - Klippe</div>
-        Dato: Fredag 15 juni, 17:00
-        <br/> Lengde: 7km
-        <br/> Stigning: 400m
-        <br/> Varighet: 3 timaru
-        
-        <div style="margin-top: 30px; margin-bottom: 20px;">
-            Frå parkeringsplassen ved Blekeld, i enden av Fitjadalsvatnet, følgjer vi stien bratt opp mot stølen Laupsaflyane. Her tek vi ein pause og nyt den flotte utsikten over Fitjadalen, fjellet og fjorden. Vidare går turen i lettare terreng langsmed Soldalsfjellet og til stølen Klippe.  Frå Klippe tek vi turen ned att til Fitjadalsvatnet. 
-        </div>
-        
-        
-        <div>
-            Pris:
-            <br/> Voksen: Kr 250,- 
-            <br/> Barn: 125,-
-        </div>
-        <br/>
-        <div class="shop_button">
-            Bestill - 8 ledige plasser
-        </div>
-    </div>
+<?
+/* @var $this ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
+$entry = $this->getApi()->getCalendarManager()->getEntry($_POST['data']['entryId']);
+$event = $entry->event;
+$availablepos = $this->getCountOfFreePositions($entry);
+?>
+
+<div class="close_dayview">
+
 </div>
+<div class="content_image">
+    <img src="/displayImage.php?id=<? echo $event->imageId; ?>" width="300" style="border: solid 5px #FFF;"/>
+</div>
+
+<div class="content_information">
+    <div style="font-size: 30px; font-weight: bold; padding-bottom: 10px;"><? echo $event->title; ?></div>
+    Dato: <? echo $entry->day."/".$entry->month."-".$entry->year.", ".$entry->starttime." - ".$entry->stoptime; ?>
     
+    <div style="margin-top: 30px; margin-bottom: 20px;">
+        <?
+        echo $event->description;
+        ?>
+    </div>
+
+
+    <div>
+        Pris:
+        <br/> Voksen: Kr <? echo $event->priceAdults ?>,- 
+        <br/> Barn: <? echo $event->priceChild ?>,-
+    </div>
+    <br/>
+    <?
+    if ($entry->availableForBooking) {
+    ?>
+    <a href="/index.php?page=calbooking&entryId=<? echo $entry->entryId; ?>">
+        <div class="shop_button">
+            Bestill - <? echo $availablepos; ?> ledige plasser
+        </div>
+    </a>
+    <?
+    }
+    ?>
+</div>    

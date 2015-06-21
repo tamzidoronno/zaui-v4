@@ -5,6 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('starter', ['ionic'])
 
+
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -17,3 +18,39 @@ angular.module('starter', ['ionic'])
     }
   });
 })
+
+
+// Setup view states
+.config(function($stateProvider, $urlRouterProvider) {
+
+  $stateProvider
+    .state('login', {
+      url: "/login",
+      templateUrl: "login.html",
+      controller: 'LoginCtrl'
+    })
+    .state('menu', {
+      url: "/menu",
+      templateUrl: "menu.html",
+      controller: 'MenuCtrl'
+    })
+    .state('users', {
+      url: "/users",
+      templateUrl: "users.html",
+      controller: 'UsersCtrl'
+    })
+    .state('doors', {
+      url: "/doors",
+      templateUrl: "doors.html",
+      controller: 'DoorsCtrl'
+    });
+
+    $urlRouterProvider.otherwise("/menu");
+
+})
+
+.controller('LoginCtrl', function($scope) {})
+.controller('MenuCtrl', function($scope) {})
+.controller('UsersCtrl', function($scope) {})
+.controller('DoorsCtrl', function($scope) {});
+

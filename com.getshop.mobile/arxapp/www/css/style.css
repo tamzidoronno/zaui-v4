@@ -1,1 +1,16 @@
 /* Empty. Add your own CSS if you like */
+.getshop-header {
+	height: 100px;
+}
+
+button i.big-icon:before {
+    font-size: 48px !important;
+}
+
+button.high {
+	max-height:100px;
+}
+
+.separator-15vh {
+	height:15vh;
+}

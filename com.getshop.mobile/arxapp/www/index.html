@@ -22,13 +22,87 @@
     <script src="js/app.js"></script>
   </head>
   <body ng-app="starter">
+     
+    <ion-nav-view></ion-nav-view>
 
-    <ion-pane>
-      <ion-header-bar class="bar-stable">
-        <h1 class="title">Ionic Blank Starter</h1>
-      </ion-header-bar>
-      <ion-content>
+
+   
+
+
+    <!-- Here are the page partials -->
+    <script id="login.html" type="text/ng-template">
+      <ion-view title="Login">
+        <ion-content>
+          <div class="list list-inset">
+            <label class="item item-input">
+              <span class="input-label">Nettaddresse</span>
+              <input type="text">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Brukernavn</span>
+              <input type="text">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Passord</span>
+              <input type="password">
+            </label>
+          </div>
+          <div class="padding">
+            <button class="button button-block button-positive">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logg inn&nbsp;&nbsp;&nbsp;&nbsp;
+            </button>
+          </div>
       </ion-content>
-    </ion-pane>
+      </ion-view>
+    </script>
+    <script id="menu.html" type="text/ng-template">
+      <ion-view title="Menu">
+        <ion-content>
+          <!--Big menu bar row-->
+          <div class="row">
+            <div class="col-25">
+              <img src="img/getshop.png" />
+            </div>
+            <div class="col-25 col-offset-25">
+              <button class="button button-block button-clear button-dark high"><i class="icon ion-gear-b big-icon"></i><br>Instillinger</button>
+            </div>
+            <div class="col-25">
+              <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-key big-icon"></i><br>Logg ut</button>
+            </div>
+          </div>
+
+          <!--Separator row-->
+          <div class="separator-15vh"></div>
+          <!--Two middle rows for menu items-->
+          <div class="row">
+            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-ios-cart big-icon"></i><br>Bestill</button>
+            <button class="button button-block button-clear button-dark high" ui-sref="doors"><i class="icon ion-locked big-icon"></i><br>Locks</button>
+            <button class="button button-block button-clear button-dark high" ui-sref="users"><i class="icon ion-person big-icon"></i><br>Brukere</button>
+          </div>
+          <div class="row">
+            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-cloud big-icon"></i><br>Cloud</button>
+            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-mic-a big-icon"></i><br>Feedback</button>
+            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-ios-paper big-icon"></i><br>Nyheter</button>
+          </div>
+          <!--Separator row-->
+          <div class="separator-15vh"></div>
+          <!--Row with number-->
+          <div class="row">
+            <div class="col col-33 col-offset-33 text-center">106</div>
+          </div>
+        </ion-content>
+      </ion-view>
+    </script>
+    <script id="users.html" type="text/ng-template">
+      <ion-view title="Users">
+        users page
+      </ion-view>
+    </script>
+    <script id="doors.html" type="text/ng-template">
+      <ion-view title="Doors">
+        doors page
+      </ion-view>
+    </script>
+
   </body>
 </html>

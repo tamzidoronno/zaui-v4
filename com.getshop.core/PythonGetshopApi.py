@@ -36,6 +36,121 @@ class CommunicationHelper:
   def close(self):
     self.socket.close();
 
+class ArxManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def doorAction(self, externalId, state):
+    args = collections.OrderedDict()
+    if isinstance(externalId,GetShopBaseClass): 
+      args["externalId"]=json.dumps(externalId.__dict__)
+    else:
+      try:
+        args["externalId"]=json.dumps(externalId)
+      except (ValueError, AttributeError):
+        args["externalId"]=externalId
+    if isinstance(state,GetShopBaseClass): 
+      args["state"]=json.dumps(state.__dict__)
+    else:
+      try:
+        args["state"]=json.dumps(state)
+      except (ValueError, AttributeError):
+        args["state"]=state
+    data = EmptyClass()
+    data.args = args
+    data.method = "doorAction"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAllAccessCategories(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllAccessCategories"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAllDoors(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllDoors"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAllPersons(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllPersons"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getLogForDoor(self, externalId, start, end):
+    args = collections.OrderedDict()
+    if isinstance(externalId,GetShopBaseClass): 
+      args["externalId"]=json.dumps(externalId.__dict__)
+    else:
+      try:
+        args["externalId"]=json.dumps(externalId)
+      except (ValueError, AttributeError):
+        args["externalId"]=externalId
+    if isinstance(start,GetShopBaseClass): 
+      args["start"]=json.dumps(start.__dict__)
+    else:
+      try:
+        args["start"]=json.dumps(start)
+      except (ValueError, AttributeError):
+        args["start"]=start
+    if isinstance(end,GetShopBaseClass): 
+      args["end"]=json.dumps(end.__dict__)
+    else:
+      try:
+        args["end"]=json.dumps(end)
+      except (ValueError, AttributeError):
+        args["end"]=end
+    data = EmptyClass()
+    data.args = args
+    data.method = "getLogForDoor"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def isLoggedOn(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "isLoggedOn"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def logonToArx(self, hostname, username, password):
+    args = collections.OrderedDict()
+    if isinstance(hostname,GetShopBaseClass): 
+      args["hostname"]=json.dumps(hostname.__dict__)
+    else:
+      try:
+        args["hostname"]=json.dumps(hostname)
+      except (ValueError, AttributeError):
+        args["hostname"]=hostname
+    if isinstance(username,GetShopBaseClass): 
+      args["username"]=json.dumps(username.__dict__)
+    else:
+      try:
+        args["username"]=json.dumps(username)
+      except (ValueError, AttributeError):
+        args["username"]=username
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
+    data = EmptyClass()
+    data.args = args
+    data.method = "logonToArx"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
 class BannerManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -1835,11 +1950,174 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def deleteDomain(self, domainId):
+    args = collections.OrderedDict()
+    if isinstance(domainId,GetShopBaseClass): 
+      args["domainId"]=json.dumps(domainId.__dict__)
+    else:
+      try:
+        args["domainId"]=json.dumps(domainId)
+      except (ValueError, AttributeError):
+        args["domainId"]=domainId
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteDomain"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def deleteRoom(self, domainId, roomId):
+    args = collections.OrderedDict()
+    if isinstance(domainId,GetShopBaseClass): 
+      args["domainId"]=json.dumps(domainId.__dict__)
+    else:
+      try:
+        args["domainId"]=json.dumps(domainId)
+      except (ValueError, AttributeError):
+        args["domainId"]=domainId
+    if isinstance(roomId,GetShopBaseClass): 
+      args["roomId"]=json.dumps(roomId.__dict__)
+    else:
+      try:
+        args["roomId"]=json.dumps(roomId)
+      except (ValueError, AttributeError):
+        args["roomId"]=roomId
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteRoom"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def deleteRoomType(self, domainId, roomTypeId):
+    args = collections.OrderedDict()
+    if isinstance(domainId,GetShopBaseClass): 
+      args["domainId"]=json.dumps(domainId.__dict__)
+    else:
+      try:
+        args["domainId"]=json.dumps(domainId)
+      except (ValueError, AttributeError):
+        args["domainId"]=domainId
+    if isinstance(roomTypeId,GetShopBaseClass): 
+      args["roomTypeId"]=json.dumps(roomTypeId.__dict__)
+    else:
+      try:
+        args["roomTypeId"]=json.dumps(roomTypeId)
+      except (ValueError, AttributeError):
+        args["roomTypeId"]=roomTypeId
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteRoomType"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getDomain(self, domainId):
+    args = collections.OrderedDict()
+    if isinstance(domainId,GetShopBaseClass): 
+      args["domainId"]=json.dumps(domainId.__dict__)
+    else:
+      try:
+        args["domainId"]=json.dumps(domainId)
+      except (ValueError, AttributeError):
+        args["domainId"]=domainId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getDomain"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getDomains(self):
     args = collections.OrderedDict()
     data = EmptyClass()
     data.args = args
     data.method = "getDomains"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getRoom(self, domainId, roomId):
+    args = collections.OrderedDict()
+    if isinstance(domainId,GetShopBaseClass): 
+      args["domainId"]=json.dumps(domainId.__dict__)
+    else:
+      try:
+        args["domainId"]=json.dumps(domainId)
+      except (ValueError, AttributeError):
+        args["domainId"]=domainId
+    if isinstance(roomId,GetShopBaseClass): 
+      args["roomId"]=json.dumps(roomId.__dict__)
+    else:
+      try:
+        args["roomId"]=json.dumps(roomId)
+      except (ValueError, AttributeError):
+        args["roomId"]=roomId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getRoom"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getRoomType(self, domainId, roomTypeId):
+    args = collections.OrderedDict()
+    if isinstance(domainId,GetShopBaseClass): 
+      args["domainId"]=json.dumps(domainId.__dict__)
+    else:
+      try:
+        args["domainId"]=json.dumps(domainId)
+      except (ValueError, AttributeError):
+        args["domainId"]=domainId
+    if isinstance(roomTypeId,GetShopBaseClass): 
+      args["roomTypeId"]=json.dumps(roomTypeId.__dict__)
+    else:
+      try:
+        args["roomTypeId"]=json.dumps(roomTypeId)
+      except (ValueError, AttributeError):
+        args["roomTypeId"]=roomTypeId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getRoomType"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getRoomTypes(self, domainId):
+    args = collections.OrderedDict()
+    if isinstance(domainId,GetShopBaseClass): 
+      args["domainId"]=json.dumps(domainId.__dict__)
+    else:
+      try:
+        args["domainId"]=json.dumps(domainId)
+      except (ValueError, AttributeError):
+        args["domainId"]=domainId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getRoomTypes"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getRooms(self, domainId):
+    args = collections.OrderedDict()
+    if isinstance(domainId,GetShopBaseClass): 
+      args["domainId"]=json.dumps(domainId.__dict__)
+    else:
+      try:
+        args["domainId"]=json.dumps(domainId)
+      except (ValueError, AttributeError):
+        args["domainId"]=domainId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getRooms"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveRoom(self, room):
+    args = collections.OrderedDict()
+    if isinstance(room,GetShopBaseClass): 
+      args["room"]=json.dumps(room.__dict__)
+    else:
+      try:
+        args["room"]=json.dumps(room)
+      except (ValueError, AttributeError):
+        args["room"]=room
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveRoom"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -2345,30 +2623,102 @@ class LogoManager(object):
     data.interfaceName = "app.logo.ILogoManager"
     return self.communicationHelper.sendMessage(data)
 
-class MecaManager(object):
+class MecaApi(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def createVechiel(self, vechiel):
+  def addVehicle(self, phoneNumber, vehicle):
     args = collections.OrderedDict()
-    if isinstance(vechiel,GetShopBaseClass): 
-      args["vechiel"]=json.dumps(vechiel.__dict__)
+    if isinstance(phoneNumber,GetShopBaseClass): 
+      args["phoneNumber"]=json.dumps(phoneNumber.__dict__)
     else:
       try:
-        args["vechiel"]=json.dumps(vechiel)
+        args["phoneNumber"]=json.dumps(phoneNumber)
       except (ValueError, AttributeError):
-        args["vechiel"]=vechiel
+        args["phoneNumber"]=phoneNumber
+    if isinstance(vehicle,GetShopBaseClass): 
+      args["vehicle"]=json.dumps(vehicle.__dict__)
+    else:
+      try:
+        args["vehicle"]=json.dumps(vehicle)
+      except (ValueError, AttributeError):
+        args["vehicle"]=vehicle
     data = EmptyClass()
     data.args = args
-    data.method = "createVechiel"
-    data.interfaceName = "core.meca.IMecaManager"
+    data.method = "addVehicle"
+    data.interfaceName = "core.mecamanager.IMecaApi"
     return self.communicationHelper.sendMessage(data)
 
-  def helloWorld(self):
+  def changePassword(self, phoneNumber, oldPassword, newPassword1, newPassword2):
     args = collections.OrderedDict()
+    if isinstance(phoneNumber,GetShopBaseClass): 
+      args["phoneNumber"]=json.dumps(phoneNumber.__dict__)
+    else:
+      try:
+        args["phoneNumber"]=json.dumps(phoneNumber)
+      except (ValueError, AttributeError):
+        args["phoneNumber"]=phoneNumber
+    if isinstance(oldPassword,GetShopBaseClass): 
+      args["oldPassword"]=json.dumps(oldPassword.__dict__)
+    else:
+      try:
+        args["oldPassword"]=json.dumps(oldPassword)
+      except (ValueError, AttributeError):
+        args["oldPassword"]=oldPassword
+    if isinstance(newPassword1,GetShopBaseClass): 
+      args["newPassword1"]=json.dumps(newPassword1.__dict__)
+    else:
+      try:
+        args["newPassword1"]=json.dumps(newPassword1)
+      except (ValueError, AttributeError):
+        args["newPassword1"]=newPassword1
+    if isinstance(newPassword2,GetShopBaseClass): 
+      args["newPassword2"]=json.dumps(newPassword2.__dict__)
+    else:
+      try:
+        args["newPassword2"]=json.dumps(newPassword2)
+      except (ValueError, AttributeError):
+        args["newPassword2"]=newPassword2
     data = EmptyClass()
     data.args = args
-    data.method = "helloWorld"
-    data.interfaceName = "core.meca.IMecaManager"
+    data.method = "changePassword"
+    data.interfaceName = "core.mecamanager.IMecaApi"
+    return self.communicationHelper.sendMessage(data)
+
+  def createAccount(self, phoneNumber):
+    args = collections.OrderedDict()
+    if isinstance(phoneNumber,GetShopBaseClass): 
+      args["phoneNumber"]=json.dumps(phoneNumber.__dict__)
+    else:
+      try:
+        args["phoneNumber"]=json.dumps(phoneNumber)
+      except (ValueError, AttributeError):
+        args["phoneNumber"]=phoneNumber
+    data = EmptyClass()
+    data.args = args
+    data.method = "createAccount"
+    data.interfaceName = "core.mecamanager.IMecaApi"
+    return self.communicationHelper.sendMessage(data)
+
+  def login(self, phoneNumber, password):
+    args = collections.OrderedDict()
+    if isinstance(phoneNumber,GetShopBaseClass): 
+      args["phoneNumber"]=json.dumps(phoneNumber.__dict__)
+    else:
+      try:
+        args["phoneNumber"]=json.dumps(phoneNumber)
+      except (ValueError, AttributeError):
+        args["phoneNumber"]=phoneNumber
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
+    data = EmptyClass()
+    data.args = args
+    data.method = "login"
+    data.interfaceName = "core.mecamanager.IMecaApi"
     return self.communicationHelper.sendMessage(data)
 
 class MessageManager(object):
@@ -6697,6 +7047,7 @@ class YouTubeManager(object):
 class GetShopApi(object):
   def __init__(self, address):
     self.communicationHelper = CommunicationHelper(address)
+    self.ArxManager = ArxManager(self.communicationHelper)
     self.BannerManager = BannerManager(self.communicationHelper)
     self.BigStock = BigStock(self.communicationHelper)
     self.BrainTreeManager = BrainTreeManager(self.communicationHelper)
@@ -6715,7 +7066,7 @@ class GetShopApi(object):
     self.LasGruppenPDFGenerator = LasGruppenPDFGenerator(self.communicationHelper)
     self.ListManager = ListManager(self.communicationHelper)
     self.LogoManager = LogoManager(self.communicationHelper)
-    self.MecaManager = MecaManager(self.communicationHelper)
+    self.MecaApi = MecaApi(self.communicationHelper)
     self.MessageManager = MessageManager(self.communicationHelper)
     self.MobileManager = MobileManager(self.communicationHelper)
     self.NewsLetterManager = NewsLetterManager(self.communicationHelper)

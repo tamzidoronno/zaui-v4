@@ -665,10 +665,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     public User forceLogon(String userId) throws ErrorException {
         User user = getUserById(userId);
-        if (user != null) {
-            addUserToSession(user);
-        }
-        
+        forceLogon(user);
         return user;
     }
 
@@ -821,5 +818,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         return false;
+    }
+
+    public void forceLogon(User user) {
+        if (user != null) {
+            addUserToSession(user);
+        }
     }
 }

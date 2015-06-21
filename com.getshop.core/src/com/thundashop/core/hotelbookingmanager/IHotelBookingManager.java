@@ -5,6 +5,11 @@ import com.thundashop.core.common.GetShopApi;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Hotel booking manager.
+ * 
+ * @author boggi
+ */
 @GetShopApi
 public interface IHotelBookingManager {
     

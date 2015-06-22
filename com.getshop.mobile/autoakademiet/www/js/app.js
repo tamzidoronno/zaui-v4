@@ -29,10 +29,10 @@ App = {
     },
     setLanguageMode: function () {
         if (App.lang === 'se') {
-            App.address = "promeisterse.local.getshop.com";
+            App.address = "promeisterse.getshop.com";
             App.appName = "ProMeisterAcademeySe";
         } else {
-            App.address = "mecademo.local.getshop.com";
+            App.address = "mecademo.getshop.com";
             App.appName = "ProMeisterAcademey";
         }
     },
@@ -991,7 +991,7 @@ App = {
         App.createUser.password = password;
         
         App.getshopApi.UserManager.createUser(App.createUser).done(function(user) {
-            alert(App.translateText("Takk, du har nå opprettet en konto er klar til å bruke appen. Du har nå blitt logget inn automatisk og en epost har blitt sendt til deg med ditt tildelte passord"))
+            alert(App.translateText("Takk, du har nå opprettet en konto og er klar til å bruke appen. Du har blitt logget inn automatisk og en epost har blitt sendt til deg med ditt tildelte passord"))
             localStorage.setItem("username", user.emailAddress);
             localStorage.setItem("password", password);    
             App.doLogin(true);

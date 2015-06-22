@@ -621,6 +621,9 @@ html body .ui-group-theme-a .ui-bar-inherit {
 .select_group img {
     max-height: 100px;
     max-width: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 .select_group {
     text-align: center;

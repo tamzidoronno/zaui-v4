@@ -191,6 +191,15 @@ and open the template in the editor.
     text-transform: uppercase;
 }
 
+.LasGruppenOrderSchema .certego_login {
+    font-size: 16px;
+    float: right;
+    background-color: #ff6e00;
+    color: #FFF;
+    border-radius: 0px 0px 5px 5px;
+    padding: 10px;
+}
+
 @media only all and (max-width: 948px) {
     .LasGruppenOrderSchema .col {
         width: 100%;
@@ -206,3 +215,4 @@ and open the template in the editor.
         margin-bottom: 20px;
     }
 }
+

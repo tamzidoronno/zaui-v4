@@ -27,6 +27,8 @@ import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +75,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
     
     @Autowired
     UserManager usermanager;
-    private List<Person> tmpCachePersons;
             
     @Override
     public boolean logonToArx(String hostname, String username, String password) {
@@ -254,10 +255,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
     
     @Override
     public List<Person> getAllPersons() throws Exception {
-        if(tmpCachePersons != null) {
-            //Speed up developement.
-            return tmpCachePersons;
-        }
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?include_accesscategory_id=true&exclude_deleted=true";
@@ -272,7 +269,12 @@ public class ArxManager extends ManagerBase implements IArxManager {
         Unmarshaller unmarsh = context.createUnmarshaller();
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         //specify the schema definition for parsing
-        Schema schema = sf.newSchema(new File("/home/boggi/integration.xsd"));
+        File intfile = new File("integration.xsd");
+        if(!intfile.exists()) {
+            System.out.println("Integration.xds does not exist at path: " + intfile.getAbsolutePath());
+            return new ArrayList();
+        }
+        Schema schema = sf.newSchema(intfile);
         unmarsh.setSchema(schema);
         //unmarshall the xml file
         Arxdata obj;
@@ -319,7 +321,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
             }
             
         }
-        tmpCachePersons = personlist;
+        
         return personlist;
     }
 
@@ -366,7 +368,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
     public void doorAction(String externalId, String state) throws Exception {
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
-        String hostName = arxHost + "5002/arx/door_actions?externalid="+externalId+"&type="+state;
+        String hostName = arxHost + ":5002/arx/door_actions?externalid="+externalId+"&type="+state;
         
         String password = userPasswords.get(currentUser.id);
         httpLoginRequest(hostName, currentUser.username, password, "");
@@ -389,6 +391,18 @@ public class ArxManager extends ManagerBase implements IArxManager {
         Document document = builder.parse(is);
         NodeList nodeList = document.getDocumentElement().getChildNodes();
         List<AccessLog> retresult = recursiveFindDoorLogEntry(nodeList, externalId);
+        Collections.sort(retresult, new Comparator<AccessLog>() {
+            public int compare(AccessLog o1, AccessLog o2) {
+                if(o1.timestamp < o2.timestamp) {
+                    return 1;
+                } else if(o1.timestamp == o2.timestamp) {
+                    return 0;
+                }
+                return -1;
+            }
+          });
+        
+        
         return retresult;
     }
 

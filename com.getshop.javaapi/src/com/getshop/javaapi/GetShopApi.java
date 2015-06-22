@@ -122,6 +122,12 @@ public class GetShopApi {
            return new APIUserManager(transport);
       }
      /**
+      * @return APIArxManager
+      */
+      public APIArxManager getArxManager() {
+           return new APIArxManager(transport);
+      }
+     /**
       * @return APIMobileManager
       */
       public APIMobileManager getMobileManager() {
@@ -168,6 +174,12 @@ public class GetShopApi {
       */
       public APIYouTubeManager getYouTubeManager() {
            return new APIYouTubeManager(transport);
+      }
+     /**
+      * @return APIMecaApi
+      */
+      public APIMecaApi getMecaApi() {
+           return new APIMecaApi(transport);
       }
      /**
       * @return APIPageManager

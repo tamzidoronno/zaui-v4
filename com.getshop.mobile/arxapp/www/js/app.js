@@ -50,7 +50,76 @@ angular.module('starter', ['ionic'])
 })
 
 .controller('LoginCtrl', function($scope) {})
+
 .controller('MenuCtrl', function($scope) {})
-.controller('UsersCtrl', function($scope) {})
+
+.controller('UsersCtrl', function($scope) {
+  $scope.users = [{
+    firstName: "Ola",
+    lastName: "Nordman",
+    streetAddress: "Strandgaten 21",
+    postNumber: "4830",
+    post: "Hauge I Dalane",
+    group: "16"
+  },{
+    firstName: "Kai",
+    lastName: "Nordman",
+    streetAddress: "Strandgaten 21",
+    postNumber: "4830",
+    post: "Hauge I Dalane",
+    group: "5"
+  },{
+    firstName: "Emil",
+    lastName: "Nordman",
+    streetAddress: "Strandgaten 21",
+    postNumber: "4830",
+    post: "Hauge I Dalane",
+    group: "5"
+  },{
+    firstName: "Ola",
+    lastName: "Nordman",
+    streetAddress: "Strandgaten 22",
+    postNumber: "4830",
+    post: "Hauge I Dalane",
+    group: "5"
+  },{
+    firstName: "Ola",
+    lastName: "Nordman",
+    streetAddress: "Strandgaten 23",
+    postNumber: "4830",
+    post: "Hauge I Dalane",
+    group: "5"
+  },{
+    firstName: "Ola",
+    lastName: "Nordman",
+    streetAddress: "Strandgaten 24",
+    postNumber: "4830",
+    post: "Hauge I Dalane",
+    group: "5"
+  },{
+    firstName: "Ola",
+    lastName: "Nordman",
+    streetAddress: "Strandgaten 25",
+    postNumber: "4830",
+    post: "Hauge I Dalane",
+    group: "5"
+  },{
+    firstName: "Ola",
+    lastName: "Nordman",
+    streetAddress: "Strandgaten 26",
+    postNumber: "4830",
+    post: "Hauge I Dalane",
+    group: "5"
+  },{
+    firstName: "Ola",
+    lastName: "Nordman",
+    streetAddress: "Strandgaten 26",
+    postNumber: "4830",
+    post: "Hauge I Dalane",
+    group: "5"
+  },
+  ];
+})
+
 .controller('DoorsCtrl', function($scope) {});
 

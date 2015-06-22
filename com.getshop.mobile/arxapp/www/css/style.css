@@ -14,3 +14,15 @@ button.high {
 .separator-15vh {
 	height:15vh;
 }
+
+.item-note-small {
+	font-size:11px;
+	color:black;
+}
+
+.group-badge {
+	font-size:24px;
+	display: block;
+	text-align:center;
+	width:100%;
+}

@@ -99,7 +99,7 @@ and open the template in the editor.
 .LasGruppenOrderSchema .col_0 table {
     text-align: center;
 }
-.LasGruppenOrderSchema .pagetitle {
+.LasGruppenOrderSchema .certego_pagetitle {
     font-size: 20px;
     padding: 10px;
     background-color: #ff6e00;
@@ -107,7 +107,7 @@ and open the template in the editor.
     text-align: left;
 }
 
-.LasGruppenOrderSchema .pagetitle .stepof {
+.LasGruppenOrderSchema .certego_pagetitle .stepof {
     float: right;
 }
 

@@ -49,7 +49,20 @@ angular.module('starter', ['ionic'])
 
 })
 
-.controller('LoginCtrl', function($scope) {})
+.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state) {
+  $scope.data = {};
+ 
+  $scope.login = function() {
+    LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
+      $state.go('menu');
+    }).error(function(data) {
+      var alertPopup = $ionicPopup.alert({
+        title: 'Login failed!',
+        template: 'Please check your credentials!'
+      });
+    });
+  }
+})
 
 .controller('MenuCtrl', function($scope) {})
 
@@ -136,5 +149,28 @@ angular.module('starter', ['ionic'])
     name: "Enterance"
   }
   ];
-});
+})
 
+.service('LoginService', function($q) {
+    return {
+        loginUser: function(name, pw) {
+            var deferred = $q.defer();
+            var promise = deferred.promise;
+ 
+            if (name == 'user' && pw == 'secret') {
+                deferred.resolve('Welcome ' + name + '!');
+            } else {
+                deferred.reject('Wrong credentials.');
+            }
+            promise.success = function(fn) {
+                promise.then(fn);
+                return promise;
+            }
+            promise.error = function(fn) {
+                promise.then(null, fn);
+                return promise;
+            }
+            return promise;
+        }
+    }
+});

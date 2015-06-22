@@ -36,19 +36,19 @@
           <div class="list list-inset">
             <label class="item item-input">
               <span class="input-label">Nettaddresse</span>
-              <input type="text">
+              <input type="text" ng-model="data.address">
             </label>
             <label class="item item-input">
               <span class="input-label">Brukernavn</span>
-              <input type="text">
+              <input type="text" ng-model="data.username">
             </label>
             <label class="item item-input">
               <span class="input-label">Passord</span>
-              <input type="password">
+              <input type="password" ng-model="data.password">
             </label>
           </div>
           <div class="padding">
-            <button class="button button-block button-positive">
+            <button class="button button-block button-positive" ng-click="login()">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logg inn&nbsp;&nbsp;&nbsp;&nbsp;
             </button>
           </div>

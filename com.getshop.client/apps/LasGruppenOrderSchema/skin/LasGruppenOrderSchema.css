@@ -200,6 +200,19 @@ and open the template in the editor.
     padding: 10px;
 }
 
+.LasGruppenOrderSchema .login_button {
+    float: right;
+}
+
+.LasGruppenOrderSchema .loginform .dologin {
+    border: solid 2px #ff8c37;
+    padding: 7px;
+    display: inline-block;
+}
+.LasGruppenOrderSchema .loginform {
+    display: none;
+}
+
 @media only all and (max-width: 948px) {
     .LasGruppenOrderSchema .col {
         width: 100%;

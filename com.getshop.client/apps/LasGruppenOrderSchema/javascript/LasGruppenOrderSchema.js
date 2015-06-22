@@ -17,6 +17,8 @@ app.LasGruppenOrderSchema = {
         $(document).on('click', '.LasGruppenOrderSchema .add_cylinder_row', app.LasGruppenOrderSchema.addCylinderRow);
         $(document).on('click', '.LasGruppenOrderSchema .button_area .prev', app.LasGruppenOrderSchema.prev);
         $(document).on('click', '.LasGruppenOrderSchema .button_area .next', app.LasGruppenOrderSchema.next);
+        $(document).on('click', '.LasGruppenOrderSchema .login_button', app.LasGruppenOrderSchema.loginClicked);
+        $(document).on('click', '.LasGruppenOrderSchema .dologin', app.LasGruppenOrderSchema.doLogin);
         
         $(document).on('change', '#invoice_company_name', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_address', app.LasGruppenOrderSchema.changeDeliveryInformation);
@@ -24,6 +26,28 @@ app.LasGruppenOrderSchema = {
         $(document).on('change', '#invoice_cellphone', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_emailaddress', app.LasGruppenOrderSchema.changeDeliveryInformation);
     },
+    
+    doLogin: function() {
+        var data = {
+            username : $('.LasGruppenOrderSchema .loginform .username').val(),
+            password : $('.LasGruppenOrderSchema .loginform .password').val()
+        }
+        
+        
+        var event = thundashop.Ajax.createEvent(null, "doLogin", this, data);
+        
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            alert(result);
+        });
+    },
+    
+    loginClicked: function() {
+        var loginForm = $('.LasGruppenOrderSchema .loginform');
+        if (!loginForm.is(":visible")) {
+            loginForm.slideDown();
+            $('.LasGruppenOrderSchema .login_button').hide();
+        } 
+   },
 
     saveData: function(target, callback, silent) {
         if (app.LasGruppenOrderSchema.inProgress) {

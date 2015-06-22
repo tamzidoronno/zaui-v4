@@ -73,4 +73,8 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     private function sendMail($mailAddress, $attachments) {
         $this->getApi()->getMessageManager()->sendMailWithAttachments($mailAddress, $mailAddress, "Bestilling fra Certego", "", "certego@getshop.com", "Certego AS", $attachments);
     }
+    
+    public function doLogin() {
+        
+    }
 }

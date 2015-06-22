@@ -117,9 +117,24 @@ angular.module('starter', ['ionic'])
     postNumber: "4830",
     post: "Hauge I Dalane",
     group: "5"
-  },
+  }
   ];
 })
 
-.controller('DoorsCtrl', function($scope) {});
+.controller('DoorsCtrl', function($scope) {
+  $scope.doors = [{
+    name: "Room 1"
+  },{
+    name: "Room 2"
+  },{
+    name: "Room 3"
+  },{
+    name: "Door to the kitchen"
+  },{
+    name: "Back door"
+  },{
+    name: "Enterance"
+  }
+  ];
+});
 

@@ -1,5 +1,5 @@
 <head>
-    <link rel="stylesheet" href="scripts/font-awesome.min.css">
+    <link rel="stylesheet" href="fontawesome/css/font-awesome.min.css">
     <script type="text/javascript" src="scripts/jquery-1.9.0.js"></script>
 <meta name="viewport" content="initial-scale=1, maximum-scale=1">
 

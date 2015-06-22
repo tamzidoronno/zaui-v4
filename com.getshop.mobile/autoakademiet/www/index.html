@@ -60,22 +60,79 @@ and open the template in the editor.
                     
                 </div>
                 <div class="pro_button" translate="true" id='app_login_button'>Logg inn</div>
-                <div style='text-align: center; color: #888; padding-top: 10px;'>........................
-                <br/><br/><div style='border: solid 1px #EEE; display: inline-block; padding: 15px;'>Ny bruker? - Opprett konto her</div></div>
+                <div style='font-size: 0px; text-align: center; color: #888; padding-top: 10px;'>
+                    <br/><br/><a href="#reset_password"><div translate="true" style='font-size: 16px; width: 220px; margin-top: 20px; background-color: #F9F9F9; border: solid 1px #EEE; display: inline-block; padding: 15px;'>Reset password</div></a> 
+                    <br/><br/><a href="#create_new_user"><div translate="true" style='font-size: 16px; width: 220px; margin-top: 20px; background-color: #F9F9F9; border: solid 1px #EEE; display: inline-block; padding: 15px;'>Ny bruker? - Opprett konto her</div></a>
+                </div>
             </div>
         </div>
+        <div data-role="page" id="yourcourses">
+            <div data-role="header" data-theme="asd">
+                <img border="0" src="css/images/logo.png" class="logo"/>
+            </div>
+            
+            <div data-role="content">
+                <div class="mycourses_page_result">
+                    
+                </div>
+            </div>
+            
+            <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
+                <div data-role="navbar" data-tap-toggle="false" data-fullscreen="true"  data-position="fixed" >
+                    <ul>
+                        <li>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back" translate="true">Tilbake</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div data-role="page" id="reset_password">
+            <div data-role="header" data-theme="asd">
+                <img border="0" src="css/images/logo.png" class="logo"/>
+            </div>
+            
+            <div data-role="content">
+                <div class="mycourses_page_result">
+                    <div class="loginform">
+                        <span translate="true">Brukernavn</span>:
+                        <input id='reset_username' placeholder="user@email.com"/>
+                    </div>
+                    <div class="pro_button" translate="true" id='reset_password_button'>Reset password</div>
+                </div>
+            </div>
+            
+            <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
+                <div data-role="navbar" data-tap-toggle="false" data-fullscreen="true"  data-position="fixed" >
+                    <ul>
+                        <li>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back" translate="true">Tilbake</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+             
         <div data-role="page" id="home">
             <div data-role="header" data-theme="asd">
                 <img border="0" src="css/images/logo.png" class="logo"/>
             </div>
             <div data-role="content">
                 <div class="mainmenu_outer">
+                    <div class="home_information">
+                        <div class="customer_name"></div>
+                        <div class="number_of_events">
+                            
+                        </div>
+                    </div>
                     <div class="mainmenu">
                         <div class='menu_entry gotolistview'><img  src="css/images/listicon.png"/><div class='name' translate="true">Kurs liste</div></div>
                         <div class='menu_entry gotocalendar'><img  src="css/images/calendaricon.png"/><div class='name' translate="true">Kurs i din region</div></div>
                         <div class='menu_entry newsbutton'><img  src="css/images/twittericon.png"/><div class='name' translate="true">Nyheter</div><div class='counter'>12</div></div>
                         <div class='menu_entry gotocourses'><img  src="css/images/haticon.png"/><div class='name' translate="true">Kurs oversikt</div></div>
                         <div class='menu_entry infobutton'><img  src="css/images/infoicon.png"/><div class='name' translate="true">Informasjon</div></div>
+                        <div class='menu_entry yourcourses'><img  src="css/images/database.png"/><div class='name' translate="true">Dine kurs</div></div>
                         <div class='menu_entry logoutbutton'><img  src="css/images/lockicon.png"/><div class='name' translate="true">Logg ut</div></div>
                     </div>
                 </div>
@@ -184,6 +241,26 @@ and open the template in the editor.
             </div>
         </div>
 
+        <div data-role="page" id="create_new_user">
+            <div data-role="header" data-theme="asd">
+                <img border="0" src="css/images/logo.png" class="logo"/>
+            </div>
+            
+            <div data-role="content" style="text-align:left">
+                <div class="content"></div>
+            </div>
+
+            <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
+                <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
+                    <ul>
+                        <li>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back" translate="true">Tilbake</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <div data-role="page" id="news">
             <div data-role="content" style="text-align:left">
                 <span translate="true">Nyheter</span>:
@@ -208,6 +285,35 @@ and open the template in the editor.
             <div data-role="content"> 
                 <span translate="true">Trykk på kursstedene for å velge, når du har valgt stedene du ønsker å se trykk så ferdig</span>
                 <div data-role="controlgroup" id="filterholdergroup"></div>
+            </div>
+        </div>
+        
+        <div id="registerschema">
+            <span translate="true">Ditt navn</span>:
+            <input placeholder="" id="create_user_name"/>
+            <span translate="true">Din epostaddresse</span>:
+            <input placeholder="" id="create_user_email" />
+            <span translate="true">Teknisk leders epostaddresse</span>:
+            <input placeholder="" id="create_user_invoiceemail" />
+            <span translate="true">Ditt telefonnr</span>:
+            <input placeholder="" id="create_user_phonenumber"/>
+            <div class="meknomenid">
+                <span translate="true">Meko-id</span>:
+                <input placeholder="" id="create_user_mekoid"/>
+            </div>
+            <div class="mecaid">
+                <span translate="true">Kundnummer</span>:
+                <input placeholder="" id="create_user_kundnummer"/>
+            </div>
+            <div class="pro_button" translate="true" id='go_to_company_search' translate="true">Neste</div>
+        </div>
+        
+        <div id="searchcompanyschema">
+            <span translate="true">Finn ditt selskap</span>:
+            <input placeholder="" id="create_user_serach_company"/>
+            <div class="pro_button" translate="true" id='search_for_company' translate="true">Søk</div>
+            <div class="companyresult">
+                
             </div>
         </div>
     </body>

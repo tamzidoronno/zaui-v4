@@ -930,12 +930,46 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'getMyEvents' : function(silent) {
+        data = {
+            args : {
+            },
+            method: 'getMyEvents',
+            interfaceName: 'core.calendar.ICalendarManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'getSignature' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
             },
             method: 'getSignature',
+            interfaceName: 'core.calendar.ICalendarManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'isUserOnEvent' : function(userId,eventId, silent) {
+        data = {
+            args : {
+                userId : JSON.stringify(userId),
+                eventId : JSON.stringify(eventId),
+            },
+            method: 'isUserOnEvent',
+            interfaceName: 'core.calendar.ICalendarManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'isUserOnWaiting' : function(userId,eventId, silent) {
+        data = {
+            args : {
+                userId : JSON.stringify(userId),
+                eventId : JSON.stringify(eventId),
+            },
+            method: 'isUserOnWaiting',
             interfaceName: 'core.calendar.ICalendarManager',
         };
         return this.communication.send(data, silent);
@@ -2176,6 +2210,17 @@ GetShopApiWebSocket.MobileManager.prototype = {
                 token : JSON.stringify(token),
             },
             method: 'registerToken',
+            interfaceName: 'core.mobilemanager.IMobileManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'registerTokenToUserId' : function(tokenId, silent) {
+        data = {
+            args : {
+                tokenId : JSON.stringify(tokenId),
+            },
+            method: 'registerTokenToUserId',
             interfaceName: 'core.mobilemanager.IMobileManager',
         };
         return this.communication.send(data, silent);
@@ -3461,6 +3506,16 @@ GetShopApiWebSocket.SedoxProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'getStatistic' : function(silent) {
+        data = {
+            args : {
+            },
+            method: 'getStatistic',
+            interfaceName: 'core.sedox.ISedoxProductManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'login' : function(emailAddress,password, silent) {
         data = {
             args : {
@@ -3937,6 +3992,27 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'cleanUpUsers' : function(silent) {
+        data = {
+            args : {
+            },
+            method: 'cleanUpUsers',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'createAndSendNewPassword' : function(emailAddress, silent) {
+        data = {
+            args : {
+                emailAddress : JSON.stringify(emailAddress),
+            },
+            method: 'createAndSendNewPassword',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'createUser' : function(user, silent) {
         data = {
             args : {
@@ -4262,6 +4338,16 @@ GetShopApiWebSocket.UtilManager = function(communication) {
 }
 
 GetShopApiWebSocket.UtilManager.prototype = {
+    'getAppVersion' : function(silent) {
+        data = {
+            args : {
+            },
+            method: 'getAppVersion',
+            interfaceName: 'core.utils.IUtilManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'getCompaniesFromBrReg' : function(search, silent) {
         data = {
             args : {

@@ -15,6 +15,7 @@ App = {
     firstConnected: false,
     numberOfMonthToShowInCalendar: 6,
     lang: 'no',
+    version: 1,
     start: function () {
         this.setLanguageMode();
         this.getshopApi = new GetShopApiWebSocket(this.address);
@@ -28,7 +29,7 @@ App = {
     },
     setLanguageMode: function () {
         if (App.lang === 'se') {
-            App.address = "promeisterse.getshop.com";
+            App.address = "promeisterse.local.getshop.com";
             App.appName = "ProMeisterAcademeySe";
         } else {
             App.address = "mecademo.local.getshop.com";
@@ -68,6 +69,7 @@ App = {
         this.sendToken();
         this.loadNews(false);
         this.loadCourseList();
+        this.loadMyCourses();
         this.firstConnected = true;
 
     },
@@ -175,7 +177,9 @@ App = {
         }
 
         // No is default language
-        var no = {}
+        var no = {
+            'Reset password' : 'Gjenopprett passord'
+        }
 
         var matrix = no;
 
@@ -189,6 +193,52 @@ App = {
 
         return matrix[text];
     },
+    loadMyCourses: function() {
+        this.getshopApi.CalendarManager.getMyEvents().done($.proxy(this.myCoursesFetched, this));
+    },
+    
+    myCoursesFetched: function(result) {
+        var me = this;
+        var container = $('#yourcourses .mycourses_page_result');
+        container.html("");
+        
+        $('.number_of_events').html(App.translateText("Du har deltatt på") + " " + result.length + " " + App.translateText("kurs"))
+        if (result.length === 0) {
+            container.html(App.translateText('Du har ikke deltatt på noen kurs enda'));
+        } else {
+            container.html("<div class='my_course_header'><center>" + App.translateText("Kurs du skal delta på") + "</center></div>");
+            for (var i in result) {
+                var event = result[i];
+                if (event.isInPast)
+                    continue;
+                
+                var div = me.createInfoBox(event);
+                container.append(div);
+            }
+            
+            
+            container.append("<div class='my_course_header'><center>" + App.translateText("Du har gjennomført følgende kurs") + "</center></div>");
+            for (var i in result) {
+                var event = result[i];
+                if (!event.isInPast)
+                    continue;
+                
+                var div = me.createInfoBox(event);
+                container.append(div);
+            }
+        }
+    },
+    
+    createInfoBox: function(event) {
+        var div = $('<div/>');
+        div.addClass('your_course_entry');
+        div.append("<div>"+App.translateText("Kurs")+": " + event.title + "</div>");
+        div.append("<div class='course_my_page_date'>"+event.day + "/" + event.month + "-" + event.year +"</div>");
+
+        div.append("<div>"+App.translateText('Sted')+": " +event.location+"</div>");
+        return div;
+    },
+    
     loadCourseList: function () {
         var me = this;
 
@@ -461,6 +511,11 @@ App = {
         
     },
     showFirstPage: function() {
+        App.getshopApi.UtilManager.getAppVersion().done(function(result) {
+            if (App.version < result) {
+                alert(App.translateText("Du har en gammel versjon av appen, last ned og installer appen på nytt for å sikre deg om at alt av funksjonalitet fungerer slik som det skal"));
+            }
+        });
         if (App.loggedInUser) {
             $.mobile.changePage('#home');
         } else {
@@ -685,6 +740,7 @@ App = {
                 return;
             };
             
+            $('.customer_name').html("Hei " + result.fullName);
             localStorage.setItem("username", username);
             localStorage.setItem("password", password);
             App.loggedInUser = result;
@@ -693,6 +749,7 @@ App = {
             App.reset();
             
             App.getshopApi.CalendarManager.registerToken(App.token).done(function() { } );
+            App.getshopApi.MobileManager.registerTokenToUserId(App.token).done(function() { } );
         });
     },
     doLogout: function() {
@@ -700,6 +757,18 @@ App = {
         localStorage.setItem("username", "");
         localStorage.setItem("password", "");
         App.reset();
+    },
+    resetPassword: function() {
+        var email = $('#reset_username').val();
+        
+        App.getshopApi.UserManager.createAndSendNewPassword(email).done(function(result) {
+            if (result) {
+                alert(App.translateText('En epost har blitt sendt til deg med nye kode.'));
+                $.mobile.changePage("#login");
+            } else {
+                alert(App.translateText('Fant ikke brukeren ved oppgitt brukernavn.'));
+            }
+        });
     },
     setupListeners: function () {
         var me = this;
@@ -719,6 +788,8 @@ App = {
         $('#prev').click($.proxy(this.prevClicked, this));
         $('#regions .region_failed').click($.proxy(this.checkGps, this));
 
+        $(document).on('tap', '#reset_password_button', App.resetPassword);
+        
         $(document).on('tap', '.infobutton', function (e) {
             $.mobile.changePage('#infopage');
             e.preventDefault();
@@ -740,6 +811,13 @@ App = {
             e.stopPropagation();
             $(this).off('click');
         });
+        
+        $(document).on('tap', '.yourcourses', function (e) {
+            $.mobile.changePage('#yourcourses');
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).off('click');
+        });
 
         $(document).on('tap', '.gotosignup', function (e) {
             App.filterToEntryId = false;
@@ -756,6 +834,7 @@ App = {
             $(this).off('click');
         });
 
+        $(document).on('pageshow', '#create_new_user', App.createCreateUserPage);
         $(document).on('tap', '.gotocalendar', function (e) {
             App.checkGps();
             $.mobile.changePage('#regions');
@@ -767,6 +846,158 @@ App = {
 
         $('#vatnr').keyup($.proxy(this.vatnumberupdated, this));
         $(document).on('change', '#select-native-2', App.groupChanged);
+    },
+    
+    createCreateUserPage: function() {
+        var container = $('#create_new_user .content');
+        container.html("");
+        container.html("<center><h1>"+App.translateText("Velg din avtalepartner")+"</h1></center>")
+        App.getshopApi.UserManager.getAllGroups().done(function(result) {
+            for (var i in result) {
+                var groupData = result[i];
+                var div = $('<div/>');
+                div.append('<img src="http://'+App.address+'/displayImage.php?id='+groupData.imageId+'"/>');
+                div.attr('groupId', groupData.id);
+                div.addClass('select_group');
+                div.append("<br/>"+groupData.groupName);
+                div.tap(function() {
+                    App.groupSelected($(this).attr('groupId'));
+                })
+                container.append(div);
+            }
+        })
+    },
+    
+    groupSelected: function(groupId) {
+        App.createUser = {
+            group : groupId
+        };
+        
+        var container = $('#create_new_user .content');
+        container.html("");
+        
+        var schema = $('#registerschema').clone();
+        schema.attr('id', 'realregisterschema');
+        schema.find('#go_to_company_search').tap(App.searchForCompany)
+          
+        if (App.lang === "se" && groupId === "1cdd1d93-6d1b-4db3-8e91-3c30cfe38a4a") {
+            $(schema).find('.meknomenid').show();
+        }
+        
+        if (App.lang === "se" && (groupId === "ddcdcab9-dedf-42e1-a093-667f1f091311" || groupId === "608c2f52-8d1a-4708-84bb-f6ecba67c2fb" )) {
+            $(schema).find('.mecaid').show();
+        }
+        
+        container.html(schema);
+        $('#create_new_user').trigger('create');
+        
+    },
+    
+    searchForCompany: function() {
+        App.createUser.emailAddress = $('#realregisterschema #create_user_email').val();
+        App.createUser.emailAddressToInvoice =  $('#realregisterschema #create_user_invoiceemail').val();
+        App.createUser.cellPhone =  $('#realregisterschema #create_user_phonenumber').val();
+        App.createUser.fullName =  $('#realregisterschema #create_user_name').val();
+        
+        if (App.createUser.fullName == "") {
+            alert(App.translateText("Navnet ditt kan ikke være blank"));
+            return;
+        }
+        
+        if (App.createUser.emailAddress === "" || App.createUser.emailAddressToInvoice === "") {
+            alert(App.translateText("Epost kan ikke være blank"));
+            return;
+        }
+        
+        if (App.lang === "no" && (App.createUser.cellPhone === "" || App.createUser.cellPhone.length !== 8)) {
+            alert(App.translateText("Ugyldig telefonnr"));
+            return;
+        }
+        
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        if (!re.test(App.createUser.emailAddress)) {
+            alert(App.translateText("Din epostaddresse er ugyldig, sjekk at du har oppgitt riktig epostaddresse"));
+            return;
+        }
+        
+        if (!re.test(App.createUser.emailAddressToInvoice)) {
+            alert(App.translateText("Epost til teknisk leder er ugyldig, sjekk at du har oppgitt riktig epostaddresse"));
+            return;
+        }
+       
+        if (App.lang === "se" && (App.createUser.group === "ddcdcab9-dedf-42e1-a093-667f1f091311" || App.createUser.group === "608c2f52-8d1a-4708-84bb-f6ecba67c2fb" )) {
+            var val = $('#realregisterschema #create_user_kundnummer').val();
+            
+            if (val.length < 7 || val.length > 13) {
+                alert(App.translateText('Your customerid can not be less then 7 digits or more then 13 digits.'));
+                return;
+            }
+
+            if (isNaN(val)) {
+                alert(App.translateText('Your customerid can only be numbers'));
+                return;
+            }
+        }
+        
+        
+        App.getshopApi.UserManager.doEmailExists(App.createUser.emailAddress).done(function(result) {
+            if (result) {
+                alert(App.translateText("Det finnes allerede en konto registrert på epost") + " " + App.createUser.emailAddress + App.translateText(", prøv å gjenopprett passordet istedenfor å lage en ny"));
+            } else {
+                App.goToCompanySearch();
+            }
+        });
+    },
+    
+    goToCompanySearch: function() {
+        var container = $('#create_new_user .content');
+        container.html("");
+        var schema = $('#searchcompanyschema').clone();
+        schema.attr('id', 'realsearchcompanyschema');
+        schema.find('#search_for_company').tap(App.doSearchForCompany);
+        container.html(schema);
+        $('#create_new_user').trigger('create');        
+    },
+    
+    doSearchForCompany: function() {
+        var searchRestultContainer = $('#realsearchcompanyschema .companyresult');
+        
+        App.getshopApi.UtilManager.getCompaniesFromBrReg($('#realsearchcompanyschema #create_user_serach_company').val()).done(function(result) {
+            if (!result.length) {
+                searchRestultContainer.html("<br/><center>"+App.translateText("Fant ikke firmaet du søkte etter, prøv på nytt")+"</center>");
+            } else {
+                searchRestultContainer.html("<br/><center>"+App.translateText("Velg ditt firma fra listen under")+"</center>");
+                searchRestultContainer.append("<br/>");
+                for (var i in result) {
+                    var company = result[i];
+                    var companyDiv = $("<div/>");
+                    companyDiv.addClass('companyselector');
+                    companyDiv.attr('vatnumber', company.vatNumber);
+                    companyDiv.append(company.name);
+                    companyDiv.append("<br/>"+company.vatNumber);
+                    companyDiv.tap(function() {
+                        App.companySelected($(this).attr('vatnumber'));
+                    });
+                    searchRestultContainer.append(companyDiv);
+                }
+            }
+         });
+    },
+    
+    companySelected: function(data) {
+        var password = Math.floor(Math.random() * 98440) + 11820;
+        App.createUser.birthDay = data;
+        App.createUser.company = App.getshopApi.UtilManager.getCompanyFromBrReg(data);
+        App.createUser.password = password;
+        
+        App.getshopApi.UserManager.createUser(App.createUser).done(function(user) {
+            alert(App.translateText("Takk, du har nå opprettet en konto er klar til å bruke appen. Du har nå blitt logget inn automatisk og en epost har blitt sendt til deg med ditt tildelte passord"))
+            localStorage.setItem("username", user.emailAddress);
+            localStorage.setItem("password", password);    
+            App.doLogin(true);
+        });
+        
+        
     },
     
     checkGps: function() {
@@ -1048,12 +1279,10 @@ App = {
             filters.push($(this).html().toUpperCase());
         });
         
-//        console.log(filters);
         $('.list_view_entry_entry').removeClass('hidden');
         $('.monthcontainer').show();
         if (filters.length > 0) {
             $('.list_view_entry_entry').each(function () {
-    //            console.log(filters.indexOf($(this).attr('location').toUpperCase()));
                 if (filters.indexOf($(this).attr('location').toUpperCase()) < 0) {
                     $(this).addClass('hidden');
                 } 
@@ -1145,7 +1374,6 @@ App = {
         }
     },
     onNotificationGCM: function (e) {
-        console.log("My token" + e.regid);
         
         switch (e.event)
         {
@@ -1157,7 +1385,6 @@ App = {
                 break;
 
             case 'message':
-                console.log(e);
                 // this is the actual push notification. its format depends on the data model from the push server
                 if (e.foreground) {
                     App.loadNews(true);
@@ -1304,7 +1531,7 @@ App.Calendar.prototype = {
         return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
     },
     signUpForEvent: function(entryId, waitinglist) {
-        var result = confirm(App.translateText("Du er i ferd med å melde deg på dette kurset, ved å trykke OK har du bekreftet ProMeister's brukervillkår og du har bli meldt på kurset"));
+        var result = confirm(App.translateText("Du er i ferd med å melde deg på dette kurset, ved å trykke OK har du bekreftet ProMeister's brukervilkår og du har blitt meldt på kurset"));
         if (!result) {
             return;
         }

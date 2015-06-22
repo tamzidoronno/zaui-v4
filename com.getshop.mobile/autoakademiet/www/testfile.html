@@ -1,51 +1,25 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>ProMeister ACADEMY</title>
-
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-        <link rel="stylesheet" href="css/jquerymobile.css" charset="utf-8" />
-        <link rel="stylesheet" href="css/GetShop.css" charset="utf-8" />
-
-        <!-- GetShop Library -->
-        <script src="js/GetShopApiWebSocket.js" charset="utf-8" ></script>
-        <script type="text/javascript" src="js/GetShop.Page.js"></script>
-        <script type="text/javascript" src="js/GetShop.ContentManager.js"></script>
-        <script type="text/javascript" src="js/GetShop.ImageDisplayer.js"></script>
-        <!-- End -->
-        
-        <script type="text/javascript" src="js/index.js"></script>
-        
-        <script src="js/jquery.js" charset="utf-8" ></script>
-        <script src="js/date.js" charset="utf-8" ></script>
-        <script src="js/jquerymobile.js" charset="utf-8" ></script>
-        
-        <script src="js/app.js" charset="utf-8" ></script>
-
-        <link rel="stylesheet" href="ical/css/master.css" type="text/css" media="screen" charset="utf-8" />
-        <script src="ical/js/coda.js" type="text/javascript" charset="utf-8" ></script>
-
-        <link rel="stylesheet" href="css/theme.css" type="text/css" media="screen" charset="utf-8" />
-    </head>
-    <body>
-        
-    </body>
-</html>
-
-<script>
-    var api = new GetShopApiWebSocket("autoakademiet.mpal.getshop.com");
-    var page = new GetShop.Page(api, "64b4f714-cb63-42b0-8fc3-898228888ce1");
-    api.setConnectedEvent(
-        function() {
-            page.load();
-        }
-    );
-    api.connect();
-</script>
+Hei, {name}<br><br>
+Tusen takk for din reservasjon av bod, vi vil kontakte deg. <br><br>
+Sem Lagerhotell bekrefter å ha mottatt følgende reservasjon:.<br><br>
+Bod: {roomName}<br>
+Startdato: {checkin_date}.<br>
+Referansenummer: {referenceNumber}.<br>
+<br>
+Følgende kontaktinformasjon er mottatt:<br>
+{contacts}<br>
+{email}<br>
+{address}<br>
+{postCode}<br>
+{city}<br>
+<br/>
+NB!
+Tildeling av bod skjer vanligvis innenfor kontortid, hverdager klokken 8.00-16.00 <br>
+Her er vi: <a href='https://www.google.no/maps/place/Sem+Lagerhotell.no+AS/@59.28437,10.334376,17z/data=!3m1!4b1!4m2!3m1!1s0x4646b7ced499b437:0xeda36b712add8d8?hl=no'>https://www.google.no/maps/place/Sem+Lagerhotell.no+AS/@59.28437,10.334376,17z/data=!3m1!4b1!4m2!3m1!1s0x4646b7ced499b437:0xeda36b712add8d8?hl=no</a>
+<br><br>
+Leie av henger kun kr 299,- pr døgn, vi anbefaler at hengeren bestilles på forhånd.
+Vi selger flytteesker av høykvalitet med mål 38 x 58 cm pris pr stk kr 25,-.10 stk kr 199,-
+<br><br>
+Spørsmål?<br>
+Ring Knut Martin Bakka 46 19 00 00 eller epost kmb@semlagerhotell.no  
+<br><br>
+<div><img src='http://www.semlagerhotell.no/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images/logo_for_email.png'></div><br><br>

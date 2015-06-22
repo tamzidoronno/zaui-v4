@@ -572,3 +572,79 @@ html body .ui-group-theme-a .ui-bar-inherit {
     top: 15px;
     font-size: 25px;
 }
+
+
+.your_course_entry .course_my_page_date {
+    font-size: 12px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 10px;
+    background-color: rgba(200,200,200,0.4);
+    
+    border-radius: 0px 0px 0px 5px;
+}
+
+.my_course_header {
+    border: solid 1px #EEE;;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px; margin-right: 20px;
+    background-color: #FFF;
+}
+.your_course_entry {
+    position: relative;
+    border: solid 1px #EEE;
+    border-radius: 5px;
+    text-align: left;
+    padding: 20px;
+    margin: 20px;
+    
+    background: rgba(226,226,226,0.88);
+    background: -moz-linear-gradient(-45deg, rgba(226,226,226,0.88) 0%, rgba(209,209,209,0.96) 69%, rgba(219,219,219,0.96) 70%, rgba(254,254,254,1) 100%);
+    background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(226,226,226,0.88)), color-stop(69%, rgba(209,209,209,0.96)), color-stop(70%, rgba(219,219,219,0.96)), color-stop(100%, rgba(254,254,254,1)));
+    background: -webkit-linear-gradient(-45deg, rgba(226,226,226,0.88) 0%, rgba(209,209,209,0.96) 69%, rgba(219,219,219,0.96) 70%, rgba(254,254,254,1) 100%);
+    background: -o-linear-gradient(-45deg, rgba(226,226,226,0.88) 0%, rgba(209,209,209,0.96) 69%, rgba(219,219,219,0.96) 70%, rgba(254,254,254,1) 100%);
+    background: -ms-linear-gradient(-45deg, rgba(226,226,226,0.88) 0%, rgba(209,209,209,0.96) 69%, rgba(219,219,219,0.96) 70%, rgba(254,254,254,1) 100%);
+    background: linear-gradient(135deg, rgba(226,226,226,0.88) 0%, rgba(209,209,209,0.96) 69%, rgba(219,219,219,0.96) 70%, rgba(254,254,254,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe', GradientType=1 );
+    
+    border: solid 1px #DDD;
+}
+
+.home_information {
+    padding: 10px;
+    border: dashed 1px #DDD;
+    color: #666;
+}
+
+.select_group img {
+    max-height: 100px;
+    max-width: 300px;
+}
+.select_group {
+    text-align: center;
+    border: solid 1px #DDD;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #F9F9F9;
+    padding: 20px;
+}
+
+#searchcompanyschema,
+#registerschema {
+    display: none;
+}
+
+.companyselector {
+    text-align: center;
+    border: solid 1px #DDD;
+    background-color: #F9F9F9;
+    padding: 10px;
+    margin: 10px;
+}
+
+.mecaid,
+.meknomenid  {
+    display: none;
+}

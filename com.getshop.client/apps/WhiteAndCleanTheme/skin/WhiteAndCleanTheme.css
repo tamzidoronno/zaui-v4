@@ -85,3 +85,27 @@ body {
     background: linear-gradient(to bottom,  #f6e6b4 0%,#ed9017 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6e6b4', endColorstr='#ed9017',GradientType=0 ); /* IE6-9 */
 }
+
+.gs_language_selection {
+    border: solid 0px;
+    position: absolute;
+    right: 10px;
+}
+
+.gs_language_selection .gs_lang_code_nb_NO {
+    background-image: url('{IMAGEFOLDER}/flag_norwegian.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 35px;
+}
+
+.gs_language_selection .gs_lang_code_en_en {
+    background-image: url('{IMAGEFOLDER}/flag_english.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 30px;
+}

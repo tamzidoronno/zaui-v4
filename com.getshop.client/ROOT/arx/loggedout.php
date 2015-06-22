@@ -66,10 +66,20 @@ Created by GetShop<br> post@getshop.com <br>+47 940 10 704
 </style>
 
 <script>
+    var hostname = localStorage.getItem('hostname');
+    if(hostname && !$('input[name="hostname"]').val()) {
+        $('input[name="hostname"]').val(hostname);
+    }
+    
 $('.logonbutton').click( function() {
     $( "#logonform" ).submit();
 });
-    
+
+$( "#logonform" ).submit(function() {
+    var hostname = $('input[name="hostname"]').val();
+    localStorage.setItem('hostname',hostname);
+});
+
 $( "#logonform" ).submit(function( event ) {
     $('.logonbutton').html('<i class="fa fa-spin fa-spinner"></i>');
 });

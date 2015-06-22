@@ -53,7 +53,7 @@ if(isset($_POST['logon']) || isset($_POST['username'])) {
 
 <div class="inputbox">
     <div class='savedetails'>
-        Save logon details
+        Add another setup
     </div>
 </div>
 <center>
@@ -66,10 +66,29 @@ Created by GetShop<br> post@getshop.com <br>+47 940 10 704
 </style>
 
 <script>
+    var hostname = localStorage.getItem('hostname');
+    if(hostname && !$('input[name="hostname"]').val()) {
+        $('input[name="hostname"]').val(hostname);
+    }
+    var username = localStorage.getItem('username');
+    if(username && !$('input[name="username"]').val()) {
+        $('input[name="username"]').val(username);
+    }
+    var password = localStorage.getItem('password');
+    if(hostname && !$('input[name="password"]').val()) {
+        $('input[name="password"]').val(password);
+    }
+    
 $('.logonbutton').click( function() {
     $( "#logonform" ).submit();
 });
-    
+
+$( "#logonform" ).submit(function() {
+    localStorage.setItem('hostname',$('input[name="hostname"]').val());
+    localStorage.setItem('username',$('input[name="username"]').val());
+    localStorage.setItem('password',$('input[name="password"]').val());
+});
+
 $( "#logonform" ).submit(function( event ) {
     $('.logonbutton').html('<i class="fa fa-spin fa-spinner"></i>');
 });

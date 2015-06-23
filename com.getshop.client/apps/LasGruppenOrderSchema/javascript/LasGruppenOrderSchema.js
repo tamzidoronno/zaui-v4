@@ -18,7 +18,10 @@ app.LasGruppenOrderSchema = {
         $(document).on('click', '.LasGruppenOrderSchema .button_area .prev', app.LasGruppenOrderSchema.prev);
         $(document).on('click', '.LasGruppenOrderSchema .button_area .next', app.LasGruppenOrderSchema.next);
         $(document).on('click', '.LasGruppenOrderSchema .login_button', app.LasGruppenOrderSchema.loginClicked);
-        $(document).on('click', '.LasGruppenOrderSchema .dologin', app.LasGruppenOrderSchema.doLogin);
+        $(document).on('click', '.LasGruppenOrderSchema .loginform .dologin', app.LasGruppenOrderSchema.doLogin);
+        $(document).on('click', '.LasGruppenOrderSchema .request_new_pincode', app.LasGruppenOrderSchema.requestNewPincode);
+        $(document).on('click', '.LasGruppenOrderSchema .signin', app.LasGruppenOrderSchema.signin);
+        $(document).on('click', '.LasGruppenOrderSchema .logout_button', app.LasGruppenOrderSchema.logout_button);
         
         $(document).on('change', '#invoice_company_name', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_address', app.LasGruppenOrderSchema.changeDeliveryInformation);
@@ -27,18 +30,64 @@ app.LasGruppenOrderSchema = {
         $(document).on('change', '#invoice_emailaddress', app.LasGruppenOrderSchema.changeDeliveryInformation);
     },
     
+    logout_button: function() {
+        var event = thundashop.Ajax.createEvent(null, "logout", this, {});
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            document.location = "/";
+        });
+    },
+    requestNewPincode: function() {
+        var data = {
+            username : $('.LasGruppenOrderSchema .loginform .username').val(),
+            password : $('.LasGruppenOrderSchema .loginform .password').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "requestPincode", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            if (result === "success") {
+                alert("En ny kode er sendt til din mobil.");
+            } else {
+                alert("Klarte ikke å sende ny kode, ta kontakt med Certego");
+            }
+        });
+    },
+    
+    signin: function() {
+        var data = {
+            username : $('.LasGruppenOrderSchema .loginform .username').val(),
+            password : $('.LasGruppenOrderSchema .loginform .password').val(),
+            pincode : $('.LasGruppenOrderSchema .loginform_picode .pincode').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "loginWithPincode", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            if (result === "success") {
+                document.location = "/";
+            } else {
+                alert("Kontroler pinkoden din.");
+            }
+        });
+    },
+    
     doLogin: function() {
         var data = {
             username : $('.LasGruppenOrderSchema .loginform .username').val(),
             password : $('.LasGruppenOrderSchema .loginform .password').val()
         }
         
-        
         var event = thundashop.Ajax.createEvent(null, "doLogin", this, data);
-        
         thundashop.Ajax.postWithCallBack(event, function(result) {
-            alert(result);
+            if (result === "success") {
+                app.LasGruppenOrderSchema.showPincodeRequest();
+            } else {
+                alert("Feil brukernavn eller passord, prøv igjen");
+            }
         });
+    },
+    
+    showPincodeRequest: function() {
+        $('.LasGruppenOrderSchema .loginform').hide();
+        $('.LasGruppenOrderSchema .loginform_picode').show();
     },
     
     loginClicked: function() {

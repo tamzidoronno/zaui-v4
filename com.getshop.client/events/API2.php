@@ -6132,6 +6132,24 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return core_usermanager_data_User
+	* @throws ErrorException
+	*/
+
+	public function checkUserNameAndPassword($username, $password) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
+	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $data["method"] = "checkUserNameAndPassword";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Create a new user to your webshop.<br>
 	* This will fail if you are trying to create a user which is granted more access then you have yourself.<br>
 	* If no users has been created, then the user object will automatically be set as an administrator.<br>
@@ -6447,6 +6465,25 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return core_usermanager_data_User
+	* @throws ErrorException
+	*/
+
+	public function loginWithPincode($username, $password, $pinCode) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
+	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $data['args']["pinCode"] = json_encode($this->transport->object_unset_nulls($pinCode));
+	     $data["method"] = "loginWithPincode";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Sometimes it is needed for someone to logon using a generated key instead.<br>
 	* The key is unique and attached to the user trying to logon.<br>
 	* Whenever someone logs on using the key,<br> it will automatically be removed, this it is only valid once.<br>
@@ -6533,6 +6570,24 @@ class APIUserManager {
 	     $data["method"] = "requestAdminRight";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return boolean
+	* @throws ErrorException
+	*/
+
+	public function requestNewPincode($username, $password) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
+	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $data["method"] = "requestNewPincode";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

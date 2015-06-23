@@ -8,9 +8,13 @@
     ?>
         <div class="certego_login">
             <div class='loginform'>
-                <input type='textfield' placeholder='brukernavn'/>
-                <input type='password' placeholder='passord'/>
-                <div class='dologin'><i class="fa fa-play"></i></div>
+                <input type='textfield' placeholder='brukernavn' class='username'/>
+                <input type='password' placeholder='passord' class='password'/>
+                <div class='certego_login_button dologin'><i class="fa fa-play"></i></div>
+            </div>
+            <div class='loginform_picode'>
+                <input type='password' placeholder='pincode' class='pincode'/>
+                <div class='certego_login_button request_new_pincode'>Bestill ny kode</div><div class='certego_login_button signin'><i class="fa fa-play"></i></div>
             </div>
             <div>
                 <div class='shop_button login_button'>
@@ -18,6 +22,17 @@
                 </div>
             </div>
         </div>
+    <?
+    } else {
+    ?>
+        <div class="certego_login">
+            <div>
+                <div class='shop_button logout_button'>
+                    <i class="fa fa-key"></i> Logg ut
+                </div>
+            </div>
+        </div>
+        
     <?
     }
     ?>

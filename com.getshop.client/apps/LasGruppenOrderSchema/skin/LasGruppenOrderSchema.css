@@ -204,11 +204,19 @@ and open the template in the editor.
     float: right;
 }
 
-.LasGruppenOrderSchema .loginform .dologin {
+
+.LasGruppenOrderSchema .loginform_picode,
+.LasGruppenOrderSchema .loginform {
+    display: none;
+}
+
+.LasGruppenOrderSchema .certego_login_button {
     border: solid 2px #ff8c37;
     padding: 7px;
     display: inline-block;
+    cursor: pointer;
 }
+
 .LasGruppenOrderSchema .loginform {
     display: none;
 }

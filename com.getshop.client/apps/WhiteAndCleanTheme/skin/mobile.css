@@ -106,3 +106,18 @@ padding-bottom: 10px; }
     padding-top: 10px;
     padding-right: 10px;
 }
+
+.gsmobilemenuentry {
+    display: none;
+}
+.gsmobiletopmenu {
+    display: block;
+    width: 100%;
+    background-color: #62be73 !important;
+    background: none;
+}
+
+.gsmobilemenuinstance .entry,
+.gsmobilemenuinstance {
+    background-color: #62be73 !important;
+}

@@ -14,7 +14,7 @@ App = {
     token: "",
     firstConnected: false,
     numberOfMonthToShowInCalendar: 6,
-    lang: 'no',
+    lang: 'se',
     version: 1,
     start: function () {
         this.setLanguageMode();
@@ -173,7 +173,40 @@ App = {
             'Fant ikke din region, trykk her for å prøve igjen': 'Hittar inget i ditt område, klicka här för att göra ny sökning',
             'Trykk på selskapet under for å velge det': 'Klicka på rätt företag i listan nedan',
             'Skriv inn ditt firmanavn og trykk på søk, da vil resultatet vises her og du kan velge selskapet du tilhører.': 'Hitta dit företag genom att fylla i hela org.nr i fältet ovan. I vissa fall går det även bra att söka på företagsnamn',
-            'Trykk på kursstedene for å velge, når du har valgt stedene du ønsker å se trykk så ferdig' : 'Välj önskade kursorter och tryck sedan Färdig'
+            'Trykk på kursstedene for å velge, når du har valgt stedene du ønsker å se trykk så ferdig' : 'Välj önskade kursorter och tryck sedan Färdig',
+            
+            'Ny bruker? - Opprett konto her' : 'Ny användare? Registrera dig här',
+            'Logg inn' : 'Logga in',
+            'Brukernavn' : 'Användarnamn',
+            'Passord' : 'Lösenord',
+            'Velkommen til ProMeister Academy, appen som gir deg kunnskapspåfylling med noen enkle tastetrykk.' : 'Välkommen till ProMeister Academy, appen som ger dig kompetensutveckling med några enkla klick.',
+            'Logger inn... Vennligst vent' : 'Loggar in… Vänligen vänta',
+            'Feil brukernavn eller passord' : 'Fel användarnamn eller lösen',
+            'Logg ut' : 'Logga ut',
+            'Du er i ferd med å melde deg på dette kurset, ved å trykke OK har du bekreftet ProMeister sine brukervilkår og du har blitt meldt på kurset' : 'Då är nästan klar med din anmälan, genom att klicka på OK godkänner du ProMeister\'s användarvillkor och blir sedan anmäld på kursen',
+            'Dine kurs' : 'Dina kurser',
+            'Du har ikke deltatt på noen kurs enda' : 'Du har ännu inte deltagit på någon kurs',
+            'Kurs du skal delta på' : 'Kurs/er som du är anmäld till',
+            'Du har gjennomført følgende kurs' : 'Du har genomfört följande kurs/er',
+            'En epost har blitt sendt til deg med nye kode.' : 'Ett epostmeddelande har skickats till dig med ditt nya lösen.',
+            'Fant ikke brukeren ved oppgitt brukernavn.' : 'Kunde inte hitta användaren med angivet användarnamn.',
+            'Ditt navn' : 'Ditt namn',
+            'Din epostaddresse' : 'Din epostadress',
+            'Teknisk leders epostaddresse' : 'Verkstadens epostadress',
+            'Ditt telefonnr' : 'Ditt telefonnr',
+            'Du har deltatt på' : 'Du har deltagit på',
+            'kurs' : 'kurs/er',
+            'Reset password' : 'Nollställ lösenord',
+            'Det finnes allerede en konto registrert på epost' : 'Det finns redan ett konto registrerat på',
+            ', prøv å gjenopprett passordet istedenfor å lage en ny' : ', prova att återställa lösenordet istället för att skapa ett nytt konto',
+            'Navnet ditt kan ikke være blank' : 'Namnfältet får inte vara tomt',
+            'Epost kan ikke være blank' : 'Epostfältet får inte vara tomt',
+            'Ugyldig telefonnr' : 'Ogiltigt telefonnr',
+            'Din epostaddresse er ugyldig, sjekk at du har oppgitt riktig epostaddresse' : 'Ogiltig epostadress, kontrollera att du uppgett korrekt epostadress',
+            'Epost til teknisk leder er ugyldig, sjekk at du har oppgitt riktig epostaddresse' : 'Epost till verkstaden är ogiltig, kontrollera att uppgett korrekt epostadress',
+            'Fant ikke firmaet du søkte etter, prøv på nytt' : 'Kunde inte hitta firman du sökte efter, prova igen',
+            'Takk, du har nå opprettet en konto og er klar til å bruke appen. Du har blitt logget inn automatisk og en epost har blitt sendt til deg med ditt tildelte passord' : 'Tack, du har nu skapat ett konto och färdig att använda appen. Du är nu automatiskt inloggad och ett epostmeddelande har skickats med ditt lösenord.',
+            'Du har en gammel versjon av appen, last ned og installer appen på nytt for å sikre deg om at alt av funksjonalitet fungerer slik som det skal' : 'Du har en gammal version av appen, ladda ner senaste versionen för att säkerställa funktionen.'
         }
 
         // No is default language
@@ -856,7 +889,8 @@ App = {
             for (var i in result) {
                 var groupData = result[i];
                 var div = $('<div/>');
-                div.append('<img src="http://'+App.address+'/displayImage.php?id='+groupData.imageId+'"/>');
+                if (groupData.imageId)
+                    div.append('<img src="http://'+App.address+'/displayImage.php?id='+groupData.imageId+'"/>');
                 div.attr('groupId', groupData.id);
                 div.addClass('select_group');
                 div.append("<br/>"+groupData.groupName);
@@ -1531,7 +1565,7 @@ App.Calendar.prototype = {
         return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
     },
     signUpForEvent: function(entryId, waitinglist) {
-        var result = confirm(App.translateText("Du er i ferd med å melde deg på dette kurset, ved å trykke OK har du bekreftet ProMeister's brukervilkår og du har blitt meldt på kurset"));
+        var result = confirm(App.translateText("Du er i ferd med å melde deg på dette kurset, ved å trykke OK har du bekreftet ProMeister sine brukervilkår og du har blitt meldt på kurset"));
         if (!result) {
             return;
         }

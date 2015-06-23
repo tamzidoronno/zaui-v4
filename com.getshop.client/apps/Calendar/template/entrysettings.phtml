@@ -1,5 +1,30 @@
+<?
+/* @var $this \ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
+$entry = $this->getApi()->getCalendarManager()->getEntry($_POST['data']['entryId']);
+$event = $entry->event;
 
+?>
 <div style='border-top: dashed 1px #FFF; margin-top: 20px;'>
+    
+    <div>
+        <center><? echo $this->__f("Attendees"); ?></center>
+        <table>
+        <?
+        foreach ($entry->attendees as $userid) {
+            $user = $this->getApi()->getUserManager()->getUserById($userid);  
+            if (!$user)
+                continue;
+            
+            $hasPaid = $this->hasPaid($entry, $userid) ? "Betalt" : "Ikke betalt";
+        ?>
+            <tr><td><? echo $user->fullName; ?></td><td><? echo $user->emailAddress; ?></td><td><? echo $user->cellPhone; ?></td><td><? echo $hasPaid; ?></td></tr>
+        
+        
+        <?
+        }
+        ?>
+        </table>
+    </div>
     <center><h1>Admin settings</h1></center>
     <div class="shop_button deleteentry" entryid="<? echo $_POST['data']['entryId']; ?>">Delete event</div>
     <div class='participantlist'>

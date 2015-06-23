@@ -838,5 +838,24 @@ class Calendar extends MarketingApplication implements Application {
             $this->includefile("entrysettings");
         }
     }
+
+    public function hasPaid($entry, $userid) {
+        $foundOrderId = "";
+        
+        foreach($entry->ordersVsUsers as $orderId => $userList) {
+            if (in_array($userid, $userList)) {
+                $foundOrderId = $orderId;
+                break;
+            }
+        }
+        
+        $order = $this->getApi()->getOrderManager()->getOrder($foundOrderId);
+        if ($order) {
+            return $order->status == 4;
+        }
+        
+        return false;
+    }
+
 }
 ?>

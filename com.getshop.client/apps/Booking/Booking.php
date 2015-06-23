@@ -57,12 +57,41 @@ class Booking extends \MarketingApplication implements \Application {
         $priceChildren = $entry->event->priceChild * $children;
         $total = $priceAdults + $priceChildren;
         echo "<div class='booking_result'>";
-        echo "<div class='resultrow'><div class='summary_row_col1'></div><div class='summaryprice'>Pris</div></div>";
+        echo "<div class='resultrow'><div class='summary_row_col1'></div><div class='summaryprice'>".$this->__w("Price")."</div></div>";
         echo "<div class='resultrow'><div class='summary_row_col1'>Antall voksne: $adults </div><div class='summaryprice'>Kr $priceAdults,-</div></div>";
         echo "<div class='resultrow'><div class='summary_row_col1'>Antall barn: $children </div><div class='summaryprice'>Kr $priceChildren,-</div></div>";
         echo "<div class='resultrow sumup'><div class='summary_row_col1 '>Totalt </div><div class='summaryprice'>Kr $total,-</div></div>";
         echo "<div>";
         
+    }
+    
+    public function completeOrder() {
+        $entry = $this->getApi()->getCalendarManager()->getEntry($_POST['data']['entryId']);
+        
+        $calendarOrder = new \core_calendarmanager_data_CalendarOrder();
+        $calendarOrder->entryId = $_POST['data']['entryId'];
+        $calendarOrder->orderLines = [];
+        
+        foreach ($_POST['data']['persons'] as $person) {
+            $orderLine = new \core_calendarmanager_data_OrderLine();
+            if ($person['children'] == "true") {
+                $orderLine->price = $entry->event->priceChild;
+            } else {
+                $orderLine->price = $entry->event->priceAdults;
+            }
+         
+            $orderLine->fullName = $person['name'];
+            $orderLine->emailAddress = $person['email'];
+            $orderLine->cellPhone = $person['cellphone'];
+            $orderLine->isChild = $person['children'];
+            $calendarOrder->orderLines[] = $orderLine;
+        }
+        
+        
+        $odreid = $this->getApi()->getCalendarManager()->placeOrder($calendarOrder);
+        echo "<script>";
+        echo "document.location='/index.php?page=cart&payOrderId=$odreid'";
+        echo "</script>";
     }
 }
 ?>

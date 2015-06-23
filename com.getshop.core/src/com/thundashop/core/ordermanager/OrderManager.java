@@ -337,8 +337,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 content += "We received a payment notification from paypal for order: " + orderId + " which is incorrect.<br>";
                 content += "The price or the currency differ from what has been registered to the order.<br>";
                 
-                String to = storeManager.getMyStore().configuration.emailAdress;
-                mailFactory.send("post@getshop.com", to, "Possible fraud attempt", content);
                 mailFactory.send("post@getshop.com", "post@getshop.com", "Possible fraud attempt", content);
             }
         } else {

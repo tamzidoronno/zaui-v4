@@ -1,5 +1,6 @@
 package com.thundashop.core.calendar;
 
+import com.thundashop.core.calendarmanager.data.CalendarOrder;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.Event;
 import com.thundashop.core.calendarmanager.data.EventPartitipated;
@@ -268,4 +269,6 @@ public interface ICalendarManager {
     public Event getEvent(String eventId);
     
     public List<Event> getEvents();
+    
+    public String placeOrder(CalendarOrder order);
 }

@@ -782,6 +782,20 @@ class APICalendarManager {
 	}
 
 	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function placeOrder($core_calendarmanager_data_CalendarOrder) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_calendarmanager_data_CalendarOrder"] = json_encode($this->transport->object_unset_nulls($core_calendarmanager_data_CalendarOrder));
+	     $data["method"] = "placeOrder";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Remove a given user from a given event.
 	* @param userId The userid for the event to be removed. (see usermanager for more inforamtion about this id)
 	* @param eventId The id of the event for the user to be removed from.

@@ -845,6 +845,21 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def placeOrder(self, order):
+    args = collections.OrderedDict()
+    if isinstance(order,GetShopBaseClass): 
+      args["order"]=json.dumps(order.__dict__)
+    else:
+      try:
+        args["order"]=json.dumps(order)
+      except (ValueError, AttributeError):
+        args["order"]=order
+    data = EmptyClass()
+    data.args = args
+    data.method = "placeOrder"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def removeUserFromEvent(self, userId, eventId):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 

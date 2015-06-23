@@ -2,6 +2,33 @@ app.Booking = {
     init: function() {
         $(document).on('change', '.Booking .select_persons', this.personsChanged);
         $(document).on('change', '.Booking .children', this.personsChanged);
+        $(document).on('click', '.Booking .calendar_go_to_payment', this.goToPayment);
+    },
+    
+    goToPayment: function() {
+        var data = {
+            entryId: $('#entry_id_to_order').val(),
+            persons: []
+        };
+        
+        $('.Booking .personrow').each(function() {
+            if ($(this).is(':visible')) {
+                var person = {
+                    name : $(this).find('.name').val(),
+                    email : $(this).find('.email').val(),
+                    cellphone : $(this).find('.cellphone').val(),
+                    children : $(this).find('.children').is(':checked')
+                }
+                
+                data.persons.push(person);
+            }
+        });
+        
+        var event = thundashop.Ajax.createEvent(null, 'completeOrder', $('.Booking'), data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.Booking .order_summary_booking').html(result);
+        })
+        
     },
     
     personsChanged: function() {

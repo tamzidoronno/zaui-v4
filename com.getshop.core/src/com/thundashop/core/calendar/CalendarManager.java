@@ -2,6 +2,7 @@ package com.thundashop.core.calendar;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.calendarmanager.data.AttendeeMetaInfo;
+import com.thundashop.core.calendarmanager.data.CalendarOrder;
 import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.EntryComment;
@@ -11,17 +12,26 @@ import com.thundashop.core.calendarmanager.data.ExtraDay;
 import com.thundashop.core.calendarmanager.data.FilterResult;
 import com.thundashop.core.calendarmanager.data.Location;
 import com.thundashop.core.calendarmanager.data.Month;
+import com.thundashop.core.calendarmanager.data.OrderLine;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.calendarmanager.data.Signature;
+import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserDeletedEventListener;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
@@ -62,6 +72,15 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
     
     @Autowired
     private UserManager userManager;
+    
+    @Autowired
+    private CartManager cartManager;
+    
+    @Autowired
+    private ProductManager productManager;
+    
+    @Autowired
+    private OrderManager orderManager;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -1136,4 +1155,66 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         return events.get(eventId);
     }
 
+    @Override
+    public String placeOrder(CalendarOrder order) {
+        Entry entry = getEntry(order.entryId);
+        if (entry == null) {
+            return "";
+        }
+        
+        cartManager.clear();
+        Product product = getProductFromEntry(entry);
+        
+        String firstOrderUserId = "";
+        for (OrderLine orderLine : order.orderLines) {
+            User user = new User();
+            user.fullName = orderLine.fullName;
+            user.emailAddress = orderLine.emailAddress;
+            user.cellPhone = orderLine.cellPhone;
+            user.address = new Address();
+            user.address.fullName = orderLine.fullName;
+            user.address.emailAddress = orderLine.emailAddress;
+            user.address.phone = orderLine.cellPhone;
+            
+            User userSaved = userManager.createUser(user);
+        
+            if (firstOrderUserId.isEmpty()) 
+                firstOrderUserId = userSaved.id;
+            
+            CartItem cartItem = cartManager.addProductItem(product.id, 1);
+            cartItem.getProduct().name = cartItem.getProduct().name + ", "+entry.day +"/"+entry.month+"-"+entry.year +" ( " + userSaved.fullName + " / " + userSaved.cellPhone + " / " + userSaved.emailAddress + " )";
+            
+            entry.attendees.add(user.id);
+        }
+        
+        Order orderSaved = orderManager.createOrderForUser(firstOrderUserId);
+        int i = 0;
+        for (OrderLine orderLine : order.orderLines) {
+            Product iproduct = orderSaved.cart.getItems().get(i).getProduct();
+            iproduct.price = orderLine.price;
+            orderSaved.cart.getItems().get(i).getProduct().price = orderLine.price;
+            i++;
+        }
+        
+        orderManager.saveOrder(orderSaved);
+        
+        for (Month month : months.values()) {
+            saveObject(month);
+        }
+        
+        return orderSaved.id;
+    }
+
+    private Product getProductFromEntry(Entry entry) {
+        Product product = productManager.getProduct(entry.entryId);
+        if (product == null) {
+            product = new Product();
+            product.name = entry.event.title;
+            product.price = 0;
+            product.id = entry.entryId;
+            productManager.saveProduct(product);
+        }
+        
+        return product;
+    }
 }

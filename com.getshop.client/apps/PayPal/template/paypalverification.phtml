@@ -24,13 +24,9 @@ foreach ($myPost as $key => $value) {
 $orderid = $_GET['orderid'];
 
 $factory = $this->getFactory();
-$mode = $this->getMode();
+$sandobox = $this->isSandbox();
 
-if($factory->getConfigurationFlag("devMode") == "true") {
-    $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
-} else if($orderid == "applications") {
-    $url = "https://www.paypal.com/cgi-bin/webscr";
-} else if(isset($mode->{'sandbox'}) && $mode->{'sandbox'}->value=="true") {
+if($sandobox) {
     $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
 } else {
     $url = "https://www.paypal.com/cgi-bin/webscr";

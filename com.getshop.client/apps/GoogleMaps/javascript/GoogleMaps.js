@@ -81,9 +81,17 @@ thundashop.app.GoogleMaps.prototype = {
                 maxZoom: parseInt(scope.config.maxZoom)
             }
             scope.mapOptions = mapOptions;
+            console.log("container: " + scope.config.container);
             scope.mapDiv = document.getElementById(scope.config.container);
             scope.map = new google.maps.Map(scope.mapDiv, scope.mapOptions);
-            var height = $(scope.mapDiv).closest('.gsucell').height() + "px";
+            var box = $(scope.mapDiv);
+            for(var i = 0; i < 10; i++) {
+                box = box.parents('.gsucell');
+                var height = box.height();
+                if(height !== 0) {
+                    break;
+                }
+            }
             $(scope.mapDiv).css('height',height);
             google.maps.event.trigger(scope.map,'resize');            
             scope.map.setCenter(center);

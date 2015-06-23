@@ -16,22 +16,22 @@ $config->{'container'} = "map_canvas_".$rand;
     }
     ?>
         
-    gooleAppsLoadedDeffered = $.Deferred();
-    gooleAppsLoadedDeffered.done(function() {
-        var map = new thundashop.app.GoogleMaps( <? echo json_encode($config); ?>);
-        map.initialize(<? echo $draggable; ?>);    
+    gooleAppsLoadedDeffered_<? echo $rand; ?> = $.Deferred();
+    gooleAppsLoadedDeffered_<? echo $rand; ?>.done(function() {
+        var map_<? echo $rand; ?> = new thundashop.app.GoogleMaps( <? echo json_encode($config); ?>);
+        map_<? echo $rand; ?>.initialize(<? echo $draggable; ?>);    
     });
 
-    var waitForGoogleMapsToLoad = function() {
+    var waitForGoogleMapsToLoad_<? echo $rand; ?> = function() {
         if (typeof(thundashop.app.GoogleMaps) !== "function") {
-            setTimeout(waitForGoogleMapsToLoad, 100);
+            setTimeout(waitForGoogleMapsToLoad_<? echo $rand; ?>, 100);
         } else {
-            gooleAppsLoadedDeffered.resolve();
+            gooleAppsLoadedDeffered_<? echo $rand; ?>.resolve();
         }
     };
      
     $(document).ready(function() {
-        waitForGoogleMapsToLoad();
+        waitForGoogleMapsToLoad_<? echo $rand; ?>();
     });
     
 </script>

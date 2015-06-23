@@ -11,8 +11,8 @@ foreach($doors as $door) {
     echo $door->name;
     echo "<div class='options'>";
     echo "<div class='optionentry pulsopen' externalId='".$door->externalId."' state='open'><i class='fa fa-unlock'></i> Open</div>";
-    echo "<div class='optionentry pulsopen' externalId='".$door->externalId."' state='forceOpen'><i class='fa fa-key'></i> Force open</div>";
-    echo "<div class='optionentry pulsopen' externalId='".$door->externalId."' state='forceClose'><i class='fa fa-lock'></i> Force close</div>";
+    echo "<div class='optionentry pulsopen' externalId='".$door->externalId."' state='forceopen'><i class='fa fa-key'></i> Force open</div>";
+    echo "<div class='optionentry pulsopen' externalId='".$door->externalId."' state='forceclose'><i class='fa fa-lock'></i> Force close</div>";
     echo "<a href='?page=dooraccesslog&id=".$door->externalId."'><div class='optionentry'><i class='fa fa-list'></i> Access log</div></a>";
     echo "</div>";
     echo "</div>";

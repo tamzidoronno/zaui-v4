@@ -21,7 +21,7 @@ mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( func
 
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
-ssh -T naxa@backend20.getshop.com << EOF > /dev/null
+ssh -T naxa@backend30.getshop.com << EOF > /dev/null
 /home/naxa/backup2.sh $1
 EOF
 
@@ -31,7 +31,7 @@ get dump.tar.gz
 EOF
 
 echo -e " Fetching database file from server";
-sftp -b batchfile naxa@backend20.getshop.com > /dev/null
+sftp -b batchfile naxa@backend30.getshop.com > /dev/null
 rm -rf batchfile;
 
 echo -e " Importing database to local";
@@ -45,7 +45,7 @@ rm -rf dump.tar.gz
 
 #transfer images
 echo -e " Syncing images";
-rsync -avz -e ssh naxa@frontend20.getshop.com:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
+rsync -avz -e ssh naxa@frontend30.getshop.com:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
 
 echo -e " Done!"
 echo -e " Note: if you wish to run resin on port 80 run: "

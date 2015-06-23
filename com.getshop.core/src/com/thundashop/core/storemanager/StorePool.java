@@ -141,7 +141,7 @@ public class StorePool {
             webAddress = webAddress.replace(".3.0.mpal.", ".3.0.");
             webAddress = webAddress.replace(".local.", ".");
             webAddress = webAddress.replace(".mlocal.", ".");
-            webAddress = webAddress.replace(".beta.", ".");
+            webAddress = webAddress.replace("beta.", ".");
             webAddress = webAddress.replace("gsmobile", "");
             webAddress = webAddress.replace(".mpal.", ".");
             webAddress = webAddress.replace(".dev.", ".");

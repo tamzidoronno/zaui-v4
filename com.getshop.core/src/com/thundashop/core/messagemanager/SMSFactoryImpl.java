@@ -25,10 +25,29 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import org.apache.axis.encoding.Base64;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -80,6 +99,94 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         storeId = storeApplicationPool.storeId;
     }
     
+    public static DefaultHttpClient wrapClient(DefaultHttpClient base) {
+        try {
+            SSLContext ctx = SSLContext.getInstance("TLS");
+            X509TrustManager tm = new X509TrustManager() {
+
+                public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
+                }
+
+                public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
+                }
+
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+            };
+            ctx.init(null, new TrustManager[]{tm}, null);
+            SSLSocketFactory ssf = new SSLSocketFactory(ctx);
+            ssf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            ClientConnectionManager ccm = base.getConnectionManager();
+            SchemeRegistry sr = ccm.getSchemeRegistry();
+            sr.register(new Scheme("https", ssf, 443));
+            return new DefaultHttpClient(ccm, base.getParams());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    
+     public String postSms(String src, String dst, String text, String msgId) {
+
+        DefaultHttpClient client = new DefaultHttpClient();
+        client = wrapClient(client);
+        HttpResponse httpResponse = null;
+        
+
+        HttpEntity entity;
+        byte[] bytes = ("MAMGUYNGZMMWMWOWM2MD:ODJjZmQyYjExZDZhMjdmMTg4YWI2MjJiZWQ3NDky").getBytes();
+        String encoding = Base64.encode(bytes);
+
+        try {
+            if(msgId == null) {
+                dst = dst.replace("+","");
+                HttpPost request = new HttpPost("https://api.plivo.com/v1/Account/MAMGUYNGZMMWMWOWM2MD/Message/");
+                request.addHeader("Authorization", "Basic " + encoding);
+
+                StringBody srcbody = new StringBody(src, ContentType.TEXT_PLAIN);
+                StringBody dstbody = new StringBody(dst, ContentType.TEXT_PLAIN);
+                StringBody textbody = new StringBody(text, ContentType.TEXT_PLAIN);
+
+                HttpEntity reqEntity = MultipartEntityBuilder.create()
+                        .addPart("src", srcbody)
+                        .addPart("dst", dstbody)
+                        .addPart("text", textbody)
+                        .build();
+
+                request.setEntity(reqEntity);
+                httpResponse = client.execute(request);
+            } else {
+                HttpGet request = new HttpGet("https://api.plivo.com/v1/Account/MAMGUYNGZMMWMWOWM2MD/Message/" + msgId);
+                request.addHeader("Authorization", "Basic " + encoding);
+                httpResponse = client.execute(request);
+           }
+
+            System.out.println("Now sending sms");
+            entity = httpResponse.getEntity();
+            System.out.println("Done sending sms");
+
+            if (entity != null) {
+                InputStream instream = entity.getContent();
+                int ch;
+                StringBuilder sb = new StringBuilder();
+                while ((ch = instream.read()) != -1) {
+                    sb.append((char) ch);
+                }
+                String result = sb.toString();
+                return result.trim();
+            }
+        } catch (ClientProtocolException e) {
+            client.getConnectionManager().shutdown();
+            e.printStackTrace();
+        } catch (IOException e) {
+            client.getConnectionManager().shutdown();
+            e.printStackTrace();
+        }
+        return "failed";
+    }
+    
+    
     @Override
     public void send(String from, String to, String message) {
         SMSFactoryImpl impl = new SMSFactoryImpl();
@@ -104,6 +211,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.from = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("from");
         impl.messageManager = messageManager;
         
+        
         new Thread(impl).start();
     }
     
@@ -120,56 +228,30 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         
         to = to.replace("+", "");
         
-        URL url;
-        InputStream is = null;
-        DataInputStream dis;
-        try {
-            message = URLEncoder.encode(message, "UTF-8");
-            if(from == null || from.isEmpty()) {
-                from = "GetShop";
-            }
-            String urlString = "https://rest.nexmo.com/sms/json?api_key=cffe6fd9&api_secret=9509ef6b&client-ref="+storeId+"&status-report-req=1&from="+from+"&to="+prefix+to+"&text="+message;
-            url = new URL(urlString);
-            dis = new DataInputStream(new BufferedInputStream(is));
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-
-            String content = "";
-            String inputLine;
-            while ((inputLine = in.readLine()) != null)
-                content += inputLine;
-            in.close();
-            
-            Gson gson = new Gson();
-            NexmoResponse response = gson.fromJson(content, NexmoResponse.class);
-            
-            if(response.messages.size() > 0) {
-                SmsLogEntry entry = new SmsLogEntry();
-                entry.responseCode = response.messages.get(0).status;
-                entry.message = message;
-                entry.to = to;
-                entry.apiId = apiId;
-                entry.prefix = prefix;
-                entry.from = from;
-                entry.network = response.messages.get(0).network;
-                entry.msgId = response.messages.get(0).msgId;
-                
-                this.messageManager.saveToLog(entry);
-            } else {
-                logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message);
-                System.out.println(content);
-                return;
-            }
-            
-        } catch (IOException ex) {
-            logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message, ex);
-            return;
-        } finally {
-            try { 
-                if (is != null)
-                    is.close(); 
-            } catch (IOException ioe) {}
+        if(from == null || from.isEmpty()) {
+            from = "GetShop";
         }
-        
+
+        Gson gson = new Gson();
+        String response = postSms(from, prefix+to, message, null);
+        PlivoResponse plivoresponse = gson.fromJson(response, PlivoResponse.class);
+
+        if(plivoresponse.message_uuid.size() > 0) {
+            SmsLogEntry entry = new SmsLogEntry();
+            entry.responseCode = "0";
+            entry.message = message;
+            entry.to = to;
+            entry.apiId = apiId;
+            entry.prefix = prefix;
+            entry.from = from;
+            entry.msgId = plivoresponse.message_uuid.get(0);
+
+            this.messageManager.saveToLog(entry);
+        } else {
+            logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message);
+            System.out.println(response);
+            return;
+        }
     }
 
     @Override
@@ -212,5 +294,13 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     @Override
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+    }
+
+    @Override
+    public String getMessageState(String msgId) {
+        String result = postSms(null, null, null, msgId);
+        Gson gson = new Gson();
+        PlivoMessageState state = gson.fromJson(result, PlivoMessageState.class);
+        return state.message_state;
     }
 }

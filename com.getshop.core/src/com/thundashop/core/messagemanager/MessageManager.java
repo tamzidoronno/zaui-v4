@@ -193,16 +193,25 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     @Override
     public List<SmsLogEntry> getSmsLog() {
         for(SmsLogEntry entry : smsLogEntries) {
-            if(entry.status == null && entry.msgId != null) {
-                SmsResponse response = getShop.getSmsResponse(entry.msgId);
-                if(response != null) {
-                    entry.errorCode = response.errCode;
-                    entry.delivered = response.deliveryTime;
-                    saveObject(entry);
+            
+            if(entry.errorCode == null || entry.errorCode.isEmpty()) {
+                if(!entry.tryPoll || entry.msgId == null) {
+                    continue;
                 }
+                if(!entry.delivered() && !entry.undelivered()) {
+                    if(entry.isOutDated()) {
+                        entry.tryPoll = false;
+                    }
+                    entry.errorCode = getMessageState(entry.msgId);
+                }
+                saveObject(entry);
             }
         }
         return smsLogEntries;
+    }
+
+    private String getMessageState(String msgId) {
+        return smsFactory.getMessageState(msgId);
     }
 
 }

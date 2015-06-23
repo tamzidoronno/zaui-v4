@@ -2914,6 +2914,35 @@ class MessageManager(object):
     data.interfaceName = "core.messagemanager.IMessageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def sendSms(self, to, message, prefix):
+    args = collections.OrderedDict()
+    if isinstance(to,GetShopBaseClass): 
+      args["to"]=json.dumps(to.__dict__)
+    else:
+      try:
+        args["to"]=json.dumps(to)
+      except (ValueError, AttributeError):
+        args["to"]=to
+    if isinstance(message,GetShopBaseClass): 
+      args["message"]=json.dumps(message.__dict__)
+    else:
+      try:
+        args["message"]=json.dumps(message)
+      except (ValueError, AttributeError):
+        args["message"]=message
+    if isinstance(prefix,GetShopBaseClass): 
+      args["prefix"]=json.dumps(prefix.__dict__)
+    else:
+      try:
+        args["prefix"]=json.dumps(prefix)
+      except (ValueError, AttributeError):
+        args["prefix"]=prefix
+    data = EmptyClass()
+    data.args = args
+    data.method = "sendSms"
+    data.interfaceName = "core.messagemanager.IMessageManager"
+    return self.communicationHelper.sendMessage(data)
+
 class MobileManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper

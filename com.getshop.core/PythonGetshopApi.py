@@ -6543,6 +6543,28 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def checkUserNameAndPassword(self, username, password):
+    args = collections.OrderedDict()
+    if isinstance(username,GetShopBaseClass): 
+      args["username"]=json.dumps(username.__dict__)
+    else:
+      try:
+        args["username"]=json.dumps(username)
+      except (ValueError, AttributeError):
+        args["username"]=username
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
+    data = EmptyClass()
+    data.args = args
+    data.method = "checkUserNameAndPassword"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def createUser(self, user):
     args = collections.OrderedDict()
     if isinstance(user,GetShopBaseClass): 
@@ -6794,6 +6816,35 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def loginWithPincode(self, username, password, pinCode):
+    args = collections.OrderedDict()
+    if isinstance(username,GetShopBaseClass): 
+      args["username"]=json.dumps(username.__dict__)
+    else:
+      try:
+        args["username"]=json.dumps(username)
+      except (ValueError, AttributeError):
+        args["username"]=username
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
+    if isinstance(pinCode,GetShopBaseClass): 
+      args["pinCode"]=json.dumps(pinCode.__dict__)
+    else:
+      try:
+        args["pinCode"]=json.dumps(pinCode)
+      except (ValueError, AttributeError):
+        args["pinCode"]=pinCode
+    data = EmptyClass()
+    data.args = args
+    data.method = "loginWithPincode"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def logonUsingKey(self, logonKey):
     args = collections.OrderedDict()
     if isinstance(logonKey,GetShopBaseClass): 
@@ -6880,6 +6931,28 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "requestAdminRight"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def requestNewPincode(self, username, password):
+    args = collections.OrderedDict()
+    if isinstance(username,GetShopBaseClass): 
+      args["username"]=json.dumps(username.__dict__)
+    else:
+      try:
+        args["username"]=json.dumps(username)
+      except (ValueError, AttributeError):
+        args["username"]=username
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
+    data = EmptyClass()
+    data.args = args
+    data.method = "requestNewPincode"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 

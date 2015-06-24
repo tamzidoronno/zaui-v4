@@ -91,11 +91,22 @@ $languages['fi_FI'] = "Finish";
     <div class="textfield gss_setting" id="uniqueusersonemail">
         <span class="title"><?php echo $this->__f("Force unique email addresses on users"); ?></span>
         <div class="gss_onoff" gs_model="storesettings" gs_model_attr="uniqueusersonemail">
-            <? $faclass = $this->getConfigurationSetting("uniqueusersonemail") == true ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? $faclass = $this->getConfigurationSetting("uniqueusersonemail") == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
             <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
         </div>
         <div class="description">
             <?php echo $this->__("If the same email is entered, it is forced as the same user if existing."); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting" id="doubleauthentication">
+        <span class="title"><?php echo $this->__f("Force users to login with pincode sent to phone"); ?></span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="doubleauthentication">
+            <? $faclass = $this->getConfigurationSetting("doubleauthentication") == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("This feature gives you an extra layer of security."); ?>
         </div>
     </div>
     

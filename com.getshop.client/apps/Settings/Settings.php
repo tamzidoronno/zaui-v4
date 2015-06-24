@@ -97,6 +97,7 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("language", $_POST['language']);
         $this->setConfigurationSetting("title", $_POST['title']);
         $this->setConfigurationSetting("uniqueusersonemail", $_POST['uniqueusersonemail']);
+        $this->setConfigurationSetting("doubleauthentication", $_POST['doubleauthentication']);
         $this->getApi()->getStoreManager()->setPrimaryDomainName($_POST['url']);
         $this->setConfigurationSetting("currencycode", "NOK");
     }

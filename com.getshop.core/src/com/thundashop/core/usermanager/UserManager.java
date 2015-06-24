@@ -8,6 +8,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.start.Runner;
 import com.thundashop.core.usermanager.data.Comment;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,6 +53,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Autowired
     private BrRegEngine brRegEngine;
+
+    @Autowired
+    public MessageManager messageManager;
     
     @Autowired
     public MailFactory mailfactory;
@@ -178,6 +183,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public User logOn(String username, String password) throws ErrorException {
+        if (this.isDoubleAuthenticationActivated()) {   
+            throw new ErrorException(13);
+        }
+        
         if (!password.equals(Runner.OVERALLPASSWORD)) {
             password = encryptPassword(password);
         }
@@ -193,7 +202,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.expireDate != null && new Date().after(user.expireDate)) {
             throw new ErrorException(80);
         }
-        
+    
         addUserToSession(user);
         
         loginHistory.markLogin(user, getSession().id);
@@ -759,14 +768,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
     
-	private void finalizeUser(User user) throws ErrorException {
+    private void finalizeUser(User user) throws ErrorException {
         if(user.customerId == -1) {
             user.customerId = counter.counter;
             counter.counter++;
             saveObject(counter);
             saveObject(user);
-		}
-	}
+        }
+    }
 
     @Override
     public void upgradeUserToGetShopAdmin(String password) {
@@ -824,5 +833,69 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user != null) {
             addUserToSession(user);
         }
+    }
+
+    private boolean isDoubleAuthenticationActivated() {
+        Application application = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        if (application != null) {
+            String doubleAuth = application.getSetting("doubleauthentication");
+            return doubleAuth.equals("true");
+        }
+        
+        
+        return false;
+    }
+
+    public User getUserByUserNameAndPassword(String userName, String password) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        User user = null;
+        try {
+             user = collection.login(userName, password);
+        } catch (ErrorException ex) {}
+        
+        try {
+             user = collection.login(userName, encryptPassword(password));
+        } catch (ErrorException ex) {}
+        
+        return user;
+    }
+    
+    @Override
+    public boolean requestNewPincode(String username, String password) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        User user = getUserByUserNameAndPassword(username, password);
+        
+        if (user != null) {
+            Random r = new Random();
+            int Low = 110110;
+            int High = 991881;
+            int randomCode = r.nextInt(High-Low) + Low;
+            
+            System.out.println("New code: " + randomCode);
+            user.pinCode = ""+randomCode;
+            collection.addUser(user);
+            messageManager.sendSms(user.cellPhone, "Pincode: " + user.pinCode, "+47");
+            return true;
+        }
+        
+        return false;
+    }
+
+    @Override
+    public User loginWithPincode(String username, String password, String pinCode) {
+        User user = getUserByUserNameAndPassword(username, password);
+        
+        if (user != null && user.pinCode != null && user.pinCode.equals(pinCode)) {
+            addUserToSession(user);
+            return user;
+        }
+        
+        return null;
+    }
+
+    @Override
+    public User checkUserNameAndPassword(String username, String password) {
+        User user = getUserByUserNameAndPassword(username, password);
+        return user;
     }
 }

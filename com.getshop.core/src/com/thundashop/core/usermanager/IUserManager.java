@@ -314,4 +314,10 @@ public interface IUserManager {
     
     @Editor
     public List<Integer> getLogins(int year);
+    
+    public boolean requestNewPincode(String username, String password);
+    
+    public User loginWithPincode(String username, String password, String pinCode);
+    
+    public User checkUserNameAndPassword(String username, String password);
 }

@@ -73,4 +73,39 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     private function sendMail($mailAddress, $attachments) {
         $this->getApi()->getMessageManager()->sendMailWithAttachments($mailAddress, $mailAddress, "Bestilling fra Certego", "", "certego@getshop.com", "Certego AS", $attachments);
     }
+    
+    public function doLogin() {
+        $user = $this->getApi()->getUserManager()->checkUserNameAndPassword($_POST['data']['username'], $_POST['data']['password']);
+        if ($user) {
+            echo "success";
+        } else {
+            echo "failed";
+        }
+    }
+    
+    public function requestPincode() {
+        $success = $this->getApi()->getUserManager()->requestNewPincode($_POST['data']['username'], $_POST['data']['password']);
+        if ($success) {
+            echo "success";
+        } else {
+            echo "failed";
+        }
+    }
+    
+    public function loginWithPincode() {
+        $userLoggedIn = $this->getApi()->getUserManager()->loginWithPincode($_POST['data']['username'], $_POST['data']['password'], $_POST['data']['pincode']);
+        
+        if ($userLoggedIn != null && isset($userLoggedIn)) {
+            unset($_SESSION['tempaddress']);
+            $_SESSION['loggedin'] = serialize($userLoggedIn);
+            echo "success";
+        } else {
+            echo "failed";
+        }
+    }
+    
+    public function logout() {
+        $this->getApi()->getUserManager()->logout();
+        session_destroy();
+    }
 }

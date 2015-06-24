@@ -7,8 +7,42 @@
     if (!\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
     ?>
         <div class="certego_login">
-            <i class="fa fa-key"></i> Logg inn
+            <div class='loginform'>
+                <input type='textfield' placeholder='brukernavn' class='username'/>
+                <input type='password' placeholder='passord' class='password'/>
+                <div class='certego_login_button dologin'><i class="fa fa-play"></i></div>
+            </div>
+            <div class='loginform_picode'>
+                <div >
+                    <center>
+                        Tast inn din personlige pinkode, <br/>dersom du ikke har den kan du bestille <br/> ny ved å trykke på "bestill ny kode"    
+                    </center>
+                </div>
+                
+                <br/>
+                <div>
+                    <div class='certego_login_button request_new_pincode'>Bestill ny kode</div>
+                    <input type='password' placeholder='pincode' class='pincode'/>             
+                    <div class='certego_login_button signin'><i class="fa fa-play"></i></div>
+                </div>
+            </div>
+            <div>
+                <div class='shop_button login_button'>
+                    <i class="fa fa-key"></i> Logg inn
+                </div>
+            </div>
         </div>
+    <?
+    } else {
+    ?>
+        <div class="certego_login">
+            <div>
+                <div class='shop_button logout_button'>
+                    <i class="fa fa-key"></i> Logg ut
+                </div>
+            </div>
+        </div>
+        
     <?
     }
     ?>

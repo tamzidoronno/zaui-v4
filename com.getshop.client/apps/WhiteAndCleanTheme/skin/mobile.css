@@ -4,6 +4,8 @@
 .shop_button {
     background: #00cc66;
     color: #FFF;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .calendar-day-head {

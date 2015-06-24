@@ -33,16 +33,21 @@ getshop.MenuEditor = {
         
         if (currentPageId === scrollPageId) {
             var target = $("#"+scrollAnchor);
-            var diff = $('.gsarea[area="body"]').offset().top;
-            $('html,body').animate({ scrollTop: target.offset().top - diff}, 300);
+            var diff = 0;
+            if ($('.gsarea[area="body"]').length) {
+                diff = $('.gsarea[area="body"]').offset().top;
+            }
+            $('html,body').animate({ scrollTop: target.offset().top - diff - 20}, 300);
         } else {
-        
             var link = '/?page='+scrollPageId;
             doNavigation(link, link, link, function(success) {
                 var target = $("#"+scrollAnchor);
                 $(document).ready(function() {
-                    var diff = $('.gsarea[area="body"]').offset().top;
-                    $('html,body').animate({ scrollTop: target.offset().top - diff}, 300);
+                    var diff = 0;
+                    if ($('.gsarea[area="body"]').length) {
+                        diff = $('.gsarea[area="body"]').offset().top;
+                    }
+                    $('html,body').animate({ scrollTop: target.offset().top - diff - 20}, 300);
                 })
                 
             });

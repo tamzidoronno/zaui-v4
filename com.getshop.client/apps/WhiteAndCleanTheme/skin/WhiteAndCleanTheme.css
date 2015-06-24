@@ -60,7 +60,7 @@ body {
     border-right: solid 0px;
 }
 
-.gsarea[area="header"] .Menu .entry a div {
+.gsarea[area="header"] .Menu .entry div {
     font-size: 16px;
     line-height: 25px;
     margin-top: 15px;

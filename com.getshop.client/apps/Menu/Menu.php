@@ -205,7 +205,7 @@ class Menu extends \SystemApplication implements \Application {
             }
             
             if ($entry->scrollPageId && $entry->scrollAnchor) {
-                echo "<div class='entry'><div scrollPageId='$entry->scrollPageId' scrollAnchor='$entry->scrollAnchor' class='gs_scrollitem'>$fontAwesome $name</div>";
+                echo "<div class='entry'><a href='#'><div scrollPageId='$entry->scrollPageId' scrollAnchor='$entry->scrollAnchor' class='gs_scrollitem'>$fontAwesome $name</div></a>";
                 if ($entry->subentries) {
                     $this->printEntries($entry->subentries, $level+1);
                 }

@@ -1165,6 +1165,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         cartManager.clear();
         Product product = getProductFromEntry(entry);
         
+        List<String> userIds = new ArrayList();
         String firstOrderUserId = "";
         for (OrderLine orderLine : order.orderLines) {
             User user = new User();
@@ -1178,6 +1179,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
             
             User userSaved = userManager.createUser(user);
         
+            userIds.add(userSaved.id);
             if (firstOrderUserId.isEmpty()) 
                 firstOrderUserId = userSaved.id;
             
@@ -1197,6 +1199,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         }
         
         orderManager.saveOrder(orderSaved);
+        
+        entry.ordersVsUsers.put(orderSaved.id, userIds);
         
         for (Month month : months.values()) {
             saveObject(month);

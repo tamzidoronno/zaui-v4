@@ -25,6 +25,8 @@ public class Entry implements Serializable, Comparable<Entry> {
     public List<ExtraDay> otherDays = new ArrayList();
     public Map<String, AttendeeMetaInfo> metaInfo = new HashMap<>();
     
+    public Map<String, List<String>> ordersVsUsers = new HashMap();
+    
     public int maxAttendees;
     
     public boolean availableForBooking = true;

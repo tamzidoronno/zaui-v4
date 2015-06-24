@@ -21,6 +21,8 @@ public class Entry extends TranslationHandler implements Serializable {
     public String name;
     public String parentId;
     public String pageId;
+    public String scrollPageId = "";
+    public String scrollAnchor = "";
     public String imageId;
     public String hardLink;
     public int userLevel;

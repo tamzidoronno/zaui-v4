@@ -63,10 +63,11 @@ class Menu extends \SystemApplication implements \Application {
             $entryItem = new EntryItem();
             $entryItem->id = $item->id;
             $entryItem->name = $item->name;
-            $entryItem->pageId = $item->pageId;
             $entryItem->linke = $item->hardLink;
             $entryItem->fontAwsomeIcon = $item->fontAwsomeIcon;
             $entryItem->userLevel = $item->userLevel;
+            $entryItem->scrollAnchor = $item->scrollAnchor;
+            $entryItem->scrollPageId = $item->scrollPageId;
             $entryItem->items = $this->createItems($item->subentries);
             $entryItem->disabledLangues = $item->disabledLangues;
             $retItems[] = $entryItem;
@@ -84,23 +85,16 @@ class Menu extends \SystemApplication implements \Application {
     }
 
     public function convertToEntry($item) {
-                $entry = $this->getApi()->getListManager()->getListEntry($item['id']);
+        $entry = $this->getApi()->getListManager()->getListEntry($item['id']);
         if (!$entry) {
              $entry = new \core_listmanager_data_Entry();
         }
+        
         $entry->name = $item['name'];
-        if (isset($item['linke'])) {
-            $entry->hardLink = $item['linke'];
-        }
-
-        if (isset($item['link']) && !isset($item['pageId'])) {
-            $entry->hardLink = $item['link'];
-        }
-
-        if (isset($item['pageId']) && $item['pageId']) {
-            $entry->pageId = $item['pageId'];
-            $entry->hardLink = null;
-        }
+        $entry->hardLink = $item['link'];
+        $entry->scrollPageId = $item['scrollPageId'];
+        $entry->scrollAnchor = $item['scrollAnchor'];
+        
         if (isset($item['userLevel'])) {
             $entry->userLevel = $item['userLevel'];
         }
@@ -108,10 +102,7 @@ class Menu extends \SystemApplication implements \Application {
             $entry->fontAwsomeIcon = $item['icon'];
         }
 
-        if (isset($item['linke']) && (!isset($item['link']) || $item['link'] == "")) {
-            $entry->hardLink = $item['linke'];
-        }
-
+        
         $entry->subentries = array();
         if(isset($item['items'])) {
             foreach($item['items'] as $subitem) {
@@ -213,11 +204,19 @@ class Menu extends \SystemApplication implements \Application {
                 }
             }
             
-            echo "<div class='entry $activate'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
-            if ($entry->subentries) {
-                $this->printEntries($entry->subentries, $level+1);
+            if ($entry->scrollPageId && $entry->scrollAnchor) {
+                echo "<div class='entry'><div scrollPageId='$entry->scrollPageId' scrollAnchor='$entry->scrollAnchor' class='gs_scrollitem'>$fontAwesome $name</div>";
+                if ($entry->subentries) {
+                    $this->printEntries($entry->subentries, $level+1);
+                }
+                echo "</div>";
+            } else {
+               echo "<div class='entry $activate'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
+                if ($entry->subentries) {
+                    $this->printEntries($entry->subentries, $level+1);
+                }
+                echo "</div>";
             }
-            echo "</div>";
         }
         echo "</div>";
     }
@@ -231,6 +230,8 @@ class EntryItem {
     public $linke = "";
     public $pageId = "";
     public $fontAwsomeIcon = "";
+    public $scrollPageId = "";
+    public $scrollAnchor = "";
     public $userLevel;
     public $items;
     public $disabledLangues;

@@ -24,6 +24,11 @@ getshop.MenuEditor = {
         var scrollPageId = $(this).attr('scrollPageId');
         var scrollAnchor = $(this).attr('scrollAnchor');
         
+        if ($('.gsmobilemenuinstance').is(':visible')) {
+            $('.gsbody').show();
+            $('.gsmobilemenuinstance').hide();
+        }
+        
         var currentPageId = $('.gsbody_inner').attr('pageId');
         
         if (currentPageId === scrollPageId) {

@@ -128,4 +128,22 @@ public class APIMessageManager {
           String result = transport.send(gs_json_object_data);
      }
 
+     /**
+     * Get how many messages a user has sent.
+     *
+     * @param year
+     * @param month
+     * @return
+     */
+     public void sendSms(java.lang.String to, java.lang.String message, java.lang.String prefix)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("to",new Gson().toJson(to));
+          gs_json_object_data.args.put("message",new Gson().toJson(message));
+          gs_json_object_data.args.put("prefix",new Gson().toJson(prefix));
+          gs_json_object_data.method = "sendSms";
+          gs_json_object_data.interfaceName = "core.messagemanager.IMessageManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
 }

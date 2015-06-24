@@ -2760,6 +2760,25 @@ class APIMessageManager {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	* Get how many messages a user has sent.
+	*
+	* @param year
+	* @param month
+	* @return void
+	*/
+
+	public function sendSms($to, $message, $prefix) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["to"] = json_encode($this->transport->object_unset_nulls($to));
+	     $data['args']["message"] = json_encode($this->transport->object_unset_nulls($message));
+	     $data['args']["prefix"] = json_encode($this->transport->object_unset_nulls($prefix));
+	     $data["method"] = "sendSms";
+	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIMobileManager {
 

@@ -51,13 +51,65 @@ angular.module('starter', ['ionic'])
 
 .controller('LoginCtrl', function($scope, LoginService, LocalStorage, $ionicPopup, $state) {
 
-  // load credentials from local storage
-  var creds = LocalStorage.getObject('credentials');
+  function Credentials(host, username, password) {
+    this.host = host;
+    this.username = username;
+    this.password = password;
+  }
 
-  $scope.data = {};
+  // load credentials from local storage
+  $scope.userData = LocalStorage.getObject('userData');
+  if ($scope.userData.credentials === undefined) {
+    $scope.userData.credentials = [];
+  }
  
+  // create data object that will store values from the view
+  $scope.data = {};
+
+
+  // define a function to login with stored credentials
+  $scope.loginWithSavedCredentials = function() {
+    // find credentials for selected host
+    var i = -1;
+    for (var index = 0; index < $scope.userData.credentials.length; index++) {
+      if ($scope.userData.credentials[index].host == $scope.data.selectedHost) {
+        i = index;
+        break;
+      }
+    }
+    if (i == -1) {
+      var alertPopup = $ionicPopup.alert({
+        title: 'Login failed!',
+        template: "Can't find credentials for this host. Please re-enter it."
+      });      
+    } else {
+      // try to login using saved credentials
+      LoginService.loginUser($scope.userData.credentials[i].host, $scope.userData.credentials[i].username, $scope.userData.credentials[i].password).success(function(data) {
+        // go to menu
+        $state.go('menu');
+      }).error(function(data) {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Login failed!',
+          template: "Those credentials don't work anymore!"
+        });
+      });      
+    }
+  }
+ 
+  // define a function to login with new credentials given by the user
   $scope.login = function() {
-    LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
+    LoginService.loginUser($scope.data.enteredHost, $scope.data.username, $scope.data.password).success(function(data) {
+      var index = 0;
+      // check if we already have credentials for this host
+      for (index; index < $scope.userData.credentials.length; index++) {
+        if ($scope.userData.credentials[index].host == $scope.data.host)
+          break; // credentials will be updated at this index
+      }
+      // add or update credentials
+      $scope.userData.credentials[index] = new Credentials($scope.data.host, $scope.data.username, $scope.data.password);
+      // save to local storage
+      LocalStorage.setObject('userData', $scope.userData);
+      // go to menu
       $state.go('menu');
     }).error(function(data) {
       var alertPopup = $ionicPopup.alert({
@@ -157,7 +209,7 @@ angular.module('starter', ['ionic'])
 
 .service('LoginService', function($q) {
     return {
-        loginUser: function(name, pw) {
+        loginUser: function(host, name, pw) {
             var deferred = $q.defer();
             var promise = deferred.promise;
  

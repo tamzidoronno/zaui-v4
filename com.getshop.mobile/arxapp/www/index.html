@@ -35,20 +35,20 @@
         <ion-content>
           <div class="list list-inset">
             <div class="item item-divider">Choose host:</div>
-            <label class="item item-input item-button-right">
+            <div class="item item-input item-button-right">
               <div class="input-label">
                 Host
               </div>
-              <select>
-                <option value="" disabled selected>...</option>
-                <option ng-repeat="host in data.hosts">{{host.name}}</option>
+              <select ng-model="data.selectedHost">
+                <option value="" disabled>...</option>
+                <option ng-repeat="creds in userData.credentials">{{creds.host}}</option>
               </select>
-              <button class="button button-positive">Go</button>
-            </label>
+              <button class="button button-positive" ng-click="loginWithSavedCredentials()">Go</button>
+            </div>
             <div class="item item-divider">Or add new login</div>
             <label class="item item-input">
               <span class="input-label">Nettaddresse</span>
-              <input type="text" ng-model="data.address">
+              <input type="text" ng-model="data.enteredHost">
             </label>
             <label class="item item-input">
               <span class="input-label">Brukernavn</span>

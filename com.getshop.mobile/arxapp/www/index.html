@@ -34,6 +34,18 @@
       <ion-view title="Login">
         <ion-content>
           <div class="list list-inset">
+            <div class="item item-divider">Choose host:</div>
+            <label class="item item-input item-button-right">
+              <div class="input-label">
+                Host
+              </div>
+              <select>
+                <option value="" disabled selected>...</option>
+                <option ng-repeat="host in data.hosts">{{host.name}}</option>
+              </select>
+              <button class="button button-positive">Go</button>
+            </label>
+            <div class="item item-divider">Or add new login</div>
             <label class="item item-input">
               <span class="input-label">Nettaddresse</span>
               <input type="text" ng-model="data.address">

@@ -45,11 +45,15 @@ angular.module('starter', ['ionic'])
       controller: 'DoorsCtrl'
     });
 
-    $urlRouterProvider.otherwise("/menu");
+    $urlRouterProvider.otherwise("/login");
 
 })
 
-.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state) {
+.controller('LoginCtrl', function($scope, LoginService, LocalStorage, $ionicPopup, $state) {
+
+  // load credentials from local storage
+  var creds = LocalStorage.getObject('credentials');
+
   $scope.data = {};
  
   $scope.login = function() {
@@ -173,4 +177,21 @@ angular.module('starter', ['ionic'])
             return promise;
         }
     }
-});
+})
+
+.factory('LocalStorage', ['$window', function($window) {
+  return {
+    set: function(key, value) {
+      $window.localStorage[key] = value;
+    },
+    get: function(key, defaultValue) {
+      return $window.localStorage[key] || defaultValue;
+    },
+    setObject: function(key, value) {
+      $window.localStorage[key] = JSON.stringify(value);
+    },
+    getObject: function(key) {
+      return JSON.parse($window.localStorage[key] || '{}');
+    }
+  }
+}]);

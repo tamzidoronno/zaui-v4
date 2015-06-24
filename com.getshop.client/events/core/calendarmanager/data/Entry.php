@@ -16,6 +16,9 @@ class core_calendarmanager_data_Entry {
 	public $metaInfo;
 
 	/** @var String */
+	public $ordersVsUsers;
+
+	/** @var String */
 	public $maxAttendees;
 
 	/** @var String */

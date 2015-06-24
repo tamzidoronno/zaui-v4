@@ -33,14 +33,16 @@ getshop.MenuEditor = {
         
         if (currentPageId === scrollPageId) {
             var target = $("#"+scrollAnchor);
-            $('html,body').animate({ scrollTop: target.offset().top - 140}, 300);
+            var diff = $('.gsarea[area="body"]').offset().top;
+            $('html,body').animate({ scrollTop: target.offset().top - diff}, 300);
         } else {
         
             var link = '/?page='+scrollPageId;
             doNavigation(link, link, link, function(success) {
                 var target = $("#"+scrollAnchor);
                 $(document).ready(function() {
-                    $('html,body').animate({ scrollTop: target.offset().top - 140}, 300);
+                    var diff = $('.gsarea[area="body"]').offset().top;
+                    $('html,body').animate({ scrollTop: target.offset().top - diff}, 300);
                 })
                 
             });

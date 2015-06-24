@@ -481,7 +481,7 @@ class Page {
             $permissions = "data-settings='".json_encode($cell->settings) . "'";
         }
         
-        $anchor = $cell->settings->anchor;
+        $anchor = $cell->anchor;
         
         echo "<div anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
         if ($anchor) {

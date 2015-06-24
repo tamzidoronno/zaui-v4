@@ -78,9 +78,6 @@ border-right: solid 1px rgba(0,0,0,0.2);
     background-color:rgba(57,57,57,1);
 }
 
-.gscontainer.gsrotating { border-bottom: solid 1px #bbb;
-padding-bottom: 10px; }
-
 .Calendar .calendercontent .content .outerdiv div img  {
     wdith: 35px;
     height: 35px;
@@ -120,4 +117,8 @@ padding-bottom: 10px; }
 .gsmobilemenuinstance .entry,
 .gsmobilemenuinstance {
     background-color: #62be73 !important;
+}
+
+.gsportraitimage {
+    font-size: 0px;
 }

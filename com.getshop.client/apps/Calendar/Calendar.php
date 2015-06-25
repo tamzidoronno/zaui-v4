@@ -838,6 +838,10 @@ class Calendar extends MarketingApplication implements Application {
             $this->includefile("entrysettings");
         }
     }
+    
+    public function removeUserFromEvent() {
+        $this->getApi()->getCalendarManager()->removeUserFromEvent($_POST['data']['userId'], $_POST['data']['entryId']);
+    }
 
     public function hasPaid($entry, $userid) {
         $foundOrderId = "";
@@ -851,7 +855,7 @@ class Calendar extends MarketingApplication implements Application {
         
         $order = $this->getApi()->getOrderManager()->getOrder($foundOrderId);
         if ($order) {
-            return $order->status == 4;
+            return $order->status == 4 || $order->status == 7;
         }
         
         return false;

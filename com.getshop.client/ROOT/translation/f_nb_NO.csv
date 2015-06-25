@@ -1,6 +1,5 @@
 ###### framework ######
 A application for selecting applications;-;En applikasjon for å velge applikasjoner
-A bookingform can be connected to the page its added to, meaning that the content of this page is the content that are being sold, not an event or course itself.;-;En booking form kan bli tilkoblet siden den er lagt til på, det betyr at innholdet på denne siden er innholdet som blir solgt, og ikke en event eller selve kurset
 A dashboad application;-;En dashboad applikasjon
 A description to the image;-;En beskrivelse av bildet
 A few settings for your ecommerce solution;-;Noen instillinger for ecommerce delen
@@ -70,7 +69,6 @@ All products;-;Alle produkter
 All text that you enter in the box below will be sent out as order confirmation emails. You can write anything you wish here, and enter variables. See bottom of page for variable defenitions.;-;All teksten som blir lagt til i boksen under vil bli sendt som bestilling bekreftelses eposten. Du kan skrive hva som helst her, og legg til variabler. Se nederst på siden for variabel definisjonen.
 All users;-;Alle brukere
 All your products;-;Alle dine produkter
-Allow guests to add events.;-;La gjester legge til eventer.
 Allows customers to pay by invoice.;-;Tillater kunder å betaler per faktura.
 Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;Gir deg muligheten til å sette opp en Brukervilkår avtale, denne må alltid godkjennes før en eventuell bestilling.
 Allows your customers to specify that they will pay on delivery.;-;Gir deg muligheten til å ta betalt ved levering.
@@ -92,8 +90,6 @@ Are you sure you want to delete this logo?;-;Er du sikker på at du vil slette d
 Are you sure you want to delete this product?;-;Er du sikker på at du ønsker å slette dette produktet?
 Are you sure you want to remove the candidate from this event?;-;Er du sikker på at du ønsker å fjerne kandidater fra dette eventet?
 Attendees;-;Påmeldte
-Automatic location;-;Automatisk lokasjon
-Available;-;Tilgengelig
 Available applications;-;Tilgjengelige applikasjoner
 Back;-;Tilbake
 Back to email;-;Tilbake til epost
@@ -131,6 +127,7 @@ CalendarEventViewer;-;CalendarEventViewer
 Cancel;-;Avbryt
 Car tuning;-;Bil tuning
 Card holder name;-;Eier av kortets navn
+Card number;-;Kort nummer
 Carousel;-;Karusell
 Carousel mode is great if you wish to add sliding content, this means that you can add multiple slider and let your customers make a choice on what they want to view. Great for banners and advertisment.;-;Karusell modus er en toppers hvis du ønsker å slide innhold, dette betyr at du kan vise flere slidere og la kundene dine ta et valg om hva de ønsker å se.
 Category list;-;Kategori liste
@@ -164,7 +161,6 @@ Comments on user;-;Kommentar på bruker
 Company Name;-;Selskapsnavn
 Configure;-;Konfigurer
 Configure this application if you want to send email from a different email provider en the default one for GetShop;-;Konfigurer denne applikasjonen hvis du ønsker å sende eposter fra en annen epost leverandør enn den som er brukt for GetShop.
-Configure your booking application;-;Konfigurer din booking applikasjon
 Configure your starting point;-;Konfigurer dinn start punkt
 Confirm entry;-;Bekreft innlegg
 Congratulation, you have added your first image.;-;Gratulerer, du har lagt til ditt første bilde
@@ -191,7 +187,6 @@ Create new user;-;Opprett ny bruker
 Create product;-;Opprett produkt
 Create shop;-;Opprett butikk
 Create this application and get started, you will automatically be shown the editors view for this application to start adding your text.;-;Opprett denne applikasjonen og kom i gang, du vil automask bli vist editor valgene for å legge til tekst.
-Create this application and start book events to given dates.;-;Opprett denne applikasjonen og start å booke eventer på gitte datoer.
 Create this application and start showing events on given dates.;-;Opprett denne applikasjonen og begynn å vis eventer på gitte datoer.
 Create your first row for the page;-;Opprett din første rad for denne siden
 Created when;-;Opprettet når
@@ -220,7 +215,6 @@ Delete selected application;-;Slett valgte applikasjon
 Delete this image;-;Slett dette bildet.
 Delete this list;-;Slett denne listen
 Delete user;-;Slett bruker
-Description when adding;-;beskrivelse når du legger til
 Did not find any products, please try modifying your search.;-;Fant ingen produkter, prøv på nytt med å endre på søkekriteriene.
 Different variables that is available;-;Forskjellige variabler som er er tilgengelige
 Disable aspect ratio;-;Deaktiver aspect ratio
@@ -255,9 +249,7 @@ Email subject;-;Tittel på epost
 Emails;-;Eposter
 Empty page;-;Tom side
 Enable test mode for sisow;-;Aktiver test modus for Sisow
-Enable this option to send email when a booking has been made.;-;Aktivert dette valget for å sende epost til når en booking har blitt gjort.
 Enable tls?;-;Aktivert tls?
-End hour;-;Slutt time
 Enter name of the person to search for;-;Skriv inn navnet til personen du ønsker å søke på.
 Enter product name here to search for a product to add as related;-;Skriv inn relatert produkt her og søk etter det.
 Enter the address to your page in the field below to activate this news feed.;-;Skriv inn adressen til siden din her og aktiver det i din nyhetsfeed.
@@ -268,7 +260,6 @@ Enter the terms and condition text in the field below.;-;Skriv inn brukervilkår
 Error;-;Feil
 Event;-;Kurs
 Event calendar;-;Event kalender
-Event held by;-;Hvem som har eventet
 Existing comments;-;Eksisterende kommentarer
 Existing product;-;Eksisterende produkt
 Exp date;-;Utløps dato
@@ -276,8 +267,6 @@ Expiration date;-;Utløps dato
 Expiry date xx/xx;-;Utløps dato xx/xx
 Extended description;-;Utvidet beskrivelse
 Extended location;-;Utvidet sted.
-Extra invoice email field, can be useful if candidate is not the same as the one that pays the bill;-;Ekstra epost felt, kan være nyttig dersom kandidaten har en annen som skal betale regningen
-Extra text;-;Ekstra tekst
 Fee for using this payment method;-;Avgifter brukt av denne betalings metoden
 Fill out the form below to create a new user.;-;Fyll ut skjemaet under for å opprette en ny bruker
 Filter by company number;-;Flitrer på firma nummer
@@ -301,6 +290,7 @@ Global css;-;Global css
 Go to E-Commerce->Products and create something.;-;Gå til E-Commerce->Produkter og opprett noe
 Go to a external page;-;Gå til en ekstern side
 Go to a internal page;-;Gå til en intern side
+Go to payment;-;Gå til betaling
 Go to product lists;-;Gå til produktlistene.
 Go to product managment;-;Gå til produkt administrasjon
 Google Analytics;-;Google Analytics
@@ -317,13 +307,10 @@ Hostname or ipaddress to the mailserver.;-;Host eller ip til mailserveren
 How many times can this coupon be used?;-;Hvor mange ganger skal denne kupongen være gyldig?
 Id of the order;-;Id på ordren
 If a order is canceled, should the items from the order be put back in stock?;-;Hvis en ordre blir kanselert, skal produktet legges tilbake i lagerstatusen?
-If this email address is specified, it will send notificition to this one if a requested event has been made.;-;Hvis denne epost adressen er spesifisert, vil det bli sendt en informasjons mail til denne eposten når en event har blitt etterspurt.
 If this function is enabled, it will show filter left for the calendar.;-;Hvis denne funksjonen er aktivert, vil du et filter bli vist til venstre for kalenderen.
 If this function is enabled, it will show the company field.;-;Hvis denne funksjonen er aktivert, vil du vise selskaps feltet. 
 If this is activated, you will be able to show your customer a listview in additional.;-;Hvis denne er aktiver så vil du få muligheten til å vise en listevisning i tillegg.
-If this option has been enabled the attendee will receive an sms.;-;Hvis dette valget har blitt aktivert, vil de påmeldte motta en sms.
 If you send sms with Clickatell as provider, you can use this to configure username an passwords;-;Hvis du sender sms'er med Clickatell som leverandør, så kan du legge inn brukernavn og passord her.
-If you turn on this feature, it will try to get the company information from  brreg. Simplify the form significantly.;-;Hvis du aktiverer denne funksjonen, så vil systemet prøve å hente ut informasjonen fra BrReg.
 If you want your webshop to send emails from another email account then ours, your need to enter the details in the form below. All username and passwords are stored on a seperated server and encrypted when it leaves that server.;-;Hvis du ønsker en webshop som sender eposter fra en annen epost konto enn vår, så må du legge inn innloggings detaljene i formen under. Alle brukernavn og passord er lagret kryptert på vår server.
 Image Editor;-;Bilde editor
 Images;-;Bilder
@@ -338,10 +325,8 @@ Inner background color;-;Indre bakgrunn farger
 Insert as carousel mode;-;Legg til som karusell modus
 Insert as tab mode;-;Legg til som tab modus
 Instillinger;-;Instillinger
-Invoice email field.;-;Regning epost addresse
 Is this an administrator account;-;Er dette en adminkonto
 Is this an editor account?;-;Er dette en editorkonto?
-Is this booking form connected to this page?;-;Er denne booking skjemaet tilkoblet denne siden?
 It is extremly easy to transfer your domain name. All you have to to do is enter the domain name in the address under.;-;Det er ekstremt enkelt å overføre domenenavn ditt. Alt du trenger å gjøre er å skrive inn domenenavnet ditt under.
 It is not possible to activate this option with the current settings.;-;det er ikke mulig å aktivere denne instillingene.
 Item details;-;Detaljer
@@ -349,13 +334,11 @@ Just add it;-;Bare legg det til
 Just click the button below;-;Bare trykk på knappen under
 Keep track of your products, orders, pages, etc with this application. Generate reports on a hourly, daily, weekly and monthly basis.;-;Hold oversikt over dine produkter, bestillinger, sider, osv med denne applikasjonen. Generer rapporter på en time, daglig, ukenlig og månedlig basis.
 Keep your customers up to date of what events you are hosting with this application;-;Hold dine kunder oppdatert med hvilken events du holder med denne applikasjonen
-Last hour of the day that people should be able to make a booking (example: 23);-;Siste time på dagen noen skal kan legge inn en book (eksempel: 23)
 Last logged on;-;Sist logget på
 Lets you easily connect to paypal, and give your customers option to pay using paypal.;-;Gir deg muligheten for at dine brukere kan benytte seg av paypal.
 Link;-;Link
 Link to booking schema.;-;Hvis link til påmeldings skjema
 Link to menu;-;Link til meny
-Link to page;-;Link til side
 Link to page.;-;Link til siden.
 List;-;Liste
 List has been saved;-;Listen har blitt lagret
@@ -365,7 +348,6 @@ Listview description;-;Kort beskrivelse for listevisning
 Load settings;-;Last instillinger
 Loading image, please wait;-;Laster bilde, vennligst vent
 Locations;-;Lokasjoner
-Lock event for signups;-;Steng eventet for registrering
 Login;-;Innlogging
 Looking for more options? You can add much more information to your product by going to the frontend of the product and use GetShop's entire application sortiment like, Images Carousel, YouTube, Facebook etc. The possibilites are endless.;-;Ser du etter mer du kan gjøre på produktet? Hvis du går til framsiden hvor produktet ligger så kan du legge til alle applikasjonene osv som GetShop tilbyr. Her kan du legge inn filmer, text, bilder, rader, karuseller osv.
 Mail;-;E-post
@@ -380,7 +362,6 @@ Manage this list;-;Behandle denne listen
 Mandatory;-;Obligatorisk
 Manually select a color;-;Manuelt velg en farge
 Map;-;Kart
-Mark as done;-;Merk som ferdig
 Markers;-;Markører
 Marketing;-;Markedsføring
 Menu Editor;-;Meny editor
@@ -395,7 +376,7 @@ More Categories?;-;Mer kategorier?
 More color options;-;Flere fargevalg
 More...;-;Mer...
 Name of the button.;-;Navn på knapp
-Name of the cardholder);-;Navn på kortholder)
+Name of the cardholder;-;Navn på kortholder
 Name of the customer;-;Navn på kunde
 Name of the person that owns this new account.;-;Navn på brukeren
 Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;Med denne applikasjonen kan du vise dine eiendommer.
@@ -429,7 +410,6 @@ No users where found for this time range.;-;Ingen brukere ble funnet for denne t
 Normal button;-;Normal knapp
 North east corner latitude;-;Nord øst hjørne latitude
 North east corner longitude;-;Nord øskt hjørne longitude
-Not available;-;Ikke tilgjengelig
 Not possible;-;Ikke mulig
 Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;Ikke fornøyd med tekst som er "kodet" inn på din side?<br>Legg til denne applikasjonen og endre teksten selv.
 Nothing to configure here, please activate some apps that has settings for emails.;-;Her er det ingenting å konfigurere, vennligst aktiver en app som har instllinger for epost.
@@ -491,7 +471,6 @@ Please select someone to chat with at the right side;-;Vennligst velg noen å ch
 Please select what list you want to display here;-;Vennligst velg hva du ønsker å vise her
 Please select your currency;-;Velg din valutta
 Please select your language;-;Vennligst velg ditt språk
-Please wait;-;Vennligst vent
 Point your domain name to the following ip address:;-;Pek ditt domenenavn til følgende ip adresse:
 Port;-;Port
 Port that the mailserver listens on.;-;Porten som mail serveren lytter på
@@ -535,9 +514,6 @@ Reset permissions;-;Fjern rettighetene
 Return stock if order is canceled?;-;Returner til lager hvis kanselert?
 Rows are created by multiple cells, you can combine them in any way you like. To do more options you need to learn the advanced mode. Click on the layout you wish to use.;-;Kolonner og rader er opprettet av flere celler, du kan kombiner disse på alle mulige måter. Trykk på layouten du ønsker å benytte
 SKU;-;SKU
-SMS From;-;SMS Fra
-SMS Text;-;SMS Melding
-SMS Text (waiting list);-;Sms tekst (venteliste)
 Sales ($year);-;Salg ($year)
 Sandbox;-;Sandbox
 Sandbox?;-;Sandbox?
@@ -559,23 +535,19 @@ Sedox Databank Theme;-;Sedox Databank theme
 Sedox FileUploader;-;Sedox fileouploder
 Sedox Search Products;-;Sedox Search Products
 Select;-;Velg
-Select a new room for;-;Velg et nytt rom for
 Select a picture from your local hard-drive, upload it and display it to your page viewers;-;Velg et bilde fra din lokale datamasjon, last det opp og vis det til dine kunder
 Select application;-;Velg applikasjon
-Select event helder;-;Velg event holder
 Select image;-;Velg bilde
 Select one of your current location;-;Velg en av lokasjonene
 Select page layout;-;Velg en layout
 Select the application you would like this user to able to access.;-;Velg en applikasjon du ønsker denne brukeren skal ha tilgang til
 Select the recipients for this email;-;Velg en eller flere motakere for denne eposten
 Select your theme;-;Velg et tema
-Send email;-;Send epost
 Send email to customers;-;Send epost til kundene
 Send newsletter;-;Send nyhetsbren
 Send newsletter to recipients;-;Send nyhetsbrev til mottakere
 Send preview;-;Send en forhåndsvisning
 Send reminder;-;Påmindelse sendt
-Send sms to attendee?;-;Send sms til påmeldte?
 Set application sticky;-;Sett applikasjonen klebelig.
 Set date;-;Sett dato
 Set page layout;-;Sett side layout
@@ -608,7 +580,6 @@ Sms Usage;-;Sms bruk
 Snickles;-;Snickles
 Some settings are important for google and other search engines, and this is where you can configure them.;-;Noen instillinger er viktig for google og andre søkemotorer, og her er hvor du kan finne dem.
 Sorry to hear that, Are you sure that you want to delete your store?;-;Dette er beklagelig, er du sikker på at du vil slette denne butikken?
-Sorry, but the start date is before todays date.;-;Sorry, men start datoen kan ikke være før dagens dato
 Sorry, no result found.;-;Sorry, ingen resultater ble funnet
 Sorry, we do not have any related products to this product;-;Sorry, vi har ingen relaterte produkter for dette produkter
 South west corner latitude;-;Sør vest latitude hjørne
@@ -618,8 +589,6 @@ Specify boundaries the map should restrict itself to. Leave it empty to avoid bo
 Standard page;-;Standard side
 Start adding pictures to your webshop, create this application and start uploading images.;-;Legg til bilder til din webshop, opprett denne applikasjonen og start å last opp bilder.
 Start entering the page name you want this button to link to.;-;Skriv inn siden du ønsker denne knappen skal linkes til
-Start hour;-;Start time
-Start hour when people should be able to request booking (example: 16);-;Start time når du ønsker at folk skal kan legge inn requests booking (example: 16)
 Start my store now;-;Start min butikk nå
 Start up price;-;Oppstarts pris
 Stock Control;-;Lagerstatus
@@ -642,7 +611,6 @@ The Merchant-ID is provided by Dibs, please contact us for more information.;-;M
 The address is already taken or invalid.;-;Denne adressen er allerede tatt eller feil.
 The api id from Clickatell;-;Api id'en fra clicatell
 The cell phone number to the owner of this account.;-;Mobiltelefonnr til den som eier denne kontoen
-The default title to use when sending emails.;-;Standard tittel som skal brukes når epost sendes.
 The description;-;Beskrivelsen
 The discount can not be 0 or the amount of times coupons can be used can not be 0;-;Avslaget kan ikke være 0, heller kan ikke antall ganger denne kupongen skal være gyldig være 0
 The facebook page is not valid;-;Denne facebook siden er ikke gylding
@@ -651,7 +619,6 @@ The password for your smtp server.;-;Passordet for smtp server.
 The password you get from clickatell, this is something personal.;-;Passordet du har fått fra clicaktell, dette er noe personlig
 The paypal account has not been configured correctly. Go to settings and configure it properly;-;Paypal kontoen har ikke blitt satt inn riktig, gå til instillinger og sett inn riktig adrese.
 The percentage must be between 0 and 100;-;Prosenten må være mellom 0 og 100
-The subject of the email that goes to the attendees set on waitinglist.;-;Emnet på eposten som sendes til de som blir satt på ventelisten
 The text has been saved;-;Teksten har blitt lagret
 The things you searched for does not exists, please try another search word!;-;Det du søkte etter eksisterer ikke, prøv å søk på ett annet ord.
 The total cost of the product, included taxes.;-;Den totale prisen på produktet.
@@ -661,7 +628,6 @@ There are multiple emails sent from your system and we have gather them all here
 There are no products in this list;-;Det finnes ingen produkter i denne listen
 There are two different types of coupons, fixed price and percentage price. Fixed price is giving your valued customers a fixed rate off for each time they buy something from the store. The Percentage price gives a percentage discount to your total cost of the cart.;-;Vi støtter 2 forskjellige typer kuponger, fast pris eller prosentvis pris. Dersom du velger fast pris vil du gi kundene dine et fast avslag ved bruk av kupongen. Dersom du setter opp en med prosentvis avslag så vil kundene dine få et prosentvis avslag iforhold til varene som ligger i handlekurven.
 There is no comments added to this user yet.;-;Det er ikke noen kommentarer på denne brukeren enda
-There is no new entries;-;Tomt, ingenting å se her.
 There is no products added to this list, manage your productlists from the settings.;-;Det er ikke noen produkter lagt til denne listen, administrer listen fra instillinger
 This application gives you the ability to control your stocks, simply change how many you have in stock on each product.;-;Denne applikasjonen gir deg muligheten til å spesifisere antallet som er på lager for hvert av produktene dine.
 This category displayer is currently empty. To create a new category please click the create new category button below.;-;Denne kategorien er for tiden tom. For å opprette en kategori vennligst trykk på opprett kategori knappen.
@@ -675,8 +641,6 @@ This is the city that will be printed on the invoice, example Las Vegas;-;Dette 
 This is the company name that will be printed on the invoice, example GetShop;-;Dette er selskapsnavnet som vises på fakturaen, eksempel : Mitt Firma
 This is the email address that will be printed on the invoice, example post@getshop.com;-;Dette er eposten som blir vist på fakturaen, eksempel : ola@nordman.no
 This is the lists that is available to be displayed in your webshop. All products in a list will be available for search engines, customers and etc.;-;Dette er listene av produkter som er tilgjengelige på din nettbutikk.
-This is the mail that will be sent to attendees under the category waiting list.;-;Denne mailen blir sendt til de som blir satt på ventelisten
-This is the mail that will be sent upon booking;-;Denne eposten blir sendt ved en booking.
 This is the post code that will be printed on the invoice, example 4380;-;Dette er postnummeret som vises på fakturaen, eksempel 4380
 This is the title of the product, example "White cute teddy bear";-;Navnet på produktet, f.eks "Søt hvit teddybjørn"
 This is the username you receive from Clickatell when you create an account.;-;Dette er et brukernavn du har fått fra clickatell når du opprettet kontoen din hos clickatell.
@@ -687,18 +651,13 @@ This is where you can configure your current page, special settings like search 
 This is where you configure the text you would like to put on your diploma. The variables helps you personalise the diploma.;-;Her konfigurerer du teksten du ønsker skal være med i diplomen. Variablen hjelper deg å personalisere diplomen
 This menu editor has the flexibility to set up menues the way you would like to. To start editing your menu, please select one from the top left corner.;-;Menu editoren er fleksibel og setter menyen på den måten du ønsker dem. Start med å editere din meny, velg en fra hjørnet i toppen på venstre side.
 This name is used to identify the list when you add it to the frontend;-;Navnet du oppgir her brukes på framsiden når du skal legge til listen.
-This sms is sent when a candidate is added to waitinglist?;-;Denne sms'en er sent til når kandidaten blir lagt på ventelisten?
 This tax group will be possible to select in your product management.;-;Mva gruppen vil være mulig å velge fra produktadminsitrasjonen.
 This user has received an KSV test.;-;Denne brukeren har mottat en KSV test.
-This will be displayed as description if someone adds event;-;Dette vil bli vist som en beskrivelse hvis noen legger til en event.
-This will be displayed as the location if someone adds event;-;Dette vil bli vist som en lokasjon når noen legger til en event.
 This will be the name of the button.;-;Dette vil være navnet på knappen.
 This will remove all original content for this page, are you sure about this? Use the page layout tab instead if you need to change the layout and keep its page data;-;Dette vil fjerne alt innhold på denen siden, er du sikker på det? Bruker page layout tabben istedenfor hvis du ønsker å bare endre på layouten og beholde dataen.
 Tightly integrates facebook into your webshop, give users options to comment product, like products, share discounts, etc;-;Gjør en tett integrasjon mot facebook på din websho, gi brukerne dine muligheter til å kommentere produktene, like produktene dine, dele rabatter, osv.
 Title;-;Tittel
 Title for the image;-;Tittel på bildet
-Title when sending emails;-;Tittel når epost sendes.
-Title when sending emails to waitinglist;-;Emne mail venteliste
 To change the text, hover the mouse over the text edior and a gear will appear. Happy hunting!<br><br>;-;For å endre teksten, dra musen over tekst editoren, et tagghjul vil da dukke opp.<br><br>
 To move pages, move them from the menu to the loose page area, then drag the loose page into another menu.;-;For å flytte sider, dra dem fra menyen til området "løse sider", deretter dra dem til den menyen du ønsker dem skal ligge på.
 To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;For å lagre all tekst som er viselig for kundene dine, oversett radene under, og trykk på lagre knappen.
@@ -706,6 +665,7 @@ Toggle able to zoom;-;Toggle om brukeren skal kan zoome på bilde
 Toggle advanced mode;-;Bytt til/fra avansert modus
 Toggle on/off bottom area;-;Toggle av og på bunnområder
 Toggle small cartview;-;Toggle liten handlekurv visning
+Total amount that will be drawn from you account;-;Totalt beløp som vil bli trukket fra kortet
 Total orders;-;Alle ordre
 Total orders registered;-;Totalt ordrer registrert
 Total page views;-;Totalt sidevisninger
@@ -720,15 +680,12 @@ Transfer;-;Overfør
 Transfer existing domain;-;Overfør eksisterende domene
 Transfer user from one event to another;-;Overfør brukeren fra en event til en annen
 Translation;-;Oversetting
-Try to get the company information from Br Reg.;-;Prøv å hent informasjonen fra Brønneysunds registeret.
-Turn this featur on if you wish to allow guests to add events to your calendar. Events needs to be confirmed by an adminstrator;-;Skru på dette valget om du ønsker at gjestene skal ha muligheten til å legge til eventer i kalenderen. Eventene på godkjennes av en administrator.
 Type;-;Type
 UA;-;UA
 Unlink entry;-;Frakoble element
 Unlock complete modules ready for use. A module contains multiple applications and is a larger piece that can be used in you webpage.;-;Ta i bruk noen av våre moduler. En modul innholder flere applikasjoner og utgjør derfor en større del av systemet som kan benyttes på din webside.
 Update password;-;Oppdater passord
 Update permissions;-;Oppdater rettigheter
-Update room;-;Oppdater rom
 Updated successfully;-;Oppdatering gjennomført
 Updating;-;Oppdaterer
 Upgrade your website to become a fully customizable e-commerce solution. We offer a variouse of payment methods!;-;Oppgrader nettsiden din til å bli en fullverdig plattform for nettbutikk.
@@ -750,7 +707,6 @@ Username;-;Brukernavn
 Users;-;Brukere
 Users created;-;Brukere opprettet
 Users logged on;-;Brukere logget på
-Users that has been marked as done;-;Brukere som har blitt merket som ferdigbehandlet
 VAT number;-;Orgnr
 VIP user - $0;-;VIP Kunde - $0
 Variables allowed;-;Variabler tillat
@@ -758,8 +714,6 @@ Variables that can be used in email and subject;-;Variabler som kan benyttes i e
 Vat number;-;MVA nummber
 View product;-;Åpne produktet
 Viewed when;-;Vist sist
-Visa;-;Visa
-Visa card number (xxxx-xxxx-xxxx-xxxx);-;Visa kort nr (xxxx-xxxx-xxxx-xxxx)
 Warn users that cookies are being stored from this site?;-;Advar brukere at cookies blir brukt på denne siten?
 Warning! this store will automatically be reset to original state each hour;-;Advasel! Systemet vil automatisk bli satt tilbake til sin originale stand hver time.
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Advarsel. du er ikke koblet til en partner enda, vennligst kontakt getshop support!
@@ -770,9 +724,7 @@ Welcome to email settings.;-;Velkommen til epost-instillinger
 Welcome, enjoy configuring your menu.;-;Velkommen, konfigurer dine menyer
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;Hva er deepfreeze? Deepfreeze fryser ned systemet og gjennoppretter systemet hver time.
 What is the shipment taxes?;-;Hva er forsendelses mvaen?
-What should be the sender name?;-;Hva skal senders navn være?
 What should the subject be?;-;Dette blir da skrevet i emnefeltet, f.eks "Takk for din bestilling"
-What should the text message contain?;-;Hva skal tekst meldingen inneholde?
 What stores should it be allowed for?;-;Hvilken nettbutikker skal den bli gydlig for
 What type of button is this?;-;Hvilken type knapp er dette?
 When;-;Når
@@ -822,11 +774,9 @@ delete;-;Slett
 dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.;-;Dibs er en betalingstjeneste som gjør det mulig for deg å ta betalt fra visa / mastercard og andre kortleverandører. Det er ekstremt enkelt å bruke. Priser for å bruke denne applikasjonen er levert av dibs, og du vil bli kontaktet av Dibs når du legger til denne applikasjonen.
 edit;-;Editer
 enter_domain;-;Skriv inn domenenavn
-event_desc;-;Event beskrivelse
 event_name;-;Event navn
 fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;Fraktguiden hjelper deg med å få kalkulert ut riktig pris ved sending av pakker I Norge. Den henter ut Bring sine priser automatisk og legger det inn I bestillingen.
 free_positions;-;Tilgjengelige plasser
-give your customers ability to book into your events or appointments;-;Gi du kunder muligheten til å registrere seg for eventer og avtaler.
 is available.;-;er tigjengelig.
 is not a valid domain name.;-;er ikke et gyldig domene navn.
 is not available, please try another one.;-;er ikke tilgjengelig, vennligst prøv en annen en.
@@ -835,7 +785,6 @@ left sidebar;-;Venstre sidebar
 like_button;-;Liker knappen
 like_button_desc;-;Aktiver eller dekativer lik knappen på alle dine produkter.
 longitide;-;longditude
-max_atandees;-;Maks deltagere
 more;-;mer
 no_activites;-;Ingen aktiviterer eksisterer for denne dagen
 number of rows;-;antall rader

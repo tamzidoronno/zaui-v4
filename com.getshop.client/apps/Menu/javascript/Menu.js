@@ -33,6 +33,9 @@ getshop.MenuEditor = {
         
         if (currentPageId === scrollPageId) {
             var target = $("#"+scrollAnchor);
+            if (!target.length) {
+                return;
+            }
             var diff = 0;
             if ($('.gsarea[area="body"]').length) {
                 diff = $('.gsarea[area="body"]').offset().top;
@@ -42,6 +45,9 @@ getshop.MenuEditor = {
             var link = '/?page='+scrollPageId;
             doNavigation(link, link, link, function(success) {
                 var target = $("#"+scrollAnchor);
+                if (!target.length) {
+                    return;
+                }
                 $(document).ready(function() {
                     var diff = 0;
                     if ($('.gsarea[area="body"]').length) {

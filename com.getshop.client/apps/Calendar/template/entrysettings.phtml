@@ -16,8 +16,8 @@ $event = $entry->event;
                 continue;
             
             $hasPaid = $this->hasPaid($entry, $userid) ? "Betalt" : "Ikke betalt";
-        ?>
-            <tr><td><? echo $user->fullName; ?></td><td><? echo $user->emailAddress; ?></td><td><? echo $user->cellPhone; ?></td><td><? echo $hasPaid; ?></td></tr>
+            ?>
+            <tr><td width="25"><i userId='<? echo $user->id; ?>' entryId="<? echo $entry->entryId; ?>" class="fa fa-trash removeuserfromevent"></i></td><td><? echo $user->fullName; ?></td><td><? echo $user->emailAddress; ?></td><td><? echo $user->cellPhone; ?></td><td><? echo $hasPaid; ?></td></tr>
         
         
         <?

@@ -322,7 +322,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void saveOrder(Order order) throws ErrorException {
-        saveOrderInternal(order);
+        try {
+            saveOrderInternal(order);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     @Override
@@ -999,6 +1003,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return orderresult;
+    }
+
+    @Override
+    public double getTotalForOrderById(String orderId) {
+        Order order = getOrderSecure(orderId);
+        return getTotalAmount(order);
     }
 
 }

@@ -6,7 +6,7 @@
 angular.module('starter', ['ionic'])
 
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, GetshopService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -17,6 +17,8 @@ angular.module('starter', ['ionic'])
       StatusBar.styleDefault();
     }
   });
+
+  GetshopService.connectToGetshop();
 })
 
 
@@ -207,13 +209,13 @@ angular.module('starter', ['ionic'])
   ];
 })
 
-.service('LoginService', function($q) {
+.service('LoginService', ['GetshopService', '$q', function(getshop, $q) {
     return {
         loginUser: function(host, name, pw) {
             var deferred = $q.defer();
             var promise = deferred.promise;
  
-            if (name == 'user' && pw == 'secret') {
+            if (getshop.ArxManager.logonToArx(host, name, pw, false)) {
                 deferred.resolve('Welcome ' + name + '!');
             } else {
                 deferred.reject('Wrong credentials.');
@@ -229,7 +231,24 @@ angular.module('starter', ['ionic'])
             return promise;
         }
     }
-})
+}])
+
+.service('GetshopService', ['$window', function($window) {
+  return {
+
+    client: null,
+
+    connectToGetshop: function() {
+
+      // Connect to getshop web api
+      client = new GetShopApiWebSocket("20244.3.0.local.getshop.com");
+      client.setConnectedEvent(function () {
+      });
+      client.connect();
+
+    }
+  }
+}])
 
 .factory('LocalStorage', ['$window', function($window) {
   return {

@@ -64,7 +64,6 @@ public class AddApplicationsToDatabase {
         WhiteAndCleanTheme.moduleId = "hidden";
         WhiteAndCleanTheme.defaultActivate = true;
         
-        
         apps.add(WhiteAndCleanTheme);
         
         return apps;

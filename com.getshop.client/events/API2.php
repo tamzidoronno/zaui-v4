@@ -2760,25 +2760,6 @@ class APIMessageManager {
 	     return $this->transport->sendMessage($data);
 	}
 
-	/**
-	* Get how many messages a user has sent.
-	*
-	* @param year
-	* @param month
-	* @return void
-	*/
-
-	public function sendSms($to, $message, $prefix) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["to"] = json_encode($this->transport->object_unset_nulls($to));
-	     $data['args']["message"] = json_encode($this->transport->object_unset_nulls($message));
-	     $data['args']["prefix"] = json_encode($this->transport->object_unset_nulls($prefix));
-	     $data["method"] = "sendSms";
-	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
 }
 class APIMobileManager {
 
@@ -6116,6 +6097,24 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function addGroupToUser($userId, $groupId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+	     $data["method"] = "addGroupToUser";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Add priviliges to a another admin user.
 	*
 	* If a user is given a privilege, all the defaults are removed.
@@ -6343,6 +6342,23 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return core_usermanager_data_Group
+	* @throws ErrorException
+	*/
+
+	public function getGroup($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getGroup";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_Group(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Fetch the currently logged on user.
 	* @return core_usermanager_data_User
 	*/
@@ -6400,6 +6416,23 @@ class APIUserManager {
 	     $data['args'] = array();
 	     $data['args']["userIds"] = json_encode($this->transport->object_unset_nulls($userIds));
 	     $data["method"] = "getUserList";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getUsersBasedOnGroupId($groupId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+	     $data["method"] = "getUsersBasedOnGroupId";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -6563,6 +6596,24 @@ class APIUserManager {
 	     $data['args'] = array();
 	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
 	     $data["method"] = "removeGroup";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function removeGroupFromUser($userId, $groupId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+	     $data["method"] = "removeGroupFromUser";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}

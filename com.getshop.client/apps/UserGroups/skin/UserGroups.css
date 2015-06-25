@@ -1,0 +1,21 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jun 25, 2015, 3:43:47 PM
+    Author     : ktonder
+*/
+
+.gs_select_searched_user_group_add {
+    border: solid 1px #DDD;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.gs_select_searched_user_group_add:hover {
+    background-color: #F9F9F9;
+}

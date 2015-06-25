@@ -53,15 +53,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application WhiteAndCleanTheme = createSettings("WhiteAndCleanTheme",
-                "cf1bf9b0-d8eb-4cc8-b464-b563373b7d1e",
+        
+        Application WhiteAndCleanTheme = createSettings("UserGroups",
+                "3983a370-d0cc-46de-ba94-cc22fe7becbb",
                 allowed2,
                 "",
-                Application.Type.Theme, true);
+                Application.Type.System, true);
         WhiteAndCleanTheme.isPublic = true;
         WhiteAndCleanTheme.isFrontend = false;
-        WhiteAndCleanTheme.moduleId = "Theme";
-        WhiteAndCleanTheme.allowedStoreIds = new ArrayList();
+        WhiteAndCleanTheme.moduleId = "hidden";
+        WhiteAndCleanTheme.defaultActivate = true;
+        
         
         apps.add(WhiteAndCleanTheme);
         

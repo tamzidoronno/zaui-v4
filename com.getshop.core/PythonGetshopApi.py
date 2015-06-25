@@ -6506,6 +6506,28 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def addGroupToUser(self, userId, groupId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
+    else:
+      try:
+        args["groupId"]=json.dumps(groupId)
+      except (ValueError, AttributeError):
+        args["groupId"]=groupId
+    data = EmptyClass()
+    data.args = args
+    data.method = "addGroupToUser"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addUserPrivilege(self, userId, managerName, managerFunction):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
@@ -6695,6 +6717,21 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getGroup(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getGroup"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getLoggedOnUser(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -6745,6 +6782,21 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getUserList"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getUsersBasedOnGroupId(self, groupId):
+    args = collections.OrderedDict()
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
+    else:
+      try:
+        args["groupId"]=json.dumps(groupId)
+      except (ValueError, AttributeError):
+        args["groupId"]=groupId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getUsersBasedOnGroupId"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -6902,6 +6954,28 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "removeGroup"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def removeGroupFromUser(self, userId, groupId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
+    else:
+      try:
+        args["groupId"]=json.dumps(groupId)
+      except (ValueError, AttributeError):
+        args["groupId"]=groupId
+    data = EmptyClass()
+    data.args = args
+    data.method = "removeGroupFromUser"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 

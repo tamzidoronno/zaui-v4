@@ -15,10 +15,8 @@ To translate all visible text for your users, translate the entries below, and h
 Translation;-;Käännös
 add_event;-;,,
 delete;-;Poista
-event_desc;-;,,
 event_name;-;,,
 free_positions;-;,,
-max_atandees;-;,,
 no_activites;-;,,
 price;-;Hinta
 save;-;Tallenna

@@ -472,3 +472,7 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
 .Calendar .eventsoverview td {
     font-size: 16px;
 }
+
+.Calendar .removeuserfromevent {
+    cursor: pointer;
+}

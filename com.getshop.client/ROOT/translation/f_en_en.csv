@@ -9,12 +9,10 @@ cart;-;Cart
 delete;-;Delete
 edit;-;Edit
 enter_domain;-;Enter Domain Name
-event_desc;-;Event Description
 event_name;-;Event name
 free_positions;-;Free positions
 like_button;-;Like button
 like_button_desc;-;Enables or disables a like button to all your products
-max_atandees;-;Max attendees
 no_activites;-;No activities exists for this day
 price;-;Price
 profile_url;-;Profile url

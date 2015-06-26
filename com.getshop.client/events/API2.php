@@ -3364,6 +3364,23 @@ class APIOrderManager {
 	* @return Double
 	*/
 
+	public function getTotalForOrderById($orderId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data["method"] = "getTotalForOrderById";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return Double
+	*/
+
 	public function getTotalSalesAmount($year, $month, $week, $day, $type) {
 	     $data = array();
 	     $data['args'] = array();

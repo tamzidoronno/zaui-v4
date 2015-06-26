@@ -18,6 +18,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.Payment;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -78,10 +79,15 @@ public class BrainTreeManager extends ManagerBase implements IBrainTreeManager {
 
     @Override
     public boolean pay(String paymentMethodNonce, String orderId) {
-        Order order = orderManager.getOrder(orderId);
+        Order order = orderManager.getOrderSecure(orderId);
         if (order == null) {
             return false;
         }
+        
+        Application paymentApplication = storeApplicationPool.getApplication("542e6a1e-9927-495c-9b6d-bb52af4ea9be");
+        if (paymentApplication != null) 
+            order.changePaymentType(paymentApplication);
+        
         
         double price = cartManager.calculateTotalCost(order.cart);
         if (order.shipping != null) {
@@ -90,12 +96,20 @@ public class BrainTreeManager extends ManagerBase implements IBrainTreeManager {
         
         TransactionRequest request = new TransactionRequest()
         .amount(new BigDecimal(""+price))
-        .paymentMethodNonce(paymentMethodNonce);
+        .paymentMethodNonce(paymentMethodNonce)
+        .options()
+            .submitForSettlement(true)
+            .done();
         
         Result<Transaction> result = getGateway().transaction().sale(request);
         if (result.isSuccess()) {
+            order.status = Order.Status.PAYMENT_COMPLETED;
+            order.paymentTransactionId = result.getTarget().getId();
+            orderManager.saveOrder(order);
+            orderManager.orderPaid(order.id);
             return true;
         } else {
+            orderManager.changeOrderStatus(orderId, Order.Status.PAYMENT_FAILED);
             Transaction transaction = result.getTransaction();
             if (transaction != null) {
                 System.out.println(""+transaction.getStatus());

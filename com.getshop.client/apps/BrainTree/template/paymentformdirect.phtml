@@ -1,15 +1,18 @@
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 
 <div class="braintreepaymentform">
-    <form id="braintreecheckoutform" action="?page=cart&subpage=gotopayment" method="post">
+    <form id="braintreecheckoutform" action="" method="post">
         <table width="100%">
             <tr><td style="width: 150px;"><? echo $this->__f("Card holder name"); ?></td><td><input data-braintree-name="cardholder_name" value="" placeholder="<? echo $this->__f("Name of the cardholder"); ?>"></td></tr>
-            <tr><td style="width: 150px;"><? echo $this->__f("Card number"); ?></td><td><input data-braintree-name="number" value="" placeholder="<? echo $this->__f("xxxx-xxxx-xxxx-xxxx)"); ?>"></td></tr>
+            <tr><td style="width: 150px;"><? echo $this->__f("Card number"); ?></td><td><input data-braintree-name="number" value="" placeholder="<? echo $this->__f("xxxx-xxxx-xxxx-xxxx"); ?>"></td></tr>
             <tr><td style="width: 150px;"><? echo $this->__f("Exp date"); ?></td><td><input data-braintree-name="expiration_date" placeholder="<? echo $this->__f("Expiry date xx/xx"); ?>"></td></tr>
             <tr><td style="width: 150px;"><? echo $this->__f("CVV"); ?></td><td><input data-braintree-name="cvv" placeholder="<? echo $this->__f("Found on backside, last 3 digits."); ?>"></td></tr>
         </table>
         <div style="display: none;">
             <input type="submit" id="submit" value="Pay">
+        </div>
+        <div style="text-align: right;">
+            <button class="shop_button do_payment" onclick="$(this).html('<? echo $this->__w("Please wait"); ?>')"><? echo $this->__w("Pay"); ?></button>
         </div>
     </form>    
 </div>

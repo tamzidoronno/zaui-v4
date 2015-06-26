@@ -81,16 +81,16 @@ class Booking extends \MarketingApplication implements \Application {
             }
          
             $orderLine->fullName = $person['name'];
-            $orderLine->emailAddress = $person['email'];
-            $orderLine->cellPhone = $person['cellphone'];
-            $orderLine->isChild = $person['children'];
+            $orderLine->emailAddress = isset($person['email']) ? $person['email'] : "";
+            $orderLine->cellPhone = isset($person['cellphone']) ? $person['cellphone'] : "";
+            $orderLine->isChild = isset($person['children']) ? $person['children'] : "";
             $calendarOrder->orderLines[] = $orderLine;
         }
         
         
         $odreid = $this->getApi()->getCalendarManager()->placeOrder($calendarOrder);
         echo "<script>";
-        echo "document.location='/index.php?page=cart&payOrderId=$odreid'";
+        echo "document.location='/index.php?page=paymentGateway&gsPaymentOrderId=$odreid'";
         echo "</script>";
     }
 }

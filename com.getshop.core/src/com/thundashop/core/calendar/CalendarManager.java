@@ -1,6 +1,8 @@
 package com.thundashop.core.calendar;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.calendarmanager.data.AttendeeMetaInfo;
 import com.thundashop.core.calendarmanager.data.CalendarOrder;
 import com.thundashop.core.calendarmanager.data.Day;
@@ -39,6 +41,7 @@ import com.thundashop.core.usermanager.data.User.Type;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -934,6 +937,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
 
     private void finalizeEntry(Entry entry) {
         entry.locationObject = locations.get(entry.locationId);
+        
+        List<String> usersThatDoesNotExists = entry.attendees.stream().filter(userid -> userManager.getUserById(userid) == null).collect(Collectors.toList()) ;
+        entry.attendees.removeAll(usersThatDoesNotExists);
+        
         if (entry.locationObject != null) {
             entry.location = entry.locationObject.location;
             entry.locationExtended = entry.locationObject.locationExtra;
@@ -943,6 +950,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
             entry.event = events.get(entry.eventId);
             entry.maxAttendees = entry.event.capacity;
         }
+        
+        entry.availableForBooking = true;
         
         if (entry.isInPast()) {
             entry.availableForBooking = false;
@@ -954,7 +963,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         
         if (entry.attendees.size() >= entry.maxAttendees) {
             entry.availableForBooking = false;
-        }
+        } 
     }
 
     @Override
@@ -1168,6 +1177,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         List<String> userIds = new ArrayList();
         String firstOrderUserId = "";
         for (OrderLine orderLine : order.orderLines) {
+            
             User user = new User();
             user.fullName = orderLine.fullName;
             user.emailAddress = orderLine.emailAddress;
@@ -1184,17 +1194,32 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
                 firstOrderUserId = userSaved.id;
             
             CartItem cartItem = cartManager.addProductItem(product.id, 1);
-            cartItem.getProduct().name = cartItem.getProduct().name + ", "+entry.day +"/"+entry.month+"-"+entry.year +" ( " + userSaved.fullName + " / " + userSaved.cellPhone + " / " + userSaved.emailAddress + " )";
+            
+            String ekstraInfo = " ( ";
+            if (userSaved.fullName != null) {
+                ekstraInfo += userSaved.fullName + " ";
+            }
+            if (userSaved.cellPhone != null) {
+                ekstraInfo += userSaved.cellPhone + " ";
+            }
+            if (userSaved.emailAddress != null) {
+                ekstraInfo += userSaved.emailAddress + " ";
+            }
+            ekstraInfo += ")";
+            cartItem.getProduct().name = cartItem.getProduct().name + ", "+entry.day +"/"+entry.month+"-"+entry.year + ekstraInfo;
             
             entry.attendees.add(user.id);
         }
         
+        
         Order orderSaved = orderManager.createOrderForUser(firstOrderUserId);
+        
         int i = 0;
         for (OrderLine orderLine : order.orderLines) {
-            Product iproduct = orderSaved.cart.getItems().get(i).getProduct();
+            CartItem cartItem = orderSaved.cart.getItems().get(i);
+            Product iproduct = cartItem.getProduct();
             iproduct.price = orderLine.price;
-            orderSaved.cart.getItems().get(i).getProduct().price = orderLine.price;
+            cartItem.getProduct().price = orderLine.price;
             i++;
         }
         

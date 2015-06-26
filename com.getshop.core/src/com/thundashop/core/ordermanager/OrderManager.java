@@ -15,6 +15,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductDynamicPrice;
@@ -59,6 +60,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    private InvoiceManager invoiceManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -458,6 +462,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return;
         }
         
+        sendMail(order);
+    }
+    
+    private void sendMail(Order order) {
+        Application orderManagerApplication = storeApplicationPool.getApplication("27716a58-0749-4601-a1bc-051a43a16d14");
         Store store = storeManager.getMyStore();
         String orderText = getCustomerOrderText(order, orderManagerApplication.getSetting("orderemail"));
        
@@ -474,11 +483,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return;
         }
         
+        Map<String, String> files = new HashMap();
+        
+            
+        Application invoiceApplicationIsActivated = storeApplicationPool.getApplication("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+        if (invoiceApplicationIsActivated != null) {
+            String file = invoiceManager.getInvoiceFile(order.id);
+            files.put(file, "Faktura "+order.incrementOrderId+".pdf");
+        }
+        
+        
         if (!subject.isEmpty()) {
-            mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, subject, orderText);
+            mailFactory.sendWithAttachments(store.configuration.emailAdress, order.cart.address.emailAddress, subject, orderText, files, true);
             
             if (store.configuration.emailAdress != null && !store.configuration.emailAdress.equals(order.cart.address.emailAddress)) {
-                mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, subject, orderText);
+                mailFactory.sendWithAttachments(store.configuration.emailAdress, store.configuration.emailAdress, subject, orderText, files, true);
             }
         }
     }
@@ -1001,4 +1020,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return orderresult;
     }
 
+    @Override
+    public Double getTotalForOrderById(String orderId) {
+        Order order = getOrderSecure(orderId);
+        return getTotalAmount(order);
+    }
+
+    public void orderPaid(String orderId) {
+        Application orderManagerApplication = storeApplicationPool.getApplication("27716a58-0749-4601-a1bc-051a43a16d14");
+        if (!orderManagerApplication.getSetting("shouldSendEmailAfterCompleted").equals("true")) {
+            return;
+        }
+        
+        Order order = getOrderSecure(orderId);
+        
+        if (order != null) {
+            sendMail(order);
+        }
+    }
 }

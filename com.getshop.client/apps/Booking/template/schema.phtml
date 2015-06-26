@@ -22,9 +22,11 @@ $positions = $this->getCountOfFreePositions($entry);
             echo "<div class='personrow' person='$i'>";
             echo "Person $i";
             echo "<div class='innercontent'>";
-            echo "<br/><input class='name' type='textfield' placeholder='".$this->__w("Name")."'/> ";
-            echo "<br/><input class='email' type='textfield' placeholder='".$this->__w("your@email.com")."'/> ";
-            echo "<br/><input class='cellphone' type='textfield'  placeholder='".$this->__w("cellphone")."'/> ";
+            echo "<input class='name' type='textfield' placeholder='".$this->__w("Name")."'/> ";
+            if ($i == 1) {
+                echo "<br/><input class='email' type='textfield' placeholder='".$this->__w("your@email.com")."'/> ";
+                echo "<br/><input class='cellphone' type='textfield'  placeholder='".$this->__w("cellphone")."'/> ";
+            }
             echo "<br/><input style='width: 20px;'type='checkbox' class='children'/>Barn (til og med 16 år) ";
             echo "</div>";
             echo "</div>";

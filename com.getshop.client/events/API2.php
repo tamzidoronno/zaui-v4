@@ -3361,7 +3361,7 @@ class APIOrderManager {
 	* will get the total amount for all years.
 	*
 	* @param year
-	* @return double
+	* @return Double
 	*/
 
 	public function getTotalForOrderById($orderId) {

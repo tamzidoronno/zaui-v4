@@ -93,6 +93,22 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     }
     
     
+    public String getInvoiceFile(String orderId) {
+        Order order = orderManager.getOrder(orderId);
+
+        AccountingDetails details = getAccountingDetails();
+
+        InvoiceGenerator generator = new InvoiceGenerator(order, details);
+        try {
+            String file = generator.createInvoice();
+            return file;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return "";
+    }
+    
     private String encodeFileToBase64Binary(String fileName) throws IOException {
  
         File file = new File(fileName);

@@ -212,5 +212,5 @@ public interface IOrderManager {
     public void changeOrderType(String orderId, String paymentTypeId);
     
     
-    public double getTotalForOrderById(String orderId);
+    public Double getTotalForOrderById(String orderId);
 }

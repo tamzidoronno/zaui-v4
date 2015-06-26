@@ -114,6 +114,7 @@ class OrderManager extends \WebshopApplication implements \Application {
         $this->setConfigurationSetting("ordersubject", $_POST['ordersubject']);
         $this->setConfigurationSetting("orderemail", $_POST['emailconfig']);
         $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
+        $this->setConfigurationSetting("shouldSendEmailAfterCompleted", $_POST['shouldSendEmailAfterCompleted']);
     }
     
     public function updateOrder() {

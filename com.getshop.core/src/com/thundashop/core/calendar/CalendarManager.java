@@ -1194,7 +1194,19 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
                 firstOrderUserId = userSaved.id;
             
             CartItem cartItem = cartManager.addProductItem(product.id, 1);
-            cartItem.getProduct().name = cartItem.getProduct().name + ", "+entry.day +"/"+entry.month+"-"+entry.year +" ( " + userSaved.fullName + " / " + userSaved.cellPhone + " / " + userSaved.emailAddress + " )";
+            
+            String ekstraInfo = " ( ";
+            if (userSaved.fullName != null) {
+                ekstraInfo += userSaved.fullName + " ";
+            }
+            if (userSaved.cellPhone != null) {
+                ekstraInfo += userSaved.cellPhone + " ";
+            }
+            if (userSaved.emailAddress != null) {
+                ekstraInfo += userSaved.emailAddress + " ";
+            }
+            ekstraInfo += ")";
+            cartItem.getProduct().name = cartItem.getProduct().name + ", "+entry.day +"/"+entry.month+"-"+entry.year + ekstraInfo;
             
             entry.attendees.add(user.id);
         }
@@ -1204,9 +1216,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         
         int i = 0;
         for (OrderLine orderLine : order.orderLines) {
-            Product iproduct = orderSaved.cart.getItems().get(i).getProduct();
+            CartItem cartItem = orderSaved.cart.getItems().get(i);
+            Product iproduct = cartItem.getProduct();
             iproduct.price = orderLine.price;
-            orderSaved.cart.getItems().get(i).getProduct().price = orderLine.price;
+            cartItem.getProduct().price = orderLine.price;
             i++;
         }
         

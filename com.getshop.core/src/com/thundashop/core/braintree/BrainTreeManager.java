@@ -106,6 +106,7 @@ public class BrainTreeManager extends ManagerBase implements IBrainTreeManager {
             order.status = Order.Status.PAYMENT_COMPLETED;
             order.paymentTransactionId = result.getTarget().getId();
             orderManager.saveOrder(order);
+            orderManager.orderPaid(order.id);
             return true;
         } else {
             orderManager.changeOrderStatus(orderId, Order.Status.PAYMENT_FAILED);

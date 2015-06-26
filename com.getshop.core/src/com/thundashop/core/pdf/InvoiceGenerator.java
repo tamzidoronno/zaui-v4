@@ -45,19 +45,23 @@ public class InvoiceGenerator {
         PDFont font = PDType1Font.HELVETICA_BOLD;
         contentStream = new PDPageContentStream(document, page);
         
-        addFooterLines();
-        generateYellowLines(page);
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            addFooterLines();
+            generateYellowLines(page);
+        }
         addTexts();
         addOrderText();
         addDescriptions();
         addSummary();
         
-        int startx = 33;
-        contentStream.drawLine(20, startx, 20, 77);
-        contentStream.drawLine(220, startx, 220, 77);
-        
-        contentStream.setStrokingColor(new Color(255, 246, 133));
-        contentStream.drawLine(300, startx, 300, 77);
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            int startx = 33;
+            contentStream.drawLine(20, startx, 20, 77);
+            contentStream.drawLine(220, startx, 220, 77);
+
+            contentStream.setStrokingColor(new Color(255, 246, 133));
+            contentStream.drawLine(300, startx, 300, 77);
+        }
         
         drawLines();
         
@@ -140,28 +144,33 @@ public class InvoiceGenerator {
     private void addTexts() throws IOException {
         String INVOICEORRECEIPT = order.status == Order.Status.PAYMENT_COMPLETED ? "KVITTERING" : "FAKTURA";
         contentStream.setNonStrokingColor(new Color(0, 0, 0));
-        writeText("Betalingsinformasjon", 40, 280, true, 8);
-        writeText("Betalt av", 40, 180, true, 8);
-        writeText("Innbetalt til konto", 40, 320, true, 8);
-        writeText(details.accountNumber, 40, 303, false, 12);
-        writeText("Kvittering", 40, 333, false, 12);
-        writeText("Betalt til", 310, 180, true, 8);
-        writeText("Beløp", 230, 328, true, 8);
-        writeText("Betalerens kontonummer", 360, 328, true, 8);
-        writeText("Kundeidentifikasjon (KID)", 28, 68, true, 8);
-        writeText("Kroner", 230, 68, true, 8);
-        writeText("Øre", 310, 68, true, 8);
-        writeText("Til konto", 400, 68, true, 8);
-        writeText("Betalings-", 450, 280, true, 8);
-        writeText("frist", 450, 270, true, 8);
+        
+        
         writeText(INVOICEORRECEIPT, 485, 810, true, 15);
         writeText("BESKRIVELSE", 45, 645, true, 8);
         writeText("PRIS", 335, 645, true, 8);
         writeText("ANTALL", 385, 645, true, 8);
         writeText("RABATT", 425, 645, true, 8);
         writeText("MVA", 475, 645, true, 8);
-        writeText("BELØP", 525, 645, true, 8);
         writeText("OPPSUMMERING", 443, 420, true, 8);
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            writeText(details.accountNumber, 40, 303, false, 12);
+            writeText("Innbetalt til konto", 40, 320, true, 8);
+            writeText("Øre", 310, 68, true, 8);
+            writeText("Til konto", 400, 68, true, 8);
+            writeText("Kroner", 230, 68, true, 8);
+            writeText("Kundeidentifikasjon (KID)", 28, 68, true, 8);
+            writeText("Betalt av", 40, 180, true, 8);
+            writeText("Betalingsinformasjon", 40, 280, true, 8);
+            writeText("Kvittering", 40, 333, false, 12);
+            writeText("BELØP", 525, 645, true, 8);
+            writeText("Betalerens kontonummer", 360, 328, true, 8);
+            writeText("Betalings-", 450, 280, true, 8);
+            writeText("frist", 450, 270, true, 8);
+            writeText("Betalt til", 310, 180, true, 8);
+            writeText("Beløp", 230, 328, true, 8);
+        }
     }
     
     private void writeText( String text, int x, int y, boolean bold, int fontSize, boolean alignRight) throws IOException {
@@ -196,29 +205,31 @@ public class InvoiceGenerator {
         int topLine = 160;
         int fontSize = 11;
         int left = 40;
-        writeText(order.cart.address.fullName, left, topLine, false, fontSize);
-        writeText(order.cart.address.address, left, topLine-lineHeight, false, fontSize);
-        writeText(order.cart.address.postCode + " " + order.cart.address.city, left, topLine-lineHeight*2, false, fontSize);
-        
-        // Price bottom
-        Double total = order.cart.getTotal(true)+order.cart.getShippingCost();
-        String totalString = String.format("%.2f", total);
-        
-        if(totalString.contains(".")) {
-            writeText(totalString.split("\\.")[0], 230, 45, false, 12);
-            writeText(totalString.split("\\.")[1], 310, 45, false, 12);
-        } else if(totalString.contains(",")) {
-            writeText(totalString.split(",")[0], 230, 45, false, 12);
-            writeText(totalString.split(",")[1], 310, 45, false, 12);
-        } else {
-            writeText(totalString, 230, 45, false, 12);
-            writeText("00", 310, 45, false, 12);
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            writeText(order.cart.address.fullName, left, topLine, false, fontSize);
+            writeText(order.cart.address.address, left, topLine-lineHeight, false, fontSize);
+            writeText(order.cart.address.postCode + " " + order.cart.address.city, left, topLine-lineHeight*2, false, fontSize);
         }
-        writeText(totalString, 230, 308, false, 12);
         
-        if (order.status == Order.Status.PAYMENT_COMPLETED) {
-            writeText("-", 400, 45, false, 12);
-        } else {
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            // Price bottom
+            Double total = order.cart.getTotal(true)+order.cart.getShippingCost();
+            String totalString = String.format("%.2f", total);
+
+            if(totalString.contains(".")) {
+                writeText(totalString.split("\\.")[0], 230, 45, false, 12);
+                writeText(totalString.split("\\.")[1], 310, 45, false, 12);
+            } else if(totalString.contains(",")) {
+                writeText(totalString.split(",")[0], 230, 45, false, 12);
+                writeText(totalString.split(",")[1], 310, 45, false, 12);
+            } else {
+                writeText(totalString, 230, 45, false, 12);
+                writeText("00", 310, 45, false, 12);
+            }
+            writeText(totalString, 230, 308, false, 12);
+        }
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
             writeText(details.accountNumber, 400, 45, false, 12);
         }
         
@@ -229,8 +240,10 @@ public class InvoiceGenerator {
         topLine = 250;
         fontSize = 11;
         left = 40;
-        writeText("Fakturadato: " + order.getDateCreated().replace("/", "."), left, topLine, false, fontSize);
-        writeText("Fakturanr: " + order.incrementOrderId, left, topLine-lineHeight, false, fontSize);
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            writeText("Fakturadato: " + order.getDateCreated().replace("/", "."), left, topLine, false, fontSize);
+            writeText("Fakturanr: " + order.incrementOrderId, left, topLine-lineHeight, false, fontSize);
+        }
 
         // Top company information
         lineHeight = 14;
@@ -246,22 +259,32 @@ public class InvoiceGenerator {
         writeText(details.contactEmail, left, 725, false, 8);
         writeText(details.webAddress, left+120, 725, false, 8);
         
-        writeText("Faktura dato: " + order.getDateCreated().split(" ")[0].replace("/", "."), left, 710, false, 8);
-        writeText("Faktura nr: " + order.incrementOrderId, left+120, 710, false, 8);
-        writeText("Forfallsdato: " + getDueDate(), left, 698, false, 8);
-        writeText("Til konto: " + details.accountNumber, left+120, 698, false, 8);
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            writeText("Faktura dato: " + order.getDateCreated().split(" ")[0].replace("/", "."), left, 710, false, 8);
+            writeText("Faktura nr: " + order.incrementOrderId, left+120, 710, false, 8);
+            writeText("Forfallsdato: " + getDueDate(), left, 698, false, 8);
+            writeText("Til konto: " + details.accountNumber, left+120, 698, false, 8);
+        } else {
+            writeText("Bestillingsdato: " + order.getDateCreated().split(" ")[0].replace("/", "."), left, 710, false, 8);
+            writeText("Ordrenr: " + order.incrementOrderId, left+120, 710, false, 8);
+        }
         
         // Betal til
         lineHeight = 13;
         topLine = 160;
         fontSize = 11;
         left = 310;
-        writeText(details.companyName, left, topLine, false, fontSize);
-        writeText(details.address, left, topLine-lineHeight, false, fontSize);
-        writeText(details.postCode + " " + details.city, left, topLine-lineHeight*2, false, fontSize);
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            writeText(details.companyName, left, topLine, false, fontSize);
+            writeText(details.address, left, topLine-lineHeight, false, fontSize);
+            writeText(details.postCode + " " + details.city, left, topLine-lineHeight*2, false, fontSize);
+        }
         
-        // Betalings frist
-        writeText(getDueDate(), 499, 273, false, 12);
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            // Betalings frist
+            writeText(getDueDate(), 499, 273, false, 12);   
+        }
     }
     
     private String getDueDate() {
@@ -383,7 +406,12 @@ public class InvoiceGenerator {
         }
         
         i++;
-        writeText("Å Betale", 443, 404-(i*11), false, 9);
+        if (order.status == Order.Status.PAYMENT_COMPLETED) {
+            writeText("Betalt", 443, 404-(i*11), false, 9);
+        } else {
+            writeText("Å Betale", 443, 404-(i*11), false, 9);
+        }
+        
         double total = order.cart.getShippingCost() + order.cart.getTotal(true);
         writeText(String.format("%.2f", (total)), (int) 560, 404-(i*11), false, 9, true);
     }

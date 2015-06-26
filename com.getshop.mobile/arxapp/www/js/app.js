@@ -241,8 +241,9 @@ angular.module('starter', ['ionic'])
     connectToGetshop: function() {
 
       // Connect to getshop web api
-      client = new GetShopApiWebSocket("20244.3.0.local.getshop.com");
+      client = new GetShopApiWebSocket("arx.getshop.com");
       client.setConnectedEvent(function () {
+        alert("Connected to getshop");
       });
       client.connect();
 

@@ -144,6 +144,7 @@ class Page {
         }
         echo "</div>";
 
+        $this->printLanguageSelection();
         echo "</div>";
     }
 

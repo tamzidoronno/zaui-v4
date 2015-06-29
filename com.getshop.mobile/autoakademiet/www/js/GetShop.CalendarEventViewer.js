@@ -30,7 +30,7 @@ GetShop.CalendarEventViewer.prototype = {
         var found = false;
         for (var i in entries) {
             var entry = entries[i];
-            var entryHtml = $("<div class='daybutton'>"+entry.day+"/"+entry.month+" - "+entry.year+"</div>");
+            var entryHtml = $("<div class='daybutton'>"+entry.day+"/"+entry.month+" - "+entry.year+"<div>"+entry.location+"</div></div>");
             
             entryHtml.attr('year', entry.year);
             entryHtml.attr('month', entry.month);

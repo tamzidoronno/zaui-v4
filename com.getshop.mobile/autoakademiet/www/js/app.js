@@ -69,7 +69,6 @@ App = {
         this.sendToken();
         this.loadNews(false);
         this.loadCourseList();
-        this.loadMyCourses();
         this.firstConnected = true;
 
     },
@@ -89,6 +88,7 @@ App = {
     },
     translateText: function (text) {
         var se = {
+            'Velg din avtalepartner' : 'Välj din avtalspartner',
             'Venter på at tilkoblingen skal gjennopprettes': 'Väntar på uppkoppling',
             'Kobler til server': 'Ansluter till server',
             'Laster data': 'Laddar',
@@ -103,6 +103,9 @@ App = {
             'Deltakers navn': 'Deltagarens namn',
             'Ingen tilgjengelige kurs': 'Det finns inga tillgängliga tillfällen ',
             'Ledige plasser': 'Lediga platser',
+            'Finn ditt selskap' : 'Hitta ditt företag/verkstad',
+            'Velg ditt firma fra listen under' : 'Välj ditt företag/verkstad',
+            'Dato' : 'Datum',
             'Mer informasjon': 'Mer info',
             'Påmelding venteliste': 'Anmälan väntelista',
             'E-post deltaker': 'Deltagarens e-post',
@@ -783,6 +786,7 @@ App = {
             
             App.getshopApi.CalendarManager.registerToken(App.token).done(function() { } );
             App.getshopApi.MobileManager.registerTokenToUserId(App.token).done(function() { } );
+            App.loadMyCourses();
         });
     },
     doLogout: function() {

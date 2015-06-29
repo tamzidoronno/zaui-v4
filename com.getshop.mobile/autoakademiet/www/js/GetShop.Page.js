@@ -26,7 +26,7 @@ GetShop.Page.prototype = {
     },
             
     createSkeleton: function() {
-        this.footer = $('<div data-role="footer" ><div data-role="navbar" ><ul><li><a href="#"  data-rel="back" translate="true">Tilbake</a></li></ul></div></div>');
+        this.footer = $('<div data-role="footer" ><div data-role="navbar" ><ul><li><a href="#"  data-rel="back" translate="true">'+App.translateText('Tilbake')+'</a></li></ul></div></div>');
         this.page = $('<div data-role="page" id="getshoppage_'+this.backendPage.id+'"></div>');
         this.contentArea = $('<div data-role="content"></div>');
         

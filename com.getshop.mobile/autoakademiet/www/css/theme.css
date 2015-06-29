@@ -523,10 +523,11 @@ html body .ui-group-theme-a .ui-bar-inherit {
 }
 
 .CalendarEventViewer .daybutton {
-    line-height: 50px;
+    line-height: 25px;
     border: solid 1px #EEE;
     margin-bottom: 5px;
     background: linear-gradient(to bottom, #FFF, #EEE);
+    padding: 10px;
 }
 
 .CalendarEventViewer {

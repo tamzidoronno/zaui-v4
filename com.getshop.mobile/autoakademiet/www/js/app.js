@@ -29,7 +29,7 @@ App = {
     },
     setLanguageMode: function () {
         if (App.lang === 'se') {
-            App.address = "promeisterse.local.getshop.com";
+            App.address = "promeisterse.getshop.com";
             App.appName = "ProMeisterAcademeySe";
         } else {
             App.address = "mecademo.getshop.com";
@@ -920,11 +920,14 @@ App = {
             for (var i in result) {
                 var groupData = result[i];
                 var div = $('<div/>');
-                if (groupData.imageId)
+                if (groupData.imageId) {
                     div.append('<img src="http://'+App.address+'/displayImage.php?id='+groupData.imageId+'"/>');
+                } else {
+                    div.append(groupData.groupName);
+                }
                 div.attr('groupId', groupData.id);
                 div.addClass('select_group');
-                div.append("<br/>"+groupData.groupName);
+                
                 div.tap(function() {
                     App.groupSelected($(this).attr('groupId'));
                 })

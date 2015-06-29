@@ -13,7 +13,7 @@ App = {
     monthIndex: 1,
     token: "",
     firstConnected: false,
-    numberOfMonthToShowInCalendar: 6,
+    numberOfMonthToShowInCalendar: 12,
     lang: 'se',
     version: 1,
     start: function () {
@@ -351,8 +351,9 @@ App = {
         entryContainer.attr('entry', entry.entryId);
 
         entryContainer.tap(function () {
-            var pageId = 'daypage_' + $(this).attr('year') + "_" + $(this).attr('month') + "_" + $(this).attr('day')+"_"+entry.entryId;
             var entryId = $(this).attr('entry');
+            var pageId = 'daypage_' + $(this).attr('year') + "_" + $(this).attr('month') + "_" + $(this).attr('day')+"_"+entryId;
+            
             $.mobile.changePage("#" + pageId, {transition: 'slide' });
         });
         

@@ -37,7 +37,8 @@ GetShop.CalendarEventViewer.prototype = {
             entryHtml.attr('day', entry.day);
             entryHtml.attr('entryId', entry.entryId);
             entryHtml.tap(function() {    
-                var pageId = 'daypage_' + $(this).attr('year') + "_" + $(this).attr('month') + "_" + $(this).attr('day')+"_"+entry.entryId;
+                var entryId = $(this).attr('entryId');
+                var pageId = 'daypage_' + $(this).attr('year') + "_" + $(this).attr('month') + "_" + $(this).attr('day')+"_"+entryId;
                 $.mobile.changePage("#" + pageId, {transition: 'slide' });
             });
             

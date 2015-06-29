@@ -215,7 +215,7 @@ angular.module('starter', ['ionic'])
             var deferred = $q.defer();
             var promise = deferred.promise;
  
-            if (getshop.ArxManager.logonToArx(host, name, pw, false)) {
+            if (getshop.client.ArxManager.logonToArx(host, name, pw, false)) {
                 deferred.resolve('Welcome ' + name + '!');
             } else {
                 deferred.reject('Wrong credentials.');
@@ -233,19 +233,18 @@ angular.module('starter', ['ionic'])
     }
 }])
 
-.service('GetshopService', ['$window', function($window) {
+.factory('GetshopService', ['$window', function($window) {
   return {
 
     client: null,
 
     connectToGetshop: function() {
-
       // Connect to getshop web api
-      client = new GetShopApiWebSocket("arx.getshop.com");
-      client.setConnectedEvent(function () {
-        alert("Connected to getshop");
+      this.client = new GetShopApiWebSocket("arx.getshop.com");
+      this.client.setConnectedEvent(function () {
+        
       });
-      client.connect();
+      this.client.connect();
 
     }
   }

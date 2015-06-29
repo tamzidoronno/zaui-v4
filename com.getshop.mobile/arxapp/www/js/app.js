@@ -124,90 +124,28 @@ angular.module('starter', ['ionic'])
 
 .controller('MenuCtrl', function($scope) {})
 
-.controller('UsersCtrl', function($scope) {
-  $scope.users = [{
-    firstName: "Ola",
-    lastName: "Nordman",
-    streetAddress: "Strandgaten 21",
-    postNumber: "4830",
-    post: "Hauge I Dalane",
-    group: "16"
-  },{
-    firstName: "Kai",
-    lastName: "Nordman",
-    streetAddress: "Strandgaten 21",
-    postNumber: "4830",
-    post: "Hauge I Dalane",
-    group: "5"
-  },{
-    firstName: "Emil",
-    lastName: "Nordman",
-    streetAddress: "Strandgaten 21",
-    postNumber: "4830",
-    post: "Hauge I Dalane",
-    group: "5"
-  },{
-    firstName: "Ola",
-    lastName: "Nordman",
-    streetAddress: "Strandgaten 22",
-    postNumber: "4830",
-    post: "Hauge I Dalane",
-    group: "5"
-  },{
-    firstName: "Ola",
-    lastName: "Nordman",
-    streetAddress: "Strandgaten 23",
-    postNumber: "4830",
-    post: "Hauge I Dalane",
-    group: "5"
-  },{
-    firstName: "Ola",
-    lastName: "Nordman",
-    streetAddress: "Strandgaten 24",
-    postNumber: "4830",
-    post: "Hauge I Dalane",
-    group: "5"
-  },{
-    firstName: "Ola",
-    lastName: "Nordman",
-    streetAddress: "Strandgaten 25",
-    postNumber: "4830",
-    post: "Hauge I Dalane",
-    group: "5"
-  },{
-    firstName: "Ola",
-    lastName: "Nordman",
-    streetAddress: "Strandgaten 26",
-    postNumber: "4830",
-    post: "Hauge I Dalane",
-    group: "5"
-  },{
-    firstName: "Ola",
-    lastName: "Nordman",
-    streetAddress: "Strandgaten 26",
-    postNumber: "4830",
-    post: "Hauge I Dalane",
-    group: "5"
-  }
-  ];
-})
+.controller('UsersCtrl', ['GetshopService', '$scope', function(getshop, $scope) {
 
-.controller('DoorsCtrl', function($scope) {
-  $scope.doors = [{
-    name: "Room 1"
-  },{
-    name: "Room 2"
-  },{
-    name: "Room 3"
-  },{
-    name: "Door to the kitchen"
-  },{
-    name: "Back door"
-  },{
-    name: "Enterance"
+  $scope.onPersonsFetched = function(result) {
+    console.log(result);
+    $scope.persons = result;
+    $scope.$apply();
   }
-  ];
-})
+
+  getshop.client.ArxManager.getAllPersons().done($scope.onPersonsFetched);
+
+}])
+
+.controller('DoorsCtrl', ['GetshopService', '$scope', function(getshop, $scope) {
+
+  $scope.onDoorsFetched = function(result) {
+    console.log(result);
+    $scope.doors = result;
+    $scope.$apply();
+  }
+
+  getshop.client.ArxManager.getAllDoors().done($scope.onDoorsFetched);
+}])
 
 .service('LoginService', ['GetshopService', '$q', function(getshop, $q) {
     return {

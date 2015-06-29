@@ -29,7 +29,7 @@ App = {
     },
     setLanguageMode: function () {
         if (App.lang === 'se') {
-            App.address = "promeisterse.getshop.com";
+            App.address = "promeisterse.local.getshop.com";
             App.appName = "ProMeisterAcademeySe";
         } else {
             App.address = "mecademo.getshop.com";
@@ -69,8 +69,13 @@ App = {
         this.sendToken();
         this.loadNews(false);
         this.loadCourseList();
+        this.loadAgreementText();
         this.firstConnected = true;
-
+    },
+    loadAgreementText: function() {
+        App.getshopApi.CalendarManager.getAgreementText().done(function(result) {
+            $('.useragreement').html(result);
+        })
     },
     startTranslation: function () {
         App.doTranslationForDom($('#dataloader'));
@@ -231,6 +236,21 @@ App = {
     },
     loadMyCourses: function() {
         this.getshopApi.CalendarManager.getMyEvents().done($.proxy(this.myCoursesFetched, this));
+    },
+    
+    signup: function(entryId, waitinglist) {
+        var userId = App.loggedInUser.id;
+        var emailAddress = App.loggedInUser.emailAddress;
+        var password = localStorage.getItem("password");
+        
+        this.getshopApi.CalendarManager.addUserToEvent(userId, entryId, password, emailAddress, 'mobile').done(function () {
+            if (waitinglist) {
+                alert(App.translateText('Du er nå meldt på ventelisten'));
+            } else {
+                alert(App.translateText('Du er nå påmeldt kurset'));
+            }
+            document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
+        });        
     },
     
     myCoursesFetched: function(result) {
@@ -777,7 +797,7 @@ App = {
                 return;
             };
             
-            $('.customer_name').html("Hei " + result.fullName);
+            $('.customer_name').html(result.fullName);
             localStorage.setItem("username", username);
             localStorage.setItem("password", password);
             App.loggedInUser = result;
@@ -884,6 +904,12 @@ App = {
 
         $('#vatnr').keyup($.proxy(this.vatnumberupdated, this));
         $(document).on('change', '#select-native-2', App.groupChanged);
+        
+        $('#signup_confirmation .pro_button').tap(function() {
+            var waitinglist = $(this).attr('waitinglist') === "true";
+            var entryId = $(this).attr('eventid');
+            App.signup(entryId, waitinglist);
+        });
     },
     
     createCreateUserPage: function() {
@@ -1570,24 +1596,11 @@ App.Calendar.prototype = {
         return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
     },
     signUpForEvent: function(entryId, waitinglist) {
-        var result = confirm(App.translateText("Du er i ferd med å melde deg på dette kurset, ved å trykke OK har du bekreftet ProMeister sine brukervilkår og du har blitt meldt på kurset"));
-        if (!result) {
-            return;
-        }
-        
-        var userId = App.loggedInUser.id;
-        var emailAddress = App.loggedInUser.emailAddress;
-        var password = localStorage.getItem("password");
-        
-        this.getshopApi.CalendarManager.addUserToEvent(userId, entryId, password, emailAddress, 'mobile').done(function () {
-            if (waitinglist) {
-                alert(App.translateText('Du er nå meldt på ventelisten'));
-            } else {
-                alert(App.translateText('Du er nå påmeldt kurset'));
-            }
-            document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
-        });
+        $.mobile.changePage("#signup_confirmation" , {transition: 'slide' });
+        $('#signup_confirmation .pro_button').attr('eventId', entryId);
+        $('#signup_confirmation .pro_button').attr('waitinglist', waitinglist);
     },
+   
     createDayPages: function (data) {
         var meCalendar = this;
         for (day in data.days) {

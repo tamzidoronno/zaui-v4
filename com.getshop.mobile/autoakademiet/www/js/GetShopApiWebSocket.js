@@ -754,6 +754,16 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'getAgreementText' : function(silent) {
+        data = {
+            args : {
+            },
+            method: 'getAgreementText',
+            interfaceName: 'core.calendar.ICalendarManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'getAllEventsConnectedToPage' : function(pageId, silent) {
         data = {
             args : {
@@ -2942,10 +2952,10 @@ GetShopApiWebSocket.PkkControlManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    'registerPkkControl' : function(data, silent) {
+    'registerPkkControl' : function(regdata, silent) {
         data = {
             args : {
-                data : JSON.stringify(data),
+                regdata : JSON.stringify(regdata),
             },
             method: 'registerPkkControl',
             interfaceName: 'core.pkk.IPkkControlManager',

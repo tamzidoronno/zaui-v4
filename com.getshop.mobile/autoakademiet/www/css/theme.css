@@ -344,6 +344,11 @@ label.error {
     width: 80px;   
 }
 
+#signup_confirmation .useragreement {
+    border: solid 1px #DDD;
+    margin: 20px;
+    padding: 20px;
+}
 
 
 .ui-page {

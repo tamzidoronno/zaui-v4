@@ -76,12 +76,32 @@ arxappControllers.controller('MenuCtrl', function($scope) {});
 arxappControllers.controller('UsersCtrl', ['GetshopService', '$scope', function(getshop, $scope) {
 
   $scope.onPersonsFetched = function(result) {
-    console.log(result);
     $scope.persons = result;
     $scope.$apply();
   }
 
   getshop.client.ArxManager.getAllPersons().done($scope.onPersonsFetched);
+
+}]);
+
+arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$stateParams', function(getshop, $scope, $stateParams) {
+
+  // This should be replaced with api call to get only one person details
+  $scope.onPersonFetched = function(result) {
+    $scope.persons = result;
+
+  	for (var i = 0; i < $scope.persons.length; i++) {
+  		var person = $scope.persons[i];
+  		if (person.firstName == $stateParams.userId) {
+  			$scope.user = person;
+  			break;
+  		}
+  	}
+
+    $scope.$apply();
+  	
+  }
+  getshop.client.ArxManager.getAllPersons().done($scope.onPersonFetched);
 
 }]);
 

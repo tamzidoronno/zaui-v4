@@ -1,0 +1,9 @@
+<?
+/* @var $this \ns_3983a370_d0cc_46de_ba94_cc22fe7becbb\UserGroups */
+$group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
+
+
+foreach ($group->groupInformations as $info) {
+    echo "<div>".$info->name."</div>";
+}
+?>

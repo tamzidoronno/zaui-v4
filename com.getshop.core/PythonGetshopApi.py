@@ -2914,35 +2914,6 @@ class MessageManager(object):
     data.interfaceName = "core.messagemanager.IMessageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def sendSms(self, to, message, prefix):
-    args = collections.OrderedDict()
-    if isinstance(to,GetShopBaseClass): 
-      args["to"]=json.dumps(to.__dict__)
-    else:
-      try:
-        args["to"]=json.dumps(to)
-      except (ValueError, AttributeError):
-        args["to"]=to
-    if isinstance(message,GetShopBaseClass): 
-      args["message"]=json.dumps(message.__dict__)
-    else:
-      try:
-        args["message"]=json.dumps(message)
-      except (ValueError, AttributeError):
-        args["message"]=message
-    if isinstance(prefix,GetShopBaseClass): 
-      args["prefix"]=json.dumps(prefix.__dict__)
-    else:
-      try:
-        args["prefix"]=json.dumps(prefix)
-      except (ValueError, AttributeError):
-        args["prefix"]=prefix
-    data = EmptyClass()
-    data.args = args
-    data.method = "sendSms"
-    data.interfaceName = "core.messagemanager.IMessageManager"
-    return self.communicationHelper.sendMessage(data)
-
 class MobileManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -6506,6 +6477,28 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def addGroupInformation(self, groupId, groupInfo):
+    args = collections.OrderedDict()
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
+    else:
+      try:
+        args["groupId"]=json.dumps(groupId)
+      except (ValueError, AttributeError):
+        args["groupId"]=groupId
+    if isinstance(groupInfo,GetShopBaseClass): 
+      args["groupInfo"]=json.dumps(groupInfo.__dict__)
+    else:
+      try:
+        args["groupInfo"]=json.dumps(groupInfo)
+      except (ValueError, AttributeError):
+        args["groupInfo"]=groupInfo
+    data = EmptyClass()
+    data.args = args
+    data.method = "addGroupInformation"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addGroupToUser(self, userId, groupId):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
@@ -6717,15 +6710,15 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
-  def getGroup(self, id):
+  def getGroup(self, groupId):
     args = collections.OrderedDict()
-    if isinstance(id,GetShopBaseClass): 
-      args["id"]=json.dumps(id.__dict__)
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
     else:
       try:
-        args["id"]=json.dumps(id)
+        args["groupId"]=json.dumps(groupId)
       except (ValueError, AttributeError):
-        args["id"]=id
+        args["groupId"]=groupId
     data = EmptyClass()
     data.args = args
     data.method = "getGroup"
@@ -6976,6 +6969,28 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "removeGroupFromUser"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def removeGroupInformation(self, groupId, groupInformationId):
+    args = collections.OrderedDict()
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
+    else:
+      try:
+        args["groupId"]=json.dumps(groupId)
+      except (ValueError, AttributeError):
+        args["groupId"]=groupId
+    if isinstance(groupInformationId,GetShopBaseClass): 
+      args["groupInformationId"]=json.dumps(groupInformationId.__dict__)
+    else:
+      try:
+        args["groupInformationId"]=json.dumps(groupInformationId)
+      except (ValueError, AttributeError):
+        args["groupInformationId"]=groupInformationId
+    data = EmptyClass()
+    data.args = args
+    data.method = "removeGroupInformation"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 

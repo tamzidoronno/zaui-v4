@@ -59,4 +59,10 @@ class UserGroups extends \ApplicationBase implements \Application {
     public function removeUserFromGroup() {
         $this->getApi()->getUserManager()->removeGroupFromUser($_POST['value2'], $_POST['value']);
     }
+    
+    public function addSystem() {
+        $system = new \core_usermanager_data_CertegoSystem();
+        $system->name = $_POST['addSystem'];
+        $this->getApi()->getUserManager()->addGroupInformation($_POST['value'], $system);
+    }
 }

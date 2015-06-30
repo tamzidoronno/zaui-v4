@@ -6104,6 +6104,24 @@ class APIUserManager {
 	* @throws ErrorException
 	*/
 
+	public function addGroupInformation($groupId, $core_usermanager_data_GroupInformation) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+	     $data['args']["core_usermanager_data_GroupInformation"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_GroupInformation));
+	     $data["method"] = "addGroupInformation";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function addGroupToUser($userId, $groupId) {
 	     $data = array();
 	     $data['args'] = array();
@@ -6349,10 +6367,10 @@ class APIUserManager {
 	* @throws ErrorException
 	*/
 
-	public function getGroup($id) {
+	public function getGroup($groupId) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
 	     $data["method"] = "getGroup";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->cast(new core_usermanager_data_Group(), $this->transport->sendMessage($data));
@@ -6619,6 +6637,24 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function removeGroupInformation($groupId, $groupInformationId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+	     $data['args']["groupInformationId"] = json_encode($this->transport->object_unset_nulls($groupInformationId));
+	     $data["method"] = "removeGroupInformation";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* This function will return a user new admin user that has access to only invoke the function
 	* specified in the paramters.
 	*
@@ -6698,7 +6734,7 @@ class APIUserManager {
 	     $data['args']["core_usermanager_data_Group"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Group));
 	     $data["method"] = "saveGroup";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
-	     return $this->transport->sendMessage($data);
+	     return $this->transport->cast(new core_usermanager_data_Group(), $this->transport->sendMessage($data));
 	}
 
 	/**

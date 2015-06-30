@@ -8,7 +8,9 @@ import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.start.Runner;
+import com.thundashop.core.usermanager.data.CertegoSystem;
 import com.thundashop.core.usermanager.data.Group;
+import com.thundashop.core.usermanager.data.GroupInformation;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -282,6 +284,7 @@ public class UserStoreCollection {
                 user.groups.add(groupId);
             }
         }
+        userManager.saveObject(user);
     }
 
     void removeGroupFromUser(String userId, String groupId) {
@@ -289,5 +292,25 @@ public class UserStoreCollection {
         if (user != null && user.groups != null) {
             user.groups.remove(groupId);
         }
+        userManager.saveObject(user);
     }
+
+    void addGroupInformation(String groupId, CertegoSystem groupInfo) {
+        Group group = getGroups(groupId);
+        if (group != null) {
+            group.addGroupInformation(groupInfo);
+            saveGroup(group);
+        }
+        userManager.saveObject(group);
+    }
+
+    void removeGroupInformation(String groupId, String groupInformationId) {
+        Group group = getGroups(groupId);
+        if (group != null) {
+            group.removeGroupInformation(groupInformationId);
+            saveGroup(group);
+        }
+        userManager.saveObject(group);
+    }
+
 }

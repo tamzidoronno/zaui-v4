@@ -197,7 +197,7 @@ public interface IUserManager {
      * @throws ErrorException 
      */
     @Administrator
-    public void saveGroup(Group group) throws ErrorException;
+    public Group saveGroup(Group group) throws ErrorException;
     
     /**
      * Returns all the groups
@@ -320,4 +320,12 @@ public interface IUserManager {
     public User loginWithPincode(String username, String password, String pinCode);
     
     public User checkUserNameAndPassword(String username, String password);
+    
+    public Group getGroup(String groupId);
+    
+    void addGroupToUser(String userId, String groupId);
+    
+    void removeGroupFromUser(String userId, String groupId);
+    
+    public List<User> getUsersBasedOnGroupId(String groupId);
 }

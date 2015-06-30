@@ -470,3 +470,9 @@ div[gss_method] {
 .gss_settings_application_moduleslist .innerappview {
     display: none;
 }
+
+.gss_col_width_2 {
+    width: 458px;
+    vertical-align: top;
+    display: inline-block;
+}

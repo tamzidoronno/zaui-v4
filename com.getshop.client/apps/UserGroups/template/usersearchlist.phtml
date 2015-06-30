@@ -1,15 +1,15 @@
 <?
 
-if (!isset($_POST['searchforuser'])) {
+if (!isset($_POST['searchforuser']) || !$_POST['searchforuser']) {
     return;
 }
 
 $users = $this->getApi()->getUserManager()->findUsers($_POST['searchforuser']);
 
 if (!count($users)) {
-    echo $this->__f("Did not find any users, please try to search for something else");
+    echo "<center><h3>".$this->__f("Did not find any users, please try to search for something else")."</h3></center>";
 } else {
-    echo "<center><h2>".$this->__f("Click on the user you wish to add")."</h2></center>";
+    echo "<center><h3>".$this->__f("Click on the user you wish to add")."</h3></center>";
     foreach ($users as $user) {
         echo "<div gss_method='addUserToGroup' gss_value_2='$user->id' gss_value='".$_POST['value']."' gss_fragment='usersingroup' gss_view='gss_users_in_group' class='gs_select_searched_user_group_add'>$user->fullName ($user->emailAddress) - $user->cellPhone</div>";
     }

@@ -33,11 +33,19 @@ class UserGroups extends \ApplicationBase implements \Application {
     public function createGroup() {
         $group = new \core_usermanager_data_Group();
         $group->groupName = $_POST['name'];
-        $this->getApi()->getUserManager()->saveGroup($group);
+        $group = $this->getApi()->getUserManager()->saveGroup($group);
+        $_POST['value'] = $group->id;
     }
 
+    
     public function deleteGroup() {
         $this->getApi()->getUserManager()->removeGroup($_POST['value']);
+    }
+    
+    public function saveGroup() {
+        $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
+        $group->groupName = $_POST['name'];
+        $this->getApi()->getUserManager()->saveGroup($group);
     }
     
     public function search() {

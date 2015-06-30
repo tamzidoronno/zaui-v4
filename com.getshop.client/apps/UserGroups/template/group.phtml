@@ -40,27 +40,36 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
 
 </div>
 
-
-<div class='gss_settings_content'>
-    <div class="textfield gss_setting"  id="name">
-        <span class="title"><?php echo $this->__f("Add user"); ?></span>
-        <input id="gss_search_for_user_to_add_to_group" type="textfield" gs_model='groupmodel' style='margin-right: 20px; margin-top: 5px;' gs_model_attr='searchforuser' value="" placeholder="<? echo $this->__f("Name, email etc of user"); ?>">
-        <div id="gss_search_for_products_in_list" gss_loadsilent="true" gss_method="search" gss_model="groupmodel" gss_fragment="usersearchlist" gss_view="usersearchlist"><i class="fa fa-search"></i></div>
-        <div class="description">
-            <?php echo $this->__("Search for a user to add.."); ?>
-        </div>
-    </div>
-    <div class="usersearchlist">
-        <?
-        $this->includefile("usersearchlist");
-        ?>
-    </div>
-</div>
-
-<div class='gss_settings_content'>
+<div class='gss_settings_content gss_col_width_2'>
+    <center><h1><?php echo $this->__f("Users in group"); ?></h1></center>
     <div class="gss_users_in_group">
         <?
         $this->includefile("usersingroup");
         ?>    
     </div>
 </div>
+
+<div class='gss_settings_content gss_col_width_2'>
+    <center><h1><?php echo $this->__f("Add user"); ?></h1></center>
+    <div class="textfield gss_setting" style="border-bottom: 0px;" id="name">
+        <span class="title"></span>
+        <input id="gss_search_for_user_to_add_to_group" type="textfield" gs_model='groupmodel' style='margin-right: 20px; margin-top: 5px;' gs_model_attr='searchforuser' value="" placeholder="<? echo $this->__f("Name, email etc of user"); ?>">
+        <div id="gss_search_for_products_in_list" gss_loadsilent="true" gss_method="search" gss_model="groupmodel" gss_fragment="usersearchlist" gss_view="usersearchlist"><i class="fa fa-search"></i></div>
+        <div class="description">
+            
+        </div>
+    </div>
+    <div class="usersearchlist ">
+        <? //john 
+        $this->includefile("usersearchlist");
+        ?>
+    </div>
+</div>
+
+<div class='gss_settings_content'>
+    <div class="systems_overview">
+        <center><h1>Systems</h1></center>
+    </div>
+</div>
+
+        

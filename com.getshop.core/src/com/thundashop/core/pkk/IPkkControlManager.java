@@ -18,7 +18,7 @@ import java.util.List;
 @GetShopApi
 public interface IPkkControlManager {
     public PkkControlData getPkkControlData(String licensePlate) throws ErrorException;
-    public void registerPkkControl(PkkControlData data) throws ErrorException;
+    public void registerPkkControl(PkkControlData regdata) throws ErrorException;
     
     @Administrator
     public List<PkkControlData> getPkkControls();

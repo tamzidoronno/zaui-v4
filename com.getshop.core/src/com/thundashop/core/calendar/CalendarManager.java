@@ -1402,10 +1402,32 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public boolean isUserOnEvent(String userId, String eventId) throws ErrorException {
         Entry entry = getEntry(eventId);
+        
         if (entry != null) {
-            return entry.attendees.contains(userId);
+            if (entry.attendees.contains(userId)) {
+                return true;
+            }
         }
         
         return false;
+    }
+
+    @Override
+    public boolean isUserOnWaiting(String userId, String eventId) throws ErrorException {
+        Entry entry = getEntry(eventId);
+        
+        if (entry != null) {
+            if (entry.waitingList.contains(userId)) {
+                return true;
+            }
+        }
+        
+        return false;
+
+    }
+
+    @Override
+    public String getAgreementText() {
+        return "Her kommer agreement teksten som man kan legge inn etter at softwaren er satt i produksjon";
     }
 }

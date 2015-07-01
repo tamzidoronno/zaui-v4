@@ -306,4 +306,8 @@ public interface ICalendarManager {
     public List<Entry> getMyEvents();
     
     public boolean isUserOnEvent(String userId, String eventId) throws ErrorException;
+    
+    public boolean isUserOnWaiting(String userId, String eventId) throws ErrorException;
+    
+    public String getAgreementText();
 }

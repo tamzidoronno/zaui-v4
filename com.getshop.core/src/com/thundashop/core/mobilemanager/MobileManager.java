@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 public class MobileManager extends ManagerBase implements IMobileManager {
     private Map<String, Integer> badges = new HashMap();
     public Map<String, Token> tokens = new HashMap();
+    public Map<String, String> userTokens = new HashMap();
     
     @Autowired
     private FrameworkConfig frameworkConfig;
@@ -128,5 +129,15 @@ public class MobileManager extends ManagerBase implements IMobileManager {
     public void clearBadged(String tokenId) {
         System.out.println("Clearing badget :  " + tokenId);
         badges.put(tokenId, 0);
+    }
+
+    @Override
+    public void registerTokenToUserId(String tokenId) throws ErrorException {
+        Token token = tokens.get(tokenId);
+        if (token != null && getSession() != null && getSession().currentUser != null) {
+            token.userId = getSession().currentUser.id;
+            saveObject(token);
+            System.out.println("Assigned token to userid");
+        }
     }
 }

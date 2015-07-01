@@ -14,5 +14,6 @@ public class Token extends DataCommon {
     public String tokenId = "";
     public TokenType type;
     public String appName = "";
+    public String userId = "";
     public boolean testMode = false;
 }

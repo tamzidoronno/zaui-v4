@@ -47,4 +47,6 @@ public interface IMobileManager {
      * @param tokenId 
      */
     public void clearBadged(String tokenId);
+    
+    public void registerTokenToUserId(String tokenId) throws ErrorException;
 }

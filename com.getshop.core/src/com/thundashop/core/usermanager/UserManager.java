@@ -762,11 +762,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         MessageManager man = getManager(MessageManager.class);
         if (storeId.equals("d27d81b9-52e9-4508-8f4c-afffa2458488")) {
-            man.sendMail(user.emailAddress, user.fullName, "Reset av password", "", storeId, storeId);
+            String message = "Hej " + user.fullName;
+            message += "<br/>";
+            message += "<br/>Ditt lösenord har ändrats till: " + password;
+            message += "<br/>";
+            message += "<br/>Med vänlig hälsning";
+            message += "<br/>ProMeister Academy";
+            man.sendMail(user.emailAddress, user.fullName, "Lösenordsåterställning", message, storeId, storeId);
         } else {
             String message = "Hei " + user.fullName;
             message += "<br/>";
-            message += "<br/>Ditt passord har nå blitt og du kan logge inn med passordet: " + password;
+            message += "<br/>Ditt passord har nå blitt endret og du kan logge inn med passordet: " + password;
             message += "<br/>";
             message += "<br/>Med Vennlig Hilsen";
             message += "<br/>ProMeister Academy";

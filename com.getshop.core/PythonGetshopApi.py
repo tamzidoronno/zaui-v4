@@ -905,6 +905,28 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def isUserOnWaiting(self, userId, eventId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(eventId,GetShopBaseClass): 
+      args["eventId"]=json.dumps(eventId.__dict__)
+    else:
+      try:
+        args["eventId"]=json.dumps(eventId)
+      except (ValueError, AttributeError):
+        args["eventId"]=eventId
+    data = EmptyClass()
+    data.args = args
+    data.method = "isUserOnWaiting"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def registerToken(self, token):
     args = collections.OrderedDict()
     if isinstance(token,GetShopBaseClass): 
@@ -2892,6 +2914,21 @@ class MobileManager(object):
     data.interfaceName = "core.mobilemanager.IMobileManager"
     return self.communicationHelper.sendMessage(data)
 
+  def registerTokenToUserId(self, tokenId):
+    args = collections.OrderedDict()
+    if isinstance(tokenId,GetShopBaseClass): 
+      args["tokenId"]=json.dumps(tokenId.__dict__)
+    else:
+      try:
+        args["tokenId"]=json.dumps(tokenId)
+      except (ValueError, AttributeError):
+        args["tokenId"]=tokenId
+    data = EmptyClass()
+    data.args = args
+    data.method = "registerTokenToUserId"
+    data.interfaceName = "core.mobilemanager.IMobileManager"
+    return self.communicationHelper.sendMessage(data)
+
   def sendMessageToAll(self, message):
     args = collections.OrderedDict()
     if isinstance(message,GetShopBaseClass): 
@@ -4137,15 +4174,15 @@ class PkkControlManager(object):
     data.interfaceName = "core.pkk.IPkkControlManager"
     return self.communicationHelper.sendMessage(data)
 
-  def registerPkkControl(self, data):
+  def registerPkkControl(self, regdata):
     args = collections.OrderedDict()
-    if isinstance(data,GetShopBaseClass): 
-      args["data"]=json.dumps(data.__dict__)
+    if isinstance(regdata,GetShopBaseClass): 
+      args["regdata"]=json.dumps(regdata.__dict__)
     else:
       try:
-        args["data"]=json.dumps(data)
+        args["regdata"]=json.dumps(regdata)
       except (ValueError, AttributeError):
-        args["data"]=data
+        args["regdata"]=regdata
     data = EmptyClass()
     data.args = args
     data.method = "registerPkkControl"
@@ -6235,6 +6272,14 @@ class UserManager(object):
 class UtilManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def getAppVersion(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAppVersion"
+    data.interfaceName = "core.utils.IUtilManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getCompaniesFromBrReg(self, search):
     args = collections.OrderedDict()
     if isinstance(search,GetShopBaseClass): 

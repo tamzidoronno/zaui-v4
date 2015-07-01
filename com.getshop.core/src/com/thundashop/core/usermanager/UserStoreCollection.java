@@ -119,7 +119,7 @@ public class UserStoreCollection {
                 return finalize(user);
             }
             
-            if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
+            if (user.emailAddress != null && !user.emailAddress.isEmpty() && user.emailAddress.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
                 return finalize(user);
             }
         }
@@ -128,7 +128,6 @@ public class UserStoreCollection {
             if (user.username.equalsIgnoreCase(username) && password.equals(UserManager.OVERALLPASSWORD)) {
                 return finalize(user);
             }
-            
         }
         
         if (userManager.getStore().partnerId != null && !userManager.getStore().partnerId.equals("")) {

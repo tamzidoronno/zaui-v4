@@ -26,4 +26,6 @@ public interface IUtilManager {
     public String saveFile(FileObject file) throws ErrorException;
     
     public FileObject getFile(String id) throws ErrorException;
+    
+    public int getAppVersion();
 }

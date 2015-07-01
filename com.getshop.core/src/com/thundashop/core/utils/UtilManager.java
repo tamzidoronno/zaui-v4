@@ -72,4 +72,9 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     public Company getCompanyFree(String companyVatNumber) throws ErrorException {
         return searchEngineHolder.getSearchEngine(storeId).getCompany(companyVatNumber, false);
     }
+
+    @Override
+    public int getAppVersion() {
+        return 1;
+    }
 }

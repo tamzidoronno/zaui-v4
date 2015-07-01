@@ -52,10 +52,10 @@ public class APIPkkControlManager {
      *
      * @author ktonder
      */
-     public void registerPkkControl(com.thundashop.core.pkkcontrol.PkkControlData data)  throws Exception  {
+     public void registerPkkControl(com.thundashop.core.pkkcontrol.PkkControlData regdata)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
-          data.args.put("data",new Gson().toJson(data));
+          data.args.put("regdata",new Gson().toJson(regdata));
           data.method = "registerPkkControl";
           data.interfaceName = "core.pkk.IPkkControlManager";
           String result = transport.send(data);

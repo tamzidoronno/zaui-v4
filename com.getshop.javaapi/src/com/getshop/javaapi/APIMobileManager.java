@@ -46,6 +46,20 @@ public class APIMobileManager {
      }
 
      /**
+     * Clears the badged number.
+     *
+     * @param tokenId
+     */
+     public void registerTokenToUserId(java.lang.String tokenId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("tokenId",new Gson().toJson(tokenId));
+          data.method = "registerTokenToUserId";
+          data.interfaceName = "core.mobilemanager.IMobileManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Sends the message to all registered units.
      *
      * @param message

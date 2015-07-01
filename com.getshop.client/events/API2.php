@@ -875,6 +875,22 @@ class APICalendarManager {
 	/**
 	* Get all entries in a region based on the point
 	* @param point
+	* @return boolean
+	*/
+
+	public function isUserOnWaiting($userId, $eventId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $data["method"] = "isUserOnWaiting";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all entries in a region based on the point
+	* @param point
 	* @return void
 	*/
 
@@ -2776,6 +2792,21 @@ class APIMobileManager {
 	     $data['args'] = array();
 	     $data['args']["core_mobilemanager_data_Token"] = json_encode($this->transport->object_unset_nulls($core_mobilemanager_data_Token));
 	     $data["method"] = "registerToken";
+	     $data["interfaceName"] = "core.mobilemanager.IMobileManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Clears the badged number.
+	*
+	* @param tokenId
+	*/
+
+	public function registerTokenToUserId($tokenId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["tokenId"] = json_encode($this->transport->object_unset_nulls($tokenId));
+	     $data["method"] = "registerTokenToUserId";
 	     $data["interfaceName"] = "core.mobilemanager.IMobileManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -6070,6 +6101,19 @@ class APIUtilManager {
 	
 	function APIUtilManager($transport) {
 		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getAppVersion() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAppVersion";
+	     $data["interfaceName"] = "core.utils.IUtilManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

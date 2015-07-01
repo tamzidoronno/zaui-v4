@@ -39,7 +39,22 @@ class Login extends \SystemApplication implements \Application {
     
     public function render() {
         $this->setUp();
-        $this->includefile('login');
+        $appsetting = $this->getFactory()->getApplicationPool()->getApplicationSetting("");
+        
+        $appExists = false;
+        $singletons = $this->getFactory()->getApplicationPool()->getSingletonInstances();
+
+        foreach ($singletons as $app) {
+            if ($app->getConfiguration()->appSettingsId == "2f98236f-b36d-4d5c-93c6-0ad99e5b3dc6") {
+                $appExists = true;
+            }
+        }
+        
+        if ($appExists && Login::getUserObject() == null) {
+            $this->includefile('prologin');
+        } else {
+            $this->includefile('login');
+        }
     }
     
     public function sendConfirmation() {

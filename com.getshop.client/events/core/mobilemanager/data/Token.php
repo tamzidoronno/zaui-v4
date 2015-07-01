@@ -10,6 +10,9 @@ class core_mobilemanager_data_Token extends core_common_DataCommon  {
 	public $appName;
 
 	/** @var String */
+	public $userId;
+
+	/** @var String */
 	public $testMode;
 
 }

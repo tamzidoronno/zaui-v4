@@ -75,7 +75,12 @@ foreach ($entries as $year => $months) {
                     
                 }
                 if (!$lockedForSignup && $bookingLink != "" && $availablePositions <= 0 ) { 
-                    $booking = "<a href='$bookingLink&waiting=true'><div style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list") . "</div></a>";
+                    if ($loggedIn) {
+                        $booking = "<a href='$bookingLink&waiting=true'><div style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list") . "</div></a>";
+                    } else {
+                        $booking = "<div onclick=\"app.ProMeisterLogin.show('$bookingLink&waiting=true');\" style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list") . "</div>";
+                    }
+                    
                 }
                 if ($entry->deffered ) { 
                     $booking = "<div class='event_deffered'><i class='fa fa-warning'></i> ".$this->__f("Deffered")."</div>";

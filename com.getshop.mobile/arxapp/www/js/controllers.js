@@ -10,6 +10,7 @@ arxappControllers.controller('LoginCtrl', function($scope, LoginService, LocalSt
 
   // load credentials from local storage
   $scope.userData = LocalStorage.getObject('userData');
+  console.log($scope.userData);
   if ($scope.userData.credentials === undefined) {
     $scope.userData.credentials = [];
   }
@@ -57,7 +58,7 @@ arxappControllers.controller('LoginCtrl', function($scope, LoginService, LocalSt
           break; // credentials will be updated at this index
       }
       // add or update credentials
-      $scope.userData.credentials[index] = new Credentials($scope.data.host, $scope.data.username, $scope.data.password);
+      $scope.userData.credentials[index] = new Credentials($scope.data.enteredHost, $scope.data.username, $scope.data.password);
       // save to local storage
       LocalStorage.setObject('userData', $scope.userData);
       // go to menu

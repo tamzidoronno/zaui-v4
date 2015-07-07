@@ -57,6 +57,10 @@
     padding-top: 65px;
 }
 
+.customer_name {
+    font-weight: bold;
+}
+
 .disabled {
     background-position: 0px -0px !important;
     color: #222 !important;
@@ -397,6 +401,9 @@ html body .ui-group-theme-a .ui-bar-inherit {
     margin-bottom: 20px;
 }
 
+#courselistoverview .monthcontainer .header {
+    font-weight: bold;
+}
 #courselistoverview .month_list_entries {
     padding-left: 10px;
     margin-top: 10px;
@@ -626,8 +633,9 @@ html body .ui-group-theme-a .ui-bar-inherit {
 
 .select_group img {
     max-height: 100px;
-    max-width: 300px;
+    max-width: 100%;
     width: auto;
+    height: auto;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
 }

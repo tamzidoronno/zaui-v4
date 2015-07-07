@@ -219,7 +219,18 @@ App = {
 
         // No is default language
         var no = {
-            'Reset password' : 'Gjenopprett passord'
+            'Reset password' : 'Gjenopprett passord',
+            'Velkommen til ProMeister Academy, appen som gir deg kunnskapspåfylling med noen enkle tastetrykk.' : 'Velkommen til ProMeister Academy, her kan du få kunnskapsløft med enkle tastetrykk.',
+            'Ny bruker? - Opprett konto her' : 'Ny bruker? Opprett konto',
+            'Du har deltatt på' : 'er påmeldt',
+            'Kurs i din region' : 'Kurs i min region',
+            'Dine kurs' : 'Mine kurs',
+            'Kurs liste' : 'Kursliste',
+            'Kurs oversikt' : 'Kursoversikt',
+            'Kurs du skal delta på' : 'Du er påmeldt på følgende:',
+            'Du har gjennomført følgende kurs' : 'Følgende kurs er gjennomført:',
+            'Du er nå påmeldt kurset' : 'Du er nå påmeldt kurset og bekreftelse er sendt på registrert epost.',
+            'Du er i ferd med å melde deg på dette kurset, ved å trykke OK har du bekreftet ProMeister sine brukervilkår og du har blitt meldt på kurset' : 'Ved å trykke OK har du bekreftet ProMeister sine vilkår og meldt deg på kurset.'
         }
 
         var matrix = no;
@@ -227,6 +238,10 @@ App = {
         if (App.lang === 'se') {
             matrix = se;
         }
+        
+        if (text)
+            text = text.trim();
+        
         if (!matrix[text]) {
             return text;
         }
@@ -256,9 +271,21 @@ App = {
     myCoursesFetched: function(result) {
         var me = this;
         var container = $('#yourcourses .mycourses_page_result');
-        container.html("");
+        container.html(""); 
         
-        $('.number_of_events').html(App.translateText("Du har deltatt på") + " " + result.length + " " + App.translateText("kurs"))
+        var count = 0;
+        for (var i in result) {
+            var event = result[i];
+            if (App.lang === "se" && event.isInPast) {
+                count++;
+            } 
+            
+            if (App.lang === "no" && !event.isInPast) {
+                count++;
+            }
+        }
+        
+        $('.number_of_events').html(App.translateText("Du har deltatt på") + " " + count + " " + App.translateText("kurs"))
         if (result.length === 0) {
             container.html(App.translateText('Du har ikke deltatt på noen kurs enda'));
         } else {

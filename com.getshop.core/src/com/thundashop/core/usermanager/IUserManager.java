@@ -5,7 +5,6 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
-import com.thundashop.core.usermanager.data.CertegoSystem;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.GroupInformation;
@@ -326,14 +325,12 @@ public interface IUserManager {
     
     public Group getGroup(String groupId);
     
+    @Administrator
     void addGroupToUser(String userId, String groupId);
     
+    @Administrator
     void removeGroupFromUser(String userId, String groupId);
     
     public List<User> getUsersBasedOnGroupId(String groupId);
-    
-    public void addGroupInformation(String groupId, CertegoSystem groupInfo);
-    
-    public void removeGroupInformation(String groupId, String groupInformationId);
     
 }

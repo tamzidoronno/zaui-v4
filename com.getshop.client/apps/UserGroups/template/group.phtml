@@ -65,28 +65,4 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
         ?>
     </div>
 </div>
-
-<div class='gss_settings_content'>
-    <center><h1>Systems</h1></center>
-    
-    <div class="textfield gss_setting" style="border-bottom: 0px;" id="name">
-        <span class="title">Add new system</span>
-        <input id="" type="textfield" gs_model='groupmodel' style='margin-right: 20px; margin-top: 5px;' gs_model_attr='addSystem' value="" placeholder="<? echo $this->__f("Name, email etc of user"); ?>">
-        <div class="description">
-            Enter the text of the system and press add button
-        </div>
-    </div>
-    
-    <div class='gss_button_area'>
-        <div class="gss_button" gss_fragment="systemsoverview" gss_value='<? echo $group->id?>' gss_view="systems_overview" gss_method="addSystem" gss_model="groupmodel"><i class='fa fa-plus'></i><?php echo $this->__("Add"); ?></div>
-    </div>
-
-    <div class="systems_overview">
-        <? 
-        $this->includefile("systemsoverview");
-        ?>
-    </div>
-    
-</div>
-
         

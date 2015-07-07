@@ -1379,6 +1379,47 @@ class CartManager(object):
     data.interfaceName = "core.cartmanager.ICartManager"
     return self.communicationHelper.sendMessage(data)
 
+class CertegoManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def deleteSystem(self, systemId):
+    args = collections.OrderedDict()
+    if isinstance(systemId,GetShopBaseClass): 
+      args["systemId"]=json.dumps(systemId.__dict__)
+    else:
+      try:
+        args["systemId"]=json.dumps(systemId)
+      except (ValueError, AttributeError):
+        args["systemId"]=systemId
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteSystem"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getSystems(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSystems"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveSystem(self, system):
+    args = collections.OrderedDict()
+    if isinstance(system,GetShopBaseClass): 
+      args["system"]=json.dumps(system.__dict__)
+    else:
+      try:
+        args["system"]=json.dumps(system)
+      except (ValueError, AttributeError):
+        args["system"]=system
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveSystem"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
 class ChatManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -6477,28 +6518,6 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
-  def addGroupInformation(self, groupId, groupInfo):
-    args = collections.OrderedDict()
-    if isinstance(groupId,GetShopBaseClass): 
-      args["groupId"]=json.dumps(groupId.__dict__)
-    else:
-      try:
-        args["groupId"]=json.dumps(groupId)
-      except (ValueError, AttributeError):
-        args["groupId"]=groupId
-    if isinstance(groupInfo,GetShopBaseClass): 
-      args["groupInfo"]=json.dumps(groupInfo.__dict__)
-    else:
-      try:
-        args["groupInfo"]=json.dumps(groupInfo)
-      except (ValueError, AttributeError):
-        args["groupInfo"]=groupInfo
-    data = EmptyClass()
-    data.args = args
-    data.method = "addGroupInformation"
-    data.interfaceName = "core.usermanager.IUserManager"
-    return self.communicationHelper.sendMessage(data)
-
   def addGroupToUser(self, userId, groupId):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
@@ -6972,28 +6991,6 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
-  def removeGroupInformation(self, groupId, groupInformationId):
-    args = collections.OrderedDict()
-    if isinstance(groupId,GetShopBaseClass): 
-      args["groupId"]=json.dumps(groupId.__dict__)
-    else:
-      try:
-        args["groupId"]=json.dumps(groupId)
-      except (ValueError, AttributeError):
-        args["groupId"]=groupId
-    if isinstance(groupInformationId,GetShopBaseClass): 
-      args["groupInformationId"]=json.dumps(groupInformationId.__dict__)
-    else:
-      try:
-        args["groupInformationId"]=json.dumps(groupInformationId)
-      except (ValueError, AttributeError):
-        args["groupInformationId"]=groupInformationId
-    data = EmptyClass()
-    data.args = args
-    data.method = "removeGroupInformation"
-    data.interfaceName = "core.usermanager.IUserManager"
-    return self.communicationHelper.sendMessage(data)
-
   def requestAdminRight(self, managerName, managerFunction, applicationInstanceId):
     args = collections.OrderedDict()
     if isinstance(managerName,GetShopBaseClass): 
@@ -7283,6 +7280,7 @@ class GetShopApi(object):
     self.CalendarManager = CalendarManager(self.communicationHelper)
     self.CarTuningManager = CarTuningManager(self.communicationHelper)
     self.CartManager = CartManager(self.communicationHelper)
+    self.CertegoManager = CertegoManager(self.communicationHelper)
     self.ChatManager = ChatManager(self.communicationHelper)
     self.ContentManager = ContentManager(self.communicationHelper)
     self.FooterManager = FooterManager(self.communicationHelper)

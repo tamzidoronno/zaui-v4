@@ -11,11 +11,9 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.start.Runner;
-import com.thundashop.core.usermanager.data.CertegoSystem;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
-import com.thundashop.core.usermanager.data.GroupInformation;
 import com.thundashop.core.usermanager.data.LoginHistory;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
@@ -209,6 +207,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         loginHistory.markLogin(user, getSession().id);
         saveObject(loginHistory);
+       
         return user;
     }
 
@@ -938,23 +937,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             collection.removeGroupFromUser(userId, groupId);
         }
     }
-
-    @Override
-    public void addGroupInformation(String groupId, CertegoSystem groupInfo) {
-        UserStoreCollection collection = getUserStoreCollection(storeId);
-        if (collection != null) {
-            collection.addGroupInformation(groupId, groupInfo);
-        }
-    }
-
-    @Override
-    public void removeGroupInformation(String groupId, String groupInformationId) {
-        UserStoreCollection collection = getUserStoreCollection(storeId);
-        if (collection != null) {
-            collection.removeGroupInformation(groupId, groupInformationId);
-        }
-    }
-
  
     
 }

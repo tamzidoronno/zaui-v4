@@ -12,6 +12,9 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
         <div class="gss_menu_submenu">
             <div class='gss_submenu_entry <? echo $appId == "ba6f5e74-87c7-4825-9606-f2d3c93d292f" ? "gss_active" : ""; ?>' gss_goto_app="ba6f5e74-87c7-4825-9606-f2d3c93d292f"><i class='fa fa-user'></i> <? echo $this->__f("Users"); ?> </div>
             <div class='gss_submenu_entry <? echo $appId == "3983a370-d0cc-46de-ba94-cc22fe7becbb" ? "gss_active" : ""; ?>' gss_goto_app='3983a370-d0cc-46de-ba94-cc22fe7becbb'><i class='fa fa-users'></i> <? echo $factory->__f("Usergroups"); ?></div>
+            <?
+            $this->printExtraUserApps();
+            ?>
         </div>
     </div>
     

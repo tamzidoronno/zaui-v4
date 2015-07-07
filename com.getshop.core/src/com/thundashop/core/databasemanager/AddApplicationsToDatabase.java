@@ -54,17 +54,31 @@ public class AddApplicationsToDatabase {
         allowed2.add("xlarge");
 
         
-        Application WhiteAndCleanTheme = createSettings("UserGroups",
+        Application UserGroups = createSettings("UserGroups",
                 "3983a370-d0cc-46de-ba94-cc22fe7becbb",
                 allowed2,
                 "",
                 Application.Type.System, true);
-        WhiteAndCleanTheme.isPublic = true;
-        WhiteAndCleanTheme.isFrontend = false;
-        WhiteAndCleanTheme.moduleId = "hidden";
-        WhiteAndCleanTheme.defaultActivate = true;
+        UserGroups.isPublic = true;
+        UserGroups.isFrontend = false;
+        UserGroups.moduleId = "hidden";
+        UserGroups.defaultActivate = true;
+        apps.add(UserGroups);
         
-        apps.add(WhiteAndCleanTheme);
+        Application CertegoSystems = createSettings("CertegoSystems",
+                "27a320a3-e983-4f55-aae8-cf94add661c2",
+                allowed2,
+                "",
+                Application.Type.System, true);
+        CertegoSystems.isPublic = false;
+        CertegoSystems.isFrontend = false;
+        CertegoSystems.allowedStoreIds = new ArrayList();
+        CertegoSystems.allowedStoreIds.add("1e647711-6624-40fd-807e-7673250accc4");
+        
+        CertegoSystems.moduleId = "other";
+        CertegoSystems.defaultActivate = true;
+        
+        apps.add(CertegoSystems);
         
         return apps;
     }

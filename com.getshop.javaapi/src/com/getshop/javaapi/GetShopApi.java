@@ -110,13 +110,7 @@ public class GetShopApi {
            return new APIReportingManager(transport);
       }
      /**
-      * @return APIArxManager
-      */
-      public APIArxManager getArxManager() {
-           return new APIArxManager(transport);
-      }
-     /**
-      * @return APIMobileManager
+      * @return APISedoxProductManager
       */
       public APISedoxProductManager getSedoxProductManager() {
            return new APISedoxProductManager(transport);
@@ -164,13 +158,7 @@ public class GetShopApi {
            return new APIYouTubeManager(transport);
       }
      /**
-      * @return APIMecaApi
-      */
-      public APIMecaApi getMecaApi() {
-           return new APIMecaApi(transport);
-      }
-     /**
-      * @return APIPageManager
+      * @return APIHotelBookingManager
       */
       public APIHotelBookingManager getHotelBookingManager() {
            return new APIHotelBookingManager(transport);
@@ -198,6 +186,12 @@ public class GetShopApi {
       */
       public APIGalleryManager getGalleryManager() {
            return new APIGalleryManager(transport);
+      }
+     /**
+      * @return APICertegoManager
+      */
+      public APICertegoManager getCertegoManager() {
+           return new APICertegoManager(transport);
       }
      /**
       * @return APIListManager

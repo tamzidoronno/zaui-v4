@@ -64,4 +64,19 @@ class CertegoSystems extends \ApplicationBase implements \Application {
         return false;
     }
 
+    public function searchForGroup() {
+        
+    }
+    
+    public function removeGroupFromSystem() {
+        $system = $this->getSystem($_POST['value']);
+        $system->groupId = null;
+        $this->getApi()->getCertegoManager()->saveSystem($system);
+    }
+    
+    public function assignSystemToGroup() {
+        $system = $this->getSystem($_POST['value']);
+        $system->groupId = $_POST['value2'];
+        $this->getApi()->getCertegoManager()->saveSystem($system);
+    }
 }

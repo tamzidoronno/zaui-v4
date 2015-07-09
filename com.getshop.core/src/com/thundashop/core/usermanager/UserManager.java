@@ -937,6 +937,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             collection.removeGroupFromUser(userId, groupId);
         }
     }
- 
-    
+
+    @Override
+    public List<Group> searchForGroup(String searchCriteria) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            return collection.searchForGroup(searchCriteria);
+        }
+        
+        return new ArrayList();
+    }
 }

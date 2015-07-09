@@ -293,4 +293,12 @@ public class UserStoreCollection {
         userManager.saveObject(user);
     }
 
+    public List<Group> searchForGroup(String searchCriteria) {
+        return groups
+            .values()
+            .stream()
+            .filter(group -> group.groupName != null && group.groupName.toLowerCase().contains(searchCriteria))
+            .collect(Collectors.toList());
+    }
+
 }

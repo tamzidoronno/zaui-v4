@@ -6769,6 +6769,23 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function searchForGroup($searchCriteria) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["searchCriteria"] = json_encode($this->transport->object_unset_nulls($searchCriteria));
+	     $data["method"] = "searchForGroup";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* If you need to reset the password for a given user, you need fetch a reset code by calling this call.
 	* @param title The title of the message to attach to the reset code.
 	* @param text The text to attach to the mail being sent with the reset code.

@@ -333,4 +333,6 @@ public interface IUserManager {
     
     public List<User> getUsersBasedOnGroupId(String groupId);
     
+    public List<Group> searchForGroup(String searchCriteria);
+    
 }

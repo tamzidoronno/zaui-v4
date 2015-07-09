@@ -7101,6 +7101,21 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def searchForGroup(self, searchCriteria):
+    args = collections.OrderedDict()
+    if isinstance(searchCriteria,GetShopBaseClass): 
+      args["searchCriteria"]=json.dumps(searchCriteria.__dict__)
+    else:
+      try:
+        args["searchCriteria"]=json.dumps(searchCriteria)
+      except (ValueError, AttributeError):
+        args["searchCriteria"]=searchCriteria
+    data = EmptyClass()
+    data.args = args
+    data.method = "searchForGroup"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def sendResetCode(self, title, text, username):
     args = collections.OrderedDict()
     if isinstance(title,GetShopBaseClass): 

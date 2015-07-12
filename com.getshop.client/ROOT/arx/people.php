@@ -35,7 +35,7 @@ foreach($users as $user) {
     foreach($user->accessCategories as $category) {
         /* @var $category core_arx_AccessCategory */
         echo "<div class='access_category'>";
-        echo "<i class='fa fa-trash-o'></i> " . $category->name. ", <span style='float:right;'> <i class='fa fa-edit'></i></span><br>";
+        echo $category->name. "<br>";
         echo "</div>";
         echo $category->startDate . "<br>";
         echo $category->endDate . "<br>";
@@ -45,9 +45,8 @@ foreach($users as $user) {
     $id = $user->id;
     echo "<a href='?page=newperson&id=$id' style='text-decoration:none; color:#fff;'>";
     echo "<div class='edit_person'><i class='fa fa-plus-circle'></i> Edit person</div>";
-    echo "</a>";
-    echo "<a href='?page=people&removePerson=$id' style='text-decoration:none; color:#fff;'><div class='access_category'><i class='fa fa-trash-o'></i> Remove person</div></a>";
-    echo "<div class='access_category donemodifying'><i class='fa fa-thumbs-o-up'></i> Done modifying</div>";
+    echo "</a><br>";
+    echo "<div class='access_category donemodifying'><i class='fa fa-thumbs-o-up'></i> Hide</div>";
     echo "</div>";
     echo "</div>";
     

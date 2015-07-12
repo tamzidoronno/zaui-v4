@@ -72,7 +72,7 @@ if(isset($_POST['createnewperson'])) {
 }
 
 ?>
-
+<div class='backbutton'><i class="fa fa-arrow-left"></i> Back to main menu</div>
 <h1>Person details - <a href="?page=newperson&id=<? echo $id; ?>&delete=1"><i class='fa fa-trash-o'></i></a></h1>
 <form action="" method="POST" id="personform">
     First name<br>
@@ -121,7 +121,7 @@ echo "</form>";
 if(is_array($person->accessCategories)) {
     foreach($person->accessCategories as $category) {
         /* @var $category core_arx_AccessCategory */
-        echo "<a href='?page=newperson&id=$id&removeCategory=".$category->name."'><i class='fa fa-trash-o'></i></a> " . $category->name . " - " . $category->startDate . " - " . $category->endDate . "<bR>";
+        echo "<a href='?page=newperson&id=$id&removeCategory=".$category->name."'><i class='fa fa-trash-o'></i></a> " . $category->name . " - " . $category->startDate . " - " . $category->endDate . "<bR><br>";
     }
 }
 ?>

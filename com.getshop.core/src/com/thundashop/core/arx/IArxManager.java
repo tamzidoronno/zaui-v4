@@ -25,4 +25,7 @@ interface IArxManager {
     public List<AccessCategory> getAllAccessCategories() throws Exception;
     public void doorAction(String externalId, String state) throws Exception;
     public List<AccessLog> getLogForDoor(String externalId, long start, long end) throws Exception;
+    public Person updatePerson(Person person) throws Exception;
+    public Person getPerson(String id) throws Exception;
+    public Person addCard(String personId, Card card) throws Exception;
 }

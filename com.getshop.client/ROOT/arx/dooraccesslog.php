@@ -23,6 +23,9 @@ if(!$result) {
         echo date("d-m-Y H:i:s", $res->timestamp/1000) . "<bR>";
         echo $res->personName . " " . $res->card . "<br>";
         echo $res->type . "<br>";
+        echo "<pre>";
+        echo htmlentities($res->dac_properties);
+        echo "</pre>";
         echo "</div>";
     }
 }

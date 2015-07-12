@@ -5,6 +5,11 @@
 <input type="text" class="searchfield" placeholder="Search for a person"></input>
 <br>
 <br>
+<a href="?page=newperson">
+    <input type="button" value="Add new person">
+</a>
+<br>
+<br>
 <?
 $users = $api->getArxManager()->getAllPersons();
 foreach($users as $user) {
@@ -12,6 +17,10 @@ foreach($users as $user) {
     echo "<div class='personrow'>";
     echo "<i class='fa fa-arrow-right'></i>";
     echo "<b>" . $user->firstName . " " . $user->lastName . "</b><br>";
+    echo "Cards: ";
+    foreach($user->cards as $card) {
+        echo $card->cardid . " ";
+    }
     echo "<div class='subdata'>";
     foreach($user->accessCategories as $category) {
         echo $category->name. ", ";
@@ -26,21 +35,26 @@ foreach($users as $user) {
     foreach($user->accessCategories as $category) {
         /* @var $category core_arx_AccessCategory */
         echo "<div class='access_category'>";
-        echo "<i class='fa fa-trash-o'></i> " . $category->name. ", <span style='float:right;'> <i class='fa fa-edit'></i></span><br>";
+        echo $category->name. "<br>";
         echo "</div>";
         echo $category->startDate . "<br>";
         echo $category->endDate . "<br>";
         echo "<hr>";
     }
     
-    echo "<div class='access_category'><i class='fa fa-plus-circle'></i> Add access category</div>";
-    echo "<div class='access_category'><i class='fa fa-trash-o'></i> Remove person</div>";
-    echo "<div class='access_category donemodifying'><i class='fa fa-thumbs-o-up'></i> Done modifying</div>";
+    $id = $user->id;
+    echo "<a href='?page=newperson&id=$id' style='text-decoration:none; color:#fff;'>";
+    echo "<div class='edit_person'><i class='fa fa-plus-circle'></i> Edit person</div>";
+    echo "</a><br>";
+    echo "<div class='access_category donemodifying'><i class='fa fa-thumbs-o-up'></i> Hide</div>";
     echo "</div>";
     echo "</div>";
     
     echo "</div>";
 }
+
+
+
 ?>
 
 <style>

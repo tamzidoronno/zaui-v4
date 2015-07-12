@@ -20,6 +20,22 @@ class APIArxManager {
 	* @author boggi
 	*/
 
+	public function addCard($personId, $core_arx_Card) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["personId"] = json_encode($this->transport->object_unset_nulls($personId));
+	     $data['args']["core_arx_Card"] = json_encode($this->transport->object_unset_nulls($core_arx_Card));
+	     $data["method"] = "addCard";
+	     $data["interfaceName"] = "core.arx.IArxManager";
+	     return $this->transport->cast(new core_arx_Person(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* communication with the arx server.
+	*
+	* @author boggi
+	*/
+
 	public function doorAction($externalId, $state) {
 	     $data = array();
 	     $data['args'] = array();
@@ -95,6 +111,21 @@ class APIArxManager {
 	* @author boggi
 	*/
 
+	public function getPerson($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getPerson";
+	     $data["interfaceName"] = "core.arx.IArxManager";
+	     return $this->transport->cast(new core_arx_Person(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* communication with the arx server.
+	*
+	* @author boggi
+	*/
+
 	public function isLoggedOn() {
 	     $data = array();
 	     $data['args'] = array();
@@ -118,6 +149,21 @@ class APIArxManager {
 	     $data["method"] = "logonToArx";
 	     $data["interfaceName"] = "core.arx.IArxManager";
 	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* communication with the arx server.
+	*
+	* @author boggi
+	*/
+
+	public function updatePerson($core_arx_Person) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_arx_Person"] = json_encode($this->transport->object_unset_nulls($core_arx_Person));
+	     $data["method"] = "updatePerson";
+	     $data["interfaceName"] = "core.arx.IArxManager";
+	     return $this->transport->cast(new core_arx_Person(), $this->transport->sendMessage($data));
 	}
 
 }

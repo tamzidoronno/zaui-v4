@@ -39,6 +39,28 @@ class CommunicationHelper:
 class ArxManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def addCard(self, personId, card):
+    args = collections.OrderedDict()
+    if isinstance(personId,GetShopBaseClass): 
+      args["personId"]=json.dumps(personId.__dict__)
+    else:
+      try:
+        args["personId"]=json.dumps(personId)
+      except (ValueError, AttributeError):
+        args["personId"]=personId
+    if isinstance(card,GetShopBaseClass): 
+      args["card"]=json.dumps(card.__dict__)
+    else:
+      try:
+        args["card"]=json.dumps(card)
+      except (ValueError, AttributeError):
+        args["card"]=card
+    data = EmptyClass()
+    data.args = args
+    data.method = "addCard"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
   def doorAction(self, externalId, state):
     args = collections.OrderedDict()
     if isinstance(externalId,GetShopBaseClass): 
@@ -114,6 +136,21 @@ class ArxManager(object):
     data.interfaceName = "core.arx.IArxManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getPerson(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getPerson"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
   def isLoggedOn(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -148,6 +185,21 @@ class ArxManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "logonToArx"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def updatePerson(self, person):
+    args = collections.OrderedDict()
+    if isinstance(person,GetShopBaseClass): 
+      args["person"]=json.dumps(person.__dict__)
+    else:
+      try:
+        args["person"]=json.dumps(person)
+      except (ValueError, AttributeError):
+        args["person"]=person
+    data = EmptyClass()
+    data.args = args
+    data.method = "updatePerson"
     data.interfaceName = "core.arx.IArxManager"
     return self.communicationHelper.sendMessage(data)
 

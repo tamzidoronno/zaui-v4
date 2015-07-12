@@ -484,3 +484,14 @@ div[gss_method] {
     vertical-align: top;
     display: inline-block;
 }
+
+.gss_col_width_inner_2 {
+    margin: 0px;
+    border-radius: 0px;
+    box-shadow: 0px 0px 0px;
+    width: 455px;
+    display: inline-block;
+    vertical-align: top;
+    border: solid 1px #DDD;
+    background-color: #F4F4F4;
+}

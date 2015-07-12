@@ -5,6 +5,9 @@ if (!isset($_POST['searchforgroup'])) {
 
 $groups = $this->getApi()->getUserManager()->searchForGroup($_POST['searchforgroup']);
 
+if (!$groups ) {
+    $groups  = [];
+}
 ?>
 <div>
     <center><h3>Velg gruppen du ønsker å tilknytte dette systemet.<h3></center>

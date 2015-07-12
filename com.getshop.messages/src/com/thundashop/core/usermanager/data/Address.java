@@ -22,8 +22,11 @@ public class Address extends DataCommon {
     public String fullName;
     public String postCode;
     public String address;
+    public String address2;
     public String city;
     public String type;
     public String countrycode;
     public String countryname;
+    public String customerNumber;
+    public String vatNumber;
 }

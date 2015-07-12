@@ -8,7 +8,6 @@ $groupName = $system->group != null ? $system->group->groupName : "";
     <span class="title"><?php echo $this->__f("Systemnummer"); ?></span>
     <input type="textfield" gs_model='systemmodel' gs_model_attr='systemnname' value="<? echo $system->number; ?>" placeholder="xxx">
     <div class="description">
-        <?php echo $this->__("Name of the person that owns this new account."); ?>
     </div>
 </div>
 
@@ -16,7 +15,7 @@ $groupName = $system->group != null ? $system->group->groupName : "";
     <span class="title"><?php echo $this->__f("Navn"); ?></span>
     <input type="textfield" gs_model='systemmodel' gs_model_attr='name' value="<? echo $system->name; ?>" placeholder="John Doe">
     <div class="description">
-        <?php echo $this->__("Email address."); ?>
+        <?php echo $this->__("Navn på eier av låsesystemet."); ?>
     </div>
 </div>
 
@@ -24,7 +23,7 @@ $groupName = $system->group != null ? $system->group->groupName : "";
     <span class="title"><?php echo $this->__f("Mail address"); ?></span>
     <input type="textfield" gs_model='systemmodel' gs_model_attr='email' value="<? echo $system->email; ?>" placeholder="email@address.org">
     <div class="description">
-        <?php echo $this->__("Email address."); ?>
+        <?php echo $this->__("E-postadresse til eier av systemet"); ?>
     </div>
 </div>
 
@@ -32,7 +31,7 @@ $groupName = $system->group != null ? $system->group->groupName : "";
     <span class="title"><?php echo $this->__f("Phone number"); ?></span>
     <input type="textfield" gs_model='systemmodel' gs_model_attr='phonenumber' value="<? echo $system->phoneNumber; ?>" placeholder='12345678'>
     <div class="description">
-        <?php echo $this->__("The cell phone number to the owner of this account."); ?>
+        <?php echo $this->__("Mobilnummer til eier av systemet"); ?>
     </div>
 </div>
 

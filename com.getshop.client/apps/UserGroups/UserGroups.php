@@ -45,6 +45,20 @@ class UserGroups extends \ApplicationBase implements \Application {
     public function saveGroup() {
         $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
         $group->groupName = $_POST['name'];
+        $group->defaultDeliveryAddress->fullName = $_POST['deliveryName'];
+        $group->defaultDeliveryAddress->address = $_POST['deliveryAddress1'];
+        $group->defaultDeliveryAddress->address2 = $_POST['deliveryAddress2'];
+        $group->defaultDeliveryAddress->postCode = $_POST['deliveryPostNumber'];
+        $group->defaultDeliveryAddress->city = $_POST['deliveryPostPlace'];
+        
+        $group->invoiceAddress->fullName = $_POST['invoiceName'];
+        $group->invoiceAddress->address = $_POST['invoiceAddress1'];
+        $group->invoiceAddress->address2 = $_POST['invoiceAddress2'];
+        $group->invoiceAddress->postCode = $_POST['invoicePostNumber'];
+        $group->invoiceAddress->city = $_POST['invoicePostPlace'];
+        $group->invoiceAddress->customerNumber = $_POST['invoiceCustomerNumber'];
+        $group->invoiceAddress->vatNumber = $_POST['invoiceVatNumber'];
+        
         $this->getApi()->getUserManager()->saveGroup($group);
     }
     
@@ -65,4 +79,24 @@ class UserGroups extends \ApplicationBase implements \Application {
         $system->name = $_POST['addSystem'];
         $this->getApi()->getUserManager()->addGroupInformation($_POST['value'], $system);
     }
+
+    public function getNumberOfUsersInGroup($group) {
+        return count($this->getApi()->getUserManager()->getUsersBasedOnGroupId($group->id));
+    }
+
+    public function printExtraInformation($group) {
+        $singleTons = $this->getFactory()->getApi()->getStoreApplicationPool()->getApplications();
+        
+        foreach ($singleTons as $singleTon) {
+            $instance = $this->getFactory()->getApplicationPool()->createInstace($singleTon);
+            if (method_exists($instance, "renderExtraGroupList")) {
+                $instance->renderExtraGroupList($group);
+            }
+        }
+    }
+    
+    public function renderExtraGroupList($group) {
+        echo "<div style='font-size: 13px; font-weight: bold;'>".$this->__f("Users").": ".$this->getNumberOfUsersInGroup($group)."</div>";
+    }
+
 }

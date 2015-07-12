@@ -9,13 +9,44 @@ and open the template in the editor.
 */
 
 .gs_select_searched_user_group_add {
-    border: solid 1px #DDD;
-    padding: 5px;
+    border-bottom: solid 1px #DDD;
     margin: 5px;
-    text-align: center;
     cursor: pointer;
+}
+
+
+.gs_select_searched_user_group_add span {
+    padding: 5px;
+    display: inline-block;
+    
+}
+
+.gs_select_searched_user_group_add i {
+    color: red;
+    border-left: solid 1px #DDD;
+    border-right: solid 1px #DDD;
+    border-top: solid 1px #DDD;
+    padding: 5px;
 }
 
 .gs_select_searched_user_group_add:hover {
     background-color: #F9F9F9;
+}
+
+.gss_addUserToGroup {
+    cursor: pointer; 
+    font-size: 20px; 
+    padding: 5px; 
+    border: solid 0px; 
+    color: green; 
+    position: absolute; 
+    right: 10px; 
+    top: 10px;
+}
+
+.gss_addUserForm {
+    display: none;
+    background-color: #F9f9f9; 
+    padding: 20px; 
+    border: solid 1px #DDD;
 }

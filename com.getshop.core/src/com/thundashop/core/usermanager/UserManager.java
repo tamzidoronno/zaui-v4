@@ -11,6 +11,8 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.start.Runner;
+import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
@@ -65,6 +67,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Autowired
     public StoreApplicationPool applicationPool;
+    
+    @Autowired
+    public StoreManager storeManager;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -167,10 +172,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.type = User.Type.ADMINISTRATOR;
         }
         users.addUser(user);
+        
+        String uncryptedPassword = user.password;
+        
         user.password = encryptPassword(user.password);
         
         databaseSaver.saveObject(user, credentials);
         
+        sendWelcomeEmail(user, uncryptedPassword);
         return user;
     }
     
@@ -888,6 +897,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         User user = getUserByUserNameAndPassword(username, password);
         
         if (user != null && user.pinCode != null && user.pinCode.equals(pinCode)) {
+            this.requestNewPincode(username, password);
             addUserToSession(user);
             return user;
         }
@@ -946,5 +956,42 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         return new ArrayList();
+    }
+
+    private void sendWelcomeEmail(User user, String uncryptedPassword) {
+        Application app = applicationPool.getApplication("ba6f5e74-87c7-4825-9606-f2d3c93d292f");
+        if (app == null) {
+            return;
+        }
+        
+        if (!app.getSetting("shouldSendEmail").equals("true")) {
+            return;
+        }
+        
+        String subject = app.getSetting("ordersubject");
+        String text = app.getSetting("orderemail");
+        
+        subject = formatText(subject, user, uncryptedPassword);
+        text = formatText(text, user, uncryptedPassword);
+        
+        Store store = storeManager.getMyStore();
+        mailfactory.send(store.getDefaultMailAddress(), user.emailAddress, subject, text);
+    }
+
+    private String formatText(String text, User user, String uncryptedPassword) {
+        text = text.replace("{User.Name}", user.fullName);
+        text = text.replace("{User.Email}", user.emailAddress);
+        text = text.replace("{User.Phone}", user.cellPhone);
+        text = text.replace("{User.Password}", uncryptedPassword);
+        
+        if (user.address != null) {
+            text = text.replace("{User.Postcode}", user.address.postCode);
+            text = text.replace("{User.Address}", user.address.address);
+            text = text.replace("{User.City}", user.address.city);            
+        }
+        
+        text = text.replace("\n", "<br/>");
+        
+        return text;
     }
 }

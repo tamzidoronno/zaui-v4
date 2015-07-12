@@ -19,7 +19,8 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
             echo $this->__f("Add and remove users from this group.");
             ?>	
         </div>
-    </div>	
+    </div>
+    
 </div>
 
 <div class='gss_settings_content'>
@@ -33,36 +34,122 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
         </div>
     </div>
 
+    <!-- Invoice information START -->
+    <div class='gss_settings_content gss_col_width_inner_2'>
+        <center><h3><?php echo $this->__f("Invoice information"); ?></h3></center>
+        
+        <div class="textfield gss_setting"  id="invoiceName">
+            <span class="title"><?php echo $this->__f("Company / Name"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceName' value="<? echo $group->invoiceAddress->fullName; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="invoiceAddress1">
+            <span class="title"><?php echo $this->__f("Address 1"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceAddress1' value="<? echo $group->invoiceAddress->address; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="invoiceAddress2">
+            <span class="title"><?php echo $this->__f("Address 2"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceAddress2' value="<? echo $group->invoiceAddress->address2; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="invoicePostNumber">
+            <span class="title"><?php echo $this->__f("Postnumber"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoicePostNumber' value="<? echo $group->invoiceAddress->postCode; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="invoicePostPlace">
+            <span class="title"><?php echo $this->__f("City"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoicePostPlace' value="<? echo $group->invoiceAddress->city; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="invoiceCustomerNumber">
+            <span class="title"><?php echo $this->__f("Customer number"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceCustomerNumber' value="<? echo $group->invoiceAddress->customerNumber; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="invoiceVatNumber">
+            <span class="title"><?php echo $this->__f("Vat number / Birthday"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceVatNumber' value="<? echo $group->invoiceAddress->vatNumber; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+    </div>
+    <!-- Invoice information END -->
+
+    <div class='gss_settings_content gss_col_width_inner_2'>
+        <center><h3><?php echo $this->__f("Default deliveryaddress"); ?></h3></center>
+        <div class="textfield gss_setting"  id="invoiceName">
+            <span class="title"><?php echo $this->__f("Company / Name"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='deliveryName' value="<? echo $group->defaultDeliveryAddress->fullName; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="deliveryAddress1">
+            <span class="title"><?php echo $this->__f("Address 1"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='deliveryAddress1' value="<? echo $group->defaultDeliveryAddress->address; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="deliveryAddress2">
+            <span class="title"><?php echo $this->__f("Address 2"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='deliveryAddress2' value="<? echo $group->defaultDeliveryAddress->address2; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="deliveryPostNumber">
+            <span class="title"><?php echo $this->__f("Postnumber"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='deliveryPostNumber' value="<? echo $group->defaultDeliveryAddress->postCode; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="deliveryPostPlace">
+            <span class="title"><?php echo $this->__f("City"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='deliveryPostPlace' value="<? echo $group->defaultDeliveryAddress->city; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+    </div>
+    
     <div class='gss_button_area'>
         <div class="gss_button" gss_confirmation="Are you sure you want to delete this group?" gss_fragment="grouplist" gss_value='<? echo $group->id?>' gss_view="gs_user_workarea" gss_method="deleteGroup" gss_model="groupmodel"><i class='fa fa-trash'></i><?php echo $this->__("Delete group"); ?></div>
-        <div class="gss_button" gss_fragment="group" gss_value='<? echo $group->id?>' gss_view="gs_user_workarea" gss_method="saveGroup" gss_model="groupmodel"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+        <div class="gss_button" gss_fragment="group" gss_value='<? echo $group->id?>' gss_view="gs_user_workarea" gss_method="saveGroup" gss_model="groupmodel" gss_success_message="Saved"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
     </div>
-
 </div>
 
-<div class='gss_settings_content gss_col_width_2'>
-    <center><h1><?php echo $this->__f("Users in group"); ?></h1></center>
-    <div class="gss_users_in_group">
+
+<div class='gss_settings_content ' style="position: relative;">
+    <i class="fa fa-plus-circle gss_addUserToGroup"  style=""></i>
+    
+    <div class="gss_addUserForm">
+        <center><b><?php echo $this->__f("Add user"); ?></b></center>
+        <div class="textfield gss_setting" style="border-bottom: 0px;" id="name">
+            <span class="title"></span>
+            <input id="gss_search_for_user_to_add_to_group" type="textfield" gs_model='groupmodel' style='margin-right: 20px; margin-top: 5px;' gs_model_attr='searchforuser' value="" placeholder="<? echo $this->__f("Name, email etc of user"); ?>">
+            <div id="gss_search_for_products_in_list" gss_loadsilent="true" gss_method="search" gss_model="groupmodel" gss_fragment="usersearchlist" gss_view="usersearchlist"><i class="fa fa-search"></i></div>
+            <div class="description">
+
+            </div>
+        </div>
+        <div class="usersearchlist ">
+            <? 
+            $this->includefile("usersearchlist");
+            ?>
+        </div>
+    </div>
+    
+    <center><h3><?php echo $this->__f("Users in group"); ?></h3></center>
+    <div class="gss_users_in_group" style="background-color: #F9f9f9; margin-top: 20px; padding: 10px; border: solid 1px #DDD;">
         <?
         $this->includefile("usersingroup");
         ?>    
     </div>
-</div>
 
-<div class='gss_settings_content gss_col_width_2'>
-    <center><h1><?php echo $this->__f("Add user"); ?></h1></center>
-    <div class="textfield gss_setting" style="border-bottom: 0px;" id="name">
-        <span class="title"></span>
-        <input id="gss_search_for_user_to_add_to_group" type="textfield" gs_model='groupmodel' style='margin-right: 20px; margin-top: 5px;' gs_model_attr='searchforuser' value="" placeholder="<? echo $this->__f("Name, email etc of user"); ?>">
-        <div id="gss_search_for_products_in_list" gss_loadsilent="true" gss_method="search" gss_model="groupmodel" gss_fragment="usersearchlist" gss_view="usersearchlist"><i class="fa fa-search"></i></div>
-        <div class="description">
-            
-        </div>
-    </div>
-    <div class="usersearchlist ">
-        <? 
-        $this->includefile("usersearchlist");
-        ?>
-    </div>
+
+    
 </div>
         

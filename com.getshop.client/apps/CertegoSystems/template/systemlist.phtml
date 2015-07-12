@@ -22,12 +22,20 @@ $systems = $this->getApi()->getCertegoManager()->getSystems();
         echo $this->__f("You have not created any systems yet");
     } else {
         foreach ($systems as $system) {
+            $groupName = $this->getGroupName($system);
             ?>
             <div gss_fragment='editsystem' gss_view='gs_system_work_area' gss_value='<? echo $system->id ?>' class='gss_product gss_edit_system'>
                <div class='gss_product_inner_desc'>
                    <div class='gss_product_title'><? echo $system->number ." - ". $system->name." - ".$system->email." - ".$system->phoneNumber; ?></div>
+                   <?
+                   if ($groupName) {
+                   ?>
+                        <div class='gss_product_title'><? echo $groupName; ?></div>
+                   <?
+                   }
+                   ?>
                </div>
-           </div>
+            </div>
             <?
         }
     }

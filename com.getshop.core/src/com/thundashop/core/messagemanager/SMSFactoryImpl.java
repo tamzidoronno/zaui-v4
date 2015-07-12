@@ -7,6 +7,7 @@ package com.thundashop.core.messagemanager;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -189,6 +190,12 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     
     @Override
     public void send(String from, String to, String message) {
+        Application smsSettingsApp = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee");
+        
+        if (smsSettingsApp == null) {
+            smsSettingsApp = new Application();
+        }
+        
         SMSFactoryImpl impl = new SMSFactoryImpl();
         impl.to = to;
         impl.message = message;
@@ -200,15 +207,15 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.storeManager = storeManager;
         impl.storeApplicationPool = storeApplicationPool;
         impl.setStoreId(storeId);
-        impl.username = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("username");
-        impl.apiId = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("apiid");
-        impl.password = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("password");
+        impl.username = smsSettingsApp.getSetting("username");
+        impl.apiId = smsSettingsApp.getSetting("apiid");
+        impl.password = smsSettingsApp.getSetting("password");
         if(prefix != null) {
             impl.prefix = prefix;
         } else {
-            impl.prefix = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("numberprefix");
+            impl.prefix = smsSettingsApp.getSetting("numberprefix");
         }
-        impl.from = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("from");
+        impl.from = smsSettingsApp.getSetting("from");
         impl.messageManager = messageManager;
         
         

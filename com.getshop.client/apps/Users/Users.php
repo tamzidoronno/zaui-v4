@@ -11,7 +11,7 @@ class Users extends \SystemApplication implements \Application {
     }
     
     public function getName() {
-        
+        return $this->__f("Users");
     }
     
     public function renderDashBoardWidget() {
@@ -94,7 +94,8 @@ class Users extends \SystemApplication implements \Application {
         $user->emailAddress = $_POST['email'];
         $user->fullName = $_POST['name'];
         $user->cellPhone = $_POST['phone_number'];
-           
+        $user->password = $_POST['password1'];
+        
         if ($_POST['iseditor'] == "true") {
             $user->type = 50;
         }
@@ -238,6 +239,33 @@ class Users extends \SystemApplication implements \Application {
     
     public function showCreateNewUser() {
         $_SESSION['navigation_user_app'] = "userlist";
+    }
+
+    public function getUserGroups($user) {
+        $groups = [];
+        
+        if ($user->groups) {
+            foreach ($user->groups as $groupId) {
+                $inGroup = $this->getApi()->getUserManager()->getGroup($groupId);
+                if ($inGroup) {
+                    $groups[] = $inGroup;
+                }
+            }
+        }
+        
+        return $groups;
+    }
+
+    
+    public function gsEmailSetup($model) {
+        if (!$model) {
+            $this->includefile("emailsettings");
+            return;
+        } 
+        
+        $this->setConfigurationSetting("ordersubject", $_POST['ordersubject']);
+        $this->setConfigurationSetting("orderemail", $_POST['emailconfig']);
+        $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
     }
 }
 ?>

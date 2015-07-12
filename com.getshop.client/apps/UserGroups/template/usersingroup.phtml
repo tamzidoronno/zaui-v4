@@ -7,11 +7,8 @@ $users = $this->getApi()->getUserManager()->getUsersBasedOnGroupId($_POST['value
 if (!count($users)) {
     echo "<div style='padding: 20px;'><i class='fa fa-warning'></i> No users has been added to this group</div>";
 } else {
-    echo "<center><h3>".$this->__f("Click on user to remove.")."</center></h3s>";
     foreach ($users as $user) {
-        
-        echo "<div gss_method='removeUserFromGroup' gss_value_2='$user->id' gss_value='".$_POST['value']."' gss_fragment='usersingroup' gss_view='gss_users_in_group' class='gs_select_searched_user_group_add'>$user->fullName ($user->emailAddress) - $user->cellPhone</div>";
-        
+        echo "<div class='gs_select_searched_user_group_add'><i gss_method='removeUserFromGroup' gss_confirmation='Are you sure you want the user from this group?' gss_value_2='$user->id' gss_value='".$_POST['value']."' gss_fragment='usersingroup' gss_view='gss_users_in_group' class='fa fa-trash'></i><span onclick='app.Users.gssinterface.showUser(\"$user->id\");'> $user->fullName ($user->emailAddress) - $user->cellPhone<span></div>";
     }
 }
 ?>

@@ -79,4 +79,35 @@ class CertegoSystems extends \ApplicationBase implements \Application {
         $system->groupId = $_POST['value2'];
         $this->getApi()->getCertegoManager()->saveSystem($system);
     }
+
+    public function getGroupName($system) {
+        $group = $this->getApi()->getUserManager()->getGroup($system->groupId);
+        if ($group) {
+            return $group->groupName;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * This is used for rendering extra information in grouplist. 
+     * Userful for adding more information in the list.
+     */
+    public function renderExtraGroupList($group) {
+        $count = $this->getSystemCount($group->id);
+        echo "<div style='font-size: 13px; font-weight: bold;'>".$this->__f("Systems").": ".$this->getSystemCount($group->id)."</div>";
+    }
+
+    public function getSystemCount($groupId) {
+        $systems = $this->getApi()->getCertegoManager()->getSystems();
+        $count = 0;
+        foreach($systems as $system) {
+            if ($system->groupId == $groupId) {
+                $count++;
+            }
+        }
+        
+        return $count;
+    }
+
 }

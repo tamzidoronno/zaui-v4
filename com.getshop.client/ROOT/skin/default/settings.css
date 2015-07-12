@@ -246,12 +246,6 @@ inputs-moz-placeholder {
 #backsidesettings input[type=text],
 #backsidesettings input[type=password],
 #backsidesettings input[type=textfield] {
-    width: 270px;
-    padding: 8px 8px;
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    color: #444;
     text-shadow: 1px 1px 0 rgba(256, 256, 256, 1.0);
     background: #FFF;
     border: 1px solid #FFF;
@@ -259,9 +253,23 @@ inputs-moz-placeholder {
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.50);
     -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.50);
     -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.50);
+}
+
+#backsidesettings textarea,
+#backsidesettings .textinput,
+#backsidesettings input[type=text],
+#backsidesettings input[type=password],
+#backsidesettings input[type=textfield] {
+    width: 270px;
+    padding: 8px 8px;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #444;
     position: absolute;
     right: 12px;
     top: 10px;
+    
 }
 
 #backsidesettings textarea.gss_mediumsize {
@@ -469,4 +477,10 @@ div[gss_method] {
 
 .gss_settings_application_moduleslist .innerappview {
     display: none;
+}
+
+.gss_col_width_2 {
+    width: 458px;
+    vertical-align: top;
+    display: inline-block;
 }

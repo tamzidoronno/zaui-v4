@@ -1,0 +1,35 @@
+<div style="border-bottom: solid 1px #DDD; margin-bottom: 25px;">
+    <center>Velg en gruppe under som du ønsker å endre, eller lag en ny ved å klikke på "New system" til venstre.</center>
+    <br/>
+</div>
+
+<div class="textfield gss_setting"  id="search">
+    <span class="title"><?php echo $this->__f("Filter (Søk)"); ?></span>
+    <input type="textfield"  id="gss_search_for_certego_system" value="" placeholder="Type to filter">
+    <div class="description">
+        <?php echo $this->__("Skriv inn i feltet til høyre for å filtrere"); ?>
+    </div>
+</div>
+
+<br/>
+<div id="gss_certego_systems_overview">
+<?
+/* @var $this \ns_27a320a3_e983_4f55_aae8_cf94add661c2\CertegoSystems */
+
+$systems = $this->getApi()->getCertegoManager()->getSystems();
+
+    if (!count($systems)) {
+        echo $this->__f("You have not created any systems yet");
+    } else {
+        foreach ($systems as $system) {
+            ?>
+            <div gss_fragment='editsystem' gss_view='gs_system_work_area' gss_value='<? echo $system->id ?>' class='gss_product gss_edit_system'>
+               <div class='gss_product_inner_desc'>
+                   <div class='gss_product_title'><? echo $system->number ." - ". $system->name." - ".$system->email." - ".$system->phoneNumber; ?></div>
+               </div>
+           </div>
+            <?
+        }
+    }
+?>
+</div>

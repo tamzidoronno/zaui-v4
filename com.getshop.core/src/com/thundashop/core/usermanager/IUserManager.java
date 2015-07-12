@@ -7,6 +7,8 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
+import com.thundashop.core.usermanager.data.GroupInformation;
+
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,7 +199,7 @@ public interface IUserManager {
      * @throws ErrorException 
      */
     @Administrator
-    public void saveGroup(Group group) throws ErrorException;
+    public Group saveGroup(Group group) throws ErrorException;
     
     /**
      * Returns all the groups
@@ -320,4 +322,17 @@ public interface IUserManager {
     public User loginWithPincode(String username, String password, String pinCode);
     
     public User checkUserNameAndPassword(String username, String password);
+    
+    public Group getGroup(String groupId);
+    
+    @Administrator
+    void addGroupToUser(String userId, String groupId);
+    
+    @Administrator
+    void removeGroupFromUser(String userId, String groupId);
+    
+    public List<User> getUsersBasedOnGroupId(String groupId);
+    
+    public List<Group> searchForGroup(String searchCriteria);
+    
 }

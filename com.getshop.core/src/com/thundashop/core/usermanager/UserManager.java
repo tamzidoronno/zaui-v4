@@ -207,6 +207,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         loginHistory.markLogin(user, getSession().id);
         saveObject(loginHistory);
+       
         return user;
     }
 
@@ -547,9 +548,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     @Override
-    public void saveGroup(Group group) throws ErrorException {
+    public Group saveGroup(Group group) throws ErrorException {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         collection.saveGroup(group);
+        return group;
     }
     
     @Override
@@ -897,5 +899,52 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public User checkUserNameAndPassword(String username, String password) {
         User user = getUserByUserNameAndPassword(username, password);
         return user;
+    }
+
+    @Override
+    public Group getGroup(String groupId) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            return collection.getGroups(groupId);
+        }
+        
+        return null;
+    }
+    
+    @Override
+    public List<User> getUsersBasedOnGroupId(String groupId) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            return collection.getUsersBasedOnGroupId(groupId);
+        }
+        
+        return new ArrayList();
+    }
+
+    @Override
+    public void addGroupToUser(String userId, String groupId) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            collection.addGroupToUser(userId, groupId);
+        }
+        
+    }
+
+    @Override
+    public void removeGroupFromUser(String userId, String groupId) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            collection.removeGroupFromUser(userId, groupId);
+        }
+    }
+
+    @Override
+    public List<Group> searchForGroup(String searchCriteria) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            return collection.searchForGroup(searchCriteria);
+        }
+        
+        return new ArrayList();
     }
 }

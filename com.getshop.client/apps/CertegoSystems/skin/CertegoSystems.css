@@ -1,0 +1,30 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 7, 2015, 7:28:28 PM
+    Author     : ktonder
+*/
+
+.gs_system_overview {
+    vertical-align: top;
+    display: inline-block;
+    padding: 20px;
+    padding-top: 0px;
+}
+
+.gs_system_overview .gss_button {
+    margin-bottom: 4px;
+}
+
+.gs_system_work_area {
+    vertical-align: top;
+    display: inline-block;
+    padding: 20px;
+    width: 950px;
+    color: #333;
+    background-color: #FFF;
+    border-radius: 5px;
+}

@@ -1,7 +1,6 @@
 ###### framework ######
 A red theme that can be used when selling exciting things;-;Een rode layout voor verkoop van interessante producten
 Address;-;Straatnaam + huisnummer
-All fields are required;-;Alle velden zijn verplicht in te vullen
 All fields are required.;-;Alle velden moet ingevuld worden
 All orders;-;Alle bestellingen
 Application;-;Applicatie 
@@ -19,8 +18,6 @@ Chat with us;-;Chat met ons
 Checkout;-;Afrekenen
 City;-;Woonplaats
 Click next to select shipping options;-;Klik volgende om een verzendmethode te kiezen
-Company;-;Bedrijf
-Completed;-;Afgerond
 Confirm order;-;Bestelling bevestigen
 Continue;-;Ga verder
 Cookies are being stored;-;Cookies worden bijgehouden
@@ -31,7 +28,6 @@ Customer information;-;Klanteninformatie
 Date;-;Datum
 December;-;December
 Delete image;-;Verwijder afbeelding
-Did not find the specified company, please check your company number;-;De opgegeven firma werd niet gevonden, kijk het nummer nog eens na
 Download ebill;-;Download eBill
 Email;-;Email
 End date;-;Einddatum
@@ -54,7 +50,6 @@ January;-;Januari
 July;-;Juli
 June;-;Juni
 Les mer;-;?
-Loading data... please wait;-;Data aan het laden, even geduld.
 Logout;-;Uitloggen
 Lost your password?;-;Wachtwoord vergeten?
 March;-;Maart
@@ -91,7 +86,6 @@ Please following theese steps to recover your password.;-;Volg instructies om uw
 Please select a payment method.;-;Selecteer een betaalmethode
 Please select a user in the left menu;-;Kies een gebruiker in het linker menu
 Please select a valid payment method;-;Gelieve een geldig betaalniddel te kiezen
-Please select department;-;Gelieve een afdeling te kiezen
 Post code;-;Postcode
 Postal code;-;Postcode
 Previous;-;Vorige
@@ -146,21 +140,17 @@ Wrong delivery method;-;Verkeerde verzendmethode
 You are here:;-;U bent hier:
 You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
 You need to select at least one to send back message to;-;Je moet op zijn minst 1 selecteren om een bericht terug te sturen
-Your are now signed up for the event;-;Je bent nu ingeschreven voor het event
 Your message has been delivered;-;Je bericht is aangekomen
 Your order has been canceled due to incorrect payment information, please try again.;-;Je bestelling is geannuleerd door onjuiste betaalgegevens. Gelieve nog eens te proberen
 Your order has now been completed and is waiting to be shipped.;-;Je bestelling is compleet en klaar om verzonden te worden
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Je bestelling is succesvol geplaatst en je krijgt zo dadelijk een email met je eBill bijgesloten. Je kan deze ook via volgende link downloaden
 Your personal information;-;Uw persoonlijke informatie
-change;-;Verander
 description;-;Omschrijving
 email;-;email
 if we dont answer, please leave your email here and we will return your message asap.;-;Indien we niet antwoorden, gelieve een email te sturen. We reageren zo snel mogelijk.
 included taxes;-;Inbegrepen belastingen
 location;-;locatie
 login;-;Log in
-org;-;org
-phone;-;telefoon
 read;-;Lees
 
 

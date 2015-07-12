@@ -5,7 +5,6 @@
 package com.thundashop.core.usermanager.data;
 
 import com.thundashop.core.common.DataCommon;
-import java.util.UUID;
 
 /**
  *

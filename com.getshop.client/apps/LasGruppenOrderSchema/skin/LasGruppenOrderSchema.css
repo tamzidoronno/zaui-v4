@@ -234,6 +234,8 @@ and open the template in the editor.
     display: none;
 }
 
+
+
 @media only all and (max-width: 948px) {
     .LasGruppenOrderSchema .col {
         width: 100%;

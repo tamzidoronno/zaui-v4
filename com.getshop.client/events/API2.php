@@ -1317,6 +1317,56 @@ class APICartManager {
 	}
 
 }
+class APICertegoManager {
+
+	var $transport;
+	
+	function APICertegoManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function deleteSystem($systemId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["systemId"] = json_encode($this->transport->object_unset_nulls($systemId));
+	     $data["method"] = "deleteSystem";
+	     $data["interfaceName"] = "core.certego.ICertegoManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getSystems() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getSystems";
+	     $data["interfaceName"] = "core.certego.ICertegoManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function saveSystem($core_certego_data_CertegoSystem) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_certego_data_CertegoSystem"] = json_encode($this->transport->object_unset_nulls($core_certego_data_CertegoSystem));
+	     $data["method"] = "saveSystem";
+	     $data["interfaceName"] = "core.certego.ICertegoManager";
+	     return $this->transport->cast(new core_certego_data_CertegoSystem(), $this->transport->sendMessage($data));
+	}
+
+}
 class APIChatManager {
 
 	var $transport;
@@ -6143,6 +6193,24 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function addGroupToUser($userId, $groupId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+	     $data["method"] = "addGroupToUser";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Add priviliges to a another admin user.
 	*
 	* If a user is given a privilege, all the defaults are removed.
@@ -6370,6 +6438,23 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return core_usermanager_data_Group
+	* @throws ErrorException
+	*/
+
+	public function getGroup($groupId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+	     $data["method"] = "getGroup";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_Group(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Fetch the currently logged on user.
 	* @return core_usermanager_data_User
 	*/
@@ -6427,6 +6512,23 @@ class APIUserManager {
 	     $data['args'] = array();
 	     $data['args']["userIds"] = json_encode($this->transport->object_unset_nulls($userIds));
 	     $data["method"] = "getUserList";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getUsersBasedOnGroupId($groupId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+	     $data["method"] = "getUsersBasedOnGroupId";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -6595,6 +6697,24 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function removeGroupFromUser($userId, $groupId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+	     $data["method"] = "removeGroupFromUser";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* This function will return a user new admin user that has access to only invoke the function
 	* specified in the paramters.
 	*
@@ -6674,7 +6794,7 @@ class APIUserManager {
 	     $data['args']["core_usermanager_data_Group"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Group));
 	     $data["method"] = "saveGroup";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
-	     return $this->transport->sendMessage($data);
+	     return $this->transport->cast(new core_usermanager_data_Group(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -6690,6 +6810,23 @@ class APIUserManager {
 	     $data['args'] = array();
 	     $data['args']["core_usermanager_data_User"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_User));
 	     $data["method"] = "saveUser";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function searchForGroup($searchCriteria) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["searchCriteria"] = json_encode($this->transport->object_unset_nulls($searchCriteria));
+	     $data["method"] = "searchForGroup";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -6903,6 +7040,12 @@ class GetShopApi {
       */
       public function getCartManager() {
            return new APICartManager($this->transport);
+      }
+      /**
+      * @return CertegoManager
+      */
+      public function getCertegoManager() {
+           return new APICertegoManager($this->transport);
       }
       /**
       * @return ChatManager

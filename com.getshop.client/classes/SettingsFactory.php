@@ -1,7 +1,6 @@
 <?php
 
 class SettingsFactory extends FactoryBase {
-
     private $currentApplication = null;
 
     public function initApp() {
@@ -66,6 +65,13 @@ class SettingsFactory extends FactoryBase {
         return json_encode($data);
     }
 
+    public function printExtraUserApps() {
+        $factory = IocContainer::getFactorySingelton();
+        $certegoapp = $factory->getApplicationPool()->getApplicationSetting("27a320a3-e983-4f55-aae8-cf94add661c2");
+        if ($certegoapp) {
+            echo "<div class='gss_submenu_entry' gss_goto_app='27a320a3-e983-4f55-aae8-cf94add661c2'><i class='fa fa-tint'></i> Systems</div>";
+        }
+    }
 }
 
 ?>

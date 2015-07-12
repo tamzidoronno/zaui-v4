@@ -11,6 +11,7 @@ import com.thundashop.core.start.Runner;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -261,4 +262,43 @@ public class UserStoreCollection {
         databaseSaver.saveObject(user, credentials);
         users.put(user.id, user);
     }
+
+    Group getGroups(String id) {
+        return groups.get(id);
+    }
+
+    public List<User> getUsersBasedOnGroupId(String groupId) {
+        return users.values().stream().filter(user -> user.groups != null && user.groups.contains(groupId)).collect(Collectors.toList());
+    }
+
+    void addGroupToUser(String userId, String groupId) {
+        User user = getUser(userId);
+        if (user != null) {
+            if (user.groups == null) {
+                user.groups = new ArrayList();
+            }
+            
+            if (!user.groups.contains(groupId)) {
+                user.groups.add(groupId);
+            }
+        }
+        userManager.saveObject(user);
+    }
+
+    void removeGroupFromUser(String userId, String groupId) {
+        User user = getUser(userId);
+        if (user != null && user.groups != null) {
+            user.groups.remove(groupId);
+        }
+        userManager.saveObject(user);
+    }
+
+    public List<Group> searchForGroup(String searchCriteria) {
+        return groups
+            .values()
+            .stream()
+            .filter(group -> group.groupName != null && group.groupName.toLowerCase().contains(searchCriteria))
+            .collect(Collectors.toList());
+    }
+
 }

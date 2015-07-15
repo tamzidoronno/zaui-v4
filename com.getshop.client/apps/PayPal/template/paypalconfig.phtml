@@ -35,7 +35,7 @@ $testPayPal = $this->getConfigurationSetting("paypaltestaddress");
 
     <div class="textfield gss_setting"  id="sanbox">
         <span class="title"><?php echo $this->__f("Sandbox?"); ?></span>
-        <div class="gss_onoff" gs_model="usermodel" gs_model_attr="issandbox">
+        <div class="gss_onoff" gs_model="paypalmodel" gs_model_attr="issandbox">
             <? $sanboxClass = $sandbox == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
             Off<i class="fa <? echo $sanboxClass; ?>"></i>On
         </div>

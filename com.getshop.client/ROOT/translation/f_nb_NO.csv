@@ -127,6 +127,7 @@ CalendarEventViewer;-;CalendarEventViewer
 Cancel;-;Avbryt
 Car tuning;-;Bil tuning
 Card holder name;-;Eier av kortets navn
+Card number;-;Kort nummer
 Carousel;-;Karusell
 Carousel mode is great if you wish to add sliding content, this means that you can add multiple slider and let your customers make a choice on what they want to view. Great for banners and advertisment.;-;Karusell modus er en toppers hvis du ønsker å slide innhold, dette betyr at du kan vise flere slidere og la kundene dine ta et valg om hva de ønsker å se.
 Category list;-;Kategori liste
@@ -289,6 +290,7 @@ Global css;-;Global css
 Go to E-Commerce->Products and create something.;-;Gå til E-Commerce->Produkter og opprett noe
 Go to a external page;-;Gå til en ekstern side
 Go to a internal page;-;Gå til en intern side
+Go to payment;-;Gå til betaling
 Go to product lists;-;Gå til produktlistene.
 Go to product managment;-;Gå til produkt administrasjon
 Google Analytics;-;Google Analytics
@@ -374,7 +376,7 @@ More Categories?;-;Mer kategorier?
 More color options;-;Flere fargevalg
 More...;-;Mer...
 Name of the button.;-;Navn på knapp
-Name of the cardholder);-;Navn på kortholder)
+Name of the cardholder;-;Navn på kortholder
 Name of the customer;-;Navn på kunde
 Name of the person that owns this new account.;-;Navn på brukeren
 Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;Med denne applikasjonen kan du vise dine eiendommer.
@@ -469,7 +471,6 @@ Please select someone to chat with at the right side;-;Vennligst velg noen å ch
 Please select what list you want to display here;-;Vennligst velg hva du ønsker å vise her
 Please select your currency;-;Velg din valutta
 Please select your language;-;Vennligst velg ditt språk
-Please wait;-;Vennligst vent
 Point your domain name to the following ip address:;-;Pek ditt domenenavn til følgende ip adresse:
 Port;-;Port
 Port that the mailserver listens on.;-;Porten som mail serveren lytter på
@@ -664,6 +665,7 @@ Toggle able to zoom;-;Toggle om brukeren skal kan zoome på bilde
 Toggle advanced mode;-;Bytt til/fra avansert modus
 Toggle on/off bottom area;-;Toggle av og på bunnområder
 Toggle small cartview;-;Toggle liten handlekurv visning
+Total amount that will be drawn from you account;-;Totalt beløp som vil bli trukket fra kortet
 Total orders;-;Alle ordre
 Total orders registered;-;Totalt ordrer registrert
 Total page views;-;Totalt sidevisninger
@@ -712,8 +714,6 @@ Variables that can be used in email and subject;-;Variabler som kan benyttes i e
 Vat number;-;MVA nummber
 View product;-;Åpne produktet
 Viewed when;-;Vist sist
-Visa;-;Visa
-Visa card number (xxxx-xxxx-xxxx-xxxx);-;Visa kort nr (xxxx-xxxx-xxxx-xxxx)
 Warn users that cookies are being stored from this site?;-;Advar brukere at cookies blir brukt på denne siten?
 Warning! this store will automatically be reset to original state each hour;-;Advasel! Systemet vil automatisk bli satt tilbake til sin originale stand hver time.
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Advarsel. du er ikke koblet til en partner enda, vennligst kontakt getshop support!

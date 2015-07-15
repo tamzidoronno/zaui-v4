@@ -50,6 +50,18 @@ public class GetShopApi {
            return new APIArxManager(transport);
       }
      /**
+      * @return APILasGruppenPDFGenerator
+      */
+      public APILasGruppenPDFGenerator getLasGruppenPDFGenerator() {
+           return new APILasGruppenPDFGenerator(transport);
+      }
+     /**
+      * @return APIInvoiceManager
+      */
+      public APIInvoiceManager getInvoiceManager() {
+           return new APIInvoiceManager(transport);
+      }
+     /**
       * @return APIUserManager
       */
       public APIUserManager getUserManager() {
@@ -80,10 +92,28 @@ public class GetShopApi {
            return new APICalendarManager(transport);
       }
      /**
+      * @return APIPkkControlManager
+      */
+      public APIPkkControlManager getPkkControlManager() {
+           return new APIPkkControlManager(transport);
+      }
+     /**
       * @return APIBigStock
       */
       public APIBigStock getBigStock() {
            return new APIBigStock(transport);
+      }
+     /**
+      * @return APIReportingManager
+      */
+      public APIReportingManager getReportingManager() {
+           return new APIReportingManager(transport);
+      }
+     /**
+      * @return APISedoxProductManager
+      */
+      public APISedoxProductManager getSedoxProductManager() {
+           return new APISedoxProductManager(transport);
       }
      /**
       * @return APIStoreApplicationPool
@@ -120,6 +150,12 @@ public class GetShopApi {
       */
       public APICartManager getCartManager() {
            return new APICartManager(transport);
+      }
+     /**
+      * @return APIYouTubeManager
+      */
+      public APIYouTubeManager getYouTubeManager() {
+           return new APIYouTubeManager(transport);
       }
      /**
       * @return APIHotelBookingManager

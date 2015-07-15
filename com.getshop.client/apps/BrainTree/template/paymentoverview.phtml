@@ -1,0 +1,8 @@
+<?
+/* @var $this \ns_542e6a1e_9927_495c_9b6d_bb52af4ea9be\BrainTree */
+?>
+<div class="overview">
+    <?
+    echo $this->__f("Total amount that will be drawn from you account").": ".\ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($this->getApi()->getOrderManager()->getTotalForOrderById($_SESSION['gsPaymentOrderId']));
+    ?>
+</div>

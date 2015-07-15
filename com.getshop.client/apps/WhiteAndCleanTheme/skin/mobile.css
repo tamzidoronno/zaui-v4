@@ -1,0 +1,151 @@
+.gs_page_width {
+    width: auto !important;
+}
+.shop_button {
+    background: #00cc66;
+    color: #FFF;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.calendar-day-head {
+    font-size: 10px !important;
+}
+
+.gsinner.gsdepth_0 { padding-left: 10px; padding-right: 10px; }
+
+.ProductLists .grid_view .shop_button {
+    margin: 0px;
+}
+.gsmobileheader { border-bottom: solid 1px #bbb; }
+
+.ProductLists .product_title {  padding: 0px; height: auto !important;
+}
+
+.gsmobileoptions { position:absolute; width: 100%; top:-20px; z-index: 10; color: #fff; }
+
+.ProductLists .product_title {
+background: rgba(255,255,255,1);
+background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,1)), color-stop(47%, rgba(246,246,246,1)), color-stop(100%, rgba(237,237,237,1)));
+background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+background: -o-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed', GradientType=0 );
+    color:#333;
+}
+
+.gsmobilemenuentry {
+background: rgba(43,43,43,1);
+background: -moz-linear-gradient(top, rgba(43,43,43,1) 0%, rgba(57,57,57,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(43,43,43,1)), color-stop(100%, rgba(57,57,57,1)));
+background: -webkit-linear-gradient(top, rgba(43,43,43,1) 0%, rgba(57,57,57,1) 100%);
+background: -o-linear-gradient(top, rgba(43,43,43,1) 0%, rgba(57,57,57,1) 100%);
+background: -ms-linear-gradient(top, rgba(43,43,43,1) 0%, rgba(57,57,57,1) 100%);
+background: linear-gradient(to bottom, rgba(43,43,43,1) 0%, rgba(57,57,57,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2b2b2b', endColorstr='#393939', GradientType=0 );
+border-bottom: solid 1px rgba(0,0,0,0.2);
+border-right: solid 1px rgba(0,0,0,0.2);
+}
+
+
+.gstab,
+.gstabcontent {
+    padding: 20px;
+    background-color: #F9f9f9;
+}
+
+.products.grid_view .productbox .image {
+    margin-top: 30px;
+    border-bottom: solid 1px #EEE;
+    padding-bottom: 30px;
+    margin-bottom: 30px
+}
+
+.products.grid_view .productbox {
+    
+    border: solid 1px #DDD !important;
+    margin-top: 30px;
+    border-radius: 5px;
+}
+
+.products.grid_view .productbox,
+.ProductLists .grid_view .webshop_button_area {
+    background-color: #fAfAfA;
+}
+
+
+.gsmobilemenu {
+    background-color:rgba(57,57,57,1);
+}
+
+.Calendar .calendercontent .content .outerdiv div img  {
+    wdith: 35px;
+    height: 35px;
+}
+
+.calendercontent {
+    height: 95px;
+}
+
+.Calendar .calendercontent .content .outerdiv {
+    margin-left: 0px;
+}
+
+.Calendar .calendercontent .content .outerdiv div  {
+    width: 33px;
+    height: 40px;
+}
+
+.Calendar .day_entry_information .content_information,
+.Calendar .day_entry_information .content_image {
+    width: auto;
+    padding-left: 0px;
+    padding-top: 10px;
+    padding-right: 10px;
+}
+
+.gsmobilemenuentry {
+    display: none;
+}
+.gsmobiletopmenu {
+    display: block;
+    width: 100%;
+    background-color: #62be73 !important;
+    background: none;
+}
+
+.gsmobilemenuinstance .entry,
+.gsmobilemenuinstance {
+    background-color: #62be73 !important;
+}
+
+.gsportraitimage {
+    font-size: 0px;
+}
+
+.gs_language_selection {
+    border: solid 0px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.gs_language_selection .gs_lang_code_nb_NO {
+    background-image: url('{IMAGEFOLDER}/flag_norwegian.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 35px;
+}
+
+.gs_language_selection .gs_lang_code_en_en {
+    background-image: url('{IMAGEFOLDER}/flag_english.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 30px;
+}

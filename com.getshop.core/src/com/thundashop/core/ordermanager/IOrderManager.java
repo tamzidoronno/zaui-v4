@@ -210,4 +210,7 @@ public interface IOrderManager {
     
     @Administrator
     public void changeOrderType(String orderId, String paymentTypeId);
+    
+    
+    public Double getTotalForOrderById(String orderId);
 }

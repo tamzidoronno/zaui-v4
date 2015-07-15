@@ -23,6 +23,7 @@ Address;-;Adresse
 All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
 An email has been sent with a code to use in step 2.;-;En epost har blitt sendt til deg som kan benyttes i steg 2.s
+Anchor;-;Anker
 Application;-;Applikasjoner
 Apply coupon;-;Bruk kupong
 April;-;April
@@ -203,6 +204,7 @@ Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
 Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
 Password missmatch;-;Passordene stemmer ikke oversens
+Pay;-;Betal
 Pay on pickup;-;Betal ved levering
 Payment;-;Betaling
 Payment failed;-;Betaling feilet
@@ -223,6 +225,7 @@ Please select a payment method.;-;Vennligst velg en betalingsmetode
 Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
 Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
 Please start typing to search for page, must be more then 2 chars;-;Start å søk etter en side, må ha minst 3 bokstaver
+Please wait;-;Vennligst vent
 Please wait while you are being transferred to dibs payment service.;-;-Vennligst vent til du blir overført til betaling siden.
 Please wait...;-;Vennligst vent...
 Post code;-;Post.nr
@@ -333,6 +336,7 @@ Use a different email;-;Bruk en annen epost
 Username / Email;-;Brukernavn / Epost
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
+Was not able to process your payment, check your card details and try again.;-;Klarte ikke å gjennomføre betalingen, sjekk betalingsopplysningene dine og prøv igjen.
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
 Welcome to my page;-;Velkommen til min side
@@ -351,6 +355,7 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
+cellphone;-;Mobilnr
 description;-;Beskrivelse
 email;-;E-post
 forgot?;-;Glemt?

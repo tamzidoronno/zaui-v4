@@ -35,12 +35,12 @@ $users = $this->getApi()->getUserManager()->getAllUsers();
         <div class='user_entry_row' gss_fragment="user" gss_view="gs_user_workarea" gss_value="<? echo $id; ?>">
             <div class="image">
                 <span class="fa-stack fa-lg">
-                    <? if ($user->type === 100) { ?>
+                    <? if ($user->type == 100) { ?>
                         <i style="color: #f35858;" class="fa fa-user fa-stack-1x"></i>
                         <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 85px;" class="fa fa-circle-o fa-stack-2x"></i>
                         <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 115px;" class="fa fa-circle-o fa-stack-2x"></i>
                         <i style="color: #FFF; font-size: 25px; line-height: 142px; width: 101px;" class="fa fa-power-off fa-stack-2x"></i>
-                    <? } else if ($user->type === 50) { ?>
+                    <? } else if ($user->type == 50) { ?>
                         <i style="color: #d5bf2b;" class="fa fa-user fa-stack-1x"></i>
                         <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 85px;" class="fa fa-circle-o fa-stack-2x"></i>
                         <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 115px;" class="fa fa-circle-o fa-stack-2x"></i>
@@ -53,7 +53,9 @@ $users = $this->getApi()->getUserManager()->getAllUsers();
                 </span>
                 
                 <div class="user_level">
-                    <? if ($user->type === 100) { 
+                    
+                    <? 
+                    if ($user->type == 100) { 
                         echo $this->__f("Admin");
                     } else if ($user->type === 50) {
                         echo $this->__f("Editor");

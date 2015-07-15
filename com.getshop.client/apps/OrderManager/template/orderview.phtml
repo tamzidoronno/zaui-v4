@@ -25,7 +25,6 @@ $orderStatusText = $order->status == 6 ? $this->__f("Sent") : $orderStatusText;
 $orderStatusText = $order->status == 7 ? $this->__f("Payment completed") : $orderStatusText;
 $orderStatusText = $order->status == 8 ? $this->__f("Capture failed") : $orderStatusText;
         
-        
 $cart = $order->cart;
 ?>
 <div class='orderoverview' orderId='<? echo $_POST['value']; ?>'>
@@ -53,6 +52,9 @@ $cart = $order->cart;
             if ($order->payment->paymentType) {
                 $paymentApp = new $order->payment->paymentType();
                 echo $changeText.$paymentApp->getName();
+                if ($order->paymentTransactionId) {
+                    echo " ( ".$order->paymentTransactionId." )";
+                }
                 echo "<br/>";
             }
             

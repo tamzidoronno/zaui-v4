@@ -30,6 +30,7 @@ public class PageCell implements Serializable {
     
     public String link = "";
     public String cellName = "";
+    public String anchor = "";
     public boolean hideOnMobile = false;
     public boolean hideOnDesktop = false;
     public boolean isHidden = false;
@@ -54,6 +55,7 @@ public class PageCell implements Serializable {
     
     public void overWrite(PageCell cell) {
         styles = cell.styles;
+        anchor = cell.anchor;
         keepOriginalLayoutOnMobile = cell.keepOriginalLayoutOnMobile;
     }
 

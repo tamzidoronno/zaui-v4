@@ -28,6 +28,10 @@ class CartManager extends \SystemApplication implements \Application {
             $_SESSION['cartCustomerId'] = $_GET['cartCustomerId'];
         }
             
+        if (isset($_GET['payOrderId'])) {
+            $this->order = $this->getApi()->getOrderManager()->getOrder($_GET['payOrderId']);
+        }
+        
         if (isset($_GET['action'])) {
             $action = $_GET['action'];
             $this->sendAddProductToCartEvent($action);
@@ -164,6 +168,11 @@ class CartManager extends \SystemApplication implements \Application {
         
     public function render() {
         $this->init();
+        
+        if ($this->canGoToPayment() && $_GET['payOrderId'] && $this->order) {
+            $this->doPayment();
+        }
+        
         if ($this->isSmallCartView()) {
             echo "<div class='small_cart_dom'>";
             $this->includefile("smallcartoverview");

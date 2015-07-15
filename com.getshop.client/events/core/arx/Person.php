@@ -18,5 +18,8 @@ class core_arx_Person {
 	/** @var String */
 	public $cards;
 
+	/** @var String */
+	public $deleted;
+
 }
 ?>

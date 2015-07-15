@@ -108,4 +108,50 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $this->getApi()->getUserManager()->logout();
         session_destroy();
     }
+
+    public function getGroup($user) {
+        if ($user == null) {
+            return null;
+        }
+        
+        $groups = [];
+        
+        if ($user->groups) {
+            foreach ($user->groups as $groupId) {
+                $inGroup = $this->getApi()->getUserManager()->getGroup($groupId);
+                if ($inGroup) {
+                    $groups[] = $inGroup;
+                }
+            }
+        }
+        
+        
+        if (count($user->groups) === 1) {
+            $group = $this->getApi()->getUserManager()->getGroup($user->groups[0]);
+            return $group;
+        }
+        
+        return null;
+    }
+
+    public function getSystems($group) {
+        if ($group == null) {
+            return [];
+        }
+        
+        return $this->getApi()->getCertegoManager()->getSystemsForGroup($group);
+    }
+
+    public function getSelectedSystem() {
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        $group = $this->getGroup($user);    
+        $systems = $this->getSystems($group);
+        
+        if (count($systems) == 1) {
+            return $systems[0];
+        }
+        
+        return null;
+    }
+
 }

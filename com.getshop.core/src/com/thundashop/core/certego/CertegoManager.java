@@ -66,6 +66,18 @@ public class CertegoManager extends ManagerBase implements ICertegoManager {
         Group group = userManager.getGroup(o.groupId);
         o.group = group;
     }
-    
-    
+
+    @Override
+    public List<CertegoSystem> getSystemsForGroup(Group group) {
+        List<CertegoSystem> retList= new ArrayList();
+        for (CertegoSystem system : systems.values()) {
+            if (system.groupId != null && system.groupId.equals(group.id)) {
+                retList.add(system);
+            }
+        }
+        
+        retList.stream().forEach(o -> finalize(o));
+        
+        return retList;
+    }
 }

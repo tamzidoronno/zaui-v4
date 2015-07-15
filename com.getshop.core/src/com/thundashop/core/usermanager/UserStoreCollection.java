@@ -47,6 +47,19 @@ public class UserStoreCollection {
             setReferenceNumber(user);
         }
         
+         // Remove groups that no longer exists
+        if (user.groups != null) {
+            List<String> groups = new ArrayList();
+            for (String groupId : user.groups) {
+                Group groupExists = getGroups(groupId);
+                if (groupExists != null) {
+                    groups.add(groupId);
+                } 
+            }
+            user.groups = groups;
+        }
+        
+        
         return user;
     }
     

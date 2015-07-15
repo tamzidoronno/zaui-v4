@@ -1,0 +1,44 @@
+<?
+/* @var $this ns_3983a370_d0cc_46de_ba94_cc22fe7becbb\UserGroups */
+$groups = $this->getApi()->getUserManager()->getAllGroups();
+
+?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-info'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Grouplist"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Below you see a list of all the groups that are added to your system").".";
+            ?>	
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+    <?
+    if (!count($groups)) {
+        echo $this->__f("You have not created any groups yet");
+    } else {
+        foreach ($groups as $group) {
+            ?>
+            <div style='min-height: 38px; height: inherit;' gss_fragment='group' gss_view='gs_user_workarea' gss_value='<? echo $group->id ?>' class='gss_product'>
+               <div class='gss_product_inner_desc'>
+                   <div class='gss_product_title'>
+                       <? 
+                       echo $group->groupName; 
+                       $this->printExtraInformation($group);
+                       ?>
+                   </div>
+               </div>
+            </div>
+            <?
+        }
+    }
+    ?>
+    
+</div>

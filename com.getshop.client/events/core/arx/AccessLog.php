@@ -15,5 +15,8 @@ class core_arx_AccessLog {
 	/** @var String */
 	public $type;
 
+	/** @var String */
+	public $dac_properties;
+
 }
 ?>

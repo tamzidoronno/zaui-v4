@@ -66,4 +66,8 @@ public class DataCommon extends TranslationHandler implements Serializable {
         if (rowCreatedDate == null)
             rowCreatedDate = new Date(0);
     }
+    
+    public boolean isOf(Class check) {
+        return this.getClass().isAssignableFrom(check);
+    }
 }

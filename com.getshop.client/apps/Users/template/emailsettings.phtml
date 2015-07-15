@@ -1,0 +1,41 @@
+<h1><? echo $this->__f("User created email"); ?></h1>    
+
+<div class="textfield gss_setting"  id="shouldSendEmail">
+    <span class="title"><?php echo $this->__f("Should send email to users when created?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="shouldSendEmail">
+        <?
+        $class = ($this->getConfigurationSetting("shouldSendEmail") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="shouldSendEmail">
+    <span class="title"><?php echo $this->__f("Order subject"); ?></span>
+    <input type='textfield' gs_model='emailmodel' gs_model_attr='ordersubject' value="<? echo $this->getConfigurationSetting("ordersubject"); ?>"/>
+    <div class="description">
+        <?php echo $this->__("What should the subject be, user created?"); ?>
+    </div>
+</div>
+
+
+<div class="textfield gss_setting"  id="shouldSendEmail">
+    <span class="title"><?php echo $this->__f("Main order email"); ?></span>
+    <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+    <div class="description">
+        <div>
+            <br/>
+            <? echo $this->__f("Variables that can be used in email and subject"); ?>:
+            <br/> {User.Passsword} = <? echo $this->__f("Name of the customer"); ?>
+            <br/> {User.Name} = <? echo $this->__f("Name of the customer"); ?>
+            <br/> {User.Email} = <? echo $this->__f("Email of the customer"); ?>
+            <br/> {User.Address} = <? echo $this->__f("Street address of the customer"); ?>
+            <br/> {User.City} = <? echo $this->__f("City of the customer"); ?>
+            <br/> {User.Postcode} = <? echo $this->__f("Customers postcode"); ?>
+            <br/> {User.Phone} = <? echo $this->__f("Phonenumber to the customer"); ?>
+        </div>
+    </div>
+</div>

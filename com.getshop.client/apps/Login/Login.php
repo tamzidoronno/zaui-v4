@@ -30,15 +30,34 @@ class Login extends \SystemApplication implements \Application {
                 return;
             }
             
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $this->doLogin($username, $password);
+            if ($this->isDoubleAuthRequired()) {
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $pincode = $_POST['pincode'];
+                $this->doLogin($username, $password, $pincode);
+            } else {
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $this->doLogin($username, $password);
+            }
+            
         }
     }
     
-    private function doLogin($username, $password) {
-        $userLoggedIn = $this->getApi()->getUserManager()->logOn($username, $password);
+    private function isDoubleAuthRequired() {
+        $settings = $this->getFactory()->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        $settingsInstance = $this->getFactory()->getApplicationPool()->createInstace($settings);
+        return $settingsInstance->getConfigurationSetting("doubleauthentication") == "true";
+    }
+    
+    private function doLogin($username, $password, $pincode=false) {
+        if ($pincode) {
+            $userLoggedIn = $this->getApi()->getUserManager()->loginWithPincode($username, $password, $pincode);
+        } else {
+            $userLoggedIn = $this->getApi()->getUserManager()->logOn($username, $password);
+        }
 
+        
         if ($userLoggedIn != null && isset($userLoggedIn)) {
             unset($_SESSION['tempaddress']);
             $_SESSION['loggedin'] = serialize($userLoggedIn);

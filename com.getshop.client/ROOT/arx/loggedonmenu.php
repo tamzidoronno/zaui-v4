@@ -13,21 +13,12 @@
         </a>
     </div>
 </div>
-
 <div class='row'>
     <div class='fifty'>
-        <i class='fa fa-list icon'></i>
-        <div>Access log</div>
-    </div>
-    <div class='fifty'>
-        <i class='fa fa-cloud icon'></i>
-        <div>Cloud services</div>
-    </div>
-</div>
-<div class='row'>
-    <div class='fifty'>
-        <i class='fa fa-info-circle icon'></i>
-        <div>About</div>
+        <a href='?page=info'>
+            <i class='fa fa-info-circle icon'></i>
+            <div>About</div>
+        </a>
     </div>
     <div class='fifty'>
         <a href='?logout=true'>

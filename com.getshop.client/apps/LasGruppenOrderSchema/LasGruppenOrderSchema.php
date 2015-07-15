@@ -73,4 +73,85 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     private function sendMail($mailAddress, $attachments) {
         $this->getApi()->getMessageManager()->sendMailWithAttachments($mailAddress, $mailAddress, "Bestilling fra Certego", "", "certego@getshop.com", "Certego AS", $attachments);
     }
+    
+    public function doLogin() {
+        $user = $this->getApi()->getUserManager()->checkUserNameAndPassword($_POST['data']['username'], $_POST['data']['password']);
+        if ($user) {
+            echo "success";
+        } else {
+            echo "failed";
+        }
+    }
+    
+    public function requestPincode() {
+        $success = $this->getApi()->getUserManager()->requestNewPincode($_POST['data']['username'], $_POST['data']['password']);
+        if ($success) {
+            echo "success";
+        } else {
+            echo "failed";
+        }
+    }
+    
+    public function loginWithPincode() {
+        $userLoggedIn = $this->getApi()->getUserManager()->loginWithPincode($_POST['data']['username'], $_POST['data']['password'], $_POST['data']['pincode']);
+        
+        if ($userLoggedIn != null && isset($userLoggedIn)) {
+            unset($_SESSION['tempaddress']);
+            $_SESSION['loggedin'] = serialize($userLoggedIn);
+            echo "success";
+        } else {
+            echo "failed";
+        }
+    }
+    
+    public function logout() {
+        $this->getApi()->getUserManager()->logout();
+        session_destroy();
+    }
+
+    public function getGroup($user) {
+        if ($user == null) {
+            return null;
+        }
+        
+        $groups = [];
+        
+        if ($user->groups) {
+            foreach ($user->groups as $groupId) {
+                $inGroup = $this->getApi()->getUserManager()->getGroup($groupId);
+                if ($inGroup) {
+                    $groups[] = $inGroup;
+                }
+            }
+        }
+        
+        
+        if (count($user->groups) === 1) {
+            $group = $this->getApi()->getUserManager()->getGroup($user->groups[0]);
+            return $group;
+        }
+        
+        return null;
+    }
+
+    public function getSystems($group) {
+        if ($group == null) {
+            return [];
+        }
+        
+        return $this->getApi()->getCertegoManager()->getSystemsForGroup($group);
+    }
+
+    public function getSelectedSystem() {
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        $group = $this->getGroup($user);    
+        $systems = $this->getSystems($group);
+        
+        if (count($systems) == 1) {
+            return $systems[0];
+        }
+        
+        return null;
+    }
+
 }

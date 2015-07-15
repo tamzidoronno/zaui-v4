@@ -16,6 +16,9 @@ class core_usermanager_data_Address extends core_common_DataCommon  {
 	public $address;
 
 	/** @var String */
+	public $address2;
+
+	/** @var String */
 	public $city;
 
 	/** @var String */
@@ -26,6 +29,12 @@ class core_usermanager_data_Address extends core_common_DataCommon  {
 
 	/** @var String */
 	public $countryname;
+
+	/** @var String */
+	public $customerNumber;
+
+	/** @var String */
+	public $vatNumber;
 
 }
 ?>

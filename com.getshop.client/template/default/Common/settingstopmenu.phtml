@@ -8,7 +8,17 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
     <div id="dashboardbutton" class='gss_topmenu-button  <? echo $appId == "b81bfb16-8066-4bea-a3c6-c155fa7119f8" ? "gss_active" : ""; ?>' gss_goto_app="b81bfb16-8066-4bea-a3c6-c155fa7119f8"><i class='fa fa-tachometer'></i> <? echo $this->__f("Dashboard") ?></div>
     <div class='gss_topmenu-button <? echo $appId == "d755efca-9e02-4e88-92c2-37a3413f3f41" ? "gss_active" : ""; ?>' gss_goto_app="d755efca-9e02-4e88-92c2-37a3413f3f41"><i class='fa fa-gears'></i> <? echo $this->__f("Instillinger"); ?></div>
     <div class='gss_topmenu-button <? echo $appId == "6ad9d19a-ccc7-4549-bec1-b240a95366bc" ? "gss_active" : ""; ?>' gss_goto_app="6ad9d19a-ccc7-4549-bec1-b240a95366bc"><i class='fa fa-envelope'></i> <? echo $this->__f("Emails"); ?> </div>
-    <div class='gss_topmenu-button <? echo $appId == "ba6f5e74-87c7-4825-9606-f2d3c93d292f" ? "gss_active" : ""; ?>' gss_goto_app="ba6f5e74-87c7-4825-9606-f2d3c93d292f"><i class='fa fa-users'></i> <? echo $this->__f("Users"); ?> </div>
+    <div class='gss_topmenu-button'><i class='fa fa-users'></i> <? echo $this->__f("Users settings"); ?> 
+        <div class="gss_menu_submenu">
+            <div class='gss_submenu_entry <? echo $appId == "ba6f5e74-87c7-4825-9606-f2d3c93d292f" ? "gss_active" : ""; ?>' gss_goto_app="ba6f5e74-87c7-4825-9606-f2d3c93d292f"><i class='fa fa-user'></i> <? echo $this->__f("Users"); ?> </div>
+            <div class='gss_submenu_entry <? echo $appId == "3983a370-d0cc-46de-ba94-cc22fe7becbb" ? "gss_active" : ""; ?>' gss_goto_app='3983a370-d0cc-46de-ba94-cc22fe7becbb'><i class='fa fa-users'></i> <? echo $factory->__f("Usergroups"); ?></div>
+            <?
+            $this->printExtraUserApps();
+            ?>
+        </div>
+    </div>
+    
+    
     <div class='gss_topmenu-button <? echo $appId == "f1fc4af3-656e-4294-a268-40d2a82d0aa1" ? "gss_active" : ""; ?>' gss_goto_app='f1fc4af3-656e-4294-a268-40d2a82d0aa1'><i class='fa fa-cube'></i> <? echo $this->__f("Applications"); ?></div>
 
     <?

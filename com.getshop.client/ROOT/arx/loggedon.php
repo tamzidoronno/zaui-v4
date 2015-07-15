@@ -19,6 +19,12 @@ switch($page) {
     case "dooraccesslog":
         include("dooraccesslog.php");
         break;
+    case "newperson":
+        include("newperson.php");
+        break;
+    case "info":
+        include("info.php");
+        break;
     default:
         include("loggedonmenu.php");
 }

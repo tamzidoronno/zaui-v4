@@ -88,7 +88,7 @@ $(document).ready(function() {
 
 if (history.pushState) {
     window.onpopstate = function(event) {
-        if (event.state) {
+        if (event && event.state) {
             var url = event.state.ajaxLink ? event.state.ajaxLink : event.state.url;
             thundashop.Ajax.doJavascriptNavigation(url, null, true);
         }

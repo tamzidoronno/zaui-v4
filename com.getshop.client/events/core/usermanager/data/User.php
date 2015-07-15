@@ -61,6 +61,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	public $referenceKey;
 
 	/** @var String */
+	public $pinCode;
+
+	/** @var String */
 	public $isPrivatePerson;
 
 	/** @var String */

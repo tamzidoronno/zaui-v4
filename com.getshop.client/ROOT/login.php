@@ -4,13 +4,36 @@ $factory = IocContainer::getFactorySingelton();
 $instance = new \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login();
 $instance->preProcess();
 
+$settings = $factory->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
+$settingsInstance = $factory->getApplicationPool()->createInstace($settings);
+$doubleauth = $settingsInstance->getConfigurationSetting("doubleauthentication") == "true";
+
 $username = "";
 $password = "";
+
 if(isset($_GET['username'])) {
     $username = $_GET['username'];
 }
+
 if(isset($_GET['password'])) {
     $password = $_GET['password'];
+}
+
+if (isset($_POST['username']))
+    $username = $_POST['username'];
+
+if (isset($_POST['password']))
+    $password = $_POST['password'];
+
+if (isset($_POST['pincoderequest']) && (!$_POST['username'] || !$_POST['password'])) {
+    echo "<div class='error_login_problem'>Please enter a valid username and password to request a new pincode.</div>";
+}
+
+if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password']) {
+    $result = $factory->getApi()->getUserManager()->requestNewPincode($_POST['username'], $_POST['password']);
+    if ($result) {
+        echo "<div class='error_login_info'>A new pincode has been sent to your phone.</div>";
+    }
 }
 
 ?>
@@ -23,6 +46,22 @@ if(isset($_GET['password'])) {
     input { padding: 3px; width: 80%; font-size: 16px; }
 </style>
 <style type="text/css">
+    .error_login_info,
+    .error_login_problem {
+        width: 450px;
+        box-sizing: border-box;
+        border: solid 2px red;
+        margin: 0 auto;
+        padding: 30px;
+        color: #FFF;
+        font-size: 16px;
+        text-align: center;
+    }
+    
+    .error_login_info {
+        border: solid 2px green;
+    }
+    
     .button {
         -moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
         -webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
@@ -79,6 +118,17 @@ if(isset($_GET['password'])) {
                         <bR>
                         <div class="password">Password<br><input class="tstextfield" name="password" type="password" value='<? echo $password; ?>' style="height:40px;width:100%;"></input></div>
                         <input type="hidden" name="loginbutton" value="true"/>
+                        <?
+                        if ($doubleauth) {
+                        ?>
+                        <bR>
+                        <div class="pincode">Pincode<br><input class="tstextfield" name="pincode" type="password" value='' style="height:40px;width:100%;"></input></div>
+                        <input class="loginbutton" type="submit" name='pincoderequest' value="Request new pincode" style="height:40px; margin-top: 20px;width:100%;"/>                
+
+                        <?
+                        }
+                        ?>
+                        
                         <input class="loginbutton" type="submit" value="login" style="height:40px; margin-top: 20px;width:100%;"/>                
                     </div>
             </form>

@@ -31,4 +31,12 @@ public class Store extends DataCommon {
      */
     public boolean isTemplate = false;
     public User registrationUser;
+
+    public String getDefaultMailAddress() {
+        if (configuration.emailAdress == null || configuration.emailAdress.isEmpty()) {
+            return "post@getshop.com";
+        }
+        
+        return configuration.emailAdress;
+    }
 }

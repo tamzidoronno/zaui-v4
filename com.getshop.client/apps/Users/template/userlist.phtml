@@ -5,18 +5,18 @@ $users = $this->getApi()->getUserManager()->getAllUsers();
 ?>
 
 <div class='gss_settings_header'>
-	<i class='fa fa-info'></i>
+    <i class='fa fa-info'></i>
 
-	<div class='gss_settings_header_description'>
-		<div class='gss_settings_header_title'>
-			<? echo $this->__f("Userlist"); ?>
-		</div>
-		<div class='gss_settings_header_description_inner'>
-			<?
-			echo $this->__f("Below you see a list of all users registered in this system. To see more information about a user you can simply click on it.").".";
-			?>	
-		</div>
-	</div>	
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Userlist"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+                echo $this->__f("Below you see a list of all users registered in this system. To see more information about a user you can simply click on it.").".";
+            ?>	
+        </div>
+    </div>	
 </div>
 
 
@@ -30,6 +30,7 @@ $users = $this->getApi()->getUserManager()->getAllUsers();
         $created = $user->rowCreatedDate;
         $icon = "fa-user on fa-gears";
         $id = $user->id;
+        $groups = $this->getUserGroups($user);
         ?>
         <div class='user_entry_row' gss_fragment="user" gss_view="gs_user_workarea" gss_value="<? echo $id; ?>">
             <div class="image">
@@ -69,6 +70,20 @@ $users = $this->getApi()->getUserManager()->getAllUsers();
                 <div class="name"><? echo $name; ?></div>
                 <div class="email"> <? echo $email; ?></div>
                 <div class="phone"><? echo $phone; ?></div>
+                <?
+                if (count($groups)) {
+                    $i = 0;
+                    echo "<div class='usergroups'>".$this->__f("Group(s)").": ";
+                    foreach ($groups as $group) {
+                        $i++;
+                        echo $group->groupName;
+                        if ($i != count($groups)) {
+                            echo ", ";
+                        }
+                    }
+                    echo "</div>";
+                }
+                ?>
                 <div class="created"><? echo $created; ?></div>
             </div>
         </div>

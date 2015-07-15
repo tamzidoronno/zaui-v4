@@ -8,4 +8,5 @@ public class AccessLog implements Serializable {
     public String card;
     public long timestamp;
     public String type;
+    public String dac_properties = "";
 }

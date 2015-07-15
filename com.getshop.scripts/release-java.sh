@@ -13,18 +13,18 @@ put apitodb.json
 EOF
 
 echo -e "Uploading thundashop jar files"
-sftp -b batchfile naxa@backendbeta.getshop.com &> /dev/null
+sftp -b batchfile naxa@backend30.getshop.com &> /dev/null
 rm -rf batchfile
 
 echo -e "Uploading api file"
-sftp -b batchfile2 naxa@backendbeta.getshop.com &> /dev/null
+sftp -b batchfile2 naxa@backend30.getshop.com &> /dev/null
 rm -rf batchfile2
 
 echo -e "Synching PDF Html template files"
-rsync --delete -avz ../com.getshop.core/html/templates naxa@backendbeta.getshop.com:dist/html/ &> /dev/null;
+rsync --delete -avz ../com.getshop.core/html/templates naxa@backend30.getshop.com:dist/html/ &> /dev/null;
 
 echo -e "Restarting java!";
-ssh -T naxa@backendbeta.getshop.com << EOF &> /dev/null;
+ssh -T naxa@backend30.getshop.com << EOF &> /dev/null;
 
 cd dist; 
 kill -9 `ps aux |grep thunda |grep -v "auto" |awk '{print $2}'`

@@ -586,6 +586,20 @@ class APICalendarManager {
 	}
 
 	/**
+	* Get all entries in a region based on the point
+	* @param point
+	* @return String
+	*/
+
+	public function getAgreementText() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAgreementText";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Returns a list of
 	*/
 
@@ -5584,9 +5598,10 @@ class APIUserManager {
 	* @throws ErrorException
 	*/
 
-	public function cleanUpUsers() {
+	public function cleanUpUsers($password) {
 	     $data = array();
 	     $data['args'] = array();
+	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $data["method"] = "cleanUpUsers";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);

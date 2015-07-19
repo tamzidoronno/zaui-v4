@@ -7,6 +7,7 @@ package com.thundashop.core.usermanager;
 
 import com.thundashop.core.calendar.CalendarManager;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,9 +22,11 @@ public class UserCleaner {
     private List<User> originalUsers = new ArrayList();
     private Map<User, List<User>> users = new HashMap();
     private int cleanerLevel ;
+    private MessageManager messageManager;
 
-    public UserCleaner(int cleanerLevel) {
+    public UserCleaner(int cleanerLevel, MessageManager messageManager) {
         this.cleanerLevel = cleanerLevel;
+        this.messageManager = messageManager;
     }
     
     public void addUser(User user) {
@@ -51,10 +54,7 @@ public class UserCleaner {
             }
             
             if (cleanerLevel == 1) {
-                if (origUser.cellPhone != null 
-                        && user.cellPhone != null 
-//                        && origUser.cellPhone.equals(user.cellPhone) 
-                        && similarity(origUser.fullName, user.fullName) > 0.5) {
+                if (similarity(origUser.fullName, user.fullName) > 0.5) {
                     return origUser;
                 }
             }
@@ -63,12 +63,11 @@ public class UserCleaner {
         return null;
     }
     
-    public void cleanNextLevel(UserManager userManager, CalendarManager calManager) throws ErrorException {
-        printSummary();
-        System.out.println("=========== Next level =============");
+    public Map<String, String> cleanNextLevel(UserManager userManager, CalendarManager calManager) throws ErrorException {
+        Map<String, String> rets = printSummary();
         
         for (User user : originalUsers) {
-            UserCleaner cleaner = new UserCleaner(cleanerLevel+1);
+            UserCleaner cleaner = new UserCleaner(cleanerLevel+1, messageManager);
             cleaner.addUser(user);
             List<User> clones = users.get(user);
             if (clones != null) {
@@ -79,10 +78,12 @@ public class UserCleaner {
             cleaner.cleanUp(userManager, calManager);
         }
         
-        
+        return rets;
     }
 
-    private void printSummary() {
+    private Map<String, String> printSummary() {
+        Map<String, String> returnResult = new HashMap();
+        
         for (User user : originalUsers) {
             List<User> clones = users.get(user);
             
@@ -90,15 +91,32 @@ public class UserCleaner {
                 continue;
             }
             
-            System.out.println("orig user: " +user.fullName + " email: " + user.emailAddress);
+            String text = "Hei,";
+            text += "<br/><br/> Vi jobber med å rydde opp i databasen vår, og har funnet flere kontoer med forskjellig navn på samme epostadresse ("+user.emailAddress+"). Vi trenger din hjelp til å rydde opp i dette.";
+            text += "<br/>";
+            text += "<br/> Svar på denne eposten og fyll ut manglende eposter.";
             
             if (clones != null) {
-                for (User clone : clones) {
-                    System.out.println("   - " + clone.fullName + " email: " + clone.emailAddress);
+                if (clones.size() == 0) {
+                    continue;
                 }
+                
+                text += "<br/>Navn: <b>" + user.fullName + " - </b> Epost?: ";
+                
+                for (User clone : clones) {
+                    text += "<br/>Navn: <b>" + clone.fullName + " - </b> Epost?: ";
+                    
+                }
+                
+                text += "<br/><br/> Tusen takk!";
+                text += "<br/><br/> Med Vennlig Hilsen";
+                text += "<br/> ProMeister Academy";
+                
+                returnResult.put(user.emailAddress, text);
             }
-            System.out.println("");
         }
+        
+        return returnResult;
     }
     
     public static double similarity(String s1, String s2) {
@@ -146,10 +164,17 @@ public class UserCleaner {
                 continue;
             }
             
-            System.out.println("orig user: " +user.fullName + " email: " + user.emailAddress);
             
             if (clones != null) {
                 for (User clone : clones) {
+                    if (user.comments == null) {
+                        user.comments = new HashMap();
+                    }
+                    
+                    if (clone.comments != null) {
+                        user.comments.putAll(clone.comments);
+                    }
+                    
                     calManager.replaceUserId(clone.id, user.id);
                     userManager.deleteUser(clone.id);
                 }

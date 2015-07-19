@@ -12,6 +12,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @GetShopApi
@@ -313,7 +314,7 @@ public interface IUserManager {
     public boolean isImpersonating() throws ErrorException;
     
     @Administrator
-    public void cleanUpUsers() throws ErrorException;
+    public Map<String,String> cleanUpUsers(String password) throws ErrorException;
     
     public boolean createAndSendNewPassword(String emailAddress) throws ErrorException;
 }

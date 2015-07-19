@@ -620,6 +620,14 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getAgreementText(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAgreementText"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getAllEventsConnectedToPage(self, pageId):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
@@ -5811,8 +5819,15 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
-  def cleanUpUsers(self):
+  def cleanUpUsers(self, password):
     args = collections.OrderedDict()
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
     data = EmptyClass()
     data.args = args
     data.method = "cleanUpUsers"

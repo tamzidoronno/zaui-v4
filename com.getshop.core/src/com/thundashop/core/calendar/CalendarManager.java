@@ -1372,6 +1372,14 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                         entry.waitingList.remove(clone);
                         entry.waitingList.add(newUserId);
                     }
+                    
+                    if (entry.metaInfo != null) {
+                        AttendeeMetaInfo metaInfo = entry.metaInfo.remove(clone);
+                        if (metaInfo != null) {
+                            metaInfo.userId = newUserId;
+                            entry.metaInfo.put(newUserId, metaInfo);
+                        }
+                    }
                 }
             }
         }
@@ -1428,6 +1436,14 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     @Override
     public String getAgreementText() {
-        return "Her kommer agreement teksten som man kan legge inn etter at softwaren er satt i produksjon";
+        if (storeId.equals("d27d81b9-52e9-4508-8f4c-afffa2458488")) {
+            return "Utebliven ankomst till anmäld kursplats medför fakturering 50% av kurskostnad.\n" +
+            "Kurspris för övriga verkstäder är 3450,- per. dag, Plats för övriga verkstäder medges bara i mån av plats.\n" +
+            "Våra konceptanslutna verkstäder har alltid förtur.";
+        } else {
+            return "Kurspris fra 01.01.2015 er kr. 2500,- pr. dag for kjedemedlemmer, dette inkluderer kursmateriell, enkel servering og kursbevis. Kurs som gjennomføres på kun en kveld eller halv dag faktureres med kr. 1250,-.  Påmelding uten fremmøte vil bli fakturert med 50% av kursprisen.\n" +
+                "Kurspris for ikke kjedemedlemmer er kr. 3750,- pr. dag, og disse vil kun få tilgang til kursene dersom det er ledige plasser.";
+        }
+        
     }
 }

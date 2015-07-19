@@ -742,8 +742,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     @Override
-    public void cleanUpUsers() throws ErrorException {
-        UserCleaner cleaner = new UserCleaner(0);
+    public Map<String, String> cleanUpUsers(String password) throws ErrorException {
+        if (password == null || !password.equals("jada")) {
+            return null;
+        }
+        
+        MessageManager messgaeManager = getManager(MessageManager.class);
+        UserCleaner cleaner = new UserCleaner(0, messgaeManager);
         
         List<User> users = userStoreCollections.get(storeId).getAllUsers();
         for (User user : users) {
@@ -751,7 +756,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         CalendarManager calManager = getManager(CalendarManager.class);
-        cleaner.cleanNextLevel(this, calManager);
+        return cleaner.cleanNextLevel(this, calManager);
     }
 
     @Override

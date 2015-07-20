@@ -998,6 +998,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (order != null) {
             content += "<br/><br/> Your account has been changed with: -" + order.creditAmount;
             content += "<br/> New account balance is now: " + user.creditAccount.getBalance() + " credit";
+        } else {
+            content += "<br/><br/> Your current account balance: " + user.creditAccount.getBalance() + " credit";
         }
         content += "<br/><br/>Link to product <a href='http://databank.tuningfiles.com/index.php?page=productview&productId=" + productId + "'>http://databank.tuningfiles.com/index.php?page=productview&productId=" + productId + "</a>";
         content += getSignature();

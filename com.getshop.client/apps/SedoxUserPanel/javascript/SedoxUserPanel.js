@@ -28,6 +28,33 @@ app.SedoxUserPanel = {
         
         $(document).on('click', '.SedoxUserPanel .transferCreditToSlave', this.showTransferCreditToSlave);
         $(document).on('click', '.SedoxUserPanel .transferCreditButton', this.doTransferCredit);
+        
+        $(document).on('keyup', '.SedoxUserPanel #filtercredithistory', this.filterCreditHistory);
+    },
+    
+    filterCreditHistory: function() {
+         var value = $('.SedoxUserPanel #filtercredithistory').val();
+         if (!value) {
+             $('.SedoxUserPanel .credithistory_list .row').show();
+         } else {
+            $('.SedoxUserPanel .credithistory_list .row').each(function() {
+                var found = false;
+                $(this).find('.col').each(function() {
+                    var innerVal = $(this).html();
+                    if (innerVal.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+                        found = true;
+                    }
+                })
+                
+                if (found) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+                
+            });
+         }
+         
     },
     
     doTransferCredit: function() {

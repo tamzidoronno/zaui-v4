@@ -1,25 +1,31 @@
 <div class='filehistory'>
-   
-<?
-$hists = $this->getLatestUploadedProducts();
-if (count($hists) == 0) {
-    echo "No history";
-    return;
-}
+    <div class="sedox_filter_searchbox">
+        <center>
+        You can filter your result here by enter text in the textfield below:
+        <br/><br/><input type="textfield" placeholder="search" id="filtercredithistory"/>
+        </center>
+    </div>
+    <div class="credithistory_list">   
+        <?
+        $hists = $this->getLatestUploadedProducts();
+        if (count($hists) == 0) {
+            echo "No history";
+            return;
+        }
 
-foreach ( $hists as $product) {
-    $name = $product->brand . " " . $product->model . " " . $product->engineSize . " " . $product->power . " " . $product->year;
-    $id = $product->id;
-    $reference = ns_23fac58b_5066_4222_860c_a9e88196b8a1\SedoxProductView::getReference($product);
-    $date = $product->rowCreatedDate;
-		  
-    echo "<a href='/index.php?page=productview&productId=$id'><div class='row'>"
-    . "<div class='col col1'>$id</div>"
-    . "<div class='col col2'>$name</div>"
-    . "<div class='col col3'>$date</div>"
-    . "<div class='col col4'>$reference</div>"
-    . "</div></a>";
-}
-?>
-    
+        foreach ( $hists as $product) {
+            $name = $product->brand . " " . $product->model . " " . $product->engineSize . " " . $product->power . " " . $product->year;
+            $id = $product->id;
+            $reference = ns_23fac58b_5066_4222_860c_a9e88196b8a1\SedoxProductView::getReference($product);
+            $date = $product->rowCreatedDate;
+
+            echo "<a href='/index.php?page=productview&productId=$id'><div class='row'>"
+            . "<div class='col col1'>$id</div>"
+            . "<div class='col col2'>$name</div>"
+            . "<div class='col col3'>$date</div>"
+            . "<div class='col col4'>$reference</div>"
+            . "</div></a>";
+        }
+        ?>
+    </div>
 </div>

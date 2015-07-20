@@ -212,3 +212,16 @@
     padding: 20px;
     font-size: 16px;
 }
+
+.SedoxUserPanel .sedox_filter_searchbox {
+    padding: 30px;
+    border-bottom: solid 1px #DDD;
+    font-size: 16px;
+    color: #FFF;
+}
+
+.SedoxUserPanel .sedox_filter_searchbox input {
+    line-height: 20px;
+    font-size: 16px;
+    padding: 5px;
+}

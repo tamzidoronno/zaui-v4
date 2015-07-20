@@ -1,25 +1,33 @@
 <div class='credithistory'>
-   
-<?
-$hists = $this->getLatestCreditHistory();
-if (count($hists) == 0) {
-    echo "No history";
-    return;
-}
-
-$hists = array_reverse($hists);
-foreach ( $hists as $hist) {
-    $id = $hist->transactionReference;
-    $desc = $hist->description;
-    $amount = $hist->amount;
-    $date = $hist->dateCreated;
-    echo "<div class='row'>"
-    . "<div class='col col1'>$id</div>"
-    . "<div class='col col2'>$desc</div>"
-    . "<div class='col col3'>$amount</div>"
-    . "<div class='col col4'>$date</div>"
-    . "</div>";
-}
-?>
+    <div class="sedox_filter_searchbox">
+        <center>
+        You can filter your result here by enter text in the textfield below:
+        <br/><br/><input type="textfield" placeholder="search" id="filtercredithistory"/>
+        </center>
+    </div>
     
+    <div class="credithistory_list">
+        <?
+        $hists = $this->getLatestCreditHistory();
+        if (count($hists) == 0) {
+            echo "No history";
+            return;
+        }
+
+        $hists = array_reverse($hists);
+        foreach ( $hists as $hist) {
+            $id = $hist->transactionReference;
+            $desc = $hist->description;
+            $amount = $hist->amount;
+            $date = $hist->dateCreated;
+            echo "<div class='row'>"
+            . "<div class='col col1'>$id</div>"
+            . "<div class='col col2'>$desc</div>"
+            . "<div class='col col3'>$amount</div>"
+            . "<div class='col col4'>$date</div>"
+            . "</div>";
+        }
+        ?>
+
+    </div>
 </div>

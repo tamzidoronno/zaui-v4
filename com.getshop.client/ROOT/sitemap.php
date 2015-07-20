@@ -103,7 +103,7 @@ $sedoxProducts = $factory->getApi()->getSedoxProductManager()->getProductIds();
 if ($sedoxProducts) {
     foreach ($sedoxProducts as $productId) {
         echo "<url>\n";
-        echo "<loc>" . $address . "/index.php?page=productview&productId=".$productId."</loc>\n";
+        echo "<loc>" . $address . "/index.php?page=productview&amp;productId=".$productId."</loc>\n";
         echo "</url>\n";
     }
 }

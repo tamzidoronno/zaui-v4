@@ -1,25 +1,33 @@
 <div class="slave_credit_history">
-    <?
-    /* @var $this \ns_32b5f680_dd8d_11e3_8b68_0800200c9a66\SedoxUserPanel */
-    $slave = $this->getSlave();
-    $user = $this->getApi()->getUserManager()->getUserById($slave->id);
-    echo "Name: ".$user->fullName;
-    echo "<br>Current balance: ".$slave->creditAccount->balance;
-    echo "<hr/>";
+    <div class="sedox_filter_searchbox">
+        <center>
+        You can filter your result here by enter text in the textfield below:
+        <br/><br/><input type="textfield" placeholder="search" id="filtercredithistory"/>
+        </center>
+    </div>
     
-    if (!$slave->creditAccount->history) {
-        echo "This user has no credit history yet";
-    } else {
-        $histories = array_reverse($slave->creditAccount->history);
-        foreach ($histories as $history) {
-            echo "<div class='row'>";
-                echo "<div class='col col1'>".$history->dateCreated."</div>";
-                echo "<div class='col col2'>".$history->transactionReference."</div>";
-                echo "<div class='col col3'>".$history->description."</div>";
-                echo "<div class='col col4'>".$history->amount."</div>";
-            echo "</div>";
-        }
-    }
-    ?>
+    <div class="credithistory_list">
+        <?
+        /* @var $this \ns_32b5f680_dd8d_11e3_8b68_0800200c9a66\SedoxUserPanel */
+        $slave = $this->getSlave();
+        $user = $this->getApi()->getUserManager()->getUserById($slave->id);
+        echo "Name: ".$user->fullName;
+        echo "<br>Current balance: ".$slave->creditAccount->balance;
+        echo "<hr/>";
 
+        if (!$slave->creditAccount->history) {
+            echo "This user has no credit history yet";
+        } else {
+            $histories = array_reverse($slave->creditAccount->history);
+            foreach ($histories as $history) {
+                echo "<div class='row'>";
+                    echo "<div class='col col1'>".$history->dateCreated."</div>";
+                    echo "<div class='col col2'>".$history->transactionReference."</div>";
+                    echo "<div class='col col3'>".$history->description."</div>";
+                    echo "<div class='col col4'>".$history->amount."</div>";
+                echo "</div>";
+            }
+        }
+        ?>
+    </div>
 </div>

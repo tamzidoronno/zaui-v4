@@ -214,10 +214,11 @@
 }
 
 .SedoxUserPanel .sedox_filter_searchbox {
-    padding: 30px;
+    padding: 15px;
     border-bottom: solid 1px #DDD;
     font-size: 16px;
     color: #FFF;
+    margin-bottom: 5px;
 }
 
 .SedoxUserPanel .sedox_filter_searchbox input {

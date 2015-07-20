@@ -70,7 +70,7 @@ $reference = $this->getReference($sedoxProduct);
                     <? echo $binFile->fileType; ?>
                 </div>
 
-                <div class='col col2'><? echo $this->getPriceForFile($binFile); ?></div>
+                <div class='col col2'><? echo strtolower($binFile->fileType) == "original" ? $this->getPriceForFile($binFile) : $this->getPriceForFile($binFile) + 40; ?></div>
 
                 <div class='col col3'>
                     <?

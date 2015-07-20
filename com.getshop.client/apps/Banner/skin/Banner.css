@@ -155,3 +155,15 @@
 }
 
 .Banner .banner_settings input { width: 165px; }
+
+.Banner .sortinner {
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+    padding: 20px;
+    border: solid 1px;
+}
+
+.Banner .sortinner img {
+    width: 250px;
+}

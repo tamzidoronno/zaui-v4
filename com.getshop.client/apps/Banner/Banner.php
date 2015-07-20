@@ -160,5 +160,36 @@ class Banner extends \WebshopApplication implements \Application {
         
         return null;
     }
+    
+    public function showSorterMenu() {
+        $this->loadBannerSet();
+        $this->includefile("sortBanners");
+    }
+    
+    public function saveSorting() {
+        $this->loadBannerSet();
+        $sortedBanners = [];
+        foreach ($this->bannerSet->banners as $banner) {
+            $order =  $_POST['data'][$banner->imageId];
+
+            if (isset($sortedBanners[$order])) {
+                echo "FAILED";
+                die();
+            } else {
+                $sortedBanners[$order] = $banner;
+            }
+        }
+
+        $saveBanners = [];
+        ksort($sortedBanners);
+        foreach ($sortedBanners as $order => $banner) {
+            $saveBanners[] = $banner;
+        }
+        
+        $this->bannerSet->banners = $saveBanners;
+        $this->getApi()->getBannerManager()->saveSet($this->bannerSet);
+
+        echo "SUCCESS";
+    }
 }
 ?>

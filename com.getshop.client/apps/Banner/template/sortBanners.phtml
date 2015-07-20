@@ -1,0 +1,17 @@
+<?
+$banners = $this->getBanners();
+$i = 0;
+foreach ($banners as $banner) {
+    $i++;
+    ?>
+    <div class='sortinner' >
+        <img src="/displayImage.php?id=<? echo $banner->imageId; ?>"/>
+        <?
+        echo "<br/><br/><input type='textfield' value='$i' style='text-align: center;' imageId='$banner->imageId'/>";
+        ?>
+    </div>
+    <?
+}
+?>
+
+<center><span class="gs_button savesorting">Save</span></center>

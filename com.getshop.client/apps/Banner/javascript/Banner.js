@@ -8,7 +8,24 @@ app.Banner = {
         $(document).on('click', '.Banner .addnewbanner', app.Banner.addNewBanner);
         $(document).on('click', '.Banner .saveset', app.Banner.saveSet);
         $(document).on('click', '.Banner .banner_settings_images .imageholder', app.Banner.imageClicked);
+        $(document).on('click', '.Banner .savesorting', app.Banner.saveSorting);
         $(document).on('change', '.Banner #height', $.proxy(app.Banner.heightChanged, app.Banner));
+    },
+    
+    saveSorting: function() {
+        var ret = {};
+        $('.sortinner input').each(function() {
+            ret[$(this).attr('imageId')] = $(this).val();
+        });
+        
+        var event = thundashop.Ajax.createEvent(null, "saveSorting", this, ret);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            if (result === "SUCCESS") {
+                location.reload();
+            } else {
+                alert('Please check the numbers, they can not overlap!');
+            }
+        });
     },
     
     setHeight: function() {
@@ -288,6 +305,11 @@ app.Banner = {
         thundashop.Ajax.post(event);
     },
     
+    showSortList: function() {
+        var event = thundashop.Ajax.createEvent(null, "showSorterMenu", this, {});
+        thundashop.common.showInformationBox(event, __f("Sort banners"));
+    },
+    
     loadSettings : function(element, application) {
          var config = {
             draggable: true,
@@ -308,6 +330,13 @@ app.Banner = {
                     iconsize : "30",
                     title: __f("Show dots"),
                     click: app.Banner.toggleDots
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-list",
+                    iconsize : "30",
+                    title: __f("Sort list"),
+                    click: app.Banner.showSortList
                 }
             ]
         }

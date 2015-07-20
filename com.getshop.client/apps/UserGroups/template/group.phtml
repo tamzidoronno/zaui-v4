@@ -79,6 +79,18 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
             <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceVatNumber' value="<? echo $group->invoiceAddress->vatNumber; ?>" placeholder="">
             <div class="description"></div>
         </div>
+        
+        <div class="textfield gss_setting"  id="invoiceReference">
+            <span class="title"><?php echo $this->__f("Reference"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceReference' value="<? echo $group->invoiceAddress->reference; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="invoiceCellPhone">
+            <span class="title"><?php echo $this->__f("Reference"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceCellPhone' value="<? echo $group->invoiceAddress->phone; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
     </div>
     <!-- Invoice information END -->
 

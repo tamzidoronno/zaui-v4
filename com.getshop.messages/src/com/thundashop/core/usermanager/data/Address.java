@@ -29,4 +29,5 @@ public class Address extends DataCommon {
     public String countryname;
     public String customerNumber;
     public String vatNumber;
+    public String reference = "";
 }

@@ -1,17 +1,36 @@
 <?
 /* @var $this \ns_7004f275_a10f_4857_8255_843c2c7fb3ab\LasGruppenOrderSchema */
 $system = $this->getSelectedSystem();
+$invoiceAddress = $this->getSelectedInvoiceAddress();
         
 $systemnumber = "";
 $systemname = "";
 $systememail = "";
 $systemcellphone = "";
 
+$invoiceVat = "";
+$invoiceName = "";
+$invoiceAddress1 = "";
+$invoiceAddress2 = "";
+$invoicePostNumber = "";
+$invoiceCellPhone = "";
+
 if (count($system)) {
     $systemnumber = 'disabled="true" value="'.$system->number.'"'; ;
     $systemname = 'disabled="true" value="'.$system->name.'"'; ;
-    $systememail = 'disabled="true" value="'.$system->phoneNumber.'"'; ;
-    $systemcellphone = 'disabled="true" value="'.$system->email.'"'; ;
+    $systememail = 'disabled="true" value="'.$system->email.'"'; ;
+    $systemcellphone = 'disabled="true" value="'.$system->phoneNumber.'"'; ;
+}
+
+if ($invoiceAddress) {
+    $invoiceVat = 'disabled="true" value="'.$invoiceAddress->vatNumber.'"';
+    $invoiceName = 'disabled="true" value="'.$invoiceAddress->fullName.'"';
+    $invoiceAddress1 = 'disabled="true" value="'.$invoiceAddress->address.'"';
+    $invoiceAddress2 = 'disabled="true" value="'.$invoiceAddress->address2.'"';
+    $invoicePostNumber = 'disabled="true" value="'.$invoiceAddress->postCode.'"';
+    $invoiceCity = 'disabled="true" value="'.$invoiceAddress->city.'"';
+    $invoiceCellPhone = 'disabled="true" value="'.$invoiceAddress->phone.'"';
+    $invoiceReference = 'disabled="true" value="'.$invoiceAddress->reference.'"';
 }
 
 ?>
@@ -81,18 +100,20 @@ if (count($system)) {
         <div class='col col1'>
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>Fakturainformasjon</b></td></tr>
-                <tr><td class='td_col_1'>Org. Nr / Fødselsdato*</td><td><input required='true' type='text' id="companyid" type_number='true'/></td></tr>
-                <tr><td>Navn / Firma*</td><td><input id="invoice_company_name" required='true' type='text'/></td></tr>
-                <tr><td>Adresse*</td><td><input id="invoice_address" required='true' type='text'/></td></tr>
-                <tr><td>Postnr / Sted*</td><td><input id="invoice_postcode" required='true' type='text'/></td></tr>
+                <tr><td class='td_col_1'>Org. Nr / Fødselsdato*</td><td><input required='true' type='text' id="companyid" type_number='true' <? echo $invoiceVat; ?>/></td></tr>
+                <tr><td>Navn / Firma*</td><td><input id="invoice_company_name" required='true' type='text' <? echo $invoiceName; ?>/></td></tr>
+                <tr><td>Adresse*</td><td><input id="invoice_address" required='true' type='text' <? echo $invoiceAddress1; ?>/></td></tr>
+                <tr><td>Adresse 2</td><td><input id="invoice_address" type='text' <? echo $invoiceAddress2; ?>/></td></tr>
+                <tr><td>Postnr*</td><td><input id="invoice_postcode" required='true' type='text' <? echo $invoicePostNumber; ?>/></td></tr>
+                <tr><td>Sted*</td><td><input id="invoice_postcode" required='true' type='text' <? echo $invoiceCity; ?>/></td></tr>
             </table>
         </div>
 
         <div class='col col2'>
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>&nbsp;</b></td></tr>
-                <tr><td>Referanse*</td><td><input required='true' type='text' id="invoice_reference"/></td></tr>
-                <tr><td>Mobiltelefon*</td><td><input id="invoice_cellphone" required='true' type_number='true' type='text'/></td></tr>
+                <tr><td>Referanse*</td><td><input required='true' type='text' id="invoice_reference" <? echo $invoiceReference; ?>/></td></tr>
+                <tr><td>Mobiltelefon*</td><td><input id="invoice_cellphone" required='true' type_number='true' type='text' <? echo $invoiceCellPhone; ?>/></td></tr>
                 <tr><td>E-post adresse</td><td><input type='text'id="invoice_emailaddress" type_email='true'/></td></tr>
                 <tr><td>Kundenr</td><td><input type='text' id="invoice_cusomer_number"/></td></tr>
             </table>
@@ -100,7 +121,10 @@ if (count($system)) {
     </div>
     
     <div class='button_area'>
+        
         <div class='shop_button next'>Neste</div>
+        <div class='shop_button next' style="margin-right: 10px;">Ny adresse</div>
+        <div class='shop_button next' style="margin-right: 10px;">Rediger fakturainformasjon</div>
     </div>
 </div>
 
@@ -131,7 +155,7 @@ if (count($system)) {
         Legg til nøklene
         <table id="keys_setup_table">
             <tr><th>Systemnr.</th><th>Antall</th><th>Merking</th></tr>
-            <tr class='keys_template_row'><td><input type='textfield' class="systemnumber systemnumber_uppercase"></td><td><input type='textfield' class="keys_count"></td><td><input class="keys_marking" type='textfield'></td></tr>
+            <tr class='keys_template_row'><td><input type='textfield' class="systemnumber systemnumber_uppercase" <? echo $systemnumber; ?>></td><td><input type='textfield' class="keys_count"></td><td><input class="keys_marking" type='textfield'></td></tr>
         </table>
         <div class='shop_button add_key_row'>
             +1 Linje
@@ -150,7 +174,7 @@ if (count($system)) {
                 <th>Beskrivelse i låsplan</th>
             </tr>
             <tr class='cylinder_template_row'>
-                <td><input type='textfield' class="systemnumber systemnumber_uppercase"></td>
+                <td><input type='textfield' class="systemnumber systemnumber_uppercase" <? echo $systemnumber; ?>></td>
                 <td><input type='textfield' style="width: 25px;" class='cylinder_count'></td>
                 <td><input type='textfield' class='cylinder_type'></td>
                 <td><input type='textfield' class='door_thickness'></td>

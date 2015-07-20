@@ -58,6 +58,8 @@ class UserGroups extends \ApplicationBase implements \Application {
         $group->invoiceAddress->city = $_POST['invoicePostPlace'];
         $group->invoiceAddress->customerNumber = $_POST['invoiceCustomerNumber'];
         $group->invoiceAddress->vatNumber = $_POST['invoiceVatNumber'];
+        $group->invoiceAddress->reference = $_POST['invoiceReference'];
+        $group->invoiceAddress->phone = $_POST['invoiceCellPhone'];
         
         $this->getApi()->getUserManager()->saveGroup($group);
     }

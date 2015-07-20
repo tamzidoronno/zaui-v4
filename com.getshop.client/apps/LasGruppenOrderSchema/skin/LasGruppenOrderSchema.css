@@ -12,6 +12,10 @@ and open the template in the editor.
     max-width: 950px;
     color: #333;
 }
+
+body[editormode="true"] .LasGruppenOrderSchema {
+    margin-left: 90px;
+}
 .LasGruppenOrderSchema .header {
     background-color: #ff6e00;
     color: #FFF;

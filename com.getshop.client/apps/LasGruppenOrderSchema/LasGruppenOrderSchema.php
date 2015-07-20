@@ -154,4 +154,14 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         return null;
     }
 
+
+    public function getSelectedInvoiceAddress() {
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        if ($user) {
+            return $this->getGroup($user)->invoiceAddress;
+        }
+        
+        return null;
+    }
+
 }

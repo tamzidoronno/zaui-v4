@@ -30,11 +30,11 @@
                 /* @var $orgFile core_sedox_SedoxBinaryFile */
                 /* @var $prod core_sedox_SedoxProduct */
                 $onclick = "";
-                if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
+//                if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
                     echo "<a href='?page=productview&productId=".$prod->id."'>";
-                } else {
-                    $onclick = "onclick='thundashop.common.Alert(\"Login\", \"Please login to see more information about the product\")'";
-                }
+//                } else {
+//                    $onclick = "onclick='thundashop.common.Alert(\"Login\", \"Please login to see more information about the product\")'";
+//                }
                 ?>
                 
                     <div <? echo $onclick; ?> class='sedox_product_box productinfo'>

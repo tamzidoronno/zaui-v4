@@ -1486,5 +1486,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return results;
     }
 
+    @Override
+    public List<String> getProductIds() throws ErrorException {
+        List<String> productIds = new ArrayList();
+        for (SedoxProduct product : products) {
+            productIds.add(product.id);
+        }
+        
+        return productIds;
+    }
+
     
 }

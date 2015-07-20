@@ -149,4 +149,6 @@ public interface ISedoxProductManager  {
     
     @Administrator
     public List<SedoxProductStatistic> getStatistic();
+    
+    public List<String> getProductIds() throws ErrorException;
 }

@@ -87,13 +87,25 @@ foreach ($lists as $list) {
     $entries = $factory->getApi()->getListManager()->getList($list);
     $altLanguages = [];
     
-    foreach ($languages as $lang) {
-        $factory->getApi()->getStoreManager()->setSessionLanguage($lang);
-        $altLanguages[$lang] = $factory->getApi()->getListManager()->getList($list);
+    if ($languages) {
+        foreach ($languages as $lang) {
+            $factory->getApi()->getStoreManager()->setSessionLanguage($lang);
+            $altLanguages[$lang] = $factory->getApi()->getListManager()->getList($list);
+        }
     }
     
     if(isset($entries)) {
         printEntries($entries, $address, $altLanguages, $mainLanguage);
     }
 }
+
+$sedoxProducts = $factory->getApi()->getSedoxProductManager()->getProductIds();
+if ($sedoxProducts) {
+    foreach ($sedoxProducts as $productId) {
+        echo "<url>\n";
+        echo "<loc>" . $address . "/index.php?page=productview&productId=".$productId."</loc>\n";
+        echo "</url>\n";
+    }
+}
+
 echo "</urlset>";

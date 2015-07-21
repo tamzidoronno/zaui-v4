@@ -1,3 +1,6 @@
+<?
+/* @var $this ns_e22e25dd_8000_471c_89a3_6927d932165e\SedoxAdmin */
+?>
 <div class="title">
     Daily processing 
 </div>
@@ -20,7 +23,11 @@
             }
             $userId = $sedoxProduct->firstUploadedByUserId;
             $impersonate = '<a href="/impersonate.php?userId='.$userId.'"><i class="fa fa-magic"></i></a>';
-            $fullName = "<span class='showUserInformationSedox' userid='$userId'>".$this->getFullName($sedoxProduct)." ($balance) </span>";
+            $user = $this->getApi()->getUserManager()->getUserById($sedoxProduct->firstUploadedByUserId);
+            $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($user->id);
+            
+            $isSlave = $sedoxUser->masterUserId ? true : false;
+            $fullName = "<span class='showUserInformationSedox' userid='$userId'>".$user->fullName." ($balance) </span>";
             $date = $sedoxProduct->rowCreatedDate;
             $goto = "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?page=productview&productId=$id'><i class='fa fa-arrow-right'></i></a>";
             $start = "Start";
@@ -50,7 +57,14 @@
                 $status = "<i style='color: green;' class='fa fa-check-circle'></i>";
             }
 			
-			$badCustomer = $this->isBadCustomer($sedoxProduct) ? "<i class='fa fa-warning' style='color: #CC0000;'></i> " : "";
+            $badCustomer = $this->isBadCustomer($sedoxProduct) ? "<i class='fa fa-warning' style='color: #CC0000;'></i> " : "";
+            
+            
+            $slaveText = "";
+            if ($isSlave) {
+                $slaveText .= " | <i class='fa fa-user showUserInformationSedox' userid='".$sedoxUser->masterUserId."' style='color: #CC0000;'></i> ";
+                $slaveText .= $sedoxUser->isPassiveSlave ? "(P)" : "(A)";
+            }
             
             echo "
                     <div productId='$id' class='filelistrow'>
@@ -59,12 +73,14 @@
                         <div class='col col2'> $name </div>
                         <div class='col col3'> $date </div>
 
-                        <div class='col col4'> $badCustomer $fullName </div>
+                        <div class='col col4'> $badCustomer $fullName $slaveText</div>
                         <div class='col col5'> $start </div>
                         <div class='col col5'> $goto </div>
                         <div class='col col6'> &nbsp; $status </div>
                     </div>
                 ";
+            
+            
         }
     } else {
         echo "Sorry! You dont have any files the specified day";

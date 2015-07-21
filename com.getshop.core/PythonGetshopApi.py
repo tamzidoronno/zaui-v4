@@ -1502,6 +1502,21 @@ class CertegoManager(object):
     data.interfaceName = "core.certego.ICertegoManager"
     return self.communicationHelper.sendMessage(data)
 
+  def search(self, searchWord):
+    args = collections.OrderedDict()
+    if isinstance(searchWord,GetShopBaseClass): 
+      args["searchWord"]=json.dumps(searchWord.__dict__)
+    else:
+      try:
+        args["searchWord"]=json.dumps(searchWord)
+      except (ValueError, AttributeError):
+        args["searchWord"]=searchWord
+    data = EmptyClass()
+    data.args = args
+    data.method = "search"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
 class ChatManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper

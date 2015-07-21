@@ -217,6 +217,18 @@ getshop.Settings = {
         }
         
         data['appid'] = this.getCurrentAppId();
+        
+        if (field) {
+            var overrideapp = $(field).closest('.gss_overrideapp');
+            if (overrideapp.length) {
+                var appId = $(field).closest('.gss_overrideapp').attr('gss_use_app_id');
+                if (appId) {
+                    data['appid'] = appId;
+                }
+            }
+        }
+        
+        
         getshop.Settings.loadingTimer = setTimeout(function() {
             $('#gss_loading_icon').show();
         }, 300);

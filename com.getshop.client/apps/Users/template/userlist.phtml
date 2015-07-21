@@ -73,7 +73,7 @@ $users = $this->getApi()->getUserManager()->getAllUsers();
                 <?
                 if (count($groups)) {
                     $i = 0;
-                    echo "<div class='usergroups'>".$this->__f("Group(s)").": ";
+                    echo "<div class='usergroups' style='font-style: italic;'>".$this->__f("Group(s)").": ";
                     foreach ($groups as $group) {
                         $i++;
                         echo $group->groupName;

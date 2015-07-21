@@ -27,4 +27,7 @@ public interface ICertegoManager {
     public void deleteSystem(String systemId);
     
     public List<CertegoSystem> getSystemsForGroup(Group group);
+    
+    @Administrator
+    public List<CertegoSystem> search(String searchWord);
 }

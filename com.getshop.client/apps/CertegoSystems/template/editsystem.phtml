@@ -1,7 +1,6 @@
 <?
 /* @var $this \ns_27a320a3_e983_4f55_aae8_cf94add661c2\CertegoSystems */
 $system = $this->getSystem($_POST['value']);
-$groupName = $system->group != null ? $system->group->groupName : "";
 ?>
 
 <div class="textfield gss_setting"  id="systemnumber">
@@ -35,40 +34,6 @@ $groupName = $system->group != null ? $system->group->groupName : "";
     </div>
 </div>
 
-<?
-if ($groupName) {
-?>
-<div class="textfield gss_setting"  id="phone">
-    <span class="title"><?php echo $this->__f("Group"); ?></span>
-    <div class="textinput"><span style="cursor: pointer;" gss_value="<? echo $system->id; ?>" gss_method="removeGroupFromSystem"  gss_fragment="editsystem" gss_view="gs_system_work_area">( <i class="fa fa-trash"></i> Remove )</span> <? echo $groupName; ?></div>
-    <div class="description">
-         <?php echo $this->__("This system is connected to the following system."); ?>
-    </div>
-</div>
-<?
-}
-
-if (!$groupName) {
-?>
-<div style="border: solid 1px #DDD; padding: 20px; background-color: #F9f9f9;">
-    <center><h2>Assign system to a group</h2></center>
-    <div class="textfield gss_setting"  id="searchforgroup">
-        <span class="title"><?php echo $this->__f("Group number"); ?></span>
-        <input type="textfield" gs_model='systemmodel' gs_model_attr='searchforgroup' value="" placeholder=''>
-        <div class="description">
-            <?php echo $this->__("Enter the groupname or something to search for."); ?>
-        </div>
-    </div>
-    <div class="gss_group_system_searchresult">
-         
-    </div>
-    <div class='gss_button_area'>
-        <div class="gss_button" gss_value="<? echo $system->id; ?>" gss_fragment="searchforgroup" gss_view="gss_group_system_searchresult" gss_method="searchForGroup" gss_model="systemmodel"><i class='fa fa-plus'></i><?php echo $this->__("Search"); ?></div>
-    </div>
-</div>
-<?
-}
-?>
 
 
 <div class='gss_button_area'>

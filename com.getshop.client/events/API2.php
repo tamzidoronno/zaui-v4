@@ -1394,6 +1394,20 @@ class APICertegoManager {
 	     return $this->transport->cast(new core_certego_data_CertegoSystem(), $this->transport->sendMessage($data));
 	}
 
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function search($searchWord) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["searchWord"] = json_encode($this->transport->object_unset_nulls($searchWord));
+	     $data["method"] = "search";
+	     $data["interfaceName"] = "core.certego.ICertegoManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIChatManager {
 

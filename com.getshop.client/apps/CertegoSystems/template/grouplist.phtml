@@ -1,0 +1,42 @@
+<div class='gss_settings_content gss_overrideapp' style="position: relative;" gss_use_app_id="<? echo $this->getId(); ?>">
+    <i class="fa fa-plus-circle gss_addSystemToGroup"  style=""></i>
+    
+    <div class="gss_addSystemForm">
+        <center><b><?php echo $this->__f("Add system"); ?></b></center>
+        <div class="textfield gss_setting" style="border-bottom: 0px;" id="name">
+            <span class="title"></span>
+            
+            <input id="gss_search_for_system_to_add_to_group" 
+                   type="textfield"
+                   gs_model='groupmodel' 
+                   gs_model_attr='certegoSystem' 
+                   style='margin-right: 20px; margin-top: 5px;' 
+                   value="" 
+                   placeholder="<? echo $this->__f("Name, email etc of user"); ?>">
+            
+            <div id="gss_search_for_systems_in_list" 
+                 gss_loadsilent="true" 
+                 gss_method="searchForSystems" 
+                 gss_model="groupmodel" 
+                 gss_fragment="systemsearch" 
+                 gss_view="systemsearch">
+                
+                <i class="fa fa-search"></i></div>
+            <div class="description">
+
+            </div>
+        </div>
+        <div class="systemsearch">
+            <? 
+            $this->includefile("systemsearch");
+            ?>
+        </div>
+    </div>
+    
+    <center><h3><?php echo $this->__f("Systems in group"); ?></h3></center>
+    <div class="gss_systems_in_group" style="background-color: #F9f9f9; margin-top: 20px; padding: 10px; border: solid 1px #DDD;">
+        <?
+        $this->includefile("systemsingroup");
+        ?>    
+    </div>
+</div>

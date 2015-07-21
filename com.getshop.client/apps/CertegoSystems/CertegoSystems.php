@@ -15,6 +15,9 @@
 namespace ns_27a320a3_e983_4f55_aae8_cf94add661c2;
 
 class CertegoSystems extends \ApplicationBase implements \Application {
+
+    private $systemsForGroup;
+
     function __construct() {
     }
 
@@ -74,9 +77,9 @@ class CertegoSystems extends \ApplicationBase implements \Application {
         $this->getApi()->getCertegoManager()->saveSystem($system);
     }
     
-    public function assignSystemToGroup() {
-        $system = $this->getSystem($_POST['value']);
-        $system->groupId = $_POST['value2'];
+    public function addSystemToGroup() {
+        $system = $this->getSystem($_POST['value2']);
+        $system->groupId = $_POST['value'];
         $this->getApi()->getCertegoManager()->saveSystem($system);
     }
 
@@ -95,7 +98,7 @@ class CertegoSystems extends \ApplicationBase implements \Application {
      */
     public function renderExtraGroupList($group) {
         $count = $this->getSystemCount($group->id);
-        echo "<div style='font-size: 13px; font-weight: bold;'>".$this->__f("Systems").": ".$this->getSystemCount($group->id)."</div>";
+        echo "<div style='font-size: 13px; font-style: italic;'>".$this->__f("Systems").": ".$this->getSystemCount($group->id)."</div>";
     }
 
     public function getSystemCount($groupId) {
@@ -110,4 +113,30 @@ class CertegoSystems extends \ApplicationBase implements \Application {
         return $count;
     }
 
+    public function renderGroupInformation($group) {
+        $this->systemsForGroup = $this->getApi()->getCertegoManager()->getSystemsForGroup($group);
+        $this->includefile('grouplist');
+    }
+    
+    public function getId() {
+        return $this->getApplicationSettings()->id;
+    }
+    
+    public function searchForSystems() {
+        
+    }
+    
+    public function printSystem($system) {
+        echo $system->number ." - ". $system->name." - ".$system->email." - ".$system->phoneNumber; 
+    }
+    
+    function getSystemsForGroup() {
+        return $this->systemsForGroup;
+    }
+    
+    public function removeSystemFromGroup() {
+        $system = $this->getSystem($_POST['value2']);
+        $system->groupId = "";
+        $this->getApi()->getCertegoManager()->saveSystem($system);
+    }
 }

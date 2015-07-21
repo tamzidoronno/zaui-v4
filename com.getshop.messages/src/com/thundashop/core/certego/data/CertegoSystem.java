@@ -14,7 +14,7 @@ import org.mongodb.morphia.annotations.Transient;
  * @author ktonder
  */
 public class CertegoSystem extends DataCommon {
-    public String number;
+    public String number ;
     public String name;
     public String phoneNumber;
     public String email;

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -79,5 +80,21 @@ public class CertegoManager extends ManagerBase implements ICertegoManager {
         retList.stream().forEach(o -> finalize(o));
         
         return retList;
+    }
+
+    @Override
+    public List<CertegoSystem> search(String searchWord) {
+        if (searchWord == null) {
+            return new ArrayList();
+        }
+        
+        return systems.values().stream()
+            .filter( o -> 
+                   (o.name != null && o.name.toLowerCase().contains(searchWord.toLowerCase()))
+                || (o.phoneNumber != null && o.phoneNumber.toLowerCase().contains(searchWord.toLowerCase()))
+                || (o.number != null && o.number.toLowerCase().contains(searchWord.toLowerCase()))
+                || (o.email != null && o.email.toLowerCase().contains(searchWord.toLowerCase()))
+            )
+            .collect(Collectors.toList());
     }
 }

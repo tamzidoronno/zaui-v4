@@ -532,39 +532,16 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             throw new ErrorException(1027);
         }
     }
-
+    
     private SedoxOrder getOrder(SedoxProduct sedoxProduct, List<Integer> files, SedoxUser user) throws ErrorException {
 
         if (sedoxProduct == null) {
             throw new ErrorException(1011);
         }
 
-        double totalPrice = 40;
-        double mostExpensive = 0;
-        if (files != null) {
-            for (int fileId : files) {
-                SedoxBinaryFile binFile = sedoxProduct.getFileById(fileId);
-                if (binFile != null && binFile.getPrice() > mostExpensive) {
-                    mostExpensive = binFile.getPrice();
-                }
-            }
-        }
-
-        totalPrice += mostExpensive;
-        double alreadySpentOnProduct = getAlreadySpentOnProduct(sedoxProduct, user);
-        if (alreadySpentOnProduct < 0) {
-            alreadySpentOnProduct = alreadySpentOnProduct * -1;
-        }
-        totalPrice = totalPrice - alreadySpentOnProduct;
-
-        // Make sure that the user does not pay for its own original file.
-        if (totalPrice == 40 && sedoxProduct.firstUploadedByUserId != null && sedoxProduct.firstUploadedByUserId.equals(user.id)) {
-            totalPrice = 0;
-        }
-
         SedoxOrder order = new SedoxOrder();
         order.productId = sedoxProduct.id;
-        order.creditAmount = totalPrice;
+        order.creditAmount = getPrice(sedoxProduct, user, files);
         return order;
     }
 
@@ -1496,5 +1473,45 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return productIds;
     }
 
-    
+    private double getPrice(SedoxProduct sedoxProduct, SedoxUser user, List<Integer> files) {
+        double totalPrice = 40;
+        double mostExpensive = 0;
+        if (files != null) {
+            for (int fileId : files) {
+                SedoxBinaryFile binFile = sedoxProduct.getFileById(fileId);
+                if (binFile != null && binFile.getPrice() > mostExpensive) {
+                    mostExpensive = binFile.getPrice();
+                }
+            }
+        }
+
+        totalPrice += mostExpensive;
+        double alreadySpentOnProduct = getAlreadySpentOnProduct(sedoxProduct, user);
+        if (alreadySpentOnProduct < 0) {
+            alreadySpentOnProduct = alreadySpentOnProduct * -1;
+        }
+        totalPrice = totalPrice - alreadySpentOnProduct;
+
+        // Make sure that the user does not pay for its own original file.
+        if (totalPrice == 40 && sedoxProduct.firstUploadedByUserId != null && sedoxProduct.firstUploadedByUserId.equals(user.id)) {
+            totalPrice = 0;
+        }
+        
+        return totalPrice;
+    }
+
+    @Override
+    public double getPriceForProduct(String productId, List<Integer> files) throws ErrorException {
+        if (getSession() == null || getSession().currentUser == null)  {
+            return -1;
+        }
+            
+        if (files == null || files.size() == 0) {
+            return -1;
+        }
+        
+        SedoxUser sedoxUser = getSedoxUserById(getSession().currentUser.id);
+        SedoxProduct product = getProductById(productId);
+        return getPrice(product, sedoxUser, files);
+    }
 }

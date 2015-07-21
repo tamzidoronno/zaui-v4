@@ -4946,6 +4946,28 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getPriceForProduct(self, productId, files):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(files,GetShopBaseClass): 
+      args["files"]=json.dumps(files.__dict__)
+    else:
+      try:
+        args["files"]=json.dumps(files)
+      except (ValueError, AttributeError):
+        args["files"]=files
+    data = EmptyClass()
+    data.args = args
+    data.method = "getPriceForProduct"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getProductById(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 

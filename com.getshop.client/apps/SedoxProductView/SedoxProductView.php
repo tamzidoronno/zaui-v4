@@ -158,24 +158,36 @@ class SedoxProductView extends \ApplicationBase implements \Application {
 		$this->getApi()->getSedoxProductManager()->toggleSaleableProduct($productId, $saleable);
     }
 	
-	public static function getReference($sedoxProduct) {
-		if (!\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
-			return null;
-		}
-		
-		if (!isset($sedoxProduct->reference->{\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id})) {
-			return null;
-		}
-		
-		return $sedoxProduct->reference->{\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id};
-	}
-        
-        public function showUserInformation() {
-            echo "<div class='SedoxAdmin'>";
-            $sedoxAdmin = new \ns_e22e25dd_8000_471c_89a3_6927d932165e\SedoxAdmin();
-            $sedoxAdmin->showUserInformation();
-            echo "</div>";
-            
+    public static function getReference($sedoxProduct) {
+            if (!\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
+                    return null;
+            }
+
+            if (!isset($sedoxProduct->reference->{\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id})) {
+                    return null;
+            }
+
+            return $sedoxProduct->reference->{\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id};
+    }
+
+    public function showUserInformation() {
+        echo "<div class='SedoxAdmin'>";
+        $sedoxAdmin = new \ns_e22e25dd_8000_471c_89a3_6927d932165e\SedoxAdmin();
+        $sedoxAdmin->showUserInformation();
+        echo "</div>";
+
+    }
+
+    public function getPrice() {
+        $files = isset($_POST['data']['files']) ? $_POST['data']['files'] : null;
+        $res = $this->getApi()->getSedoxProductManager()->getPriceForProduct($_POST['data']['productId'], $files);
+        if ($res == -1) {
+            echo "N/A";
+        } else if($res < 0) {
+            echo "0";
+        } else {
+            echo $res;
         }
+    }
 }
 ?>

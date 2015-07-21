@@ -65,7 +65,7 @@ $reference = $this->getReference($sedoxProduct);
             ?>
             <div class='binaryfilerow' binfileid="<? echo $binFile->id; ?>">
                 <div class="col col1 squaredThree">
-                    <input type="checkbox" value="None" id="squaredThree_<? echo $binFile->id; ?>" name="check" fileId="<? echo $binFile->id; ?>" />
+                    <input productid="<? echo $sedoxProduct->id; ?>" type="checkbox" value="None" id="squaredThree_<? echo $binFile->id; ?>" name="check" fileId="<? echo $binFile->id; ?>" />
                     <label for="squaredThree_<? echo $binFile->id; ?>"></label>
                     <? echo $binFile->fileType; ?>
                 </div>
@@ -110,6 +110,10 @@ $reference = $this->getReference($sedoxProduct);
         </div>
     <? } ?>
     <div class='row'>
+        <div class="pricetobecharged">
+            You will be charged <span>N/A</span> credits
+        </div>
+        
         <div class='sedox_button purchase'>Purchase and download</div>
         <div class='sedox_warning'>Note! When you click on the button below you will download the file and it will be purchased. </div>
     </div>

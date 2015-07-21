@@ -348,3 +348,16 @@
     font-size: 16px;
     text-align: center;
 }
+
+
+.SedoxProductView .pricetobecharged span {
+    font-weight: bold;
+    font-style: italic;
+}
+
+.SedoxProductView .pricetobecharged {
+    padding: 14px;
+    border: solid 1px #DDD;
+    margin-right: 10px;
+    vertical-align: top;
+}

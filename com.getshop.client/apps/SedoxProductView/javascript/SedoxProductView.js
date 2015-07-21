@@ -70,6 +70,10 @@ app.SedoxProductView = {
 //            handleFileUpload(files, $(this));
     },
             
+    filesChecked: function() {
+        
+    },
+    
     init: function() {
         var me = this;
         $(document).on('click', '.SedoxProductView .savechecksumonly', app.SedoxProductView.saveCheckSum);
@@ -83,6 +87,7 @@ app.SedoxProductView = {
         $(document).on('click', '.SedoxProductView .uploadtuningfilebox', app.SedoxProductView.uploadBoxClick);
         $(document).on('click', '.SedoxProductView .togglesalable', app.SedoxProductView.toggleSalable);
         $(document).on('click', '.checkbuttons input', app.SedoxProductView.checkbuttonsClicked);
+        $(document).on('change', '.SedoxProductView .binaryfilerow input', app.SedoxProductView.filesChanged);
         
         $(document).on('dragenter', '.SedoxProductView .uploadtuningfilebox', function(e)
         {
@@ -111,16 +116,26 @@ app.SedoxProductView = {
         });
     },
     
+    filesChanged: function() {
+        var data = app.SedoxProductView.getData(this);
+        var event = thundashop.Ajax.createEvent(null, "getPrice", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.SedoxProductView .pricetobecharged span').html(result);
+//            console.log(result);
+        });
+        
+    },
+    
     checkbuttonsClicked: function() {
         var text = $(this).val();
         $('#extrafileinformationbox').val(text);
     },
             
-	saveCheckSum: function() {
-		var data = app.SedoxProductView.getData(this);
+    saveCheckSum: function() {
+        var data = app.SedoxProductView.getData(this);
         var event = thundashop.Ajax.createEvent("", "setOrginalCheckSum", this, data);
         thundashop.Ajax.post(event, function() { thundashop.common.Alert("Success", "Updated completed")} );
-	},
+    },
 	
     changeInfo: function()  {
         var data = {
@@ -144,6 +159,7 @@ app.SedoxProductView = {
         var event = thundashop.Ajax.createEvent("", "deleteBinaryFile", this, data);
         thundashop.Ajax.post(event);
     },
+    
     getData : function(me) {
         var files = [];
         

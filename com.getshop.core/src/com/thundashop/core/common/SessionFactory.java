@@ -41,7 +41,7 @@ public class SessionFactory extends DataCommon {
         session.addObject(name, object);
         sessions.put(sessionId, session);
         
-        cleanUp();
+//        cleanUp();
     }
     
     public <T> T getObject(String sessionId, String name) throws ErrorException {

@@ -98,6 +98,10 @@ $(function() {
             return;
         }
         
+        if ($(this).attr('href').indexOf('downloadHistoryCsv.php') > -1) {
+            return;
+        }
+        
         if ($(this).attr('href').indexOf('impersonate.php') > -1) {
             return;
         }

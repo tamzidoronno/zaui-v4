@@ -94,6 +94,19 @@
     background-color: #666;
 }
 
+.SedoxUserPanel .sedox_box .detailstitle .fa-arrow-circle-down {
+    position: absolute;
+    right: 30px;
+    top: 0px;
+    border-left: solid 1px #555;
+    border-bottom: solid 1px #555;
+    padding: 5px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #FFF;
+    background-color: #666;
+}
+
 .SedoxUserPanel .sedox_box .sedox_button {
     position: absolute;
     left: 20px;

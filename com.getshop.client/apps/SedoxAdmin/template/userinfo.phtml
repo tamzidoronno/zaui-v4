@@ -46,13 +46,16 @@ $badCustomer = $sedoxUser->badCustomer ? "checked='checked'" : "";
             echo "no slaves connected to this user";
         } else {            
             foreach ($slaves as $slave) {
+                $slaveText = " | <i class='fa fa-user showUserInformationSedox' userid='".$sedoxUser->masterUserId."' style='color: #CC0000;'></i> ";
+                $slaveText .= $slave->isPassiveSlave ? "(P)" : "(A)";
+                
                 $id = $slave->id;
                 $user = $this->getApi()->getUserManager()->getUserById($slave->id);
                 $remove = "<i class='fa fa-trash-o removeuser' userid='$id' style='cursor: pointer'></i> ";
                 $extraIncome = $slave->slaveIncome;
 
                 $slaveUserInfo = "<span class='showuser' userid='$user->id'>".$user->fullName ." (".$user->emailAddress.")</span>";
-                echo "<div> $remove <input type='text' class='extraincometext' value='$extraIncome' userid='$id'/> $slaveUserInfo</div>";
+                echo "<div> $remove <input type='text' class='extraincometext' value='$extraIncome' userid='$id'/> $slaveUserInfo $slaveText</div>";
             }
         }
         ?>

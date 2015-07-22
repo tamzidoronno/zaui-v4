@@ -113,16 +113,14 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
             to = to.substring(1);
         }
         
-        try {
-            message = URLEncoder.encode(message, "ISO-8859-1");
-        } catch (UnsupportedEncodingException ex) {
-            java.util.logging.Logger.getLogger(SMSFactoryImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         String prefix = config.getNumberprefix();
         if(prefix == null || prefix.isEmpty()) {
             prefix = "47";
         }
+        if(from == null || from.isEmpty()) {
+            from = "GetShop";
+        }
+        
         String urlString = "https://rest.nexmo.com/sms/json?api_key=cffe6fd9&api_secret=9509ef6b&client-ref="+storeId+"&status-report-req=1&from="+from+"&to="+prefix+to+"&text="+message;
         if(prefix != null && prefix.equals("47")) {
             urlString = "https://sveve.no/SMS/SendMessage?user=getshopa&passwd=dza18&to=+"+prefix+to+"&msg=" + message + "&from="+from;

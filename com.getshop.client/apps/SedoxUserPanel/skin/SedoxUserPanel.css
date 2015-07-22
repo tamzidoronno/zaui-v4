@@ -168,7 +168,7 @@
 }
 
 .SedoxUserPanel.informationboxbackground .slave_credit_history .col3 {
-    width: 500px;
+    width: 480px;
 }
 .SedoxUserPanel.informationboxbackground .slave_credit_history .col2 {
     width: 170px !important;
@@ -225,4 +225,20 @@
     line-height: 20px;
     font-size: 16px;
     padding: 5px;
+}
+
+.SedoxUserPanel .filter_slave_button {
+    border: solid 1px #888;
+    cursor: pointer;
+    padding: 10px;
+    margin: 20px;
+    display: inline-block;
+}
+
+.SedoxUserPanel .filter_slave_button.selected {
+    background-color: #888;
+}
+
+.SedoxUserPanel .slaveslist .col {
+    vertical-align: top;
 }

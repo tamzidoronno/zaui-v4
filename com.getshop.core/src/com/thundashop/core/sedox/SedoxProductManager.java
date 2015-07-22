@@ -108,10 +108,20 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public synchronized void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof SedoxProduct) {
+                boolean changed = ((SedoxProduct)dataCommon).checkToolReplacement();
+                if (changed) {
+                    try {
+                        databaseSaver.saveObject(dataCommon, credentials);
+                    } catch (ErrorException ex) {
+                        java.util.logging.Logger.getLogger(SedoxProductManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 products.add((SedoxProduct) dataCommon);
+                
             }
             if (dataCommon instanceof SedoxUser) {
                 SedoxUser user = (SedoxUser) dataCommon;
+                user.checkForCreatedDate();
                 users.put(user.id, user);
             }
         }
@@ -541,6 +551,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         SedoxOrder order = new SedoxOrder();
         order.productId = sedoxProduct.id;
+        order.dateCreated = new Date();
         order.creditAmount = getPrice(sedoxProduct, user, files);
         return order;
     }
@@ -1057,7 +1068,16 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private double getAlreadySpentOnProduct(SedoxProduct sedoxProduct, SedoxUser user) {
         double spent = 0;
 
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MONTH, -3);
+        Date threeMonthsAgo = cal.getTime();
+        
         for (SedoxOrder order : user.orders) {
+            if (order.dateCreated.before(threeMonthsAgo)) {
+                continue;
+            }
+            
             if (sedoxProduct.id != null && sedoxProduct.id.equals(order.productId)) {
                 spent += order.creditAmount;
             }

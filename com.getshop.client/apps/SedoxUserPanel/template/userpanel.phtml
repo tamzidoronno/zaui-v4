@@ -142,7 +142,10 @@
 
 <div class='sedox_box slaveslist'>
     <div class='details'>
-        <div class='detailstitle'><i class='fa fa-users'></i> &nbsp;Your partners</div>
+        <div class='detailstitle'>
+            <i class='fa fa-users'></i> &nbsp;Your partners
+            <div class="fa fa-expand"></div>
+        </div>
 
         <div class='filehistory'>
             <div class='row header'><div class='col col1'>Credit each 100</div><div class='col col2'>Name</div><div class="col col3">Credit balance</div></div>
@@ -162,7 +165,7 @@
                     ?>
                     <div class='row <? echo $odd; ?>'>
                         <div class='col col1'><? echo $slave->slaveIncome; ?></div>
-                        <div class='col col2'><? echo $user->fullName; ?></div>
+                        <div class='col col2'><? echo $user->fullName. "<br/> Email: " . $user->emailAddress; ?></div>
                         <div class='col col3'><div userid="<? echo $slave->id; ?>" class="show_slave_credit_history"><? echo $slave->creditAccount->balance; ?> </div></div>
                         <div class='col col4'><div slaveId="<? echo $slave->id; ?>" masterId="<? echo $user->id;?>" class="transferCreditToSlave">Transfer credit</div></div>
                     </div>                
@@ -174,6 +177,7 @@
         </div>
     </div>
 </div>
+
 <div class='bottom_information'>
     Dont see all of the information that you wish to see here? Let us know if you find anything missing.
 </div>

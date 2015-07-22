@@ -181,4 +181,21 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         
         return true;
     }
+
+    boolean checkToolReplacement() {
+        boolean ret = false;
+        if (tool != null && tool.toLowerCase().equals("ctc")) {
+            tool = "Alientech Powergate 2";
+            ret = true;
+            System.out.println("Product id: " + id);
+        }
+        
+        if (tool != null && tool.toLowerCase().equals("ctc2")) {
+            tool = "Alientech Powergate 3";
+            ret = true;
+            System.out.println("Product id2: " + id);
+        }
+        
+        return ret;
+    }
 }

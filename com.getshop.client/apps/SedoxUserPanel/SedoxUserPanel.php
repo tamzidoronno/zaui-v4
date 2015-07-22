@@ -195,7 +195,10 @@ class SedoxUserPanel extends \ApplicationBase implements \Application {
     public function showTransferCredit() {
         $this->includefile("transferCredit");
     }
-    
+
+    public function showAllSlaveHistory() {
+        $this->includefile('fullSlaveCreditHistory');
+    }
 }
 
 ?>

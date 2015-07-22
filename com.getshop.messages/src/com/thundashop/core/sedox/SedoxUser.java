@@ -6,6 +6,7 @@ package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,5 +30,13 @@ public class SedoxUser extends DataCommon {
     public void addCreditOrderUpdate(SedoxCreditOrder sedoxCreditOrder, String description) {
         creditAccount.updateCredit(sedoxCreditOrder, description);
         creditOrders.add(sedoxCreditOrder);
+    }
+
+    void checkForCreatedDate() {
+        for (SedoxOrder order : orders) {
+            if (order.dateCreated == null) {
+                order.dateCreated = new Date();
+            }
+        }
     }
 }

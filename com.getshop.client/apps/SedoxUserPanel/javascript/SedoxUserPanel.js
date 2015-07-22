@@ -27,9 +27,39 @@ app.SedoxUserPanel = {
         $(document).on('click', '.SedoxUserPanel .fa-expand', this.expandBox);
         
         $(document).on('click', '.SedoxUserPanel .transferCreditToSlave', this.showTransferCreditToSlave);
+        $(document).on('click', '.SedoxUserPanel .slaveslist .fa-expand', this.showPartnerHistory);
         $(document).on('click', '.SedoxUserPanel .transferCreditButton', this.doTransferCredit);
+        $(document).on('click', '.SedoxUserPanel .filter_slave_button', this.filterSlaveHistory);
         
         $(document).on('keyup', '.SedoxUserPanel #filtercredithistory', this.filterCreditHistory);
+    },
+    
+    filterSlaveHistory: function() {
+        if ($(this).hasClass("selected")) {
+            $(this).removeClass("selected")
+        } else {
+            $(this).addClass("selected")
+        }
+        
+        var selected = $('.SedoxUserPanel .filter_slave_button.selected');
+        if (!selected.length) {
+            $('.slaveinterallist').show();
+        } else {
+            $('.slaveinterallist').hide();
+            
+            $(selected).each(function() {
+                $('.slaveinterallist.'+$(this).attr('slaveid')).show();
+            });
+        }
+    },
+    
+    showPartnerHistory: function() {
+        var data = {
+            userId : $(this).attr('userid')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "showAllSlaveHistory", this, data);
+        thundashop.common.showInformationBox(event, 'Partner history');
     },
     
     filterCreditHistory: function() {

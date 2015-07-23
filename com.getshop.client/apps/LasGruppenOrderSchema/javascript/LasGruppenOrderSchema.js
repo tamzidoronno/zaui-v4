@@ -107,8 +107,10 @@ app.LasGruppenOrderSchema = {
     },
     
     menuSelected: function() {
+        $('.LasGruppenOrderSchema .menu_entry').css('font-weight', 'normal');
         $('.LasGruppenOrderSchema .sub_entry_content').hide();
         $('.LasGruppenOrderSchema .sub_entry_content[content="'+$(this).attr('goto')+'"').show();
+        $(this).css('font-weight', 'bold');
     },
     
     doLoginKeyUp: function(event) {

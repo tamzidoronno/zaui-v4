@@ -266,7 +266,7 @@ body[editormode="true"] .LasGruppenOrderSchema {
     display: none;
 }
 
-.LasGruppenOrderSchema .sub_entry_content:nth-child(3) {
+.LasGruppenOrderSchema .sub_entry_content:first-child {
     display: block;
 }
 

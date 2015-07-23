@@ -25,12 +25,90 @@ app.LasGruppenOrderSchema = {
         $(document).on('keyup', '.LasGruppenOrderSchema .loginform .password', app.LasGruppenOrderSchema.doLoginKeyUp);
         $(document).on('keyup', '.LasGruppenOrderSchema .loginform_picode .pincode', app.LasGruppenOrderSchema.doSignupKeyUp);
         $(document).on('click', '.LasGruppenOrderSchema .logout_button', app.LasGruppenOrderSchema.logout_button);
+        $(document).on('click', '.LasGruppenOrderSchema .menu_entry', app.LasGruppenOrderSchema.menuSelected);
+        $(document).on('click', '.LasGruppenOrderSchema .address_to_edit', app.LasGruppenOrderSchema.editDeliveryAddress);
+        $(document).on('click', '.LasGruppenOrderSchema .deliveryoverview_button', app.LasGruppenOrderSchema.showDeliverAddresses);
+        $(document).on('click', '.LasGruppenOrderSchema .deleteaddress', app.LasGruppenOrderSchema.deleteDelivaryAddress);
+        $(document).on('click', '.LasGruppenOrderSchema .start_order_by_address', app.LasGruppenOrderSchema.next);
+        
+        $(document).on('click', '.LasGruppenOrderSchema .savedeliveryaddr', app.LasGruppenOrderSchema.saveDeliveryAddr);
         
         $(document).on('change', '#invoice_company_name', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_address', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_postcode', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_cellphone', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_emailaddress', app.LasGruppenOrderSchema.changeDeliveryInformation);
+    },
+    
+    deleteDelivaryAddress: function() {
+        var confirmRet = confirm("Er du sikker på at du ønsker å slette adressen?");
+        if (!confirmRet)
+            return;
+        
+        var data = {
+            addrid : $('.LasGruppenOrderSchema #edit_del_addrid').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "deleteDeliveryAddr", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.LasGruppenOrderSchema .welcomepagecontent').html(result);
+            $('.LasGruppenOrderSchema .deliveryoverview_button').click();
+        });
+    },
+    
+    showDeliverAddresses: function() {
+        $('.LasGruppenOrderSchema .edit_deliver_address').show();
+        $('.LasGruppenOrderSchema #edit_delivery_addr').hide();
+    },
+    
+    editDeliveryAddress: function() {
+        $('.LasGruppenOrderSchema .edit_deliver_address').hide();
+        $('.LasGruppenOrderSchema #edit_delivery_addr').show();
+        
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_name').val($(this).find('.del_name').html());
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addr1').val($(this).find('.del_addr').html());
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addr2').val($(this).find('.del_addr2').html());
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_postcode').val($(this).find('.del_postcode').html());
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_city').val($(this).find('.del_city').html());
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addrid').val($(this).attr('addrid'));
+        
+        if ($('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addrid').val()) {
+            $('#edit_delivery_addr .deleteaddress').show();
+        } else {
+            $('#edit_delivery_addr .deleteaddress').hide();
+        }
+        
+    },
+    
+    saveDeliveryAddr: function() {
+        
+        var currentPage = $('.LasGruppenOrderSchema #edit_delivery_addr');
+        var validated = app.LasGruppenOrderSchema.validatePage(currentPage);
+        if (!validated) {
+            alert('For å kunne gå videre må du først rette opp i de røde feltene');
+            return;
+        }
+        
+        var data = {
+            name : $('.LasGruppenOrderSchema #edit_del_name').val(),
+            addr1 : $('.LasGruppenOrderSchema #edit_del_addr1').val(),
+            addr2 : $('.LasGruppenOrderSchema #edit_del_addr2').val(),
+            postcode : $('.LasGruppenOrderSchema #edit_del_postcode').val(),
+            city : $('.LasGruppenOrderSchema #edit_del_city').val(),
+            addrid : $('.LasGruppenOrderSchema #edit_del_addrid').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "saveDeliveryAddr", currentPage, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.LasGruppenOrderSchema .welcomepagecontent').html(result);
+            $('.LasGruppenOrderSchema .deliveryoverview_button').click();
+        });
+        
+    },
+    
+    menuSelected: function() {
+        $('.LasGruppenOrderSchema .sub_entry_content').hide();
+        $('.LasGruppenOrderSchema .sub_entry_content[content="'+$(this).attr('goto')+'"').show();
     },
     
     doLoginKeyUp: function(event) {

@@ -1,0 +1,207 @@
+<?
+/* @var $this \ns_7004f275_a10f_4857_8255_843c2c7fb3ab\LasGruppenOrderSchema */
+$user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+
+$invoiceAddress = $this->getSelectedInvoiceAddress();
+$defaultDeliveryAddress = $this->getDefaultDeliveryAddress();
+$group = $this->getGroup($user);
+$systems = $this->getSystems($group);
+    
+$extraDeliveriesAddresses = [];
+$extraInvoicesAddresses = [];
+
+if ($group->extraAddresses) {
+    foreach ($group->extraAddresses as $addr) {
+        if ($addr->type == "shipment") {
+            $extraDeliveriesAddresses[] = $addr;
+        }
+        
+        if ($addr->type == "invoice") {
+            $extraInvoicesAddresses[] = $addr;
+        }
+    }
+}
+
+$systemnumber = "";
+$systemname = "";
+$systememail = "";
+$systemcellphone = "";
+
+$invoiceVat = "";
+$invoiceName = "";
+$invoiceAddress1 = "";
+$invoiceAddress2 = "";
+$invoicePostNumber = "";
+$invoiceCity = "";
+$invoiceCellPhone = "";
+$invoiceReference = "";
+
+
+$defaultDelName = "";
+$defaultDelAddress1 = "";
+$defaultDelAddress2 = "";
+$defaultDelPostNumber = "";
+$defaultDelCity = "";
+
+if ($defaultDeliveryAddress) {
+    $defaultDelName = 'disabled="true" value="'.$defaultDeliveryAddress->fullName.'"';
+    $defaultDelAddress1 = 'disabled="true" value="'.$defaultDeliveryAddress->address.'"';
+    $defaultDelAddress2 = 'disabled="true" value="'.$defaultDeliveryAddress->address2.'"';
+    $defaultDelPostNumber = 'disabled="true" value="'.$defaultDeliveryAddress->postCode.'"';
+    $defaultDelCity = 'disabled="true" value="'.$defaultDeliveryAddress->city.'"';
+}
+
+if ($invoiceAddress) {
+    $invoiceVat = 'disabled="true" value="'.$invoiceAddress->vatNumber.'"';
+    $invoiceName = 'disabled="true" value="'.$invoiceAddress->fullName.'"';
+    $invoiceAddress1 = 'disabled="true" value="'.$invoiceAddress->address.'"';
+    $invoiceAddress2 = 'disabled="true" value="'.$invoiceAddress->address2.'"';
+    $invoicePostNumber = 'disabled="true" value="'.$invoiceAddress->postCode.'"';
+    $invoiceCity = 'disabled="true" value="'.$invoiceAddress->city.'"';
+    $invoiceCellPhone = 'disabled="true" value="'.$invoiceAddress->phone.'"';
+    $invoiceReference = 'disabled="true" value="'.$invoiceAddress->reference.'"';
+}
+
+if (!$user->prevLoggedIn) {
+    $lastLoggedIn = "-";
+} else {
+    $lastLoggedIn = $user->prevLoggedIn;
+}
+?>
+
+
+<div class="certego_pagetitle">Velkommen
+    <div class='stepof'></div>
+</div>
+
+<div>
+    <div class='col col_0'>
+        <? echo $group->groupName ?>
+        <br/> <? echo $user->fullName; ?>
+        <br/> Sist logget inn: <? echo $lastLoggedIn; ?>
+    </div>
+</div>
+
+<div>
+    <div class='col col_1' style="padding-left: 0px;">
+        <div class="certego_pagetitle" style="text-align: center;">Meny</div>
+        <div class="menu_entry" goto="invoiceinfo">Fakturainformasjon</div>
+        <div class="menu_entry" goto="stystemoverview">Systemoversikt</div>
+        <div class="menu_entry deliveryoverview_button" goto="deliveryaddresses">Leveringsadresser</div>
+        <div class="menu_entry">Fakturaadresser</div>
+        <br/>
+        <div class="certego_pagetitle" style="text-align: center;">Arkiv</div>
+        <div class="menu_entry">Tidligere bestillinger</div>
+        <br/>
+        <div class="certego_pagetitle" style="text-align: center;">Bestilling</div>
+        <div class="menu_entry" goto="neworder">Ny bestilling</div>
+    </div>
+    
+    <div class='col col_2' style="border: solid 1px #DDD; margin-top: 20px; ">
+        <div class="invoiceinformation sub_entry_content" content="invoiceinfo">
+            <table>
+                <tr><td class='td_col_1' colspan='2'><b>Fakturainformasjon</b></td></tr>
+                <tr><td class='td_col_1'>Org. Nr / Fødselsdato*</td><td><input required='true' type='text' type_number='true' <? echo $invoiceVat; ?> /></td></tr>
+                <tr><td>Navn / Firma*</td><td><input required='true' type='text' <? echo $invoiceName; ?> /></td></tr>
+                <tr><td>Adresse*</td><td><input required='true' type='text' <? echo $invoiceAddress1; ?>/></td></tr>
+                <tr><td>Adresse 2</td><td><input type='text' <? echo $invoiceAddress2; ?>/></td></tr>
+                <tr><td>Postnr*</td><td><input required='true' type='text' <? echo $invoicePostNumber; ?>/></td></tr>
+                <tr><td>Sted*</td><td><input required='true' type='text' <? echo $invoiceCity; ?> /></td></tr>
+                <tr><td>Mobilnummer</td><td><input required='true' type='text' <? echo $invoiceCellPhone; ?> /></td></tr>
+                <tr><td>Referanse</td><td><input required='true' type='text' <? echo $invoiceReference; ?> /></td></tr>
+            </table>    
+            
+            <table>
+                <tr><td class='td_col_1' colspan='2'><b>Leveringsadresse</b></td></tr>
+                <tr><td>Navn / Firma*</td><td><input required='true' type='text' <? echo $defaultDelName; ?> /></td></tr>
+                <tr><td>Adresse*</td><td><input required='true' type='text' <? echo $defaultDelAddress1; ?>/></td></tr>
+                <tr><td>Adresse 2</td><td><input type='text' <? echo $defaultDelAddress2; ?>/></td></tr>
+                <tr><td>Postnr*</td><td><input required='true' type='text' <? echo $defaultDelPostNumber; ?>/></td></tr>
+                <tr><td>Sted*</td><td><input required='true' type='text' <? echo $defaultDelCity; ?> /></td></tr>
+            </table>
+        </div>
+        
+        <div class="stystemoverview sub_entry_content" content="stystemoverview">
+            <center>
+                Du kan bestille på følgende systemer.<br/><br/>
+            </center>
+            <?
+            foreach ($systems as $system) {
+                echo "<div class='system_entry'>$system->number - $system->name - $system->phoneNumber - $system->email</div>";
+            }
+            ?>
+        </div>
+        
+        <div class="neworder sub_entry_content" content="neworder">
+            <center>Velg fakturadresse du ønsker å gjøre en bestilling på.</center>
+            <br/>
+            <div class='address_to_edit start_order_by_address'>
+                <div class="del_vatnumber"><? echo $invoiceAddress->vatNumber; ?></div>
+                <div class="del_name"><? echo $invoiceAddress->fullName; ?></div>
+                <div class="del_addr"><? echo $invoiceAddress->address; ?></div>
+                <? if (isset($invoiceAddress->address)) { ?>
+                    <div class="del_addr2"><? echo $invoiceAddress->address; ?></div>
+                <? } ?>
+                <div class="del_postcode"><? echo $invoiceAddress->postCode; ?></div>
+                <div class="del_city"><? echo $invoiceAddress->city; ?></div>
+                <i class="fa fa-arrow-right"></i>
+            </div>
+        </div>
+                
+        <div class="deliveryaddresses sub_entry_content" content="deliveryaddresses">
+            <?
+            if (!count($extraDeliveriesAddresses)) {
+                echo "Du har ikke lagt til noen ekstra adresser enda, trykk legg til for å legge til en ny adresse";
+            } else {
+                ?>
+            
+                <div class='deliveryaddressestoedit edit_deliver_address'>
+                    <?
+                    foreach ($extraDeliveriesAddresses as $addr) {
+                        ?>
+                        <div class="address_to_edit" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
+                            <div class="del_name"><? echo $addr->fullName; ?></div>
+                            <div class="del_addr"><? echo $addr->address; ?></div>
+                            <? if (isset($addr->address2)) { ?>
+                                <div class="del_addr2"><? echo $addr->address2; ?></div>
+                            <? } ?>
+                            <div class="del_postcode"><? echo $addr->postCode; ?></div>
+                            <div class="del_city"><? echo $addr->city; ?></div>
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                        <?
+                    }
+                    ?>
+            
+                    <div class='button_area'>
+                        <div class='shop_button address_to_edit'>Legg til ny addresse</div>
+                    </div>
+                </div>
+            <?
+            }
+            ?>
+            <div id="edit_delivery_addr">
+                <input type="hidden" value="" id="edit_del_addrid"/>
+                <table>
+                    <tr><td>Navn / Firma*</td><td><input id="edit_del_name" required='true' type='text' /></td></tr>
+                    <tr><td>Adresse*</td><td><input id="edit_del_addr1" required='true' type='text' /></td></tr>
+                    <tr><td>Adresse 2</td><td><input id="edit_del_addr2" type='text' /></td></tr>
+                    <tr><td>Postnr*</td><td><input id="edit_del_postcode" required='true' type='text' /></td></tr>
+                    <tr><td>Sted*</td><td><input id="edit_del_city" required='true' type='text' /></td></tr>
+                </table>
+
+                <div class='button_area'>
+                    <div class='shop_button deleteaddress'>Slett</div> 
+                    <div class='shop_button savedeliveryaddr'>Lagre</div> &nbsp;
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <div class='button_area'>
+                
+            </div>
+        </div>
+    </div>
+    
+</div>

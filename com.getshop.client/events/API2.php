@@ -6342,6 +6342,24 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function deleteExtraAddressToGroup($groupId, $addressId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+	     $data['args']["addressId"] = json_encode($this->transport->object_unset_nulls($addressId));
+	     $data["method"] = "deleteExtraAddressToGroup";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Delete a registered user.
 	* This will fail if you are trying to create a user which is granted more access then you have yourself.
 	* @param userId The id for the user to delete.
@@ -6831,6 +6849,24 @@ class APIUserManager {
 	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
 	     $data['args']["newPassword"] = json_encode($this->transport->object_unset_nulls($newPassword));
 	     $data["method"] = "resetPassword";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function saveExtraAddressToGroup($core_usermanager_data_Group, $core_usermanager_data_Address) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_usermanager_data_Group"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Group));
+	     $data['args']["core_usermanager_data_Address"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Address));
+	     $data["method"] = "saveExtraAddressToGroup";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}

@@ -50,6 +50,7 @@ public class User extends DataCommon implements Comparable<User> {
     public int loggedInCounter = 0;
     
     public Date lastLoggedIn;
+    public Date prevLoggedIn;
     public Date expireDate;
     
     public String birthDay;

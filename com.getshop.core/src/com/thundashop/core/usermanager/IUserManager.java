@@ -5,6 +5,7 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.GroupInformation;
@@ -334,5 +335,8 @@ public interface IUserManager {
     public List<User> getUsersBasedOnGroupId(String groupId);
     
     public List<Group> searchForGroup(String searchCriteria);
+
+    public void saveExtraAddressToGroup(Group group, Address address);
     
+    public void deleteExtraAddressToGroup(String groupId, String addressId);
 }

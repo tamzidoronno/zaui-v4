@@ -109,6 +109,10 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         session_destroy();
     }
 
+    public function getCurrentGroup() {
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        return $this->getGroup($user);
+    }
     public function getGroup($user) {
         if ($user == null) {
             return null;
@@ -164,4 +168,33 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         return null;
     }
 
+    public function getDefaultDeliveryAddress() {
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        if ($user) {
+            return $this->getGroup($user)->defaultDeliveryAddress;
+        }
+        
+        return null;
+    }
+
+    public function deleteDeliveryAddr() {
+        $group = $this->getCurrentGroup();
+        $this->getApi()->getUserManager()->deleteExtraAddressToGroup($group->id, $_POST['data']['addrid']);
+        $this->includefile("welcome");
+    }
+    
+    public function saveDeliveryAddr() {
+        $address = new \core_usermanager_data_Address();
+        $address->type = "shipment";
+        $address->fullName = $_POST['data']['name'];
+        $address->address = $_POST['data']['addr1'];
+        $address->address2 = $_POST['data']['addr2'];
+        $address->postCode = $_POST['data']['postcode'];
+        $address->city = $_POST['data']['city'];
+        $address->id = $_POST['data']['addrid'];
+        
+        $group = $this->getCurrentGroup();
+        $this->getApi()->getUserManager()->saveExtraAddressToGroup($group, $address);
+        $this->includefile("welcome");
+    }
 }

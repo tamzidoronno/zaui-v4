@@ -34,6 +34,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	public $lastLoggedIn;
 
 	/** @var String */
+	public $prevLoggedIn;
+
+	/** @var String */
 	public $expireDate;
 
 	/** @var String */

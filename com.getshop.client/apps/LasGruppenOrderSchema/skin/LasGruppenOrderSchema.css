@@ -69,6 +69,9 @@ body[editormode="true"] .LasGruppenOrderSchema {
     outline: 0; 
     font: normal 13px/100% Verdana, Tahoma, sans-serif; 
     background: #FFFFFF; 
+     box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 } 
 
 .LasGruppenOrderSchema textarea { 
@@ -195,13 +198,17 @@ body[editormode="true"] .LasGruppenOrderSchema {
     text-transform: uppercase;
 }
 
+.LasGruppenOrderSchema .certego_login.certego_logout {
+    margin-top: 43px;
+}
 .LasGruppenOrderSchema .certego_login {
     font-size: 16px;
-    float: right;
+    right: 0px;
     background-color: #ff6e00;
     color: #FFF;
     border-radius: 0px 0px 5px 5px;
     padding: 10px;
+    position: absolute;
 }
 
 .LasGruppenOrderSchema .login_button {
@@ -238,7 +245,60 @@ body[editormode="true"] .LasGruppenOrderSchema {
     display: none;
 }
 
+.LasGruppenOrderSchema .menu_entry {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: solid 1px #DDD;
+    border-left: solid 1px #DDD;
+    border-right: solid 1px #DDD;
+    background-color: #FAFAFA;
+}
 
+.LasGruppenOrderSchema .menu_entry:hover {
+    background: none;
+}
+
+.LasGruppenOrderSchema .system_entry {
+    padding: 10px;
+}
+
+.LasGruppenOrderSchema .sub_entry_content {
+    display: none;
+}
+
+.LasGruppenOrderSchema .sub_entry_content:nth-child(3) {
+    display: block;
+}
+
+.LasGruppenOrderSchema .system_entry:nth-child(n+2) {
+    background-color: #F9F9F9;
+}
+
+.LasGruppenOrderSchema .address_to_edit {
+    border: solid 1px #DDD;
+    margin-bottom: 20px;
+    position: relative;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.LasGruppenOrderSchema .address_to_edit i {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    vertical-align: middle;
+    text-align: center;
+    width: 20px;
+    padding-right: 5px;
+    padding-left: 5px;
+    background-color: #F9F9F9;
+    padding-top: 35px;
+}
+
+.LasGruppenOrderSchema #edit_delivery_addr {
+    display: none;
+}
 
 @media only all and (max-width: 948px) {
     .LasGruppenOrderSchema .col {

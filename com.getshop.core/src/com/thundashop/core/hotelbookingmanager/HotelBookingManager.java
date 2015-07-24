@@ -1202,7 +1202,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if (roomType != null) {
             roomType = roomtype.name;
         }
-                
+               
         if (storeId != null && storeId.equals("3292fa74-32a2-4d52-b88f-6be6f3dff813")) {
             getMsgManager().smsFactory.send("GetShop", "46190000", "Ny bestilling opprettet, Navn: " + name + ", Rom: " + roomType);
         }

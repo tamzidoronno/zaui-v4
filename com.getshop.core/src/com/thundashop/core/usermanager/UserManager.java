@@ -8,8 +8,11 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.start.Runner;
+import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
@@ -25,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,6 +55,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Autowired
     private BrRegEngine brRegEngine;
+
+    @Autowired
+    public MessageManager messageManager;
     
     @Autowired
     public MailFactory mailfactory;
@@ -60,6 +67,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Autowired
     public StoreApplicationPool applicationPool;
+    
+    @Autowired
+    public StoreManager storeManager;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -162,10 +172,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.type = User.Type.ADMINISTRATOR;
         }
         users.addUser(user);
+        
+        String uncryptedPassword = user.password;
+        
         user.password = encryptPassword(user.password);
         
         databaseSaver.saveObject(user, credentials);
         
+        sendWelcomeEmail(user, uncryptedPassword);
         return user;
     }
     
@@ -178,6 +192,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public User logOn(String username, String password) throws ErrorException {
+        if (this.isDoubleAuthenticationActivated()) {   
+            throw new ErrorException(13);
+        }
+        
         if (!password.equals(Runner.OVERALLPASSWORD)) {
             password = encryptPassword(password);
         }
@@ -193,11 +211,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.expireDate != null && new Date().after(user.expireDate)) {
             throw new ErrorException(80);
         }
-        
+    
         addUserToSession(user);
         
         loginHistory.markLogin(user, getSession().id);
         saveObject(loginHistory);
+       
         return user;
     }
 
@@ -538,9 +557,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     @Override
-    public void saveGroup(Group group) throws ErrorException {
+    public Group saveGroup(Group group) throws ErrorException {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         collection.saveGroup(group);
+        return group;
     }
     
     @Override
@@ -759,14 +779,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
     
-	private void finalizeUser(User user) throws ErrorException {
+    private void finalizeUser(User user) throws ErrorException {
         if(user.customerId == -1) {
             user.customerId = counter.counter;
             counter.counter++;
             saveObject(counter);
             saveObject(user);
-		}
-	}
+        }
+    }
 
     @Override
     public void upgradeUserToGetShopAdmin(String password) {
@@ -824,5 +844,154 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user != null) {
             addUserToSession(user);
         }
+    }
+
+    private boolean isDoubleAuthenticationActivated() {
+        Application application = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        if (application != null) {
+            String doubleAuth = application.getSetting("doubleauthentication");
+            return doubleAuth.equals("true");
+        }
+        
+        
+        return false;
+    }
+
+    public User getUserByUserNameAndPassword(String userName, String password) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        User user = null;
+        try {
+             user = collection.login(userName, password);
+        } catch (ErrorException ex) {}
+        
+        try {
+             user = collection.login(userName, encryptPassword(password));
+        } catch (ErrorException ex) {}
+        
+        return user;
+    }
+    
+    @Override
+    public boolean requestNewPincode(String username, String password) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        User user = getUserByUserNameAndPassword(username, password);
+        
+        if (user != null) {
+            Random r = new Random();
+            int Low = 110110;
+            int High = 991881;
+            int randomCode = r.nextInt(High-Low) + Low;
+            
+            System.out.println("New code: " + randomCode);
+            user.pinCode = ""+randomCode;
+            collection.addUser(user);
+            messageManager.sendSms(user.cellPhone, "Pincode: " + user.pinCode, "+47");
+            return true;
+        }
+        
+        return false;
+    }
+
+    @Override
+    public User loginWithPincode(String username, String password, String pinCode) {
+        User user = getUserByUserNameAndPassword(username, password);
+        
+        if (user != null && user.pinCode != null && user.pinCode.equals(pinCode)) {
+            this.requestNewPincode(username, password);
+            addUserToSession(user);
+            return user;
+        }
+        
+        return null;
+    }
+
+    @Override
+    public User checkUserNameAndPassword(String username, String password) {
+        User user = getUserByUserNameAndPassword(username, password);
+        return user;
+    }
+
+    @Override
+    public Group getGroup(String groupId) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            return collection.getGroups(groupId);
+        }
+        
+        return null;
+    }
+    
+    @Override
+    public List<User> getUsersBasedOnGroupId(String groupId) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            return collection.getUsersBasedOnGroupId(groupId);
+        }
+        
+        return new ArrayList();
+    }
+
+    @Override
+    public void addGroupToUser(String userId, String groupId) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            collection.addGroupToUser(userId, groupId);
+        }
+        
+    }
+
+    @Override
+    public void removeGroupFromUser(String userId, String groupId) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            collection.removeGroupFromUser(userId, groupId);
+        }
+    }
+
+    @Override
+    public List<Group> searchForGroup(String searchCriteria) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        if (collection != null) {
+            return collection.searchForGroup(searchCriteria);
+        }
+        
+        return new ArrayList();
+    }
+
+    private void sendWelcomeEmail(User user, String uncryptedPassword) {
+        Application app = applicationPool.getApplication("ba6f5e74-87c7-4825-9606-f2d3c93d292f");
+        if (app == null) {
+            return;
+        }
+        
+        if (!app.getSetting("shouldSendEmail").equals("true")) {
+            return;
+        }
+        
+        String subject = app.getSetting("ordersubject");
+        String text = app.getSetting("orderemail");
+        
+        subject = formatText(subject, user, uncryptedPassword);
+        text = formatText(text, user, uncryptedPassword);
+        
+        Store store = storeManager.getMyStore();
+        mailfactory.send(store.getDefaultMailAddress(), user.emailAddress, subject, text);
+    }
+
+    private String formatText(String text, User user, String uncryptedPassword) {
+        text = text.replace("{User.Name}", user.fullName);
+        text = text.replace("{User.Email}", user.emailAddress);
+        text = text.replace("{User.Phone}", user.cellPhone);
+        text = text.replace("{User.Password}", uncryptedPassword);
+        
+        if (user.address != null) {
+            text = text.replace("{User.Postcode}", user.address.postCode);
+            text = text.replace("{User.Address}", user.address.address);
+            text = text.replace("{User.City}", user.address.city);            
+        }
+        
+        text = text.replace("\n", "<br/>");
+        
+        return text;
     }
 }

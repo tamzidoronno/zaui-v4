@@ -46,11 +46,18 @@ getUrl = function(hash) {
     return hash;
 };
 
+var doNavigation = function(useLink, url, ajaxLink, callback) {
+    if (typeof(callback) === "undefined") {
+        callback = true;
+    }
+    window.history.pushState({url: url, ajaxLink: ajaxLink}, "Title", url);
+    thundashop.Ajax.doJavascriptNavigation(useLink, null, callback);
+}
+
 var navigate = function(url, ajaxLink) {
     var useLink = ajaxLink ? ajaxLink : url;
     if (history.pushState) {
-        window.history.pushState({url: url, ajaxLink: ajaxLink}, "Title", url);
-        thundashop.Ajax.doJavascriptNavigation(useLink, null, true);
+        doNavigation(useLink, url, ajaxLink);
     } else {
         window.location.hash = useLink;
     }
@@ -81,7 +88,7 @@ $(document).ready(function() {
 
 if (history.pushState) {
     window.onpopstate = function(event) {
-        if (event.state) {
+        if (event && event.state) {
             var url = event.state.ajaxLink ? event.state.ajaxLink : event.state.url;
             thundashop.Ajax.doJavascriptNavigation(url, null, true);
         }

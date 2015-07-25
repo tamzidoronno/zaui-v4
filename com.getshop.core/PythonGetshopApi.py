@@ -39,6 +39,28 @@ class CommunicationHelper:
 class ArxManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def addCard(self, personId, card):
+    args = collections.OrderedDict()
+    if isinstance(personId,GetShopBaseClass): 
+      args["personId"]=json.dumps(personId.__dict__)
+    else:
+      try:
+        args["personId"]=json.dumps(personId)
+      except (ValueError, AttributeError):
+        args["personId"]=personId
+    if isinstance(card,GetShopBaseClass): 
+      args["card"]=json.dumps(card.__dict__)
+    else:
+      try:
+        args["card"]=json.dumps(card)
+      except (ValueError, AttributeError):
+        args["card"]=card
+    data = EmptyClass()
+    data.args = args
+    data.method = "addCard"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
   def doorAction(self, externalId, state):
     args = collections.OrderedDict()
     if isinstance(externalId,GetShopBaseClass): 
@@ -114,6 +136,21 @@ class ArxManager(object):
     data.interfaceName = "core.arx.IArxManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getPerson(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getPerson"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
   def isLoggedOn(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -148,6 +185,21 @@ class ArxManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "logonToArx"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def updatePerson(self, person):
+    args = collections.OrderedDict()
+    if isinstance(person,GetShopBaseClass): 
+      args["person"]=json.dumps(person.__dict__)
+    else:
+      try:
+        args["person"]=json.dumps(person)
+      except (ValueError, AttributeError):
+        args["person"]=person
+    data = EmptyClass()
+    data.args = args
+    data.method = "updatePerson"
     data.interfaceName = "core.arx.IArxManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -845,6 +897,21 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def placeOrder(self, order):
+    args = collections.OrderedDict()
+    if isinstance(order,GetShopBaseClass): 
+      args["order"]=json.dumps(order.__dict__)
+    else:
+      try:
+        args["order"]=json.dumps(order)
+      except (ValueError, AttributeError):
+        args["order"]=order
+    data = EmptyClass()
+    data.args = args
+    data.method = "placeOrder"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def removeUserFromEvent(self, userId, eventId):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
@@ -1377,6 +1444,62 @@ class CartManager(object):
     data.args = args
     data.method = "updateProductCount"
     data.interfaceName = "core.cartmanager.ICartManager"
+    return self.communicationHelper.sendMessage(data)
+
+class CertegoManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def deleteSystem(self, systemId):
+    args = collections.OrderedDict()
+    if isinstance(systemId,GetShopBaseClass): 
+      args["systemId"]=json.dumps(systemId.__dict__)
+    else:
+      try:
+        args["systemId"]=json.dumps(systemId)
+      except (ValueError, AttributeError):
+        args["systemId"]=systemId
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteSystem"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getSystems(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSystems"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getSystemsForGroup(self, group):
+    args = collections.OrderedDict()
+    if isinstance(group,GetShopBaseClass): 
+      args["group"]=json.dumps(group.__dict__)
+    else:
+      try:
+        args["group"]=json.dumps(group)
+      except (ValueError, AttributeError):
+        args["group"]=group
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSystemsForGroup"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveSystem(self, system):
+    args = collections.OrderedDict()
+    if isinstance(system,GetShopBaseClass): 
+      args["system"]=json.dumps(system.__dict__)
+    else:
+      try:
+        args["system"]=json.dumps(system)
+      except (ValueError, AttributeError):
+        args["system"]=system
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveSystem"
+    data.interfaceName = "core.certego.ICertegoManager"
     return self.communicationHelper.sendMessage(data)
 
 class ChatManager(object):
@@ -3468,6 +3591,21 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getTotalAmount"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getTotalForOrderById(self, orderId):
+    args = collections.OrderedDict()
+    if isinstance(orderId,GetShopBaseClass): 
+      args["orderId"]=json.dumps(orderId.__dict__)
+    else:
+      try:
+        args["orderId"]=json.dumps(orderId)
+      except (ValueError, AttributeError):
+        args["orderId"]=orderId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getTotalForOrderById"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -6477,6 +6615,28 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def addGroupToUser(self, userId, groupId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
+    else:
+      try:
+        args["groupId"]=json.dumps(groupId)
+      except (ValueError, AttributeError):
+        args["groupId"]=groupId
+    data = EmptyClass()
+    data.args = args
+    data.method = "addGroupToUser"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addUserPrivilege(self, userId, managerName, managerFunction):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
@@ -6511,6 +6671,28 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "cancelImpersonating"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def checkUserNameAndPassword(self, username, password):
+    args = collections.OrderedDict()
+    if isinstance(username,GetShopBaseClass): 
+      args["username"]=json.dumps(username.__dict__)
+    else:
+      try:
+        args["username"]=json.dumps(username)
+      except (ValueError, AttributeError):
+        args["username"]=username
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
+    data = EmptyClass()
+    data.args = args
+    data.method = "checkUserNameAndPassword"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -6644,6 +6826,21 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getGroup(self, groupId):
+    args = collections.OrderedDict()
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
+    else:
+      try:
+        args["groupId"]=json.dumps(groupId)
+      except (ValueError, AttributeError):
+        args["groupId"]=groupId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getGroup"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getLoggedOnUser(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -6694,6 +6891,21 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getUserList"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getUsersBasedOnGroupId(self, groupId):
+    args = collections.OrderedDict()
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
+    else:
+      try:
+        args["groupId"]=json.dumps(groupId)
+      except (ValueError, AttributeError):
+        args["groupId"]=groupId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getUsersBasedOnGroupId"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -6765,6 +6977,35 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def loginWithPincode(self, username, password, pinCode):
+    args = collections.OrderedDict()
+    if isinstance(username,GetShopBaseClass): 
+      args["username"]=json.dumps(username.__dict__)
+    else:
+      try:
+        args["username"]=json.dumps(username)
+      except (ValueError, AttributeError):
+        args["username"]=username
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
+    if isinstance(pinCode,GetShopBaseClass): 
+      args["pinCode"]=json.dumps(pinCode.__dict__)
+    else:
+      try:
+        args["pinCode"]=json.dumps(pinCode)
+      except (ValueError, AttributeError):
+        args["pinCode"]=pinCode
+    data = EmptyClass()
+    data.args = args
+    data.method = "loginWithPincode"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def logonUsingKey(self, logonKey):
     args = collections.OrderedDict()
     if isinstance(logonKey,GetShopBaseClass): 
@@ -6825,6 +7066,28 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def removeGroupFromUser(self, userId, groupId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
+    else:
+      try:
+        args["groupId"]=json.dumps(groupId)
+      except (ValueError, AttributeError):
+        args["groupId"]=groupId
+    data = EmptyClass()
+    data.args = args
+    data.method = "removeGroupFromUser"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def requestAdminRight(self, managerName, managerFunction, applicationInstanceId):
     args = collections.OrderedDict()
     if isinstance(managerName,GetShopBaseClass): 
@@ -6851,6 +7114,28 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "requestAdminRight"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def requestNewPincode(self, username, password):
+    args = collections.OrderedDict()
+    if isinstance(username,GetShopBaseClass): 
+      args["username"]=json.dumps(username.__dict__)
+    else:
+      try:
+        args["username"]=json.dumps(username)
+      except (ValueError, AttributeError):
+        args["username"]=username
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
+    data = EmptyClass()
+    data.args = args
+    data.method = "requestNewPincode"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -6910,6 +7195,21 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "saveUser"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def searchForGroup(self, searchCriteria):
+    args = collections.OrderedDict()
+    if isinstance(searchCriteria,GetShopBaseClass): 
+      args["searchCriteria"]=json.dumps(searchCriteria.__dict__)
+    else:
+      try:
+        args["searchCriteria"]=json.dumps(searchCriteria)
+      except (ValueError, AttributeError):
+        args["searchCriteria"]=searchCriteria
+    data = EmptyClass()
+    data.args = args
+    data.method = "searchForGroup"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -7092,6 +7392,7 @@ class GetShopApi(object):
     self.CalendarManager = CalendarManager(self.communicationHelper)
     self.CarTuningManager = CarTuningManager(self.communicationHelper)
     self.CartManager = CartManager(self.communicationHelper)
+    self.CertegoManager = CertegoManager(self.communicationHelper)
     self.ChatManager = ChatManager(self.communicationHelper)
     self.ContentManager = ContentManager(self.communicationHelper)
     self.FooterManager = FooterManager(self.communicationHelper)

@@ -1,0 +1,22 @@
+<?
+if (!isset($_POST['searchforgroup'])) {
+    return;
+}
+
+$groups = $this->getApi()->getUserManager()->searchForGroup($_POST['searchforgroup']);
+
+if (!$groups ) {
+    $groups  = [];
+}
+?>
+<div>
+    <center><h3>Velg gruppen du ønsker å tilknytte dette systemet.<h3></center>
+</div>
+<?
+foreach ($groups as $group) {
+    ?>
+
+    <div class="gss_button" gss_value="<? echo $_POST['value']; ?>" gss_value_2="<? echo $group->id; ?>" gss_fragment="editsystem" gss_view="gs_system_work_area" gss_method="assignSystemToGroup" ><i class="fa fa-plus-circle"></i> <? echo $group->groupName; ?></div>
+    <?
+}
+?>

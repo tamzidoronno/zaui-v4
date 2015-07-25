@@ -9,7 +9,7 @@ $availablepos = $this->getCountOfFreePositions($entry);
 
 </div>
 <div class="content_image">
-    <img src="/displayImage.php?id=<? echo $event->imageId; ?>" width="300" style="border: solid 5px #FFF;"/>
+    <img src="/displayImage.php?id=<? echo $event->imageId; ?>" width="100%" style="border: solid 5px #FFF;"/>
 </div>
 
 <div class="content_information">
@@ -26,7 +26,7 @@ $availablepos = $this->getCountOfFreePositions($entry);
     <div>
         Pris:
         <br/> Voksen: Kr <? echo $event->priceAdults ?>,- 
-        <br/> Barn: <? echo $event->priceChild ?>,-
+        <br/> Barn: Kr <? echo $event->priceChild ?>,-
     </div>
     <br/>
     <?

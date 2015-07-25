@@ -7,6 +7,9 @@ class core_pagemanager_data_PageCell {
 	public $cellName;
 
 	/** @var String */
+	public $anchor;
+
+	/** @var String */
 	public $hideOnMobile;
 
 	/** @var String */

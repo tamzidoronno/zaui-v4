@@ -57,7 +57,7 @@ if (!$user->address) {
         <span class="title"><?php echo $this->__f("Ref.nr"); ?></span>
         <input type="textfield" gs_model='usermodel' gs_model_attr='referenceKey' value="<? echo $user->referenceKey; ?>">
         <div class="description">
-            <?php echo $this->__("The cell phone number to the owner of this account."); ?>
+            <?php echo $this->__("A autogenereted reference number that can be used to identify this user."); ?>
         </div>
     </div>
 
@@ -100,7 +100,7 @@ if (!$user->address) {
     </div>
 
 </div>
-<div class='gss_settings_content'>
+<div class='gss_settings_content gss_settings_user_address'>
     <div class="gss_settings_title">Addresses</div>
 
     <div class="textfield gss_setting"  id="streetaddress">
@@ -130,10 +130,16 @@ if (!$user->address) {
     </div>
 </div>
 <div class='gss_settings_content'>
+    
     <div class="gss_settings_title"><? echo $this->__f("Update password"); ?></div>
+    
+    <div class="textfield gss_setting" style="height: 38px;">
+        <div class="gss_button" id="autogeneratepassword" style="position: absolute; right: 14px; width: 262px;"><? echo $this->__f("Click to autogenerate password"); ?></div>
+    </div>
+   
     <div class="textfield gss_setting"  id="password1">
         <span class="title"><?php echo $this->__f("Password"); ?></span>
-        <input type="password" gs_model='usermodel' gs_model_attr='password1' value="" placeholder="*******">
+        <input type="password" id='gss_new_user_password1'  gs_model='usermodel' gs_model_attr='password1' value="" placeholder="*******">
         <div class="description">
             <?php echo $this->__("Please enter the accounts password."); ?>
         </div>
@@ -141,7 +147,7 @@ if (!$user->address) {
 
     <div class="textfield gss_setting"  id="password2">
         <span class="title"><?php echo $this->__f("Repeat password password"); ?></span>
-        <input type="password" gs_model='usermodel' gs_model_attr='password2' value="" placeholder="*******">
+        <input type="password" id='gss_new_user_password2'  gs_model='usermodel' gs_model_attr='password2' value="" placeholder="*******">
         <div class="description">
             <?php echo $this->__("Make sure that the password you wrote above is the correct."); ?>
         </div>

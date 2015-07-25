@@ -38,7 +38,8 @@ class PayPal extends \PaymentApplication implements \Application {
     }
 
     function curPageURL() {
-        return @$_SERVER['HTTP_ORIGIN'];
+        $actual_link = "http://$_SERVER[HTTP_HOST]";
+        return $actual_link;
     }
 
     /**
@@ -49,10 +50,11 @@ class PayPal extends \PaymentApplication implements \Application {
     public function preProcess() {
         $order = $this->getOrder();
 
-        $returnAddress = "http://" . $this->getFactory()->getStore()->webAddress . "/index.php?page=home";
+        $returnAddress = $this->curPageURL();
         $orderId = $order->id;
 
         $sandbox = $this->getConfigurationSetting("sandbox");
+        
         $testEmailAddress = $this->getConfigurationSetting("paypaltestaddress");
         $payPalEmail = $this->getConfigurationSetting("paypalemailaddress");
 
@@ -80,6 +82,7 @@ class PayPal extends \PaymentApplication implements \Application {
         echo "<form action='$url' method='POST' id='paypalform'>";
 
         //CALLBACK...
+        echo '<INPUT TYPE="hidden" name="charset" value="utf-8">';
         echo '<input type="hidden" name="notify_url" value="' . $callback . '">';
         echo '<INPUT TYPE="hidden" NAME="return" value="' . $returnAddress . '">';
 
@@ -91,7 +94,7 @@ class PayPal extends \PaymentApplication implements \Application {
         foreach ($order->cart->items as $cartItem) {
             $product = $cartItem->product;
             $variations = isset($cartItem->variations) ? $cartItem->variations : array();
-            $price = $this->getApi()->getProductManager()->getPrice($product->id, $variations);
+            $price = $product->price;
             $count = $cartItem->count;
 
             $helpertext = \HelperCart::getVartionsText($cartItem);
@@ -127,6 +130,10 @@ class PayPal extends \PaymentApplication implements \Application {
      */
     public function renderConfig() {
         $this->includefile("paypalconfig");
+    }
+    
+    public function isSandbox() {
+        return $this->getConfigurationSetting("sandbox") == "true";
     }
 
     public function getMode() {

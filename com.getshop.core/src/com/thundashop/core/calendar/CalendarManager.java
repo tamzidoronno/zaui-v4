@@ -1,7 +1,10 @@
 package com.thundashop.core.calendar;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.calendarmanager.data.AttendeeMetaInfo;
+import com.thundashop.core.calendarmanager.data.CalendarOrder;
 import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.EntryComment;
@@ -11,17 +14,26 @@ import com.thundashop.core.calendarmanager.data.ExtraDay;
 import com.thundashop.core.calendarmanager.data.FilterResult;
 import com.thundashop.core.calendarmanager.data.Location;
 import com.thundashop.core.calendarmanager.data.Month;
+import com.thundashop.core.calendarmanager.data.OrderLine;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.calendarmanager.data.Signature;
+import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserDeletedEventListener;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
@@ -29,6 +41,7 @@ import com.thundashop.core.usermanager.data.User.Type;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,6 +75,15 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
     
     @Autowired
     private UserManager userManager;
+    
+    @Autowired
+    private CartManager cartManager;
+    
+    @Autowired
+    private ProductManager productManager;
+    
+    @Autowired
+    private OrderManager orderManager;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -915,6 +937,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
 
     private void finalizeEntry(Entry entry) {
         entry.locationObject = locations.get(entry.locationId);
+        
+        List<String> usersThatDoesNotExists = entry.attendees.stream().filter(userid -> userManager.getUserById(userid) == null).collect(Collectors.toList()) ;
+        entry.attendees.removeAll(usersThatDoesNotExists);
+        
         if (entry.locationObject != null) {
             entry.location = entry.locationObject.location;
             entry.locationExtended = entry.locationObject.locationExtra;
@@ -924,6 +950,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
             entry.event = events.get(entry.eventId);
             entry.maxAttendees = entry.event.capacity;
         }
+        
+        entry.availableForBooking = true;
         
         if (entry.isInPast()) {
             entry.availableForBooking = false;
@@ -935,7 +963,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         
         if (entry.attendees.size() >= entry.maxAttendees) {
             entry.availableForBooking = false;
-        }
+        } 
     }
 
     @Override
@@ -1136,4 +1164,86 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         return events.get(eventId);
     }
 
+    @Override
+    public String placeOrder(CalendarOrder order) {
+        Entry entry = getEntry(order.entryId);
+        if (entry == null) {
+            return "";
+        }
+        
+        cartManager.clear();
+        Product product = getProductFromEntry(entry);
+        
+        List<String> userIds = new ArrayList();
+        String firstOrderUserId = "";
+        for (OrderLine orderLine : order.orderLines) {
+            
+            User user = new User();
+            user.fullName = orderLine.fullName;
+            user.emailAddress = orderLine.emailAddress;
+            user.cellPhone = orderLine.cellPhone;
+            user.address = new Address();
+            user.address.fullName = orderLine.fullName;
+            user.address.emailAddress = orderLine.emailAddress;
+            user.address.phone = orderLine.cellPhone;
+            
+            User userSaved = userManager.createUser(user);
+        
+            userIds.add(userSaved.id);
+            if (firstOrderUserId.isEmpty()) 
+                firstOrderUserId = userSaved.id;
+            
+            CartItem cartItem = cartManager.addProductItem(product.id, 1);
+            
+            String ekstraInfo = " ( ";
+            if (userSaved.fullName != null) {
+                ekstraInfo += userSaved.fullName + " ";
+            }
+            if (userSaved.cellPhone != null) {
+                ekstraInfo += userSaved.cellPhone + " ";
+            }
+            if (userSaved.emailAddress != null) {
+                ekstraInfo += userSaved.emailAddress + " ";
+            }
+            ekstraInfo += ")";
+            cartItem.getProduct().name = cartItem.getProduct().name + ", "+entry.day +"/"+entry.month+"-"+entry.year + ekstraInfo;
+            
+            entry.attendees.add(user.id);
+        }
+        
+        
+        Order orderSaved = orderManager.createOrderForUser(firstOrderUserId);
+        
+        int i = 0;
+        for (OrderLine orderLine : order.orderLines) {
+            CartItem cartItem = orderSaved.cart.getItems().get(i);
+            Product iproduct = cartItem.getProduct();
+            iproduct.price = orderLine.price;
+            cartItem.getProduct().price = orderLine.price;
+            i++;
+        }
+        
+        orderManager.saveOrder(orderSaved);
+        
+        entry.ordersVsUsers.put(orderSaved.id, userIds);
+        
+        for (Month month : months.values()) {
+            saveObject(month);
+        }
+        
+        return orderSaved.id;
+    }
+
+    private Product getProductFromEntry(Entry entry) {
+        Product product = productManager.getProduct(entry.entryId);
+        if (product == null) {
+            product = new Product();
+            product.name = entry.event.title;
+            product.price = 0;
+            product.id = entry.entryId;
+            productManager.saveProduct(product);
+        }
+        
+        return product;
+    }
 }

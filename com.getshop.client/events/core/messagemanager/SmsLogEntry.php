@@ -36,5 +36,8 @@ class core_messagemanager_SmsLogEntry extends core_common_DataCommon  {
 	/** @var String */
 	public $network;
 
+	/** @var String */
+	public $tryPoll;
+
 }
 ?>

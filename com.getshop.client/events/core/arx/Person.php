@@ -1,5 +1,8 @@
 <?php
-class core_arx_Person extends core_common_DataCommon  {
+class core_arx_Person {
+	/** @var String */
+	public $id;
+
 	/** @var String */
 	public $lastName;
 

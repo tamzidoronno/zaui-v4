@@ -1,16 +1,79 @@
+<?
+/* @var $this \ns_7004f275_a10f_4857_8255_843c2c7fb3ab\LasGruppenOrderSchema */
+$system = $this->getSelectedSystem();
+        
+$systemnumber = "";
+$systemname = "";
+$systememail = "";
+$systemcellphone = "";
+
+if (count($system)) {
+    $systemnumber = 'disabled="true" value="'.$system->number.'"'; ;
+    $systemname = 'disabled="true" value="'.$system->name.'"'; ;
+    $systememail = 'disabled="true" value="'.$system->phoneNumber.'"'; ;
+    $systemcellphone = 'disabled="true" value="'.$system->email.'"'; ;
+}
+
+?>
+
 <div class='orderpage order_page1' pageNumer='1'>
     <div class="certego_pagetitle">Kontaktinformasjon
         <div class='stepof'>Steg 1 / 4</div>
     </div>
+    <?
+    
+    if (!\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
+    ?>
+        <div class="certego_login">
+            <div class='loginform'>
+                <input type='textfield' placeholder='brukernavn' class='username'/>
+                <input type='password' placeholder='passord' class='password'/>
+                <div class='certego_login_button dologin'><i class="fa fa-play"></i></div>
+            </div>
+            <div class='loginform_picode'>
+                <div >
+                    <center>
+                        Tast inn din personlige pinkode, <br/>dersom du ikke har den kan du bestille <br/> ny ved å trykke på "bestill ny kode"    
+                    </center>
+                </div>
+                
+                <br/>
+                <div>
+                    <div class='certego_login_button request_new_pincode'>Bestill ny kode</div>
+                    <input type='password' placeholder='pincode' class='pincode'/>             
+                    <div class='certego_login_button signin'><i class="fa fa-play"></i></div>
+                </div>
+            </div>
+            <div>
+                <div class='shop_button login_button'>
+                    <i class="fa fa-key"></i> Logg inn
+                </div>
+            </div>
+        </div>
+    <?
+    } else {
+    ?>
+        <div class="certego_login">
+            <div>
+                <div class='shop_button logout_button'>
+                    <i class="fa fa-key"></i> Logg ut
+                </div>
+            </div>
+        </div>
+        
+    <?
+    }
+    ?>
+    
 
     <div>
         <div class='col col1'>
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>Informasjon om rekvirent</b></td></tr>
-                <tr><td class='td_col_1'>Systemnummer*</td><td><input class='systemnumber_uppercase' required='true' type='text'id="main_system_number"/></td></tr>
-                <tr><td class='td_col_1'>Navn*</td><td><input required='true' type='text' id="main_name"/></td></tr>
-                <tr><td>Epost*</td><td><input required='true' type='text' type_email='true' id="main_email"/></td></tr>
-                <tr><td>Mobiltelefon*</td><td><input required='true' type='text' type_number='true' id="main_cell"/></td></tr>
+                <tr><td class='td_col_1'>Systemnummer*</td><td><input class='systemnumber_uppercase' required='true' type='text'id="main_system_number" <? echo $systemnumber; ?>/></td></tr>
+                <tr><td class='td_col_1'>Navn*</td><td><input required='true' type='text' id="main_name" <? echo $systemname;?> /></td></tr>
+                <tr><td>Epost*</td><td><input required='true' type='text' type_email='true' id="main_email" <? echo $systememail;?> /></td></tr>
+                <tr><td>Mobiltelefon*</td><td><input required='true' type='text' type_number='true' id="main_cell" <? echo $systemcellphone;?> /></td></tr>
             </table>
         </div>
     </div>

@@ -22,9 +22,11 @@ $positions = $this->getCountOfFreePositions($entry);
             echo "<div class='personrow' person='$i'>";
             echo "Person $i";
             echo "<div class='innercontent'>";
-            echo "<br/><input class='name' type='textfield' placeholder='Navn'/> ";
-            echo "<br/><input class='email' type='textfield' placeholder='din@epost.no'/> ";
-            echo "<br/><input class='cellphone' type='textfield'  placeholder='Mobilnr'/> ";
+            echo "<input class='name' type='textfield' placeholder='".$this->__w("Name")."'/> ";
+            if ($i == 1) {
+                echo "<br/><input class='email' type='textfield' placeholder='".$this->__w("your@email.com")."'/> ";
+                echo "<br/><input class='cellphone' type='textfield'  placeholder='".$this->__w("cellphone")."'/> ";
+            }
             echo "<br/><input style='width: 20px;'type='checkbox' class='children'/>Barn (til og med 16 år) ";
             echo "</div>";
             echo "</div>";
@@ -35,7 +37,7 @@ $positions = $this->getCountOfFreePositions($entry);
         
     </div>
     <br/>
-    <div class="shop_button" style="float: right;">Gå til betaling</div>
+    <div class="shop_button calendar_go_to_payment" style="float: right;"><? echo $this->__f("Go to payment"); ?></div>
     <br/>
     <br/>
 </div>

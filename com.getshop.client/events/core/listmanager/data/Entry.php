@@ -13,6 +13,12 @@ class core_listmanager_data_Entry extends core_common_TranslationHandler  {
 	public $pageId;
 
 	/** @var String */
+	public $scrollPageId;
+
+	/** @var String */
+	public $scrollAnchor;
+
+	/** @var String */
 	public $imageId;
 
 	/** @var String */

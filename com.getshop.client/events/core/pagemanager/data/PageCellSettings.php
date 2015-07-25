@@ -9,8 +9,5 @@ class core_pagemanager_data_PageCellSettings {
 	/** @var String */
 	public $editorLevel;
 
-	/** @var String */
-	public $anchor;
-
 }
 ?>

@@ -8,6 +8,8 @@ getshop.MenuEditor = {
         $(document).on('keyup', ".Menu .titleinformation #itemname", getshop.MenuEditor.nameKeyUp);
         $(document).on('keyup', ".Menu .titleinformation #icontext", getshop.MenuEditor.iconKeyUp);
         $(document).on('keyup', ".Menu .titleinformation #itemlink", getshop.MenuEditor.itemLinkChanged);
+        $(document).on('keyup', ".Menu .titleinformation #scrollAnchor", getshop.MenuEditor.scrollAnchorChanged);
+        $(document).on('keyup', ".Menu .titleinformation #scrollPageId", getshop.MenuEditor.scrollPageIdChanged);
         $(document).on('mouseenter', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.showSubEntries);
         $(document).on('mouseleave', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.hideSubEntries);
         $(document).on('click', ".Menu .save", getshop.MenuEditor.saveMenuEditor);
@@ -15,6 +17,54 @@ getshop.MenuEditor = {
         $(document).on('click', ".Menu .cancel", getshop.MenuEditor.closeMenuEditor);
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
         $(document).on('change', ".menu_item_language", getshop.MenuEditor.itemLanguageChanged);
+        $(document).on('click', ".gs_scrollitem", getshop.MenuEditor.scrollToAnchor);
+    },
+    
+    scrollToAnchor: function() {
+        var scrollPageId = $(this).attr('scrollPageId');
+        var scrollAnchor = $(this).attr('scrollAnchor');
+        
+        if ($('.gsmobilemenuinstance').is(':visible')) {
+            $('.gsbody').show();
+            $('.gsmobilemenuinstance').hide();
+        }
+        
+        var currentPageId = $('.gsbody_inner').attr('pageId');
+        
+        if (currentPageId === scrollPageId) {
+            var target = $("#"+scrollAnchor);
+            if (!target.length) {
+                return;
+            }
+            var diff = 0;
+            if ($('.gsarea[area="body"]').length) {
+                diff = $('.gsarea[area="body"]').offset().top;
+            }
+            $('html,body').animate({ scrollTop: target.offset().top - diff - 20}, 300);
+        } else {
+            var link = '/?page='+scrollPageId;
+            doNavigation(link, link, link, function(success) {
+                var target = $("#"+scrollAnchor);
+                if (!target.length) {
+                    return;
+                }
+                $(document).ready(function() {
+                    var diff = 0;
+                    if ($('.gsarea[area="body"]').length) {
+                        diff = $('.gsarea[area="body"]').offset().top;
+                    }
+                    $('html,body').animate({ scrollTop: target.offset().top - diff - 20}, 300);
+                })
+                
+            });
+        }
+    },
+    
+    scrollAnchorChanged: function() {
+        getshop.MenuEditor.activeItem.scrollAnchor = $(this).val();
+    },
+    scrollPageIdChanged: function() {
+        getshop.MenuEditor.activeItem.scrollPageId = $(this).val();
     },
     showSubEntries : function() {
         $(this).children('.entries').show();
@@ -160,7 +210,6 @@ getshop.MenuEditor = {
 
     itemLinkChanged: function() {
         getshop.MenuEditor.activeItem.link = $(this).val();
-        getshop.MenuEditor.activeItem.pageId = $(this).attr('pageId');
     },
             
     menuClicked: function() {
@@ -197,6 +246,8 @@ getshop.MenuEditor = {
             $('.titleinformation #itemname').val(getshop.MenuEditor.activeItem.name);    
             $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.pageId);    
             $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.link);    
+            $('.titleinformation #scrollPageId').val(getshop.MenuEditor.activeItem.scrollPageId);    
+            $('.titleinformation #scrollAnchor').val(getshop.MenuEditor.activeItem.scrollAnchor);    
             if (getshop.MenuEditor.activeItem.link) {
                 $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.link);
                 $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.link);

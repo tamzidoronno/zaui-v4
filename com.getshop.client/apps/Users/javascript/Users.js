@@ -1,4 +1,17 @@
 app.Users = {
+    init: function() {
+        $(document).on('click','#autogeneratepassword', app.Users.autoGenPassword);
+    },
+    autoGenPassword: function() {
+        var randomstring = Math.random().toString(36).slice(-8);
+        $('#gss_new_user_password1').val(randomstring);
+        $('#gss_new_user_password2').val(randomstring);
+        $('#gss_new_user_password1').change();
+        $('#gss_new_user_password2').change();
+        
+        $('#gss_new_user_password1').attr('type', 'textfield');
+        $('#gss_new_user_password2').attr('type', 'textfield');
+    },
     userCreated: function(res) {
         alert(res);
         return true;
@@ -33,3 +46,5 @@ app.Users.gssinterface =  {
         });
     }
 };
+
+app.Users.init();

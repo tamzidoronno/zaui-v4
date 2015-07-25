@@ -969,10 +969,11 @@ thundashop.framework = {
             }
         });
         
-        settings['anchor'] = $('#gs_settings_cell_anchor').val();
+        
         var data = {
             "cellid": cellid,
             "styles": styles,
+            "anchor" : $('#gs_settings_cell_anchor').val(),
             "colsizes": colsizes,
             "settings" : settings,
             "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked')

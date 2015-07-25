@@ -91,7 +91,7 @@ $menuLists = $this->getMenuLists();
                             <div class="titleinformation">
                                 <table>
                                     <tr><td><? echo $this->__f("Name"); ?></td><td><input type="textfield" id="itemname"/></td></tr>
-                                    <tr><td><? echo $this->__f("Link"); ?></td><td><input type="textfield" class="pagepicker" id="itemlink"/></td></tr>
+                                    <tr><td><? echo $this->__f("Link"); ?></td><td><input type="textfield" class="" id="itemlink"/></td></tr>
                                     <tr><td><? echo $this->__f("Fontawesome icon name"); ?></td><td><input type="text" id="icontext"/></td></tr>
                                     <tr><td><? echo $this->__f("Userlevel"); ?></td>
                                         <td>
@@ -124,6 +124,20 @@ $menuLists = $this->getMenuLists();
                                     <?
                                     }
                                     ?>
+                                        
+                                    <tr>
+                                        <td valign="top" colspan="2"><hr/><center><? echo $this->__f("This is used when you need to setup a scrolling page, good for onepager sites.");?></center></td>
+                                    </tr>
+                                    <tr>
+                                         <td valign="top"><br/><? echo $this->__f("Scrollmenu");?></td>
+                                         <td>
+                                             <br/>
+                                             <div>
+                                                <input type="textfield" id="scrollPageId" id="itemlink" placeholder="pageid"/>
+                                                <br/><input type="textfield" id="scrollAnchor" id="itemlink" placeholder="anchorname"/>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                             <div class="disabled"></div>

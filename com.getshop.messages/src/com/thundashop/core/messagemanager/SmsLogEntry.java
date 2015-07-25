@@ -16,4 +16,25 @@ public class SmsLogEntry extends DataCommon {
     public String from;
     public String msgId;
     public String network;
+    boolean tryPoll = true;
+
+    boolean isOutDated() {
+        if(rowCreatedDate != null) {
+            long then = rowCreatedDate.getTime() / 1000;
+            long now = new Date().getTime() / 1000;
+            long diff = now - then;
+            if(diff > 3600) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean delivered() {
+        return errorCode.equals("delivered");
+    }
+
+    boolean undelivered() {
+        return errorCode.equals("undelivered");
+    }
 }

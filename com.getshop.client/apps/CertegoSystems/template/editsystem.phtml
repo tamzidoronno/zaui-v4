@@ -1,0 +1,78 @@
+<?
+/* @var $this \ns_27a320a3_e983_4f55_aae8_cf94add661c2\CertegoSystems */
+$system = $this->getSystem($_POST['value']);
+$groupName = $system->group != null ? $system->group->groupName : "";
+?>
+
+<div class="textfield gss_setting"  id="systemnumber">
+    <span class="title"><?php echo $this->__f("Systemnummer"); ?></span>
+    <input type="textfield" gs_model='systemmodel' gs_model_attr='systemnname' value="<? echo $system->number; ?>" placeholder="xxx">
+    <div class="description">
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="name">
+    <span class="title"><?php echo $this->__f("Navn"); ?></span>
+    <input type="textfield" gs_model='systemmodel' gs_model_attr='name' value="<? echo $system->name; ?>" placeholder="John Doe">
+    <div class="description">
+        <?php echo $this->__("Navn på eier av låsesystemet."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="email">
+    <span class="title"><?php echo $this->__f("Mail address"); ?></span>
+    <input type="textfield" gs_model='systemmodel' gs_model_attr='email' value="<? echo $system->email; ?>" placeholder="email@address.org">
+    <div class="description">
+        <?php echo $this->__("E-postadresse til eier av systemet"); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="phone">
+    <span class="title"><?php echo $this->__f("Phone number"); ?></span>
+    <input type="textfield" gs_model='systemmodel' gs_model_attr='phonenumber' value="<? echo $system->phoneNumber; ?>" placeholder='12345678'>
+    <div class="description">
+        <?php echo $this->__("Mobilnummer til eier av systemet"); ?>
+    </div>
+</div>
+
+<?
+if ($groupName) {
+?>
+<div class="textfield gss_setting"  id="phone">
+    <span class="title"><?php echo $this->__f("Group"); ?></span>
+    <div class="textinput"><span style="cursor: pointer;" gss_value="<? echo $system->id; ?>" gss_method="removeGroupFromSystem"  gss_fragment="editsystem" gss_view="gs_system_work_area">( <i class="fa fa-trash"></i> Remove )</span> <? echo $groupName; ?></div>
+    <div class="description">
+         <?php echo $this->__("This system is connected to the following system."); ?>
+    </div>
+</div>
+<?
+}
+
+if (!$groupName) {
+?>
+<div style="border: solid 1px #DDD; padding: 20px; background-color: #F9f9f9;">
+    <center><h2>Assign system to a group</h2></center>
+    <div class="textfield gss_setting"  id="searchforgroup">
+        <span class="title"><?php echo $this->__f("Group number"); ?></span>
+        <input type="textfield" gs_model='systemmodel' gs_model_attr='searchforgroup' value="" placeholder=''>
+        <div class="description">
+            <?php echo $this->__("Enter the groupname or something to search for."); ?>
+        </div>
+    </div>
+    <div class="gss_group_system_searchresult">
+         
+    </div>
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_value="<? echo $system->id; ?>" gss_fragment="searchforgroup" gss_view="gss_group_system_searchresult" gss_method="searchForGroup" gss_model="systemmodel"><i class='fa fa-plus'></i><?php echo $this->__("Search"); ?></div>
+    </div>
+</div>
+<?
+}
+?>
+
+
+<div class='gss_button_area'>
+    <input type="hidden" gs_model='systemmodel' gs_model_attr='systemid' value="<? echo $system->id; ?>">
+    <div class="gss_button" gss_value="<? echo $system->id; ?>" gss_confirmation="Sikker på at du ønsker å slette?" gss_fragment="systemlist" gss_view="gs_system_work_area" gss_method="deleteSystem" gss_model="systemmodel"><i class='fa fa-trash'></i><?php echo $this->__("Slett system"); ?></div>
+    <div class="gss_button" gss_value="<? echo $system->id; ?>" gss_fragment="editsystem" gss_view="gs_system_work_area" gss_method="createSystem" gss_model="systemmodel"><i class='fa fa-plus'></i><?php echo $this->__("Lagre system"); ?></div>
+</div>

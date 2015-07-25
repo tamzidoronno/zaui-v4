@@ -188,6 +188,12 @@ public class GetShopApi {
            return new APIPageManager(transport);
       }
      /**
+      * @return APICertegoManager
+      */
+      public APICertegoManager getCertegoManager() {
+           return new APICertegoManager(transport);
+      }
+     /**
       * @return APIInvoiceManager
       */
       public APIInvoiceManager getInvoiceManager() {

@@ -5192,6 +5192,18 @@ GetShopApiWebSocket.ArxManager = function(communication) {
 }
 
 GetShopApiWebSocket.ArxManager.prototype = {
+    'addCard' : function(personId,card, silent) {
+        data = {
+            args : {
+                personId : JSON.stringify(personId),
+                card : JSON.stringify(card),
+            },
+            method: 'addCard',
+            interfaceName: 'core.arx.IArxManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'doorAction' : function(externalId,state, silent) {
         data = {
             args : {
@@ -5247,6 +5259,17 @@ GetShopApiWebSocket.ArxManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'getPerson' : function(id, silent) {
+        data = {
+            args : {
+                id : JSON.stringify(id),
+            },
+            method: 'getPerson',
+            interfaceName: 'core.arx.IArxManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'isLoggedOn' : function(silent) {
         data = {
             args : {
@@ -5265,6 +5288,17 @@ GetShopApiWebSocket.ArxManager.prototype = {
                 password : JSON.stringify(password),
             },
             method: 'logonToArx',
+            interfaceName: 'core.arx.IArxManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'updatePerson' : function(person, silent) {
+        data = {
+            args : {
+                person : JSON.stringify(person),
+            },
+            method: 'updatePerson',
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
@@ -6008,6 +6042,55 @@ GetShopApiWebSocket.CarTuningManager.prototype = {
             },
             method: 'saveCarTuningData',
             interfaceName: 'core.cartuning.ICarTuningManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+}
+GetShopApiWebSocket.CertegoManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.CertegoManager.prototype = {
+    'deleteSystem' : function(systemId, silent) {
+        data = {
+            args : {
+                systemId : JSON.stringify(systemId),
+            },
+            method: 'deleteSystem',
+            interfaceName: 'core.certego.ICertegoManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getSystems' : function(silent) {
+        data = {
+            args : {
+            },
+            method: 'getSystems',
+            interfaceName: 'core.certego.ICertegoManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getSystemsForGroup' : function(group, silent) {
+        data = {
+            args : {
+                group : JSON.stringify(group),
+            },
+            method: 'getSystemsForGroup',
+            interfaceName: 'core.certego.ICertegoManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'saveSystem' : function(system, silent) {
+        data = {
+            args : {
+                system : JSON.stringify(system),
+            },
+            method: 'saveSystem',
+            interfaceName: 'core.certego.ICertegoManager',
         };
         return this.communication.send(data, silent);
     },
@@ -7158,6 +7241,17 @@ GetShopApiWebSocket.OrderManager.prototype = {
                 order : JSON.stringify(order),
             },
             method: 'getTotalAmount',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getTotalForOrderById' : function(orderId, silent) {
+        data = {
+            args : {
+                orderId : JSON.stringify(orderId),
+            },
+            method: 'getTotalForOrderById',
             interfaceName: 'core.ordermanager.IOrderManager',
         };
         return this.communication.send(data, silent);
@@ -8874,6 +8968,18 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'addGroupToUser' : function(userId,groupId, silent) {
+        data = {
+            args : {
+                userId : JSON.stringify(userId),
+                groupId : JSON.stringify(groupId),
+            },
+            method: 'addGroupToUser',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'addUserPrivilege' : function(userId,managerName,managerFunction, silent) {
         data = {
             args : {
@@ -8892,6 +8998,18 @@ GetShopApiWebSocket.UserManager.prototype = {
             args : {
             },
             method: 'cancelImpersonating',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'checkUserNameAndPassword' : function(username,password, silent) {
+        data = {
+            args : {
+                username : JSON.stringify(username),
+                password : JSON.stringify(password),
+            },
+            method: 'checkUserNameAndPassword',
             interfaceName: 'core.usermanager.IUserManager',
         };
         return this.communication.send(data, silent);
@@ -9013,6 +9131,17 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'getGroup' : function(groupId, silent) {
+        data = {
+            args : {
+                groupId : JSON.stringify(groupId),
+            },
+            method: 'getGroup',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'getLoggedOnUser' : function(silent) {
         data = {
             args : {
@@ -9051,6 +9180,17 @@ GetShopApiWebSocket.UserManager.prototype = {
                 userIds : JSON.stringify(userIds),
             },
             method: 'getUserList',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getUsersBasedOnGroupId' : function(groupId, silent) {
+        data = {
+            args : {
+                groupId : JSON.stringify(groupId),
+            },
+            method: 'getUsersBasedOnGroupId',
             interfaceName: 'core.usermanager.IUserManager',
         };
         return this.communication.send(data, silent);
@@ -9110,6 +9250,19 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'loginWithPincode' : function(username,password,pinCode, silent) {
+        data = {
+            args : {
+                username : JSON.stringify(username),
+                password : JSON.stringify(password),
+                pinCode : JSON.stringify(pinCode),
+            },
+            method: 'loginWithPincode',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'logonUsingKey' : function(logonKey, silent) {
         data = {
             args : {
@@ -9154,6 +9307,18 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'removeGroupFromUser' : function(userId,groupId, silent) {
+        data = {
+            args : {
+                userId : JSON.stringify(userId),
+                groupId : JSON.stringify(groupId),
+            },
+            method: 'removeGroupFromUser',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'requestAdminRight' : function(managerName,managerFunction,applicationInstanceId, silent) {
         data = {
             args : {
@@ -9162,6 +9327,18 @@ GetShopApiWebSocket.UserManager.prototype = {
                 applicationInstanceId : JSON.stringify(applicationInstanceId),
             },
             method: 'requestAdminRight',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'requestNewPincode' : function(username,password, silent) {
+        data = {
+            args : {
+                username : JSON.stringify(username),
+                password : JSON.stringify(password),
+            },
+            method: 'requestNewPincode',
             interfaceName: 'core.usermanager.IUserManager',
         };
         return this.communication.send(data, silent);
@@ -9197,6 +9374,17 @@ GetShopApiWebSocket.UserManager.prototype = {
                 user : JSON.stringify(user),
             },
             method: 'saveUser',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'searchForGroup' : function(searchCriteria, silent) {
+        data = {
+            args : {
+                searchCriteria : JSON.stringify(searchCriteria),
+            },
+            method: 'searchForGroup',
             interfaceName: 'core.usermanager.IUserManager',
         };
         return this.communication.send(data, silent);
@@ -9334,6 +9522,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.CalendarManager = new GetShopApiWebSocket.CalendarManager(this);
     this.CartManager = new GetShopApiWebSocket.CartManager(this);
     this.CarTuningManager = new GetShopApiWebSocket.CarTuningManager(this);
+    this.CertegoManager = new GetShopApiWebSocket.CertegoManager(this);
     this.ChatManager = new GetShopApiWebSocket.ChatManager(this);
     this.GalleryManager = new GetShopApiWebSocket.GalleryManager(this);
     this.GetShop = new GetShopApiWebSocket.GetShop(this);

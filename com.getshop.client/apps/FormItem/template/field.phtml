@@ -1,0 +1,80 @@
+<?
+/* @var $this \ns_4a5ee780_32f8_11e5_a2cb_0800200c9a66\FormItem */
+$type = $this->getField("type");
+if(!$type) {
+    echo $this->__w("Field has not been configured yet, configure it first.");
+} else {
+    $name = $this->getField("name");
+    $title = $this->getField("title");
+    $required = $this->getField("required");
+    $requiredField = "needed='false'";
+    $placeholder = $this->getField("placeholder");
+    if($required == "true") {
+        $title = "* ".$title;
+        $requiredField = "needed='true'";
+        true;
+    }
+    
+    switch($type) {
+        case "h1":
+            echo "<h1 formtype='$type' class='formiteminput'>" . $title . "</h3>";
+            break;
+        case "h1":
+            echo "<h2 formtype='$type' class='formiteminput'>" . $title . "</h3>";
+            break;
+        case "h1":
+            echo "<h3 formtype='$type' class='formiteminput'>" . $title . "</h3>";
+            break;
+        case "infofield":
+            echo "<div formtype='$type' class='formiteminput'>";
+            echo nl2br($title);
+            echo "</div>";
+            break;
+        case "input":
+        case "input":
+            echo "<label>";
+            echo "<span class='title'>$title</span>";
+            echo "<input type='$type' name='$title' formtype='$type' class='inputfield formiteminput' placeholder='$placeholder' $requiredField>";
+            echo "</label>";
+            break;
+        case "radio":
+             $selected = "";
+            if($this->getField("selected") == "true") {
+                $selected = "CHECKED";
+            }
+            echo "<label>";
+            echo "<input type='$type' name='$name' formtype='$type' class='radioinput formiteminput' $selected value='$title' $requiredField>";
+            echo "<span class='radiotitle'>" .$title . "</span>";
+            echo "</label>";
+            break;
+        case "select":
+            echo "<label>";
+            echo "<span class='title'>$title</span>";
+            echo "<select name='$title' formtype='$type' class='formiteminput'>";
+            for($i = 0;$i < 10; $i++) {
+                $val = $this->getField("dropdown_$i");
+                if(!$val) {
+                    continue;
+                }
+                echo "<option value='$val'>$val</option>";
+            }
+            echo "</select>";
+            echo "</label>";
+            
+            break;
+        case "submit":
+            echo "<input type='$type' name='$name' formtype='$type' class='submitForm' value='$title'>";
+            if(isset($_POST['event']) && $_POST['event'] == "submitForm" && $_POST['data']['valid'] == "true") {
+                $data = "data:text/html;base64," . base64_encode($this->getSubmittedForm());
+                echo "<div style='padding: 10px;'><i class='fa fa-thumbs-o-up'></i> The form has been submitted, you can download it <a href='$data' target='_new'>here</a>.</div>";
+            }
+            break;
+        case "textarea":
+            echo "<label>";
+            echo "<span class='title'>$title</span>";
+            echo "<textarea type='txt' formtype='$type' name='$title' class='inputfield formiteminput' $requiredField></textarea>";
+            echo "</label>";
+            break;
+    }
+}
+?>

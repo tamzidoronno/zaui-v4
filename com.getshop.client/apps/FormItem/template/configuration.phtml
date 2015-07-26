@@ -1,0 +1,68 @@
+<?
+$types = array();
+$types['input'] = "Input field";
+$types['textarea'] = "Textarea";
+$types['radio'] = "Radio button";
+$types['select'] = "Drop down";
+$types['submit'] = "Submit button";
+$types['h1'] = "Heading 1";
+$types['h2'] = "Heading 2";
+$types['h3'] = "Heading 3";
+$types['infofield'] = "Information field";
+
+/* @var $this \ns_4a5ee780_32f8_11e5_a2cb_0800200c9a66\FormItem */
+?>
+<div style="padding:20px;" gstype='form' method="updateconfig">
+    Select a type:<br>
+    <select gsname='type'>
+        <? 
+        $type = $this->getField('type');
+        foreach($types as $index => $value) {
+            $selected = "";
+            if($type == $index) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='$index' $selected>$value</option>";
+        }
+        ?>
+    </select><br>
+    <br>
+    Title of the field:<br>
+    <textarea type='txt' gsname='title' style='width:100%; height: 100px;'><? echo $this->getField('title'); ?></textarea>
+    <br>
+    <br>
+    Name of the field:<br>
+    <input type='txt' gsname='name' value='<? echo $this->getField('name'); ?>'><br><br>
+    Placeholder:<br>
+    <input type='txt' gsname='placeholder' value='<? echo $this->getField('placeholder'); ?>'><br><br>
+    Default selected:<br>
+    <?
+    $selected = "";
+    if($this->getField("selected") == "true") {
+        $selected = "CHECKED";
+    }
+    ?>
+    <input type='checkbox' gsname='selected' <? echo $selected; ?>><br><br>
+    Required field:<br>
+    <?
+    $selected = "";
+    if($this->getField("required") == "true") {
+        $selected = "CHECKED";
+    }
+    ?>
+    <input type='checkbox' gsname='required' <? echo $selected; ?>><br><br>
+    
+    <hr>
+    <b>Configuration for drop down</b><br>
+    <div style='height: 5px;'></div>
+    
+    <?
+    for($i = 0; $i < 10; $i++) {
+        echo "Drop down value $i&nbsp;&nbsp;&nbsp;";
+        echo "<input type='txt' gsname='dropdown_$i' value=".$this->getField('dropdown_'.$i)."><br>";
+        echo "<div style='height: 5px;'></div>";
+    }
+    ?>
+    
+    <input gstype="submit" type="button" value='Save'>
+</div>

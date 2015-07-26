@@ -1,0 +1,6 @@
+.FormItem .title {
+    display:block; width: 100%; padding-bottom: 3px;
+}
+.FormItem .inputfield { width: 100%; }
+.FormItem .radioinput,.FormItem .radiotitle { vertical-align: middle; }
+.FormItem textarea.inputfield { min-height: 100px; }

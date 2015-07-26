@@ -54,31 +54,16 @@ public class AddApplicationsToDatabase {
         allowed2.add("xlarge");
 
         
-        Application UserGroups = createSettings("UserGroups",
-                "3983a370-d0cc-46de-ba94-cc22fe7becbb",
+        Application forms = createSettings("FormItem",
+                "4a5ee780-32f8-11e5-a2cb-0800200c9a66",
                 allowed2,
                 "",
-                Application.Type.System, true);
-        UserGroups.isPublic = true;
-        UserGroups.isFrontend = false;
-        UserGroups.moduleId = "hidden";
-        UserGroups.defaultActivate = true;
-        apps.add(UserGroups);
-        
-        Application CertegoSystems = createSettings("CertegoSystems",
-                "27a320a3-e983-4f55-aae8-cf94add661c2",
-                allowed2,
-                "",
-                Application.Type.System, true);
-        CertegoSystems.isPublic = false;
-        CertegoSystems.isFrontend = false;
-        CertegoSystems.allowedStoreIds = new ArrayList();
-        CertegoSystems.allowedStoreIds.add("1e647711-6624-40fd-807e-7673250accc4");
-        
-        CertegoSystems.moduleId = "other";
-        CertegoSystems.defaultActivate = true;
-        
-        apps.add(CertegoSystems);
+                Application.Type.Marketing, true);
+        forms.isPublic = true;
+        forms.isFrontend = true;
+        forms.moduleId = "Marketing";
+        forms.defaultActivate = false;
+        apps.add(forms);
         
         return apps;
     }

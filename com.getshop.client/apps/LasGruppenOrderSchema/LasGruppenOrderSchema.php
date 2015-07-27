@@ -197,4 +197,20 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $this->getApi()->getUserManager()->saveExtraAddressToGroup($group, $address);
         $this->includefile("welcome");
     }
+    
+    public function saveInvoiceAddr() {
+        $address = new \core_usermanager_data_Address();
+        $address->type = "invoice";
+        $address->fullName = $_POST['data']['name'];
+        $address->address = $_POST['data']['addr1'];
+        $address->address2 = $_POST['data']['addr2'];
+        $address->postCode = $_POST['data']['postcode'];
+        $address->city = $_POST['data']['city'];
+        $address->vatNumber = $_POST['data']['vatNumber'];
+        $address->id = $_POST['data']['addrid'];
+        
+        $group = $this->getCurrentGroup();
+        $this->getApi()->getUserManager()->saveExtraAddressToGroup($group, $address);
+        $this->includefile("welcome");
+    }
 }

@@ -88,7 +88,7 @@ if (!$user->prevLoggedIn) {
         <div class="menu_entry" goto="invoiceinfo">Fakturainformasjon</div>
         <div class="menu_entry" goto="stystemoverview">Systemoversikt</div>
         <div class="menu_entry deliveryoverview_button" goto="deliveryaddresses">Leveringsadresser</div>
-        <div class="menu_entry">Fakturaadresser</div>
+        <div class="menu_entry invoiceaddresses_button" goto="invoiceaddresses">Fakturaadresser</div>
         <br/>
         <div class="certego_pagetitle" style="text-align: center;">Arkiv</div>
         <div class="menu_entry">Tidligere bestillinger</div>
@@ -98,6 +98,11 @@ if (!$user->prevLoggedIn) {
     </div>
     
     <div class='col col_2' style="border: solid 1px #DDD; margin-top: 20px; ">
+        <div class="sub_entry_content">
+            <center><h2>Velkommen kjære kunde.</h2></center>
+            <br/>Vi har gjort livet ditt litt enklere ved å forbedre bestillingsprossen, samtidig som vi ivaretar din sikkerhet.
+        </div>
+        
         <div class="invoiceinformation sub_entry_content" content="invoiceinfo">
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>Fakturainformasjon</b></td></tr>
@@ -135,6 +140,26 @@ if (!$user->prevLoggedIn) {
         <div class="neworder sub_entry_content" content="neworder">
             <center>Velg fakturadresse du ønsker å gjøre en bestilling på.</center>
             <br/>
+            
+            <div class='shop_button show_new_address_form' style='margin-bottom: 20px;'>Ny adresse</div>
+            <div id='new_address_form_order' style='display: none; margin-top: 20px; margin-bottom: 20px; border: solid 1px #DDD; padding: 20px; margin-top: 0px;'>
+                <div  class="new_invoice_address_direct">
+                    <table>
+                        <tr><td>Org. Nr / Fødselsdato*</td><td><input id="edit_inv_birthday" required='true' type='text' /></td></tr>
+                        <tr><td>Navn / Firma*</td><td><input id="edit_inv_name" required='true' type='text' /></td></tr>
+                        <tr><td>Adresse*</td><td><input id="edit_inv_addr1" required='true' type='text' /></td></tr>
+                        <tr><td>Adresse 2</td><td><input id="edit_inv_addr2" type='text' /></td></tr>
+                        <tr><td>Postnr*</td><td><input id="edit_inv_postcode" required='true' type='text' /></td></tr>
+                        <tr><td>Sted*</td><td><input id="edit_inv_city" required='true' type='text' /></td></tr>
+                    </table>
+
+                    <div class='button_area'>
+                        <div class='shop_button show_new_address_form'>Avbryt</div>
+                        <div class='shop_button '>Neste</div>
+                    </div>
+                </div>
+            </div>
+            
             <div class='address_to_edit start_order_by_address'>
                 <div class="del_vatnumber"><? echo $invoiceAddress->vatNumber; ?></div>
                 <div class="del_name"><? echo $invoiceAddress->fullName; ?></div>
@@ -146,17 +171,37 @@ if (!$user->prevLoggedIn) {
                 <div class="del_city"><? echo $invoiceAddress->city; ?></div>
                 <i class="fa fa-arrow-right"></i>
             </div>
+            
+            
+            
+            <?
+            foreach ($extraInvoicesAddresses as $addr) {
+                ?>
+                <div class="address_to_edit start_order_by_address" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
+                    <div class="inv_birthday"><? echo $addr->vatNumber; ?></div>
+                    <div class="inv_name"><? echo $addr->fullName; ?></div>
+                    <div class="inv_addr"><? echo $addr->address; ?></div>
+                    <? if (isset($addr->address2)) { ?>
+                        <div class="inv_addr2"><? echo $addr->address2; ?></div>
+                    <? } ?>
+                    <div class="inv_postcode"><? echo $addr->postCode; ?></div>
+                    <div class="inv_city"><? echo $addr->city; ?></div>
+                    <i class="fa fa-arrow-right"></i>
+                </div>
+                <?
+            }
+            ?>
         </div>
                 
         <div class="deliveryaddresses sub_entry_content" content="deliveryaddresses">
             <?
             if (!count($extraDeliveriesAddresses)) {
                 echo "Du har ikke lagt til noen ekstra adresser enda, trykk legg til for å legge til en ny adresse";
-                ?>
-            <br/>
-            <br/>
+            ?>
+                <br/>
+                <br/>
                     <div class='button_area'>
-                        <div class='shop_button address_to_edit'>Legg til ny addresse</div>
+                        <div class='shop_button delivery_address_to_edit'>Legg til ny addresse</div>
                     </div>        
                 <?
             } else {
@@ -166,7 +211,7 @@ if (!$user->prevLoggedIn) {
                     <?
                     foreach ($extraDeliveriesAddresses as $addr) {
                         ?>
-                        <div class="address_to_edit" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
+                        <div class="address_to_edit delivery_address_to_edit" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
                             <div class="del_name"><? echo $addr->fullName; ?></div>
                             <div class="del_addr"><? echo $addr->address; ?></div>
                             <? if (isset($addr->address2)) { ?>
@@ -208,6 +253,54 @@ if (!$user->prevLoggedIn) {
             <div class='button_area'>
                 
             </div>
+        </div>
+        
+        
+        <div class="invoiceaddresses sub_entry_content" content="invoiceaddresses">
+            <div class="invoice_addresses">
+                <?
+                if (!count($extraInvoicesAddresses)) {
+                    echo "<div> Du har ikke lagt til noen ekstra adresser enda, trykk på legg til ny";
+                } else {
+                    foreach ($extraInvoicesAddresses as $addr) {
+                        ?>
+                        <div class="address_to_edit invoice_address_to_edit" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
+                            <div class="inv_birthday"><? echo $addr->vatNumber; ?></div>
+                            <div class="inv_name"><? echo $addr->fullName; ?></div>
+                            <div class="inv_addr"><? echo $addr->address; ?></div>
+                            <? if (isset($addr->address2)) { ?>
+                                <div class="inv_addr2"><? echo $addr->address2; ?></div>
+                            <? } ?>
+                            <div class="inv_postcode"><? echo $addr->postCode; ?></div>
+                            <div class="inv_city"><? echo $addr->city; ?></div>
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                        <?
+                    }
+                }
+                ?>
+                
+                <div class='button_area'>
+                    <div class='shop_button invoice_address_to_edit'>Legg til ny addresse</div>
+                </div>
+            </div>
+            <div style='display: none;' class="invoice_address_edit">
+                <input type="hidden" value="" id="edit_inv_addrid"/>
+                <table>
+                    <tr><td>Org. Nr / Fødselsdato*</td><td><input id="edit_inv_birthday" required='true' type='text' /></td></tr>
+                    <tr><td>Navn / Firma*</td><td><input id="edit_inv_name" required='true' type='text' /></td></tr>
+                    <tr><td>Adresse*</td><td><input id="edit_inv_addr1" required='true' type='text' /></td></tr>
+                    <tr><td>Adresse 2</td><td><input id="edit_inv_addr2" type='text' /></td></tr>
+                    <tr><td>Postnr*</td><td><input id="edit_inv_postcode" required='true' type='text' /></td></tr>
+                    <tr><td>Sted*</td><td><input id="edit_inv_city" required='true' type='text' /></td></tr>
+                </table>
+                
+                <div class='button_area'>
+                    <div class='shop_button delete_invoice_address'>Slett</div> 
+                    <div class='shop_button invoice_address_to_save'>Lagre</div>
+                </div>
+            </div>
+              
         </div>
     </div>
     

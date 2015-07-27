@@ -26,12 +26,17 @@ app.LasGruppenOrderSchema = {
         $(document).on('keyup', '.LasGruppenOrderSchema .loginform_picode .pincode', app.LasGruppenOrderSchema.doSignupKeyUp);
         $(document).on('click', '.LasGruppenOrderSchema .logout_button', app.LasGruppenOrderSchema.logout_button);
         $(document).on('click', '.LasGruppenOrderSchema .menu_entry', app.LasGruppenOrderSchema.menuSelected);
-        $(document).on('click', '.LasGruppenOrderSchema .address_to_edit', app.LasGruppenOrderSchema.editDeliveryAddress);
+        $(document).on('click', '.LasGruppenOrderSchema .delivery_address_to_edit', app.LasGruppenOrderSchema.editDeliveryAddress);
+        $(document).on('click', '.LasGruppenOrderSchema .invoice_address_to_edit', app.LasGruppenOrderSchema.editInvoiceAddress);
         $(document).on('click', '.LasGruppenOrderSchema .deliveryoverview_button', app.LasGruppenOrderSchema.showDeliverAddresses);
+        $(document).on('click', '.LasGruppenOrderSchema .invoiceaddresses_button', app.LasGruppenOrderSchema.showInvoiceAddresses);
         $(document).on('click', '.LasGruppenOrderSchema .deleteaddress', app.LasGruppenOrderSchema.deleteDelivaryAddress);
+        $(document).on('click', '.LasGruppenOrderSchema .delete_invoice_address', app.LasGruppenOrderSchema.deleteInvoiceAddress);
         $(document).on('click', '.LasGruppenOrderSchema .start_order_by_address', app.LasGruppenOrderSchema.next);
+        $(document).on('click', '.LasGruppenOrderSchema .show_new_address_form', app.LasGruppenOrderSchema.toggleNewAddressForm);
         
         $(document).on('click', '.LasGruppenOrderSchema .savedeliveryaddr', app.LasGruppenOrderSchema.saveDeliveryAddr);
+        $(document).on('click', '.LasGruppenOrderSchema .invoice_address_to_save', app.LasGruppenOrderSchema.saveInvoiceAddr);
         
         $(document).on('change', '#invoice_company_name', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_address', app.LasGruppenOrderSchema.changeDeliveryInformation);
@@ -40,7 +45,84 @@ app.LasGruppenOrderSchema = {
         $(document).on('change', '#invoice_emailaddress', app.LasGruppenOrderSchema.changeDeliveryInformation);
     },
     
+    toggleNewAddressForm: function() {
+        var form = $('.LasGruppenOrderSchema #new_address_form_order');
+        if (form.is(':visible')) {
+            form.slideUp();
+            $('.LasGruppenOrderSchema .show_new_address_form').slideDown();
+        } else {
+            $(this).slideUp();
+            form.slideDown();
+        }
+    },
+    
+    saveInvoiceAddr: function() {
+        var currentPage = $('.LasGruppenOrderSchema #edit_delivery_addr');
+        var validated = app.LasGruppenOrderSchema.validatePage(currentPage);
+        if (!validated) {
+            alert('For å kunne gå videre må du først rette opp i de røde feltene');
+            return;
+        }
+        
+        var data = {
+            vatNumber : $('.LasGruppenOrderSchema #edit_inv_birthday').val(),
+            name : $('.LasGruppenOrderSchema #edit_inv_name').val(),
+            addr1 : $('.LasGruppenOrderSchema #edit_inv_addr1').val(),
+            addr2 : $('.LasGruppenOrderSchema #edit_inv_addr2').val(),
+            postcode : $('.LasGruppenOrderSchema #edit_inv_postcode').val(),
+            city : $('.LasGruppenOrderSchema #edit_inv_city').val(),
+            addrid : $('.LasGruppenOrderSchema #edit_inv_addrid').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "saveInvoiceAddr", currentPage, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.LasGruppenOrderSchema .welcomepagecontent').html(result);
+            $('.LasGruppenOrderSchema .invoiceaddresses_button').click();
+        });
+        
+    },
+    
+    editInvoiceAddress: function() {
+        $('.LasGruppenOrderSchema .invoice_addresses').hide();
+        $('.LasGruppenOrderSchema .invoice_address_edit').show();
+        
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_name').val($(this).find('.inv_name').html());
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addr1').val($(this).find('.inv_addr').html());
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addr2').val($(this).find('.inv_addr2').html());
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_postcode').val($(this).find('.inv_postcode').html());
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_city').val($(this).find('.inv_city').html());
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_birthday').val($(this).find('.inv_birthday').html());
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addrid').val($(this).attr('addrid'));
+        
+        if ($('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addrid').val()) {
+            $('#invoice_address_edit .deleteaddress').show();
+        } else {
+            $('#invoice_address_edit .deleteaddress').hide();
+        }
+    },
+    
+    showInvoiceAddresses: function() {
+        $('.LasGruppenOrderSchema .invoice_addresses').show();
+        $('.LasGruppenOrderSchema .invoice_address_edit').hide();
+    },
+    
     deleteDelivaryAddress: function() {
+        var confirmRet = confirm("Er du sikker på at du ønsker å slette adressen?");
+        if (!confirmRet)
+            return;
+        
+        var data = {
+            addrid : $('.LasGruppenOrderSchema #edit_del_addrid').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "deleteDeliveryAddr", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.LasGruppenOrderSchema .welcomepagecontent').html(result);
+            $('.LasGruppenOrderSchema .deliveryoverview_button').click();
+        });
+    },
+    
+    deleteInvoiceAddress: function() {
         var confirmRet = confirm("Er du sikker på at du ønsker å slette adressen?");
         if (!confirmRet)
             return;

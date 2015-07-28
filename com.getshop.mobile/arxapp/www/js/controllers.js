@@ -10,7 +10,6 @@ arxappControllers.controller('LoginCtrl', function($scope, LoginService, LocalSt
 
   // load credentials from local storage
   $scope.userData = LocalStorage.getObject('userData');
-  console.log($scope.userData);
   if ($scope.userData.credentials === undefined) {
     $scope.userData.credentials = [];
   }
@@ -108,8 +107,19 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
 
 arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(getshop, $scope) {
 
+  $scope.openDoor = function(externalId) {
+    getshop.client.ArxManager.doorAction(externalId, 'forceOpen');
+  }
+
+  $scope.closeDoor = function(externalId) {
+    getshop.client.ArxManager.doorAction(externalId, 'forceClose');
+  }
+
+  $scope.setTimerOnDoor = function(externalId) {
+    getshop.client.ArxManager.doorAction(externalId, 'dont know what to put here');
+  }
+
   $scope.onDoorsFetched = function(result) {
-    console.log(result);
     $scope.doors = result;
     $scope.$apply();
   }

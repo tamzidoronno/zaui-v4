@@ -15,7 +15,7 @@
 namespace ns_7004f275_a10f_4857_8255_843c2c7fb3ab;
 
 class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
-    public static $url = "http://20192.getshop.com";
+    public static $url = "https://certegobeta.getshop.com";
     
     public function getDescription() {
         return "TEST";
@@ -43,10 +43,19 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     }
     
     public function downloadPdf() {
+        $_POST['data']['userLoggedIn'] = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null;
+        if ($_POST['data']['userLoggedIn']) {
+            $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+            $group = $this->getGroup($user);
+            $_POST['data']['groupName'] = $group->groupName;
+            $_POST['data']['fullName'] = $user->fullName;
+            $_POST['data']['groupReference'] = $group->invoiceAddress->customerNumber;
+        }
+                
         $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
         $attachments = $this->getAttachments();
         
-        if ($_POST['data']['page4']['securitytype'] != "signature") {
+        if ($_POST['data']['page4']['securitytype'] != "signature" || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
             $this->sendMail("system@certego.no", $attachments);
         }
         
@@ -191,6 +200,7 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $address->address2 = $_POST['data']['addr2'];
         $address->postCode = $_POST['data']['postcode'];
         $address->city = $_POST['data']['city'];
+        $address->phone = $_POST['data']['phone'];
         $address->id = $_POST['data']['addrid'];
         
         $group = $this->getCurrentGroup();
@@ -207,10 +217,15 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $address->postCode = $_POST['data']['postcode'];
         $address->city = $_POST['data']['city'];
         $address->vatNumber = $_POST['data']['vatNumber'];
+        $address->phone = $_POST['data']['phone'];
         $address->id = $_POST['data']['addrid'];
         
         $group = $this->getCurrentGroup();
         $this->getApi()->getUserManager()->saveExtraAddressToGroup($group, $address);
         $this->includefile("welcome");
+    }
+    
+    public function showAddresses() {
+        $this->includefile("address_select_box");
     }
 }

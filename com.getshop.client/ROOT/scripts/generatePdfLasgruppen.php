@@ -6,6 +6,19 @@ if (isset($_GET['id'])) {
 session_start();
 $data = json_decode($_SESSION['lasgruppen_pdf_data'], true);
 $data = $data['data'];
+
+$userLoggedIn = $data['userLoggedIn'];
+
+
+if ($userLoggedIn) {
+    $data['page1']['contact']['systemnumber'] = "";
+    $data['page1']['contact']['name'] = "";
+    $data['page1']['contact']['email'] = "";
+    $data['page1']['contact']['cellphone'] = "";
+    $data['page1']['invoice']['customerNumber'] = "";
+    $data['page1']['invoice']['customerNumber'] = "";
+    $data['page1']['invoice']['reference'] = ""; 
+}
 ?>
 
 <head>
@@ -50,9 +63,10 @@ $data = $data['data'];
             position: absolute;
             right: 80px;
             top: 40px;
-            width: 250px;
+            width: 450px;
             font-size: 50px;
             font-weight: bold;
+            text-align: right;
         }
         
         .row {
@@ -103,20 +117,49 @@ $data = $data['data'];
 </head>
 <div class="page">
     <div class="logo"></div>
-    <div class="header_text1">Bestilling</div>
+    <div class="header_text1">
+        <?
+        if ($userLoggedIn) {
+            echo "Innlogget bestilling";
+        } else {
+            echo "Bestilling";
+        }
+        ?>
+    </div>
     
+    
+    <?
+    if ($userLoggedIn) {
+    ?>
+        <div class="row row_1">
+            <div class="col">
+                <b>Informasjon om bestiller</b>
+                <div style="padding-left: 20px; ">
+                    <?
+                    echo $data['groupName'];
+                    echo "<br/>".$data['fullName'];
+                    echo "<br/>".$data['groupReference'];
+                    ?>
+                </div>
+            </div>
+        </div>
+    <?
+    }
+    ?>
     <div class="row row_1">
         <div class="col">
             <b>Fakturainformasjon</b>
             <div style="padding-left: 20px; padding-top: 10px;">
                 <? echo $data['page1']['invoice']['vatnumber']; ?>
-                <br/> <? echo $data['page1']['invoice']['companyName']; ?>
-                <br/> <? echo $data['page1']['invoice']['address']; ?>
-                <br/> <? echo $data['page1']['invoice']['postnumer']; ?>
-                <br/> <? echo $data['page1']['invoice']['customerNumber']; ?>
-                <br/> <? echo $data['page1']['invoice']['reference']; ?>
-                <br/> <? echo $data['page1']['invoice']['email']; ?>
-                <br/> <? echo $data['page1']['invoice']['cellphone']; ?>
+                <? echo $data['page1']['invoice']['companyName'] ? "<br/>".$data['page1']['invoice']['companyName'] : ""; ?>
+                <? echo $data['page1']['invoice']['address'] ? "<br/>".$data['page1']['invoice']['address'] : ""; ?>
+                <? echo $data['page1']['invoice']['address2'] ? "<br/>".$data['page1']['invoice']['address2'] : ""; ?>
+                <? echo $data['page1']['invoice']['postnumer'] ? "<br/>".$data['page1']['invoice']['postnumer'] : ""; ?>
+                <? echo $data['page1']['invoice']['customerNumber'] ? "<br/>".$data['page1']['invoice']['customerNumber'] : ""; ?>
+                <? echo $data['page1']['invoice']['city'] ? " ".$data['page1']['invoice']['city'] : ""; ?>
+                <? echo $data['page1']['invoice']['reference'] ? "<br/> Referanse: ".$data['page1']['invoice']['reference'] : "" ; ?>
+                <? echo $data['page1']['invoice']['email'] ? "<br/>Epost: ".$data['page1']['invoice']['email'] : ""; ?>
+                <? echo $data['page1']['invoice']['cellphone'] ? "<br/>Telefon: ".$data['page1']['invoice']['cellphone'] : ""; ?>
             </div>
         </div>
         <div class="col">
@@ -128,13 +171,17 @@ $data = $data['data'];
                     echo "<br>Hentes av: ".$data['page3']['storeDeliveryInformation']['name'];
                     echo "<br>Molbilnr: ".$data['page3']['storeDeliveryInformation']['cellphone'];
                 } else {
-                    echo $data['page3']['deliveryInfo']['name'];
-                    echo "<br>".$data['page3']['deliveryInfo']['address'];
-                    echo "<br>".$data['page3']['deliveryInfo']['postnumber'];
-                    echo "<br>".$data['page3']['deliveryInfo']['emailaddress'];
-                    echo "<br>".$data['page3']['deliveryInfo']['cellphone'];
-                    echo "<br>".$data['page3']['shipping'];
+                    echo $data['page3']['deliveryInfo']['name'] ? $data['page3']['deliveryInfo']['name'] : "";
+                    echo $data['page3']['deliveryInfo']['address'] ? "<br>".$data['page3']['deliveryInfo']['address'] : "";
+                    echo $data['page3']['deliveryInfo']['address2'] ? "<br>".$data['page3']['deliveryInfo']['address2'] : "";
+                    echo $data['page3']['deliveryInfo']['postnumber'] ? "<br>".$data['page3']['deliveryInfo']['postnumber'] : "";
+                    echo $data['page3']['deliveryInfo']['city'] ? " ".$data['page3']['deliveryInfo']['city'] : "";
+                    echo $data['page3']['deliveryInfo']['emailaddress'] ? "<br>Epost: ".$data['page3']['deliveryInfo']['emailaddress'] : "";
+                    echo $data['page3']['deliveryInfo']['cellphone'] ? "<br> Telefon: ".$data['page3']['deliveryInfo']['cellphone'] : "";
+                    echo $data['page3']['shipping'] ? "<br>Leveringsmåte: ".$data['page3']['shipping'] : "";
                 }
+                
+                echo "<br/><br/><b>Dato: </b>". date('d/m-Y H:i');
                 ?>
             </div>
         </div>
@@ -142,23 +189,35 @@ $data = $data['data'];
     
     <div class="row row_2">
         <div class="col">
-            <b>Informasjon om rekvirent</b>
-            <div style="padding-left: 20px; padding-top: 10px;">
-                <?
-                echo strtoupper($data['page1']['contact']['systemnumber']);
-                echo "<br>".$data['page1']['contact']['name'];
-                echo "<br>".$data['page1']['contact']['email'];
-                echo "<br>".$data['page1']['contact']['cellphone'];
-                ?>
-            </div>
+            <?
+            if (!$userLoggedIn) {
+            ?>
+                <b>Informasjon om rekvirent</b>
+                <div style="padding-left: 20px; padding-top: 10px;">
+                    <?
+                    echo $data['page1']['contact']['systemnumber'] ? "System: ".strtoupper($data['page1']['contact']['systemnumber']) : "";
+                    echo $data['page1']['contact']['name'] ? "<br> Navn: ".$data['page1']['contact']['name'] : "";
+                    echo $data['page1']['contact']['email'] ? "<br> E-Post: ".$data['page1']['contact']['email'] : "";
+                    echo $data['page1']['contact']['cellphone'] ? "<br> Telefon: ".$data['page1']['contact']['cellphone'] : "";
+                    ?>
+                </div>
+            <?
+            }
+            ?>
             
        </div>
+        <?
+        if ($data['page3']['extrainformation']) {
+        ?>
         <div class="col">
             <b>Ekstra informasjon om levering</b>
             <div style="padding-left: 20px; padding-top: 10px;">
                 <? echo nl2br($data['page3']['extrainformation']); ?>
             </div>
         </div>
+        <?
+        }
+        ?>
     </div>
     
     <div class="row row_3">
@@ -169,25 +228,31 @@ $data = $data['data'];
             </div>
         </div>
         <div class="col">
+            <? 
+            if (!$userLoggedIn) {
+            ?>
             <b>Bestillingsmetode</b>
             <div style="padding-left: 20px; padding-top: 10px;">
                 <?
                 if (isset($data['page4']['securitytype']) && $data['page4']['securitytype'] == "signature") {
                     echo "Signatur";
-                    
+
                     echo "<div style='height: 60px; border-bottom: solid 1px #00aad0;'></div>";
                     echo "<center><span style='color: #888; font-size: 15px;'>Signatur av bemyndiget person</span></center>";
                 }
-                
+
                 if (isset($data['page4']['securitytype']) && $data['page4']['securitytype'] == "pincode") {
                     echo "Pinkode: ".$data['page4']['pincode'];
                 }
-                
+
                 if (!isset($data['page4']['securitytype'])) {
                     echo "Uten sikkerhet (kun sylinderer)";
                 }
                 ?>
             </div>
+            <?
+            }
+            ?>
         </div>
     </div>
     

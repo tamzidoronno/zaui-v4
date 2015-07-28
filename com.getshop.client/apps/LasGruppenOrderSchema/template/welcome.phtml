@@ -42,6 +42,7 @@ $defaultDelAddress1 = "";
 $defaultDelAddress2 = "";
 $defaultDelPostNumber = "";
 $defaultDelCity = "";
+$defaultDelCell = "";
 
 if ($defaultDeliveryAddress) {
     $defaultDelName = 'disabled="true" value="'.$defaultDeliveryAddress->fullName.'"';
@@ -49,6 +50,7 @@ if ($defaultDeliveryAddress) {
     $defaultDelAddress2 = 'disabled="true" value="'.$defaultDeliveryAddress->address2.'"';
     $defaultDelPostNumber = 'disabled="true" value="'.$defaultDeliveryAddress->postCode.'"';
     $defaultDelCity = 'disabled="true" value="'.$defaultDeliveryAddress->city.'"';
+    $defaultDelCell = 'disabled="true" value="'.$defaultDeliveryAddress->phone.'"';
 }
 
 if ($invoiceAddress) {
@@ -99,8 +101,8 @@ if (!$user->prevLoggedIn) {
     
     <div class='col col_2' style="border: solid 1px #DDD; margin-top: 20px; ">
         <div class="sub_entry_content">
-            <center><h2>Velkommen kjære kunde.</h2></center>
-            <br/>Vi har gjort livet ditt litt enklere ved å forbedre bestillingsprossen, samtidig som vi ivaretar din sikkerhet.
+            <center><h2>Velkommen til Certego systembestilling</h2></center>
+            <br/>Vi har gjort livet ditt litt enklere ved å forbedre bestillingsprosessen, samtidig som vi ivaretar din sikkerhet.
         </div>
         
         <div class="invoiceinformation sub_entry_content" content="invoiceinfo">
@@ -123,6 +125,7 @@ if (!$user->prevLoggedIn) {
                 <tr><td>Adresse 2</td><td><input type='text' <? echo $defaultDelAddress2; ?>/></td></tr>
                 <tr><td>Postnr*</td><td><input required='true' type='text' <? echo $defaultDelPostNumber; ?>/></td></tr>
                 <tr><td>Sted*</td><td><input required='true' type='text' <? echo $defaultDelCity; ?> /></td></tr>
+                <tr><td>Mobilnummer</td><td><input required='true' type='text' <? echo $defaultDelCell; ?> /></td></tr>
             </table>
         </div>
         
@@ -145,30 +148,33 @@ if (!$user->prevLoggedIn) {
             <div id='new_address_form_order' style='display: none; margin-top: 20px; margin-bottom: 20px; border: solid 1px #DDD; padding: 20px; margin-top: 0px;'>
                 <div  class="new_invoice_address_direct">
                     <table>
-                        <tr><td>Org. Nr / Fødselsdato*</td><td><input id="edit_inv_birthday" required='true' type='text' /></td></tr>
-                        <tr><td>Navn / Firma*</td><td><input id="edit_inv_name" required='true' type='text' /></td></tr>
-                        <tr><td>Adresse*</td><td><input id="edit_inv_addr1" required='true' type='text' /></td></tr>
-                        <tr><td>Adresse 2</td><td><input id="edit_inv_addr2" type='text' /></td></tr>
-                        <tr><td>Postnr*</td><td><input id="edit_inv_postcode" required='true' type='text' /></td></tr>
-                        <tr><td>Sted*</td><td><input id="edit_inv_city" required='true' type='text' /></td></tr>
+                        <tr><td>Org. Nr / Fødselsdato*</td><td><input id="companyid" required='true' type='text' /></td></tr>
+                        <tr><td>Navn / Firma*</td><td><input id="invoice_company_name" required='true' type='text' /></td></tr>
+                        <tr><td>Adresse*</td><td><input id="invoice_address" required='true' type='text' /></td></tr>
+                        <tr><td>Adresse 2</td><td><input id="invoice_address2" type='text' /></td></tr>
+                        <tr><td>Postnr*</td><td><input id="invoice_postcode" required='true' type='text' /></td></tr>
+                        <tr><td>Sted*</td><td><input id="invoice_city" required='true' type='text' /></td></tr>
+                        <tr><td>Mobiltelefon*</td><td><input id="invoice_cellphone" required='true' type='text' /></td></tr>
+                        <tr><td>Epost</td><td><input id="invoice_emailaddress" type='text' /></td></tr>
                     </table>
 
                     <div class='button_area'>
                         <div class='shop_button show_new_address_form'>Avbryt</div>
-                        <div class='shop_button '>Neste</div>
+                        <div class='shop_button goto_next_page'>Neste</div>
                     </div>
                 </div>
             </div>
             
             <div class='address_to_edit start_order_by_address'>
-                <div class="del_vatnumber"><? echo $invoiceAddress->vatNumber; ?></div>
-                <div class="del_name"><? echo $invoiceAddress->fullName; ?></div>
-                <div class="del_addr"><? echo $invoiceAddress->address; ?></div>
-                <? if (isset($invoiceAddress->address)) { ?>
-                    <div class="del_addr2"><? echo $invoiceAddress->address; ?></div>
+                <div class="inv_birthday"><? echo $invoiceAddress->vatNumber; ?></div>
+                <div class="inv_name"><? echo $invoiceAddress->fullName; ?></div>
+                <div class="inv_addr"><? echo $invoiceAddress->address; ?></div>
+                <? if (isset($invoiceAddress->address2)) { ?>
+                    <div class="inv_addr2"><? echo $invoiceAddress->address2; ?></div>
                 <? } ?>
-                <div class="del_postcode"><? echo $invoiceAddress->postCode; ?></div>
-                <div class="del_city"><? echo $invoiceAddress->city; ?></div>
+                <div class="inv_postcode"><? echo $invoiceAddress->postCode; ?></div>
+                <div class="inv_city"><? echo $invoiceAddress->city; ?></div>
+                <div class="inv_phone"><? echo $invoiceAddress->phone; ?></div>
                 <i class="fa fa-arrow-right"></i>
             </div>
             
@@ -219,6 +225,7 @@ if (!$user->prevLoggedIn) {
                             <? } ?>
                             <div class="del_postcode"><? echo $addr->postCode; ?></div>
                             <div class="del_city"><? echo $addr->city; ?></div>
+                            <div class="del_phone"><? echo $addr->phone; ?></div>
                             <i class="fa fa-arrow-right"></i>
                         </div>
                         <?
@@ -226,7 +233,7 @@ if (!$user->prevLoggedIn) {
                     ?>
             
                     <div class='button_area'>
-                        <div class='shop_button address_to_edit'>Legg til ny addresse</div>
+                        <div class='shop_button address_to_edit delivery_address_to_edit'>Legg til ny addresse</div>
                     </div>
                 </div>
             <?
@@ -240,6 +247,7 @@ if (!$user->prevLoggedIn) {
                     <tr><td>Adresse 2</td><td><input id="edit_del_addr2" type='text' /></td></tr>
                     <tr><td>Postnr*</td><td><input id="edit_del_postcode" required='true' type='text' /></td></tr>
                     <tr><td>Sted*</td><td><input id="edit_del_city" required='true' type='text' /></td></tr>
+                    <tr><td>Mobilnummer*</td><td><input id="edit_del_phone" required='true' type='text' /></td></tr>
                 </table>
 
                 <div class='button_area'>
@@ -265,7 +273,7 @@ if (!$user->prevLoggedIn) {
                     foreach ($extraInvoicesAddresses as $addr) {
                         ?>
                         <div class="address_to_edit invoice_address_to_edit" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
-                            <div class="inv_birthday"><? echo $addr->vatNumber; ?></div>
+                            <div class="inv_birthday"><? echo isset($addr->vatNumber) ? $addr->vatNumber : ""; ?></div>
                             <div class="inv_name"><? echo $addr->fullName; ?></div>
                             <div class="inv_addr"><? echo $addr->address; ?></div>
                             <? if (isset($addr->address2)) { ?>
@@ -273,6 +281,7 @@ if (!$user->prevLoggedIn) {
                             <? } ?>
                             <div class="inv_postcode"><? echo $addr->postCode; ?></div>
                             <div class="inv_city"><? echo $addr->city; ?></div>
+                            <div class="inv_phone"><? echo $addr->phone; ?></div>
                             <i class="fa fa-arrow-right"></i>
                         </div>
                         <?
@@ -293,6 +302,7 @@ if (!$user->prevLoggedIn) {
                     <tr><td>Adresse 2</td><td><input id="edit_inv_addr2" type='text' /></td></tr>
                     <tr><td>Postnr*</td><td><input id="edit_inv_postcode" required='true' type='text' /></td></tr>
                     <tr><td>Sted*</td><td><input id="edit_inv_city" required='true' type='text' /></td></tr>
+                    <tr><td>Mobiltelefon*</td><td><input id="edit_inv_phone" required='true' type='text' /></td></tr>
                 </table>
                 
                 <div class='button_area'>

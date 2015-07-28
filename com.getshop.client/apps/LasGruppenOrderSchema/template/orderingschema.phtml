@@ -132,18 +132,27 @@
     </div>
     <div class='shippinginformation' style="border-top: solid 1px #DDD;">
             <div class='col col1 deliveryinformationdiv'>
+            <?
+            if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
+                echo "<div class='selectbox_del_addresses'>";
+                $this->includefile('address_select_box');
+                echo "</div>";
+            } else {
+            ?>
             <input type='checkbox' id='samedeliveryasinvoice'/> Leveringsaddresse lik fakturaaddresse
-
+            <? } ?>
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>Leveringsaddresse</b></td></tr>
                 <tr><td class='td_col_1'>Navn / Firma*</td><td><input required='true' type='text' id="delivery_company_name"/></td></tr>
                 <tr><td>Adresse*</td><td><input type='text' required='true' id="delivery_address"/></td></tr>
+                <tr><td>Adresse2</td><td><input type='text' id="delivery_address2"/></td></tr>
             </table>
         </div>
 
         <div class='col col2 deliveryinformationdiv'>
             <table>
-                <tr><td>Postnr / Sted*</td><td><input type='text' required='true' id="delivery_postcode"/></td></tr>
+                <tr><td>Postnr*</td><td><input type='text' required='true' id="delivery_postcode"/></td></tr>
+                <tr><td>Sted*</td><td><input type='text' required='true' id="delivery_city"/></td></tr>
                 <tr><td>Mobiltelefon*</td><td><input type='text' required='true' type_number="true" id="delivery_cellphone"/></td></tr>
                 <tr><td>E-post adresse</td><td><input type='text' id="delivery_emailaddress" type_email='true'/></td></tr>
             </table>
@@ -163,7 +172,7 @@
 <!---- PAGE 5 ---->
 <div class='orderpage order_page4'  pageNumer='4'>    
     <div class="certego_pagetitle">
-        Sikkerhetsprosedyre
+        <span>Sikkerhetsprosedyre</span>
         <div class='stepof'>Steg 4 / 4</div>
     </div>
     

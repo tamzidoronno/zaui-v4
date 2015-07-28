@@ -6,7 +6,7 @@ $systems = $this->getSystems($group);
 
 $printSystems = "<input type='textfield' class='systemnumber systemnumber_uppercase'> ";
 if ($systems && count($systems)) {
-    $printSystems = "<select>";
+    $printSystems = "<select class='systemnumber systemnumber_uppercase'>";
     foreach ($systems as $system) {
         $printSystems .= "<option>$system->number</option>";
     }

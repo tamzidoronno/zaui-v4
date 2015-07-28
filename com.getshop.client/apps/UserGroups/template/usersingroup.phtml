@@ -2,8 +2,6 @@
 /* @var $this ns_3983a370_d0cc_46de_ba94_cc22fe7becbb\UserGroups */
 $users = $this->getApi()->getUserManager()->getUsersBasedOnGroupId($_POST['value']);
 
-
-    
 if (!count($users)) {
     echo "<div style='padding: 20px;'><i class='fa fa-warning'></i> No users has been added to this group</div>";
 } else {

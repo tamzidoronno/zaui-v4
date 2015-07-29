@@ -51,6 +51,7 @@ class UserGroups extends \ApplicationBase implements \Application {
         $group->defaultDeliveryAddress->postCode = $_POST['deliveryPostNumber'];
         $group->defaultDeliveryAddress->city = $_POST['deliveryPostPlace'];
         $group->defaultDeliveryAddress->phone = $_POST['deliveryCellphone'];
+        $group->defaultDeliveryAddress->emailAddress = $_POST['deliveryEmail'];
         
         $group->invoiceAddress->fullName = $_POST['invoiceName'];
         $group->invoiceAddress->address = $_POST['invoiceAddress1'];

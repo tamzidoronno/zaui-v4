@@ -43,6 +43,7 @@ $defaultDelAddress2 = "";
 $defaultDelPostNumber = "";
 $defaultDelCity = "";
 $defaultDelCell = "";
+$defaultDelEmail = "";
 
 if ($defaultDeliveryAddress) {
     $defaultDelName = 'disabled="true" value="'.$defaultDeliveryAddress->fullName.'"';
@@ -51,6 +52,7 @@ if ($defaultDeliveryAddress) {
     $defaultDelPostNumber = 'disabled="true" value="'.$defaultDeliveryAddress->postCode.'"';
     $defaultDelCity = 'disabled="true" value="'.$defaultDeliveryAddress->city.'"';
     $defaultDelCell = 'disabled="true" value="'.$defaultDeliveryAddress->phone.'"';
+    $defaultDelEmail = 'disabled="true" value="'.$defaultDeliveryAddress->emailAddress.'"';
 }
 
 if ($invoiceAddress) {
@@ -70,6 +72,10 @@ if (!$user->prevLoggedIn) {
     $lastLoggedIn = $user->prevLoggedIn;
 }
 ?>
+
+<div id='hidden_button_to_next_page' style='display: none' class="shop_button goto_next_page">
+    Next
+</div>
 
 
 <div class="certego_pagetitle">Velkommen
@@ -108,7 +114,7 @@ if (!$user->prevLoggedIn) {
         <div class="invoiceinformation sub_entry_content" content="invoiceinfo">
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>Fakturainformasjon</b></td></tr>
-                <tr><td class='td_col_1'>Org. Nr / Fødselsdato*</td><td><input required='true' type='text' type_number='true' <? echo $invoiceVat; ?> /></td></tr>
+                <tr><td class='td_col_1'>Org. Nr / Fødselsdato*</td><td><input type='text' type_number='true' <? echo $invoiceVat; ?> /></td></tr>
                 <tr><td>Navn / Firma*</td><td><input required='true' type='text' <? echo $invoiceName; ?> /></td></tr>
                 <tr><td>Adresse*</td><td><input required='true' type='text' <? echo $invoiceAddress1; ?>/></td></tr>
                 <tr><td>Adresse 2</td><td><input type='text' <? echo $invoiceAddress2; ?>/></td></tr>
@@ -126,6 +132,7 @@ if (!$user->prevLoggedIn) {
                 <tr><td>Postnr*</td><td><input required='true' type='text' <? echo $defaultDelPostNumber; ?>/></td></tr>
                 <tr><td>Sted*</td><td><input required='true' type='text' <? echo $defaultDelCity; ?> /></td></tr>
                 <tr><td>Mobilnummer</td><td><input required='true' type='text' <? echo $defaultDelCell; ?> /></td></tr>
+                <tr><td>Epost</td><td><input required='true' type='text' <? echo $defaultDelEmail; ?> /></td></tr>
             </table>
         </div>
         
@@ -148,19 +155,19 @@ if (!$user->prevLoggedIn) {
             <div id='new_address_form_order' style='display: none; margin-top: 20px; margin-bottom: 20px; border: solid 1px #DDD; padding: 20px; margin-top: 0px;'>
                 <div  class="new_invoice_address_direct">
                     <table>
-                        <tr><td>Org. Nr / Fødselsdato*</td><td><input id="companyid" required='true' type='text' /></td></tr>
+                        <tr><td>Org. Nr / Fødselsdato</td><td><input id="companyid" type='text' /></td></tr>
                         <tr><td>Navn / Firma*</td><td><input id="invoice_company_name" required='true' type='text' /></td></tr>
                         <tr><td>Adresse*</td><td><input id="invoice_address" required='true' type='text' /></td></tr>
                         <tr><td>Adresse 2</td><td><input id="invoice_address2" type='text' /></td></tr>
                         <tr><td>Postnr*</td><td><input id="invoice_postcode" required='true' type='text' /></td></tr>
                         <tr><td>Sted*</td><td><input id="invoice_city" required='true' type='text' /></td></tr>
-                        <tr><td>Mobiltelefon*</td><td><input id="invoice_cellphone" required='true' type='text' /></td></tr>
+                        <tr><td>Mobiltelefon</td><td><input id="invoice_cellphone" type='text' /></td></tr>
                         <tr><td>Epost</td><td><input id="invoice_emailaddress" type='text' /></td></tr>
                     </table>
 
                     <div class='button_area'>
                         <div class='shop_button show_new_address_form'>Avbryt</div>
-                        <div class='shop_button goto_next_page'>Neste</div>
+                        <div class='shop_button goto_next_page_new_address'>Neste</div>
                     </div>
                 </div>
             </div>
@@ -226,6 +233,7 @@ if (!$user->prevLoggedIn) {
                             <div class="del_postcode"><? echo $addr->postCode; ?></div>
                             <div class="del_city"><? echo $addr->city; ?></div>
                             <div class="del_phone"><? echo $addr->phone; ?></div>
+                            <div class="del_email"><? echo isset($addr->emailAddress) && $addr->emailAddress ? $addr->emailAddress : ""; ?></div>
                             <i class="fa fa-arrow-right"></i>
                         </div>
                         <?
@@ -248,6 +256,7 @@ if (!$user->prevLoggedIn) {
                     <tr><td>Postnr*</td><td><input id="edit_del_postcode" required='true' type='text' /></td></tr>
                     <tr><td>Sted*</td><td><input id="edit_del_city" required='true' type='text' /></td></tr>
                     <tr><td>Mobilnummer*</td><td><input id="edit_del_phone" required='true' type='text' /></td></tr>
+                    <tr><td>Epost</td><td><input id="edit_del_email" type='text' /></td></tr>
                 </table>
 
                 <div class='button_area'>
@@ -296,13 +305,13 @@ if (!$user->prevLoggedIn) {
             <div style='display: none;' class="invoice_address_edit">
                 <input type="hidden" value="" id="edit_inv_addrid"/>
                 <table>
-                    <tr><td>Org. Nr / Fødselsdato*</td><td><input id="edit_inv_birthday" required='true' type='text' /></td></tr>
+                    <tr><td>Org. Nr / Fødselsdato</td><td><input id="edit_inv_birthday" required='true' type='text' /></td></tr>
                     <tr><td>Navn / Firma*</td><td><input id="edit_inv_name" required='true' type='text' /></td></tr>
                     <tr><td>Adresse*</td><td><input id="edit_inv_addr1" required='true' type='text' /></td></tr>
                     <tr><td>Adresse 2</td><td><input id="edit_inv_addr2" type='text' /></td></tr>
                     <tr><td>Postnr*</td><td><input id="edit_inv_postcode" required='true' type='text' /></td></tr>
                     <tr><td>Sted*</td><td><input id="edit_inv_city" required='true' type='text' /></td></tr>
-                    <tr><td>Mobiltelefon*</td><td><input id="edit_inv_phone" required='true' type='text' /></td></tr>
+                    <tr><td>Mobiltelefon</td><td><input id="edit_inv_phone" type='text' /></td></tr>
                 </table>
                 
                 <div class='button_area'>

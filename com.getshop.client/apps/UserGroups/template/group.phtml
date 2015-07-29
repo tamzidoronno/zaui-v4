@@ -132,6 +132,11 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
             <input type="textfield" gs_model='groupmodel' gs_model_attr='deliveryCellphone' value="<? echo $group->defaultDeliveryAddress->phone; ?>" placeholder="">
             <div class="description"></div>
         </div>
+        <div class="textfield gss_setting"  id="deliveryCellphone">
+            <span class="title"><?php echo $this->__f("Email"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='deliveryEmail' value="<? echo $group->defaultDeliveryAddress->emailAddress; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
     </div>
     
     <div class='gss_button_area'>

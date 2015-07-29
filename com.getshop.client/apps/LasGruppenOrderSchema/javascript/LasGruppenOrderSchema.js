@@ -472,7 +472,7 @@ app.LasGruppenOrderSchema = {
             }
             var event = thundashop.Ajax.createEvent(null, "getBrReg", this, data);
             thundashop.Ajax.postWithCallBack(event, function(res) {
-                if (res) {
+                if (res && res != "null") {
                     var company = JSON.parse(res);
                     
                     if (!$('#invoice_company_name').val())

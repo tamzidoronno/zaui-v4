@@ -15,8 +15,8 @@
 namespace ns_7004f275_a10f_4857_8255_843c2c7fb3ab;
 
 class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
-    public static $url = "http://20192.3.0.local.getshop.com";
-//    public static $url = "https://certegobeta.getshop.com";
+//    public static $url = "http://20192.3.0.local.getshop.com";
+    public static $url = "https://certegobeta.getshop.com";
     
     public function getDescription() {
         return "TEST";
@@ -83,7 +83,7 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
             $_POST['data']['hidePinCode'] = false;
             $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
             $attachments = $this->getAttachments();
-//            $this->sendMail("system@certego.no", $attachments);
+            $this->sendMail("system@certego.no", $attachments);
         }
         
         if (isset($_POST['data']['page4']['emailCopy']) && $_POST['data']['page4']['emailCopy']) {

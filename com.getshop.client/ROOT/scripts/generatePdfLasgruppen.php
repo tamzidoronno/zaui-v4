@@ -242,7 +242,13 @@ if ($userLoggedIn) {
                 }
 
                 if (isset($data['page4']['securitytype']) && $data['page4']['securitytype'] == "pincode") {
-                    echo "Pinkode: ".$hidePinCode ? "******" : $data['page4']['pincode'];
+                    echo "Pinkode: ";
+                    
+                    if ($hidePinCode) {
+                        echo "******";
+                    } else {
+                        echo $data['page4']['pincode'];
+                    }
                 }
 
                 if (!isset($data['page4']['securitytype'])) {

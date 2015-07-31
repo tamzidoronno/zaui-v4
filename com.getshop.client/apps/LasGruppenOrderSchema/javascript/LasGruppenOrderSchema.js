@@ -695,7 +695,7 @@ app.LasGruppenOrderSchema = {
     },
     
     setupShippinhOptions: function(button, doneFunction) {
-        
+        $(button).html('<i class="fa fa-spinner fa-spin"></i> Behandler...');
         var event = thundashop.Ajax.createEvent(null, "isCompany", button, { vatnumber: $('#companyid').val() });
         thundashop.Ajax.postWithCallBack(event, function(result) {
             

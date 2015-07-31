@@ -125,6 +125,8 @@ app.LasGruppenOrderSchema = {
     },
     
     populateInvoiceFields: function() {
+        var result = prompt('Ønsker du å oppgi en fakturareferanse? (la stå blank hvis ikke)');
+        
         $('.LasGruppenOrderSchema #companyid').val($(this).find('.inv_birthday').html());
         $('.LasGruppenOrderSchema #invoice_company_name').val($(this).find('.inv_name').html());
         $('.LasGruppenOrderSchema #invoice_address').val($(this).find('.inv_addr').html());
@@ -132,6 +134,7 @@ app.LasGruppenOrderSchema = {
         $('.LasGruppenOrderSchema #invoice_postcode').val($(this).find('.inv_postcode').html());
         $('.LasGruppenOrderSchema #invoice_city').val($(this).find('.inv_city').html());
         $('.LasGruppenOrderSchema #invoice_cellphone').val($(this).find('.inv_phone').html());
+        $('.LasGruppenOrderSchema #invoice_reference').val(result);
         app.LasGruppenOrderSchema.saveAddress = false;
         app.LasGruppenOrderSchema.nextScoped();
     },
@@ -397,6 +400,7 @@ app.LasGruppenOrderSchema = {
                     reference: $('#invoice_reference').val(),
                     cellphone: $('#invoice_cellphone').val(),
                     email: $('#invoice_emailaddress').val(),
+                    invoiceReference: $('#invoice_reference').val(),
                     customerNumber: $('#invoice_cusomer_number').val()
                 }
             },

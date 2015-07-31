@@ -18,7 +18,6 @@ if ($userLoggedIn) {
     $data['page1']['contact']['cellphone'] = "";
     $data['page1']['invoice']['customerNumber'] = "";
     $data['page1']['invoice']['customerNumber'] = "";
-    $data['page1']['invoice']['reference'] = ""; 
 }
 ?>
 

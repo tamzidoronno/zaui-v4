@@ -148,10 +148,10 @@ if (!$user->prevLoggedIn) {
         </div>
         
         <div class="neworder sub_entry_content" content="neworder">
-            <center>Velg fakturadresse du ønsker å gjøre en bestilling på.</center>
+            <center>Velg fakturaadresse du ønsker å gjøre en bestilling på.</center>
             <br/>
             
-            <div class='shop_button show_new_address_form' style='margin-bottom: 20px;'>Ny adresse</div>
+            <div class='shop_button show_new_address_form' style='margin-bottom: 20px;'>Ny fakturaadresse</div>
             <div id='new_address_form_order' style='display: none; margin-top: 20px; margin-bottom: 20px; border: solid 1px #DDD; padding: 20px; margin-top: 0px;'>
                 <div  class="new_invoice_address_direct">
                     <table>
@@ -163,6 +163,7 @@ if (!$user->prevLoggedIn) {
                         <tr><td>Sted*</td><td><input id="invoice_city" required='true' type='text' /></td></tr>
                         <tr><td>Mobiltelefon</td><td><input id="invoice_cellphone" type='text' /></td></tr>
                         <tr><td>Epost</td><td><input id="invoice_emailaddress" type='text' /></td></tr>
+                        <tr><td>Fakturareferanse</td><td><input id="invoice_reference" type='text' /></td></tr>
                     </table>
 
                     <div class='button_area'>
@@ -214,7 +215,7 @@ if (!$user->prevLoggedIn) {
                 <br/>
                 <br/>
                     <div class='button_area'>
-                        <div class='shop_button delivery_address_to_edit'>Legg til ny addresse</div>
+                        <div class='shop_button delivery_address_to_edit'>Legg til ny adresse</div>
                     </div>        
                 <?
             } else {
@@ -241,7 +242,7 @@ if (!$user->prevLoggedIn) {
                     ?>
             
                     <div class='button_area'>
-                        <div class='shop_button address_to_edit delivery_address_to_edit'>Legg til ny addresse</div>
+                        <div class='shop_button address_to_edit delivery_address_to_edit'>Legg til ny adresse</div>
                     </div>
                 </div>
             <?
@@ -299,7 +300,7 @@ if (!$user->prevLoggedIn) {
                 ?>
                 
                 <div class='button_area'>
-                    <div class='shop_button invoice_address_to_edit'>Legg til ny addresse</div>
+                    <div class='shop_button invoice_address_to_edit'>Legg til ny adresse</div>
                 </div>
             </div>
             <div style='display: none;' class="invoice_address_edit">

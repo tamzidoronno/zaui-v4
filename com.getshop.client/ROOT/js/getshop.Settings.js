@@ -229,9 +229,11 @@ getshop.Settings = {
         }
         
         
-        getshop.Settings.loadingTimer = setTimeout(function() {
-            $('#gss_loading_icon').show();
-        }, 300);
+        if (!getshop.Settings.loadingTimer) {
+            getshop.Settings.loadingTimer = setTimeout(function() {
+                $('#gss_loading_icon').show();
+            }, 300);
+        } 
         
         $.ajax({
             type: "POST",
@@ -241,12 +243,14 @@ getshop.Settings = {
             context: document.body,
             success: function (response) {
                 clearTimeout(getshop.Settings.loadingTimer);
+                getshop.Settings.loadingTimer = null;
                 $('#gss_loading_icon').hide();
                 success(response, field, data);
             },
             error: function (failure) {
                 $('.gss_settings_inner.apparea').html(failure.responseText);
                 clearTimeout(getshop.Settings.loadingTimer);
+                getshop.Settings.loadingTimer = null;
                 $('#gss_loading_icon').hide();
             }
         });

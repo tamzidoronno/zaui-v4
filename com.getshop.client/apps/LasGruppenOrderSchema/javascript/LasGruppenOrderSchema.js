@@ -334,7 +334,7 @@ app.LasGruppenOrderSchema = {
         } 
    },
 
-   saveData: function(target, callback, silent) {
+   saveData: function(target, callback, silent, dontShowLoader) {
         if (app.LasGruppenOrderSchema.inProgress) {
             return;
         }
@@ -456,7 +456,7 @@ app.LasGruppenOrderSchema = {
             if (callback) {
                 callback();
             }
-        });
+        }, dontShowLoader);
     },
     
     validateEmail: function(email) {
@@ -612,7 +612,17 @@ app.LasGruppenOrderSchema = {
                 alert('Du må minst velge nøkler, sylindrer eller begge');
                 return;
             }
-            app.LasGruppenOrderSchema.setupShippinhOptions(this);
+            
+            var me = this;
+            
+            var doneFunction = function() {
+                app.LasGruppenOrderSchema.goToNextPage(pageNumber, me);
+            }
+            
+            app.LasGruppenOrderSchema.setupShippinhOptions(this, doneFunction);
+            
+            
+            return;
         }
         
         if (pageNumber === 4) {
@@ -633,7 +643,14 @@ app.LasGruppenOrderSchema = {
                     return;
                 }
                 
-                app.LasGruppenOrderSchema.saveData(this);
+                $(this).html('<i class="fa fa-spinner fa-spin"></i> Behandler bestilling...');
+                var me = this;
+                var doneFunc = function() {
+                    app.LasGruppenOrderSchema.goToNextPage(pageNumber, me);
+                }
+                
+                app.LasGruppenOrderSchema.saveData(this, doneFunc(), null, true);
+                return;
             } 
        }
         
@@ -673,33 +690,42 @@ app.LasGruppenOrderSchema = {
         return false;
     },
     
-    setupShippinhOptions: function(button) {
-        var event = thundashop.Ajax.createEvent(null, "showAddresses", button, {});
+    setupShippinhOptions: function(button, doneFunction) {
+        
+        var event = thundashop.Ajax.createEvent(null, "isCompany", button, { vatnumber: $('#companyid').val() });
         thundashop.Ajax.postWithCallBack(event, function(result) {
-            $('.LasGruppenOrderSchema .selectbox_del_addresses').html(result);
+            
+            app.LasGruppenOrderSchema.isCompany = result === "true";
+            
+            var event = thundashop.Ajax.createEvent(null, "showAddresses", button, {});
+            thundashop.Ajax.postWithCallBack(event, function(result) {
+                $('.LasGruppenOrderSchema .selectbox_del_addresses').html(result);
+            });
+
+            $('.order_page3 .shipping_div_option').show();
+
+            if (app.LasGruppenOrderSchema.isCompany) {
+                $('#shipping_mypack').hide();
+            } else {
+                $('#shipping_express').hide();
+                $('#shipping_bedriftspakke').hide();
+            }
+
+            if ($('#cylindersoption').is(':checked') && app.LasGruppenOrderSchema.isCompany) {
+                $('#shipping_rekomandert').hide();
+            }
+
+            if (!$('#companyid').val()) {
+                $('#shipping_bedriftspakke').hide();
+                $('#shipping_other').hide();
+                $('#shipping_express').hide();
+                $('#shipping_rekomandert').hide();
+                $('#shipping_store input').prop("checked", true);
+                $('.select_stores').show();
+            }
+            
+            doneFunction();
         });
-        
-        $('.order_page3 .shipping_div_option').show();
-
-        if (app.LasGruppenOrderSchema.isCompany) {
-            $('#shipping_mypack').hide();
-        } else {
-            $('#shipping_express').hide();
-            $('#shipping_bedriftspakke').hide();
-        }
-
-        if ($('#cylindersoption').is(':checked') && app.LasGruppenOrderSchema.isCompany) {
-            $('#shipping_rekomandert').hide();
-        }
-        
-        if (!$('#companyid').val()) {
-            $('#shipping_bedriftspakke').hide();
-            $('#shipping_other').hide();
-            $('#shipping_express').hide();
-            $('#shipping_rekomandert').hide();
-            $('#shipping_store input').prop("checked", true);
-            $('.select_stores').show();
-        }
     },
     
     addFirstRows: function() {

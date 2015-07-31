@@ -15,8 +15,8 @@
 namespace ns_7004f275_a10f_4857_8255_843c2c7fb3ab;
 
 class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
-//    public static $url = "http://20192.3.0.local.getshop.com";
-    public static $url = "https://certegobeta.getshop.com";
+    public static $url = "http://20192.3.0.local.getshop.com";
+//    public static $url = "https://certegobeta.getshop.com";
     
     public function getDescription() {
         return "TEST";
@@ -52,9 +52,6 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
             $_POST['data']['fullName'] = $user->fullName;
             $_POST['data']['groupReference'] = $group->invoiceAddress->customerNumber;
         }
-                
-        $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
-        $attachments = $this->getAttachments();
         
         if ($_POST['data']['saveInvoiceAddress'] == "true") {
             $_POST['data']['name'] = $_POST['data']['page1']['invoice']['companyName'];
@@ -83,12 +80,28 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         
         
         if ($_POST['data']['page4']['securitytype'] != "signature" || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
-            $this->sendMail("system@certego.no", $attachments);
+            $_POST['data']['hidePinCode'] = false;
+            $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
+            $attachments = $this->getAttachments();
+//            $this->sendMail("system@certego.no", $attachments);
         }
         
         if (isset($_POST['data']['page4']['emailCopy']) && $_POST['data']['page4']['emailCopy']) {
+            $_POST['data']['hidePinCode'] = true;
+            $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
+            $attachments = $this->getAttachments();
             $this->sendMail($_POST['data']['page4']['emailCopy'], $attachments);
         }
+    }
+    
+    public function isCompany() {
+        $company = $this->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['vatnumber']);
+        if ($company) {
+            echo "true";
+        } else {
+            echo "false";
+        }
+        die();
     }
     
     private function getAttachments() {

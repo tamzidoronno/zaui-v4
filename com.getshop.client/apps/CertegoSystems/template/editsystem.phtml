@@ -14,7 +14,7 @@ $system = $this->getSystem($_POST['value']);
     <span class="title"><?php echo $this->__f("Navn"); ?></span>
     <input type="textfield" gs_model='systemmodel' gs_model_attr='name' value="<? echo $system->name; ?>" placeholder="John Doe">
     <div class="description">
-        <?php echo $this->__("Navn på eier av låsesystemet."); ?>
+        <?php echo $this->__("Navn på systemeier."); ?>
     </div>
 </div>
 
@@ -22,7 +22,7 @@ $system = $this->getSystem($_POST['value']);
     <span class="title"><?php echo $this->__f("Mail address"); ?></span>
     <input type="textfield" gs_model='systemmodel' gs_model_attr='email' value="<? echo $system->email; ?>" placeholder="email@address.org">
     <div class="description">
-        <?php echo $this->__("E-postadresse til eier av systemet"); ?>
+        <?php echo $this->__("E-postadresse til systemeier"); ?>
     </div>
 </div>
 
@@ -30,7 +30,7 @@ $system = $this->getSystem($_POST['value']);
     <span class="title"><?php echo $this->__f("Phone number"); ?></span>
     <input type="textfield" gs_model='systemmodel' gs_model_attr='phonenumber' value="<? echo $system->phoneNumber; ?>" placeholder='12345678'>
     <div class="description">
-        <?php echo $this->__("Mobilnummer til eier av systemet"); ?>
+        <?php echo $this->__("Mobiltelefonnr til systemeier"); ?>
     </div>
 </div>
 

@@ -8,6 +8,7 @@ $data = json_decode($_SESSION['lasgruppen_pdf_data'], true);
 $data = $data['data'];
 
 $userLoggedIn = $data['userLoggedIn'];
+$hidePinCode = $data['hidePinCode'];
 
 
 if ($userLoggedIn) {
@@ -242,7 +243,7 @@ if ($userLoggedIn) {
                 }
 
                 if (isset($data['page4']['securitytype']) && $data['page4']['securitytype'] == "pincode") {
-                    echo "Pinkode: ".$data['page4']['pincode'];
+                    echo "Pinkode: ".$hidePinCode ? "******" : $data['page4']['pincode'];
                 }
 
                 if (!isset($data['page4']['securitytype'])) {
@@ -257,7 +258,14 @@ if ($userLoggedIn) {
     </div>
     
     <div class="row row_4">
-        <div style='font-size: 18px; color: #666; border-bottom: solid 1px #00aad0; padding-bottom: 10px; margin-top: 20px;'>Skjema sendes til CERTEGO AS, Postboks 454 Brakerøya, 3002 Drammen eller skannes og sendes til <span style='text-decoration: underline;font-weight: bold; color: #ff6e00;'>system@certego.no</span></div>
+        <div style='font-size: 18px; color: #666; border-bottom: solid 1px #00aad0; padding-bottom: 10px; margin-top: 20px;'>
+        <?
+        if (!$userLoggedIn) {
+        ?>
+        Skjema sendes til CERTEGO AS, Postboks 454 Brakerøya, 3002 Drammen eller skannes og sendes til <span style='text-decoration: underline;font-weight: bold; color: #ff6e00;'>system@certego.no</span>
+        <? } ?>
+        
+        </div>
         <div>
             <?
             if (isset($data['page2']['keys']) && $data['page2']['keys'] == "true") {

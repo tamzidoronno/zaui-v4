@@ -1358,6 +1358,19 @@ class APICertegoManager {
 	* @author ktonder
 	*/
 
+	public function getOrders() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getOrders";
+	     $data["interfaceName"] = "core.certego.ICertegoManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
 	public function getSystems() {
 	     $data = array();
 	     $data['args'] = array();
@@ -1376,6 +1389,20 @@ class APICertegoManager {
 	     $data['args'] = array();
 	     $data['args']["core_usermanager_data_Group"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Group));
 	     $data["method"] = "getSystemsForGroup";
+	     $data["interfaceName"] = "core.certego.ICertegoManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function saveOrder($core_certego_data_CertegoOrder) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_certego_data_CertegoOrder"] = json_encode($this->transport->object_unset_nulls($core_certego_data_CertegoOrder));
+	     $data["method"] = "saveOrder";
 	     $data["interfaceName"] = "core.certego.ICertegoManager";
 	     return $this->transport->sendMessage($data);
 	}

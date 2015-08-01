@@ -1464,6 +1464,14 @@ class CertegoManager(object):
     data.interfaceName = "core.certego.ICertegoManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getOrders(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getOrders"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getSystems(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -1484,6 +1492,21 @@ class CertegoManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getSystemsForGroup"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveOrder(self, order):
+    args = collections.OrderedDict()
+    if isinstance(order,GetShopBaseClass): 
+      args["order"]=json.dumps(order.__dict__)
+    else:
+      try:
+        args["order"]=json.dumps(order)
+      except (ValueError, AttributeError):
+        args["order"]=order
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveOrder"
     data.interfaceName = "core.certego.ICertegoManager"
     return self.communicationHelper.sendMessage(data)
 

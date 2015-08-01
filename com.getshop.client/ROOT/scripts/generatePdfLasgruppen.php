@@ -4,11 +4,17 @@ if (isset($_GET['id'])) {
 }
 
 session_start();
-$data = json_decode($_SESSION['lasgruppen_pdf_data'], true);
-$data = $data['data'];
+
+if (isset($_GET['orderId']) && $_GET['orderId']) {
+    $data = json_decode($_SESSION[$_GET['orderId']], true);
+    $data = $data['data'];
+} else {
+    $data = json_decode($_SESSION['lasgruppen_pdf_data'], true);
+    $data = $data['data'];    
+}
 
 $userLoggedIn = $data['userLoggedIn'];
-$hidePinCode = $data['hidePinCode'];
+$hidePinCode = !isset($data['hidePinCode']) ? false : $data['hidePinCode'];
 
 
 if ($userLoggedIn) {
@@ -181,7 +187,7 @@ if ($userLoggedIn) {
                     echo $data['page3']['shipping'] ? "<br>Leveringsmåte: ".$data['page3']['shipping'] : "";
                 }
                 
-                echo "<br/><br/><b>Dato: </b>". date('d/m-Y H:i');
+                echo "<br/><br/><b>Dato: </b>"; echo isset($data['created']) ? $data['created'] : date('d/m-Y H:i');
                 ?>
             </div>
         </div>

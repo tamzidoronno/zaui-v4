@@ -53,7 +53,9 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
             $_POST['data']['groupReference'] = $group->invoiceAddress->customerNumber;
         }
         
-        if ($_POST['data']['saveInvoiceAddress'] == "true") {
+        $this->saveOrder();
+        
+        if ($_POST['data']['saveInvoiceAddress'] == "true" && $_POST['data']['page1']['invoice']['companyName']) {
             $_POST['data']['name'] = $_POST['data']['page1']['invoice']['companyName'];
             $_POST['data']['addr1'] = $_POST['data']['page1']['invoice']['address'];
             $_POST['data']['addr2'] = $_POST['data']['page1']['invoice']['address2'];
@@ -66,7 +68,7 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
             $this->saveInvoiceAddr(true);
         }
         
-        if ($_POST['data']['saveDeliveryAddress'] == "true") {
+        if ($_POST['data']['saveDeliveryAddress'] == "true" && $_POST['data']["page3"]["deliveryInfo"]["name"]) {
             $_POST['data']['name'] = $_POST['data']["page3"]["deliveryInfo"]["name"];
             $_POST['data']['addr1'] = $_POST['data']["page3"]["deliveryInfo"]["address"];
             $_POST['data']['addr2'] = $_POST['data']["page3"]["deliveryInfo"]["address2"];
@@ -274,4 +276,13 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     public function showAddresses() {
         $this->includefile("address_select_box");
     }
+
+    public function saveOrder() {
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
+            $certegoOrder = new \core_certego_data_CertegoOrder();
+            $certegoOrder->data = json_encode($_POST);
+            $this->getApi()->getCertegoManager()->saveOrder($certegoOrder);
+        }
+    }
+
 }

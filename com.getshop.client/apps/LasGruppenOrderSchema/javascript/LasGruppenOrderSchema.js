@@ -34,7 +34,7 @@ app.LasGruppenOrderSchema = {
         $(document).on('click', '.LasGruppenOrderSchema .invoiceaddresses_button', app.LasGruppenOrderSchema.showInvoiceAddresses);
         $(document).on('click', '.LasGruppenOrderSchema .deleteaddress', app.LasGruppenOrderSchema.deleteDelivaryAddress);
         $(document).on('click', '.LasGruppenOrderSchema .delete_invoice_address', app.LasGruppenOrderSchema.deleteInvoiceAddress);
-        $(document).on('click', '.LasGruppenOrderSchema .start_order_by_address', app.LasGruppenOrderSchema.populateInvoiceFields);
+        $(document).on('click', '.LasGruppenOrderSchema .start_order_by_address', app.LasGruppenOrderSchema.askForInvoiceReference);
         $(document).on('click', '.LasGruppenOrderSchema .show_new_address_form', app.LasGruppenOrderSchema.toggleNewAddressForm);
         $(document).on('click', '.LasGruppenOrderSchema .goto_next_page_new_address', app.LasGruppenOrderSchema.nextNewAddress);
         $(document).on('click', '.LasGruppenOrderSchema .goto_next_page', app.LasGruppenOrderSchema.next);
@@ -124,16 +124,21 @@ app.LasGruppenOrderSchema = {
         $('.LasGruppenOrderSchema #invoice_cellphone').val("");    
     },
     
-    populateInvoiceFields: function() {
-        var result = prompt('Ønsker du å oppgi en fakturareferanse? (la stå blank hvis ikke)');
-        
-        $('.LasGruppenOrderSchema #companyid').val($(this).find('.inv_birthday').html());
-        $('.LasGruppenOrderSchema #invoice_company_name').val($(this).find('.inv_name').html());
-        $('.LasGruppenOrderSchema #invoice_address').val($(this).find('.inv_addr').html());
-        $('.LasGruppenOrderSchema #invoice_address2').val($(this).find('.inv_addr2').html());
-        $('.LasGruppenOrderSchema #invoice_postcode').val($(this).find('.inv_postcode').html());
-        $('.LasGruppenOrderSchema #invoice_city').val($(this).find('.inv_city').html());
-        $('.LasGruppenOrderSchema #invoice_cellphone').val($(this).find('.inv_phone').html());
+    askForInvoiceReference: function() {
+        // When OK hit it goes to "populateInvoiceFields"
+        app.LasGruppenOrderSchema.lastClickedAddress = this;
+        $("#ask_for_refernece_dialog").dialog("open");
+    },
+    
+    populateInvoiceFields: function(result) {
+        var me = app.LasGruppenOrderSchema.lastClickedAddress;
+        $('.LasGruppenOrderSchema #companyid').val($(me).find('.inv_birthday').html());
+        $('.LasGruppenOrderSchema #invoice_company_name').val($(me).find('.inv_name').html());
+        $('.LasGruppenOrderSchema #invoice_address').val($(me).find('.inv_addr').html());
+        $('.LasGruppenOrderSchema #invoice_address2').val($(me).find('.inv_addr2').html());
+        $('.LasGruppenOrderSchema #invoice_postcode').val($(me).find('.inv_postcode').html());
+        $('.LasGruppenOrderSchema #invoice_city').val($(me).find('.inv_city').html());
+        $('.LasGruppenOrderSchema #invoice_cellphone').val($(me).find('.inv_phone').html());
         $('.LasGruppenOrderSchema #invoice_reference').val(result);
         app.LasGruppenOrderSchema.saveAddress = false;
         app.LasGruppenOrderSchema.nextScoped();
@@ -590,6 +595,7 @@ app.LasGruppenOrderSchema = {
     },
     
     next: function() {
+        $('.shop_button.next').html('Neste');
         var currentPage = $(this).closest('.orderpage');
         var pageNumber = currentPage.attr('pageNumer');
         pageNumber++;
@@ -653,7 +659,7 @@ app.LasGruppenOrderSchema = {
                     app.LasGruppenOrderSchema.goToNextPage(pageNumber, me);
                 }
                 
-                app.LasGruppenOrderSchema.saveData(this, doneFunc(), null, true);
+                app.LasGruppenOrderSchema.saveData(this, doneFunc, null, true);
                 return;
             } 
        }
@@ -663,10 +669,11 @@ app.LasGruppenOrderSchema = {
                 confirmationEmail : $($('.order_page5 input')[0]).val()
             }
             
+            $(this).html('<i class="fa fa-spinner fa-spin"></i> Behandler bestilling...');
             var event = thundashop.Ajax.createEvent("", "sendConfirmation", this, data);
             thundashop.Ajax.postWithCallBack(event, function() {
                 app.LasGruppenOrderSchema.goToNextPage(pageNumber, me);
-            });
+            }, true);
                 
             return;
         }
@@ -787,6 +794,7 @@ app.LasGruppenOrderSchema = {
     },
     
     prev: function() {
+        $('.shop_button.next').html('Neste');
         var currentPage = $(this).closest('.orderpage');
         var pageNumber = currentPage.attr('pageNumer');
         pageNumber--;

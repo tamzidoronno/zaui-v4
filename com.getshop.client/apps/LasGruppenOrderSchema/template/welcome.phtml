@@ -73,6 +73,40 @@ if (!$user->prevLoggedIn) {
 }
 ?>
 
+<div id="ask_for_refernece_dialog">
+    <form>
+        <div>
+            Ønsker du å oppgi en fakturareferanse? 
+            <br/>(la stå blank hvis ikke)
+            
+        </div>
+        <br/>
+        <input style='width: 266px;'type="text" name="name" id="promt_invoice_reference" class="text ui-widget-content ui-corner-all" />
+        <br/>
+    </form>
+</div>
+
+<script>
+    $("#ask_for_refernece_dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        title: 'Fakturareferanse',
+        width: 350,
+        buttons: {
+            "Cancel": function() {
+                $(this).dialog("close");
+            },
+            
+            "Ok": function() {
+                var invoiceReference = $("#promt_invoice_reference").val();
+                $(this).dialog("close");
+                app.LasGruppenOrderSchema.populateInvoiceFields(invoiceReference);
+            }
+            
+        }
+    });
+</script>
+
 <div id='hidden_button_to_next_page' style='display: none' class="shop_button goto_next_page">
     Next
 </div>
@@ -99,7 +133,7 @@ if (!$user->prevLoggedIn) {
         <div class="menu_entry invoiceaddresses_button" goto="invoiceaddresses">Fakturaadresser</div>
         <br/>
         <div class="certego_pagetitle" style="text-align: center;">Arkiv</div>
-        <div class="menu_entry">Tidligere bestillinger</div>
+        <div class="menu_entry" goto='ordersoverview'>Tidligere bestillinger</div>
         <br/>
         <div class="certego_pagetitle" style="text-align: center;">Bestilling</div>
         <div class="menu_entry" goto="neworder">Ny bestilling</div>
@@ -136,6 +170,23 @@ if (!$user->prevLoggedIn) {
             </table>
         </div>
         
+        <div class="stystemoverview sub_entry_content" content="ordersoverview">
+            <?
+            $orders = $this->getApi()->getCertegoManager()->getOrders();
+            if (count($orders) == 0) {
+                echo "Du har ikke gjennomført noen bestillinger.";
+            } else {
+                
+                echo "Dine bestillinger (klikk på for å laste ned pdf): ";
+                foreach ($orders as $order) {
+                    echo "<a class='gs_ignorenavigate' href='/scripts/downloadPdfLasGruppen.php?orderId=$order->id'><div style='cursor: pointer; border: solid 1px #DDD; margin-top: 10px; padding: 5px;'>$order->created</div></a>";
+                    $tmpData = json_decode($order->data);
+                    $tmpData->data->created = $order->created;
+                    $_SESSION[$order->id] = json_encode($tmpData);
+                }
+            }
+            ?>
+        </div>
         <div class="stystemoverview sub_entry_content" content="stystemoverview">
             <center>
                 Du kan bestille på følgende systemer.<br/><br/>
@@ -192,7 +243,7 @@ if (!$user->prevLoggedIn) {
             foreach ($extraInvoicesAddresses as $addr) {
                 ?>
                 <div class="address_to_edit start_order_by_address" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
-                    <div class="inv_birthday"><? echo $addr->vatNumber; ?></div>
+                    <div class="inv_birthday"><? echo isset($addr->vatNumber) ? $addr->vatNumber : ""; ?></div>
                     <div class="inv_name"><? echo $addr->fullName; ?></div>
                     <div class="inv_addr"><? echo $addr->address; ?></div>
                     <? if (isset($addr->address2)) { ?>

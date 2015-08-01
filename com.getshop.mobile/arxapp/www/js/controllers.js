@@ -107,16 +107,27 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
 
 arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(getshop, $scope) {
 
-  $scope.openDoor = function(externalId) {
+  $scope.getToday = function() {
+    var d = new Date();
+    return d.getTime();
+  }
+
+  $scope.getYesterday = function() {
+    var d = new Date();
+    d.setDate(d.getDate()-100);
+    return d.getTime();
+  }
+
+  $scope.forceOpen = function(externalId) {
     getshop.client.ArxManager.doorAction(externalId, 'forceOpen');
   }
 
-  $scope.closeDoor = function(externalId) {
+  $scope.forceClose = function(externalId) {
     getshop.client.ArxManager.doorAction(externalId, 'forceClose');
   }
 
-  $scope.setTimerOnDoor = function(externalId) {
-    getshop.client.ArxManager.doorAction(externalId, 'dont know what to put here');
+  $scope.pulseOpen = function(externalId) {
+    getshop.client.ArxManager.doorAction(externalId, 'open');
   }
 
   $scope.onDoorsFetched = function(result) {
@@ -127,3 +138,13 @@ arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(
   getshop.client.ArxManager.getAllDoors().done($scope.onDoorsFetched);
 }]);
 
+arxappControllers.controller('DoorDetailCtrl', ['GetshopService', '$scope', '$stateParams', function(getshop, $scope, $stateParams) {
+
+  $scope.onAccessLogFetched = function(result) {
+    $scope.accessLog = result;
+    $scope.$apply();
+  }
+
+  getshop.client.ArxManager.getLogForDoor($stateParams.id, $stateParams.from, $stateParams.to).done($scope.onAccessLogFetched);
+
+}]);

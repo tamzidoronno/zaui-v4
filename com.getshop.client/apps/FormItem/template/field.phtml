@@ -15,6 +15,11 @@ if(!$type) {
         true;
     }
     
+    $dinput = "";
+    if($type == "dateinput") {
+        $dinput = "dateinput";
+    }
+    
     switch($type) {
         case "h1":
             echo "<h1 formtype='$type' class='formiteminput'>" . $title . "</h3>";
@@ -31,10 +36,10 @@ if(!$type) {
             echo "</div>";
             break;
         case "input":
-        case "input":
+        case "dateinput":
             echo "<label>";
             echo "<span class='title'>$title</span>";
-            echo "<input type='$type' name='$title' formtype='$type' class='inputfield formiteminput' placeholder='$placeholder' $requiredField>";
+            echo "<input type='$type' name='$title' formtype='$type' class='inputfield formiteminput $dinput' placeholder='$placeholder' $requiredField>";
             echo "</label>";
             break;
         case "radio":
@@ -78,3 +83,7 @@ if(!$type) {
     }
 }
 ?>
+
+<script>
+    $('.FormItem .dateinput').datepicker();
+</script>

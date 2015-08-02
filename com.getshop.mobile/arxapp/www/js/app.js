@@ -50,6 +50,11 @@ angular.module('arxapp', ['ionic', 'ArxAppControllers'])
       url: "/doors",
       templateUrl: "doors.html",
       controller: 'DoorsCtrl'
+    })
+    .state('door-detail', {
+      url: "/door?id&from&to",
+      templateUrl: "door-detail.html",
+      controller: "DoorDetailCtrl"
     });
 
     $urlRouterProvider.otherwise("/login");

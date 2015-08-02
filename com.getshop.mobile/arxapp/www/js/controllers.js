@@ -10,7 +10,6 @@ arxappControllers.controller('LoginCtrl', function($scope, LoginService, LocalSt
 
   // load credentials from local storage
   $scope.userData = LocalStorage.getObject('userData');
-  console.log($scope.userData);
   if ($scope.userData.credentials === undefined) {
     $scope.userData.credentials = [];
   }
@@ -108,8 +107,30 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
 
 arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(getshop, $scope) {
 
+  $scope.getToday = function() {
+    var d = new Date();
+    return d.getTime();
+  }
+
+  $scope.getYesterday = function() {
+    var d = new Date();
+    d.setDate(d.getDate()-100);
+    return d.getTime();
+  }
+
+  $scope.forceOpen = function(externalId) {
+    getshop.client.ArxManager.doorAction(externalId, 'forceOpen');
+  }
+
+  $scope.forceClose = function(externalId) {
+    getshop.client.ArxManager.doorAction(externalId, 'forceClose');
+  }
+
+  $scope.pulseOpen = function(externalId) {
+    getshop.client.ArxManager.doorAction(externalId, 'open');
+  }
+
   $scope.onDoorsFetched = function(result) {
-    console.log(result);
     $scope.doors = result;
     $scope.$apply();
   }
@@ -117,3 +138,13 @@ arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(
   getshop.client.ArxManager.getAllDoors().done($scope.onDoorsFetched);
 }]);
 
+arxappControllers.controller('DoorDetailCtrl', ['GetshopService', '$scope', '$stateParams', function(getshop, $scope, $stateParams) {
+
+  $scope.onAccessLogFetched = function(result) {
+    $scope.accessLog = result;
+    $scope.$apply();
+  }
+
+  getshop.client.ArxManager.getLogForDoor($stateParams.id, $stateParams.from, $stateParams.to).done($scope.onAccessLogFetched);
+
+}]);

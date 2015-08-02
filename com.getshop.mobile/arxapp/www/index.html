@@ -92,7 +92,7 @@
           <!--Two middle rows for menu items-->
           <div class="row">
             <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-ios-cart big-icon"></i><br>Bestill</button>
-            <button class="button button-block button-clear button-dark high" ui-sref="doors"><i class="icon ion-locked big-icon"></i><br>Locks</button>
+            <button class="button button-block button-clear button-dark high" ui-sref="doors"><i class="icon ion-locked big-icon"></i><br>Doors</button>
             <button class="button button-block button-clear button-dark high" ui-sref="users"><i class="icon ion-person big-icon"></i><br>Brukere</button>
           </div>
           <div class="row">
@@ -164,11 +164,11 @@
         </ion-header-bar>
         <ion-content>
           <div class="list">
-            <a class="item item-icon-left" ng-repeat="door in doors" href="#">
+            <a class="item item-icon-left" ng-repeat="door in doors" href="#/door?id={{door.externalId}}&from={{getYesterday()}}&to={{getToday()}}">
               <span class="item-note item-note-small">
-                <button class="button button-positive"><i class="icon ion-lock-combination"></i></button>
-                <button class="button button-positive"><i class="icon ion-locked"></i></button>
-                <button class="button button-positive"><i class="icon ion-unlocked"></i></button>
+                <button class="button button-positive" ng-click="pulseOpen(door.externalId)"><i class="icon ion-lock-combination"></i></button>
+                <button class="button button-positive" ng-click="forceClose(door.externalId)"><i class="icon ion-locked"></i></button>
+                <button class="button button-positive" ng-click="forceOpen(door.externalId)"><i class="icon ion-unlocked"></i></button>
               </span>
               <i class="icon ion-key"></i>
               <h2>{{door.name}}</h2>
@@ -178,6 +178,28 @@
         <ion-footer-bar class="bar bar-footer">
           <button class="button button-full" ui-sref="menu">Tilbake</button>
         </ion-footer-bar>        
+      </ion-view>
+    </script>
+    <script id="door-detail.html" type="text/ng-template">
+      <ion-view title="{{door.name}} access log">
+        <ion-header-bar class="bar bar-header bar-light">
+          <h1 class="title">{{door.name}} access log</h1>
+        </ion-header-bar>
+        <ion-content>
+          <div class="list">
+
+            <div class="item item-icon-left" ng-repeat="record in accessLog">
+              <i class="icon ion-key"></i>
+              <h2>{{record.personName}}</h2>
+              <p>{{record.type}} {{record.door}} with {{record.card}} on {{record.timestamp}}</p>
+            </div>
+
+          </div>
+          </ion-content>
+        <ion-footer-bar class="bar bar-footer">
+          <button class="button button-full" ui-sref="doors">Tilbake</button>
+        </ion-footer-bar>
+      </ion-view>
       </ion-view>
     </script>
 

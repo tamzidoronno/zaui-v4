@@ -16,6 +16,9 @@ if (isset($_GET['orderId']) && $_GET['orderId']) {
 $userLoggedIn = $data['userLoggedIn'];
 $hidePinCode = !isset($data['hidePinCode']) ? false : $data['hidePinCode'];
 
+array_walk_recursive($data, function (&$value) {
+    $value = htmlentities($value);
+});
 
 if ($userLoggedIn) {
     $data['page1']['contact']['systemnumber'] = "";

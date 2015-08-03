@@ -1,3 +1,61 @@
+var CertegoHtmlEnDeCode = (function() {
+    var charToEntityRegex,
+        entityToCharRegex,
+        charToEntity,
+        entityToChar;
+
+    function resetCharacterEntities() {
+        charToEntity = {};
+        entityToChar = {};
+        // add the default set
+        addCharacterEntities({
+            '&amp;'     :   '&',
+            '&gt;'      :   '>',
+            '&lt;'      :   '<',
+            '&quot;'    :   '"',
+            '&#39;'     :   "'"
+        });
+    }
+
+    function addCharacterEntities(newEntities) {
+        var charKeys = [],
+            entityKeys = [],
+            key, echar;
+        for (key in newEntities) {
+            echar = newEntities[key];
+            entityToChar[key] = echar;
+            charToEntity[echar] = key;
+            charKeys.push(echar);
+            entityKeys.push(key);
+        }
+        charToEntityRegex = new RegExp('(' + charKeys.join('|') + ')', 'g');
+        entityToCharRegex = new RegExp('(' + entityKeys.join('|') + '|&#[0-9]{1,5};' + ')', 'g');
+    }
+
+    function htmlEncode(value){
+        var htmlEncodeReplaceFn = function(match, capture) {
+            return charToEntity[capture];
+        };
+
+        return (!value) ? value : String(value).replace(charToEntityRegex, htmlEncodeReplaceFn);
+    }
+
+    function htmlDecode(value) {
+        var htmlDecodeReplaceFn = function(match, capture) {
+            return (capture in entityToChar) ? entityToChar[capture] : String.fromCharCode(parseInt(capture.substr(2), 10));
+        };
+
+        return (!value) ? value : String(value).replace(entityToCharRegex, htmlDecodeReplaceFn);
+    }
+
+    resetCharacterEntities();
+
+    return {
+        htmlEncode: htmlEncode,
+        htmlDecode: htmlDecode
+    };
+})();
+
 app.LasGruppenOrderSchema = {
     addedRows: false,
     inProgress: false,
@@ -148,14 +206,14 @@ app.LasGruppenOrderSchema = {
         $('.LasGruppenOrderSchema .invoice_addresses').hide();
         $('.LasGruppenOrderSchema .invoice_address_edit').show();
         
-        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_name').val($(this).find('.inv_name').html());
-        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addr1').val($(this).find('.inv_addr').html());
-        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addr2').val($(this).find('.inv_addr2').html());
-        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_postcode').val($(this).find('.inv_postcode').html());
-        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_city').val($(this).find('.inv_city').html());
-        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_phone').val($(this).find('.inv_phone').html());
-        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_birthday').val($(this).find('.inv_birthday').html());
-        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addrid').val($(this).attr('addrid'));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_name').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_name').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addr1').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_addr').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addr2').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_addr2').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_postcode').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_postcode').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_city').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_city').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_phone').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_phone').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_birthday').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_birthday').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addrid').val(CertegoHtmlEnDeCode.htmlDecode($(this).attr('addrid')));
         
         if ($('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addrid').val()) {
             $('#invoice_address_edit .deleteaddress').show();
@@ -210,14 +268,14 @@ app.LasGruppenOrderSchema = {
         $('.LasGruppenOrderSchema .edit_deliver_address').hide();
         $('.LasGruppenOrderSchema #edit_delivery_addr').show();
         
-        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_name').val($(this).find('.del_name').html());
-        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addr1').val($(this).find('.del_addr').html());
-        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addr2').val($(this).find('.del_addr2').html());
-        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_postcode').val($(this).find('.del_postcode').html());
-        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_city').val($(this).find('.del_city').html());
-        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_phone').val($(this).find('.del_phone').html());
-        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_email').val($(this).find('.del_email').html());
-        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addrid').val($(this).attr('addrid'));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_name').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_name').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addr1').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_addr').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addr2').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_addr2').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_postcode').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_postcode').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_city').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_city').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_phone').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_phone').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_email').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_email').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addrid').val(CertegoHtmlEnDeCode.htmlDecode($(this).attr('addrid')));
         
         if ($('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addrid').val()) {
             $('#edit_delivery_addr .deleteaddress').show();

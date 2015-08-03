@@ -46,24 +46,24 @@ $defaultDelCell = "";
 $defaultDelEmail = "";
 
 if ($defaultDeliveryAddress) {
-    $defaultDelName = 'disabled="true" value="'.$defaultDeliveryAddress->fullName.'"';
-    $defaultDelAddress1 = 'disabled="true" value="'.$defaultDeliveryAddress->address.'"';
-    $defaultDelAddress2 = 'disabled="true" value="'.$defaultDeliveryAddress->address2.'"';
-    $defaultDelPostNumber = 'disabled="true" value="'.$defaultDeliveryAddress->postCode.'"';
-    $defaultDelCity = 'disabled="true" value="'.$defaultDeliveryAddress->city.'"';
-    $defaultDelCell = 'disabled="true" value="'.$defaultDeliveryAddress->phone.'"';
-    $defaultDelEmail = 'disabled="true" value="'.$defaultDeliveryAddress->emailAddress.'"';
+    $defaultDelName = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->fullName).'"';
+    $defaultDelAddress1 = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->address).'"';
+    $defaultDelAddress2 = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->address2).'"';
+    $defaultDelPostNumber = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->postCode).'"';
+    $defaultDelCity = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->city).'"';
+    $defaultDelCell = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->phone).'"';
+    $defaultDelEmail = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->emailAddress).'"';
 }
 
 if ($invoiceAddress) {
-    $invoiceVat = 'disabled="true" value="'.$invoiceAddress->vatNumber.'"';
-    $invoiceName = 'disabled="true" value="'.$invoiceAddress->fullName.'"';
-    $invoiceAddress1 = 'disabled="true" value="'.$invoiceAddress->address.'"';
-    $invoiceAddress2 = 'disabled="true" value="'.$invoiceAddress->address2.'"';
-    $invoicePostNumber = 'disabled="true" value="'.$invoiceAddress->postCode.'"';
-    $invoiceCity = 'disabled="true" value="'.$invoiceAddress->city.'"';
-    $invoiceCellPhone = 'disabled="true" value="'.$invoiceAddress->phone.'"';
-    $invoiceReference = 'disabled="true" value="'.$invoiceAddress->reference.'"';
+    $invoiceVat = 'disabled="true" value="'.htmlentities($invoiceAddress->vatNumber).'"';
+    $invoiceName = 'disabled="true" value="'.htmlentities($invoiceAddress->fullName).'"';
+    $invoiceAddress1 = 'disabled="true" value="'.htmlentities($invoiceAddress->address).'"';
+    $invoiceAddress2 = 'disabled="true" value="'.htmlentities($invoiceAddress->address2).'"';
+    $invoicePostNumber = 'disabled="true" value="'.htmlentities($invoiceAddress->postCode).'"';
+    $invoiceCity = 'disabled="true" value="'.htmlentities($invoiceAddress->city).'"';
+    $invoiceCellPhone = 'disabled="true" value="'.htmlentities($invoiceAddress->phone).'"';
+    $invoiceReference = 'disabled="true" value="'.htmlentities($invoiceAddress->reference).'"';
 }
 
 if (!$user->prevLoggedIn) {
@@ -118,8 +118,8 @@ if (!$user->prevLoggedIn) {
 
 <div>
     <div class='col col_0'>
-        <? echo $group->groupName ?>
-        <br/> <? echo $user->fullName; ?>
+        <? echo htmlentities($group->groupName); ?>
+        <br/> <? echo htmlentities($user->fullName); ?>
         <br/> Sist logget inn: <? echo $lastLoggedIn; ?>
     </div>
 </div>
@@ -193,7 +193,7 @@ if (!$user->prevLoggedIn) {
             </center>
             <?
             foreach ($systems as $system) {
-                echo "<div class='system_entry'>$system->number - $system->name - $system->phoneNumber - $system->email</div>";
+                echo "<div class='system_entry'>".htmlentities($system->number)." - ".htmlentities($system->name)." - ".htmlentities($system->phoneNumber)." - ".htmlentities($system->email)."</div>";
             }
             ?>
         </div>
@@ -225,15 +225,15 @@ if (!$user->prevLoggedIn) {
             </div>
             
             <div class='address_to_edit start_order_by_address'>
-                <div class="inv_birthday"><? echo $invoiceAddress->vatNumber; ?></div>
-                <div class="inv_name"><? echo $invoiceAddress->fullName; ?></div>
-                <div class="inv_addr"><? echo $invoiceAddress->address; ?></div>
+                <div class="inv_birthday"><? echo htmlentities($invoiceAddress->vatNumber); ?></div>
+                <div class="inv_name"><? echo htmlentities($invoiceAddress->fullName); ?></div>
+                <div class="inv_addr"><? echo htmlentities($invoiceAddress->address); ?></div>
                 <? if (isset($invoiceAddress->address2)) { ?>
-                    <div class="inv_addr2"><? echo $invoiceAddress->address2; ?></div>
+                    <div class="inv_addr2"><? echo htmlentities($invoiceAddress->address2); ?></div>
                 <? } ?>
-                <div class="inv_postcode"><? echo $invoiceAddress->postCode; ?></div>
-                <div class="inv_city"><? echo $invoiceAddress->city; ?></div>
-                <div class="inv_phone"><? echo $invoiceAddress->phone; ?></div>
+                <div class="inv_postcode"><? echo htmlentities($invoiceAddress->postCode); ?></div>
+                <div class="inv_city"><? echo htmlentities($invoiceAddress->city); ?></div>
+                <div class="inv_phone"><? echo htmlentities($invoiceAddress->phone); ?></div>
                 <i class="fa fa-arrow-right"></i>
             </div>
             
@@ -243,14 +243,14 @@ if (!$user->prevLoggedIn) {
             foreach ($extraInvoicesAddresses as $addr) {
                 ?>
                 <div class="address_to_edit start_order_by_address" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
-                    <div class="inv_birthday"><? echo isset($addr->vatNumber) ? $addr->vatNumber : ""; ?></div>
-                    <div class="inv_name"><? echo $addr->fullName; ?></div>
-                    <div class="inv_addr"><? echo $addr->address; ?></div>
+                    <div class="inv_birthday"><? echo isset($addr->vatNumber) ? htmlentities($addr->vatNumber) : ""; ?></div>
+                    <div class="inv_name"><? echo htmlentities($addr->fullName); ?></div>
+                    <div class="inv_addr"><? echo htmlentities($addr->address); ?></div>
                     <? if (isset($addr->address2)) { ?>
-                        <div class="inv_addr2"><? echo $addr->address2; ?></div>
+                        <div class="inv_addr2"><? echo htmlentities($addr->address2); ?></div>
                     <? } ?>
-                    <div class="inv_postcode"><? echo $addr->postCode; ?></div>
-                    <div class="inv_city"><? echo $addr->city; ?></div>
+                    <div class="inv_postcode"><? echo htmlentities($addr->postCode); ?></div>
+                    <div class="inv_city"><? echo htmlentities($addr->city); ?></div>
                     <i class="fa fa-arrow-right"></i>
                 </div>
                 <?
@@ -277,15 +277,15 @@ if (!$user->prevLoggedIn) {
                     foreach ($extraDeliveriesAddresses as $addr) {
                         ?>
                         <div class="address_to_edit delivery_address_to_edit" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
-                            <div class="del_name"><? echo $addr->fullName; ?></div>
-                            <div class="del_addr"><? echo $addr->address; ?></div>
+                            <div class="del_name"><? echo htmlentities($addr->fullName); ?></div>
+                            <div class="del_addr"><? echo htmlentities($addr->address); ?></div>
                             <? if (isset($addr->address2)) { ?>
-                                <div class="del_addr2"><? echo $addr->address2; ?></div>
+                                <div class="del_addr2"><? echo htmlentities($addr->address2); ?></div>
                             <? } ?>
-                            <div class="del_postcode"><? echo $addr->postCode; ?></div>
-                            <div class="del_city"><? echo $addr->city; ?></div>
-                            <div class="del_phone"><? echo $addr->phone; ?></div>
-                            <div class="del_email"><? echo isset($addr->emailAddress) && $addr->emailAddress ? $addr->emailAddress : ""; ?></div>
+                            <div class="del_postcode"><? echo htmlentities($addr->postCode); ?></div>
+                            <div class="del_city"><? echo htmlentities($addr->city); ?></div>
+                            <div class="del_phone"><? echo htmlentities($addr->phone); ?></div>
+                            <div class="del_email"><? echo isset($addr->emailAddress) && $addr->emailAddress ? htmlentities($addr->emailAddress) : ""; ?></div>
                             <i class="fa fa-arrow-right"></i>
                         </div>
                         <?
@@ -334,15 +334,15 @@ if (!$user->prevLoggedIn) {
                     foreach ($extraInvoicesAddresses as $addr) {
                         ?>
                         <div class="address_to_edit invoice_address_to_edit" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
-                            <div class="inv_birthday"><? echo isset($addr->vatNumber) ? $addr->vatNumber : ""; ?></div>
-                            <div class="inv_name"><? echo $addr->fullName; ?></div>
-                            <div class="inv_addr"><? echo $addr->address; ?></div>
+                            <div class="inv_birthday"><? echo isset($addr->vatNumber) ? htmlentities($addr->vatNumber) : ""; ?></div>
+                            <div class="inv_name"><? echo htmlentities($addr->fullName); ?></div>
+                            <div class="inv_addr"><? echo htmlentities($addr->address); ?></div>
                             <? if (isset($addr->address2)) { ?>
-                                <div class="inv_addr2"><? echo $addr->address2; ?></div>
+                                <div class="inv_addr2"><? echo htmlentities($addr->address2); ?></div>
                             <? } ?>
-                            <div class="inv_postcode"><? echo $addr->postCode; ?></div>
-                            <div class="inv_city"><? echo $addr->city; ?></div>
-                            <div class="inv_phone"><? echo $addr->phone; ?></div>
+                            <div class="inv_postcode"><? echo htmlentities($addr->postCode); ?></div>
+                            <div class="inv_city"><? echo htmlentities($addr->city); ?></div>
+                            <div class="inv_phone"><? echo htmlentities($addr->phone); ?></div>
                             <i class="fa fa-arrow-right"></i>
                         </div>
                         <?

@@ -26,7 +26,7 @@ echo "</script>";
     $i = 0;
     /** @var $addr core_usermanager_data_Address */
     foreach ($addresses as $addr) {
-        echo "<option value='$i'>$addr->fullName - $addr->address - $addr->postCode $addr->city";
+        echo "<option value='$i'>".htmlentities($addr->fullName)." - ".htmlentities($addr->address)." - ".htmlentities($addr->postCode." ".$addr->city);
         $i++;
     }
     ?>

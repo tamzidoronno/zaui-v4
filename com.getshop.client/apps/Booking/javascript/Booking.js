@@ -237,7 +237,7 @@ $('.Booking .savebooking').live('click', function () {
     data.name = $('#candidateName').val();
     data.entryId = $(this).attr('entryid');
     data.email = $('#candidateEmail').val();
-    data.cellphone = $('#cellphone').val();
+    data.cellphone = $('#candidateCellphone').val();
     data.birthday = $('#birthday').val();
     if (!data.birthday && $('.search_company').val()) {
         data.birthday = $('.search_company').val();

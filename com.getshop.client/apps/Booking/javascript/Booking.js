@@ -234,7 +234,7 @@ $('.Booking .savebooking').live('click', function () {
         return;
     }
     var data = {}
-    data.name = $('#name').val();
+    data.name = $('#candinatename').val();
     data.entryId = $(this).attr('entryid');
     data.email = $('#email').val();
     data.cellphone = $('#cellphone').val();

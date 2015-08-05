@@ -59,7 +59,7 @@ Booking = {
         }
     },
     bindEvents: function () {
-        $(document).on('keyup', '.Booking #birthday.updateOnBlur', this.updateCompanyInformation);
+        $(document).on('keyup', '.Booking #candidateBirthday.updateOnBlur', this.updateCompanyInformation);
         $(document).on('click', '.Booking .donemarker', this.markAsDone);
         $(document).on('click', '.Booking .find_company_for_selection', this.startSearchCompany);
         $(document).on('change', '.Booking .select_course_location', this.updateCourseLocation);
@@ -119,9 +119,9 @@ Booking = {
         var name = row.find('.selected_name').html();
 
         $(this).closest('.app').find('.search_company').val(name);
-        $(this).closest('.app').find('#birthday').val(brregnumber);
-        $(this).closest('.app').find('#birthday').keyup();
-//        $(this).closest('.app').find('#birthday').closest('tr').show();
+        $(this).closest('.app').find('#candidateBirthday').val(brregnumber);
+        $(this).closest('.app').find('#candidateBirthday').keyup();
+//        $(this).closest('.app').find('#candidateBirthday').closest('tr').show();
         $('.Booking .search_result_area').hide();
     },
     searchBrreg: function (event) {
@@ -251,7 +251,7 @@ $('.Booking .savebooking').live('click', function () {
         data.extradep = $("#candidateExtradep").val();
     }
 
-    if ($('#birthday').hasClass("updateOnBlur")) {
+    if ($('#candidateBirthday').hasClass("updateOnBlur")) {
         data.company = $('.companyinformation').html();
     } else {
         data.company = $('#company').val();

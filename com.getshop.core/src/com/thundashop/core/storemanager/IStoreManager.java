@@ -3,6 +3,7 @@ package com.thundashop.core.storemanager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.storemanager.data.KeyData;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 
@@ -21,6 +22,17 @@ public interface IStoreManager {
      * @throws ErrorException 
      */
     public Store initializeStore(String webAddress, String initSessionId) throws ErrorException;
+    
+    /**
+     * Save whatever data you want to the store.
+     * @param key The key to save to
+     * @param value The value to save
+     * @param secure Secure? Need to be administrator to read it?
+     */
+    public void saveKey(String key, String value, boolean secure);
+    public void removeKey(String key);
+    public String getKey(String key);
+    public String getKeySecure(String key, String password);
     
     
     /**

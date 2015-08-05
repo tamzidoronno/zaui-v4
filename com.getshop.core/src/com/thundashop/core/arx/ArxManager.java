@@ -277,7 +277,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         Unmarshaller unmarsh = context.createUnmarshaller();
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         //specify the schema definition for parsing
-        Schema schema = sf.newSchema(new File("/home/boggi/integration.xsd"));
+        Schema schema = sf.newSchema(new File("integration.xsd"));
         unmarsh.setSchema(schema);
         //unmarshall the xml file
         Arxdata obj;
@@ -530,7 +530,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         Unmarshaller unmarsh = context.createUnmarshaller();
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         //specify the schema definition for parsing
-        Schema schema = sf.newSchema(new File("/home/boggi/integration.xsd"));
+        Schema schema = sf.newSchema(new File("integration.xsd"));
         unmarsh.setSchema(schema);
 
         //unmarshall the xml file

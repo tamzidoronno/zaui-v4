@@ -195,6 +195,9 @@ class Factory extends FactoryBase {
             if (method_exists($appInstance, "renderOnStartup")) {
                 $appInstance->renderOnStartup();
             }
+            if (method_exists($appInstance, "addScripts")) {
+                $appInstance->addScripts();
+            }
         }
         if (method_exists($themeApp, "addScripts")) {
             $themeApp->addScripts();

@@ -6425,6 +6425,43 @@ class StoreManager(object):
     data.interfaceName = "core.storemanager.IStoreManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getKey(self, key):
+    args = collections.OrderedDict()
+    if isinstance(key,GetShopBaseClass): 
+      args["key"]=json.dumps(key.__dict__)
+    else:
+      try:
+        args["key"]=json.dumps(key)
+      except (ValueError, AttributeError):
+        args["key"]=key
+    data = EmptyClass()
+    data.args = args
+    data.method = "getKey"
+    data.interfaceName = "core.storemanager.IStoreManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getKeySecure(self, key, password):
+    args = collections.OrderedDict()
+    if isinstance(key,GetShopBaseClass): 
+      args["key"]=json.dumps(key.__dict__)
+    else:
+      try:
+        args["key"]=json.dumps(key)
+      except (ValueError, AttributeError):
+        args["key"]=key
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
+    data = EmptyClass()
+    data.args = args
+    data.method = "getKeySecure"
+    data.interfaceName = "core.storemanager.IStoreManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getMyStore(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -6490,6 +6527,50 @@ class StoreManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "removeDomainName"
+    data.interfaceName = "core.storemanager.IStoreManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def removeKey(self, key):
+    args = collections.OrderedDict()
+    if isinstance(key,GetShopBaseClass): 
+      args["key"]=json.dumps(key.__dict__)
+    else:
+      try:
+        args["key"]=json.dumps(key)
+      except (ValueError, AttributeError):
+        args["key"]=key
+    data = EmptyClass()
+    data.args = args
+    data.method = "removeKey"
+    data.interfaceName = "core.storemanager.IStoreManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveKey(self, key, value, secure):
+    args = collections.OrderedDict()
+    if isinstance(key,GetShopBaseClass): 
+      args["key"]=json.dumps(key.__dict__)
+    else:
+      try:
+        args["key"]=json.dumps(key)
+      except (ValueError, AttributeError):
+        args["key"]=key
+    if isinstance(value,GetShopBaseClass): 
+      args["value"]=json.dumps(value.__dict__)
+    else:
+      try:
+        args["value"]=json.dumps(value)
+      except (ValueError, AttributeError):
+        args["value"]=value
+    if isinstance(secure,GetShopBaseClass): 
+      args["secure"]=json.dumps(secure.__dict__)
+    else:
+      try:
+        args["secure"]=json.dumps(secure)
+      except (ValueError, AttributeError):
+        args["secure"]=secure
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveKey"
     data.interfaceName = "core.storemanager.IStoreManager"
     return self.communicationHelper.sendMessage(data)
 

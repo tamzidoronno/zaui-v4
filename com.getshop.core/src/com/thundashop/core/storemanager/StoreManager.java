@@ -5,10 +5,12 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.storemanager.data.KeyData;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     
     @Autowired
     public MailFactory mailFactory;
+    
+    private HashMap<String, KeyData> keyDataStore = new HashMap();
 
     @PostConstruct
     public void init() {
@@ -36,6 +40,12 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
+        for(DataCommon dcommon : data.data) {
+            if(dcommon instanceof KeyData) {
+                KeyData kdata = (KeyData) dcommon;
+                keyDataStore.put(kdata.datakey, kdata);
+            }
+        }
     }
 
     @Override
@@ -213,6 +223,46 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             store.isTemplate = isTemplate;
             storePool.saveStore(store);
         }
+    }
+
+    @Override
+    public void saveKey(String key, String value, boolean secure) {
+        KeyData keydata = new KeyData();
+        if(keyDataStore.containsKey(key)) {
+            keydata = keyDataStore.get(key);
+        }
+        keydata.datakey = key;
+        keydata.value = value;
+        keydata.secure = secure;
+        keyDataStore.put(key, keydata);
+        saveObject(keydata);
+    }
+
+    @Override
+    public String getKey(String key) {
+        KeyData res = keyDataStore.get(key);
+        if(res.secure) {
+            if(!getSession().currentUser.isAdministrator()) {
+                return "";
+            }
+        }
+        
+        return res.value;
+    }
+
+    @Override
+    public void removeKey(String key) {
+        KeyData obj = keyDataStore.get(key);
+        keyDataStore.remove(key);
+        deleteObject(obj);
+    }
+
+    @Override
+    public String getKeySecure(String key, String password) {
+        if(password.equals("fdsafasfneo445gfsbsdfasfasf")) {
+            return keyDataStore.get(key).value;
+        }
+        return "";
     }
 
   

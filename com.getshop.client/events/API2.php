@@ -6039,6 +6039,39 @@ class APIStoreManager {
 	}
 
 	/**
+	* Save whatever data you want to the store.
+	* @param key The key to save to
+	* @param value The value to save
+	* @param secure Secure? Need to be administrator to read it?
+	*/
+
+	public function getKey($key) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["key"] = json_encode($this->transport->object_unset_nulls($key));
+	     $data["method"] = "getKey";
+	     $data["interfaceName"] = "core.storemanager.IStoreManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Save whatever data you want to the store.
+	* @param key The key to save to
+	* @param value The value to save
+	* @param secure Secure? Need to be administrator to read it?
+	*/
+
+	public function getKeySecure($key, $password) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["key"] = json_encode($this->transport->object_unset_nulls($key));
+	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $data["method"] = "getKeySecure";
+	     $data["interfaceName"] = "core.storemanager.IStoreManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get the store added to this session.
 	* @return core_storemanager_data_Store
 	* @throws ErrorException
@@ -6112,6 +6145,40 @@ class APIStoreManager {
 	     $data["method"] = "removeDomainName";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
 	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Save whatever data you want to the store.
+	* @param key The key to save to
+	* @param value The value to save
+	* @param secure Secure? Need to be administrator to read it?
+	*/
+
+	public function removeKey($key) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["key"] = json_encode($this->transport->object_unset_nulls($key));
+	     $data["method"] = "removeKey";
+	     $data["interfaceName"] = "core.storemanager.IStoreManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Save whatever data you want to the store.
+	* @param key The key to save to
+	* @param value The value to save
+	* @param secure Secure? Need to be administrator to read it?
+	*/
+
+	public function saveKey($key, $value, $secure) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["key"] = json_encode($this->transport->object_unset_nulls($key));
+	     $data['args']["value"] = json_encode($this->transport->object_unset_nulls($value));
+	     $data['args']["secure"] = json_encode($this->transport->object_unset_nulls($secure));
+	     $data["method"] = "saveKey";
+	     $data["interfaceName"] = "core.storemanager.IStoreManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

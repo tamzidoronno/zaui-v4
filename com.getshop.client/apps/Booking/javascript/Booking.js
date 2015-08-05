@@ -238,17 +238,17 @@ $('.Booking .savebooking').live('click', function () {
     data.entryId = $(this).attr('entryid');
     data.email = $('#candidateEmail').val();
     data.cellphone = $('#candidateCellphone').val();
-    data.birthday = $('#birthday').val();
+    data.birthday = $('#candidateBirthday').val();
     if (!data.birthday && $('.search_company').val()) {
         data.birthday = $('.search_company').val();
     }
 
-    if ($('#invoiceemail').length > 0) {
-        data.invoiceemail = $('#invoiceemail').val();
+    if ($('#candiateInvoiceemail').length > 0) {
+        data.invoiceemail = $('#candiateInvoiceemail').val();
     }
 
-    if ($("#extradep").length > 0) {
-        data.extradep = $("#extradep").val();
+    if ($("#candidateExtradep").length > 0) {
+        data.extradep = $("#candidateExtradep").val();
     }
 
     if ($('#birthday').hasClass("updateOnBlur")) {

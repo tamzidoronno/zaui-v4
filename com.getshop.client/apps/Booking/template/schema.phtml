@@ -113,7 +113,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
             <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="candidateName" type='textfield'<? echo $bookingUserName; ?>/></td></tr>
             <tr><td class="col1"><?php echo $this->__w("email", 'contact'); ?></td><td><input id="candidateEmail" type='textfield' <? echo $bookingUserEmail; ?>/></td></tr>
             <? if ($this->isInvoiceEmailActivated()) { ?>
-                <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="invoiceemail" type='textfield' <? echo $bookingInvoiceEmail; ?>/></td></tr>
+                <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="candiateInvoiceemail" type='textfield' <? echo $bookingInvoiceEmail; ?>/></td></tr>
             <? } ?>
             <tr><td class="col1"><?php echo $this->__w("phone", 'contact'); ?></td><td><input id="candidateCellphone" type='textfield' <? echo $bookingcellPhone; ?>/></td></tr>
 
@@ -125,7 +125,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                 </tr>
                 <tr style="display:none;"><td class="col1"><?php echo $this->__w("orgnummer"); ?></td>
                     <td>
-                        <input orgLength="<? echo $this->getOrgNumberLength(); ?>" onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="birthday" type='textfield' disabled/>
+                        <input orgLength="<? echo $this->getOrgNumberLength(); ?>" onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="candidateBirthday" type='textfield' disabled/>
                     </td>
                 </tr>                
                 <? if (!$companyRemote) { ?>
@@ -135,7 +135,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                 <? } ?>
 
                 <? if ($extradep) { ?>
-                    <tr><td class="col1"><? echo $this->getTextForExtraDep(); ?></td><td><input id="extradep" checktype='<? echo $this->getCheckType(); ?>' <? echo $bookinReference; ?>type='textfield'/></td></tr>
+                    <tr><td class="col1"><? echo $this->getTextForExtraDep(); ?></td><td><input id="candidateExtradep" checktype='<? echo $this->getCheckType(); ?>' <? echo $bookinReference; ?>type='textfield'/></td></tr>
                 <? } ?>
 
                 <? if (!$this->isConnectedToCurrentPage()) { ?> 

@@ -55,6 +55,15 @@ app.FormItem = {
             };
             result.push(obj);
         });
+        
+        if($('#g-recaptcha-response').length > 0) {
+            if(!$('#g-recaptcha-response').val()) {
+                alert('You need to verify the captcha first');
+                return;
+            }
+        }
+        
+        data.captcha = $('#g-recaptcha-response').val();
         data.result = result;
         data.valid = valid;
         

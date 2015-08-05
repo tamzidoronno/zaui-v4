@@ -30,6 +30,19 @@ if(!$type) {
         case "h3":
             echo "<h3 formtype='$type' class='formiteminput'>" . $title . "</h3>";
             break;
+        case "recaptcha":
+            echo '<div id="recaptchafield" data-sitekey="'.$this->getCaptchaKey().'"></div>';
+            ?>
+            <script>
+                $.getScript( "https://www.google.com/recaptcha/api.js?onload=capthaLoader&render=explicit", function() {
+                    grecaptcha.render(
+                        "recaptchafield", {
+                        "sitekey" : "<? echo $this->getCaptchaKey(); ?>"
+                    });
+                });
+            </script>
+            <?
+            break;
         case "infofield":
             echo "<div formtype='$type' class='formiteminput'>";
             echo nl2br($title);

@@ -18,7 +18,52 @@ class FormItem extends \MarketingApplication implements \Application {
     public function render() {
         $this->includefile("field");
     }
+        
+    public function addScripts() {
+    }
     
+    
+    public function renderConfig() {
+        $taxes = $this->getApi()->getProductManager()->getTaxes();
+
+        if (sizeof($taxes) > 0) {
+            $taxgroups = array();
+            foreach ($taxes as $tax) {
+                $taxgroups[$tax->groupNumber] = $tax;
+            }
+
+            $setting = new \core_common_Settings();
+            $setting->id = "shipmentent";
+            $setting->value = $taxgroups[0]->taxRate;
+            @$this->configuration->settings->{"shipmentent"} = $setting;
+            
+            foreach($taxgroups as $number => $taxobj) {
+                if($number == 0) {
+                    continue;
+                }
+                $setting = new \core_common_Settings();
+                $setting->id = "tax_group_". $number;
+                $setting->value = $taxgroups[$number]->taxRate;
+                $this->configuration->settings->{"tax_group_". $number} = $setting;
+            }
+        }
+
+        $this->includefile("formconfig");
+    }
+
+    public function getSecret() {
+        return $this->getApi()->getStoreManager()->getKeySecure("secret", "fdsafasfneo445gfsbsdfasfasf");
+    }
+    
+    public function getCaptchaKey() {
+        return $this->getApi()->getStoreManager()->getKey("sitekey");
+    }
+    
+    public function saveConfig() {
+        $this->getApi()->getStoreManager()->saveKey("sitekey", $_POST['sitekey'], false);
+        $this->getApi()->getStoreManager()->saveKey("secret", $_POST['secret'], true);
+    }
+
     public function submitForm() {
         $result = "<table width='600'>";
         foreach($_POST['data']['result'] as $index => $res) {
@@ -53,6 +98,10 @@ class FormItem extends \MarketingApplication implements \Application {
         $_SESSION['submittedForm'] = $result; 
         
         $this->getApi()->getMessageManager()->sendMail($email, $email, "Form submission", $result, "post@getshop.com", "post@getshop.com");
+    }
+    
+    public function renderBottom() {
+        echo "\n" . "<script src='https://www.google.com/recaptcha/api.js?onload=capthaLoader&render=explicit'></script>";
     }
     
     public function getSubmittedForm() {

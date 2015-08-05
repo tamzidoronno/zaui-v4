@@ -42,7 +42,9 @@ public class UserStoreCollection {
         }
         
         if(user.referenceKey.isEmpty()) {
-            setReferenceNumber(user);
+            if (!storeId.equals("d27d81b9-52e9-4508-8f4c-afffa2458488")) {
+                setReferenceNumber(user);
+            }
         }
         
         return user;

@@ -234,9 +234,9 @@ $('.Booking .savebooking').live('click', function () {
         return;
     }
     var data = {}
-    data.name = $('#candinatename').val();
+    data.name = $('#candidateName').val();
     data.entryId = $(this).attr('entryid');
-    data.email = $('#email').val();
+    data.email = $('#candidateEmail').val();
     data.cellphone = $('#cellphone').val();
     data.birthday = $('#birthday').val();
     if (!data.birthday && $('.search_company').val()) {

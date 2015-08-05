@@ -110,8 +110,8 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
         $bookinReference = $userToBook ? " value='$userToBook->referenceKey'" : "";
         ?>
         <table id="bookingtable" allowadd="<? echo ($allowAdd == true) ? "true" : "false"; ?>">
-            <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="candinatename" type='textfield'<? echo $bookingUserName; ?>/></td></tr>
-            <tr><td class="col1"><?php echo $this->__w("email", 'contact'); ?></td><td><input id="email" type='textfield' <? echo $bookingUserEmail; ?>/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="candidateName" type='textfield'<? echo $bookingUserName; ?>/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("email", 'contact'); ?></td><td><input id="candidateEmail" type='textfield' <? echo $bookingUserEmail; ?>/></td></tr>
             <? if ($this->isInvoiceEmailActivated()) { ?>
                 <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="invoiceemail" type='textfield' <? echo $bookingInvoiceEmail; ?>/></td></tr>
             <? } ?>

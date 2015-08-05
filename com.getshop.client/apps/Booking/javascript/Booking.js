@@ -70,7 +70,29 @@ Booking = {
         $(document).on('click', '.Booking .company_selection', this.selectCompanyFromBrreg);
         $(document).on('click', '.Booking .toggleUserId', this.toggleInvoiced);
         $(document).on('click', '.Booking .confirm_booking_button', this.confirmBooking);
+        $(document).on('click', '.Booking .check_for_user', this.checkForUser);
+        $(document).on('click', '.Booking .unsetEnteteredUserToBook', this.unsetUserToBook);
     },
+    
+    unsetUserToBook: function() {
+        var data = {
+            entry: $(this).attr('entryid')
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, 'unsetUserToBook', this, data);
+        thundashop.Ajax.post(event);
+    },
+    
+    checkForUser: function() {
+        var data = {
+            email: $('#bookingEmailCheckAddress').val(),
+            entryId: $(this).attr('entryId')
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, 'saveEmailAddressToSession', this, data);
+        thundashop.Ajax.post(event);
+    },
+    
     confirmBooking: function() {
         var data = {
             entryId: $(this).attr('entryId')
@@ -193,14 +215,16 @@ Booking = {
 $('.Booking .groupselection .selectbox').live('click', function () {
     var groupid = $(this).attr('groupid');
     var data = {
-        groupid: groupid
+        groupid: groupid,
+        entry : $(this).attr('entryid')
     }
     var event = thundashop.Ajax.createEvent('Booking', 'setGroup', $(this), data);
     thundashop.Ajax.post(event);
 });
 
 $('.Booking .selected .changeit').live('click', function () {
-    var event = thundashop.Ajax.createEvent('Booking', 'unsetGroup', $(this), {});
+    var entryid = $(this).attr('entryid');
+    var event = thundashop.Ajax.createEvent('Booking', 'unsetGroup', $(this), { 'entry' : entryid});
     thundashop.Ajax.post(event);
 });
 
@@ -211,9 +235,13 @@ $('.Booking .savebooking').live('click', function () {
     }
     var data = {}
     data.name = $('#name').val();
+    data.entryId = $(this).attr('entryid');
     data.email = $('#email').val();
     data.cellphone = $('#cellphone').val();
     data.birthday = $('#birthday').val();
+    if (!data.birthday && $('.search_company').val()) {
+        data.birthday = $('.search_company').val();
+    }
 
     if ($('#invoiceemail').length > 0) {
         data.invoiceemail = $('#invoiceemail').val();

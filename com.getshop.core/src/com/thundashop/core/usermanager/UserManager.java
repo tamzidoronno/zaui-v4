@@ -690,7 +690,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return sessionFactory.getObject(getSession().id, "impersonatedUser") != null;
     }
     
-    private User getUserByEmail(String emailAddress) throws ErrorException {
+    @Override
+    public User getUserByEmail(String emailAddress) throws ErrorException {
         List<User> users = getUserStoreCollection(getStore().id).getAllUsers();
         for (User user : users) {
             if (user.emailAddress != null && user.emailAddress.equals(emailAddress)) {
@@ -808,4 +809,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             System.out.println("Group: " + group.groupName + " count: " + count);
         }
     }
+    
+    
+    
 }

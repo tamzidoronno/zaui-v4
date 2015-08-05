@@ -105,8 +105,15 @@ class Booking extends MarketingApplication implements Application {
     }
 
     public function render() {
-        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() == null) {
+        $userObject = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        
+        if (isset($_GET['page'])) {
+            $this->clearSession();
+        }
+        if ($userObject == null) {
             $this->includefile("logininformation");
+        } elseif ($userObject->type > 10) {
+            $this->includefile("schema");
         } else {
             $this->includefile('confirmbooking');
         }
@@ -222,33 +229,67 @@ class Booking extends MarketingApplication implements Application {
     }
 
     public function runRegisterEvent() {
-        $data['name'] = $_POST['data']['name'];
-        $data['email'] = $_POST['data']['email'];
-        $data['cellphone'] = $_POST['data']['cellphone'];
-
-        if (isset($_POST['data']['extradep'])) {
-            $data['referenceKey'] = $_POST['data']['extradep'];
-        }
-
-        if ($this->getAllowAdd()) {
-            $event = $this->registerCalenderEvent($data);
-            $data['eventid'] = $event->entryId;
-            $this->sendMail($event, $data);
+        
+        $_GET['event'] = $_POST['data']['entryId'];
+        $userToBook = $this->getUserToBook();
+        if ($userToBook) {
+            $this->confirmBooking($userToBook);
         } else {
-            $data['birthday'] = $_POST['data']['birthday'];
-            $data['company'] = $_POST['data']['company'];
-            $data['eventid'] = isset($_POST['data']['eventid']) ? $_POST['data']['eventid'] : "";
-        }
+        
+            $data['name'] = $_POST['data']['name'];
+            $data['email'] = $_POST['data']['email'];
+            $data['cellphone'] = $_POST['data']['cellphone'];
 
-        $this->registerEvent($data);
+            if (isset($_POST['data']['extradep'])) {
+                $data['referenceKey'] = $_POST['data']['extradep'];
+            }
+
+            if ($this->getAllowAdd()) {
+                $event = $this->registerCalenderEvent($data);
+                $data['eventid'] = $event->entryId;
+                $this->sendMail($event, $data);
+            } else {
+                $data['birthday'] = $_POST['data']['birthday'];
+                $data['company'] = $_POST['data']['company'];
+                $data['eventid'] = isset($_POST['data']['eventid']) ? $_POST['data']['eventid'] : "";
+                $_GET['entry'] =  $_POST['data']['eventid'];
+            }
+
+            $this->registerEvent($data);
+        }
+        
+        $this->clearSession();
+    }
+    
+    public function getUserToBook() {
+        $userToBook = false;
+        if (isset($_SESSION['userEmailToBook']) && $_SESSION['userEmailToBook']) {
+           $userToBook = $this->getApi()->getUserManager()->getUserByEmail($_SESSION['userEmailToBook']);
+           return $userToBook;
+        }
+        
+        return null;
     }
 
     public function setGroup() {
         $_SESSION['group'] = $_POST['data']['groupid'];
+        $_GET['entry'] = $_POST['data']['entry'];
+        $userToBook = $this->getUserToBook();
+        if ($userToBook && !count($userToBook->groups)) {
+            $userToBook->groups[] = $_POST['data']['groupid'];
+            $this->getApi()->getUserManager()->saveUser($userToBook);
+        }
     }
 
     public function unsetGroup() {
         unset($_SESSION['group']);
+        $_GET['entry'] = $_POST['data']['entry'];
+        
+        $userToBook = $this->getUserToBook();
+        if ($userToBook && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor()){
+            $userToBook->groups = [];
+            $this->getApi()->getUserManager()->saveUser($userToBook);
+        }
     }
 
     private function setCompany($orgNumber, $fetch) {
@@ -353,8 +394,11 @@ class Booking extends MarketingApplication implements Application {
         $this->setConfigurationSetting("invoiced", json_encode($invoiced));
     }
 
-    public function confirmBooking() {
-        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+    public function confirmBooking($user=false) {
+        if (!$user) {
+            $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        } 
+        
         if (!$user) {
             echo __f("You need to be logged in to use this feature");
             return;
@@ -367,6 +411,25 @@ class Booking extends MarketingApplication implements Application {
         } else {
             $this->getApi()->getCalendarManager()->addUserToEvent($user->id, $_POST['data']['entryId'], "", $user->username, "webpage");
         }
+        
+        $this->clearSession();
+    }
+    
+    public function clearSession() {
+        unset($_SESSION['group']);
+        unset($_SESSION['userEmailToBook']);
+    }
+    
+    public function saveEmailAddressToSession() {
+        $_SESSION['userEmailToBook'] = $_POST['data']['email'];
+        $_GET['entry'] = $_POST['data']['entryId'];
+        unset($_SESSION['group']);
+    }
+    
+    public function unsetUserToBook() {
+        
+        $_GET['entry'] = $_POST['data']['entry'];
+        unset($_SESSION['userEmailToBook']);
     }
 }
 

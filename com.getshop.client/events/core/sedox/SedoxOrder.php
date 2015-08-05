@@ -6,5 +6,8 @@ class core_sedox_SedoxOrder {
 	/** @var String */
 	public $creditAmount;
 
+	/** @var String */
+	public $dateCreated;
+
 }
 ?>

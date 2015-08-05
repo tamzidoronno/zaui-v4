@@ -55,6 +55,14 @@ public interface IUserManager {
      */
     public User logOn(String username, String password) throws ErrorException;
     
+    /**
+     * return the given user by an email, returns null if not found
+     * @param emailAddress
+     * @return
+     * @throws ErrorException 
+     */
+    @Editor
+    public User getUserByEmail(String emailAddress) throws ErrorException;
     
     /**
      * Sometimes it is needed for someone to logon using a generated key instead.<br>

@@ -1,16 +1,7 @@
 <?
-/** @var $this ns_74ea4e90_2d5a_4290_af0c_230a66e09c78\Booking */
+
 namespace ns_74ea4e90_2d5a_4290_af0c_230a66e09c78;
 
-if (!isset($_SESSION['userEmailToBook'])) {
-    $_SESSION['userEmailToBook'] = null;
-}
-
-$userToBook = $this->getUserToBook();
-
-if ($userToBook) {
-    $_SESSION['group'] = $userToBook->groups[0];
-}
 $allowAdd = $this->getAllowAdd();
 $settings = $this->getConfiguration()->settings;
 $starthour = isset($settings->starthour_for_allowaddon) ? $settings->starthour_for_allowaddon->value : 0;
@@ -21,37 +12,11 @@ $extradep = $this->isExtraDepActivated();
 $updateClass = $companyRemote ? "updateOnBlur" : "";
 $groups = $this->getApi()->getUserManager()->getAllGroups();
 
-$entry = isset($_GET['entry']) ? $this->getFactory()->getApi()->getCalendarManager()->getEntry($_GET['entry']) : "";
-
-
 if ($groups != null) {
     shuffle($groups);
 }
 
-if ($_SESSION['userEmailToBook'] == null) {
-    echo "<div class='pre_booking_signup'>";
-    ?>
-    <div>
-        <div><? echo $this->__f("Event").": ".$entry->title; ?></div>
-        <div><? echo $this->__f("Date").": ".$entry->day."/".$entry->month."-".$entry->year; ?></div>
-        <div><? echo $this->__f("Location").": ".$entry->location; ?></div>
-        <div><? echo $entry->locationObject->locationExtra; ?></div>
-    </div>
-    <?
-    echo "<br/><hr/>".$this->__f("You can use this form to sign up other attendees then yourself since you are an editor or administrator.");
-    echo "<br/><br/>".$this->__f("Enter emailaddress to customer: ");
-    echo "<br/><input type='textfield' id='bookingEmailCheckAddress' placeholder='customer@emailaddress.xx' style='padding: 5px;'><br/>";
-    ?>
-        <div class="button check_for_user" entryId="<? echo $entry->entryId; ?>">
-            <div class="rightglare"></div>
-            <div class="filler"></div>
-            <ins class="" id=""><? echo $this->__w("Next"); ?></ins>
-        </div>
-    <?
-    echo "</div>";
-}
-
-if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSION['group']) && $_SESSION['userEmailToBook'] != null && (!$userToBook || !count($userToBook->groups))) {
+if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSION['group'])) {
     if (isset($_GET['entry'])) {
         $_SESSION['entry'] = $_GET['entry'];
     }
@@ -62,7 +27,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
 
     foreach ($groups as $group) {
         $id = $group->id;
-        echo "<div groupid='$id' class='selectbox' entryid='$entry->entryId'>";
+        echo "<div groupid='$id' class='selectbox'>";
         $imageId = $group->imageId;
         if ($imageId == "") {
             echo $group->groupName;
@@ -72,7 +37,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
         echo "</div>";
     }
     echo "</div>";
-} elseif ($_SESSION['userEmailToBook'] != null) {
+} else {
 
     if (isset($_GET['entry']) && isset($_SESSION['entry'])) {
         unset($_SESSION['entry']);
@@ -96,30 +61,23 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                     } else {
                         echo "<img src='displayImage.php?id=$imageId'/>";
                     }
-                    echo "<div class='changeit' entryid='$entry->entryId'>" . $this->__w("change") . "</div>";
+                    echo "<div class='changeit'>" . $this->__w("change") . "</div>";
                     echo "</div>";
                 }
             }
         }
-        
-        $bookingUserName = $userToBook ? "disabled='true' value='$userToBook->fullName'" : "";
-        $bookingUserEmail = isset($_SESSION['userEmailToBook']) ? "disabled='true' value='".$_SESSION['userEmailToBook']."'" : "";
-        $bookingInvoiceEmail = $userToBook ? "disabled='true' value='$userToBook->emailAddressToInvoice'" : "";
-        $bookingcellPhone = $userToBook ? "disabled='true' value='$userToBook->cellPhone'" : "";
-        $bookingbirthDay = $userToBook ? "disabled='true' value='$userToBook->birthDay'" : "";
-        $bookinReference = $userToBook ? " value='$userToBook->referenceKey'" : "";
         ?>
         <table id="bookingtable" allowadd="<? echo ($allowAdd == true) ? "true" : "false"; ?>">
-            <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="name" type='textfield'<? echo $bookingUserName; ?>/></td></tr>
-            <tr><td class="col1"><?php echo $this->__w("email", 'contact'); ?></td><td><input id="email" type='textfield' <? echo $bookingUserEmail; ?>/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="name" type='textfield'/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("email", 'contact'); ?></td><td><input id="email" type='textfield'/></td></tr>
             <? if ($this->isInvoiceEmailActivated()) { ?>
-                <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="invoiceemail" type='textfield' <? echo $bookingInvoiceEmail; ?>/></td></tr>
+                <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="invoiceemail" type='textfield'/></td></tr>
             <? } ?>
-            <tr><td class="col1"><?php echo $this->__w("phone", 'contact'); ?></td><td><input id="cellphone" type='textfield' <? echo $bookingcellPhone; ?>/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("phone", 'contact'); ?></td><td><input id="cellphone" type='textfield'/></td></tr>
 
             <? if (!$allowAdd) { ?>
                 <tr><td><? echo $this->__w("Company"); ?></td><td>
-                        <input type="text" placeholder="" class="search_company" <? echo $bookingbirthDay; ?>>
+                        <input type="text" placeholder="" class="search_company">
                         <span class="search_result_area"></span>
                     </td>
                 </tr>
@@ -135,7 +93,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                 <? } ?>
 
                 <? if ($extradep) { ?>
-                    <tr><td class="col1"><? echo $this->getTextForExtraDep(); ?></td><td><input id="extradep" checktype='<? echo $this->getCheckType(); ?>' <? echo $bookinReference; ?>type='textfield'/></td></tr>
+                    <tr><td class="col1"><? echo $this->getTextForExtraDep(); ?></td><td><input id="extradep" checktype='<? echo $this->getCheckType(); ?>' type='textfield'/></td></tr>
                 <? } ?>
 
                 <? if (!$this->isConnectedToCurrentPage()) { ?> 
@@ -199,16 +157,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
             <? } ?>
             <tr>
                 <td colspan="2" align="right">
-                    
-                    <div class="button unsetEnteteredUserToBook"  entryid="<? echo $entry->entryId; ?>">
-                        <div class="rightglare"></div>
-                        <div class="filler"></div>
-                        <ins class="send_email" id="send_email"><?
-                                echo $this->__w("Change user");
-                            ?></ins>
-                    </div>
-                    
-                    <div class="button savebooking" entryid="<? echo $entry->entryId; ?>">
+                    <div class="button savebooking">
                         <div class="rightglare"></div>
                         <div class="filler"></div>
                         <ins class="send_email" id="send_email"><?

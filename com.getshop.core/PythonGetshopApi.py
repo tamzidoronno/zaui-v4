@@ -6010,6 +6010,21 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getUserByEmail(self, emailAddress):
+    args = collections.OrderedDict()
+    if isinstance(emailAddress,GetShopBaseClass): 
+      args["emailAddress"]=json.dumps(emailAddress.__dict__)
+    else:
+      try:
+        args["emailAddress"]=json.dumps(emailAddress)
+      except (ValueError, AttributeError):
+        args["emailAddress"]=emailAddress
+    data = EmptyClass()
+    data.args = args
+    data.method = "getUserByEmail"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getUserById(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 

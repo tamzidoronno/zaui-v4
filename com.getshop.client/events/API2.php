@@ -5849,6 +5849,22 @@ class APIUserManager {
 	}
 
 	/**
+	* return the given user by an email, returns null if not found
+	* @param emailAddress
+	* @return core_usermanager_data_User
+	* @throws ErrorException
+	*/
+
+	public function getUserByEmail($emailAddress) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["emailAddress"] = json_encode($this->transport->object_unset_nulls($emailAddress));
+	     $data["method"] = "getUserByEmail";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Fetch a user
 	* @param id
 	* @return core_usermanager_data_User

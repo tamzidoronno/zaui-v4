@@ -21,7 +21,7 @@ $extradep = $this->isExtraDepActivated();
 $updateClass = $companyRemote ? "updateOnBlur" : "";
 $groups = $this->getApi()->getUserManager()->getAllGroups();
 
-$entry = isset($_GET['entry']) ? $this->getFactory()->getApi()->getCalendarManager()->getEntry($_GET['entry']) : "";
+$currentEntry = isset($_GET['entry']) ? $this->getFactory()->getApi()->getCalendarManager()->getEntry($_GET['entry']) : "";
 
 
 if ($groups != null) {
@@ -32,17 +32,17 @@ if ($_SESSION['userEmailToBook'] == null) {
     echo "<div class='pre_booking_signup'>";
     ?>
     <div>
-        <div><? echo $this->__f("Event").": ".$entry->title; ?></div>
-        <div><? echo $this->__f("Date").": ".$entry->day."/".$entry->month."-".$entry->year; ?></div>
-        <div><? echo $this->__f("Location").": ".$entry->location; ?></div>
-        <div><? echo $entry->locationObject->locationExtra; ?></div>
+        <div><? echo $this->__f("Event").": ".$currentEntry->title; ?></div>
+        <div><? echo $this->__f("Date").": ".$currentEntry->day."/".$currentEntry->month."-".$currentEntry->year; ?></div>
+        <div><? echo $this->__f("Location").": ".$currentEntry->location; ?></div>
+        <div><? echo $currentEntry->locationObject->locationExtra; ?></div>
     </div>
     <?
     echo "<br/><hr/>".$this->__f("You can use this form to sign up other attendees then yourself since you are an editor or administrator.");
     echo "<br/><br/>".$this->__f("Enter emailaddress to customer: ");
     echo "<br/><input type='textfield' id='bookingEmailCheckAddress' placeholder='customer@emailaddress.xx' style='padding: 5px;'><br/>";
     ?>
-        <div class="button check_for_user" entryId="<? echo $entry->entryId; ?>">
+        <div class="button check_for_user" entryId="<? echo $currentEntry->entryId; ?>">
             <div class="rightglare"></div>
             <div class="filler"></div>
             <ins class="" id=""><? echo $this->__w("Next"); ?></ins>
@@ -62,7 +62,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
 
     foreach ($groups as $group) {
         $id = $group->id;
-        echo "<div groupid='$id' class='selectbox' entryid='$entry->entryId'>";
+        echo "<div groupid='$id' class='selectbox' entryid='$currentEntry->entryId'>";
         $imageId = $group->imageId;
         if ($imageId == "") {
             echo $group->groupName;
@@ -96,7 +96,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                     } else {
                         echo "<img src='displayImage.php?id=$imageId'/>";
                     }
-                    echo "<div class='changeit' entryid='$entry->entryId'>" . $this->__w("change") . "</div>";
+                    echo "<div class='changeit' entryid='$currentEntry->entryId'>" . $this->__w("change") . "</div>";
                     echo "</div>";
                 }
             }
@@ -200,7 +200,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
             <tr>
                 <td colspan="2" align="right">
                     
-                    <div class="button unsetEnteteredUserToBook"  entryid="<? echo $entry->entryId; ?>">
+                    <div class="button unsetEnteteredUserToBook"  entryid="<? echo $currentEntry->entryId; ?>">
                         <div class="rightglare"></div>
                         <div class="filler"></div>
                         <ins class="send_email" id="send_email"><?
@@ -208,7 +208,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                             ?></ins>
                     </div>
                     
-                    <div class="button savebooking" entryid="<? echo $entry->entryId; ?>">
+                    <div class="button savebooking" entryid="<? echo $currentEntry->entryId; ?>">
                         <div class="rightglare"></div>
                         <div class="filler"></div>
                         <ins class="send_email" id="send_email"><?

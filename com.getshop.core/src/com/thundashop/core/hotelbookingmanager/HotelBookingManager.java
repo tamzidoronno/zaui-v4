@@ -681,13 +681,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             return true;
         }
 
-        if (checkInVismaIfUserExists(user)) {
-            UserManager userManager = getManager(UserManager.class);
-            userManager.markUserAsTransferredToVisma(user);
-            return true;
-        }
+        UserManager userManager = getManager(UserManager.class);
+        userManager.markUserAsTransferredToVisma(user);
 
-        return false;
+        return true;
     }
 
     /**

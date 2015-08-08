@@ -1,0 +1,308 @@
+<?
+/* @var $this HotelbookingManagement */
+$hmanager = $this->getApi()->getHotelBookingManager();
+$rooms = $hmanager->getAllRooms();
+$newRoom = array();
+foreach($rooms as $room) {
+    $newRoom[$room->id] = $room;
+}
+$rooms = $newRoom;
+
+$types = $hmanager->getRoomTypes();
+
+foreach($types as $type) {
+    $types[$type->id] = $type;
+}
+
+$selectedType = new \core_hotelbookingmanager_RoomType();
+if(isset($_POST['data']['typeId'])) {
+    foreach($types as $type) {
+        if($type->id == $_POST['data']['typeId']) {
+            $selectedType = $type;
+        }
+    }
+}
+$start = strtotime($this->getStartDate());
+$end = strtotime($this->getEndDate());
+?>
+
+Existing booking references
+<div style="">
+    <table width="100%" id="datatableadmin">
+        <thead>
+            <tr>
+                <th>Ref id</th>
+                <th>Actions</th>
+                <th>Registration date</th>
+                <th>Reserved by</th>
+                <th>Room (code)</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Gebyr</th>
+                <th>Contract</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?
+        $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
+        $heardAbout = array();
+        $roomTypes = array();
+        foreach($reservations as $reservation) {
+            $roomarray = array();
+            /* $rooms \core_hotelbookingmanager_Room[] */
+
+            if($start > strtotime($reservation->rowCreatedDate)) {
+                continue;
+            }
+            if($end < strtotime($reservation->rowCreatedDate)) {
+                continue;
+            }
+            
+            foreach($reservation->rooms as $index => $room) {
+                $roomid = $room->roomId;
+                @$roomTypes[$rooms[$roomid]->roomType]++;
+                $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$roomid'>" . $rooms[$roomid]->roomName . " (" . $reservation->codes[$index] . ")</span>";
+            }
+            
+            $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
+            $active = $reservation->active ? "" : "color: red";
+            $alreadyConfirmed = $reservation->confirmed;
+            
+            /* @var $reservation \core_hotelbookingmanager_BookingReference */
+            echo "<tr reservation='".$reservation->bookingReference."'>";
+            echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
+            echo "<td style='text-align:center;' valign='top'>"
+            . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>";
+
+            if ($alreadyConfirmed) {
+                echo "&nbsp;&nbsp;<i style='cursor:pointer; $active' refid='".$reservation->bookingReference."' class='fa fa-stop stop_reference'></i>";
+            }
+            
+            if (!$alreadyConfirmed) {
+                echo "&nbsp;&nbsp;<i style='cursor:pointer;' refid='".$reservation->bookingReference."' class='fa fa-play go_live'></i>";
+            }
+            echo "</td>";
+            echo "<td valign='top'>" . date("d.m.Y", strtotime($reservation->rowCreatedDate)) . "</td>";
+            echo "<td valign='top'>";
+            if($order && $order->userId) {
+                $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+                echo "<a href='?page=users_all_users&userid=".$order->userId."'>";
+                echo join("<br>", $reservation->contact->names);
+                echo "</a>";
+                if($reservation->heardAboutUs) {
+                    echo "<br><span style='color:#BBB;'>Heard about: "  . $reservation->heardAboutUs . "</span>";
+                }
+                @$heardAbout[$reservation->heardAboutUs]++;
+            }
+            echo "</td>";
+            $endDate = date("d.m.Y", strtotime($reservation->endDate));
+            if(!$this->isStopped($reservation)) {
+                $endDate = "";
+            }
+            
+            echo "<td style='text-align:center;' valign='top'>" . join("<br>", $roomarray) . "</td>";
+            echo "<td style='text-align:center;' valign='top'>" . date("d.m.Y", strtotime($reservation->startDate)) . "</td>";
+            echo "<td style='text-align:center;' valign='top'>" . $endDate . "</td>";
+            if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") {
+                echo "<td style='text-align:center;' valign='top'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
+                echo "<td style='text-align:center;' valign='top'>";
+                echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
+                echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-plus'></i></a> ";
+                echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=autogiro')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-car'></i></a>";
+                echo "</td>";
+            }
+            echo "</tr>";
+        }
+        ?>
+        </tbody>
+    </table>
+    <h1>Fra hvor</h1>
+    <table>
+    <?
+    foreach($heardAbout as $index => $number) {
+        if(!$index) {
+            continue;
+        }
+        echo "<tr><td>" . $index . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>" . $number . "</td></tr>";
+    }
+    ?>
+    </table>
+    <h1>Fordeling av boder</h1>
+    <table>
+    <?
+    foreach($roomTypes as $id => $count) {
+        if(!isset($types[$id])) {
+            continue;
+        }
+        echo "<tr><td> " . $types[$id]->name . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>" . $count . "</td></tr>";
+    }
+    ?>
+    </table>
+</div>
+<br>
+<br>
+<br>
+<script>
+    $('#datatableadmin').DataTable({
+            "bJQueryUI": true,
+            "aLengthMenu": [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
+            "iDisplayLength": 1000
+        });
+</script>
+<br>
+
+<? echo $this->__w("Add a room"); ?>
+<div gstype="form" method="addRoom">
+    <input type="text" gsname="roomname" placeholder="Room name">
+    <input type="hidden" gsname="newroom" value="true">
+    <input type="submit" gstype="submit" gsname="submit">
+</div>
+<br>
+Existing rooms:<br>
+<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
+    <table width="100%" gstype='form' method='addRoom' cellspacing="0" cellpadding="2">
+        <input type="hidden" value="true" gsname="updated">
+        <tr>
+            <td colspan='6' align='center'><div style='text-align:right'><i class='fa fa-floppy-o' style='cursor:pointer; color:green;' gstype='submit'></div></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td>Room type</td>
+            <td>Active</td>
+            <td>Last reservation</td>
+            <td>Room name</td>
+            <td>Lock id</td>
+        </tr>
+        <?
+        foreach($rooms as $room) {
+            $this->printRoomRow($room, $types);
+        }
+        ?>
+        <tr>
+            <td colspan='6' align='center'><div style='text-align:right'><i class='fa fa-floppy-o' style='cursor:pointer; color:green;' gstype='submit'></div></td>
+        </tr>
+    </table>
+</div>
+<br>
+<br>
+<br>
+<br>
+
+<? echo $this->__w("New room type"); ?>
+<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
+    <div>
+        <select id="type">
+            <?
+                foreach($types as $type) {
+                    echo "<option value='" . $type->id . "'>" . $type->name . "</option>";
+                }
+            ?>
+        </select>
+        <span class="edit_type">Edit</span>
+        <span class="delete_type">Delete</span>
+    </div>
+    <div gstype="form" method="addType">
+        <input type="hidden" gsname="id" value="<? echo $selectedType->id; ?>">
+        <input gstype="value" type="txt" gsname='name' placeholder="Enter a name for the room type" style="width:50%;" value="<? echo $selectedType->name; ?>"><br>
+        <input gstype="value" type="txt" gsname='en_desc' placeholder="Enter the norwegian description" style="width:50%;"  value="<? echo $selectedType->description_no; ?>"><br>
+        <input gstype="value" type="txt" gsname='no_desc' placeholder="Enter the english description" style="width:50%;"  value="<? echo $selectedType->description_en; ?>"><br>
+        <input gstype="submit" type="button" value="save">
+    </div>
+</div>
+<br>
+<? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
+
+    <b>Information related to the contract</b>
+    <table gstype="form" method="saveContractData">
+        <tr>
+            <td>landlord's name</td>
+            <td><input type="text" gsname="utleier_navn" value="<? echo $this->getConfigurationSetting("utleier_navn"); ?>"></td>
+        </tr>
+        <tr>
+            <td>landlord's address</td>
+            <td><input type="text" gsname="utleier_adresse" value="<? echo $this->getConfigurationSetting("utleier_adresse"); ?>"></td>
+        </tr>
+        <tr>
+            <td>landlord's place</td>
+            <td><input type="text" gsname="utleier_sted" value="<? echo $this->getConfigurationSetting("utleier_sted"); ?>"></td>
+        </tr>
+        <tr>
+            <td>landlord's postal code</td>
+            <td><input type="text" gsname="utleier_postnr" value="<? echo $this->getConfigurationSetting("utleier_postnr"); ?>"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input gstype="submit" type="button" value="Lagre"></td>
+        </tr>
+    </table>
+    <br>
+    <b>Variables in use for contracts</b>
+    <pre>
+    [navn] = leietakers navn
+    [org_fnr] = fødseldato eventuelt orgnr
+    [postaddr] = adressen for leier
+    [rom] = Rommet som skal leies ut
+    [areal] = Størrelsen på boden / rommet
+    [startdato] = Startdato   
+    [pris] = Prisen ved inngåelse av leie
+    [year] = Året
+    [adresse] = Kundens adresse
+    [postnr] = Kundens postadresse
+    [dagensdato] = Dagens dato
+    [dag_i_maned] = Dag i måned for bestilling
+    [admingebyr] = Administrasjons gebyr
+    [taxes] = Skatter og avgifter
+    [total_price] = Total pris ink. skatter og avgifter.
+
+    [belop_forslag] = Forslag på pris
+    [utleier_sted] = Sted som kontrakten skrives ut på
+    [utleier_navn] = Navnet på utleier
+    [utleier_adresse] = Utleiers adresse
+    [utleier_postnr] = Utleiers postnummer
+    </pre>
+<? } ?>
+
+
+<b>Arx server</b>
+<div>Variabler: {code}, {room}, {checkin_time}, {checkout_time}, {name}, {checkin_date}, {referenceNumber, {contacts}, {roomName}, {email}, {address}, {postCode}, {city}</div>
+<table gstype="form" method="saveArxData">
+    <tr><td>Server address</td><td><input type="text" gsname="arx_server" value="<? echo $this->getConfigurationSetting("arx_server"); ?>"></td><tr>
+    <tr><td>Server username</td><td><input type="text" gsname="arx_username" value="<? echo $this->getConfigurationSetting("arx_username"); ?>"></td><tr>
+    <tr><td>Server password</td><td><input type="text" gsname="arx_password" value="<? echo $this->getConfigurationSetting("arx_password"); ?>"></td><tr>
+    <tr><td>Sms from</td><td><input type="text" gsname="arx_smsfrom" value="<? echo $this->getConfigurationSetting("arx_smsfrom"); ?>"></td><tr>
+    <tr><td>Sms welcome</td><td><input style="width: 800px;" type="text" gsname="arx_smswelcome" value="<? echo $this->getConfigurationSetting("arx_smswelcome"); ?>"></td><tr>
+    <tr><td>Sms ready</td><td><input style="width: 800px;" type="text" gsname="arx_smsready" value="<? echo $this->getConfigurationSetting("arx_smsready"); ?>"></td><tr>
+    <tr><td>Sms welcome (no)</td><td><input style="width: 800px;" type="text" gsname="arx_smswelcomeNO" value="<? echo $this->getConfigurationSetting("arx_smswelcomeNO"); ?>"></td><tr>
+    <tr><td>Sms ready (no)</td><td><input style="width: 800px;" type="text" gsname="arx_smsreadyNO" value="<? echo $this->getConfigurationSetting("arx_smsreadyNO"); ?>"></td><tr>
+    <tr><td>Welcome email title</td><td><input style="width: 800px;" type="text" gsname="arx_welcomeemail_title" value="<? echo $this->getConfigurationSetting("arx_welcomeemail_title"); ?>"></td><tr>
+    <tr><td>Welcome email</td><td><textarea style="width: 800px;height:200px;" type="text" gsname="arx_welcomeEmail"><? echo $this->getConfigurationSetting("arx_welcomeEmail"); ?></textarea></td><tr>
+    <tr><td>Welcome email title (no)</td><td><input style="width: 800px;" type="text" gsname="arx_welcomeemail_title_no" value="<? echo $this->getConfigurationSetting("arx_welcomeemail_title_no"); ?>"></td><tr>
+    <tr><td>Welcome email (no)</td><td><textarea style="width: 800px;height:200px;" type="text" gsname="arx_welcomeEmailNO"><? echo $this->getConfigurationSetting("arx_welcomeEmailNO"); ?></textarea></td><tr>
+    <tr><td></td><td><input gstype="submit" type="button" value="Save"></td><tr>
+</table>
+<br><br>
+<b>Visma server</b>
+<table gstype="form" method="saveVismaData">
+    <tr><td>Server address</td><td><input type="text" gsname="visma_server" value="<? echo $this->getConfigurationSetting("visma_server"); ?>"></td><tr>
+    <tr><td>Server username</td><td><input type="text" gsname="visma_username" value="<? echo $this->getConfigurationSetting("visma_username"); ?>"></td><tr>
+    <tr><td>Server password</td><td><input type="text" gsname="visma_password" value="<? echo $this->getConfigurationSetting("visma_password"); ?>"></td><tr>
+    <tr><td>Server port</td><td><input type="text" gsname="visma_port" value="<? echo $this->getConfigurationSetting("visma_port"); ?>"></td><tr>
+    <tr><td>Server sql username</td><td><input type="text" gsname="visma_sqlUsername" value="<? echo $this->getConfigurationSetting("visma_sqlUsername"); ?>"></td><tr>
+    <tr><td>Server sql password</td><td><input type="text" gsname="visma_sqlPassword" value="<? echo $this->getConfigurationSetting("visma_sqlPassword"); ?>"></td><tr>
+    <tr><td>Server database</td><td><input type="text" gsname="visma_db" value="<? echo $this->getConfigurationSetting("visma_db"); ?>"></td><tr>
+    <tr><td></td><td><input gstype="submit" type="button" value="Save"></td><tr>
+</table>
+
+<b>Arx log</b>
+<div class="arx_log">
+    <?
+    $this->includefile("arxlog");
+    ?>
+</div>
+<br>
+<br>
+<br>
+<script>
+    setInterval(function(){ app.HotelbookingManagement.refreshArxLog(); }, 5000);
+</script>

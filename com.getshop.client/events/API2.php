@@ -1922,6 +1922,21 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return core_hotelbookingmanager_BookingStats
+	* @throws ErrorException
+	*/
+
+	public function buildStatistics($core_hotelbookingmanager_BookingStatsInput) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_hotelbookingmanager_BookingStatsInput"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_BookingStatsInput));
+	     $data["method"] = "buildStatistics";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_BookingStats(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Check if a room is available in the given time periode.
 	* @param startDate The first day unix timestamp.
 	* @param endDate The last day unix timestamp.

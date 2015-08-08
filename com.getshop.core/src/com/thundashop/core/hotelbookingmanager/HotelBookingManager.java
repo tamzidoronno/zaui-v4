@@ -1,6 +1,7 @@
 package com.thundashop.core.hotelbookingmanager;
 
 import com.ibm.icu.util.Calendar;
+import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -1206,5 +1207,90 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if (storeId != null && storeId.equals("3292fa74-32a2-4d52-b88f-6be6f3dff813")) {
             getMsgManager().smsFactory.send("GetShop", "46190000", "Ny bestilling opprettet, Navn: " + name + ", Rom: " + roomType);
         }
+    }
+
+    @Override
+    public BookingStats buildStatistics(BookingStatsInput input) {
+        Calendar start = Calendar.getInstance();
+        start.setTimeInMillis(input.startDate*1000);
+        Calendar end = Calendar.getInstance();
+        end.setTimeInMillis(input.endDate*1000);
+        
+        BookingStats stats = new BookingStats();
+
+        OrderManager orderMgr = getManager(OrderManager.class);
+        while(true) {
+            List<BookingReference> reservations = getReferencesOnDate(start.getTime());
+            int daysinmonth = start.getActualMaximum(Calendar.DAY_OF_MONTH);
+            
+            BookingStatsDay bstatsDay = new BookingStatsDay();
+            
+            bstatsDay.income.put("total", 0);
+            bstatsDay.count.put("total", 0);
+            
+            for(BookingReference ref : reservations) {
+                try {
+                    Order order = orderMgr.getOrderByReference(ref.bookingReference + "");
+                    Double amount = order.cart.getTotal(false);
+                    //The total amount.
+                    int dayAmount = (int) (amount / daysinmonth);
+                    Integer total = bstatsDay.income.get("total");
+                    bstatsDay.income.put("total", total += dayAmount);
+
+                    total = bstatsDay.count.get("total");
+                    bstatsDay.count.put("total", total += 1);
+                    
+                    
+                    //The income for each room type.
+                    if(ref.rooms.isEmpty() || ref.rooms.get(0).roomId == null || getRoom(ref.rooms.get(0).roomId) == null) {
+                        continue;
+                    }
+                    
+                    String roomId = ref.rooms.get(0).roomId;
+                    bstatsDay.takenRooms.add(roomId);
+                    
+                    String roomType = getRoom(ref.rooms.get(0).roomId).roomType;
+                    if(!bstatsDay.income.containsKey(roomType)) {
+                        bstatsDay.income.put(roomType, 0);
+                        bstatsDay.count.put(roomType, 0);
+                    }
+                    total = bstatsDay.income.get(roomType);
+                    if(amount == 0) {
+                        System.out.println(dayAmount + " - " + amount);
+                    }
+                    bstatsDay.income.put(roomType, total += dayAmount);
+                    
+                    total = bstatsDay.count.get(roomType);
+                    bstatsDay.count.put(roomType, total += 1);
+                    
+                } catch (ErrorException ex) {
+                    java.util.logging.Logger.getLogger(HotelBookingManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            stats.stats.put(start.getTimeInMillis()/1000, bstatsDay);
+            
+            start.add(Calendar.DAY_OF_YEAR, 1);
+            if(start.after(end)) {
+                break;
+            }
+        }
+        
+        return stats;
+    }
+
+    private List<BookingReference> getReferencesOnDate(Date time) {
+        List<BookingReference>  result = new ArrayList();
+        for(BookingReference ref : bookingReferences.values()) {
+            if(!ref.isStopped()) {
+                if(ref.startDate.before(time)) {
+                    result.add(ref);
+                }
+            } else {
+                if(ref.startDate.before(time) && ref.endDate.after(time)) {
+                    result.add(ref);
+                }
+            }
+        }
+        return result;
     }
 }

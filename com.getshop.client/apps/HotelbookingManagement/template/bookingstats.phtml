@@ -1,0 +1,122 @@
+<? /* @var $this ns_15e67fa1_c862_4bc3_9b17_dfd818f30712\HotelbookingManagement */ ?>
+<h1>Statistikk for periode <? echo $this->getStartDate(); ?> - <? echo $this->getEndDate(); ?> </h1>
+
+
+<?
+$input = new core_hotelbookingmanager_BookingStatsInput();
+$input->startDate = strtotime($this->getStartDate());
+$input->endDate = strtotime($this->getEndDate());
+$input->type = $_POST['data']['interval'];
+
+$res = $this->getApi()->getHotelBookingManager()->buildStatistics($input);
+$types = $this->getApi()->getHotelBookingManager()->getRoomTypes();
+$rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
+
+
+$inuse = array();
+foreach ($res->stats as $date => $bookingDayData) {
+    $count = $bookingDayData->count;
+    foreach ($count as $typeid => $i) {
+        $inuse[$typeid] = true;
+    }
+}
+
+$typesToPrint = array();
+foreach ($types as $type) {
+    if (key_exists($type->id, $inuse)) {
+        $typesToPrint[$type->id] = $type;
+    }
+}
+
+$roomCount = array();
+foreach($rooms as $room) {
+    /* @var $room core_hotelbookingmanager_Room */
+    if(!$room->roomType) {
+        continue;
+    }
+    @$roomCount[$room->roomType]++;
+    @$roomCount["total"]++;
+    
+}
+
+echo "<table width='100%'>";
+echo "<td>";
+echo "<h1>Belegg</h1>";
+print_table("count", $res, $typesToPrint, $roomCount);
+echo "</td><td>";
+echo "<h1>Intekter</h1>";
+print_table("income", $res, $typesToPrint, $roomCount);
+echo "</td>";
+echo "</table>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+
+
+function print_table($tabletype, $res, $typesToPrint, $roomCount) {
+
+    echo "<table cellspacing='1' cellpadding='1'>";
+    echo "<tr style='color:#fff; background-color:#000'>";
+    echo "<th>Dato</th>";
+    foreach ($typesToPrint as $type) {
+        /* @var $type core_hotelbookingmanager_RoomType */
+        echo "<th>" . $type->name . "</th>";
+    }
+    echo "<th>Totalt</th>";
+    if($tabletype == "count") {
+        echo "<th>Belegg</th>";
+    }
+    echo "</tr>";
+
+    $sum = array();
+    $counter = 0;
+    foreach ($res->stats as $date => $bookingDayData) {
+        if($tabletype == "income") {
+            $statsData = $bookingDayData->income;
+        } else {
+            $statsData = $bookingDayData->count;
+        }
+        echo "<tr bgcolor='#efefef'>";
+        echo "<td>" . date("d.m.Y", $date) . "</td>";
+        foreach ($typesToPrint as $type) {
+            @$sum[$type->id] += @$statsData->{$type->id};
+            echo "<td>" . @$statsData->{$type->id} . "</td>";
+        }
+        echo "<td>" . @$statsData->{"total"} . "</td>";
+        @$sum['total'] += @$statsData->{"total"};
+        $total = 0;
+         if($tabletype == "count") {
+             $belegg = round($statsData->{"total"} / $roomCount['total']*100);
+             echo "<td>$belegg%</td>";
+         }
+        echo "</tr>";
+        $counter++;
+    }
+    
+    echo "<tr bgcolor='#000' style='color:#fff'>";
+    echo "<td><b>Sum</b></td>";
+    foreach(@$sum as $key => $val) {
+        echo "<td>" . $val . "</td>";
+    }
+    if($tabletype == "count") {
+        echo "<td>";
+        $belegg = round(($sum['total'] / ($roomCount['total']*$counter))*100, 1);
+        echo $belegg . "%";
+        echo "</td>";
+    }
+    echo "</tr>";
+    echo "<tr bgcolor='#000' style='color:#fff'>";
+    echo "<td><b>Gj.snitt</b></td>";
+    foreach(@$sum as $key => $val) {
+        echo "<td>" . round($val / $counter) . "</td>";
+    }
+    if($tabletype == "count") {
+        echo "<td></td>";
+    }
+    echo "</tr>";
+    
+    echo "</table>";
+}
+?>
+

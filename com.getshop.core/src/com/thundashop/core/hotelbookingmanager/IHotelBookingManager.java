@@ -128,5 +128,5 @@ public interface IHotelBookingManager {
     public Room getRoomForCartItem(Integer reference, String cartItemId) throws ErrorException;
     
     @Administrator
-    public BookingStats buildStatistics(BookingStatsInput input);
+    public BookingStats buildStatistics(BookingStatsInput input) throws ErrorException;
 }

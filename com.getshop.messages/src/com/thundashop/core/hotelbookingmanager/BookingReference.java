@@ -34,7 +34,7 @@ public class BookingReference extends DataCommon {
     public Integer parkingSpots = 0;
     public String heardAboutUs = "";
     Date failed = null;
-
+    
     boolean isToday() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);

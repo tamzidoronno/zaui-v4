@@ -346,7 +346,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 return reference1.rowCreatedDate.compareTo(reference2.rowCreatedDate);
             }
         });
-
+        
+        OrderManager ordMgr = getManager(OrderManager.class);
+        for(BookingReference ref : result) {
+            if(ref.bookingFee < 1) {
+                Order order = ordMgr.getOrderByReference(ref.bookingReference + "");
+                ref.bookingFee = order.cart.getTotal(false);
+                if(ref.bookingFee > 0) {
+                    saveObject(ref);
+                }
+            }
+        }
+        
         return result;
     }
 
@@ -1210,7 +1221,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public BookingStats buildStatistics(BookingStatsInput input) {
+    public BookingStats buildStatistics(BookingStatsInput input) throws ErrorException {
         Calendar start = Calendar.getInstance();
         start.setTimeInMillis(input.startDate*1000);
         Calendar end = Calendar.getInstance();
@@ -1230,8 +1241,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             
             for(BookingReference ref : reservations) {
                 try {
-                    Order order = orderMgr.getOrderByReference(ref.bookingReference + "");
-                    Double amount = order.cart.getTotal(false);
+                    Double amount = ref.bookingFee; 
                     //The total amount.
                     int dayAmount = (int) (amount / daysinmonth);
                     Integer total = bstatsDay.income.get("total");
@@ -1278,9 +1288,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return stats;
     }
 
-    private List<BookingReference> getReferencesOnDate(Date time) {
+    private List<BookingReference> getReferencesOnDate(Date time) throws ErrorException {
         List<BookingReference>  result = new ArrayList();
-        for(BookingReference ref : bookingReferences.values()) {
+        for(BookingReference ref : getAllReservations()) {
             if(!ref.isStopped()) {
                 if(ref.startDate.before(time)) {
                     result.add(ref);

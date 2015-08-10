@@ -1,4 +1,4 @@
-<? namespace ns_dabb8a85_f593_43ec_bf0d_240467118a40; ?>
+re<? namespace ns_dabb8a85_f593_43ec_bf0d_240467118a40; ?>
 <?php
 /* @var $this News */
 if ($this->hasWriteAccess()) {
@@ -52,6 +52,8 @@ foreach($entries as $entry) {
     if (!$entry->isPublished) {
         continue;
     }
+    
+    $id = $entry->id;
     
     echo "<div class='news_container news_container_$i $last' id='".$id."'>";
     

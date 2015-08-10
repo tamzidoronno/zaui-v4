@@ -125,8 +125,8 @@ app.ProMeisterLogin = {
         
         // Sverige
         if (storeId === "d27d81b9-52e9-4508-8f4c-afffa2458488") {
-            if ($('.promeisterloginform #cellphone').val().length !== 9) {
-                alert(__f('Telefonnr må være 9 siffer'));
+            if ($('.promeisterloginform #cellphone').val().length !== 10) {
+                alert(__f('Telefonnr må være 10 siffer'));
                 return;
             }
         }

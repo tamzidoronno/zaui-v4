@@ -17,6 +17,25 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return "left";
     }
     
+    public function displaySelection() {
+        
+    }
+    
+    public function getStartDate() {
+        $startDate = date("d.m.Y", time()-(86400*15));
+        if(isset($_POST['data']['startdate'])) {
+            $startDate = $_POST['data']['startdate'];
+        }
+        return $startDate;
+    }
+    public function getEndDate() {
+        $endDate = date("d.m.Y", time()+(86400*15));
+        if(isset($_POST['data']['startdate'])) {
+            $endDate = $_POST['data']['enddate'];
+        }
+        return $endDate;
+    }
+    
     public function saveArxData() {
         
         $settings = new \core_hotelbookingmanager_ArxSettings();
@@ -104,6 +123,17 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
        
     public function activateBooking() {
         $this->getApi()->getHotelBookingManager()->confirmReservation($_POST['data']['referenceid']);
+    }
+    
+    /**
+     * 
+     * @param \core_hotelbookingmanager_BookingReference $res
+     */
+    public function isStopped($res) {
+        if(!$res->active && $res->confirmed) {
+            return true;
+        }
+        return false;
     }
     
     public function deleteType() {

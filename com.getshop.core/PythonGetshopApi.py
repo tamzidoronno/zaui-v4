@@ -2000,6 +2000,21 @@ class GetShop(object):
 class HotelBookingManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def buildStatistics(self, input):
+    args = collections.OrderedDict()
+    if isinstance(input,GetShopBaseClass): 
+      args["input"]=json.dumps(input.__dict__)
+    else:
+      try:
+        args["input"]=json.dumps(input)
+      except (ValueError, AttributeError):
+        args["input"]=input
+    data = EmptyClass()
+    data.args = args
+    data.method = "buildStatistics"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def checkAvailable(self, startDate, endDate, type):
     args = collections.OrderedDict()
     if isinstance(startDate,GetShopBaseClass): 

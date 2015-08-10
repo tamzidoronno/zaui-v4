@@ -21,7 +21,7 @@ public class BookingReference extends DataCommon {
     public String language = "nb_NO";
     public List<Integer> codes = new ArrayList();
     private List<String> roomIds = new ArrayList();
-    private List<ReservedRoom> rooms = new ArrayList();
+    public List<ReservedRoom> rooms = new ArrayList();
     
     //0 = No rooms has been up
     public HashMap<String, Integer> uploadedRoomToArx = new HashMap();
@@ -34,7 +34,7 @@ public class BookingReference extends DataCommon {
     public Integer parkingSpots = 0;
     public String heardAboutUs = "";
     Date failed = null;
-
+    
     boolean isToday() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
@@ -145,4 +145,12 @@ public class BookingReference extends DataCommon {
         }
         return false;
     }
+
+    boolean isStopped() {
+        if(confirmed && !active) {
+            return true;
+        }
+        return false;
+    }
+    
 }

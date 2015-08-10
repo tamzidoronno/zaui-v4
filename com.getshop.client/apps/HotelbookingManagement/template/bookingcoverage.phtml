@@ -1,0 +1,64 @@
+<h1>Belegg for periode</h1>
+<div style='width:1000px; overflow:auto;'>
+    <div style='background-color:#efefef; padding: 10px;padding-top: 40px; width: 100000px;'>
+    <?
+    $input = new core_hotelbookingmanager_BookingStatsInput();
+    $input->startDate = strtotime($this->getStartDate());
+    $input->endDate = strtotime($this->getEndDate());
+    $input->type = $_POST['data']['interval'];
+
+    $res = $this->getApi()->getHotelBookingManager()->buildStatistics($input);
+    $types = $this->getApi()->getHotelBookingManager()->getRoomTypes();
+    foreach($types as $type) {
+        $types[$type->id] = $type;
+    }
+
+    $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
+
+    $lastLetter = "";
+
+    echo "<div class='daterow'>";
+    echo "<span class='name'></span>";
+    foreach($res->stats as $date => $stat) {
+        echo "<span class='datetext'>".date("m.d.Y", $date)."</span>";
+    }
+    echo "</div>";
+
+
+    foreach($rooms as $room) {
+        $letter = substr($room->roomName,0,1);
+        if($lastLetter && $lastLetter != $letter) {
+            echo "<bR>";
+        }
+        /* @var $room core_hotelbookingmanager_Room */
+        echo "<div class='row'>";
+        echo "<span class='name'>" . str_replace("Marius", "", $room->roomName ). " (" . $types[$room->roomType]->name . ")". "</span>";
+        foreach($res->stats as $date => $stat) {
+            $taken = $stat->{'takenRooms'};
+            if(in_array($room->id, $taken)) {
+                echo "<span class='datebox taken'></span>";
+            } else {
+                echo "<span class='datebox free'></span>";
+            }
+        }
+        $lastLetter = $letter;
+        echo "</div>";
+    }
+    ?>
+    </div>
+</div>
+
+<style>
+.datebox { border-left: solid 1px #fff; width: 12px; height: 12px; display:inline-block; }
+.taken { background-color:#a05d1b; }
+.free { background-color:#c1d78d; }
+.name { width: 100px; display:inline-block; font-size: 10px; }
+.HotelbookingManagement .row { height: 13px; }
+.daterow { height: 25px; padding-left: 103px; }
+.HotelbookingManagement .datetext {   
+    transform: rotate(-45deg);
+  width: 13px;
+  font-size: 10px;
+  float:left;
+}
+</style>

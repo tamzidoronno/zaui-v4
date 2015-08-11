@@ -351,9 +351,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         for(BookingReference ref : result) {
             if(ref.bookingFee < 1) {
                 Order order = ordMgr.getOrderByReference(ref.bookingReference + "");
-                ref.bookingFee = order.cart.getTotal(false);
-                if(ref.bookingFee > 0) {
-                    saveObject(ref);
+                if(order != null && order.cart != null) {
+                    ref.bookingFee = order.cart.getTotal(false);
+                    if(ref.bookingFee > 0) {
+                        saveObject(ref);
+                    }
                 }
             }
         }
@@ -754,7 +756,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 result += generateOrderLines(user, settingsFromVismaApp);
             } catch (RuntimeException ex) {
                 ex.printStackTrace();
-                getMsgManager().mailFactory.send("internal@getshop.com", "post@getshop.com", "Failed to export user + orders to visma", "For storid: " + storeId + " userid: " + user.id + "(" + user.toString() + ")");
             }
         }
 

@@ -1290,7 +1290,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         List<BookingReference>  result = new ArrayList();
         for(BookingReference ref : getAllReservations()) {
             if(!ref.isStopped()) {
-                if(ref.startDate.before(time)) {
+                if(ref.startDate != null && ref.startDate.before(time)) {
                     result.add(ref);
                 }
             } else {

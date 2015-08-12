@@ -53,6 +53,8 @@ foreach($entries as $entry) {
         continue;
     }
     
+    $id = $entry->id;
+    
     echo "<div class='news_container news_container_$i $last' id='".$id."'>";
     
     if ($this->hasWriteAccess()) {

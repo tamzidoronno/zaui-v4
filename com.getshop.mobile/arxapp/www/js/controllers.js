@@ -88,6 +88,7 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
 
   // This should be replaced with api call to get only one person details
   $scope.onPersonFetched = function(result) {
+    //console.log(result);
     $scope.persons = result;
 
   	for (var i = 0; i < $scope.persons.length; i++) {

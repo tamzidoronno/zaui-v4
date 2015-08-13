@@ -142,13 +142,24 @@
         <ion-content>
           <div class="list">
 
+            <div class="item item-divider">
+              Adgangsgrupper
+            </div>            
             <div class="item item-icon-left" ng-repeat="ac in user.accessCategories">
-              <i class="icon ion-key"></i>
+              <i class="icon ion-home"></i>
               <h2>{{ac.name}}</h2>
               <p>{{ac.description}}</p>
               <p>{{ac.startDate}} - {{ac.endDate}}</p>
             </div>
-
+            <div class="item item-divider">
+              Cards
+            </div>
+            <div class="item item-icon-left" ng-repeat="card in user.cards">
+              <i class="icon ion-card"></i>
+              <h2>{{card.cardid}}</h2>
+              <p>{{card.format}}</p>
+              <p>{{card.description}}</p>
+            </div>
           </div>
           </ion-content>
         <ion-footer-bar class="bar bar-footer">

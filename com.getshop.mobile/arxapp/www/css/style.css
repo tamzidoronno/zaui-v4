@@ -15,6 +15,10 @@ button.high {
 	height:15vh;
 }
 
+.separator-10vh {
+	height:10vh;
+}
+
 .item-note-small {
 	font-size:11px;
 	color:black;
@@ -25,4 +29,8 @@ button.high {
 	display: block;
 	text-align:center;
 	width:100%;
+}
+
+.center {
+	text-align:center;
 }

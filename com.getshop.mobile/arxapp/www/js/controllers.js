@@ -72,6 +72,7 @@ arxappControllers.controller('LoginCtrl', function($scope, LoginService, LocalSt
 });
 
 arxappControllers.controller('MenuCtrl', function($scope) {});
+arxappControllers.controller('AboutCtrl', function($scope) {});
 
 arxappControllers.controller('UsersCtrl', ['GetshopService', '$scope', function(getshop, $scope) {
 

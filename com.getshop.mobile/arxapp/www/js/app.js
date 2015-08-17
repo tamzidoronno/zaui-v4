@@ -36,6 +36,11 @@ angular.module('arxapp', ['ionic', 'ArxAppControllers'])
       templateUrl: "menu.html",
       controller: 'MenuCtrl'
     })
+    .state('about', {
+      url: "/about",
+      templateUrl: "about.html",
+      controller: 'AboutCtrl'
+    })
     .state('users', {
       url: "/users",
       templateUrl: "users.html",

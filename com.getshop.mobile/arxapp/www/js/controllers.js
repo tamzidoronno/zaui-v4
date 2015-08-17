@@ -72,6 +72,7 @@ arxappControllers.controller('LoginCtrl', function($scope, LoginService, LocalSt
 });
 
 arxappControllers.controller('MenuCtrl', function($scope) {});
+arxappControllers.controller('AboutCtrl', function($scope) {});
 
 arxappControllers.controller('UsersCtrl', ['GetshopService', '$scope', function(getshop, $scope) {
 
@@ -88,6 +89,7 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
 
   // This should be replaced with api call to get only one person details
   $scope.onPersonFetched = function(result) {
+    //console.log(result);
     $scope.persons = result;
 
   	for (var i = 0; i < $scope.persons.length; i++) {

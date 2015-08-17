@@ -36,6 +36,9 @@
     <!-- Here are the page partials -->
     <script id="login.html" type="text/ng-template">
       <ion-view title="Login">
+        <ion-header-bar class="bar bar-header bar-light">
+          <h1 class="title">Arx Services</h1> 
+        </ion-header-bar>
         <ion-content>
           <div class="list list-inset">
             <div class="item item-divider">Choose host:</div>
@@ -71,34 +74,58 @@
       </ion-content>
       </ion-view>
     </script>
-    <script id="menu.html" type="text/ng-template">
-      <ion-view title="Menu">
+    <script id="about.html" type="text/ng-template">
+      <ion-view title="About">
+        <!--Header bar-->
+        <ion-header-bar class="bar bar-header bar-light">
+          <button class="button button-icon icon ion-arrow-left-c" ui-sref="menu"></button>
+          <h1 class="title">About</h1> 
+        </ion-header-bar>
         <ion-content>
-          <!--Big menu bar row-->
-          <div class="row">
-            <div class="col-25">
-              <img src="img/getshop.png" />
-            </div>
-            <div class="col-25 col-offset-25">
-              <button class="button button-block button-clear button-dark high"><i class="icon ion-gear-b big-icon"></i><br>Instillinger</button>
-            </div>
-            <div class="col-25">
-              <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-key big-icon"></i><br>Logg ut</button>
+          <!--Separator row-->
+          <div class="separator-15vh"></div>
+          <div class="list">
+            <div class="item item-thumbnail-left">
+              <img src="img/getshop.png">
+              <h2>Produsert av GetShop AS</h2>
+              <p>http://www.getshop.no</p>
+              <p>Tlf: 0047 483 11 484</p>
             </div>
           </div>
+        </ion-content>
+      </ion-view>
+    </script>
+    <script id="menu.html" type="text/ng-template">
+      <ion-view title="Menu">
+        <!--Header bar-->
+        <ion-header-bar class="bar bar-header bar-light">
+          <h1 class="title">Arx Services</h1> 
+          <!--
+          <div class="col-25">
+            <img src="img/getshop.png" />
+          </div>
+          <div class="col-25 col-offset-25">
+            <button class="button button-block button-clear button-dark high"><i class="icon ion-gear-b big-icon"></i><br>Instillinger</button>
+          </div>
+          <div class="col-25">
+            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-key big-icon"></i><br>Logg ut</button>
+          </div>
+          -->
+        </ion-header-bar>
+        <ion-content>
 
           <!--Separator row-->
           <div class="separator-15vh"></div>
           <!--Two middle rows for menu items-->
           <div class="row">
-            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-ios-cart big-icon"></i><br>Bestill</button>
+<!--            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-ios-cart big-icon"></i><br>Bestill</button> -->
+            <button class="button button-block button-clear button-dark high" ui-sref="users"><i class="icon ion-person big-icon"></i><br>People</button>
             <button class="button button-block button-clear button-dark high" ui-sref="doors"><i class="icon ion-locked big-icon"></i><br>Doors</button>
-            <button class="button button-block button-clear button-dark high" ui-sref="users"><i class="icon ion-person big-icon"></i><br>Brukere</button>
           </div>
           <div class="row">
-            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-cloud big-icon"></i><br>Cloud</button>
-            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-mic-a big-icon"></i><br>Feedback</button>
-            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-ios-paper big-icon"></i><br>Nyheter</button>
+<!--            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-cloud big-icon"></i><br>Cloud</button> -->
+            <button class="button button-block button-clear button-dark high" ui-sref="about"><i class="icon ion-help big-icon"></i><br>About</button>
+            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-log-out big-icon"></i><br>Log out</button>
           </div>
           <!--Separator row-->
           <div class="separator-15vh"></div>
@@ -112,7 +139,8 @@
     <script id="users.html" type="text/ng-template">
       <ion-view title="Users">
         <ion-header-bar class="bar bar-header bar-light">
-          <h1 class="title">Brukere</h1>
+          <button class="button button-icon icon ion-arrow-left-c" ui-sref="menu"></button>
+          <h1 class="title">People</h1> 
         </ion-header-bar>
         <ion-content>
           <div class="list">
@@ -129,37 +157,53 @@
             </a>
           </div>
           </ion-content>
+        <!--
         <ion-footer-bar class="bar bar-footer">
           <button class="button button-full" ui-sref="menu">Tilbake</button>
         </ion-footer-bar>
+        -->
       </ion-view>
     </script>
     <script id="user-detail.html" type="text/ng-template">
       <ion-view title="{{user.firstName}} {{user.lastName}}">
         <ion-header-bar class="bar bar-header bar-light">
+          <button class="button button-icon icon ion-arrow-left-c" ui-sref="users"></button>
           <h1 class="title">{{user.firstName}} {{user.lastName}}</h1>
         </ion-header-bar>
         <ion-content>
           <div class="list">
 
+            <div class="item item-divider">
+              Adgangsgrupper
+            </div>            
             <div class="item item-icon-left" ng-repeat="ac in user.accessCategories">
-              <i class="icon ion-key"></i>
+              <i class="icon ion-home"></i>
               <h2>{{ac.name}}</h2>
               <p>{{ac.description}}</p>
               <p>{{ac.startDate}} - {{ac.endDate}}</p>
             </div>
-
+            <div class="item item-divider">
+              Cards
+            </div>
+            <div class="item item-icon-left" ng-repeat="card in user.cards">
+              <i class="icon ion-card"></i>
+              <h2>{{card.cardid}}</h2>
+              <p>{{card.format}}</p>
+              <p>{{card.description}}</p>
+            </div>
           </div>
           </ion-content>
+        <!--
         <ion-footer-bar class="bar bar-footer">
           <button class="button button-full" ui-sref="users">Tilbake</button>
         </ion-footer-bar>
-      </ion-view>
+        -->
       </ion-view>
     </script>
     <script id="doors.html" type="text/ng-template">
       <ion-view title="Doors">
        <ion-header-bar class="bar bar-header bar-light">
+          <button class="button button-icon icon ion-arrow-left-c" ui-sref="menu"></button>
           <h1 class="title">Doors</h1>
         </ion-header-bar>
         <ion-content>
@@ -175,14 +219,17 @@
             </a>
           </div>
         </ion-content>
+        <!--
         <ion-footer-bar class="bar bar-footer">
           <button class="button button-full" ui-sref="menu">Tilbake</button>
         </ion-footer-bar>        
+        -->
       </ion-view>
     </script>
     <script id="door-detail.html" type="text/ng-template">
       <ion-view title="{{door.name}} access log">
         <ion-header-bar class="bar bar-header bar-light">
+          <button class="button button-icon icon ion-arrow-left-c" ui-sref="doors"></button>
           <h1 class="title">{{door.name}} access log</h1>
         </ion-header-bar>
         <ion-content>
@@ -195,11 +242,12 @@
             </div>
 
           </div>
-          </ion-content>
+        </ion-content>
+        <!--
         <ion-footer-bar class="bar bar-footer">
           <button class="button button-full" ui-sref="doors">Tilbake</button>
         </ion-footer-bar>
-      </ion-view>
+        -->
       </ion-view>
     </script>
 

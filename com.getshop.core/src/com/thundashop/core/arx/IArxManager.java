@@ -8,6 +8,7 @@ package com.thundashop.core.arx;
 
 import com.thundashop.core.arx.Door;
 import com.thundashop.core.common.GetShopApi;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ interface IArxManager {
     public List<AccessCategory> getAllAccessCategories() throws Exception;
     public void doorAction(String externalId, String state) throws Exception;
     public List<AccessLog> getLogForDoor(String externalId, long start, long end) throws Exception;
+    public HashMap<String, List<AccessLog>> getLogForAllDoor(long start, long end) throws Exception;
     public Person updatePerson(Person person) throws Exception;
     public Person getPerson(String id) throws Exception;
     public Person addCard(String personId, Card card) throws Exception;

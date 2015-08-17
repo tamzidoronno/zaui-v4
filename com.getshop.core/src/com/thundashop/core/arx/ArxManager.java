@@ -223,8 +223,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
         NodeList nodeList = document.getDocumentElement().getChildNodes();
         List<Door> doors = recursiveFindDoors(nodeList, 0);
         
-        findDoorStatus(doors);
-        
         return doors;
     }
     
@@ -362,31 +360,21 @@ public class ArxManager extends ManagerBase implements IArxManager {
     }
 
     @Override
+    public HashMap<String, List<AccessLog>> getLogForAllDoor(long start, long end) throws Exception {
+        String result = getDoorLog(start, end);
+        List<Door> allDoors = getAllDoors();
+        HashMap<String, List<AccessLog>> returnResult = new HashMap();
+        
+        for(Door door : allDoors) {
+            returnResult.put(door.externalId, generateDoorAccessLogFromResult(result, door.externalId));
+        }
+        return returnResult;
+    }
+    
+    @Override
     public List<AccessLog> getLogForDoor(String externalId, long start, long end) throws Exception {
-        
-        User currentUser = getSession().currentUser;
-        String arxHost = "https://" + currentUser.fullName;
-        String hostName = arxHost + ":5002/arx/eventexport?start_date="+start+"&end_date="+end+"&filter=" + URLEncoder.encode("<filter><name>"
-                + "<mask>controller.door.forcedUnlock</mask>"
-                + "<mask>controller.door.requestToExit</mask>"
-                + "<mask>controller.door.mode.unlocked</mask>"
-                + "<mask>controller.door.mode.locked</mask>"
-                + "<mask>acs.dac.update</mask>"
-                + "<mask>controller.door.pulseOpenRequest</mask>"
-                + "</name>"
-                + "</filter>");
-        System.out.println("Looking up: " + hostName);
-        String password = userPasswords.get(currentUser.id);
-        String result = httpLoginRequest(hostName, currentUser.username, password, "");
-        
-        InputStream is = new ByteArrayInputStream( result.getBytes() );
-        
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(is);
-        NodeList nodeList = document.getDocumentElement().getChildNodes();
-        List<AccessLog> retresult = recursiveFindDoorLogEntry(nodeList, externalId);
-        return retresult;
+        String result = getDoorLog(start, end);
+        return generateDoorAccessLogFromResult(result, externalId);
     }
 
     private List<AccessLog> recursiveFindDoorLogEntry(NodeList nodeList, String externalid) {
@@ -682,5 +670,34 @@ public class ArxManager extends ManagerBase implements IArxManager {
             }
         }
     }
-    
+
+    private String getDoorLog(long start, long end) {
+         User currentUser = getSession().currentUser;
+        String arxHost = "https://" + currentUser.fullName;
+        String hostName = arxHost + ":5002/arx/eventexport?start_date="+start+"&end_date="+end+"&filter=" + URLEncoder.encode("<filter><name>"
+                + "<mask>controller.door.forcedUnlock</mask>"
+                + "<mask>controller.door.requestToExit</mask>"
+                + "<mask>controller.door.mode.unlocked</mask>"
+                + "<mask>controller.door.mode.locked</mask>"
+                + "<mask>acs.dac.update</mask>"
+                + "<mask>controller.door.pulseOpenRequest</mask>"
+                + "</name>"
+                + "</filter>");
+        System.out.println("Looking up: " + hostName);
+        String password = userPasswords.get(currentUser.id);
+        String result = httpLoginRequest(hostName, currentUser.username, password, "");
+        return result;
+    }
+
+    private List<AccessLog> generateDoorAccessLogFromResult(String result, String externalId) throws Exception {
+        InputStream is = new ByteArrayInputStream( result.getBytes() );
+        
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(is);
+        NodeList nodeList = document.getDocumentElement().getChildNodes();
+        List<AccessLog> retresult = recursiveFindDoorLogEntry(nodeList, externalId);
+        return retresult;
+    }
+
 }

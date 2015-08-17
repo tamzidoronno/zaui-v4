@@ -107,6 +107,28 @@ class ArxManager(object):
     data.interfaceName = "core.arx.IArxManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getLogForAllDoor(self, start, end):
+    args = collections.OrderedDict()
+    if isinstance(start,GetShopBaseClass): 
+      args["start"]=json.dumps(start.__dict__)
+    else:
+      try:
+        args["start"]=json.dumps(start)
+      except (ValueError, AttributeError):
+        args["start"]=start
+    if isinstance(end,GetShopBaseClass): 
+      args["end"]=json.dumps(end.__dict__)
+    else:
+      try:
+        args["end"]=json.dumps(end)
+      except (ValueError, AttributeError):
+        args["end"]=end
+    data = EmptyClass()
+    data.args = args
+    data.method = "getLogForAllDoor"
+    data.interfaceName = "core.arx.IArxManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getLogForDoor(self, externalId, start, end):
     args = collections.OrderedDict()
     if isinstance(externalId,GetShopBaseClass): 

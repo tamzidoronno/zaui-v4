@@ -1,9 +1,12 @@
 <?php
 /* @var $api GetShopApi */
 ?>
-<div class='backbutton'><i class="fa fa-arrow-left"></i> Back to main menu</div>
+<!--<div class='backbutton'><i class="fa fa-arrow-left"></i> Back to main menu</div>-->
 <?
 $doors = $api->getArxManager()->getAllDoors();
+
+echo "<a href='?page=doorstats' class='doorstats'><i class='fa fa-line-chart'></i> Door statistics</a>";
+
 foreach($doors as $door) {
     /* @var $door core_arx_Door */
     echo "<div class='doorentry'>";
@@ -19,6 +22,8 @@ foreach($doors as $door) {
 }
 ?>
 <style>
+    .doorstats { margin-bottom: 20px; border: solid 1px; font-size: 20px; padding: 10px; color:#fff; display:block; text-decoration: none; }
+    .doorstats i { float: right; }
     .doorentry { border: solid 1px; padding: 10px; }
     .doorentry .options { display:none; }
     .doorentry.highlighet { background-color:#000; }

@@ -25,6 +25,9 @@ switch($page) {
     case "info":
         include("info.php");
         break;
+    case "doorstats":
+        include("doorstats.php");
+        break;
     default:
         include("loggedonmenu.php");
 }

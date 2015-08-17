@@ -94,6 +94,22 @@ class APIArxManager {
 	* @author boggi
 	*/
 
+	public function getLogForAllDoor($start, $end) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $data['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $data["method"] = "getLogForAllDoor";
+	     $data["interfaceName"] = "core.arx.IArxManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* communication with the arx server.
+	*
+	* @author boggi
+	*/
+
 	public function getLogForDoor($externalId, $start, $end) {
 	     $data = array();
 	     $data['args'] = array();

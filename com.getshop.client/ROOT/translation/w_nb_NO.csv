@@ -20,6 +20,7 @@ Add this to the header or to the body to make a new login form, can be added any
 Add this to the page and you can allow your customers to search for products.;-;Legg til et produktsøk på siden din, og du gir deretter dine kunder mulighet til å søke opp dine produkter.
 Add youtube vidoes to your page. Just search for the video you want to add and click add.;-;Legg inn youtube videor på websiden din. Bare søk etter den filmen du ønsker og trykk på legg til.
 Address;-;Adresse
+Adult;-;Voksne
 All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
 An email has been sent with a code to use in step 2.;-;En epost har blitt sendt til deg som kan benyttes i steg 2.s
@@ -56,6 +57,7 @@ Change to tab mode;-;Bytt til tab modus
 Changes has been saved!;-;Innstillingene har blitt lagret!
 Chat with us;-;Chat med oss
 Checkout;-;Utsjekking
+Children;-;Barn
 Choose;-;Velg
 City;-;By
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
@@ -106,6 +108,7 @@ Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
 Fade;-;Fade
 Failed;-;Feilet
 February;-;Februar
+Field has not been configured yet, configure it first.;-;Feltet har ikke blitt konfigurert enda, konfigurer det først.
 Fixed price;-;Fast pris
 Friday;-;Fredag
 Full name;-;Hele navnet
@@ -221,6 +224,7 @@ Please enter your email address:;-;Skriv inn din epost
 Please enter your room number;-;Skriv inn nom nummeret ditt
 Please enter your username and password;-;Skriv inn ditt brukernavn og passord
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
+Please select a option;-;Vennligst gjør et valg
 Please select a payment method.;-;Vennligst velg en betalingsmetode
 Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
 Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
@@ -359,6 +363,7 @@ cellphone;-;Mobilnr
 description;-;Beskrivelse
 email;-;E-post
 forgot?;-;Glemt?
+free spots;-;ledige plasser
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
 included taxes;-;Inkludert mva
 location;-;Sted

@@ -14,7 +14,7 @@ $availablepos = $this->getCountOfFreePositions($entry);
 
 <div class="content_information">
     <div style="font-size: 30px; font-weight: bold; padding-bottom: 10px;"><? echo $event->title; ?></div>
-    Dato: <? echo $entry->day."/".$entry->month."-".$entry->year.", ".$entry->starttime." - ".$entry->stoptime; ?>
+    <? echo $this->__w("Date"); ?>: <? echo $entry->day."/".$entry->month."-".$entry->year.", ".$entry->starttime." - ".$entry->stoptime; ?>
     
     <div style="margin-top: 30px; margin-bottom: 20px;">
         <?
@@ -24,9 +24,9 @@ $availablepos = $this->getCountOfFreePositions($entry);
 
 
     <div>
-        Pris:
-        <br/> Voksen: Kr <? echo $event->priceAdults ?>,- 
-        <br/> Barn: Kr <? echo $event->priceChild ?>,-
+        <? echo $this->__w("Price"); ?>:
+        <br/> <? echo $this->__w("Adult"); ?>: Kr <? echo $event->priceAdults ?>,- 
+        <br/> <? echo $this->__w("Children"); ?>: Kr <? echo $event->priceChild ?>,-
     </div>
     <br/>
     <?
@@ -34,7 +34,7 @@ $availablepos = $this->getCountOfFreePositions($entry);
     ?>
     <a href="/index.php?page=calbooking&entryId=<? echo $entry->entryId; ?>">
         <div class="shop_button">
-            Bestill - <? echo $availablepos; ?> ledige plasser
+            <? echo $this->__w("Order"); ?>- <? echo $availablepos; ?> <? echo $this->__w("free spots"); ?>
         </div>
     </a>
     <?

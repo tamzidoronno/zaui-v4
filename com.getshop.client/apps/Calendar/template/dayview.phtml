@@ -3,6 +3,7 @@
 $entry = $this->getApi()->getCalendarManager()->getEntry($_POST['data']['entryId']);
 $event = $entry->event;
 $availablepos = $this->getCountOfFreePositions($entry);
+$currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fecthCurrencyCodeTranslated();
 ?>
 
 <div class="close_dayview">
@@ -25,8 +26,8 @@ $availablepos = $this->getCountOfFreePositions($entry);
 
     <div>
         <? echo $this->__w("Price"); ?>:
-        <br/> <? echo $this->__w("Adult"); ?>: Kr <? echo $event->priceAdults ?>,- 
-        <br/> <? echo $this->__w("Children"); ?>: Kr <? echo $event->priceChild ?>,-
+        <br/> <? echo $this->__w("Adult") . " : $currency " . $event->priceAdults ?>,- 
+        <br/> <? echo $this->__w("Children") . " : $currency " . $event->priceChild ?>,-
     </div>
     <br/>
     <?

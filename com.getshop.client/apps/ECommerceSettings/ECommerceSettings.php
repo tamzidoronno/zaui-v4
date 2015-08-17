@@ -49,6 +49,22 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         return ECommerceSettings::$currencyCode;
     }
     
+    public static function fecthCurrencyCodeTranslated() {
+        $code = ECommerceSettings::fetchCurrencyCode();
+        if($code == "USD") {
+            return "$";
+        }
+        if($code == "CAD") {
+            return "$";
+        }
+        if($code == "AUD") {
+            return "$";
+        }
+        if($code == "NOK") {
+            return "kr";
+        }
+    }
+    
     public static function fetchDefaultPaymentAppWhenCustomerIdIsSet() {
         if (!ECommerceSettings::$defaultPayment) {
             $factory = \IocContainer::getFactorySingelton();

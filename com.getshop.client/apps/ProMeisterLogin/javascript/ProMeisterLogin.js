@@ -186,13 +186,14 @@ app.ProMeisterLogin = {
         var event = thundashop.Ajax.createEvent(null, "proLogin", null, login);
         thundashop.Ajax.postWithCallBack(event, function(result) {
             if (result === "success") {
-                window.location = app.ProMeisterLogin.addressOnSuccess;
-                app.ProMeisterLogin.close();
+                $('#loginform').submit();
             } else {
                 alert(__f("Wrong username or password"));
             }
             
         });
+        
+        return false;
     },
     
     doResetPassword: function() {

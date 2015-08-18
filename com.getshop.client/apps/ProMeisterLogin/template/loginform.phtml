@@ -7,18 +7,21 @@
         <div class='signupform_content'>
             <div class='signupform_content_signin' style='padding-left: 250px;'>
                 <h1> <? echo $this->__f("You have to login to continue"); ?></h1>
-                <table style='width: 400px; margin-left: 50px;'>
-                    <tr><td><? echo $this->__f("Email"); ?></td><td align='right'><input style='width: 230px;' type='text' placeholder='your@email.com' id="login_username"/></td></tr>
-                    <tr><td><? echo $this->__f("Password"); ?></td><td align='right'><input style='width: 230px;' type='password' placeholder='******' id="login_password"></td></tr>
-                    
-                    <tr>
-                        <td align="right" colspan='2' colspan='2'>
-                            <div class='gs_login_button show_forgot_password'><? echo $this->__f("Forgot password?"); ?></div> 
-                            <div class='gs_login_button login_create_new_account'><? echo $this->__f("Create new account"); ?></div> 
-                            <div class='gs_login_button loginbutton'><? echo $this->__f("Login"); ?></div>
-                        </td>
-                    </tr>
-                </table>    
+                <form id="loginform" action="/" method="POST"> 
+
+                    <table style='width: 400px; margin-left: 50px;'>
+                        <tr><td><? echo $this->__f("Email"); ?></td><td align='right'><input style='width: 230px;' type='text' placeholder='your@email.com' id="login_username" name="username"/></td></tr>
+                        <tr><td><? echo $this->__f("Password"); ?></td><td align='right'><input style='width: 230px;' type='password' placeholder='******' id="login_password" name="password"></td></tr>
+
+                        <tr>
+                            <td align="right" colspan='2' colspan='2'>
+                                <div class='gs_login_button show_forgot_password'><? echo $this->__f("Forgot password?"); ?></div> 
+                                <div class='gs_login_button login_create_new_account'><? echo $this->__f("Create new account"); ?></div> 
+                                <div class='gs_login_button loginbutton'><? echo $this->__f("Login"); ?></div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
             
             

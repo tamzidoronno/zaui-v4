@@ -3,8 +3,11 @@
 $hmanager = $this->getApi()->getHotelBookingManager();
 $rooms = $hmanager->getAllRooms();
 $newRoom = array();
+$typecount = array();
+
 foreach($rooms as $room) {
     $newRoom[$room->id] = $room;
+    @$typecount[$room->roomType]++;
 }
 $rooms = $newRoom;
 
@@ -12,6 +15,12 @@ $types = $hmanager->getRoomTypes();
 
 foreach($types as $type) {
     $types[$type->id] = $type;
+}
+
+foreach($typecount as $idx => $count) {
+    $name = @$types[$idx]->name;
+    $name = str_replace("kvm", "", $name);
+    $typecount[$name] = $typecount[$idx];
 }
 
 $selectedType = new \core_hotelbookingmanager_RoomType();
@@ -25,6 +34,140 @@ if(isset($_POST['data']['typeId'])) {
 $start = strtotime($this->getStartDate());
 $end = strtotime($this->getEndDate());
 ?>
+
+<?
+$reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
+$heardAbout = array();
+$roomTypes = array();
+foreach($reservations as $reservation) {
+    foreach($reservation->rooms as $index => $room) {
+        $roomid = $room->roomId;
+        
+        
+        if(!isset($rooms[$roomid])) {
+            continue;
+        }
+        if(!$this->isStarted($reservation)) {
+            continue;
+        }
+        
+        if(!isset($types[$rooms[$roomid]->roomType])) {
+            continue;
+        }
+        
+        $name = @$types[$rooms[$roomid]->roomType]->name;
+        $name = str_replace("kvm", "", $name);
+        @$roomTypes[$name]++;
+        
+        
+
+        if($this->isStopped($reservation)) {
+            if($start < strtotime($reservation->endDate) && $end > strtotime($reservation->endDate)) {
+                @$endedRooms[$name]++;
+            }
+            if($end < strtotime($reservation->endDate)) {
+                @$currentRooms[$name]++;
+            }
+        } else {
+            if($end > strtotime($reservation->startDate)) {
+                @$currentRooms[$name]++;
+            }
+        }
+        
+        
+        
+        if($start < strtotime($reservation->startDate) && $end > strtotime($reservation->startDate)) {
+            @$startedRoom[$name]++;
+        }
+    }
+    if($end < strtotime($reservation->rowCreatedDate)) {
+        continue;
+    }
+    @$heardAbout[$reservation->heardAboutUs]++;
+}
+
+ksort($roomTypes);
+?>
+<table width="100%">
+    <tr>
+        <td valign="top">
+            <h1>Fra hvor</h1>
+            <table>
+            <?
+            foreach($heardAbout as $index => $number) {
+                if(!$index) {
+                    continue;
+                }
+                echo "<tr><td>" . $index . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>" . $number . "</td></tr>";
+            }
+            ?>
+            </table>
+        </td>
+        <td valign="top">
+            <h1>Fordeling av boder</h1>
+            <table>
+                <tr>
+                    <th>Størrelse</th>
+                    <th>Utleid</th>
+                    <th>Inngått</th>
+                    <th>Oppsagt</th>
+                    <th>Diff</th>
+                    <th>Totalt</th>
+                    <th>Leiegrad</th>
+            <?
+            $totalCurrent = 0;
+            $totalNew = 0;
+            $totalEnded = 0;
+            $totalAll = 0;
+            foreach($roomTypes as $id => $count) {
+                if(!isset($types[$id])) {
+                    continue;
+                }
+                $current = @$currentRooms[$id];
+                $new = @$startedRoom[$id];
+                $ended = @$endedRooms[$id];
+                if(!$current) {
+                    $current = 0;
+                }
+                if(!$new) {
+                    $new = 0;
+                }
+                if(!$ended) {
+                    $ended = 0;
+                }
+                $totalCurrent += $current;
+                $totalNew += $new;
+                $totalEnded += $ended;
+                
+                $count = $typecount[$id];
+                $totalAll += $count;
+                
+                $diff = $new - $ended;
+                $grad = round((($current / $count)*100),0);
+                
+                echo "<tr><td> ".$id. "kvm</td>";
+                echo "<td align='center'>" .$current . "</td>";
+                echo "<td align='center'>" . $new . "</td>";
+                echo "<td align='center'>" . $ended . "</td>";
+                echo "<td align='center'>" . $diff . "</td>";
+                echo "<td align='center'>" . $count . "</td>";
+                echo "<td align='center'>" . $grad . "%</td>";
+                echo "</tr>";
+            }
+            echo "<tr><td>Totalt</td>";
+            echo "<td align='center'>" .$totalCurrent . "</td>";
+            echo "<td align='center'>" . $totalNew . "</td>";
+            echo "<td align='center'>" . $totalEnded . "</td>";
+            echo "<td align='center'>" . ($totalNew - $totalEnded) . "</td>";
+            echo "<td align='center'>" . $totalAll . "</td>";
+            echo "<td align='center'>" . round(($totalCurrent/$totalAll)*100) . "%</td>";
+            echo "</tr>";
+            ?>
+            </table>
+        </td>
+    </tr>
+</table>
+<br><br>
 
 Existing booking references
 <div style="">
@@ -44,9 +187,6 @@ Existing booking references
         </thead>
         <tbody>
         <?
-        $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
-        $heardAbout = array();
-        $roomTypes = array();
         foreach($reservations as $reservation) {
             $roomarray = array();
             /* $rooms \core_hotelbookingmanager_Room[] */
@@ -58,9 +198,24 @@ Existing booking references
                 continue;
             }
             
+            if($this->getType() == "boder_aktiv" && $this->isStopped($reservation)) {
+               continue;
+            }
+            if($this->getType() == "boder_aktiv" && !$this->isStarted($reservation)) {
+               continue;
+            }
+            if($this->getType() == "boder_ikke_startet" && $this->isStarted($reservation)) {
+               continue;
+            }
+            if($this->getType() == "boder_sluttet" && !$this->isStopped($reservation)) {
+               continue;
+            }
+            
             foreach($reservation->rooms as $index => $room) {
                 $roomid = $room->roomId;
-                @$roomTypes[$rooms[$roomid]->roomType]++;
+                if(!isset($rooms[$roomid])) {
+                    continue;
+                }
                 $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$roomid'>" . $rooms[$roomid]->roomName . " (" . $reservation->codes[$index] . ")</span>";
             }
             
@@ -92,7 +247,6 @@ Existing booking references
                 if($reservation->heardAboutUs) {
                     echo "<br><span style='color:#BBB;'>Heard about: "  . $reservation->heardAboutUs . "</span>";
                 }
-                @$heardAbout[$reservation->heardAboutUs]++;
             }
             echo "</td>";
             $endDate = date("d.m.Y", strtotime($reservation->endDate));
@@ -116,28 +270,7 @@ Existing booking references
         ?>
         </tbody>
     </table>
-    <h1>Fra hvor</h1>
-    <table>
-    <?
-    foreach($heardAbout as $index => $number) {
-        if(!$index) {
-            continue;
-        }
-        echo "<tr><td>" . $index . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>" . $number . "</td></tr>";
-    }
-    ?>
-    </table>
-    <h1>Fordeling av boder</h1>
-    <table>
-    <?
-    foreach($roomTypes as $id => $count) {
-        if(!isset($types[$id])) {
-            continue;
-        }
-        echo "<tr><td> " . $types[$id]->name . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>" . $count . "</td></tr>";
-    }
-    ?>
-    </table>
+    
 </div>
 <br>
 <br>

@@ -22,7 +22,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     }
     
     public function getStartDate() {
-        $startDate = date("d.m.Y", time()-(86400*15));
+        $startDate = "01.10.2014";
         if(isset($_POST['data']['startdate'])) {
             $startDate = $_POST['data']['startdate'];
         }
@@ -136,6 +136,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return false;
     }
     
+    public function isStarted($res) {
+        return $res->confirmed;
+    }
+    
     public function deleteType() {
         $id = $_POST['data']['typeId'];
         $this->getApi()->getHotelBookingManager()->removeRoomType($id);
@@ -207,6 +211,14 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
 
     public function render() {
         $this->includefile("HotelbookingManagement");
+    }
+    public function getType() {
+        $type = "boder_aktiv";
+        if(isset($_POST['data']['type'])) {
+            $type = $_POST['data']['type'];
+        }
+        
+        return $type;
     }
 
     public function deleteRoom() {

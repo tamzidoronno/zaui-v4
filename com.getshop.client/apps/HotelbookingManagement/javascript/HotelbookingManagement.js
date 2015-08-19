@@ -101,8 +101,14 @@ app.HotelbookingManagement = {
         $(document).on('keyup', '.HotelbookingManagement .adminfee', app.HotelbookingManagement.updateAdminFee);
         $(document).on('click', '.HotelbookingManagement .stop_reference_action', app.HotelbookingManagement.doStopReference);
         $(document).on('click', '.HotelbookingManagement .go_live', app.HotelbookingManagement.confirmReservation);
+        $(document).on('change', '.HotelbookingManagement #selectweekdate', app.HotelbookingManagement.selectWeekdate);
     },
-    
+    selectWeekdate : function() {
+        var dates = $(this).val();
+        dates = dates.split(";");
+        $('.startdate').val(dates[0]);
+        $('.enddate').val(dates[1]);
+    },
     confirmReservation: function() {
         var data = {
             referenceid : $(this).attr('refid')

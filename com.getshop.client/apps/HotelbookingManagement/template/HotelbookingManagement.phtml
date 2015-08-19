@@ -1,10 +1,8 @@
 <?php
 namespace ns_15e67fa1_c862_4bc3_9b17_dfd818f30712;
 
-$type = "boder";
-if(isset($_POST['data']['type'])) {
-    $type = $_POST['data']['type'];
-}
+$type = $this->getType();
+
 $periode = "daily";
 if(isset($_POST['data']['interval'])) {
     $periode = $_POST['data']['interval'];
@@ -13,7 +11,9 @@ $startDate = $this->getStartDate();
 $endDate = $this->getEndDate();
 
 $types = array();
-$types['boder'] = "Boder";
+$types['boder_aktiv'] = "Boder aktive";
+$types['boder_ikke_startet'] = "Boder ikke startet";
+$types['boder_sluttet'] = "Boder sluttet";
 $types['stats'] = "Statistikk";
 $types['coverage'] = "Belegg";
 
@@ -36,6 +36,20 @@ if(isset($_POST['data']['updated'])) {
 <br>
 <br>
 <br>
+<select id="selectweekdate">
+    <option value="">Velg en uke</option>
+    <? 
+    $year = date("Y", time());
+    for($i = 1; $i <= 52; $i++) {
+        $date = strtotime($year . 'W' . str_pad(($i+1), 2, '0', STR_PAD_LEFT));
+        $mondaytime = strtotime('last monday', $date);
+        $monday = date("d.m.Y", $mondaytime);
+        $sunday = date("d.m.Y", ($mondaytime+86400*7));
+        echo "<option value='$monday;$sunday'>Week $i - $year</option>";
+    }
+    ?>
+</select>
+
 <div gstype="form"  method="displaySelection">
     <input type="startDate" class="startdate" gsname='startdate' value='<? echo $startDate; ?>'>
     <input type="endDate" class="enddate" gsname='enddate' value='<? echo $endDate; ?>'>
@@ -64,8 +78,10 @@ if(isset($_POST['data']['updated'])) {
 </div>
 
 <script>
-    $('.startdate').datepicker({ dateFormat: "dd.mm.yy"});
-    $('.enddate').datepicker({ dateFormat: "dd.mm.yy"});
+    $('.startdate').datepicker({ dateFormat: "dd.mm.yy",changeMonth: true,
+      changeYear: true});
+    $('.enddate').datepicker({ dateFormat: "dd.mm.yy",changeMonth: true,
+      changeYear: true});
 </script>
 
 <?

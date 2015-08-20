@@ -49,6 +49,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $name;
 
 	/** @var String */
+	public $uniqueName;
+
+	/** @var String */
 	public $stockQuantity;
 
 	/** @var String */

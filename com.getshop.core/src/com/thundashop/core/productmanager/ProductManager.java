@@ -221,7 +221,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public String getPageIdByName(String name) {
         for (Product product : products.values()) {
-            String productName = makeSeoUrl(product.name);
+            String productName = makeSeoUrl(product.uniqueName);
             if (productName.equals(name)) {
                 return product.pageId;
             }

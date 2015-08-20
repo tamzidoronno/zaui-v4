@@ -44,6 +44,10 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public Double original_price;
     @Translation
     public String name;
+    
+    @Transient
+    public String uniqueName;
+    
     public int stockQuantity;
     public String pageId;
     public boolean freeShipping = false;

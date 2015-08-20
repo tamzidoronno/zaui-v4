@@ -29,7 +29,7 @@ if($this->getFactory()->isMobile()) {
         foreach ($products as $product) {
             $i++;
             $j++;
-            $linkName = \GetShopHelper::makeSeoUrl($product->name);
+            $linkName = \GetShopHelper::makeSeoUrl($product->uniqueName);
             $pageId = $product->pageId;
             $mainImage = false;
 

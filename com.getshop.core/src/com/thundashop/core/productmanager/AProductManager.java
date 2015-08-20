@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -106,8 +107,32 @@ public abstract class AProductManager extends ManagerBase {
             }
         }
         
+        product.uniqueName = product.name;
+        
+        ensureUniqueNameWhenDuplicate(product);
+        
 //        updateTranslation(product);
         return product;
+    }
+
+    private void ensureUniqueNameWhenDuplicate(Product product) {
+        Set<Product> sortedProducts = new TreeSet<Product>(products.values());
+        
+        int i = 0;
+        
+        for (Product iproduct : sortedProducts) {
+            
+            if (iproduct.name != null
+                    && product.name != null 
+                    && iproduct.name.toLowerCase().equals(product.name.toLowerCase())) {
+                
+                i++;
+                
+                if (product.id.equals(iproduct.id) && i > 1) {
+                    product.uniqueName = product.name + "_" + i;    
+                }
+            }
+        }
     }
 
     @Override

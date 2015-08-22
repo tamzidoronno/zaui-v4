@@ -42,9 +42,11 @@ app.HotelbookingManagement = {
         });
         var data = {
             "rooms" : rooms,
-            "enddate" : $('.HotelbookingManagement .enddate').val(),
-            "startdate" : $('.HotelbookingManagement .startdate').val(),
-            "refid" : $('.HotelbookingManagement #referenceId').val()
+            "end" : $('.HotelbookingManagement .enddate').val(),
+            "start" : $('.HotelbookingManagement .startdate').val(),
+            "refid" : $('.HotelbookingManagement #referenceId').val(),
+            "price" : $('.HotelbookingManagement .monthlyprice').val()
+            
         }
         var event = thundashop.Ajax.createEvent("", "moveRoom", $(this), data);
         thundashop.Ajax.post(event);

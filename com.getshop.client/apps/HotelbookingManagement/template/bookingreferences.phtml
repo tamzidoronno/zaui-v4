@@ -12,7 +12,6 @@ foreach($rooms as $room) {
 $rooms = $newRoom;
 
 $types = $hmanager->getRoomTypes();
-
 foreach($types as $type) {
     $types[$type->id] = $type;
 }
@@ -21,6 +20,7 @@ foreach($typecount as $idx => $count) {
     $name = @$types[$idx]->name;
     $name = str_replace("kvm", "", $name);
     $typecount[$name] = $typecount[$idx];
+    unset($typecount[$idx]);
 }
 
 $selectedType = new \core_hotelbookingmanager_RoomType();
@@ -39,6 +39,11 @@ $end = strtotime($this->getEndDate());
 $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
 $heardAbout = array();
 $roomTypes = array();
+$avgtime = 0;
+$totalClosed = 0;
+$avgAllTime = 0;
+$allCount = 0;
+
 foreach($reservations as $reservation) {
     foreach($reservation->rooms as $index => $room) {
         $roomid = $room->roomId;
@@ -64,13 +69,19 @@ foreach($reservations as $reservation) {
         if($this->isStopped($reservation)) {
             if($start < strtotime($reservation->endDate) && $end > strtotime($reservation->endDate)) {
                 @$endedRooms[$name]++;
+                $avgtime += ((strtotime($reservation->endDate) - strtotime($reservation->startDate))/86400);
+                $totalClosed++;
             }
             if($end < strtotime($reservation->endDate)) {
                 @$currentRooms[$name]++;
+                $avgAllTime += (time() - strtotime($reservation->startDate))/86400;
+                $allCount++;
             }
         } else {
             if($end > strtotime($reservation->startDate)) {
                 @$currentRooms[$name]++;
+                $avgAllTime += (time() - strtotime($reservation->startDate))/86400;
+                $allCount++;
             }
         }
         
@@ -85,7 +96,6 @@ foreach($reservations as $reservation) {
     }
     @$heardAbout[$reservation->heardAboutUs]++;
 }
-
 ksort($roomTypes);
 ?>
 <table width="100%">
@@ -100,6 +110,12 @@ ksort($roomTypes);
                 }
                 echo "<tr><td>" . $index . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>" . $number . "</td></tr>";
             }
+            if($totalClosed > 0) {
+                echo "<tr><td>Gj. snitt leietid</td><td>".round($avgtime/$totalClosed)." dager av totalt $totalClosed oppsagte boder</td></tr>";
+            } else {
+                echo "<tr><td>Gj. snitt leietid</td><td>Ingen boder sagt opp.</td></tr>";
+            }
+            echo "<tr><td>Gj. snitt leietid</td><td>".round($avgAllTime/$allCount)." dager av totalt $allCount utleide boder</td></tr>";
             ?>
             </table>
         </td>
@@ -119,10 +135,8 @@ ksort($roomTypes);
             $totalNew = 0;
             $totalEnded = 0;
             $totalAll = 0;
+
             foreach($roomTypes as $id => $count) {
-                if(!isset($types[$id])) {
-                    continue;
-                }
                 $current = @$currentRooms[$id];
                 $new = @$startedRoom[$id];
                 $ended = @$endedRooms[$id];
@@ -258,7 +272,7 @@ Existing booking references
             echo "<td style='text-align:center;' valign='top'>" . date("d.m.Y", strtotime($reservation->startDate)) . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $endDate . "</td>";
             if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") {
-                echo "<td style='text-align:center;' valign='top'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
+                echo "<td style='text-align:center;' valign='top'>".$reservation->bookingFee."</td>";
                 echo "<td style='text-align:center;' valign='top'>";
                 echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
                 echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-plus'></i></a> ";

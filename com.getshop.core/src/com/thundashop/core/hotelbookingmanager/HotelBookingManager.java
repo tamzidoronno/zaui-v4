@@ -222,10 +222,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         reference.storeId = storeId;
         reference.contact = contact;
-
+        reference.rooms.get(0).roomId = "ec6bd88b-fc67-48c4-ad1d-1f861d58d35c";
+        
         databaseSaver.saveObject(reference, credentials);
         bookingReferences.put(reference.bookingReference, reference);
         sendSmsToKnutMartin(contact, roomtype);
+        
+        
         return new Integer(reference.bookingReference).toString();
     }
 

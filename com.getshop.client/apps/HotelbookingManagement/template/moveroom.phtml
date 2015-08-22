@@ -35,6 +35,11 @@ for($i = 0; $i < sizeof($reference->contact->names);$i++) {
     End date<br>
     <br>
 </div>
+<div>
+    <input type="text" class='monthlyprice' style="float:right;" value='<? echo $reference->bookingFee; ?>'>
+    Monthly price<br>
+    <br>
+</div>
     <div style="text-align:right;">
         <input type="button" id="doChangeRoom" value="<? echo $this->__f("Update room"); ?>">
     </div>

@@ -81,26 +81,38 @@ function print_table($tabletype, $res, $typesToPrint, $roomCount) {
         echo "<td>" . date("d.m.Y", $date) . "</td>";
         foreach ($typesToPrint as $type) {
             @$sum[$type->id] += @$statsData->{$type->id};
-            echo "<td>" . @$statsData->{$type->id} . "</td>";
+            echo "<td align='center'>" . @$statsData->{$type->id} . "</td>";
         }
-        echo "<td>" . @$statsData->{"total"} . "</td>";
+        echo "<td align='center'>" . @$statsData->{"total"} . "</td>";
         @$sum['total'] += @$statsData->{"total"};
         $total = 0;
          if($tabletype == "count") {
              $belegg = round($statsData->{"total"} / $roomCount['total']*100);
-             echo "<td>$belegg%</td>";
+             echo "<td align='center'>$belegg%</td>";
          }
         echo "</tr>";
         $counter++;
     }
     
+    echo "<tr  bgcolor='#000' style='color:#fff'>";
+    echo "<th>Dato</th>";
+    foreach ($typesToPrint as $type) {
+        /* @var $type core_hotelbookingmanager_RoomType */
+        echo "<th>" . $type->name . "</th>";
+    }
+    echo "<th>Totalt</th>";
+    if($tabletype == "count") {
+        echo "<th>Belegg</th>";
+    }
+    echo "</tr>";
+    
     echo "<tr bgcolor='#000' style='color:#fff'>";
     echo "<td><b>Sum</b></td>";
     foreach(@$sum as $key => $val) {
-        echo "<td>" . $val . "</td>";
+        echo "<td align='center'>" . $val . "</td>";
     }
     if($tabletype == "count") {
-        echo "<td>";
+        echo "<td valign='center'>";
         $belegg = round(($sum['total'] / ($roomCount['total']*$counter))*100, 1);
         echo $belegg . "%";
         echo "</td>";
@@ -109,7 +121,7 @@ function print_table($tabletype, $res, $typesToPrint, $roomCount) {
     echo "<tr bgcolor='#000' style='color:#fff'>";
     echo "<td><b>Gj.snitt</b></td>";
     foreach(@$sum as $key => $val) {
-        echo "<td>" . round($val / $counter) . "</td>";
+        echo "<td align='center'>" . round($val / $counter) . "</td>";
     }
     if($tabletype == "count") {
         echo "<td></td>";

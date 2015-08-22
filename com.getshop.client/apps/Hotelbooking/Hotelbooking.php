@@ -220,6 +220,28 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         echo "<h1>Takk for din bestilling av lagerbod.</h1> Vi har mottatt dine ønsker og tar kontakt snarest mulig.<br>";
         echo "En epost med mer detaljer er på vei!";
         echo "<br><br><br><br>";
+        
+        ?>
+            <!-- Google Code for Semlagerhotell Tracking Conversion Page -->
+            <script type="text/javascript">
+            /* <![CDATA[ */
+            var google_conversion_id = 968059358;
+            var google_conversion_language = "en";
+            var google_conversion_format = "3";
+            var google_conversion_color = "ffffff";
+            var google_conversion_label = "pZlMCM7joV8Q3tPNzQM";
+            var google_remarketing_only = false;
+            /* ]]> */
+            </script>
+            <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+            </script>
+            <noscript>
+            <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/968059358/?label=pZlMCM7joV8Q3tPNzQM&amp;guid=ON&amp;script=0"/>
+            </div>
+            </noscript>
+        <?
+        
     }
 
     public function getContinuePage() {

@@ -257,6 +257,7 @@ Existing booking references
                 $user = $this->getApi()->getUserManager()->getUserById($order->userId);
                 echo "<a href='?page=users_all_users&userid=".$order->userId."'>";
                 echo join("<br>", $reservation->contact->names);
+                echo " <span style='float:right;padding-right:10px;'>" . $user->cellPhone . "</span>";
                 echo "</a>";
                 if($reservation->heardAboutUs) {
                     echo "<br><span style='color:#BBB;'>Heard about: "  . $reservation->heardAboutUs . "</span>";
@@ -284,7 +285,6 @@ Existing booking references
         ?>
         </tbody>
     </table>
-    
 </div>
 <br>
 <br>

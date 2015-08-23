@@ -22,11 +22,18 @@ foreach ($res->stats as $date => $bookingDayData) {
 }
 
 $typesToPrint = array();
+$indexList = array();
 foreach ($types as $type) {
     if (key_exists($type->id, $inuse)) {
         $typesToPrint[$type->id] = $type;
+        $indexList[$type->id] = str_replace("kvm", "", $type->name);
     }
 }
+asort($indexList);
+foreach($indexList as $index => $val) {
+    $indexList[$index] = $typesToPrint[$index];
+}
+$typesToPrint = $indexList;
 
 $roomCount = array();
 foreach($rooms as $room) {
@@ -36,7 +43,6 @@ foreach($rooms as $room) {
     }
     @$roomCount[$room->roomType]++;
     @$roomCount["total"]++;
-    
 }
 
 echo "<table width='100%'>";
@@ -61,9 +67,9 @@ function print_table($tabletype, $res, $typesToPrint, $roomCount) {
     echo "<th>Dato</th>";
     foreach ($typesToPrint as $type) {
         /* @var $type core_hotelbookingmanager_RoomType */
-        echo "<th>" . $type->name . "</th>";
+        echo "<th>" . $type->name . "<br>(" . $roomCount[$type->id] . ")". "</th>";
     }
-    echo "<th>Totalt</th>";
+    echo "<th>Totalt<br>(".$roomCount['total'] .")</th>";
     if($tabletype == "count") {
         echo "<th>Belegg</th>";
     }
@@ -98,9 +104,9 @@ function print_table($tabletype, $res, $typesToPrint, $roomCount) {
     echo "<th>Dato</th>";
     foreach ($typesToPrint as $type) {
         /* @var $type core_hotelbookingmanager_RoomType */
-        echo "<th>" . $type->name . "</th>";
+        echo "<th>" . $type->name . "<br>(" . $roomCount[$type->id] . ")". "</th>";
     }
-    echo "<th>Totalt</th>";
+    echo "<th>Totalt<br>(".$roomCount['total'] .")</th>";
     if($tabletype == "count") {
         echo "<th>Belegg</th>";
     }

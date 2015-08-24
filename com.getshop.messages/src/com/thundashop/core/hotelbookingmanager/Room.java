@@ -23,7 +23,7 @@ public class Room extends DataCommon {
     boolean isAvilable(Date start, Date end) {
         
         if(!isActive) {
-            return false;
+//            return false;
         }
         
         if(bookedDates == null) {

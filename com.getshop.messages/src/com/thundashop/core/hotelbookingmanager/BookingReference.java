@@ -9,6 +9,17 @@ import java.util.List;
 
 public class BookingReference extends DataCommon {
 
+    boolean hasRoom(String id) {
+        for(ReservedRoom rroom :rooms) {
+            if(rroom.roomId.equals(id)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+
     static class uploadArxStatus {
         public static Integer NOTHING_UPLOADED = 0;
         public static Integer OUTDOORSUPLOADED = 1;
@@ -140,8 +151,14 @@ public class BookingReference extends DataCommon {
     }
     
     boolean isBetween(Date start, Date end) {
-        if(start.before(startDate) && end.after(endDate)) {
+        if(active && start.after(startDate)) {
             return true;
+        }
+        
+        if(!active) {
+            if(start.before(startDate) && end.after(endDate)) {
+                return true;
+            }
         }
         return false;
     }

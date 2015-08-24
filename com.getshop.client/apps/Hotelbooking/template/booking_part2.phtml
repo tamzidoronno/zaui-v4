@@ -143,6 +143,10 @@ if ($this->getServiceType() == "storage") {
             }
         }
         echo "<div class='name' >" . $product->name . "</div>";
+        if ($avroom <= 0) {
+            echo "<span class='sold_out'>Det kan være at det ikke er noen ledige boder av denne typen, velg denne boden for å bli kontaktet når noe blir ledig.</span>";
+        }
+
         if (isset($product->descriptions[0])) {
             echo trim($product->descriptions[0] ? strip_tags($product->descriptions[0]) : '');
         }

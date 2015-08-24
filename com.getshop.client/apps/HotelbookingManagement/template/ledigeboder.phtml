@@ -1,0 +1,36 @@
+<h1>Ledige boder i perioden <? echo $this->getStartDate(); ?> - <? echo $this->getEndDate(); ?> </h1>
+<?
+/* @var $this \ns_15e67fa1_c862_4bc3_9b17_dfd818f30712\HotelbookingManagement */
+/* @var $api GetShopApi */
+$api = $this->getApi();
+$rooms = $api->getHotelBookingManager()->getAllRooms();
+$types = $api->getHotelBookingManager()->getRoomTypes();
+foreach($types as $type) {
+    $types[$type->id] = $type;
+}
+
+$start = time()*1000;
+$end = (time()+86400)*1000;
+
+$result = array();
+foreach($rooms as $room) {
+    $type = @$types[$room->roomType]->name;
+    $type = str_replace("kvm", "", $type);
+    if(!isset($result[$type])) {
+        $result[$type] = array();
+    }
+    if($api->getHotelBookingManager()->isAvilable($room->id, $start, $end)) {
+         $result[$type][] =  $room->roomName;
+    }
+}
+ksort($result);
+foreach($result as $size => $freerooms) {
+    if(sizeof($freerooms) == 0) {
+        continue;
+    }
+    echo "<h1> Størrelse $size"."kvm </h1>";
+    foreach($freerooms as $room) {
+        echo $room . "<br>";
+    }
+}
+?>

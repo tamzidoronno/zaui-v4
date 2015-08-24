@@ -2177,6 +2177,23 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return boolean
+	* @throws ErrorException
+	*/
+
+	public function isAvilable($roomId, $start, $end) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $data['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $data['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $data["method"] = "isAvilable";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
 	* @return void
 	* @throws ErrorException
 	*/

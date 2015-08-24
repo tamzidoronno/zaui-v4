@@ -2227,6 +2227,35 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def isAvilable(self, roomId, start, end):
+    args = collections.OrderedDict()
+    if isinstance(roomId,GetShopBaseClass): 
+      args["roomId"]=json.dumps(roomId.__dict__)
+    else:
+      try:
+        args["roomId"]=json.dumps(roomId)
+      except (ValueError, AttributeError):
+        args["roomId"]=roomId
+    if isinstance(start,GetShopBaseClass): 
+      args["start"]=json.dumps(start.__dict__)
+    else:
+      try:
+        args["start"]=json.dumps(start)
+      except (ValueError, AttributeError):
+        args["start"]=start
+    if isinstance(end,GetShopBaseClass): 
+      args["end"]=json.dumps(end.__dict__)
+    else:
+      try:
+        args["end"]=json.dumps(end)
+      except (ValueError, AttributeError):
+        args["end"]=end
+    data = EmptyClass()
+    data.args = args
+    data.method = "isAvilable"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def markReferenceAsStopped(self, referenceId, stoppedDate):
     args = collections.OrderedDict()
     if isinstance(referenceId,GetShopBaseClass): 

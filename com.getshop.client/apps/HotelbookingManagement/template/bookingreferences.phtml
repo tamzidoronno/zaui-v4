@@ -10,6 +10,7 @@ foreach($rooms as $room) {
     @$typecount[$room->roomType]++;
 }
 $rooms = $newRoom;
+$roomtypecount = $typecount;
 
 $types = $hmanager->getRoomTypes();
 foreach($types as $type) {
@@ -97,6 +98,7 @@ foreach($reservations as $reservation) {
     @$heardAbout[$reservation->heardAboutUs]++;
 }
 ksort($roomTypes);
+ksort($typecount);
 ?>
 <table width="100%">
     <tr>
@@ -136,7 +138,7 @@ ksort($roomTypes);
             $totalEnded = 0;
             $totalAll = 0;
 
-            foreach($roomTypes as $id => $count) {
+            foreach($typecount as $id => $count) {
                 $current = @$currentRooms[$id];
                 $new = @$startedRoom[$id];
                 $ended = @$endedRooms[$id];
@@ -159,7 +161,11 @@ ksort($roomTypes);
                 $diff = $new - $ended;
                 $grad = round((($current / $count)*100),0);
                 
-                echo "<tr><td> ".$id. "kvm</td>";
+                if($id != "tilpasset") {
+                    echo "<tr><td> ".$id. "kvm</td>";
+                } else {
+                    echo "<tr><td> ".$id. "</td>";
+                }
                 echo "<td align='center'>" .$current . "</td>";
                 echo "<td align='center'>" . $new . "</td>";
                 echo "<td align='center'>" . $ended . "</td>";
@@ -192,7 +198,7 @@ Existing booking references
                 <th>Actions</th>
                 <th>Registration date</th>
                 <th>Reserved by</th>
-                <th>Room (code)</th>
+                <th>Room</th>
                 <th>Start date</th>
                 <th>End date</th>
                 <th>Mnd. Pris</th>
@@ -230,7 +236,8 @@ Existing booking references
                 if(!isset($rooms[$roomid])) {
                     continue;
                 }
-                $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$roomid'>" . $rooms[$roomid]->roomName . " (" . $reservation->codes[$index] . ")</span>";
+                $ttype = $types[$rooms[$roomid]->roomType];
+                $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$roomid'>bod_" . $rooms[$roomid]->roomName . " (" . $ttype->name . ")". "</span>";
             }
             
             $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);

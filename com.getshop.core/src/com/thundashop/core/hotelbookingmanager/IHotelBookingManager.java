@@ -129,4 +129,6 @@ public interface IHotelBookingManager {
     
     @Administrator
     public BookingStats buildStatistics(BookingStatsInput input) throws ErrorException;
+    
+    public boolean isAvilable(String roomId, long start, long end);
 }

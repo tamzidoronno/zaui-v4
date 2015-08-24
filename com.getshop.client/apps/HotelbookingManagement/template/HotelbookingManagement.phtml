@@ -12,6 +12,8 @@ $endDate = $this->getEndDate();
 
 $types = array();
 $types['boder_aktiv'] = "Boder aktive";
+$types['boder_alle'] = "Boder alle";
+$types['boder_ledige'] = "Boder ledige";
 $types['boder_ikke_startet'] = "Boder ikke startet";
 $types['boder_sluttet'] = "Boder sluttet";
 $types['stats'] = "Statistikk";
@@ -91,6 +93,9 @@ switch($type) {
         break;
     case "coverage":
         $this->includefile("bookingcoverage");
+        break;
+    case "boder_ledige":
+        $this->includefile("ledigeboder");
         break;
     default:
         $this->includefile("bookingreferences");

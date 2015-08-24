@@ -30,7 +30,7 @@
 .Hotelbooking .room_selection_2 .selection_box { float:left; }
 .Hotelbooking .room_selection_2 .personalcount { font-size: 14px; font-weight: bold; }
 .Hotelbooking .room_selection_2 .price_text { font-size: 22px; font-weight: bold; }
-.Hotelbooking .sold_out { margin: 20px; color:#BBB; }
+.Hotelbooking .sold_out { font-size: 12px; color:#aaa; }
 
 .Hotelbooking .no_room_available { font-size: 22px; text-align: center; }
 .Hotelbooking .room_selection_2 .price_box { float:right;display:inline-block; width: 35%; padding-top:10px; }

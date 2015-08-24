@@ -2,6 +2,7 @@ package com.thundashop.core.hotelbookingmanager;
 
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -171,7 +172,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         int count = 0;
         for (Room room : rooms.values()) {
-            if (room.roomType != null && room.roomType.equals(rtype.id) && room.isAvilable(start, end)) {
+            if (room.roomType != null && room.roomType.equals(rtype.id) && isAvilable(room.id, start.getTime() ,end.getTime())) {
                 count++;
             }
         }
@@ -1303,5 +1304,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         return result;
+    }
+
+    @Administrator
+    public boolean isAvilable(String roomId, long start, long end) {
+        for(BookingReference ref : bookingReferences.values()) {
+            if(!ref.hasRoom(roomId)) {
+                continue;
+            }
+            if(ref.isBetween(new Date(start), new Date(end))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

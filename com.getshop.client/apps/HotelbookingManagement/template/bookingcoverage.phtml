@@ -32,7 +32,7 @@
         }
         /* @var $room core_hotelbookingmanager_Room */
         echo "<div class='row'>";
-        echo "<span class='name'>" . str_replace("Marius", "", $room->roomName ). " (" . $types[$room->roomType]->name . ")". "</span>";
+        echo "<span class='name'>" . str_replace("Marius", "", $room->roomName ). " (" . @$types[$room->roomType]->name . ")". "</span>";
         foreach($res->stats as $date => $stat) {
             $taken = $stat->{'takenRooms'};
             if(in_array($room->id, $taken)) {

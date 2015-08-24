@@ -45,15 +45,11 @@ foreach($rooms as $room) {
     @$roomCount["total"]++;
 }
 
-echo "<table width='100%'>";
-echo "<td>";
 echo "<h1>Belegg</h1>";
 print_table("count", $res, $typesToPrint, $roomCount);
-echo "</td><td>";
-echo "<h1>Intekter</h1>";
+echo "<h1>Inntekter</h1>";
 print_table("income", $res, $typesToPrint, $roomCount);
-echo "</td>";
-echo "</table>";
+
 echo "<br>";
 echo "<br>";
 echo "<br>";
@@ -62,7 +58,7 @@ echo "<br>";
 
 function print_table($tabletype, $res, $typesToPrint, $roomCount) {
 
-    echo "<table cellspacing='1' cellpadding='1'>";
+    echo "<table cellspacing='1' cellpadding='1' width='100%'>";
     echo "<tr style='color:#fff; background-color:#000'>";
     echo "<th>Dato</th>";
     foreach ($typesToPrint as $type) {
@@ -115,7 +111,7 @@ function print_table($tabletype, $res, $typesToPrint, $roomCount) {
     echo "<tr bgcolor='#000' style='color:#fff'>";
     echo "<td><b>Sum</b></td>";
     foreach(@$sum as $key => $val) {
-        echo "<td align='center'>" . $val . "</td>";
+        echo "<td align='center'>" .  number_format($val, 0, ',', ' ') . "</td>";
     }
     if($tabletype == "count") {
         echo "<td valign='center'>";

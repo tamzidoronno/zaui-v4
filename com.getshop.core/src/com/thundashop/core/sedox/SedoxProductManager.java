@@ -1495,12 +1495,17 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     private double getPrice(SedoxProduct sedoxProduct, SedoxUser user, List<Integer> files) {
         double totalPrice = 40;
+        
+        if (user.fixedPrice != null && !user.fixedPrice.isEmpty()) {
+            totalPrice = 0;
+        }
+        
         double mostExpensive = 0;
         if (files != null) {
             for (int fileId : files) {
                 SedoxBinaryFile binFile = sedoxProduct.getFileById(fileId);
-                if (binFile != null && binFile.getPrice() > mostExpensive) {
-                    mostExpensive = binFile.getPrice();
+                if (binFile != null && binFile.getPrice(user) > mostExpensive) {
+                    mostExpensive = binFile.getPrice(user);
                 }
             }
         }
@@ -1533,5 +1538,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxUser sedoxUser = getSedoxUserById(getSession().currentUser.id);
         SedoxProduct product = getProductById(productId);
         return getPrice(product, sedoxUser, files);
+    }
+
+    @Override
+    public void setFixedPrice(String userId, String price) throws ErrorException {
+        SedoxUser user = getSedoxUserAccountById(userId);
+        if (user != null) {
+            user.fixedPrice = price;
+            databaseSaver.saveObject(user, credentials);
+        }
     }
 }

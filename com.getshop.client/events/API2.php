@@ -5128,6 +5128,25 @@ class APISedoxProductManager {
 	}
 
 	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setFixedPrice($userId, $price) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["price"] = json_encode($this->transport->object_unset_nulls($price));
+	     $data["method"] = "setFixedPrice";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	*
 	* @author ktonder
 	*/

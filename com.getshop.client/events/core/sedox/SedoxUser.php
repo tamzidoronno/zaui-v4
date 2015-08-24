@@ -33,5 +33,8 @@ class core_sedox_SedoxUser extends core_common_DataCommon  {
 	/** @var String */
 	public $slaveIncome;
 
+	/** @var String */
+	public $fixedPrice;
+
 }
 ?>

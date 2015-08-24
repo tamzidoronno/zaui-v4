@@ -260,7 +260,8 @@ app.SedoxAdmin = {
             allowNegativeCredit : $('.SedoxAdmin #allownegativecredit').is(':checked'),
             allowWindowsApplication : $('.SedoxAdmin #allowwindowsapp').is(':checked'),
             isNorwegian : $('.SedoxAdmin #norwegiancustomer').is(':checked'),
-            badCustomer : $('.SedoxAdmin #badCustomer').is(':checked')
+            badCustomer : $('.SedoxAdmin #badCustomer').is(':checked'),
+            fixedPrice : $('.SedoxAdmin #fixedPrice').val()
         };
         
         var event = thundashop.Ajax.createEvent("", "saveUserInfo", this, data);

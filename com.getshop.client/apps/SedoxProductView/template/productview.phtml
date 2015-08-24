@@ -70,7 +70,17 @@ $reference = $this->getReference($sedoxProduct);
                     <? echo $binFile->fileType; ?>
                 </div>
 
-                <div class='col col2'><? echo strtolower($binFile->fileType) == "original" ? $this->getPriceForFile($binFile) : $this->getPriceForFile($binFile) + 40; ?></div>
+                <?
+                $filePrice = strtolower($binFile->fileType) == "original" ? $this->getPriceForFile($binFile) : $this->getPriceForFile($binFile) + 40; 
+                $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+                if ($user != null) {
+                    $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccount();
+                    if ($sedoxUser->fixedPrice) {
+                        $filePrice = $sedoxUser->fixedPrice;
+                    }
+                }
+                ?>
+                <div class='col col2'><? echo $filePrice; ?></div>
 
                 <div class='col col3'>
                     <?

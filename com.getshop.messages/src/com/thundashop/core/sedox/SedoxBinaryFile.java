@@ -42,7 +42,11 @@ public class SedoxBinaryFile implements Serializable {
         checksumCorrected = !productAttributes[15].equals("csnone");
     }
 
-    public double getPrice() {
+    public double getPrice(SedoxUser sedoxUser) {
+        
+        if (sedoxUser.fixedPrice != null && !sedoxUser.fixedPrice.isEmpty()) {
+            return Double.parseDouble(sedoxUser.fixedPrice);
+        }
         
         if (fileType.toLowerCase().equals("tune")) {
             return 60;

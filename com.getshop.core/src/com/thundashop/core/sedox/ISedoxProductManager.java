@@ -150,6 +150,9 @@ public interface ISedoxProductManager  {
     @Administrator
     public List<SedoxProductStatistic> getStatistic();
     
+    @Administrator
+    public void setFixedPrice(String userId, String price) throws ErrorException;
+    
     public List<String> getProductIds() throws ErrorException;
     
     public double getPriceForProduct(String productId, List<Integer> files) throws ErrorException;

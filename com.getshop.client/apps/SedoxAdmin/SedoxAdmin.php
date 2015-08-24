@@ -124,6 +124,7 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         $this->getApi()->getSedoxProductManager()->toggleAllowNegativeCredit($_POST['data']['userId'], $_POST['data']['allowNegativeCredit']);
         $this->getApi()->getSedoxProductManager()->toggleAllowWindowsApp($_POST['data']['userId'], $_POST['data']['allowWindowsApplication']);
         $this->getApi()->getSedoxProductManager()->toggleBadCustomer($_POST['data']['userId'], $_POST['data']['badCustomer']);
+        $this->getApi()->getSedoxProductManager()->setFixedPrice($_POST['data']['userId'], $_POST['data']['fixedPrice']);
     }
     
     public function updateCredit() {

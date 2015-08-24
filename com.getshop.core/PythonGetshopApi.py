@@ -5361,6 +5361,28 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setFixedPrice(self, userId, price):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(price,GetShopBaseClass): 
+      args["price"]=json.dumps(price.__dict__)
+    else:
+      try:
+        args["price"]=json.dumps(price)
+      except (ValueError, AttributeError):
+        args["price"]=price
+    data = EmptyClass()
+    data.args = args
+    data.method = "setFixedPrice"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def sync(self, option):
     args = collections.OrderedDict()
     if isinstance(option,GetShopBaseClass): 

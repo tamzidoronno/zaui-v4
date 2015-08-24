@@ -26,6 +26,7 @@ public class SedoxUser extends DataCommon {
     boolean isActiveDelevoper = false;
     public String masterUserId;
     public double slaveIncome = 0;
+    public String fixedPrice = "";
 
     public void addCreditOrderUpdate(SedoxCreditOrder sedoxCreditOrder, String description) {
         creditAccount.updateCredit(sedoxCreditOrder, description);

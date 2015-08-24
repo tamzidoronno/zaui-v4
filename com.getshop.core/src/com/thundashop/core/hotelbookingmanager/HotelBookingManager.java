@@ -681,17 +681,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         checkForArxUpdate();
     }
 
-    private boolean isTransferred(User user) throws ClassNotFoundException, SQLException {
-        if (user.isTransferredToAccountSystem) {
-            return true;
-        }
-
-        UserManager userManager = getManager(UserManager.class);
-        userManager.markUserAsTransferredToVisma(user);
-
-        return true;
-    }
-
     /**
      * Not sure what or why we do this.
      *
@@ -745,15 +734,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         UserManager usrmgr = getManager(UserManager.class);
 
         List<User> allUsers = usrmgr.getAllUsers();
-
+        List<User> usersTransferred = new ArrayList();
+        
         for (User user : allUsers) {
             if (!user.isCustomer()) {
                 continue;
             }
 
             try {
-                if (!isTransferred(user)) {
+                if (!user.isTransferredToAccountSystem) {
                     result += VismaUsers.generateVismaUserString(user) + "\r\n";
+                    usersTransferred.add(user);
                 }
 
                 result += generateOrderLines(user, settingsFromVismaApp);
@@ -789,6 +780,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             client.disconnect();
             if (!done) {
                 throw new IOException("Failed to transfer file to VISMA FTP server");
+            }
+            
+            UserManager userManager = getManager(UserManager.class);
+            
+            for (User userTransferred : usersTransferred) {    
+                userManager.markUserAsTransferredToVisma(userTransferred);
             }
         } else {
             System.out.println("Transferred data to visma:");

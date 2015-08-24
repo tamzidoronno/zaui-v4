@@ -650,6 +650,24 @@ public class APISedoxProductManager {
      }
 
      /**
+     * Developers is simply an getshop user that is registered as an developer.
+     * Active developers are administrators that has an SedoxUser with the flag
+     * isActiveDeveloper = true
+     *
+     * @return
+     * @throws ErrorException
+     */
+     public void setFixedPrice(java.lang.String userId, java.lang.String price)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("userId",new Gson().toJson(userId));
+          data.args.put("price",new Gson().toJson(price));
+          data.method = "setFixedPrice";
+          data.interfaceName = "core.sedox.ISedoxProductManager";
+          String result = transport.send(data);
+     }
+
+     /**
      *
      * @author ktonder
      */

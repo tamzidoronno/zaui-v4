@@ -687,7 +687,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
      *
      * @param user
      */
-    private String generateOrderLines(User user, Map<String, Setting> settingsFromVismaApp) throws ErrorException, ClassNotFoundException, SQLException {
+    private String generateOrderLines(User user, Map<String, Setting> settingsFromVismaApp, VismaUsers factory) throws ErrorException, ClassNotFoundException {
         ProductManager manager = getManager(ProductManager.class);
         MessageManager msgManager = getManager(MessageManager.class);
         OrderManager ordermgr = getManager(OrderManager.class);
@@ -695,7 +695,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         for (Order order : ordermgr.getAllOrdersForUser(user.id)) {
             references.put(new Integer(order.reference), getReservationByReferenceId(new Integer(order.reference)));
         }
-        return VismaUsers.generateOrderLines(ordermgr.getAllOrdersForUser(user.id), user, references, manager, this, settingsFromVismaApp, msgManager, ordermgr);
+
+        return factory.generateOrderLines(ordermgr.getAllOrdersForUser(user.id), user, references, manager, this, settingsFromVismaApp, msgManager, ordermgr);
     }
 
     @Override
@@ -705,14 +706,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         } catch (ClassNotFoundException ex) {
             System.out.println("Sql driver not found, check that the jdbc jar driver is in classpath");
             ex.printStackTrace();
-        } catch (SQLException ex) {
-            sendSqlErrorMessage(ex);
         } catch (IOException ex) {
             sendSqlErrorMessage(ex);
         }
     }
 
-    public void checkForVismaTransferInternal() throws ErrorException, ClassNotFoundException, SQLException, IOException {
+    public void checkForVismaTransferInternal() throws ErrorException, ClassNotFoundException, IOException {
 
         if (vismaSettings == null || vismaSettings.address == null || vismaSettings.address.isEmpty()) {
             return;
@@ -736,7 +735,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         List<User> allUsers = usrmgr.getAllUsers();
         List<User> usersTransferred = new ArrayList();
-        
+        VismaUsers factory = new VismaUsers();
         for (User user : allUsers) {
             if (!user.isCustomer()) {
                 continue;
@@ -748,7 +747,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     usersTransferred.add(user);
                 }
 
-                result += generateOrderLines(user, settingsFromVismaApp);
+            } catch (RuntimeException ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        for (User user : allUsers) {
+            if (!user.isCustomer()) {
+                continue;
+            }
+
+            try {
+                result += generateOrderLines(user, settingsFromVismaApp, factory);
             } catch (RuntimeException ex) {
                 ex.printStackTrace();
             }
@@ -758,6 +768,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             return;
         }
 
+        String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date()) + ".edi";
+        String path = "/tmp/" + filename;
+        
         if (frameworkConfig.productionMode) {
             FTPClient client = new FTPClient();
             client.connect(vismaSettings.address, vismaSettings.port);
@@ -769,12 +782,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 throw new IOException("Failed to connect to FTP Server, " + vismaSettings.address);
             }
             
-            deleteAllFilesOnServer(client);
-            String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date()) + ".edi";
-            String path = "/tmp/" + filename;
-            PrintWriter writer = new PrintWriter(path, "ISO-8859-1");
-            writer.print(result);
-            writer.close();
+            try (PrintWriter writer = new PrintWriter(path, "ISO-8859-1")) {
+                writer.print(result);
+            }
             InputStream inputStream = new FileInputStream(new File(path));
             boolean done = client.storeFile("./" + filename, inputStream);
             inputStream.close();
@@ -783,25 +793,25 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 throw new IOException("Failed to transfer file to VISMA FTP server");
             }
             
-            UserManager userManager = getManager(UserManager.class);
-            
-            for (User userTransferred : usersTransferred) {    
-                userManager.markUserAsTransferredToVisma(userTransferred);
-            }
         } else {
-            System.out.println("Transferred data to visma:");
-            System.out.println(result);
+            try (PrintWriter writer = new PrintWriter(path, "ISO-8859-1")) {
+                writer.print(result);
+            }
+            
+            System.out.println("Debug visma file: " + path);
+        }
+        
+        UserManager userManager = getManager(UserManager.class);
+        for (User userTransferred : usersTransferred) {    
+            userManager.markUserAsTransferredToVisma(userTransferred);
+        }
+
+        OrderManager orderManager = getManager(OrderManager.class);
+        for (Order order : factory.getOrdersTransferred()) {
+            orderManager.setDontSendToAccountSystem(order);
         }
     }
 
-    private void deleteAllFilesOnServer(FTPClient client) throws IOException {
-        FTPFile[] files = client.listFiles();
-        if (files  != null) {
-            for (FTPFile file : files) {
-                client.deleteFile(file.getName());
-            }
-        }   
-    }
     
     @Override
     public void setVismaConfiguration(VismaSettings settings) throws ErrorException {

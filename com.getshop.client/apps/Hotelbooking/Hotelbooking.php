@@ -477,6 +477,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             foreach($cart->items as $item) {
                 if($item->product->id == $this->getProductId()) {
                     $ids[] = $item->cartItemId;
+                    $this->getApi()->getCartManager()->updateProductCount($item->cartItemId, 3);
                 }
             }
             $this->getApi()->getHotelBookingManager()->setCartItemIds($reference, $ids);
@@ -488,9 +489,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             }
             
             if ($this->getServiceType() == "storage") {
-                for ($i = 0; $i < $this->getDayCount(true); $i++) {
-                    $order = $this->createOrder($user, $i);
-                }
+                $order = $this->createOrder($user, true);
             } else {
                 $order = $this->createOrder($user);
             }
@@ -925,18 +924,21 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->getApi()->getUserManager()->createUser($user);
     }
 
-    public function createOrder($user, $i = null) {
+    public function createOrder($user, $all = false) {
         if ($this->partnerShipChecked()) {
             $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($this->getReferenceKey());
         } else {
             $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
         }
         
-        if($i != null) {
+        if($all) {
+            $i = 0;
             $startDate = date('M d, Y h:m:s A', strtotime("+".$i." months", $this->getStart()));
-            $endDate = date('M d, Y h:m:s A', strtotime("-1 day",strtotime("+".($i+1)." months", $this->getStart())));
+            $endDate = date('M d, Y h:m:s A', strtotime("-1 day",strtotime("+".($i+$this->getMinumRental())." months", $this->getStart())));
+            $expiryDate = date('M d, Y h:m:s A', strtotime("-15 day",strtotime("+".($i+$this->getMinumRental())." months", $this->getStart())));
             $order->startDate = $startDate;
             $order->endDate = $endDate;
+            $order->expiryDate = $expiryDate;
         } else {
             $order->startDate = date('M d, Y h:m:s A', $this->getStart());
             $order->endDate = date('M d, Y h:m:s A', $this->getEnd());

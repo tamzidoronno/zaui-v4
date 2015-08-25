@@ -628,6 +628,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (copiedOrder.cart != null) {
             copiedOrder.cart.rowCreatedDate = order.expiryDate;
         }
+        
+        // This id done to set count to 1 for SemLagerhotell HardCoded to save time!!
+        for (CartItem item : copiedOrder.cart.getItems()) {
+            item.setCount(1);
+        }
 
         cal.add(Calendar.MONTH, -1);
         cal.add(Calendar.DATE, 15);

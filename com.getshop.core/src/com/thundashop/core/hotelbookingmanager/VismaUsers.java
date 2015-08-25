@@ -4,7 +4,6 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Setting;
-import com.thundashop.core.hotelbookingmanager.BookingReference;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -12,27 +11,34 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class VismaUsers extends DataCommon {
-
+    private List<Order> ordersTransferred = new ArrayList();
+    
     static String payMentCondition = "15"; // gets it from PmtTrm
     static String payMentType = "10"; // gets it from PmtMt
 
-    private static Integer getVismaId(ProductManager prodManager, CartItem item) throws ErrorException {
+    private static Integer getVismaId(ProductManager prodManager, CartItem item, User user) throws ErrorException {
         Product currentProduct = prodManager.getProduct(item.getProduct().id);
 
         if (currentProduct == null) {
+            if (item.getProduct().vismaId != null && item.getProduct().vismaId.equals(100) && !user.isPrivatePerson) {
+                return 200;
+            }
+
             return item.getProduct().vismaId;
         }
 
+        if (currentProduct.vismaId != null && currentProduct.vismaId.equals(100) && !user.isPrivatePerson) {
+            return 200;
+        }
+        
         return currentProduct.vismaId;
     }
 
@@ -62,9 +68,9 @@ public class VismaUsers extends DataCommon {
         return false;
     }
 
-    static boolean containsError(ProductManager prodManager, MessageManager messageManager, OrderManager ordermgr, Order order) throws ErrorException {
+    static boolean containsError(ProductManager prodManager, MessageManager messageManager, OrderManager ordermgr, Order order, User user) throws ErrorException {
         for (CartItem item : order.cart.getItems()) {
-            Integer vismaId = getVismaId(prodManager, item);
+            Integer vismaId = getVismaId(prodManager, item, user);
             if (vismaId == null || vismaId == 0) {
                 if (!order.triedTransferredToAccountingSystem) {
                     messageManager.sendMail(
@@ -83,7 +89,11 @@ public class VismaUsers extends DataCommon {
         return false;
     }
 
-    static String generateOrderLines(
+    public List<Order> getOrdersTransferred() {
+        return ordersTransferred;
+    }
+    
+    String generateOrderLines(
             List<Order> orders,
             User user,
             HashMap<Integer, BookingReference> references,
@@ -91,7 +101,7 @@ public class VismaUsers extends DataCommon {
             HotelBookingManager bookingManager,
             Map<String, Setting> settingsFromVismaApp,
             MessageManager messageManager,
-            OrderManager ordermgr) throws ErrorException, ClassNotFoundException, SQLException {
+            OrderManager ordermgr) throws ErrorException, ClassNotFoundException {
 
         String result = "";
         for (Order order : orders) {
@@ -100,11 +110,6 @@ public class VismaUsers extends DataCommon {
             }
 
             if (order.transferedToAccountingSystem) {
-                continue;
-            }
-
-            if (bookingManager.orderExistsInVisma(order.incrementOrderId)) {
-                ordermgr.setDontSendToAccountSystem(order);
                 continue;
             }
 
@@ -117,10 +122,11 @@ public class VismaUsers extends DataCommon {
                 continue;
             }
 
-            if (containsError(prodManager, messageManager, ordermgr, order)) {
+            if (containsError(prodManager, messageManager, ordermgr, order, user)) {
                 continue;
             }
 
+            ordersTransferred.add(order);
             String ordrehode = "H;"; // Fast H
             ordrehode += "1;"; // Fast 1 for salg
             ordrehode += settingsFromVismaApp.get("ordertype").value + ";"; // Fast 1 for normalordre
@@ -134,7 +140,7 @@ public class VismaUsers extends DataCommon {
             result += ordrehode + "\r\n";
 
             for (CartItem item : order.cart.getItems()) {
-                Integer vismaId = getVismaId(prodManager, item);
+                Integer vismaId = getVismaId(prodManager, item, user);
                 String orderline = "L;"; // Fast L for orderline
                 orderline += vismaId + ";"; // ProdNO
                 orderline += ";"; // Avgiftskode ( hentes fra kunden )

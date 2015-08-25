@@ -67,6 +67,8 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean isPrivatePerson = true;
     public boolean mvaRegistered = false;
     
+    public List<String> parents = new ArrayList();
+    
     public Company company = null;
     
     /**

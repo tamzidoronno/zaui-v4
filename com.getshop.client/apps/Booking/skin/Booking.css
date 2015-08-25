@@ -129,3 +129,11 @@
     margin-bottom: 20px;
     
 }
+
+.Booking .addSubUserToEvent {
+    cursor: pointer;
+}
+
+.Booking .addSubUserToEvent:hover {
+    background-color: #FFF;
+}

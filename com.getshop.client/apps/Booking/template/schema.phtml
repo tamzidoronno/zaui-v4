@@ -1,11 +1,14 @@
 <?
-/** @var $this ns_74ea4e90_2d5a_4290_af0c_230a66e09c78\Booking */
+/* @var $this ns_74ea4e90_2d5a_4290_af0c_230a66e09c78\Booking */
 namespace ns_74ea4e90_2d5a_4290_af0c_230a66e09c78;
 
 if (!isset($_SESSION['userEmailToBook'])) {
     $_SESSION['userEmailToBook'] = null;
 }
 
+/* Temp */
+//$_SESSION['userEmailToBook'] = "karsten@inkorgen.nu"; 
+       
 $userToBook = $this->getUserToBook();
 
 if ($userToBook) {
@@ -83,6 +86,18 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
         unset($_SESSION['entry']);
     }
     ?>
+
+    <div style='text-align: center; '>
+        <center>
+            <div style='width: 510px; border: solid 1px #DDD; background-color: #f9f9f9;margin-bottom: 20px; padding: 10px; font-size: 16px; '>
+                <div><? echo $this->__f("Event").": ".$currentEntry->title; ?></div>
+                <div><? echo $this->__f("Date").": ".$currentEntry->day."/".$currentEntry->month."-".$currentEntry->year; ?></div>
+                <div><? echo $this->__f("Location").": ".$currentEntry->location; ?></div>
+                <div><? echo $currentEntry->locationObject->locationExtra; ?></div>
+            </div>
+        </center>
+    </div>
+
     <center>
         <?
         if (isset($_SESSION['group'])) {
@@ -217,11 +232,75 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                             } else {
                                 echo $this->isConnectedToCurrentPage() ? $this->__w("Place order") : $this->__w("Sign up");
                             }
-                            ?></ins>
+                            ?>
+                        </ins>
                     </div>
                 </td>
             </tr>
         </table>
+        
+        <?
+        if ($userToBook) {
+        ?>
+            <div class="booking_subusers" style="border: solid 1px #FAFAFA; width: 510px; background-color: #FEfEfE; font-size: 16px; margin-top: 30px; padding: 20px;">
+            <?
+                $subUsers = $this->getApi()->getUserManager()->getSubUsers($userToBook->id);
+                echo "<b>".$this->__w("Sub Accounts")."</b><br/><br/>";
+                if (!count($subUsers)) {
+                    echo $this->__w("You dont have any subaccounts yet. Fill form below and click \"create user\" to add subaccount");
+                } else {
+                    ?>
+                    <div style="text-align: left; margin-bottom: 5px; padding-left: 5px;">
+                        <i class="fa fa-graduation-cap" style=" margin-left: 10px; color:#006e63;"></i> = <? echo $this->__f("Signed on"); ?>
+                        <br/><i class="fa fa-graduation-cap" style="margin-left: 10px; color:#d4c300;"></i> = <? echo $this->__f("Waitinglist"); ?>
+                        <br/><i class="fa fa-graduation-cap" style="margin-left: 10px; color:#DDD;"></i> = <? echo $this->__f("Not signed on"); ?>
+                        <br/>
+                        <br/><center> <? echo $this->__f("Click on the user below you wish to attend to this event"); ?></center>
+                    </div>
+                
+                    <?
+                    foreach ($subUsers as $subUser) {
+                        $color = in_array($subUser->id, $currentEntry->attendees) ? "006e63" : "DDD";
+                        $color = in_array($subUser->id, $currentEntry->waitingList) ? "d4c300" : $color;
+                        echo "<div style='text-align: left; padding: 5px; border: solid 1px #DDD;' class='addSubUserToEvent' entryid='$currentEntry->entryId' userid='$subUser->id'>";
+                        echo '<i class="fa fa-graduation-cap" style="margin-right: 10px; margin-left: 10px; color:#'.$color.';"></i>';
+                        echo $subUser->fullName . ", " . $subUser->cellPhone;
+                        echo "</div>";
+                    }
+                }
+            ?>
+                
+                <div>
+                    
+                    <div class="addUser_booking">
+                        
+                        <table style="border: solid 1px #DDD; margin-top: 20px; padding: 20px; width: 510px;" >
+                            <tr><td colspan="2" style=''><center style='margin-bottom: 5px; border-bottom: solid 1px #DDD; padding-bottom: 5px;'> <b><? echo $this->__f("Add new account"); ?> </b></center></td> </tr>
+                            <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="subAccountCandidateName" type='textfield' /></td></tr>
+                            <tr><td class="col1"><?php echo $this->__w("phone", 'contact'); ?></td><td><input id="subAccountCandidatePhone" type='textfield' /></td></tr>
+                            <tr>
+                                <td colspan="2" align="right">
+                                    <div class="button createSubAccount" entryid="<? echo $currentEntry->entryId; ?>" parent="<? echo $userToBook->id; ?>">
+                                        <div class="rightglare"></div>
+                                        <div class="filler"></div>
+                                        <ins class="send_email" id="send_email">
+                                            <?
+                                                echo $this->__w("Create user");
+                                            ?>
+                                        </ins>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        <?
+        }
+        ?>
+            
+            
     </center>    
 
     <? if ($allowAdd) { ?>

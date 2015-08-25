@@ -809,7 +809,27 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             System.out.println("Group: " + group.groupName + " count: " + count);
         }
     }
-    
-    
-    
+
+    @Override
+    public List<User> getSubUsers(String userId) throws ErrorException {
+        ArrayList<User> retUsers = new ArrayList();
+        
+        for (User user : getAllUsers()) {
+            if (user.parents.contains(userId)) {
+                retUsers.add(user);
+            }
+        }
+        
+        return retUsers;
+    }
+
+    @Override
+    public void addSubUser(String parent, String subUser) throws ErrorException {
+        User user = getUserById(subUser);
+        
+        if (user != null) {
+            user.parents.add(parent);
+            saveUser(user);
+        }       
+    }
 }

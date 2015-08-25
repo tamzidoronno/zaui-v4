@@ -427,9 +427,32 @@ class Booking extends MarketingApplication implements Application {
     }
     
     public function unsetUserToBook() {
-        
         $_GET['entry'] = $_POST['data']['entry'];
         unset($_SESSION['userEmailToBook']);
+    }
+    
+    public function createSubAccount() {        
+        $data = $_POST['data'];
+        $_GET['entry'] = $data['entryId'];
+        
+        $password = rand(120010, 989988);
+        $user = $this->getApiObject()->core_usermanager_data_User();
+        $user->fullName = $data['name'];
+        $user->cellPhone = $data['phone'];
+        $user->password = $password;
+        $user->parents = [];
+        $user->parents[] = $data['parentUserId'];
+        
+        $createdUser = $this->getApi()->getUserManager()->createUser($user);
+        $this->getApi()->getCalendarManager()->addUserToEvent($createdUser->id, $data['entryId'], $password, $createdUser->username, "webpage");
+    }
+    
+    public function addSubUserToEvent() {
+        $data = $_POST['data'];
+        $_GET['entry'] = $data['entryId'];
+        
+        $createdUser = $this->getApi()->getUserManager()->getUserById($data['userId']);
+        $this->getApi()->getCalendarManager()->addUserToEvent($createdUser->id, $data['entryId'], "", $createdUser->username, "webpage");
     }
 }
 

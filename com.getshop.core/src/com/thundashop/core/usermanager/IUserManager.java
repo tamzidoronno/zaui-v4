@@ -325,4 +325,8 @@ public interface IUserManager {
     public Map<String,String> cleanUpUsers(String password) throws ErrorException;
     
     public boolean createAndSendNewPassword(String emailAddress) throws ErrorException;
+    
+    public List<User> getSubUsers(String userId) throws ErrorException;
+    
+    public void addSubUser(String parent, String subUser) throws ErrorException;
 }

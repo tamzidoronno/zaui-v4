@@ -13,15 +13,15 @@ put apitodb.json
 EOF
 
 echo -e "Uploading thundashop jar files"
-sftp -b batchfile naxa@backend.getshop.com &> /dev/null
+sftp -b batchfile naxa@backendbetapromeister.getshop.com &> /dev/null
 rm -rf batchfile
 
 echo -e "Uploading api file"
-sftp -b batchfile2 naxa@backend.getshop.com &> /dev/null
+sftp -b batchfile2 naxa@backendbetapromeister.getshop.com &> /dev/null
 rm -rf batchfile2
 
 echo -e "Restarting java!";
-ssh -T naxa@backend.getshop.com << EOF &> /dev/null;
+ssh -T naxa@backendbetapromeister.getshop.com << EOF &> /dev/null;
 
 cd dist; 
 kill -9 `ps aux |grep thunda |grep -v "auto" |awk '{print $2}'`

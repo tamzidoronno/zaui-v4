@@ -1378,6 +1378,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         CartItem item = order.cart.getItems().get(0);
         item.getProduct().name = orderLineText;
         item.getProduct().price = bookingReference.bookingFee;
+        order.userId = bookingReference.userId;
         orderManager.saveOrder(order);
         System.out.println("Order created: " + orderLineText);
         

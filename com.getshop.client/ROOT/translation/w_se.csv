@@ -2,12 +2,14 @@
 April;-;April
 August;-;Augusti
 Available positions;-;Lediga platser
+Back;-;Tillbaka
 Booking;-;Anmäl
 By calendar;-;Kalender
 By list;-;Lista
 Candidate name;-;Deltagarens namn
 Company;-;Orgnr/Företag
-Company name;-;Företag namn
+Company name;-;Organisationsnr
+Continue;-;Fortsätt
 Date;-;Datum
 December;-;December
 Download as pdf;-;Skriv ut som PDF
@@ -22,11 +24,14 @@ May;-;Maj
 Monday;-;Måndag
 More information;-;Mer information
 My name is:;-;Mitt namn är:
+Name;-;Ditt namn
 November;-;November
 October;-;Oktober
+Password;-;Lösen
 Phone;-;Tel.nr
 Read more;-;Läs mer
 Saturday;-;Lördag
+Search;-;Sök
 Search for the company you want to enter by clicking the button above, and this box will be filled automatically.;-;Hitta dit företag genom att fylla i hela org.nr i fältet ovan. I vissa fall går det även bra att söka på företagsnamn
 Select event location;-;Välj kursort
 Send message;-;Skicka
@@ -44,6 +49,9 @@ We host events at the following locations, click on the location to filter the c
 Wednesday;-;Onsdag
 What's on your mind?;-;Meddelande:
 Your are now signed up for the event;-;Du är nu anmäld!
+Your email;-;Din e-postadress
+Your emailaddress;-;Din e-postadress
+Your phonenumber;-;Ditt mobilnr
 change;-;Ändra
 course;-;Kurs
 day;-;Datum

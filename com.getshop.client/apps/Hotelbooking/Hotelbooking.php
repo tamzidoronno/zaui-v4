@@ -197,7 +197,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function sendConfirmationEmail() {
-        $orderId = $_GET['orderId'];
 
         $message = "test";
         $title = "test title";
@@ -206,11 +205,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $mainemail = $this->getFactory()->getSettings()->{"mainemailaddress"}->value;
         }
 
-        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-        $address = $order->cart->address;
-        $name = $address->fullName;
-        $reference = $order->reference;
-        $user = $this->getApi()->getUserManager()->getUserById($order->userId);
         if ($this->getServiceType() == "hotel") {
             $title = $this->__w("Thank you for your booking a room at") . " " . $this->getProjectName() . ".";
         } else {
@@ -254,16 +248,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             if ($this->partnerShipChecked() || !$this->hasPaymentAppAdded()) {
                 $this->sendConfirmationEmail();
                 $this->clearBookingData();
-                $this->includeEcommerceTransaction();
             } else {
                 //Send the user to the payment view.
                 $payment = $this->getFactory()->getApplicationPool()->getAllPaymentInstances();
-                if (sizeof($payment) > 0) {
-                    //Orderid is set in $this->continueToPayment()
-                    $payment[0]->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
-                    $payment[0]->initPaymentMethod();
-                    $payment[0]->preProcess();
-                }
             }
             return;
         }
@@ -470,30 +457,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count, $contact, $inactive, $this->getFactory()->getSelectedLanguage());
         if (($reference) > 0) {
             $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
-            $cartmgr = $this->getApi()->getCartManager();
-            $cartmgr->setReference($reference);
-            
-            $cart = $cartmgr->getCart();
-            foreach($cart->items as $item) {
-                if($item->product->id == $this->getProductId()) {
-                    $ids[] = $item->cartItemId;
-                    $this->getApi()->getCartManager()->updateProductCount($item->cartItemId, 3);
-                }
-            }
-            $this->getApi()->getHotelBookingManager()->setCartItemIds($reference, $ids);
-            
             
             $user = null;
             if (!$this->partnerShipChecked()) {
                 $user = $this->createUser();
             }
-            
-            if ($this->getServiceType() == "storage") {
-                $order = $this->createOrder($user, true);
-            } else {
-                $order = $this->createOrder($user);
-            }
-            
+            $reservation->userId = $user->id;
             
             if(isset($_POST['data']['heardaboutus'])) {
                 $reservation->heardAboutUs = $_POST['data']['heardaboutus'];
@@ -503,7 +472,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             }
             
             $_GET['orderProcessed'] = true;
-            $_GET['orderId'] = $order->id;
         } else {
             $_GET['failedreservation'] = true;
             $this->failedReservation = true;
@@ -834,39 +802,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->requestAdminRight("OrderManager", "saveOrder", $this->__o("Must be able to save order to set start and end date"));
     }
 
-    public function includeEcommerceTransaction() {
-        $orderId = $_GET['orderId'];
-        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-        $taxes = $this->getRoomTaxes();
-        $price = $this->getRoomPrice();
-        $total = $price + $taxes;
-
-        echo "<script>";
-        echo "ga('ecommerce:addTransaction', {
-            'id': '" . $order->id . "',
-            'affiliation': '" . $this->getProjectName() . "',
-            'revenue': '" . $price . "',
-            'shipping': '0',
-            'tax': '" . $taxes . "'
-          });";
-
-        foreach ($order->cart->items as $item) {
-            /* @var $product \core_productmanager_data_Product */
-            $product = $item->product;
-
-            echo "ga('ecommerce:addItem', {
-                'id': '" . $order->incrementOrderId . "',
-                'name': '" . $product->name . "',
-                'sku': '" . $product->sku . "',
-                'category': '',
-                'price': '" . $product->price . "',
-                'quantity': '1'
-              });";
-        }
-
-        echo "ga('ecommerce:send');";
-        echo "</script>";
-    }
 
     public function getParkingPrice() {
         if(!$this->getParkingProduct()) {

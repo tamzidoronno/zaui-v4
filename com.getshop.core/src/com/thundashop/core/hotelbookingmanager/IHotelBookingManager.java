@@ -49,6 +49,7 @@ public interface IHotelBookingManager {
     
     public Room getRoom(String id) throws ErrorException;
     
+    public void buildRecurringOrders() throws ErrorException;
     
     public String getEmailMessage(String language) throws ErrorException;
     

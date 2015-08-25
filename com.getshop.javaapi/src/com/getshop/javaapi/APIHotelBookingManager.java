@@ -16,6 +16,19 @@ public class APIHotelBookingManager {
       }
 
      /**
+     * Add new room to the manager.
+     * @param room
+     * @throws ErrorException
+     */
+     public void buildRecurringOrders()  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.method = "buildRecurringOrders";
+          data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Get all references
      * @return
      * @throws ErrorException

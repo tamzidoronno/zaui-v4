@@ -2000,6 +2000,14 @@ class GetShop(object):
 class HotelBookingManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def buildRecurringOrders(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "buildRecurringOrders"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def buildStatistics(self, input):
     args = collections.OrderedDict()
     if isinstance(input,GetShopBaseClass): 

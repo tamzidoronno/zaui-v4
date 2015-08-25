@@ -19,6 +19,33 @@ public class BookingReference extends DataCommon {
         return false;
     }
 
+    private Date getInvoicedTo() {
+        if(invoicedTo == null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(startDate);
+            cal.add(Calendar.MONTH, 3);
+            if(!cal.after(new Date())) {
+                cal.set(Calendar.MONTH, 8);
+            }
+            if(cal.get(Calendar.DAY_OF_MONTH) < 15) {
+                cal.add(Calendar.MONTH, 1);
+            }
+            cal.set(Calendar.YEAR, 2015);
+            invoicedTo = cal.getTime();
+        }
+        
+        
+        
+        return invoicedTo;
+    }
+
+    void incrementInvoicedTo() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(invoicedTo);
+        cal.add(Calendar.MONTH, 1);
+        invoicedTo = cal.getTime();
+    }
+
 
     static class uploadArxStatus {
         public static Integer NOTHING_UPLOADED = 0;
@@ -45,6 +72,8 @@ public class BookingReference extends DataCommon {
     public Integer parkingSpots = 0;
     public String heardAboutUs = "";
     Date failed = null;
+    public Date invoicedTo = null;
+    public String userId;
     
     boolean isToday() {
         Calendar cal = Calendar.getInstance();
@@ -60,6 +89,23 @@ public class BookingReference extends DataCommon {
             return true;
         }
         return false;
+    }
+    
+    public boolean needNewOrder() {
+        if(!active && confirmed) {
+            return false;
+        }
+        if(!confirmed) {
+            return false;
+        }
+        
+        Date curInvoiced = getInvoicedTo();
+        
+        Calendar futureDate = Calendar.getInstance();
+        futureDate.setTime(new Date());
+        futureDate.add(Calendar.DAY_OF_YEAR, 15);
+
+        return curInvoiced.before(futureDate.getTime());
     }
 
     boolean isNow() {

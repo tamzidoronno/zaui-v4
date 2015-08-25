@@ -1922,6 +1922,20 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function buildRecurringOrders() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "buildRecurringOrders";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all references
 	* @return core_hotelbookingmanager_BookingStats
 	* @throws ErrorException

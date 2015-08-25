@@ -216,7 +216,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $type = "boder_aktiv";
         if(isset($_POST['data']['type'])) {
             $type = $_POST['data']['type'];
+        } else if(isset($_SESSION['bodtype'])) {
+            return $_SESSION['bodtype'];
         }
+        $_SESSION['bodtype'] = $type;
         
         return $type;
     }

@@ -99,6 +99,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
     </div>
 
     <center>
+        <div style='border: solid 1px #DDD; padding: 10px; width: 510px;'>
         <?
         if (isset($_SESSION['group'])) {
             foreach ($groups as $group) {
@@ -238,7 +239,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                 </td>
             </tr>
         </table>
-        
+        </div>
         <?
         if ($userToBook) {
         ?>
@@ -299,8 +300,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
         <?
         }
         ?>
-            
-            
+               
     </center>    
 
     <? if ($allowAdd) { ?>

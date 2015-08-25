@@ -73,12 +73,12 @@ public class VismaUsers extends DataCommon {
             Integer vismaId = getVismaId(prodManager, item, user);
             if (vismaId == null || vismaId == 0) {
                 if (!order.triedTransferredToAccountingSystem) {
-                    messageManager.sendMail(
-                            "post@getshop.com",
-                            "Visma order transferred failed",
-                            "failed to transfer order: " + order.incrementOrderId + " id: " + order.id, "Product: " + item.getProduct().name + " does not have a visma id, this orderline can not be transferred",
-                            "post@getshop.com",
-                            "GetShop system");
+//                    messageManager.sendMail(
+//                            "post@getshop.com",
+//                            "Visma order transferred failed",
+//                            "failed to transfer order: " + order.incrementOrderId + " id: " + order.id, "Product: " + item.getProduct().name + " does not have a visma id, this orderline can not be transferred",
+//                            "post@getshop.com",
+//                            "GetShop system");
                     ordermgr.setTriedToSendOrderToAccountingSystem(order);
                 }
 

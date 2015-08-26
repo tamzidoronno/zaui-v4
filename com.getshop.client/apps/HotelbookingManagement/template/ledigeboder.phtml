@@ -30,7 +30,13 @@ foreach($result as $size => $freerooms) {
     }
     echo "<h1> Størrelse $size"."kvm </h1>";
     foreach($freerooms as $room) {
-        echo $room . "<br>";
+        $lastRes = $api->getHotelBookingManager()->getLastReservation($room);
+        if(!$lastRes) {
+            echo $room . " er ikke utleid enda.";
+        } else {
+            echo $room . " er ledig fra: " . date("d.m.Y", strtotime($lastRes->endDate));
+        }
+        echo "<br>";
     }
 }
 ?>

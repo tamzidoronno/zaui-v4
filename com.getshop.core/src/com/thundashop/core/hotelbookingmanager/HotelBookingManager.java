@@ -1406,4 +1406,30 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
     }
+
+    @Override
+    public BookingReference getLastReservation(String bodNr) throws ErrorException {
+        Room room = getRoomByName(bodNr);
+        BookingReference returnRes = null;
+        for(BookingReference ref : bookingReferences.values()) {
+            if(ref.hasRoom(room.id)) {
+                if(returnRes == null) {
+                    returnRes = ref;
+                } else if(ref.startDate.after(returnRes.startDate)) {
+                    returnRes = ref;
+                }
+            }
+        }
+        
+        return returnRes;
+    }
+
+    private Room getRoomByName(String name) {
+        for(Room room : rooms.values()) {
+            if(room.roomName.equals(name)) {
+                return room;
+            }
+        }
+        return null;
+    }
 }

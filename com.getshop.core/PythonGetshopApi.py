@@ -2175,6 +2175,21 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getLastReservation(self, bodNr):
+    args = collections.OrderedDict()
+    if isinstance(bodNr,GetShopBaseClass): 
+      args["bodNr"]=json.dumps(bodNr.__dict__)
+    else:
+      try:
+        args["bodNr"]=json.dumps(bodNr)
+      except (ValueError, AttributeError):
+        args["bodNr"]=bodNr
+    data = EmptyClass()
+    data.args = args
+    data.method = "getLastReservation"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getReservationByReferenceId(self, referenceId):
     args = collections.OrderedDict()
     if isinstance(referenceId,GetShopBaseClass): 

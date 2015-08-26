@@ -131,5 +131,8 @@ public interface IHotelBookingManager {
     @Administrator
     public BookingStats buildStatistics(BookingStatsInput input) throws ErrorException;
     
+    @Administrator
+    public BookingReference getLastReservation(String bodNr) throws ErrorException;
+    
     public boolean isAvilable(String roomId, long start, long end);
 }

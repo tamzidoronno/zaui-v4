@@ -218,8 +218,10 @@ Existing booking references
                 continue;
             }
             
-            if($this->getType() == "boder_aktiv" && $this->isStopped($reservation)) {
-               continue;
+            if($this->getType() == "boder_aktiv") {
+                if($this->isStopped($reservation) && (strtotime($reservation->endDate) < $start)) {
+                   continue;
+                }
             }
             if($this->getType() == "boder_aktiv" && !$this->isStarted($reservation)) {
                continue;

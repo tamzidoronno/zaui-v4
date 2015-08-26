@@ -2135,6 +2135,21 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
+	public function getLastReservation($bodNr) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["bodNr"] = json_encode($this->transport->object_unset_nulls($bodNr));
+	     $data["method"] = "getLastReservation";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_BookingReference(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Get all references
+	* @return core_hotelbookingmanager_BookingReference
+	* @throws ErrorException
+	*/
+
 	public function getReservationByReferenceId($referenceId) {
 	     $data = array();
 	     $data['args'] = array();

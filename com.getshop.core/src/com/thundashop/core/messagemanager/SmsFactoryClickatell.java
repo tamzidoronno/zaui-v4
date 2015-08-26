@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +36,9 @@ import org.springframework.stereotype.Component;
  *
  * @author ktonder
  */
-@Component("SmsFactorySveve")
+@Component("SmsFactoryClickatell")
 @Scope("prototype")
-public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnable {
+public class SmsFactoryClickatell extends StoreComponent implements SMSFactory, Runnable {
     @Autowired
     public Logger logger;
     
@@ -62,7 +63,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     @Autowired
     public SmsConfiguration config;
     
-    public SMSFactoryImpl() {
+    public SmsFactoryClickatell() {
         credentials = new Credentials(MessageManager.class);
         credentials.manangerName = "MessageManager";
         credentials.storeid = storeId;
@@ -70,7 +71,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     
     @Override
     public void send(String from, String to, String message) {
-        SMSFactoryImpl impl = new SMSFactoryImpl();
+        SmsFactoryClickatell impl = new SmsFactoryClickatell();
         impl.from = from;
         impl.to = to;
         impl.message = message;
@@ -96,8 +97,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     }
     
     public void run() {
-        System.out.println("Sending with sveve and nexmo");
-        
+        System.out.println("Sending with clickatell");
         try {
             config.setup(storeId);
         } catch (ErrorException ex) {
@@ -114,24 +114,13 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
             to = to.substring(1);
         }
         
-        String prefix = config.getNumberprefix();
-        if(prefix == null || prefix.isEmpty()) {
-            prefix = "47";
-        }
-        if(from == null || from.isEmpty()) {
-            from = "GetShop";
-        }
-        
         try {
-            message = URLEncoder.encode(message, "UTF-8");
+            message = URLEncoder.encode(message, "ISO-8859-1");
         } catch (UnsupportedEncodingException ex) {
-            java.util.logging.Logger.getLogger(SMSFactoryImpl.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SmsFactoryClickatell.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        String urlString = "https://rest.nexmo.com/sms/json?api_key=cffe6fd9&api_secret=9509ef6b&client-ref="+storeId+"&status-report-req=1&from="+from+"&to="+prefix+to+"&text="+message;
-        if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
-            urlString = "https://sveve.no/SMS/SendMessage?user=getshopa&passwd=dza18&to=+"+prefix+to+"&msg=" + message + "&from="+from;
-        }
+        String urlString = "http://api.clickatell.com/http/sendmsg?user="+config.getUsername()+"&password="+config.getPassword()+"&api_id="+config.getApiId()+"&concat=3&to="+config.getNumberprefix()+to+"&"+"&text="+message;
         
         if (!frameworkConfig.productionMode) {
             System.out.println("Url for sms: " + urlString);

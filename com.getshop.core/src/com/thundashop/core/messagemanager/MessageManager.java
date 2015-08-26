@@ -20,6 +20,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     private SubscribedToAirgram airgramSubscriptions = new SubscribedToAirgram();
 
     @Autowired
+    @Qualifier("SmsFactorySveve")
     public SMSFactory smsFactory;
 
     @Autowired

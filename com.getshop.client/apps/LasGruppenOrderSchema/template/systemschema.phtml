@@ -6,9 +6,9 @@ $systems = $this->getSystems($group);
 
 $printSystems = "<input type='textfield' class='systemnumber systemnumber_uppercase'> ";
 if ($systems && count($systems)) {
-    $printSystems = "<select class='systemnumber systemnumber_uppercase'>";
+    $printSystems = "<select style='width: 100px;' class='systemnumber systemnumber_uppercase'>";
     foreach ($systems as $system) {
-        $printSystems .= "<option>$system->number</option>";
+        $printSystems .= "<option>$system->number - $system->name</option>";
     }
     $printSystems .= "</select>";
 }
@@ -28,8 +28,8 @@ if ($systems && count($systems)) {
 </div>
 
 <div class='col col_2'>
-    Fyll ut informasjon om nøkler og sylindrer så nøyaktig som mulig.
-    <br/>Hvis nødvendig kan utfyllende informasjon legges i feltet Informasjon til systemavdelingen på siste side (Steg 4/4).
+    <? echo nl2br($this->getConfigurationSetting("page2_orderinformation")); ?>
+    
 </div>
 
 

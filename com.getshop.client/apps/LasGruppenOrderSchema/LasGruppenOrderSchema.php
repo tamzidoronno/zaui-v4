@@ -285,4 +285,16 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         }
     }
 
+    public function showSettings() {
+        $this->includefile("settings");
+    }
+    
+    public function saveSettings() {
+        $this->setConfigurationSetting("page1_welcome_header", $_POST['data']['page1_welcome_header']);
+        $this->setConfigurationSetting("page1_welcome_body", $_POST['data']['page1_welcome_body']);
+        $this->setConfigurationSetting("page2_orderinformation", $_POST['data']['page2_orderinformation']);
+        $this->setConfigurationSetting("page3_shippinginformation_rekommandert", $_POST['data']['page3_shippinginformation_rekommandert']);
+        $this->setConfigurationSetting("page3_shippinginformation_express", $_POST['data']['page3_shippinginformation_express']);
+        $this->setConfigurationSetting("page3_shippinginformation_bedriftspakke", $_POST['data']['page3_shippinginformation_bedriftspakke']);
+    }
 }

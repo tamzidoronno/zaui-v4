@@ -84,6 +84,12 @@ if (!$user->prevLoggedIn) {
     <br/>
 </div>
 
+<div id="ask_for_birthday_dialog">
+    <div>
+        Advarsel. Du har ikke oppgitt Org.Nr / Fødselsdato, du må derfor hente varene i butikk.
+    </div>
+</div>
+
 <script>
     $("#ask_for_refernece_dialog").dialog({
         autoOpen: false,
@@ -99,6 +105,24 @@ if (!$user->prevLoggedIn) {
                 var invoiceReference = $("#promt_invoice_reference").val();
                 $(this).dialog("close");
                 app.LasGruppenOrderSchema.populateInvoiceFields(invoiceReference);
+            }
+            
+        }
+    });
+    
+    $("#ask_for_birthday_dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        title: 'Advarsel',
+        width: 350,
+        buttons: {
+            "Cancel": function() {
+                $(this).dialog("close");
+            },
+            
+            "Ok": function() {
+                app.LasGruppenOrderSchema.askForInvoiceReference2();
+                $(this).dialog("close");
             }
             
         }
@@ -139,8 +163,8 @@ if (!$user->prevLoggedIn) {
     
     <div class='col col_2' style="border: solid 1px #DDD; margin-top: 20px; ">
         <div class="sub_entry_content">
-            <center><h2>Velkommen til Certego systembestilling</h2></center>
-            <br/>Vi har gjort livet ditt litt enklere ved å forbedre bestillingsprosessen, samtidig som vi ivaretar din sikkerhet.
+            <center><h2><? echo $this->getConfigurationSetting("page1_welcome_header"); ?></h2></center>
+            <br/><? echo nl2br($this->getConfigurationSetting("page1_welcome_body")); ?>
         </div>
         
         <div class="invoiceinformation sub_entry_content" content="invoiceinfo">

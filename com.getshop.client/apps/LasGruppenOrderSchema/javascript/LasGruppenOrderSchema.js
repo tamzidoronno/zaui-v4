@@ -96,6 +96,7 @@ app.LasGruppenOrderSchema = {
         $(document).on('click', '.LasGruppenOrderSchema .show_new_address_form', app.LasGruppenOrderSchema.toggleNewAddressForm);
         $(document).on('click', '.LasGruppenOrderSchema .goto_next_page_new_address', app.LasGruppenOrderSchema.nextNewAddress);
         $(document).on('click', '.LasGruppenOrderSchema .goto_next_page', app.LasGruppenOrderSchema.next);
+        $(document).on('click', '.LasGruppenOrderSchema .saveSettings', app.LasGruppenOrderSchema.saveSettings);
         
         
         $(document).on('click', '.LasGruppenOrderSchema .savedeliveryaddr', app.LasGruppenOrderSchema.saveDeliveryAddr);
@@ -107,6 +108,22 @@ app.LasGruppenOrderSchema = {
         $(document).on('change', '#invoice_cellphone', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_emailaddress', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '.LasGruppenOrderSchema #deliveryAddressSelected', app.LasGruppenOrderSchema.deliveryAddressSelected);
+    },
+    
+    saveSettings: function() {
+        var data = {
+            page1_welcome_header : $('.LasGruppenOrderSchema #page1_welcome_header').val(),
+            page1_welcome_body : $('.LasGruppenOrderSchema #page1_welcome_body').val(),
+            page2_orderinformation : $('.LasGruppenOrderSchema #page2_orderinformation').val(),
+            page3_shippinginformation_rekommandert : $('.LasGruppenOrderSchema #page3_shippinginformation_rekommandert').val(),
+            page3_shippinginformation_express : $('.LasGruppenOrderSchema #page3_shippinginformation_express').val(),
+            page3_shippinginformation_bedriftspakke : $('.LasGruppenOrderSchema #page3_shippinginformation_bedriftspakke').val(),
+        };
+        
+        var event = thundashop.Ajax.createEvent("", "saveSettings", this, data);
+        thundashop.Ajax.post(event, function() {
+            thundashop.common.hideInformationBox();
+        });
     },
     
     nextNewAddress: function() {
@@ -183,8 +200,18 @@ app.LasGruppenOrderSchema = {
     },
     
     askForInvoiceReference: function() {
-        // When OK hit it goes to "populateInvoiceFields"
         app.LasGruppenOrderSchema.lastClickedAddress = this;
+        var companyId = $(this).find('.inv_birthday').html()
+        
+        if (!companyId) {
+            $("#ask_for_birthday_dialog").dialog("open");
+            return;
+        }
+        
+        app.LasGruppenOrderSchema.askForInvoiceReference2();
+    },
+    
+    askForInvoiceReference2: function() {
         $("#ask_for_refernece_dialog").dialog("open");
     },
     
@@ -668,13 +695,6 @@ app.LasGruppenOrderSchema = {
         
         app.LasGruppenOrderSchema.addFirstRows();
         
-        if (pageNumber === 2) {
-            var companyId = $('#companyid').val();
-            if (!companyId) {
-                alert('Advarsel. Du har ikke oppgitt Org.Nr / Fødselsdato, du må derfor hente varene i butikk.');
-            }
-        }
-        
         if (pageNumber === 3) {
             if (!app.LasGruppenOrderSchema.isValidOrderLines()) {
                 alert('Du må minst velge nøkler, sylindrer eller begge');
@@ -937,6 +957,33 @@ app.LasGruppenOrderSchema = {
         row.addClass('order_cylinder_row_to_add');
         row.find('.systemnumber').val($('#main_system_number').val());
         $('.cylinder_setup table').append(row);
+    },
+    
+    showSettings: function() {
+        var event = thundashop.Ajax.createEvent(null, "showSettings", this, {});
+        thundashop.common.showInformationBox(event, "Settings");
+    },
+    
+    loadSettings: function(element, application) {
+         var config = {
+            draggable: true,
+            app : true,
+            application: application,
+            title: "Settings",
+            items: [
+                {
+                    icontype: "awesome",
+                    icon: "fa-edit",
+                    iconsize : "30",
+                    title: __f("Edit text content"),
+                    click: app.LasGruppenOrderSchema.showSettings
+                }
+            ]
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
     }
 }
 

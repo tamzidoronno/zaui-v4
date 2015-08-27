@@ -8,6 +8,10 @@ and open the template in the editor.
     Author     : ktonder
 */
 
+#informationbox-holder .LasGruppenOrderSchema {
+    max-width: inherit;
+}
+
 .LasGruppenOrderSchema {
     max-width: 950px;
     color: #333;
@@ -16,6 +20,11 @@ and open the template in the editor.
 body[editormode="true"] .LasGruppenOrderSchema {
     margin-left: 90px;
 }
+
+body[editormode="true"] #informationbox-holder .LasGruppenOrderSchema {
+    margin-left: 0px;
+}
+
 .LasGruppenOrderSchema .header {
     background-color: #ff6e00;
     color: #FFF;

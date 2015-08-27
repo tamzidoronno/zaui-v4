@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.*;
 import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +50,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Autowired
     public MailFactory mailFactory;
     @Autowired
+    @Qualifier("SmsFactorySveve")
     public SMSFactory smsFactory;
     private List<ReminderHistory> reminderHistory = new ArrayList();
     private HashMap<String, EventPartitipated> eventData = new HashMap();

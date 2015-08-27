@@ -94,7 +94,17 @@ public class BookingReference extends DataCommon {
     
     public boolean needNewOrder() {
         if(!active && confirmed) {
-            return false;
+            Date curInvoiced = getInvoicedTo();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(curInvoiced);
+            cal.add(Calendar.MONTH, 1);
+            if(endDate == null) {
+                return false;
+            }
+            
+            if(cal.getTime().after(endDate)) {
+                return false;
+            }
         }
         if(!confirmed) {
             return false;

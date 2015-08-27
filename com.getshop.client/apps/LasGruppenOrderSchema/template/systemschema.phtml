@@ -8,7 +8,7 @@ $printSystems = "<input type='textfield' class='systemnumber systemnumber_upperc
 if ($systems && count($systems)) {
     $printSystems = "<select style='width: 100px;' class='systemnumber systemnumber_uppercase'>";
     foreach ($systems as $system) {
-        $printSystems .= "<option>$system->number - $system->name</option>";
+        $printSystems .= "<option value='$system->number'>$system->number - $system->name</option>";
     }
     $printSystems .= "</select>";
 }

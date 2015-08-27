@@ -203,6 +203,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         end = cal.getTime();
 
         BookingReference reference = new BookingReference();
+        
+        reference.roomtype = roomType;
         reference.bookingReference = genereateReferenceId();
         reference.startDate = start;
         reference.endDate = end;
@@ -365,6 +367,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         saveObject(ref);
                     }
                 }
+            }
+            if(ref.invoicedTo == null) {
+                ref.invoicedTo = ref.getInvoicedTo();
+                saveObject(ref);
             }
         }
         
@@ -840,7 +846,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             message = message.replaceAll("\\{code\\}", code + "");
         }
         if (roomName != null) {
-            message = message.replaceAll("\\{room\\}", roomName);
+            message = message.replaceAll("\\{roomName\\}", roomName);
         }
         String startMinute = new SimpleDateFormat("m").format(reference.startDate).toString();
         if (startMinute.length() < 2) {
@@ -862,18 +868,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         message = message.replaceAll("\\{contacts\\}", contacts);
 
-        OrderManager ordermgr = getManager(OrderManager.class);
         UserManager usermgr = getManager(UserManager.class);
-        Order order = ordermgr.getOrderByReference(reference.bookingReference + "");
-        if (order != null && order.cart.getItems().size() > 0) {
-            message = message.replaceAll("\\{roomName\\}", order.cart.getItems().get(0).getProduct().name + "");
-            User user = usermgr.getUserById(order.userId);
-            if (user != null) {
-                message = message.replaceAll("\\{email\\}", user.emailAddress);
-                message = message.replaceAll("\\{address\\}", user.address.address);
-                message = message.replaceAll("\\{postCode\\}", user.address.postCode);
-                message = message.replaceAll("\\{city\\}", user.address.city);
-            }
+        User user = usermgr.getUserById(reference.userId);
+        if (user != null) {
+            message = message.replaceAll("\\{email\\}", user.emailAddress);
+            message = message.replaceAll("\\{address\\}", user.address.address);
+            message = message.replaceAll("\\{postCode\\}", user.address.postCode);
+            message = message.replaceAll("\\{city\\}", user.address.city);
         }
         return message;
     }
@@ -927,7 +928,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public synchronized void checkForWelcomeMessagesToSend() throws ErrorException {
         UserManager usermgr = getManager(UserManager.class);
-        OrderManager ordermgr = getManager(OrderManager.class);
         
         for (BookingReference reference : getAllReservations()) {
             if (reference.sentWelcomeMessages.equals("true")) {
@@ -954,26 +954,23 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
 
             //Sending email confirmation to user.
-            String message = formatMessage(reference, getEmailMessage(reference.language), null, 0, reference.contact.names.get(0));
-            String title = formatMessage(reference, getEmailTitle(reference.language), null, 0, reference.contact.names.get(0));
+            String message = formatMessage(reference, getEmailMessage(reference.language), reference.roomtype, 0, reference.contact.names.get(0));
+            String title = formatMessage(reference, getEmailTitle(reference.language),  reference.roomtype, 0, reference.contact.names.get(0));
 
             
             
-            Order order = ordermgr.getOrderByReference(reference.bookingReference + "");
-            if (order != null) {
-                User user = usermgr.getUserById(order.userId);
-                if (user != null) {
-                    String copyadress = getSettings("Settings").get("mainemailaddress").value;
-                    if (copyadress != null && !copyadress.isEmpty()) {
-                        sendMail(copyadress, user.emailAddress, title, message, user);
-                        logMailSent(copyadress, "System owner", true, reference.bookingReference);
-                        // Apperently Fastnames mailservers does not support to send two emails at the same time. Need to sleep a bit so the mailservers dont crashes.
-                        try { Thread.sleep(1000); } catch (InterruptedException ex) {}
-                        sendMail(copyadress, copyadress, title, message, user);
-                        reference.sentWelcomeMessages = "true";
-                        logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);
-                        saveObject(reference);
-                    }
+            User user = usermgr.getUserById(reference.userId);
+            if (user != null) {
+                String copyadress = getSettings("Settings").get("mainemailaddress").value;
+                if (copyadress != null && !copyadress.isEmpty()) {
+                    sendMail(copyadress, user.emailAddress, title, message, user);
+                    logMailSent(copyadress, "System owner", true, reference.bookingReference);
+                    // Apperently Fastnames mailservers does not support to send two emails at the same time. Need to sleep a bit so the mailservers dont crashes.
+                    try { Thread.sleep(1000); } catch (InterruptedException ex) {}
+                    sendMail(copyadress, copyadress, title, message, user);
+                    reference.sentWelcomeMessages = "true";
+                    logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);
+                    saveObject(reference);
                 }
             }
         }

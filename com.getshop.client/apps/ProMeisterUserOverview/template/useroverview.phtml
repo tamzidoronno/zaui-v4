@@ -1,0 +1,115 @@
+<?
+/* @var $this \ns_18013065_9122_4181_8ba7_8be3e0b5b445\ProMeisterUserOverview */
+?>
+
+<link href='https://fonts.googleapis.com/css?family=Just+Another+Hand' rel='stylesheet' type='text/css'>
+
+<br/>
+<br/>
+<br/>
+<div class="inner" style='position: relative;'>
+    <div class="headline">Kompetanseoversikt </div>
+    <div id="leftside" style="display: inline-block; vertical-align: top; ">
+        <div style='padding-top: 20px; text-align: center; padding-bottom: 20px;'>
+            <i class='fa fa-bullseye' style='color: #001cac'></i> Nuläge &nbsp;&nbsp;&nbsp;
+            <i class='fa fa-bullseye' style='color: #b00019'></i> Krav &nbsp;&nbsp;&nbsp;
+            <i class='fa fa-bullseye' style='color: #26af53'></i> Behov
+        </div>
+        <div id="chartdiv" style="width: 500px; height: 400px; ">
+            <br/><br/>
+            <center>
+                <i class='fa fa-spinner fa-star fa-spin'></i>Laster data
+            </center>
+        </div>
+        
+    </div>
+    
+    <div style="border-left: dashed 4px #FFF; position: absolute; right: 0px; top: 0px; padding: 16px; text-align: center; padding-left: 10px; padding-top: 10px;">
+        <i class="fa fa-user"></i>
+        <br/>Bytt bruker
+    </div>
+    
+    <div id="eventsoverview" style="width: 500px; display: inline-block; vertical-align: top; ">
+        <div class="sub_headline" >Du skal delta på:</div>
+        <i class="fa fa-star"></i> Oscilloscope TiePie
+        <br/><i class="fa fa-star"></i> AC Certifiering
+        
+        <div class="sub_headline">Du har deltatt på følgende utbilding:</div>
+        <i class="fa fa-star"></i> Felsökningsteknik El 1
+        <br/><i class="fa fa-star"></i> Diesel Bas
+        <br/><i class="fa fa-star"></i> Felsökningsteknik El 1
+        <br/><i class="fa fa-star"></i> Klimatanläggning – Funktion och felsökning
+        <br/><i class="fa fa-star"></i> Oscilloscope TiePie
+        <br/><i class="fa fa-star"></i> AC Certifiering
+        
+        <div style='position: absolute; right: 20px; bottom: 20px; padding: 5px; border: solid 3px #008e80;'> Se alle dine utbildingar <i class='fa fa-arrow-right'></i></div>
+    </div>
+</div>
+<br/>
+<br/>
+<br/>
+
+<script>
+chart = AmCharts.makeChart( "chartdiv", {
+     "type": "radar",
+     "theme": "light",
+     "startEffect" : "elastic",
+     "startDuration" : 0,
+     "color" : "#FFFFFF",
+     "dataProvider": [ {
+       "country": "Bensin",
+       "nuläge": 4,
+       "krav" : 3,
+       "behov" : 4
+     }, {
+       "country": "Diesel",
+       "nuläge": 2,
+       "krav" : 3,
+       "behov" : 4
+     }, {
+       "country": "El/Elektronik",
+       "nuläge": 4,
+       "krav" : 3,
+       "behov" : 4
+     }, {
+       "country": "El/Hybrid",
+       "nuläge": 3.5,
+       "krav" : 3,
+       "behov" : 4
+     }, {
+       "country": "Kundbemötande",
+       "nuläge": 3.5,
+       "krav" : 3,
+       "behov" : 4
+     }, ],
+     "valueAxes": [ {
+       "axisTitleOffset": 20,
+       "minimum": 0,
+       "axisAlpha": 0.15
+     } ],
+     "graphs": [ {
+       "balloonText": "Nuläge",
+       "bullet": "round",
+       "fillAlphas": 0.5,
+       "lineColor" : "#001cac",
+       "valueField": "nuläge"
+     }, {
+       "balloonText": "Krav",
+       "bullet": "round",
+       "fillAlphas": 0,
+       "lineColor" : "#b00019",
+       "valueField": "krav"
+     }, {
+       "balloonText": "Behov",
+       "bullet": "round",
+       "fillAlphas": 0,
+       "lineColor" : "#26af53",
+       "valueField": "behov"
+     }],
+     "categoryField": "country",
+     "export": {
+       "enabled": true
+     }
+});    
+
+</script>

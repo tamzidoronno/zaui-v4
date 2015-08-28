@@ -9,6 +9,7 @@ import com.thundashop.core.databasemanager.data.Credentials;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -55,18 +56,18 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings proMeisterLogin = createSettings(
-                "ProMeisterLogin",
-                "2f98236f-b36d-4d5c-93c6-0ad99e5b3dc6",
-                allowed2,
-                "",
-                ApplicationSettings.Type.System, true);
-        proMeisterLogin.isPublic = false;
-        proMeisterLogin.isResponsive = true;
-        proMeisterLogin.allowedStoreIds = new ArrayList();
-        proMeisterLogin.allowedStoreIds.add("d27d81b9-52e9-4508-8f4c-afffa2458488");
-        proMeisterLogin.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
-        apps.add(proMeisterLogin);
+//        ApplicationSettings proMeisterLogin = createSettings(
+//                "ProMeisterLogin",
+//                "2f98236f-b36d-4d5c-93c6-0ad99e5b3dc6",
+//                allowed2,
+//                "",
+//                ApplicationSettings.Type.System, true);
+//        proMeisterLogin.isPublic = false;
+//        proMeisterLogin.isResponsive = true;
+//        proMeisterLogin.allowedStoreIds = new ArrayList();
+//        proMeisterLogin.allowedStoreIds.add("d27d81b9-52e9-4508-8f4c-afffa2458488");
+//        proMeisterLogin.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
+//        apps.add(proMeisterLogin);
 
 //        
 //        ApplicationSettings hotelvask = createSettings(
@@ -122,17 +123,18 @@ public class AddApplicationsToDatabase {
 //        sedoxAdmin.allowedStoreIds = new ArrayList();
 //        sedoxAdmin.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
 //        apps.add(sedoxAdmin);
-//        
-//        ApplicationSettings sedoxProductView = createSettings(
-//                "SedoxProductView",
-//                "23fac58b-5066-4222-860c-a9e88196b8a1",
-//                allowed,
-//                "",
-//                ApplicationSettings.Type.Webshop, false);
-//        sedoxProductView.isPublic = false;
-//        sedoxProductView.allowedStoreIds = new ArrayList();
-//        sedoxProductView.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-//        apps.add(sedoxProductView);
+//      
+        ApplicationSettings promeisterUserOverview = createSettings(
+                "ProMeisterUserOverview",
+                "18013065-9122-4181-8ba7-8be3e0b5b445",
+                allowed2,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        promeisterUserOverview.isPublic = false;
+        promeisterUserOverview.allowedStoreIds = new ArrayList();
+        promeisterUserOverview.allowedStoreIds.add("d27d81b9-52e9-4508-8f4c-afffa2458488");
+        promeisterUserOverview.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
+        apps.add(promeisterUserOverview);
 //        
 //        ApplicationSettings sedoxUserPanel = createSettings(
 //                "SedoxUserPanel",

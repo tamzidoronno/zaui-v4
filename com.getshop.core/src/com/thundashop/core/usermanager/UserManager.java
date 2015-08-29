@@ -730,6 +730,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(counter);
             saveObject(user);
         }
+        
+        if (user.parents != null && user.parents.size() > 0) {
+            String parentId = user.parents.get(0);
+            User userParent = getUserById(parentId);
+            user.address = userParent.address;
+            user.company = userParent.company;
+            user.referenceKey = userParent.referenceKey;
+            user.groups = userParent.groups;
+            user.emailAddressToInvoice = userParent.emailAddressToInvoice;
+            user.birthDay = userParent.birthDay;
+        }
     }
 
     public void markUserAsTransferredToVisma(User user) {

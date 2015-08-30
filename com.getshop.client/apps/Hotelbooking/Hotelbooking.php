@@ -758,6 +758,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     public function requestAdminRights() {
         $this->requestAdminRight("UserManager", "getAllUsers", $this->__o("This app need to be able to get the users to check if it has a reference number."));
         $this->requestAdminRight("OrderManager", "setExpiryDate", $this->__o("It needs to be able to set a Order expiry date so it can uses the recurring functionality"));
+        $this->requestAdminRight("HotelBookingManager", "updateReservation", $this->__o("Need to update reservation after order has been placed."));
     }
 
     public function includeEcommerceTransaction() {

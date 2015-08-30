@@ -101,18 +101,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     function getDayCount($realDayCount=false) {
         if ($realDayCount && $this->getServiceType() == "storage") {
-            $d1 = $this->getStart();
-            $d2 = $this->getEnd($realDayCount);
-            $min_date = min($d1, $d2);
-            $max_date = max($d1, $d2);
-            $i = 1;
-            
-            while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
-                $i++;
-            }
-            return $i;
+            return $this->getMinumRental();
         }
-
+        
+        if ($this->getServiceType() == "storage") {
+            return 1;
+        }
+        
         return round(($this->getEnd() - $this->getStart()) / 86400);
     }
 

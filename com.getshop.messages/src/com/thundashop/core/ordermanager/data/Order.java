@@ -35,6 +35,12 @@ public class Order extends DataCommon implements Comparable<Order> {
 		orderNew.rowCreatedDate = new Date();
 		orderNew.triedTransferredToAccountingSystem = false;
 		orderNew.transferedToAccountingSystem = false;
+		orderNew.createdDate = new Date();
+		
+		if (orderNew.cart != null) {
+			orderNew.cart.rowCreatedDate = new Date();
+		}
+		
 		return orderNew;
 	}
     

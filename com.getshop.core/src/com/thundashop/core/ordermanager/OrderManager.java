@@ -525,6 +525,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 			copiedOrder.expiryDate = cal.getTime();
 		} 
 		
+		copiedOrder.createdDate = order.expiryDate;
+		copiedOrder.rowCreatedDate = order.expiryDate;
+		if (copiedOrder.cart != null) {
+			copiedOrder.cart.rowCreatedDate = order.expiryDate;
+		}
+		
 		setIncrementalOrderId(copiedOrder);
 		saveOrder(copiedOrder);
 		

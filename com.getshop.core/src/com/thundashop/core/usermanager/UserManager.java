@@ -867,6 +867,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
+        if (ret.isEmpty()) {
+            ret.add(currentUesr);
+        }
+        
         return ret;
     }
 }

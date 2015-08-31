@@ -248,7 +248,7 @@ public interface ICalendarManager {
      * return a list of entires that a specified user
      * has been attending to
      */
-    @Editor
+    @Customer
     public List<Entry> getEntriesByUserId(String userId) throws ErrorException;
     
     

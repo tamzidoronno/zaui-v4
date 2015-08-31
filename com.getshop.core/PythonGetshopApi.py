@@ -6090,6 +6090,14 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getProMeisterScoreType(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getProMeisterScoreType"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getStoresConnectedToMe(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -6155,6 +6163,14 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getUserList"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getUsersWithinTheSameCompany(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getUsersWithinTheSameCompany"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 

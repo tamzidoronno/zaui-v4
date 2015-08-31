@@ -8,6 +8,8 @@ import com.thundashop.core.common.Writing;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
+import com.thundashop.core.usermanager.data.ProMeisterScoreSettings;
+import com.thundashop.core.usermanager.data.ProMeisterScoreType;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import java.util.ArrayList;
@@ -329,4 +331,8 @@ public interface IUserManager {
     public List<User> getSubUsers(String userId) throws ErrorException;
     
     public void addSubUser(String parent, String subUser) throws ErrorException;
+    
+    public ProMeisterScoreType getProMeisterScoreType() throws ErrorException;
+    
+    public List<User> getUsersWithinTheSameCompany() throws ErrorException;
 }

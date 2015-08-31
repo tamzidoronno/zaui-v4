@@ -1,5 +1,55 @@
 <?
 /* @var $this \ns_18013065_9122_4181_8ba7_8be3e0b5b445\ProMeisterUserOverview */
+
+$userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+
+if (isset($_SESSION['ProMeisterUserOverview_show_user'])) {
+    $userId = $_SESSION['ProMeisterUserOverview_show_user'];
+}
+
+$upComingEvents = [];
+$pastEvents = [];
+$loggedInUser = $this->getApi()->getUserManager()->getUserById(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);
+$user = $this->getApi()->getUserManager()->getUserById($userId);
+
+$events = $this->getApi()->getCalendarManager()->getEntriesByUserId($userId);
+if ($events) {
+    foreach ($events as $event) {
+        if ($event->isInPast) {
+            $pastEvents[] = $event;
+        } else {
+            $upComingEvents[] = $event;
+        }
+    }
+}
+
+$dataProvider = false;
+if ($user->proMeisterScoreSettings && $user->proMeisterScoreSettings->scores && count($user->proMeisterScoreSettings->scores)) {
+
+    $i = 0;
+    
+    $dataProvider = "";
+    
+    foreach ($user->proMeisterScoreSettings->type->categories as $cat) {
+        $i++;
+        $behov = $user->proMeisterScoreSettings->type->behov->{$cat};
+        $krav = $user->proMeisterScoreSettings->type->requirements->{$cat};
+        $score = $user->proMeisterScoreSettings->scores->{$cat};
+        
+        
+        $dataProvider .= "{";
+            $dataProvider .= "\"country\": \"$cat\",";
+            $dataProvider .= "\"nuläge\": \"$score\",";
+            $dataProvider .= "\"krav\": \"$krav\",";
+            $dataProvider .= "\"behov\": \"$behov\"";
+        $dataProvider .= "}";
+        if (count($user->proMeisterScoreSettings->type->categories) != $i) {
+            $dataProvider .= ",";
+        }
+        
+    }
+}
+
 ?>
 
 <link href='https://fonts.googleapis.com/css?family=Just+Another+Hand' rel='stylesheet' type='text/css'>
@@ -8,80 +58,114 @@
 <br/>
 <br/>
 <div class="inner" style='position: relative;'>
-    <div class="headline">Kompetanseoversikt </div>
-    <div id="leftside" style="display: inline-block; vertical-align: top; ">
-        <div style='padding-top: 20px; text-align: center; padding-bottom: 20px;'>
-            <i class='fa fa-bullseye' style='color: #001cac'></i> Nuläge &nbsp;&nbsp;&nbsp;
-            <i class='fa fa-bullseye' style='color: #b00019'></i> Krav &nbsp;&nbsp;&nbsp;
-            <i class='fa fa-bullseye' style='color: #26af53'></i> Behov
-        </div>
-        <div id="chartdiv" style="width: 500px; height: 400px; ">
-            <br/><br/>
-            <center>
-                <i class='fa fa-spinner fa-star fa-spin'></i>Laster data
-            </center>
-        </div>
-        
-    </div>
+    <div class="headline">Kompetanseoversikt - <? echo $user->fullName; ?></div>
     
-    <div style="border-left: dashed 4px #FFF; position: absolute; right: 0px; top: 0px; padding: 16px; text-align: center; padding-left: 10px; padding-top: 10px;">
-        <i class="fa fa-user"></i>
-        <br/>Bytt bruker
-    </div>
+    <?
+    if ($loggedInUser->isMaster) {
+    ?>
+        <div class="showUser" style="border-left: dashed 4px #FFF; cursor: pointer; position: absolute; right: 0px; top: 0px; padding: 16px; text-align: center; padding-left: 10px; padding-top: 10px;">
+            <i class="fa fa-user"></i>
+            <br/><? echo $this->__w("Users"); ?>
+        </div>
+    <?
+    }
+    ?>   
     
-    <div id="eventsoverview" style="width: 500px; display: inline-block; vertical-align: top; ">
-        <div class="sub_headline" >Du skal delta på:</div>
-        <i class="fa fa-star"></i> Oscilloscope TiePie
-        <br/><i class="fa fa-star"></i> AC Certifiering
+    <?
+    if ($loggedInUser->isMaster) {
+    ?>
+        <div id="useroverview_outer" style="display: none;">"
+            <?
+            $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
+            foreach ($allUsers as $iuser) {
+                echo "<div class='user_to_select' userid='$iuser->id'>";
+                echo "<i class='fa fa-user'></i>";
+                echo "<br/>".$iuser->fullName;
+                echo "</div>";
+            }
+            ?>
+
+            <div class='user_to_select'>
+                <i class='fa fa-user'></i>
+                <br/> <? echo $this->__w("New user"); ?>
+            </div>
+        </div>
+    
         
-        <div class="sub_headline">Du har deltatt på følgende utbilding:</div>
-        <i class="fa fa-star"></i> Felsökningsteknik El 1
-        <br/><i class="fa fa-star"></i> Diesel Bas
-        <br/><i class="fa fa-star"></i> Felsökningsteknik El 1
-        <br/><i class="fa fa-star"></i> Klimatanläggning – Funktion och felsökning
-        <br/><i class="fa fa-star"></i> Oscilloscope TiePie
-        <br/><i class="fa fa-star"></i> AC Certifiering
-        
-        <div style='position: absolute; right: 20px; bottom: 20px; padding: 5px; border: solid 3px #008e80;'> Se alle dine utbildingar <i class='fa fa-arrow-right'></i></div>
+    <?
+    }
+    ?>
+    
+    <div id="eventsoverview_outer">
+        <div id="leftside" style="display: inline-block; vertical-align: top; ">
+            <div style='padding-top: 20px; text-align: center; padding-bottom: 20px;'>
+                <i class='fa fa-bullseye' style='color: #001cac'></i> Nuläge &nbsp;&nbsp;&nbsp;
+                <i class='fa fa-bullseye' style='color: #b00019'></i> Krav &nbsp;&nbsp;&nbsp;
+                <i class='fa fa-bullseye' style='color: #26af53'></i> Behov
+            </div>
+            <div id="chartdiv" style="width: 500px; height: 400px; ">
+                <br/><br/>
+                <center>
+                    <?
+                    if ($dataProvider) {
+                    ?>
+                        <i class='fa fa-spinner fa-star fa-spin'></i>Laster data
+                    <? } else { ?>
+                        <? echo $this->__w("No data available yet."); ?>
+                    <? } ?>
+                </center>
+            </div>
+
+        </div>
+
+        <div id="eventsoverview" style="width: 500px; display: inline-block; vertical-align: top; ">
+            <div class="sub_headline" >Du skal delta på:</div>
+            <div>
+                <?
+                    if (!count($upComingEvents)) {
+                        echo $this->__w("You have not signed up for any events yet.");
+                    } else {
+                        foreach ($upComingEvents as $event) {
+                            echo "<i class='fa fa-star'></i> $event->title<br/>";
+                        }
+                    }
+                ?>
+            </div>
+
+            <div class="sub_headline">Du har deltatt på følgende utbilding:</div>
+            <div>
+                <?
+                if (!count($pastEvents)) {
+                    echo $this->__w("You have not participated in any events yet.");
+                } else {
+                    foreach ($pastEvents as $event) {
+                        echo "<i class='fa fa-star'></i> $event->title<br/>";
+                    }
+                }    
+                ?>
+            </div>
+
+            <div style='position: absolute; right: 20px; bottom: 20px; padding: 5px; border: solid 3px #008e80;'> Se alle dine utbildingar <i class='fa fa-arrow-right'></i></div>
+        </div>
     </div>
 </div>
 <br/>
 <br/>
 <br/>
 
+<?
+if ($dataProvider) {
+?>
 <script>
+    
+    
 chart = AmCharts.makeChart( "chartdiv", {
      "type": "radar",
      "theme": "light",
      "startEffect" : "elastic",
      "startDuration" : 0,
      "color" : "#FFFFFF",
-     "dataProvider": [ {
-       "country": "Bensin",
-       "nuläge": 4,
-       "krav" : 3,
-       "behov" : 4
-     }, {
-       "country": "Diesel",
-       "nuläge": 2,
-       "krav" : 3,
-       "behov" : 4
-     }, {
-       "country": "El/Elektronik",
-       "nuläge": 4,
-       "krav" : 3,
-       "behov" : 4
-     }, {
-       "country": "El/Hybrid",
-       "nuläge": 3.5,
-       "krav" : 3,
-       "behov" : 4
-     }, {
-       "country": "Kundbemötande",
-       "nuläge": 3.5,
-       "krav" : 3,
-       "behov" : 4
-     }, ],
+     "dataProvider": [ <? echo $dataProvider; ?> ],
      "valueAxes": [ {
        "axisTitleOffset": 20,
        "minimum": 0,
@@ -113,3 +197,7 @@ chart = AmCharts.makeChart( "chartdiv", {
 });    
 
 </script>
+
+<?
+}
+?>

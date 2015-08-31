@@ -41,3 +41,13 @@ and open the template in the editor.
     padding: 20px;
     font-size: 26px;
 }
+
+.ProMeisterUserOverview .user_to_select {
+    background-color: #007266;
+    margin: 20px;
+    padding: 20px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    cursor: pointer;
+}

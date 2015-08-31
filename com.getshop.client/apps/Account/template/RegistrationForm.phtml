@@ -219,9 +219,29 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
                 </div>
             </td>
         </tr>
+        <?
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->type > 10) {
+        ?>
+            <tr>
+                
+                
+                <td colspan='2'>
+                    <div style='padding: 20px; border: solid 1px #DDD; margin-right: 180px;'>
+                        <?
+                        $checked = $user->isMaster ? "checked='checked'" : "";
+                        ?>
+                        <input style='width: 20px;' type='checkbox' <? echo $checked ?> id='isMaster'/>
+
+                        <?php echo $this->__f("Is this a master user?"); ?>
+                    </div>
+                </td>
+            </tr>
+            <?
+        }
+        ?>
     <? } ?>
 </table>
-<hr>
+<br/>
 <table>
     <?php
     if ($this->isEditorMode()) {

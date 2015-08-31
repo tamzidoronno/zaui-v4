@@ -59,6 +59,7 @@ class Account extends \SystemApplication implements \Application {
     }
 
     public function updatePassword() {
+        
         $old = $_POST['data']['old'];
         $new = $_POST['data']['new'];
         $new2 = $_POST['data']['new_repeat'];
@@ -105,6 +106,8 @@ class Account extends \SystemApplication implements \Application {
         $birthDay = $_POST['data']['birthDay'];
         
         
+        
+        
         if ($user_id) {
             $user = $this->getApi()->getUserManager()->getUserById($user_id);
         } else {
@@ -124,6 +127,11 @@ class Account extends \SystemApplication implements \Application {
         $user->cellPhone = $cellPhone;
         $user->companyName = $companyName;
         $user->birthDay = $birthDay;
+        
+        if (isset($_POST['data']['isMaster'])) {
+            $user->isMaster = $_POST['data']['isMaster'];
+        }
+        
         if(isset($expire)) {
             $user->expireDate = date_format($expire, "M d, Y h:m:s a");
         }

@@ -134,6 +134,21 @@ $('.Users #removegroup').live('click', function() {
     thundashop.Ajax.post(event);
 });
 
+$(document).on('click', '.Users .save_score_settings', function() {
+    var me = this;
+    var data = {
+        userId : $(this).attr('userid')
+    };
+
+    $('.Users .score_settings_table').find('input').each(function() {
+        data[$(this).attr('id')] = $(this).val()
+    });
+    
+    var event = thundashop.Ajax.createEvent(null, "saveProMeisterSettings", this, data);
+    thundashop.Ajax.postWithCallBack(event, function() {
+        alert('saved');
+    });
+});
 
 $(document).on('click','.Users #activate_permissionfilter', function() {
     $(this).parent().hide();

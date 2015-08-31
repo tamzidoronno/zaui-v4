@@ -5900,6 +5900,22 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return core_usermanager_data_ProMeisterScoreType
+	* @throws ErrorException
+	*/
+
+	public function getProMeisterScoreType() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getProMeisterScoreType";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_ProMeisterScoreType(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Create a new user to your webshop.<br>
 	* This will fail if you are trying to create a user which is granted more access then you have yourself.<br>
 	* If no users has been created, then the user object will automatically be set as an administrator.<br>
@@ -5978,6 +5994,22 @@ class APIUserManager {
 	     $data['args'] = array();
 	     $data['args']["userIds"] = json_encode($this->transport->object_unset_nulls($userIds));
 	     $data["method"] = "getUserList";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getUsersWithinTheSameCompany() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getUsersWithinTheSameCompany";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}

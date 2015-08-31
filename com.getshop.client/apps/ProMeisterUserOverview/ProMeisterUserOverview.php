@@ -25,4 +25,8 @@ class ProMeisterUserOverview extends \ApplicationBase implements \Application {
         
         $this->includefile("useroverview");
     }
+    
+    public function setUserId() {
+        $_SESSION['ProMeisterUserOverview_show_user'] = $_POST['data']['userId'];
+    }
 }

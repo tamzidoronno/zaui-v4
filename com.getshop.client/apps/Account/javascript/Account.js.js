@@ -18,7 +18,7 @@ thundashop.app.account.registerUser = function(target) {
     var cellPhone = container.find('#cellPhone').val();
     var invoiceemail = container.find('#invoiceemail').val();
     
-    var event = thundashop.Ajax.createEvent('Account', 'registerUser', target, {
+    var data = {
         "set_update_user" : "1",
         name : fullName,
         email : email,
@@ -34,8 +34,16 @@ thundashop.app.account.registerUser = function(target) {
         companyName : companyName,
         cellPhone : cellPhone,
         isprivateperson : $('#isprivateperson').val()
-        
-    });
+    }
+    
+    var isMaster = $('#isMaster');
+    if (isMaster.length > 0) {
+        data.isMaster = $('#isMaster').is(':checked')
+    }
+    
+    
+    var event = thundashop.Ajax.createEvent('Account', 'registerUser', target, data);
+    
     thundashop.Ajax.postSynchronWithReprint(event);
     thundashop.common.Alert(__w("Changes has been saved!"));
 }

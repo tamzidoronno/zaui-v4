@@ -189,5 +189,17 @@ class Users extends \SystemApplication implements \Application {
             }
         }
     }
+    
+    public function saveProMeisterSettings() {
+        $settings = $this->getApi()->getUserManager()->getProMeisterScoreType();
+        
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userId']);
+        $user->proMeisterScoreSettings = new \core_usermanager_data_ProMeisterScoreSettings();
+        foreach ($settings->categories as $cat) {
+            $user->proMeisterScoreSettings->scores->{$cat} = $_POST['data'][$cat];
+        }
+        
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
 }
 ?>

@@ -69,6 +69,10 @@ public class User extends DataCommon implements Comparable<User> {
     
     public List<String> parents = new ArrayList();
     
+    public ProMeisterScoreSettings proMeisterScoreSettings;
+    
+    public boolean isMaster = false;
+    
     public Company company = null;
     
     /**

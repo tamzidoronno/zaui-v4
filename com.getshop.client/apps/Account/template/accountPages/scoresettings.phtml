@@ -1,0 +1,30 @@
+<? /* @var $this \ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f\Users */ 
+
+$user = $this->getUserData();
+?>
+<div style="margin-top: 50px; padding: 20px; padding-top: 0px; border: solid 1px #DDD;">
+    <center><h2><? echo $this->__w("Score settings"); ?></h2></center>
+    <table class="score_settings_table">
+        <?
+        $scoreType = $this->getApi()->getUserManager()->getProMeisterScoreType();
+        echo "<tr><th></th><th>Score</th><th>Behov</th><th>Krav</th></tr>";
+        foreach ($scoreType->categories as $cat) {
+            $behov = $scoreType->behov->{$cat};
+            $requirement = $scoreType->requirements->{$cat};
+            $value = "";
+            
+//            echo "<pre>";
+//            print_r($user->proMeisterScoreSettings);
+//            echo "</pre>";
+//            
+            if ($user->proMeisterScoreSettings) {
+                $value = @$user->proMeisterScoreSettings->scores->{$cat};
+            }
+            
+            echo "<tr><td>$cat</td><td><input type='textfield' value='$value' id='$cat'/></td><td style='text-align: center;'>$behov</td><td style='text-align: center;'>$requirement</td></tr>";
+        }
+        ?>
+    </table>
+    
+    <span class="button save_score_settings" userid="<? echo $user->id; ?>"><div class="rightglare"></div><div class="filler"></div><ins id="save_score_settings"><? echo $this->__f("Update score settings"); ?></ins></span>
+</div>

@@ -1072,6 +1072,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     @Override
     public List<Entry> getEntriesByUserId(String userId) throws ErrorException {
+        if (getSession().currentUser.type < 50) {
+            hasAccessToUserId(userId);
+        }
+        
         List<Entry> entries = new ArrayList();
         for (Month month : months.values()) {
             for (Day day : month.days.values()) {
@@ -1445,5 +1449,17 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 "Kurspris for ikke kjedemedlemmer er kr. 3750,- pr. dag, og disse vil kun få tilgang til kursene dersom det er ledige plasser.";
         }
         
+    }
+
+    private void hasAccessToUserId(String userId) throws ErrorException {
+        UserManager userManager = getManager(UserManager.class);
+        List<User> users = userManager.getUsersWithinTheSameCompany();
+        for (User iuser : users) {
+            if (iuser.id.equals(userId)) {
+                return;
+            }
+        }
+        
+        throw new ErrorException(26);
     }
 }

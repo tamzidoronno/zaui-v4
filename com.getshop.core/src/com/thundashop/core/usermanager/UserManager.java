@@ -11,6 +11,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
+import com.thundashop.core.usermanager.data.ProMeisterScoreType;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
@@ -24,7 +25,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +43,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     private UserCounter counter = new UserCounter();
     private SecureRandom random = new SecureRandom();
+    private ProMeisterScoreType proMeisterScoreType = new ProMeisterScoreType();
     
     @Autowired
     public UserManager(Logger log, DatabaseSaver databaseSaver) {
@@ -50,7 +51,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
     
     @Autowired
-	private CompanySearchEngineHolder searchEngineHolder;
+    private CompanySearchEngineHolder searchEngineHolder;
 	
     @Autowired
     public MailFactory mailfactory;
@@ -741,6 +742,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.emailAddressToInvoice = userParent.emailAddressToInvoice;
             user.birthDay = userParent.birthDay;
         }
+        
+        if (user.proMeisterScoreSettings != null) {
+            user.proMeisterScoreSettings.type = proMeisterScoreType;
+        }
     }
 
     public void markUserAsTransferredToVisma(User user) {
@@ -842,5 +847,26 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.parents.add(parent);
             saveUser(user);
         }       
+    }
+
+    @Override
+    public ProMeisterScoreType getProMeisterScoreType() throws ErrorException {
+        return proMeisterScoreType;
+    }
+
+    @Override
+    public List<User> getUsersWithinTheSameCompany() throws ErrorException {
+        List<User> ret = new ArrayList();
+        
+        User currentUesr = getSession().currentUser;
+        if (currentUesr != null) {
+            for (User user : getAllUsers()) {
+                if (user.birthDay != null && user.birthDay.equals(currentUesr.birthDay)) {
+                    ret.add(user);
+                }
+            }
+        }
+        
+        return ret;
     }
 }

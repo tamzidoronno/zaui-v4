@@ -17,6 +17,12 @@ foreach ($users as $user) {
             <? echo $user->fullName; ?>
             <br><? echo $user->emailAddress; ?>
             <br><? echo $user->cellPhone; ?>
+            <?
+            if ($user->company) {
+                 echo "<br>".$user->company->name; 
+            }
+            ?>
+            
         </div>
         <div class="inline address">
             <? echo "<b>".$this->__f("Address").":</b>";
@@ -28,6 +34,16 @@ foreach ($users as $user) {
             }
             ?>
         </div>
+        
+        <?
+        if ($user->isMaster) {
+            ?>
+            <div class='showIsMaster'>
+                <i class='fa fa-star' title='this user is a masteruser'></i>
+            </div>
+            <?
+        }
+        ?>
     </div>
 </a>
 <? } ?>

@@ -1,0 +1,400 @@
+<?
+/* @var $this \ns_7004f275_a10f_4857_8255_843c2c7fb3ab\LasGruppenOrderSchema */
+$user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+
+$invoiceAddress = $this->getSelectedInvoiceAddress();
+$defaultDeliveryAddress = $this->getDefaultDeliveryAddress();
+$group = $this->getGroup($user);
+$systems = $this->getSystems($group);
+    
+$extraDeliveriesAddresses = [];
+$extraInvoicesAddresses = [];
+
+if ($group->extraAddresses) {
+    foreach ($group->extraAddresses as $addr) {
+        if ($addr->type == "shipment") {
+            $extraDeliveriesAddresses[] = $addr;
+        }
+        
+        if ($addr->type == "invoice") {
+            $extraInvoicesAddresses[] = $addr;
+        }
+    }
+}
+
+$systemnumber = "";
+$systemname = "";
+$systememail = "";
+$systemcellphone = "";
+
+$invoiceVat = "";
+$invoiceName = "";
+$invoiceAddress1 = "";
+$invoiceAddress2 = "";
+$invoicePostNumber = "";
+$invoiceCity = "";
+$invoiceCellPhone = "";
+$invoiceReference = "";
+
+
+$defaultDelName = "";
+$defaultDelAddress1 = "";
+$defaultDelAddress2 = "";
+$defaultDelPostNumber = "";
+$defaultDelCity = "";
+$defaultDelCell = "";
+$defaultDelEmail = "";
+
+if ($defaultDeliveryAddress) {
+    $defaultDelName = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->fullName).'"';
+    $defaultDelAddress1 = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->address).'"';
+    $defaultDelAddress2 = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->address2).'"';
+    $defaultDelPostNumber = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->postCode).'"';
+    $defaultDelCity = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->city).'"';
+    $defaultDelCell = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->phone).'"';
+    $defaultDelEmail = 'disabled="true" value="'.htmlentities($defaultDeliveryAddress->emailAddress).'"';
+}
+
+if ($invoiceAddress) {
+    $invoiceVat = 'disabled="true" value="'.htmlentities($invoiceAddress->vatNumber).'"';
+    $invoiceName = 'disabled="true" value="'.htmlentities($invoiceAddress->fullName).'"';
+    $invoiceAddress1 = 'disabled="true" value="'.htmlentities($invoiceAddress->address).'"';
+    $invoiceAddress2 = 'disabled="true" value="'.htmlentities($invoiceAddress->address2).'"';
+    $invoicePostNumber = 'disabled="true" value="'.htmlentities($invoiceAddress->postCode).'"';
+    $invoiceCity = 'disabled="true" value="'.htmlentities($invoiceAddress->city).'"';
+    $invoiceCellPhone = 'disabled="true" value="'.htmlentities($invoiceAddress->phone).'"';
+    $invoiceReference = 'disabled="true" value="'.htmlentities($invoiceAddress->reference).'"';
+}
+
+if (!$user->prevLoggedIn) {
+    $lastLoggedIn = "-";
+} else {
+    $lastLoggedIn = $user->prevLoggedIn;
+}
+?>
+
+<div id="ask_for_refernece_dialog">
+    <div>
+        Ønsker du å oppgi en fakturareferanse? 
+        <br/>(la stå blank hvis ikke)
+
+    </div>
+    <br/>
+    <input style='width: 266px;'type="text" name="name" id="promt_invoice_reference" class="text ui-widget-content ui-corner-all" />
+    <br/>
+</div>
+
+<div id="ask_for_birthday_dialog">
+    <div>
+        Advarsel. Du har ikke oppgitt Org.Nr / Fødselsdato, du må derfor hente varene i butikk.
+    </div>
+</div>
+
+<script>
+    $("#ask_for_refernece_dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        title: 'Fakturareferanse',
+        width: 350,
+        buttons: {
+            "Cancel": function() {
+                $(this).dialog("close");
+            },
+            
+            "Ok": function() {
+                var invoiceReference = $("#promt_invoice_reference").val();
+                $(this).dialog("close");
+                app.LasGruppenOrderSchema.populateInvoiceFields(invoiceReference);
+            }
+            
+        }
+    });
+    
+    $("#ask_for_birthday_dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        title: 'Advarsel',
+        width: 350,
+        buttons: {
+            "Cancel": function() {
+                $(this).dialog("close");
+            },
+            
+            "Ok": function() {
+                app.LasGruppenOrderSchema.askForInvoiceReference2();
+                $(this).dialog("close");
+            }
+            
+        }
+    });
+</script>
+
+<div id='hidden_button_to_next_page' style='display: none' class="shop_button goto_next_page">
+    Next
+</div>
+
+
+<div class="certego_pagetitle">Velkommen
+    <div class='stepof'></div>
+</div>
+
+<div>
+    <div class='col col_0'>
+        <? echo htmlentities($group->groupName); ?>
+        <br/> <? echo htmlentities($user->fullName); ?>
+        <br/> Sist logget inn: <? echo $lastLoggedIn; ?>
+    </div>
+</div>
+
+<div>
+    <div class='col col_1' style="padding-left: 0px;">
+        <div class="certego_pagetitle" style="text-align: center;">Meny</div>
+        <div class="menu_entry" goto="invoiceinfo">Fakturainformasjon</div>
+        <div class="menu_entry" goto="stystemoverview">Systemoversikt</div>
+        <div class="menu_entry deliveryoverview_button" goto="deliveryaddresses">Leveringsadresser</div>
+        <div class="menu_entry invoiceaddresses_button" goto="invoiceaddresses">Fakturaadresser</div>
+        <br/>
+        <div class="certego_pagetitle" style="text-align: center;">Arkiv</div>
+        <div class="menu_entry" goto='ordersoverview'>Tidligere bestillinger</div>
+        <br/>
+        <div class="certego_pagetitle" style="text-align: center;">Bestilling</div>
+        <div class="menu_entry" goto="neworder">Ny bestilling</div>
+    </div>
+    
+    <div class='col col_2' style="border: solid 1px #DDD; margin-top: 20px; ">
+        <div class="sub_entry_content">
+            <center><h2><? echo $this->getConfigurationSetting("page1_welcome_header"); ?></h2></center>
+            <br/><? echo nl2br($this->getConfigurationSetting("page1_welcome_body")); ?>
+        </div>
+        
+        <div class="invoiceinformation sub_entry_content" content="invoiceinfo">
+            <table>
+                <tr><td class='td_col_1' colspan='2'><b>Fakturainformasjon</b></td></tr>
+                <tr><td class='td_col_1'>Org. Nr / Fødselsdato*</td><td><input type='text' type_number='true' <? echo $invoiceVat; ?> /></td></tr>
+                <tr><td>Navn / Firma*</td><td><input required='true' type='text' <? echo $invoiceName; ?> /></td></tr>
+                <tr><td>Adresse*</td><td><input required='true' type='text' <? echo $invoiceAddress1; ?>/></td></tr>
+                <tr><td>Adresse 2</td><td><input type='text' <? echo $invoiceAddress2; ?>/></td></tr>
+                <tr><td>Postnr*</td><td><input required='true' type='text' <? echo $invoicePostNumber; ?>/></td></tr>
+                <tr><td>Sted*</td><td><input required='true' type='text' <? echo $invoiceCity; ?> /></td></tr>
+                <tr><td>Mobilnummer</td><td><input required='true' type='text' <? echo $invoiceCellPhone; ?> /></td></tr>
+                <tr><td>Referanse</td><td><input required='true' type='text' <? echo $invoiceReference; ?> /></td></tr>
+            </table>    
+            
+            <table>
+                <tr><td class='td_col_1' colspan='2'><b>Leveringsadresse</b></td></tr>
+                <tr><td>Navn / Firma*</td><td><input required='true' type='text' <? echo $defaultDelName; ?> /></td></tr>
+                <tr><td>Adresse*</td><td><input required='true' type='text' <? echo $defaultDelAddress1; ?>/></td></tr>
+                <tr><td>Adresse 2</td><td><input type='text' <? echo $defaultDelAddress2; ?>/></td></tr>
+                <tr><td>Postnr*</td><td><input required='true' type='text' <? echo $defaultDelPostNumber; ?>/></td></tr>
+                <tr><td>Sted*</td><td><input required='true' type='text' <? echo $defaultDelCity; ?> /></td></tr>
+                <tr><td>Mobilnummer</td><td><input required='true' type='text' <? echo $defaultDelCell; ?> /></td></tr>
+                <tr><td>Epost</td><td><input required='true' type='text' <? echo $defaultDelEmail; ?> /></td></tr>
+            </table>
+        </div>
+        
+        <div class="stystemoverview sub_entry_content" content="ordersoverview">
+            <?
+            $orders = $this->getApi()->getCertegoManager()->getOrders();
+            if (count($orders) == 0) {
+                echo "Du har ikke gjennomført noen bestillinger.";
+            } else {
+                
+                echo "Dine bestillinger (klikk på for å laste ned pdf): ";
+                foreach ($orders as $order) {
+                    echo "<a class='gs_ignorenavigate' href='/scripts/downloadPdfLasGruppen.php?orderId=$order->id'><div style='cursor: pointer; border: solid 1px #DDD; margin-top: 10px; padding: 5px;'>$order->created</div></a>";
+                    $tmpData = json_decode($order->data);
+                    $tmpData->data->created = $order->created;
+                    $_SESSION[$order->id] = json_encode($tmpData);
+                }
+            }
+            ?>
+        </div>
+        <div class="stystemoverview sub_entry_content" content="stystemoverview">
+            <center>
+                Du kan bestille på følgende systemer.<br/><br/>
+            </center>
+            <?
+            foreach ($systems as $system) {
+                echo "<div class='system_entry'>".htmlentities($system->number)." - ".htmlentities($system->name)." - ".htmlentities($system->phoneNumber)." - ".htmlentities($system->email)."</div>";
+            }
+            ?>
+        </div>
+        
+        <div class="neworder sub_entry_content" content="neworder">
+            <center>Velg fakturaadresse du ønsker å gjøre en bestilling på.</center>
+            <br/>
+            
+            <div class='shop_button show_new_address_form' style='margin-bottom: 20px;'>Ny fakturaadresse</div>
+            <div id='new_address_form_order' style='display: none; margin-top: 20px; margin-bottom: 20px; border: solid 1px #DDD; padding: 20px; margin-top: 0px;'>
+                <div  class="new_invoice_address_direct">
+                    <table>
+                        <tr><td>Org. Nr / Fødselsdato</td><td><input id="companyid" type='text' /></td></tr>
+                        <tr><td>Navn / Firma*</td><td><input id="invoice_company_name" required='true' type='text' /></td></tr>
+                        <tr><td>Adresse*</td><td><input id="invoice_address" required='true' type='text' /></td></tr>
+                        <tr><td>Adresse 2</td><td><input id="invoice_address2" type='text' /></td></tr>
+                        <tr><td>Postnr*</td><td><input id="invoice_postcode" required='true' type='text' /></td></tr>
+                        <tr><td>Sted*</td><td><input id="invoice_city" required='true' type='text' /></td></tr>
+                        <tr><td>Mobiltelefon</td><td><input id="invoice_cellphone" type='text' /></td></tr>
+                        <tr><td>Epost</td><td><input id="invoice_emailaddress" type='text' /></td></tr>
+                        <tr><td>Fakturareferanse</td><td><input id="invoice_reference" type='text' /></td></tr>
+                    </table>
+
+                    <div class='button_area'>
+                        <div class='shop_button show_new_address_form'>Avbryt</div>
+                        <div class='shop_button goto_next_page_new_address'>Neste</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class='address_to_edit start_order_by_address'>
+                <div class="inv_birthday"><? echo htmlentities($invoiceAddress->vatNumber); ?></div>
+                <div class="inv_name"><? echo htmlentities($invoiceAddress->fullName); ?></div>
+                <div class="inv_addr"><? echo htmlentities($invoiceAddress->address); ?></div>
+                <? if (isset($invoiceAddress->address2)) { ?>
+                    <div class="inv_addr2"><? echo htmlentities($invoiceAddress->address2); ?></div>
+                <? } ?>
+                <div class="inv_postcode"><? echo htmlentities($invoiceAddress->postCode); ?></div>
+                <div class="inv_city"><? echo htmlentities($invoiceAddress->city); ?></div>
+                <div class="inv_phone"><? echo htmlentities($invoiceAddress->phone); ?></div>
+                <i class="fa fa-arrow-right"></i>
+            </div>
+            
+            
+            
+            <?
+            foreach ($extraInvoicesAddresses as $addr) {
+                ?>
+                <div class="address_to_edit start_order_by_address" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
+                    <div class="inv_birthday"><? echo isset($addr->vatNumber) ? htmlentities($addr->vatNumber) : ""; ?></div>
+                    <div class="inv_name"><? echo htmlentities($addr->fullName); ?></div>
+                    <div class="inv_addr"><? echo htmlentities($addr->address); ?></div>
+                    <? if (isset($addr->address2)) { ?>
+                        <div class="inv_addr2"><? echo htmlentities($addr->address2); ?></div>
+                    <? } ?>
+                    <div class="inv_postcode"><? echo htmlentities($addr->postCode); ?></div>
+                    <div class="inv_city"><? echo htmlentities($addr->city); ?></div>
+                    <i class="fa fa-arrow-right"></i>
+                </div>
+                <?
+            }
+            ?>
+        </div>
+                
+        <div class="deliveryaddresses sub_entry_content" content="deliveryaddresses">
+            <?
+            if (!count($extraDeliveriesAddresses)) {
+                echo "Du har ikke lagt til noen ekstra adresser enda, trykk legg til for å legge til en ny adresse";
+            ?>
+                <br/>
+                <br/>
+                    <div class='button_area'>
+                        <div class='shop_button delivery_address_to_edit'>Legg til ny adresse</div>
+                    </div>        
+                <?
+            } else {
+                ?>
+            
+                <div class='deliveryaddressestoedit edit_deliver_address'>
+                    <?
+                    foreach ($extraDeliveriesAddresses as $addr) {
+                        ?>
+                        <div class="address_to_edit delivery_address_to_edit" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
+                            <div class="del_name"><? echo htmlentities($addr->fullName); ?></div>
+                            <div class="del_addr"><? echo htmlentities($addr->address); ?></div>
+                            <? if (isset($addr->address2)) { ?>
+                                <div class="del_addr2"><? echo htmlentities($addr->address2); ?></div>
+                            <? } ?>
+                            <div class="del_postcode"><? echo htmlentities($addr->postCode); ?></div>
+                            <div class="del_city"><? echo htmlentities($addr->city); ?></div>
+                            <div class="del_phone"><? echo htmlentities($addr->phone); ?></div>
+                            <div class="del_email"><? echo isset($addr->emailAddress) && $addr->emailAddress ? htmlentities($addr->emailAddress) : ""; ?></div>
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                        <?
+                    }
+                    ?>
+            
+                    <div class='button_area'>
+                        <div class='shop_button address_to_edit delivery_address_to_edit'>Legg til ny adresse</div>
+                    </div>
+                </div>
+            <?
+            }
+            ?>
+            <div id="edit_delivery_addr">
+                <input type="hidden" value="" id="edit_del_addrid"/>
+                <table>
+                    <tr><td>Navn / Firma*</td><td><input id="edit_del_name" required='true' type='text' /></td></tr>
+                    <tr><td>Adresse*</td><td><input id="edit_del_addr1" required='true' type='text' /></td></tr>
+                    <tr><td>Adresse 2</td><td><input id="edit_del_addr2" type='text' /></td></tr>
+                    <tr><td>Postnr*</td><td><input id="edit_del_postcode" required='true' type='text' /></td></tr>
+                    <tr><td>Sted*</td><td><input id="edit_del_city" required='true' type='text' /></td></tr>
+                    <tr><td>Mobilnummer*</td><td><input id="edit_del_phone" required='true' type='text' /></td></tr>
+                    <tr><td>Epost</td><td><input id="edit_del_email" type='text' /></td></tr>
+                </table>
+
+                <div class='button_area'>
+                    <div class='shop_button deleteaddress'>Slett</div> 
+                    <div class='shop_button savedeliveryaddr'>Lagre</div> &nbsp;
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <div class='button_area'>
+                
+            </div>
+        </div>
+        
+        
+        <div class="invoiceaddresses sub_entry_content" content="invoiceaddresses">
+            <div class="invoice_addresses">
+                <?
+                if (!count($extraInvoicesAddresses)) {
+                    echo "Du har ikke lagt til noen ekstra adresser enda, trykk på legg til ny";
+                } else {
+                    foreach ($extraInvoicesAddresses as $addr) {
+                        ?>
+                        <div class="address_to_edit invoice_address_to_edit" addrid="<? echo isset($addr->id) ? $addr->id : ""; ?>">
+                            <div class="inv_birthday"><? echo isset($addr->vatNumber) ? htmlentities($addr->vatNumber) : ""; ?></div>
+                            <div class="inv_name"><? echo htmlentities($addr->fullName); ?></div>
+                            <div class="inv_addr"><? echo htmlentities($addr->address); ?></div>
+                            <? if (isset($addr->address2)) { ?>
+                                <div class="inv_addr2"><? echo htmlentities($addr->address2); ?></div>
+                            <? } ?>
+                            <div class="inv_postcode"><? echo htmlentities($addr->postCode); ?></div>
+                            <div class="inv_city"><? echo htmlentities($addr->city); ?></div>
+                            <div class="inv_phone"><? echo htmlentities($addr->phone); ?></div>
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                        <?
+                    }
+                }
+                ?>
+                
+                <div class='button_area'>
+                    <div class='shop_button invoice_address_to_edit'>Legg til ny adresse</div>
+                </div>
+            </div>
+            <div style='display: none;' class="invoice_address_edit">
+                <input type="hidden" value="" id="edit_inv_addrid"/>
+                <table>
+                    <tr><td>Org. Nr / Fødselsdato</td><td><input id="edit_inv_birthday" required='true' type='text' /></td></tr>
+                    <tr><td>Navn / Firma*</td><td><input id="edit_inv_name" required='true' type='text' /></td></tr>
+                    <tr><td>Adresse*</td><td><input id="edit_inv_addr1" required='true' type='text' /></td></tr>
+                    <tr><td>Adresse 2</td><td><input id="edit_inv_addr2" type='text' /></td></tr>
+                    <tr><td>Postnr*</td><td><input id="edit_inv_postcode" required='true' type='text' /></td></tr>
+                    <tr><td>Sted*</td><td><input id="edit_inv_city" required='true' type='text' /></td></tr>
+                    <tr><td>Mobiltelefon</td><td><input id="edit_inv_phone" type='text' /></td></tr>
+                </table>
+                
+                <div class='button_area'>
+                    <div class='shop_button delete_invoice_address'>Slett</div> 
+                    <div class='shop_button invoice_address_to_save'>Lagre</div>
+                </div>
+            </div>
+              
+        </div>
+    </div>
+    
+</div>

@@ -1,0 +1,29 @@
+<?
+/* @var $this ns_27a320a3_e983_4f55_aae8_cf94add661c2\CertegoSystems */
+if (!isset($_POST['certegoSystem']) || !$_POST['certegoSystem']) {
+    return;
+}
+
+$systems = $this->getApi()->getCertegoManager()->search($_POST['certegoSystem']);
+
+if (!count($systems)) {
+    echo "<center><h3>".$this->__f("Did not find any system, please try to search for something else")."</h3></center>";
+} else {
+    $foundOne = false;
+    echo "<center><h3>".$this->__f("Click on the system you wish to add")."</h3></center>";
+    foreach ($systems as $system) {
+        if ($system->groupId != null || $system->groupId != "") {
+            continue;
+        }
+        
+        $foundOne = true;
+        echo "<div gss_method='addSystemToGroup' gss_value_2='$system->id' gss_value='".$_POST['value']."' gss_fragment='systemsingroup' gss_view='gss_systems_in_group' class='gs_select_searched_user_group_add'>";
+        $this->printSystem($system);
+        echo "</div>";
+    }
+    
+    if (!$foundOne) {
+        echo "<center><h3>".$this->__f("Did not find any system, please try to search for something else")."</h3></center>";
+    }
+}
+?>

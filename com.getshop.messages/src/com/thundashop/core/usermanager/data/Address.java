@@ -14,6 +14,7 @@ public class Address extends DataCommon {
     
     public static class Type {
         public static String SHIPMENT = "shipment";
+        public static String INVOICE = "invoice";
         public static String MAIN = "main";
     }
     
@@ -29,4 +30,5 @@ public class Address extends DataCommon {
     public String countryname;
     public String customerNumber;
     public String vatNumber;
+    public String reference = "";
 }

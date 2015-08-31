@@ -1,6 +1,66 @@
+var CertegoHtmlEnDeCode = (function() {
+    var charToEntityRegex,
+        entityToCharRegex,
+        charToEntity,
+        entityToChar;
+
+    function resetCharacterEntities() {
+        charToEntity = {};
+        entityToChar = {};
+        // add the default set
+        addCharacterEntities({
+            '&amp;'     :   '&',
+            '&gt;'      :   '>',
+            '&lt;'      :   '<',
+            '&quot;'    :   '"',
+            '&#39;'     :   "'"
+        });
+    }
+
+    function addCharacterEntities(newEntities) {
+        var charKeys = [],
+            entityKeys = [],
+            key, echar;
+        for (key in newEntities) {
+            echar = newEntities[key];
+            entityToChar[key] = echar;
+            charToEntity[echar] = key;
+            charKeys.push(echar);
+            entityKeys.push(key);
+        }
+        charToEntityRegex = new RegExp('(' + charKeys.join('|') + ')', 'g');
+        entityToCharRegex = new RegExp('(' + entityKeys.join('|') + '|&#[0-9]{1,5};' + ')', 'g');
+    }
+
+    function htmlEncode(value){
+        var htmlEncodeReplaceFn = function(match, capture) {
+            return charToEntity[capture];
+        };
+
+        return (!value) ? value : String(value).replace(charToEntityRegex, htmlEncodeReplaceFn);
+    }
+
+    function htmlDecode(value) {
+        var htmlDecodeReplaceFn = function(match, capture) {
+            return (capture in entityToChar) ? entityToChar[capture] : String.fromCharCode(parseInt(capture.substr(2), 10));
+        };
+
+        return (!value) ? value : String(value).replace(entityToCharRegex, htmlDecodeReplaceFn);
+    }
+
+    resetCharacterEntities();
+
+    return {
+        htmlEncode: htmlEncode,
+        htmlDecode: htmlDecode
+    };
+})();
+
 app.LasGruppenOrderSchema = {
     addedRows: false,
     inProgress: false,
+    saveAddress: false,
+    saveDeliveryAddress: true,
     isCompany: false,
     addedCount: 0,
     
@@ -25,12 +85,267 @@ app.LasGruppenOrderSchema = {
         $(document).on('keyup', '.LasGruppenOrderSchema .loginform .password', app.LasGruppenOrderSchema.doLoginKeyUp);
         $(document).on('keyup', '.LasGruppenOrderSchema .loginform_picode .pincode', app.LasGruppenOrderSchema.doSignupKeyUp);
         $(document).on('click', '.LasGruppenOrderSchema .logout_button', app.LasGruppenOrderSchema.logout_button);
+        $(document).on('click', '.LasGruppenOrderSchema .menu_entry', app.LasGruppenOrderSchema.menuSelected);
+        $(document).on('click', '.LasGruppenOrderSchema .delivery_address_to_edit', app.LasGruppenOrderSchema.editDeliveryAddress);
+        $(document).on('click', '.LasGruppenOrderSchema .invoice_address_to_edit', app.LasGruppenOrderSchema.editInvoiceAddress);
+        $(document).on('click', '.LasGruppenOrderSchema .deliveryoverview_button', app.LasGruppenOrderSchema.showDeliverAddresses);
+        $(document).on('click', '.LasGruppenOrderSchema .invoiceaddresses_button', app.LasGruppenOrderSchema.showInvoiceAddresses);
+        $(document).on('click', '.LasGruppenOrderSchema .deleteaddress', app.LasGruppenOrderSchema.deleteDelivaryAddress);
+        $(document).on('click', '.LasGruppenOrderSchema .delete_invoice_address', app.LasGruppenOrderSchema.deleteInvoiceAddress);
+        $(document).on('click', '.LasGruppenOrderSchema .start_order_by_address', app.LasGruppenOrderSchema.askForInvoiceReference);
+        $(document).on('click', '.LasGruppenOrderSchema .show_new_address_form', app.LasGruppenOrderSchema.toggleNewAddressForm);
+        $(document).on('click', '.LasGruppenOrderSchema .goto_next_page_new_address', app.LasGruppenOrderSchema.nextNewAddress);
+        $(document).on('click', '.LasGruppenOrderSchema .goto_next_page', app.LasGruppenOrderSchema.next);
+        $(document).on('click', '.LasGruppenOrderSchema .saveSettings', app.LasGruppenOrderSchema.saveSettings);
+        
+        
+        $(document).on('click', '.LasGruppenOrderSchema .savedeliveryaddr', app.LasGruppenOrderSchema.saveDeliveryAddr);
+        $(document).on('click', '.LasGruppenOrderSchema .invoice_address_to_save', app.LasGruppenOrderSchema.saveInvoiceAddr);
         
         $(document).on('change', '#invoice_company_name', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_address', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_postcode', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_cellphone', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_emailaddress', app.LasGruppenOrderSchema.changeDeliveryInformation);
+        $(document).on('change', '.LasGruppenOrderSchema #deliveryAddressSelected', app.LasGruppenOrderSchema.deliveryAddressSelected);
+    },
+    
+    saveSettings: function() {
+        var data = {
+            page1_welcome_header : $('.LasGruppenOrderSchema #page1_welcome_header').val(),
+            page1_welcome_body : $('.LasGruppenOrderSchema #page1_welcome_body').val(),
+            page2_orderinformation : $('.LasGruppenOrderSchema #page2_orderinformation').val(),
+            page3_shippinginformation_rekommandert : $('.LasGruppenOrderSchema #page3_shippinginformation_rekommandert').val(),
+            page3_shippinginformation_express : $('.LasGruppenOrderSchema #page3_shippinginformation_express').val(),
+            page3_shippinginformation_bedriftspakke : $('.LasGruppenOrderSchema #page3_shippinginformation_bedriftspakke').val(),
+            page3_shippinginformation_service : $('.LasGruppenOrderSchema #page3_shippinginformation_service').val(),
+        };
+        
+        var event = thundashop.Ajax.createEvent("", "saveSettings", this, data);
+        thundashop.Ajax.post(event, function() {
+            thundashop.common.hideInformationBox();
+        });
+    },
+    
+    nextNewAddress: function() {
+        app.LasGruppenOrderSchema.saveAddress = true;
+        app.LasGruppenOrderSchema.nextScoped();
+    },
+    
+    nextScoped: function() {
+        $('#hidden_button_to_next_page').click();
+    },
+    
+    deliveryAddressSelected: function() {
+        var value = $(this).val();
+        
+        if (value == "other") {
+            app.LasGruppenOrderSchema.saveDeliveryAddress = true;
+            $('.deliveryinformationdiv table input').removeAttr('disabled');
+            $('.deliveryinformationdiv table input').val("");
+        } else {
+            app.LasGruppenOrderSchema.saveDeliveryAddress = false;
+            var address = certegoDeliveryAddresses[value];
+            app.LasGruppenOrderSchema.populateDeliveryInformation(address);
+        }
+    },
+    
+    toggleNewAddressForm: function() {
+        app.LasGruppenOrderSchema.clearInvoiceFields();
+        var form = $('.LasGruppenOrderSchema #new_address_form_order');
+        if (form.is(':visible')) {
+            form.slideUp();
+            $('.LasGruppenOrderSchema .show_new_address_form').slideDown();
+        } else {
+            $(this).slideUp();
+            form.slideDown();
+        }
+    },
+    
+    saveInvoiceAddr: function() {
+        var currentPage = $('.LasGruppenOrderSchema #edit_delivery_addr');
+        var validated = app.LasGruppenOrderSchema.validatePage(currentPage);
+        if (!validated) {
+            alert('For å kunne gå videre må du først rette opp i de røde feltene');
+            return;
+        }
+        
+        var data = {
+            vatNumber : $('.LasGruppenOrderSchema #edit_inv_birthday').val(),
+            name : $('.LasGruppenOrderSchema #edit_inv_name').val(),
+            addr1 : $('.LasGruppenOrderSchema #edit_inv_addr1').val(),
+            addr2 : $('.LasGruppenOrderSchema #edit_inv_addr2').val(),
+            postcode : $('.LasGruppenOrderSchema #edit_inv_postcode').val(),
+            city : $('.LasGruppenOrderSchema #edit_inv_city').val(),
+            phone : $('.LasGruppenOrderSchema #edit_inv_phone').val(),
+            addrid : $('.LasGruppenOrderSchema #edit_inv_addrid').val()
+        }
+        
+        
+        var event = thundashop.Ajax.createEvent(null, "saveInvoiceAddr", currentPage, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.LasGruppenOrderSchema .welcomepagecontent').html(result);
+            $('.LasGruppenOrderSchema .invoiceaddresses_button').click();
+        });
+        
+    },
+    
+    clearInvoiceFields : function() {
+        $('.LasGruppenOrderSchema #companyid').val("");
+        $('.LasGruppenOrderSchema #invoice_company_name').val("");
+        $('.LasGruppenOrderSchema #invoice_address').val("");
+        $('.LasGruppenOrderSchema #invoice_address2').val("");
+        $('.LasGruppenOrderSchema #invoice_postcode').val("");
+        $('.LasGruppenOrderSchema #invoice_city').val("");
+        $('.LasGruppenOrderSchema #invoice_cellphone').val("");    
+    },
+    
+    askForInvoiceReference: function() {
+        app.LasGruppenOrderSchema.lastClickedAddress = this;
+        var companyId = $(this).find('.inv_birthday').html()
+        
+        if (!companyId) {
+            $("#ask_for_birthday_dialog").dialog("open");
+            return;
+        }
+        
+        app.LasGruppenOrderSchema.askForInvoiceReference2();
+    },
+    
+    askForInvoiceReference2: function() {
+        $("#ask_for_refernece_dialog").dialog("open");
+    },
+    
+    populateInvoiceFields: function(result) {
+        var me = app.LasGruppenOrderSchema.lastClickedAddress;
+        $('.LasGruppenOrderSchema #companyid').val($(me).find('.inv_birthday').html());
+        $('.LasGruppenOrderSchema #invoice_company_name').val($(me).find('.inv_name').html());
+        $('.LasGruppenOrderSchema #invoice_address').val($(me).find('.inv_addr').html());
+        $('.LasGruppenOrderSchema #invoice_address2').val($(me).find('.inv_addr2').html());
+        $('.LasGruppenOrderSchema #invoice_postcode').val($(me).find('.inv_postcode').html());
+        $('.LasGruppenOrderSchema #invoice_city').val($(me).find('.inv_city').html());
+        $('.LasGruppenOrderSchema #invoice_cellphone').val($(me).find('.inv_phone').html());
+        $('.LasGruppenOrderSchema #invoice_reference').val(result);
+        app.LasGruppenOrderSchema.saveAddress = false;
+        app.LasGruppenOrderSchema.nextScoped();
+    },
+    
+    editInvoiceAddress: function() {
+        $('.LasGruppenOrderSchema .invoice_addresses').hide();
+        $('.LasGruppenOrderSchema .invoice_address_edit').show();
+        
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_name').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_name').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addr1').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_addr').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addr2').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_addr2').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_postcode').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_postcode').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_city').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_city').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_phone').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_phone').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_birthday').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.inv_birthday').html()));
+        $('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addrid').val(CertegoHtmlEnDeCode.htmlDecode($(this).attr('addrid')));
+        
+        if ($('.LasGruppenOrderSchema .invoice_address_edit #edit_inv_addrid').val()) {
+            $('#invoice_address_edit .deleteaddress').show();
+        } else {
+            $('#invoice_address_edit .deleteaddress').hide();
+        }
+    },
+    
+    showInvoiceAddresses: function() {
+        $('.LasGruppenOrderSchema .invoice_addresses').show();
+        $('.LasGruppenOrderSchema .invoice_address_edit').hide();
+    },
+    
+    deleteDelivaryAddress: function() {
+        var confirmRet = confirm("Er du sikker på at du ønsker å slette adressen?");
+        if (!confirmRet)
+            return;
+        
+        var data = {
+            addrid : $('.LasGruppenOrderSchema #edit_del_addrid').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "deleteDeliveryAddr", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.LasGruppenOrderSchema .welcomepagecontent').html(result);
+            $('.LasGruppenOrderSchema .deliveryoverview_button').click();
+        });
+    },
+    
+    deleteInvoiceAddress: function() {
+        var confirmRet = confirm("Er du sikker på at du ønsker å slette adressen?");
+        if (!confirmRet)
+            return;
+        
+        var data = {
+            addrid : $('.LasGruppenOrderSchema #edit_inv_addrid').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "deleteDeliveryAddr", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.LasGruppenOrderSchema .welcomepagecontent').html(result);
+            $('.LasGruppenOrderSchema .invoiceaddresses_button').click();
+        });
+    },
+    
+    showDeliverAddresses: function() {
+        $('.LasGruppenOrderSchema .edit_deliver_address').show();
+        $('.LasGruppenOrderSchema #edit_delivery_addr').hide();
+    },
+    
+    editDeliveryAddress: function() {
+        $('.LasGruppenOrderSchema .edit_deliver_address').hide();
+        $('.LasGruppenOrderSchema #edit_delivery_addr').show();
+        
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_name').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_name').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addr1').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_addr').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addr2').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_addr2').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_postcode').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_postcode').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_city').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_city').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_phone').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_phone').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_email').val(CertegoHtmlEnDeCode.htmlDecode($(this).find('.del_email').html()));
+        $('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addrid').val(CertegoHtmlEnDeCode.htmlDecode($(this).attr('addrid')));
+        
+        if ($('.LasGruppenOrderSchema #edit_delivery_addr #edit_del_addrid').val()) {
+            $('#edit_delivery_addr .deleteaddress').show();
+        } else {
+            $('#edit_delivery_addr .deleteaddress').hide();
+        }
+        
+    },
+    
+    saveDeliveryAddr: function() {
+        
+        var currentPage = $('.LasGruppenOrderSchema #edit_delivery_addr');
+        var validated = app.LasGruppenOrderSchema.validatePage(currentPage);
+        if (!validated) {
+            alert('For å kunne gå videre må du først rette opp i de røde feltene');
+            return;
+        }
+        
+        var data = {
+            name : $('.LasGruppenOrderSchema #edit_del_name').val(),
+            addr1 : $('.LasGruppenOrderSchema #edit_del_addr1').val(),
+            addr2 : $('.LasGruppenOrderSchema #edit_del_addr2').val(),
+            postcode : $('.LasGruppenOrderSchema #edit_del_postcode').val(),
+            city : $('.LasGruppenOrderSchema #edit_del_city').val(),
+            phone : $('.LasGruppenOrderSchema #edit_del_phone').val(),
+            addrid : $('.LasGruppenOrderSchema #edit_del_addrid').val(),
+            emailaddress : $('.LasGruppenOrderSchema #edit_del_email').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "saveDeliveryAddr", currentPage, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.LasGruppenOrderSchema .welcomepagecontent').html(result);
+            $('.LasGruppenOrderSchema .deliveryoverview_button').click();
+        });
+        
+    },
+    
+    menuSelected: function() {
+        $('.LasGruppenOrderSchema .menu_entry').css('font-weight', 'normal');
+        $('.LasGruppenOrderSchema .sub_entry_content').hide();
+        $('.LasGruppenOrderSchema .sub_entry_content[content="'+$(this).attr('goto')+'"').show();
+        $(this).css('font-weight', 'bold');
     },
     
     doLoginKeyUp: function(event) {
@@ -113,7 +428,7 @@ app.LasGruppenOrderSchema = {
         } 
    },
 
-    saveData: function(target, callback, silent) {
+   saveData: function(target, callback, silent, dontShowLoader) {
         if (app.LasGruppenOrderSchema.inProgress) {
             return;
         }
@@ -170,10 +485,13 @@ app.LasGruppenOrderSchema = {
                     vatnumber: $('#companyid').val(),
                     companyName: $('#invoice_company_name').val(),
                     address: $('#invoice_address').val(),
+                    address2: $('#invoice_address2').val(),
                     postnumer: $('#invoice_postcode').val(),
+                    city: $('#invoice_city').val(),
                     reference: $('#invoice_reference').val(),
                     cellphone: $('#invoice_cellphone').val(),
                     email: $('#invoice_emailaddress').val(),
+                    invoiceReference: $('#invoice_reference').val(),
                     customerNumber: $('#invoice_cusomer_number').val()
                 }
             },
@@ -191,7 +509,9 @@ app.LasGruppenOrderSchema = {
                 deliveryInfo: {
                     name: $('#delivery_company_name').val(),
                     address: $('#delivery_address').val(),
+                    address2: $('#delivery_address2').val(),
                     postnumber: $('#delivery_postcode').val(),
+                    city: $('#delivery_city').val(),
                     cellphone: $('#delivery_cellphone').val(),
                     emailaddress: $('#delivery_emailaddress').val(),
                 },
@@ -216,6 +536,9 @@ app.LasGruppenOrderSchema = {
         
         data.silent = silent;
 
+        data.saveDeliveryAddress = app.LasGruppenOrderSchema.saveDeliveryAddress;
+        data.saveInvoiceAddress = app.LasGruppenOrderSchema.saveAddress;
+        
         if (!data.page4.emailCopy) {
             $('#email_copy_sent_to').hide()
         } else {
@@ -228,7 +551,7 @@ app.LasGruppenOrderSchema = {
             if (callback) {
                 callback();
             }
-        });
+        }, dontShowLoader);
     },
     
     validateEmail: function(email) {
@@ -244,10 +567,9 @@ app.LasGruppenOrderSchema = {
             }
             var event = thundashop.Ajax.createEvent(null, "getBrReg", this, data);
             thundashop.Ajax.postWithCallBack(event, function(res) {
-                if (res) {
+                if (res && res != "null") {
                     var company = JSON.parse(res);
                     
-                    console.log(company);
                     if (!$('#invoice_company_name').val())
                         $('#invoice_company_name').val(company.name);
                     
@@ -255,7 +577,10 @@ app.LasGruppenOrderSchema = {
                         $('#invoice_address').val(company.streetAddress);
                     
                     if (!$('#invoice_postcode').val())
-                        $('#invoice_postcode').val(company.postnumber + " " + company.city);
+                        $('#invoice_postcode').val(company.postnumber);
+                    
+                    if (!$('#invoice_city').val())
+                        $('#invoice_city').val(company.city);
                         
                     if (!$('#invoice_cellphone').val())
                         $('#invoice_cellphone').val()
@@ -281,12 +606,28 @@ app.LasGruppenOrderSchema = {
     }, 
     
     shangeDeliveryInformation: function() {
+        var address = {
+            fullName : $('#invoice_company_name').val(),
+            address : $('#invoice_address').val(),
+            address2 : $('#invoice_address2').val(),
+            postCode : $('#invoice_postcode').val(),
+            city : $('#invoice_city').val(),
+            phone : $('#invoice_cellphone').val(),
+            emailAddress : $('#invoice_emailaddress').val()
+        }
+        
+        app.LasGruppenOrderSchema.populateDeliveryInformation(address);
+    },
+    
+    populateDeliveryInformation: function(address) {
         $('.deliveryinformationdiv table input').attr('disabled','disabled');
-        $('#delivery_company_name').val($('#invoice_company_name').val());
-        $('#delivery_address').val($('#invoice_address').val());
-        $('#delivery_postcode').val($('#invoice_postcode').val());
-        $('#delivery_cellphone').val($('#invoice_cellphone').val());
-        $('#delivery_emailaddress').val($('#invoice_emailaddress').val());
+        $('#delivery_company_name').val(address.fullName);
+        $('#delivery_address').val(address.address);
+        $('#delivery_address2').val(address.address2);
+        $('#delivery_postcode').val(address.postCode);
+        $('#delivery_city').val(address.city);
+        $('#delivery_cellphone').val(address.phone);
+        $('#delivery_emailaddress').val(address.emailAddress);
     },
     
     requiredFieldChanged: function() {
@@ -322,6 +663,14 @@ app.LasGruppenOrderSchema = {
         $('.nosecurityneeded').hide();
         $('.securityneeded').hide();
         
+        if ($('input[name="userid"]').val()) {
+            $('.order_page4 .certego_pagetitle span').html('Klar til innsending');
+            $('.nosecurityneeded').show();
+            $('.order_page4 .next').html('Send');
+            $('.order_page4 .next').show();
+            return;
+        } 
+        
         if ($('#selection_key').is(':checked')) {
             $('.securityneeded').show();
         } else {
@@ -332,6 +681,7 @@ app.LasGruppenOrderSchema = {
     },
     
     next: function() {
+        $('.shop_button.next').html('Neste');
         var currentPage = $(this).closest('.orderpage');
         var pageNumber = currentPage.attr('pageNumer');
         pageNumber++;
@@ -351,7 +701,17 @@ app.LasGruppenOrderSchema = {
                 alert('Du må minst velge nøkler, sylindrer eller begge');
                 return;
             }
-            app.LasGruppenOrderSchema.setupShippinhOptions();
+            
+            var me = this;
+            
+            var doneFunction = function() {
+                app.LasGruppenOrderSchema.goToNextPage(pageNumber, me);
+            }
+            
+            app.LasGruppenOrderSchema.setupShippinhOptions(this, doneFunction);
+            
+            
+            return;
         }
         
         if (pageNumber === 4) {
@@ -372,7 +732,14 @@ app.LasGruppenOrderSchema = {
                     return;
                 }
                 
-                app.LasGruppenOrderSchema.saveData(this);
+                $(this).html('<i class="fa fa-spinner fa-spin"></i> Behandler bestilling...');
+                var me = this;
+                var doneFunc = function() {
+                    app.LasGruppenOrderSchema.goToNextPage(pageNumber, me);
+                }
+                
+                app.LasGruppenOrderSchema.saveData(this, doneFunc, null, true);
+                return;
             } 
        }
         
@@ -381,10 +748,11 @@ app.LasGruppenOrderSchema = {
                 confirmationEmail : $($('.order_page5 input')[0]).val()
             }
             
+            $(this).html('<i class="fa fa-spinner fa-spin"></i> Behandler bestilling...');
             var event = thundashop.Ajax.createEvent("", "sendConfirmation", this, data);
             thundashop.Ajax.postWithCallBack(event, function() {
                 app.LasGruppenOrderSchema.goToNextPage(pageNumber, me);
-            });
+            }, true);
                 
             return;
         }
@@ -412,19 +780,43 @@ app.LasGruppenOrderSchema = {
         return false;
     },
     
-    setupShippinhOptions: function() {
-        $('.order_page3 .shipping_div_option').show();
+    setupShippinhOptions: function(button, doneFunction) {
+        $(button).html('<i class="fa fa-spinner fa-spin"></i> Behandler...');
+        var event = thundashop.Ajax.createEvent(null, "isCompany", button, { vatnumber: $('#companyid').val() });
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            
+            app.LasGruppenOrderSchema.isCompany = result === "true";
+            
+            var event = thundashop.Ajax.createEvent(null, "showAddresses", button, {});
+            thundashop.Ajax.postWithCallBack(event, function(result) {
+                $('.LasGruppenOrderSchema .selectbox_del_addresses').html(result);
+            });
 
-        if (app.LasGruppenOrderSchema.isCompany) {
-            $('#shipping_mypack').hide();
-        } else {
-            $('#shipping_express').hide();
-            $('#shipping_bedriftspakke').hide();
-        }
+            $('.order_page3 .shipping_div_option').show();
 
-        if ($('#cylindersoption').is(':checked') && app.LasGruppenOrderSchema.isCompany) {
-            $('#shipping_rekomandert').hide();
-        }
+            if (app.LasGruppenOrderSchema.isCompany) {
+                $('#shipping_mypack').hide();
+            } else {
+                $('#shipping_express').hide();
+                $('#shipping_bedriftspakke').hide();
+            }
+
+            if ($('#cylindersoption').is(':checked') && app.LasGruppenOrderSchema.isCompany) {
+                $('#shipping_rekomandert').hide();
+            }
+
+            if (!$('#companyid').val()) {
+                $('#shipping_bedriftspakke').hide();
+                $('#shipping_service').hide();
+                $('#shipping_other').hide();
+                $('#shipping_express').hide();
+                $('#shipping_rekomandert').hide();
+                $('#shipping_store input').prop("checked", true);
+                $('.select_stores').show();
+            }
+            
+            doneFunction();
+        });
     },
     
     addFirstRows: function() {
@@ -482,6 +874,7 @@ app.LasGruppenOrderSchema = {
     },
     
     prev: function() {
+        $('.shop_button.next').html('Neste');
         var currentPage = $(this).closest('.orderpage');
         var pageNumber = currentPage.attr('pageNumer');
         pageNumber--;
@@ -547,8 +940,14 @@ app.LasGruppenOrderSchema = {
         if (selectedval === "4") {
             $('.select_stores').show();
         }
+        
         if (selectedval === "5") {
             $('.specialsending').show();
+            $('.shippinginformation').show();
+        }
+        
+        if (selectedval === "6") {
+            $('.extratext_shipping_6').show();
             $('.shippinginformation').show();
         }
     },
@@ -566,6 +965,33 @@ app.LasGruppenOrderSchema = {
         row.addClass('order_cylinder_row_to_add');
         row.find('.systemnumber').val($('#main_system_number').val());
         $('.cylinder_setup table').append(row);
+    },
+    
+    showSettings: function() {
+        var event = thundashop.Ajax.createEvent(null, "showSettings", this, {});
+        thundashop.common.showInformationBox(event, "Settings");
+    },
+    
+    loadSettings: function(element, application) {
+         var config = {
+            draggable: true,
+            app : true,
+            application: application,
+            title: "Settings",
+            items: [
+                {
+                    icontype: "awesome",
+                    icon: "fa-edit",
+                    iconsize : "30",
+                    title: __f("Edit text content"),
+                    click: app.LasGruppenOrderSchema.showSettings
+                }
+            ]
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
     }
 }
 

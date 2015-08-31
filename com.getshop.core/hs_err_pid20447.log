@@ -1,0 +1,802 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGBUS (0x7) at pc=0x00007f8568b107d2, pid=20447, tid=140211013367552
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_40-b25) (build 1.8.0_40-b25)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.40-b25 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# C  [libzip.so+0x117d2]  newEntry+0x62
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f856400b800):  JavaThread "main" [_thread_in_native, id=20451, stack(0x00007f856b953000,0x00007f856ba54000)]
+
+siginfo: si_signo: 7 (SIGBUS), si_code: 2 (BUS_ADRERR), si_addr: 0x00007f85430d4be5
+
+Registers:
+RAX=0x00007f8564939050, RBX=0x00007f85641d2e50, RCX=0x00007f8564000020, RDX=0x00007f8564939050
+RSP=0x00007f856ba4cea0, RBP=0x00007f856ba4cef0, RSI=0x00000000000007e0, RDI=0x00007f8564000020
+R8 =0x0000000000000003, R9 =0x00007f8564000078, R10=0x00007f855515d0d8, R11=0x00007f856afeea30
+R12=0x00007f85430d4bc8, R13=0x00007f8564939050, R14=0x0000000010105583, R15=0x00007f85641d2070
+RIP=0x00007f8568b107d2, EFLAGS=0x0000000000010202, CSGSFS=0x1500000000000033, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+Top of Stack: (sp=0x00007f856ba4cea0)
+0x00007f856ba4cea0:   0003005700000037 00bb2a0d00000000
+0x00007f856ba4ceb0:   00000007c00007a8 00007f856a76952e
+0x00007f856ba4cec0:   00007f8564939050 00007f85641d2e50
+0x00007f856ba4ced0:   00007f8564930890 00007f85641d2070
+0x00007f856ba4cee0:   0000000010105583 0000000000000032
+0x00007f856ba4cef0:   00007f856ba4cf50 00007f8568b10f2f
+0x00007f856ba4cf00:   00007f856400b800 0100370002004400
+0x00007f856ba4cf10:   00007f856ba4cf70 00007f856ba4cfa3
+0x00007f856ba4cf20:   00007f856ba4cfa1 00007f856ba4cf70
+0x00007f856ba4cf30:   0000000000000032 00007f856400b9f8
+0x00007f856ba4cf40:   00007f856ba4d3c8 0000000000000001
+0x00007f856ba4cf50:   00007f856ba4d3b0 00007f8568b02d30
+0x00007f856ba4cf60:   0004003800000007 00007f85641d2070
+0x00007f856ba4cf70:   676e6f6d2f67726f 70726f6d2f62646f
+0x00007f856ba4cf80:   7070616d2f616968 7070614d2f676e69
+0x00007f856ba4cf90:   7065637845676e69 616c632e6e6f6974
+0x00007f856ba4cfa0:   003b000000007373 00400002003f003e
+0x00007f856ba4cfb0:   00000001000c0000 00020041003e003b
+0x00007f856ba4cfc0:   ff02001800000047 0748000704001500
+0x00007f856ba4cfd0:   4b00074a00074900 0042002400fa0000
+0x00007f856ba4cfe0:   00a1004c00020000 00007f856aee2749
+0x00007f856ba4cff0:   00007f856ba4d610 00007f856ba4d600
+0x00007f856ba4d000:   00007f856aeb5029 00007f856a9aaf7a
+0x00007f856ba4d010:   00007f856a9aaf78 00007f856aeb14ea
+0x00007f856ba4d020:   0700b42a0d009a0d 0484570e00b60519
+0x00007f856ba4d030:   0000b02adbffa701 1a00000038000300
+0x00007f856ba4d040:   0900400000000600 290042001d004100
+0x00007f856ba4d050:   00007f856ba4d180 2000000039004700
+0x00007f856ba4d060:   4f0016001d000300 00007f8564008d10
+0x00007f856ba4d070:   00007f856ba4d110 00007f856a17610d
+0x00007f856ba4d080:   0000000000004700 0101520000000000
+0x00007f856ba4d090:   0000000000000000 00007f856400b800 
+
+Instructions: (pc=0x00007f8568b107d2)
+0x00007f8568b107b2:   00 48 c7 40 28 00 00 00 00 41 80 7f 30 00 0f 84
+0x00007f8568b107c2:   8a 02 00 00 4c 8b 63 08 4d 2b 67 28 4d 03 67 18
+0x00007f8568b107d2:   41 0f b6 5c 24 1d 41 0f b6 44 24 1c c1 e3 08 09
+0x00007f8568b107e2:   c3 41 0f b6 44 24 1e 88 45 bd 41 0f b6 54 24 20 
+
+Register to memory mapping:
+
+RAX=0x00007f8564939050 is an unknown value
+RBX=0x00007f85641d2e50 is an unknown value
+RCX=0x00007f8564000020 is an unknown value
+RDX=0x00007f8564939050 is an unknown value
+RSP=0x00007f856ba4cea0 is pointing into the stack for thread: 0x00007f856400b800
+RBP=0x00007f856ba4cef0 is pointing into the stack for thread: 0x00007f856400b800
+RSI=0x00000000000007e0 is an unknown value
+RDI=0x00007f8564000020 is an unknown value
+R8 =0x0000000000000003 is an unknown value
+R9 =0x00007f8564000078 is an unknown value
+R10=0x00007f855515d0d8 is at entry_point+88 in (nmethod*)0x00007f855515cf10
+R11=0x00007f856afeea30: <offset 0x187a30> in /lib/x86_64-linux-gnu/libc.so.6 at 0x00007f856ae67000
+R12=0x00007f85430d4bc8 is an unknown value
+R13=0x00007f8564939050 is an unknown value
+R14=0x0000000010105583 is an unknown value
+R15=0x00007f85641d2070 is an unknown value
+
+
+Stack: [0x00007f856b953000,0x00007f856ba54000],  sp=0x00007f856ba4cea0,  free space=999k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libzip.so+0x117d2]  newEntry+0x62
+C  [libzip.so+0x11f2f]  ZIP_GetEntry2+0xff
+C  [libzip.so+0x3d30]  Java_java_util_zip_ZipFile_getEntry+0xf0
+J 171  java.util.zip.ZipFile.getEntry(J[BZ)J (0 bytes) @ 0x00007f855515d14e [0x00007f855515d080+0xce]
+J 343 C2 java.util.jar.JarFile.getEntry(Ljava/lang/String;)Ljava/util/zip/ZipEntry; (22 bytes) @ 0x00007f85551d0610 [0x00007f85551d02e0+0x330]
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 171  java.util.zip.ZipFile.getEntry(J[BZ)J (0 bytes) @ 0x00007f855515d0d8 [0x00007f855515d080+0x58]
+J 343 C2 java.util.jar.JarFile.getEntry(Ljava/lang/String;)Ljava/util/zip/ZipEntry; (22 bytes) @ 0x00007f85551d0610 [0x00007f85551d02e0+0x330]
+J 650 C2 sun.misc.URLClassPath.getResource(Ljava/lang/String;Z)Lsun/misc/Resource; (83 bytes) @ 0x00007f85552d649c [0x00007f85552d6120+0x37c]
+J 271 C1 java.net.URLClassLoader$1.run()Ljava/lang/Class; (63 bytes) @ 0x00007f8555194ffc [0x00007f8555194de0+0x21c]
+J 270 C1 java.net.URLClassLoader$1.run()Ljava/lang/Object; (5 bytes) @ 0x00007f8555194a4c [0x00007f85551949c0+0x8c]
+v  ~StubRoutines::call_stub
+J 269  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedExceptionAction;Ljava/security/AccessControlContext;)Ljava/lang/Object; (0 bytes) @ 0x00007f8555194663 [0x00007f8555194600+0x63]
+J 1343 C2 java.lang.ClassLoader.loadClass(Ljava/lang/String;Z)Ljava/lang/Class; (122 bytes) @ 0x00007f85554fd13c [0x00007f85554fc420+0xd1c]
+J 252 C1 sun.misc.Launcher$AppClassLoader.loadClass(Ljava/lang/String;Z)Ljava/lang/Class; (85 bytes) @ 0x00007f855518a2e4 [0x00007f8555189940+0x9a4]
+J 251 C1 java.lang.ClassLoader.loadClass(Ljava/lang/String;)Ljava/lang/Class; (7 bytes) @ 0x00007f8555189584 [0x00007f8555189480+0x104]
+v  ~StubRoutines::call_stub
+j  com.thundashop.core.databasemanager.Database.<init>()V+44
+v  ~StubRoutines::call_stub
+j  sun.reflect.NativeConstructorAccessorImpl.newInstance0(Ljava/lang/reflect/Constructor;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeConstructorAccessorImpl.newInstance([Ljava/lang/Object;)Ljava/lang/Object;+85
+j  sun.reflect.DelegatingConstructorAccessorImpl.newInstance([Ljava/lang/Object;)Ljava/lang/Object;+5
+j  java.lang.reflect.Constructor.newInstance([Ljava/lang/Object;)Ljava/lang/Object;+79
+j  org.springframework.beans.BeanUtils.instantiateClass(Ljava/lang/reflect/Constructor;[Ljava/lang/Object;)Ljava/lang/Object;+12
+j  org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(Lorg/springframework/beans/factory/support/RootBeanDefinition;Ljava/lang/String;Lorg/springframework/beans/factory/BeanFactory;)Ljava/lang/Object;+141
+j  org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(Ljava/lang/String;Lorg/springframework/beans/factory/support/RootBeanDefinition;)Lorg/springframework/beans/BeanWrapper;+40
+j  org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(Ljava/lang/String;Lorg/springframework/beans/factory/support/RootBeanDefinition;[Ljava/lang/Object;)Lorg/springframework/beans/BeanWrapper;+209
+j  org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(Ljava/lang/String;Lorg/springframework/beans/factory/support/RootBeanDefinition;[Ljava/lang/Object;)Ljava/lang/Object;+34
+j  org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(Ljava/lang/String;Lorg/springframework/beans/factory/support/RootBeanDefinition;[Ljava/lang/Object;)Ljava/lang/Object;+124
+j  org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject()Ljava/lang/Object;+16
+j  org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(Ljava/lang/String;Lorg/springframework/beans/factory/ObjectFactory;)Ljava/lang/Object;+132
+j  org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Object;Z)Ljava/lang/Object;+375
+j  org.springframework.beans.factory.support.AbstractBeanFactory.getBean(Ljava/lang/String;)Ljava/lang/Object;+5
+j  org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(Ljava/lang/String;Ljava/lang/Class;Lorg/springframework/beans/factory/config/DependencyDescriptor;)Ljava/util/Map;+175
+j  org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(Lorg/springframework/beans/factory/config/DependencyDescriptor;Ljava/lang/String;Ljava/util/Set;Lorg/springframework/beans/TypeConverter;)Ljava/lang/Object;+802
+j  org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(Lorg/springframework/beans/factory/config/DependencyDescriptor;Ljava/lang/String;Ljava/util/Set;Lorg/springframework/beans/TypeConverter;)Ljava/lang/Object;+111
+j  org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(Ljava/lang/Object;Ljava/lang/String;Lorg/springframework/beans/PropertyValues;)V+95
+j  org.springframework.beans.factory.annotation.InjectionMetadata.inject(Ljava/lang/Object;Ljava/lang/String;Lorg/springframework/beans/PropertyValues;)V+120
+j  org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(Lorg/springframework/beans/PropertyValues;[Ljava/beans/PropertyDescriptor;Ljava/lang/Object;Ljava/lang/String;)Lorg/springframework/beans/PropertyValues;+18
+j  org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(Ljava/lang/String;Lorg/springframework/beans/factory/support/RootBeanDefinition;Lorg/springframework/beans/BeanWrapper;)V+305
+j  org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(Ljava/lang/String;Lorg/springframework/beans/factory/support/RootBeanDefinition;[Ljava/lang/Object;)Ljava/lang/Object;+222
+j  org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(Ljava/lang/String;Lorg/springframework/beans/factory/support/RootBeanDefinition;[Ljava/lang/Object;)Ljava/lang/Object;+124
+j  org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject()Ljava/lang/Object;+16
+j  org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(Ljava/lang/String;Lorg/springframework/beans/factory/ObjectFactory;)Ljava/lang/Object;+132
+j  org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Object;Z)Ljava/lang/Object;+375
+j  org.springframework.beans.factory.support.AbstractBeanFactory.getBean(Ljava/lang/String;)Ljava/lang/Object;+5
+j  org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(Ljava/lang/String;Ljava/lang/Class;Lorg/springframework/beans/factory/config/DependencyDescriptor;)Ljava/util/Map;+175
+j  org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(Lorg/springframework/beans/factory/config/DependencyDescriptor;Ljava/lang/String;Ljava/util/Set;Lorg/springframework/beans/TypeConverter;)Ljava/lang/Object;+802
+j  org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(Lorg/springframework/beans/factory/config/DependencyDescriptor;Ljava/lang/String;Ljava/util/Set;Lorg/springframework/beans/TypeConverter;)Ljava/lang/Object;+111
+j  org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(Ljava/lang/Object;Ljava/lang/String;Lorg/springframework/beans/PropertyValues;)V+95
+j  org.springframework.beans.factory.annotation.InjectionMetadata.inject(Ljava/lang/Object;Ljava/lang/String;Lorg/springframework/beans/PropertyValues;)V+120
+j  org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(Lorg/springframework/beans/PropertyValues;[Ljava/beans/PropertyDescriptor;Ljava/lang/Object;Ljava/lang/String;)Lorg/springframework/beans/PropertyValues;+18
+j  org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(Ljava/lang/String;Lorg/springframework/beans/factory/support/RootBeanDefinition;Lorg/springframework/beans/BeanWrapper;)V+305
+j  org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(Ljava/lang/String;Lorg/springframework/beans/factory/support/RootBeanDefinition;[Ljava/lang/Object;)Ljava/lang/Object;+222
+j  org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(Ljava/lang/String;Lorg/springframework/beans/factory/support/RootBeanDefinition;[Ljava/lang/Object;)Ljava/lang/Object;+124
+j  org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject()Ljava/lang/Object;+16
+j  org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(Ljava/lang/String;Lorg/springframework/beans/factory/ObjectFactory;)Ljava/lang/Object;+132
+j  org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Object;Z)Ljava/lang/Object;+375
+j  org.springframework.beans.factory.support.AbstractBeanFactory.getBean(Ljava/lang/String;)Ljava/lang/Object;+5
+j  org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons()V+248
+j  org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;)V+103
+j  org.springframework.context.support.AbstractApplicationContext.refresh()V+54
+j  org.springframework.context.support.ClassPathXmlApplicationContext.<init>([Ljava/lang/String;ZLorg/springframework/context/ApplicationContext;)V+15
+j  org.springframework.context.support.ClassPathXmlApplicationContext.<init>(Ljava/lang/String;)V+11
+j  com.thundashop.core.start.Runner.main([Ljava/lang/String;)V+61
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007f8564933000 JavaThread "MongoCleaner988850650" daemon [_thread_new, id=20472, stack(0x0000000000000000,0x0000000000000000)]
+  0x00007f856492b800 JavaThread "cluster-1-localhost:27018" daemon [_thread_in_native, id=20471, stack(0x00007f85421f9000,0x00007f85422fa000)]
+  0x00007f85640d6000 JavaThread "Service Thread" daemon [_thread_blocked, id=20468, stack(0x00007f854322c000,0x00007f854332d000)]
+  0x00007f85640c9000 JavaThread "C1 CompilerThread3" daemon [_thread_blocked, id=20467, stack(0x00007f854332d000,0x00007f854342e000)]
+  0x00007f85640c6800 JavaThread "C2 CompilerThread2" daemon [_thread_in_native, id=20466, stack(0x00007f854342e000,0x00007f854352f000)]
+  0x00007f85640c5000 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=20465, stack(0x00007f854352f000,0x00007f8543630000)]
+  0x00007f85640c2000 JavaThread "C2 CompilerThread0" daemon [_thread_in_native, id=20464, stack(0x00007f8543630000,0x00007f8543731000)]
+  0x00007f85640c0800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=20463, stack(0x00007f8543731000,0x00007f8543832000)]
+  0x00007f8564088800 JavaThread "Finalizer" daemon [_thread_blocked, id=20462, stack(0x00007f8543afb000,0x00007f8543bfc000)]
+  0x00007f8564086800 JavaThread "Reference Handler" daemon [_thread_blocked, id=20461, stack(0x00007f8543bfc000,0x00007f8543cfd000)]
+=>0x00007f856400b800 JavaThread "main" [_thread_in_native, id=20451, stack(0x00007f856b953000,0x00007f856ba54000)]
+
+Other Threads:
+  0x00007f8564081800 VMThread [stack: 0x00007f8543cfd000,0x00007f8543dfe000] [id=20460]
+  0x00007f85640d8800 WatcherThread [stack: 0x00007f854312b000,0x00007f854322c000] [id=20469]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 150016K, used 87744K [0x0000000718b00000, 0x0000000723200000, 0x00000007c0000000)
+  eden space 129024K, 68% used [0x0000000718b00000,0x000000071e0b0118,0x0000000720900000)
+  from space 20992K, 0% used [0x0000000721d80000,0x0000000721d80000,0x0000000723200000)
+  to   space 20992K, 0% used [0x0000000720900000,0x0000000720900000,0x0000000721d80000)
+ ParOldGen       total 343040K, used 0K [0x00000005ca000000, 0x00000005def00000, 0x0000000718b00000)
+  object space 343040K, 0% used [0x00000005ca000000,0x00000005ca000000,0x00000005def00000)
+ Metaspace       used 15586K, capacity 15742K, committed 16128K, reserved 1062912K
+  class space    used 1921K, capacity 1949K, committed 2048K, reserved 1048576K
+
+Card table byte_map: [0x00007f855404f000,0x00007f8555000000] byte_map_base: 0x00007f85511ff000
+
+Marking Bits: (ParMarkBitMap*) 0x00007f856ae3c6c0
+ Begin Bits: [0x00007f8514500000, 0x00007f851c280000)
+ End Bits:   [0x00007f851c280000, 0x00007f8524000000)
+
+Polling page: 0x00007f856ba83000
+
+CodeCache: size=245760Kb used=5616Kb max_used=5623Kb free=240143Kb
+ bounds [0x00007f8555000000, 0x00007f8555590000, 0x00007f8564000000]
+ total_blobs=1918 nmethods=1572 adapters=259
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 4.320 Thread 0x00007f85640c9000 nmethod 1572 0x00007f8555579390 code [0x00007f8555579500, 0x00007f85555797e8]
+Event: 4.336 Thread 0x00007f85640c9000 1574       3       java.lang.Boolean::valueOf (14 bytes)
+Event: 4.336 Thread 0x00007f85640c9000 nmethod 1574 0x00007f8555575e10 code [0x00007f8555575f80, 0x00007f8555576110]
+Event: 4.342 Thread 0x00007f85640c5000 nmethod 1573 0x00007f8555580ed0 code [0x00007f8555581060, 0x00007f8555581798]
+Event: 4.343 Thread 0x00007f85640c9000 1575       3       java.util.Arrays::binarySearch0 (95 bytes)
+Event: 4.344 Thread 0x00007f85640c9000 nmethod 1575 0x00007f8555578bd0 code [0x00007f8555578d60, 0x00007f8555579198]
+Event: 4.358 Thread 0x00007f85640c2000 1576  s!   4       sun.misc.URLClassPath::getLoader (197 bytes)
+Event: 4.393 Thread 0x00007f85640c6800 1577  s    4       sun.misc.URLClassPath::getNextLoader (88 bytes)
+Event: 4.394 Thread 0x00007f85640c9000 1578   !   3       java.security.SecureClassLoader::getProtectionDomain (114 bytes)
+Event: 4.395 Thread 0x00007f85640c9000 nmethod 1578 0x00007f8555577f50 code [0x00007f8555578120, 0x00007f85555788b8]
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (10 events):
+Event: 2.244 Thread 0x00007f856400b800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f85552f59b4 method=java.util.regex.Pattern$CharProperty.match(Ljava/util/regex/Matcher;ILjava/lang/CharSequence;)Z @ 18
+Event: 3.110 Thread 0x00007f856400b800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x00007f85553fc0dc method=java.util.concurrent.ConcurrentHashMap.get(Ljava/lang/Object;)Ljava/lang/Object; @ 149
+Event: 3.469 Thread 0x00007f856400b800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f85553cb648 method=org.springframework.asm.MethodVisitor.visitFieldInsn(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V @ 4
+Event: 3.469 Thread 0x00007f856400b800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f855539e678 method=org.springframework.asm.MethodVisitor.visitInsn(I)V @ 4
+Event: 3.550 Thread 0x00007f856400b800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f8555362e28 method=java.util.LinkedList.node(I)Ljava/util/LinkedList$Node; @ 19
+Event: 3.680 Thread 0x00007f856400b800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f855537a5c4 method=java.util.HashMap.putVal(ILjava/lang/Object;Ljava/lang/Object;ZZ)Ljava/lang/Object; @ 203
+Event: 3.680 Thread 0x00007f856400b800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f855537a5c4 method=java.util.HashMap.putVal(ILjava/lang/Object;Ljava/lang/Object;ZZ)Ljava/lang/Object; @ 203
+Event: 4.088 Thread 0x00007f856400b800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00007f855532bd98 method=java.lang.String.valueOf(Ljava/lang/Object;)Ljava/lang/String; @ 1
+Event: 4.237 Thread 0x00007f856400b800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f85553d49b4 method=java.util.HashMap.putVal(ILjava/lang/Object;Ljava/lang/Object;ZZ)Ljava/lang/Object; @ 203
+Event: 4.275 Thread 0x00007f856400b800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007f85553d49b4 method=java.util.HashMap.putVal(ILjava/lang/Object;Ljava/lang/Object;ZZ)Ljava/lang/Object; @ 203
+
+Internal exceptions (10 events):
+Event: 3.223 Thread 0x00007f856400b800 Exception <a 'java/lang/ClassNotFoundException': org/springframework/aop/scope/ScopedProxyFactoryBeanBeanInfo> (0x000000071d005c70) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u40/2855/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 2
+Event: 3.224 Thread 0x00007f856400b800 Exception <a 'java/lang/ClassNotFoundException': org/springframework/aop/scope/ScopedProxyFactoryBeanCustomizer> (0x000000071d013b58) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u40/2855/hotspot/src/share/vm/classfile/systemDictionary.cpp, line
+Event: 3.850 Thread 0x00007f856400b800 Exception <a 'java/lang/ClassNotFoundException': com/thundashop/core/common/ManagerBaseBeanInfo> (0x000000071d6e7e40) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u40/2855/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 210]
+Event: 3.850 Thread 0x00007f856400b800 Exception <a 'java/lang/ClassNotFoundException': com/thundashop/core/common/ManagerBaseCustomizer> (0x000000071d6f3990) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u40/2855/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 210]
+Event: 3.880 Thread 0x00007f856400b800 Exception <a 'java/lang/ClassNotFoundException': com/thundashop/core/getshop/GetShopBeanInfo> (0x000000071d71feb0) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u40/2855/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 210]
+Event: 3.880 Thread 0x00007f856400b800 Exception <a 'java/lang/ClassNotFoundException': com/thundashop/core/getshop/GetShopCustomizer> (0x000000071d72b260) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u40/2855/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 210]
+Event: 3.938 Thread 0x00007f856400b800 Exception <a 'java/lang/ClassNotFoundException': com/thundashop/core/common/DatabaseSaverImplBeanInfo> (0x000000071d784060) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u40/2855/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 210]
+Event: 3.939 Thread 0x00007f856400b800 Exception <a 'java/lang/ClassNotFoundException': com/thundashop/core/common/DatabaseSaverImplCustomizer> (0x000000071d790f50) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u40/2855/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 210]
+Event: 3.950 Thread 0x00007f856400b800 Exception <a 'java/lang/ClassNotFoundException': com/thundashop/core/common/Slf4jLoggerBeanInfo> (0x000000071d7b5d48) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u40/2855/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 210]
+Event: 3.950 Thread 0x00007f856400b800 Exception <a 'java/lang/ClassNotFoundException': com/thundashop/core/common/Slf4jLoggerCustomizer> (0x000000071d7c1ed8) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u40/2855/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 210]
+
+Events (10 events):
+Event: 4.408 loading class org/bson/io/OutputBuffer$1 done
+Event: 4.409 loading class org/bson/io/PoolOutputBuffer$1
+Event: 4.409 loading class org/bson/io/PoolOutputBuffer$1 done
+Event: 4.410 loading class org/bson/io/UTF8Encoding
+Event: 4.410 loading class org/bson/io/UTF8Encoding done
+Event: 4.411 Thread 0x00007f8564933000 Thread added: 0x00007f8564933000
+Event: 4.411 loading class org/mongodb/morphia/Morphia
+Event: 4.411 loading class org/mongodb/morphia/Morphia done
+Event: 4.412 loading class org/mongodb/morphia/mapping/MappingException
+Event: 4.412 loading class org/mongodb/morphia/mapping/MappingException done
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 08:01 6947780                            /usr/lib/jvm/java-8-oracle/jre/bin/java
+00600000-00601000 rw-p 00000000 08:01 6947780                            /usr/lib/jvm/java-8-oracle/jre/bin/java
+00a8e000-00aaf000 rw-p 00000000 00:00 0                                  [heap]
+5ca000000-5def00000 rw-p 00000000 00:00 0 
+5def00000-718b00000 ---p 00000000 00:00 0 
+718b00000-723200000 rw-p 00000000 00:00 0 
+723200000-7c0000000 ---p 00000000 00:00 0 
+7c0000000-7c0200000 rw-p 00000000 00:00 0 
+7c0200000-800000000 ---p 00000000 00:00 0 
+7f84e8000000-7f84e8021000 rw-p 00000000 00:00 0 
+7f84e8021000-7f84ec000000 ---p 00000000 00:00 0 
+7f84ec000000-7f84ec021000 rw-p 00000000 00:00 0 
+7f84ec021000-7f84f0000000 ---p 00000000 00:00 0 
+7f84f0000000-7f84f06f9000 rw-p 00000000 00:00 0 
+7f84f06f9000-7f84f4000000 ---p 00000000 00:00 0 
+7f84f4000000-7f84f4021000 rw-p 00000000 00:00 0 
+7f84f4021000-7f84f8000000 ---p 00000000 00:00 0 
+7f84f8000000-7f84f8649000 rw-p 00000000 00:00 0 
+7f84f8649000-7f84fc000000 ---p 00000000 00:00 0 
+7f84fc000000-7f84fcd41000 rw-p 00000000 00:00 0 
+7f84fcd41000-7f8500000000 ---p 00000000 00:00 0 
+7f8500000000-7f8500021000 rw-p 00000000 00:00 0 
+7f8500021000-7f8504000000 ---p 00000000 00:00 0 
+7f8504000000-7f85047af000 rw-p 00000000 00:00 0 
+7f85047af000-7f8508000000 ---p 00000000 00:00 0 
+7f8508000000-7f8508021000 rw-p 00000000 00:00 0 
+7f8508021000-7f850c000000 ---p 00000000 00:00 0 
+7f850c000000-7f850c021000 rw-p 00000000 00:00 0 
+7f850c021000-7f8510000000 ---p 00000000 00:00 0 
+7f8510000000-7f8510021000 rw-p 00000000 00:00 0 
+7f8510021000-7f8514000000 ---p 00000000 00:00 0 
+7f8514500000-7f8524000000 rw-p 00000000 00:00 0 
+7f8524000000-7f8524021000 rw-p 00000000 00:00 0 
+7f8524021000-7f8528000000 ---p 00000000 00:00 0 
+7f852c000000-7f852c021000 rw-p 00000000 00:00 0 
+7f852c021000-7f8530000000 ---p 00000000 00:00 0 
+7f8534000000-7f8534021000 rw-p 00000000 00:00 0 
+7f8534021000-7f8538000000 ---p 00000000 00:00 0 
+7f8538000000-7f8538021000 rw-p 00000000 00:00 0 
+7f8538021000-7f853c000000 ---p 00000000 00:00 0 
+7f853c000000-7f853c021000 rw-p 00000000 00:00 0 
+7f853c021000-7f8540000000 ---p 00000000 00:00 0 
+7f85420f8000-7f85421f9000 rw-p 00000000 00:00 0                          [stack:20472]
+7f85421f9000-7f85421fc000 ---p 00000000 00:00 0 
+7f85421fc000-7f85424ba000 rw-p 00000000 00:00 0                          [stack:20471]
+7f85424ba000-7f85424fa000 ---p 00000000 00:00 0 
+7f85424fa000-7f8542510000 r-xp 00000000 08:01 6954715                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnet.so
+7f8542510000-7f8542710000 ---p 00016000 08:01 6954715                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnet.so
+7f8542710000-7f8542711000 rw-p 00016000 08:01 6954715                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnet.so
+7f854279c000-7f85427ad000 r-xp 00000000 08:01 6951987                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnio.so
+7f85427ad000-7f85429ac000 ---p 00011000 08:01 6951987                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnio.so
+7f85429ac000-7f85429ad000 rw-p 00010000 08:01 6951987                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libnio.so
+7f85429ad000-7f8542bad000 rw-p 00000000 00:00 0 
+7f8542bb2000-7f8542bba000 r-xp 00000000 08:01 6952004                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libmanagement.so
+7f8542bba000-7f8542dba000 ---p 00008000 08:01 6952004                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libmanagement.so
+7f8542dba000-7f8542dbb000 rw-p 00008000 08:01 6952004                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libmanagement.so
+7f8542dbb000-7f8542fbb000 rw-p 00000000 00:00 0 
+7f8542fbb000-7f8542fd7000 r--s 00393000 08:01 6947888                    /usr/lib/jvm/java-8-oracle/jre/lib/ext/cldrdata.jar
+7f8542fd7000-7f8542fe2000 r--s 00116000 08:01 6947882                    /usr/lib/jvm/java-8-oracle/jre/lib/ext/localedata.jar
+7f8542fe2000-7f8542fe5000 r--s 0001d000 08:01 3693008                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/batik-util.jar
+7f8542fe5000-7f8542fea000 r--s 00010000 08:01 3693087                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/xml-apis-ext.jar
+7f8542fea000-7f8542fed000 r--s 00011000 08:01 3693533                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/commons-discovery-0.5.jar
+7f8542fed000-7f8542ff1000 r--s 0002a000 08:01 3693554                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/wsdl4j-1.6.3.jar
+7f8542ff1000-7f8542ff4000 r--s 0001c000 08:01 3693047                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/nekohtml.jar
+7f8542ff4000-7f8542ffc000 r--s 00045000 08:01 3693007                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/batik-css.jar
+7f8542ffc000-7f8543005000 r--s 0002d000 08:01 3693088                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/xml-apis.jar
+7f8543005000-7f8543007000 r--s 00000000 08:01 3693004                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/aopalliance-1.0.jar
+7f8543007000-7f854300b000 r--s 00039000 08:01 3693553                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/spring-expression-4.1.0.RELEASE.jar
+7f854300b000-7f8543014000 r--s 0004f000 08:01 3693549                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/spring-aop-4.1.0.RELEASE.jar
+7f8543014000-7f8543016000 r--s 0000e000 08:01 3693534                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/commons-logging-1.2.jar
+7f8543016000-7f854301b000 r--s 00094000 08:01 6949549                    /usr/lib/jvm/java-8-oracle/jre/lib/jsse.jar
+7f854301b000-7f8543022000 r--s 0003f000 08:01 3693532                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/commons-codec-1.10.jar
+7f8543022000-7f854302b000 r--s 000bf000 08:01 3712030                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/morphia-0.108-getshop.jar
+7f854302b000-7f8543036000 r--s 00089000 08:01 3712029                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/mongo-java-driver-2.13.2.jar
+7f8543036000-7f8543039000 r--s 00018000 08:01 3693542                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/jetty-io-9.2.10.v20150310.jar
+7f8543039000-7f854303c000 r--s 00015000 08:01 3693548                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/servlet-api-3.1.jar
+7f854303c000-7f854303e000 r--s 00018000 08:01 3693541                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/jetty-http-9.2.10.v20150310.jar
+7f854303e000-7f8543044000 r--s 00051000 08:01 3693544                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/jetty-util-9.2.10.v20150310.jar
+7f8543044000-7f854304a000 r--s 00061000 08:01 3693543                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/jetty-server-9.2.10.v20150310.jar
+7f854304a000-7f85430a7000 r--s 009a1000 08:01 3693049                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/pdfbox-app-1.8.2.jar
+7f85430a7000-7f85430a9000 r--s 00014000 08:01 3693035                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/java_websocket.jar
+7f85430a9000-7f85430b0000 r--s 0003c000 08:01 3693531                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/braintree-java-2.39.1.jar
+7f85430b0000-7f85430b5000 r--s 0002c000 08:01 3693012                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/commons-net-2.0.jar
+7f85430b5000-7f85430ce000 r--s 00135000 08:01 3693085                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/xercesImpl.jar
+7f85430ce000-7f85430d0000 r--s 00001000 08:01 3693538                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/google-http-client-gson-1.18.0-rc.jar
+7f85430d0000-7f85430d9000 r--s 000bf000 08:01 3941636                    /home/ktonder/source/getshop/3.0.0/com.getshop.messages/dist/lib/morphia.jar
+7f85430d9000-7f85430de000 r--s 0002e000 08:01 3941459                    /home/ktonder/source/getshop/3.0.0/com.getshop.messages/dist/lib/gson-2.3.jar (deleted)
+7f85430de000-7f85430e5000 r--s 00040000 08:01 3941637                    /home/ktonder/source/getshop/3.0.0/com.getshop.messages/dist/com.thundashop.messages.jar
+7f85430e5000-7f85430ec000 r--s 0003c000 08:01 3693537                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/google-http-client-1.18.0-rc.jar
+7f85430ec000-7f8543100000 r--s 00173000 08:01 3693006                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/axis.jar
+7f8543100000-7f8543104000 r--s 00022000 08:01 3693540                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/javapns-jdk16-2.2.1.jar
+7f8543104000-7f854310b000 r--s 00078000 08:01 3693546                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/mail-1.5.0-b01.jar
+7f854310b000-7f854310d000 r--s 00008000 08:01 3693030                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/httpmime-4.3.5.jar
+7f854310d000-7f8543119000 r--s 00085000 08:01 3693028                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/httpclient-4.3.5.jar
+7f8543119000-7f854311f000 r--s 0003f000 08:01 3693029                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/httpcore-4.3.2.jar
+7f854311f000-7f8543128000 r--s 0006f000 08:01 3693545                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/log4j-1.2.17.jar
+7f8543128000-7f854312b000 r--s 00014000 08:01 3693003                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/antisamy-1.5.3.jar
+7f854312b000-7f854312c000 ---p 00000000 00:00 0 
+7f854312c000-7f854322c000 rw-p 00000000 00:00 0                          [stack:20469]
+7f854322c000-7f854322f000 ---p 00000000 00:00 0 
+7f854322f000-7f854332d000 rw-p 00000000 00:00 0                          [stack:20468]
+7f854332d000-7f8543330000 ---p 00000000 00:00 0 
+7f8543330000-7f854342e000 rw-p 00000000 00:00 0                          [stack:20467]
+7f854342e000-7f8543431000 ---p 00000000 00:00 0 
+7f8543431000-7f854352f000 rw-p 00000000 00:00 0                          [stack:20466]
+7f854352f000-7f8543532000 ---p 00000000 00:00 0 
+7f8543532000-7f8543630000 rw-p 00000000 00:00 0                          [stack:20465]
+7f8543630000-7f8543633000 ---p 00000000 00:00 0 
+7f8543633000-7f8543731000 rw-p 00000000 00:00 0                          [stack:20464]
+7f8543731000-7f8543734000 ---p 00000000 00:00 0 
+7f8543734000-7f8543832000 rw-p 00000000 00:00 0                          [stack:20463]
+7f8543832000-7f8543afb000 r--p 00000000 08:01 4720521                    /usr/lib/locale/locale-archive
+7f8543afb000-7f8543afe000 ---p 00000000 00:00 0 
+7f8543afe000-7f8543bfc000 rw-p 00000000 00:00 0                          [stack:20462]
+7f8543bfc000-7f8543bff000 ---p 00000000 00:00 0 
+7f8543bff000-7f8543cfd000 rw-p 00000000 00:00 0                          [stack:20461]
+7f8543cfd000-7f8543cfe000 ---p 00000000 00:00 0 
+7f8543cfe000-7f8544000000 rw-p 00000000 00:00 0                          [stack:20460]
+7f8544000000-7f8544021000 rw-p 00000000 00:00 0 
+7f8544021000-7f8548000000 ---p 00000000 00:00 0 
+7f8548000000-7f8548021000 rw-p 00000000 00:00 0 
+7f8548021000-7f854c000000 ---p 00000000 00:00 0 
+7f854c000000-7f854c021000 rw-p 00000000 00:00 0 
+7f854c021000-7f8550000000 ---p 00000000 00:00 0 
+7f8550000000-7f8550002000 r--s 00004000 08:01 3693014                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/gcm-server-1.0.2.jar
+7f8550002000-7f8550007000 r--s 0002e000 08:01 3693539                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/gson-2.3.jar
+7f8550007000-7f8550014000 r--s 0009f000 08:01 3693550                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/spring-beans-4.1.0.RELEASE.jar
+7f8550014000-7f8550018000 r--s 00025000 08:01 3693535                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/google-api-client-1.18.0-rc.jar
+7f8550018000-7f8550030000 r--s 000e2000 08:01 3693551                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/spring-context-4.1.0.RELEASE.jar
+7f8550030000-7f8551a7f000 rw-p 00000000 00:00 0 
+7f8551a7f000-7f8551c57000 r--s 03d09000 08:01 6947835                    /usr/lib/jvm/java-8-oracle/jre/lib/rt.jar
+7f8551c57000-7f85534d8000 rw-p 00000000 00:00 0 
+7f85534d8000-7f85534d9000 ---p 00000000 00:00 0 
+7f85534d9000-7f8553681000 rw-p 00000000 00:00 0                          [stack:20459]
+7f8553681000-7f855404f000 ---p 00000000 00:00 0 
+7f855404f000-7f85540f7000 rw-p 00000000 00:00 0 
+7f85540f7000-7f8554ac4000 ---p 00000000 00:00 0 
+7f8554ac4000-7f8554b18000 rw-p 00000000 00:00 0 
+7f8554b18000-7f8554fff000 ---p 00000000 00:00 0 
+7f8554fff000-7f8555000000 rw-p 00000000 00:00 0 
+7f8555000000-7f8555590000 rwxp 00000000 00:00 0 
+7f8555590000-7f8564000000 ---p 00000000 00:00 0 
+7f8564000000-7f8564942000 rw-p 00000000 00:00 0 
+7f8564942000-7f8568000000 ---p 00000000 00:00 0 
+7f8568000000-7f8568002000 r--s 00006000 08:01 3693036                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/jaxrpc.jar
+7f8568002000-7f8568017000 r--s 000e1000 08:01 3693552                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/spring-core-4.1.0.RELEASE.jar
+7f8568017000-7f8568038000 rw-p 00000000 00:00 0 
+7f8568038000-7f8568039000 ---p 00000000 00:00 0 
+7f8568039000-7f8568139000 rw-p 00000000 00:00 0                          [stack:20458]
+7f8568139000-7f856813a000 ---p 00000000 00:00 0 
+7f856813a000-7f856823a000 rw-p 00000000 00:00 0                          [stack:20457]
+7f856823a000-7f856823b000 ---p 00000000 00:00 0 
+7f856823b000-7f856833b000 rw-p 00000000 00:00 0                          [stack:20456]
+7f856833b000-7f856833c000 ---p 00000000 00:00 0 
+7f856833c000-7f856843c000 rw-p 00000000 00:00 0                          [stack:20455]
+7f856843c000-7f856843d000 ---p 00000000 00:00 0 
+7f856843d000-7f856853d000 rw-p 00000000 00:00 0                          [stack:20454]
+7f856853d000-7f856853e000 ---p 00000000 00:00 0 
+7f856853e000-7f856863e000 rw-p 00000000 00:00 0                          [stack:20453]
+7f856863e000-7f856863f000 ---p 00000000 00:00 0 
+7f856863f000-7f8568756000 rw-p 00000000 00:00 0                          [stack:20452]
+7f8568756000-7f8568aff000 ---p 00000000 00:00 0 
+7f8568aff000-7f8568b19000 r-xp 00000000 08:01 6954743                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libzip.so
+7f8568b19000-7f8568d19000 ---p 0001a000 08:01 6954743                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libzip.so
+7f8568d19000-7f8568d1a000 rw-p 0001a000 08:01 6954743                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libzip.so
+7f8568d1a000-7f8568d25000 r-xp 00000000 08:01 1311085                    /lib/x86_64-linux-gnu/libnss_files-2.19.so
+7f8568d25000-7f8568f24000 ---p 0000b000 08:01 1311085                    /lib/x86_64-linux-gnu/libnss_files-2.19.so
+7f8568f24000-7f8568f25000 r--p 0000a000 08:01 1311085                    /lib/x86_64-linux-gnu/libnss_files-2.19.so
+7f8568f25000-7f8568f26000 rw-p 0000b000 08:01 1311085                    /lib/x86_64-linux-gnu/libnss_files-2.19.so
+7f8568f26000-7f8568f31000 r-xp 00000000 08:01 1311566                    /lib/x86_64-linux-gnu/libnss_nis-2.19.so
+7f8568f31000-7f8569130000 ---p 0000b000 08:01 1311566                    /lib/x86_64-linux-gnu/libnss_nis-2.19.so
+7f8569130000-7f8569131000 r--p 0000a000 08:01 1311566                    /lib/x86_64-linux-gnu/libnss_nis-2.19.so
+7f8569131000-7f8569132000 rw-p 0000b000 08:01 1311566                    /lib/x86_64-linux-gnu/libnss_nis-2.19.so
+7f8569132000-7f8569149000 r-xp 00000000 08:01 1311120                    /lib/x86_64-linux-gnu/libnsl-2.19.so
+7f8569149000-7f8569348000 ---p 00017000 08:01 1311120                    /lib/x86_64-linux-gnu/libnsl-2.19.so
+7f8569348000-7f8569349000 r--p 00016000 08:01 1311120                    /lib/x86_64-linux-gnu/libnsl-2.19.so
+7f8569349000-7f856934a000 rw-p 00017000 08:01 1311120                    /lib/x86_64-linux-gnu/libnsl-2.19.so
+7f856934a000-7f856934c000 rw-p 00000000 00:00 0 
+7f856934c000-7f8569355000 r-xp 00000000 08:01 1311116                    /lib/x86_64-linux-gnu/libnss_compat-2.19.so
+7f8569355000-7f8569554000 ---p 00009000 08:01 1311116                    /lib/x86_64-linux-gnu/libnss_compat-2.19.so
+7f8569554000-7f8569555000 r--p 00008000 08:01 1311116                    /lib/x86_64-linux-gnu/libnss_compat-2.19.so
+7f8569555000-7f8569556000 rw-p 00009000 08:01 1311116                    /lib/x86_64-linux-gnu/libnss_compat-2.19.so
+7f8569556000-7f8569580000 r-xp 00000000 08:01 6954729                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libjava.so
+7f8569580000-7f8569780000 ---p 0002a000 08:01 6954729                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libjava.so
+7f8569780000-7f8569782000 rw-p 0002a000 08:01 6954729                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libjava.so
+7f8569782000-7f856978f000 r-xp 00000000 08:01 6954739                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libverify.so
+7f856978f000-7f856998f000 ---p 0000d000 08:01 6954739                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libverify.so
+7f856998f000-7f8569991000 rw-p 0000d000 08:01 6954739                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/libverify.so
+7f8569991000-7f8569998000 r-xp 00000000 08:01 1311542                    /lib/x86_64-linux-gnu/librt-2.19.so
+7f8569998000-7f8569b97000 ---p 00007000 08:01 1311542                    /lib/x86_64-linux-gnu/librt-2.19.so
+7f8569b97000-7f8569b98000 r--p 00006000 08:01 1311542                    /lib/x86_64-linux-gnu/librt-2.19.so
+7f8569b98000-7f8569b99000 rw-p 00007000 08:01 1311542                    /lib/x86_64-linux-gnu/librt-2.19.so
+7f8569b99000-7f8569c9e000 r-xp 00000000 08:01 1311032                    /lib/x86_64-linux-gnu/libm-2.19.so
+7f8569c9e000-7f8569e9d000 ---p 00105000 08:01 1311032                    /lib/x86_64-linux-gnu/libm-2.19.so
+7f8569e9d000-7f8569e9e000 r--p 00104000 08:01 1311032                    /lib/x86_64-linux-gnu/libm-2.19.so
+7f8569e9e000-7f8569e9f000 rw-p 00105000 08:01 1311032                    /lib/x86_64-linux-gnu/libm-2.19.so
+7f8569e9f000-7f856ab4d000 r-xp 00000000 08:01 6954705                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/libjvm.so
+7f856ab4d000-7f856ad4c000 ---p 00cae000 08:01 6954705                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/libjvm.so
+7f856ad4c000-7f856ae23000 rw-p 00cad000 08:01 6954705                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/libjvm.so
+7f856ae23000-7f856ae67000 rw-p 00000000 00:00 0 
+7f856ae67000-7f856b022000 r-xp 00000000 08:01 1311187                    /lib/x86_64-linux-gnu/libc-2.19.so
+7f856b022000-7f856b221000 ---p 001bb000 08:01 1311187                    /lib/x86_64-linux-gnu/libc-2.19.so
+7f856b221000-7f856b225000 r--p 001ba000 08:01 1311187                    /lib/x86_64-linux-gnu/libc-2.19.so
+7f856b225000-7f856b227000 rw-p 001be000 08:01 1311187                    /lib/x86_64-linux-gnu/libc-2.19.so
+7f856b227000-7f856b22c000 rw-p 00000000 00:00 0 
+7f856b22c000-7f856b22f000 r-xp 00000000 08:01 1311094                    /lib/x86_64-linux-gnu/libdl-2.19.so
+7f856b22f000-7f856b42e000 ---p 00003000 08:01 1311094                    /lib/x86_64-linux-gnu/libdl-2.19.so
+7f856b42e000-7f856b42f000 r--p 00002000 08:01 1311094                    /lib/x86_64-linux-gnu/libdl-2.19.so
+7f856b42f000-7f856b430000 rw-p 00003000 08:01 1311094                    /lib/x86_64-linux-gnu/libdl-2.19.so
+7f856b430000-7f856b445000 r-xp 00000000 08:01 6954741                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/jli/libjli.so
+7f856b445000-7f856b645000 ---p 00015000 08:01 6954741                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/jli/libjli.so
+7f856b645000-7f856b646000 rw-p 00015000 08:01 6954741                    /usr/lib/jvm/java-8-oracle/jre/lib/amd64/jli/libjli.so
+7f856b646000-7f856b65f000 r-xp 00000000 08:01 1311273                    /lib/x86_64-linux-gnu/libpthread-2.19.so
+7f856b65f000-7f856b85e000 ---p 00019000 08:01 1311273                    /lib/x86_64-linux-gnu/libpthread-2.19.so
+7f856b85e000-7f856b85f000 r--p 00018000 08:01 1311273                    /lib/x86_64-linux-gnu/libpthread-2.19.so
+7f856b85f000-7f856b860000 rw-p 00019000 08:01 1311273                    /lib/x86_64-linux-gnu/libpthread-2.19.so
+7f856b860000-7f856b864000 rw-p 00000000 00:00 0 
+7f856b864000-7f856b887000 r-xp 00000000 08:01 1311128                    /lib/x86_64-linux-gnu/ld-2.19.so
+7f856b887000-7f856b88e000 r--s 0002f000 08:01 3693536                    /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/google-api-services-youtube-v3-rev117-1.19.0.jar
+7f856b88e000-7f856b953000 rw-p 00000000 00:00 0 
+7f856b953000-7f856b956000 ---p 00000000 00:00 0 
+7f856b956000-7f856ba59000 rw-p 00000000 00:00 0                          [stack:20451]
+7f856ba59000-7f856ba7a000 rw-p 00000000 00:00 0 
+7f856ba7a000-7f856ba82000 rw-s 00000000 08:01 8651352                    /tmp/hsperfdata_ktonder/20447
+7f856ba82000-7f856ba83000 rw-p 00000000 00:00 0 
+7f856ba83000-7f856ba84000 r--p 00000000 00:00 0 
+7f856ba84000-7f856ba86000 rw-p 00000000 00:00 0 
+7f856ba86000-7f856ba87000 r--p 00022000 08:01 1311128                    /lib/x86_64-linux-gnu/ld-2.19.so
+7f856ba87000-7f856ba88000 rw-p 00023000 08:01 1311128                    /lib/x86_64-linux-gnu/ld-2.19.so
+7f856ba88000-7f856ba89000 rw-p 00000000 00:00 0 
+7fff1e766000-7fff1e788000 rw-p 00000000 00:00 0                          [stack]
+7fff1e7fe000-7fff1e800000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+7fff1e766000-7fff1e788000 rw-p 00000000 00:00 0                          [stack]
+7fff1e7fe000-7fff1e800000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -Dfile.encoding=UTF-8 
+java_command: com.thundashop.core.start.Runner
+java_class_path (initial): /home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/spring-context-4.1.0.RELEASE.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/spring-core-4.1.0.RELEASE.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/google-api-services-youtube-v3-rev117-1.19.0.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/google-api-client-1.18.0-rc.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/spring-beans-4.1.0.RELEASE.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/gson-2.3.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/jaxrpc.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/gcm-server-1.0.2.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/antisamy-1.5.3.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/log4j-1.2.17.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/httpcore-4.3.2.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/httpclient-4.3.5.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/httpmime-4.3.5.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/mail-1.5.0-b01.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/javapns-jdk16-2.2.1.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/axis.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/google-http-client-1.18.0-rc.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.messages/dist/com.thundashop.messages.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/google-http-client-gson-1.18.0-rc.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/xercesImpl.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/commons-net-2.0.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/braintree-java-2.39.1.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/java_websocket.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib/pdfbox-app-1.8.2.jar:/home/ktonder/source/getshop/3.0.0/com.getshop.core/lib
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/opt/OpenPrinting-Gutenprint/sbin:/opt/OpenPrinting-Gutenprint/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+LD_LIBRARY_PATH=/usr/lib/jvm/java-8-oracle/jre/lib/amd64:/usr/lib/jvm/java-8-oracle/jre/lib/i386:/usr/lib32
+SHELL=/bin/bash
+DISPLAY=:0.0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xaad2e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xaad2e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0x90b550], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0x90b550], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0x90b550], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0x90b550], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR1: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGUSR2: [libjvm.so+0x90cb90], sa_mask[0]=00100000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0x90dee0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: SIG_IGN, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGTERM: [libjvm.so+0x90dee0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0x90dee0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=14.04
+DISTRIB_CODENAME=trusty
+DISTRIB_DESCRIPTION="Ubuntu 14.04.2 LTS"
+
+uname:Linux 3.13.0-36-generic #63-Ubuntu SMP Wed Sep 3 21:30:07 UTC 2014 x86_64
+libc:glibc 2.19 NPTL 2.19 
+rlimit: STACK 8192k, CORE 0k, NPROC 256836, NOFILE 4096, AS infinity
+load average:2.44 2.42 2.16
+
+/proc/meminfo:
+MemTotal:       32896872 kB
+MemFree:         6053692 kB
+Buffers:          737684 kB
+Cached:         16638960 kB
+SwapCached:            0 kB
+Active:         17238308 kB
+Inactive:        7568388 kB
+Active(anon):    7455476 kB
+Inactive(anon):   169388 kB
+Active(file):    9782832 kB
+Inactive(file):  7399000 kB
+Unevictable:         296 kB
+Mlocked:             296 kB
+SwapTotal:       8257532 kB
+SwapFree:        8257532 kB
+Dirty:             17040 kB
+Writeback:             0 kB
+AnonPages:       7430640 kB
+Mapped:          1876084 kB
+Shmem:            194852 kB
+Slab:             943508 kB
+SReclaimable:     872804 kB
+SUnreclaim:        70704 kB
+KernelStack:        7936 kB
+PageTables:        79192 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    24705968 kB
+Committed_AS:   15988228 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      159660 kB
+VmallocChunk:   34359571960 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:   5038080 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:     2348276 kB
+DirectMap2M:    31154176 kB
+
+
+CPU:total 8 (4 cores per cpu, 2 threads per core) family 6 model 42 stepping 7, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, aes, clmul, ht, tsc, tscinvbit
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 42
+model name	: Intel(R) Core(TM) i7-2700K CPU @ 3.50GHz
+stepping	: 7
+microcode	: 0x26
+cpu MHz		: 3501.000
+cache size	: 8192 KB
+physical id	: 0
+siblings	: 8
+core id		: 0
+cpu cores	: 4
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6984.15
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 42
+model name	: Intel(R) Core(TM) i7-2700K CPU @ 3.50GHz
+stepping	: 7
+microcode	: 0x26
+cpu MHz		: 3501.000
+cache size	: 8192 KB
+physical id	: 0
+siblings	: 8
+core id		: 1
+cpu cores	: 4
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6984.15
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 42
+model name	: Intel(R) Core(TM) i7-2700K CPU @ 3.50GHz
+stepping	: 7
+microcode	: 0x26
+cpu MHz		: 3501.000
+cache size	: 8192 KB
+physical id	: 0
+siblings	: 8
+core id		: 2
+cpu cores	: 4
+apicid		: 4
+initial apicid	: 4
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6984.15
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 42
+model name	: Intel(R) Core(TM) i7-2700K CPU @ 3.50GHz
+stepping	: 7
+microcode	: 0x26
+cpu MHz		: 3501.000
+cache size	: 8192 KB
+physical id	: 0
+siblings	: 8
+core id		: 3
+cpu cores	: 4
+apicid		: 6
+initial apicid	: 6
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6984.15
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 4
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 42
+model name	: Intel(R) Core(TM) i7-2700K CPU @ 3.50GHz
+stepping	: 7
+microcode	: 0x26
+cpu MHz		: 3501.000
+cache size	: 8192 KB
+physical id	: 0
+siblings	: 8
+core id		: 0
+cpu cores	: 4
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6984.15
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 5
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 42
+model name	: Intel(R) Core(TM) i7-2700K CPU @ 3.50GHz
+stepping	: 7
+microcode	: 0x26
+cpu MHz		: 3501.000
+cache size	: 8192 KB
+physical id	: 0
+siblings	: 8
+core id		: 1
+cpu cores	: 4
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6984.15
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 6
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 42
+model name	: Intel(R) Core(TM) i7-2700K CPU @ 3.50GHz
+stepping	: 7
+microcode	: 0x26
+cpu MHz		: 3501.000
+cache size	: 8192 KB
+physical id	: 0
+siblings	: 8
+core id		: 2
+cpu cores	: 4
+apicid		: 5
+initial apicid	: 5
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6984.15
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 7
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 42
+model name	: Intel(R) Core(TM) i7-2700K CPU @ 3.50GHz
+stepping	: 7
+microcode	: 0x26
+cpu MHz		: 3501.000
+cache size	: 8192 KB
+physical id	: 0
+siblings	: 8
+core id		: 3
+cpu cores	: 4
+apicid		: 7
+initial apicid	: 7
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt tsc_deadline_timer aes xsave avx lahf_lm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid
+bogomips	: 6984.15
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 32896872k(6053692k free), swap 8257532k(8257532k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.40-b25) for linux-amd64 JRE (1.8.0_40-b25), built on Feb 10 2015 21:29:53 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Thu Jul 16 11:09:41 2015
+elapsed time: 4 seconds (0d 0h 0m 4s)
+

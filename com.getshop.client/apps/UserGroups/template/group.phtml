@@ -38,6 +38,12 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
     <div class='gss_settings_content gss_col_width_inner_2'>
         <center><h3><?php echo $this->__f("Invoice information"); ?></h3></center>
         
+        <div class="textfield gss_setting"  id="invoiceVatNumber">
+            <span class="title"><?php echo $this->__f("Vat number / Birthday"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceVatNumber' value="<? echo $group->invoiceAddress->vatNumber; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
         <div class="textfield gss_setting"  id="invoiceName">
             <span class="title"><?php echo $this->__f("Company / Name"); ?></span>
             <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceName' value="<? echo $group->invoiceAddress->fullName; ?>" placeholder="">
@@ -68,17 +74,24 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
             <div class="description"></div>
         </div>
         
+        <div class="textfield gss_setting"  id="invoiceCellPhone">
+            <span class="title"><?php echo $this->__f("Cellphone"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceCellPhone' value="<? echo $group->invoiceAddress->phone; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+       
         <div class="textfield gss_setting"  id="invoiceCustomerNumber">
             <span class="title"><?php echo $this->__f("Customer number"); ?></span>
             <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceCustomerNumber' value="<? echo $group->invoiceAddress->customerNumber; ?>" placeholder="">
             <div class="description"></div>
         </div>
         
-        <div class="textfield gss_setting"  id="invoiceVatNumber">
-            <span class="title"><?php echo $this->__f("Vat number / Birthday"); ?></span>
-            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceVatNumber' value="<? echo $group->invoiceAddress->vatNumber; ?>" placeholder="">
+        <div class="textfield gss_setting"  id="invoiceReference">
+            <span class="title"><?php echo $this->__f("Reference"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='invoiceReference' value="<? echo $group->invoiceAddress->reference; ?>" placeholder="">
             <div class="description"></div>
         </div>
+        
     </div>
     <!-- Invoice information END -->
 
@@ -111,6 +124,17 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
         <div class="textfield gss_setting"  id="deliveryPostPlace">
             <span class="title"><?php echo $this->__f("City"); ?></span>
             <input type="textfield" gs_model='groupmodel' gs_model_attr='deliveryPostPlace' value="<? echo $group->defaultDeliveryAddress->city; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="deliveryCellphone">
+            <span class="title"><?php echo $this->__f("Cellphone"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='deliveryCellphone' value="<? echo $group->defaultDeliveryAddress->phone; ?>" placeholder="">
+            <div class="description"></div>
+        </div>
+        <div class="textfield gss_setting"  id="deliveryCellphone">
+            <span class="title"><?php echo $this->__f("Email"); ?></span>
+            <input type="textfield" gs_model='groupmodel' gs_model_attr='deliveryEmail' value="<? echo $group->defaultDeliveryAddress->emailAddress; ?>" placeholder="">
             <div class="description"></div>
         </div>
     </div>
@@ -148,8 +172,9 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
         $this->includefile("usersingroup");
         ?>    
     </div>
-
-
-    
 </div>
+
+<?
+$this->printExtraApps($group);
+?>
         

@@ -26,11 +26,13 @@ $systems = $this->getApi()->getCertegoManager()->getSystems();
             ?>
             <div gss_fragment='editsystem' gss_view='gs_system_work_area' gss_value='<? echo $system->id ?>' class='gss_product gss_edit_system'>
                <div class='gss_product_inner_desc'>
-                   <div class='gss_product_title'><? echo $system->number ." - ". $system->name." - ".$system->email." - ".$system->phoneNumber; ?></div>
+                   <div class='gss_product_title'>
+                       <? $this->printSystem($system); ?>
+                   </div>
                    <?
                    if ($groupName) {
                    ?>
-                        <div class='gss_product_title'><? echo $groupName; ?></div>
+                        <div class='gss_product_title' style="font-style: italic;"><? echo $groupName; ?></div>
                    <?
                    }
                    ?>

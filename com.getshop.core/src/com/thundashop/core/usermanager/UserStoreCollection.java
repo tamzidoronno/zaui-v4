@@ -8,6 +8,7 @@ import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.start.Runner;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
@@ -315,6 +316,46 @@ public class UserStoreCollection {
             .stream()
             .filter(group -> group.groupName != null && group.groupName.toLowerCase().contains(searchCriteria))
             .collect(Collectors.toList());
+    }
+
+    void saveExtraAddressToGroup(Group group, Address address, User loggedInUser) {
+        group = getGroups(group.id);
+        
+        if (group == null) {
+            throw new ErrorException(26);
+        }
+        
+        if (!loggedInUser.groups.contains(group.id)) {
+            throw new ErrorException(26);
+        }
+        
+        if (group.extraAddresses == null) {
+            group.extraAddresses = new ArrayList();
+        }
+        
+        if (address.id == null || address.id.isEmpty()) {
+            address.id = UUID.randomUUID().toString();
+        }
+        
+        List<Address> oldAddresses = group.extraAddresses.stream().filter(o -> o.id.equals(address.id)).collect(Collectors.toList());
+        group.extraAddresses.removeAll(oldAddresses);
+        group.extraAddresses.add(address);
+        saveGroup(group);
+    }
+
+    void deleteExtraAddressToGroup(String groupId, String addressId, User currentUser) {
+        Group group = getGroups(groupId);
+    
+        if (group == null) {
+            throw new ErrorException(26);
+        }
+        
+        if (!currentUser.groups.contains(group.id)) {
+            throw new ErrorException(26);
+        }
+        
+        List<Address> oldAddresses = group.extraAddresses.stream().filter(o -> o.id.equals(addressId)).collect(Collectors.toList());
+        group.extraAddresses.removeAll(oldAddresses);
     }
 
 }

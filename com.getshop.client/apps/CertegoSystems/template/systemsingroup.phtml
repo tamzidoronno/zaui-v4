@@ -1,0 +1,23 @@
+<?
+/* @var $this ns_27a320a3_e983_4f55_aae8_cf94add661c2\CertegoSystems */
+
+$group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
+$systems = $this->getApi()->getCertegoManager()->getSystemsForGroup($group);
+
+if (!count($systems)) {
+    echo "<div style='padding: 20px;'><i class='fa fa-warning'></i> No systems has been added to this group</div>";
+} else {
+    foreach ($systems as $system) {
+        echo "<div class='gs_select_searched_user_group_add'>"
+        . "<i gss_method='removeSystemFromGroup' "
+                . "gss_confirmation='Are you sure you want the system from this group?' "
+                . "gss_value_2='$system->id' "
+                . "gss_value='".$_POST['value']."' "
+                . "gss_fragment='systemsingroup' "
+                . "gss_view='gss_systems_in_group' "
+                . "class='fa fa-trash'></i><span onclick=''>";
+        $this->printSystem($system);
+        echo "<span></div>";
+    }
+}
+?>

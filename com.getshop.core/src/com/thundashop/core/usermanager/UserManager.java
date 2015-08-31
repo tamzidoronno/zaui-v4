@@ -13,6 +13,7 @@ import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.start.Runner;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
@@ -224,6 +225,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         sessionFactory.addToSession(getSession().id, "user", user.id);
         saveSessionFactory();
 
+        user.prevLoggedIn = user.lastLoggedIn;
+        
         user.lastLoggedIn = new Date();
         user.loggedInCounter++;
         databaseSaver.saveObject(user, credentials);
@@ -993,5 +996,21 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         text = text.replace("\n", "<br/>");
         
         return text;
+    }
+
+    @Override
+    public void saveExtraAddressToGroup(Group group, Address address) {
+        UserStoreCollection storeCollection = getUserStoreCollection(storeId);
+        if (getSession() != null && getSession().currentUser != null) {
+            storeCollection.saveExtraAddressToGroup(group, address, getSession().currentUser);
+        }
+    }
+
+    @Override
+    public void deleteExtraAddressToGroup(String groupId, String addressId) {
+        UserStoreCollection storeCollection = getUserStoreCollection(storeId);
+        if (getSession() != null && getSession().currentUser != null) {
+            storeCollection.deleteExtraAddressToGroup(groupId, addressId, getSession().currentUser);
+        }
     }
 }

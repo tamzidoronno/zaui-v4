@@ -1,6 +1,19 @@
 app.CertegoSystems = {
     init: function() {
-        $(document).on('keyup', '#gss_search_for_certego_system', app.CertegoSystems.filterResult);
+        $(document).on('change', '#gss_search_for_system_to_add_to_group', app.CertegoSystems.search);
+        $(document).on('click', '.gss_addSystemToGroup', app.CertegoSystems.showSearchForm);
+    },
+    
+    search: function() {
+        $('#gss_search_for_systems_in_list').click();
+    },
+    
+    showSearchForm: function() {
+        if ($('.gss_addSystemForm').is(':visible')) {
+            $('.gss_addSystemForm').slideUp();
+        } else {
+            $('.gss_addSystemForm').slideDown();
+        }
     },
     
     filterResult: function() {

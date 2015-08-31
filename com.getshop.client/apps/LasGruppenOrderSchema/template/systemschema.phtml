@@ -1,0 +1,91 @@
+<?
+/* @var $this \ns_7004f275_a10f_4857_8255_843c2c7fb3ab\LasGruppenOrderSchema */
+
+$group = $this->getCurrentGroup();
+$systems = $this->getSystems($group);
+
+
+$printSystems = "<input type='textfield' class='systemnumber systemnumber_uppercase'> ";
+if ($systems && count($systems)) {
+    $printSystems = "<select style='width: 100px;' class='systemnumber'>";
+    foreach ($systems as $system) {
+        $printSystems .= "<option value='$system->number'>".strtoupper($system->number)." - $system->name</option>";
+    }
+    $printSystems .= "</select>";
+}
+?>
+
+<div class="certego_pagetitle">
+    Nøkler og Sylindrer
+    <div class='stepof'>Steg 2 / 4</div>
+</div>
+
+<div class='col col_1'>
+    Vennligst velg hva du ønsker
+    <br/>
+    <input id='selection_key' class='keyandcylinders' gs_value='1' type='checkbox' value='keys'/> Nøkler
+    <br/><input class='keyandcylinders' id='cylindersoption' gs_value='2' type='checkbox' value='cylinders'/> Sylindrer
+
+</div>
+
+<div class='col col_2'>
+    <? echo nl2br($this->getConfigurationSetting("page2_orderinformation")); ?>
+    
+</div>
+
+
+
+<div class='col col_0 keys_setup'>
+    Legg til nøklene
+    <table id="keys_setup_table">
+        <tr><th>Systemnr.</th><th>Antall</th><th>Merking</th></tr>
+        <tr class='keys_template_row'><td><? echo $printSystems; ?></td><td><input type='textfield' class="keys_count"></td><td><input class="keys_marking" type='textfield'></td></tr>
+    </table>
+    <div class='shop_button add_key_row'>
+        +1 Linje
+    </div>
+</div>
+<div class='col col_0 cylinder_setup'>
+    Legg til sylindrer
+    <table>
+        <tr>
+            <th>Systemnr.</th>
+            <th>Antall</th>
+            <th>Type sylinder</th>
+            <th>Dørtykkelse</th>
+            <th>Angi hvilke nøkler som skal passe</th>
+            <th>Overflate</th>
+            <th>Beskrivelse i låsplan</th>
+        </tr>
+        <tr class='cylinder_template_row'>
+            <td>
+                <?
+                echo $printSystems;
+                ?>
+            </td>
+            <td><input type='textfield' style="width: 40px;" class='cylinder_count'></td>
+            <td><input type='textfield' class='cylinder_type'></td>
+            <td><input type='textfield' class='door_thickness'></td>
+            <td><input type='textfield' style="width: 240px" class='keys_that_fits'></td>
+            <td>
+                <select class='texture'>
+                    <option value='overflate'>Overflate</option>
+                    <option value='Forkrommet matt'>Forkrommet matt</option>
+                    <option value='Forkrommet'>Forkrommet</option>
+                    <option value='Messing matt'>Messing matt</option>
+                    <option value='Messing polert'>Messing polert</option>
+                    <option value='Sort rustikk'>Sort rustikk</option>
+                </select>
+            </td>
+            <td><input type='textfield' class='cylinder_description'></td>
+        </tr>
+    </table>
+    <div class='shop_button add_cylinder_row'>
+        +1 Linje
+    </div>
+</div>
+
+<div class='button_area'>
+    <div class='shop_button prev'>Tilbake</div>
+    <div class='shop_button next'>Neste</div>
+</div>

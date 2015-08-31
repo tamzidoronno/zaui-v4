@@ -50,6 +50,8 @@ class UserGroups extends \ApplicationBase implements \Application {
         $group->defaultDeliveryAddress->address2 = $_POST['deliveryAddress2'];
         $group->defaultDeliveryAddress->postCode = $_POST['deliveryPostNumber'];
         $group->defaultDeliveryAddress->city = $_POST['deliveryPostPlace'];
+        $group->defaultDeliveryAddress->phone = $_POST['deliveryCellphone'];
+        $group->defaultDeliveryAddress->emailAddress = $_POST['deliveryEmail'];
         
         $group->invoiceAddress->fullName = $_POST['invoiceName'];
         $group->invoiceAddress->address = $_POST['invoiceAddress1'];
@@ -58,6 +60,8 @@ class UserGroups extends \ApplicationBase implements \Application {
         $group->invoiceAddress->city = $_POST['invoicePostPlace'];
         $group->invoiceAddress->customerNumber = $_POST['invoiceCustomerNumber'];
         $group->invoiceAddress->vatNumber = $_POST['invoiceVatNumber'];
+        $group->invoiceAddress->reference = $_POST['invoiceReference'];
+        $group->invoiceAddress->phone = $_POST['invoiceCellPhone'];
         
         $this->getApi()->getUserManager()->saveGroup($group);
     }
@@ -96,7 +100,18 @@ class UserGroups extends \ApplicationBase implements \Application {
     }
     
     public function renderExtraGroupList($group) {
-        echo "<div style='font-size: 13px; font-weight: bold;'>".$this->__f("Users").": ".$this->getNumberOfUsersInGroup($group)."</div>";
+        echo "<div style='font-size: 13px; font-style: italic;'>".$this->__f("Users").": ".$this->getNumberOfUsersInGroup($group)."</div>";
+    }
+
+    public function printExtraApps($group) {
+        $singleTons = $this->getFactory()->getApi()->getStoreApplicationPool()->getApplications();
+        
+        foreach ($singleTons as $singleTon) {
+            $instance = $this->getFactory()->getApplicationPool()->createInstace($singleTon);
+            if (method_exists($instance, "renderGroupInformation")) {
+                $instance->renderGroupInformation($group);
+            }
+        }
     }
 
 }

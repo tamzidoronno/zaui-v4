@@ -28,3 +28,34 @@ and open the template in the editor.
     background-color: #FFF;
     border-radius: 5px;
 }
+
+.gss_addSystemToGroup {
+    cursor: pointer; 
+    font-size: 20px; 
+    padding: 5px; 
+    border: solid 0px; 
+    color: green; 
+    position: absolute; 
+    right: 10px; 
+    top: 10px;
+}
+
+.gss_addSystemForm {
+    display: none;
+    background-color: #F9f9f9; 
+    padding: 20px; 
+    border: solid 1px #DDD;
+}
+
+
+#gss_search_for_systems_in_list {
+    position: absolute;
+    right: 0px;
+    font-size: 20px;
+    border: solid 1px #F1F1F1;
+    top: 13px;
+    padding: 5px;
+    border-radius: 5px;
+    background: linear-gradient(to bottom, #17f800, #328e00);
+    color: #FFF;
+}

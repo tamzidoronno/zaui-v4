@@ -1,0 +1,33 @@
+<?
+/* @var $this \ns_7004f275_a10f_4857_8255_843c2c7fb3ab\LasGruppenOrderSchema */
+$user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+$group = $this->getGroup($user);
+$extraDeliveriesAddresses = [];
+if ($group->extraAddresses) {
+    foreach ($group->extraAddresses as $addr) {
+        if ($addr->type == "shipment") {
+            $extraDeliveriesAddresses[] = $addr;
+        }
+    }
+}
+
+$addresses = [];
+$addresses[] = $group->defaultDeliveryAddress;
+$addresses = array_merge($addresses, $extraDeliveriesAddresses);
+echo "<script>";
+echo "var certegoDeliveryAddresses = ".json_encode($addresses).";";
+echo "</script>";
+?>
+<select id='deliveryAddressSelected'>
+    <option value='other'>Annen</option>
+    
+    <?
+
+    $i = 0;
+    /** @var $addr core_usermanager_data_Address */
+    foreach ($addresses as $addr) {
+        echo "<option value='$i'>".htmlentities($addr->fullName)." - ".htmlentities($addr->address)." - ".htmlentities($addr->postCode." ".$addr->city);
+        $i++;
+    }
+    ?>
+</select>

@@ -1486,6 +1486,14 @@ class CertegoManager(object):
     data.interfaceName = "core.certego.ICertegoManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getOrders(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getOrders"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getSystems(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -1509,6 +1517,21 @@ class CertegoManager(object):
     data.interfaceName = "core.certego.ICertegoManager"
     return self.communicationHelper.sendMessage(data)
 
+  def saveOrder(self, order):
+    args = collections.OrderedDict()
+    if isinstance(order,GetShopBaseClass): 
+      args["order"]=json.dumps(order.__dict__)
+    else:
+      try:
+        args["order"]=json.dumps(order)
+      except (ValueError, AttributeError):
+        args["order"]=order
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveOrder"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
   def saveSystem(self, system):
     args = collections.OrderedDict()
     if isinstance(system,GetShopBaseClass): 
@@ -1521,6 +1544,21 @@ class CertegoManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "saveSystem"
+    data.interfaceName = "core.certego.ICertegoManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def search(self, searchWord):
+    args = collections.OrderedDict()
+    if isinstance(searchWord,GetShopBaseClass): 
+      args["searchWord"]=json.dumps(searchWord.__dict__)
+    else:
+      try:
+        args["searchWord"]=json.dumps(searchWord)
+      except (ValueError, AttributeError):
+        args["searchWord"]=searchWord
+    data = EmptyClass()
+    data.args = args
+    data.method = "search"
     data.interfaceName = "core.certego.ICertegoManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -6814,6 +6852,28 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def deleteExtraAddressToGroup(self, groupId, addressId):
+    args = collections.OrderedDict()
+    if isinstance(groupId,GetShopBaseClass): 
+      args["groupId"]=json.dumps(groupId.__dict__)
+    else:
+      try:
+        args["groupId"]=json.dumps(groupId)
+      except (ValueError, AttributeError):
+        args["groupId"]=groupId
+    if isinstance(addressId,GetShopBaseClass): 
+      args["addressId"]=json.dumps(addressId.__dict__)
+    else:
+      try:
+        args["addressId"]=json.dumps(addressId)
+      except (ValueError, AttributeError):
+        args["addressId"]=addressId
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteExtraAddressToGroup"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def deleteUser(self, userId):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
@@ -7268,6 +7328,28 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "resetPassword"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveExtraAddressToGroup(self, group, address):
+    args = collections.OrderedDict()
+    if isinstance(group,GetShopBaseClass): 
+      args["group"]=json.dumps(group.__dict__)
+    else:
+      try:
+        args["group"]=json.dumps(group)
+      except (ValueError, AttributeError):
+        args["group"]=group
+    if isinstance(address,GetShopBaseClass): 
+      args["address"]=json.dumps(address.__dict__)
+    else:
+      try:
+        args["address"]=json.dumps(address)
+      except (ValueError, AttributeError):
+        args["address"]=address
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveExtraAddressToGroup"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 

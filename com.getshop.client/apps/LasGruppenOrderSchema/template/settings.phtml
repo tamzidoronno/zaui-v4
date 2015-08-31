@@ -1,0 +1,40 @@
+<?
+/* @var $this \ns_7004f275_a10f_4857_8255_843c2c7fb3ab\LasGruppenOrderSchema */
+?>
+<div style='padding: 20px; color: #FFF;'>
+    <div style='padding: 10px; border: solid 1px;'>
+        <h1>Page 1 ( Homepage ) </h1>
+        Welcome header:
+        <br/><input type='textfield' id='page1_welcome_header' value='<? echo $this->getConfigurationSetting("page1_welcome_header"); ?>'/>
+        <br/>
+        <br/> Welcome text:
+        <br/> <textarea id='page1_welcome_body'><? echo $this->getConfigurationSetting("page1_welcome_body"); ?></textarea>
+    </div>
+</div>
+
+<div style='padding: 20px; color: #FFF;'>
+    <div style='padding: 10px; border: solid 1px;'>
+        <h1>Page 2 ( Orderview )</h1>
+        Ordering information:
+        <br/> <textarea id='page2_orderinformation'><? echo $this->getConfigurationSetting("page2_orderinformation"); ?></textarea>
+    </div>
+</div>
+
+<div style='padding: 20px; color: #FFF;'>
+    <div style='padding: 10px; border: solid 1px;'>
+        <h1>Page 3 ( Shipping ) </h1>
+        Shipping bedriftspakke
+        <br/> <textarea id='page3_shippinginformation_bedriftspakke'><? echo $this->getConfigurationSetting("page3_shippinginformation_bedriftspakke"); ?></textarea>
+        Shipping express
+        <br/> <textarea id='page3_shippinginformation_express'><? echo $this->getConfigurationSetting("page3_shippinginformation_express"); ?></textarea>
+        Shipping rekommandert
+        <br/> <textarea id='page3_shippinginformation_rekommandert'><? echo $this->getConfigurationSetting("page3_shippinginformation_rekommandert"); ?></textarea>
+        Servicepakke
+        <br/> <textarea id='page3_shippinginformation_service'><? echo $this->getConfigurationSetting("page3_shippinginformation_service"); ?></textarea>
+    </div>
+</div>
+
+<div style='padding: 20px; text-align: center;' >
+    <div class='gs_button saveSettings'> Save </div>
+</div>
+    

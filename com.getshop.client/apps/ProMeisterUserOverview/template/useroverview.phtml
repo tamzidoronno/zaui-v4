@@ -13,16 +13,7 @@ $upComingEvents = [];
 $pastEvents = [];
 $user = $this->getApi()->getUserManager()->getUserById($userId);
 
-$events = $this->getApi()->getCalendarManager()->getEntriesByUserId($userId);
-if ($events) {
-    foreach ($events as $event) {
-        if ($event->isInPast) {
-            $pastEvents[] = $event;
-        } else {
-            $upComingEvents[] = $event;
-        }
-    }
-}
+
 
 $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
     
@@ -40,7 +31,20 @@ $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
 
 
 <div class="inner" style='position: relative;'>
-<? foreach ($allUsers as $user) { ?>
+<? foreach ($allUsers as $user) { 
+    $events = $this->getApi()->getCalendarManager()->getEntriesByUserId($user->id);
+    if ($events) {
+        foreach ($events as $event) {
+            if ($event->isInPast) {
+                $pastEvents[] = $event;
+            } else {
+                $upComingEvents[] = $event;
+            }
+        }
+    }
+    
+    
+    ?>
     <div class="user_data_conatiner">
         <?
         $dataProvider = false;

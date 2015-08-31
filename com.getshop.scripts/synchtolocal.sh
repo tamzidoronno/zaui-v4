@@ -21,7 +21,7 @@ mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( func
 
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
-ssh -T naxa@backendbeta.getshop.com << EOF > /dev/null
+ssh -T naxa@backend30.getshop.com << EOF > /dev/null
 /home/naxa/backup.sh
 EOF
 
@@ -31,7 +31,7 @@ get dump.tar.gz
 EOF
 
 echo -e " Fetching database file from server";
-sftp -b batchfile naxa@backendbeta.getshop.com > /dev/null
+sftp -b batchfile naxa@backend30.getshop.com > /dev/null
 rm -rf batchfile;
 
 echo -e " Importing database to local";

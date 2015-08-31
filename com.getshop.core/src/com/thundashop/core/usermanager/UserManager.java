@@ -279,7 +279,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 if (getSession().currentUser.groups != null 
                         && getSession().currentUser.groups.size() > 0 
                         && !getSession().currentUser.groups.contains(group)) {
-                    throw new ErrorException(97);
+//                    throw new ErrorException(97);
                 }
             }
         }

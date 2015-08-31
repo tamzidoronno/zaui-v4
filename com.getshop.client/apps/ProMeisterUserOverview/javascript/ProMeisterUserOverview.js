@@ -21,15 +21,7 @@ app.ProMeisterUserOverview = {
     },
     
     showUserOverview: function() {
-        if ($('.ProMeisterUserOverview #eventsoverview_outer').is(':visible')) {
-            $('.ProMeisterUserOverview #eventsoverview_outer').slideUp(function() {
-                $('.ProMeisterUserOverview #useroverview_outer').slideDown();
-            });
-        } else {
-            $('.ProMeisterUserOverview #useroverview_outer').slideUp(function() {
-                $('.ProMeisterUserOverview #eventsoverview_outer').slideDown();
-            });
-        }
+        alert('Not yet implemented');
     }
 };
 

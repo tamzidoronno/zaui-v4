@@ -19,6 +19,15 @@ and open the template in the editor.
     padding-bottom: 20px;
 }
 
+.ProMeisterUserOverview .user_data_conatiner {
+    background-color: #008e80;
+    margin-top: 10px; 
+    padding-top: 20px; 
+    position: relative;
+    padding: 20px;
+    border: solid 1px #004f48;
+}
+
 .ProMeisterUserOverview .inner {
     min-height: 450px;
     margin-left: 10px;

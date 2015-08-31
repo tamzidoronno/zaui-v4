@@ -81,8 +81,9 @@
     </div>
     <div class='col col1' radio_required='true'>
         <div class="shipping_div_option" id="shipping_bedriftspakke"><input type='radio' name="shippingtype" gs_value='1' value='Bedriftspakke'/> Bedriftspakke</div>
-        <div class="shipping_div_option" id="shipping_rekomandert"><input type='radio' name="shippingtype" gs_value='2' value='Rekommandert' /> Rekommandert</div>
         <div class="shipping_div_option" id="shipping_express"><input type='radio' name="shippingtype" gs_value='3' value='Express over natt' /> Express over natt</div>
+        <div class="shipping_div_option" id="shipping_service"><input type='radio' name="shippingtype" gs_value='6' value='Servicepakke' /> Servicepakke</div>
+        <div class="shipping_div_option" id="shipping_rekomandert"><input type='radio' name="shippingtype" gs_value='2' value='Rekommandert' /> Rekommandert</div>
         <div class="shipping_div_option" id="shipping_store"><input type='radio' name="shippingtype" gs_value='4' value='Hentes i butikk' /> Hentes i butikk</div>
         <div class="shipping_div_option" id="shipping_other"><input type='radio' name="shippingtype" gs_value='5' value='Annet leveringsmåte' /> Annen leveringsmåte</div>
     </div>
@@ -120,6 +121,10 @@
         
         <div class="extratext_shipping extratext_shipping_3">
             <? echo nl2br($this->getConfigurationSetting("page3_shippinginformation_express")); ?>
+        </div>
+        
+        <div class="extratext_shipping extratext_shipping_6">
+            <? echo nl2br($this->getConfigurationSetting("page3_shippinginformation_service")); ?>
         </div>
         
         <div class="specialsending">

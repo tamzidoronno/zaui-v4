@@ -4,11 +4,12 @@
 $group = $this->getCurrentGroup();
 $systems = $this->getSystems($group);
 
+
 $printSystems = "<input type='textfield' class='systemnumber systemnumber_uppercase'> ";
 if ($systems && count($systems)) {
-    $printSystems = "<select style='width: 100px;' class='systemnumber systemnumber_uppercase'>";
+    $printSystems = "<select style='width: 100px;' class='systemnumber'>";
     foreach ($systems as $system) {
-        $printSystems .= "<option value='$system->number'>$system->number - $system->name</option>";
+        $printSystems .= "<option value='$system->number'>".strtoupper($system->number)." - $system->name</option>";
     }
     $printSystems .= "</select>";
 }

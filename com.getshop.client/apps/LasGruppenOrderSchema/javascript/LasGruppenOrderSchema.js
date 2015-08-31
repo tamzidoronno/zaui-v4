@@ -118,6 +118,7 @@ app.LasGruppenOrderSchema = {
             page3_shippinginformation_rekommandert : $('.LasGruppenOrderSchema #page3_shippinginformation_rekommandert').val(),
             page3_shippinginformation_express : $('.LasGruppenOrderSchema #page3_shippinginformation_express').val(),
             page3_shippinginformation_bedriftspakke : $('.LasGruppenOrderSchema #page3_shippinginformation_bedriftspakke').val(),
+            page3_shippinginformation_service : $('.LasGruppenOrderSchema #page3_shippinginformation_service').val(),
         };
         
         var event = thundashop.Ajax.createEvent("", "saveSettings", this, data);
@@ -806,6 +807,7 @@ app.LasGruppenOrderSchema = {
 
             if (!$('#companyid').val()) {
                 $('#shipping_bedriftspakke').hide();
+                $('#shipping_service').hide();
                 $('#shipping_other').hide();
                 $('#shipping_express').hide();
                 $('#shipping_rekomandert').hide();
@@ -938,8 +940,14 @@ app.LasGruppenOrderSchema = {
         if (selectedval === "4") {
             $('.select_stores').show();
         }
+        
         if (selectedval === "5") {
             $('.specialsending').show();
+            $('.shippinginformation').show();
+        }
+        
+        if (selectedval === "6") {
+            $('.extratext_shipping_6').show();
             $('.shippinginformation').show();
         }
     },

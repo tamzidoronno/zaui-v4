@@ -296,5 +296,6 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("page3_shippinginformation_rekommandert", $_POST['data']['page3_shippinginformation_rekommandert']);
         $this->setConfigurationSetting("page3_shippinginformation_express", $_POST['data']['page3_shippinginformation_express']);
         $this->setConfigurationSetting("page3_shippinginformation_bedriftspakke", $_POST['data']['page3_shippinginformation_bedriftspakke']);
+        $this->setConfigurationSetting("page3_shippinginformation_service", $_POST['data']['page3_shippinginformation_service']);
     }
 }

@@ -28,7 +28,11 @@ app.ProductLists = {
                     title: __f("Go to product managment"),
                     click: app.Products.gssinterface.showProductManagement
                 },
-                
+                {
+                    text: "<span style='font-size: 22px;'><></span>",
+                    click: function(papp1, papp) { app.ProductLists.setSlideView(papp, 0)},
+                    title: __f("Set as slideview")
+                },
                 {
                     text: "<span style='font-size: 22px;'>1</span>",
                     click: function(papp1, papp) { app.ProductLists.setColumns(papp, 1)},
@@ -75,6 +79,12 @@ app.ProductLists = {
         var toolbox = new GetShopToolbox(config, application);
         toolbox.show();
         toolbox.attachToElement(application, 2);
+    },
+    
+    setSlideView: function(app, columnsize) {
+        debugger;
+        var event = thundashop.Ajax.createEvent(null, "setSlideView", app, {});
+        thundashop.Ajax.post(event)
     },
     
     setColumns: function(app, columnsize) {

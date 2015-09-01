@@ -35,11 +35,24 @@ class ProductLists extends \ApplicationBase implements \Application {
         $this->showProductIds = $showProductIds;
         $this->showColumnSize = $columnSize;
         $this->showRemoveButton = $showRemoveButton;
-        $this->includefile("showProducts");
+        if ($this->isSlideView()) {
+            $this->includefile("slideView");
+        } else {
+            $this->includefile("showProducts");
+        }
+        
+    }
+    
+    private function isSlideView() {
+        return $this->getConfigurationSetting("isSlideView") == "true";
     }
     
     public function showRemoveButton() {
         return $this->showRemoveButton;
+    }
+    
+    public function setSlideView() {
+        $this->setConfigurationSetting("isSlideView", "true");
     }
     
     public function getAllProducts() {
@@ -159,6 +172,7 @@ class ProductLists extends \ApplicationBase implements \Application {
     }
     
     public function setColumns() {
+        $this->setConfigurationSetting("isSlideView", "false");
         $this->setConfigurationSetting("column_size", $_POST['data']);
     }
 

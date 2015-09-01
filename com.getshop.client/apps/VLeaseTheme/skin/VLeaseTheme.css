@@ -54,11 +54,11 @@ body {
     color: #FF0000 ! important;
 }
 
-.gsarea[area="header"] .Menu .entry a div i {
+.gsarea[area="header"] .Menu .entry div i {
     display: block;
     font-size: 30px;
 }
-.gsarea[area="header"] .Menu .entry a div {
+.gsarea[area="header"] .Menu .entry  div {
     font-size: 14px;
     line-height: 25px;
     margin-top: 15px;

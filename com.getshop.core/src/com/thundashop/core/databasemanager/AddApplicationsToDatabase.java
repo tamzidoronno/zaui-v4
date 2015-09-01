@@ -54,16 +54,18 @@ public class AddApplicationsToDatabase {
         allowed2.add("xlarge");
 
         
-        Application forms = createSettings("FormItem",
-                "4a5ee780-32f8-11e5-a2cb-0800200c9a66",
+        Application vLeaseTheme = createSettings("VLeaseTheme",
+                "a940cb75-40ef-4f4b-a691-40eb9490b3b0",
                 allowed2,
                 "",
-                Application.Type.Marketing, true);
-        forms.isPublic = true;
-        forms.isFrontend = true;
-        forms.moduleId = "Marketing";
-        forms.defaultActivate = false;
-        apps.add(forms);
+                Application.Type.Theme, true);
+        vLeaseTheme.isPublic = false;
+        vLeaseTheme.isFrontend = false;
+        vLeaseTheme.moduleId = "Theme";
+        vLeaseTheme.defaultActivate = false;
+        vLeaseTheme.allowedStoreIds = new ArrayList();
+        vLeaseTheme.allowedStoreIds.add("09f05570-ce91-4e9a-b640-433deca91412");
+        apps.add(vLeaseTheme);
         
         return apps;
     }

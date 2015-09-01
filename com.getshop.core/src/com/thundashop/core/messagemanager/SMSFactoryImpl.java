@@ -163,7 +163,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
                 httpResponse = client.execute(request);
            }
 
-            System.out.println("Now sending sms");
+            System.out.println("Now sending sms, " + src + " | " + dst + " | " + text + " | "  + msgId);
             entity = httpResponse.getEntity();
             System.out.println("Done sending sms");
 

@@ -20,7 +20,7 @@ body {
 
 
 .gsarea[area="body"] {
-    padding-top: 80px;
+    padding-top: 85px;
 }
 .gsarea[area="header"] {
     position: fixed !important;

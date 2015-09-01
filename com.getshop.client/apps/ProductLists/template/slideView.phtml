@@ -41,7 +41,7 @@ function getProdcutImageId($product) {
                 echo "</div>";
                 echo $image;
                 echo "<div class='descriptionarea'>";
-                    echo $product->shortDescription;
+                    echo nl2br($product->shortDescription);
                 echo "</div>";
             echo '</div>';
         }

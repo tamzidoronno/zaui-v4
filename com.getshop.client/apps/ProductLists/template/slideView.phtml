@@ -2,4 +2,61 @@
  /* @var $this ns_f245b8ae_f3ba_454e_beb4_ecff5ec328d6\ProductLists */
 $products = $this->getAllProducts();
 
+$slideListID = "slidelist_".$this->getConfiguration()->id;
+
+function getProdcutImageId($product) {
+    $mainImage = false;
+
+    if ($product->mainImage && in_array($product->mainImage, $product->imagesAdded)) {
+        $mainImage = $product->mainImage;
+    }
+
+    if (!$mainImage && count($product->imagesAdded)) {
+        $mainImage = $product->imagesAdded[0];
+    }
+    
+    return $mainImage;
+}
 ?>    
+
+<div class="slidelist" id="slidelist_<? echo $this->getConfiguration()->id; ?>">
+    <div class="slidelist_inner">
+        <?
+        
+        foreach ($products as $product) {
+            $mainImage = getProdcutImageId($product);
+
+            if (!$mainImage) {
+                $image = '<div class="image"><i class="fa fa-image"></i></div>';
+            } else {
+                $image = '<div class="image"><img src="/displayImage.php?id='.$mainImage.'"/></div>';
+            }
+
+
+            
+            echo '<div class="product">';
+                echo "<div class='title'>".$product->name."</div>";
+                echo "<div class='price'>";
+                 echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price); 
+                echo "</div>";
+                echo $image;
+                echo "<div class='descriptionarea'>";
+                    echo $product->shortDescription;
+                echo "</div>";
+            echo '</div>';
+        }
+        ?>
+    </div>
+    <?
+    echo "<div class='slidePrev' onclick=\"app.ProductLists.slideListRunner.prev('$slideListID')\"><i class='fa fa-arrow-left'></i></div>";
+    
+    echo "<div class='slideNext' onclick=\"app.ProductLists.slideListRunner.next('$slideListID')\"><i class='fa fa-arrow-right'></i></div>";
+    ?>
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        app.ProductLists.slideListRunner.start('<? echo $slideListID ?>');
+    });
+</script>

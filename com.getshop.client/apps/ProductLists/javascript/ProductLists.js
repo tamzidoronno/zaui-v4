@@ -82,7 +82,6 @@ app.ProductLists = {
     },
     
     setSlideView: function(app, columnsize) {
-        debugger;
         var event = thundashop.Ajax.createEvent(null, "setSlideView", app, {});
         thundashop.Ajax.post(event)
     },
@@ -175,6 +174,80 @@ app.ProductLists.gssinterface = {
         getshop.Settings.showSettings();
         getshop.Settings.setApplicationId('f245b8ae-f3ba-454e-beb4-ecff5ec328d6', false);
     }
+}
+
+app.ProductLists.slideListRunner = {
+    inProgress : {},
+    
+    start: function(slideListId) {
+        var slideListDom = $('#'+slideListId);
+        var productWidth = slideListDom.closest('.app').width();
+        app.ProductLists.slideListRunner[slideListId] = false;
+        slideListDom.find('.product').width(productWidth);
+        app.ProductLists.slideListRunner.next(slideListDom);
+    },
+    
+    next: function(slideListId) {
+        if (app.ProductLists.slideListRunner[slideListId]) {
+            return;
+        }
+        
+        var slideListDom = $('#'+slideListId);
+        var products = $('#'+slideListId).find('.product');
+        var productWidth = products.innerWidth();
+        var left = slideListDom.find('.slidelist_inner').css('margin-left');
+        var length = "-"+productWidth*(products.length-1)+"px";
+        
+        app.ProductLists.slideListRunner[slideListId] = true;
+        if (left === length) {
+            slideListDom.find('.slidelist_inner').animate({
+                marginLeft: "-=80",
+            }, function() {
+                $(this).animate({
+                    marginLeft: "+=80"
+                }, function() {
+                    app.ProductLists.slideListRunner[slideListId] = false;
+                });
+            });
+        } else {
+            slideListDom.find('.slidelist_inner').animate({
+                marginLeft: ["-="+productWidth, "easeInOutExpo"]
+            }, function() {
+                app.ProductLists.slideListRunner[slideListId] = false;
+            });    
+        }
+    },
+    
+    prev: function(slideListId) {
+        if (app.ProductLists.slideListRunner[slideListId]) {
+            return;
+        }
+        
+        var slideListDom = $('#'+slideListId);
+        var products = $('#'+slideListId).find('.product');
+        var productWidth = products.innerWidth();
+        var left = slideListDom.find('.slidelist_inner').css('margin-left');
+        var length = "0px";
+        
+        app.ProductLists.slideListRunner[slideListId] = true;
+        if (left === length) {
+            slideListDom.find('.slidelist_inner').animate({
+                marginLeft: "+=80"
+            }, function() {
+                $(this).animate({
+                    marginLeft: "-=80"
+                }, function() {
+                    app.ProductLists.slideListRunner[slideListId] = false;
+                });
+            });
+        } else {
+            slideListDom.find('.slidelist_inner').animate({
+                marginLeft: "+="+productWidth,
+            }, function() {
+                app.ProductLists.slideListRunner[slideListId] = false;
+            });    
+        }
+    },
 }
 
 app.ProductLists.init();

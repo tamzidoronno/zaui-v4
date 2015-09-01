@@ -357,6 +357,49 @@
     /*padding: 20px;*/
 }
 
+.ProductLists .slidelist {
+    overflow-x: hidden;
+    position: relative;
+}
+
+.ProductLists .slidelist .slidelist_inner {
+    white-space: nowrap;
+}
+
+.ProductLists .slidelist .slidePrev,
+.ProductLists .slidelist .slideNext {
+    position: absolute;
+    top: 50%;
+    margin-top: -30px;
+    font-size: 20px;
+    border-radius: 15px;
+    padding: 10px;
+    padding-left: 15px; padding-right: 15px;
+    background-color: rgba(0,0,0,0.5);
+    color: #FFF;
+    cursor: pointer;
+}
+
+.ProductLists .slidelist .slidePrev:hover,
+.ProductLists .slidelist .slideNext:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.ProductLists .slidelist .slidePrev {
+    left: 0px;
+}
+.ProductLists .slidelist .slideNext {
+    right: 0px;    
+}
+
+.ProductLists .slidelist .product {
+    display: inline-block;
+    position: relative;
+    padding-left: 50px;
+    padding-rigth: 50px;
+    white-space: normal;
+}
+
 @media only all and (max-width: 800px) { 
     .productbox { width: 100% !important; margin-bottom: 20px; }
     .productbox_outer { width: 100% !important; }

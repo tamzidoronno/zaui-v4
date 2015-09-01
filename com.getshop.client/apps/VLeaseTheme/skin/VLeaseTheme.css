@@ -19,6 +19,16 @@ body {
 }
 
 
+.gsarea[area="body"] {
+    padding-top: 80px;
+}
+.gsarea[area="header"] {
+    position: fixed !important;
+    z-index: 1;
+    top: 0px;
+    width: 100%;
+}
+
 .gsarea[area="header"] .gsdepth_0.gscount_0.gsrow,
 .gsarea[area="header"] .gsdepth_0.gscount_1.gsrow {
     background: #ffffff; /* Old browsers */
@@ -39,9 +49,9 @@ body {
     margin-left: -1px;
 }
 
-.gsarea[area="header"] .Menu .entry .entries .entry div {
+.gsarea[area="header"] .Menu .entry.active a {
     border-right: solid 0px;
-    
+    color: #FF0000 ! important;
 }
 
 .gsarea[area="header"] .Menu .entry a div i {
@@ -53,9 +63,8 @@ body {
     line-height: 25px;
     margin-top: 15px;
     margin-bottom: 15px;
-    border-right: solid 1px #c9c9c9; 
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
     text-align: center;
     /*font-weight: 300;*/
 }
@@ -77,4 +86,40 @@ body {
 .gsarea[area="footer"] {
     margin-top: 20px;
     background-color: #DDD;
+}
+
+.ProductLists .slidelist .product {
+    font-size: 16px;
+}
+
+
+.ProductLists .slidelist .product .price {
+    position: absolute;
+    top: 0px;
+    right: 120px;
+    font-size: 26px;
+    font-weight: bold;
+}
+.ProductLists .slidelist .product .title {
+    font-size: 25px;
+}
+
+.ProductLists .slidelist .product .image {
+    display: inline-block;
+}
+
+.ProductLists .slidelist .product .image img {
+    max-width: 600px;
+    max-height: 600px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.ProductLists .slidelist .product .descriptionarea {
+    display: inline-block;
+    width: 500px; 
+    border: solid 1px #F1F1F1;
+    vertical-align: top;
+    padding: 20px;
+    margin-top: 20px;
 }

@@ -106,7 +106,7 @@ body {
 
 .ProductLists .slidelist .product .image {
     display: inline-block;
-    border-radius: 15px;
+    
     padding: 20px;
 }
 
@@ -114,6 +114,7 @@ body {
     width: 600px;
     display: inline-block;
     vertical-align: top;
+    border-radius: 15px;
 }
 
 .ProductLists .slidelist .product .descriptionarea {

@@ -106,11 +106,12 @@ body {
 
 .ProductLists .slidelist .product .image {
     display: inline-block;
+    border-radius: 15px;
+    padding: 20px;
 }
 
 .ProductLists .slidelist .product .image img {
-    max-width: 600px;
-    max-height: 600px;
+    width: 600px;
     display: inline-block;
     vertical-align: top;
 }

@@ -105,10 +105,6 @@ public class VismaUsers extends DataCommon {
 
         String result = "";
         for (Order order : orders) {
-            if (!order.activated) {
-                continue;
-            }
-
             if (order.transferedToAccountingSystem) {
                 continue;
             }
@@ -134,7 +130,7 @@ public class VismaUsers extends DataCommon {
             ordrehode += user.customerId + ";"; // Kundenr 
             ordrehode += new SimpleDateFormat("yyyyMMdd").format(order.createdDate) + ";"; // Ordredato
             ordrehode += new SimpleDateFormat("yyyyMMdd").format(reference.startDate) + ";"; // Leveringsdato
-            ordrehode += settingsFromVismaApp.get("paymentterm").value + ";"; //Betalingsbetingelse
+            ordrehode += "0;"; //Betalingsbetingelse
             ordrehode += settingsFromVismaApp.get("paymenttype").value + ";"; //Betalingsmåte ( 10 = avtalegiro )
             ordrehode += ";"; // avgiftskode ( tom = bruk fra kunde )
             result += ordrehode + "\r\n";

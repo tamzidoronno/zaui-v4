@@ -1526,13 +1526,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public double getPriceForProduct(String productId, List<Integer> files) throws ErrorException {
+    public Double getPriceForProduct(String productId, List<Integer> files) throws ErrorException {
         if (getSession() == null || getSession().currentUser == null)  {
-            return -1;
+            return -1D;
         }
             
         if (files == null || files.size() == 0) {
-            return -1;
+            return -1D;
         }
         
         SedoxUser sedoxUser = getSedoxUserById(getSession().currentUser.id);

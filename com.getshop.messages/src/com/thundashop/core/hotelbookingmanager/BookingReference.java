@@ -178,6 +178,10 @@ public class BookingReference extends DataCommon {
             return rooms.get(0).roomId;
         }
         
+        if (rooms.size() == 1) {
+            return rooms.get(0).roomId;
+        }
+        
         return null;
     }
 

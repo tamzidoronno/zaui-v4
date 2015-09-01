@@ -155,5 +155,5 @@ public interface ISedoxProductManager  {
     
     public List<String> getProductIds() throws ErrorException;
     
-    public double getPriceForProduct(String productId, List<Integer> files) throws ErrorException;
+    public Double getPriceForProduct(String productId, List<Integer> files) throws ErrorException;
 }

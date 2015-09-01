@@ -139,6 +139,7 @@ public class StoreHandler {
             throw new ErrorException(85);
         } catch (InvocationTargetException ex) {
             Throwable cause = ex.getCause();
+            ex.printStackTrace();
             if (cause instanceof ErrorException) { throw (ErrorException) cause; }
 
             cause.printStackTrace();

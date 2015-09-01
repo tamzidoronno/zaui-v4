@@ -4782,7 +4782,7 @@ class APISedoxProductManager {
 	* Active developers are administrators that has an SedoxUser with the flag
 	* isActiveDeveloper = true
 	*
-	* @return double
+	* @return Double
 	* @throws ErrorException
 	*/
 

@@ -712,6 +712,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             ex.printStackTrace();
         } catch (IOException ex) {
             sendSqlErrorMessage(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -761,11 +763,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 continue;
             }
 
-            try {
-                result += generateOrderLines(user, settingsFromVismaApp, factory);
-            } catch (RuntimeException ex) {
-                ex.printStackTrace();
-            }
+            result += generateOrderLines(user, settingsFromVismaApp, factory);
         }
 
         if (result.isEmpty()) {
@@ -1375,12 +1373,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         
         Order order = orderManager.createOrder(user.address);
+        order.reference = "" + bookingReference.bookingReference;
         CartItem item = order.cart.getItems().get(0);
         item.getProduct().name = orderLineText;
         item.getProduct().price = bookingReference.bookingFee;
         order.userId = bookingReference.userId;
         orderManager.saveOrder(order);
-        System.out.println("Order created: " + orderLineText);
+        System.out.println("Order created: " + orderLineText + " , id: " + order.incrementOrderId + " id: " + order.id);
         
     }
 

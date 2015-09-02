@@ -461,15 +461,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $user = null;
             if (!$this->partnerShipChecked()) {
                 $user = $this->createUser();
+            } else {
+                $user = $this->getUserByReferenceKey();
             }
             $reservation->userId = $user->id;
             
             if(isset($_POST['data']['heardaboutus'])) {
                 $reservation->heardAboutUs = $_POST['data']['heardaboutus'];
-                $this->startAdminImpersonation("HotelBookingManager", "updateReservation");
-                $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
-                $this->stopImpersionation();
             }
+//            $this->startAdminImpersonation("HotelBookingManager", "updateReservation");
+            $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
+//            $this->stopImpersionation();
             
             $_GET['orderProcessed'] = true;
         } else {
@@ -720,6 +722,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return "";
     }
 
+    public function getUserByReferenceKey() {
+        $refKey = $this->getReferenceKey();
+        $users = $this->getApi()->getUserManager()->getAllUsers();
+        foreach($users as $user) {
+            if($user->referenceKey == $refKey) {
+                return $user;
+            }
+        }
+        return null;
+    }
+    
     public function hasValidSelection() {
         $count = $this->checkavailabilityFromSelection();
         $isvalid = true;

@@ -202,6 +202,7 @@ Existing booking references
                 <th>Start date</th>
                 <th>End date</th>
                 <th>Mnd. Pris</th>
+                <th>Invoiced to</th>
                 <th>Contract</th>
             </tr>
         </thead>
@@ -281,6 +282,7 @@ Existing booking references
             echo "<td style='text-align:center;' valign='top'>" . $endDate . "</td>";
             if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") {
                 echo "<td style='text-align:center;' valign='top'>".$reservation->bookingFee."</td>";
+                echo "<td style='text-align:center;' valign='top'>".date("d.m.Y", strtotime($reservation->invoicedTo))."</td>";
                 echo "<td style='text-align:center;' valign='top'>";
                 echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
                 echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-plus'></i></a> ";

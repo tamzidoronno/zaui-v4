@@ -19,8 +19,8 @@ public class BookingReference extends DataCommon {
         return false;
     }
 
-    private Date getInvoicedTo() {
-        if(invoicedTo == null) {
+    public Date getInvoicedTo() {
+        if(invoicedTo == null && startDate != null) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(startDate);
             cal.add(Calendar.MONTH, 3);
@@ -60,6 +60,7 @@ public class BookingReference extends DataCommon {
     public List<Integer> codes = new ArrayList();
     private List<String> roomIds = new ArrayList();
     public List<ReservedRoom> rooms = new ArrayList();
+    public String roomtype = null;
     
     //0 = No rooms has been up
     public HashMap<String, Integer> uploadedRoomToArx = new HashMap();
@@ -93,7 +94,17 @@ public class BookingReference extends DataCommon {
     
     public boolean needNewOrder() {
         if(!active && confirmed) {
-            return false;
+            Date curInvoiced = getInvoicedTo();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(curInvoiced);
+            cal.add(Calendar.MONTH, 1);
+            if(endDate == null) {
+                return false;
+            }
+            
+            if(cal.getTime().after(endDate)) {
+                return false;
+            }
         }
         if(!confirmed) {
             return false;

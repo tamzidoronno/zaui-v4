@@ -17,41 +17,46 @@ class GenerateReport {
     }
 
     public function generateCalendarBookedReport($group) {
-        $entry = $this->factory->getApi()->getCalendarManager()->getEntry($_GET['entryid']);
-        $attendees = $entry->attendees;
-        $rows = array();
-        
+        $this->printSingleGroup($group);
+    }
+    
+    private function getHeadingRow($entry, $groupName) {
+        $heading = array();
+        $heading["Kurs"] = $entry->title;
+        $heading["Lokasjon"] = $entry->location;
+        $heading["Dato"] = $entry->day.".".$entry->month.".".$entry->year;
+        $heading["Gruppe"] = $groupName;
+        $heading["Antall dager"] = sizeof($entry->otherDays)+1;
+        return $heading;
+    }
+
+    private function getStackedGroups() {
         $allGroups = $this->factory->getApi()->getUserManager()->getAllGroups();
         $stackedGroups = array();
         foreach($allGroups as $groupobj) {
             $stackedGroups[$groupobj->id] = $groupobj;
         }
         
-        $heading = array();
-        $heading["Kurs"] = $entry->title;
-        $heading["Lokasjon"] = $entry->location;
-        $heading["Dato"] = $entry->day.".".$entry->month.".".$entry->year;
-        $heading["Gruppe"] = $stackedGroups[$group]->groupName;
-        $heading["Antall dager"] = sizeof($entry->otherDays)+1;
-        $rows[] = $heading;
+        return $stackedGroups;
+    }
+    
+    private function printSingleGroup($group) {
+        $entry = $this->factory->getApi()->getCalendarManager()->getEntry($_GET['entryid']);
+        $attendees = $entry->attendees;
+        $rows = array();
         
+        $stackedGroups = $this->getStackedGroups();
+        $groupName = isset($stackedGroups[$group]) ? $stackedGroups[$group]->groupName : "alle";
         
-        $line = array();
-        $line["Navn"] = "";
-        $line["E-post"] = "";
-        $line["Tlf nr"] = "";
-        $line["Firmanavn"] = "";
-        $line["Org.nr"] = "";
-        $line["Kommentar"] = "";
-
-        $rows[] = $line;
+        $rows[] = $this->getHeadingRow($entry, $groupName);
+        $rows[] = $this->getEmptyLine();
+        $rows[] = $this->getUserHeading();
         
-        $rows[] = ["Group reference id", "Address", "Name", "Event name", "Ort", "Email", "Comments:"];
         foreach ($attendees as $attandee) {
             $user = $this->factory->getApi()->getUserManager()->getUserById($attandee);
-            if (is_array($user->groups)) {
-                if (in_array($group, $user->groups)) {
-                    $rows[] = $this->createExcelRow($user, $entry);
+            if (is_array($user->groups) || $group == "all") {
+                if ((count($user->groups) && in_array($group, $user->groups)) || $group == "all") {
+                    $rows[] = $this->createExcelRow($user, $entry, $group == "all", $stackedGroups);
                 }
             }
         }
@@ -60,14 +65,19 @@ class GenerateReport {
         
         foreach ($entry->waitingList as $attandee) {
             $user = $this->factory->getApi()->getUserManager()->getUserById($attandee);
-            if (is_array($user->groups)) {
+            if (is_array($user->groups) || $group == "all") {
                 $line = array();
-                if (in_array($group, $user->groups)) {
-                    $rows[] = $this->createExcelRow($user, $entry);
+                if (in_array($group, $user->groups) || $group == "all") {
+                    $rows[] = $this->createExcelRow($user, $entry, $group == "all", $stackedGroups);
                 }
             }
         }
+        
         $rows = $this->convertToExcelCharSet($rows);
+        
+//        echo "<pre>";
+//        print_r($rows);
+//        echo "</pre>";
         $this->printExcelHeader($entry->title." ".$entry->year."-".sprintf("%02d", $entry->month)."-".sprintf("%02d", $entry->day).".xls");
         $export_file = "xlsfile://tmp/example.xls";
         $fp = fopen($export_file, "wb");
@@ -96,7 +106,7 @@ class GenerateReport {
         header("Cache-Control: private", false);
     }
     
-    public function createExcelRow($user, $entry) {
+    public function createExcelRow($user, $entry, $all=false, $stackedGroups) {
         $line = array();
         $line[] = $user->referenceKey;
         
@@ -127,6 +137,23 @@ class GenerateReport {
         $line[] = $entry->location;
         $line[] = $user->emailAddress;
         
+        if (count($user->comments)) {
+            $commentString = "";
+            foreach ($user->comments as $comment) {
+                if ($comment->appId == "798538dc-f9d1-417c-86a9-a142c6b825c5")
+                    $commentString .= $comment->comment." | ";
+            }
+            
+            $line[] = $commentString;
+        } else {
+            $line[] = "";
+        }
+        
+        
+        if ($all) {
+            $line[] = @$stackedGroups[@$user->groups[0]]->groupName;
+        }
+        
         return $line;
     }
 
@@ -151,6 +178,21 @@ class GenerateReport {
         }
         
         return $commentText;
+    }
+
+    public function getEmptyLine() {
+        $line = array();
+        $line["Navn"] = "";
+        $line["E-post"] = "";
+        $line["Tlf nr"] = "";
+        $line["Firmanavn"] = "";
+        $line["Org.nr"] = "";
+        $line["Kommentar"] = "";
+        return $line;
+    }
+
+    public function getUserHeading() {
+        return ["Group reference id", "Address", "Name", "Event name", "Ort", "Email", "Comments:"];
     }
 
 }

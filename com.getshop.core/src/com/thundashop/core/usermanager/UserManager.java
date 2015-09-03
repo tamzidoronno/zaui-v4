@@ -158,12 +158,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.type = User.Type.ADMINISTRATOR;
         }
         users.addUser(user);
+        
+        String passwordPlainText = user.password;
         user.password = encryptPassword(user.password);
         
         databaseSaver.saveObject(user, credentials);
         
         throwEvent(Events.USER_CREATED, user.id);
         
+        sendWelcomeEmail(user, passwordPlainText);
         return user;
     }
     
@@ -782,7 +785,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             message += "<br/>Med vänlig hälsning";
             message += "<br/>ProMeister Academy";
             man.sendMail(user.emailAddress, user.fullName, "Lösenordsåterställning", message, storeId, storeId);
-        } else {
+        } 
+        
+        if (storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
             String message = "Hei " + user.fullName;
             message += "<br/>";
             message += "<br/>Ditt passord har nå blitt endret og du kan logge inn med passordet: " + password;
@@ -809,7 +814,63 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             System.out.println("Group: " + group.groupName + " count: " + count);
         }
     }
+
+    private String getFromAddress() throws ErrorException {
+        String storeEmailAddress = getStore().configuration.emailAdress;
+        if (storeEmailAddress != null) {
+            return storeEmailAddress;
+        }
+
+        return "noreply@getshop.com";
+    }
     
-    
-    
+    private void sendWelcomeEmail(User user, String passwordPlainText) throws ErrorException {
+        if (user.emailAddress == null || !user.emailAddress.contains("@")) {
+            return;
+        }
+        
+        String content = "";
+        String subject = "";
+        
+        // Norway ( ProMeister Academy )
+        if (storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
+            content += "Hei "+user.fullName;
+            content += "<br/>";
+            content += "<br/>Takk for at du har laget en konto hos ProMeister Academy. Fra din konto kan du raskt melde deg på kurs hos oss, og samtidig ha kontroll over kursene du har deltatt på. Du benytter følgende opplysninger for å logge deg på.";
+            content += "<br/>";
+            content += "<br/>Brukernavn: "+user.emailAddress;
+            content += "<br/>Passord: " + passwordPlainText;
+            content += "<br/>";
+            content += "<br/>Brukernavn og passordet gjelder både på nettsiden og mobilappen.";
+            content += "<br/>";
+            content += "<br/>Med Vennlig Hilsen";
+            content += "<br/>ProMeister Academy";
+            
+            subject = "Inloggningsuppgifter ProMeisterAcademy";
+        }
+
+        // Sweden ( ProMeister Academy )
+        if (storeId.equals("d27d81b9-52e9-4508-8f4c-afffa2458488")) {
+            content += "Hej "+user.fullName;
+            content += "<br/>";
+            content += "<br/>Tack för att du skapat ett konto hos ProMeister Academy. Med inloggningen har du möjlighet att enkelt anmäla dig till kurser. Använd nedanstående uppgifter för att logga in.";
+            content += "<br/>";
+            content += "<br/>Användarnamn: "+user.emailAddress;
+            content += "<br/>Lösenord: " + passwordPlainText;
+            content += "<br/>";
+            content += "<br/>Inloggningsuppgifterna fungerar både på websidan och i mobilappen.";
+            content += "<br/>";
+            content += "<br/>Med vänlig hälsning";
+            content += "<br/>ProMeister Academy";
+            
+            subject = "Brukernavn og passord ProMeisterAcademy";
+        }
+        
+        
+        String fromAddress = getFromAddress();
+        
+        if (!content.isEmpty() && !subject.isEmpty()) {
+            mailfactory.send(fromAddress, user.emailAddress, subject, content);
+        }
+    }
 }

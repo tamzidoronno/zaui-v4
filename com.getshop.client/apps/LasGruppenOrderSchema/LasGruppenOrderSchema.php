@@ -88,6 +88,11 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
             $this->sendMail("system@certego.no", $attachments);
         }
         
+        if ($_POST['data']['page4']['securitytype'] == "signature") {
+            $_POST['data']['hidePinCode'] = false;
+            $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
+        }
+        
         if (isset($_POST['data']['page4']['emailCopy']) && $_POST['data']['page4']['emailCopy']) {
             $_POST['data']['hidePinCode'] = true;
             $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);

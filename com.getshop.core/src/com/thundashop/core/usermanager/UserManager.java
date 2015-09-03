@@ -846,7 +846,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             content += "<br/>Med Vennlig Hilsen";
             content += "<br/>ProMeister Academy";
             
-            subject = "Inloggningsuppgifter ProMeisterAcademy";
+            subject = "Brukernavn og passord ProMeisterAcademy";
         }
 
         // Sweden ( ProMeister Academy )
@@ -863,7 +863,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             content += "<br/>Med vänlig hälsning";
             content += "<br/>ProMeister Academy";
             
-            subject = "Brukernavn og passord ProMeisterAcademy";
+            subject = "Inloggningsuppgifter ProMeisterAcademy";
         }
         
         

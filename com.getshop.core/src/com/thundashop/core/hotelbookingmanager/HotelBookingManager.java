@@ -2,6 +2,8 @@ package com.thundashop.core.hotelbookingmanager;
 
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
@@ -29,6 +31,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -200,6 +203,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         end = cal.getTime();
 
         BookingReference reference = new BookingReference();
+        
+        reference.roomtype = roomType;
         reference.bookingReference = genereateReferenceId();
         reference.startDate = start;
         reference.endDate = end;
@@ -353,14 +358,19 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         OrderManager ordMgr = getManager(OrderManager.class);
         for(BookingReference ref : result) {
-            if(ref.bookingFee < 1) {
+            if(ref.bookingFee < 1 || ref.userId == null) {
                 Order order = ordMgr.getOrderByReference(ref.bookingReference + "");
                 if(order != null && order.cart != null) {
+                    ref.userId = order.userId;
                     ref.bookingFee = order.cart.getTotal(false);
                     if(ref.bookingFee > 0) {
                         saveObject(ref);
                     }
                 }
+            }
+            if(ref.invoicedTo == null) {
+                ref.invoicedTo = ref.getInvoicedTo();
+                saveObject(ref);
             }
         }
         
@@ -708,6 +718,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             ex.printStackTrace();
         } catch (IOException ex) {
             sendSqlErrorMessage(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -757,11 +769,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 continue;
             }
 
-            try {
-                result += generateOrderLines(user, settingsFromVismaApp, factory);
-            } catch (RuntimeException ex) {
-                ex.printStackTrace();
-            }
+            result += generateOrderLines(user, settingsFromVismaApp, factory);
         }
 
         if (result.isEmpty()) {
@@ -838,7 +846,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             message = message.replaceAll("\\{code\\}", code + "");
         }
         if (roomName != null) {
-            message = message.replaceAll("\\{room\\}", roomName);
+            message = message.replaceAll("\\{roomName\\}", roomName);
         }
         String startMinute = new SimpleDateFormat("m").format(reference.startDate).toString();
         if (startMinute.length() < 2) {
@@ -860,18 +868,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         message = message.replaceAll("\\{contacts\\}", contacts);
 
-        OrderManager ordermgr = getManager(OrderManager.class);
         UserManager usermgr = getManager(UserManager.class);
-        Order order = ordermgr.getOrderByReference(reference.bookingReference + "");
-        if (order != null && order.cart.getItems().size() > 0) {
-            message = message.replaceAll("\\{roomName\\}", order.cart.getItems().get(0).getProduct().name + "");
-            User user = usermgr.getUserById(order.userId);
-            if (user != null) {
-                message = message.replaceAll("\\{email\\}", user.emailAddress);
-                message = message.replaceAll("\\{address\\}", user.address.address);
-                message = message.replaceAll("\\{postCode\\}", user.address.postCode);
-                message = message.replaceAll("\\{city\\}", user.address.city);
-            }
+        User user = usermgr.getUserById(reference.userId);
+        if (user != null) {
+            message = message.replaceAll("\\{email\\}", user.emailAddress);
+            message = message.replaceAll("\\{address\\}", user.address.address);
+            message = message.replaceAll("\\{postCode\\}", user.address.postCode);
+            message = message.replaceAll("\\{city\\}", user.address.city);
         }
         return message;
     }
@@ -925,7 +928,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public synchronized void checkForWelcomeMessagesToSend() throws ErrorException {
         UserManager usermgr = getManager(UserManager.class);
-        OrderManager ordermgr = getManager(OrderManager.class);
         
         for (BookingReference reference : getAllReservations()) {
             if (reference.sentWelcomeMessages.equals("true")) {
@@ -952,26 +954,23 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
 
             //Sending email confirmation to user.
-            String message = formatMessage(reference, getEmailMessage(reference.language), null, 0, reference.contact.names.get(0));
-            String title = formatMessage(reference, getEmailTitle(reference.language), null, 0, reference.contact.names.get(0));
+            String message = formatMessage(reference, getEmailMessage(reference.language), reference.roomtype, 0, reference.contact.names.get(0));
+            String title = formatMessage(reference, getEmailTitle(reference.language),  reference.roomtype, 0, reference.contact.names.get(0));
 
             
             
-            Order order = ordermgr.getOrderByReference(reference.bookingReference + "");
-            if (order != null) {
-                User user = usermgr.getUserById(order.userId);
-                if (user != null) {
-                    String copyadress = getSettings("Settings").get("mainemailaddress").value;
-                    if (copyadress != null && !copyadress.isEmpty()) {
-                        sendMail(copyadress, user.emailAddress, title, message, user);
-                        logMailSent(copyadress, "System owner", true, reference.bookingReference);
-                        // Apperently Fastnames mailservers does not support to send two emails at the same time. Need to sleep a bit so the mailservers dont crashes.
-                        try { Thread.sleep(1000); } catch (InterruptedException ex) {}
-                        sendMail(copyadress, copyadress, title, message, user);
-                        reference.sentWelcomeMessages = "true";
-                        logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);
-                        saveObject(reference);
-                    }
+            User user = usermgr.getUserById(reference.userId);
+            if (user != null) {
+                String copyadress = getSettings("Settings").get("mainemailaddress").value;
+                if (copyadress != null && !copyadress.isEmpty()) {
+                    sendMail(copyadress, user.emailAddress, title, message, user);
+                    logMailSent(copyadress, "System owner", true, reference.bookingReference);
+                    // Apperently Fastnames mailservers does not support to send two emails at the same time. Need to sleep a bit so the mailservers dont crashes.
+                    try { Thread.sleep(1000); } catch (InterruptedException ex) {}
+                    sendMail(copyadress, copyadress, title, message, user);
+                    reference.sentWelcomeMessages = "true";
+                    logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);
+                    saveObject(reference);
                 }
             }
         }
@@ -1198,12 +1197,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public void confirmReservation(int bookingReferenceId) throws ErrorException {
         BookingReference bookingReference = getReservationByReferenceId(bookingReferenceId);
-        if (bookingReference != null && !bookingReference.confirmed) {
-            bookingReference.confirmed = true;
-            OrderManager orderManager = getManager(OrderManager.class);
-            orderManager.setOrdersActivatedByReferenceId(bookingReference);
-            saveObject(bookingReference);
-        }
+        bookingReference.invoicedTo = bookingReference.startDate;
+        
+        createOrderForReference(bookingReferenceId, 3);
+        bookingReference.active = true;
+        bookingReference.confirmed = true;
+        
+        updateReservation(bookingReference);
     }
 
     @Override
@@ -1324,5 +1324,109 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         return true;
+    }
+
+    private void createOrderForReference(int bookingReferenceId, int numberOfMonths) throws ErrorException {
+        BookingReference bookingReference = getReservationByReferenceId(bookingReferenceId);
+        if(bookingReference.bookingFee <= 0) {
+            throw new ErrorException(1032);
+        }
+        
+        Date startDate = bookingReference.invoicedTo;
+        
+        Calendar calEnd = Calendar.getInstance();
+        calEnd.setTime(startDate);
+        calEnd.add(Calendar.MONTH, numberOfMonths);
+        Date endDate = calEnd.getTime();
+        
+        Room room = rooms.get(bookingReference.rooms.get(0).roomId);
+        if(room == null) {
+            System.out.println("Room does not exists" + bookingReference.rooms.get(0).roomId);
+            return;
+        }
+        RoomType type = getRoomTypeById(room.roomType);
+        
+        OrderManager orderManager = getManager(OrderManager.class);
+        UserManager usrMgr = getManager(UserManager.class);
+        User user = usrMgr.getUserById(bookingReference.userId);
+        
+        CartManager cartmgr = getManager(CartManager.class);
+        cartmgr.clear();
+        cartmgr.addProduct("fdcff9f1-dadc-4d73-be76-7ee6171f4231", numberOfMonths, null);
+        
+        
+        DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        String startText = formatter.format(startDate);
+        String endText = formatter.format(endDate);
+
+        //Create order and modify it to be correct.
+        if(type == null) {
+            throw new ErrorException(1033);
+        }
+        
+        String itemName = type.name;
+        String orderLineText = "bod " + room.roomName + ", " + startText + " - " + endText + " (" + itemName + ")";
+
+
+        
+        Order order = orderManager.createOrder(user.address);
+        order.reference = "" + bookingReference.bookingReference;
+        CartItem item = order.cart.getItems().get(0);
+        item.getProduct().name = orderLineText;
+        item.getProduct().price = bookingReference.bookingFee;
+        order.userId = bookingReference.userId;
+        orderManager.saveOrder(order);
+        System.out.println("Order created: " + orderLineText + " , id: " + order.incrementOrderId + " id: " + order.id);
+        
+    }
+
+    private RoomType getRoomTypeById(String roomTypeId) {
+        return roomTypes.get(roomTypeId);
+    }
+
+    @Override
+    public void buildRecurringOrders() throws ErrorException {
+        int counter = 0;
+        for(BookingReference ref : bookingReferences.values()) {
+            if(ref.needNewOrder()) {
+                try {
+                    if(ref.bookingFee == 0) {
+                        continue;
+                    }
+                    createOrderForReference(ref.bookingReference, 1);
+                    ref.incrementInvoicedTo();
+                    updateReservation(ref);
+                }catch(ErrorException e) {
+                    System.out.println("Failed building recurring order on : " + ref.bookingReference);
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public BookingReference getLastReservation(String bodNr) throws ErrorException {
+        Room room = getRoomByName(bodNr);
+        BookingReference returnRes = null;
+        for(BookingReference ref : bookingReferences.values()) {
+            if(ref.hasRoom(room.id)) {
+                if(returnRes == null) {
+                    returnRes = ref;
+                } else if(ref.startDate.after(returnRes.startDate)) {
+                    returnRes = ref;
+                }
+            }
+        }
+        
+        return returnRes;
+    }
+
+    private Room getRoomByName(String name) {
+        for(Room room : rooms.values()) {
+            if(room.roomName.equals(name)) {
+                return room;
+            }
+        }
+        return null;
     }
 }

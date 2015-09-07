@@ -8,6 +8,7 @@ import com.mongodb.Mongo;
 import com.thundashop.core.apigenerator.GenerateApi.ApiMethod;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.getshop.Version;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -25,7 +26,7 @@ public class AnalyseApplications {
     private final List<Class> dataObjects;
     private final List<ApiMethod> allMethods = new ArrayList();
     private final HashMap<ApplicationSettings, List<ApiMethod>> usedMethods = new HashMap();
-    String appPath = "../com.getshop.client/app/";
+    String appPath = "/source/getshop/"+Version.mainVersion+"/com.getshop.client/app/";
     
     public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
         GenerateApi api = new GenerateApi();

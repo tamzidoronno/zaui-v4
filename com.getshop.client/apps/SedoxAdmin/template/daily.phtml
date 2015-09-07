@@ -26,6 +26,7 @@
             $user = $this->getApi()->getUserManager()->getUserById($sedoxProduct->firstUploadedByUserId);
             $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($user->id);
             
+            $indicateFixedPrice = $sedoxUser->fixedPrice ? "style='background-color: #FFFFE2'" : "";
             $isSlave = $sedoxUser->masterUserId ? true : false;
             $fullName = "<span class='showUserInformationSedox' userid='$userId'>".$user->fullName." ($balance) </span>";
             $date = $sedoxProduct->rowCreatedDate;
@@ -67,7 +68,7 @@
             }
             
             echo "
-                    <div productId='$id' class='filelistrow'>
+                    <div productId='$id' class='filelistrow' $indicateFixedPrice>
                         
                         <div class='col col1'> $impersonate &nbsp; $id </div>
                         <div class='col col2'> $name </div>

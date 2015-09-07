@@ -51,5 +51,11 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	/** @var String */
 	public $failed;
 
+	/** @var String */
+	public $invoicedTo;
+
+	/** @var String */
+	public $userId;
+
 }
 ?>

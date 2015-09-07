@@ -19,6 +19,33 @@ public class BookingReference extends DataCommon {
         return false;
     }
 
+    public Date getInvoicedTo() {
+        if(invoicedTo == null && startDate != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(startDate);
+            cal.add(Calendar.MONTH, 3);
+            if(!cal.after(new Date())) {
+                cal.set(Calendar.MONTH, 8);
+            }
+            if(cal.get(Calendar.DAY_OF_MONTH) < 15) {
+                cal.add(Calendar.MONTH, 1);
+            }
+            cal.set(Calendar.YEAR, 2015);
+            invoicedTo = cal.getTime();
+        }
+        
+        
+        
+        return invoicedTo;
+    }
+
+    void incrementInvoicedTo() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(invoicedTo);
+        cal.add(Calendar.MONTH, 1);
+        invoicedTo = cal.getTime();
+    }
+
 
     static class uploadArxStatus {
         public static Integer NOTHING_UPLOADED = 0;
@@ -33,6 +60,7 @@ public class BookingReference extends DataCommon {
     public List<Integer> codes = new ArrayList();
     private List<String> roomIds = new ArrayList();
     public List<ReservedRoom> rooms = new ArrayList();
+    public String roomtype = null;
     
     //0 = No rooms has been up
     public HashMap<String, Integer> uploadedRoomToArx = new HashMap();
@@ -45,6 +73,8 @@ public class BookingReference extends DataCommon {
     public Integer parkingSpots = 0;
     public String heardAboutUs = "";
     Date failed = null;
+    public Date invoicedTo = null;
+    public String userId;
     
     boolean isToday() {
         Calendar cal = Calendar.getInstance();
@@ -60,6 +90,33 @@ public class BookingReference extends DataCommon {
             return true;
         }
         return false;
+    }
+    
+    public boolean needNewOrder() {
+        if(!active && confirmed) {
+            Date curInvoiced = getInvoicedTo();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(curInvoiced);
+            cal.add(Calendar.MONTH, 1);
+            if(endDate == null) {
+                return false;
+            }
+            
+            if(cal.getTime().after(endDate)) {
+                return false;
+            }
+        }
+        if(!confirmed) {
+            return false;
+        }
+        
+        Date curInvoiced = getInvoicedTo();
+        
+        Calendar futureDate = Calendar.getInstance();
+        futureDate.setTime(new Date());
+        futureDate.add(Calendar.DAY_OF_YEAR, 15);
+
+        return curInvoiced.before(futureDate.getTime());
     }
 
     boolean isNow() {
@@ -129,6 +186,10 @@ public class BookingReference extends DataCommon {
         
         if(rooms.size() == 1 && rooms.get(0).cartItemId == null) {
             rooms.get(0).cartItemId = cartItemId;
+            return rooms.get(0).roomId;
+        }
+        
+        if (rooms.size() == 1) {
             return rooms.get(0).roomId;
         }
         

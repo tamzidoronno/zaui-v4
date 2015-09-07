@@ -45,9 +45,9 @@ app.HotelbookingManagement = {
             "end" : $('.HotelbookingManagement .enddate').val(),
             "start" : $('.HotelbookingManagement .startdate').val(),
             "refid" : $('.HotelbookingManagement #referenceId').val(),
-            "price" : $('.HotelbookingManagement .monthlyprice').val()
-            
-        }
+            "price" : $('.HotelbookingManagement .monthlyprice').val(),
+            "invoicedTo" : $('.HotelbookingManagement .invoicedTo').val()
+        };
         var event = thundashop.Ajax.createEvent("", "moveRoom", $(this), data);
         thundashop.Ajax.post(event);
         thundashop.common.hideInformationBox();

@@ -216,7 +216,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $type = "boder_aktiv";
         if(isset($_POST['data']['type'])) {
             $type = $_POST['data']['type'];
+        } else if(isset($_SESSION['bodtype'])) {
+            return $_SESSION['bodtype'];
         }
+        $_SESSION['bodtype'] = $type;
         
         return $type;
     }
@@ -238,6 +241,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $reference->startDate = date("M d, Y h:m:s A", strtotime($_POST['data']['start']));
         $reference->endDate = date("M d, Y h:m:s A", strtotime($_POST['data']['end']));
         $reference->bookingFee = $_POST['data']['price'];
+        $reference->invoicedTo = date("M d, Y h:m:s A", strtotime($_POST['data']['invoicedTo']));
         $this->getApi()->getHotelBookingManager()->updateReservation($reference);
 
         foreach($rooms as $id => $room) {

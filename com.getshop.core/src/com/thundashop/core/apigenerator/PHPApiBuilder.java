@@ -1,5 +1,6 @@
 package com.thundashop.core.apigenerator;
 
+import com.thundashop.core.getshop.Version;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,7 +12,7 @@ import java.util.List;
 public class PHPApiBuilder {
 
     private final GenerateApi generator;
-    private String eventsPath = "../com.getshop.client/events/";
+    public static String eventsPath = "/source/getshop/"+Version.mainVersion+"/com.getshop.client/events/";
     private final List<Class> allManagers;
     private final List<Class> dataObjects;
 
@@ -100,6 +101,10 @@ public class PHPApiBuilder {
     }
 
     public void generate() throws IOException {
+        
+        String current = new java.io.File( "." ).getCanonicalPath();
+        System.out.println("Current dir:"+current);
+        
         String result = generatePHPApi();
         this.generator.writeFile(result, eventsPath + "API2.php");
         

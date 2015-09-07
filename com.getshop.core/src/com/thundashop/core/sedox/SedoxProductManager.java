@@ -50,6 +50,7 @@ import javax.annotation.PostConstruct;
 import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Scope;
@@ -91,6 +92,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public WebSocketServerImpl webSocketServer;
     
     @Autowired
+    @Qualifier("SmsFactoryClickatell")
     public SMSFactory smsFactory;
 
     @PostConstruct
@@ -1526,13 +1528,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public double getPriceForProduct(String productId, List<Integer> files) throws ErrorException {
+    public Double getPriceForProduct(String productId, List<Integer> files) throws ErrorException {
         if (getSession() == null || getSession().currentUser == null)  {
-            return -1;
+            return -1D;
         }
             
         if (files == null || files.size() == 0) {
-            return -1;
+            return -1D;
         }
         
         SedoxUser sedoxUser = getSedoxUserById(getSession().currentUser.id);

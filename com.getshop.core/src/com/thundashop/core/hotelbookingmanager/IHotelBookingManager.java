@@ -49,6 +49,7 @@ public interface IHotelBookingManager {
     
     public Room getRoom(String id) throws ErrorException;
     
+    public void buildRecurringOrders() throws ErrorException;
     
     public String getEmailMessage(String language) throws ErrorException;
     
@@ -129,6 +130,9 @@ public interface IHotelBookingManager {
     
     @Administrator
     public BookingStats buildStatistics(BookingStatsInput input) throws ErrorException;
+    
+    @Administrator
+    public BookingReference getLastReservation(String bodNr) throws ErrorException;
     
     public boolean isAvilable(String roomId, long start, long end);
 }

@@ -56,7 +56,11 @@ if (count($day->entries) == 0) {
             echo "Reports<br> ";
             foreach ($this->getApi()->getUserManager()->getAllGroups() as $group) {
                 $reportGenerator = $this->getFactory()->getStore()->id == "d27d81b9-52e9-4508-8f4c-afffa2458488" ? "generateExcelReportSweden" : "generateExcelReport";
-                echo "<a href='$reportGenerator.php?type=calendarbookedusers&entryid=$entry->entryId&group=$group->id'><span style='cursor: pointer; display: inline-block; border: dashed 1px; padding: 4px; margin-right: 10px;'>".$group->groupName."</span></a>";
+                echo "<a href='$reportGenerator.php?type=calendarbookedusers&entryid=$entry->entryId&group=$group->id'><span style='cursor: pointer; display: inline-block; border: dashed 1px; padding: 4px; margin-top: 4px; margin-right: 10px;'>".$group->groupName."</span></a>";
+            }
+            
+            if ($this->getFactory()->getStore()->id == "d27d81b9-52e9-4508-8f4c-afffa2458488") {
+                echo "<a href='$reportGenerator.php?type=calendarbookedusers&entryid=$entry->entryId&group=all'><span style='cursor: pointer; display: inline-block; border: dashed 1px; padding: 4px; margin-top: 4px; margin-right: 10px;'>".$this->__f("All")."</span></a>";
             }
             ?>
             </center>

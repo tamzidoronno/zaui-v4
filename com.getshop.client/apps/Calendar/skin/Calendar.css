@@ -420,3 +420,7 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     padding-left: 10px;
     padding-right: 10px;
 }
+
+.Calendar .dayentry .reports {
+    margin-right: 70px;
+}

@@ -202,6 +202,7 @@ Existing booking references
                 <th>Start date</th>
                 <th>End date</th>
                 <th>Mnd. Pris</th>
+                <th>Invoiced to</th>
                 <th>Contract</th>
             </tr>
         </thead>
@@ -218,8 +219,10 @@ Existing booking references
                 continue;
             }
             
-            if($this->getType() == "boder_aktiv" && $this->isStopped($reservation)) {
-               continue;
+            if($this->getType() == "boder_aktiv") {
+                if($this->isStopped($reservation) && (strtotime($reservation->endDate) < $start)) {
+                   continue;
+                }
             }
             if($this->getType() == "boder_aktiv" && !$this->isStarted($reservation)) {
                continue;
@@ -260,15 +263,13 @@ Existing booking references
             echo "</td>";
             echo "<td valign='top'>" . date("d.m.Y", strtotime($reservation->rowCreatedDate)) . "</td>";
             echo "<td valign='top'>";
-            if($order && $order->userId) {
-                $user = $this->getApi()->getUserManager()->getUserById($order->userId);
-                echo "<a href='?page=users_all_users&userid=".$order->userId."'>";
-                echo join("<br>", $reservation->contact->names);
-                echo " <span style='float:right;padding-right:10px;'>" . $user->cellPhone . "</span>";
-                echo "</a>";
-                if($reservation->heardAboutUs) {
-                    echo "<br><span style='color:#BBB;'>Heard about: "  . $reservation->heardAboutUs . "</span>";
-                }
+            $user = $this->getApi()->getUserManager()->getUserById($reservation->userId);
+            echo "<a href='?page=users_all_users&userid=".$user->id."'>";
+            echo join("<br>", $reservation->contact->names);
+            echo " <span style='float:right;padding-right:10px;'>" . $user->cellPhone . "</span>";
+            echo "</a>";
+            if($reservation->heardAboutUs) {
+                echo "<br><span style='color:#BBB;'>Heard about: "  . $reservation->heardAboutUs . "</span>";
             }
             echo "</td>";
             $endDate = date("d.m.Y", strtotime($reservation->endDate));
@@ -281,6 +282,7 @@ Existing booking references
             echo "<td style='text-align:center;' valign='top'>" . $endDate . "</td>";
             if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") {
                 echo "<td style='text-align:center;' valign='top'>".$reservation->bookingFee."</td>";
+                echo "<td style='text-align:center;' valign='top'>".date("d.m.Y", strtotime($reservation->invoicedTo))."</td>";
                 echo "<td style='text-align:center;' valign='top'>";
                 echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
                 echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-plus'></i></a> ";

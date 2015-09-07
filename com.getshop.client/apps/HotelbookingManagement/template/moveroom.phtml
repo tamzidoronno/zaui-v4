@@ -40,6 +40,11 @@ for($i = 0; $i < sizeof($reference->contact->names);$i++) {
     Monthly price<br>
     <br>
 </div>
+<div>
+    <input type="text" class='invoicedTo' style="float:right;" value='<? echo date("d.m.Y", strtotime($reference->invoicedTo)); ?>'>
+    Invoiced to<br>
+    <br>
+</div>
     <div style="text-align:right;">
         <input type="button" id="doChangeRoom" value="<? echo $this->__f("Update room"); ?>">
     </div>

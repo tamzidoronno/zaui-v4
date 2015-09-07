@@ -1,5 +1,6 @@
 package com.thundashop.core.apigenerator;
 
+import com.thundashop.core.getshop.Version;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
@@ -33,9 +34,15 @@ public class GenerateApi {
     private HashMap<String, Integer> methodProcessed = new HashMap();
     private String type = "defualt";
 
+    File srcCore = new File("/source/getshop/" + Version.mainVersion + "/com.getshop.core/");
+    File srcMessages = new File("/source/getshop/" + Version.mainVersion + "/com.getshop.messages/");
+        
+        
     public GenerateApi() throws ClassNotFoundException {
-        File core = new File("../com.getshop.core/");
-        File messages = new File("../com.getshop.messages/");
+        File core = new File("../GetShop Core/");
+        File messages = new File("../GetShop Message/");
+        
+        
         coreClasses = findClasses(core);
         messageClasses = findClasses(messages);
         allManagers = filterClasses(coreClasses);
@@ -223,8 +230,7 @@ public class GenerateApi {
     private void generate() throws ClassNotFoundException, IOException, Exception {
         generatePHPApi();
         generateJavaApi();
-        generatePythonApi();
-        buildDocumentation();
+//        generatePythonApi();
         analyseApplications();
     }
     
@@ -309,7 +315,7 @@ public class GenerateApi {
             
             System.out.println(result.manager.getSimpleName() + " : "+ result.methodName);
 
-            String path = new File(".").getAbsolutePath() + "/src/" + filteredClass.getName().replace(".", "/") + ".java";
+            String path = srcCore + "/src/" + filteredClass.getName().replace(".", "/") + ".java";
             String javafile = readContent(path);
             if(javafile.isEmpty()) {
                 System.out.println("Unable to load java file : " + path);

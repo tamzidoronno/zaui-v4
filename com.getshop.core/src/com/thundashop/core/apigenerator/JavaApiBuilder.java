@@ -6,6 +6,7 @@ package com.thundashop.core.apigenerator;
 
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.apigenerator.GenerateApi.ApiMethod;
+import com.thundashop.core.getshop.Version;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -24,7 +25,7 @@ import java.util.Map;
 public class JavaApiBuilder {
 
     private final GenerateApi generator;
-    private String apiPath = "../com.getshop.javaapi/src/com/getshop/javaapi";
+    private String apiPath = "/source/getshop/"+Version.mainVersion+"/com.getshop.javaapi/src/com/getshop/javaapi";
     private final List<Class> allManagers;
     private final List<Class> dataObjects;
 
@@ -135,6 +136,7 @@ public class JavaApiBuilder {
             resultHeader += "import java.util.LinkedHashMap;\n";
 
             resultHeader += "import com.thundashop.core.common.JsonObject2;\n";
+            resultHeader += "import com.getshop.common.Transporter;\n";
 
             String fname = "API" + entry.getSimpleName().substring(1) + ".java";
             generator.writeFile(resultHeader+content, apiPath + "/" + fname);
@@ -143,6 +145,7 @@ public class JavaApiBuilder {
         
         content = "";
         content = "package com.getshop.javaapi;\n\n";
+        content += "import com.getshop.common.Transporter;\n";
         content += "public class GetShopApi {\r\n";
         content += "\r\n";
         content += "      public Transporter transport;\r\n";

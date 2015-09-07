@@ -10,6 +10,7 @@ com.getshop.messages/nbproject/private/private.properties
 com.getshop.messages/nbproject/private/private.xml
 com.getshop.messages/nbproject/private/
 com.getshop.messages/build/
+com.getshop.client/events/API2.php
 com.getshop.client/uploadedfiles
 com.getshop.core/nbproject/private/
 com.getshop.client/uploadedfiles
@@ -79,6 +80,7 @@ com.getshop.remote/nbproject/project.properties
 
 com.getshop.client/etc/config.txt
 com.getshop.client/ROOT/cssfolder
+com.getshop.javaapi/src/com/getshop/javaapi
 /com.getshop.client/com.getshop.javaapi/nbproject/private/
 /com.getshop.javaapi/build/
 /com.getshop.javaapi/dist/
@@ -94,6 +96,7 @@ com.getshop.client/ROOT/diplomapictures
 *private/*
 
 
+
 #phonegap - autoakademiet
 com.getshop.mobile/autoakademiet/platforms/android/CordovaLib/ant-build
 com.getshop.mobile/autoakademiet/platforms/android/ant-build
@@ -102,3 +105,6 @@ com.getshop.mobile/autoakademiet/platforms/android/AndroidManifest.xml
 com.getshop.mobile/autoakademiet/apk/
 com.getshop.mobile/autoakademiet/platforms/android/CordovaLib/bin/
 com.getshop.mobile/autoakademiet/platforms/android/CordovaLib/gen/
+
+
+com.getshop.client/ROOT/bosch/Opel\ Insignia\ Sports\ Tourer/

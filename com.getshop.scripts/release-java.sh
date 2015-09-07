@@ -19,16 +19,16 @@ put API2.php
 EOF
 
 echo -e "Uploading thundashop jar files"
-sftp -b batchfile naxa@backend.getshop.com #&> /dev/null
+sftp -b batchfile naxa@backend.getshop.com &> /dev/null
 rm -rf batchfile
 
 echo -e "uploading apitodb.json file"
-sftp -b batchfile2 naxa@backend.getshop.com #&> /dev/null
+sftp -b batchfile2 naxa@backend.getshop.com &> /dev/null
 rm -rf batchfile2
 
 echo -e "uploading API.php file"
-sftp -b batchfile3 naxa@www.getshop.com #&> /dev/null
-rm -rf batchfiler3
+sftp -b batchfile3 naxa@www.getshop.com &> /dev/null
+rm -rf batchfile3
 
 echo -e "Restarting java!";
 ssh -T naxa@backend.getshop.com << EOF &> /dev/null;

@@ -120,3 +120,4 @@ core/build
 core/secret.txt
 output.txt
 javaapi/src/main/java/com/getshop/javaapi
+artifacts/builds

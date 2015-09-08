@@ -1,7 +1,7 @@
 #!/bin/bash
 gradleFolder=`pwd`
-folder="/opt/getshop/builds/"$1_$2"/tmp"
-zipFile=backend_$1_$2.tar.gz
+folder="/opt/getshop/builds/"$1"/tmp"
+zipFile=backend_$1.tar.gz
 
 #Java package
 mkdir -p $folder/dist
@@ -16,7 +16,7 @@ rm -rf $folder
 mkdir php
 cd php
 rsync -av --exclude='app' --exclude='uploadedfiles' --exclude='gimp' --exclude='docs' --exclude='etc' $gradleFolder/com.getshop.client/ .
-tar czvf php_$1_$2.tar.gz *
-mv php_$1_$2.tar.gz ../
+tar czvf php_$1.tar.gz *
+mv php_$1.tar.gz ../
 cd ../
 rm -rf php;

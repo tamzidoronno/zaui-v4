@@ -30,11 +30,8 @@ task javaapiGen {
 }
 
 
-task assemble(type: Exec, dependsOn: ['javaapiClean', 'javaapiGen', 'javaapi:jar', 'core:fatJar']) {
-    if ( project.hasProperty("buildVersion") ) {
-        commandLine 'scripts/assemble.sh', version, buildVersion
-    }
-    
+task assembleGetShop(type: Exec, dependsOn: ['javaapiClean', 'javaapiGen', 'javaapi:jar', 'core:fatJar']) {
+    commandLine 'scripts/assemble.sh', version
 }
 
 task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {

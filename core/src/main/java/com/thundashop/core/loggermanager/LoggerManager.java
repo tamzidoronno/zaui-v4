@@ -1,0 +1,72 @@
+package com.thundashop.core.loggermanager;
+
+import com.getshop.scope.GetShopSession;
+import com.thundashop.core.common.DatabaseSaver;
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.Logger;
+import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.loggermanager.data.LoggerData;
+import com.thundashop.core.common.JsonObject2;
+import com.thundashop.core.databasemanager.Database;
+import java.util.UUID;
+import java.util.logging.Level;
+import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+/**
+ *
+ * @author boggi
+ */
+@Component
+@GetShopSession
+public class LoggerManager extends ManagerBase {
+    
+    @Autowired
+    private Database database;
+
+    @PostConstruct
+    public void init() {
+        initialize();
+    }
+    
+    public void logApiCall(JsonObject2 object) throws ErrorException {
+        LoggerManagerThread thread = new LoggerManagerThread();
+        thread.object = object;
+        thread.database = database;
+        thread.storeId = storeId;
+        thread.credentials = credentials;
+        
+        thread.start();
+    }
+}
+
+class LoggerManagerThread extends Thread {
+    public JsonObject2 object;
+    public String storeId;
+    public Credentials credentials;
+    public Database database;
+    
+    @Override
+    public void run() {
+        try {
+            if(object.interfaceName.equals("core.chat.ChatManager") && object.method.equals("getMessages")) {
+                return;
+            }
+            if(object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStore")) {
+                return;
+            }
+
+            LoggerData data = new LoggerData();
+            data.data = object;
+            data.type = LoggerData.Types.API;
+            data.storeId = storeId;
+            data.id = UUID.randomUUID().toString();
+            database.saveWithOverrideDeepfreeze(data, credentials);
+        } catch (ErrorException ex) {
+            java.util.logging.Logger.getLogger(LoggerManagerThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+}

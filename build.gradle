@@ -1,0 +1,51 @@
+import org.gradle.api.artifacts.*
+
+apply plugin: 'base' // To add "clean" task to the root project.
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+
+version = '3.0.0'
+
+subprojects {
+    apply from: rootProject.file('common.gradle')
+}
+
+repositories {
+    mavenCentral()
+}
+
+task createJavaAPI(dependsOn: "core:build") {
+    doFirst {
+        println 'java-api: ' + version
+    }
+}
+
+task javaapiClean {
+    dependsOn 'javaapi:cleanUp'
+}
+
+task javaapiGen {
+    dependsOn 'core:startGenerator'
+}
+
+
+task assemble(type: Exec, dependsOn: ['javaapiClean', 'javaapiGen', 'javaapi:jar', 'core:fatJar']) {
+    if ( project.hasProperty("buildVersion") ) {
+        commandLine 'scripts/assemble.sh', version, buildVersion
+    }
+    
+}
+
+task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {
+    title = 'All modules'
+    destinationDir = new File(project.buildDir, 'merged-javadoc')
+
+    // Note: The closures below are executed lazily.
+    source {
+       subprojects*.sourceSets*.main*.allSource
+    }
+    classpath.from {
+        subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDependency); })*.resolve()
+    }
+}

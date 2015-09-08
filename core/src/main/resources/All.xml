@@ -1,0 +1,29 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"  
+xmlns:context="http://www.springframework.org/schema/context" xmlns:jms="http://www.springframework.org/schema/jms"  
+xmlns:amq="http://activemq.apache.org/schema/core" 
+xmlns:task="http://www.springframework.org/schema/task"
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd  
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd   
+http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd   
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd  
+http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-2.5.xsd 
+http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.2.0.xsd
+http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd" 
+>  
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+    
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+        <property name="scopes">
+            <map>
+                <entry key="getshop">
+                    <ref bean="getShopSessionScope"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+    <context:component-scan base-package="com.thundashop, com.getshop" />
+    <task:annotation-driven/>
+</beans>

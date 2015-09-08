@@ -1,0 +1,32 @@
+apply plugin: 'application'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'com.thundashop.core.start.Runner'
+}
+
+mainClassName  = 'com.thundashop.core.start.Runner'
+
+task fatJar(type: Jar) {
+    from(project(':core').sourceSets.main.resources)
+    from files(sourceSets.main.output.classesDir)
+    from {configurations.compile.collect {zipTree(it)}} {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+}
+
+task startGenerator(type:JavaExec) {
+    main = 'com.thundashop.core.apigenerator.GenerateApi'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+
+manifest {
+    attributes 'Main-Class': 'com.thundashop.core.start.Runner'
+    }
+}
+
+dependencies {
+    compile project(":messages")
+    compile fileTree(dir: '../libs', include: ['*.jar'])
+}

@@ -736,14 +736,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(user);
         }
         
-        if ((user.birthDay == null || user.birthDay.isEmpty()) && user.company != null) {
-            user.birthDay = user.company.vatNumber;
-        }
-        
-        if (user.birthDay != null && (user.company == null || user.company.name.isEmpty()) && getSession() != null) {
-            UtilManager man = getManager(UtilManager.class);
-            user.company = man.getCompanyFromBrReg(user.birthDay);
-            saveUser(user);
+        if (storeId != null && (storeId.equals("d27d81b9-52e9-4508-8f4c-afffa2458488") || storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445"))) {
+            if ((user.birthDay == null || user.birthDay.isEmpty()) && user.company != null) {
+                user.birthDay = user.company.vatNumber;
+            }
+
+            if (user.birthDay != null && (user.company == null || user.company.name.isEmpty()) && getSession() != null) {
+                UtilManager man = getManager(UtilManager.class);
+                user.company = man.getCompanyFromBrReg(user.birthDay);
+                saveUser(user);
+            }
         }
     }
 

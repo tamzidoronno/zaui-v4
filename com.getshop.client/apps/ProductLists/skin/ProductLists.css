@@ -398,6 +398,7 @@
     padding-left: 50px;
     padding-rigth: 50px;
     white-space: normal;
+    vertical-align: top;
 }
 
 @media only all and (max-width: 800px) { 
@@ -414,4 +415,19 @@
         padding-left: 3px;
         padding-right: 3px;
     }
+    
+    .ProductLists .slidelist .product_inner {
+        padding-right: 100px;
+    }
+    .ProductLists .slidelist .product  img {
+        max-width: 100%;
+    }
+    
+    .ProductLists .slidelist .slidePrev {
+        left: 10px;
+    }
+    .ProductLists .slidelist .slideNext {
+        right: 10px;    
+    }
+
 }

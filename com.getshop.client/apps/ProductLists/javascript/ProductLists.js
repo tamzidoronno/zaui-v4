@@ -184,7 +184,10 @@ app.ProductLists.slideListRunner = {
         var productWidth = slideListDom.closest('.app').width();
         app.ProductLists.slideListRunner[slideListId] = false;
         slideListDom.find('.product').width(productWidth);
+        $('#loader_'+slideListId).hide();
+        slideListDom.show();
         app.ProductLists.slideListRunner.next(slideListDom);
+
     },
     
     next: function(slideListId) {

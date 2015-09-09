@@ -19,7 +19,11 @@ function getProdcutImageId($product) {
 }
 ?>    
 
-<div class="slidelist" id="slidelist_<? echo $this->getConfiguration()->id; ?>">
+<div style='font-size: 20px; text-align: center;' id='loader_<? echo $slideListID; ?>'>
+    <i class='fa fa-spinner fa-spin'></i> <? echo $this->__w("Loading"); ?>
+</div>
+
+<div class="slidelist" id="slidelist_<? echo $this->getConfiguration()->id; ?>" style='display: none;'>
     <div class="slidelist_inner">
         <?
         
@@ -35,13 +39,15 @@ function getProdcutImageId($product) {
 
             
             echo '<div class="product">';
-                echo "<div class='title'>".$product->name."</div>";
-                echo "<div class='price'>";
-                 echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price); 
-                echo "</div>";
-                echo $image;
-                echo "<div class='descriptionarea'>";
-                    echo nl2br($product->shortDescription);
+                echo "<div class='product_inner'>";
+                    echo "<div class='title'>".$product->name."</div>";
+                    echo "<div class='price'>";
+                     echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price); 
+                    echo "</div>";
+                    echo $image;
+                    echo "<div class='descriptionarea'>";
+                        echo nl2br($product->shortDescription);
+                    echo "</div>";
                 echo "</div>";
             echo '</div>';
         }

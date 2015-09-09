@@ -1,150 +1,127 @@
-.gsarea[area="header"] .Menu { position: absolute; right: 0px; top: 60px;  }
-.gsarea[area="header"] .Menu a div { padding: 10px; color:#fff; font-size: 16px; }
-.gs_page_width { width: 1100px; margin: auto; }
-h1 { text-align: center;
-     font-size: 30px;
-     margin-top: 30px;
-     margin-bottom: 30px;
-     font-weight: normal;
-     font-family: 'Lobster', cursive; }
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 1, 2015, 10:46:21 AM
+    Author     : ktonder
+*/
+
 
 body {
-    min-width: 1100px;
-    font-family: 'Roboto', sans-serif;
-    background-color: #3a99d7;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    color: #FFF;    
+    font-family: Arial, sans-serif;
 }
 
-.gsarea[area="header"],.gsarea[area="footer"] {
-    background-color: rgba(0,0,0,0.6);
-    color: #FFF;
-    margin: 0px;
+.gs_page_width {
+    max-width: 1234px;
+    margin: 0 auto;
 }
 
+
+.gsarea[area="body"] {
+    padding-top: 85px;
+}
 .gsarea[area="header"] {
-    background: linear-gradient(to bottom, #2f6083, #173c55) !important;
-}
-
-.gsarea[area="body"]  .CartManager { 
-    color: #000;
-}
-
-#confirmorder {
-    width: 250px;
-}
-
-.gsarea[area="body"]  .gscolumn.gs_margin_left { 
-    padding-left: 20px;
-}
-.gsarea[area="body"]  .gscolumn.gs_margin_right { 
-    padding-right: 20px;
-}
-.gsarea[area="body"]  .gscolumn .gsinner { 
-    display: inline-block;
-    color: #333;
-    border-radius: 7px;
-    text-align: left;
+    position: fixed !important;
+    z-index: 2;
+    top: 0px;
     width: 100%;
-    box-shadow: 0px 0px 3px #FFF;
-    vertical-align: top; 
+    box-shadow: 0px 0px 3px #000;
 }
 
-.gsarea[area="body"] .gscolumn .gsinner.gsdepth_1 {
-    padding: 15px;
-    width:100%;
+.gsarea[area="header"] .gsdepth_0.gscount_0.gsrow,
+.gsarea[area="header"] .gsdepth_0.gscount_1.gsrow {
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #e5e5e5 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+}
+.gsarea[area="header"] .Menu .entry .entries {
+    background-color: #fafafa;
+    top: 40px;
+    border-left: solid 1px #c9c9c9;
+    border-bottom: solid 1px #c9c9c9;
+    border-right: solid 1px #c9c9c9;
+    margin-left: -1px;
 }
 
-.shop_button {
-     background-color: green;
-     color: #FFF;
-     width:100%;
-    padding-left:0px;
-    padding-right:0px;
+.gsarea[area="header"] .Menu .entry.active a {
+    border-right: solid 0px;
+    color: #FF0000 ! important;
 }
 
-.gstabbtn { font-size: 16px; border-radius: 3px; padding-left: 10px; padding-right: 10px; border-color:#2e7bab; }
-.gsactivetab { background-color:#2b3a44; }
-.gstabheader { text-align: center; padding-bottom: 20px; }
+.gsarea[area="header"] .Menu .entry div i {
+    display: block;
+    font-size: 30px;
+}
+.gsarea[area="header"] .Menu .entry  div {
+    font-size: 14px;
+    line-height: 25px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding-right: 20px;
+    padding-left: 20px;
+    text-align: center;
+    /*font-weight: 300;*/
+}
+
+.gsarea[area="header"] .Menu .entry:last-child a div {
+    border-right: solid 0px;
+}
+.gsarea[area="footer"] .gsdepth_0.gscount_0 {
+    background-color: #2b2b2b;
+}
+.gsarea[area="footer"] .gsdepth_0.gscount_1 {
+    background-color: #393939;
+    min-height: 264px;
+}
+.gsarea[area="footer"] .gsdepth_0.gscount_2 {
+    background-color: #2b2b2b;
+}
 
 .gsarea[area="footer"] {
-    margin-top: 50px;
+    background-color: #DDD;
 }
 
-.Banner .dots .dot.selected { background-image: none; background-color: #000; border-radius: 20px; height: 15px; width: 15px; margin-top: 4px; }
-.Banner .dots .dot.selected { }
-
-.gsarea[area="footer"] .gsdepth_0.gscount_0.gsrow {
-    background-color: #1E425A;
-    padding-top: 15px;
-}
-
-.gsarea[area="footer"] .gsdepth_0.gscount_2.gsrow {
-    background-color: #1E425A;
-    height: 40px;
-    padding-top: 20px;
-    height: 600px;
-}
-
-.gsarea[area="header"] .entry.active {
-    background-image: url('{IMAGEFOLDER}/header-triangle.png');
-    background-repeat: no-repeat;
-    background-position: center bottom;
-    background-size: 20px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-
-}
-
-.small_cart_dom .checkout_area .checkout {
-    display: inline-block;
-    color: #FFF;
-    border-left: solid 1px #63b6db;
-    padding-left: 10px;
-    position: absolute;
-    right: 0px;
-    padding-right: 10px;
-    border-radius: 0px 0px 5px 0px;
-    
-    background: #c5deea; /* Old browsers */
-    background: -moz-linear-gradient(top,  #c5deea 0%, #8abbd7 31%, #066dab 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c5deea), color-stop(31%,#8abbd7), color-stop(100%,#066dab)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #c5deea 0%,#8abbd7 31%,#066dab 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #c5deea 0%,#8abbd7 31%,#066dab 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #c5deea 0%,#8abbd7 31%,#066dab 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #c5deea 0%,#8abbd7 31%,#066dab 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c5deea', endColorstr='#066dab',GradientType=0 ); /* IE6-9 */
-}
-
-.small_cart_dom .checkout_area {
-    background: #63b6db; /* Old browsers */
-    background: -moz-linear-gradient(top,  #63b6db 0%, #309dcf 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#63b6db), color-stop(100%,#309dcf)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #63b6db 0%,#309dcf 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #63b6db 0%,#309dcf 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #63b6db 0%,#309dcf 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #63b6db 0%,#309dcf 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#63b6db', endColorstr='#309dcf',GradientType=0 ); /* IE6-9 */
-    border-radius: 0px 0px 5px 5px;
-    line-height: 45px;
+.ProductLists .slidelist .product {
     font-size: 16px;
-    color: #FFF;
-    padding-left: 10px;
 }
 
-.Contact .shop_button { padding-left:0px; padding-right:0px; }
-.CartManager .leftcart,.CartManager .rightcart { box-shadow: 0px 0px 3px #FFF; border-radius: 5px; }
 
-.gsarea[area="body"] .gscontainer.gsdepth_0.gscount_0 {
-    background-color: #014c77;
+.ProductLists .slidelist .product .price {
+    position: absolute;
+    top: 0px;
+    right: 120px;
+    font-size: 26px;
+    font-weight: bold;
+}
+.ProductLists .slidelist .product .title {
+    font-size: 25px;
 }
 
-.gsarea[area="body"] .gscontainer.gsdepth_0.gscount_0 .gscontainerinner {
-    min-height: 550px;
-    background-repeat: no-repeat;
-    background-position: center;
+.ProductLists .slidelist .product .image {
+    display: inline-block;
+    
+    padding: 20px;
+}
 
-    background-image: url('/displayImage.php?id=3ccd19ef-d48d-43bc-bcea-b58c87ee1ab9');
+.ProductLists .slidelist .product .image img {
+    width: 600px;
+    display: inline-block;
+    vertical-align: top;
+    border-radius: 15px;
+}
+
+.ProductLists .slidelist .product .descriptionarea {
+    display: inline-block;
+    width: 500px; 
+    border: solid 1px #F1F1F1;
+    vertical-align: top;
+    padding: 20px;
+    margin-top: 20px;
 }

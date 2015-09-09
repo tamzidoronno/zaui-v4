@@ -806,15 +806,21 @@ class ApplicationManager extends FactoryBase {
         $user->type = 10;
         $user->password = $password;
         $user->company = $this->getFactory()->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['orgnr']);
-        $this->getApi()->getUserManager()->createUser($user);
-        $userLoggedOn = $this->getFactory()->getApi()->getUserManager()->logOn($user->emailAddress, $password);
+        $user = $this->getApi()->getUserManager()->createUser($user);
+        
        
-       if ($userLoggedOn) {
-           \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($userLoggedOn);
-           echo "success";
-       } else {
-           echo "failed";
-       }
+        if (isset($_POST['data']['dontLogin']) && $_POST['data']['dontLogin']) {
+            echo $user->id;
+            return;
+        }
+        
+        $userLoggedOn = $this->getFactory()->getApi()->getUserManager()->logOn($user->emailAddress, $password);
+        if ($userLoggedOn) {
+            \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($userLoggedOn);
+            echo "success";
+        } else {
+            echo "failed";
+        }
     }
     
     public function proResetPassword() {

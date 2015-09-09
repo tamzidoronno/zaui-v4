@@ -33,15 +33,24 @@ app.ProMeisterLogin = {
             cellphone : $('.promeisterloginform #cellphone').val()
         };
         
+        if (!app.ProMeisterLogin.addressOnSuccess) {
+            data['dontLogin'] = true;
+        }
+        
         data.orgnr = $(this).attr('orgnr');
         
         var event = thundashop.Ajax.createEvent(null, "proMeisterCreateUser", null, data);
         thundashop.Ajax.postWithCallBack(event, function(result) {
-            if (result === "success") {
-                window.location = app.ProMeisterLogin.addressOnSuccess;
-                app.ProMeisterLogin.close();
+            if (!app.ProMeisterLogin.addressOnSuccess) {
+                window.location = '/index.php?page=users_all_users&userid='+result;
             } else {
-                alert(__f("Failed to create user"));
+                if (result === "success") {
+                    if (app.ProMeisterLogin.addressOnSuccess)
+                        window.location = app.ProMeisterLogin.addressOnSuccess;
+                    app.ProMeisterLogin.close();
+                } else {
+                    alert(__f("Failed to create user"));
+                }
             }
             
         });
@@ -68,6 +77,11 @@ app.ProMeisterLogin = {
     
     showStep1: function() {
         app.ProMeisterLogin.hideSteps();
+        if (app.ProMeisterLogin.addressOnSuccess) {
+            $('.signup_step1 .back_button').show();
+        } else {
+            $('.signup_step1 .back_button').hide();
+        }
         $('.signup_step1').show();
     },
     
@@ -175,6 +189,14 @@ app.ProMeisterLogin = {
         app.ProMeisterLogin.showStep0();
         app.ProMeisterLogin.addressOnSuccess = addressOnSuccess;
         $('.signupform_outer').show();
+    },
+    
+    showCreateAccount: function() {
+        $(window).scrollTop(0);
+        app.ProMeisterLogin.showStep0();
+        app.ProMeisterLogin.addressOnSuccess = null;
+        $('.signupform_outer').show();
+        app.ProMeisterLogin.showStep1();
     },
     
     login: function() {

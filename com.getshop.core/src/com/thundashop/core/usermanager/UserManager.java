@@ -1,6 +1,7 @@
 package com.thundashop.core.usermanager;
 
 import com.google.gson.Gson;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.calendar.CalendarManager;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -16,6 +17,7 @@ import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.utils.CompanySearchEngine;
 import com.thundashop.core.utils.CompanySearchEngineHolder;
+import com.thundashop.core.utils.UtilManager;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -81,11 +83,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
-        try {
-            showStatistic();
-        } catch (ErrorException ex) {
-            java.util.logging.Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            showStatistic();
+//        } catch (ErrorException ex) {
+//            java.util.logging.Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     private UserStoreCollection getUserStoreCollection(String storeId) throws ErrorException {
@@ -733,6 +735,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(counter);
             saveObject(user);
         }
+        
+        if ((user.birthDay == null || user.birthDay.isEmpty()) && user.company != null) {
+            user.birthDay = user.company.vatNumber;
+        }
+        
+        if (user.birthDay != null && (user.company == null || user.company.name.isEmpty()) && getSession() != null) {
+            UtilManager man = getManager(UtilManager.class);
+            user.company = man.getCompanyFromBrReg(user.birthDay);
+            saveUser(user);
+        }
     }
 
     public void markUserAsTransferredToVisma(User user) {
@@ -872,5 +884,23 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (!content.isEmpty() && !subject.isEmpty()) {
             mailfactory.send(fromAddress, user.emailAddress, subject, content);
         }
+    }
+
+    private void printUsersWithoutRefernece() throws ErrorException {
+        int count = 0;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2015);
+        cal.set(Calendar.MONTH, 3);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        
+        for (User user : getAllUsers()) {
+            if (user.groups == null || user.groups.size() == 0 && user.rowCreatedDate.after(cal.getTime())) {
+                count++;
+                System.out.println(user.fullName + ", " + user.emailAddress + ", " + user.emailAddressToInvoice + ", " + user.cellPhone);
+            }
+        }
+        
+        System.out.println("Users: " + count);
     }
 }

@@ -423,6 +423,7 @@ class Factory extends FactoryBase {
     }
 
     public function run($json = false) {
+        $_SESSION['GS_InSession'] = "true";
         $this->runPreprocess();
         $this->renderConent($json);
         $this->runPostProcess();

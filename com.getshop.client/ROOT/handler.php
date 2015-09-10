@@ -45,6 +45,11 @@ ob_start();
 checkCreateApp();
 
 $factory = IocContainer::getFactorySingelton();
+
+if (!isset($_SESSION['GS_InSession']) || !$_SESSION['GS_InSession']) {
+    die("Timed out");
+}
+
 $handler = new handler();
 if (isset($_POST['core']['appid']) && $_POST['core']['appid']) {
     $handler->route($factory);

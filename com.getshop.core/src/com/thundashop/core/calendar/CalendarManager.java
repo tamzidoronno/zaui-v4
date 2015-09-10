@@ -626,6 +626,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     private void addUserToEventInternal(String userId, String eventId, String password, String username, String source) throws ErrorException {
+        if (userId == null) {
+            throw new NullPointerException("Tried to add a user to an event that does not exists");
+        }
+        
         for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
@@ -645,7 +649,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                         AttendeeMetaInfo metaInfo = new AttendeeMetaInfo();
                         metaInfo.source = source;
                         metaInfo.userId = userId;
-                        entry.metaInfo.put(userId, metaInfo);
+                        if (userId != null && metaInfo != null) {
+                            entry.metaInfo.put(userId, metaInfo);
+                        }
 
                         databaseSaver.saveObject(month, credentials);
 
@@ -1379,7 +1385,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                         AttendeeMetaInfo metaInfo = entry.metaInfo.remove(clone);
                         if (metaInfo != null) {
                             metaInfo.userId = newUserId;
-                            entry.metaInfo.put(newUserId, metaInfo);
+                            if (newUserId != null && metaInfo != null) {
+                                entry.metaInfo.put(newUserId, metaInfo);
+                            }
                         }
                     }
                 }

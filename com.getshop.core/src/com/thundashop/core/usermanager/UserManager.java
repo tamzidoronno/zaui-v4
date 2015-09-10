@@ -696,10 +696,22 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public User getUserByEmail(String emailAddress) throws ErrorException {
+        User loggedInUser = getSession().currentUser;
+        boolean needCheck = loggedInUser.type == User.Type.CUSTOMER;
+        
         List<User> users = getUserStoreCollection(getStore().id).getAllUsers();
         for (User user : users) {
             if (user.emailAddress != null && user.emailAddress.equals(emailAddress)) {
-                return user;
+                
+                if (needCheck) {
+                    if (user.parents != null || user.parents.contains(loggedInUser.id)) {
+                        return user;
+                    }
+                } else {
+                    return user;
+                }
+                
+                
             }
         }
         

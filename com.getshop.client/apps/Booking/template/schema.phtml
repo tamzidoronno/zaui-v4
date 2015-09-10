@@ -11,6 +11,11 @@ if (!isset($_SESSION['userEmailToBook'])) {
        
 $userToBook = $this->getUserToBook();
 
+if (isset($_SESSION['ProMeister_booking_useYourSelf']) && $_SESSION['ProMeister_booking_useYourSelf'] == "true") {
+    $userToBook = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+    $_SESSION['userEmailToBook'] = $userToBook->emailAddress;
+}
+
 if ($userToBook) {
     $_SESSION['group'] = $userToBook->groups[0];
 }
@@ -112,7 +117,9 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                     } else {
                         echo "<img src='displayImage.php?id=$imageId'/>";
                     }
-                    echo "<div class='changeit' entryid='$currentEntry->entryId'>" . $this->__w("change") . "</div>";
+                    if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->type > 10) {
+                        echo "<div class='changeit' entryid='$currentEntry->entryId'>" . $this->__w("change") . "</div>";
+                    }
                     echo "</div>";
                 }
             }
@@ -216,13 +223,17 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
             <tr>
                 <td colspan="2" align="right">
                     
-                    <div class="button unsetEnteteredUserToBook"  entryid="<? echo $currentEntry->entryId; ?>">
-                        <div class="rightglare"></div>
-                        <div class="filler"></div>
-                        <ins class="send_email" id="send_email"><?
-                                echo $this->__w("Change user");
-                            ?></ins>
-                    </div>
+                    <? 
+                    if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->type > 10) {
+                    ?>
+                        <div class="button unsetEnteteredUserToBook"  entryid="<? echo $currentEntry->entryId; ?>">
+                            <div class="rightglare"></div>
+                            <div class="filler"></div>
+                            <ins class="send_email" id="send_email"><?
+                                    echo $this->__w("Change user");
+                                ?></ins>
+                        </div>
+                    <? } ?>
                     
                     <div class="button savebooking" entryid="<? echo $currentEntry->entryId; ?>">
                         <div class="rightglare"></div>
@@ -263,9 +274,14 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                     foreach ($subUsers as $subUser) {
                         $color = in_array($subUser->id, $currentEntry->attendees) ? "006e63" : "DDD";
                         $color = in_array($subUser->id, $currentEntry->waitingList) ? "d4c300" : $color;
-                        echo "<div style='text-align: left; padding: 5px; border: solid 1px #DDD;' class='addSubUserToEvent' entryid='$currentEntry->entryId' userid='$subUser->id'>";
+                        echo "<div style='text-align: left; padding: 5px; border: solid 1px #DDD; position: relative;' class='addSubUserToEvent' entryid='$currentEntry->entryId' userid='$subUser->id'>";
                         echo '<i class="fa fa-graduation-cap" style="margin-right: 10px; margin-left: 10px; color:#'.$color.';"></i>';
                         echo $subUser->fullName . ", " . $subUser->cellPhone;
+                        
+                        if ($color == "DDD") {
+                            echo "<div class='subusersignonbutton'>".$this->__w("Sign up")."</div>";
+                        }
+                        
                         echo "</div>";
                     }
                 }

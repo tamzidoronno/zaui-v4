@@ -112,7 +112,14 @@ class Booking extends MarketingApplication implements Application {
         }
         if ($userObject == null) {
             $this->includefile("logininformation");
-        } elseif ($userObject->type > 10) {
+        } elseif ($userObject->type > 10 || $userObject->isMaster) {
+            
+            if ($userObject->isMaster) {
+                $_SESSION['ProMeister_booking_useYourSelf'] = "true";
+            } else {
+                $_SESSION['ProMeister_booking_useYourSelf'] = "false";
+            }
+            
             $this->includefile("schema");
         } else {
             $this->includefile('confirmbooking');
@@ -229,7 +236,6 @@ class Booking extends MarketingApplication implements Application {
     }
 
     public function runRegisterEvent() {
-        
         $_GET['event'] = $_POST['data']['entryId'];
         $userToBook = $this->getUserToBook();
         if ($userToBook) {
@@ -256,9 +262,12 @@ class Booking extends MarketingApplication implements Application {
             }
 
             $this->registerEvent($data);
+            
+            
         }
         
         $this->clearSession();
+        
     }
     
     public function getUserToBook() {

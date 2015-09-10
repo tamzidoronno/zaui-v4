@@ -784,8 +784,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return false;
         }
         
-        RandomString passwordGenerator = new RandomString(8);
-        String password = passwordGenerator.nextString();
+        Random r = new Random();
+        int Low = 145111;
+        int High = 989227;
+        int R = r.nextInt(High-Low) + Low;
+        
+        String password = ""+R;
         
         user.password = encryptPassword(password);
         databaseSaver.saveObject(user, credentials);

@@ -9,7 +9,7 @@ thundashop.handleAjaxError = function(error, textstatus, status, content) {
     if (error && error.responseText === "Timed out") {
         alert('Session timed out, reloading page');
         document.location = '/';
-        return;
+        throw new Error("timeout");
     }
     
     $('#loaderbox').hide();
@@ -33,8 +33,9 @@ thundashop.handleAjaxError = function(error, textstatus, status, content) {
 
 thundashop.AjaxPreCheck = function(response) {
     if (response === "Timed out") {
-        alert('Session timed out, reloading page');
+        alert(__('Session timed out, reloading page'));
         document.location = '/';
+        throw new Error("timeout");
     }
 }
 

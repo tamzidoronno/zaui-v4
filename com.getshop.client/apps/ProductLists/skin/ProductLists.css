@@ -416,8 +416,14 @@
         padding-right: 3px;
     }
     
+    .ProductLists .slidelist .product {
+        padding-left: 30px;
+    }
+    
     .ProductLists .slidelist .product_inner {
-        padding-right: 100px;
+        margin-right: 50px;
+        padding: 20px;
+        box-sizing: border-box;
     }
     .ProductLists .slidelist .product  img {
         max-width: 100%;

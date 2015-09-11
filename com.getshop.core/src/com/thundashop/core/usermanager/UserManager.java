@@ -107,9 +107,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.username == null || user.username.trim().length() == 0) {
             int i = 10000;
             boolean exists = true;
+            
+            List<User> users = getAllUsers();
+            
             while (exists) {
                 i++;
-                List<User> users = getAllUsers();
                 user.username = "" + (users.size() + i);
                 exists = false;
                 for (User usr : users) {
@@ -123,7 +125,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public User createUser(User user) throws ErrorException {
-        System.out.println("Userkey : " + user.referenceKey);
         if (getSession().currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }
@@ -743,7 +744,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 user.birthDay = user.company.vatNumber;
             }
 
-            if (user.birthDay != null && (user.company == null || user.company.name.isEmpty()) && getSession() != null ) {
+            if (user.birthDay != null && (user.company == null || user.company.name.isEmpty()) && getSession() != null && !user.triedToFetch) {
                 UtilManager man = getManager(UtilManager.class);
                 user.company = man.getCompanyFromBrReg(user.birthDay);
                 user.triedToFetch = true;

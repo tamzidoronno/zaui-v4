@@ -804,9 +804,11 @@ class ApplicationManager extends FactoryBase {
         $user->emailAddress = $_POST['data']['email'];
         $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
         $user->type = 10;
+        $user->birthDay = $_POST['data']['orgnr'];
         $user->referenceKey = $_POST['data']['reference'];
         $user->password = $password;
         $user->groups = [];
+        $user->cellPhone = $_POST['data']['cellphone'];
         $user->groups[] = $_POST['data']['groupId'];
         $user->company = $this->getFactory()->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['orgnr']);
         $user = $this->getApi()->getUserManager()->createUser($user);

@@ -71,6 +71,12 @@ and open the template in the editor.
     font-size: 24px;
 }
 
+.ProMeisterUserOverview .date_view  {
+    font-size: 16px;
+    padding-left: 30px;
+    margin-bottom: 5px;
+    padding-top: 5px;
+}
 .ProMeisterUserOverview .createSubUser td {
     font-size: 24px;
 }

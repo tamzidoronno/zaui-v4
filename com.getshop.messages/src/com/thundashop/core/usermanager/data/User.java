@@ -22,6 +22,7 @@ public class User extends DataCommon implements Comparable<User> {
 
     public List<UserPrivilege> privileges = new ArrayList();
     public String lastRegisteredToken;
+    public boolean triedToFetch = false;
 
  
     public static class Type {

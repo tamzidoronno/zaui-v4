@@ -301,6 +301,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         // Keep comments from prev saved user. (has seperated functions for adding and deleting)
         user.comments = savedUser.comments;
         
+        user.triedToFetch = false;
+        
         if (user.company == null && user.birthDay != null && !user.birthDay.equals("")) {
             user.company = getCompany(user, true);
         }
@@ -741,9 +743,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 user.birthDay = user.company.vatNumber;
             }
 
-            if (user.birthDay != null && (user.company == null || user.company.name.isEmpty()) && getSession() != null) {
+            if (user.birthDay != null && (user.company == null || user.company.name.isEmpty()) && getSession() != null && !user.triedToFetch) {
                 UtilManager man = getManager(UtilManager.class);
                 user.company = man.getCompanyFromBrReg(user.birthDay);
+                user.triedToFetch = true;
                 saveUser(user);
             }
         }

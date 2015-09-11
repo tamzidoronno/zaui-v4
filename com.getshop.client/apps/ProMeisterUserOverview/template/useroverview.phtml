@@ -9,15 +9,9 @@ if (isset($_SESSION['ProMeisterUserOverview_show_user'])) {
 
 $loggedInUser = $this->getApi()->getUserManager()->getUserById(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);
 
-$upComingEvents = [];
-$pastEvents = [];
+
 $user = $this->getApi()->getUserManager()->getUserById($userId);
-
-
-
 $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
-    
-
 
 ?>
 
@@ -28,11 +22,27 @@ $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
 <br/>
 
 
-
-
 <div class="inner" style='position: relative;'>
+    
+    <div class='createSubUser'>
+        <center>
+            <?
+                echo $this->__f("You got other persons that needs our courses? create an account and sign them you yourself.");
+            ?>
+            <br/>
+            <br/>
+            <table>
+                <tr><td><? echo $this->__f("Candidate name"); ?></td><td><input type='textfield' id='new_subuser_name'/></td></tr>
+                <tr><td><? echo $this->__f("Cellphone"); ?></td><td><input type='textfield' id='new_subuser_cellphone'/></td></tr>
+                <tr><td colspan='2' align='right' ><div class='gs_button createButton_subuser'><? echo $this->__("Create"); ?></div></td></tr>
+            </table>
+        </center>
+    </div>
+    
 <? foreach ($allUsers as $user) { 
     $events = $this->getApi()->getCalendarManager()->getEntriesByUserId($user->id);
+    $upComingEvents = [];
+    $pastEvents = [];
     if ($events) {
         foreach ($events as $event) {
             if ($event->isInPast) {
@@ -107,7 +117,8 @@ $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
                             echo $this->__w("You have not signed up for any events yet.");
                         } else {
                             foreach ($upComingEvents as $event) {
-                                echo "<i class='fa fa-star'></i> $event->title<br/>";
+                                echo "<i class='fa fa-star'></i> $event->title";
+                                echo "<div class='date_view'> Dato: ".$event->day."/".$event->month." - ".$event->year."</div>";
                             }
                         }
                     ?>
@@ -121,12 +132,11 @@ $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
                     } else {
                         foreach ($pastEvents as $event) {
                             echo "<i class='fa fa-star'></i> $event->title<br/>";
+                            echo "<div class='date_view'>".$event->day."/".$event->month." - ".$event->year."</div>";
                         }
                     }    
                     ?>
                 </div>
-
-                <div style='position: absolute; right: 20px; bottom: 20px; padding: 5px; border: solid 3px #008073;'> Se alle dine utbildingar <i class='fa fa-arrow-right'></i></div>
             </div>
         </div>
         <?

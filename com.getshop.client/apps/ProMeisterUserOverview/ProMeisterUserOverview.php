@@ -29,4 +29,8 @@ class ProMeisterUserOverview extends \ApplicationBase implements \Application {
     public function setUserId() {
         $_SESSION['ProMeisterUserOverview_show_user'] = $_POST['data']['userId'];
     }
+    
+    public function createSubUserLoggedIn() {
+        $this->getApi()->getUserManager()->createSubAccount($_POST['data']['fullName'], $_POST['data']['cellPhone']);
+    }
 }

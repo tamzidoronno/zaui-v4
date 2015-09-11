@@ -697,7 +697,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public User getUserByEmail(String emailAddress) throws ErrorException {
         User loggedInUser = getSession().currentUser;
-        boolean needCheck = loggedInUser.type == User.Type.CUSTOMER;
+        boolean needCheck = loggedInUser != null && loggedInUser.type == User.Type.CUSTOMER;
         
         List<User> users = getUserStoreCollection(getStore().id).getAllUsers();
         for (User user : users) {
@@ -750,6 +750,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.parents != null && user.parents.size() > 0) {
             String parentId = user.parents.get(0);
             User userParent = getUserById(parentId);
+            
+            if (!userParent.isMaster) {
+                userParent.isMaster = true;
+                saveObject(userParent);
+            }
+            
             user.address = userParent.address;
             user.company = userParent.company;
             user.referenceKey = userParent.referenceKey;
@@ -760,6 +766,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         if (user.proMeisterScoreSettings != null) {
             user.proMeisterScoreSettings.type = proMeisterScoreType;
+            saveObject(user);
         }
     }
 
@@ -948,5 +955,21 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (!content.isEmpty() && !subject.isEmpty()) {
             mailfactory.send(fromAddress, user.emailAddress, subject, content);
         }
+    }
+
+    @Override
+    public void createSubAccount(String fullName, String phoneNumber) throws ErrorException {
+        if (getSession() == null || getSession().currentUser == null) {
+            throw new ErrorException(26);
+        }
+        
+        User user = new User();
+        user.fullName = fullName;
+        user.cellPhone = phoneNumber;
+        user.parents = new ArrayList();
+        user.parents.add(getSession().currentUser.id);
+        
+        User createUser = createUser(user);
+        System.out.println(createUser.id + " " + createUser.parents.size());
     }
 }

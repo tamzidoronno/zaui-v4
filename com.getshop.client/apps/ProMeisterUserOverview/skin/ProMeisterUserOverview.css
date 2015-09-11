@@ -60,3 +60,17 @@ and open the template in the editor.
     text-align: center;
     cursor: pointer;
 }
+
+.ProMeisterUserOverview .createSubUser {
+    border: solid 1px #FFF;
+    padding: 30px;
+    display: none;
+}
+
+.ProMeisterUserOverview .createSubUser .gs_button { 
+    font-size: 24px;
+}
+
+.ProMeisterUserOverview .createSubUser td {
+    font-size: 24px;
+}

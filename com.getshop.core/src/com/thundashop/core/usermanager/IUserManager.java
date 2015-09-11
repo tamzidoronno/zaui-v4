@@ -336,4 +336,7 @@ public interface IUserManager {
     public ProMeisterScoreType getProMeisterScoreType() throws ErrorException;
     
     public List<User> getUsersWithinTheSameCompany() throws ErrorException;
+    
+    @Customer
+    public void createSubAccount(String fullName, String phoneNumber) throws ErrorException;
 }

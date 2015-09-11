@@ -743,11 +743,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 user.birthDay = user.company.vatNumber;
             }
 
-            if (user.birthDay != null && (user.company == null || user.company.name.isEmpty()) && getSession() != null && !user.triedToFetch) {
+            if (user.birthDay != null && (user.company == null || user.company.name.isEmpty()) && getSession() != null ) {
                 UtilManager man = getManager(UtilManager.class);
                 user.company = man.getCompanyFromBrReg(user.birthDay);
                 user.triedToFetch = true;
-                saveUser(user);
+                saveObject(user);
             }
         }
     }

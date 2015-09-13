@@ -32,17 +32,37 @@ public class GenerateApi {
     private final LinkedList<Class> allManagers;
     private HashMap<String, Integer> methodProcessed = new HashMap();
     private String type = "defualt";
+    private final String pathToClients;
+    private boolean addMain = true;
+    private final String pathToSource;
+    private final boolean debug;
 
-    public GenerateApi() throws ClassNotFoundException {
-        File core = new File("../core/");
-        File messages = new File("../messages/");
+    public GenerateApi(String pathToCore, String pathToMessages, String pathToClients, String pathToSource, boolean debug) throws ClassNotFoundException {
+        File core = null;
+        File messages = null;
+        
+        this.debug = debug;
+        this.pathToClients = pathToClients;
+        this.addMain = pathToClients == null;
+        this.pathToSource = pathToSource;
+        
+        if (pathToCore == null && pathToMessages == null) {
+            core = new File("../core/");
+            messages = new File("../messages/");
+        } else {
+            core = new File(pathToCore);
+            messages = new File(pathToMessages);
+        }
+        
+        
+        
         coreClasses = findClasses(core);
         messageClasses = findClasses(messages);
         allManagers = filterClasses(coreClasses);
     }
 
     public void analyseApplications() throws UnknownHostException, IOException, ClassNotFoundException {
-        AnalyseApplications analyser = new AnalyseApplications(this, allManagers, messageClasses);
+        AnalyseApplications analyser = new AnalyseApplications(this, allManagers, messageClasses, pathToClients);
         analyser.generate();
         ImportApiCallsToApplications importer = new ImportApiCallsToApplications();
         importer.run();
@@ -59,7 +79,7 @@ public class GenerateApi {
     }
 
     public void generatePHPApi() throws Exception {
-        PHPApiBuilder phpapi = new PHPApiBuilder(this, allManagers, messageClasses);
+        PHPApiBuilder phpapi = new PHPApiBuilder(this, allManagers, messageClasses, pathToClients);
         phpapi.generate();
     }
 
@@ -102,9 +122,8 @@ public class GenerateApi {
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, Exception {
-        GenerateApi ga = new GenerateApi();
+        GenerateApi ga = new GenerateApi(null, null, null, null, false);
         ga.generate();
-
     }
 
     void setType(String type) {
@@ -188,7 +207,7 @@ public class GenerateApi {
      * @throws ClassNotFoundException
      */
     @SuppressWarnings("unchecked")
-    public static List<Class> findClasses(File directory) throws ClassNotFoundException {
+    public List<Class> findClasses(File directory) throws ClassNotFoundException {
         List<Class> classes = new ArrayList<Class>();
         if (!directory.exists()) {
             return classes;
@@ -196,7 +215,6 @@ public class GenerateApi {
 
         try {
             String current = new java.io.File( "." ).getCanonicalPath();
-            System.out.println("Current dir:"+current);
         } catch (Exception ex) { }
         File[] files = directory.listFiles();
         for (File file : files) {
@@ -207,8 +225,9 @@ public class GenerateApi {
             } else if (fileName.endsWith(".class") && !fileName.contains("$")) {
                 Class _class;
                 try {
-                    if (file.getAbsolutePath().contains("/build/classes/main/")) {
-                        String offset = "/build/classes/main/";
+                    String addText = addMain ? "main/" : "";
+                    if (file.getAbsolutePath().contains("/build/classes/" + addText)) {
+                        String offset = "/build/classes/" + addText;
                         String className = file.getAbsolutePath().substring(file.getAbsolutePath().indexOf(offset) + offset.length());
                         className = className.replace("/", ".");
                         className = className.replace(".class", "");
@@ -224,7 +243,7 @@ public class GenerateApi {
         return classes;
     }
 
-    private void generate() throws ClassNotFoundException, IOException, Exception {
+    public void generate() throws ClassNotFoundException, IOException, Exception {
         generatePHPApi();
         generateJavaApi();
 //        generatePythonApi();
@@ -256,7 +275,9 @@ public class GenerateApi {
             });
         }
 
-        System.out.println("Number of annotated api classes: " + filteredApiClasses.size());
+        if (debug) {
+            System.out.println("Number of annotated api classes: " + filteredApiClasses.size());
+        }
         return filteredApiClasses;
     }
 
@@ -311,9 +332,8 @@ public class GenerateApi {
             result.method = method;
             result.methodName = method.getName();
             
-            System.out.println(result.manager.getSimpleName() + " : "+ result.methodName);
-
-            String path = new File(".").getAbsolutePath() + "/src/main/java/" + filteredClass.getName().replace(".", "/") + ".java";
+            File filePath = pathToSource == null ? new File(".") :  new File(pathToSource);
+            String path = filePath.getAbsolutePath() + "/src/main/java/" + filteredClass.getName().replace(".", "/") + ".java";
             String javafile = readContent(path);
             if(javafile.isEmpty()) {
                 System.out.println("Unable to load java file : " + path);
@@ -338,7 +358,9 @@ public class GenerateApi {
         if (methods.size() >= 100) {
             spaces = " ";
         }
-        System.out.println("Number of api calls in total: " + methods.size() + spaces + "for manager: " + filteredClass.getSimpleName());
+        
+        if (debug)
+            System.out.println("Number of api calls in total: " + methods.size() + spaces + "for manager: " + filteredClass.getSimpleName());
 
 
         if (methods.size() > 0) {

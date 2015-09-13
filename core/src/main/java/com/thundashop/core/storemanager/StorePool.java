@@ -127,7 +127,7 @@ public class StorePool {
         
         //MEssage usself about creation.
         GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);
-        scope.setStoreId(store.id);
+        scope.setStoreId(store.id, "");
         messageManager.sendMail("post@getshop.com", "post@getshop.com", "Instance created", "shopname, String email; " + shopname + ", " +  email, email, "post@getshop.com");
         
         return store;

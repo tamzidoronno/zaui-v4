@@ -174,6 +174,7 @@ public class StorePool {
             return null;
         }
         
+        object.multiLevelName = gson.fromJson(object.multiLevelName, String.class);
 
         int i = 0;
         Object[] executeArgs = new Object[object.args.size()];
@@ -201,6 +202,7 @@ public class StorePool {
             i++;
         }
 
+        object.realInterfaceName = object.interfaceName;
         object.interfaceName = object.interfaceName.replace(".I", ".");
 
         if (sessionId != null) {
@@ -230,7 +232,7 @@ public class StorePool {
     private Object[] runTroughAntiSamy(JsonObject2 object, Object[] argumentValues) throws ErrorException {
         StoreHandler storeHandler = getStoreHandler(object.sessionId);
         
-        if (storeHandler != null && storeHandler.isAdministrator(object.sessionId)) {
+        if (storeHandler != null && storeHandler.isAdministrator(object.sessionId, object)) {
             return argumentValues;
         }
         
@@ -283,6 +285,7 @@ public class StorePool {
 
     private Method getMethod(JsonObject2 object) throws ClassNotFoundException, SecurityException {
         Class aClass = getClass().getClassLoader().loadClass("com.thundashop." + object.interfaceName);
+        
         Method[] methods = aClass.getMethods();
         Method method = null;
         for (Method tmpMethod : methods) {

@@ -1,6 +1,7 @@
 package com.thundashop.core.start;
 
 
+import com.thundashop.core.apigenerator.GenerateApiLocal;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StorePool;
@@ -26,6 +27,8 @@ public class Runner {
      */
     public static void main(String[] args) throws InterruptedException, Exception {  
 
+        GenerateApiLocal.main(args);
+        
         java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
         java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
 

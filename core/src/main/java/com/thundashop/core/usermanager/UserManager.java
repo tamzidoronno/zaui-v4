@@ -1,7 +1,7 @@
 package com.thundashop.core.usermanager;
 
-import com.getshop.bookingengine.BookingEngine;
-import com.getshop.bookingengine.BookingEngineHolder;
+import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingEngineHolder;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;

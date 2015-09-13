@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.getshop.bookingengine;
+package com.thundashop.core.bookingengine;
 
+import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import org.springframework.context.annotation.Scope;
@@ -15,13 +16,9 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("getshop")
+@GetShopSession
 public class BookingEngine extends GetShopSessionBeanNamed {
 
-
-    public BookingEngine(String name) {
-        super(name);
-    }
 
     @Override
     public void dataFromDatabase(DataRetreived data) {

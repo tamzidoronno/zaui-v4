@@ -29,12 +29,15 @@ public class AnalyseApplications {
     String appPath = "../com.getshop.client/app/";
     
     public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
-        GenerateApi api = new GenerateApi();
-        api.analyseApplications();
+//        GenerateApi api = new GenerateApi();
+//        api.analyseApplications();
     }
 
-    AnalyseApplications(GenerateApi generator, List<Class> managers, List<Class> dataObjects) {
+    AnalyseApplications(GenerateApi generator, List<Class> managers, List<Class> dataObjects, String pathToClients) {
         this.generator = generator;
+        if (pathToClients != null) {
+            appPath = pathToClients+"app/";
+        }
         this.allManagers = managers;
         this.dataObjects = dataObjects;
     }
@@ -96,8 +99,12 @@ public class AnalyseApplications {
     }
 
     private void analyseDir(File path, Application app) {
-        if(!path.exists() || path.isFile()) {
-            System.out.println(appPath + " does not exists or is file");
+        if(!path.exists()) {
+            return;
+        }
+        
+        if(path.isFile()) {
+            System.out.println(appPath + " is file");
             return;
         }
         

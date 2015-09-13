@@ -11,8 +11,10 @@ public class JsonObject2 implements Serializable {
     public String method;
     public String interfaceName;
     public String sessionId;
+    public String multiLevelName;
     public Map<String,String> args;
     
     public String addr;
     public String messageId = "";
+    public String realInterfaceName;
 }

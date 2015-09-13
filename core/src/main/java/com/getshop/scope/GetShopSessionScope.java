@@ -4,7 +4,7 @@
  */
 package com.getshop.scope;
 
-import com.getshop.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.pagemanager.PageManager;
 import java.util.ArrayList;
@@ -23,8 +23,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GetShopSessionScope implements Scope {
-
+    
     private Map<Long, String> threadStoreIds = Collections.synchronizedMap(new HashMap<Long, String>());
+    private Map<Long, String> threadSessionBeanNames = Collections.synchronizedMap(new HashMap<Long, String>());
     private Map<String, Object> objectMap = Collections.synchronizedMap(new HashMap<String, Object>());
     private Map<String, Object> namedSessionObjects = Collections.synchronizedMap(new HashMap<String, Object>());
 
@@ -32,6 +33,7 @@ public class GetShopSessionScope implements Scope {
        
         long threadId = Thread.currentThread().getId();
         String storeId = threadStoreIds.get(threadId);
+        String sessionBeanName = threadSessionBeanNames.get(threadId);
         
         if (storeId == null) {
             throw new NullPointerException("There is scoped bean created without being in a context of a store, object: " + name);
@@ -44,10 +46,15 @@ public class GetShopSessionScope implements Scope {
             try {
                 Object object = objectFactory.getObject();
                 if (object instanceof GetShopSessionBeanNamed) {
+                    if (namedSessionObjects.containsKey(name+"_"+storeId+"_"+sessionBeanName)) {
+                        return namedSessionObjects.get(name+"_"+storeId+"_"+sessionBeanName);
+                    }
+                    
                     GetShopSessionBeanNamed bean = (GetShopSessionBeanNamed)object;
                     bean.storeId = storeId;
-                    namedSessionObjects.put(name+"_"+storeId+"_"+bean.getName(), bean);
+                    bean.setName(sessionBeanName);
                     bean.initialize();
+                    namedSessionObjects.put(name+"_"+storeId+"_"+sessionBeanName, bean);
                     return bean;
                 }
                 
@@ -107,9 +114,10 @@ public class GetShopSessionScope implements Scope {
         objectMap.clear();
     }
 
-    public void setStoreId(String storeId) {
+    public void setStoreId(String storeId, String multiLevelName) {
         long threadId = Thread.currentThread().getId();
         threadStoreIds.put(threadId, storeId);
+        threadSessionBeanNames.put(threadId, multiLevelName);
     }
 
 }

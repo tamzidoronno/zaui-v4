@@ -58,7 +58,7 @@ public class ImportApiCallsToApplications {
         morphia.map(DataCommon.class);
         
         HashMap<String, Application> apps = fetchApplicationSettings();
-        GenerateApi tmp = new GenerateApi();
+        GenerateApi tmp = new GenerateApi(null, null, null, null, false);
         String jsondata = tmp.readContent("../apitodb.json");
         Gson gson = new Gson();
         

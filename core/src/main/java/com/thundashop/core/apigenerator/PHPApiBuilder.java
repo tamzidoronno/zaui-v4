@@ -1,5 +1,6 @@
 package com.thundashop.core.apigenerator;
 
+import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -15,7 +16,12 @@ public class PHPApiBuilder {
     private final List<Class> allManagers;
     private final List<Class> dataObjects;
 
-    public PHPApiBuilder(GenerateApi generator, List<Class> allManagers, List<Class> dataObjects) {
+    public PHPApiBuilder(GenerateApi generator, List<Class> allManagers, List<Class> dataObjects, String pathToEvents) {
+        
+        if (pathToEvents != null) {
+            eventsPath = pathToEvents+"events/";
+        }
+        
         this.generator = generator;
         this.allManagers = allManagers;
         this.dataObjects = dataObjects;
@@ -34,9 +40,7 @@ public class PHPApiBuilder {
             classname = paths[2] + "_" + paths[3] + "_" + filename;
         } else if (paths.length == 6) {
             classname = paths[2] + "_" + paths[3] + "_" + paths[4] + "_" + filename;
-        } else {
-            System.out.println(entry.getName());
-        }
+        } 
         return classname;
     }
 
@@ -103,8 +107,6 @@ public class PHPApiBuilder {
         String result = generatePHPApi();
         this.generator.writeFile(result, eventsPath + "API2.php");
         
-        System.out.println("PATH: " + eventsPath);
-        
         for (Class dataobject : dataObjects) {
             String dataPath = eventsPath + dataobject.getCanonicalName().replace("com.thundashop.", "").replace(".", "/");
             dataPath = dataPath+".php";
@@ -164,14 +166,22 @@ public class PHPApiBuilder {
                 + "\t\t$this->transport = $transport;\n"
                 + "\t}\n\n";
 
+        boolean multiLevel = manager.getAnnotation(GetShopMultiLayerSession.class) != null;
+        
         for (GenerateApi.ApiMethod method : methods) {
             String args = "";
+            
+            if (multiLevel) {
+                args += "$gs_multilevel_name, ";
+            }
+            
             for (String value : method.arguments.keySet()) {
                 if (method.arguments.get(value).contains("thundashop")) {
                     value = method.arguments.get(value).replace("com.thundashop.", "").replace(".", "_");
                 }
                 args += "$" + value + ", ";
             }
+            
             if (!args.isEmpty()) {
                 args = args.substring(0, args.length() - 2);
             }
@@ -203,6 +213,11 @@ public class PHPApiBuilder {
                 }
                 phpClass += "\t     $data['args'][\"" + arg + "\"] = json_encode($this->transport->object_unset_nulls($" + arg + "));\n";
             }
+            
+            if (multiLevel) {
+                phpClass += "\t     $data['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));\n";
+            }
+            
             phpClass += "\t     $data[\"method\"] = \"" + method.method.getName() + "\";\n";
             phpClass += "\t     $data[\"interfaceName\"] = \"" + method.manager.getCanonicalName().replace("com.thundashop.", "") + "\";\n";
             if (returnvalue.startsWith("core_") || returnvalue.startsWith("app_")) {

@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class GetShopSessionBeanNamed extends ManagerSubBase {
     
-    @Autowired
-    public GetShopSessionBeanNamed(String name) {
-        this.name = name;
+    public GetShopSessionBeanNamed() {
     }
     
     private String name;
@@ -26,7 +24,7 @@ public class GetShopSessionBeanNamed extends ManagerSubBase {
     }
 
     public void setName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.name = name;
     }
     
     @Override

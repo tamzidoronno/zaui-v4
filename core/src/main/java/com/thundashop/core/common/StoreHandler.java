@@ -9,6 +9,8 @@ import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingManager;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -44,22 +46,22 @@ public class StoreHandler {
     }
         
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        scope.setStoreId(storeId);
-        setSessionObject(inObject.sessionId);
+        scope.setStoreId(storeId, inObject.multiLevelName);
+        Class getShopInterfaceClass = loadClass(inObject.realInterfaceName);
+        setSessionObject(inObject.sessionId, getShopInterfaceClass, inObject);
 
         Class aClass = loadClass(inObject.interfaceName);
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues);
 
         try {
-            Annotation userLevel = authenticateUserLevel(executeMethod, aClass);
-            Object result = invokeMethod(executeMethod, aClass, argumentValues);
-//            logUserLevelActivity(userLevel);
+            Annotation userLevel = authenticateUserLevel(executeMethod, aClass, getShopInterfaceClass, inObject);
+            Object result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
             clearSessionObject();
             result = cloneResult(result);
             return result;
         } catch (ErrorException ex) {
             if (ex.code == 26) {
-                User user = findUser();
+                User user = findUser(getShopInterfaceClass, inObject);
                 String userInfo = "";
                 if (user != null) {
                     userInfo += " id: " + user.id;
@@ -73,11 +75,11 @@ public class StoreHandler {
         }
     }
 
-    public synchronized boolean isAdministrator(String sessionId) throws ErrorException {
+    public synchronized boolean isAdministrator(String sessionId, JsonObject2 object) throws ErrorException {
 
-        scope.setStoreId(storeId);
+        scope.setStoreId(storeId, object.multiLevelName);
 
-        UserManager manager = getManager(UserManager.class);
+        UserManager manager = getManager(UserManager.class, null, null);
         User user = manager.getUserBySessionId(sessionId);
         if (user != null) {
             return user.isAdministrator();
@@ -122,9 +124,9 @@ public class StoreHandler {
         }
     }
 
-    private Object invokeMethod(Method executeMethod, Class aClass, Object[] argObjects) throws ErrorException {
+    private Object invokeMethod(Method executeMethod, Class aClass, Object[] argObjects, Class getShopInterfaceClass, JsonObject2 inObject) throws ErrorException {
         try {
-            ManagerBase manager = getManager(aClass);
+            ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
             Object result = executeMethod.invoke(manager, argObjects);
             return result;
         } catch (IllegalAccessException ex) {
@@ -154,8 +156,8 @@ public class StoreHandler {
         return stackTrace;
     }
 
-    private void setSessionObject(String sessionId) {
-        IUserManager userManager = getManager(IUserManager.class);
+    private void setSessionObject(String sessionId, Class getShopInterfaceClass, JsonObject2 inObject) {
+        IUserManager userManager = getManager(IUserManager.class, getShopInterfaceClass, inObject);
 
         Session session = null;
         if (!sessions.containsKey(sessionId)) {
@@ -227,7 +229,7 @@ public class StoreHandler {
         throw retex;
     }
 
-    private synchronized Annotation authenticateUserLevel(Method executeMethod, Class aClass) throws ErrorException {
+    private synchronized Annotation authenticateUserLevel(Method executeMethod, Class aClass, Class getShopInterfaceClass, JsonObject2 inObject) throws ErrorException {
         executeMethod = getCorrectMethod(executeMethod);
 
         if (executeMethod.getAnnotation(Internal.class) != null) {
@@ -245,7 +247,7 @@ public class StoreHandler {
         }
 
         if (userLevel != null) {
-            User user = findUser();
+            User user = findUser(getShopInterfaceClass, inObject);
 
             if (user == null || userLevel instanceof GetShopAdministrator && !user.isGetShopAdministrator()) {
                 throw new ErrorException(26);
@@ -268,7 +270,7 @@ public class StoreHandler {
             }
 
             if (user != null && (userLevel instanceof Administrator || userLevel instanceof Editor)) {
-                checkUserPrivileges(user, executeMethod, aClass);
+                checkUserPrivileges(user, executeMethod, aClass, getShopInterfaceClass, inObject);
             }
 
             if (user == null || userLevel instanceof Administrator && !user.isAdministrator()) {
@@ -281,12 +283,12 @@ public class StoreHandler {
         return userLevel;
     }
 
-    private void checkUserPrivileges(User user, Method executeMethod, Class aClass) throws ErrorException {
+    private void checkUserPrivileges(User user, Method executeMethod, Class aClass, Class getShopInterfaceClass, JsonObject2 inObject) throws ErrorException {
         if (user.privileges.isEmpty()) {
             return;
         }
 
-        ManagerBase manager = getManager(aClass);
+        ManagerBase manager = getManager(aClass, getShopInterfaceClass, inObject);
         String managerName = manager.getClass().getSimpleName();
 
         for (UserPrivilege priv : user.privileges) {
@@ -298,10 +300,10 @@ public class StoreHandler {
         throw new ErrorException(26);
     }
 
-    private User findUser() throws ErrorException {
+    private User findUser(Class getShopInterfaceClass, JsonObject2 inObject) throws ErrorException {
 
         try {
-            UserManager manager = getManager(UserManager.class);
+            UserManager manager = getManager(UserManager.class, getShopInterfaceClass, inObject);
             return manager.getLoggedOnUser();
         } catch (ErrorException e) {
             // Errorhiding is an antipattern! :P
@@ -310,9 +312,14 @@ public class StoreHandler {
         return new User();
     }
 
-    private <T> T getManager(Class aClass) {
+    private <T> T getManager(Class aClass, Class getShopInterfaceClass, JsonObject2 inObject) {
         try {
-            return (T) AppContext.appContext.getBean(aClass);
+//            if (getShopInterfaceClass != null && getShopInterfaceClass.getAnnotation(GetShopMultiLayerSession.class) != null) {
+//                return (T) AppContext.appContext.getBean(aClass, inObject.multiLevelName);
+//            } else {
+                return (T) AppContext.appContext.getBean(aClass);
+//            }
+            
         } catch (BeansException ex) {
             System.out.println("Throws bean exception?");
         }
@@ -353,21 +360,6 @@ public class StoreHandler {
 //            }
 //        }
 //        return false;
-    }
-
-    private void logUserLevelActivity(Annotation userLevel) {
-        if (userLevel == null) {
-            return;
-        }
-        
-        UserManager manager = getManager(UserManager.class);
-        if (userLevel instanceof Editor) {
-            manager.markEditorActionExecuted();
-        }
-        
-        if (userLevel instanceof Administrator) {
-            manager.markAdminActionExecuted();
-        }
     }
 
     /**

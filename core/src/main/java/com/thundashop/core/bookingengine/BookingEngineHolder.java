@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.getshop.bookingengine;
+package com.thundashop.core.bookingengine;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.ManagerBase;

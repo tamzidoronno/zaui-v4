@@ -1,5 +1,7 @@
 package com.thundashop.core.usermanager;
 
+import com.getshop.bookingengine.BookingEngine;
+import com.getshop.bookingengine.BookingEngineHolder;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -72,6 +74,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Autowired
     public StoreManager storeManager;
 
+    @Autowired
+    public BookingEngineHolder holder;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -445,9 +450,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public boolean isCaptain(String id) throws ErrorException {
-        
         User user = getUserById(id);
-        if(user.fullName == null) {
+        if(user == null || user.fullName == null) {
             return false;
         }
         

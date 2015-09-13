@@ -4,12 +4,11 @@
  */
 package com.thundashop.core.common;
 
+import com.getshop.scope.GetShopSessionBeanNamed;
 import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.thundashop.core.appmanager.data.ApiCallsInUse;
-import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -189,6 +188,9 @@ public class StoreHandler {
             System.out.println("Throws bean exception?");
         }
         
+        for (GetShopSessionBeanNamed bean : scope.getSessionNamedObjects()) {
+            bean.session = session;
+        }
         
         try {
             session.currentUser = userManager.getLoggedOnUser();

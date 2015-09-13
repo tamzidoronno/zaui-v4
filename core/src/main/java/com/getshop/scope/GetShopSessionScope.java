@@ -4,9 +4,13 @@
  */
 package com.getshop.scope;
 
+import com.getshop.bookingengine.BookingEngine;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.pagemanager.PageManager;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;
@@ -22,8 +26,10 @@ public class GetShopSessionScope implements Scope {
 
     private Map<Long, String> threadStoreIds = Collections.synchronizedMap(new HashMap<Long, String>());
     private Map<String, Object> objectMap = Collections.synchronizedMap(new HashMap<String, Object>());
+    private Map<String, Object> namedSessionObjects = Collections.synchronizedMap(new HashMap<String, Object>());
 
     public Object get(String name, ObjectFactory<?> objectFactory) {
+       
         long threadId = Thread.currentThread().getId();
         String storeId = threadStoreIds.get(threadId);
         
@@ -33,9 +39,18 @@ public class GetShopSessionScope implements Scope {
         
         String nameWithStoreId = name + "_" + storeId;
         
+        
         if (!objectMap.containsKey(nameWithStoreId)) {
             try {
                 Object object = objectFactory.getObject();
+                if (object instanceof GetShopSessionBeanNamed) {
+                    GetShopSessionBeanNamed bean = (GetShopSessionBeanNamed)object;
+                    bean.storeId = storeId;
+                    namedSessionObjects.put(name+"_"+storeId+"_"+bean.getName(), bean);
+                    bean.initialize();
+                    return bean;
+                }
+                
                 if (object instanceof ManagerBase) {
                     ManagerBase managerBase = (ManagerBase) object;
                     managerBase.storeId = storeId;
@@ -50,6 +65,7 @@ public class GetShopSessionScope implements Scope {
                 objectMap.put(nameWithStoreId, object);
             } catch (BeansException exception) {
                 System.out.println("Got an bean exception ? ");
+                exception.printStackTrace();
             }
         }
 
@@ -65,6 +81,10 @@ public class GetShopSessionScope implements Scope {
      */
     public Object getManagerBasedOnNameAndStoreId(String name, String storeId) {
         return objectMap.get(name + "_" + storeId);
+    }
+    
+    public List<GetShopSessionBeanNamed> getSessionNamedObjects() {
+        return new ArrayList(namedSessionObjects.values());
     }
 
     public Object remove(String name) {

@@ -1002,6 +1002,13 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             entry.location = entry.locationObject.location;
             entry.locationExtended = entry.locationObject.locationExtra;
         }
+        
+        for (String userId : entry.attendees) {
+            if (entry.participateData.get(userId) == null) {
+                entry.participateData.put(userId, "participated");
+            }
+        }
+        
         entry.isInPast = entry.isInPast();
     }
 
@@ -1074,6 +1081,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     @Override
     public List<Entry> getEntriesByUserId(String userId) throws ErrorException {
+        if (getSession() == null) {
+            return new ArrayList();
+        }
+        
         if (getSession().currentUser.type < 50) {
             hasAccessToUserId(userId);
         }
@@ -1460,6 +1471,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             if (iuser.id.equals(userId)) {
                 return;
             }
+        }
+        
+        if (getSession() != null && getSession().currentUser != null) {
+            System.out.println(getSession().currentUser.fullName + " dont have access to user: " + userManager.getUserById(userId).fullName);
         }
         
         throw new ErrorException(26);

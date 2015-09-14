@@ -463,8 +463,8 @@ $('.Calendar .save_candidate_setting').live('click', function() {
     var data = {
         receiveDiploma : $('#receiveDiploma_inner').hasClass('on'),
         userId : $('#configuserid').val(),
-        configentryId : $('#configentryId').val()
-        
+        configentryId : $('#configentryId').val(),
+        participated : $('#participated select').val()
     };
     var event = thundashop.Ajax.createEvent('','updateUserSettings',$(this), data);
     thundashop.Ajax.postWithCallBack(event, function() {

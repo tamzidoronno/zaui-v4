@@ -23,6 +23,7 @@ public class Entry implements Serializable, Comparable<Entry> {
     public List<String> dropDiploma = new ArrayList();
     public List<String> waitingList = new ArrayList();
     public List<ExtraDay> otherDays = new ArrayList();
+    public Map<String, String> participateData = new HashMap();
     public Map<String, AttendeeMetaInfo> metaInfo = new HashMap<>();
     
     public int maxAttendees;
@@ -68,6 +69,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.needConfirmation = entry.needConfirmation;
         this.locationExtended = entry.locationExtended;
         this.lockedForSignup = entry.lockedForSignup;
+        this.participateData = entry.participateData;
         this.maxAttendees = entry.maxAttendees;
         this.description = entry.description;
         this.attendees = entry.attendees;
@@ -91,6 +93,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.linkToPage = entry.linkToPage;
         this.day = entry.day;
         this.comments = entry.comments;
+        
     }
 
     @Override

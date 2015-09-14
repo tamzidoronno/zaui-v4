@@ -48,7 +48,7 @@ class Calendar extends MarketingApplication implements Application {
         print_r(array_keys($newObject));
         
         $entryObject->dropDiploma = array_keys($newObject);
-        
+        $entryObject->participateData->{$_POST['data']['userId']} = $_POST['data']['participated'];
         $this->getApi()->getCalendarManager()->saveEntry($entryObject);
     }
     

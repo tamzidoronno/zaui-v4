@@ -17,6 +17,19 @@ class Users extends \SystemApplication implements \Application {
     public function postProcess() {
     }
     
+    public function isProMeisterLoginAppAdded() {
+        $appExists = false;
+        $singletons = $this->getFactory()->getApplicationPool()->getSingletonInstances();
+
+        foreach ($singletons as $app) {
+            if ($app->getConfiguration()->appSettingsId == "2f98236f-b36d-4d5c-93c6-0ad99e5b3dc6") {
+                $appExists = true;
+            }
+        }
+        
+        return $appExists;
+    }
+    
     public function removeComment() {
         $commentid = $_POST['data']['commentid'];
         $userid = $_POST['data']['userid'];

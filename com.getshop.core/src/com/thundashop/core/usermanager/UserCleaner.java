@@ -175,8 +175,8 @@ public class UserCleaner {
                         user.comments.putAll(clone.comments);
                     }
                     
-                    calManager.replaceUserId(clone.id, user.id);
-                    userManager.deleteUser(clone.id);
+//                    calManager.replaceUserId(clone.id, user.id);
+//                    userManager.deleteUser(clone.id);
                 }
             }
         }

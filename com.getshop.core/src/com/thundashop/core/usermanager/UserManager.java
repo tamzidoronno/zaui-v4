@@ -164,6 +164,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         users.addUser(user);
         
+        if (user.password == null || user.password.isEmpty()) {
+            Random r = new Random();
+            int Low = 145111;
+            int High = 989227;
+            int R = r.nextInt(High-Low) + Low;
+            user.password = ""+R;
+        }
+        
         String passwordPlainText = user.password;
         user.password = encryptPassword(user.password);
         
@@ -373,6 +381,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
 
+        if (user.parents != null && user.parents.size() > 0) {
+            throw new ErrorException(103);
+        }
+        
         UserStoreCollection users = getUserStoreCollection(storeId);
         user = users.deleteUser(userId);
         if (user != null) {
@@ -753,6 +765,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(user);
         }
         
+        detachedParentIfMasterDeleted(user);
+        
         if (user.parents != null && user.parents.size() > 0) {
             String parentId = user.parents.get(0);
             User userParent = getUserById(parentId);
@@ -906,7 +920,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         List<User> ret = new ArrayList();
         
         User currentUesr = getSession().currentUser;
-        if (currentUesr != null) {
+        if (currentUesr != null && currentUesr.isMaster) {
             for (User user : getAllUsers()) {
                 if (user.birthDay != null && user.birthDay.equals(currentUesr.birthDay)) {
                     ret.add(user);
@@ -931,12 +945,20 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
     
     private void sendWelcomeEmail(User user, String passwordPlainText) throws ErrorException {
-        if (user.emailAddress == null || !user.emailAddress.contains("@")) {
+        if ((user.emailAddress == null || !user.emailAddress.contains("@")) && (user.parents == null || user.parents.size() == 0)) {
             return;
         }
         
         String content = "";
         String subject = "";
+        
+        String userNameOrEmail = "";
+        
+        if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
+            userNameOrEmail = user.emailAddress;
+        } else {
+            userNameOrEmail = user.username;
+        }
         
         // Norway ( ProMeister Academy )
         if (storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
@@ -944,7 +966,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             content += "<br/>";
             content += "<br/>Takk for at du har laget en konto hos ProMeister Academy. Fra din konto kan du raskt melde deg på kurs hos oss, og samtidig ha kontroll over kursene du har deltatt på. Du benytter følgende opplysninger for å logge deg på.";
             content += "<br/>";
-            content += "<br/>Brukernavn: "+user.emailAddress;
+            content += "<br/>Brukernavn: " + userNameOrEmail;
             content += "<br/>Passord: " + passwordPlainText;
             content += "<br/>";
             content += "<br/>Brukernavn og passordet gjelder både på nettsiden og mobilappen.";
@@ -961,7 +983,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             content += "<br/>";
             content += "<br/>Tack för att du skapat ett konto hos ProMeister Academy. Med inloggningen har du möjlighet att enkelt anmäla dig till kurser. Använd nedanstående uppgifter för att logga in.";
             content += "<br/>";
-            content += "<br/>Användarnamn: "+user.emailAddress;
+            content += "<br/>Användarnamn: " + userNameOrEmail;
             content += "<br/>Lösenord: " + passwordPlainText;
             content += "<br/>";
             content += "<br/>Inloggningsuppgifterna fungerar både på websidan och i mobilappen.";
@@ -975,8 +997,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         String fromAddress = getFromAddress();
         
+        User masterUser = getMasterUser(user.id);
         if (!content.isEmpty() && !subject.isEmpty()) {
-            mailfactory.send(fromAddress, user.emailAddress, subject, content);
+            if (masterUser != null) {
+                mailfactory.send(fromAddress, masterUser.emailAddress, subject, content);
+            } else {
+                mailfactory.send(fromAddress, user.emailAddress, subject, content);
+            }
         }
     }
 
@@ -1013,5 +1040,31 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         System.out.println("Users: " + count);
+    }
+
+    private User getMasterUser(String id) throws ErrorException {
+        User user = getUserById(id);
+        if (user != null && user.parents != null && user.parents.size() > 0) {
+            return getUserById(user.parents.get(0));
+        }
+        
+        return null;
+    }
+
+    private void detachedParentIfMasterDeleted(User user) throws ErrorException {
+        List<String> removeList = new ArrayList();
+        
+        if (user.parents != null ) {
+            for (String parentId : user.parents) {
+                User parent = getUserById(parentId);
+                if (parent == null) {
+                    removeList.add(parentId);
+                }
+            }
+            
+            for (String toRemove : removeList) {
+                user.parents.remove(toRemove);
+            }
+        }
     }
 }

@@ -369,6 +369,18 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             databaseSaver.saveObject(toReset, credentials);
         }
     }
+    
+    private List<User> getChildren(User master) throws ErrorException {
+        List<User> children = new ArrayList();
+        
+        for (User user : getAllUsers()) {
+            if (user.parents != null && user.parents.contains(master.id)) {
+                children.add(user);
+            }
+        }
+        
+        return children;
+    }
 
     @Override
     public void deleteUser(String userId) throws ErrorException {
@@ -381,7 +393,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
 
-        if (user.parents != null && user.parents.size() > 0) {
+        if (user.isMaster && getChildren(user).size() > 0) {
             throw new ErrorException(103);
         }
         

@@ -1,0 +1,115 @@
+.shop_button {
+    color: #FFF;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#c9de96+0,8ab66b+44,398235+100;Green+3D+%233 */
+    background: #e2252b; /* Old browsers */
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+    display: inline-block;
+}
+
+.ProductLists .slidelist .product .title {
+    text-align: center;
+    font-size: 25px;
+    padding: 10px;
+}
+
+.ProductLists .slidelist .product .descriptionarea {
+    font-size: 16px;
+    
+    padding-top: 25px;
+}
+
+.gsmobilemenu .gsmobilemenuentry {
+    display: none;
+}
+
+.gsmobilemenu .gsmobilemenuentry.gsmobiletopmenu {
+    display: inherit;
+    width: 100%;
+    
+    color: #FFF;
+    
+    background: #e2252b; /* Old browsers */
+    background: -moz-linear-gradient(-45deg, #e2252b 0%, #f9393d 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#e2252b), color-stop(100%,#f9393d)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg, #e2252b 0%,#f9393d 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg, #e2252b 0%,#f9393d 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg, #e2252b 0%,#f9393d 100%); /* IE10+ */
+    background: linear-gradient(135deg, #e2252b 0%,#f9393d 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2252b', endColorstr='#f9393d',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.menuentries .entry {
+    color: #FFF;
+}
+
+.gslandscapeimage {
+    height: 167px;
+    min-height: 167px;
+    margin-bottom: -17px;
+    background-image: url('displayImage.php?id=35b2dc80-d784-4fe5-ae76-a6a071f680b8');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-color: #e6e6e6;    
+}
+
+.gsportraitimage {
+    height: 165px;
+    min-height: 165px;
+    margin-bottom: -17px;
+    background-image: url('displayImage.php?id=c234ec62-41e9-427e-bcb4-351d9e3c53fd');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-color: #e6e6e6;
+}
+
+.gslandscapeimage img,
+.gsportraitimage img {
+    display: none;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    z-index: 2;
+}
+
+
+.ProductLists .slidelist .product_inner {
+    box-shadow: 0px 0px 8px #b1d8f5;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    
+    color: #FFF;
+    
+    background: #e2252b; /* Old browsers */
+    background: -moz-linear-gradient(-45deg, #e2252b 0%, #f9393d 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#e2252b), color-stop(100%,#f9393d)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg, #e2252b 0%,#f9393d 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg, #e2252b 0%,#f9393d 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg, #e2252b 0%,#f9393d 100%); /* IE10+ */
+    background: linear-gradient(135deg, #e2252b 0%,#f9393d 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2252b', endColorstr='#f9393d',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+
+body {
+    padding-bottom: 45px !important;
+}
+
+.gsucell[cellid="11721284-d02a-4c4e-8db5-1e80547c930f"],
+.gsucell[cellid="724e432d-c76d-4003-a434-7688f329a549"],
+.gsucell[cellid="a6033834-ba57-4893-9a7b-b473e003a126"] {
+   background-color: #FFF !important;
+   padding: 10px;
+}
+
+.gsucell[cellid="11721284-d02a-4c4e-8db5-1e80547c930f"] .gsinner,
+.gsucell[cellid="724e432d-c76d-4003-a434-7688f329a549"] .gsinner,
+.gsucell[cellid="a6033834-ba57-4893-9a7b-b473e003a126"] .gsinner {
+    margin-bottom: 20px;
+    background-color: #f0f0f0;
+}
+.gs_page_width:not(.gscell_408) {
+    padding-left: 20px;
+    padding-right: 20px;
+}

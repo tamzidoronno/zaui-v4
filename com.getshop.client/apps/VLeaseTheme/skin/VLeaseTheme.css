@@ -126,3 +126,12 @@ body {
     margin-top: 20px;
     display: inline-block;
 }
+
+.shop_button {
+    color: #FFF;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#c9de96+0,8ab66b+44,398235+100;Green+3D+%233 */
+    background: #e2252b; /* Old browsers */
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+    display: inline-block;
+}

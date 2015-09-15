@@ -702,7 +702,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public User getUserByEmail(String emailAddress) throws ErrorException {
         List<User> users = getUserStoreCollection(getStore().id).getAllUsers();
         for (User user : users) {
-            if (user.emailAddress != null && user.emailAddress.equals(emailAddress)) {
+            if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(emailAddress)) {
                 return user;
             }
         }

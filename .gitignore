@@ -121,3 +121,7 @@ core/secret.txt
 output.txt
 javaapi/src/main/java/com/getshop/javaapi
 artifacts/builds
+
+scripts/dump/
+core/private/
+com.getshop.client/events/API2.php

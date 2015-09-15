@@ -10,6 +10,9 @@ class core_common_JsonObject2 {
 	public $sessionId;
 
 	/** @var String */
+	public $multiLevelName;
+
+	/** @var String */
 	public $args;
 
 	/** @var String */
@@ -17,6 +20,9 @@ class core_common_JsonObject2 {
 
 	/** @var String */
 	public $messageId;
+
+	/** @var String */
+	public $realInterfaceName;
 
 }
 ?>

@@ -788,7 +788,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             String parentId = user.parents.get(0);
             User userParent = getUserById(parentId);
             
-            if (!userParent.isMaster) {
+            if (!userParent.isMaster && userParent.type < User.Type.EDITOR) {
                 userParent.isMaster = true;
                 saveObject(userParent);
             }
@@ -817,6 +817,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 user.triedToFetch = true;
                 saveObject(user);
             }
+        }
+        
+        if (user.type > User.Type.CUSTOMER) {
+            user.isMaster = false;
         }
     }
 

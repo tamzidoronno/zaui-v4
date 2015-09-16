@@ -138,6 +138,16 @@ $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
                     ?>
                 </div>
             </div>
+            
+            <? 
+            if ($loggedInUser->isMaster) {
+            ?>
+                <div style='position: absolute; right: 10px; bottom: 10px;'>
+                    <a href='/index.php?page=ac52f14b-78df-4eba-92c9-bf635ebb5b6e&userId=<? echo $user->id; ?>'><div class='gs_button' style='font-size: 36px;'><? echo  $this->__w("Sign up")." ".$user->fullName ; ?></div></a>
+                </div>
+            <?
+            }
+            ?>
         </div>
         <?
         if ($dataProvider) {

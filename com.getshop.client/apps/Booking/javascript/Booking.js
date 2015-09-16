@@ -128,11 +128,15 @@ Booking = {
     
     confirmBooking: function() {
         var data = {
-            entryId: $(this).attr('entryId')
+            entryId: $(this).attr('entryId'),
+            userId: $(this).attr('userId')
         }
 
         var event = thundashop.Ajax.createEvent(null, "confirmBooking", this, data);
-        thundashop.Ajax.post(event);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            alert(result);
+            document.location = '/';
+        });
     },
     toggleInvoiced: function () {
         var data = {

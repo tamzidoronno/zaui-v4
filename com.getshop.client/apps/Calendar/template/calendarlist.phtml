@@ -1,8 +1,11 @@
 <?
 
 $entries = $this->getListViewData();
-echo $this->downloadingListAsPdf;
+$userToSigupDirect = false;
 
+if (isset($_GET['userId'])) {
+    $userToSigupDirect = $this->getApi()->getUserManager()->getUserById($_GET['userId']);
+}
 
 foreach ($entries as $year => $months) {
     foreach ($months as $month => $locations) {
@@ -67,8 +70,14 @@ foreach ($entries as $year => $months) {
                 
                 $booking = "";
                 if (!$lockedForSignup && $bookingLink != "" && $availablePositions > 0) {
+                    
                     if ($loggedIn) {
-                        $booking = "<a href='$bookingLink'><div style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div></a>";
+                        if ($userToSigupDirect) {
+                            $userId = $userToSigupDirect->id;
+                            $booking = "<a href='$bookingLink&userId=$userId&$userId=$userToSigupDirect->id'><div style='text-align: center;' class='gs_button'>" . $this->__w("Sign up")." ".$userToSigupDirect->fullName . "</div></a>";
+                        } else {
+                            $booking = "<a href='$bookingLink'><div style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div></a>";
+                        }
                     } else {
                         $booking = "<div onclick=\"app.ProMeisterLogin.show('$bookingLink');\" style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div>";
                     }
@@ -76,7 +85,13 @@ foreach ($entries as $year => $months) {
                 }
                 if (!$lockedForSignup && $bookingLink != "" && $availablePositions <= 0 ) { 
                     if ($loggedIn) {
-                        $booking = "<a href='$bookingLink&waiting=true'><div style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list") . "</div></a>";
+                        if ($userToSigupDirect) {
+                            $userId = $userToSigupDirect->id;
+                            $booking = "<a href='$bookingLink&userId=$userId&waiting=true'><div style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list")." ". $userToSigupDirect->fullName . "</div></a>";
+                        } else {
+                            $booking = "<a href='$bookingLink&waiting=true'><div style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list") . "</div></a>";
+                        }
+                        
                     } else {
                         $booking = "<div onclick=\"app.ProMeisterLogin.show('$bookingLink&waiting=true');\" style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list") . "</div>";
                     }

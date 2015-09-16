@@ -110,8 +110,11 @@ class Booking extends MarketingApplication implements Application {
         if (isset($_GET['page'])) {
             $this->clearSession();
         }
+        
         if ($userObject == null) {
             $this->includefile("logininformation");
+        } elseif (isset($_GET['userId'])) {
+            $this->includefile('confirmbooking');
         } elseif ($userObject->type > 10 || $userObject->isMaster) {
             
             if ($userObject->isMaster) {
@@ -413,6 +416,10 @@ class Booking extends MarketingApplication implements Application {
             return;
         }
         
+        if (isset($_POST['data']['userId'])) {
+            $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userId']);
+        }
+        
         $_GET['entry'] = $_POST['data']['entryId'];
         
         if ($this->isConnectedToCurrentPage()) {
@@ -422,6 +429,9 @@ class Booking extends MarketingApplication implements Application {
         }
         
         $this->clearSession();
+        
+        $text = str_replace("{fullName}", $user->fullName, $this->__w("{fullName} is now signed up on this event"));
+        echo $text;
     }
     
     public function clearSession() {

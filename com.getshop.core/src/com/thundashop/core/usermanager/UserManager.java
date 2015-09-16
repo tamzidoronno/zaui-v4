@@ -734,8 +734,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         List<User> users = getUserStoreCollection(getStore().id).getAllUsers();
         for (User user : users) {
-            if (user.emailAddress != null && user.emailAddress.equals(emailAddress)) {
-                
+            if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(emailAddress)) {
                 if (needCheck) {
                     if (user.parents != null || user.parents.contains(loggedInUser.id)) {
                         return user;
@@ -743,8 +742,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 } else {
                     return user;
                 }
-                
-                
             }
         }
         

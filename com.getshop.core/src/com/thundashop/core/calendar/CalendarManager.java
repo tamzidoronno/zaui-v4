@@ -1162,11 +1162,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
             int curmonth = calendar.get(Calendar.MONTH) + 1;
             int curDay = calendar.get(Calendar.DAY_OF_MONTH);
-
+            
             if (curmonth == month.month) {
                 TreeMap<Integer, Day> days = new TreeMap();
                 for (Day day : month.days.values()) {
-                    if (day.day > curDay) {
+                    if (day.day >= curDay) {
                         days.put(day.day, day);
                     }
                 }

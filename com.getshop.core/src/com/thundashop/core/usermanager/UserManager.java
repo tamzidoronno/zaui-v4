@@ -726,6 +726,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public User getUserByEmail(String emailAddress) throws ErrorException {
+        if (emailAddress != null) {
+            emailAddress = emailAddress.trim();
+        }
         User loggedInUser = getSession().currentUser;
         boolean needCheck = loggedInUser != null && loggedInUser.type == User.Type.CUSTOMER;
         
@@ -776,6 +779,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(counter);
             saveObject(user);
         }
+        
+        user.cleanWhiteSpaces();
         
         detachedParentIfMasterDeleted(user);
         

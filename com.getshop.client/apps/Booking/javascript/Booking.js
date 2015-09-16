@@ -267,13 +267,13 @@ $('.Booking .savebooking').live('click', function () {
         return;
     }
     var data = {}
-    data.name = $('#candidateName').val();
+    data.name = $('#candidateName').val().trim();
     data.entryId = $(this).attr('entryid');
-    data.email = $('#candidateEmail').val();
-    data.cellphone = $('#candidateCellphone').val();
-    data.birthday = $('#candidateBirthday').val();
+    data.email = $('#candidateEmail').val().trim();
+    data.cellphone = $('#candidateCellphone').val().trim();
+    data.birthday = $('#candidateBirthday').val().trim();
     if (!data.birthday && $('.search_company').val()) {
-        data.birthday = $('.search_company').val();
+        data.birthday = $('.search_company').val().trim();
     }
 
     if ($('#candiateInvoiceemail').length > 0) {

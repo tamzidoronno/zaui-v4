@@ -810,10 +810,10 @@ class ApplicationManager extends FactoryBase {
         $user->groups = [];
         $user->cellPhone = $_POST['data']['cellphone'];
         $user->groups[] = $_POST['data']['groupId'];
+        $user->isMaster = $_POST['data']['garageleader'];
         $user->company = $this->getFactory()->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['orgnr']);
         $user = $this->getApi()->getUserManager()->createUser($user);
         
-       
         if (isset($_POST['data']['dontLogin']) && $_POST['data']['dontLogin']) {
             echo $user->id;
             return;

@@ -47,6 +47,11 @@ public class UserStoreCollection {
             }
         }
         
+        // Editors and adminsitrators can not be masters, simple as that!
+        if (user.isMaster && user.type > 10) {
+            user.isMaster = false;
+        }
+        
         return user;
     }
     

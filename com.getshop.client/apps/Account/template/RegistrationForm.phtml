@@ -11,6 +11,7 @@ $companyName = "";
 
 $user = $this->getUserData();
 $hidden = "";
+$username = "";
 $exists = false;
 $userId = "";
 $cellphone = "";
@@ -21,6 +22,7 @@ if ($user) {
     /* @var $user core_usermanager_data_User */
     $fullName = $user->fullName;
     $email = $user->emailAddress;
+    $username = $user->username;
     $password = $user->password;
     if ($user->address) {
         $street = $user->address->address;
@@ -55,6 +57,14 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
         </td>
         <td>
             <input type="txt" id="full_name" value="<?php echo $fullName; ?>"></input>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Username"); ?>
+        </td>
+        <td>
+            <?php echo $username; ?>
         </td>
     </tr>
     <tr>
@@ -232,7 +242,7 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
                         ?>
                         <input style='width: 20px;' type='checkbox' <? echo $checked ?> id='isMaster'/>
 
-                        <?php echo $this->__f("Is this a master user?"); ?>
+                        <?php echo $this->__f("Is this a garage leader?"); ?>
                     </div>
                 </td>
             </tr>

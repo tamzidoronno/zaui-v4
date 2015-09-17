@@ -17,6 +17,8 @@ import com.thundashop.core.calendarmanager.data.Signature;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MailStatus;
+import com.thundashop.core.messagemanager.MessageStatusFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
@@ -49,8 +51,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private HashMap<String, Location> locations = new HashMap();
     @Autowired
     public MailFactory mailFactory;
+    
     @Autowired
-    @Qualifier("SmsFactorySveve")
+    @Qualifier("SmsFactoryClickatell")
     public SMSFactory smsFactory;
     private List<ReminderHistory> reminderHistory = new ArrayList();
     private HashMap<String, EventPartitipated> eventData = new HashMap();
@@ -59,6 +62,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Autowired
     private CompanySearchEngineHolder holder;
 
+    @Autowired
+    private MessageStatusFactory messageStatusFactory;
+    
     private List<DiplomaPeriod> diplomaPeriods = new ArrayList<DiplomaPeriod>();
     private Map<String, LocationArea> areas = new HashMap();
 
@@ -593,24 +599,36 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             String mutatedText = text;
             mutatedText = mutateText("", mutatedText, entry, user);
             if (byEmail) {
+                String status1 = null;
+                String status2 = null;
                 if (files != null) {
-                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddress, subject, mutatedText, files, true);
-                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText, files, true);
+                    status1 = mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddress, subject, mutatedText, files, true);
+                    status2 = mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText, files, true);
                 } else {
-                    mailFactory.send(getFromAddress(null), user.emailAddress, subject, mutatedText);
-                    mailFactory.send(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText);
+                    status1 = mailFactory.send(getFromAddress(null), user.emailAddress, subject, mutatedText);
+                    status2 = mailFactory.send(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText);
                 }
+                
+                MailStatus mailStatus1 = messageStatusFactory.getStatus(status1, storeId);
+                MailStatus mailStatus2 = messageStatusFactory.getStatus(status2, storeId);
 
+                emailHistory.emailStatus.put(user.id, mailStatus1);
+                emailHistory.invoiceEmailStatus.put(user.id, mailStatus2);
+                    
                 emailHistory.users.add(user);
             }
 
             if (bySMS) {
+                
                 HashMap<String, Setting> settings = getSettings("Booking");
                 String from = settings.get("smsfrom").value;
                 String message = mutatedText;
                 String phoneNumber = user.cellPhone;
-                smsFactory.send(from, phoneNumber, message);
+                String messageId = smsFactory.send(from, phoneNumber, message);
                 smsHistory.users.add(user);
+                
+                MailStatus smsStatus = messageStatusFactory.getStatus(messageId, storeId);
+                smsHistory.smsStatus.put(user.id, smsStatus);
             }
         }
 
@@ -914,6 +932,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             }
 
             if (hist.eventId.equals(eventId)) {
+                finalizeHistory(hist);
                 allHistory.add(hist);
             }
         }
@@ -1455,5 +1474,28 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 "Kurspris for ikke kjedemedlemmer er kr. 3750,- pr. dag, og disse vil kun få tilgang til kursene dersom det er ledige plasser.";
         }
         
+    }
+
+    private void finalizeHistory(ReminderHistory hist) {
+        HashMap<String, MailStatus> emailStatus = checkMap(hist.emailStatus);
+        hist.emailStatus = emailStatus;
+        
+        HashMap<String, MailStatus> invoiceEmailStatus = checkMap( hist.invoiceEmailStatus);
+        hist.invoiceEmailStatus = invoiceEmailStatus;
+        
+        HashMap<String, MailStatus> smsStatus = checkMap( hist.smsStatus);
+        hist.smsStatus = smsStatus;
+    }
+
+    private HashMap<String, MailStatus> checkMap(HashMap<String, MailStatus> mapToCheck) {
+        HashMap<String, MailStatus> retStatus = new HashMap();
+        for (String userId : mapToCheck.keySet()) {
+            MailStatus status = mapToCheck.get(userId);
+            MailStatus newStatus = messageStatusFactory.getStatus(status.id, storeId);
+            System.out.println("found status: " + newStatus);
+            retStatus.put(userId, newStatus);
+        }
+        
+        return retStatus;
     }
 }

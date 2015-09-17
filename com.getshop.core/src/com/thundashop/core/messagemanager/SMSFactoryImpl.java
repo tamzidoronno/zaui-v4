@@ -26,6 +26,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -69,7 +70,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     }
     
     @Override
-    public void send(String from, String to, String message) {
+    public String send(String from, String to, String message) {
         SMSFactoryImpl impl = new SMSFactoryImpl();
         impl.from = from;
         impl.to = to;
@@ -83,6 +84,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.config = config;
         impl.setStoreId(storeId);
         new Thread(impl).start();
+        return "";
     }
     
     private void saveMessageSent() throws ErrorException {

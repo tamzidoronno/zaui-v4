@@ -9,6 +9,6 @@ package com.thundashop.core.messagemanager;
  * @author boggi
  */
 public interface SMSFactory {
-    public void send(String from, String to, String message);
+    public String send(String from, String to, String message);
     public int messageCount(int year, int month);
 }

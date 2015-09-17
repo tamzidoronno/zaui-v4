@@ -26,6 +26,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -61,7 +62,11 @@ public class SmsFactoryClickatell extends StoreComponent implements SMSFactory, 
     public StorePool storeManager;
     
     @Autowired
+    public MessageStatusFactory messageStatusFactory;
+    
+    @Autowired
     public SmsConfiguration config;
+    private String messageId;
     
     public SmsFactoryClickatell() {
         credentials = new Credentials(MessageManager.class);
@@ -70,9 +75,10 @@ public class SmsFactoryClickatell extends StoreComponent implements SMSFactory, 
     }
     
     @Override
-    public void send(String from, String to, String message) {
+    public String send(String from, String to, String message) {
         SmsFactoryClickatell impl = new SmsFactoryClickatell();
         impl.from = from;
+        impl.messageId = UUID.randomUUID().toString();
         impl.to = to;
         impl.message = message;
         impl.databaseSaver = databaseSaver;
@@ -82,8 +88,12 @@ public class SmsFactoryClickatell extends StoreComponent implements SMSFactory, 
         impl.frameworkConfig = frameworkConfig;
         impl.storeManager = storeManager;
         impl.config = config;
+        impl.messageStatusFactory = messageStatusFactory;
         impl.setStoreId(storeId);
+        messageStatusFactory.logStatus(impl.messageId, "QUEUED", "The message is put on queue", storeId, "SMSs");
         new Thread(impl).start();
+        
+        return impl.messageId;
     }
     
     private void saveMessageSent() throws ErrorException {
@@ -98,6 +108,8 @@ public class SmsFactoryClickatell extends StoreComponent implements SMSFactory, 
     
     public void run() {
         System.out.println("Sending with clickatell");
+        messageStatusFactory.logStatus(messageId, "SENDING", "The message is being put on the mailserver", storeId, "SMS");
+        
         try {
             config.setup(storeId);
         } catch (ErrorException ex) {
@@ -123,6 +135,7 @@ public class SmsFactoryClickatell extends StoreComponent implements SMSFactory, 
         String urlString = "http://api.clickatell.com/http/sendmsg?user="+config.getUsername()+"&password="+config.getPassword()+"&api_id="+config.getApiId()+"&concat=3&to="+config.getNumberprefix()+to+"&"+"&text="+message;
         
         if (!frameworkConfig.productionMode) {
+            messageStatusFactory.logStatus(messageId, "STOPPED_FRAMEWORK_IN_DEBUG_MODE", "Message was not delivered, the framework is set to debug mode.", storeId, "SMS");
             System.out.println("Url for sms: " + urlString);
             System.out.println("Sent SMS [ to: " + to + ", from: " + from +", Message: " + message + " ]");
             return;
@@ -151,12 +164,18 @@ public class SmsFactoryClickatell extends StoreComponent implements SMSFactory, 
                 content += inputLine;
             in.close();
             
+            
+            System.out.println(content);
             if(!content.trim().startsWith("ID:")) {
                 logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message);
                 System.out.println(content);
+                messageStatusFactory.logStatus(messageId, "FAILED_TO_SEND", "Message was not delivered. " + content, storeId, "SMS");
                 return;
             }
+            
+            messageStatusFactory.logStatus(messageId, "DELIVERED", "Message was successfully delivered", storeId, "SMS");
         } catch (IOException ex) {
+            messageStatusFactory.logStatus(messageId, "FAILED_TO_SEND", "Server refused to accept the message", storeId, ex, "SMS");
             logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message, ex);
             return;
         } finally {

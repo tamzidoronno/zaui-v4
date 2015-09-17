@@ -1492,7 +1492,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         for (String userId : mapToCheck.keySet()) {
             MailStatus status = mapToCheck.get(userId);
             MailStatus newStatus = messageStatusFactory.getStatus(status.id, storeId);
-            System.out.println("found status: " + newStatus);
             retStatus.put(userId, newStatus);
         }
         

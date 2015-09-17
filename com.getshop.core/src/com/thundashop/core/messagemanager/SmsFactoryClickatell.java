@@ -164,8 +164,6 @@ public class SmsFactoryClickatell extends StoreComponent implements SMSFactory, 
                 content += inputLine;
             in.close();
             
-            
-            System.out.println(content);
             if(!content.trim().startsWith("ID:")) {
                 logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message);
                 System.out.println(content);

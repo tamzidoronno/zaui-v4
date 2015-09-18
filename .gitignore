@@ -125,3 +125,4 @@ artifacts/builds
 scripts/dump/
 core/private/
 com.getshop.client/events/API2.php
+com.getshop.pullserver/events

@@ -30,7 +30,7 @@ task javaapiGen {
 }
 
 
-task assembleGetShop(type: Exec, dependsOn: ['javaapiClean', 'javaapiGen', 'javaapi:jar', 'core:fatJar']) {
+task assembleGetShop(type: Exec, dependsOn: ['javaapiClean', 'javaapiGen', 'javaapi:jar', 'core:build']) {
     commandLine 'scripts/assemble.sh', version
 }
 

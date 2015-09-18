@@ -26,13 +26,10 @@ public class Runner {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException, Exception {  
-
-        GenerateApiLocal.main(args);
-        
         java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
         java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
 
-        PrintWriter out = new PrintWriter("secret.txt") ;
+        PrintWriter out = new PrintWriter("../secret.txt") ;
         out.write(OVERALLPASSWORD+"\n");
         out.close();
 

@@ -31,8 +31,13 @@ public class FrameworkConfig {
         File f = new File("config.txt");
         
         if (!f.exists()) {
-            System.out.println("WARNING: Did not find framework config file (config.txt), using default configs");
-            return;
+            
+            f = new File("../config.txt");
+            
+            if (!f.exists()) {
+                System.out.println("WARNING: Did not find framework config file (config.txt or ../config.txt), using default configs");
+                return;
+            }
         }
         
         try {    

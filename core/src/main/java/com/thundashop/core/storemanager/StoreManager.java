@@ -265,6 +265,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         return "";
     }
 
-  
+    @Override
+    public Store initializeStoreByStoreId(String storeId, String initSessionId) throws ErrorException {
+        return storePool.initStoreByStoreId(storeId, initSessionId);
+    }
 
 }

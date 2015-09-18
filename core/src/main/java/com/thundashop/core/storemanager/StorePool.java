@@ -165,24 +165,8 @@ public class StorePool {
             return null;
         }
         
-        if (!getSessionFactory().exists(sessionId)) {
-            getSessionFactory().addToSession(sessionId, "storeId", store.id);
-        } else {
-            //Check if the store has been chaged.
-            Store curStore = getStoreBySessionId(sessionId);
-            if(!curStore.storeId.equals(store.storeId)) {
-                //Store has been changed.
-                getSessionFactory().removeFromSession(sessionId);
-                getSessionFactory().addToSession(sessionId, "storeId", store.id);
-            }
-        }
-        
-        if(store.configuration.configurationFlags == null) {
-            store.configuration.configurationFlags = new HashMap();
-        }
-        
-        if(AppContext.devMode) {
-            store.configuration.configurationFlags.put("devMode","true");
+        if (store != null) {
+            initStore(store, sessionId);
         }
         
         return store;
@@ -269,6 +253,37 @@ public class StorePool {
                     stores.put(store.id, store);
                 }
             }
+        }
+    }
+
+    public Store initStoreByStoreId(String storeId, String sessionId) {
+        Store store = stores.get(storeId);
+        if (store != null) {
+            initStore(store, sessionId);
+        }
+        
+        return store;
+    }
+
+    private void initStore(Store store, String sessionId) {
+        if (!getSessionFactory().exists(sessionId)) {
+            getSessionFactory().addToSession(sessionId, "storeId", store.id);
+        } else {
+            //Check if the store has been chaged.
+            Store curStore = getStoreBySessionId(sessionId);
+            if(!curStore.storeId.equals(store.storeId)) {
+                //Store has been changed.
+                getSessionFactory().removeFromSession(sessionId);
+                getSessionFactory().addToSession(sessionId, "storeId", store.id);
+            }
+        }
+        
+        if(store.configuration.configurationFlags == null) {
+            store.configuration.configurationFlags = new HashMap();
+        }
+        
+        if(AppContext.devMode) {
+            store.configuration.configurationFlags.put("devMode","true");
         }
     }
 }

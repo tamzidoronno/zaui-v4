@@ -24,6 +24,14 @@ public interface IStoreManager {
     public Store initializeStore(String webAddress, String initSessionId) throws ErrorException;
     
     /**
+     * Initializing this api. This will identify the webshop and will act as the root for everything in this api.
+     * @param initSessionId The session id to identify to this user.
+     * @return
+     * @throws ErrorException 
+     */
+    public Store initializeStoreByStoreId(String storeId, String initSessionId) throws ErrorException;
+    
+    /**
      * Save whatever data you want to the store.
      * @param key The key to save to
      * @param value The value to save

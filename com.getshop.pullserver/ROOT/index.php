@@ -23,7 +23,7 @@ include 'loader.php';
 
 $api = new GetShopApi(25554, 'localhost', session_id());
 $api->getStoreManager()->initializeStore("pullserver.getshop.com", session_id());
-$store = $api->getStoreManager()->getMyStore();
+$api->getUserManager()->logOn("post@getshop.com", "g4kkg4kk");
 
 $pullMessage = new core_pullserver_data_PullMessage();
 $pullMessage->body = file_get_contents("php://input");

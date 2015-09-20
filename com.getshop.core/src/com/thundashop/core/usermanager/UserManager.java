@@ -913,4 +913,23 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         System.out.println("Users: " + count);
     }
+
+    @Override
+    public void mergeUsers(String userId, List<String> userIds) throws ErrorException {
+        User masterUser = getUserById(userId);
+        CalendarManager calendarManager = getManager(CalendarManager.class);
+        if (masterUser != null) {
+            for (String slaveUserId : userIds) {
+                User slaveUser = getUserById(slaveUserId);
+                if (slaveUser != null) {
+                    for (String key : slaveUser.comments.keySet()) {
+                        masterUser.comments.put(key, slaveUser.comments.get(key));
+                    }
+
+                    calendarManager.replaceUserId(slaveUserId, masterUser.id);
+                    deleteUser(slaveUserId);
+                }
+            }
+        }
+    }
 }

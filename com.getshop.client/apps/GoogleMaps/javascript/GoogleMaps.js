@@ -278,5 +278,4 @@ googleMapsInitialized = function() {
     thundashop.app.GoogleMapsCommon.inizialized = true;
 }
 $.getScript("https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=googleMapsInitialized", function(){
-    google.load('visualization', '1.0', {'packages':['corechart']});
 });

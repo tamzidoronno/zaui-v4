@@ -928,9 +928,10 @@ class Page {
 
                     var aspectRatio =  origHeight / origWindowWidth;
                     var newHeight = $(window).width() * aspectRatio;
-                    var heightDiff = 1 - (newHeight / origHeight);
-                    console.log(heightDiff);
-                    console.log(newHeight);
+                    var heightDiff = newHeight / origHeight;
+                    console.log("height diff: " + heightDiff);
+                    console.log("new height: " + newHeight);
+                    console.log("Orig height: " + origHeight);
 //                    alert(heightDiff);
                     var innerWidthChange = $('.gs_page_width').width() / innerWidth;
 
@@ -951,6 +952,7 @@ class Page {
                         
                         //Calculate top postion
                         var curTop = $(this).position().top;
+                        console.log("Height: difff: " + heightDiff);
                         if(heightDiff > 0) {
                             curTop *= heightDiff;
                         }

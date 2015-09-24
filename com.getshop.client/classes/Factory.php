@@ -761,7 +761,7 @@ class Factory extends FactoryBase {
     public function getPageTitle() {
         $javapage = $this->getPage()->javapage;
         $settings = $this->getSettings();
-        $title = isset($settings->settings) ? $settings->settings->title->value : "";
+        $title = isset($settings->settings) && isset($settings->settings->title) ? $settings->settings->title->value : "";
         
 
         if($javapage->title) {

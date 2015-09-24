@@ -1,2 +1,3 @@
 body { background-color:#000; color:#fff; }
 .gsarea[area="header"] { display:none; }
+.gs_page_width { max-width: 1200px; margin: 0 auto;}

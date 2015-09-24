@@ -54,18 +54,18 @@ public class AddApplicationsToDatabase {
         allowed2.add("xlarge");
 
         
-        Application vLeaseTheme = createSettings("VLeaseTheme",
-                "a940cb75-40ef-4f4b-a691-40eb9490b3b0",
+        Application selgbilentheme = createSettings("SelgBilenTheme",
+                "68bfe8b2-655b-4099-87b7-964e078370f2",
                 allowed2,
                 "",
                 Application.Type.Theme, true);
-        vLeaseTheme.isPublic = false;
-        vLeaseTheme.isFrontend = false;
-        vLeaseTheme.moduleId = "Theme";
-        vLeaseTheme.defaultActivate = false;
-        vLeaseTheme.allowedStoreIds = new ArrayList();
-        vLeaseTheme.allowedStoreIds.add("09f05570-ce91-4e9a-b640-433deca91412");
-        apps.add(vLeaseTheme);
+        selgbilentheme.isPublic = false;
+        selgbilentheme.isFrontend = false;
+        selgbilentheme.moduleId = "Theme";
+        selgbilentheme.defaultActivate = false;
+        selgbilentheme.allowedStoreIds = new ArrayList();
+        selgbilentheme.allowedStoreIds.add("cd277b87-b006-4a7f-952b-570c23f89d34");
+        apps.add(selgbilentheme);
         
         return apps;
     }

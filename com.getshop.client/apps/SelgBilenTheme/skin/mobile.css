@@ -7,7 +7,7 @@ body { background-color:#000; color:#fff; }
 .Product .images .mainimage { border: solid 0px; }
 .ProductLists .product_price,.ProductLists .short_description,.ProductLists .addProductToCart { display:none; }
 .ProductLists .product_row { border: solid 2px #4a7ebb; margin: 10px; }
-.ProductLists .image { width: 400px !important; padding-top: 30px; }
+.ProductLists .image { width: 100% !important; padding-top: 30px; }
 .ProductLists .image img { width: 100% !important; }
 .ProductLists .products.row_view .content { left: 0px; padding-top: 5px; width:100%; text-align: center; }
 .ProductLists .products.row_view .content {  
@@ -27,7 +27,9 @@ body { background-color:#000; color:#fff; }
 .gs_page_width { padding-left: 20px; padding-right: 20px; }
 .gsmobilemenu { display:none; }
 .webshop_button_area { display:none; }
-.ProductLists .products.grid_view .productbox img { margin-bottom: 50px; }
+.ProductLists .products.grid_view .productbox img { margin-bottom: 50px; height: auto !important; }
 .gscell_6.gsuicell img { padding-right: 0px !important; }
 .Contact .contactform2 .fields,.Contact .contactform2 .submitarea { width: 100%; }
 .Contact input.submitbutton { width: 100%; margin-top: 10px; }
+.ProductLists .products.grid_view .productbox { border: solid 0px !important; padding-bottom: 0px;  }
+.ProductLists .product_title { font-size: 20px; font-weight: bold; }

@@ -26,3 +26,13 @@ body {
 .Contact .contactform2 .fields .inputContainer { margin: 5px; }
 .Contact .contactform2 .submitarea { width: 30%; padding-top:5px; }
 
+
+.Product .product_price,.Product .addProductToCart, .Product .short_description_title { display:none; }
+.Product .images .mainimage,.Product .images { width: 1200px; }
+.Product .product_contentbox { margin-top: 0px; padding-top: 0px; }
+.Product .short_description { display:none; }
+.Product .images .mainimage { border: solid 0px; }
+
+.gsbody_inner[gspagetype="product"] .gsarea[area="body"] .gs_page_width { background-color:#fff; color:#000; }
+.gsbody_inner[gspagetype="product"] .gsarea[area="body"] .ContentManager {  padding: 20px; }
+.gsbody_inner[gspagetype="product"] .gsarea[area="body"] .product_title { background-color:#ba0000; padding-left: 20px; color:#fff; }

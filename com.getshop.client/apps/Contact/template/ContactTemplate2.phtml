@@ -1,0 +1,28 @@
+<?
+$fields = $this->getFields();
+
+$counter = 0;
+echo "<div class='contactform2 contactformtosend'>";
+echo "<span class='fields'>";
+echo "<table width='100%'>";
+echo "<tr>";
+foreach($fields as $key => $field) {
+    $counter++;
+    $colspan = 1;
+    if($counter % 2 != 0) {
+        if($counter == sizeof($fields)) {
+            $colspan = 2;
+        }
+        echo "</tr><tr>";
+    }
+    echo "<td colspan='$colspan'><span class='inputContainer'><input name='$key' tosendname='$key' placeholder='$field'></span></td>";
+}
+echo "</tr>";
+echo "</table>";
+echo "</span>";
+echo "<span class='submitarea'>";
+echo "<input type='submit' value='SEND' class='submitbutton'>";
+echo "</span>";
+echo "</div>";
+?>
+<div style="clear:both;"></div>

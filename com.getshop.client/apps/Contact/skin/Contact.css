@@ -50,6 +50,26 @@
 .medium .Contact .medium_contact_form input, .small .Contact .medium_contact_form input { padding: 13px; }
 .medium .Contact .medium_contact_form .text, .small .Contact .medium_contact_form .text { padding: 13px; }
 
+.Contact .inputContainer {
+    background: #fff;
+    padding: 3px 3px;
+    border: 1px solid #a9a9a9;
+    display:block;
+}
+.Contact .inputContainer input {
+    width: 100%;
+    margin: 0; padding: 0; border: 0;
+    display: block;
+    background-color: transparent;
+    font-size: 16px;
+}
+.Contact .contactform2 .fields { float:left; width: 50%; display:inline-block; }
+.Contact .contactform2 .submitarea { float:left; width: 50%; display: inline-block; float: left; text-align: center; }
+.Contact .contactform2 .submitarea .submitbutton { cursor:pointer; }
+.Contact .inputContainer input:focus{
+    outline: 0;
+}
+
 .Contact .shop_button {
     display: inline-block;
     padding-right: 20px;

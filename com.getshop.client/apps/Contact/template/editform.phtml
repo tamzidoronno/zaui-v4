@@ -4,6 +4,7 @@ $number = 0;
 if(isset($config)) {
     $number = $config['numberOfFields'];
 }
+$numberOfTypes = 2;
 ?>
 
 
@@ -16,6 +17,23 @@ if(isset($config)) {
     <tr>
         <td width="50%"><? echo $this->__w("Subject to recipient"); ?></td>
         <td width="50%"><input type="text" name="emailSubject" style='width:100%;' value="<? echo $this->getSubject(); ?>"></td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Email form type"); ?></td>
+        <td width="50%">
+            <select name="formtype">
+            <?
+            for($i = 1; $i <= $numberOfTypes; $i++) {
+                $curType = $this->getCurrentType();
+                $SELECTED = "";
+                if($curType == $i) {
+                    $SELECTED = "SELECTED";
+                }
+                echo "<option value='$i' $SELECTED>$i</option>";
+            }
+            ?>
+            </select>
+        </td>
     </tr>
     <tr>
         <td width="50%"><? echo $this->__w("Number of fields"); ?></td>
@@ -47,6 +65,10 @@ if(isset($config)) {
         echo "</tr>";
     }
     ?>
+    <tr>
+        <td><? echo $this->__w("Thank you message"); ?></td>
+        <td><input type="text" style='width:100%;' name="thankyou" value='<? echo $this->getThankYouMessage(); ?>'></td>
+    </tr>
 </table>
 <span class="saveContactConfiguration"><? echo $this->__w("Save"); ?></span>
 <script>app.Contact.updateFormFields();</script>

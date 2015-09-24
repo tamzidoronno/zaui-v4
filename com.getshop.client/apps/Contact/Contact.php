@@ -47,10 +47,11 @@ class Contact extends \WebshopApplication implements \Application {
     }
     
     public function render() {
-        if($this->isEditable()) {
-            $this->includefile("EditContactTemplate");
+        $type = $this->getCurrentType();
+        if(isset($_POST['event']) && $_POST['event'] == "sendContactForm") {
+            echo $this->getThankYouMessage();
         } else {
-            $this->includefile("ContactTemplate");
+            $this->includefile("ContactTemplate".$type);
         }
     }
     
@@ -72,6 +73,18 @@ class Contact extends \WebshopApplication implements \Application {
             $config = json_decode($config, true);
         }
         return $config;
+    }
+    
+    public function getCurrentType() {
+        $config = $this->getContactConfig();
+        if(isset($config) && isset($config['formtype']) && $config['formtype']) {
+            return $config['formtype'];
+        }
+        return 1;
+    }
+    
+    public function sendContactForm() {
+        $this->sendMessage();
     }
     
     public function getBodyTitle() {
@@ -181,8 +194,10 @@ class Contact extends \WebshopApplication implements \Application {
             }
         }
         
-        $content .= "<br><br>".$this->__w("Message").":<br>" . $_POST['data']['field']['content'];
-        $content = nl2br($content);
+        if(isset($_POST['data']['field']['content'])) {
+            $content .= "<br><br>".$this->__w("Message").":<br>" . $_POST['data']['field']['content'];
+            $content = nl2br($content);
+        }
         
         $title = $this->getSubject();
 
@@ -190,7 +205,16 @@ class Contact extends \WebshopApplication implements \Application {
         
         $this->getApi()->getMessageManager()->sendMail($to, "Webshop owner", $title, $content, $replyAddress, "GetShop");
     }
-    
+
+    public function getThankYouMessage() {
+        $config = $this->getContactConfig();
+        if(isset($config) && isset($config['thankyou']) && $config['thankyou']) {
+            return $config['thankyou'];
+        }
+        
+        return $this->__w("Thank you for your message");
+    }
+
 }
 
 ?>

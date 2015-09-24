@@ -1,3 +1,28 @@
-body { background-color:#000; color:#fff; }
-.gsarea[area="header"] { display:none; }
+body { 
+    background-color:#000; color:#fff;
+    font-family: Arial, sans-serif;
+}
+.gsarea[area="header"] { color:#fff; }
+.Menu .entry a { font-size: 20px; float:right; color:#fff; }
 .gs_page_width { max-width: 1200px; margin: 0 auto;}
+.ProductLists .product_price,.ProductLists .short_description,.ProductLists .addProductToCart { display:none; }
+.ProductLists .product_row { border: solid 2px #4a7ebb; margin: 10px; }
+.ProductLists .image { width: 400px !important; padding-top: 30px; }
+.ProductLists .image img { width: 100% !important; }
+.ProductLists .products.row_view .content { left: 0px; padding-top: 5px; width:100%; text-align: center; }
+.ProductLists .products.row_view .content {  
+    background-image: url("{IMAGEFOLDER}/solgt.png"); 
+    background-repeat: no-repeat;
+    background-position: left top; 
+}
+.ProductLists .product_row {  
+    background-image: url("{IMAGEFOLDER}/lesmer.png"); 
+    background-repeat: no-repeat;
+    background-position: bottom right; 
+}
+.Contact .inputContainer input { font-size: 20px; }
+.Contact .submitbutton { border: solid 1px; border-radius: 0px; background-color:#000; color:#fff; margin: 5px; width: 200px; }
+.Contact .contactform2 .fields { width: 70%;}
+.Contact .contactform2 .fields .inputContainer { margin: 5px; }
+.Contact .contactform2 .submitarea { width: 30%; padding-top:5px; }
+

@@ -4,7 +4,22 @@ app.Contact = {
     initEvents : function() {
       $(document).on('change','.Contact select[name="numberOfFields"]', app.Contact.updateFormFields);
       $(document).on('click','.Contact .saveContactConfiguration', app.Contact.saveConfiguration);
+      $(document).on('click','.Contact .submitbutton', app.Contact.sendContactForm);
     },
+    sendContactForm : function() {
+        var form = $(this).closest('.contactformtosend');
+        var fields = {};
+        form.find('[tosendname]').each(function() {
+            fields[$(this).attr('tosendname')] = $(this).val();
+        });
+        
+        var data = {};
+        data['field'] = fields;
+        
+        var event = thundashop.Ajax.createEvent('','sendContactForm',$(this),data);
+        thundashop.Ajax.post(event);
+    },
+    
     loadConfiguration : function() {
         var event = thundashop.Ajax.createEvent('','loadConfiguration',$(this));
         thundashop.common.showInformationBox(event, 'Contact configuration');

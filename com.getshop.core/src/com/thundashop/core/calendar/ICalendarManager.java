@@ -9,6 +9,7 @@ import com.thundashop.core.calendarmanager.data.LocationArea;
 import com.thundashop.core.calendarmanager.data.LocationPoint;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
+import com.thundashop.core.calendarmanager.data.StatisticResult;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
@@ -310,4 +311,7 @@ public interface ICalendarManager {
     public boolean isUserOnWaiting(String userId, String eventId) throws ErrorException;
     
     public String getAgreementText();
+    
+    @Administrator
+    public List<StatisticResult> getStatistic(Date from, Date to) throws ErrorException;
 }

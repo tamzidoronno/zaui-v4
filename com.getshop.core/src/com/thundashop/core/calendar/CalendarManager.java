@@ -14,6 +14,7 @@ import com.thundashop.core.calendarmanager.data.LocationPoint;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.calendarmanager.data.Signature;
+import com.thundashop.core.calendarmanager.data.StatisticResult;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -1497,4 +1498,104 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         
         return retStatus;
     }
+
+    @Override
+    public List<StatisticResult> getStatistic(Date from, Date to) throws ErrorException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(from);
+        calendar.set(Calendar.HOUR, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        
+        from = calendar.getTime();
+        
+        calendar.setTime(to);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        to = calendar.getTime();
+        
+        List<Entry> allEntries = getAllEntriesForStatistic(from, to);
+        List<StatisticResult> results = new ArrayList();
+        
+        UserManager userManager = getManager(UserManager.class);
+        List<Group> groups = userManager.getAllGroups();
+        
+        for (Group group : groups) {
+            StatisticResult result = getStatisticResult(from, to, group, allEntries);    
+            results.add(result);
+        }
+        
+        StatisticResult result = getStatisticResult(from, to, null, allEntries);    
+        results.add(result);
+        
+        return results;
+    }
+
+    private StatisticResult getStatisticResult(Date from, Date to, Group group, List<Entry> allEntries) throws ErrorException {
+        StatisticResult result = new StatisticResult();
+        result.from = from;
+        result.to = to;
+        result.group = group;
+        result.signedOn = getSignedOnCount(allEntries, group);
+        result.waitingList = getWaitingListCount(allEntries, group);
+        return result;
+    }
+
+    private List<Entry> getAllEntriesForStatistic(Date from, Date to) {
+        List<Entry> entries = new ArrayList();
+        for (Month month : months.values()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    Date date = entry.getDate();
+                    
+                    if (date.after(from) && date.before(to)) {
+                        entries.add(entry);
+                    }
+                }
+            }
+        }
+        
+        return entries;
+    }
+
+    private int getSignedOnCount(List<Entry> allEntries, Group group) throws ErrorException {
+        int i = 0;
+        
+        for (Entry entry : allEntries) {
+            i += getCount(entry.attendees, group);
+        }
+        
+        return i;
+    }
+    
+    private int getCount(List<String> attendees, Group group) throws ErrorException {
+        int i = 0;
+        
+        UserManager manager = getManager(UserManager.class);
+        
+        for (String userId : attendees) {
+            User user = manager.getUserById(userId);
+            if (group != null && user.groups != null) {
+                if (user != null && user.groups.contains(group.id)) {
+                    i++;
+                }                    
+            } else {
+                if (user.groups == null || user.groups.size() == 0) {
+                    i++;
+                }
+            }
+        }
+        
+        return i;
+    }
+
+    private int getWaitingListCount(List<Entry> allEntries, Group group) throws ErrorException {
+        int i = 0;
+        
+        for (Entry entry : allEntries) {
+            i += getCount(entry.waitingList, group);
+        }
+        
+        return i;
+    }
+
 }

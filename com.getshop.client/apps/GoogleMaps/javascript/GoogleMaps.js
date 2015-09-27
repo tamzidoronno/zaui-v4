@@ -19,14 +19,13 @@ app.GoogleMaps = {
                     click: thundashop.app.GoogleMapsCommon.loadSettings
                 }
             ]
-        }
+        };
 
         var toolbox = new GetShopToolbox(config, application);
         toolbox.show();
         toolbox.attachToElement(application, 2);
     }
-
-}
+};
 
 thundashop.app.GoogleMaps.prototype = {
     config: null,
@@ -42,8 +41,7 @@ thundashop.app.GoogleMaps.prototype = {
     waitForGoogleMapsToLoad: function(loaded) {
         var scope = this;
         
-        if (thundashop.app.GoogleMapsCommon === false || typeof(google.maps.DirectionsRenderer) === "undefined") {
-            console.log("Waiting " + thundashop.app.GoogleMapsCommon + " " + google.maps.DirectionsRenderer);
+        if (thundashop.app.GoogleMapsCommon === false || typeof(google) === "undefined" || typeof(google.maps) === "undefined" || typeof(google.maps.DirectionsRenderer) === "undefined") {
             setTimeout(function() {
                 scope.waitForGoogleMapsToLoad(loaded);
             }, 100);
@@ -81,7 +79,6 @@ thundashop.app.GoogleMaps.prototype = {
                 maxZoom: parseInt(scope.config.maxZoom)
             }
             scope.mapOptions = mapOptions;
-            console.log("container: " + scope.config.container);
             scope.mapDiv = document.getElementById(scope.config.container);
             scope.map = new google.maps.Map(scope.mapDiv, scope.mapOptions);
             var box = $(scope.mapDiv);

@@ -69,6 +69,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                     userStoreCollection.addUserDirect((User) dataCommon);
                 }
                 if (dataCommon instanceof Group) {
+                    Group group = (Group)dataCommon;
+                    if (group.groupName.equals("Annen")) {
+                        group.groupName = "Øvrige";
+                        saveGroup(group);
+                    }
                     userStoreCollection.addGroup((Group)dataCommon);
                 }
                 if (dataCommon instanceof UserCounter) {

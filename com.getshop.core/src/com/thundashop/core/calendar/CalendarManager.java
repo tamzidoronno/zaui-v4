@@ -1524,9 +1524,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             results.add(result);
         }
         
-        StatisticResult result = getStatisticResult(from, to, null, allEntries);    
-        results.add(result);
-        
         return results;
     }
 
@@ -1561,7 +1558,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         int i = 0;
         
         for (Entry entry : allEntries) {
-            i += getCount(entry.attendees, group);
+            int count = getCount(entry.attendees, group);
+            if (entry.otherDays != null) {
+                count = (entry.otherDays.size() + 1) * count;
+            }
+            i += count;
         }
         
         return i;
@@ -1574,15 +1575,18 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         
         for (String userId : attendees) {
             User user = manager.getUserById(userId);
-            if (group != null && user.groups != null) {
-                if (user != null && user.groups.contains(group.id)) {
-                    i++;
-                }                    
-            } else {
-                if (user.groups == null || user.groups.size() == 0) {
-                    i++;
+            if (user != null) {
+                if (group != null && user.groups != null) {
+                    if (user != null && user.groups.contains(group.id)) {
+                        i++;
+                    }                    
+                } else {
+                    if (user.groups == null || user.groups.size() == 0) {
+                        i++;
+                    }
                 }
             }
+            
         }
         
         return i;
@@ -1592,7 +1596,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         int i = 0;
         
         for (Entry entry : allEntries) {
-            i += getCount(entry.waitingList, group);
+            int count = getCount(entry.waitingList, group);
+            if (entry.otherDays != null) {
+                count = (entry.otherDays.size() + 1) * count;
+            }
+            i += count;
         }
         
         return i;

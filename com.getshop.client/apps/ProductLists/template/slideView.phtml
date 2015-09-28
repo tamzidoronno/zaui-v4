@@ -62,7 +62,7 @@ function getProdcutImageId($product) {
 
 
 <script>
-    $(window).load(function() {
+    PubSub.subscribe('NAVIGATION_COMPLETED', function() {
         app.ProductLists.slideListRunner.start('<? echo $slideListID ?>');
     });
 </script>

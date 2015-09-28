@@ -10,12 +10,12 @@ body {
 .ProductLists .image { width: 400px !important; padding-top: 30px; }
 .ProductLists .image img { width: 100% !important; }
 .ProductLists .products.row_view .content { left: 0px; padding-top: 5px; width:100%; text-align: center; }
-
-.ProductLists .product_row {  
-    background-image: url("{IMAGEFOLDER}/lesmer.png"); 
+.ProductLists .products.row_view .content {  
+    background-image: url("{IMAGEFOLDER}/solgt.png"); 
     background-repeat: no-repeat;
-    background-position: bottom right; 
+    background-position: left top; 
 }
+
 .Contact .inputContainer input { font-size: 20px; }
 .Contact .submitbutton { border: solid 1px; border-radius: 0px; background-color:#000; color:#fff; margin: 5px; width: 200px; }
 .Contact .contactform2 .fields { width: 70%;}

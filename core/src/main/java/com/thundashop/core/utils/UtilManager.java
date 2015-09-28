@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.utilmanager.data.FileObject;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pdf.InvoiceManager;
@@ -33,7 +34,12 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     public HashMap<String, FileObject> files = new HashMap();
 
     @Autowired
+    private FrameworkConfig frameworkConfig;
+    
+    @Autowired
     public BrRegEngine brRegEngine;
+    
+    private int currentStartup;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -42,6 +48,16 @@ public class UtilManager extends ManagerBase implements IUtilManager {
                 files.put(tmpData.id, (FileObject) tmpData);
             }
         }
+        
+        String startupCount = getManagerSetting("startupcount");
+        if (startupCount == null) {
+            currentStartup = 0;
+        } else {
+            currentStartup = Integer.parseInt(startupCount);
+        }
+        
+        currentStartup++;
+        setManagerSetting("startupcount", ""+currentStartup);
     }
 
     @Override
@@ -134,5 +150,15 @@ public class UtilManager extends ManagerBase implements IUtilManager {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    @Override
+    public boolean isInProductionMode() {
+        return frameworkConfig.productionMode;
+    }
+
+    @Override
+    public int getStartupCount() {
+        return currentStartup;
     }
 }

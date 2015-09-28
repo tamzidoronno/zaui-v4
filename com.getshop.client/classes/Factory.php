@@ -21,6 +21,8 @@ class Factory extends FactoryBase {
     private $storeSettings;
     private $language;
     
+    private $isProductionMode = false;
+    
     public $productionMode = true;
     
     /** @var $translation GetShopTranslation */
@@ -127,57 +129,77 @@ class Factory extends FactoryBase {
         $this->errors = $errors;
     }
 
+    private function addJavascriptFile($file) {
+        if ($this->isProductionMode) {
+            $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
+            $fileContent = file_get_contents($file)."\n";
+            file_put_contents($fileName, $fileContent, FILE_APPEND);
+        } else {
+            echo "\n" . '<script type="text/javascript" src="'.$file.'"></script>';
+        }
+    }
+    
     public function loadJavascriptFiles($includetoolbox = true) {
         $scopid = $_POST['scopeid'];
         echo "<script>GetShop = {}; scopeid='$scopid'</script>";
-//        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery-1.9.0.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/watch.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery-migrate-1.2.1.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery.placeholder.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.Namespace.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.Ajax.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.Common.js#28374518123481"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.Skeleton.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.ImageEditor.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.BigStock.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.Model.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/jquery.history.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/jquery.form.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/jcrop/js/jquery.Jcrop.min.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="/js/colresize.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="/js/moments.js"></script>';
         
-        // Photoswipe
         echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/photoswipe.css">';
         echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/default-skin/default-skin.css">';
-        echo "\n" . '<script async src="/js/photoswipe/photoswipe.min.js"></script>';
-        echo "\n" . '<script async src="/js/photoswipe/photoswipe-ui-default.min.js"></script>';
-        echo "\n" . '<script async src="/js/getshop.photoswipe.js"></script>';        
-
-        echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/jquery.iframe-transport.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jquery.fileupload.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/jquery.fileupload-ui.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.imageupload.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/PubSub.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/mutate.events.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/mutate.min.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.ApplicationManager.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.Administration.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/getshop.base64.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.framework.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.ImportApplication.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.Toolbox.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/datatables/jquery.dataTables.min.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/colorpicker/js/colorpicker.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/jquery.applicationPicker.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.doImageUpload.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.rotate.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.PagePicker.js"></script>';
-        echo "\n" . '<script async type="text/javascript" src="js/getshop.Settings.js"></script>';
+        
+        $this->isProductionMode = $this->getApi()->getUtilManager()->isInProductionMode();
+        $this->startupCount = $this->getApi()->getUtilManager()->getStartupCount();
+        if ($this->isProductionMode) {
+            $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
+            file_put_contents($fileName, "");
+        }
+        
+        $this->addJavascriptFile("js/jquery-1.9.0.js");
+        $this->addJavascriptFile("js/watch.js");
+        $this->addJavascriptFile("js/jquery-migrate-1.2.1.js");
+        $this->addJavascriptFile("js/jquery.placeholder.js");
+        $this->addJavascriptFile("js/getshop.Namespace.js");
+        $this->addJavascriptFile("js/getshop.Ajax.js");
+        $this->addJavascriptFile("js/getshop.Common.js");
+        $this->addJavascriptFile("js/getshop.Skeleton.js");
+        $this->addJavascriptFile("js/getshop.ImageEditor.js");
+        $this->addJavascriptFile("js/getshop.BigStock.js");
+        $this->addJavascriptFile("js/getshop.Model.js");
+        $this->addJavascriptFile("js/jquery.history.js");
+        $this->addJavascriptFile("js/jquery.form.js");
+        $this->addJavascriptFile("js/jcrop/js/jquery.Jcrop.min.js");
+        $this->addJavascriptFile("js/colresize.js");
+        $this->addJavascriptFile("js/moments.js");
+        $this->addJavascriptFile("js/photoswipe/photoswipe.min.js");
+        $this->addJavascriptFile("js/photoswipe/photoswipe-ui-default.min.js");
+        $this->addJavascriptFile("js/getshop.photoswipe.js");
+        $this->addJavascriptFile("js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js");
+        $this->addJavascriptFile("js/jquery.ui/js/timepickeraddon.js");
+        $this->addJavascriptFile("js/jquery.iframe-transport.js");
+        $this->addJavascriptFile("js/jquery.fileupload.js");
+        $this->addJavascriptFile("js/jquery.fileupload-ui.js");
+        $this->addJavascriptFile("js/getshop.imageupload.js");
+        $this->addJavascriptFile("js/PubSub.js");
+        $this->addJavascriptFile("js/mutate.events.js");
+        $this->addJavascriptFile("js/mutate.min.js");
+        $this->addJavascriptFile("js/getshop.ApplicationManager.js");
+        $this->addJavascriptFile("js/getshop.Administration.js");
+        $this->addJavascriptFile("js/getshop.base64.js");
+        $this->addJavascriptFile("js/getshop.framework.js");
+        $this->addJavascriptFile("js/getshop.ImportApplication.js");
+        $this->addJavascriptFile("js/getshop.Toolbox.js");
+        $this->addJavascriptFile("js/datatables/jquery.dataTables.min.js");
+        $this->addJavascriptFile("js/colorpicker/js/colorpicker.js");
+        $this->addJavascriptFile("js/jquery.applicationPicker.js");
+        $this->addJavascriptFile("js/imagesloaded.pkgd.min.js");
+        $this->addJavascriptFile("js/getshop.doImageUpload.js");
+        $this->addJavascriptFile("js/getshop.rotate.js");
+        $this->addJavascriptFile("js/getshop.PagePicker.js");
+        $this->addJavascriptFile("js/getshop.Settings.js");
+        
+        if ($this->isProductionMode) {
+            echo "\n" . '<script type="text/javascript" src="'.$fileName.'"></script>';
+        }
+//        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
 
 
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';

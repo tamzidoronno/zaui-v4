@@ -62,19 +62,7 @@ function getProdcutImageId($product) {
 
 
 <script>
-    
-    function startSlideShowProductList() {
-        if(typeof(app.ProductLists) === "undefined" || typeof(app.ProductLists.slideListRunner) === "undefined") {
-            setTimeout(function() {
-                startSlideShowProductList();
-            }, "200");
-        } else {
-            app.ProductLists.slideListRunner.start('<? echo $slideListID ?>');
-        }
-    }
-    
-    
-    PubSub.subscribe('NAVIGATION_COMPLETED', function() {
-        startSlideShowProductList();
+    $(document).ready(function() {
+        app.ProductLists.slideListRunner.start('<? echo $slideListID ?>');
     });
 </script>

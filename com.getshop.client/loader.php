@@ -90,7 +90,7 @@ function symLinkIfNeeded($class_name) {
         $appName = $classArray[1];
         $namespacedfolder = "../app/$namespace";
 
-        if (!file_exists($namespacedfolder)) {
+        if (!file_exists($namespacedfolder) && file_exists("../apps/".$appName)) {
             @symlink("../apps/$appName", $namespacedfolder);
         }
     }

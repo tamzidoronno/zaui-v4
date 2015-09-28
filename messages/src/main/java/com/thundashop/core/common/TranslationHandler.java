@@ -83,6 +83,13 @@ public class TranslationHandler implements Serializable {
         for (Field field : fields) {
             if (field.getAnnotation(Translation.class) != null) {
                 String keyindex = language+"_"+field.getName();
+                
+                String oldValue = "";
+                if (field.getName().equals("name")) {
+                    oldValue = (String) field.get(this);
+                }
+                
+                
                 String currentKeyLang = translationStrings.get("current_key_lang_"+field.getName());
                 if (currentKeyLang == null) {
                     currentKeyLang = "";
@@ -90,8 +97,11 @@ public class TranslationHandler implements Serializable {
                 
                 boolean languageHasChanged = !currentKeyLang.equals(language);
                 String oldValueInCurrentLanguage = translationStrings.get(keyindex);
-                String newValueInCurrentLanguage = gson.toJson(field.get(this));
                 
+                String newValueInCurrentLanguage = null;
+                if (field.get(this) != null) {
+                    newValueInCurrentLanguage = gson.toJson(field.get(this));
+                } 
                 
                 if (languageHasChanged && oldValueInCurrentLanguage != null) {
                     try {

@@ -186,7 +186,7 @@ app.ProductLists.slideListRunner = {
         slideListDom.find('.product').width(productWidth);
         $('#loader_'+slideListId).hide();
         slideListDom.show();
-        app.ProductLists.slideListRunner.next(slideListDom);
+        app.ProductLists.slideListRunner.next(slideListId);
 
     },
     

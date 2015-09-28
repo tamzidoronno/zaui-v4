@@ -25,4 +25,8 @@ public interface IUtilManager {
     public FileObject getFile(String id) throws ErrorException;
     
     public String getBase64EncodedPDFWebPage(String urlToPage);
+    
+    public boolean isInProductionMode();
+    
+    public int getStartupCount();
 }

@@ -26,6 +26,10 @@ if ($theme) {
     $apps[] = $theme;
 }
 
+$startupCount = $factory->getApi()->getUtilManager()->getStartupCount();
+$allInOne = $factory->getApi()->getUtilManager()->isInProductionMode();
+$fileContentAllInOne = "";
+
 foreach ($apps as $app) {
     $appInstance = $factory->getApplicationPool()->createInstace($app);
     if ($appInstance) {
@@ -47,18 +51,28 @@ foreach ($apps as $app) {
 
         while (false !== ($entry = readdir($handle))) {
             if (endsWith(strtolower($entry), ".js")) {
-                $filecontent = file_get_contents($javascriptFolder . "/" . $entry);
-                $fileName = "javascripts/" . $namespace . "_" . $entry;
-                @file_put_contents($fileName, $filecontent);
-                echo '<script async type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
-                echo "<script>";
-                    echo 'if (typeof(getshop) === "undefined") { getshop = {}; }';
-                    echo 'if (typeof(getshop.gs_loaded_javascripts) === "undefined") { getshop.gs_loaded_javascripts = []; }';
-                    echo ' getshop.gs_loaded_javascripts.push("'.$fileName.'");';
-                echo "</script>";
+                if ($allInOne) {
+                    $fileContentAllInOne .= file_get_contents($javascriptFolder . "/" . $entry) . "\n";
+                } else {
+                    $filecontent = file_get_contents($javascriptFolder . "/" . $entry);
+                    $fileName = "javascripts/" . $namespace . "_" .$startupCount ."_" . $entry;
+                    @file_put_contents($fileName, $filecontent);
+                    echo '<script type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
+                    echo "<script>";
+                        echo 'if (typeof(getshop) === "undefined") { getshop = {}; }';
+                        echo 'if (typeof(getshop.gs_loaded_javascripts) === "undefined") { getshop.gs_loaded_javascripts = []; }';
+                        echo ' getshop.gs_loaded_javascripts.push("'.$fileName.'");';
+                    echo "</script>";
+                }
             }
         }
     }
+}
+
+if ($allInOne) {
+    $fileName = "javascripts/".$factory->getStore()->id."_get_shop_all_$startupCount.js";
+    file_put_contents($fileName, $fileContentAllInOne);
+    echo '<script type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
 }
 ?>
  

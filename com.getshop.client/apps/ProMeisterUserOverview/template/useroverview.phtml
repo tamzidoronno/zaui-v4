@@ -84,7 +84,7 @@ $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
             }
         }
         ?>
-        <div class="headline">Kompetanseoversikt - <? echo $user->fullName; ?></div>
+        <div class="headline"><? echo $this->__w("Kompetanseoversikt"); ?> - <? echo $user->fullName; ?></div>
 
 
         <div id="eventsoverview_outer">
@@ -110,7 +110,7 @@ $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
             </div>
 
             <div id="eventsoverview" style="width: 460px; display: inline-block; vertical-align: top; ">
-                <div class="sub_headline" >Du skal delta på:</div>
+                <div class="sub_headline" ><? echo $this->__w("Du skal delta på"); ?>:</div>
                 <div>
                     <?
                         if (!count($upComingEvents)) {
@@ -124,7 +124,7 @@ $allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
                     ?>
                 </div>
 
-                <div class="sub_headline">Du har deltatt på følgende utbilding:</div>
+                <div class="sub_headline"><? echo $this->__w("Du har deltatt på følgende kurs");?>:</div>
                 <div>
                     <?
                     if (!count($pastEvents)) {

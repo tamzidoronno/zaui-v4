@@ -10,21 +10,26 @@ Candidate name;-;Deltagarens namn
 Company;-;Orgnr/Företag
 Company name;-;Organisationsnr
 Continue;-;Fortsätt
+Create user;-;Skapa användare
 Date;-;Datum
 December;-;December
 Download as pdf;-;Skriv ut som PDF
+Du har deltatt på følgende kurs;-;Du har deltagit på följande utbildning
+Du skal delta på;-;Du skall delta på:
 February;-;Februari
 Friday;-;Fredag
 Invoice email;-;Verkstadens e-post
 January;-;Januari
 July;-;Juli
 June;-;Juni
+Kompetanseoversikt;-;Kompetensöversikt
 March;-;Mars
 May;-;Maj
 Monday;-;Måndag
 More information;-;Mer information
 My name is:;-;Mitt namn är:
 Name;-;Ditt namn
+No data available yet.;-;Ingen data tillgänglig
 November;-;November
 October;-;Oktober
 Password;-;Lösen
@@ -39,6 +44,7 @@ Send us mail;-;Skicka ett meddelande till oss
 September;-;September
 Sign up;-;Anmälan
 Sign up for waiting list;-;Anmäl till väntelista
+Sub Accounts;-;Underkonton
 Sunday;-;Söndag
 There is no entries for this event;-;Det finns inga tillgängliga tillfällen 
 This event has the following entries;-;Följande tillfällen är tillgängliga
@@ -48,9 +54,13 @@ Waiting list;-;väntelista
 We host events at the following locations, click on the location to filter the calendar by location(s);-;Följande tillfällen finns tillgängliga. Filtrera genom att markera orter i listan nedan
 Wednesday;-;Onsdag
 What's on your mind?;-;Meddelande:
+You dont have any subaccounts yet. Fill form below and click "create user" to add subaccount;-;Du har inga underkonton ännu. Fyll i formuläret nedan och markera ”Skapa användare” för att lägga till ett underkonto.
+You have not participated in any events yet.;-;Du har inte deltagit på någon kurs ännu
+You have not signed up for any events yet.;-;Du är inte anmäld på någon kurs ännu.
 Your are now signed up for the event;-;Du är nu anmäld!
 Your email;-;Din e-postadress
 Your emailaddress;-;Din e-postadress
+Your personal information;-;Din personliga information
 Your phonenumber;-;Ditt mobilnr
 change;-;Ändra
 course;-;Kurs
@@ -58,5 +68,6 @@ day;-;Datum
 email;-;Deltagarens e-post
 location;-;Plats:
 phone;-;Deltagarens mobiltelefon
+{fullName} is now signed up on this event;-;{fullName} är nu registrerad på denna kurs
 
 

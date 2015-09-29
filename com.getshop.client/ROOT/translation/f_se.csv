@@ -1,19 +1,26 @@
 ###### framework ######
+Add new account;-;Skapa ny användare
+Check the box above if you have mechanics you manage.;-;Kryssa i rutan om du vill kunna administrera dina mekaniker.
 Course materials / computers;-;Förevisningsmateriel/datorer
 Coursediplom;-;Kursintyg
 Create new account;-;Skapa nytt konto
 Deffered;-;Inställd
+Error;-;Fel
 Event;-;Kurs
 Event materials ordered;-;Kursmaterial beställt
 Find the company you work for;-;Hitta ditt företag
 Forgot password?;-;Glömt lösenord
+Is this a garage leader?;-;Verkstadschef?
 Learningobject;-;Praktikobjekt
 Lunch;-;Fika/lunch
 Pens;-;Pennor
 Place;-;Ort
+Put {fullName} on waitinglist now;-;Sätt {fullName}  på väntelistan
 Room booked;-;Lokal bokad
+Session timed out, reloading page;-;Inloggningstiden har gått ut. Du har blivit utloggad. Logga in igen.
 Telefonnr må være 10 siffer;-;Mobilnr måste vara 10 siffror 
 Thank you for your order, a mail has been sent with more information.;-;Tack för din anmälan. Ett email har skickats till dig med mer information.
+You are attending to this event;-;Du är redan anmäld till denna utbildning
 You have to login to continue;-;Du måste logga in för att fortsätta
 Your personal information has been updated.;-;Din personliga information har uppdaterats
 free_positions;-;Lediga platser

@@ -4,7 +4,7 @@ $languageHandler = new LanguageHandler();
 
 $errormsg = "";
 foreach ($this->getApi()->transport->errors as $error) {
-    $errormsg = $error['error']."<br>";
+    $errormsg = $error['error_code'].",<span id='error_text'>".$error['error_text']."</span>"."<br>";
 }
 ?>
 

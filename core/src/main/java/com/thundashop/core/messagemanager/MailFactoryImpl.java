@@ -109,17 +109,17 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
 
     @Override
     public void send(String from, String to, String title, String content) {
-        MailFactoryImpl mfi = new MailFactoryImpl();
-        mfi.from = from;
-        mfi.to = to;
-        mfi.subject = title;
-        mfi.content = content;
-        mfi.mailSettings = getMailSettings();
-        mfi.logger = logger;
-        mfi.storeId = storeId;
-        mfi.frameworkConfig = frameworkConfig;
-        
-        new Thread(mfi).start();
+        if (to != null && !to.isEmpty()) {
+            if (to.contains(";")) {
+                for (String email : to.split(";")) {
+                    MailFactoryImpl mfi = createMailFactory(from, email, title, content);
+                    new Thread(mfi).start();    
+                }
+            } else {
+                MailFactoryImpl mfi = createMailFactory(from, to, title, content);
+                new Thread(mfi).start();
+            }
+        }
     }
 
     @Override
@@ -138,23 +138,37 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
      */
     @Override
     public void sendWithAttachments(String from, String to, String title, String content, Map<String, String> files, boolean delete) {
+         if (to != null && !to.isEmpty()) {
+            if (to.contains(";")) {
+                for (String email : to.split(";")) {
+                    MailFactoryImpl mfi = createMailFactory(from, email, title, content);
+                    mfi.files = files;
+                    mfi.delete = delete;
+                    new Thread(mfi).start();
+                }
+            } else {
+                MailFactoryImpl mfi = createMailFactory(from, to, title, content);
+                mfi.files = files;
+                mfi.delete = delete;
+                new Thread(mfi).start();
+            }
+        }
+        
+        
+        
+    }
+
+    private MailFactoryImpl createMailFactory(String from, String to, String title, String content) {
         MailFactoryImpl mfi = new MailFactoryImpl();
         mfi.from = from;
         mfi.to = to;
-        mfi.files = files;
-        mfi.delete = delete;
         mfi.subject = title;
         mfi.content = content;
         mfi.mailSettings = getMailSettings();
         mfi.logger = logger;
         mfi.storeId = storeId;
         mfi.frameworkConfig = frameworkConfig;
-        
-        if(to == null || to.equals("test@getshop.com")) {
-            //Send this to noone, or the test account.. no way!
-            return;
-        }
-        new Thread(mfi).start();
+        return mfi;
     }
 
     private class Authenticator extends javax.mail.Authenticator {

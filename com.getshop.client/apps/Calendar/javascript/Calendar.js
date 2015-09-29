@@ -489,8 +489,11 @@ $('.Calendar .candidate_setting').live('click', function() {
 $('.Calendar .deleteentry').live('click', function() {
     var data = {};
     data.entryId = $(this).attr('entryid');
-    var event = thundashop.Ajax.createEvent('Calendar', 'deleteEntry', $(this), data);
-    thundashop.Ajax.post(event);
+    var confirmed = confirm("Are you sure you want to delete this event?");
+    if (confirmed) {
+        var event = thundashop.Ajax.createEvent('Calendar', 'deleteEntry', $(this), data);
+        thundashop.Ajax.post(event);
+    }
 });
 
 $('.Calendar .editentry').live('click', function() {

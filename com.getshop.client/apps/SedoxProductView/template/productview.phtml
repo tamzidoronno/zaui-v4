@@ -75,7 +75,11 @@ $reference = $this->getReference($sedoxProduct);
                 $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
                 if ($user != null) {
                     $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccount();
-                    if ($sedoxUser->fixedPrice) {
+                    if ($sedoxUser->fixedPrice 
+                            && strtolower($binFile->fileType) != "cmdencrypted"
+                            && strtolower($binFile->fileType) != "cmd original"
+                            && strtolower($binFile->fileType) != "original"
+                            ) {
                         $filePrice = $sedoxUser->fixedPrice;
                     }
                 }

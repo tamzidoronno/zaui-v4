@@ -35,3 +35,7 @@ body { background-color:#000; color:#fff; }
 .ProductLists .product_title { font-size: 16px !important; font-weight: bold; }
 
 .gsbody_inner[gspagetype="product"] { background-color:#fff; color:#000; }
+
+body { padding-bottom: 0px; }
+.gsmobilefooter { display:block; background-color:#ba0000; font-size: 20px !important; color:#fff !important; text-align: center; padding-top: 10px; }
+.gsmobilefooter a { color:#fff; text-decoration: underline; }

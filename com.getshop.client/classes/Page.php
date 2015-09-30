@@ -107,13 +107,16 @@ class Page {
             }
 
             if ($editedCellid == null) {
-                echo "<script>$('.gsiseditingprepend').remove();</script>";
+//                echo "<script>$('.gsiseditingprepend').remove();</script>";
             }
         } else {
             echo "<div class='gsbody' pageId='" . $this->getId() . "'>";
             $cells = $layout->areas->{'body'};
             $this->printMobileHeader($layout->areas->{'header'});
             $this->printArea($cells, 0, null);
+            echo "<div class='footer gsmobilefooter'>";
+            $this->printArea($layout->areas->{'footer'}, 0, null);
+            echo "</div>";
             $this->printCss($layout->areas->{'body'});
             echo "</div>";
             $this->printMobileMenu($layout->areas->{'header'});

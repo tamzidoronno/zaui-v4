@@ -68,11 +68,13 @@ public class MessageStatusFactory {
         
         credentials.storeid = storeId;
         dbStatus.storeId = storeId;
-        try {
-            database.save(dbStatus, credentials);
-        } catch (ErrorException ex2) {
-            ex.printStackTrace();
-            ex2.printStackTrace();
-        }     
+        if (storeId != null) {
+            try {
+                database.save(dbStatus, credentials);
+            } catch (ErrorException ex2) {
+                ex.printStackTrace();
+                ex2.printStackTrace();
+            }     
+        }
     }
 }

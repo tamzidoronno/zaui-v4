@@ -4,7 +4,7 @@ body {
 }
 .gsarea[area="header"] { color:#fff; }
 .Menu .entry a { font-size: 20px; float:right; color:#fff; }
-.gs_page_width { max-width: 1200px; margin: 0 auto;}
+.gs_page_width { max-width: 1200px; margin: 0 auto; min-width: 1024px; }
 .ProductLists .product_price,.ProductLists .short_description,.ProductLists .addProductToCart { display:none; }
 .ProductLists .product_row { margin: 10px; }
 .ProductLists .image { width: 400px !important; padding-top: 30px; }

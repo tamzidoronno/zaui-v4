@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class TranslationComparor {
 
-    private String path = "../com.getshop.client/ROOT/translation/";
+    private String path = "/source/getshop/1.0.0/com.getshop.client/ROOT/translation/";
     
     private List<TranslationFile> webShopTranslationFiles = new ArrayList();
     private List<TranslationFile> frameworkTranslationFiles = new ArrayList();

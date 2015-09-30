@@ -41,12 +41,12 @@ public class GenerateTranslation {
             while (allDocs.hasNext()) {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, allDocs.next());
                 if(dataCommon instanceof ApplicationSettings) {
-                    System.out.println("found");
                     ApplicationSettings dbobj = (ApplicationSettings) dataCommon;
                     applicationNames.put(dbobj.id.replace("-", "_"), dbobj);
                 }
             }
         }
+        
     }
 
     private int fileCount = 0;
@@ -58,7 +58,7 @@ public class GenerateTranslation {
         loadAppsFromDatabase();
         
         GenerateTranslation gt = new GenerateTranslation();
-        gt.parsePath("../com.getshop.client/");
+        gt.parsePath("/source/getshop/1.0.0/com.getshop.client/");
 
         ArrayList<String> webShopTranslation = gt.createKeyList("webshop");
         ArrayList<String> frameworkTranslation = gt.createKeyList("framework");
@@ -84,7 +84,7 @@ public class GenerateTranslation {
     private void writeTranslationFile(String filename, ArrayList<String> webShopTranslation, boolean includeSuffix) {
         try {
             // Create file 
-            FileWriter fstream = new FileWriter("../com.getshop.client/ROOT/translation/" + filename + ".csv");
+            FileWriter fstream = new FileWriter("/source/getshop/1.0.0/com.getshop.client/ROOT/translation/" + filename + ".csv");
             BufferedWriter out = new BufferedWriter(fstream);
 
             HashMap<String, List<TranslationKey>> sortedTranslation = buildSortedTranslation(webShopTranslation);
@@ -117,8 +117,10 @@ public class GenerateTranslation {
             if (f.isDirectory()) {
                 parsePath(f.getAbsolutePath());
             } else if (filePath.endsWith(".php") || filePath.endsWith(".phtml") || filePath.endsWith(".js")) {
-                parseFile(fileOriginal);
-                fileCount++;
+                if (!filePath.contains(".min.")) {
+                    parseFile(fileOriginal);
+                    fileCount++;
+                }
             }
         }
     }

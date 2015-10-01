@@ -56,6 +56,7 @@ public class PageCell implements Serializable {
     public void overWrite(PageCell cell) {
         styles = cell.styles;
         anchor = cell.anchor;
+        link = cell.link;
         keepOriginalLayoutOnMobile = cell.keepOriginalLayoutOnMobile;
     }
 

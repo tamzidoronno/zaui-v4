@@ -482,6 +482,8 @@ class Page {
         
         $permissions = "";
         if($this->factory->isEditorMode()) {
+            $permobject = $cell->settings;
+            $permobject->{'link'} = $cell->link;
             $permissions = "data-settings='".json_encode($cell->settings) . "'";
         }
         
@@ -620,6 +622,15 @@ class Page {
                                 <option value='50'>Editors</option>
                                 <option value='100'>Administrators</option>
                             </select>
+                        </span>
+                    </label>
+                </div>
+                <div style='clear:both;'></div>
+                <br>
+                <div>
+                    <label><? echo $this->factory->__w("Link this cell"); ?>
+                        <span class='gscssinput'>
+                            <input type='txt' gsname='link'> 
                         </span>
                     </label>
                 </div>

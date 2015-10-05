@@ -7,12 +7,15 @@
  */
 package com.thundashop.core.pagemanager.data;
 
+import com.google.gson.Gson;
 import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -32,6 +35,10 @@ public class Page extends DataCommon implements Cloneable {
     public String metaKeywords = "";
     public String metaTitle = "";
     public String overridePageTitle = "";
+    
+    public String masterPageId = "";
+    
+    public HashMap<String, String> overrideApps = new HashMap();
     
     public Page() {
     }
@@ -89,6 +96,39 @@ public class Page extends DataCommon implements Cloneable {
                 dumpRows(row.cells, depth + 1);
             }
         }
+    }
+
+    public Page jsonClone() {
+        Gson gson = new Gson();
+        String json = gson.toJson(this);
+        Page newPage = gson.fromJson(json, Page.class);
+        newPage.id = UUID.randomUUID().toString();
+        return newPage;
+    }
+
+    public void finalizeSlavePage(Page masterPage) {
+        if (masterPage != null) {
+            layout = masterPage.layout.jsonClone();
+            
+            for (String cellId : overrideApps.keySet()) {
+                String instanceId = overrideApps.get(cellId);
+                if (getCell(cellId) != null) {
+                    getCell(cellId).appId = instanceId;
+                }
+            }
+        }
+    }
+
+    public void addApplication(String cellId, String instanceId) {
+        if (isASlavePage()) {
+            overrideApps.put(cellId, instanceId);
+        } else {
+            getCell(cellId).appId = instanceId;
+        }
+    }
+
+    public boolean isASlavePage() {
+        return masterPageId != null && !masterPageId.isEmpty();
     }
 
     public static class DefaultPages {

@@ -51,9 +51,10 @@ thundashop.ApplicationManager = {
     addApplication: function () {
         var data = {
             cellId: $(this).closest('.gs_add_applicationlist').attr('cellid'),
-            appId: $(this).closest('.gs_add_app_entry').attr('appId')
+            appId: $(this).closest('.gs_add_app_entry').attr('appId'),
+            pageId: $('#gspageid').val()
         };
-
+        
         var event = thundashop.Ajax.createEvent(null, "addApplicationToCell", this, data);
         thundashop.Ajax.post(event);
     }

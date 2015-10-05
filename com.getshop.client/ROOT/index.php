@@ -378,3 +378,11 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
 <script>
     google.load('visualization', '1.0', {'packages':['corechart']});
 </script>
+
+<?
+//$res = $factory->getApi()->getQuestBackManager()->createNewQuestion("test", 1);
+//echo "<pre>";
+//print_r($res);
+//echo "</pre>";
+//echo "<a href='/?page=$res->pageId'>next</a>";
+?>

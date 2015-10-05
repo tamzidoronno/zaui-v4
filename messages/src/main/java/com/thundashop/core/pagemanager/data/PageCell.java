@@ -2,6 +2,7 @@ package com.thundashop.core.pagemanager.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,6 +42,8 @@ public class PageCell implements Serializable {
     public String type = "normal";
     public ArrayList<PageCell> cells = new ArrayList();
     public String appId;
+    public HashMap<String, String> cellAppIdOverride = new HashMap();
+    public String templateFromPageId = "";
     public FloatingData floatingData = new FloatingData();
     public String styles = "";
     public CarouselConfig carouselConfig = new CarouselConfig();

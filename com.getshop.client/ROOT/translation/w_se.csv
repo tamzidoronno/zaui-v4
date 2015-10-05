@@ -3,11 +3,15 @@ April;-;April
 August;-;Augusti
 Available positions;-;Lediga platser
 Back;-;Tillbaka
+Birth Date;-;Org.nr
+Birth date;-;Org.nr
 Booking;-;Anmäl
 By calendar;-;Kalender
 By list;-;Lista
 Candidate name;-;Deltagarens namn
+Cell phone;-;Mobilnummer
 Change user;-;Byt användare
+City;-;Postort
 Company;-;Orgnr/Företag
 Company name;-;Organisationsnr
 Continue;-;Fortsätt
@@ -15,26 +19,32 @@ Create user;-;Skapa användare
 Date;-;Datum
 December;-;December
 Download as pdf;-;Skriv ut som PDF
-Du har deltatt på følgende kurs;-;Du har deltagit på följande utbildning
-Du skal delta på;-;Du skall delta på:
+Du har deltatt på følgende kurs;-;Du har deltagit på följande utbildningar
+Du skal delta på;-;Du skall delta på
 February;-;Februari
 Friday;-;Fredag
+Full name;-;För och efternamn
+Group;-;Tillhörighet
 Invoice email;-;Verkstadens e-post
 January;-;Januari
 July;-;Juli
 June;-;Juni
 Kompetanseoversikt;-;Kompetensöversikt
+Logout;-;Logga ut
 March;-;Mars
 May;-;Maj
 Monday;-;Måndag
 More information;-;Mer information
+My Account;-;Mitt konto
 My name is:;-;Mitt namn är:
 Name;-;Ditt namn
+New user;-;Ny användare
 No data available yet.;-;Ingen data tillgänglig
 November;-;November
 October;-;Oktober
 Password;-;Lösen
 Phone;-;Tel.nr
+Postal code;-;Post nr
 Read more;-;Läs mer
 Saturday;-;Lördag
 Search;-;Sök
@@ -51,6 +61,8 @@ There is no entries for this event;-;Det finns inga tillgängliga tillfällen
 This event has the following entries;-;Följande tillfällen är tillgängliga
 Thursday;-;Torsdag
 Tuesday;-;Tisdag
+Update;-;Uppdatera
+Username;-;Användarenamn
 Waiting list;-;väntelista
 We host events at the following locations, click on the location to filter the calendar by location(s);-;Följande tillfällen finns tillgängliga. Filtrera genom att markera orter i listan nedan
 Wednesday;-;Onsdag

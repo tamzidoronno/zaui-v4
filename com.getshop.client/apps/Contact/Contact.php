@@ -199,6 +199,8 @@ class Contact extends \WebshopApplication implements \Application {
             $content = nl2br($content);
         }
         
+        $content .= "<br><br>Originated from: " . $_SERVER["HTTP_HOST"];
+        
         $title = $this->getSubject();
 
         $to = $this->getEmail();

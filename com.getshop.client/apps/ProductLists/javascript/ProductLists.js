@@ -186,8 +186,6 @@ app.ProductLists.slideListRunner = {
         slideListDom.find('.product').width(productWidth);
         $('#loader_'+slideListId).hide();
         slideListDom.show();
-        app.ProductLists.slideListRunner.next(slideListId);
-
     },
     
     next: function(slideListId) {
@@ -202,7 +200,7 @@ app.ProductLists.slideListRunner = {
         var length = "-"+productWidth*(products.length-1)+"px";
         
         app.ProductLists.slideListRunner[slideListId] = true;
-        if (left === length) {
+        if (left === length || (products.length-1 === 0)) {
             slideListDom.find('.slidelist_inner').animate({
                 marginLeft: "-=80",
             }, function() {

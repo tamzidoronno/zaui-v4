@@ -4,7 +4,7 @@ body {
 }
 .gsarea[area="header"] { color:#fff; }
 .Menu .entry a { font-size: 20px; float:right; color:#fff; }
-.gs_page_width { max-width: 1200px; margin: 0 auto;}
+.gs_page_width { max-width: 1200px; margin: 0 auto; min-width: 1024px; }
 .ProductLists .product_price,.ProductLists .short_description,.ProductLists .addProductToCart { display:none; }
 .ProductLists .product_row { margin: 10px; }
 .ProductLists .image { width: 400px !important; padding-top: 30px; }
@@ -32,3 +32,10 @@ body {
 .gsbody_inner[gspagetype="product"] .gsarea[area="body"] .gs_page_width { background-color:#fff; color:#000; }
 .gsbody_inner[gspagetype="product"] .gsarea[area="body"] .ContentManager {  padding: 20px; }
 .gsbody_inner[gspagetype="product"] .gsarea[area="body"] .product_title { background-color:#ba0000; padding-left: 20px; color:#fff; }
+.Product .images img {
+    width: 40%;
+}
+.Product .images .mainimage {
+    text-align:center;
+    padding-top: 10px;
+}

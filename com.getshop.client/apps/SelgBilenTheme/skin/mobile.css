@@ -21,7 +21,7 @@ body { background-color:#000; color:#fff; }
     background-position: bottom right; 
 }
 
-
+.gscell_59,.gscell_60 { display:none; }
 
 .gscontainercell.gscell_4 { display:none; }
 .gs_page_width { padding-left: 20px; padding-right: 20px; }
@@ -32,4 +32,10 @@ body { background-color:#000; color:#fff; }
 .Contact .contactform2 .fields,.Contact .contactform2 .submitarea { width: 100%; }
 .Contact input.submitbutton { width: 100%; margin-top: 10px; }
 .ProductLists .products.grid_view .productbox { border: solid 0px !important; padding-bottom: 0px;  }
-.ProductLists .product_title { font-size: 20px; font-weight: bold; }
+.ProductLists .product_title { font-size: 16px !important; font-weight: bold; }
+
+.gsbody_inner[gspagetype="product"] { background-color:#fff; color:#000; }
+
+body { padding-bottom: 0px; }
+.gsmobilefooter { display:block; background-color:#ba0000; font-size: 20px !important; color:#fff !important; text-align: center; padding-top: 10px; }
+.gsmobilefooter a { color:#fff; text-decoration: underline; }

@@ -107,13 +107,16 @@ class Page {
             }
 
             if ($editedCellid == null) {
-                echo "<script>$('.gsiseditingprepend').remove();</script>";
+//                echo "<script>$('.gsiseditingprepend').remove();</script>";
             }
         } else {
             echo "<div class='gsbody' pageId='" . $this->getId() . "'>";
             $cells = $layout->areas->{'body'};
             $this->printMobileHeader($layout->areas->{'header'});
             $this->printArea($cells, 0, null);
+            echo "<div class='footer gsmobilefooter'>";
+            $this->printArea($layout->areas->{'footer'}, 0, null);
+            echo "</div>";
             $this->printCss($layout->areas->{'body'});
             echo "</div>";
             $this->printMobileMenu($layout->areas->{'header'});
@@ -479,6 +482,8 @@ class Page {
         
         $permissions = "";
         if($this->factory->isEditorMode()) {
+            $permobject = $cell->settings;
+            $permobject->{'link'} = $cell->link;
             $permissions = "data-settings='".json_encode($cell->settings) . "'";
         }
         
@@ -617,6 +622,15 @@ class Page {
                                 <option value='50'>Editors</option>
                                 <option value='100'>Administrators</option>
                             </select>
+                        </span>
+                    </label>
+                </div>
+                <div style='clear:both;'></div>
+                <br>
+                <div>
+                    <label><? echo $this->factory->__w("Link this cell"); ?>
+                        <span class='gscssinput'>
+                            <input type='txt' gsname='link'> 
                         </span>
                     </label>
                 </div>

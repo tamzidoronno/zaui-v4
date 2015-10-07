@@ -91,18 +91,16 @@ public class AddApplicationsToDatabase {
         createNewInstanceApplication.defaultActivate = false;
         apps.add(createNewInstanceApplication);
         
-        Application ArtistDugnadTheme = createSettings("ArtistDugnadTheme",
-        "e5f96f95-f61d-4316-94a8-bfdb1a6d5a88",
+        Application AuksjonenButton = createSettings("AuksjonenButton",
+        "91192b8c-19da-465e-89ee-763fcf5d97c3",
         allowed2,
         " ",
-        Application.Type.Theme, true);
-        ArtistDugnadTheme.isPublic = false;
-        ArtistDugnadTheme.isFrontend = false;
-        ArtistDugnadTheme.moduleId = "other";
-        ArtistDugnadTheme.defaultActivate = false;
-        ArtistDugnadTheme.allowedStoreIds = new ArrayList();
-        ArtistDugnadTheme.allowedStoreIds.add("31a70f56-5e43-4560-ad38-a8c5c555a45e");
-        apps.add(ArtistDugnadTheme);
+        Application.Type.Webshop, true);
+        AuksjonenButton.isPublic = true;
+        AuksjonenButton.isFrontend = true;
+        AuksjonenButton.moduleId = "WebShop";
+        AuksjonenButton.defaultActivate = false;
+        apps.add(AuksjonenButton);
 
         return apps;
     }

@@ -62,6 +62,12 @@ class ApplicationModulePool {
         reporting.description = "Are you interested in numbers? how are you performing, how many sms have you sent etc.";
         modules.put(reporting.id, reporting);
         
+        ApplicationModule questback = new ApplicationModule();
+        questback.moduleName = "QuestBack";
+        questback.id = "questback";
+        questback.faIcon = "fa-question";
+        questback.description = "Questback applications, this module is containing all the applications that is required to setup a proper questback";
+        modules.put(questback.id, questback);
         
     }
     

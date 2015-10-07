@@ -196,6 +196,10 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/getshop.PagePicker.js");
         $this->addJavascriptFile("js/getshop.Settings.js");
         
+        // JS TREE
+        $this->addJavascriptFile("js/jstree/jstree.min.js");
+        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jstree/themes/default/style.min.css">';
+        
         if ($this->isProductionMode) {
             echo "\n" . '<script type="text/javascript" src="'.$fileName.'"></script>';
         }

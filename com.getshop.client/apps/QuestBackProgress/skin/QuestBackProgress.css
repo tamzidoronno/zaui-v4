@@ -1,0 +1,39 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 7, 2015, 9:33:22 AM
+    Author     : ktonder
+*/
+
+.QuestBackProgress .speedgauge_outer {
+    height: 120px;
+    width: 120px;
+    position:  absolute;
+    top: -25px;
+    right: -25px;
+}
+
+.QuestBackProgress .speedgauge_outer .speedpin {
+    background-image: url('{IMAGEFOLDER}/pin.png');
+    height: 54px;
+    width: 50px;
+    left: 50%;
+    margin-left: -25px;
+    top: 50%;
+    margin-top: -27px;
+    position: absolute;
+    
+
+}
+
+.QuestBackProgress .speedgauge_outer .speedgauge {
+    background-image: url('{IMAGEFOLDER}/speedgauge.png');
+    background-size: 100%;
+    height: 120px;
+    width: 120px;
+    background-repeat: no-repeat;
+    position: relative;
+}

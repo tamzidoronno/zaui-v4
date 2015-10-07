@@ -1,0 +1,61 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 6, 2015, 10:05:28 PM
+    Author     : ktonder
+*/
+
+.QuestBack .options_area .options_area_options {
+    margin-bottom: 10px;
+}
+.QuestBack .admin_button {
+    display: inline-block;
+    width: 20px;
+    border: solid 1px #DDD;
+    text-align: center;
+    cursor: pointer;
+}
+.QuestBack .options_area {
+    margin-top: 20px;
+}
+
+.QuestBack .typeselector {
+    text-align: center;
+}
+
+.QuestBack .quest_back_type_selected {
+    border: solid 1px #DDD;
+    width: 80px; 
+    height: 60px;
+    margin: 10px;
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.QuestBack .quest_back_type_selected:hover {
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e5e5e5+100;White+3D */
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #e5e5e5 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+}
+
+.QuestBack .quest_back_type_selected:active {
+    background: inherit;
+    background-color: #F9F9F9;
+}
+
+.QuestBack .quest_back_type_selected i {
+    font-size: 40px;
+    display: block;
+}

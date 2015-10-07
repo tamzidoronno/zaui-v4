@@ -1,5 +1,44 @@
 <?
 /* @var $this \ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534\QuestBackManagement */
+$id = "questiontree_".uniqid();
+
+$tree = $this->getConfigurationSetting("list");
+if ($tree) {
+    $tree = json_decode($tree);
+}
+
+function printItem($item) {
+    $liclass = $item->li_attr->class;
+    $nodeId = $item->li_attr->nodeid;
+    echo "<ul><li class='$liclass' nodeid='$nodeId'>".$item->text;
+        if (count($item->children)) {
+            echo "<ul>";
+            foreach ($item->children as $child) {
+                $liclass = $child->li_attr->class;
+                $nodeId = $child->li_attr->nodeid;
+                echo "<li nodeid='$nodeId' class='$liclass'>".$child->text."</li>";
+            }
+            echo "</ul>";
+        }
+        echo "</li>";
+    echo "</ul>";
+}
 ?>
 
-<div class='gs_button showTemplatePage'>Show template page</div>
+<div id='<? echo $id; ?>'>
+    <ul>
+        <li>Questions
+            <? 
+            if ($tree) {
+                foreach ($tree[0]->children as $child) {
+                    printItem($child);
+                }
+            }
+            ?>
+       </li>
+    </ul>
+</div>
+
+<script>
+    app.QuestBackManagement.createTree('<? echo $id;?>');
+</script>

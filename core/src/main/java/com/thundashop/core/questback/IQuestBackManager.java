@@ -6,6 +6,7 @@
 package com.thundashop.core.questback;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.questback.data.QuestBackQuestion;
 
@@ -16,15 +17,16 @@ import com.thundashop.core.questback.data.QuestBackQuestion;
 @GetShopApi
 public interface IQuestBackManager {
     
-    /**
-     * Create a new question.
-     * 
-     * @param question
-     * @return 
-     */
-    @Administrator
-    public QuestBackQuestion createNewQuestion(String question, int type);
-    
+
     @Administrator
     public void createTemplatePageIfNotExists();
+    
+    @Administrator
+    public void questionTreeChanged(String applicationId);
+    
+    @Customer
+    public String getPageId(String nodeId);
+    
+    @Customer
+    public String getQuestionTitle(String pageId);
 }

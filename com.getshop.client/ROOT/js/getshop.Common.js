@@ -249,7 +249,7 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
 };
 thundashop.common.lastPushId = null;
 thundashop.common.goToPage = function(id, callback) {
-    var link = "?page="+id;
+    var link = "/?page="+id;
     if(thundashop.common.lastPushId === null || thundashop.common.lastPushId !== id) {
         if(window.history.pushState !== undefined) {
             window.history.pushState({url: link, ajaxLink: link}, "Title", link);

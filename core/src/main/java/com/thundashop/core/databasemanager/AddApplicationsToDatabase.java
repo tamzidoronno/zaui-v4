@@ -67,6 +67,19 @@ public class AddApplicationsToDatabase {
         selgbilentheme.allowedStoreIds.add("cd277b87-b006-4a7f-952b-570c23f89d34");
         apps.add(selgbilentheme);
         
+        Application ArtistDugnadTheme = createSettings("ArtistDugnadTheme",
+        "e5f96f95-f61d-4316-94a8-bfdb1a6d5a88",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        ArtistDugnadTheme.isPublic = false;
+        ArtistDugnadTheme.isFrontend = false;
+        ArtistDugnadTheme.moduleId = "other";
+        ArtistDugnadTheme.defaultActivate = false;
+        ArtistDugnadTheme.allowedStoreIds = new ArrayList();
+        ArtistDugnadTheme.allowedStoreIds.add("31a70f56-5e43-4560-ad38-a8c5c555a45e");
+        apps.add(ArtistDugnadTheme);
+
         return apps;
     }
 

@@ -35,7 +35,7 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     @Administrator
-    public ApplicationInstance addApplication(String applicationId, String pageCellId);
+    public ApplicationInstance addApplication(String applicationId, String pageCellId, String pageId);
     
     /**
      * Add application

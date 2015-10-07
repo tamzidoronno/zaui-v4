@@ -54,18 +54,42 @@ public class AddApplicationsToDatabase {
         allowed2.add("xlarge");
 
         
-        Application selgbilentheme = createSettings("SelgBilenTheme",
-                "68bfe8b2-655b-4099-87b7-964e078370f2",
+        Application questBackManagement = createSettings("QuestBackManagement",
+                "3ff6088a-43d5-4bd4-a5bf-5c371af42534",
                 allowed2,
                 "",
-                Application.Type.Theme, true);
-        selgbilentheme.isPublic = false;
-        selgbilentheme.isFrontend = false;
-        selgbilentheme.moduleId = "Theme";
-        selgbilentheme.defaultActivate = false;
-        selgbilentheme.allowedStoreIds = new ArrayList();
-        selgbilentheme.allowedStoreIds.add("cd277b87-b006-4a7f-952b-570c23f89d34");
-        apps.add(selgbilentheme);
+                Application.Type.Marketing, true);
+        questBackManagement.isPublic = false;
+        questBackManagement.isFrontend = true;
+        questBackManagement.moduleId = "Marketing";
+        questBackManagement.defaultActivate = false;
+        questBackManagement.allowedStoreIds = new ArrayList();
+        questBackManagement.allowedStoreIds.add("2ded07b4-45f8-45d9-95dc-dc43b20d21bb");
+        apps.add(questBackManagement);
+        
+        Application questBack = createSettings("QuestBack",
+                "07422211-7818-445e-9f16-ad792320cb10",
+                allowed2,
+                "",
+                Application.Type.Marketing, true);
+        questBack.isPublic = false;
+        questBack.isFrontend = true;
+        questBack.moduleId = "Marketing";
+        questBack.defaultActivate = false;
+        questBack.allowedStoreIds = new ArrayList();
+        questBack.allowedStoreIds.add("2ded07b4-45f8-45d9-95dc-dc43b20d21bb");
+        apps.add(questBack);
+        
+        Application createNewInstanceApplication = createSettings("CreateNewInstanceApplication",
+                "fb19a166-5465-4ae7-9377-779a8edb848e",
+                allowed2,
+                "",
+                Application.Type.Marketing, true);
+        createNewInstanceApplication.isPublic = true;
+        createNewInstanceApplication.isFrontend = true;
+        createNewInstanceApplication.moduleId = "other";
+        createNewInstanceApplication.defaultActivate = false;
+        apps.add(createNewInstanceApplication);
         
         Application ArtistDugnadTheme = createSettings("ArtistDugnadTheme",
         "e5f96f95-f61d-4316-94a8-bfdb1a6d5a88",

@@ -54,6 +54,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         return createPage(null);
     }
 
+    public Page createPageWithName(String pageId) {
+        return createPage(pageId);
+    }
+    
     private Page createPage(String pageId) {
         Page page = new Page();
         if (pages.isEmpty()) {
@@ -85,15 +89,15 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public ApplicationInstance addApplication(String applicationId, String pageCellId) {
+    public ApplicationInstance addApplication(String applicationId, String pageCellId, String pageId ) {
         ApplicationInstance instance = instancePool.createNewInstance(applicationId);
-        List<Page> pagesWithCells = getPagesThatHasCell(pageCellId);
-
-        for (Page page : pagesWithCells) {
-            page.getCell(pageCellId).appId = instance.id;
+        Page page = getPage(pageId);
+        
+        if (page != null && page.getCell(pageCellId) != null) {
+            page.addApplication(pageCellId, instance.id); 
+            savePage(page);
         }
-
-        pagesWithCells.stream().forEach(page -> savePage(page));
+        
         return instance;
     }
 
@@ -151,6 +155,15 @@ public class PageManager extends ManagerBase implements IPageManager {
             savePage(page);
         }
 
+        if (page.isASlavePage()) {
+            page.finalizeSlavePage(getPage(page.masterPageId));
+            page.getCellsFlatList().stream()
+                .filter(pageCell -> instancePool.getApplicationInstance(pageCell.appId) != null)
+                .filter(pageCell -> instancePool.getApplicationInstance(pageCell.appId).appSettingsId != null)
+                .filter(pageCell -> instancePool.getApplicationInstance(pageCell.appId).appSettingsId.equals("fb19a166-5465-4ae7-9377-779a8edb848e"))
+                .forEach(o -> updateCreateApplications(o, page));
+            page.finalizeSlavePage(getPage(page.masterPageId));
+        }
         
         return page;
     }
@@ -168,7 +181,12 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public Page removeAppFromCell(String pageId, String cellid) throws ErrorException {
         Page page = getPage(pageId);
-        page.layout.removeAppFromCell(cellid);
+        if (page.isASlavePage()) {
+            page.overrideApps.remove(cellid);
+        } else {
+            page.layout.removeAppFromCell(cellid);
+        }
+        
         savePage(page);
         return page;
     }
@@ -586,5 +604,26 @@ public class PageManager extends ManagerBase implements IPageManager {
         PageCell cell = page.getCell(cellId);
         cell.settings = settings;
         saveObject(page);
+    }
+
+    public Page createPageFromTemplatePage(String pageId) {
+        Page page = getPage(pageId);
+        if (page != null) {
+            Page newPage = page.jsonClone();
+            newPage.masterPageId = page.id;
+            savePage(newPage);
+            return newPage;
+        }
+        
+        return null;
+    }
+
+    private void updateCreateApplications(PageCell o, Page page) {
+        ApplicationInstance oldApplication = instancePool.getApplicationInstance(o.appId);
+        Setting appIdSetting = oldApplication.settings.get("appId");
+        if (appIdSetting != null) {
+            ApplicationInstance newInstance = instancePool.createNewInstance(appIdSetting.value);
+            page.addApplication(o.cellId, newInstance.id);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.thundashop.core.pagemanager.data;
 
+import com.google.gson.Gson;
 import com.thundashop.core.common.ErrorException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -534,5 +535,10 @@ public class PageLayout implements Serializable {
 
     public List<PageCell> getCells(String area) {
         return areas.get(area);
+    }
+
+    PageLayout jsonClone() {
+        Gson gson = new Gson();
+        return gson.fromJson(gson.toJson(this), PageLayout.class);
     }
 }

@@ -1,0 +1,33 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color:#00f5ff;
+}
+
+.gs_page_width {
+    max-width: 1080px;
+    margin: 0 auto;
+    background-color:#fff;
+}
+
+.gsarea[area="footer"] .gsinner,.gsarea[area="header"] .gsinner {
+    background-color:#283583;
+    color:#fff;
+}
+
+.gsarea[area="header"] .Menu {
+    text-align: center;
+}
+
+.gsarea[area="header"] .gsinner a div {
+    color:#fff;
+    height: 80px;
+    line-height:80px;
+    text-align: center;
+    width: 200px;
+    font-size: 20px;
+}
+
+.gsarea[area="footer"] .gsinner {
+    margin-bottom: 50px;
+}

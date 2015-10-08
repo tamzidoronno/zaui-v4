@@ -29,6 +29,15 @@ class Contact extends \WebshopApplication implements \Application {
         $_SESSION['contact']['edit'] = $this->getConfiguration()->id;
     }
     
+    public function getEventLabel() {
+         $config = $this->getContactConfig();
+        if(isset($config) && $config['eventlabel']) {
+            return $config['eventlabel'];
+        }
+        
+        return "";
+    }
+    
     public function saveContact() {
         unset($_SESSION['contact']['edit']);
         $email = $_POST['data']['email'];
@@ -48,8 +57,14 @@ class Contact extends \WebshopApplication implements \Application {
     
     public function render() {
         $type = $this->getCurrentType();
+        $label = $this->getEventLabel();
         if(isset($_POST['event']) && $_POST['event'] == "sendContactForm") {
             echo $this->getThankYouMessage();
+            ?>
+            <script>
+                 _gaq.push(['_trackEvent', "contactform", "send", "<? echo $label; ?>"]);
+            </script>
+            <?
         } else {
             $this->includefile("ContactTemplate".$type);
         }
@@ -200,6 +215,7 @@ class Contact extends \WebshopApplication implements \Application {
         }
         
         $content .= "<br><br>Originated from: " . $_SERVER["HTTP_HOST"];
+        $content .= "<br>Tracking label: " . $this->getEventLabel();
         
         $title = $this->getSubject();
 

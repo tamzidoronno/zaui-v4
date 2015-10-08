@@ -112,7 +112,7 @@ class Page {
         } else {
             echo "<div class='gsbody' pageId='" . $this->getId() . "'>";
             $cells = $layout->areas->{'body'};
-            echo "<div class='header gsmobileheader'>";
+            echo "<div class='header gsmobileheaderfull'>";
             $this->printArea($layout->areas->{'header'}, 0, null);
             echo "</div>";
             $this->printMobileHeader($layout->areas->{'header'});

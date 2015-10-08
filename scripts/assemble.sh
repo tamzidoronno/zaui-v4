@@ -16,10 +16,11 @@ mv $zipFile ../
 cd ../
 rm -rf tmp
 
+#Php package
 mkdir php
 cd php
-rsync -av --exclude='app' --exclude='uploadedfiles' --exclude='gimp' --exclude='docs' --exclude='etc' $gradleFolder/com.getshop.client/ .
+rsync -av --exclude='/app' --exclude='uploadedfiles' --exclude='gimp' --exclude='docs' --exclude='etc' $gradleFolder/com.getshop.client/ .
 tar czvf php_$1.tar.gz *
 mv php_$1.tar.gz ../
 cd ../
-rm -rf php;
+#rm -rf php;

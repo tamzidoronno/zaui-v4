@@ -28,6 +28,8 @@ public interface IStoreApplicationPool {
      */
     public List<Application> getApplications();
 
+    public boolean isActivated(String appId);
+    
     /**
      * Returns a list of all applications that are available for this store.
      * This also includes applications that has not yet been activated by the

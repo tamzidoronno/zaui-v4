@@ -389,4 +389,14 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean isActivated(String appId) {
+        for(Application app : getApplications()) {
+            if(app.id.equals(appId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

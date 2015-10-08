@@ -98,6 +98,18 @@ public class AddApplicationsToDatabase {
         QuestBackProgress.defaultActivate = true;
         apps.add(QuestBackProgress);
         
+        Application IntranettTheme = createSettings("IntranettTheme",
+            "ff3fc20e-9a8b-4c8b-bfa9-97e3d0807746",
+            allowed2,
+            " ",
+            Application.Type.Theme, true);
+        IntranettTheme.isPublic = true;
+        IntranettTheme.isFrontend = true;
+        IntranettTheme.moduleId = "other";
+        IntranettTheme.defaultActivate = false;
+        apps.add(IntranettTheme);
+
+
         Application QuestBackUserOverview = createSettings("QuestBackUserOverview",
                 "cc678bcb-0e87-4c6c-aaad-8ec24ecdf9df",
                 allowed2,

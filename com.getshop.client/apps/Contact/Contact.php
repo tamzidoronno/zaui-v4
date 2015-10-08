@@ -60,15 +60,19 @@ class Contact extends \WebshopApplication implements \Application {
         $label = $this->getEventLabel();
         if(isset($_POST['event']) && $_POST['event'] == "sendContactForm") {
             echo $this->getThankYouMessage();
-            ?>
-            <script>
-                 _gaq.push(['_trackEvent', "contactform", "send", "<? echo $label; ?>"]);
-            </script>
-            <?
+            /* if google analythics is activated */
+            if($this->getApi()->getStoreApplicationPool()->isActivated("0cf21aa0-5a46-41c0-b5a6-fd52fb90216f")) {
+                ?>
+                <script>
+                     _gaq.push(['_trackEvent', "contactform", "send", "<? echo $label; ?>"]);
+                </script>
+                <?
+            }
         } else {
             $this->includefile("ContactTemplate".$type);
         }
     }
+    
     
     public function isEditable() {
         if(isset($_SESSION['contact']['edit']) && $_SESSION['contact']['edit'] == $this->getConfiguration()->id) {

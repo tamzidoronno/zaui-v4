@@ -1,0 +1,34 @@
+<?
+/* @var $this \ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534\QuestBackManagement */
+$test = $this->getApi()->getQuestBackManager()->getTest($_POST['data']['testid']);
+$tree = $this->getConfigurationSetting("list");
+$questions = false;
+if ($tree) {
+    $tree = json_decode($tree);
+    $questions = $tree[0]->children;
+}
+
+?>
+<div class='testsettings'>
+    <?
+    echo "Test name:&nbsp;&nbsp;<input type='textfield' class='test_name' value='$test->name'/>";
+    $chcekdForce = $test->forceCorrectAnswer ? "checked='checked'" : "";
+    echo "<br/><br/><input type='checkbox' $chcekdForce class='force_correct_answers'/> Force correct answers?";
+    
+    if (!$questions) {
+        echo "You have not created any questions yet";
+    } else {
+        foreach ($questions as $category) {
+            echo "<h2>".$category->text."</h2>";
+            foreach ($category->children as $question) {
+                $questionId = $question->li_attr->nodeid;
+                $selected = in_array($questionId, $test->questions) ? "checked='checked'" : "";
+                echo "<input $selected type='checkbox' class='test_qustions_added' value='$questionId' style='position: relative; top: 2px;'/> ".$question->text."<br/>";
+            }
+        }
+    }
+    
+    ?>
+    <br/><br/>
+    <div class='gs_button saveTestSettings' testid='<?  echo $test->id; ?>'><? echo $this->__f("Save"); ?></div>
+</div>

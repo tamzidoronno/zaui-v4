@@ -26,4 +26,17 @@ public class ApplicationInstance extends DataCommon {
 
         return appConfig;
     }
+    
+    public String getSetting(String key) {
+        Setting setting = settings.get(key);
+        if (setting == null) {
+            return "";
+        }
+        
+        if (setting.value == null) {
+            return "";
+        }
+        
+        return setting.value;
+    }
 }

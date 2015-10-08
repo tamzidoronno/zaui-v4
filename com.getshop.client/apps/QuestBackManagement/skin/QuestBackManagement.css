@@ -1,0 +1,64 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 7, 2015, 10:52:48 AM
+    Author     : ktonder
+*/
+
+
+.QuestBackManagement .menuouter .menuelement {
+    display: inline-block;
+    padding: 10px;
+    border-right: solid 1px #DDD;
+}
+
+.QuestBackManagement .menuouter .menuelement.active {
+    background-color: #fbfbfb;
+}
+
+.QuestBackManagement .menuouter {
+    cursor: pointer;
+    
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e5e5e5+100;White+3D */
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #e5e5e5 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+    
+    border-bottom: solid 1px #BBB;
+}
+
+.QuestBackManagement .moderninputfield {
+    padding: 10px;
+}
+
+.QuestBackManagement .parts .part {
+    padding: 20px;
+}
+
+.QuestBackManagement .modify_questionbase_button,
+.QuestBackManagement .delete_test_button {
+    text-align: center;
+    padding: 5px;
+    cursor: pointer;
+    border: solid 1px #BBB;
+}
+
+.QuestBackManagement .createnewtest {
+    border: solid 1px #BBB;
+    padding: 20px;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.QuestBackManagement .testsettings {
+    background-color: #FFF; 
+    padding: 20px;
+}

@@ -16,16 +16,83 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
     public function getName() {
         return "QuestBackManagement";
     }
+    
+    private function showPart($filename, $toshow) {
+        $display = $this->getToShow() == $toshow ? "display: block;" : "display: none;";
+        echo "<div class='part' toshow='$toshow' style='$display'>";
+            $this->includefile($filename);
+        echo "</div>";
+    }
 
     public function render() {
-        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator())
-            $this->includefile("overview");
-        else 
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            $this->printMenu();
+            echo "<div class='parts'>";
+                $this->showPart("overview", "questions");
+                $this->showPart("tests", "tests");
+            echo "</div>";
+            
+        } else {
             echo "Please login";
+        }
+    }
+    
+    public function deleteTest() {
+        $this->getApi()->getQuestBackManager()->deleteTest($_POST['data']['testid']);
     }
     
     public function showTemplatePage() {
         $this->getApi()->getQuestBackManager()->createTemplatePageIfNotExists();
     }
+    
+    public function saveList() {
+        $this->setConfigurationSetting("list", $_POST['data']['list']);
+        $this->getApi()->getQuestBackManager()->questionTreeChanged($this->getConfiguration()->id);
+    }
+    
+    public function getPageIdForQuestion() {
+        echo $this->getApi()->getQuestBackManager()->getPageId($_POST['data']['entryId']);
+        die();
+    }
 
+    public function createTest() {
+        $this->getApi()->getQuestBackManager()->createTest($_POST['data']['testname']);
+    }
+    
+    private function getActiveClass($toshow) {
+        return $this->getToShow() == $toshow ? "active" : "";
+    }
+    
+    public function printMenu() {
+        echo "<div class='menuouter'>";
+            echo "<div class='menuelement ".$this->getActiveClass("questions")."' toshow='questions'>Questions</div>";
+            echo "<div class='menuelement ".$this->getActiveClass("tests")."' toshow='tests'>Tests</div>";
+            echo "<div class='menuelement ".$this->getActiveClass("usersmanagement")."' toshow='usersmanagement'>User Management</div>";
+            echo "<div class='menuelement ".$this->getActiveClass("settings")."' toshow='settings'>QuestBack Settings</div>";
+        echo "</div>";
+    }
+    
+    public function setToShow() {
+        $_SESSION['ns_df435931_9364_4b6a_b4b2_951c90cc0d70_toshow'] = $_POST['data']['toshow'];
+    }
+    
+    public function getToShow() {
+        if (!isset($_SESSION['ns_df435931_9364_4b6a_b4b2_951c90cc0d70_toshow'])) {
+            return "questions";
+        }
+        
+        return $_SESSION['ns_df435931_9364_4b6a_b4b2_951c90cc0d70_toshow'];
+    }
+    
+    public function showTestSettings() {
+        $this->includefile("testsettings");
+    }
+    
+    public function saveTestSettings() {
+        $test = $this->getApi()->getQuestBackManager()->getTest($_POST['data']['testid']);
+        $test->questions = $_POST['data']['nodeIds'];
+        $test->forceCorrectAnswer = $_POST['data']['forceCorrectAnswer'];
+        $test->name = $_POST['data']['name'];
+        $this->getApi()->getQuestBackManager()->saveTest($test);
+    }
 }

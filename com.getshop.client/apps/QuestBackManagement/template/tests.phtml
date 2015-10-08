@@ -1,0 +1,35 @@
+<?
+/* @var $this \ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534\QuestBackManagement */
+echo "<center><h2>".$this->__f("Available tests")."</h2></center>";
+$tests = $this->getApi()->getQuestBackManager()->getAllTests();
+
+if (count($tests) == 0) {
+    echo "<div>".$this->__f("No tests has been created yet")."</div>";
+} else {
+    
+    
+    echo "<table width='100%'>";
+    echo "<th></th>";
+    echo "<th></th>";
+    echo "<th style='text-align: left; padding-left: 10px;' >Name of test</th>";
+    echo "<th>Questions</th>";
+    
+    foreach ($tests as $test) {
+        $testName = $test->name;
+        $questions = count($test->questions);
+        $delete = "<div class='delete_test_button'><i class='fa fa-trash'></i></div>";
+        $modify = "<div class='modify_questionbase_button' title='add/remove questions in test'><i class='fa fa-edit'></i></div>";
+        echo "<tr testid='$test->id'><td style='width: 20px;'>$delete</td><td style='width: 20px;'>$modify</td><td style='padding-left: 10px;'>$testName</td><td style='text-align: center'>$questions</td></tr>";
+    }
+    
+    echo "</table>";
+}
+?>
+
+<div class='createnewtest'>
+    <? echo $this->__f("Create a new test"); ?>
+    <br/>
+    <br/><input class='moderninputfield test_field_name' type='textfield' placeholder='Name of test'/>
+    <br/>
+    <br/><div class='gs_button createTest'><? echo $this->__f("Create test"); ?></div>
+</div>

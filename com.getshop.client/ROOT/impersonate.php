@@ -10,6 +10,7 @@
     
     \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::refresh();
     
+    $_SESSION['showadmin'] = false;
     echo "<script>";
     echo "document.location = '/index.php';";
     echo "</script>";

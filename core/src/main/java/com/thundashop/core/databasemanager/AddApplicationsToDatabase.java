@@ -59,12 +59,10 @@ public class AddApplicationsToDatabase {
                 allowed2,
                 "",
                 Application.Type.Marketing, true);
-        questBackManagement.isPublic = false;
+        questBackManagement.isPublic = true;
         questBackManagement.isFrontend = true;
-        questBackManagement.moduleId = "Marketing";
-        questBackManagement.defaultActivate = false;
-        questBackManagement.allowedStoreIds = new ArrayList();
-        questBackManagement.allowedStoreIds.add("2ded07b4-45f8-45d9-95dc-dc43b20d21bb");
+        questBackManagement.moduleId = "questback";
+        questBackManagement.defaultActivate = true;
         apps.add(questBackManagement);
         
         Application questBack = createSettings("QuestBack",
@@ -72,13 +70,44 @@ public class AddApplicationsToDatabase {
                 allowed2,
                 "",
                 Application.Type.Marketing, true);
-        questBack.isPublic = false;
+        questBack.isPublic = true;
         questBack.isFrontend = true;
-        questBack.moduleId = "Marketing";
-        questBack.defaultActivate = false;
-        questBack.allowedStoreIds = new ArrayList();
-        questBack.allowedStoreIds.add("2ded07b4-45f8-45d9-95dc-dc43b20d21bb");
+        questBack.moduleId = "questback";
+        questBack.defaultActivate = true;
         apps.add(questBack);
+        
+        Application questBackTitlePrinter = createSettings("QuestBackTitlePrinter",
+                "5366fb18-af90-44ed-99b7-5bb361fec16c",
+                allowed2,
+                "",
+                Application.Type.Marketing, true);
+        questBackTitlePrinter.isPublic = true;
+        questBackTitlePrinter.isFrontend = true;
+        questBackTitlePrinter.moduleId = "questback";
+        questBackTitlePrinter.defaultActivate = true;
+        apps.add(questBackTitlePrinter);
+        
+        Application QuestBackProgress = createSettings("QuestBackProgress",
+                "778eb415-ec18-4202-8012-092f6f5ae292",
+                allowed2,
+                "",
+                Application.Type.Marketing, true);
+        QuestBackProgress.isPublic = true;
+        QuestBackProgress.isFrontend = true;
+        QuestBackProgress.moduleId = "questback";
+        QuestBackProgress.defaultActivate = true;
+        apps.add(QuestBackProgress);
+        
+        Application QuestBackUserOverview = createSettings("QuestBackUserOverview",
+                "cc678bcb-0e87-4c6c-aaad-8ec24ecdf9df",
+                allowed2,
+                "",
+                Application.Type.Marketing, true);
+        QuestBackUserOverview.isPublic = true;
+        QuestBackUserOverview.isFrontend = true;
+        QuestBackUserOverview.moduleId = "questback";
+        QuestBackUserOverview.defaultActivate = true;
+        apps.add(QuestBackUserOverview);
         
         Application createNewInstanceApplication = createSettings("CreateNewInstanceApplication",
                 "fb19a166-5465-4ae7-9377-779a8edb848e",

@@ -571,7 +571,7 @@ class ApplicationManager extends FactoryBase {
     public function addApplicationToCell() {
         $cellId = $_POST['data']['cellId'];
         $appId = $_POST['data']['appId'];
-        $pageId = $_POST['data']['pageId'];
+        $pageId = $this->getPage()->javapage->id;
        
         $application = $this->getFactory()->getApi()->getPageManager()->addApplication($appId, $cellId, $pageId);
         $this->invokeApplicationAdded($application);

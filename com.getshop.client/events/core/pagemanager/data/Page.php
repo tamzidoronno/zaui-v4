@@ -30,6 +30,12 @@ class core_pagemanager_data_Page extends core_common_DataCommon  {
 	/** @var String */
 	public $overridePageTitle;
 
+	/** @var String */
+	public $masterPageId;
+
+	/** @var String */
+	public $overrideApps;
+
 	/** @var core_listmanager_data_Entry */
 	public $linkToListEntry;
 

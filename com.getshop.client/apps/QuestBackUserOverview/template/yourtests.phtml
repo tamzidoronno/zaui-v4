@@ -1,0 +1,18 @@
+<?
+/* @var $this \ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview */
+$allTests = $this->getApi()->getQuestBackManager()->getTests();
+?>
+<div class='yourtests'>
+    
+    <?
+    if (!count($allTests)) {
+        echo $this->__f("You currently dont have any tests, please contact admin to get access to one");
+    } else {
+        echo "<center><h1>".$this->__f("Your tests")."</h1></center>";
+        foreach ($allTests as $test) {
+            echo "<div class='test' testid='$test->id'>$test->name</div>";
+        }
+    }
+    ?>
+
+</div>

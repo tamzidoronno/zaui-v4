@@ -386,3 +386,8 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
 //echo "</pre>";
 //echo "<a href='/?page=$res->pageId'>next</a>";
 ?>
+
+<?
+if (isset($_GET['testmenow']))
+	echo "TEST"; 
+?>

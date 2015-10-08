@@ -31,7 +31,7 @@ class Contact extends \WebshopApplication implements \Application {
     
     public function getEventLabel() {
          $config = $this->getContactConfig();
-        if(isset($config) && $config['eventlabel']) {
+        if(isset($config) && isset($config['eventlabel'])) {
             return $config['eventlabel'];
         }
         

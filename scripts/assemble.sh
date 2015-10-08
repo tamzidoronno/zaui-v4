@@ -23,4 +23,4 @@ rsync -av --exclude='/app' --exclude='uploadedfiles' --exclude='gimp' --exclude=
 tar czvf php_$1.tar.gz *
 mv php_$1.tar.gz ../
 cd ../
-#rm -rf php;
+rm -rf php;

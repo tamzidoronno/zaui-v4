@@ -15,7 +15,7 @@ $randomid = uniqid();
         var time = data.endTime / 1000;
         var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
         d.setUTCSeconds(time);
-        
+       
         var dformat =  ("00" + (d.getMonth() + 1)).slice(-2) + "." + 
             ("00" + d.getDate()).slice(-2) + "." + 
             d.getFullYear() + " " + 

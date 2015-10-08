@@ -16,7 +16,7 @@ $apps = $factory->getApplicationPool()->getAllApplicationSettings();
 if (!$factory->isEditorMode()) {
     $apps = $factory->getApi()->getStoreApplicationPool()->getApplications();
     // Login app
-    $appSettings = new core_applicationmanager_ApplicationSettings();
+    $appSettings = new core_appmanager_data_Application();
     $appSettings->id = "df435931-9364-4b6a-b4b2-951c90cc0d70";
     $apps[] = $appSettings;
 }

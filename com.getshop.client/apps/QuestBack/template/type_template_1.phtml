@@ -46,7 +46,7 @@ if (!$headingText && $isAdmin) {
                 echo "<div class='admin_button admin_correct_option'><i class='fa fa-check' title='Mark as correct answer' style='$correct'></i></div>";
             }
             
-            echo "<input style='  position: relative; top: 2px;' type='checkbox' value='$option->id'/> ";
+            echo "<input style='position: relative; top: 2px;' class='answer_option_box' type='checkbox' value='$option->id'/> ";
             if ($isAdmin) {
                 echo "<input class='admin_option_text' type='textfield' value='".$option->text."'/>";
             } else {
@@ -60,5 +60,5 @@ if (!$headingText && $isAdmin) {
     }
     ?>
     
-    <div class='gs_button'><? echo $this->__f("Next"); ?></div>
+    <div class='gs_button answer_question'><? echo $this->__f("Next"); ?></div>
 </div>

@@ -98,6 +98,17 @@ public class AddApplicationsToDatabase {
         QuestBackProgress.defaultActivate = true;
         apps.add(QuestBackProgress);
         
+        Application QuestBackUserOverview = createSettings("QuestBackUserOverview",
+                "cc678bcb-0e87-4c6c-aaad-8ec24ecdf9df",
+                allowed2,
+                "",
+                Application.Type.Marketing, true);
+        QuestBackUserOverview.isPublic = true;
+        QuestBackUserOverview.isFrontend = true;
+        QuestBackUserOverview.moduleId = "questback";
+        QuestBackUserOverview.defaultActivate = true;
+        apps.add(QuestBackUserOverview);
+        
         Application createNewInstanceApplication = createSettings("CreateNewInstanceApplication",
                 "fb19a166-5465-4ae7-9377-779a8edb848e",
                 allowed2,

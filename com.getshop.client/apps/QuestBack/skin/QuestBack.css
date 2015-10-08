@@ -59,3 +59,8 @@ and open the template in the editor.
     font-size: 40px;
     display: block;
 }
+
+.QuestBack .already_answered_info {
+    font-size: 16px;
+    text-align: center;
+}

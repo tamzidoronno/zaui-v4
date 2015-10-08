@@ -11,8 +11,55 @@ app.QuestBack = {
         $(document).on('click', '.QuestBack .gs_button.add_option', app.QuestBack.addOption)
         $(document).on('click', '.QuestBack .admin_delete_option', app.QuestBack.deleteOption)
         $(document).on('click', '.QuestBack .admin_correct_option', app.QuestBack.markAsCorrectOption)
+        $(document).on('click', '.QuestBack .answer_question', app.QuestBack.answerQuestion)
+        $(document).on('click', '.QuestBack .go_to_next_question', app.QuestBack.goToNextQuestion)
         $(document).on('change', '.QuestBack .admin_option_text', app.QuestBack.optionTextChanged)
         $(document).on('focusout', '.QuestBack .headingtext', app.QuestBack.saveHeading)
+    },
+    
+    goToNextQuestion: function() {
+        var event = thundashop.Ajax.createEvent(null, "nextQuestion", this, {});
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            if (result === "done") {
+                 alert('show result!');
+            } else {
+                thundashop.common.goToPage(result);
+            }
+            
+        });
+    },
+    
+    answerQuestion: function() {
+        if (app.QuestBack.inProgress) {
+            alert('true');
+        }
+        
+        app.QuestBack.inProgress = true;
+        app.QuestBack.oldButtonText = $(this).html();
+        $(this).html('<i class="fa fa-spinner fa-spin"></i> '+ __f('Checking')+"...");
+        
+        
+        var selectedAnswers = $('.answer_option_box').map(function() {
+            if ($(this).is(':checked')) {
+                return $(this).val();
+            }
+        });
+        
+        var data = {
+            answers : $.makeArray( selectedAnswers )
+        }
+        var me = this;
+        var event = thundashop.Ajax.createEvent(null, "checkAnswer", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            app.QuestBack.inProgress = false;
+            $(me).html(app.QuestBack.oldButtonText);
+            
+            if (result === "wrong") {
+                thundashop.common.Alert(__f("Wrong answer"), __f("You have answered incorrectly, please check your answers and try again"), true);
+            } else {
+                thundashop.common.goToPage(result);
+            }
+        });
     },
     
     optionTextChanged: function() {

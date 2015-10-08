@@ -8,7 +8,8 @@ package com.thundashop.core.questback;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.questback.data.QuestBackQuestion;
+import com.thundashop.core.questback.data.QuestTest;
+import java.util.List;
 
 /**
  *
@@ -25,8 +26,40 @@ public interface IQuestBackManager {
     public void questionTreeChanged(String applicationId);
     
     @Customer
-    public String getPageId(String nodeId);
+    public String getPageId(String questionId);
     
     @Customer
     public String getQuestionTitle(String pageId);
+    
+    @Administrator
+    public QuestTest createTest(String testName);
+    
+    @Administrator
+    public QuestTest saveTest(QuestTest test);
+    
+    @Administrator
+    public List<QuestTest> getAllTests();
+    
+    @Administrator
+    public void deleteTest(String testId);
+    
+    @Customer
+    public QuestTest getTest(String testId);
+    
+    
+    /**
+     * Return a list of all tests that the logged in user is assigned to.
+     * 
+     * @return 
+     */
+    @Customer
+    public List<QuestTest> getTests();
+    
+    @Customer
+    public String getNextQuestionPage(String testId);
+    
+    @Customer
+    public String answerQuestions(String testId, String applicationId, String pageId, List<String> answers);
+    
+    public boolean hasAnswered(String pageId, String testId);
 }

@@ -100,6 +100,7 @@
 "100","Invalid input parameters."
 "101","Was not able to find the user in the waitinglist."
 "102","Insufficient credits."
+"103","Test has been deleted."
 "1000","Left menu entry already exists."
 "1001","Menu entry does not exists."
 "1002","App configuration does not exists."

@@ -8,6 +8,69 @@
 app.QuestBackManagement = {
     init: function() {
         $(document).on('click', '.QuestBackManagement .showTemplatePage', app.QuestBackManagement.showTemplatePage)
+        $(document).on('click', '.QuestBackManagement .menuelement', app.QuestBackManagement.changeMenu)
+        $(document).on('click', '.QuestBackManagement .delete_test_button', app.QuestBackManagement.deleteTest)
+        $(document).on('click', '.QuestBackManagement .modify_questionbase_button', app.QuestBackManagement.modifyTest)
+        $(document).on('click', '.QuestBackManagement .saveTestSettings', app.QuestBackManagement.saveTestSettings)
+        $(document).on('click', '.QuestBackManagement .createTest', app.QuestBackManagement.createTest)
+    },
+    
+    saveTestSettings: function() {
+        var data = {
+            testid : $(this).attr('testid'),
+            forceCorrectAnswer : $('.QuestBackManagement .force_correct_answers').is(':checked'),
+            name : $('.QuestBackManagement .testsettings .test_name').val()
+        };
+        
+        var nodeIds = [];
+        $('.test_qustions_added').each(function() {
+            if ($(this).is(':checked')) {
+                nodeIds.push($(this).val());
+            }
+        });
+        
+        data.nodeIds = nodeIds;
+        
+        var event = thundashop.Ajax.createEvent(null, "saveTestSettings", this, data);
+        thundashop.Ajax.post(event, function() {
+            thundashop.common.unmask();
+        });
+    },
+    
+    modifyTest: function() {
+        var data = { testid : $(this).closest('tr').attr('testid') };
+        var event = thundashop.Ajax.createEvent(null, "showTestSettings", this, data);
+        thundashop.common.showInformationBox(event, "Edit test");
+    },
+    
+    deleteTest: function() {
+        var ret = confirm("Are you sure you want to delete this test?");
+        
+        if (ret) {
+            var data = { testid : $(this).closest('tr').attr('testid') };
+            var event = thundashop.Ajax.createEvent(null, "deleteTest", this, data);
+            thundashop.Ajax.post(event);
+        }
+    },
+    
+    createTest: function() {
+        var data = { testname : $('.QuestBackManagement .test_field_name').val() };
+        var event = thundashop.Ajax.createEvent(null, "createTest", this, data);
+        thundashop.Ajax.post(event);
+    },
+    
+    changeMenu: function() {
+        var toshow = $(this).attr('toshow');
+        $('.QuestBackManagement .menuelement.active').removeClass('active');
+        $(this).addClass('active');
+        $('.QuestBackManagement .parts .part').hide();
+        $('.QuestBackManagement .parts .part[toshow="'+toshow+'"]').show();
+        var data = {
+            toshow : $(this).attr('toshow')
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "setToShow", this, data);
+        thundashop.Ajax.postWithCallBack(event, function() {}, true);
     },
     
     showTemplatePage: function() {

@@ -18,10 +18,17 @@ class QuestBack extends \ApplicationBase implements \Application {
     }
 
     public function render() {
-        if ($this->getConfigurationSetting("type") == "") {
-            $this->includefile('selectType');
+        $pageId = $this->getPage()->javapage->id;
+        $testId = \ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
+        
+        if ($this->getApi()->getQuestBackManager()->hasAnswered($pageId, $testId)) {
+            $this->includefile('alreadyAnswered');
         } else {
-            $this->includefile("type_template_".$this->getConfigurationSetting("type"));
+            if ($this->getConfigurationSetting("type") == "") {
+                $this->includefile('selectType');
+            } else {
+                $this->includefile("type_template_".$this->getConfigurationSetting("type"));
+            }
         }
     }
     
@@ -116,6 +123,18 @@ class QuestBack extends \ApplicationBase implements \Application {
         
         $json = json_encode($options);
         $this->setConfigurationSetting("options", $json);
+    }
+    
+    public function checkAnswer() {
+        $testId = \ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
+        $pageId = $this->getPage()->javapage->id;
+        echo $this->getApi()->getQuestBackManager()->answerQuestions($testId, $this->getConfiguration()->id, $pageId, $_POST['data']['answers']);
+        die();
+    }
+    
+    public function nextQuestion() {
+        echo $this->getApi()->getQuestBackManager()->getNextQuestionPage(\ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId());
+        die();
     }
     
 }

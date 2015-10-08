@@ -35,6 +35,30 @@ and open the template in the editor.
     border-bottom: solid 1px #BBB;
 }
 
+.QuestBackManagement .moderninputfield {
+    padding: 10px;
+}
+
 .QuestBackManagement .parts .part {
+    padding: 20px;
+}
+
+.QuestBackManagement .modify_questionbase_button,
+.QuestBackManagement .delete_test_button {
+    text-align: center;
+    padding: 5px;
+    cursor: pointer;
+    border: solid 1px #BBB;
+}
+
+.QuestBackManagement .createnewtest {
+    border: solid 1px #BBB;
+    padding: 20px;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.QuestBackManagement .testsettings {
+    background-color: #FFF; 
     padding: 20px;
 }

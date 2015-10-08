@@ -1,0 +1,27 @@
+.AuksjonenButton .gotoauction { border: solid 1px; padding: 10px; float:right; cursor:pointer; background-color:#ec0000; text-transform: uppercase; color:#fff;  
+  border-style: solid;
+  border-width: 0;
+  cursor: pointer;
+  font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;
+  font-weight: normal;
+  line-height: normal;
+  margin: 0 0 1.25rem;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 0;
+  display: inline-block;
+  padding-top: 1rem;
+  padding-right: 2rem;
+  padding-bottom: 1.0625rem;
+  padding-left: 2rem;
+  font-size: 1rem;
+  border-color: #007095;
+  color: #fff;
+  transition: background-color 300ms ease-out;
+  margin-right:20px;
+
+}
+.AuksjonenButton .ending { padding-top: 10px; color:#bbb; }

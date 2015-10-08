@@ -120,6 +120,17 @@ public class AddApplicationsToDatabase {
         createNewInstanceApplication.defaultActivate = false;
         apps.add(createNewInstanceApplication);
         
+        Application AuksjonenButton = createSettings("AuksjonenButton",
+        "91192b8c-19da-465e-89ee-763fcf5d97c3",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        AuksjonenButton.isPublic = true;
+        AuksjonenButton.isFrontend = true;
+        AuksjonenButton.moduleId = "WebShop";
+        AuksjonenButton.defaultActivate = false;
+        apps.add(AuksjonenButton);
+
         return apps;
     }
 

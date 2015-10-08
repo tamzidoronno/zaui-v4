@@ -39,6 +39,12 @@ class core_pagemanager_data_PageCell {
 	/** @var String */
 	public $appId;
 
+	/** @var String */
+	public $cellAppIdOverride;
+
+	/** @var String */
+	public $templateFromPageId;
+
 	/** @var core_pagemanager_data_FloatingData */
 	public $floatingData;
 

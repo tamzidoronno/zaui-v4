@@ -125,11 +125,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         if (page == null) {
             return null;
         }
-
-//        page.dumpLayout();        
-//        page = finalizePage(page);
-//        page = page.makeClone();
-//        removeApplicationsThatHasAccessDenied(page);
+       
+        page = finalizePage(page);
+        page = page.makeClone();
+        removeApplicationsThatHasAccessDenied(page);
         return page;
     }
 
@@ -253,7 +252,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public List<String> getPagesForApplication(String appId) {;
+    public List<String> getPagesForApplication(String appId) {
         List<String> retPages = new ArrayList();
         for (Page page : pages.values()) {
             for (PageCell cell : page.getCellsFlatList()) {
@@ -270,6 +269,23 @@ public class PageManager extends ManagerBase implements IPageManager {
         return retPages;
     }
 
+    public List<String> getPagesForApplicationOnlyBody(String appId) {
+        List<String> retPages = new ArrayList();
+        for (Page page : pages.values()) {
+            for (PageCell cell : page.layout.getCellsInBodyFlatList()) {
+                if (cell.appId != null && cell.appId.equals(appId)) {
+                    retPages.add(page.id);
+                }
+                
+                if (page.overrideApps.values().contains(appId)) {
+                    retPages.add(page.id);
+                }
+            }
+        }
+        
+        return retPages;
+    }
+    
     @Override
     public HashMap<String, String> translatePages(List<String> pages) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

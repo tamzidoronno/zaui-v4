@@ -339,6 +339,17 @@ public class PageLayout implements Serializable {
         return null;
     }
 
+    public ArrayList<PageCell> getCellsInBodyFlatList() {
+        ArrayList<PageCell> arrayList = new ArrayList();
+        List<PageCell> cells = areas.get("body");
+        if (cells != null) {
+            for (PageCell row : areas.get("body")) {
+                arrayList.addAll(row.getCellsFlatList());
+            }
+        }
+        return arrayList;
+    }
+    
     public ArrayList<PageCell> getCellsFlatList() {
         ArrayList<PageCell> arrayList = new ArrayList();
         for (String area : areas.keySet()) {

@@ -9,6 +9,7 @@ import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -44,17 +45,17 @@ public class Entry extends TranslationHandler implements Serializable {
     @Transient
     public String uniqueId;
     
-    public Stream<Entry> flattened() {
+    
+    public List<Entry> getAllEntries() {
+        List<Entry> retEntries = new ArrayList();
+        retEntries.add(this);
         
-        List<Entry> streamSubentries = subentries;
-        
-        if (streamSubentries == null) {
-            streamSubentries = new ArrayList<Entry>();
+        if (subentries != null) {
+            for (Entry entry : subentries) {
+                retEntries.addAll(entry.getAllEntries());
+            }
         }
         
-        return Stream.concat(
-                Stream.of(this),
-                streamSubentries.stream()
-                    .flatMap(Entry::flattened));
+        return retEntries;
     }
 }

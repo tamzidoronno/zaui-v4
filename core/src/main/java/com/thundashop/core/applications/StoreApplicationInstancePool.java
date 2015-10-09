@@ -127,33 +127,28 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     }
 
     private ApplicationInstance checkSecurity(ApplicationInstance secureClone) {
-//        List<String> pages = pageManger.getPagesForApplication(secureClone.id);
-//        
-//        System.out.println("App: " + secureClone.id);
-//        
-//        int lowestAccessLevelForAppOnPages = Integer.MAX_VALUE;
-//        
-//        if (pages.size() == 0) {
-//            lowestAccessLevelForAppOnPages = 0;
-//        } else {
-//            long currentTime = System.currentTimeMillis();
-//            for (String pageId : pages) {
-//                int accessLevel = listManager.getHighestAccessLevel(pageId);
-//                if (accessLevel < lowestAccessLevelForAppOnPages) {
-//                    lowestAccessLevelForAppOnPages = accessLevel ;
-//                }
-//            }    
-//            
-//            System.out.println("TEST: " + (System.currentTimeMillis() - currentTime) +  " | " + pages.size());
-//        }
-//        
-//        if (lowestAccessLevelForAppOnPages > 0 && (getSession() == null || getSession().currentUser == null)) {
-//            secureClone.appSettingsId = "access_denied";
-//        }
-//        
-//        if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type < lowestAccessLevelForAppOnPages) {
-//            secureClone.appSettingsId = "access_denied";
-//        }
+        List<String> pages = pageManger.getPagesForApplicationOnlyBody(secureClone.id);
+
+        int lowestAccessLevelForAppOnPages = Integer.MAX_VALUE;
+        
+        if (pages.size() == 0) {
+            lowestAccessLevelForAppOnPages = 0;
+        } else {
+            for (String pageId : pages) {
+                int accessLevel = listManager.getHighestAccessLevel(pageId);
+                if (accessLevel < lowestAccessLevelForAppOnPages) {
+                    lowestAccessLevelForAppOnPages = accessLevel ;
+                }
+            }    
+        }
+        
+        if (lowestAccessLevelForAppOnPages > 0 && (getSession() == null || getSession().currentUser == null)) {
+            secureClone.appSettingsId = "access_denied";
+        }
+        
+        if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type < lowestAccessLevelForAppOnPages) {
+            secureClone.appSettingsId = "access_denied";
+        }
         
         return secureClone;
     }

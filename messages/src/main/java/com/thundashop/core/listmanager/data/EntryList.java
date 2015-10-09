@@ -26,7 +26,7 @@ public class EntryList extends DataCommon {
         Set<Entry> retEntries = new HashSet();
         for (Entry entry : entries) {
             retEntries.add(entry);
-            retEntries.addAll(entry.flattened().collect(Collectors.toList()));
+            retEntries.addAll(entry.getAllEntries());
         }
         
         return new ArrayList(retEntries);

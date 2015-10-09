@@ -125,9 +125,9 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
 
 //        page.dumpLayout();        
-        page = finalizePage(page);
-        page = page.makeClone();
-        removeApplicationsThatHasAccessDenied(page);
+//        page = finalizePage(page);
+//        page = page.makeClone();
+//        removeApplicationsThatHasAccessDenied(page);
         return page;
     }
 

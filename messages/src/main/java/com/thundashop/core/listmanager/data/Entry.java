@@ -10,6 +10,7 @@ import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author boggi
@@ -42,4 +43,18 @@ public class Entry extends TranslationHandler implements Serializable {
     
     @Transient
     public String uniqueId;
+    
+    public Stream<Entry> flattened() {
+        
+        List<Entry> streamSubentries = subentries;
+        
+        if (streamSubentries == null) {
+            streamSubentries = new ArrayList<Entry>();
+        }
+        
+        return Stream.concat(
+                Stream.of(this),
+                streamSubentries.stream()
+                    .flatMap(Entry::flattened));
     }
+}

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -670,5 +671,21 @@ public class ListManager extends ManagerBase implements IListManager {
 
     public Entry findEntryByPageId(String id) {
         return getEntryByPageId(id);
+    }
+
+    public int getHighestAccessLevel(String pageId) {
+        int accessLevel = 0;
+        
+        for (EntryList list : allEntries.values()) {
+            for (Entry entry : list.getAllEntriesFlatList()) {
+                if (entry.pageId != null && entry.pageId.equals(pageId)) {
+                    if (accessLevel < entry.userLevel) {
+                        accessLevel = entry.userLevel;
+                    }
+                }
+            }
+        }
+        
+        return accessLevel;
     }
 }

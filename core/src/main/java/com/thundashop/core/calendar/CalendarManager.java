@@ -224,15 +224,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         for (ApplicationInstance calendar : calendars) {
             if (calendar.settings != null && calendar.settings.get("linkToBookingPage") != null) {
                 for (ApplicationInstance config : bookings) {
-                    ArrayList<String> list = new ArrayList();
-                    list.add(config.id);
-                    Map<String, List<String>> pages = pageManager.getPagesForApplications(list);
-                    for (String appId : pages.keySet()) {
-                        List<String> pageIds = pages.get(appId);
-                        for (String pageId : pageIds) {
-                            if (pageId.equals(calendar.settings.get("linkToBookingPage").value)) {
-                                settings = config.settings;
-                            }
+                    List<String> pageIds = pageManager.getPagesForApplication(config.id);
+                    
+                    for (String pageId : pageIds) {
+                        if (pageId.equals(calendar.settings.get("linkToBookingPage").value)) {
+                            settings = config.settings;
                         }
                     }
                 }

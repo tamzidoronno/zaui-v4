@@ -85,8 +85,6 @@ public abstract class AProductManager extends ManagerBase {
             product.taxGroupObject = taxGroups.get(product.taxgroup);
         }
 
-        Page page = pageManager.getPage(product.pageId);
-
         if (product.original_price == null) {
             product.original_price = product.price;
         }

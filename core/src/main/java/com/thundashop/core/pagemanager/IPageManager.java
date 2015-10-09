@@ -243,12 +243,12 @@ public interface IPageManager {
     
     
     /**
-     * Fetch a list of all pages found for a list of applications.<br>
-     * The key is the application id, the list combined with the key a list of page ids found for the specified applications.
+     * Find all pages that a application instance is connected to..
+     * 
      * @param appIds A list of application ids to resolve pages for.
      * @throws ErrorException 
      */
-    public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException;
+    public List<String> getPagesForApplication(String appId);
     
     /**
      * Need to translate a set of page ids?
@@ -271,6 +271,9 @@ public interface IPageManager {
     /**
      * Save the page
      */
+    // NB! Must be administrator, changed to editor level will 
+    // likely cause problems where apps are removed due to 
+    // security.
     @Administrator
     public void savePage(Page page) throws ErrorException;
     

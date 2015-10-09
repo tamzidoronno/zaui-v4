@@ -12,7 +12,10 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.Settings;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.listmanager.ListManager;
+import com.thundashop.core.pagemanager.PageManager;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,12 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     @Autowired
     private StoreApplicationPool storeApplicationPool;
 
+    @Autowired
+    private PageManager pageManger;
+    
+    @Autowired
+    private ListManager listManager;
+    
     private Map<String, ApplicationInstance> applicationInstances;
 
     @Override
@@ -52,7 +61,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         saveObject(applicationInstance);
 
         applicationInstances.put(applicationInstance.id, applicationInstance);
-        return applicationInstance.secureClone();
+        return checkSecurity(applicationInstance.secureClone());
     }
 
     @Override
@@ -63,7 +72,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
             return null;
         }
 
-        return instance.secureClone();
+        return checkSecurity(instance.secureClone());
     }
 
     @Override
@@ -85,7 +94,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
 
         application.settings = saveSettings;
         saveObject(application);
-        return application.secureClone();
+        return checkSecurity(application.secureClone());
     }
 
     /**
@@ -115,5 +124,34 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         }
         
         return null;
+    }
+
+    private ApplicationInstance checkSecurity(ApplicationInstance secureClone) {
+        List<String> pages = pageManger.getPagesForApplication(secureClone.id);
+        
+        System.out.println("App: " + secureClone.id);
+        
+        int lowestAccessLevelForAppOnPages = Integer.MAX_VALUE;
+        
+        if (pages.size() == 0) {
+            lowestAccessLevelForAppOnPages = 0;
+        } else {
+            for (String pageId : pages) {
+                int accessLevel = listManager.getHighestAccessLevel(pageId);
+                if (accessLevel < lowestAccessLevelForAppOnPages) {
+                    lowestAccessLevelForAppOnPages = accessLevel ;
+                }
+            }    
+        }
+        
+        if (lowestAccessLevelForAppOnPages > 0 && (getSession() == null || getSession().currentUser == null)) {
+            secureClone.appSettingsId = "access_denied";
+        }
+        
+        if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type < lowestAccessLevelForAppOnPages) {
+            secureClone.appSettingsId = "access_denied";
+        }
+        
+        return secureClone;
     }
 }

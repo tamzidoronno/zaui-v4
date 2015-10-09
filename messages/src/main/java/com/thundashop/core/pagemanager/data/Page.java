@@ -38,6 +38,10 @@ public class Page extends DataCommon implements Cloneable {
     
     public String masterPageId = "";
     
+    /**
+     * Key 1 = CellID
+     * Value 2 = ApplicationInstanceId
+     */
     public HashMap<String, String> overrideApps = new HashMap();
     
     public Page() {
@@ -99,10 +103,15 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public Page jsonClone() {
+        Page newPage = makeClone();
+        newPage.id = UUID.randomUUID().toString();
+        return newPage;
+    }
+    
+    public Page makeClone() {
         Gson gson = new Gson();
         String json = gson.toJson(this);
         Page newPage = gson.fromJson(json, Page.class);
-        newPage.id = UUID.randomUUID().toString();
         return newPage;
     }
 
@@ -129,6 +138,10 @@ public class Page extends DataCommon implements Cloneable {
 
     public boolean isASlavePage() {
         return masterPageId != null && !masterPageId.isEmpty();
+    }
+
+    public void removeApplicationsThatDoesNotExists() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public static class DefaultPages {

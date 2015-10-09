@@ -126,6 +126,8 @@ public class PageManager extends ManagerBase implements IPageManager {
 
 //        page.dumpLayout();        
         page = finalizePage(page);
+        page = page.makeClone();
+        removeApplicationsThatHasAccessDenied(page);
         return page;
     }
 
@@ -249,8 +251,21 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<String> getPagesForApplication(String appId) {;
+        List<String> retPages = new ArrayList();
+        for (Page page : pages.values()) {
+            for (PageCell cell : page.getCellsFlatList()) {
+                if (cell.appId != null && cell.appId.equals(appId)) {
+                    retPages.add(page.id);
+                }
+                
+                if (page.overrideApps.values().contains(appId)) {
+                    retPages.add(page.id);
+                }
+            }
+        }
+        
+        return retPages;
     }
 
     @Override
@@ -624,6 +639,16 @@ public class PageManager extends ManagerBase implements IPageManager {
         if (appIdSetting != null) {
             ApplicationInstance newInstance = instancePool.createNewInstance(appIdSetting.value);
             page.addApplication(o.cellId, newInstance.id);
+        }
+    }
+
+    private void removeApplicationsThatHasAccessDenied(Page page) {
+        for (PageCell cell : page.getCellsFlatList()) {
+            ApplicationInstance instace = instancePool.getApplicationInstance(cell.appId);
+            if (instace != null && instace.appSettingsId != null && instace.appSettingsId.equals("access_denied")) {
+                System.out.println("Removing: " + cell.appId);
+                cell.appId = null;
+            }
         }
     }
 }

@@ -39,4 +39,8 @@ public class ApplicationInstance extends DataCommon {
         
         return setting.value;
     }
+
+    public void clear() {
+        settings = new HashMap<>();
+    }
 }

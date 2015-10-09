@@ -156,12 +156,12 @@ public class ProductManager extends AProductManager implements IProductManager {
     public Product getProductFromApplicationId(String app_uuid) throws ErrorException {
         List<String> uuidlist = new ArrayList();
         uuidlist.add(app_uuid);
-        HashMap<String, List<String>> result = pageManager.getPagesForApplications(uuidlist);
-        if (result.isEmpty()) {
+        List<String> pageIds = pageManager.getPagesForApplication(app_uuid);
+        if (pageIds.isEmpty()) {
             throw new ErrorException(1011);
         }
         ProductCriteria criteria = new ProductCriteria();
-        criteria.pageIds.add(result.get(app_uuid).get(0));
+        criteria.pageIds.addAll(pageIds);
         List<Product> foundresult = getProducts(criteria);
         if (foundresult.isEmpty()) {
             throw new ErrorException(1011);

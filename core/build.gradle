@@ -20,6 +20,11 @@ task startGenerator(type:JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+task generateJavascriptApi(type:JavaExec) {
+    main = 'com.thundashop.core.start.GenerateJavascriptApi'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 
 manifest {
     attributes 'Main-Class': 'com.thundashop.core.start.Runner'

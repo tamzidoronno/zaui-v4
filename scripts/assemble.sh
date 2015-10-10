@@ -26,5 +26,4 @@ cd ../
 rm -rf php;
 
 #Javascript API
-mkdir javascripts
-cp $gradleFolder/core/build/getshopapi.js javascripts/
+cp $gradleFolder/core/build/getshopapi.js .

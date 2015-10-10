@@ -134,6 +134,7 @@
 "1031","CMD Encrypted files should always be sent in pair, tuningfiles + cmd original file"
 "1032","Price is zero or negative"
 "1033","The room type does not exists"
+"1034","The room is already taken"
 
 "1000001","The name attribute is invalid",
 "1000002","The entry you are trying to fecth does not exists.",

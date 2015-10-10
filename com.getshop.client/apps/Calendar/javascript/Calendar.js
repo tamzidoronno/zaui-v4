@@ -685,7 +685,8 @@ $('.Calendar .filters .filter').live('click', function() {
     var isSelected = $(this).hasClass('selected');
     var event = null;
     var data = {
-        filter: $(this).text()
+        filter: $(this).text(),
+        userId: $(this).closest('.filters').attr('userId')
     };
 
     if (!isSelected) {

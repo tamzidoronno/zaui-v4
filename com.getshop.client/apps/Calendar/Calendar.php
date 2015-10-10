@@ -297,6 +297,10 @@ class Calendar extends MarketingApplication implements Application {
             $this->getApi()->getCalendarManager()->applyFilter($this->activeFilters);
             $this->activeFilters = $this->getApi()->getCalendarManager()->getActiveFilters();
         }
+        
+        if (isset($_POST['data']['userId'])) {
+            $_GET['userId'] = $_POST['data']['userId'];
+        }
     }
     
     public function asList() {
@@ -557,6 +561,10 @@ class Calendar extends MarketingApplication implements Application {
         
         
         $this->getApi()->getCalendarManager()->applyFilter($filters);
+        
+        if (isset($_POST['data']['userId'])) {
+            $_GET['userId'] = $_POST['data']['userId'];
+        }
     }
     
     private function in_arrayi($needle, $haystack) {

@@ -46,6 +46,8 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     private Map<String, SavedApplicationSettings> settings = new HashMap();
 
+    private Map<String, Application> chachedThemeApp = new HashMap();
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         getShopApplicationPool.addListener(this);
@@ -142,8 +144,15 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     public Application getThemeApplication() {
         String id = getManagerSetting("selectedThemeApplication");
 
+        if (chachedThemeApp.get(id) != null) {
+            return chachedThemeApp.get(id);
+        }
+        
+        
         if (id == null) {
-            return finalizeApplication(getDefaultThemeApplication());
+            Application app = finalizeApplication(getDefaultThemeApplication());
+            chachedThemeApp.put(id, app);
+            return app;
         }
 
         Application app = getAvailableThemeApplications()
@@ -153,9 +162,12 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .orElse(null);
 
         if (app == null) {
-            return finalizeApplication(getDefaultThemeApplication());
+            app = finalizeApplication(getDefaultThemeApplication());
+            chachedThemeApp.put(id, app);
+            return app;
         }
 
+        chachedThemeApp.put(id, app);
         return finalizeApplication(app);
     }
 
@@ -281,7 +293,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
             return null;
         }
 
-        Application retApp = app.jsonClone();
+        Application retApp = app.cloneMe();
         retApp.settings = new HashMap();
 
         SavedApplicationSettings setting = settings.get(app.id);

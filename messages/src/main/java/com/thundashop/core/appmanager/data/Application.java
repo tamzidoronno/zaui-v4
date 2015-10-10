@@ -5,6 +5,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Setting;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
@@ -74,12 +75,44 @@ public class Application extends DataCommon implements Comparator<Application> {
         }
     }
     
-    public Application jsonClone() {
-        Gson gson = new Gson();
-        String json = gson.toJson(this);
-        return gson.fromJson(json, Application.class);
+    public Application cloneMe() {
+        // Dont use GSON cloning, gson clone is a bit slow and this needs to be fast!
+        Application applicationClone = new Application();
+        applicationClone.settings = this.settings;
+        applicationClone.connectedWidgets = this.connectedWidgets;
+        applicationClone.appName = this.appName;
+        applicationClone.description = this.description;
+        applicationClone.allowedAreas = this.allowedAreas;
+        applicationClone.isSingleton = this.isSingleton;
+        applicationClone.renderStandalone = this.renderStandalone;
+        applicationClone.isPublic = this.isPublic;
+        applicationClone.isFrontend = this.isFrontend;
+        applicationClone.isResponsive = this.isResponsive;
+        applicationClone.price = this.price;
+        applicationClone.userId = this.userId;
+        applicationClone.type = this.type;
+        applicationClone.ownerStoreId = this.ownerStoreId;
+        applicationClone.clonedFrom = this.clonedFrom;
+        applicationClone.trialPeriode = this.trialPeriode;
+        applicationClone.pageSingelton  = this.pageSingelton;
+        applicationClone.hasDashBoard = this.hasDashBoard;
+        applicationClone.defaultActivate = this.defaultActivate;
+        applicationClone.allowedStoreIds = this.allowedStoreIds;
+        applicationClone.apiCallsInUse = this.apiCallsInUse;
+        applicationClone.applicationModule = this.applicationModule;
+        applicationClone.activeAppOnModuleActivation = this.activeAppOnModuleActivation;
+        applicationClone.moduleId = this.moduleId;
+        
+        // Inherited variables
+        applicationClone.id = this.id;
+        applicationClone.storeId = this.storeId;
+        applicationClone.deleted = this.deleted;
+        applicationClone.className = this.className;
+        applicationClone.rowCreatedDate = this.rowCreatedDate;
+        applicationClone.lastModified = this.lastModified;
+        return applicationClone;
     }
-
+    
     public String getSetting(String key) {
         Setting setting = settings.get(key);
         if (setting == null) {

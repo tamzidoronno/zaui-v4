@@ -14,9 +14,12 @@ import com.thundashop.core.calendarmanager.data.LocationPoint;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.calendarmanager.data.Signature;
+import com.thundashop.core.calendarmanager.data.StatisticResult;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MailStatus;
+import com.thundashop.core.messagemanager.MessageStatusFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
@@ -49,8 +52,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private HashMap<String, Location> locations = new HashMap();
     @Autowired
     public MailFactory mailFactory;
+    
     @Autowired
-    @Qualifier("SmsFactorySveve")
+    @Qualifier("SmsFactoryClickatell")
     public SMSFactory smsFactory;
     private List<ReminderHistory> reminderHistory = new ArrayList();
     private HashMap<String, EventPartitipated> eventData = new HashMap();
@@ -59,6 +63,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Autowired
     private CompanySearchEngineHolder holder;
 
+    @Autowired
+    private MessageStatusFactory messageStatusFactory;
+    
     private List<DiplomaPeriod> diplomaPeriods = new ArrayList<DiplomaPeriod>();
     private Map<String, LocationArea> areas = new HashMap();
 
@@ -593,24 +600,36 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             String mutatedText = text;
             mutatedText = mutateText("", mutatedText, entry, user);
             if (byEmail) {
+                String status1 = null;
+                String status2 = null;
                 if (files != null) {
-                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddress, subject, mutatedText, files, true);
-                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText, files, true);
+                    status1 = mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddress, subject, mutatedText, files, true);
+                    status2 = mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText, files, true);
                 } else {
-                    mailFactory.send(getFromAddress(null), user.emailAddress, subject, mutatedText);
-                    mailFactory.send(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText);
+                    status1 = mailFactory.send(getFromAddress(null), user.emailAddress, subject, mutatedText);
+                    status2 = mailFactory.send(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText);
                 }
+                
+                MailStatus mailStatus1 = messageStatusFactory.getStatus(status1, storeId);
+                MailStatus mailStatus2 = messageStatusFactory.getStatus(status2, storeId);
 
+                emailHistory.emailStatus.put(user.id, mailStatus1);
+                emailHistory.invoiceEmailStatus.put(user.id, mailStatus2);
+                    
                 emailHistory.users.add(user);
             }
 
             if (bySMS) {
+                
                 HashMap<String, Setting> settings = getSettings("Booking");
                 String from = settings.get("smsfrom").value;
                 String message = mutatedText;
                 String phoneNumber = user.cellPhone;
-                smsFactory.send(from, phoneNumber, message);
+                String messageId = smsFactory.send(from, phoneNumber, message);
                 smsHistory.users.add(user);
+                
+                MailStatus smsStatus = messageStatusFactory.getStatus(messageId, storeId);
+                smsHistory.smsStatus.put(user.id, smsStatus);
             }
         }
 
@@ -626,6 +645,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     private void addUserToEventInternal(String userId, String eventId, String password, String username, String source) throws ErrorException {
+        if (userId == null) {
+            throw new NullPointerException("Tried to add a user to an event that does not exists");
+        }
+        
         for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
@@ -645,7 +668,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                         AttendeeMetaInfo metaInfo = new AttendeeMetaInfo();
                         metaInfo.source = source;
                         metaInfo.userId = userId;
-                        entry.metaInfo.put(userId, metaInfo);
+                        if (userId != null && metaInfo != null) {
+                            entry.metaInfo.put(userId, metaInfo);
+                        }
 
                         databaseSaver.saveObject(month, credentials);
 
@@ -908,6 +933,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             }
 
             if (hist.eventId.equals(eventId)) {
+                finalizeHistory(hist);
                 allHistory.add(hist);
             }
         }
@@ -1141,11 +1167,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
             int curmonth = calendar.get(Calendar.MONTH) + 1;
             int curDay = calendar.get(Calendar.DAY_OF_MONTH);
-
+            
             if (curmonth == month.month) {
                 TreeMap<Integer, Day> days = new TreeMap();
                 for (Day day : month.days.values()) {
-                    if (day.day > curDay) {
+                    if (day.day >= curDay) {
                         days.put(day.day, day);
                     }
                 }
@@ -1379,7 +1405,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                         AttendeeMetaInfo metaInfo = entry.metaInfo.remove(clone);
                         if (metaInfo != null) {
                             metaInfo.userId = newUserId;
-                            entry.metaInfo.put(newUserId, metaInfo);
+                            if (newUserId != null && metaInfo != null) {
+                                entry.metaInfo.put(newUserId, metaInfo);
+                            }
                         }
                     }
                 }
@@ -1448,4 +1476,134 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
         
     }
+
+    private void finalizeHistory(ReminderHistory hist) {
+        HashMap<String, MailStatus> emailStatus = checkMap(hist.emailStatus);
+        hist.emailStatus = emailStatus;
+        
+        HashMap<String, MailStatus> invoiceEmailStatus = checkMap( hist.invoiceEmailStatus);
+        hist.invoiceEmailStatus = invoiceEmailStatus;
+        
+        HashMap<String, MailStatus> smsStatus = checkMap( hist.smsStatus);
+        hist.smsStatus = smsStatus;
+    }
+
+    private HashMap<String, MailStatus> checkMap(HashMap<String, MailStatus> mapToCheck) {
+        HashMap<String, MailStatus> retStatus = new HashMap();
+        for (String userId : mapToCheck.keySet()) {
+            MailStatus status = mapToCheck.get(userId);
+            MailStatus newStatus = messageStatusFactory.getStatus(status.id, storeId);
+            retStatus.put(userId, newStatus);
+        }
+        
+        return retStatus;
+    }
+
+    @Override
+    public List<StatisticResult> getStatistic(Date from, Date to) throws ErrorException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(from);
+        calendar.set(Calendar.HOUR, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        
+        from = calendar.getTime();
+        
+        calendar.setTime(to);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        to = calendar.getTime();
+        
+        List<Entry> allEntries = getAllEntriesForStatistic(from, to);
+        List<StatisticResult> results = new ArrayList();
+        
+        UserManager userManager = getManager(UserManager.class);
+        List<Group> groups = userManager.getAllGroups();
+        
+        for (Group group : groups) {
+            StatisticResult result = getStatisticResult(from, to, group, allEntries);    
+            results.add(result);
+        }
+        
+        return results;
+    }
+
+    private StatisticResult getStatisticResult(Date from, Date to, Group group, List<Entry> allEntries) throws ErrorException {
+        StatisticResult result = new StatisticResult();
+        result.from = from;
+        result.to = to;
+        result.group = group;
+        result.signedOn = getSignedOnCount(allEntries, group);
+        result.waitingList = getWaitingListCount(allEntries, group);
+        return result;
+    }
+
+    private List<Entry> getAllEntriesForStatistic(Date from, Date to) {
+        List<Entry> entries = new ArrayList();
+        for (Month month : months.values()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    Date date = entry.getDate();
+                    
+                    if (date.after(from) && date.before(to)) {
+                        entries.add(entry);
+                    }
+                }
+            }
+        }
+        
+        return entries;
+    }
+
+    private int getSignedOnCount(List<Entry> allEntries, Group group) throws ErrorException {
+        int i = 0;
+        
+        for (Entry entry : allEntries) {
+            int count = getCount(entry.attendees, group);
+            if (entry.otherDays != null) {
+                count = (entry.otherDays.size() + 1) * count;
+            }
+            i += count;
+        }
+        
+        return i;
+    }
+    
+    private int getCount(List<String> attendees, Group group) throws ErrorException {
+        int i = 0;
+        
+        UserManager manager = getManager(UserManager.class);
+        
+        for (String userId : attendees) {
+            User user = manager.getUserById(userId);
+            if (user != null) {
+                if (group != null && user.groups != null) {
+                    if (user != null && user.groups.contains(group.id)) {
+                        i++;
+                    }                    
+                } else {
+                    if (user.groups == null || user.groups.size() == 0) {
+                        i++;
+                    }
+                }
+            }
+            
+        }
+        
+        return i;
+    }
+
+    private int getWaitingListCount(List<Entry> allEntries, Group group) throws ErrorException {
+        int i = 0;
+        
+        for (Entry entry : allEntries) {
+            int count = getCount(entry.waitingList, group);
+            if (entry.otherDays != null) {
+                count = (entry.otherDays.size() + 1) * count;
+            }
+            i += count;
+        }
+        
+        return i;
+    }
+
 }

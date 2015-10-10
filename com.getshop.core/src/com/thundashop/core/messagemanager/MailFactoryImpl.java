@@ -10,6 +10,7 @@ import com.thundashop.core.common.StoreComponent;
 import java.io.File;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -36,13 +37,17 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     private String subject;
     private String content;
     private String storeId;
+    private String messageId;
 
     @Autowired
     private MailConfig configuration;
-
+    
     @Autowired
     public FrameworkConfig frameworkConfig;
 
+    @Autowired
+    public MessageStatusFactory messageStatusFactory;
+    
     @Autowired
     public Logger logger;
     private Map<String, String> files;
@@ -70,22 +75,29 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     }
 
     @Override
-    public void send(String from, String to, String title, String content) {
+    public String send(String from, String to, String title, String content) {
+        String messageId = UUID.randomUUID().toString();
+        
         MailFactoryImpl mfi = new MailFactoryImpl();
         mfi.from = from;
         mfi.to = to;
+        mfi.messageStatusFactory = messageStatusFactory;
         mfi.subject = title;
         mfi.content = content;
         mfi.configuration = configuration;
         mfi.logger = logger;
         mfi.storeId = storeId;
         mfi.frameworkConfig = frameworkConfig;
-
+        mfi.messageId = messageId;
+        
+        messageStatusFactory.logStatus(messageId, "QUEUED", "The message is put on queue", storeId, "MAIL");
         if (to == null || to.equals("test@getshop.com")) {
             //Send this to noone, or the test account.. no way!
-            return;
+            return "";
         }
         new Thread(mfi).start();
+        
+        return messageId;
     }
 
     @Override
@@ -103,24 +115,32 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
      * @param delete
      */
     @Override
-    public void sendWithAttachments(String from, String to, String title, String content, Map<String, String> files, boolean delete) {
+    public String sendWithAttachments(String from, String to, String title, String content, Map<String, String> files, boolean delete) {
+        String messageId = UUID.randomUUID().toString();
         MailFactoryImpl mfi = new MailFactoryImpl();
         mfi.from = from;
         mfi.to = to;
         mfi.files = files;
         mfi.delete = delete;
+        mfi.messageStatusFactory = messageStatusFactory;
         mfi.subject = title;
         mfi.content = content;
         mfi.configuration = configuration;
         mfi.logger = logger;
         mfi.storeId = storeId;
         mfi.frameworkConfig = frameworkConfig;
+        mfi.messageId = messageId;
 
+        messageStatusFactory.logStatus(messageId, "QUEUED", "The message is put on queue", storeId, "MAIL");
+        
         if (to == null || to.equals("test@getshop.com")) {
             //Send this to noone, or the test account.. no way!
-            return;
+            return "";
         }
+        
         new Thread(mfi).start();
+        
+        return messageId;
     }
 
     private void warnNotDelivered() {
@@ -143,7 +163,9 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
 
     @Override
     public void run() {
+        messageStatusFactory.logStatus(messageId, "SENDING", "The message is being put on the mailserver", storeId, "MAIL");
         configuration.setup(storeId);
+        
         MimeMessage message = new MimeMessage(getSession());
         boolean delivered = false;
         for (int i = 0; i < 10; i++) {
@@ -177,14 +199,17 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 }
 
                 if (frameworkConfig.productionMode) {
+                    messageStatusFactory.logStatus(messageId, "DELIVERED", "Message was successfully delivered to mailserver", storeId, "MAIL");
                     Transport.send(message);
                     delivered = true;
                     break;
                 } else {
+                    messageStatusFactory.logStatus(messageId, "STOPPED_FRAMEWORK_IN_DEBUG_MODE", "Message was not delivered, the framework is set to debug mode.", storeId, "MAIL");
                     System.out.println("Mail sent to: " + to + ", from: " + from + ", subject: " + subject + ", content: " + content);
                     break;
                 }
             } catch (Exception ex) {
+                messageStatusFactory.logStatus(messageId, "FAILED_TO_SEND", "Was not able to send message, there is an error with connection or emailaddresses. See additional information for exact errormessage.", storeId, ex, "MAIL");
                 logger.error(this, "Was not able to send email to" + to + " from: " + from + " subject: " + subject);
                 ex.printStackTrace();
             }

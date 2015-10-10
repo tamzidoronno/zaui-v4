@@ -119,4 +119,12 @@ public class Entry implements Serializable, Comparable<Entry> {
         
         return dateRepresentation.before(new Date());
     }
+
+    public Date getDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, (month-1));
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        return calendar.getTime();
+    }
 }

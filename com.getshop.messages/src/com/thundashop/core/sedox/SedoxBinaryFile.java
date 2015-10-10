@@ -44,7 +44,12 @@ public class SedoxBinaryFile implements Serializable {
 
     public double getPrice(SedoxUser sedoxUser) {
         
-        if (sedoxUser.fixedPrice != null && !sedoxUser.fixedPrice.isEmpty()) {
+        if (sedoxUser.fixedPrice != null 
+                && !sedoxUser.fixedPrice.isEmpty() 
+                && !fileType.toLowerCase().equals("cmdencrypted") 
+                && !fileType.toLowerCase().equals("cmd original") 
+                && !fileType.toLowerCase().equals("original") 
+                ) {
             return Double.parseDouble(sedoxUser.fixedPrice);
         }
         

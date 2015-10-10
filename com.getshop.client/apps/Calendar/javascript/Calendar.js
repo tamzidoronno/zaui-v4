@@ -534,11 +534,30 @@ $('.Calendar .addcomment').live('click', function() {
     thundashop.common.showInformationBox(event, __f('Add comment'));
 });
 
+var CalendarReloadHistory = function() {
+    var historyDom = $('#informationbox .all_reminder_history');
+    if (!historyDom.is(':visible')) {
+        return;
+    }
+    
+    var data = {
+        entryid : $('#informationbox #sendreminderbymail').attr('entryid')
+    }
+    
+    var event = thundashop.Ajax.createEvent(null, 'showReminderHistory', historyDom, data);
+    thundashop.Ajax.postWithCallBack(event, function(result) {
+        historyDom.html(result);
+    });
+    
+    setTimeout(CalendarReloadHistory, 5000);   
+}
+
 $('.Calendar .reminder').live('click', function() {
     var data = {};
     data.entryid = $(this).attr('entryid');
     var event = thundashop.Ajax.createEvent('Calendar', 'showSendReminder', $(this), data);
     thundashop.common.showInformationBox(event, __f("Send reminder"));
+    setTimeout(CalendarReloadHistory, 5000);
 });
 
 $('.Calendar .confirmentry').live('click', function() {

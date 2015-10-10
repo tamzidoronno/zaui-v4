@@ -14,6 +14,7 @@ import com.thundashop.core.common.StoreHandler;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MailStatus;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import java.io.File;
@@ -322,7 +323,27 @@ public class Database {
             }
         }
     }
+
+    public <T> T getById(String id, Credentials credentials) {
+        DB db = mongo.getDB(credentials.manangerName);
+        if (db != null) {
+            DBCollection col = db.getCollection(collectionPrefix + credentials.storeid);
+            if (col != null) {
+                BasicDBObject field = new BasicDBObject();
+                field.put("_id", id);
+                DBObject res = col.findOne(field);
+                if (res != null) {
+                    Morphia morphia = new Morphia();
+                    morphia.map(DataCommon.class);
+                    return (T) morphia.fromDBObject(DataCommon.class, res);
+                }
+            }
+        }
+        
+        return null;
+    }
 }
+
 class DataCommonSorter implements Comparator<DataCommon> {
 
     @Override

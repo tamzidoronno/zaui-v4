@@ -6,6 +6,8 @@
 
 app.ProMeisterLogin = {
     addressOnSuccess: "",
+    checkType: 0,
+    reference: "",
     
     init : function() {
         $(document).on('click', '.promeisterloginform .loginbutton', app.ProMeisterLogin.login);
@@ -30,18 +32,28 @@ app.ProMeisterLogin = {
             name : $('.promeisterloginform #name').val(),
             email : $('.promeisterloginform #email').val(),
             invoiceemail : $('.promeisterloginform #invoiceemail').val(),
-            cellphone : $('.promeisterloginform #cellphone').val()
+            cellphone : $('.promeisterloginform #cellphone').val(),
+            reference : app.ProMeisterLogin.reference
         };
+        
+        if (!app.ProMeisterLogin.addressOnSuccess) {
+            data['dontLogin'] = true;
+        }
         
         data.orgnr = $(this).attr('orgnr');
         
         var event = thundashop.Ajax.createEvent(null, "proMeisterCreateUser", null, data);
         thundashop.Ajax.postWithCallBack(event, function(result) {
-            if (result === "success") {
-                window.location = app.ProMeisterLogin.addressOnSuccess;
-                app.ProMeisterLogin.close();
+            if (!app.ProMeisterLogin.addressOnSuccess) {
+                window.location = '/index.php?page=users_all_users&userid='+result;
             } else {
-                alert(__f("Failed to create user"));
+                if (result === "success") {
+                    if (app.ProMeisterLogin.addressOnSuccess)
+                        window.location = app.ProMeisterLogin.addressOnSuccess;
+                    app.ProMeisterLogin.close();
+                } else {
+                    alert(__f("Failed to create user"));
+                }
             }
             
         });
@@ -68,16 +80,62 @@ app.ProMeisterLogin = {
     
     showStep1: function() {
         app.ProMeisterLogin.hideSteps();
+        if (app.ProMeisterLogin.addressOnSuccess) {
+            $('.signup_step1 .back_button').show();
+        } else {
+            $('.signup_step1 .back_button').hide();
+        }
         $('.signup_step1').show();
     },
     
     showStep2: function() {
         app.ProMeisterLogin.hideSteps();
-        $('.signup_step2').show();
         
+        var storeId = $('input[name="storeid"]').val();
+        var groupId = $('.groupselection.selected').attr('groupid');
+        
+        $('.extradep').hide();
+        app.ProMeisterLogin.reference = "";
+        app.ProMeisterLogin.checkType = 0;
+        
+        if (storeId === "d27d81b9-52e9-4508-8f4c-afffa2458488") {
+            if (groupId == "1cdd1d93-6d1b-4db3-8e91-3c30cfe38a4a") {
+                $('.extradep span').html('Meko-Id');
+                app.ProMeisterLogin.checkType = 1;
+                $('.extradep').show();
+            }
+            
+            if (groupId == "ddcdcab9-dedf-42e1-a093-667f1f091311" || groupId == "608c2f52-8d1a-4708-84bb-f6ecba67c2fb") {
+                $('.extradep span').html('Kundnummer');
+                app.ProMeisterLogin.checkType = 2;
+                $('.extradep').show();
+            }   
+        }
+        
+        $('.signup_step2').show();
     },
     
     showStep3: function() {
+        
+        
+        // MECA + OQ8
+        if (app.ProMeisterLogin.checkType == 2) {
+            val = $('#reference_meca').val();
+            if (val.length < 7 || val.length > 13) {
+                alert(__f('Please check your group id'));
+                return;
+            }
+
+            if (isNaN(val)) {
+                alert(__f('Please check your group id'));
+                return;
+            }
+        }
+        
+        if (app.ProMeisterLogin.checkType == 1 || app.ProMeisterLogin.checkType == 2) {
+            app.ProMeisterLogin.reference = $('#reference_meca').val();
+        }
+
         var success = function() {
             app.ProMeisterLogin.hideSteps();
             $('.signup_step3').show();
@@ -175,6 +233,14 @@ app.ProMeisterLogin = {
         app.ProMeisterLogin.showStep0();
         app.ProMeisterLogin.addressOnSuccess = addressOnSuccess;
         $('.signupform_outer').show();
+    },
+    
+    showCreateAccount: function() {
+        $(window).scrollTop(0);
+        app.ProMeisterLogin.showStep0();
+        app.ProMeisterLogin.addressOnSuccess = null;
+        $('.signupform_outer').show();
+        app.ProMeisterLogin.showStep1();
     },
     
     login: function() {

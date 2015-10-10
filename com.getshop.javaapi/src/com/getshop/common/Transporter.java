@@ -1,5 +1,6 @@
-package com.getshop.javaapi;
+package com.getshop.common;
 
+import com.getshop.javaapi.GetShopApi;
 import com.google.gson.Gson;
 import com.thundashop.core.common.JsonObject2;
 import java.io.BufferedReader;

@@ -495,6 +495,11 @@ class Calendar extends MarketingApplication implements Application {
         $this->includefile("sendreminder");
     }
     
+    public function showReminderHistory() {
+        $this->loadData();
+        $this->includefile("reminderhistory");
+    }
+    
     private function getAttachment() {
         if ($_POST['data']['attachment1']) {
             $data = explode(",", $_POST['data']['attachment1']);

@@ -15,16 +15,34 @@
     </ul>
 </div>
 
-<div class="sepbox">
-    <div class="title"><b><? echo $this->__f("Create a new user"); ?>:</b></div>
-    <input type="text" value="" class="create_user_input" placeholder="Email address">
-    <div class="button create_user">
-        <div class="rightglare"></div>
-        <div class="filler"></div>
-        <ins>
-            <? echo $this->__f("Create user"); ?></ins>
+
+<?
+if ($this->isProMeisterLoginAppAdded()) {
+?>
+    <div style="padding: 20px; text-align: center;">
+        <div class="button" onclick='app.ProMeisterLogin.showCreateAccount();'>
+            <div class="rightglare"></div>
+            <div class="filler"></div>
+            <ins>
+                <? echo $this->__f("Create user"); ?></ins>
+        </div>
     </div>
-</div>
+<?
+} else {
+?>
+    <div class="sepbox">
+        <div class="title"><b><? echo $this->__f("Create a new user"); ?>:</b></div>
+        <input type="text" value="" class="create_user_input" placeholder="Email address">
+        <div class="button create_user">
+            <div class="rightglare"></div>
+            <div class="filler"></div>
+            <ins>
+                <? echo $this->__f("Create user"); ?></ins>
+        </div>
+    </div>
+<?
+}
+?>
 
 <div class="sepbox">
     <h2> Groups </h2>
@@ -72,4 +90,30 @@
     </div>
 </div>
 
+<?
+if ($this->isPromeister()) {
+?>
+    <div class="sepbox">
+        <h2 style="text-align: center;">Statistic</h2>
+        <center>
 
+        <table style="width: 200px;">
+            <tr><td>From</td><td><input id="start_date" type="textfield"/></td></tr>
+            <tr><td>To</td><td><input id="end_date" type="textfield"/></td></tr>
+            <tr><td colspan="2" style="text-align: center;"><br/><div id="show_statistic" class="gs_button">Show</div></td></tr>
+        </table>
+        </center>
+        <br/>
+        <div class="statisic_result">
+
+        </div>
+    </div>
+
+
+    <script>
+        $('#start_date').datepicker({ dateFormat: "dd.mm.yy"});
+        $('#end_date').datepicker({ dateFormat: "dd.mm.yy"});
+    </script>
+<?
+}
+?>

@@ -65,6 +65,18 @@ $('.Users .deleteuser').live('click', function(e) {
     thundashop.app.users.deleteUser(userId, $(this));
 });
 
+$('.Users #show_statistic').live('click', function(e) {
+    var data = {
+        startDate : $('.Users #start_date').val(),
+        endDate : $('.Users #end_date').val()
+    }
+    
+    var event = thundashop.Ajax.createEvent(null, "showGroupStatistic", this, data);
+    thundashop.Ajax.postWithCallBack(event, function(result) {
+        $('.Users .statisic_result').html(result);
+    });
+});
+
 $('.Users .create_group').live('click', function(e) {
     var groupName = $('#groupnamecreate').val();
     var data = {

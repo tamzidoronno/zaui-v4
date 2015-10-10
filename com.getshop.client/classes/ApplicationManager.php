@@ -804,17 +804,28 @@ class ApplicationManager extends FactoryBase {
         $user->emailAddress = $_POST['data']['email'];
         $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
         $user->type = 10;
+        $user->birthDay = $_POST['data']['orgnr'];
+        $user->referenceKey = $_POST['data']['reference'];
         $user->password = $password;
+        $user->groups = [];
+        $user->cellPhone = $_POST['data']['cellphone'];
+        $user->groups[] = $_POST['data']['groupId'];
         $user->company = $this->getFactory()->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['orgnr']);
-        $this->getApi()->getUserManager()->createUser($user);
-        $userLoggedOn = $this->getFactory()->getApi()->getUserManager()->logOn($user->emailAddress, $password);
+        $user = $this->getApi()->getUserManager()->createUser($user);
+        
        
-       if ($userLoggedOn) {
-           \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($userLoggedOn);
-           echo "success";
-       } else {
-           echo "failed";
-       }
+        if (isset($_POST['data']['dontLogin']) && $_POST['data']['dontLogin']) {
+            echo $user->id;
+            return;
+        }
+        
+        $userLoggedOn = $this->getFactory()->getApi()->getUserManager()->logOn($user->emailAddress, $password);
+        if ($userLoggedOn) {
+            \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($userLoggedOn);
+            echo "success";
+        } else {
+            echo "failed";
+        }
     }
     
     public function proResetPassword() {

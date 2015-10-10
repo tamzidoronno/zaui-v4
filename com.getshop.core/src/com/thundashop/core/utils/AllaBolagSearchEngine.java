@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.utils;
 
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.usermanager.data.Company;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -37,14 +39,32 @@ import org.xml.sax.SAXException;
  */
 @Component
 public class AllaBolagSearchEngine implements CompanySearchEngine {
+    
+    @Autowired
+    public FrameworkConfig frameworkConfig;
+
     private String key = "BIWSa34c782cbc10a0da3e9770a974f4";
     @Override
     public String getName() {
         return "allabolag";
     }
+    
+    private Company getDemoCompany() {
+        Company company = new Company();
+        company.name = "GetShop AS";
+        company.city = "Sokndal";
+        company.streetAddress = "Strandgaten 21";
+        company.vatNumber = "123 456 789";
+        company.email = "post@getshop.com";
+        return company;
+    }
 
     @Override
     public Company getCompany(String organisationNumber, boolean fetch) {
+        if (!frameworkConfig.productionMode) {
+            return getDemoCompany();
+        }
+        
         try {
             String urlAddition = fetch ? "fetch" : "find";
             String url = "http://www.allabolag.se/ws/BIWS/service.php?key="+key+"&type="+urlAddition+"&query=nummer:"+organisationNumber;
@@ -67,6 +87,11 @@ public class AllaBolagSearchEngine implements CompanySearchEngine {
 
     @Override
     public List<Company> search(String search) {
+        if (!frameworkConfig.productionMode) {
+            List<Company> companies = new ArrayList();
+            companies.add(getDemoCompany());
+            return companies;
+        }
         
         try {
             search = URLEncoder.encode(search, "UTF-8");

@@ -62,7 +62,8 @@ public class ImportApiCallsToApplications {
         
         HashMap<String, HashMap<String, List<String>>> toAdd = new HashMap();
         toAdd = gson.fromJson(jsondata, toAdd.getClass());
-        for(String appid : toAdd.keySet()) {
+        for(Object oappid : toAdd.keySet()) {
+            String appid = (String)oappid;
             Map<String, List<String>> list = toAdd.get(appid);
             apps.get(appid).apiCallsInUse = new ArrayList();
             for(String managerPath : list.keySet()) {

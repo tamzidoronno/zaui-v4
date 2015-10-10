@@ -52,7 +52,7 @@ foreach ($entries as $year => $months) {
             foreach ($entry->otherDays as $otherDay) {
                 $i++;
                 $dayName = $this->__w("Day") . ":$i - ";
-                echo "<br>" . $dayName . $this->__w("Date") . ": " . $otherDay->day . "/" . $entry->month . " - " . $otherDay->starttime . "-" . $otherDay->stoptime;
+                echo "<br>" . $dayName . $this->__w("Date") . ": " . $otherDay->day . "/" . $otherDay->month . " - " . $otherDay->starttime . "-" . $otherDay->stoptime;
             }
             $count = $this->getCountOfFreePositions($entry);
             echo "</td>";

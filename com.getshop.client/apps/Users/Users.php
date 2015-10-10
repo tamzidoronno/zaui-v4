@@ -17,6 +17,19 @@ class Users extends \SystemApplication implements \Application {
     public function postProcess() {
     }
     
+    public function isProMeisterLoginAppAdded() {
+        $appExists = false;
+        $singletons = $this->getFactory()->getApplicationPool()->getSingletonInstances();
+
+        foreach ($singletons as $app) {
+            if ($app->getConfiguration()->appSettingsId == "2f98236f-b36d-4d5c-93c6-0ad99e5b3dc6") {
+                $appExists = true;
+            }
+        }
+        
+        return $appExists;
+    }
+    
     public function removeComment() {
         $commentid = $_POST['data']['commentid'];
         $userid = $_POST['data']['userid'];
@@ -188,6 +201,35 @@ class Users extends \SystemApplication implements \Application {
                 $this->getApi()->getUserManager()->saveGroup($group);
             }
         }
+    }
+    
+    public function showGroupStatistic() {
+        
+        $startDate = date('M d, Y h:m:s A',  strtotime($_POST['data']['startDate']));
+        $endDate = date('M d, Y h:m:s A',  strtotime($_POST['data']['endDate']));
+        
+        $result = $this->getApi()->getCalendarManager()->getStatistic($startDate, $endDate);
+        $countSum = 0;
+        $waitingListSum = 0;
+        
+        echo "<table>";
+        echo "<th style='width: 100px;'>Group</th><th style='width: 100px;'>Signed on</th><th style='width: 100px;'>Waitinglist</th>";
+        foreach ($result as $res) {
+            $groupName = $res->group != null ? $res->group->groupName : "Unassigned"; 
+            $count = $res->signedOn; 
+            $waiting = $res->waitingList; 
+            $countSum += $res->signedOn;
+            $waitingListSum += $res->waitingList;
+            echo "<tr ><td style='border-bottom: dashed 1px #BBB;'>$groupName</td><td style='text-align: center; border-bottom: dashed 1px #BBB;'>$count</td><td style='text-align: center; border-bottom: dashed 1px #BBB;'>$waiting</td></tr>";
+        }
+        
+        echo "<tr><td></td><td style='text-align: center;'>$countSum</td><td style='text-align: center;'>$waitingListSum</td></tr>";
+        
+        echo "</table>";
+    }
+    
+    public function isPromeister() {
+        return $this->isProMeisterLoginAppAdded();
     }
 }
 ?>

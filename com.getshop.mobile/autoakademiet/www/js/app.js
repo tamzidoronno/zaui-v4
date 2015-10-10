@@ -14,7 +14,7 @@ App = {
     token: "",
     firstConnected: false,
     numberOfMonthToShowInCalendar: 12,
-    lang: 'se',
+    lang: 'no',
     version: 1,
     start: function () {
         this.setLanguageMode();

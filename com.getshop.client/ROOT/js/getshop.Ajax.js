@@ -6,6 +6,11 @@ var hasFadeInEffect = false;
 thundashop.Namespace.Register("thundashop.Ajax");
 
 thundashop.handleAjaxError = function(error, textstatus, status, content) {
+    if (error && error.responseText === "Timed out") {
+        alert('Session timed out, reloading page');
+        document.location = '/';
+        throw new Error("timeout");
+    }
     
     $('#loaderbox').hide();
     
@@ -25,6 +30,14 @@ thundashop.handleAjaxError = function(error, textstatus, status, content) {
     
     PubSub.publish("AJAXERROR", error);
 };
+
+thundashop.AjaxPreCheck = function(response) {
+    if (response === "Timed out") {
+        alert(__('Session timed out, reloading page'));
+        document.location = '/';
+        throw new Error("timeout");
+    }
+}
 
 thundashop.Ajax = {
     ajaxFile: 'handler.php',
@@ -54,6 +67,7 @@ thundashop.Ajax = {
             data: data,
             context: document.body,
             success: function(response) {
+                thundashop.AjaxPreCheck(response);
                 callback(response);
                 $('#loaderbox').hide();
                 if(file !== "Chat.php") {
@@ -73,7 +87,7 @@ thundashop.Ajax = {
     },
     post: function(data, callback, extraArg, dontUpdate, dontShowLoaderBox, xtra) {
         PubSub.publish("POSTED_DATA", "");
-
+        
         var file = this.ajaxFile;
         var uploadcallback = false;
         if (xtra !== undefined) {
@@ -97,6 +111,7 @@ thundashop.Ajax = {
             dataType: dataType,
             context: document.body,
             success: function(response) {
+                thundashop.AjaxPreCheck(response);
                 if (typeof(dontUpdate) === "undefined" || dontUpdate === false) {
                     thundashop.Ajax.updateFromResponse(response);
                 }
@@ -146,6 +161,7 @@ thundashop.Ajax = {
             data: thundashop.base64.encodeForAjax(event),
             context: document.body,
             success: function(response) {
+                thundashop.AjaxPreCheck(response);
                 result = response;
                 PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
             },
@@ -165,6 +181,7 @@ thundashop.Ajax = {
             async: false,
             dataType: "json",
             success: function(response) {
+                thundashop.AjaxPreCheck(response);
                 thundashop.Ajax.updateFromResponse(response);
                 if (response.errors && response.errors !== "")
                     result = false;
@@ -258,7 +275,9 @@ thundashop.Ajax = {
                     callback();
                 }
             },
-            error: thundashop.handleAjaxError
+            error: function(error, textstatus, status, content) {
+                thundashop.handleAjaxError(error, textstatus, status, content)
+            }
         })
     },
     reloadCss: function() {

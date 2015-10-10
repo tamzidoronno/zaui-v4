@@ -26,10 +26,20 @@ class ProMeisterLogin extends \ApplicationBase implements \Application {
         $this->includefile("loginform");
     }
     
-      public function renderConfig() {
-          
-          echo "test";
-      }
+    public function renderConfig() {
+        echo "test";
+    }
+    
+    public function getCheckType() {
+        if ($_SESSION['group'] == "1cdd1d93-6d1b-4db3-8e91-3c30cfe38a4a") {
+            return 1;
+        }
 
-//put your code here
+        if ($_SESSION['group'] == "ddcdcab9-dedf-42e1-a093-667f1f091311" || $_SESSION['group'] == "608c2f52-8d1a-4708-84bb-f6ecba67c2fb") {
+            return 2;
+        }
+
+        return 0;
+    }
+    
 }

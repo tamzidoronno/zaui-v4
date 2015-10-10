@@ -1,6 +1,7 @@
 package com.thundashop.core.usermanager;
 
 import com.google.gson.Gson;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.calendar.CalendarManager;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -16,6 +17,7 @@ import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.utils.CompanySearchEngine;
 import com.thundashop.core.utils.CompanySearchEngineHolder;
+import com.thundashop.core.utils.UtilManager;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -67,6 +69,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                     userStoreCollection.addUserDirect((User) dataCommon);
                 }
                 if (dataCommon instanceof Group) {
+                    Group group = (Group)dataCommon;
+                    if (group.groupName.equals("Annen")) {
+                        group.groupName = "Øvrige";
+                        saveGroup(group);
+                    }
                     userStoreCollection.addGroup((Group)dataCommon);
                 }
                 if (dataCommon instanceof UserCounter) {
@@ -81,11 +88,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
-        try {
-            showStatistic();
-        } catch (ErrorException ex) {
-            java.util.logging.Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            showStatistic();
+//        } catch (ErrorException ex) {
+//            java.util.logging.Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     private UserStoreCollection getUserStoreCollection(String storeId) throws ErrorException {
@@ -105,9 +112,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.username == null || user.username.trim().length() == 0) {
             int i = 10000;
             boolean exists = true;
+            
+            List<User> users = getAllUsers();
+            
             while (exists) {
                 i++;
-                List<User> users = getAllUsers();
                 user.username = "" + (users.size() + i);
                 exists = false;
                 for (User usr : users) {
@@ -121,7 +130,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public User createUser(User user) throws ErrorException {
-        System.out.println("Userkey : " + user.referenceKey);
         if (getSession().currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }
@@ -158,12 +166,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.type = User.Type.ADMINISTRATOR;
         }
         users.addUser(user);
+        
+        String passwordPlainText = user.password;
         user.password = encryptPassword(user.password);
         
         databaseSaver.saveObject(user, credentials);
         
         throwEvent(Events.USER_CREATED, user.id);
         
+        sendWelcomeEmail(user, passwordPlainText);
         return user;
     }
     
@@ -295,6 +306,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         // Keep comments from prev saved user. (has seperated functions for adding and deleting)
         user.comments = savedUser.comments;
+        
+        user.triedToFetch = false;
         
         if (user.company == null && user.birthDay != null && !user.birthDay.equals("")) {
             user.company = getCompany(user, true);
@@ -694,7 +707,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public User getUserByEmail(String emailAddress) throws ErrorException {
         List<User> users = getUserStoreCollection(getStore().id).getAllUsers();
         for (User user : users) {
-            if (user.emailAddress != null && user.emailAddress.equals(emailAddress)) {
+            if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(emailAddress)) {
                 return user;
             }
         }
@@ -729,6 +742,19 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             counter.counter++;
             saveObject(counter);
             saveObject(user);
+        }
+        
+        if (storeId != null && (storeId.equals("d27d81b9-52e9-4508-8f4c-afffa2458488") || storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445"))) {
+            if ((user.birthDay == null || user.birthDay.isEmpty()) && user.company != null) {
+                user.birthDay = user.company.vatNumber;
+            }
+
+            if (user.birthDay != null && (user.company == null || user.company.name.isEmpty()) && getSession() != null && !user.triedToFetch) {
+                UtilManager man = getManager(UtilManager.class);
+                user.company = man.getCompanyFromBrReg(user.birthDay);
+                user.triedToFetch = true;
+                saveObject(user);
+            }
         }
     }
 
@@ -767,8 +793,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return false;
         }
         
-        RandomString passwordGenerator = new RandomString(8);
-        String password = passwordGenerator.nextString();
+        Random r = new Random();
+        int Low = 145111;
+        int High = 989227;
+        int R = r.nextInt(High-Low) + Low;
+        
+        String password = ""+R;
         
         user.password = encryptPassword(password);
         databaseSaver.saveObject(user, credentials);
@@ -782,7 +812,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             message += "<br/>Med vänlig hälsning";
             message += "<br/>ProMeister Academy";
             man.sendMail(user.emailAddress, user.fullName, "Lösenordsåterställning", message, storeId, storeId);
-        } else {
+        } 
+        
+        if (storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
             String message = "Hei " + user.fullName;
             message += "<br/>";
             message += "<br/>Ditt passord har nå blitt endret og du kan logge inn med passordet: " + password;
@@ -809,7 +841,100 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             System.out.println("Group: " + group.groupName + " count: " + count);
         }
     }
+
+    private String getFromAddress() throws ErrorException {
+        String storeEmailAddress = getStore().configuration.emailAdress;
+        if (storeEmailAddress != null) {
+            return storeEmailAddress;
+        }
+
+        return "noreply@getshop.com";
+    }
     
-    
-    
+    private void sendWelcomeEmail(User user, String passwordPlainText) throws ErrorException {
+        if (user.emailAddress == null || !user.emailAddress.contains("@")) {
+            return;
+        }
+        
+        String content = "";
+        String subject = "";
+        
+        // Norway ( ProMeister Academy )
+        if (storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
+            content += "Hei "+user.fullName;
+            content += "<br/>";
+            content += "<br/>Takk for at du har laget en konto hos ProMeister Academy. Fra din konto kan du raskt melde deg på kurs hos oss, og samtidig ha kontroll over kursene du har deltatt på. Du benytter følgende opplysninger for å logge deg på.";
+            content += "<br/>";
+            content += "<br/>Brukernavn: "+user.emailAddress;
+            content += "<br/>Passord: " + passwordPlainText;
+            content += "<br/>";
+            content += "<br/>Brukernavn og passordet gjelder både på nettsiden og mobilappen.";
+            content += "<br/>";
+            content += "<br/>Med Vennlig Hilsen";
+            content += "<br/>ProMeister Academy";
+            
+            subject = "Brukernavn og passord ProMeisterAcademy";
+        }
+
+        // Sweden ( ProMeister Academy )
+        if (storeId.equals("d27d81b9-52e9-4508-8f4c-afffa2458488")) {
+            content += "Hej "+user.fullName;
+            content += "<br/>";
+            content += "<br/>Tack för att du skapat ett konto hos ProMeister Academy. Med inloggningen har du möjlighet att enkelt anmäla dig till kurser. Använd nedanstående uppgifter för att logga in.";
+            content += "<br/>";
+            content += "<br/>Användarnamn: "+user.emailAddress;
+            content += "<br/>Lösenord: " + passwordPlainText;
+            content += "<br/>";
+            content += "<br/>Inloggningsuppgifterna fungerar både på websidan och i mobilappen.";
+            content += "<br/>";
+            content += "<br/>Med vänlig hälsning";
+            content += "<br/>ProMeister Academy";
+            
+            subject = "Inloggningsuppgifter ProMeisterAcademy";
+        }
+        
+        
+        String fromAddress = getFromAddress();
+        
+        if (!content.isEmpty() && !subject.isEmpty()) {
+            mailfactory.send(fromAddress, user.emailAddress, subject, content);
+        }
+    }
+
+    private void printUsersWithoutRefernece() throws ErrorException {
+        int count = 0;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2015);
+        cal.set(Calendar.MONTH, 3);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        
+        for (User user : getAllUsers()) {
+            if (user.groups == null || user.groups.size() == 0 && user.rowCreatedDate.after(cal.getTime())) {
+                count++;
+                System.out.println(user.fullName + ", " + user.emailAddress + ", " + user.emailAddressToInvoice + ", " + user.cellPhone);
+            }
+        }
+        
+        System.out.println("Users: " + count);
+    }
+
+    @Override
+    public void mergeUsers(String userId, List<String> userIds) throws ErrorException {
+        User masterUser = getUserById(userId);
+        CalendarManager calendarManager = getManager(CalendarManager.class);
+        if (masterUser != null) {
+            for (String slaveUserId : userIds) {
+                User slaveUser = getUserById(slaveUserId);
+                if (slaveUser != null) {
+                    for (String key : slaveUser.comments.keySet()) {
+                        masterUser.comments.put(key, slaveUser.comments.get(key));
+                    }
+
+                    calendarManager.replaceUserId(slaveUserId, masterUser.id);
+                    deleteUser(slaveUserId);
+                }
+            }
+        }
+    }
 }

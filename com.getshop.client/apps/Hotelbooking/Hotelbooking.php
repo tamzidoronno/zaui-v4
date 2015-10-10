@@ -469,9 +469,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             if(isset($_POST['data']['heardaboutus'])) {
                 $reservation->heardAboutUs = $_POST['data']['heardaboutus'];
             }
-//            $this->startAdminImpersonation("HotelBookingManager", "updateReservation");
+            $this->startAdminImpersonation("HotelBookingManager", "updateReservation");
             $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
-//            $this->stopImpersionation();
+            $this->stopImpersionation();
             
             $_GET['orderProcessed'] = true;
         } else {

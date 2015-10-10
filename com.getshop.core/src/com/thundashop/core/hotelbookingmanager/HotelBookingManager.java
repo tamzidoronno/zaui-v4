@@ -417,11 +417,20 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Room existingRoom = getRoom(oldRoom);
         Room newRoom = getRoom(newRoomId);
 
+        
+        if(!oldRoom.equals(newRoomId)) {
+            if(!isAvilable(newRoomId, bookingreference.startDate.getTime(), bookingreference.endDate.getTime())) {
+                System.out.println("This room is taken");
+                throw new ErrorException(1034);
+            }
+        }
+        
         if (!existingRoom.isActive) {
             existingRoom.isActive = true;
             newRoom.isActive = false;
         }
         existingRoom.lastReservation = null;
+        
 
         List<BookedDate> existingBookingDates = existingRoom.getBookedDatesByReference(reference);
         newRoom.bookedDates.addAll(existingBookingDates);

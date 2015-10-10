@@ -242,7 +242,25 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
                         ?>
                         <input style='width: 20px;' type='checkbox' <? echo $checked ?> id='isMaster'/>
 
-                        <?php echo $this->__f("Is this a garage leader?"); ?>
+                        <?php echo $this->__f("Is this a garage leader?"); 
+                        
+                        $subUsers = $this->getApi()->getUserManager()->getSubUsers($user->id);
+                        if ($subUsers) {
+                        ?>
+                    
+                            <div style='margin-top: 20px;'>
+                                <b><? echo $this->__f("Sub accounts"); echo '</b>';
+                                foreach ($subUsers as $subUser) {
+                                    $fullName = $subUser->fullName;
+                                    $subAccountId = $subUser->id;
+                                    echo "<a href='/index.php?page=users_all_users&userid=$subAccountId'><div style='padding-left: 20px; padding-top: 5px; padding-bottom: 5px;'>$fullName</div></a>";
+                                }
+                                ?>
+                                
+                            </div>
+                        <?
+                        }
+                        ?>
                     </div>
                 </td>
             </tr>

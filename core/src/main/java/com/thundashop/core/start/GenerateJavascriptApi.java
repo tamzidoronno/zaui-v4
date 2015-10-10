@@ -23,18 +23,21 @@ import java.util.Map;
  * @author ktonder
  */
 public class GenerateJavascriptApi {
-
+    public static String pathToBuildClasses = "build/classes/main/";
+    public static String pathToJavaSource = "src/main/java/";
+    public static String storeFileIn = "build/getshopapi.js";
     private List<Class> interfaces = new ArrayList();
 
-    public void start(String fileName) throws ClassNotFoundException, IOException, URISyntaxException {
+    public void start() throws ClassNotFoundException, IOException, URISyntaxException {
         loadInterfaces();
-        generateJavascript(fileName);
+        generateJavascript();
     }
 
     private void loadInterfaces() throws ClassNotFoundException {
-        File file = new File("../com.getshop.core/build/classes/");
+        File file = new File(pathToBuildClasses);
         List<Class> classes = GeneratePhpApi.findClasses(file, "");
         classes = GeneratePhpApiNew.sortClasses(classes);
+  
         for (Class clazz : classes) {
             GetShopApi annotation = (GetShopApi) clazz.getAnnotation(GetShopApi.class);
             if (annotation != null) {
@@ -48,28 +51,19 @@ public class GenerateJavascriptApi {
         return encoding.decode(ByteBuffer.wrap(encoded)).toString();
     }
 
-    private String getHeader() throws URISyntaxException {
+    private String getHeader() throws URISyntaxException, IOException {
         String total = "";
         
-        try (InputStream fis = this.getClass().getResourceAsStream("GetShopJavascriptApiHeader")) {
-            if (fis == null) {
-                System.out.println("Was not able to find header file, is the package not compile? please clean/build and try again");
-                System.exit(-1);
-            }
-            int content;
-            while ((content = fis.read()) != -1) {
-                // convert to char and display it
-                total += (char) content;
-                
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        List<String> lines = Files.readAllLines(Paths.get(GenerateJavascriptApi.pathToJavaSource+"com/thundashop/core/start/GetShopJavascriptApiHeader"));
+
+        for (String line : lines) {
+            total += line;
         }
-        
+
         return total;
     }
 
-    private void generateJavascript(String saveToFile) throws IOException, URISyntaxException {
+    private void generateJavascript() throws IOException, URISyntaxException {
         String javascriptFile = "";
         javascriptFile += getHeader() + "\n\n";
         
@@ -91,8 +85,9 @@ public class GenerateJavascriptApi {
             for (Method method : methods) {
 
                 String path = clazz.getCanonicalName();
-                path = path.replace(".", "/") + ".java";
-                Map<String, Object> parsed = GeneratePhpApiNew.parseMethod(path, method, "JAVA");
+                path =  pathToJavaSource+path.replace(".", "/") + ".java";
+
+                Map<String, Object> parsed = GeneratePhpApiNew.parseMethod(path, method, "JAVA", false);
                 Object args = parsed.get("splittedArgs");
                 ArrayList<String> arguments = (ArrayList) args;
                 String argstring = "";
@@ -127,17 +122,12 @@ public class GenerateJavascriptApi {
         javascriptFile += createManagers;
 
         
-        Files.write(Paths.get(saveToFile), javascriptFile.getBytes());
-        System.out.println("file stored in : " +saveToFile );
+        Files.write(Paths.get(storeFileIn), javascriptFile.getBytes());
+        System.out.println("file stored in : " + storeFileIn );
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, URISyntaxException {
-        String fileName = "/tmp/getshopapi.js";
-        if (args.length > 0) {
-            fileName = args[0];
-        }
-        
         GenerateJavascriptApi generate = new GenerateJavascriptApi();
-        generate.start(fileName);
+        generate.start();
     }
 }

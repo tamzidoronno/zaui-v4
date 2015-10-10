@@ -21,6 +21,15 @@ if(in_array($_POST['data']['userId'], $entryobject->dropDiploma)) {
     </div>
 </div>
 
+<div class="dropdown setting" id="participated">
+    <div class="text inline"><?php echo $this->__f("Participated"); ?></div>
+    <select class="config">
+        <option value="participated" <? echo $entryobject->participateData->{$_POST['data']['userId']} == "participated" ? 'selected="true"' : ''; ?>>Deltog</option>
+        <option value="notvalid_cancel" <? echo $entryobject->participateData->{$_POST['data']['userId']} == "notvalid_cancel" ? 'selected="true"' : ''; ?>>Deltog ej, ogiltig frånvaro</option>
+        <option value="valid_cancel" <? echo $entryobject->participateData->{$_POST['data']['userId']} == "valid_cancel" ? 'selected="true"' : ''; ?>> Deltog ej, giltig frånvaro.</option>
+    </select>
+</div>
+
 <div class="bottom_menu_settings">
     <div class="gs_button save_candidate_setting"><?php echo $this->__("Save settings"); ?></div>
 </div>

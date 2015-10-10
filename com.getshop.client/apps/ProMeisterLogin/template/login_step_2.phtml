@@ -8,7 +8,17 @@
             <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="invoiceemail" type='textfield'/></td></tr>
             <tr><td class="col1"><?php echo $this->__w("Your phonenumber"); ?></td><td><input id="cellphone" type='textfield'/></td></tr>
             <tr style='display: none;' class="extradep"><td class="col1"><span></span></td><td><input id="reference_meca" type='textfield'/></td></tr>
-            
+            <tr><td class="col1" colspan="2">
+                    <br/>
+                    
+                    <input id="garageleader" type='checkbox'/> <?php echo $this->__w("Garage leader?"); ?>
+                    <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?
+                    echo $this->__f("Check the box above if you have mechanics you manage.");
+                    ?>
+                    <br/>
+                </td>
+            </tr>
         </table>
         
         <div class="button showstep3">

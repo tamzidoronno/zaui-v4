@@ -75,6 +75,15 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	/** @var String */
 	public $mvaRegistered;
 
+	/** @var String */
+	public $parents;
+
+	/** @var core_usermanager_data_ProMeisterScoreSettings */
+	public $proMeisterScoreSettings;
+
+	/** @var String */
+	public $isMaster;
+
 	/** @var core_usermanager_data_Company */
 	public $company;
 

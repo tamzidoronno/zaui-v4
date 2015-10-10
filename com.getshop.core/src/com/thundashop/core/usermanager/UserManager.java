@@ -12,6 +12,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
+import com.thundashop.core.usermanager.data.ProMeisterScoreType;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
@@ -45,6 +46,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     private UserCounter counter = new UserCounter();
     private SecureRandom random = new SecureRandom();
+    private ProMeisterScoreType proMeisterScoreType = new ProMeisterScoreType();
     
     @Autowired
     public UserManager(Logger log, DatabaseSaver databaseSaver) {
@@ -52,7 +54,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
     
     @Autowired
-	private CompanySearchEngineHolder searchEngineHolder;
+    private CompanySearchEngineHolder searchEngineHolder;
 	
     @Autowired
     public MailFactory mailfactory;
@@ -166,6 +168,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.type = User.Type.ADMINISTRATOR;
         }
         users.addUser(user);
+        
+        if (user.password == null || user.password.isEmpty()) {
+            Random r = new Random();
+            int Low = 145111;
+            int High = 989227;
+            int R = r.nextInt(High-Low) + Low;
+            user.password = ""+R;
+        }
         
         String passwordPlainText = user.password;
         user.password = encryptPassword(user.password);
@@ -289,7 +299,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 if (getSession().currentUser.groups != null 
                         && getSession().currentUser.groups.size() > 0 
                         && !getSession().currentUser.groups.contains(group)) {
-                    throw new ErrorException(97);
+//                    throw new ErrorException(97);
                 }
             }
         }
@@ -364,6 +374,18 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             databaseSaver.saveObject(toReset, credentials);
         }
     }
+    
+    private List<User> getChildren(User master) throws ErrorException {
+        List<User> children = new ArrayList();
+        
+        for (User user : getAllUsers()) {
+            if (user.parents != null && user.parents.contains(master.id)) {
+                children.add(user);
+            }
+        }
+        
+        return children;
+    }
 
     @Override
     public void deleteUser(String userId) throws ErrorException {
@@ -376,6 +398,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
 
+        if (user.isMaster && getChildren(user).size() > 0) {
+            throw new ErrorException(103);
+        }
+        
         UserStoreCollection users = getUserStoreCollection(storeId);
         user = users.deleteUser(userId);
         if (user != null) {
@@ -705,10 +731,22 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public User getUserByEmail(String emailAddress) throws ErrorException {
+        if (emailAddress != null) {
+            emailAddress = emailAddress.trim();
+        }
+        User loggedInUser = getSession().currentUser;
+        boolean needCheck = loggedInUser != null && loggedInUser.type == User.Type.CUSTOMER;
+        
         List<User> users = getUserStoreCollection(getStore().id).getAllUsers();
         for (User user : users) {
             if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(emailAddress)) {
-                return user;
+                if (needCheck) {
+                    if (user.parents != null || user.parents.contains(loggedInUser.id)) {
+                        return user;
+                    }
+                } else {
+                    return user;
+                }
             }
         }
         
@@ -744,6 +782,32 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(user);
         }
         
+        user.cleanWhiteSpaces();
+        
+        detachedParentIfMasterDeleted(user);
+        
+        if (user.parents != null && user.parents.size() > 0) {
+            String parentId = user.parents.get(0);
+            User userParent = getUserById(parentId);
+            
+            if (!userParent.isMaster && userParent.type < User.Type.EDITOR) {
+                userParent.isMaster = true;
+                saveObject(userParent);
+            }
+            
+            user.address = userParent.address;
+            user.company = userParent.company;
+            user.referenceKey = userParent.referenceKey;
+            user.groups = userParent.groups;
+            user.emailAddressToInvoice = userParent.emailAddressToInvoice;
+            user.birthDay = userParent.birthDay;
+        }
+        
+        if (user.proMeisterScoreSettings != null) {
+            user.proMeisterScoreSettings.type = proMeisterScoreType;
+            saveObject(user);
+        }
+
         if (storeId != null && (storeId.equals("d27d81b9-52e9-4508-8f4c-afffa2458488") || storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445"))) {
             if ((user.birthDay == null || user.birthDay.isEmpty()) && user.company != null) {
                 user.birthDay = user.company.vatNumber;
@@ -755,6 +819,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 user.triedToFetch = true;
                 saveObject(user);
             }
+        }
+        
+        if (user.type > User.Type.CUSTOMER) {
+            user.isMaster = false;
         }
     }
 
@@ -842,6 +910,54 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
 
+    @Override
+    public List<User> getSubUsers(String userId) throws ErrorException {
+        ArrayList<User> retUsers = new ArrayList();
+        
+        for (User user : getAllUsers()) {
+            if (user.parents.contains(userId)) {
+                retUsers.add(user);
+            }
+        }
+        
+        return retUsers;
+    }
+
+    @Override
+    public void addSubUser(String parent, String subUser) throws ErrorException {
+        User user = getUserById(subUser);
+        
+        if (user != null) {
+            user.parents.add(parent);
+            saveUser(user);
+        }       
+    }
+
+    @Override
+    public ProMeisterScoreType getProMeisterScoreType() throws ErrorException {
+        return proMeisterScoreType;
+    }
+
+    @Override
+    public List<User> getUsersWithinTheSameCompany() throws ErrorException {
+        List<User> ret = new ArrayList();
+        
+        User currentUesr = getSession().currentUser;
+        if (currentUesr != null && currentUesr.isMaster) {
+            for (User user : getAllUsers()) {
+                if (user.birthDay != null && user.birthDay.equals(currentUesr.birthDay)) {
+                    ret.add(user);
+                }
+            }
+        }
+        
+        if (ret.isEmpty()) {
+            ret.add(currentUesr);
+        }
+        
+        return ret;
+    }
+    
     private String getFromAddress() throws ErrorException {
         String storeEmailAddress = getStore().configuration.emailAdress;
         if (storeEmailAddress != null) {
@@ -852,12 +968,20 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
     
     private void sendWelcomeEmail(User user, String passwordPlainText) throws ErrorException {
-        if (user.emailAddress == null || !user.emailAddress.contains("@")) {
+        if ((user.emailAddress == null || !user.emailAddress.contains("@")) && (user.parents == null || user.parents.size() == 0)) {
             return;
         }
         
         String content = "";
         String subject = "";
+        
+        String userNameOrEmail = "";
+        
+        if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
+            userNameOrEmail = user.emailAddress;
+        } else {
+            userNameOrEmail = user.username;
+        }
         
         // Norway ( ProMeister Academy )
         if (storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
@@ -865,7 +989,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             content += "<br/>";
             content += "<br/>Takk for at du har laget en konto hos ProMeister Academy. Fra din konto kan du raskt melde deg på kurs hos oss, og samtidig ha kontroll over kursene du har deltatt på. Du benytter følgende opplysninger for å logge deg på.";
             content += "<br/>";
-            content += "<br/>Brukernavn: "+user.emailAddress;
+            content += "<br/>Brukernavn: " + userNameOrEmail;
             content += "<br/>Passord: " + passwordPlainText;
             content += "<br/>";
             content += "<br/>Brukernavn og passordet gjelder både på nettsiden og mobilappen.";
@@ -882,7 +1006,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             content += "<br/>";
             content += "<br/>Tack för att du skapat ett konto hos ProMeister Academy. Med inloggningen har du möjlighet att enkelt anmäla dig till kurser. Använd nedanstående uppgifter för att logga in.";
             content += "<br/>";
-            content += "<br/>Användarnamn: "+user.emailAddress;
+            content += "<br/>Användarnamn: " + userNameOrEmail;
             content += "<br/>Lösenord: " + passwordPlainText;
             content += "<br/>";
             content += "<br/>Inloggningsuppgifterna fungerar både på websidan och i mobilappen.";
@@ -896,11 +1020,33 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         String fromAddress = getFromAddress();
         
+        User masterUser = getMasterUser(user.id);
         if (!content.isEmpty() && !subject.isEmpty()) {
-            mailfactory.send(fromAddress, user.emailAddress, subject, content);
+            if (masterUser != null) {
+                mailfactory.send(fromAddress, masterUser.emailAddress, subject, content);
+            } else {
+                mailfactory.send(fromAddress, user.emailAddress, subject, content);
+            }
         }
     }
 
+
+    @Override
+    public void createSubAccount(String fullName, String phoneNumber) throws ErrorException {
+        if (getSession() == null || getSession().currentUser == null) {
+            throw new ErrorException(26);
+        }
+        
+        User user = new User();
+        user.fullName = fullName;
+        user.cellPhone = phoneNumber;
+        user.parents = new ArrayList();
+        user.parents.add(getSession().currentUser.id);
+        
+        User createUser = createUser(user);
+        System.out.println(createUser.id + " " + createUser.parents.size());
+    }
+    
     private void printUsersWithoutRefernece() throws ErrorException {
         int count = 0;
         
@@ -934,6 +1080,32 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                     calendarManager.replaceUserId(slaveUserId, masterUser.id);
                     deleteUser(slaveUserId);
                 }
+            }
+        }
+    }
+    
+    private User getMasterUser(String id) throws ErrorException {
+        User user = getUserById(id);
+        if (user != null && user.parents != null && user.parents.size() > 0) {
+            return getUserById(user.parents.get(0));
+        }
+        
+        return null;
+    }
+
+    private void detachedParentIfMasterDeleted(User user) throws ErrorException {
+        List<String> removeList = new ArrayList();
+        
+        if (user.parents != null ) {
+            for (String parentId : user.parents) {
+                User parent = getUserById(parentId);
+                if (parent == null) {
+                    removeList.add(parentId);
+                }
+            }
+            
+            for (String toRemove : removeList) {
+                user.parents.remove(toRemove);
             }
         }
     }

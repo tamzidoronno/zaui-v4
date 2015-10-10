@@ -11,6 +11,7 @@ $companyName = "";
 
 $user = $this->getUserData();
 $hidden = "";
+$username = "";
 $exists = false;
 $userId = "";
 $cellphone = "";
@@ -21,6 +22,7 @@ if ($user) {
     /* @var $user core_usermanager_data_User */
     $fullName = $user->fullName;
     $email = $user->emailAddress;
+    $username = $user->username;
     $password = $user->password;
     if ($user->address) {
         $street = $user->address->address;
@@ -55,6 +57,14 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
         </td>
         <td>
             <input type="txt" id="full_name" value="<?php echo $fullName; ?>"></input>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Username"); ?>
+        </td>
+        <td>
+            <?php echo $username; ?>
         </td>
     </tr>
     <tr>
@@ -123,7 +133,7 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
             <input type="txt" id="cellPhone" value="<?php echo $cellphone; ?>"></input>
         </td>
     </tr>
-    <tr>
+    <tr class='is_private_person_registerform'>
         <td class="col1">
             <?php echo $this->__w("Is private person"); ?>
         </td>
@@ -134,7 +144,7 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
             </select>
         </td>
     </tr>
-    <tr>
+    <tr class='is_registered_tax_registerform'>
         <td class="col1">
             <?php echo $this->__w("Mva registered"); ?>
         </td>
@@ -219,9 +229,47 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
                 </div>
             </td>
         </tr>
+        <?
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->type > 10) {
+        ?>
+            <tr>
+                
+                
+                <td colspan='2'>
+                    <div style='padding: 20px; border: solid 1px #DDD; margin-right: 180px;'>
+                        <?
+                        $checked = $user->isMaster ? "checked='checked'" : "";
+                        ?>
+                        <input style='width: 20px;' type='checkbox' <? echo $checked ?> id='isMaster'/>
+
+                        <?php echo $this->__f("Is this a garage leader?"); 
+                        
+                        $subUsers = $this->getApi()->getUserManager()->getSubUsers($user->id);
+                        if ($subUsers) {
+                        ?>
+                    
+                            <div style='margin-top: 20px;'>
+                                <b><? echo $this->__f("Sub accounts"); echo '</b>';
+                                foreach ($subUsers as $subUser) {
+                                    $fullName = $subUser->fullName;
+                                    $subAccountId = $subUser->id;
+                                    echo "<a href='/index.php?page=users_all_users&userid=$subAccountId'><div style='padding-left: 20px; padding-top: 5px; padding-bottom: 5px;'>$fullName</div></a>";
+                                }
+                                ?>
+                                
+                            </div>
+                        <?
+                        }
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <?
+        }
+        ?>
     <? } ?>
 </table>
-<hr>
+<br/>
 <table>
     <?php
     if ($this->isEditorMode()) {

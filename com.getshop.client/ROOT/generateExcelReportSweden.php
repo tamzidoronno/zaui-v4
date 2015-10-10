@@ -75,9 +75,6 @@ class GenerateReport {
         
         $rows = $this->convertToExcelCharSet($rows);
         
-//        echo "<pre>";
-//        print_r($rows);
-//        echo "</pre>";
         $this->printExcelHeader($entry->title." ".$entry->year."-".sprintf("%02d", $entry->month)."-".sprintf("%02d", $entry->day).".xls");
         $export_file = "xlsfile://tmp/example.xls";
         $fp = fopen($export_file, "wb");
@@ -149,6 +146,7 @@ class GenerateReport {
             $line[] = "";
         }
         
+        $line[] = $this->getParticipateData($entry->participateData->{$user->id});
         
         if ($all) {
             $line[] = @$stackedGroups[@$user->groups[0]]->groupName;
@@ -193,6 +191,19 @@ class GenerateReport {
 
     public function getUserHeading() {
         return ["Group reference id", "Address", "Name", "Event name", "Ort", "Email", "Comments:"];
+    }
+
+    public function getParticipateData($data) {
+        if ($data == "participated") 
+            return "Deltog";
+        
+        if ($data == "notvalid_cancel") 
+            return "Faktureras 50%";
+        
+        if ($data == "valid_cancel") 
+            return "Ej faktureras";
+        
+        return $data;
     }
 
 }

@@ -187,12 +187,31 @@ if (count($day->entries) == 0) {
                 $transfer = $this->hasWriteAccess() ? "<td width='22'><i class='transferUser fa fa-sign-in' userId='$userid' entryId='$entryid' title='".$this->__("Transfer")."'></i></td>" : "";
                 $source = $this->getSource($user, $entry);
                 $remove = $this->hasWriteAccess() ? "<i userid='$userid' entryid='$entryid' class='remove fa fa-trash-o'></i>" : "";
+                $status = $this->hasReadAccess() ? true : "";
+                if ($status) {
+                    $color = "green";
+                    $title = "Deltog";
+                    
+                    if ($entry->participateData->{$user->id} == "valid_cancel") {
+                        $color = "#d7c529";
+                        $title = "Deltog ej, giltig frånvaro.";
+                    }
+                    
+                    if ($entry->participateData->{$user->id} == "notvalid_cancel") {
+                        $color = "red";
+                        $title = "Deltog ej, ogiltig frånvaro";
+                    }
+                    
+                    $entry->participateData->{$user->id} == "valid_cancel" ? "yellow" : $color;
+                    $color = $entry->participateData->{$user->id} == "" ? "red" : $color;
+                    $status = "<i userid='$userid' style='color: $color' entryid='$entryid' class='fa fa-graduation-cap' title='$title'></i>";
+                }
                 $activeComment = $this->isActiveComment($user, $entryid) ? "activeComment" : "";
                 $comment = $this->hasWriteAccess() ? "<i userid='$userid' entryid='$entryid' class='addcomment $activeComment fa fa-comments' title='".$this->__f("Comments"). "'></i>" : "";
                 $companyName = $this->hasReadAccess() && $user->company ? $user->company->name : "";
                 $link = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() ? "?page=users_all_users&userid=$userid" : "#";
                 $settings = $this->hasWriteAccess() ? "<div class='candidate_setting fa fa-cogs' userid='$userid' entryid='$entryid' title='".$this->__f("User settings"). "'></div>" : "";
-                echo "<tr class='dayrow'><td width='22' >$remove</td><td><div class='attendee'><a href='$link'> $i. ".$user->fullName.$group."<br/> $companyName</a></div></td><td width='50'>$transfer</td><td width='22'>$comment</td><td>$dropdiploma</td><td width='22'>$settings</td><td width='22'>$source</td></tr>";
+                echo "<tr class='dayrow'><td width='25' >$remove</td><td><div class='attendee'><a href='$link'>$i. ".$user->fullName.$group."<br/> $companyName</a></div></td><td width='50'>$transfer</td><td width='22'>$comment</td><td>$dropdiploma</td><td width='22'>$settings</td><td width='45'><span style='display: inline-block;'>$source</span><span style='display: inline-block; padding-left: 5px;'>$status</span></td></tr>";
                 echo "<tr class='dayrow'><td colspan='8'><div style='border-top: solid 1px #DDD;'/></td></tr>";
             } 
 

@@ -1,0 +1,220 @@
+<?
+/* @var $this \ns_18013065_9122_4181_8ba7_8be3e0b5b445\ProMeisterUserOverview */
+
+$userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+
+if (isset($_SESSION['ProMeisterUserOverview_show_user'])) {
+    $userId = $_SESSION['ProMeisterUserOverview_show_user'];
+}
+
+$loggedInUser = $this->getApi()->getUserManager()->getUserById(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);
+
+
+$user = $this->getApi()->getUserManager()->getUserById($userId);
+$allUsers = $this->getApi()->getUserManager()->getUsersWithinTheSameCompany();
+
+?>
+
+<link href='https://fonts.googleapis.com/css?family=Just+Another+Hand' rel='stylesheet' type='text/css'>
+
+<br/>
+<br/>
+<br/>
+
+
+<div class="inner" style='position: relative;'>
+    
+    <div class='createSubUser'>
+        <center>
+            <?
+                echo $this->__f("You got other persons that needs our courses? create an account and sign them you yourself.");
+            ?>
+            <br/>
+            <br/>
+            <table>
+                <tr><td><? echo $this->__f("Candidate name"); ?></td><td><input type='textfield' id='new_subuser_name'/></td></tr>
+                <tr><td><? echo $this->__f("Cellphone"); ?></td><td><input type='textfield' id='new_subuser_cellphone'/></td></tr>
+                <tr><td colspan='2' align='right' ><div class='gs_button createButton_subuser'><? echo $this->__("Create user"); ?></div></td></tr>
+            </table>
+        </center>
+    </div>
+    
+<? foreach ($allUsers as $user) { 
+    $events = $this->getApi()->getCalendarManager()->getEntriesByUserId($user->id);
+    $upComingEvents = [];
+    $pastEvents = [];
+    if ($events) {
+        foreach ($events as $event) {
+            if ($event->isInPast) {
+                $pastEvents[] = $event;
+            } else {
+                $upComingEvents[] = $event;
+            }
+        }
+    }
+    
+    
+    ?>
+    <div class="user_data_conatiner">
+        <?
+        $dataProvider = false;
+        if ($user->proMeisterScoreSettings && $user->proMeisterScoreSettings->scores && count($user->proMeisterScoreSettings->scores)) {
+
+            $i = 0;
+
+            $dataProvider = "";
+
+            foreach ($user->proMeisterScoreSettings->type->categories as $cat) {
+                $i++;
+                $behov = $user->proMeisterScoreSettings->type->behov->{$cat};
+                $krav = $user->proMeisterScoreSettings->type->requirements->{$cat};
+                $score = $user->proMeisterScoreSettings->scores->{$cat};
+
+
+                $dataProvider .= "{";
+                    $dataProvider .= "\"country\": \"$cat\",";
+                    $dataProvider .= "\"nuläge\": \"$score\",";
+                    $dataProvider .= "\"krav\": \"$krav\",";
+                    $dataProvider .= "\"behov\": \"$behov\"";
+                $dataProvider .= "}";
+                if (count($user->proMeisterScoreSettings->type->categories) != $i) {
+                    $dataProvider .= ",";
+                }
+
+            }
+        }
+        ?>
+        <div class="headline"><? echo $this->__w("Kompetanseoversikt"); ?> - <? echo $user->fullName; ?></div>
+
+
+        <div id="eventsoverview_outer">
+            <div id="leftside" style="display: inline-block; vertical-align: top; ">
+                <div style='padding-top: 20px; text-align: center; padding-bottom: 20px;'>
+                    <i class='fa fa-bullseye' style='color: #001cac'></i> Nuläge &nbsp;&nbsp;&nbsp;
+                    <i class='fa fa-bullseye' style='color: #b00019'></i> Krav &nbsp;&nbsp;&nbsp;
+                    <i class='fa fa-bullseye' style='color: #26af53'></i> Behov
+                </div>
+                <div id="chartdiv_<? echo $user->id; ?>" style="width: 500px; height: 400px; ">
+                    <br/><br/>
+                    <center>
+                        <?
+                        if ($dataProvider) {
+                        ?>
+                            <i class='fa fa-spinner fa-star fa-spin'></i>Laster data
+                        <? } else { ?>
+                            <? echo $this->__w("No data available yet."); ?>
+                        <? } ?>
+                    </center>
+                </div>
+
+            </div>
+
+            <div id="eventsoverview" style="width: 460px; display: inline-block; vertical-align: top; ">
+                <div class="sub_headline" ><? echo $this->__w("Du skal delta på"); ?>:</div>
+                <div>
+                    <?
+                        if (!count($upComingEvents)) {
+                            echo $this->__w("You have not signed up for any events yet.");
+                        } else {
+                            foreach ($upComingEvents as $event) {
+                                echo "<i class='fa fa-star'></i> $event->title";
+                                echo "<div class='date_view'> Dato: ".$event->day."/".$event->month." - ".$event->year."</div>";
+                            }
+                        }
+                    ?>
+                </div>
+
+                <div class="sub_headline"><? echo $this->__w("Du har deltatt på følgende kurs");?>:</div>
+                <div>
+                    <?
+                    if (!count($pastEvents)) {
+                        echo $this->__w("You have not participated in any events yet.");
+                    } else {
+                        foreach ($pastEvents as $event) {
+                            echo "<i class='fa fa-star'></i> $event->title<br/>";
+                            echo "<div class='date_view'>".$event->day."/".$event->month." - ".$event->year."</div>";
+                        }
+                    }    
+                    ?>
+                </div>
+            </div>
+            
+            <? 
+            if ($loggedInUser->isMaster) {
+            ?>
+                <div style='position: absolute; right: 10px; bottom: 10px;'>
+                    <a href='/index.php?page=ac52f14b-78df-4eba-92c9-bf635ebb5b6e&userId=<? echo $user->id; ?>'><div class='gs_button' style='font-size: 36px;'><? echo  $this->__w("Sign up")." ".$user->fullName ; ?></div></a>
+                </div>
+            <?
+            }
+            ?>
+        </div>
+        <?
+        if ($dataProvider) {
+        ?>
+        <script>
+
+
+        chart = AmCharts.makeChart( "chartdiv_<? echo $user->id; ?>", {
+             "type": "radar",
+             "theme": "light",
+             "startEffect" : "elastic",
+             "startDuration" : 0,
+             "color" : "#FFFFFF",
+             "dataProvider": [ <? echo $dataProvider; ?> ],
+             "valueAxes": [ {
+               "axisTitleOffset": 20,
+               "minimum": 0,
+               "axisAlpha": 0.15
+             } ],
+             "graphs": [ {
+               "balloonText": "Nuläge",
+               "bullet": "round",
+               "fillAlphas": 0.5,
+               "lineColor" : "#001cac",
+               "valueField": "nuläge"
+             }, {
+               "balloonText": "Krav",
+               "bullet": "round",
+               "fillAlphas": 0,
+               "lineColor" : "#b00019",
+               "valueField": "krav"
+             }, {
+               "balloonText": "Behov",
+               "bullet": "round",
+               "fillAlphas": 0,
+               "lineColor" : "#26af53",
+               "valueField": "behov"
+             }],
+             "categoryField": "country",
+             "export": {
+               "enabled": true
+             }
+        });    
+
+        </script>
+
+        <?
+        }
+        ?>
+        </div>
+        <?
+}
+?>
+ 
+<?
+    if ($loggedInUser->isMaster) {
+    ?>
+        <div class="showUser" style=" cursor: pointer; position: absolute; right: 0px; top: 0px; padding: 16px; text-align: center; padding-left: 17px; padding-top: 10px; background-color: #004f48">
+            <i class="fa fa-user"></i>
+            <br/><? echo $this->__w("New user"); ?>
+        </div>
+    <?
+    }
+?>   
+
+        </div>
+<br/>
+<br/>
+<br/>
+

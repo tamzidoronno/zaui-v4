@@ -24,6 +24,18 @@ public class User extends DataCommon implements Comparable<User> {
     public String lastRegisteredToken;
     public boolean triedToFetch = false;
 
+    public void cleanWhiteSpaces() {
+        cleanWhiteSpace(cellPhone);
+        cleanWhiteSpace(emailAddressToInvoice);
+        cleanWhiteSpace(emailAddress);
+    }
+    
+    private void cleanWhiteSpace(String toClean) {
+        if (toClean != null) 
+            toClean = toClean.trim();
+        
+    }
+
  
     public static class Type {
         public static int ADMINISTRATOR = 100;
@@ -67,6 +79,12 @@ public class User extends DataCommon implements Comparable<User> {
     
     public boolean isPrivatePerson = true;
     public boolean mvaRegistered = false;
+    
+    public List<String> parents = new ArrayList();
+    
+    public ProMeisterScoreSettings proMeisterScoreSettings;
+    
+    public boolean isMaster = false;
     
     public Company company = null;
     

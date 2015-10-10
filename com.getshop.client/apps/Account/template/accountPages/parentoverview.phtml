@@ -1,0 +1,15 @@
+<?
+/* @var $this \ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f\Users */
+$user = $this->getUserData();
+
+if (count($user->parents)) {
+    echo "<div style='border: solid 1px #DDD; margin-top: 50px; margin-bottom: 10px; padding: 10px;'>";
+        echo "<h1 style='text-align: center;'> Parents </h1>";
+        foreach ($user->parents as $parentId) {
+            $parent = $this->getApi()->getUserManager()->getUserById($parentId);
+            echo "<a href='/index.php?page=users_all_users&userid=$parentId'> $parent->fullName </a>";
+        }
+    echo "</div>";
+}
+
+?>

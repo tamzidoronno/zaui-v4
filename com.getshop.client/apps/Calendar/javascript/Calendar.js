@@ -463,8 +463,8 @@ $('.Calendar .save_candidate_setting').live('click', function() {
     var data = {
         receiveDiploma : $('#receiveDiploma_inner').hasClass('on'),
         userId : $('#configuserid').val(),
-        configentryId : $('#configentryId').val()
-        
+        configentryId : $('#configentryId').val(),
+        participated : $('#participated select').val()
     };
     var event = thundashop.Ajax.createEvent('','updateUserSettings',$(this), data);
     thundashop.Ajax.postWithCallBack(event, function() {
@@ -489,8 +489,11 @@ $('.Calendar .candidate_setting').live('click', function() {
 $('.Calendar .deleteentry').live('click', function() {
     var data = {};
     data.entryId = $(this).attr('entryid');
-    var event = thundashop.Ajax.createEvent('Calendar', 'deleteEntry', $(this), data);
-    thundashop.Ajax.post(event);
+    var confirmed = confirm("Are you sure you want to delete this event?");
+    if (confirmed) {
+        var event = thundashop.Ajax.createEvent('Calendar', 'deleteEntry', $(this), data);
+        thundashop.Ajax.post(event);
+    }
 });
 
 $('.Calendar .editentry').live('click', function() {
@@ -701,7 +704,8 @@ $('.Calendar .filters .filter').live('click', function() {
     var isSelected = $(this).hasClass('selected');
     var event = null;
     var data = {
-        filter: $(this).text()
+        filter: $(this).text(),
+        userId: $(this).closest('.filters').attr('userId')
     };
 
     if (!isSelected) {

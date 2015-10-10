@@ -1028,6 +1028,13 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             entry.location = entry.locationObject.location;
             entry.locationExtended = entry.locationObject.locationExtra;
         }
+        
+        for (String userId : entry.attendees) {
+            if (entry.participateData.get(userId) == null) {
+                entry.participateData.put(userId, "participated");
+            }
+        }
+        
         entry.isInPast = entry.isInPast();
     }
 
@@ -1100,6 +1107,14 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     @Override
     public List<Entry> getEntriesByUserId(String userId) throws ErrorException {
+        if (getSession() == null) {
+            return new ArrayList();
+        }
+        
+        if (getSession().currentUser.type < 50) {
+            hasAccessToUserId(userId);
+        }
+        
         List<Entry> entries = new ArrayList();
         for (Month month : months.values()) {
             for (Day day : month.days.values()) {
@@ -1606,4 +1621,19 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         return i;
     }
 
+    private void hasAccessToUserId(String userId) throws ErrorException {
+        UserManager userManager = getManager(UserManager.class);
+        List<User> users = userManager.getUsersWithinTheSameCompany();
+        for (User iuser : users) {
+            if (iuser.id.equals(userId)) {
+                return;
+            }
+        }
+        
+        if (getSession() != null && getSession().currentUser != null) {
+            System.out.println(getSession().currentUser.fullName + " dont have access to user: " + userManager.getUserById(userId).fullName);
+        }
+        
+        throw new ErrorException(26);
+    }
 }

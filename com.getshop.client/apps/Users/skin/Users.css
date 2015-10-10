@@ -199,3 +199,11 @@
 .Users .save_user_button { float:right; }
 .Users .pm_rights { cursor:pointer; }
 .Users .sepbox img {  max-width: 200px; max-height:100px; }
+
+.Users #result .user .fa-star {
+    position: absolute;
+    right: 10px; 
+    top: 30px;
+    font-size: 40px;
+    color: green;
+}

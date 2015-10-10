@@ -1,6 +1,7 @@
 package com.thundashop.core.usermanager;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -8,6 +9,8 @@ import com.thundashop.core.common.Writing;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
+import com.thundashop.core.usermanager.data.ProMeisterScoreSettings;
+import com.thundashop.core.usermanager.data.ProMeisterScoreType;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import java.util.ArrayList;
@@ -61,7 +64,7 @@ public interface IUserManager {
      * @return
      * @throws ErrorException 
      */
-    @Editor
+    @Customer
     public User getUserByEmail(String emailAddress) throws ErrorException;
     
     /**
@@ -328,4 +331,15 @@ public interface IUserManager {
     
     @Administrator
     public void mergeUsers(String userId, List<String> userIds) throws ErrorException;
+
+    public List<User> getSubUsers(String userId) throws ErrorException;
+    
+    public void addSubUser(String parent, String subUser) throws ErrorException;
+    
+    public ProMeisterScoreType getProMeisterScoreType() throws ErrorException;
+    
+    public List<User> getUsersWithinTheSameCompany() throws ErrorException;
+    
+    @Customer
+    public void createSubAccount(String fullName, String phoneNumber) throws ErrorException;
 }

@@ -5901,6 +5901,28 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def addSubUser(self, parent, subUser):
+    args = collections.OrderedDict()
+    if isinstance(parent,GetShopBaseClass): 
+      args["parent"]=json.dumps(parent.__dict__)
+    else:
+      try:
+        args["parent"]=json.dumps(parent)
+      except (ValueError, AttributeError):
+        args["parent"]=parent
+    if isinstance(subUser,GetShopBaseClass): 
+      args["subUser"]=json.dumps(subUser.__dict__)
+    else:
+      try:
+        args["subUser"]=json.dumps(subUser)
+      except (ValueError, AttributeError):
+        args["subUser"]=subUser
+    data = EmptyClass()
+    data.args = args
+    data.method = "addSubUser"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addUserPrivilege(self, userId, managerName, managerFunction):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
@@ -6091,11 +6113,34 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getProMeisterScoreType(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getProMeisterScoreType"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getStoresConnectedToMe(self):
     args = collections.OrderedDict()
     data = EmptyClass()
     data.args = args
     data.method = "getStoresConnectedToMe"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getSubUsers(self, userId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSubUsers"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -6141,6 +6186,14 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getUserList"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getUsersWithinTheSameCompany(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getUsersWithinTheSameCompany"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 

@@ -1,7 +1,12 @@
 <?
 /* @var $this \ns_74ea4e90_2d5a_4290_af0c_230a66e09c78\Booking */
 
-$user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+if (isset($_GET['userId'])) {
+    $user = $this->getApi()->getUserManager()->getUserById($_GET['userId']);
+} else {
+    $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+}
+
 $entry = isset($_GET['entry']) ? $this->getFactory()->getApi()->getCalendarManager()->getEntry($_GET['entry']) : "";
 $alreadySignedUp = isset($_GET['entry']) ?  $this->getApi()->getCalendarManager()->isUserOnEvent($user->id, $entry->entryId) : false;
 $alreadySignedUpWaiting = isset($_GET['entry']) ?  $this->getApi()->getCalendarManager()->isUserOnWaiting($user->id, $entry->entryId) : false;
@@ -31,9 +36,9 @@ $alreadySignedUpWaiting = isset($_GET['entry']) ?  $this->getApi()->getCalendarM
 
     }
     if (!$alreadySignedUp && !$alreadySignedUpWaiting) {
-        $text = isset($_GET['waiting']) ? $this->__w("Put me on waitinglist") : $this->__w("Yes, sign me up now!"); 
+        $text = isset($_GET['waiting']) ? str_replace("{fullName}", $user->fullName, $this->__f("Put {fullName} on waitinglist now")) : str_replace("{fullName}", $user->fullName, $this->__f("Yes, sign up {fullName} now")); 
         ?>
-        <div class='shop_button confirm_booking_button' entryId='<? echo $entry->entryId; ?>'><? echo $text; ?></div>
+        <div userId='<? echo $user->id; ?>' class='shop_button confirm_booking_button' entryId='<? echo $entry->entryId; ?>'><? echo $text; ?></div>
         <?
     }
     ?>

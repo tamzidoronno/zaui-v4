@@ -128,6 +128,7 @@ public class StoreHandler {
         try {
             ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
             Object result = executeMethod.invoke(manager, argObjects);
+            result = manager.preProcessMessage(result, executeMethod);
             return result;
         } catch (IllegalAccessException ex) {
             throw new ErrorException(84);

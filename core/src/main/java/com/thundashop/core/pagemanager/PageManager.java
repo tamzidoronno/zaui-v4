@@ -16,6 +16,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
 import com.thundashop.core.usermanager.UserManager;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -127,8 +128,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
        
         page = finalizePage(page);
-        page = page.makeClone();
-        removeApplicationsThatHasAccessDenied(page);
         return page;
     }
 
@@ -669,4 +668,17 @@ public class PageManager extends ManagerBase implements IPageManager {
             }
         }
     }
+
+    @Override
+    public Object preProcessMessage(Object object, Method executeMethod) {
+        if (object instanceof Page) {
+            Page page = ((Page)object).makeClone();
+            removeApplicationsThatHasAccessDenied(page);
+            return page;
+        }
+        
+        return super.preProcessMessage(object, executeMethod);
+    }
+    
+    
 }

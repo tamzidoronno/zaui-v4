@@ -85,8 +85,10 @@ By enabling this function the stock quantities will be modified when a customer 
 By turning on this feature you will set this application to be visible on all pages.;-;Ved å skru på denne funksjonen vil denne applikasjonen bly synlig på alle sider.
 Cancel;-;Avbryt
 Category list;-;Kategori liste
+Cellphone;-;Mobilnr
 Change image;-;Endre bilde
 Chat;-;Chat
+Check the box above if you have mechanics you manage.;-;Klikk av boksen over dersom du er leder for andre mekanikere
 Chrome?;-;Chrome?
 Click on the chat icon in the top menu and start translating.;-;Trykk på chat iconet i toppen menyen for å starte oversettingen.
 Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;Trykk på ikonet i toppmenyen under kategorien "Mer" for å få tilgang til rapportsiden.
@@ -119,6 +121,7 @@ Create a new product;-;Opprett et nytt produkt
 Create a new user;-;Opprett en ny bruker
 Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Opprett kategorier og legg til en liste av produkter for kategorien, legg til bilder til dine kategorier og navgi de med hva du vil.
 Create event;-;Opprett en event
+Create new account;-;Opprett konto
 Create new category;-;Lag en ny kategori
 Create new group;-;Opprett en ny gruppe
 Create new pages by dragging "New Page" to where you want the new page to be in the menu.;-;Lag en ny side med å dra "Ny side" til der du ønsker den.
@@ -189,6 +192,7 @@ Favicon;-;Favicon
 First Page;-;Første side
 Fixed price discount?;-;Fast beløp avslag?
 Footer;-;Footer
+Forgot password?;-;Glemt passord?
 Free shipping if total price is above, if set empty this feature is disabled;-;Gratis frakt hvis total pris er over, hvis den er tom vil denne funksjonen være skrudd av.
 Gallery;-;Galleri
 Get Started;-;Kom i gang
@@ -241,6 +245,7 @@ Link;-;Link
 Link to booking schema.;-;Hvis link til påmeldings skjema
 Link to menu;-;Link til meny
 Link to page;-;Link til side
+Location;-;Sted
 Lunch;-;Bestillt mat / lunch
 Mail;-;E-post
 MailManager;-;Epost behandler
@@ -307,6 +312,7 @@ Pens;-;Penner
 Percentage price;-;Prosent pris
 Place;-;Sted
 Please click on 'Add new top level variation' above;-;Vennligst tryll på 'Legg til ny topp nivå variasjon' over.
+Please confirm!;-;Vennligst bekreft!
 Please enter your paypal address:;-;Vennligst skriv inn din paypal addresse:
 Please select;-;Vennligst velg
 Please select a shipment method.;-;Vennligst velg en betalingsmetode.
@@ -334,6 +340,8 @@ Remove image;-;Fjern bilde
 Rename;-;Gi nytt navn
 Reporting;-;Rapportering
 Reset code is;-;Gjensettelse kode er
+Reset password;-;Gjenopprett passord
+Reset password.;-;Gjenopprett passord.
 Restrict to administrators;-;Kun administrators har adgang
 Restrict to administrators and editors;-;Sett restriksjoner til administratorer og editorer.
 Return stock if order is canceled?;-;Returner til lager hvis kanselert?
@@ -499,12 +507,14 @@ When you have added this application, it will automatically start relating produ
 Where you would you like to direct the user:;-;Hvis vil du at brukeren skal gå:
 Withdraw from stock when order is created;-;Trekk fra lagerstatus når ordren blir laget
 Would you like to use paypal in sandbox mode?;-;Ønsker du å bruke paypal i sandbox modus?
+Yes, sign up {fullName} now;-;Ja, meld {fullName} på nå.
 You are not logged on, please log on.;-;Du er ikke logget på, vennligst logg på.
 You can choose between three types of user levels.;-;Du kan velge mellom tre typer over brukernivå
 You can filter your customers by entering som text in the textbox;-;Du kan filtere dine kunder ved å legge inn tekst i tekstboksen.
 You currently have the following users added to your system;-;Du har for tiden lagt til følgende kunder til systemet.
 You do not want to display the cart.. sure enable this then.;-;Du ønsker ikke å vise handlekurven... Greit nok, aktivert dette.
 You dont have any cupons added.;-;Du har ikke lagt til noen kuponger.
+You got other persons that needs our courses? create an account and sign them you yourself.;-;Har du andre mekanikere som du ønsker å melde på? Lag en konto her og meld dem på selv.
 You guessed correctly, in this panel you can setup a variation of your product. If you for instance has a product that has two different colors, you can set it up here and make your customers to specify the color before they can add it to the cart.;-;Du gjettet riktig, i dette panelet kan du legge til variasjoner til ditt produkt. Hvis du har for eksemplet ett produkt med forskjellige farger, så kan du sette inn her og spesifisere fargene. Så kan kundene dine velge en farge før de legger det inn i handlekurven.
 You have not yet created any web shops, create one and they will be listed here.;-;Du har ikke enda opprettet en web shop, opprett en og den vil bli listet her.
 You need this application if you want this webshop send emails from your email account;-;Du må konfigurere denne applikasjonen hvis du ønsker å sende epost gjennom din epost konto.

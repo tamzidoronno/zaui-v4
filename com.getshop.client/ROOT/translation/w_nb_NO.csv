@@ -3,6 +3,7 @@
 * PayOnDelivery fee;-;Gebyr henting 
 0-100 km/h;-;0-100 km/h
 A confirmation email has been sent to your email.;-;En bekreftelse er sendt til din e-post.
+A new password has been sent to your email account;-;Nytt passord har blitt sendt til din epostaddresse.
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add a room;-;Legg til et rom
 Add more contacts;-;Legg til flere deltagere
@@ -20,6 +21,7 @@ April;-;April
 August;-;August
 Available positions;-;Ledige plasser
 BOOK A ROOM AT;-;BOOK ET ROM HOS
+Back;-;Tilbake
 Birth Date;-;Fødselsdato
 Birth date;-;Fødselsdato
 Birth date has to be formatted like dd.mm.yy;-;Fødselsdato må være av format: dd.mm.åå.
@@ -61,6 +63,7 @@ Cookies are being stored;-;Cookier blir lagret
 Country;-;Land
 Coupon;-;Kupong
 Coupon discount;-;Kupong avslag
+Create user;-;Opprett bruker
 Current users added to this booking;-;Brukere som er lagt til
 Customer information;-;Kunde detaljer
 Date;-;Dato
@@ -88,6 +91,7 @@ Fr;-;Fr
 Free shipping;-;Gratis frakt
 Friday;-;Fredag
 Full name;-;Hele navnet
+Garage leader?;-;Teknisk leder?
 Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Got tipped by a friend;-;Ble tipset av en venn
 Group;-;Gruppe
@@ -126,6 +130,7 @@ Name of the person you want to tip;-;Navn på personen du ønsker å tipse
 New message;-;Ny melding
 New password;-;Nytt passord
 New room type;-;Ny rom type
+New user;-;Ny bruker
 News paper;-;Avisen
 Next;-; Neste
 November;-;November
@@ -235,6 +240,7 @@ Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
 Status;-;Status
 Stop;-;Stopp
 Su;-;Sø
+Sub Accounts;-;Underkontoer
 Success;-;Success
 Summary;-;Oppsummering
 Sunday;-;Søndag
@@ -295,6 +301,9 @@ You are being transferred to paypal, please wait...;-;Du  blir nå overført til
 You are here:;-;Du er her:
 You do not have any orders.;-;Du har ingen bestillinger
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
+You dont have any subaccounts yet. Fill form below and click "create user" to add subaccount;-;Du har ikke laget noen underkontoer enda. Fyll ut skjemaet under og trykk på "oprrett bruker".
+You have not participated in any events yet.;-;Du har ikke deltatt på noen kurs enda.
+You have not signed up for any events yet.;-;Du er ikke påmeldt noen kurs.
 You have selected the following duration for your stay;-;Du har valgt følgende tidsperiode før besøket
 You have selected the following start date for your rental periode;-;Startdato for leie
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.

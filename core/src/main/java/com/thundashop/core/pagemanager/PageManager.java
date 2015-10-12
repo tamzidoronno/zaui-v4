@@ -653,9 +653,11 @@ public class PageManager extends ManagerBase implements IPageManager {
     private void updateCreateApplications(PageCell o, Page page) {
         ApplicationInstance oldApplication = instancePool.getApplicationInstance(o.appId);
         Setting appIdSetting = oldApplication.settings.get("appId");
-        if (appIdSetting != null) {
+        
+        if (appIdSetting != null && page.overrideApps.get(o.cellId) == null) {
             ApplicationInstance newInstance = instancePool.createNewInstance(appIdSetting.value);
             page.addApplication(o.cellId, newInstance.id);
+            savePage(page);
         }
     }
 

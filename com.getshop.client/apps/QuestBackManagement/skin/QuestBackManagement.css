@@ -62,3 +62,10 @@ and open the template in the editor.
     background-color: #FFF; 
     padding: 20px;
 }
+
+.QuestBackManagement {
+    white-space: normal !important;
+    height: auto;
+    padding: 1px 2px;
+    padding-right: 30px;
+}

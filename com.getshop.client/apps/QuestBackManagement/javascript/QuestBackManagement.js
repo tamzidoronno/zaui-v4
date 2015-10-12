@@ -108,7 +108,7 @@ app.QuestBackManagement = {
     
     navigateToQuestion: function(e, data) {
         var data = {
-            entryId : $(e.target).parent().attr('nodeid')
+            entryId : $(e.target).closest('.qb_question').attr('nodeid')
         };
 
         var event = thundashop.Ajax.createEvent(null, "getPageIdForQuestion", $(e.target), data);

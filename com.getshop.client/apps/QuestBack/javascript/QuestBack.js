@@ -25,7 +25,6 @@ app.QuestBack = {
             } else {
                 thundashop.common.goToPage(result);
             }
-            
         });
     },
     
@@ -69,7 +68,8 @@ app.QuestBack = {
         }
         
         var event = thundashop.Ajax.createEvent(null, "optionTextChanged", this, data);
-        thundashop.Ajax.post(event);
+        // Silent
+        thundashop.Ajax.postWithCallBack(event, function() {});
     },
     
     deleteOption: function() {
@@ -113,8 +113,8 @@ app.QuestBack = {
         var data = {
             type: $(this).attr('type')
         }
-        
-        if (data.type == 2 || data.type == 3 ) {
+
+        if (data.type == 3 ) {
             alert('Not yet implemented');
             return;
         }

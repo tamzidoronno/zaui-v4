@@ -21,7 +21,7 @@ class QuestBack extends \ApplicationBase implements \Application {
         $pageId = $this->getPage()->javapage->id;
         $testId = \ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
         
-        if ($this->getApi()->getQuestBackManager()->hasAnswered($pageId, $testId)) {
+        if ($testId && $this->getApi()->getQuestBackManager()->hasAnswered($pageId, $testId)) {
             $this->includefile('alreadyAnswered');
         } else {
             if ($this->getConfigurationSetting("type") == "") {
@@ -114,6 +114,12 @@ class QuestBack extends \ApplicationBase implements \Application {
     
     public function markAsCorrectOption() {
         $options = $this->getOptions();
+        
+        if ($this->getConfigurationSetting("type") == "2")  {
+            foreach ($options as $option) {
+                $option->correctAnswer = false;
+            }
+        }
         
         foreach ($options as $option) {
             if ($option->id == $_POST['data']['optionId']) {

@@ -190,16 +190,16 @@ if (count($day->entries) == 0) {
                 $status = $this->hasReadAccess() ? true : "";
                 if ($status) {
                     $color = "green";
-                    $title = "Deltog";
+                    $title = $this->__f('Participated');
                     
                     if ($entry->participateData->{$user->id} == "valid_cancel") {
                         $color = "#d7c529";
-                        $title = "Deltog ej, giltig frånvaro.";
+                        $title = $this->__f("Not participated, leagal reason");
                     }
                     
                     if ($entry->participateData->{$user->id} == "notvalid_cancel") {
                         $color = "red";
-                        $title = "Deltog ej, ogiltig frånvaro";
+                        $title = $this->__f("Not participated, illegal reason");
                     }
                     
                     $entry->participateData->{$user->id} == "valid_cancel" ? "yellow" : $color;

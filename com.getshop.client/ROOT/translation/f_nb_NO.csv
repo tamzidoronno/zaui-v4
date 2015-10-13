@@ -282,6 +282,8 @@ No users found;-;Ingen brukere funnet.
 No users where found for this time range.;-;Ingen brukere ble funnet for denne tidsperioden.
 North east corner latitude;-;Nord øst hjørne latitude
 North east corner longitude;-;Nord øskt hjørne longitude
+Not participated, illegal reason;-;Ikke deltatt, ugyldig fravær.
+Not participated, leagal reason;-;Ikke deltatt, gyldig fravær.
 Not possible;-;Ikke mulig
 Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;Ikke fornøyd med tekst som er "kodet" inn på din side?<br>Legg til denne applikasjonen og endre teksten selv.
 Not set;-;Ikke satt
@@ -306,6 +308,7 @@ Page id;-;Side id
 Page name;-;Side navn
 Page view summary;-;Sidevisning oppsummering.
 Page views;-;Side visninger
+Participated;-;Deltok
 Payment application;-;Betalings applikasjon
 Paypal address;-;Paypal adresse
 Pens;-;Penner

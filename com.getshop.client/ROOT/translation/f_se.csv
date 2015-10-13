@@ -14,6 +14,9 @@ Forgot password?;-;Glömt lösenord
 Is this a garage leader?;-;Verkstadschef?
 Learningobject;-;Praktikobjekt
 Lunch;-;Fika/lunch
+Not participated, illegal reason;-;Deltog ej, ogiltig frånvaro
+Not participated, leagal reason;-;Deltog ej, giltig frånvaro
+Participated;-;Deltog
 Pens;-;Pennor
 Place;-;Ort
 Put {fullName} on waitinglist now;-;Sätt {fullName}  på väntelistan

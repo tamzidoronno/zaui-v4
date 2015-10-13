@@ -1,0 +1,34 @@
+.QuestBackResultPrinter .trafficlight {
+    display: inline-block;
+    width: 61px;
+    height: 150px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    
+}
+
+.QuestBackResultPrinter  {
+    padding: 20px;
+}
+
+.QuestBackResultPrinter .category_row {
+    border: solid 1px #CCC; 
+    min-height: 150px;
+    margin-bottom: 10px;
+    padding-top: 20px;
+    position: relative;
+}
+
+.QuestBackResultPrinter .category_title {
+    font-size: 20px;
+}
+
+.QuestBackResultPrinter .category_content {
+    padding-left: 100px;
+   
+}
+
+.QuestBackResultPrinter .trafficlight.trafficlight_yellow { background-image: url('{IMAGEFOLDER}/yellow.png'); }
+.QuestBackResultPrinter .trafficlight.trafficlight_red { background-image: url('{IMAGEFOLDER}/red.png'); }
+.QuestBackResultPrinter .trafficlight.trafficlight_green { background-image: url('{IMAGEFOLDER}/green.png'); }

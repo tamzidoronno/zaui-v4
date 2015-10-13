@@ -13,6 +13,7 @@ import com.thundashop.core.common.DataCommon;
  */
 public class QuestBackQuestion extends DataCommon {
     public String description = "";
+    public String parentId = "";
     public String pageId = "";
     public String name = "";
 }

@@ -106,3 +106,14 @@ html {
     line-height: 30px;
     height: 30px;
 }
+
+
+.QuestBackManagement .test_progress_view .name {
+    width: 800px;
+}
+
+.QuestBackManagement .test_progress_view .col.progress {
+    width: 100px;
+    text-align: center;
+    border-left: dashed 1px #DDD;
+}

@@ -1,16 +1,12 @@
-<div class='speedgauge_outer'>
+<div class='speedgauge_outer' >
     <div class='speedgauge'>
-        <div class='speedpin'></div>
+        <div class='speedpin' style="-webkit-transform: rotate(80deg); -moz-transfor: rotate(80deg); transform: rotate(80deg); "></div>
     </div>    
 </div>
 
-<?
-if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
-    ?>
-    <script>
-        var testNumber = Math.floor((Math.random() * 100) + 1);
-        app.QuestBackProgress.updateProgressBar(testNumber);
-    </script>
-<?
-}
-?>
+
+<script>
+    var testNumber = <? echo $this->getProgress(); ?>;
+    app.QuestBackProgress.updateProgressBar(testNumber);
+</script>
+

@@ -12,7 +12,36 @@ app.QuestBackManagement = {
         $(document).on('click', '.QuestBackManagement .delete_test_button', app.QuestBackManagement.deleteTest)
         $(document).on('click', '.QuestBackManagement .modify_questionbase_button', app.QuestBackManagement.modifyTest)
         $(document).on('click', '.QuestBackManagement .saveTestSettings', app.QuestBackManagement.saveTestSettings)
+        $(document).on('click', '.QuestBackManagement .assignTestsToUser', app.QuestBackManagement.assignTestsToUser);
         $(document).on('click', '.QuestBackManagement .createTest', app.QuestBackManagement.createTest)
+        $(document).on('change', '.QuestBackManagement #testToSeeResultFor', app.QuestBackManagement.testToSeeResultFor)
+    },
+    
+    testToSeeResultFor: function() {
+        var data = {
+            testId : $('#testToSeeResultFor').val(),
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "showTestResults", this, data);
+        
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.test_result_view').html(result);
+        });
+    },
+    
+    assignTestsToUser: function() {
+        var data = {
+            testId : $('#testToSend').val(),
+        }
+        
+        data.usersIds = $('.QuestBackManagement .user_to_send:checked').map(function () {
+            return this.value;
+        }).get()
+        
+        var event = thundashop.Ajax.createEvent(null, "assignTestToUsers", this, data);
+        thundashop.Ajax.post(event, function() {
+            alert('Test has been sent');
+        });
     },
     
     saveTestSettings: function() {

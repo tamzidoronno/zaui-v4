@@ -64,3 +64,7 @@ and open the template in the editor.
     font-size: 16px;
     text-align: center;
 }
+
+.QuestBack .admin_option_text {
+    width: 370px;
+}

@@ -20,8 +20,6 @@ public class QuestTest extends DataCommon {
     public String name = "";
 
     public QuestTest() {
-        userIds.add("73ddc597-c856-4de6-844b-3efb014719bc");
+
     }
-    
-    
 }

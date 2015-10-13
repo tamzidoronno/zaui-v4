@@ -6,14 +6,22 @@
 package com.thundashop.core.questback.data;
 
 import java.io.Serializable;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
  * @author ktonder
  */
 public class UserQuestionAnswer implements Serializable {
+    public int percentageOfCorrect = 0;
     public boolean hasAnsweredCorrectly = false;
     public boolean hasAnswered = false;
     public String questionId = "";
     public int tries = 0;
+    
+    @Transient
+    public QuestBackQuestion question;
+    
+    @Transient
+    public QuestBackQuestion parent;
 }

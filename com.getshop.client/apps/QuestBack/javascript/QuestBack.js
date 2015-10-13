@@ -21,7 +21,7 @@ app.QuestBack = {
         var event = thundashop.Ajax.createEvent(null, "nextQuestion", this, {});
         thundashop.Ajax.postWithCallBack(event, function(result) {
             if (result === "done") {
-                 alert('show result!');
+                thundashop.common.goToPage('questback_result_page');
             } else {
                 thundashop.common.goToPage(result);
             }
@@ -56,7 +56,11 @@ app.QuestBack = {
             if (result === "wrong") {
                 thundashop.common.Alert(__f("Wrong answer"), __f("You have answered incorrectly, please check your answers and try again"), true);
             } else {
-                thundashop.common.goToPage(result);
+                if (result === "done") {
+                    thundashop.common.goToPage('questback_result_page');
+                } else {
+                    thundashop.common.goToPage(result);
+                }
             }
         });
     },
@@ -65,7 +69,7 @@ app.QuestBack = {
         var data = {
             text : $(this).val(),
             optionId : $(this).parent().attr('optionid')
-        }
+        };
         
         var event = thundashop.Ajax.createEvent(null, "optionTextChanged", this, data);
         // Silent

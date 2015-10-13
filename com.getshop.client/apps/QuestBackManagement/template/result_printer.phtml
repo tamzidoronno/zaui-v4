@@ -1,0 +1,26 @@
+<div class='result_printer'>
+    
+    <div class='test_progress_view'>
+        <div class='col name'>Name</div>
+        <div class='col progress'>Progress</div>
+    </div>
+    <?
+    $test = $this->getApi()->getQuestBackManager()->getTest($_POST['data']['testId']);
+
+    foreach ($test->userIds as $userId) {
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        if (!$user) {
+            continue;
+        }
+
+        $testResult = $this->getApi()->getQuestBackManager()->getTestResults($user->id, $test->id);
+        $testProgress = count($testResult->answers)."/".count($test->questions);
+
+        echo "<div class='test_progress_view'>";
+            echo "<div class='col name'>$user->fullName</div>";
+            echo "<div class='col progress'>$testProgress</div>";
+        echo "</div>";
+    }
+    ?>
+
+</div>

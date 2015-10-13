@@ -63,9 +63,44 @@ and open the template in the editor.
     padding: 20px;
 }
 
-.QuestBackManagement {
+.QuestBackManagement .qb_question a{
     white-space: normal !important;
     height: auto;
     padding: 1px 2px;
     padding-right: 30px;
+}
+
+.QuestBackManagement th {
+    text-align: left ;
+}
+
+
+.QuestBackManagement .result_printer {
+    margin-top: 20px;
+}
+
+.QuestBackManagement .test_progress_view {
+    background-color: #CCC;
+    margin: 10px;
+    font-size: 0px;
+    cursor: pointer;
+}
+
+.QuestBackManagement .test_progress_view:first-child {
+    background-color: #BBB;
+    cursor: auto;
+}
+
+.QuestBackManagement .test_progress_view .col {
+    padding: 20px;  
+    box-sizing: border-box;
+    font-size: 16px;
+}
+.QuestBackManagement .test_progress_view .name {
+    width: 300px;
+}
+
+.QuestBackManagement .test_progress_view .col {
+    display: inline-block;
+    
 }

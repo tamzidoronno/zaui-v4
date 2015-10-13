@@ -1,0 +1,33 @@
+<?
+/* @var $this ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534\QuestBackManagement */
+$allUsers = $this->getApi()->getUserManager()->getAllUsers();
+?>
+<div>
+    <h2>Send tests</h2>
+    What test do you want to send out?: &nbsp;&nbsp;
+    <select id="testToSend">
+    <?
+    $tests = $this->getApi()->getQuestBackManager()->getAllTests();
+    foreach ($tests as $test) {
+        echo "<option value='$test->id'>$test->name</option>";
+    }
+    ?>
+    </select>
+    
+    <br/>
+    <br/>
+    <table width='100%'>
+        <th></th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>CellPhone</th>
+        <?
+        foreach ($allUsers as $user) {
+            echo "<tr><td width='25'><input type='checkbox' class='user_to_send' value='$user->id'></td><td>$user->fullName</td><td>$user->emailAddress</td><td>$user->cellPhone</td></tr>";
+        }
+        ?>
+        
+    </table>
+    <br/>
+    <div class='gs_button assignTestsToUser'>Send</div>
+</div>

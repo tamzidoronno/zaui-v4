@@ -20,4 +20,13 @@ class QuestBackProgress extends \ApplicationBase implements \Application {
     public function render() {
         $this->includefile("progress");
     }
+    
+    public function getProgress() {
+        $testId = \ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
+        if ($testId) {
+            return $this->getApi()->getQuestBackManager()->getProgress($testId);
+        } else {
+            return 0;
+        }
+    }
 }

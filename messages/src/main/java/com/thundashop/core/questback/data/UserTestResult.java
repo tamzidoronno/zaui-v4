@@ -7,7 +7,9 @@ package com.thundashop.core.questback.data;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -18,6 +20,9 @@ public class UserTestResult extends DataCommon {
     public String testId = "";
     public String userId = "";
 
+    @Transient
+    public HashMap<String, List<UserQuestionAnswer>> groupedAnswers = new HashMap();
+    
     public boolean hasAnswered(String questionId, boolean forceAnswer) {
         UserQuestionAnswer answerForQuestion = answers.stream()
                 .filter(o -> o.questionId.equals(questionId))
@@ -49,5 +54,13 @@ public class UserTestResult extends DataCommon {
         
         answerForQuestion.tries++;
         answerForQuestion.hasAnsweredCorrectly = allCorrect;
+        
+        if (answerForQuestion.tries == 1 && allCorrect) {
+            answerForQuestion.percentageOfCorrect = 100;
+        }
+        
+        if (answerForQuestion.tries == 2 && allCorrect) {
+            answerForQuestion.percentageOfCorrect = 50;
+        }
     }
 }

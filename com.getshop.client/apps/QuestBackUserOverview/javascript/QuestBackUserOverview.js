@@ -11,8 +11,8 @@ app.QuestBackUserOverview = {
         var event = thundashop.Ajax.createEvent(null, "startTest", this, data);
         thundashop.Ajax.postWithCallBack(event, function(pageId) {
             console.log(pageId);
-            if (pageId == "done") {
-                alert('show result!');
+            if (pageId === "done") {
+                thundashop.common.goToPage('questback_result_page');
             } else {
                 thundashop.common.goToPage(pageId);                
             }

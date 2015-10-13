@@ -9,6 +9,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.questback.data.QuestTest;
+import com.thundashop.core.questback.data.UserTestResult;
 import java.util.List;
 
 /**
@@ -61,5 +62,18 @@ public interface IQuestBackManager {
     @Customer
     public String answerQuestions(String testId, String applicationId, String pageId, List<String> answers);
     
+    @Customer
     public boolean hasAnswered(String pageId, String testId);
+    
+    @Administrator
+    public void assignUserToTest(String testId, String userId);
+    
+    @Customer
+    public int getProgress(String testId);
+    
+    @Administrator
+    public UserTestResult getTestResults(String userId, String testId);
+    
+    @Customer
+    public UserTestResult getTestResult(String testId);
 }

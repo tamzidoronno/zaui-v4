@@ -25,11 +25,15 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
     }
 
     public function render() {
+        unset($_SESSION['ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df_current_testid']);
+        
         if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
             $this->printMenu();
             echo "<div class='parts'>";
                 $this->showPart("overview", "questions");
                 $this->showPart("tests", "tests");
+                $this->showPart("usersmanagement", "usersmanagement");
+                $this->showPart("results", "results");
             echo "</div>";
             
         } else {
@@ -37,6 +41,15 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
         }
     }
     
+    public function showTestResults() {
+        $test = $this->getApi()->getQuestBackManager()->getTest($_POST['data']['testId']);
+        if (!$test) {
+            echo "No test selected";
+            return;
+        }
+        
+        $this->includefile("result_printer");
+    }
     public function deleteTest() {
         $this->getApi()->getQuestBackManager()->deleteTest($_POST['data']['testid']);
     }
@@ -68,7 +81,7 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
             echo "<div class='menuelement ".$this->getActiveClass("questions")."' toshow='questions'>Questions</div>";
             echo "<div class='menuelement ".$this->getActiveClass("tests")."' toshow='tests'>Tests</div>";
             echo "<div class='menuelement ".$this->getActiveClass("usersmanagement")."' toshow='usersmanagement'>User Management</div>";
-            echo "<div class='menuelement ".$this->getActiveClass("settings")."' toshow='settings'>QuestBack Settings</div>";
+            echo "<div class='menuelement ".$this->getActiveClass("results")."' toshow='results'>Results</div>";
         echo "</div>";
     }
     
@@ -94,5 +107,22 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
         $test->forceCorrectAnswer = $_POST['data']['forceCorrectAnswer'];
         $test->name = $_POST['data']['name'];
         $this->getApi()->getQuestBackManager()->saveTest($test);
+    }
+    
+    public function gsEmailSetup($model) {
+        if (!$model) {
+            $this->includefile("emailsettings");
+            return;
+        } 
+        
+        $this->setConfigurationSetting("ordersubject", $_POST['ordersubject']);
+        $this->setConfigurationSetting("orderemail", $_POST['emailconfig']);
+        $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
+    }
+    
+    public function assignTestToUsers() {
+        foreach ($_POST['data']['usersIds'] as $userId) {
+            $this->getApi()->getQuestBackManager()->assignUserToTest($_POST['data']['testId'], $userId);
+        }
     }
 }

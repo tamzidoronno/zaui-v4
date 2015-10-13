@@ -60,5 +60,9 @@ if (!$headingText && $isAdmin) {
     }
     ?>
     
-    <div class='gs_button answer_question'><? echo $this->__f("Next"); ?></div>
+    <?
+    if (\ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId()) {
+    ?>
+        <div class='gs_button answer_question'><? echo $this->__f("Next"); ?></div>
+    <? } ?>
 </div>

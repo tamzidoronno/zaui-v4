@@ -1,0 +1,21 @@
+<div>
+    <h2>Test result</h2>
+    Select the tests you wish to see the result for:
+    <br/>
+    <br/>
+    
+    <select id="testToSeeResultFor">
+        <option value='-'>-</option>
+        <?
+        $tests = $this->getApi()->getQuestBackManager()->getAllTests();
+        foreach ($tests as $test) {
+            echo "<option value='$test->id'>$test->name</option>";
+        }
+        ?>
+    </select>
+    
+    <div class='test_result_view'>
+        
+    </div>
+    
+</div>

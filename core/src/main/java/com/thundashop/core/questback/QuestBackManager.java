@@ -9,18 +9,24 @@ import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.questback.data.QuestBackOption;
 import com.thundashop.core.questback.data.QuestBackQuestion;
 import com.thundashop.core.questback.data.QuestTest;
 import com.thundashop.core.questback.data.QuestionTreeItem;
+import com.thundashop.core.questback.data.UserQuestionAnswer;
 import com.thundashop.core.questback.data.UserTestResult;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +48,15 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
     
     @Autowired
     private StoreApplicationInstancePool instancePool;
+    
+    @Autowired
+    private UserManager userManager;
+    
+    @Autowired
+    private StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    private MessageManager messageManager;
     
     private Map<String, QuestBackQuestion> questions = new HashMap();
     
@@ -91,11 +106,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         
         if (o instanceof UserTestResult) {
             UserTestResult result = (UserTestResult)o;
-            if (results.stream().anyMatch(o2 -> o2.userId.equals(result.userId))) {
-                deleteObject(o);
-            } else {
-                results.add(result);
-            }
+            results.add(result);
         }
     }
 
@@ -124,28 +135,31 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         ArrayList<QuestionTreeItem> items = gson.fromJson(jsonList, new TypeToken<ArrayList<QuestionTreeItem>>(){}.getType());
         
         for (QuestionTreeItem item : items) {
-            checkItem(item);
+            checkItem(item, null);
         }
     }
 
-    private void checkItem(QuestionTreeItem item) {
+    private void checkItem(QuestionTreeItem item, String parentId) {
         for (QuestionTreeItem child : item.children) {
-            checkItem(child);
+            checkItem(child, item.li_attr.nodeid);
         }
         
         if (item.li_attr.nodeid != null && !item.li_attr.nodeid.isEmpty() && questions.get(item.li_attr.nodeid) == null) {
-            System.out.println("Creating question");
             createNewQuestion(item.li_attr.nodeid);
         }
         
         QuestBackQuestion quest = questions.get(item.li_attr.nodeid);
         if (quest != null) {
+            if (!quest.parentId.equals(parentId)) {
+                quest.parentId = parentId;
+                saveObject(quest);
+            }
+            
             if (quest.name == null || !quest.name.equals(item.text)) {
                 quest.name = item.text;
                 saveObject(quest);
             }
         }
-        
     }
 
     @Override
@@ -249,7 +263,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
     
     private UserTestResult getResultTest(String testId, String userId) {
         UserTestResult result = results.stream()
-            .filter( answer -> answer.userId.equals(userId) && answer.testId.equals(testId))
+            .filter( answer -> answer.userId.equals(userId) && answer.testId != null && answer.testId.equals(testId))
             .findFirst()
             .orElse(null);
         
@@ -260,6 +274,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             results.add(result);
         }
         
+        finalizeTestResult(result);
         return result;
     }
 
@@ -282,13 +297,13 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             }
         }
         
-        if (!allCorrect && test.forceCorrectAnswer) {
-            return "wrong";
-        }
-        
         testResult.answer(question.id, allCorrect);
         saveObject(testResult);
         
+        if (!allCorrect && test.forceCorrectAnswer) {
+            return "wrong";
+        }
+                
         return getNextQuestionPage(test.id);
     }
 
@@ -304,5 +319,76 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
 
     private void testDeleted() {
         throw new ErrorException(103);
+    }
+
+    @Override
+    public void assignUserToTest(String testId, String userId) {
+        QuestTest test = getTest(testId);
+        if (test == null)
+            testDeleted();
+        
+        if (!test.userIds.contains(userId)) {
+            test.userIds.add(userId);
+            saveObject(test);
+        }
+        
+        sendMail(userId, test);
+    }
+
+    private void sendMail(String userId, QuestTest test) {
+        User user = userManager.getUserById(userId);
+        
+        Application application = storeApplicationPool.getApplication("3ff6088a-43d5-4bd4-a5bf-5c371af42534");
+        if (application.getSetting("shouldSendEmail").equals("true")) {
+            String subject = application.getSetting("ordersubject");
+            String message = application.getSetting("orderemail");
+            message = manipulateText(message, user, test);
+            subject = manipulateText(subject, user, test);
+            
+            messageManager.sendMail(user.emailAddress, user.fullName, subject, message, "post@getshop.com", null);
+        }
+    }
+
+    private String manipulateText(String message, User user, QuestTest test) {
+        message = message.replaceAll("(\r\n|\n)", "<br />");
+        message = message.replace("{User.Name}", user.fullName);
+        message = message.replace("{Test.Name}", test.name);
+        message = message.replace("{User.Email}", user.emailAddress);
+        
+        return message;
+    }
+
+    @Override
+    public int getProgress(String testId) {
+        UserTestResult testResult = getResultTest(testId, getSession().currentUser.id);
+        if (testResult == null) {
+            return 0;
+        }
+        
+        if (getTest(testId).questions.isEmpty()) {
+            return 100;
+        }
+        
+        double percent = (double)testResult.answers.size() / (double)getTest(testId).questions.size();
+        percent = percent * 100;
+        
+        return (int)percent;
+    }
+
+    @Override
+    public UserTestResult getTestResults(String userId, String testId) {
+        return getResultTest(testId, userId);
+    }
+
+    @Override
+    public UserTestResult getTestResult(String testId) {
+        return getResultTest(testId, getSession().currentUser.id);
+    }
+
+    private void finalizeTestResult(UserTestResult result) {
+        for (UserQuestionAnswer answer : result.answers) {
+            answer.question = questions.get(answer.questionId);
+            answer.parent = questions.get(answer.question.parentId);
+        }
     }
 }

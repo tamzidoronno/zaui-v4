@@ -17,4 +17,5 @@ public class QuestionTreeItem {
     public LiAttr li_attr = new LiAttr();
     public String id = "";
     public String text = "";
+    public String parentId = "";
 }

@@ -1,7 +1,19 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color:#00f5ff;
+    
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#29e5fe+0,ff7b0d+100;Orange+3D */
+    background: #29e5fe; /* Old browsers */
+    background: -moz-linear-gradient(top,  #29e5fe 0%, #283b87 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#29e5fe), color-stop(100%,#283b87)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #29e5fe 0%,#283b87 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #29e5fe 0%,#283b87 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #29e5fe 0%,#283b87 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #29e5fe 0%,#283b87 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#29e5fe', endColorstr='#283b87',GradientType=0 ); /* IE6-9 */
+       background-repeat: no-repeat;
+    background-attachment: fixed;
+
 }
 
 .gs_page_width {

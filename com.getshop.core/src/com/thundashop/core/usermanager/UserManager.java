@@ -880,6 +880,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             message += "<br/>Med vänlig hälsning";
             message += "<br/>ProMeister Academy";
             man.sendMail(user.emailAddress, user.fullName, "Lösenordsåterställning", message, storeId, storeId);
+            
+            if (user.emailAddressToInvoice != null && !user.emailAddressToInvoice.equals(user.emailAddress)) {
+                man.sendMail(user.emailAddressToInvoice, user.fullName, "Lösenordsåterställning", message, storeId, storeId);
+            }
         } 
         
         if (storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
@@ -890,6 +894,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             message += "<br/>Med Vennlig Hilsen";
             message += "<br/>ProMeister Academy";
             man.sendMail(user.emailAddress, user.fullName, "Reset av passord", message, "post@getshop.com", "GetShop");
+            
+            if (user.emailAddressToInvoice != null && !user.emailAddressToInvoice.equals(user.emailAddress)) {
+//                man.sendMail(user.emailAddressToInvoice, user.fullName, "Lösenordsåterställning", message, storeId, storeId);
+            }
         }
         
         return true;

@@ -159,6 +159,11 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
         <tr>
             <td class="col1">
                 <?php echo $this->__w("Organisation"); ?>
+                <?
+                if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+                    echo "<br/><span userid='$userId' class='editCompany'>".$this->__f("( Edit )")."</span>";
+                }
+                ?>
             </td>
             <td>
                 <div class="organisation">

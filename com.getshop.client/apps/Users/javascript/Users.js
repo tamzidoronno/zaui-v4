@@ -60,6 +60,31 @@ $('.Users .email_invite').live('blur', function(e) {
     thundashop.app.users.check_email($(this));
 });
 
+$('.Users .editCompany').live('click', function(e) {
+    var data = {
+        userId : $(this).attr('userid')
+    }
+    
+    var event = thundashop.Ajax.createEvent(null, "showEditCompany", this, data);
+    thundashop.common.showInformationBox(event, __f("Edit company information"));
+});
+
+$('.Users .saveCompanyInformation').live('click', function(e) {
+    var data = {
+        userId : $(this).attr('userid'),
+        companyNameToSave : $('.Users #companyNameToSave').val(),
+        streetaddress : $('.Users #streetaddress').val(),
+        postnumber : $('.Users #postnumber').val(),
+        city : $('.Users #city').val(),
+        country : $('.Users #country').val()
+    }
+    
+    var event = thundashop.Ajax.createEvent(null, "saveCompanyInformation", this, data);
+    thundashop.Ajax.post(event, function() {
+        document.location = '/index.php?page=users_all_users&userid=' + data.userId;
+    });
+});
+
 $('.Users .deleteuser').live('click', function(e) {
     var userId = $(this).attr('userid');
     thundashop.app.users.deleteUser(userId, $(this));

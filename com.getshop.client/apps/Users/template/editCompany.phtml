@@ -1,0 +1,17 @@
+<?
+/* @var $this ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f\Users */
+$user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userId']);
+$company = $user->company;
+
+?>
+<div style='padding: 50px;'>
+    <table>
+        <tr><td>Company name</td><td><input type='textfield' id='companyNameToSave' style='width: 600px;' value='<? echo $company->name; ?>'/></td></tr>
+        <tr><td>Street address</td><td><input type='textfield' id='streetaddress' style='width: 600px;' value='<? echo $company->streetAddress; ?>'/></td></tr>
+        <tr><td>Postnumber</td><td><input type='textfield' id='postnumber' style='width: 600px;' value='<? echo $company->postnumber; ?>'/></td></tr>
+        <tr><td>City</td><td><input type='textfield' id='city' style='width: 600px;' value='<? echo $company->city; ?>'/></td></tr>
+        <tr><td>Country</td><td><input type='textfield' style='width: 600px;' id='country' value='<? echo $company->country; ?>'/></td></tr>
+    </table>
+    <br/><br/>
+    <div class='gs_button saveCompanyInformation' userid='<? echo $user->id; ?>'>Save</div>
+</div>

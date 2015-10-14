@@ -243,5 +243,20 @@ class Users extends \SystemApplication implements \Application {
         
         $this->getApi()->getUserManager()->saveUser($user);
     }
+    
+    public function showEditCompany() {
+        $this->includefile("editCompany");
+    }
+    
+    public function saveCompanyInformation() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userId']);
+        $user->company->name = $_POST['data']['companyNameToSave'];
+        $user->company->streetAddress = $_POST['data']['streetaddress'];
+        $user->company->postnumber = $_POST['data']['postnumber'];
+        $user->company->city = $_POST['data']['city'];
+        $user->company->country = $_POST['data']['country'];
+        
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
 }
 ?>

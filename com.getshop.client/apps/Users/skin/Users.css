@@ -207,3 +207,9 @@
     font-size: 40px;
     color: green;
 }
+
+
+.Users .editCompany {
+    color: blue;
+    cursor: pointer;
+}

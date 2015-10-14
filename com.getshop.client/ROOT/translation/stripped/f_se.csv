@@ -1,4 +1,5 @@
 ###### framework ######
+( Edit );-;
 * Minimum rental periode is {days};-;
 1 column;-;
 1/2 Start by selecting your theme.;-;
@@ -244,6 +245,7 @@ Due days;-;
 Edit area;-;
 Edit button;-;
 Edit code;-;
+Edit company information;-;
 Edit event;-;
 Edit link to button;-;
 Edit map;-;
@@ -494,7 +496,6 @@ Percentage price;-;
 PkkControl;-;
 Please check your group id;-;
 Please click on 'Add new top level variation' above;-;
-Please confirm!;-;
 Please enter the information below in order to activate SMS for clickatell.;-;
 Please enter your paypal address:;-;
 Please select;-;
@@ -837,7 +838,6 @@ With this application you can easilly get an overview of your customers that has
 Withdraw from stock when order is created;-;
 Would you like to use paypal in sandbox mode?;-;
 Wrong username or password;-;
-Yes, sign up {fullName} now;-;
 You are currently impersonating;-;
 You are not logged on, please log on.;-;
 You are put on waitinglist for this event;-;

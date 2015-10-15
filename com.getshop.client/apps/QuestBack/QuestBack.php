@@ -134,7 +134,7 @@ class QuestBack extends \ApplicationBase implements \Application {
     public function checkAnswer() {
         $testId = \ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
         $pageId = $this->getPage()->javapage->id;
-        echo $this->getApi()->getQuestBackManager()->answerQuestions($testId, $this->getConfiguration()->id, $pageId, $_POST['data']['answers']);
+        echo $this->getApi()->getQuestBackManager()->answerQuestions($testId, $this->getConfiguration()->id, $pageId, @$_POST['data']['answers']);
         die();
     }
     
@@ -142,7 +142,20 @@ class QuestBack extends \ApplicationBase implements \Application {
         echo $this->getApi()->getQuestBackManager()->getNextQuestionPage(\ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId());
         die();
     }
+
+    public function printOptionButton() {
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            echo "<div style='margin-right: 20px;' class='gs_button add_option'> Add option </div>";
+        }
+        
+    }
     
+    public function printNextButton() {
+        if (\ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId())
+            echo '<div class="gs_button answer_question">'.$this->__f("Next").'</div>';
+   
+    }
+
 }
 
 class QuestBackOption {

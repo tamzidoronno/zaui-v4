@@ -55,10 +55,8 @@ if (!$headingText && $isAdmin) {
         echo "</div>";
     }
     echo "</div>";
-    if ($isAdmin) {
-        echo "<div class='gs_button add_option'> Add option </div>";
-    }
+
+    $this->printOptionButton();
+    $this->printNextButton();
     ?>
-    
-    <div class='gs_button answer_question'><? echo $this->__f("Next"); ?></div>
 </div>

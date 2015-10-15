@@ -536,7 +536,7 @@ $(document).on('click', '#messagebox .okbutton', function() {
     $('#messagebox').fadeOut(200);
 });
 
-thundashop.common.Alert = function(title, message, error) {
+thundashop.common.Alert = function(title, message, error, autoHide) {
     $("#messagebox").find('.title').html(title);
     if (typeof(message) === "undefined")
         message = "";
@@ -550,6 +550,9 @@ thundashop.common.Alert = function(title, message, error) {
 
     if (!error)
         $("#messagebox").delay(2000).fadeOut(200);
+    
+    if (autoHide) 
+        $("#messagebox").delay(autoHide).fadeOut(200);
 }
 
 thundashop.common.mask = function() {

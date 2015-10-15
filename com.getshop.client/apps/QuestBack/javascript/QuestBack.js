@@ -30,7 +30,7 @@ app.QuestBack = {
     
     answerQuestion: function() {
         if (app.QuestBack.inProgress) {
-            alert('true');
+            return;
         }
         
         app.QuestBack.inProgress = true;
@@ -54,7 +54,7 @@ app.QuestBack = {
             $(me).html(app.QuestBack.oldButtonText);
             
             if (result === "wrong") {
-                thundashop.common.Alert(__f("Wrong answer"), __f("You have answered incorrectly, please check your answers and try again"), true);
+                thundashop.common.Alert(__f("Wrong answer"), __f("You have answered incorrectly, please check your answers and try again"), true, 2000);
             } else {
                 if (result === "done") {
                     thundashop.common.goToPage('questback_result_page');

@@ -55,14 +55,8 @@ if (!$headingText && $isAdmin) {
         echo "</div>";
     }
     echo "</div>";
-    if ($isAdmin) {
-        echo "<div class='gs_button add_option'> Add option </div>";
-    }
-    ?>
     
-    <?
-    if (\ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId()) {
+    $this->printOptionButton();
+    $this->printNextButton();
     ?>
-        <div class='gs_button answer_question'><? echo $this->__f("Next"); ?></div>
-    <? } ?>
 </div>

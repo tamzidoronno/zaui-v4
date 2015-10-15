@@ -280,6 +280,11 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
 
     @Override
     public String answerQuestions(String testId, String applicationId, String pageId, List<String> answers) {
+        
+        if (answers == null) {
+            answers = new ArrayList();
+        }
+        
         QuestTest test = tests.get(testId);
         UserTestResult testResult = getResultTest(testId, getSession().currentUser.id);
         QuestBackQuestion question = getQuestionBasedOnPageId(pageId);

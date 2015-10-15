@@ -291,9 +291,20 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         List<QuestBackOption> options = gson.fromJson(jsonEncodedAnswers, new TypeToken<ArrayList<QuestBackOption>>(){}.getType());
         
         boolean allCorrect = true;
+        
+        // Checks if a correct answer has not been selected
         for (QuestBackOption option : options) {
             if (option.correctAnswer && !answers.contains(option.id)) {
                 allCorrect = false;
+            }
+        }
+        
+        // Checks if a wrong answer has been selected
+        for (QuestBackOption option : options) {
+            for (String optionId : answers) {
+                if (option.id.equals(optionId) && !option.correctAnswer) {
+                    allCorrect = false;
+                }
             }
         }
         

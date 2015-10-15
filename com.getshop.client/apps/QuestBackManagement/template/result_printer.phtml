@@ -16,10 +16,10 @@
         $testResult = $this->getApi()->getQuestBackManager()->getTestResults($user->id, $test->id);
         $testProgress = count($testResult->answers)."/".count($test->questions);
 
-        echo "<div class='test_progress_view'>";
+        echo "<a href='/?page=questback_result_page&userId=$user->id&testId=$test->id'><div class='test_progress_view'>";
             echo "<div class='col name'>$user->fullName</div>";
             echo "<div class='col progress'>$testProgress</div>";
-        echo "</div>";
+        echo "</div></a>";
     }
     ?>
 

@@ -106,6 +106,19 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
         $test->questions = $_POST['data']['nodeIds'];
         $test->forceCorrectAnswer = $_POST['data']['forceCorrectAnswer'];
         $test->name = $_POST['data']['name'];
+        
+        $test->redFrom = $_POST['data']['redFrom'];
+        $test->redTo = $_POST['data']['redTo'];
+        $test->redText = $_POST['data']['redText'];
+        
+        $test->yellowFrom = $_POST['data']['yellowFrom'];
+        $test->yellowTo = $_POST['data']['yellowTo'];
+        $test->yellowText = $_POST['data']['yellowText'];
+        
+        $test->greenFrom = $_POST['data']['greenFrom'];
+        $test->greenTo = $_POST['data']['greenTo'];
+        $test->greenText = $_POST['data']['greenText'];
+        
         $this->getApi()->getQuestBackManager()->saveTest($test);
     }
     

@@ -48,8 +48,22 @@ app.QuestBackManagement = {
         var data = {
             testid : $(this).attr('testid'),
             forceCorrectAnswer : $('.QuestBackManagement .force_correct_answers').is(':checked'),
-            name : $('.QuestBackManagement .testsettings .test_name').val()
+            name : $('.QuestBackManagement .testsettings .test_name').val(),
+            
+            redFrom : $('.QuestBackManagement .testsettings #red_from').val(),
+            redTo : $('.QuestBackManagement .testsettings #red_to').val(),
+            redText : $('.QuestBackManagement .testsettings #red_text').val(),
+            
+            greenFrom : $('.QuestBackManagement .testsettings #green_from').val(),
+            greenTo : $('.QuestBackManagement .testsettings #green_to').val(),
+            greenText : $('.QuestBackManagement .testsettings #green_text').val(),
+            
+            yellowFrom : $('.QuestBackManagement .testsettings #yellow_from').val(),
+            yellowTo : $('.QuestBackManagement .testsettings #yellow_to').val(),
+            yellowText : $('.QuestBackManagement .testsettings #yellow_text').val(),
+            
         };
+        
         
         var nodeIds = [];
         $('.test_qustions_added').each(function() {

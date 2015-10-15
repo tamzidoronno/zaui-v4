@@ -11,19 +11,13 @@ class QuestBackResultPrinter extends \MarketingApplication implements \Applicati
     }
 
     public function render() {
-        $currentTestId = \ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
-        if (!$currentTestId) {
-            echo "Please go back and select a test, there is no tests to show result for here";
-            return;
-        }
         
         $this->includefile("resultOverView");
     }
     
     public function getCategories() {
-        $currentTestId = \ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
-        $test = $this->getApi()->getQuestBackManager()->getTest($currentTestId);
-        $result = $this->getApi()->getQuestBackManager()->getTestResult($currentTestId);
+        $test = $this->getCurrentTest();
+        $result = $this->getCurrentTestResults();
         
         $categories = [];
         foreach($result->answers as $answer) {
@@ -50,6 +44,24 @@ class QuestBackResultPrinter extends \MarketingApplication implements \Applicati
         
         $number = $total/$questionsInCategory;
         return number_format((float)$number, 2, '.', '');
+    }
+
+    public function getCurrentTest() {
+        $currentTestId = \ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
+        if (isset($_GET['testId'])) {
+            return $this->getApi()->getQuestBackManager()->getTest($_GET['testId']);
+        } 
+        
+        return $this->getApi()->getQuestBackManager()->getTest($currentTestId);
+    }
+
+    public function getCurrentTestResults() {
+        $test = $this->getCurrentTest();
+        if (isset($_GET['userId'])) {
+            return $this->getApi()->getQuestBackManager()->getTestResults($_GET['userId'], $test->id);
+        }
+        
+        return $this->getApi()->getQuestBackManager()->getTestResult($test->id);
     }
 
 }

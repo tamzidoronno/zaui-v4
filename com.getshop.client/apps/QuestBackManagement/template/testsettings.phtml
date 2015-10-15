@@ -29,6 +29,33 @@ if ($tree) {
     }
     
     ?>
+    <div class='category_settings_box'>
+        <div class='category_settings_title'>Red</div>
+        <table>
+            <tr><td>From</td><td><input style='width: 400px;' id="red_from"  type='textfield' value='<? echo $test->redFrom; ?>' /></td></tr>
+            <tr><td>To</td><td><input style='width: 400px;' id="red_to" type='textfield' value='<? echo $test->redTo; ?>' /></td></tr>
+            <tr><td>Text</td><td><textarea style='width: 400px;' id="red_text" ><? echo $test->redText; ?></textarea></td></tr>
+        </table>
+    </div>    
+    
+    <div class='category_settings_box'>
+        <div class='category_settings_title'>Yellow</div>
+        <table>
+            <tr><td>From</td><td><input id="yellow_from" style='width: 400px;' type='textfield' value='<? echo $test->yellowFrom; ?>' /></td></tr>
+            <tr><td>To</td><td><input id="yellow_to" style='width: 400px;' type='textfield' value='<? echo $test->yellowTo; ?>' /></td></tr>
+            <tr><td>Text</td><td><textarea id="yellow_text" style='width: 400px;' ><? echo $test->yellowText; ?></textarea></td></tr>
+        </table>
+    </div>
+
+    <div class='category_settings_box'>
+        <div class='category_settings_title'>Green</div>
+        <table>
+            <tr><td>From</td><td><input id="green_from" style='width: 400px;' value='<? echo $test->greenFrom; ?>' type='textfield'/></td></tr>
+            <tr><td>To</td><td><input id="green_to" style='width: 400px;' type='textfield' value='<? echo $test->greenTo; ?>' /></td></tr>
+            <tr><td>Text</td><td><textarea id="green_text" style='width: 400px;' ><? echo $test->greenText; ?></textarea></td></tr>
+        </table>
+    </div>
+    
     <br/><br/>
     <div class='gs_button saveTestSettings' testid='<?  echo $test->id; ?>'><? echo $this->__f("Save"); ?></div>
 </div>

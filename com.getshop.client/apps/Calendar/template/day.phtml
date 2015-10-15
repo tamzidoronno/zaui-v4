@@ -202,6 +202,11 @@ if (count($day->entries) == 0) {
                         $title = $this->__f("Not participated, illegal reason");
                     }
                     
+                    if ($entry->participateData->{$user->id} == "valid_free") {
+                        $color = "green";
+                        $title = $this->__f("Participated, free");
+                    }
+                    
                     $entry->participateData->{$user->id} == "valid_cancel" ? "yellow" : $color;
                     $color = $entry->participateData->{$user->id} == "" ? "red" : $color;
                     $status = "<i userid='$userid' style='color: $color' entryid='$entryid' class='fa fa-graduation-cap' title='$title'></i>";

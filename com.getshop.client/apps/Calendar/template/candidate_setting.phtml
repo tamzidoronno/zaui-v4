@@ -25,6 +25,7 @@ if(in_array($_POST['data']['userId'], $entryobject->dropDiploma)) {
     <div class="text inline"><?php echo $this->__f("Participated"); ?></div>
     <select class="config">
         <option value="participated" <? echo $entryobject->participateData->{$_POST['data']['userId']} == "participated" ? 'selected="true"' : ''; ?>><? echo $this->__f("Participated"); ?></option>
+        <option value="valid_free" <? echo $entryobject->participateData->{$_POST['data']['userId']} == "valid_free" ? 'selected="true"' : ''; ?>><? echo $this->__f("Participated, free"); ?></option>
         <option value="notvalid_cancel" <? echo $entryobject->participateData->{$_POST['data']['userId']} == "notvalid_cancel" ? 'selected="true"' : ''; ?>><? echo $this->__f("Not participated, illegal reason"); ?></option>
         <option value="valid_cancel" <? echo $entryobject->participateData->{$_POST['data']['userId']} == "valid_cancel" ? 'selected="true"' : ''; ?>> <? echo $this->__f("Not participated, leagal reason"); ?></option>
     </select>

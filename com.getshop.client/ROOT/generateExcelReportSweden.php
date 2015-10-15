@@ -203,6 +203,9 @@ class GenerateReport {
         if ($data == "valid_cancel") 
             return "Ej faktureras";
         
+        if ($data == "valid_free") 
+            return "Deltog, ingen fakturering";
+        
         return $data;
     }
 

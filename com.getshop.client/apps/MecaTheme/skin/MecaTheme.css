@@ -117,3 +117,24 @@ html {
     text-align: center;
     border-left: dashed 1px #DDD;
 }
+
+.gsarea[area="header"] .Login .login_header_type_1 a,
+.gsarea[area="header"] .Login .login_header_type_1 {
+    color: #FFF;
+}
+
+.gsarea[area="header"] .Login .fa-lock {
+    border-left: solid 1px #0e4e96;
+}
+
+.gsarea[area="header"] .Login .login_header_type_1 {
+    border: solid 1px #0e4e96;
+    border-radius: 0px;
+    background-color: #053f83;
+}
+    
+
+.QuestBack .questback_option_row {
+    font-size: 18px;
+    margin-bottom: 20px;
+}

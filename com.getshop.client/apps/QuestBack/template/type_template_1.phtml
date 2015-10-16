@@ -38,7 +38,7 @@ if (!$headingText && $isAdmin) {
     }
     foreach ($options as $option) {
         $id = $option->id;
-        echo "<div optionid='$id'>";
+        echo "<div optionid='$id' class='questback_option_row'>";
             if ($isAdmin) {
                 
                 $correct = $option->correctAnswer ? "color: green" : "color: #DDD";

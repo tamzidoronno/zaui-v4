@@ -21,7 +21,7 @@ mongo <<< 'db.adminCommand("listDatabases").databases.forEach( function (d) {   
 
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
-ssh -T naxa@backendbetapromeister.getshop.com << EOF > /dev/null
+ssh -T naxa@backend.getshop.com << EOF > /dev/null
 /home/naxa/backup.sh
 EOF
 
@@ -31,7 +31,7 @@ get dump.tar.gz
 EOF
 
 echo -e " Fetching database file from server";
-sftp -b batchfile naxa@backendbetapromeister.getshop.com > /dev/null
+sftp -b batchfile naxa@backend.getshop.com > /dev/null
 rm -rf batchfile;
 
 echo -e " Importing database to local";
@@ -41,8 +41,8 @@ rm -rf dump.tar.gz
 
 #transfer images
 echo -e " Syncing images";
-rsync -avz -e ssh naxa@frontendbetapromeister.getshop.com:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
-rsync -avz -e ssh naxa@frontendbetapromeister.getshop.com:/home/naxa/FrontEnd/ROOT/diplomapictures/ ../com.getshop.client/ROOT/diplomapictures/ &> /dev/null
+rsync -avz -e ssh naxa@www.getshop.com:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
+rsync -avz -e ssh naxa@www.getshop.com:/home/naxa/FrontEnd/ROOT/diplomapictures/ ../com.getshop.client/ROOT/diplomapictures/ &> /dev/null
 
 echo -e " Done!"
 echo -e " Note: if you wish to run resin on port 80 run: "

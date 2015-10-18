@@ -72,6 +72,39 @@ Booking = {
         $(document).on('click', '.Booking .confirm_booking_button', this.confirmBooking);
         $(document).on('click', '.Booking .check_for_user', this.checkForUser);
         $(document).on('click', '.Booking .unsetEnteteredUserToBook', this.unsetUserToBook);
+        $(document).on('click', '.Booking .createSubAccount', this.createSubAccount);
+        $(document).on('click', '.Booking .addSubUserToEvent', this.addSubUserToEvent);
+    },
+    
+    addSubUserToEvent: function() {
+        var data = {
+            entryId : $(this).attr('entryid'),
+            userId: $(this).attr('userid'),
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "addSubUserToEvent", this, data);
+        var result = thundashop.Ajax.postSynchronWithReprint(event);
+        
+        if (result !== false)
+            thundashop.common.Alert(__w('Completed'), __w('Your are now signed up for the event'));
+        
+    },
+    
+    createSubAccount: function() {
+        var data = {
+            entryId : $(this).attr('entryid'),
+            parentUserId : $(this).attr('parent'),
+            name : $('#subAccountCandidateName').val(),
+            phone : $('#subAccountCandidatePhone').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "createSubAccount", this, data);
+        var result = thundashop.Ajax.postSynchronWithReprint(event);
+        
+        if (result !== false)
+            thundashop.common.Alert(__w('Completed'), __w('Your are now signed up for the event'));
+        
+        
     },
     
     unsetUserToBook: function() {
@@ -95,11 +128,15 @@ Booking = {
     
     confirmBooking: function() {
         var data = {
-            entryId: $(this).attr('entryId')
+            entryId: $(this).attr('entryId'),
+            userId: $(this).attr('userId')
         }
 
         var event = thundashop.Ajax.createEvent(null, "confirmBooking", this, data);
-        thundashop.Ajax.post(event);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            alert(result);
+            document.location = '/';
+        });
     },
     toggleInvoiced: function () {
         var data = {
@@ -234,13 +271,13 @@ $('.Booking .savebooking').live('click', function () {
         return;
     }
     var data = {}
-    data.name = $('#candidateName').val();
+    data.name = $('#candidateName').val().trim();
     data.entryId = $(this).attr('entryid');
-    data.email = $('#candidateEmail').val();
-    data.cellphone = $('#candidateCellphone').val();
-    data.birthday = $('#candidateBirthday').val();
+    data.email = $('#candidateEmail').val().trim();
+    data.cellphone = $('#candidateCellphone').val().trim();
+    data.birthday = $('#candidateBirthday').val().trim();
     if (!data.birthday && $('.search_company').val()) {
-        data.birthday = $('.search_company').val();
+        data.birthday = $('.search_company').val().trim();
     }
 
     if ($('#candiateInvoiceemail').length > 0) {

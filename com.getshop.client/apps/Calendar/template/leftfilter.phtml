@@ -1,4 +1,7 @@
-<div class="inline filters">
+<?
+$userId = isset($_GET['userId']) ? $_GET['userId'] : "";
+?>
+<div class="inline filters" userId='<? echo $userId; ?>'>
     <?
     echo $this->__w("We host events at the following locations, click on the location to filter the calendar by location(s)");
     echo "<hr>";

@@ -33,7 +33,8 @@ app.ProMeisterLogin = {
             email : $('.promeisterloginform #email').val(),
             invoiceemail : $('.promeisterloginform #invoiceemail').val(),
             cellphone : $('.promeisterloginform #cellphone').val(),
-            reference : app.ProMeisterLogin.reference
+            garageleader : $('.promeisterloginform #garageleader').is(':checked'),
+            reference : app.ProMeisterLogin.reference,
         };
         
         if (!app.ProMeisterLogin.addressOnSuccess) {

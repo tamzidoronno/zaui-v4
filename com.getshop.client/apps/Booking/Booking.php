@@ -110,9 +110,19 @@ class Booking extends MarketingApplication implements Application {
         if (isset($_GET['page'])) {
             $this->clearSession();
         }
+        
         if ($userObject == null) {
             $this->includefile("logininformation");
-        } elseif ($userObject->type > 10) {
+        } elseif (isset($_GET['userId'])) {
+            $this->includefile('confirmbooking');
+        } elseif ($userObject->type > 10 || $userObject->isMaster) {
+            
+            if ($userObject->isMaster) {
+                $_SESSION['ProMeister_booking_useYourSelf'] = "true";
+            } else {
+                $_SESSION['ProMeister_booking_useYourSelf'] = "false";
+            }
+            
             $this->includefile("schema");
         } else {
             $this->includefile('confirmbooking');
@@ -229,7 +239,6 @@ class Booking extends MarketingApplication implements Application {
     }
 
     public function runRegisterEvent() {
-        
         $_GET['event'] = $_POST['data']['entryId'];
         $userToBook = $this->getUserToBook();
         if ($userToBook) {
@@ -256,9 +265,12 @@ class Booking extends MarketingApplication implements Application {
             }
 
             $this->registerEvent($data);
+            
+            
         }
         
         $this->clearSession();
+        
     }
     
     public function getUserToBook() {
@@ -404,6 +416,10 @@ class Booking extends MarketingApplication implements Application {
             return;
         }
         
+        if (isset($_POST['data']['userId'])) {
+            $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userId']);
+        }
+        
         $_GET['entry'] = $_POST['data']['entryId'];
         
         if ($this->isConnectedToCurrentPage()) {
@@ -413,6 +429,9 @@ class Booking extends MarketingApplication implements Application {
         }
         
         $this->clearSession();
+        
+        $text = str_replace("{fullName}", $user->fullName, $this->__w("{fullName} is now signed up on this event"));
+        echo $text;
     }
     
     public function clearSession() {
@@ -427,9 +446,32 @@ class Booking extends MarketingApplication implements Application {
     }
     
     public function unsetUserToBook() {
-        
         $_GET['entry'] = $_POST['data']['entry'];
         unset($_SESSION['userEmailToBook']);
+    }
+    
+    public function createSubAccount() {        
+        $data = $_POST['data'];
+        $_GET['entry'] = $data['entryId'];
+        
+        $password = rand(120010, 989988);
+        $user = $this->getApiObject()->core_usermanager_data_User();
+        $user->fullName = $data['name'];
+        $user->cellPhone = $data['phone'];
+        $user->password = $password;
+        $user->parents = [];
+        $user->parents[] = $data['parentUserId'];
+        
+        $createdUser = $this->getApi()->getUserManager()->createUser($user);
+        $this->getApi()->getCalendarManager()->addUserToEvent($createdUser->id, $data['entryId'], $password, $createdUser->username, "webpage");
+    }
+    
+    public function addSubUserToEvent() {
+        $data = $_POST['data'];
+        $_GET['entry'] = $data['entryId'];
+        
+        $createdUser = $this->getApi()->getUserManager()->getUserById($data['userId']);
+        $this->getApi()->getCalendarManager()->addUserToEvent($createdUser->id, $data['entryId'], "", $createdUser->username, "webpage");
     }
 }
 

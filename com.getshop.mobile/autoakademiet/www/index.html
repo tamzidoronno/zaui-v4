@@ -29,6 +29,11 @@ and open the template in the editor.
         <script type="text/javascript" src="js/index.js"></script>
 
         <script src="js/jquery.js" charset="utf-8" ></script>
+        <script type="text/javascript">
+            $(document).bind("mobileinit", function(){
+                $.mobile.hashListeningEnabled = false;
+            });
+        </script>  
         <script src="js/date.js" charset="utf-8" ></script>
         <script src="js/jquerymobile.js" charset="utf-8" ></script>
         <script src="js/app.js" charset="utf-8" ></script>

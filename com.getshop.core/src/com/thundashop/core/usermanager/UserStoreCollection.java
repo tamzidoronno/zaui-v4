@@ -47,6 +47,11 @@ public class UserStoreCollection {
             }
         }
         
+        // Editors and adminsitrators can not be masters, simple as that!
+        if (user.isMaster && user.type > 10) {
+            user.isMaster = false;
+        }
+        
         return user;
     }
     
@@ -96,6 +101,9 @@ public class UserStoreCollection {
                 retusers.put(user.id, user);
             }
             if (user.company != null && user.company.vatNumber.equals(searchCriteria)) {
+                retusers.put(user.id, user);
+            }
+            if (user.company != null && user.company.name.toLowerCase().contains(searchCriteria.toLowerCase())) {
                 retusers.put(user.id, user);
             }
             if (user.birthDay != null && user.birthDay.equals(searchCriteria)) {

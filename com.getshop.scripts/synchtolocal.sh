@@ -42,6 +42,7 @@ rm -rf dump.tar.gz
 #transfer images
 echo -e " Syncing images";
 rsync -avz -e ssh naxa@www.getshop.com:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
+rsync -avz -e ssh naxa@www.getshop.com:/home/naxa/FrontEnd/ROOT/diplomapictures/ ../com.getshop.client/ROOT/diplomapictures/ &> /dev/null
 
 echo -e " Done!"
 echo -e " Note: if you wish to run resin on port 80 run: "

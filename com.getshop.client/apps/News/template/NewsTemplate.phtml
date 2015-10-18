@@ -46,7 +46,7 @@ foreach($entries as $entry) {
     $i++;
 }
 
-echo "<div class='button_area_news'><center><div class='gs_button show_old_news'>Vis allerede publiserte nyheter</div></center></div>";
+echo "<div class='button_area_news'><center><div class='gs_button show_old_news'>".$this->__f("Vis allerede publiserte nyheter")."</div></center></div>";
 echo "<div class='oldnews' style='display: none'>";
 foreach($entries as $entry) {
     if (!$entry->isPublished) {

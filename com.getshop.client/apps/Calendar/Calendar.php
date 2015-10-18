@@ -48,7 +48,7 @@ class Calendar extends MarketingApplication implements Application {
         print_r(array_keys($newObject));
         
         $entryObject->dropDiploma = array_keys($newObject);
-        
+        $entryObject->participateData->{$_POST['data']['userId']} = $_POST['data']['participated'];
         $this->getApi()->getCalendarManager()->saveEntry($entryObject);
     }
     
@@ -296,6 +296,10 @@ class Calendar extends MarketingApplication implements Application {
             $this->activeFilters[] = ucwords($word);
             $this->getApi()->getCalendarManager()->applyFilter($this->activeFilters);
             $this->activeFilters = $this->getApi()->getCalendarManager()->getActiveFilters();
+        }
+        
+        if (isset($_POST['data']['userId'])) {
+            $_GET['userId'] = $_POST['data']['userId'];
         }
     }
     
@@ -562,6 +566,10 @@ class Calendar extends MarketingApplication implements Application {
         
         
         $this->getApi()->getCalendarManager()->applyFilter($filters);
+        
+        if (isset($_POST['data']['userId'])) {
+            $_GET['userId'] = $_POST['data']['userId'];
+        }
     }
     
     private function in_arrayi($needle, $haystack) {

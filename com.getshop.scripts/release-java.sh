@@ -1,4 +1,3 @@
-transfer file
 cat << EOF > batchfile
 cd dist
 lcd $HOME/netbeans/1.0.0
@@ -12,12 +11,6 @@ lcd $HOME/netbeans/1.0.0
 put apitodb.json
 EOF
 
-cat << EOF > batchfile3
-lcd /source/getshop/1.0.0/com.getshop.client/events
-cd FrontEnd/events
-put API2.php
-EOF
-
 echo -e "Uploading thundashop jar files"
 sftp -b batchfile naxa@backend.getshop.com &> /dev/null
 rm -rf batchfile
@@ -25,10 +18,6 @@ rm -rf batchfile
 echo -e "uploading apitodb.json file"
 sftp -b batchfile2 naxa@backend.getshop.com &> /dev/null
 rm -rf batchfile2
-
-echo -e "uploading API.php file"
-sftp -b batchfile3 naxa@www.getshop.com &> /dev/null
-rm -rf batchfile3
 
 echo -e "Restarting java!";
 ssh -T naxa@backend.getshop.com << EOF &> /dev/null;

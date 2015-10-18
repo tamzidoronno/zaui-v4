@@ -141,6 +141,7 @@ class CommunicationHelper {
             $handler = new LanguageHandler();
             $result = array();
             $result['error'] = $object->errorCode . "," . $handler->getErrorMessage($object->errorCode);
+            $result['error_code'] = $object->errorCode;
             $result['error_text'] = $handler->getErrorMessage($object->errorCode);
             $result['error_additional_info'] = $object->additionalInformation;
             $result['error_method'] = $event['method'];

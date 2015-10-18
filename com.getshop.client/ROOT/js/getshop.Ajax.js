@@ -42,6 +42,14 @@ thundashop.AjaxPreCheck = function(response) {
 thundashop.Ajax = {
     ajaxFile: 'handler.php',
     showErrorMessage: function(message) {
+        var text = $(message).find('#error_text').html();
+        text = __f(text);
+        
+        var messageTranslated = $("<div>"+message+"</div>");
+        messageTranslated.find('#error_text').html(text);
+        messageTranslated.find('.title').html(__f($(message).find('.title').html()));
+        message = messageTranslated.html();
+        
         $("#errorbox").show();
         $("#errorbox").html("<div class='errorform'><div class='close'></div>" + message + "</div>");
         $("#errorbox").delay(5000).fadeOut(1000);

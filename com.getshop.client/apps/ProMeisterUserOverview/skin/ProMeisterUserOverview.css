@@ -1,0 +1,82 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 28, 2015, 8:22:17 PM
+    Author     : ktonder
+*/
+
+.ProMeisterUserOverview .headline {
+    font-size: 60px;
+    text-align: center;
+    border-bottom: dashed 4px #FFF;
+}
+.ProMeisterUserOverview .sub_headline {
+    font-size: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.ProMeisterUserOverview .user_data_conatiner {
+    background-color: #008e80;
+    margin-top: 10px; 
+    padding-top: 20px; 
+    position: relative;
+    padding: 20px;
+    border: solid 1px #004f48;
+}
+
+.ProMeisterUserOverview .inner {
+    min-height: 450px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#008f81+0,006e63+100 */
+    background: #008f81; /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  #008f81 0%, #006e63 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#008f81), color-stop(100%,#006e63)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg,  #008f81 0%,#006e63 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg,  #008f81 0%,#006e63 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg,  #008f81 0%,#006e63 100%); /* IE10+ */
+    background: linear-gradient(135deg,  #008f81 0%,#006e63 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#008f81', endColorstr='#006e63',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+    box-shadow: 0px 0px 15px #AAA;
+    
+    font-family: 'Just Another Hand', cursive;
+    color: #FFF;
+    padding: 20px;
+    font-size: 26px;
+}
+
+.ProMeisterUserOverview .user_to_select {
+    background-color: #007266;
+    margin: 20px;
+    padding: 20px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    cursor: pointer;
+}
+
+.ProMeisterUserOverview .createSubUser {
+    border: solid 1px #FFF;
+    padding: 30px;
+    display: none;
+}
+
+.ProMeisterUserOverview .createSubUser .gs_button { 
+    font-size: 24px;
+}
+
+.ProMeisterUserOverview .date_view  {
+    font-size: 16px;
+    padding-left: 30px;
+    margin-bottom: 5px;
+    padding-top: 5px;
+}
+.ProMeisterUserOverview .createSubUser td {
+    font-size: 24px;
+}

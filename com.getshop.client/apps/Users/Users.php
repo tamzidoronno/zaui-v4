@@ -231,5 +231,32 @@ class Users extends \SystemApplication implements \Application {
     public function isPromeister() {
         return $this->isProMeisterLoginAppAdded();
     }
+        
+    public function saveProMeisterSettings() {
+        $settings = $this->getApi()->getUserManager()->getProMeisterScoreType();
+        
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userId']);
+        $user->proMeisterScoreSettings = new \core_usermanager_data_ProMeisterScoreSettings();
+        foreach ($settings->categories as $cat) {
+            $user->proMeisterScoreSettings->scores->{$cat} = $_POST['data'][$cat];
+        }
+        
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
+    public function showEditCompany() {
+        $this->includefile("editCompany");
+    }
+    
+    public function saveCompanyInformation() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userId']);
+        $user->company->name = $_POST['data']['companyNameToSave'];
+        $user->company->streetAddress = $_POST['data']['streetaddress'];
+        $user->company->postnumber = $_POST['data']['postnumber'];
+        $user->company->city = $_POST['data']['city'];
+        $user->company->country = $_POST['data']['country'];
+        
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
 }
 ?>

@@ -1,0 +1,8 @@
+.GetShopAnimationFront .animationwarapper {
+    background-image: url("{IMAGEFOLDER}/digital.jpg");
+    font-family: ubuntu; 
+    background-size: cover; 
+    background-attachment: fixed; 
+    padding-top: 500px; 
+    padding-bottom: 500px;
+}

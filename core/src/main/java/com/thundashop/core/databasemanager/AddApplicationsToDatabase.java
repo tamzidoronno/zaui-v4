@@ -48,16 +48,19 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
         
-        Application QuestBackResultPrinter = createSettings("QuestBackResultPrinter",
-            "4194456a-09b3-4eca-afb3-b3948d1f8767",
+        Application GetShopAnimationFront = createSettings("GetShopAnimationFront",
+            "a77292ec-8e4b-4e68-9729-27b45cdc6720",
             allowed2,
             " ",
             Application.Type.Marketing, true);
-        QuestBackResultPrinter.isPublic = true;
-        QuestBackResultPrinter.isFrontend = true;
-        QuestBackResultPrinter.moduleId = "questback";
-        QuestBackResultPrinter.defaultActivate = true;
-        apps.add(QuestBackResultPrinter);
+            GetShopAnimationFront.isPublic = false;
+            GetShopAnimationFront.isFrontend = true;
+            GetShopAnimationFront.moduleId = "cms";
+            GetShopAnimationFront.defaultActivate = false;
+            GetShopAnimationFront.allowedStoreIds = new ArrayList();
+            GetShopAnimationFront.allowedStoreIds.add("efad5b1f-b679-4c2b-8774-8c2475c20137");
+            apps.add(GetShopAnimationFront);
+
 
         return apps;
     }

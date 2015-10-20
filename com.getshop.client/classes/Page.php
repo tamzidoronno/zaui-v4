@@ -44,7 +44,9 @@ class Page {
 
         
         
-        echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type'>";
+        $loggedIn = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? "true" : "false";
+        
+        echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
             $edited = $this->printArea($layout->areas->{'header'}, true);
@@ -116,7 +118,9 @@ class Page {
             $this->printArea($layout->areas->{'header'}, 0, null);
             echo "</div>";
             $this->printMobileHeader($layout->areas->{'header'});
+            echo "<div class='gsmobilebody'>";
             $this->printArea($cells, 0, null);
+            echo "</div>";
             echo "<div class='footer gsmobilefooter'>";
             $this->printArea($layout->areas->{'footer'}, 0, null);
             echo "</div>";
@@ -194,9 +198,16 @@ class Page {
         echo "<i class='fa fa-search'></i>";
         echo "Search";
         echo "</span>";
+        $loggedIn = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null;
         echo "<span class='gsmobilemenuentry gsmobilemenubox gsslideright'>";
-        echo "<i class='fa fa-caret-right'></i>";
-        echo "Hide";
+        
+            if ($loggedIn) {
+                echo "<i class='fa fa-lock' id='getshop_logout'></i>";
+                echo IocContainer::getFactorySingelton()->__f("Logout");
+            } else {
+                echo "<i class='fa fa-caret-right'></i>";
+                echo "Hide";
+            }
         echo "</span>";
         echo "</div>";
     }

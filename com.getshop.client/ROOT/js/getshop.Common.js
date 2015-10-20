@@ -828,7 +828,7 @@ $(document).on('click', '.tabset .tab', function() {
 
 $(function() {
     $(document).on('mousedown', '#getshop_logout', function() {
-        var event = thundashop.Ajax.createEvent(null, 'logout', $(this), {});
+        var event = thundashop.Ajax.createEvent(null, 'logout', $('.Login'), {});
         thundashop.Ajax.postSynchron(event);
         window.location = "/";
     });

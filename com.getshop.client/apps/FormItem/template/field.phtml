@@ -81,10 +81,11 @@ if(!$type) {
             
             break;
         case "submit":
-            echo "<input type='$type' name='$name' formtype='$type' class='submitForm' value='$title'>";
             if(isset($_POST['event']) && $_POST['event'] == "submitForm" && $_POST['data']['valid'] == "true") {
                 $data = "data:text/html;base64," . base64_encode($this->getSubmittedForm());
-                echo "<div style='padding: 10px;'><i class='fa fa-thumbs-o-up'></i> The form has been submitted, you can download it <a href='$data' target='_new'>here</a>.</div>";
+                echo "<b><div style='padding: 10px;'><i class='fa fa-thumbs-o-up'></i> The form has been submitted, you can download it <a href='$data' target='_new'>here</a>, thank you for your interest.</div></b>";
+            } else {
+                echo "<input type='$type' name='$name' formtype='$type' class='submitForm' value='$title'>";
             }
             break;
         case "textarea":

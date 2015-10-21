@@ -141,6 +141,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         $pageDescription = $factory->getPage()->javapage->description;
         if ($factory->getStore()->favicon) {
             echo '<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">';
+            echo '<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />';
         }
 
         $factory->loadJavascriptFiles();

@@ -58,9 +58,9 @@ class ProductLists extends \ApplicationBase implements \Application {
     public function toggleDecimals() {
         $display = $this->getDisplayDecimals();
         if($display) {
-            $this->setConfigurationSetting("hidedecimals", "false");
-        } else {
             $this->setConfigurationSetting("hidedecimals", "true");
+        } else {
+            $this->setConfigurationSetting("hidedecimals", "false");
         }
     }
     

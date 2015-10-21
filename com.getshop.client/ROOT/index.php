@@ -139,9 +139,6 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <?php
         $html = init($factory);
         $pageDescription = $factory->getPage()->javapage->description;
-        if ($factory->getStore()->favicon) {
-            echo '<link rel="icon" href="favicon.ico" type="image/x-icon" />';
-        }
 
         $factory->loadJavascriptFiles();
         $factory->showCssFiles();

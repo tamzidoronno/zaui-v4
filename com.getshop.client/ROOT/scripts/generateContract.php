@@ -60,14 +60,15 @@ foreach($taxgroups as $group) {
 
 
 $taxes = 0;
-$totalPrice = $selectedProduct->price;
-if($foundgroup) {
-    $taxes = @$selectedProduct->price * ($group->taxRate/100);
-    $totalPrice += $taxes;
+$priceExMva = $order->bookingFee;
+if($foundgroup && $user->mvaRegistered) {
+    $taxes = $priceExMva * ($group->taxRate/100);
+    $totalPrice = $priceExMva + $taxes;
 }
 
 function replacevariables($content) {
-    global $user, $room, $selectedProduct, $selectedType, $order, $hotelbookingmanagementapp, $taxes, $totalPrice;
+    global $user, $room, $selectedProduct, $selectedType, $order, $hotelbookingmanagementapp, $taxes, $totalPrice, $priceExMva;
+    
     $content = str_replace("gsnavn", $user->fullName, $content);
     $content = str_replace("gsorgfnr", $user->birthDay, $content);
     $content = str_replace("gspostaddr", $user->address->address . ", " . $user->address->postCode . " " . $user->address->city, $content);
@@ -77,10 +78,10 @@ function replacevariables($content) {
     $content = str_replace("gsdagensdato", date("d.m.Y", time()), $content);
     $content = str_replace("gsdagimaned", date("d", strtotime($order->startDate)), $content);
     $content = str_replace("gsyear", date("Y", strtotime($order->startDate)), $content);
-    $content = str_replace("gspris", $selectedProduct->price, $content);
+    $content = str_replace("gspris", $priceExMva, $content);
     $content = str_replace("gstaxes", $taxes, $content);
     $content = str_replace("gstotalprice", $totalPrice, $content);
-    $content = str_replace("gsadmingebyr", $order->bookingFee, $content);
+    $content = str_replace("gsadmingebyr", "0", $content);
     $content = str_replace("gspostnr", $user->address->postCode, $content);
     $content = str_replace("gssted", $user->address->city, $content);
     $content = str_replace("gsadresse", $user->address->address, $content);

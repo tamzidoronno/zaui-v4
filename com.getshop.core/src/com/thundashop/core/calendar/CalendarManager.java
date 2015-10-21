@@ -1534,6 +1534,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         UserManager userManager = getManager(UserManager.class);
         List<Group> groups = userManager.getAllGroups();
         
+        Group groupNotAssigned = new Group();
+        groupNotAssigned.id = "not_assigned";
+        groupNotAssigned.groupName = "Not assigned";
+        groups.add(groupNotAssigned);
+        
         for (Group group : groups) {
             StatisticResult result = getStatisticResult(from, to, group, allEntries);    
             results.add(result);
@@ -1591,14 +1596,17 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         for (String userId : attendees) {
             User user = manager.getUserById(userId);
             if (user != null) {
-                if (group != null && user.groups != null) {
-                    if (user != null && user.groups.contains(group.id)) {
-                        i++;
-                    }                    
-                } else {
-                    if (user.groups == null || user.groups.size() == 0) {
-                        i++;
-                    }
+                if (group == null && (user.groups == null || user.groups.isEmpty())) {
+                    i++;
+                    continue;
+                }
+                
+                if (user.groups != null && !user.groups.isEmpty() && user.groups.contains(group.id)) {
+                    i++;
+                }
+                
+                if ((user.groups == null || user.groups.isEmpty()) && group.id.equals("not_assigned")) {
+                    i++;
                 }
             }
             

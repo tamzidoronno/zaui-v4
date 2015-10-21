@@ -804,6 +804,10 @@ class Calendar extends MarketingApplication implements Application {
         return "";
     }
     
+    public function getLinkToCalendar($entry) {
+        return "/index.php?page=".$this->getPage()->getId()."&year=".$entry->year."&month=".$entry->month."&day=".$entry->day."&scroll_to_dayview=true&asList=false";
+    }
+    
     public function createPeriod() {
         $startDate = date('M d, Y h:m:s A', strtotime($_POST['data']['startDate']));
         $stopDate = date('M d, Y h:m:s A', strtotime($_POST['data']['endDate']));

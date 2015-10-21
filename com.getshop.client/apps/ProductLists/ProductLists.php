@@ -199,10 +199,10 @@ class ProductLists extends \ApplicationBase implements \Application {
 
     public function getDisplayDecimals() {
         if(!$this->getConfigurationSetting("hidedecimals")) {
-            return false;
+            return true;
         }
         
-        return $this->getConfigurationSetting("hidedecimals") == "true";
+        return $this->getConfigurationSetting("hidedecimals") != "true";
     }
 
 }

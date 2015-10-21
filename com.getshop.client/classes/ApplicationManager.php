@@ -145,9 +145,10 @@ class ApplicationManager extends FactoryBase {
         $cell->keepOriginalLayoutOnMobile = ($_POST['data']['keepOriginalLayout'] == "true");
         $cell->anchor = $_POST['data']['anchor'];
         $cell->link = $_POST['data']['settings']['link'];
+        $cell->hideOnMobile = ($_POST['data']['settings']['hideOnMobile'] == "true");
 
         $this->getApi()->getPageManager()->saveCell($pageid, $cell);
-        
+
         if(isset($_POST['data']['colsizes'])) {
             $colsizes = $_POST['data']['colsizes'];
             foreach($colsizes as $cellid => $width) {

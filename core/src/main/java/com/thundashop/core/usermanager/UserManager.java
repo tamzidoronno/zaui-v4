@@ -986,9 +986,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private String formatText(String text, User user, String uncryptedPassword) {
-        text = text.replace("{User.Name}", user.fullName);
-        text = text.replace("{User.Email}", user.emailAddress);
-        text = text.replace("{User.Phone}", user.cellPhone);
+        if (user.fullName != null)
+            text = text.replace("{User.Name}", user.fullName);
+        
+        if (user.emailAddress != null)
+            text = text.replace("{User.Email}", user.emailAddress);
+        
+        if (user.cellPhone != null)
+            text = text.replace("{User.Phone}", user.cellPhone);
+        
         text = text.replace("{User.Password}", uncryptedPassword);
         
         if (user.address != null) {

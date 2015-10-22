@@ -42,6 +42,16 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
     }
     
     public function showTestResults() {
+        if (isset($_POST['data']['testId'])) {
+            $_SESSION['QuestBackManageMent_result_page'] = $_POST['data']['testId'];
+        } else {
+            $_POST['data']['testId'] = $_SESSION['QuestBackManageMent_result_page'];
+        }
+        
+        if (!isset($_POST['data']['testId'])) {
+            return;
+        }
+        
         $test = $this->getApi()->getQuestBackManager()->getTest($_POST['data']['testId']);
         if (!$test) {
             echo "No test selected";
@@ -138,4 +148,65 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
             $this->getApi()->getQuestBackManager()->assignUserToTest($_POST['data']['testId'], $userId);
         }
     }
+
+    public function groupUsers($userIds) {
+        $grouped = [];
+        
+        foreach ($userIds as $userId) {
+            $user = $this->getApi()->getUserManager()->getUserById($userId);
+            if (!$user->groups) {
+                if (!isset($grouped['no_group'])) {
+                    $grouped['no_group'] = [];
+                }
+                $grouped['no_group'][] = $user;
+            } else {
+                foreach ($user->groups as $groupId) {
+                    if (!isset($grouped[$groupId])) {
+                        $grouped[$groupId] = [];
+                    }
+                    $grouped[$groupId][] = $user;
+                }
+            }
+        }
+        
+        return $grouped;
+    }
+    
+    public function getCategories($result) {
+        $categories = [];
+        foreach($result->answers as $answer) {
+            if (!in_array($answer->parent, $categories)) {
+                $categories[] = $answer->parent;
+            }
+        }
+        
+        foreach ($categories as $cat) {
+            $cat->result = \ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter::getResult($result, $cat);
+        }
+        
+        return $categories;
+    }
+
+    public function mergeCats($allResults) {
+        $returnResult = [];
+        
+        foreach ($allResults as $cats) {
+            foreach ($cats as $cat) {
+                if (!isset($returnResult[$cat->id])) {
+                    $returnResult[$cat->id] = $cat;
+                } else {
+                    $returnResult[$cat->id]->result += $cat->result;       
+                }
+            }
+        }
+        
+        $retAllResults = [];
+        foreach ($returnResult as $id => $cat) {
+            $cat->result = $cat->result / count($allResults);
+            $retAllResults[] = $cat;
+        }
+        
+        return $retAllResults;
+    }
+
 }

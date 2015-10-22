@@ -27,12 +27,12 @@ class QuestBackResultPrinter extends \MarketingApplication implements \Applicati
         }
         
         foreach ($categories as $cat) {
-            $cat->result = $this->getResult($result, $cat);
+            $cat->result = QuestBackResultPrinter::getResult($result, $cat);
         }
         return $categories;
     }
 
-    public function getResult($result, $cat) {
+    public static function getResult($result, $cat) {
         $total = "";
         $questionsInCategory = 0;
         foreach($result->answers as $answer) {
@@ -62,6 +62,38 @@ class QuestBackResultPrinter extends \MarketingApplication implements \Applicati
         }
         
         return $this->getApi()->getQuestBackManager()->getTestResult($test->id);
+    }
+
+    public static function getResultClass($test, $cat) {
+        if ($cat->result < $test->redTo) {
+            return "red";
+        }
+        
+        if ($cat->result <= $test->yellowTo && $cat->result >= $test->yellowFrom) {
+            return "yellow";
+        }
+        
+        if ($cat->result > $test->greenFrom) {
+            return "green";
+        }
+        
+        return "";
+    }
+    
+    public static function getResultText($test, $cat) {
+        if ($cat->result < $test->redTo) {
+            return $test->redText;
+        }
+        
+        if ($cat->result <= $test->yellowTo && $cat->result >= $test->yellowFrom) {
+            return $test->yellowText;
+        }
+        
+        if ($cat->result > $test->greenFrom) {
+            return $test->greenText;
+        }
+        
+        return "";
     }
 
 }

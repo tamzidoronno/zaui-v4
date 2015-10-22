@@ -1,25 +1,65 @@
+<?
+/* @var $this \ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534\QuestBackManagement */
+?>
 <div class='result_printer'>
-    
-    <div class='test_progress_view'>
-        <div class='col name'>Name</div>
-        <div class='col progress'>Progress</div>
-    </div>
+
+
     <?
     $test = $this->getApi()->getQuestBackManager()->getTest($_POST['data']['testId']);
 
-    foreach ($test->userIds as $userId) {
-        $user = $this->getApi()->getUserManager()->getUserById($userId);
-        if (!$user) {
-            continue;
-        }
+    $allResults = [];
+    
+    $groupUserIds = $this->groupUsers($test->userIds);
+    
+    foreach ($groupUserIds as $groupId => $users) {
+        echo "<div class='groupResult'>";
+            echo "<div class='groupName'>";
+            if ($groupId == "no_group") {
+                echo  $this->__f("Unassigned users");     
+            } else {
+                $group = $this->getApi()->getUserManager()->getGroup($groupId);
+                echo $group->groupName;
+            }
+            echo "</div>";
 
-        $testResult = $this->getApi()->getQuestBackManager()->getTestResults($user->id, $test->id);
-        $testProgress = count($testResult->answers)."/".count($test->questions);
-
-        echo "<a href='/?page=questback_result_page&userId=$user->id&testId=$test->id'><div class='test_progress_view'>";
-            echo "<div class='col name'>$user->fullName</div>";
-            echo "<div class='col progress'>$testProgress</div>";
-        echo "</div></a>";
+            foreach ($users as $user) {
+                $testResult = $this->getApi()->getQuestBackManager()->getTestResults($user->id, $test->id);
+                $testProgress = count($testResult->answers)."/".count($test->questions);
+                $completed = count($testResult->answers) == count($test->questions);
+                
+                $cats = $this->getCategories($testResult);
+                $allResults[] = $cats;
+                
+                if ($completed) {
+                    echo "<a href='/?page=questback_result_page&userId=$user->id&testId=$test->id'>";
+                }
+                    echo "<div class='test_progress_view'>";
+                        echo "<div class='col name'>$user->fullName - ($testProgress)</div>";
+                        echo "<div class='cats'>";
+                            foreach ($cats as $cat) {
+                                $class = ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter::getResultClass($test, $cat);
+                                echo "<div title='$cat->name ($cat->result%)' class='cat_result_box_outer'><div class='col cat_result_col $class'></div></div>";
+                            }
+                        echo "</div>";
+                    echo "</div>";
+                    
+                if (count($testResult->answers) == count($test->questions)) {
+                    echo "</a>";
+                }
+            }
+            
+            $cats = $this->mergeCats($allResults);
+            echo "<div class='test_progress_view'>";
+                echo "<div class='col name'>Overall result</div>";
+                echo "<div class='cats'>";
+                    foreach ($cats as $cat) {
+                        echo $cat->result;
+                        $class = ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter::getResultClass($test, $cat);
+                        echo "<div title='$cat->name ($cat->result%)' class='cat_result_box_outer'><div class='col cat_result_col $class'></div></div>";
+                    }
+                echo "</div>";
+            echo "</div>";
+        echo "</div>";
     }
     ?>
 

@@ -61,6 +61,7 @@ public class PageCell implements Serializable {
         anchor = cell.anchor;
         link = cell.link;
         keepOriginalLayoutOnMobile = cell.keepOriginalLayoutOnMobile;
+        hideOnMobile = cell.hideOnMobile;
     }
 
     

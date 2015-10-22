@@ -168,4 +168,6 @@ public interface IStoreManager {
      */
     public int generateStoreId() throws ErrorException;
     
+    public void setImageIdToFavicon(String id); 
+    
 }

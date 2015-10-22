@@ -752,7 +752,7 @@ thundashop.framework = {
                         }
                         var event = thundashop.Ajax.createEvent('', 'saveColChanges', $(this), data);
                         thundashop.Ajax.postWithCallBack(event, function () {
-
+                            
                         });
                     }
                 }

@@ -381,6 +381,10 @@ class Page {
     }
 
     function printCell($cell, $count, $depth, $totalcells, $edit, $parent, $header=false) {
+        if ($this->factory->isMobile() && $cell->hideOnMobile) {
+             return;
+        }
+
         if(!$this->factory->isEditorMode() && $cell->link) {
             echo "<a href='" . $cell->link . "'>";
         }
@@ -498,6 +502,7 @@ class Page {
         if($this->factory->isEditorMode()) {
             $permobject = $cell->settings;
             $permobject->{'link'} = $cell->link;
+            $permobject->{'hideOnMobile'} = $cell->hideOnMobile;
             $permissions = "data-settings='".json_encode($cell->settings) . "'";
         }
         
@@ -611,6 +616,15 @@ class Page {
                     <label><? echo $this->factory->__w("Display this cell when logged on (it will always be visible for administrators)"); ?>
                         <span class='gscssinput'>
                             <input type='checkbox' gsname='displayWhenLoggedOn'> 
+                        </span>
+                    </label>
+                </div>
+                <div style='clear:both;'></div>
+                <br>
+                <div>
+                    <label><? echo $this->factory->__w("Hide this cell on a cell phone"); ?>
+                        <span class='gscssinput'>
+                            <input type='checkbox' gsname='hideOnMobile'> 
                         </span>
                     </label>
                 </div>
@@ -1275,7 +1289,7 @@ class Page {
     }
 
     public function printCellContent($cell, $parent, $edit, $totalcells, $count, $depth) {
-
+        
         if ($cell->mode == "INIT") {
             echo "<div class='gsinitrow'>";
             echo "<div class='gsselectcelltype'>Select a type for this row</div>";

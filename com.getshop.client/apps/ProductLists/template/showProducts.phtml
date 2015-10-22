@@ -74,7 +74,14 @@ if($this->getFactory()->isMobile()) {
                             </div>
                         </div>
                     </a>
-                        <div class="product_price" ><? echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price); ?></div>
+                        <div class="product_price" ><? 
+                        if($this->getDisplayDecimals()) {
+                            $price = ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price, 2);
+                        } else {
+                            $price = ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price, 0);
+                        }
+                        echo $price;
+                        ?></div>
                     
                     <div class="webshop_button_area">
                         <div class="shop_button addProductToCart" productId='<? echo $product->id; ?>'><? echo $this->__f("Add to cart"); ?></div>

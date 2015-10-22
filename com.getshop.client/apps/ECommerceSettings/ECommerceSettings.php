@@ -89,10 +89,10 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         echo $selected;
     }
     
-    public static function formatPrice($price) {
+    public static function formatPrice($price, $numberOfDecimals = 2) {
         $code = ECommerceSettings::fetchCurrencyCode();
         if ($code == "NOK") {
-            return "Kr ".number_format((float)$price, 2, '.', '').",-";
+            return "Kr ".number_format((float)$price, $numberOfDecimals, '.', '').",-";
         }
         
         echo "Price $".$price;

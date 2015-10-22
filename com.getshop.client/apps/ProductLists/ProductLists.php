@@ -55,6 +55,15 @@ class ProductLists extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("isSlideView", "true");
     }
     
+    public function toggleDecimals() {
+        $display = $this->getDisplayDecimals();
+        if($display) {
+            $this->setConfigurationSetting("hidedecimals", "true");
+        } else {
+            $this->setConfigurationSetting("hidedecimals", "false");
+        }
+    }
+    
     public function getAllProducts() {
         if ($this->isSearchResultList()) {
             $searchWord = isset($_GET['searchWord']) ? $_GET['searchWord'] : "";
@@ -187,5 +196,14 @@ class ProductLists extends \ApplicationBase implements \Application {
     public function deleteList() {
         $this->getApi()->getProductManager()->deleteProductList($_POST['value']);
     }
+
+    public function getDisplayDecimals() {
+        if(!$this->getConfigurationSetting("hidedecimals")) {
+            return true;
+        }
+        
+        return $this->getConfigurationSetting("hidedecimals") != "true";
+    }
+
 }
 ?>

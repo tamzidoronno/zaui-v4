@@ -1673,6 +1673,29 @@ class Page {
                     </div>
 
                     <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow gscelllayout"></div>
+                        <div class="gscelllayoutrow gscelllayout"></div>
+                    </div>
+            
+
+                    <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
+                        <div class="gscelllayoutrow gscelllayout"></div>
+                    </div>
+
+                    <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow gscelllayout"></div>
+                        <div class="gscelllayoutrow">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
+                    </div>
+            
+
+                    <div class="gscelllayoutbox">
                         <div class="gscelllayoutrow gscelllayout gscelllayoutheight_3"></div>
                         <div class="gscelllayoutrow gscelllayout gscelllayoutheight_3"></div>
                         <div class="gscelllayoutrow gscelllayout gscelllayoutheight_3"></div>
@@ -1685,6 +1708,21 @@ class Page {
                         </div>
                         <div class="gscelllayoutrow gscelllayout gscelllayoutheight_3"></div>
                         <div class="gscelllayoutrow gscelllayout gscelllayoutheight_3"></div>
+                    </div>
+
+                    <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow gscelllayoutheight_3">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
+                        <div class="gscelllayoutrow gscelllayoutheight_3">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
+                        <div class="gscelllayoutrow gscelllayoutheight_3">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
                     </div>
 
                     <div class="gscelllayoutbox">

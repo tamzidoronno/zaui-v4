@@ -390,6 +390,10 @@ public class PageLayout implements Serializable {
         return returning;
     }
 
+    public void resetMobileList() {
+        mobileList = new LinkedList();
+    }
+    
     private PageCell initNewCell(String mode) {
         PageCell cell = new PageCell();
         cell.mode = mode;

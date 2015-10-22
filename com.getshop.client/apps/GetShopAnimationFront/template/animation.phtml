@@ -320,15 +320,18 @@
         <div class="spacer s0" id="trigger"></div>
         
             <div class='animationwarapper' >
-                <div id="target">
-                    <div id="animation_l1" style='position: absolute; right: -200px; font-size: 100px;'>G</div>
-                    <div id="animation_l2" style='position: absolute; right: -255px; font-size: 100px;'>e</div>
-                    <div id="animation_l3" style='position: absolute; right: -290px; font-size: 100px;'>t</div>
-                    <div id="animation_l4" style='position: absolute; right: -350px; font-size: 100px;'>S</div>
-                    <div id="animation_l5" style='position: absolute; right: -400px; font-size: 100px;'>h</div>
-                    <div id="animation_l6" style='position: absolute; right: -450px; font-size: 100px;'>o</div>
-                    <div id="animation_l7" style='position: absolute; right: -500px; font-size: 100px;'>p</div>
-                    <img id="plane2" style='position: absolute; left: -200px;' src="https://www.getshop.com/displayImage.php?id=7d09b192-4aea-4045-88e3-69445b408c57">
+            <div style='top: 160px; position:absolute; font-size: 60px;text-align: center; width:100%;padding-top: 200px;'>
+                Vi skreddersyr din webløsning.
+            </div>
+                <div id="target" style="position:relative; left: 50%;">
+                    <div id="animation_l1" style='position: absolute; left:  0px; font-size: 100px;'>G</div>
+                    <div id="animation_l2" style='position: absolute; left:  70px; font-size: 100px;'>e</div>
+                    <div id="animation_l3" style='position: absolute; left:  130px; font-size: 100px;'>t</div>
+                    <div id="animation_l4" style='position: absolute; left:  180px; font-size: 100px;'>S</div>
+                    <div id="animation_l5" style='position: absolute; left:  240px; font-size: 100px;'>h</div>
+                    <div id="animation_l6" style='position: absolute; left:  300px; font-size: 100px;'>o</div>
+                    <div id="animation_l7" style='position: absolute; left:  360px; font-size: 100px;'>p</div>
+                    <img id="plane2" style='position: absolute; left: -130px;' src="https://www.getshop.com/displayImage.php?id=7d09b192-4aea-4045-88e3-69445b408c57">
                 </div>
             </div>
         
@@ -342,23 +345,23 @@
                var flightpath2 = {
                     entry: {
                         curviness: 1.2,
-                        autoRotate: false,
+                        autoRotate: true,
                         values: [
-                            {x: -$(window).width()-100, y: -500},
-                            {x: -$(window).width()+center-alignLeft, y: 0}
+                            {x: -100, y: 400},
+                            {x: -200, y: 200}
                         ]
                     },
                     entry2: {
-                        curviness: 1.2,
-                        autoRotate: false,
+                        curviness: 1.7,
+                        autoRotate: true,
                         values: [
-                            {x: -$(window).width()-500, y: -400},
+                            {x: 13000, y: 200},
                             {x: -$(window).width()+center-alignLeft, y: 0}
                         ]
                     },
                     entry3: {
                         curviness: 1.2,
-                        autoRotate: false,
+                        autoRotate: true,
                         values: [
                             {x: -$(window).width()+600, y: -300},
                             {x: -$(window).width()+center-alignLeft, y: 0}
@@ -366,7 +369,7 @@
                     },
                     entry4: {
                         curviness: 1.2,
-                        autoRotate: false,
+                        autoRotate: true,
                         values: [
                             {x: -$(window).width()-600, y: -200},
                             {x: -$(window).width()+center-alignLeft, y: 0}
@@ -374,7 +377,7 @@
                     },
                     entry5: {
                         curviness: 1.2,
-                        autoRotate: false,
+                        autoRotate: true,
                         values: [
                             {x: -$(window).width(), y: -100},
                             {x: -$(window).width()+center-alignLeft, y: 0}
@@ -382,7 +385,7 @@
                     },
                     entry6: {
                         curviness: 1.2,
-                        autoRotate: false,
+                        autoRotate: true,
                         values: [
                             {x: -$(window).width()+200, y: -100},
                             {x: -$(window).width()+center-alignLeft, y: 0}

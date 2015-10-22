@@ -133,3 +133,11 @@ body {
 #messagebox {
     background: none !important;
 }
+
+.gsmobilebody .Login .login_header_type_1 {
+    display: none;
+}
+
+.gsmobilebody .Login {
+    display: block;
+}

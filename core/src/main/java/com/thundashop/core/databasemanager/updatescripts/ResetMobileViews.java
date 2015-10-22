@@ -21,13 +21,16 @@ public class ResetMobileViews  extends UpgradeBase {
 
     private void start() throws UnknownHostException {
         HashMap<String, HashMap<String, Page>> pages = getAllPages();
+        int counter = 0;
         for(String storeId : pages.keySet()) {
             HashMap<String,Page> storePages = pages.get(storeId);
             for(Page page : storePages.values()) {
                 page.layout.resetMobileList();
                 System.out.println("Resetting page: " + page.id + " collection: " + storeId);
                 saveObject(page, "PageManager");
+                counter++;
             }
         }
+        System.out.println("Modified to total: " + counter + " pages");
     }
 }

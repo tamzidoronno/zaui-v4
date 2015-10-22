@@ -53,4 +53,6 @@ public interface IMessageManager  {
     
     public void collectEmail(String email);
     
+    public List<String> getCollectedEmails();
+    
 }

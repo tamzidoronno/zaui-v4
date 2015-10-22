@@ -113,7 +113,7 @@ class Page {
             }
         } else {
             echo "<div class='gsbody' pageId='" . $this->getId() . "'>";
-            $cells = $layout->areas->{'body'};
+            $cells = $this->factory->getApi()->getPageManager()->getMobileBody($this->getId());
             echo "<div class='header gsmobileheaderfull'>";
             $this->printArea($layout->areas->{'header'}, 0, null);
             echo "</div>";

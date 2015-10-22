@@ -681,6 +681,16 @@ public class PageManager extends ManagerBase implements IPageManager {
         
         return super.preProcessMessage(object, executeMethod);
     }
+
+    @Override
+    public List<PageCell> getMobileBody(String pageId) {
+        return getPage(pageId).getMobileList();
+    }
+
+    @Override
+    public void resetMobileLayout(String pageId) {
+        getPage(pageId).resetMobileLayout();
+    }
     
     
 }

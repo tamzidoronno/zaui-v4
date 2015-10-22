@@ -14,6 +14,7 @@ import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -142,6 +143,16 @@ public class Page extends DataCommon implements Cloneable {
 
     public void removeApplicationsThatDoesNotExists() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<PageCell> getMobileList() {
+         System.out.println("Mobile list for id: " + id);
+       return layout.getMobileBody();
+    }
+
+    public void resetMobileLayout() {
+        System.out.println("Resetting: " + id);
+        layout.mobileList = new LinkedList();
     }
 
     public static class DefaultPages {

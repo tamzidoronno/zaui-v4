@@ -214,4 +214,9 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         return smsFactory.getMessageState(msgId);
     }
 
+    @Override
+    public List<String> getCollectedEmails() {
+        return collectedEmails.emails;
+    }
+
 }

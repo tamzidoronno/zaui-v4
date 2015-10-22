@@ -12,7 +12,24 @@ class MailChimp extends \ApplicationBase implements \Application {
     }
 
     public function render() {
-        $this->includefile("frontend");
+        $key = $this->getApiKey();
+        if(!$key) {
+            $this->includefile("nokeyset");
+        } else {
+            $this->includefile("frontend");
+            if($this->hasWriteAccess()) {
+                $this->includefile("emailfilter");
+            }
+        }
+    }
+    
+    public function getApiKey() {
+        return $this->getConfigurationSetting("api_key");
+    }
+    
+    
+    public function setApiKey() {
+        $this->setConfigurationSetting("api_key", $_POST['data']['api_key']);
     }
     
     public function addEmail() {

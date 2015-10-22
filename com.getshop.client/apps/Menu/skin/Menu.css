@@ -15,6 +15,8 @@
     display: none;
 }
 
+.vakata-context,#jstree-marker { z-index: 101; }
+
 .Menu .info {
     border: solid 1px #EEE;
     margin-top: 10px;
@@ -98,6 +100,7 @@
     display: inline-block;
     width: 248px;
     border: solid 1px #DDD;
+    height: 215px;
     position: relative;
 }
 .Menu .menueditor {

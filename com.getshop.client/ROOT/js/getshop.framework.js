@@ -102,6 +102,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_close_cell_layoutbutton', this.hideChangeLayoutOption);
         $(document).on('click', '.gscelllayoutbox', this.changeCellLayout);
         $(document).on('click', '.gscell', this.checkMoveApp);
+        $(document).on('click', '.gsresetmobilelayout', this.resetMobileLayout);
         $(document).on('keyup', '#gs_start_store_email', this.startFromCurrentStore);
 
         /* Cell operations */
@@ -109,6 +110,16 @@ thundashop.framework = {
         $(document).on('click', '.simpleaddrow', this.simpleaddrow);
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+    },
+    
+    resetMobileLayout : function() {
+        var event = thundashop.Ajax.createEvent('','resetMobileLayout',$(this),{});
+        thundashop.Ajax.postWithCallBack(event, function() {
+            var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
+            var location = window.location.protocol + "//gsmobile" + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
+            $('#gscontentframe').attr('src', location);
+            $('#gscontentframelandscape').attr('src', location);
+        });
     },
     
     checkMoveApp : function() {

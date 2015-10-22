@@ -33,6 +33,10 @@ class ApplicationManager extends FactoryBase {
         $this->getApi()->getPageManager()->swapAppWithCell($pageId, $fromCell, $toCell);
     }
     
+    function resetMobileLayout() {
+        $this->getApi()->getPageManager()->resetMobileLayout($this->getPage()->javapage->id);
+    }
+    
     function setLayoutOnCell() {
         $layout = $_POST['data']['layout'];
         $cellid = $_POST['data']['cellid'];

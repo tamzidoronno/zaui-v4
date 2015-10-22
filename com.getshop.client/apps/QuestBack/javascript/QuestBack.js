@@ -13,8 +13,13 @@ app.QuestBack = {
         $(document).on('click', '.QuestBack .admin_correct_option', app.QuestBack.markAsCorrectOption)
         $(document).on('click', '.QuestBack .answer_question', app.QuestBack.answerQuestion)
         $(document).on('click', '.QuestBack .go_to_next_question', app.QuestBack.goToNextQuestion)
+        $(document).on('click', '.QuestBack .options_area_options div', app.QuestBack.toggleBoxIfPossible)
         $(document).on('change', '.QuestBack .admin_option_text', app.QuestBack.optionTextChanged)
         $(document).on('focusout', '.QuestBack .headingtext', app.QuestBack.saveHeading)
+    },
+    
+    toggleBoxIfPossible: function() {
+        $(this).find('input').attr('checked','checked');
     },
     
     goToNextQuestion: function() {

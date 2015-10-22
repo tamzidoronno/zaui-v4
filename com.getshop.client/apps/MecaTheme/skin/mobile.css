@@ -59,18 +59,23 @@ body {
 
 }
 
-.options_area_options div input {
-    display: block;
-    text-align: center;
-    margin-bottom: 10px;
+.input_option_box {
     width: 100%;
+    /*display: block !important;*/
+    text-align: center !important;
+    
+}
+.questback_option_row input {
+    margin-bottom: 10px;
+    border: solid 1px #000;
     box-sizing: border-box;
 }
 
-.options_area_options div {
+.questback_option_row {
     margin-bottom: 20px;
     background-color: #f3f3f3;
     padding: 10px;
+    cursor:pointer;
 }
 
 .gscell[cellid="392a83b3-708d-492a-bc6c-444c5f06a56e"] {
@@ -86,11 +91,25 @@ body {
 }
 
 .gscell[cellid="6ae5bd85-d004-4c1a-abb1-ff7fd9bb9647"] {
-    position: absolute; top: -80px;
-    right: 20px;
+    position: fixed; 
+    top: -22px;
+    right: -30px;
     background-color: transparent;
+    z-index: 3;
 }
 
+.answer_question {
+    
+    width: 100%;
+    box-sizing: border-box;
+    
+/*    box-sizing: border-box;
+    position: fixed;
+    bottom: 60px;
+    z-index: 3;
+    left: 20px;
+    right: 20px;*/
+}
 
 .gscell[cellid="40041203-1e84-4cda-a848-a6d14870e202"] {
     display: none;

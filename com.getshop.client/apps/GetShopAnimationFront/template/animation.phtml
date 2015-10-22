@@ -320,10 +320,10 @@
         <div class="spacer s0" id="trigger"></div>
         
             <div class='animationwarapper' >
-            <div style='top: 160px; position:absolute; font-size: 60px;text-align: center; width:100%;padding-top: 200px;'>
+            <div style='top: 260px; position:absolute; font-size: 60px;text-align: center; width:100%;padding-top: 200px;'>
                 Vi skreddersyr din webløsning.
             </div>
-                <div id="target" style="position:relative; left: 50%;">
+                <div id="target" style="position:relative; left: 50%; top: 140px;">
                     <div id="animation_l1" style='position: absolute; left:  0px; font-size: 100px;'>G</div>
                     <div id="animation_l2" style='position: absolute; left:  70px; font-size: 100px;'>e</div>
                     <div id="animation_l3" style='position: absolute; left:  130px; font-size: 100px;'>t</div>
@@ -432,14 +432,10 @@
                 
                 var tl = new TimelineMax().add([tw1,tw2,tw3,tw4,tw5,tw6,tw7,tw8, tw9], 'sequence');
 
-
                 // build scene
-                var scene = new ScrollMagic.Scene({triggerElement: "#trigger", duration: 1000, offset: 526});
-                scene = scene.setPin("#target")
-                scene = scene.setTween(tl)
+                var scene = new ScrollMagic.Scene({triggerElement: "#trigger", duration: 1000, offset: 700});
+                scene = scene.setPin("#target");
+                scene = scene.setTween(tl);
                 scene = scene.addTo(controller);
-                
-           
-  
-            })
+            });
         </script>

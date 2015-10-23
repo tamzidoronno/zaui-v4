@@ -18,7 +18,10 @@ app.QuestBack = {
         $(document).on('focusout', '.QuestBack .headingtext', app.QuestBack.saveHeading)
     },
     
-    toggleBoxIfPossible: function() {
+    toggleBoxIfPossible: function(e, b) {
+        if ($(e.target).is('input')) {
+            return;
+        }
         
         if ($(this).find('input').is(':checked')) {
             $(this).find('input').removeAttr('checked');

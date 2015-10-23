@@ -14,6 +14,7 @@ public class PageLayout implements Serializable {
     HashMap<String, ArrayList<PageCell>> areas = new HashMap();
     LinkedList<String> mobileList = new LinkedList();
     private LinkedList<String> mobileTmpList;
+    private boolean flatMobileList = false;
 
     void clear() {
         areas.put("body", new ArrayList());
@@ -340,8 +341,8 @@ public class PageLayout implements Serializable {
         return null;
     }
 
-    public ArrayList<PageCell> getCellsInBodyFlatList() {
-        ArrayList<PageCell> arrayList = new ArrayList();
+    public LinkedList<PageCell> getCellsInBodyFlatList() {
+        LinkedList<PageCell> arrayList = new LinkedList();
         List<PageCell> cells = areas.get("body");
         if (cells != null) {
             for (PageCell row : areas.get("body")) {
@@ -391,7 +392,9 @@ public class PageLayout implements Serializable {
     }
 
     public void resetMobileList() {
+        flatMobileList = false;
         mobileList = new LinkedList();
+        buildMobileList(areas.get("body"), false);
     }
     
     private PageCell initNewCell(String mode) {
@@ -464,10 +467,14 @@ public class PageLayout implements Serializable {
     
     private void buildMobileList(ArrayList<PageCell> cells, Boolean tmpList) {
         for(PageCell cell : cells) {
-            if(tmpList) {
-                mobileTmpList.add(cell.cellId);
+            if(!cell.cells.isEmpty() && !cell.isRotating() && !cell.isTab() && flatMobileList) {
+                buildMobileList(cell.cells, tmpList);
             } else {
-                mobileList.add(cell.cellId);
+                if(tmpList) {
+                    mobileTmpList.add(cell.cellId);
+                } else {
+                    mobileList.add(cell.cellId);
+                }
             }
         }
     }
@@ -567,5 +574,11 @@ public class PageLayout implements Serializable {
             }
         }
         return cells;
+    }
+
+    void flattenMobileLayout() {
+        flatMobileList = true;
+        mobileList = new LinkedList();
+        buildMobileList(areas.get("body"), false);
     }
 }

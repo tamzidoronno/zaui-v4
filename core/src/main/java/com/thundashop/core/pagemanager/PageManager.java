@@ -689,7 +689,16 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public void resetMobileLayout(String pageId) {
-        getPage(pageId).resetMobileLayout();
+        Page page = getPage(pageId);
+        page.resetMobileLayout();
+        savePage(page);
+    }
+
+    @Override
+    public void flattenMobileLayout(String pageId) {
+        Page page = getPage(pageId);
+        page.flattenMobileLayout();
+        savePage(page);
     }
     
     

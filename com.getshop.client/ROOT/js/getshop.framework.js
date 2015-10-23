@@ -103,6 +103,7 @@ thundashop.framework = {
         $(document).on('click', '.gscelllayoutbox', this.changeCellLayout);
         $(document).on('click', '.gscell', this.checkMoveApp);
         $(document).on('click', '.gsresetmobilelayout', this.resetMobileLayout);
+        $(document).on('click', '.gsflattenmobile', this.gsflattenmobile);
         $(document).on('keyup', '#gs_start_store_email', this.startFromCurrentStore);
 
         /* Cell operations */
@@ -114,6 +115,17 @@ thundashop.framework = {
     
     resetMobileLayout : function() {
         var event = thundashop.Ajax.createEvent('','resetMobileLayout',$(this),{});
+        thundashop.Ajax.postWithCallBack(event, function() {
+            var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
+            var location = window.location.protocol + "//gsmobile" + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
+            $('#gscontentframe').attr('src', location);
+            $('#gscontentframelandscape').attr('src', location);
+        });
+    },
+    
+    
+    gsflattenmobile : function() {
+        var event = thundashop.Ajax.createEvent('','flattenMobileLayout',$(this),{});
         thundashop.Ajax.postWithCallBack(event, function() {
             var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
             var location = window.location.protocol + "//gsmobile" + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;

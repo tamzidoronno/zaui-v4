@@ -254,6 +254,9 @@ public interface IPageManager {
     
     @Administrator
     public void resetMobileLayout(String pageId);
+    
+    @Administrator
+    public void flattenMobileLayout(String pageId);
     /**
      * Need to translate a set of page ids?
      * @param pages A list (array) of page ids to translate.

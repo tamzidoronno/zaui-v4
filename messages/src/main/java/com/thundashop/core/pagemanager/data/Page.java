@@ -151,8 +151,11 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public void resetMobileLayout() {
-        System.out.println("Resetting: " + id);
-        layout.mobileList = new LinkedList();
+        layout.resetMobileList();
+    }
+
+    public void flattenMobileLayout() {
+        layout.flattenMobileLayout();
     }
 
     public static class DefaultPages {

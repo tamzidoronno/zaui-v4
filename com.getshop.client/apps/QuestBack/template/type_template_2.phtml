@@ -46,7 +46,7 @@ if (!$headingText && $isAdmin) {
                 echo "<div class='admin_button admin_correct_option'><i class='fa fa-check' title='Mark as correct answer' style='$correct'></i></div>";
             }
             
-            echo "<input style='position: relative; top: 2px;' class='answer_option_box' type='radio' name='question' value='$option->id'/> ";
+            echo "<div style='display: inline-block;' class='input_option_box'><input style='position: relative; top: 2px;' class='answer_option_box' type='radio' name='question' value='$option->id'/></div> ";
             if ($isAdmin) {
                 echo "<input class='admin_option_text' type='textfield' value='".$option->text."'/>";
             } else {

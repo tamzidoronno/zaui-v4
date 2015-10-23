@@ -13,13 +13,18 @@ app.QuestBack = {
         $(document).on('click', '.QuestBack .admin_correct_option', app.QuestBack.markAsCorrectOption)
         $(document).on('click', '.QuestBack .answer_question', app.QuestBack.answerQuestion)
         $(document).on('click', '.QuestBack .go_to_next_question', app.QuestBack.goToNextQuestion)
-        $(document).on('click', '.QuestBack .options_area_options div', app.QuestBack.toggleBoxIfPossible)
+        $(document).on('click', '.QuestBack .questback_option_row', app.QuestBack.toggleBoxIfPossible)
         $(document).on('change', '.QuestBack .admin_option_text', app.QuestBack.optionTextChanged)
         $(document).on('focusout', '.QuestBack .headingtext', app.QuestBack.saveHeading)
     },
     
     toggleBoxIfPossible: function() {
-        $(this).find('input').attr('checked','checked');
+        
+        if ($(this).find('input').is(':checked')) {
+            $(this).find('input').removeAttr('checked');
+        } else {
+            $(this).find('input').attr('checked','checked');
+        }
     },
     
     goToNextQuestion: function() {
@@ -52,6 +57,14 @@ app.QuestBack = {
         var data = {
             answers : $.makeArray( selectedAnswers )
         }
+        
+        if (data.answers.length === 0) {
+            app.QuestBack.inProgress = false;
+            $(this).html(app.QuestBack.oldButtonText);
+            alert(__f('Please select atleast one option'));
+            return;
+        }
+        
         var me = this;
         var event = thundashop.Ajax.createEvent(null, "checkAnswer", this, data);
         thundashop.Ajax.postWithCallBack(event, function(result) {
@@ -62,12 +75,16 @@ app.QuestBack = {
                 thundashop.common.Alert(__f("Wrong answer"), __f("You have answered incorrectly, please check your answers and try again"), true, 2000);
             } else {
                 if (result === "done") {
-                    thundashop.common.goToPage('questback_result_page');
+                    thundashop.common.goToPage('questback_result_page', app.QuestBack.scrollToTop);
                 } else {
-                    thundashop.common.goToPage(result);
+                    thundashop.common.goToPage(result, app.QuestBack.scrollToTop);
                 }
             }
         });
+    },
+    
+    scrollToTop: function() {
+        window.scrollTo(0,0);
     },
     
     optionTextChanged: function() {

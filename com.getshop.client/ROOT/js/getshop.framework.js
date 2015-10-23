@@ -797,6 +797,7 @@ thundashop.framework = {
         var csslines = css.split("\n");
         var newcss = "";
         var levelfound = false;
+        var levelexists = false;
         
         for (var key in csslines) {
             
@@ -804,8 +805,9 @@ thundashop.framework = {
                 levelfound = false;
             }
             
-            if(csslines[key].indexOf(level) > 0) {
+            if(csslines[key].indexOf(level + " ") > 0) {
                 levelfound = true;
+                levelexists = true;
             }
             
             var attr = csslines[key].split(":");
@@ -814,6 +816,13 @@ thundashop.framework = {
             }
             newcss += csslines[key] + "\n";
         }
+        
+        if(!levelexists) {
+            console.log('level never found: ' + level + " id: " + id);
+            var inkcellid = $('[cellid="'+id+'"]').attr('incrementcellid');
+            newcss += ".gscell_" + inkcellid + level + " {\n\n}\n";
+        }
+        
         cssEditorForCell.setValue(newcss);
     },
     getCssAttr: function (attribute, id, level) {
@@ -823,7 +832,6 @@ thundashop.framework = {
         if(!level) {
             level = ".gsucell";
         }
-        console.log(attribute + " - " + id + " - " + level);
         
         var csslines = css.split("\n");
         var newcss = "";
@@ -834,7 +842,7 @@ thundashop.framework = {
                 levelfound = false;
             }
             
-            if(csslines[key].indexOf(level) > 0) {
+            if(csslines[key].indexOf(level + " ") > 0) {
                 levelfound = true;
             }
 
@@ -918,7 +926,7 @@ thundashop.framework = {
                         if (!type || type === "") {
                             thundashop.framework.addCss('background-repeat', 'no-repeat', cellid, level);
                             thundashop.framework.addCss('background-position', 'center', cellid, level);
-                            thundashop.framework.addCss('background-size', '100%', cellid, level);
+                            thundashop.framework.addCss('background-size', 'cover', cellid, level);
                             thundashop.framework.addCss('background-image', 'url("/displayImage.php?id=' + id + '")', cellid, level);
                             target.closest('.gscolorselectionpanel').find('.gschoosebgimagebutton').show();
                             target.closest('.gscolorselectionpanel').find('.gsuploadimage').hide();

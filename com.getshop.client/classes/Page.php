@@ -620,11 +620,21 @@ class Page {
                     </label>
                 </div>
                 <div style='clear:both;'></div>
+                
                 <br>
                 <div>
                     <label><? echo $this->factory->__w("Hide this cell on a cell phone"); ?>
                         <span class='gscssinput'>
                             <input type='checkbox' gsname='hideOnMobile'> 
+                        </span>
+                    </label>
+                </div>
+                <div style='clear:both;'></div>
+                <br>
+                <div>
+                    <label> <? echo $this->factory->__w("Keep original layout in mobile view."); ?>
+                        <span class='gscssinput'>
+                            <input type="checkbox" class='gskeepOriginalLayout'>
                         </span>
                     </label>
                 </div>
@@ -670,63 +680,55 @@ class Page {
 
             </div>
             <div class='gspage' target='background' style="padding: 10px;">
-                <div class='gsheading'><? echo $this->factory->__w("Mobile settings"); ?></div>
-                <input type="checkbox" class='gskeepOriginalLayout'> <? echo $this->factory->__w("Keep original layout in mobile view."); ?>
-                <br><br>
-                <div class='gsoutercolorselectionpanel gsoutercolorselectionbg'>
-                    
-                    
-                    
-                    <div class='gsheading'><? echo $this->factory->__w("Outer background"); ?></div>
-                    <div class='gscolorselectionpanel' level=''>
-                        <table width='100%'>
-                            <tr>
-                                <td valign="top">
-                                    <? echo $this->factory->__w("Select a background image for the outer area of this cell."); ?>
-        <!--                                    <select>
-                                        <option><? echo $this->factory->__w("Cover"); ?></option>
-                                        <option><? echo $this->factory->__w("Center"); ?></option>
-                                        <option><? echo $this->factory->__w("100% width"); ?></option>
-                                        <option><? echo $this->factory->__w("Normal"); ?></option>
-                                    </select>-->
-                                </td>
-                                <td align='right'>
-                                    <div class="inputWrapper">
-                                        <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
-                                        <input type='button' value='<? echo $this->factory->__w("Choose"); ?>' class='gschoosebgimagebutton'>
-                                        <input class="fileInput gsbgimageselection" type="file" />
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class='gsoutercolorselectionpanel' >
-                    <div class='gsheading'><? echo $this->factory->__w("Inner background"); ?></div>
-                    <div class='gscolorselectionpanel' level='.gsuicell'>
-                        <table width='100%'>
-                            <tr>
-                                <td valign="top">
-                                    <? echo $this->factory->__w("Select a background image for the inner area of this cell."); ?>
-        <!--                                    <select>
-                                        <option><? echo $this->factory->__w("Cover"); ?></option>
-                                        <option><? echo $this->factory->__w("Center"); ?></option>
-                                        <option><? echo $this->factory->__w("100% width"); ?></option>
-                                        <option><? echo $this->factory->__w("Normal"); ?></option>
-                                    </select>-->
-                                </td>                                
-                                <td align='right'>
-                                    <div class="inputWrapper">
-                                        <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
-                                        <input type='button' value='<? echo $this->factory->__w("Choose"); ?>' class='gschoosebgimagebutton'>
-                                        <input class="fileInput gsbgimageselection" type="file" />
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div> 
-                </div>
-
+                <table width='100%'>
+                    <tr>
+                        <td>
+                            <div class='gsoutercolorselectionpanel gsoutercolorselectionbg'>
+                                <div class='gsheading'><? echo $this->factory->__w("Outer background"); ?></div>
+                                <div class='gscolorselectionpanel' level=''>
+                                    <table width='100%'>
+                                        <tr>
+                                            <td valign="top">
+                                                <? echo $this->factory->__w("Select a background image."); ?>
+                                            </td>
+                                            <td align='right'>
+                                                <div class="inputWrapper">
+                                                    <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
+                                                    <input type='button' value='<? echo $this->factory->__w("Choose"); ?>' class='gschoosebgimagebutton'>
+                                                    <input class="fileInput gsbgimageselection" type="file" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                        <td style='padding-left: 20px;'>
+                            <div class='gsoutercolorselectionpanel' >
+                                <div class='gsheading'><? echo $this->factory->__w("Inner background"); ?></div>
+                                <div class='gscolorselectionpanel' level='.gsuicell'>
+                                    <table width='100%'>
+                                        <tr>
+                                            <td valign="top">
+                                                <? echo $this->factory->__w("Select a background image."); ?>
+                                            </td>                                
+                                            <td align='right'>
+                                                <div class="inputWrapper">
+                                                    <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
+                                                    <input type='button' value='<? echo $this->factory->__w("Choose"); ?>' class='gschoosebgimagebutton'>
+                                                    <input class="fileInput gsbgimageselection" type="file" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div> 
+                            </div>
+                       </td>
+                    </tr>
+                </table>
+                
+                <br>
+ 
                 <div class='gsheading'><? echo $this->factory->__w("Other attributes"); ?></div>
 
                 <div class='gscssattributes'>
@@ -741,9 +743,29 @@ class Page {
                         </span>
                     </div>
                     <div class="gscssrow">
+                       &nbsp;&nbsp;<? echo $this->factory->__w("Mouse over background inner"); ?> <span class="gscssinput">
+                            <input type='text' data-attr="background-color"  data-level='.gsuicell:hover' class='gsinnerbgcolormouseover' style='width:60px; padding:0px;'>
+                            <div id="colorSelector5" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
+                                <div>
+                                    <i class="fa fa-eyedropper"></i>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="gscssrow">
                         <? echo $this->factory->__w("Background color outer"); ?> <span class="gscssinput">
                             <input type='text' data-attr="background-color"  data-level='.gsucell' class='gsouterbgcolor' style='width:60px; padding:0px;'>
                             <div id="colorSelector3" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
+                                <div>
+                                    <i class="fa fa-eyedropper"></i>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="gscssrow">
+                        &nbsp;&nbsp;<? echo $this->factory->__w("Mouse over background outer"); ?> <span class="gscssinput">
+                            <input type='text' data-attr="background-color"  data-level='.gsucell:hover' class='gsouterbgcolormouseover' style='width:60px; padding:0px;'>
+                            <div id="colorSelector4" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
                                 <div>
                                     <i class="fa fa-eyedropper"></i>
                                 </div>
@@ -837,6 +859,18 @@ class Page {
             }});
             $('#colorSelector3').ColorPicker({ onChange: function (hsb, hex, rgb) {
                 var field = $('.gsouterbgcolor');
+                field.val("#" + hex);
+                field.ColorPickerHide();
+                field.keyup();
+            }});
+            $('#colorSelector4').ColorPicker({ onChange: function (hsb, hex, rgb) {
+                var field = $('.gsouterbgcolormouseover');
+                field.val("#" + hex);
+                field.ColorPickerHide();
+                field.keyup();
+            }});
+            $('#colorSelector5').ColorPicker({ onChange: function (hsb, hex, rgb) {
+                var field = $('.gsinnerbgcolormouseover');
                 field.val("#" + hex);
                 field.ColorPickerHide();
                 field.keyup();

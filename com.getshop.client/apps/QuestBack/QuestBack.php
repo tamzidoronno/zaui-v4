@@ -144,7 +144,7 @@ class QuestBack extends \ApplicationBase implements \Application {
     }
 
     public function printOptionButton() {
-        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+        if (!\ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId()) {
             echo "<div style='margin-right: 20px;' class='gs_button add_option'> Add option </div>";
         }
         

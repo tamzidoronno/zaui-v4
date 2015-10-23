@@ -262,6 +262,10 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
     }
     
     private UserTestResult getResultTest(String testId, String userId) {
+        if (userId == null || testId == null) {
+            return null;
+        }
+        
         UserTestResult result = results.stream()
             .filter( answer -> answer.userId.equals(userId) && answer.testId != null && answer.testId.equals(testId))
             .findFirst()

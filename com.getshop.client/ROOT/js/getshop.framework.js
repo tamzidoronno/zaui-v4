@@ -823,7 +823,6 @@ thundashop.framework = {
         if(!level) {
             level = ".gsucell";
         }
-        console.log(attribute + " - " + id + " - " + level);
         
         var csslines = css.split("\n");
         var newcss = "";
@@ -992,6 +991,19 @@ thundashop.framework = {
             }
         });
         
+        var settingsPage = $('.gspage[target="effects"]');
+        settingsPage.find("[gsname]").each(function() {
+            var name = $(this).attr('gsname');
+            if($(this).is(':checkbox')) {
+               if($(this).is(':checked')) {
+                   settings[name] = true;
+               } else {
+                   settings[name] = false;
+               }
+            } else {
+                 settings[name] = $(this).val();
+            }
+        });
         
         var data = {
             "cellid": cellid,
@@ -999,8 +1011,9 @@ thundashop.framework = {
             "anchor" : $('#gs_settings_cell_anchor').val(),
             "colsizes": colsizes,
             "settings" : settings,
-            "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked')
+            "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked'),    
         };
+        
         var event = thundashop.Ajax.createEvent('', 'saveColChanges', $(this), data);
         if (avoidreprint === true) {
             $('.gsresizingpanel').hide();
@@ -1098,8 +1111,23 @@ thundashop.framework = {
         
         //Loading permission object.
         var settings = JSON.parse(cell.attr('data-settings'));
+  
         var settingsPage = $('.gspage[target="cellsettings"]');
         settingsPage.find("[gsname]").each(function() {
+            var name = $(this).attr('gsname');
+            if($(this).is(':checkbox')) {
+               if(settings[name]) {
+                   $(this).attr('checked','cheked');
+               } else {
+                   $(this).attr('checked',null);
+               }
+            } else {
+                $(this).val(settings[name]);
+            }
+        });
+        
+        var effectsPage = $('.gspage[target="effects"]');
+        effectsPage.find("[gsname]").each(function() {
             var name = $(this).attr('gsname');
             if($(this).is(':checkbox')) {
                if(settings[name]) {

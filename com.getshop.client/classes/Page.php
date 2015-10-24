@@ -384,7 +384,7 @@ class Page {
         if ($this->factory->isMobile() && $cell->hideOnMobile) {
              return;
         }
-
+        
         if(!$this->factory->isEditorMode() && $cell->link) {
             echo "<a href='" . $cell->link . "'>";
         }
@@ -509,6 +509,10 @@ class Page {
         $anchor = $cell->anchor;
         
         echo "<div anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        $this->printEffectTrigger($cell, $depth);
+        
+        $this->printEffectSettingsDiv($cell);
+        
         if ($anchor) {
             echo "<a id='$anchor' name='$anchor'></a>";
         }
@@ -552,6 +556,7 @@ class Page {
             echo "</a>";
         }
         
+        $this->printEffectTriggerLoaded($cell, $depth);
         return true;
     }
 
@@ -610,6 +615,70 @@ class Page {
                 <span class='tabbtn' target='css'><? echo $this->factory->__w("Css"); ?></span>
                 <span class='tabbtn' target='background'><? echo $this->factory->__w("Styling"); ?></span>
                 <span class='tabbtn' target='cellsettings'><? echo $this->factory->__w("Settings"); ?></span>
+                <span class='tabbtn' target='effects'><? echo $this->factory->__w("Effects"); ?></span>
+            </div>
+            <div class='gspage' target='effects' style='padding: 10px;'>
+                <?
+                if (!$this->factory->isEffectsEnabled()) {
+                    echo $this->factory->__f("Effects disabled, this module requires a higher SLA.");
+                } else {
+                ?>
+                    <h2>Scroll effect - Fadein</h2>
+                    <div>
+                        <label><? echo $this->factory->__w("Fade in when scrolling"); ?>
+                            <span class='gscssinput'>
+                                <input type='checkbox' gsname='scrollFadeIn'> 
+                            </span>
+                        </label>
+                    </div>
+                    <div style='clear:both;'></div>
+                    <br>
+                    <div>
+                        <label><? echo $this->factory->__w("Start opacity"); ?>
+                            <span class='gscssinput'>
+                                <input type='textfield' gsname='scrollFadeInStartOpacity'> 
+                            </span>
+                        </label>
+                    </div>
+                    <div style='clear:both;'></div>
+                    <br>
+                    <div>
+                        <label><? echo $this->factory->__w("End opacity"); ?>
+                            <span class='gscssinput'>
+                                <input type='textfield' gsname='scrollFadeInEndOpacity'> 
+                            </span>
+                        </label>
+                    </div>
+                    <div style='clear:both;'></div>
+                    <br>
+                    <div>
+                        <label><? echo $this->factory->__w("Duraction (ms)"); ?>
+                            <span class='gscssinput'>
+                                <input type='textfield' gsname='scrollFadeInDuration'> 
+                            </span>
+                        </label>
+                    </div>
+                    <div style='clear:both;'></div>
+                    <br>
+                    <div>
+                        <label><? echo $this->factory->__w("Slide left (px) (negative is from right)"); ?>
+                            <span class='gscssinput'>
+                                <input type='textfield' gsname='slideLeft'> 
+                            </span>
+                        </label>
+                    </div>
+                    <div style='clear:both;'></div>
+                    <br>
+                    <div>
+                        <label><? echo $this->factory->__w("Slide top (px) (negative is from bottom)"); ?>
+                            <span class='gscssinput'>
+                                <input type='textfield' gsname='slideTop'> 
+                            </span>
+                        </label>
+                    </div>
+                <?
+                }
+                ?>
             </div>
             <div class='gspage' target='cellsettings' style='padding: 10px;'>
                 <div>
@@ -1816,6 +1885,34 @@ class Page {
             }
             echo "</div>";
         }
+    }
+
+    public function printEffectTrigger($cell, $depth) {
+        if (!$this->factory->isEffectsEnabled()) {
+            return;
+        }
+        
+        if ($depth == 0) {
+            echo "<div class='spacer s0 getshopScrollMagicTriggerRow' id='scrollmagic_trigger_$cell->cellId' cellId='$cell->cellId'></div>";
+        }
+    }
+
+    public function printEffectTriggerLoaded($cell, $depth) {
+        if (!$this->factory->isEffectsEnabled()) {
+            return;
+        }
+        
+        $cellId = $cell->cellId;
+        echo "<script>getshopScrollMagic.rowLoaded('$cellId');</script>";
+    }
+
+    public function printEffectSettingsDiv($cell) {
+        $attrs = "";
+        foreach ($cell->settings as $key => $value) {
+            $attrs .= " $key='$value' ";
+        }
+        
+        echo "<div style='display: none' class='gsCellSettings_attrs' $attrs></div>";
     }
 
 }

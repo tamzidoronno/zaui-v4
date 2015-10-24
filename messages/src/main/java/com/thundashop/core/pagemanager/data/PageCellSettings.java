@@ -6,4 +6,11 @@ public class PageCellSettings implements Serializable {
     public boolean displayWhenLoggedOn = true;
     public boolean displayWhenLoggedOut = true;
     public Integer editorLevel = 0;
+    
+    public boolean scrollFadeIn = false;
+    public int scrollFadeInDuration = 300;
+    public Double scrollFadeInStartOpacity = 0.5;
+    public Double scrollFadeInEndOpacity = 1D;
+    public int slideLeft = 0;
+    public int slideTop = 0;
 }

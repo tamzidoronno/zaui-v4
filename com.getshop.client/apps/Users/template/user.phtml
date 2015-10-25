@@ -87,6 +87,25 @@ if (!$user->address) {
         </div>
     </div>
     
+    <?
+    if ($user->type == 100) {
+    ?>
+    <div class="textfield gss_setting"  id="showHiddenFields">
+        <span class="title"><?php echo $this->__f("Show hidden fields"); ?></span>
+        <div class="gss_onoff" gs_model="usermodel" gs_model_attr="showHiddenFields">
+            <?
+            $faclass = $user->showHiddenFields ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?> "></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("This must be enabled if the user should be able to see the hidden fields."); ?>
+        </div>
+    </div>
+    <?
+    }
+    ?>
+    
     <div class="textfield gss_setting"  id="password1">
         <span class="title"><?php echo $this->__f("Dicount"); ?></span>
         <input type="text" gs_model='usermodel' gs_model_attr='discount' value="<? echo $user->discount; ?>" placeholder="0">

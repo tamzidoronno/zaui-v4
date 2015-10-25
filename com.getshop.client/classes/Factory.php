@@ -196,6 +196,15 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/getshop.PagePicker.js");
         $this->addJavascriptFile("js/getshop.Settings.js");
         
+        if ($this->isEffectsEnabled()) {
+            echo '<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.14.2/TweenMax.min.js"></script>';
+            echo '<script src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.min.js"></script>';
+            echo '<script src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/debug.addIndicators.min.js"></script>';
+            echo '<script src="js/scrollmagic.Velocity.js"></script>';
+            echo '<script src="js/scrollmagic.js"></script>';
+            echo '<script src="js/getshop.ScrollMangic.js"></script>';
+        }
+        
         // JS TREE
         $this->addJavascriptFile("js/jstree/jstree.min.js");
         echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jstree/themes/default/style.min.css">';
@@ -817,5 +826,8 @@ class Factory extends FactoryBase {
         }
     }
 
+    public function isEffectsEnabled() {
+        return true;
+    }
 }
 ?>

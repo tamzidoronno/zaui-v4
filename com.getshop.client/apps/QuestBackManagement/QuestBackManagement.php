@@ -154,6 +154,11 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
         
         foreach ($userIds as $userId) {
             $user = $this->getApi()->getUserManager()->getUserById($userId);
+            
+            // A user can have been deleted
+            if (!$user)
+                continue;
+            
             if (!$user->groups) {
                 if (!isset($grouped['no_group'])) {
                     $grouped['no_group'] = [];

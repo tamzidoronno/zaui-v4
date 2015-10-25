@@ -92,10 +92,21 @@ body {
 
 .gscell[cellid="6ae5bd85-d004-4c1a-abb1-ff7fd9bb9647"] {
     position: fixed; 
-    top: -22px;
-    right: -30px;
+    top: 4px;
+    right: 5px;
     background-color: transparent;
     z-index: 3;
+}
+
+.QuestBack {
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+}
+
+.QuestBackTitlePrinter {
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .answer_question {

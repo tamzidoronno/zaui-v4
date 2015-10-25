@@ -24,6 +24,12 @@
 
             foreach ($users as $user) {
                 $testResult = $this->getApi()->getQuestBackManager()->getTestResults($user->id, $test->id);
+                
+                // If a user has been deleted
+                if (!$testResult) {
+                    continue;
+                }
+                
                 $testProgress = count($testResult->answers)."/".count($test->questions);
                 $completed = count($testResult->answers) == count($test->questions);
                 

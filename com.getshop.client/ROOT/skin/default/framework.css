@@ -6,7 +6,11 @@ h1 {
 .gscell .gscellsettings,.gscontainercell .gscellsettings { z-index:5; position:absolute; color:#000; right: 0px; top: 0px; display:none;background-color:#FFF;cursor:pointer; font-size:9px; padding-left: 2px; padding-bottom: 2px; border: solid 1px rgba(0,0,0,0.1); }
 
 .gscarouselnumber { position: absolute; left: 2px; color:#fff; }
-
+.gscolselector { display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center; }
+.gsprefixbox {  display: inline-block;
+  width: 20px;
+  text-align: left;
+  padding-left: 7px; }
 .gscontainercell .gsdepth_0.gsrow { padding: 0px !important; margin: 0px !important; }
 .gsselectedcarouselrow { opacity: 1 !important; z-index: 1 !important; }
 .gsvisualizeedit { border-color:red; }

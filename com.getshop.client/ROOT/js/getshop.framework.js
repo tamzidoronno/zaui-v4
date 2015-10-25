@@ -348,6 +348,11 @@ thundashop.framework = {
         if (!val) {
             return;
         }
+        
+        if(target.attr('data-partoval-prefix')) {
+            val = target.attr('data-partoval-prefix') + val;
+        }
+        
         if (prefix) {
             val += prefix + " !important";
         }
@@ -363,6 +368,14 @@ thundashop.framework = {
             var val = thundashop.framework.getCssAttr(attr, cellid, level);
             val = val.replace(prefix, "");
             val = val.trim();
+            if(!val && target.attr('value')) {
+                val = target.attr('value');
+            }
+            
+            if(target.attr('data-partoval-prefix')) {
+                val = val.replace(target.attr('data-partoval-prefix'), "");
+            }
+            
             target.val(val);
         });
     },
@@ -870,7 +883,11 @@ thundashop.framework = {
         var incrementid = $('.gscell[cellid="' + id + '"]').attr('incrementcellid');
         var startPos = css.indexOf(".gscell_" + incrementid + level + " ");
         var endPos = css.indexOf("}", startPos);
-        css = css.substring(0, endPos) + "\t" + attribute + " : " + value + ";\n " + css.substring(endPos);
+        if(attribute.indexOf(":") <= 0) {
+            css = css.substring(0, endPos) + "\t" + attribute + " : " + value + ";\n " + css.substring(endPos);
+        } else {
+            css = css.substring(0, endPos) + "\t" + attribute + value + ";\n " + css.substring(endPos);
+        }
         thundashop.framework.setCss(id, css);
         css = css.trim();
         cssEditorForCell.setValue(css);

@@ -7,6 +7,7 @@ public class PageCellSettings implements Serializable {
     public boolean displayWhenLoggedOut = true;
     public Integer editorLevel = 0;
     
+    public boolean paralexxRow = false;
     public boolean scrollFadeIn = false;
     public int scrollFadeInDuration = 300;
     public Double scrollFadeInStartOpacity = 0.5;

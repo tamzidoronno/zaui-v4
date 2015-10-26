@@ -4,7 +4,7 @@ namespace ns_df435931_9364_4b6a_b4b2_951c90cc0d70;
 class Login extends \SystemApplication implements \Application {
 
     // Seconds
-    public static $sessionTimeout = 1380;
+    public static $sessionTimeout = 3380;
     public $errorMessage = "";
 
     public function getDescription() {

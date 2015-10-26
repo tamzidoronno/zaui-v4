@@ -23,6 +23,7 @@ public class SedoxCreditAccount implements Serializable {
         historyEntry.description = sedoxProduct.toString();
         historyEntry.transactionReference = transactionSedoxId;
         balance = balance + historyEntry.amount;
+        historyEntry.newBalance = balance;
         history.add(historyEntry);
     }
     
@@ -42,6 +43,7 @@ public class SedoxCreditAccount implements Serializable {
         
         historyEntry.transactionReference = sedoxCreditOrder.magentoOrderId;
         balance = balance + historyEntry.amount;
+        historyEntry.newBalance = balance;
         history.add(historyEntry);
     }
 

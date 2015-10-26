@@ -120,7 +120,7 @@
                 return null;
             }
             if ($latestCreditHistory != null) {
-                echo "<div class='row header'><div class='col col1'>Sedox Id</div><div class='col col2'>Description</div><div class='col col3'>Amount</div> <div class='col col4'>Date</div></div>";
+                echo "<div class='row header'><div class='col col1'>Sedox Id</div><div class='col col2'>Description</div><div class='col col3'>Amount</div> <div class='col col4'>Date</div> <div class='col col5'>New amount</div></div>";
                 $i = 0;
                 foreach ($latestCreditHistory as $hist) {
                     $i++;
@@ -132,6 +132,7 @@
                         <div class='col col2'><? echo $hist->description; ?></div>
                         <div class='col col3'><? echo $hist->amount; ?></div>
                         <div class='col col4'><? echo $hist->dateCreated; ?></div>
+                        <div class='col col5'><? echo $hist->newBalance; ?></div>
                     </div>
                     <?
                 }

@@ -74,6 +74,16 @@ app.SedoxProductView = {
         
     },
     
+    toggleStart: function() {
+        var data = {
+            productId : $(this).attr('productid'),
+            started : $(this).attr('started')
+        }
+        
+        var event = thundashop.Ajax.createEvent("", "toggleStartStop", this, data);
+        thundashop.Ajax.post(event);
+    },
+    
     init: function() {
         var me = this;
         $(document).on('click', '.SedoxProductView .savechecksumonly', app.SedoxProductView.saveCheckSum);
@@ -86,6 +96,7 @@ app.SedoxProductView = {
         $(document).on('click', '.SedoxProductView .saveextrainfo', app.SedoxProductView.saveExtraInfo);
         $(document).on('click', '.SedoxProductView .uploadtuningfilebox', app.SedoxProductView.uploadBoxClick);
         $(document).on('click', '.SedoxProductView .togglesalable', app.SedoxProductView.toggleSalable);
+        $(document).on('click', '.SedoxProductView .togglestart', app.SedoxProductView.toggleStart);
         $(document).on('click', '.checkbuttons input', app.SedoxProductView.checkbuttonsClicked);
         $(document).on('change', '.SedoxProductView .binaryfilerow input', app.SedoxProductView.filesChanged);
         

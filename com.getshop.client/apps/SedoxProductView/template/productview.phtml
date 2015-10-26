@@ -206,6 +206,7 @@ $class1 = array_key_exists("purchaseOnlyForCustomer", $sedoxProduct->states) ? "
 $class2 = array_key_exists("notifyForCustomer", $sedoxProduct->states) ? "active" : "";
 $class3 = array_key_exists("sendProductByMail", $sedoxProduct->states) ? "active" : "";
 $class4 = $sedoxProduct->saleAble ? "saleable" : "";
+$class5 = $sedoxProduct->started ? "active" : "";
 $text = $sedoxProduct->saleAble ? "Make product NOT salable" : "Make product saleable";
 $badCustomer = $sedoxUser->badCustomer == "true" ? "<div><i class='fa fa-warning' style='color: #CC0000;'></i> <b>THIS IS A BAD CUSTOMER!</b></div> <br/>" : "";
 
@@ -223,6 +224,21 @@ echo $badCustomer;
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button notifybyemailandsms <? echo $class2; ?>">Notify by email and sms</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button sendproductbyemail <? echo $class3; ?>">Send product by email</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button togglesalable <? echo $class4; ?>"><? echo $text; ?></div>
+            
+            <div style='padding-top: 15px; text-align: center; padding-right: 7px;'>
+                
+                <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button togglestart <? echo $class5; ?>" started='<? echo $sedoxProduct->started ? "1" : "0"; ?>'>
+                <? 
+                    if ($sedoxProduct->started) {
+                        echo "Stop"; 
+                    } else {
+                        echo "Start"; 
+                    }
+                    
+                ?>
+                </div>
+            </div>
+            
         </div>
 
     </div>

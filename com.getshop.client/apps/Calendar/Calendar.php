@@ -462,6 +462,12 @@ class Calendar extends MarketingApplication implements Application {
         }
         return "?page=$page&year=$year&month=$month";
     }
+    
+    public function toggleReadyToInvoice() {
+        $entry = $this->getApi()->getCalendarManager()->getEntry($_POST['data']['entryId']);
+        $entry->readyToInvoice = $_POST['data']['ready'];
+        $this->getApi()->getCalendarManager()->saveEntry($entry);
+    }
 
     public function getAttendees($entry) {
         if (count($entry->attendees) == 0) {
@@ -701,6 +707,17 @@ class Calendar extends MarketingApplication implements Application {
         }
         
         return ($b > $a) ? -1 : 1;
+    }
+    
+    static function usortEntriesByName($c, $d) {
+        $a = $c->title;
+        $b = $d->title;
+        
+        if ($a == $b) {
+            return 0;
+        }
+        
+        return strcmp ($a , $b);
     }
     
     public function getListViewData() {

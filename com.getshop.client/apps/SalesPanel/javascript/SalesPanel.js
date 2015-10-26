@@ -67,7 +67,7 @@ app.SalesPanel = {
         var searchkey = $(this).val();
         
         $.ajax({
-          url: "http://hotell.difi.no/api/jsonp/brreg/enhetsregisteret?query="+ searchkey,
+          url: "https://hotell.difi.no/api/jsonp/brreg/enhetsregisteret?query="+ searchkey,
           success: app.SalesPanel.loadResultFromBrreg,
           dataType: "jsonp"
         });

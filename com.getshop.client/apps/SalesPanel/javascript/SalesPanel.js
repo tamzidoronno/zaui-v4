@@ -6,6 +6,13 @@ app.SalesPanel = {
         $(document).on('click', '.SalesPanel .listcustomer', app.SalesPanel.listcustomerbtn);
         $(document).on('click', '.SalesPanel .registerevent', app.SalesPanel.registerevent);
         $(document).on('keyup', '.SalesPanel .searchcompany', app.SalesPanel.searchCompany);
+        $(document).on('click', '.SalesPanel .editevent', app.SalesPanel.editEvent);
+    },
+    editEvent : function() {
+        var event = thundashop.Ajax.createEvent('','editEvent',$(this), {
+            eventId : $(this).attr('eventId')
+        });
+        thundashop.common.showInformationBox(event, 'Edit an event');
     },
     registerevent : function() {
         var event = thundashop.Ajax.createEvent('','registerEvent',$(this), {

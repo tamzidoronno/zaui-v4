@@ -49,6 +49,15 @@ class SalesPanel extends \MarketingApplication implements \Application {
         $this->getApi()->getSalesManager()->saveCustomer($customer);
     }
 
+    public function getCustomerTypes() {
+        $customerTypes = array();
+        $customerTypes[0] = "Website";
+        $customerTypes[1] = "Booking";
+        $customerTypes[2] = "Hotel";
+        $customerTypes[3] = "WebShop";
+        return $customerTypes;
+    }
+    
     public function displayCustomerArea() {
         $this->includefile("displaycustomer");
     }
@@ -57,16 +66,20 @@ class SalesPanel extends \MarketingApplication implements \Application {
         $this->includefile("registerevent");
     }
     
+    public function editEvent() {
+        $this->includefile("registerevent");
+    }
+    
     public function printEvents($events, $printCustomer = false) {
         echo "<table width='100%'>";
         foreach($events as $event) {
             /* @var $event \core_salesmanager_SalesEvent */
             echo "<tr>";
-            echo "<td align='top'>" . $event->createdByName . "<bR>" . date("y-m-d h:i", strtotime($event->rowCreatedDate)). "</td><bR>";
+            echo "<td align='top'>" . $event->createdByName . " - <span class='editevent' style='color:blue; cursor:pointer;' eventId='".$event->id."'>edit</span><bR>" . date("d.m.Y h:i", strtotime($event->rowCreatedDate)). "</td><bR>";
             echo "<td align='top' width='50%'>" . $event->comment . "</td>";
             echo "<td valign='right'>";
             if($event->date) {
-                echo date("y-m-d h:i", $event->date);
+                echo date("d.m.Y h:i", $event->date);
             } else {
                 echo "No date set";
             }

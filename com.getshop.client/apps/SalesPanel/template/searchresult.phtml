@@ -1,6 +1,7 @@
 <?
 /* @var $this \ns_84420130_b401_44e8_a9ab_52d6458f2c0c\SalesPanel */
 $result = $this->getApi()->getSalesManager()->findCustomer($_POST['data']['key'], "-1");
+$types = $this->getCustomerTypes();
 if(!is_array($result)) {
     echo "No result found, register the company or search for a different one. :)";
 } else {
@@ -11,7 +12,11 @@ if(!is_array($result)) {
         echo "<td>" . $company->orgid . "</td>";
         echo "<td><span class='listcustomer' data-orgid='".$company->orgid."' style='cursor:pointer; color:blue;'>" . $company->name . "</span></td>";
         echo "<td>" . $company->phone . "</td>";
-        echo "<td>" . $company->type . "</td>";
+        echo "<td>";
+        if($company->type) {
+            echo $types[$company->type];
+        }
+        echo "</td>";
         echo "</tr>";
     }
     echo "</table>";

@@ -48,18 +48,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
         
-        Application GetShopAnimationFront = createSettings("GetShopAnimationFront",
-            "a77292ec-8e4b-4e68-9729-27b45cdc6720",
-            allowed2,
-            " ",
-            Application.Type.Marketing, true);
-            GetShopAnimationFront.isPublic = false;
-            GetShopAnimationFront.isFrontend = true;
-            GetShopAnimationFront.moduleId = "cms";
-            GetShopAnimationFront.defaultActivate = false;
-            GetShopAnimationFront.allowedStoreIds = new ArrayList();
-            GetShopAnimationFront.allowedStoreIds.add("efad5b1f-b679-4c2b-8774-8c2475c20137");
-            apps.add(GetShopAnimationFront);
+        Application SalesPanel = createSettings("SalesPanel",
+        "84420130-b401-44e8-a9ab-52d6458f2c0c",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SalesPanel.isPublic = false;
+        SalesPanel.isFrontend = true;
+        SalesPanel.moduleId = "other";
+        SalesPanel.allowedStoreIds.add("efad5b1f-b679-4c2b-8774-8c2475c20137");
+        SalesPanel.defaultActivate = false;
+        apps.add(SalesPanel);
 
 
         return apps;

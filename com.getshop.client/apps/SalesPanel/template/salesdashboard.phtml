@@ -1,0 +1,25 @@
+<?php
+/* @var $this \ns_84420130_b401_44e8_a9ab_52d6458f2c0c\SalesPanel */
+?>
+
+<input type="txt" placeholder="Search for a company" class="searchcompany">
+
+<span class="mybutton registercustomer">
+    Register customer
+</span> 
+
+<div class="companysearchresult">
+    Search for a company by entering the name or organization number in the field above.
+</div>
+<bR>
+<bR>
+
+<div class="salesmainarea">
+    <? 
+    if ($this->orgId) {
+        $this->displayCustomerArea();
+    } else {
+        $this->displayDashBoard();
+    }
+    ?>
+</div>

@@ -1,0 +1,14 @@
+Welcome back <? echo $this->getUser()->fullName; ?>.<br>
+<? $cust = $this->getApi()->getSalesManager()->getLatestCustomer(); ?>
+The latest registered potential is: <b><? echo $cust->name; ?>, (<span class='listcustomer' data-orgid='<? echo $cust->orgid; ?>' style="cursor:pointer;">open</span>)</b><br>
+<bR>
+Events for today are:<br>
+<?
+/* @var $this \ns_84420130_b401_44e8_a9ab_52d6458f2c0c\SalesPanel */
+$eventsForToday = $this->getApi()->getSalesManager()->getEventsForDay(time());
+if(!is_array($eventsForToday)) {
+    echo "No events registered for today";
+} else {
+    $this->printEvents($eventsForToday, true);
+}
+?>

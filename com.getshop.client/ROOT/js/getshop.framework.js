@@ -348,6 +348,11 @@ thundashop.framework = {
         if (!val) {
             return;
         }
+        
+        if(target.attr('data-partoval-prefix')) {
+            val = target.attr('data-partoval-prefix') + val;
+        }
+        
         if (prefix) {
             val += prefix + " !important";
         }
@@ -363,6 +368,14 @@ thundashop.framework = {
             var val = thundashop.framework.getCssAttr(attr, cellid, level);
             val = val.replace(prefix, "");
             val = val.trim();
+            if(!val && target.attr('value')) {
+                val = target.attr('value');
+            }
+            
+            if(target.attr('data-partoval-prefix')) {
+                val = val.replace(target.attr('data-partoval-prefix'), "");
+            }
+            
             target.val(val);
         });
     },
@@ -797,6 +810,7 @@ thundashop.framework = {
         var csslines = css.split("\n");
         var newcss = "";
         var levelfound = false;
+        var levelexists = false;
         
         for (var key in csslines) {
             
@@ -804,8 +818,9 @@ thundashop.framework = {
                 levelfound = false;
             }
             
-            if(csslines[key].indexOf(level) > 0) {
+            if(csslines[key].indexOf(level + " ") > 0) {
                 levelfound = true;
+                levelexists = true;
             }
             
             var attr = csslines[key].split(":");
@@ -814,6 +829,13 @@ thundashop.framework = {
             }
             newcss += csslines[key] + "\n";
         }
+        
+        if(!levelexists) {
+            console.log('level never found: ' + level + " id: " + id);
+            var inkcellid = $('[cellid="'+id+'"]').attr('incrementcellid');
+            newcss += ".gscell_" + inkcellid + level + " {\n\n}\n";
+        }
+        
         cssEditorForCell.setValue(newcss);
     },
     getCssAttr: function (attribute, id, level) {
@@ -833,7 +855,7 @@ thundashop.framework = {
                 levelfound = false;
             }
             
-            if(csslines[key].indexOf(level) > 0) {
+            if(csslines[key].indexOf(level + " ") > 0) {
                 levelfound = true;
             }
 
@@ -861,7 +883,11 @@ thundashop.framework = {
         var incrementid = $('.gscell[cellid="' + id + '"]').attr('incrementcellid');
         var startPos = css.indexOf(".gscell_" + incrementid + level + " ");
         var endPos = css.indexOf("}", startPos);
-        css = css.substring(0, endPos) + "\t" + attribute + " : " + value + ";\n " + css.substring(endPos);
+        if(attribute.indexOf(":") <= 0) {
+            css = css.substring(0, endPos) + "\t" + attribute + " : " + value + ";\n " + css.substring(endPos);
+        } else {
+            css = css.substring(0, endPos) + "\t" + attribute + value + ";\n " + css.substring(endPos);
+        }
         thundashop.framework.setCss(id, css);
         css = css.trim();
         cssEditorForCell.setValue(css);
@@ -917,7 +943,7 @@ thundashop.framework = {
                         if (!type || type === "") {
                             thundashop.framework.addCss('background-repeat', 'no-repeat', cellid, level);
                             thundashop.framework.addCss('background-position', 'center', cellid, level);
-                            thundashop.framework.addCss('background-size', '100%', cellid, level);
+                            thundashop.framework.addCss('background-size', 'cover', cellid, level);
                             thundashop.framework.addCss('background-image', 'url("/displayImage.php?id=' + id + '")', cellid, level);
                             target.closest('.gscolorselectionpanel').find('.gschoosebgimagebutton').show();
                             target.closest('.gscolorselectionpanel').find('.gsuploadimage').hide();

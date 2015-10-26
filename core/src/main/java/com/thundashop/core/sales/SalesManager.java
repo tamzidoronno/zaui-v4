@@ -138,6 +138,7 @@ public class SalesManager extends ManagerBase implements ISalesManager {
 
     @Override
     public List<SalesCustomer> findCustomer(String key, String type) {
+        key = key.toLowerCase();
         List<SalesCustomer> result = new LinkedList();
         for(SalesCustomer cust : customers.values()) {
             if(!type.equals("-1") && !cust.type.equals(type)) {

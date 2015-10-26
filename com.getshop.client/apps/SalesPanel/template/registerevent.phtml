@@ -1,0 +1,33 @@
+<?
+$types = $this->getEventTypes();
+?>
+<div gstype="form" method="createEvent" style="padding:10px;color:#fff;">
+    <div>
+        <input type="hidden" gsname="orgId" value="<? echo $_POST['data']['orgId']; ?>">
+    <label>
+        Date
+        <input type="txt" gsname="date" class="eventDate">
+    </label>
+    </div>
+    <br>
+    <label>
+        Comment
+        <textarea gsname="comment" style="width:95%;height:100px;"></textarea>
+    </label>
+    <br><br>
+    <label>
+        Type
+        <select gsname="type">
+            <? 
+            foreach($types as $type => $val) {
+                echo "<option value='$type'>$val</option>";
+            }
+            ?>
+        </select>
+    </label>
+    <span class='mybutton' gstype='submit' style='color:#000; background-color:#d1d1d1;'>Register event</span>
+</div>
+
+<script>
+    $('.eventDate').datepicker();
+</script>

@@ -1,0 +1,13 @@
+.SalesPanel .mybutton { border: solid 1px; padding: 10px; border-radius: 5px; margin-right: 10px; float:right; }
+.SalesPanel .mybutton:hover { background-color:#efefef; cursor: pointer; }
+.SalesPanel .searchcompany { padding: 10px;font-size: 16px; border-radius: 5px; width:50%; border: solid 1px; }
+.SalesPanel .newcustomerform { padding: 10px; color:#ffffff; }
+.SalesPanel .newcustomerform label { width: 45%; float: left; padding: 20px; }
+.SalesPanel .newcustomerform label input, .SalesPanel .searchbrregcustomer { width: 100%; margin-top: 10px; font-size: 16px; padding: 5px; border: solid 1px; border-radius: 5px; }
+.SalesPanel .exitingcustomerform { padding: 10px; color:#ffffff; }
+.SalesPanel .exitingcustomerform label { width: 25%; float: left; padding: 20px; }
+.SalesPanel .exitingcustomerform label input, .SalesPanel .searchbrregcustomer { width: 100%; margin-top: 10px; font-size: 16px; padding: 5px; border: solid 1px; border-radius: 5px; }
+.SalesPanel .selectcustomer { float: right; padding: 2px; border-radius: 4px; cursor:pointer; }
+.SalesPanel .searchresultrow { border: solid 1px; padding: 10px; margin-right:20px; margin-left:20px; margin-bottom: 3px; }
+
+

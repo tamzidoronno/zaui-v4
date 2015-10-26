@@ -1,0 +1,71 @@
+<? 
+/* @var $customer core_salesmanager_SalesCustomer */
+$customer = $this->getSelectedCustomer();
+$states = array();
+$states[0] = "Initial";
+$states[1] = "Not interested";
+$states[2] = "Might be";
+$states[3] = "Interested";
+$states[4] = "Customer";
+$states[5] = "Left us";
+?>
+
+
+
+<div class="exitingcustomerform" gstype="form" method="addCustomer" style='color:#000;width:46%; border: solid 1px; display:inline-block;float:left;'>
+    <b style="font-size: 18px;"><? echo $customer->name; ?></b>
+    <div class='brregresult'>
+    </div>
+    <label>
+        Org id
+        <input type="txt" gsname="orgid" disabled value='<? echo $customer->orgid; ?>'>
+    </label>
+    <label>
+        Company name
+        <input type="txt" gsname="name" value='<? echo $customer->name; ?>'>
+    </label>
+    <label>
+        Street address
+        <input type="txt" gsname="streetAddress" value='<? echo $customer->streetAddress; ?>'>
+    </label>
+    <label>
+        Phone number
+        <input type="txt" gsname="phone" value='<? echo $customer->phone; ?>'>
+    </label>
+    <label>
+        Contact person
+        <input type="txt" gsname="contactPerson" value='<? echo $customer->contactPerson; ?>'>
+    </label>
+    <label>
+        Website
+        <input type="txt" gsname="website" value='<? echo $customer->website; ?>'>
+    </label>
+    <label>
+        State
+        <select type="txt" gsname="state">
+            <? 
+            foreach($states as $state => $val) {
+                $selected = "";
+                if($customer->state == $state) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$state' $selected>$val</option>";
+            }
+            ?>
+        </select>
+    </label>
+    <div style='clear:both;'></div>
+    Comment:<br>
+    <textarea gsname="comment" style="width:100%; height: 100px;"><? echo $customer->comment; ?></textarea>
+    <span class='mybutton' gstype='submit' style='color:#000; background-color:#d1d1d1;'>Update customer</span>
+</div>
+<div class="exitingcustomerform" gstype="form" method="addCustomer" style='color:#000;width:47%; border: solid 1px; display:inline-block;float:right; margin-left: 20px;'>
+    <span class="mybutton registerevent">
+        Register an event
+    </span>
+    <? 
+    $events = $this->getApi()->getSalesManager()->getEventsForCustomer($this->orgId);
+    $this->printEvents($events); 
+    ?>
+</div>
+<div style='clear:both;'></div>

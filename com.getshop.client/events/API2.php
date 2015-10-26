@@ -5793,6 +5793,25 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function createSubAccountEditor($fullName, $phoneNumber, $leaderId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["fullName"] = json_encode($this->transport->object_unset_nulls($fullName));
+	     $data['args']["phoneNumber"] = json_encode($this->transport->object_unset_nulls($phoneNumber));
+	     $data['args']["leaderId"] = json_encode($this->transport->object_unset_nulls($leaderId));
+	     $data["method"] = "createSubAccountEditor";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Create a new user to your webshop.<br>
 	* This will fail if you are trying to create a user which is granted more access then you have yourself.<br>
 	* If no users has been created, then the user object will automatically be set as an administrator.<br>

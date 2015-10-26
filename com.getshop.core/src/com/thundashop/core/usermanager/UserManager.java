@@ -1045,14 +1045,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
         
+        createSubAccountInternal(fullName, phoneNumber, getSession().currentUser.id);
+    }
+    
+    private void createSubAccountInternal(String fullName, String phoneNumber, String parentId) throws ErrorException {
         User user = new User();
         user.fullName = fullName;
         user.cellPhone = phoneNumber;
         user.parents = new ArrayList();
-        user.parents.add(getSession().currentUser.id);
+        user.parents.add(parentId);
         
         User createUser = createUser(user);
-        System.out.println(createUser.id + " " + createUser.parents.size());
     }
     
     private void printUsersWithoutRefernece() throws ErrorException {
@@ -1116,5 +1119,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 user.parents.remove(toRemove);
             }
         }
+    }
+
+    @Override
+    public void createSubAccountEditor(String fullName, String phoneNumber, String leaderId) throws ErrorException {
+        createSubAccountInternal(fullName, phoneNumber, leaderId);
     }
 }

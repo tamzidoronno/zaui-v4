@@ -258,5 +258,13 @@ class Users extends \SystemApplication implements \Application {
         
         $this->getApi()->getUserManager()->saveUser($user);
     }
+    
+    public function showAdminAddSubUserAccount() {
+        $this->includefile("addSubAccountToUserAdmin");
+    }
+    
+    public function createSubAccountAdmin() {
+        $this->getApi()->getUserManager()->createSubAccountEditor($_POST["data"]["name"], $_POST["data"]["phone"], $_POST["data"]["leaderId"]);
+    }
 }
 ?>

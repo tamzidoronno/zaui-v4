@@ -16,6 +16,10 @@ class SalesPanel extends \MarketingApplication implements \Application {
         $this->includefile("salesdashboard");
     }
     
+    public function searchCustomer() {
+        $this->includefile("searchresult");
+    }
+    
     public function registerCustomer() {
         $this->includefile("registercustomer");
     }

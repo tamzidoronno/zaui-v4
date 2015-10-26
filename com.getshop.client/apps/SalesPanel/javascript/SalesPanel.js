@@ -5,12 +5,26 @@ app.SalesPanel = {
         $(document).on('click', '.SalesPanel .selectcustomer', app.SalesPanel.selectCustomer);
         $(document).on('click', '.SalesPanel .listcustomer', app.SalesPanel.listcustomerbtn);
         $(document).on('click', '.SalesPanel .registerevent', app.SalesPanel.registerevent);
+        $(document).on('keyup', '.SalesPanel .searchcompany', app.SalesPanel.searchCompany);
     },
     registerevent : function() {
         var event = thundashop.Ajax.createEvent('','registerEvent',$(this), {
             orgId : $("[gsname='orgid']").val()
         });
         thundashop.common.showInformationBox(event, 'Register event');
+    },
+    searchCompany : function(event) {
+        if(event.keyCode !== 13) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','searchCustomer',$(this), {
+            key : $(this).val()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.companysearchresult').show();
+            $('.companysearchresult').html(result);
+        });
     },
     listcustomerbtn : function() {
         var id = $(this).attr('data-orgid');
@@ -21,6 +35,7 @@ app.SalesPanel = {
             orgId : orgId
         });
         thundashop.Ajax.postWithCallBack(event, function(data) {
+            $('.companysearchresult').hide();
             $('.salesmainarea').html(data);
         });
     },

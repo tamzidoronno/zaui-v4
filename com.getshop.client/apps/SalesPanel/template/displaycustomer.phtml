@@ -8,11 +8,17 @@ $states[2] = "Might be";
 $states[3] = "Interested";
 $states[4] = "Customer";
 $states[5] = "Left us";
+
+$customerTypes = array();
+$customerTypes[0] = "Website";
+$customerTypes[1] = "Booking";
+$customerTypes[2] = "Hotel";
+$customerTypes[3] = "WebShop";
 ?>
 
 
 
-<div class="exitingcustomerform" gstype="form" method="addCustomer" style='color:#000;width:46%; border: solid 1px; display:inline-block;float:left;'>
+<div class="exitingcustomerform cardfield" gstype="form" method="addCustomer" style='width:46%;float:left;'>
     <b style="font-size: 18px;"><? echo $customer->name; ?></b>
     <div class='brregresult'>
     </div>
@@ -54,12 +60,26 @@ $states[5] = "Left us";
             ?>
         </select>
     </label>
+    <label>
+        Type of customer
+        <select type="txt" gsname="type">
+            <? 
+            foreach($customerTypes as $type => $val) {
+                $selected = "";
+                if($customer->type == $type) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$type' $selected>$val</option>";
+            }
+            ?>
+        </select>
+    </label>
     <div style='clear:both;'></div>
     Comment:<br>
     <textarea gsname="comment" style="width:100%; height: 100px;"><? echo $customer->comment; ?></textarea>
-    <span class='mybutton' gstype='submit' style='color:#000; background-color:#d1d1d1;'>Update customer</span>
+    <span class='mybutton' gstype='submit'>Update customer</span>
 </div>
-<div class="exitingcustomerform" gstype="form" method="addCustomer" style='color:#000;width:47%; border: solid 1px; display:inline-block;float:right; margin-left: 20px;'>
+<div class="exitingcustomerform  cardfield" gstype="form" method="addCustomer" style='width:47%; float:right; '>
     <span class="mybutton registerevent">
         Register an event
     </span>

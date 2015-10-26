@@ -159,7 +159,9 @@ app.SedoxAdmin = {
         $(document).on('click', '.SedoxAdmin .saveusersettings', app.SedoxAdmin.saveUserSettings);
         $(document).on('change', '.SedoxAdmin #slavesearchtextfield', app.SedoxAdmin.searchForSlavesToAdd);
         $(document).on('change', '.SedoxAdmin .extraincometext', app.SedoxAdmin.addCreditForSlave);
+        $(document).on('change', '.SedoxAdmin .update_magento_user', app.SedoxAdmin.updateMagentoUser);
         $(document).on('click', '.SedoxAdmin .addusertomaster', app.SedoxAdmin.addUserToMaster);
+        $(document).on('click', '.SedoxAdmin .synchfrommagento', app.SedoxAdmin.synchFromMagento);
         $(document).on('click', '.SedoxAdmin i.removeuser', app.SedoxAdmin.removeUserFromMaster);
         $(document).on('click', '.SedoxAdmin .showuser', app.SedoxAdmin.changeToUser);
         $(document).on('change', '.SedoxAdmin #togglepassiveslave', app.SedoxAdmin.togglePassiveChanged);
@@ -169,6 +171,30 @@ app.SedoxAdmin = {
                 app.SedoxAdmin.webSocketListener = new SedoxWebSocketListener(window.location.host);
                 app.SedoxAdmin.webSocketListener.connect();
             }    
+        });
+        
+    },
+    
+    updateMagentoUser: function() {
+        var data = {
+            userId : $(this).val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "synchFromMagento", this, data);
+        thundashop.Ajax.post(event, function() {
+            alert('update completed')
+        });
+    },
+    
+    synchFromMagento: function() {
+        var userId = $(this).attr('userid');
+        var data = {
+            userId : userId
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "synchFromMagento", this, data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.SedoxAdmin.updateInfoBox(userId);
         });
         
     },

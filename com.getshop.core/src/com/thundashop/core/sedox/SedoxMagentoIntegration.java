@@ -29,6 +29,7 @@ public class SedoxMagentoIntegration {
             SedoxApiPort port = locator.getSedoxApiPort();
             return port.checkLogin(emailAddress, password).toString();
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
 

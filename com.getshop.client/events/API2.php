@@ -5231,6 +5231,24 @@ class APISedoxProductManager {
 	* @throws ErrorException
 	*/
 
+	public function syncFromMagento($userId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data["method"] = "syncFromMagento";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function toggleAllowNegativeCredit($userId, $allow) {
 	     $data = array();
 	     $data['args'] = array();

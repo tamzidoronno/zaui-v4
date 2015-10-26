@@ -155,5 +155,8 @@ public interface ISedoxProductManager  {
     
     public List<String> getProductIds() throws ErrorException;
     
+    @Administrator
+    public void syncFromMagento(String userId) throws ErrorException;
+    
     public Double getPriceForProduct(String productId, List<Integer> files) throws ErrorException;
 }

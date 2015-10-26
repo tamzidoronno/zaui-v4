@@ -12,7 +12,6 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MailFactoryImpl;
-import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
 import com.thundashop.core.socket.WebSocketServerImpl;
@@ -434,6 +433,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private void updateUserFromMagento(String id, boolean force) throws ErrorException {
         UserManager userManager = getManager(IUserManager.class);
         User user = userManager.getUserById("" + id);
+    
+        if (user == null) {
+            return;
+        }
+        
         if (user.fullName != null && user.emailAddress != null && !force) {
             return;
         }
@@ -770,6 +774,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public List<User> searchForUsers(String searchString) throws ErrorException {
+        if (searchString == null) {
+            return new ArrayList();
+        }
+        
         UserManager manager = getManager(IUserManager.class);
 
         Set<User> retUsers = new HashSet();
@@ -1549,5 +1557,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             user.fixedPrice = price;
             databaseSaver.saveObject(user, credentials);
         }
+    }
+
+    @Override
+    public void syncFromMagento(String userId) throws ErrorException {
+        getSedoxUserById(userId);
+        updateUserFromMagento(userId, true);
     }
 }

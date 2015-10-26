@@ -14,6 +14,7 @@ $fixedPrice = $sedoxUser->fixedPrice;
 <div class="useroverview" userid="<? echo $userid; ?>">
     Id: <? echo $userid; ?>
     <br> Name: <? echo $user->fullName; ?>
+    <br> Cellphone: <? echo $user->cellPhone; ?>
     <br> Company: <? echo $user->companyName; ?>
     <br> Group: <? echo $user->group; ?>
     <br> Email: <? echo $user->emailAddress; ?>
@@ -33,6 +34,8 @@ $fixedPrice = $sedoxUser->fixedPrice;
         <tr><td>Amount</td><td><input type="textfield" id="amount"/></td></tr>
     </table>
     <div class="gs_button savecredit" userId="<? echo $userid; ?>"> Update </div>
+    <hr/>
+        <div class="gs_button synchfrommagento" userId="<? echo $userid; ?>"> Sync from magento </div>
     <hr/>
     <b>Slave/Master Setup:</b><br><br>
     <?

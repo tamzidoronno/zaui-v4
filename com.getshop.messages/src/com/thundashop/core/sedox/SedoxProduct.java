@@ -75,7 +75,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public void setParametersBasedOnFileString(String fileName) {
         String[] productAttributes = fileName.split(";");
         
-        if (productAttributes.length != 16 &&  productAttributes.length != 17) {
+        if (productAttributes.length != 17 && productAttributes.length != 18) {
             saleAble = false;
             return;
         }
@@ -92,8 +92,10 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         ecuHardwareNumber = productAttributes[10]; // %ECU.ECUStg%;
         ecuSoftwareNumber = productAttributes[11]; // %ECU.ECUStg%;
         ecuSoftwareVersion = productAttributes[12]; // %ECU.ECUStg%;
-        if (productAttributes.length > 16) {
-            tool = productAttributes[16]; 
+        originalChecksum = productAttributes[13]; //%File.8Bitsum.Org%
+        
+        if (productAttributes.length > 17) {
+            tool = productAttributes[17]; 
         }
     }
 

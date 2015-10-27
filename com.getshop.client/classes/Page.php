@@ -735,9 +735,9 @@ class Page {
             echo "<div class='gsaddcontenttext'>";
             echo "</div>";
             echo "<i title='Add content' class='fa fa-plus-circle gs_show_application_add_list' $show></i> ";
-            if($depth == 1) {
+//            if($depth == 1) {
                 echo "<i title='Change layout' class='fa fa-th gs_change_cell_layoutbutton' $show></i>";
-            }
+//            }
             echo "</span>";
         } else {
             $this->renderApplication($cell);
@@ -1172,7 +1172,7 @@ class Page {
             return false;
         }
 
-        if($depth == 1) {
+        if($depth <= 1) {
             echo "<div style='position:absolute;width:100%; bottom: -1px;' class='gscellbox' cellid='" . $cell->cellId . "'>";
             echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
             echo "<div class='gscellboxheader'>";

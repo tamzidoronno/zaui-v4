@@ -8,7 +8,7 @@
 getshopScrollMagic = {
     controllers : {},
 
-        rowLoaded: function(cellId) {
+    rowLoaded: function(cellId) {
         var cell = $('.gscell[cellid="'+cellId+'"]');
         var cellSettings = cell.find('.gsCellSettings_attrs');
 
@@ -16,7 +16,7 @@ getshopScrollMagic = {
         var triggerId = trigger.attr('id');
 
         var sceneFadeIn = false;
-
+        
         if (cellSettings.attr('scrollFadeIn')) {
             cell.css('opacity', cellSettings.attr('scrollFadeInStartOpacity'));
 
@@ -37,6 +37,14 @@ getshopScrollMagic = {
                     });
         }
 
+        if (cellSettings.attr('paralexxRow')) {
+            cell.height(cell.find('.gsinner').height()*2);
+            var controller2 = new ScrollMagic.Controller({globalSceneOptions: {triggerHook: "onEnter", duration: "200%"}});
+            new ScrollMagic.Scene({triggerElement: '#'+triggerId})
+                .setTween('.gscell[cellid="'+cellId+'"] > div', {y: "80%", ease: Linear.easeNone})
+                .addIndicators()
+                .addTo(controller2);
+        }
 
         if (sceneFadeIn) {
             var controller = new ScrollMagic.Controller();
@@ -45,7 +53,6 @@ getshopScrollMagic = {
                 sceneFadeIn.addTo(controller);
 
         }
-
 
 
     }

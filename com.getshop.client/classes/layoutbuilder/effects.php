@@ -57,6 +57,16 @@ if (!$this->factory->isEffectsEnabled()) {
             </span>
         </label>
     </div>
+    <br/>
+    <br/>
+    <h2>Scroll effect - Parallex (works best on outer row)</h2>
+    <div>
+        <label><? echo $this->factory->__w("If you enable this, the parallex effect will be enabled. The background will scroll faster then the cell on top"); ?>
+            <span class='gscssinput'>
+                <input type='checkbox' gsname='paralexxRow'> 
+            </span>
+        </label>
+    </div>
     <?
 }
 ?>

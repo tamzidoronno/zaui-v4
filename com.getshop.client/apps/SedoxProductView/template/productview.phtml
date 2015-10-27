@@ -237,6 +237,16 @@ echo $badCustomer;
                     
                 ?>
                 </div>
+                
+                
+                <? 
+                    if (!$sedoxProduct->isFinished && !array_key_exists("sendProductByMail", $sedoxProduct->states) ) {
+                ?>
+                        <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button markasfinished" started='<? echo $sedoxProduct->started ? "1" : "0"; ?>'> Mark as finished </div>      
+                <?
+                    }     
+                ?>
+                </div>
             </div>
             
         </div>

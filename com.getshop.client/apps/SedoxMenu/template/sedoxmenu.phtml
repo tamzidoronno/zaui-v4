@@ -31,7 +31,17 @@ $notLoggedIn = $this->getUser() ? "" : "notLoggedIn";
     } 
     
     if ($this->hasWriteAccess()) { ?>
-        <a href='?page=83a088e9-9770-4433-b091-1df3afce8d6d'><div class="sedoxmenuentry"><i class="fa fa-gear"></i><div>ADMIN</div></div></a>
+        <a href='?page=83a088e9-9770-4433-b091-1df3afce8d6d'>
+            <div class="sedoxmenuentry"><i class="fa fa-gear"></i>
+                <div>
+                    ADMIN    
+                </div>
+                
+                <div class='filecount_indicator'>
+                    <? echo $this->getApi()->getSedoxProductManager()->getFileNotProcessedToDayCount(); ?>
+                </div>
+            </div>
+        </a>
     <? }
     ?>
         

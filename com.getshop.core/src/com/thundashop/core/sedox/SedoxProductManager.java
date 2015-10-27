@@ -1564,4 +1564,27 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         getSedoxUserById(userId);
         updateUserFromMagento(userId, true);
     }
+
+    @Override
+    public int getFileNotProcessedToDayCount() throws ErrorException {
+        List<SedoxProduct> productsToday = getProductsByDaysBack(0);
+        int count = 0;
+        for (SedoxProduct product : productsToday) {
+            if (product.isFinished || product.states.containsKey("sendProductByMail"))
+                continue;
+            
+            count++;
+        }
+        
+        return count;
+    }
+
+    @Override
+    public void markAsFinished(String productId, boolean finished) throws ErrorException {
+        SedoxProduct sedoxProduct = getProductById(productId);
+        if (sedoxProduct != null) {
+            sedoxProduct.isFinished = finished;
+            saveObject(sedoxProduct);
+        }
+    }
 }

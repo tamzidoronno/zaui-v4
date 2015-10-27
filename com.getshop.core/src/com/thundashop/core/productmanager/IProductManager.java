@@ -186,4 +186,5 @@ public interface IProductManager {
      * @throws ErrorException 
      */
     public List<Product> getAllProductsLight() throws ErrorException;
+    
 }

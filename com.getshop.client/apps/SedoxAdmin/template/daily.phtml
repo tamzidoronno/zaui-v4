@@ -54,7 +54,7 @@
                 $status = "<i style='color: orange;' class='fa fa-comment'></i>";
             }
             
-            if (array_key_exists("sendProductByMail", $sedoxProduct->states)) {
+            if (array_key_exists("sendProductByMail", $sedoxProduct->states) || $sedoxProduct->isFinished ) {
                 $status = "<i style='color: green;' class='fa fa-check-circle'></i>";
             }
 			

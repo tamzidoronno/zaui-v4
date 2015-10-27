@@ -54,6 +54,8 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public String ecuSoftwareNumber;
     public String ecuSoftwareVersion;
     
+    public Boolean isFinished = false;
+    
     public String uploadOrigin;
     public Map<String,String> reference = new HashMap();
     
@@ -200,4 +202,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         
         return ret;
     }
+    
+    
+    
 }

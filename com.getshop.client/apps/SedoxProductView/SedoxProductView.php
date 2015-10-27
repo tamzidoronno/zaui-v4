@@ -194,5 +194,9 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         $productId = $_POST['data']['productId'];
         $this->getApi()->getSedoxProductManager()->toggleStartStop($productId, $_POST['data']['started'] == "0");
     }
+    
+    public function markAsFinished() {
+        $this->getApi()->getSedoxProductManager()->markAsFinished($_POST['data']['productId'], true);
+    }
 }
 ?>

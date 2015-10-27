@@ -6,6 +6,7 @@ package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.usermanager.data.User;
@@ -159,4 +160,10 @@ public interface ISedoxProductManager  {
     public void syncFromMagento(String userId) throws ErrorException;
     
     public Double getPriceForProduct(String productId, List<Integer> files) throws ErrorException;
+    
+    @Editor
+    public int getFileNotProcessedToDayCount() throws ErrorException;
+    
+    @Editor
+    public void markAsFinished(String productId, boolean finished) throws ErrorException;
 }

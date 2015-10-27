@@ -97,6 +97,7 @@ app.SedoxProductView = {
         $(document).on('click', '.SedoxProductView .uploadtuningfilebox', app.SedoxProductView.uploadBoxClick);
         $(document).on('click', '.SedoxProductView .togglesalable', app.SedoxProductView.toggleSalable);
         $(document).on('click', '.SedoxProductView .togglestart', app.SedoxProductView.toggleStart);
+        $(document).on('click', '.SedoxProductView .markasfinished', app.SedoxProductView.markAsFinished);
         $(document).on('click', '.checkbuttons input', app.SedoxProductView.checkbuttonsClicked);
         $(document).on('change', '.SedoxProductView .binaryfilerow input', app.SedoxProductView.filesChanged);
         
@@ -125,6 +126,15 @@ app.SedoxProductView = {
             me.imageSelected(files, originalButton);
             
         });
+    },
+    
+    markAsFinished: function() {
+        var data = {
+            productId : $(this).attr('productid')
+        }
+        
+        var event = thundashop.Ajax.createEvent("", "markAsFinished", this, data);
+        thundashop.Ajax.post(event);    
     },
     
     filesChanged: function() {

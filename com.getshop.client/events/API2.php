@@ -4795,6 +4795,23 @@ class APISedoxProductManager {
 	* Active developers are administrators that has an SedoxUser with the flag
 	* isActiveDeveloper = true
 	*
+	* @return int
+	* @throws ErrorException
+	*/
+
+	public function getFileNotProcessedToDayCount() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getFileNotProcessedToDayCount";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
 	* @return List
 	* @throws ErrorException
 	*/
@@ -4994,6 +5011,25 @@ class APISedoxProductManager {
 	     $data["method"] = "login";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function markAsFinished($productId, $finished) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["finished"] = json_encode($this->transport->object_unset_nulls($finished));
+	     $data["method"] = "markAsFinished";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

@@ -13,6 +13,9 @@ class core_calendarmanager_data_Entry {
 	public $otherDays;
 
 	/** @var String */
+	public $participateData;
+
+	/** @var String */
 	public $metaInfo;
 
 	/** @var String */
@@ -74,6 +77,9 @@ class core_calendarmanager_data_Entry {
 
 	/** @var String */
 	public $eventHelder;
+
+	/** @var String */
+	public $readyToInvoice;
 
 	/** @var String */
 	public $comments;

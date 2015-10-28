@@ -134,7 +134,7 @@ $reference = $this->getReference($sedoxProduct);
 </div>
 
 <?
-if (!$this->hasWriteAccess()) {
+if (!$this->hasWriteAccess() || get_class($sedoxProduct) == "core_sedox_SedoxSharedProduct") {
     return;
 }
 

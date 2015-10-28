@@ -154,37 +154,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             return;
         }
 
-        if (option.equals("updatesoftwareversion")) {
-            updateSoftwareVersion();
-            return;
-        }
-
         if (option.equals("products") || option.equals("all")) {
             deleteAllProducts();
         }
 
         if (option.equals("users") || option.equals("all")) {
             deleteAllUsers();
-        }
-
-        try {
-            SedoxMysqlImporter productImporter = new SedoxMysqlImporter();
-            if (option.equals("products") || option.equals("all")) {
-                for (SedoxProduct product : productImporter.getProducts()) {
-                    product.storeId = this.storeId;
-                    databaseSaver.saveObject(product, credentials);
-                    products.add(product);
-                }
-            }
-
-            if (option.equals("users") || option.equals("all")) {
-                List<SedoxUser> accounts = productImporter.getCreditAccounts();
-                for (SedoxUser user : accounts) {
-                    saveUser(user);
-                }
-            }
-        } catch (ErrorException | SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
         }
 
         if (option.equals("magento") || option.equals("all")) {
@@ -1352,23 +1327,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private void updateOrders() throws ErrorException {
         List<SedoxMagentoIntegration.Order> orders = sedoxMagentoIntegration.getOrders();
         updateOrders(orders);
-    }
-
-    private void updateSoftwareVersion() throws ErrorException {
-        try {
-            SedoxMysqlImporter productImporter = new SedoxMysqlImporter();
-            int i = 0;
-            for (SedoxProduct sedoxProduct : products) {
-                i++;
-                productImporter.updateSoftwareVersion(sedoxProduct);
-                saveObject(sedoxProduct);
-            }
-            productImporter.close();
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SedoxProductManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            java.util.logging.Logger.getLogger(SedoxProductManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override

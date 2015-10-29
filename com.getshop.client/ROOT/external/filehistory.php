@@ -39,6 +39,7 @@ foreach ($orders as $product) {
     $data['tool'] = $product->tool;
     $data['gear'] = $product->gearType;
     $data['started'] = $product->started == true;
+    $data['reference'] = ns_23fac58b_5066_4222_860c_a9e88196b8a1\SedoxProductView::getReference($product);
 	$files[] = $data;
 }
 

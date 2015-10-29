@@ -3,7 +3,7 @@ cat << EOF > batchfile
 cd dist
 lcd $HOME/netbeans/1.0.0
 put "GetShop Core/dist/GetShop_Core.jar" com.thundashop.core.jar
-cd libs
+cd lib
 put "GetShop Messages/dist/GetShop_Messages.jar" com.thundashop.messages.jar
 EOF
 

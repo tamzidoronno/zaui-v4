@@ -669,7 +669,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private void sendAirGramMessage(String emailAddress, SedoxProduct sedoxProduct) throws ErrorException {
         UserManager userManager = getManager(UserManager.class);
         User user = userManager.getUserById(sedoxProduct.firstUploadedByUserId);
-        SedoxSharedProduct sharedProduct = getSharedProductById(sedoxProduct.id);
+        SedoxSharedProduct sharedProduct = getSharedProductById(sedoxProduct.sharedProductId);
         SedoxUser sedoxUser = getSedoxUserAccountById(user.id);
 
         String message = "File: " + sharedProduct.getName();

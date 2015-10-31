@@ -33,7 +33,7 @@ $year = $json['Year'];
 $slave = null;
 $comment = $json['extraComment'];
 $geartype = $json['ManualGear'] == true ? "man" : "auto";
-$useCredit = "yes";
+$useCredit = "true";
 $sedoxFileUpload->saveFileContent($brand, $model, $engineSize, $power, $year, $tool, $comment, $geartype, $useCredit, $slave, $filename, $filecontent, "Windows Application");
 
 ?>

@@ -10,6 +10,9 @@ class core_calendarmanager_data_StatisticResult {
 	public $waitingList;
 
 	/** @var String */
+	public $entryId;
+
+	/** @var String */
 	public $from;
 
 	/** @var String */

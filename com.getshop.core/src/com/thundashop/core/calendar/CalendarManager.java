@@ -1644,4 +1644,44 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         
         throw new ErrorException(26);
     }
+
+    @Override
+    public List<StatisticResult> getDetailedStatistic(Date from, Date to) throws ErrorException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(from);
+        calendar.set(Calendar.HOUR, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        
+        from = calendar.getTime();
+        
+        calendar.setTime(to);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        to = calendar.getTime();
+        
+        UserManager userManager = getManager(UserManager.class);
+        List<Group> groups = userManager.getAllGroups();
+        
+        Group groupNotAssigned = new Group();
+        groupNotAssigned.id = "not_assigned";
+        groupNotAssigned.groupName = "Not assigned";
+        groups.add(groupNotAssigned);
+        
+        List<StatisticResult> results = new ArrayList();
+        
+        for (Group group : groups) {
+            List<Entry> allEntries = getAllEntriesForStatistic(from, to);
+            
+            for (Entry entry : allEntries) {
+                List<Entry> allEntriesToCheck = new ArrayList();
+                allEntriesToCheck.add(entry);
+                
+                StatisticResult result = getStatisticResult(from, to, group, allEntriesToCheck);    
+                result.entryId = entry.entryId;
+                results.add(result);
+            }
+        }
+        
+        return results;
+    }
 }

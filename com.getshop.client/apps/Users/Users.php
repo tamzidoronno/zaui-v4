@@ -225,6 +225,10 @@ class Users extends \SystemApplication implements \Application {
         
         echo "<tr><td></td><td style='text-align: center;'>$countSum</td><td style='text-align: center;'>$waitingListSum</td></tr>";
         
+        $encodedStartDate = urlencode($startDate);
+        $encodedEndDate = urlencode($endDate);
+        echo "<tr><td colspan='2' style='text-align: center; '><a style='color: blue;' target='_blank' ignorenavigateWithJavascript='true' href='/scripts/downloadDetailedReport.php?from=$encodedStartDate&to=$encodedEndDate'>Download detailed report</a></td></tr>";
+        
         echo "</table>";
     }
     

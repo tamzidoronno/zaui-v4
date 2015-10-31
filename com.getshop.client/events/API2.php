@@ -4728,7 +4728,7 @@ class APISedoxProductManager {
 	* @throws ErrorException
 	*/
 
-	public function createSedoxProduct($core_sedox_SedoxSharedProduct, $base64encodedOriginalFile, $originalFileName, $forSlaveId, $origin) {
+	public function createSedoxProduct($core_sedox_SedoxSharedProduct, $base64encodedOriginalFile, $originalFileName, $forSlaveId, $origin, $comment, $useCredit) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["core_sedox_SedoxSharedProduct"] = json_encode($this->transport->object_unset_nulls($core_sedox_SedoxSharedProduct));
@@ -4736,6 +4736,8 @@ class APISedoxProductManager {
 	     $data['args']["originalFileName"] = json_encode($this->transport->object_unset_nulls($originalFileName));
 	     $data['args']["forSlaveId"] = json_encode($this->transport->object_unset_nulls($forSlaveId));
 	     $data['args']["origin"] = json_encode($this->transport->object_unset_nulls($origin));
+	     $data['args']["comment"] = json_encode($this->transport->object_unset_nulls($comment));
+	     $data['args']["useCredit"] = json_encode($this->transport->object_unset_nulls($useCredit));
 	     $data["method"] = "createSedoxProduct";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->cast(new core_sedox_SedoxProduct(), $this->transport->sendMessage($data));

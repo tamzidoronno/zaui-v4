@@ -44,10 +44,9 @@ public class SedoxProduct extends SedoxProductCopiedData implements Comparable<S
         }  
     }
     
-    public String fileSafeName() {
+    public String fileSafeName(String fileName) {
         try {
-            String name = toString();
-            return URLEncoder.encode(name, "UTF-8");
+            return URLEncoder.encode(fileName, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException("Failed to make safe filename", ex);
         }

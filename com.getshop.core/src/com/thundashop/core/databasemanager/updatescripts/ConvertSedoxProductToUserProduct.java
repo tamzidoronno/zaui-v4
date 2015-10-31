@@ -55,6 +55,7 @@ public class ConvertSedoxProductToUserProduct {
                     product.power = (String) object.get("power"); 
                     product.ecuType =  (String) object.get("ecuType"); 
                     product.build =  (String) object.get("build"); 
+                    product.storeId = "608afafe-fd72-4924-aca7-9a8552bc6c81";
                     product.ecuBrand = (String) object.get("ecuBrand"); 
                     product.softwareNumber = (String) object.get("softwareNumber"); 
                     product.softwareSize =  (String) object.get("softwareSize"); 

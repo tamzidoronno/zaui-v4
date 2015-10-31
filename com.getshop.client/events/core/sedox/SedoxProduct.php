@@ -39,5 +39,8 @@ class core_sedox_SedoxProduct extends core_sedox_SedoxProductCopiedData  {
 	/** @var String */
 	public $isBuiltFromSpecialRequest;
 
+	/** @var String */
+	public $duplicate;
+
 }
 ?>

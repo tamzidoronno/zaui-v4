@@ -257,6 +257,32 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 return product;
             }
         }
+        
+        if (getSession().currentUser != null) {
+
+            for (SedoxProduct product : products) {
+                if (product.sharedProductId.equals(id) && product.firstUploadedByUserId.equals(getSession().currentUser.id)) {
+                    finalize(product);
+                    return product;
+                }
+            }
+            
+            for (SedoxSharedProduct sharedProduct : productsShared) {
+                if (sharedProduct.id.equals(id)) {
+                    SedoxProduct sedoxProduct = new SedoxProduct();
+                    sedoxProduct.id = getNextProductId();
+                    sedoxProduct.firstUploadedByUserId = getSession().currentUser.id;
+                    sedoxProduct.storeId = storeId;
+                    sedoxProduct.sharedProductId = id;
+                    sedoxProduct.rowCreatedDate = new Date();
+                    sedoxProduct.isFinished = true;
+                    sedoxProduct.duplicate = true;
+                    saveObject(sedoxProduct);
+                    finalize(sedoxProduct);
+                    products.add(sedoxProduct);
+                }
+            }
+        }
 
         return null;
     }

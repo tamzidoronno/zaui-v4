@@ -228,6 +228,7 @@ class Users extends \SystemApplication implements \Application {
         $encodedStartDate = urlencode($startDate);
         $encodedEndDate = urlencode($endDate);
         echo "<tr><td colspan='2' style='text-align: center; '><a style='color: blue;' target='_blank' ignorenavigateWithJavascript='true' href='/scripts/downloadDetailedReport.php?from=$encodedStartDate&to=$encodedEndDate'>Download detailed report</a></td></tr>";
+        echo "<tr><td colspan='2' style='text-align: center; '><a style='color: blue;' target='_blank' ignorenavigateWithJavascript='true' href='/scripts/downloadDetailedReportByLocation.php?from=$encodedStartDate&to=$encodedEndDate'>Download detailed report (by locations)</a></td></tr>";
         
         echo "</table>";
     }

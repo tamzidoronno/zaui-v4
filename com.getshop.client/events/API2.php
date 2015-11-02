@@ -656,6 +656,22 @@ class APICalendarManager {
 	}
 
 	/**
+	* Get all entries in a region based on the point
+	* @param point
+	* @return List
+	*/
+
+	public function getDetailedStatisticGroupedByLocations($from, $to) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["from"] = json_encode($this->transport->object_unset_nulls($from));
+	     $data['args']["to"] = json_encode($this->transport->object_unset_nulls($to));
+	     $data["method"] = "getDetailedStatisticGroupedByLocations";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* return a list of entires that a specified user
 	* has been attending to
 	*/

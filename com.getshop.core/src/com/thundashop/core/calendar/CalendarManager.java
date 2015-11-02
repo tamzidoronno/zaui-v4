@@ -1528,7 +1528,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         to = calendar.getTime();
         
-        List<Entry> allEntries = getAllEntriesForStatistic(from, to);
+        List<Entry> allEntries = getAllEntriesForStatistic(from, to, null);
         List<StatisticResult> results = new ArrayList();
         
         UserManager userManager = getManager(UserManager.class);
@@ -1557,7 +1557,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         return result;
     }
 
-    private List<Entry> getAllEntriesForStatistic(Date from, Date to) {
+    private List<Entry> getAllEntriesForStatistic(Date from, Date to, Location location) {
         List<Entry> entries = new ArrayList();
         for (Month month : months.values()) {
             for (Day day : month.days.values()) {
@@ -1565,7 +1565,13 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                     Date date = entry.getDate();
                     
                     if (date.after(from) && date.before(to)) {
-                        entries.add(entry);
+                        if (location != null) {
+                            if (entry.locationId != null && entry.locationId.equals(location.id)) {
+                                entries.add(entry);
+                            }
+                        } else {
+                            entries.add(entry);
+                        }
                     }
                 }
             }
@@ -1670,7 +1676,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         List<StatisticResult> results = new ArrayList();
         
         for (Group group : groups) {
-            List<Entry> allEntries = getAllEntriesForStatistic(from, to);
+            List<Entry> allEntries = getAllEntriesForStatistic(from, to, null);
             
             for (Entry entry : allEntries) {
                 List<Entry> allEntriesToCheck = new ArrayList();
@@ -1680,6 +1686,43 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 result.entryId = entry.entryId;
                 results.add(result);
             }
+        }
+        
+        return results;
+    }
+
+    @Override
+    public List<StatisticResult> getDetailedStatisticGroupedByLocations(Date from, Date to) throws ErrorException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(from);
+        calendar.set(Calendar.HOUR, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        
+        from = calendar.getTime();
+        
+        calendar.setTime(to);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        to = calendar.getTime();
+        
+        UserManager userManager = getManager(UserManager.class);
+        List<Group> groups = userManager.getAllGroups();
+        
+        Group groupNotAssigned = new Group();
+        groupNotAssigned.id = "not_assigned";
+        groupNotAssigned.groupName = "Not assigned";
+        groups.add(groupNotAssigned);
+        
+        List<StatisticResult> results = new ArrayList();
+        
+        for (Location location : getAllLocations()) {
+            for (Group group : groups) {
+                List<Entry> allEntries = getAllEntriesForStatistic(from, to, location);
+                StatisticResult result = getStatisticResult(from, to, group, allEntries);    
+                result.locationId = location.id;
+                results.add(result);
+            }
+            
         }
         
         return results;

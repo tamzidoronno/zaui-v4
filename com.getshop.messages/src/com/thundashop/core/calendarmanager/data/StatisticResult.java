@@ -17,6 +17,7 @@ public class StatisticResult {
     public int signedOn;
     public int waitingList;
     public String entryId;
+    public String locationId; 
     
     public Date from;
     public Date to;

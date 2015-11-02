@@ -13,6 +13,9 @@ class core_calendarmanager_data_StatisticResult {
 	public $entryId;
 
 	/** @var String */
+	public $locationId;
+
+	/** @var String */
 	public $from;
 
 	/** @var String */

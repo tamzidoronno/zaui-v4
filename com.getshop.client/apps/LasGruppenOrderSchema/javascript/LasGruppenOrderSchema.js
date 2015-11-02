@@ -879,7 +879,7 @@ app.LasGruppenOrderSchema = {
         var pageNumber = currentPage.attr('pageNumer');
         pageNumber--;
         $(this).closest('.orderpage').hide();
-        $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').show();
+        $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"]').show();
     },
     
     securityChanged: function() {

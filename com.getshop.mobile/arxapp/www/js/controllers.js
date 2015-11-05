@@ -122,7 +122,7 @@ arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(
 
   $scope.getYesterday = function() {
     var d = new Date();
-    d.setDate(d.getDate()-100);
+    d.setDate(d.getDate()-1);
     return d.getTime();
   }
 
@@ -143,16 +143,59 @@ arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(
     $scope.$apply();
   }
 
+  $scope.refreshDoorList = function() {
+      var done = getshop.client.ArxManager.clearDoorCache();
+      done.done(function() {
+          $state.go("doors");
+      });
+  }
+  $scope.isProcessing = true;
+  $scope.onAccessLogFetched([]);
   getshop.client.ArxManager.getAllDoors().done($scope.onDoorsFetched);
 }]);
 
 arxappControllers.controller('DoorDetailCtrl', ['GetshopService', '$scope', '$stateParams', function(getshop, $scope, $stateParams) {
 
+$scope.onChangeDates = function() {
+    var startDate = new Date($('.startDate').val());
+    var endDate = new Date($('.endDate').val());
+    var doorId = $('.doorId').val();
+    
+    getshop.client.ArxManager.getLogForDoor(doorId, startDate.getTime(), endDate.getTime()).done($scope.onAccessLogFetched);
+}
+
   $scope.onAccessLogFetched = function(result) {
     $scope.accessLog = result;
+    $scope.isProcessing = false;
+    
+    
+    for(var key in result) {
+        var stmp = result[key].timestamp;
+        var d = new Date(stmp);
+        var pieces = result[key].type.split(/[\s.]+/);
+        result[key].timestamp = formatDate(d);
+        result[key].type = pieces[pieces.length-1];
+    }
+    
+    if(result.length === 0) {
+        $scope.isEmpty = true;
+    } else {
+        $scope.isEmpty = false;
+    }
     $scope.$apply();
   }
+  $scope.isProcessing = true;
 
+  var from = new Date(parseInt($stateParams.from));
+  var to = new Date(parseInt($stateParams.to));
+  from = formatDateEnglish(from);
+  to = formatDateEnglish(to);
+  
+  $('.startDate').val(from);
+  $('.endDate').val(to);
+  $('.doorId').val($stateParams.id);
+  
+    
   getshop.client.ArxManager.getLogForDoor($stateParams.id, $stateParams.from, $stateParams.to).done($scope.onAccessLogFetched);
-
+  
 }]);

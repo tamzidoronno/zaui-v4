@@ -36,3 +36,11 @@ button.high {
 }
 
 .input-label-desc { display:block; font-size: 12px; }
+.button.button-dark.button-clear { padding-top: 5px; }
+
+.largeripple svg {
+  width: 28px;
+  height: 28px;
+  stroke: #444;
+  fill: #444;
+}

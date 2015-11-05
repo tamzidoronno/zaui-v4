@@ -1,3 +1,45 @@
+function formatDate(d) {
+    var month = d.getMonth()+1;
+        if(month < 10) {
+            month = "0" + month;
+        }
+        var day = d.getDate();
+        if(day < 10) {
+            day = "0" + day;
+        }
+        var hour = d.getHours();
+        if(hour < 10) {
+            hour = "0" + hour;
+        }
+        var min = d.getMinutes();
+        if(min < 10) {
+            min = "0" + min;
+        }
+        var secs = d.getSeconds();
+        if(secs < 10) {
+            secs = "0" + secs;
+        }
+
+
+        var dformat = [day,month,d.getFullYear()].join('.')+' '+
+              [hour,min,secs].join(':');
+
+        return dformat;
+}
+
+function formatDateEnglish(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules

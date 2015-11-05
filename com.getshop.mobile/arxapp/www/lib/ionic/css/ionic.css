@@ -6814,7 +6814,9 @@ progress {
       border-color: transparent;
       background: none;
       box-shadow: none;
-      color: #444; }
+      color: #444; 
+      padding-top: 5px;
+}
     .button.button-dark.button-icon {
       border-color: transparent;
       background: none; }

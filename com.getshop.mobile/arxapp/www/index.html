@@ -35,6 +35,8 @@
 
     <!-- Here are the page partials -->
     <script id="login.html" type="text/ng-template">
+        
+        
       <ion-view title="Login">
         <ion-header-bar class="bar bar-header bar-light">
           <h1 class="title">Arx Services</h1>
@@ -53,15 +55,15 @@
             </div>
             <div class="item item-divider">Or add new login</div>
             <label class="item item-input">
-              <span class="input-label">Nettaddresse</span>
+              <span class="input-label">Hostname</span>
               <input type="text" ng-model="data.enteredHost">
             </label>
             <label class="item item-input">
-              <span class="input-label">Brukernavn</span>
+              <span class="input-label">Username</span>
               <input type="text" ng-model="data.username">
             </label>
             <label class="item item-input">
-              <span class="input-label">Passord</span>
+              <span class="input-label">Password</span>
               <input type="password" ng-model="data.password">
             </label>
             <label class="item item-input">
@@ -216,11 +218,14 @@
             </a>
           </div>
         </ion-content>
-        <!--
-        <ion-footer-bar class="bar bar-footer">
-          <button class="button button-full" ui-sref="menu">Tilbake</button>
-        </ion-footer-bar>        
-        -->
+
+        <ion-footer-bar align-title="left" class="bar-assertive">
+          <h1 class="title"></h1>
+          <div class="buttons" ng-click="refreshDoorList()">
+            <button class="button">Refresh door list</button>
+          </div>
+        </ion-footer-bar>
+ 
       </ion-view>
     </script>
     <script id="door-detail.html" type="text/ng-template">
@@ -230,6 +235,12 @@
           <h1 class="title">{{door.name}} access log</h1>
         </ion-header-bar>
         <ion-content>
+        <div ng-if="isProcessing" style="text-align:center; padding-top: 20px;">
+                <ion-spinner icon="ripple" class="largeripple"></ion-spinner>
+        </div>
+        <div ng-if="isEmpty" style="text-align:center; padding-top: 20px;">
+            No entries where found.
+        </div>
           <div class="list">
 
             <div class="item item-icon-left" ng-repeat="record in accessLog">
@@ -240,12 +251,24 @@
 
           </div>
         </ion-content>
-        <!--
-        <ion-footer-bar class="bar bar-footer">
-          <button class="button button-full" ui-sref="doors">Tilbake</button>
+         <ion-footer-bar align-title="left" class="bar-assertive">
+          <div class="buttons">
+            <input type="date" class="startDate"/>
+          </div>&nbsp;&nbsp;&nbsp;
+          <div class="buttons">
+            <input type="date" class="endDate" />
+          </div>
+            <input type="hidden" class="doorId" />
+          <div class="buttons">
+            &nbsp;&nbsp;&nbsp;<span class="button"  ng-click="onChangeDates()">Change date</span>
+          </div>
         </ion-footer-bar>
-        -->
       </ion-view>
+      
+      
+      
+    
+
     </script>
 
   </body>

@@ -150,7 +150,6 @@ arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(
       });
   }
   $scope.isProcessing = true;
-  $scope.onAccessLogFetched([]);
   getshop.client.ArxManager.getAllDoors().done($scope.onDoorsFetched);
 }]);
 

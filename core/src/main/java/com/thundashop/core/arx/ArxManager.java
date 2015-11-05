@@ -11,9 +11,13 @@ import com.assaabloy.arxdata.persons.PersonType;
 import com.getshop.scope.GetShopSession;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.app.logo.ILogoManager;
+import com.thundashop.app.newsmanager.data.MailSubscription;
+import com.thundashop.app.newsmanager.data.NewsEntry;
 import com.thundashop.core.arx.Door;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayInputStream;
@@ -79,14 +83,24 @@ public class ArxManager extends ManagerBase implements IArxManager {
     
     @Autowired
     UserManager usermanager;
+    private List<Door> doorList = new ArrayList();
+    
+    @Override
+    public void dataFromDatabase(DataRetreived data) {
+        for (DataCommon retData : data.data) {
+            if (retData instanceof Door) {
+                doorList.add((Door) retData);
+            }
+        }
+    }
             
     @Override
     public boolean logonToArx(String hostname, String username, String password) {
-        String result = httpLoginRequest("https://" + hostname + ":5002/arx/export", username, password, "");
+        String result = httpLoginRequest("https://" + hostname + ":5002/arx/export?external_id=fasdfsadfasf", username, password, "");
         if(result.equals("401")) {
             return false;
         }
-        
+        System.out.println(storeId);
         String reference = hostname + "@" + username;
         
         User user = usermanager.getUserByReference(reference);
@@ -207,6 +221,12 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
     @Override
     public List<Door> getAllDoors() throws Exception {
+        
+        List<Door> cachedDoors = getCachedDoors();
+        if(!cachedDoors.isEmpty()) {
+            return cachedDoors;
+        }
+        
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
 
@@ -222,6 +242,11 @@ public class ArxManager extends ManagerBase implements IArxManager {
         Document document = builder.parse(is);
         NodeList nodeList = document.getDocumentElement().getChildNodes();
         List<Door> doors = recursiveFindDoors(nodeList, 0);
+        
+        for(Door door : doors) {
+            door.hostOwner = currentUser.fullName;
+            saveDoor(door);
+        }
         
         return doors;
     }
@@ -698,6 +723,36 @@ public class ArxManager extends ManagerBase implements IArxManager {
         NodeList nodeList = document.getDocumentElement().getChildNodes();
         List<AccessLog> retresult = recursiveFindDoorLogEntry(nodeList, externalId);
         return retresult;
+    }
+
+    private void saveDoor(Door door) {
+        if(door.hostOwner.isEmpty()) {
+            System.out.println("Sorry, cant save this door");
+        } else {
+            saveObject(door);
+            doorList.add(door);
+        }
+        
+    }
+
+    private List<Door> getCachedDoors() {
+        User currentUser = getSession().currentUser;
+        List<Door> result = new ArrayList();
+        for(Door door : doorList) {
+            if(door.hostOwner.equals(currentUser.fullName)) {
+                result.add(door);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void clearDoorCache() throws Exception {
+        List<Door> cachedDoors = getAllDoors();
+        doorList.removeAll(cachedDoors);
+        for(Door door : cachedDoors) {
+            deleteObject(door);
+        }
     }
 
 }

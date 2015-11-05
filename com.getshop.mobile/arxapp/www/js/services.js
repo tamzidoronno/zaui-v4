@@ -4,23 +4,24 @@ var arxAppServices = angular.module('ArxAppServices', ['ionic']);
 arxAppServices.service('LoginService', ['GetshopService', '$q', function(getshop, $q) {
     return {
         loginUser: function(host, name, pw) {
-            var deferred = $q.defer();
-            var promise = deferred.promise;
+            var deferred = $.Deferred();
  
-            if (getshop.client.ArxManager.logonToArx(host, name, pw, false)) {
-                deferred.resolve('Welcome ' + name + '!');
-            } else {
+            if(!host) {
                 deferred.reject('Wrong credentials.');
+                return deferred;
             }
-            promise.success = function(fn) {
-                promise.then(fn);
-                return promise;
-            }
-            promise.error = function(fn) {
-                promise.then(null, fn);
-                return promise;
-            }
-            return promise;
+ 
+            var res = getshop.client.ArxManager.logonToArx(host, name, pw, false);
+
+            res.done(function(test) {
+                if(test) {
+                    deferred.resolve('Welcome ' + name + '!');
+                } else {
+                    deferred.reject('Wrong credentials.');
+                }
+            });
+            
+            return deferred;
         }
     }
 }]);
@@ -32,7 +33,8 @@ arxAppServices.factory('GetshopService', ['$window', function($window) {
 
     connectToGetshop: function() {
       // Connect to getshop web api
-      this.client = new GetShopApiWebSocket("arx.getshop.com");
+//      this.client = new GetShopApiWebSocket("localhost", "31332");
+      this.client = new GetShopApiWebSocket("localhost", "31330");
       this.client.setConnectedEvent(function () {
         console.log('Connected to getshop');
       });

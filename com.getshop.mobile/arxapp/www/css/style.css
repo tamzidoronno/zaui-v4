@@ -34,3 +34,5 @@ button.high {
 .center {
 	text-align:center;
 }
+
+.input-label-desc { display:block; font-size: 12px; }

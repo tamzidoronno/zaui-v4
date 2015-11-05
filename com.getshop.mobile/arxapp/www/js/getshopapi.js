@@ -1,7 +1,8 @@
 
-GetShopApiWebSocket = function(address) {
+GetShopApiWebSocket = function(address, port) {
     this.sentMessages =  [];
     this.address = address;
+    this.port = port;
 };
 
 GetShopApiWebSocket.prototype = {
@@ -22,7 +23,7 @@ GetShopApiWebSocket.prototype = {
         if (this.connectionEstablished === null) {
             this.fireDisconnectedEvent();
         }
-        var address = "ws://"+this.address+":31332/";
+        var address = "ws://"+this.address+":"+this.port+"/";
         this.socket = new WebSocket(address);
         this.socket.onopen = $.proxy(this.connected, this);
         this.socket.onclose = function() {

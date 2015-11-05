@@ -21,7 +21,6 @@ angular.module('arxapp', ['ionic', 'ArxAppControllers'])
   GetshopService.connectToGetshop();
 })
 
-
 // Setup view states
 .config(function($stateProvider, $urlRouterProvider) {
 

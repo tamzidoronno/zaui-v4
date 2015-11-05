@@ -2,10 +2,11 @@ var arxappControllers = angular.module('ArxAppControllers', ['ArxAppServices', '
 
 arxappControllers.controller('LoginCtrl', function($scope, LoginService, LocalStorage, $ionicPopup, $state) {
 
-  function Credentials(host, username, password) {
+  function Credentials(host, username, password, alias) {
     this.host = host;
     this.username = username;
     this.password = password;
+    this.alias = alias;
   }
 
   // load credentials from local storage
@@ -18,60 +19,65 @@ arxappControllers.controller('LoginCtrl', function($scope, LoginService, LocalSt
   $scope.data = {};
 
 
-  // define a function to login with stored credentials
-  $scope.loginWithSavedCredentials = function() {
-    // find credentials for selected host
-    var i = -1;
-    for (var index = 0; index < $scope.userData.credentials.length; index++) {
-      if ($scope.userData.credentials[index].host == $scope.data.selectedHost) {
-        i = index;
-        break;
-      }
-    }
-    if (i == -1) {
-      var alertPopup = $ionicPopup.alert({
-        title: 'Login failed!',
-        template: "Can't find credentials for this host. Please re-enter it."
-      });      
-    } else {
-      // try to login using saved credentials
-      LoginService.loginUser($scope.userData.credentials[i].host, $scope.userData.credentials[i].username, $scope.userData.credentials[i].password).success(function(data) {
-        // go to menu
-        $state.go('menu');
-      }).error(function(data) {
-        var alertPopup = $ionicPopup.alert({
-          title: 'Login failed!',
-          template: "Those credentials don't work anymore!"
-        });
-      });      
-    }
-  }
- 
   // define a function to login with new credentials given by the user
+  $scope.updateFields = function() {
+      var credentials = $scope.userData.credentials;
+      for(var key in credentials) {
+          var alias = credentials[key].alias;
+          if(alias === undefined) {
+              alias = "";
+          }
+          var index = credentials[key].host + " - " + alias;
+          if(index === $scope.data.selectedHost) {
+              var credential = credentials[key];
+              $scope.data.enteredHost = credential.host;
+              $scope.data.username = credential.username;
+              $scope.data.password = credential.password;
+              $scope.data.alias = credential.alias;
+          }
+      }
+  }
+  
   $scope.login = function() {
-    LoginService.loginUser($scope.data.enteredHost, $scope.data.username, $scope.data.password).success(function(data) {
+      
+    var result = LoginService.loginUser($scope.data.enteredHost, $scope.data.username, $scope.data.password);
+    
+    $scope.isProcessing = true;
+    
+    result.done(function(data) {
       var index = 0;
       // check if we already have credentials for this host
       for (index; index < $scope.userData.credentials.length; index++) {
-        if ($scope.userData.credentials[index].host == $scope.data.host)
+        if ($scope.userData.credentials[index].host == $scope.data.enteredHost)
           break; // credentials will be updated at this index
       }
       // add or update credentials
-      $scope.userData.credentials[index] = new Credentials($scope.data.enteredHost, $scope.data.username, $scope.data.password);
+      var credentials = new Credentials($scope.data.enteredHost, $scope.data.username, $scope.data.password, $scope.data.alias);
+      $scope.userData.credentials[index] = credentials;
       // save to local storage
       LocalStorage.setObject('userData', $scope.userData);
+      LocalStorage.setObject('currentCredentials', credentials);
       // go to menu
       $state.go('menu');
-    }).error(function(data) {
-      var alertPopup = $ionicPopup.alert({
-        title: 'Login failed!',
-        template: 'Please check your credentials!'
-      });
+    });
+
+    result.always(function() {
+        $scope.isProcessing = false;
+    });
+
+    result.fail(function() {
+        var alertPopup = $ionicPopup.alert({
+            title: 'Login failed!',
+            template: 'Please check your credentials!'
+        });
     });
   }
 });
 
-arxappControllers.controller('MenuCtrl', function($scope) {});
+arxappControllers.controller('MenuCtrl',  function($scope, LocalStorage) {
+    var curCredentials = LocalStorage.getObject('currentCredentials');
+    $('.footercontent').html(curCredentials.host + " - " + curCredentials.alias);
+});
 arxappControllers.controller('AboutCtrl', function($scope) {});
 
 arxappControllers.controller('UsersCtrl', ['GetshopService', '$scope', function(getshop, $scope) {

@@ -37,7 +37,7 @@
     <script id="login.html" type="text/ng-template">
       <ion-view title="Login">
         <ion-header-bar class="bar bar-header bar-light">
-          <h1 class="title">Arx Services</h1> 
+          <h1 class="title">Arx Services</h1>
         </ion-header-bar>
         <ion-content>
           <div class="list list-inset">
@@ -46,11 +46,10 @@
               <div class="input-label">
                 Host
               </div>
-              <select ng-model="data.selectedHost">
-                <option value="" disabled>...</option>
-                <option ng-repeat="creds in userData.credentials">{{creds.host}}</option>
+              <select ng-model="data.selectedHost" ng-change="updateFields()">
+                <option value="" disabled>Saved credentials</option>
+                <option ng-repeat="creds in userData.credentials">{{creds.host}} - {{creds.alias}}</option>
               </select>
-              <button class="button button-positive" ng-click="loginWithSavedCredentials()">Go</button>
             </div>
             <div class="item item-divider">Or add new login</div>
             <label class="item item-input">
@@ -65,15 +64,23 @@
               <span class="input-label">Passord</span>
               <input type="password" ng-model="data.password">
             </label>
+            <label class="item item-input">
+              <span class="input-label">Alias
+              <span class="input-label-desc">* Not required<br>* Used for more profiles</span>
+              </span>
+              <input type="text" ng-model="data.alias">
+            </label>
           </div>
           <div class="padding">
-            <button class="button button-block button-positive" ng-click="login()">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logg inn&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="button button-block button-positive" ng-click="login()" ng-disabled="isProcessing">
+              <span>Sign in</span>
+              <ion-spinner ng-if="isProcessing == true" icon="ripple"></ion-spinner>
             </button>
           </div>
       </ion-content>
       </ion-view>
     </script>
+    
     <script id="about.html" type="text/ng-template">
       <ion-view title="About">
         <!--Header bar-->
@@ -99,18 +106,7 @@
       <ion-view title="Menu">
         <!--Header bar-->
         <ion-header-bar class="bar bar-header bar-light">
-          <h1 class="title">Arx Services</h1> 
-          <!--
-          <div class="col-25">
-            <img src="img/getshop.png" />
-          </div>
-          <div class="col-25 col-offset-25">
-            <button class="button button-block button-clear button-dark high"><i class="icon ion-gear-b big-icon"></i><br>Instillinger</button>
-          </div>
-          <div class="col-25">
-            <button class="button button-block button-clear button-dark high" ui-sref="login"><i class="icon ion-key big-icon"></i><br>Logg ut</button>
-          </div>
-          -->
+          <h1 class="title">Arx Services</h1>
         </ion-header-bar>
         <ion-content>
 
@@ -130,10 +126,11 @@
           <!--Separator row-->
           <div class="separator-15vh"></div>
           <!--Row with number-->
-          <div class="row">
-            <div class="col col-33 col-offset-33 text-center">106</div>
-          </div>
         </ion-content>
+
+        <ion-footer-bar align-title="left" class="bar-assertive">
+          <h1 class="title footercontent"></h1>
+        </ion-footer-bar>
       </ion-view>
     </script>
     <script id="users.html" type="text/ng-template">

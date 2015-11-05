@@ -45,23 +45,27 @@ public class SedoxSharedProduct extends DataCommon implements Comparable<SedoxSh
             saleAble = false;
             return;
         }
-        
-        brand = productAttributes[0]; // %Vehicle.Producer%; (bmw / audi)
-        model = productAttributes[1]; // %Vehicle.Series% (e90 / passat etc)
-        engineSize = productAttributes[3]; // %Vehicle.Model% 
-        build = productAttributes[2]; // %Vehicle.Build%;
-        year = productAttributes[5]; // %Vehicle.Modelyear%
-        power = productAttributes[6]; // %Engine.OutputPS%
-        ecuBrand = productAttributes[7]; // %ECU.Producer%
-        ecuType = productAttributes[8]; // %ECU.Build% 
-        ecuPartNumber = productAttributes[9];
-        ecuHardwareNumber = productAttributes[10]; // %ECU.ECUStg%;
-        ecuSoftwareNumber = productAttributes[11]; // %ECU.ECUStg%;
-        ecuSoftwareVersion = productAttributes[12]; // %ECU.ECUStg%;
-        originalChecksum = productAttributes[13]; //%File.8Bitsum.Org%
-        
+            
+        brand = productAttributes[0]; // %Vehicle.Producer% (bmw / audi)
+        model = productAttributes[1]; // %Vehicle.Series% (e90 / passat)
+        build = productAttributes[2]; // %Vehicle.Build% (Different values)
+        engineSize = productAttributes[3]; // %Vehicle.Model% (2.0TDI)
+        // charactristic = productAttributes[4]; // %Vehicle. Characteristic % (Not in use)
+        year = productAttributes[5]; // %Vehicle.Modelyear% (year)
+        power = productAttributes[6]; // %Engine.OutputPS% (hp)
+        ecuBrand = productAttributes[7]; // %ECU.Producer% (bosch / siemens)
+        ecuType = productAttributes[8]; // %ECU.Build% (edc15 / edc16)
+        ecuPartNumber = productAttributes[9]; // %ECU.ECUProd% (car ecu part nr)
+        ecuHardwareNumber = productAttributes[10]; // %ECU.ECUStg% (bosch / siemens part nr)
+        ecuSoftwareNumber = productAttributes[11]; // %ECU. Software %; (softwaren nr)
+        ecuSoftwareVersion = productAttributes[12]; // %ECU.Softwareversion % (software upg, or code)
+        originalChecksum = productAttributes[13]; //%File.8Bitsum.Org% (org 8bit sum / checksum)
+        // tuneChecksum = productAttributes[14]; //%File.8Bitsum% (tune 8bit sum / checksum) (not in use)
+        // softwareSize = productAttributes[15]; //% ECU.Softwaresize % (size of file) (not in use)
+        // chekcsumStatus = productAttributes[16]; 
+         
         if (productAttributes.length > 17) {
-            tool = productAttributes[17]; 
+            tool = productAttributes[17]; //% File.ReadHardware % (tool used for read)
         }
     }
     

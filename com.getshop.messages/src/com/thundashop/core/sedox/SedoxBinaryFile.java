@@ -39,7 +39,7 @@ public class SedoxBinaryFile implements Serializable {
             return;
         }
         
-        checksumCorrected = !productAttributes[15].equals("csnone");
+        checksumCorrected = !productAttributes[16].equals("csnone"); //% ECU.Checksumstatus % (checksum is corrected or not)
     }
 
     public double getPrice(SedoxUser sedoxUser) {

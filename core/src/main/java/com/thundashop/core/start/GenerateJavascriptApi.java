@@ -57,7 +57,7 @@ public class GenerateJavascriptApi {
         List<String> lines = Files.readAllLines(Paths.get(GenerateJavascriptApi.pathToJavaSource+"com/thundashop/core/start/GetShopJavascriptApiHeader"));
 
         for (String line : lines) {
-            total += line;
+            total += line + "\n";
         }
 
         return total;

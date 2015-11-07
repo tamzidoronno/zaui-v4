@@ -225,9 +225,9 @@
           <div class="list">
             <div class="listentry item item-icon-left" ng-repeat="door in doors" >
               <span class="item-note item-note-small">
-                <button class="button button-positive" ng-click="pulseOpen(door.externalId)" ><i class="icon ion-lock-combination"></i><span class='btn-text'>Pulse open</span></button>
-                <button class="button button-positive" ng-click="forceClose(door.externalId)" ng-class="{green: door.forcedClose}"><i class="icon ion-locked"></i><span class='btn-text'>Force close</span></button>
                 <button class="button button-positive" ng-click="forceOpen(door.externalId)" ng-class="{green: door.forcedOpen}"><i class="icon ion-unlocked"></i><span class='btn-text'>Force open</span></button>
+                <button class="button button-positive" ng-click="forceClose(door.externalId)" ng-class="{green: door.forcedClose}"><i class="icon ion-locked"></i><span class='btn-text'>Force close</span></button>
+                <button class="button button-positive" ng-click="pulseOpen(door.externalId)" ><i class="icon ion-lock-combination"></i><span class='btn-text'>Pulse open</span></button>
                 <a href="#/door?id={{door.externalId}}&from={{getYesterday()}}&to={{getToday()}}">
                     <button class="button button-positive"><i class="icon ion-arrow-right-b"></i><span class='btn-text'>Log</span></button>
                 </a>

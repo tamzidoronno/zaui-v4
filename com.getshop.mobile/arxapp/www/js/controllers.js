@@ -120,7 +120,6 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
 }]);
 
 arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(getshop, $scope) {
-
   $scope.getToday = function() {
     var d = new Date();
     return d.getTime();
@@ -133,10 +132,23 @@ arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(
   }
 
   $scope.forceOpen = function(externalId) {
+      for(var key in $scope.doors) {
+          var door = $scope.doors[key];
+          if(door.externalId === externalId) {
+              $scope.doors[key].forcedOpen = !$scope.doors[key].forcedOpen;
+          }
+      }
     getshop.client.ArxManager.doorAction(externalId, 'forceOpen');
   }
 
   $scope.forceClose = function(externalId) {
+    for(var key in $scope.doors) {
+        var door = $scope.doors[key];
+        if(door.externalId === externalId) {
+            $scope.doors[key].forcedClose = !$scope.doors[key].forcedClose;
+        }
+    }
+
     getshop.client.ArxManager.doorAction(externalId, 'forceClose');
   }
 
@@ -160,7 +172,7 @@ arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(
       });
   }
   
-        $('.loadingdoorspinner').show();
+  $('.loadingdoorspinner').show();
   getshop.client.ArxManager.getAllDoors().done($scope.onDoorsFetched);
 }]);
 

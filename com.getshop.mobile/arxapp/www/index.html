@@ -223,16 +223,19 @@
           </div>
           
           <div class="list">
-  
-            <a class="item item-icon-left" ng-repeat="door in doors" href="#/door?id={{door.externalId}}&from={{getYesterday()}}&to={{getToday()}}">
+            <div class="listentry item item-icon-left" ng-repeat="door in doors" >
               <span class="item-note item-note-small">
-                <button class="button button-positive" ng-click="pulseOpen(door.externalId)" ><i class="icon ion-lock-combination"></i></button>
-                <button class="button button-positive" ng-click="forceClose(door.externalId)" ng-class="{forcedClose: green}"><i class="icon ion-locked"></i></button>
-                <button class="button button-positive" ng-click="forceOpen(door.externalId)" ng-class="{forcedOpen: green}"><i class="icon ion-unlocked"></i></button>
+                <button class="button button-positive" ng-click="pulseOpen(door.externalId)" ><i class="icon ion-lock-combination"></i><span class='btn-text'>Pulse open</span></button>
+                <button class="button button-positive" ng-click="forceClose(door.externalId)" ng-class="{green: door.forcedClose}"><i class="icon ion-locked"></i><span class='btn-text'>Force close</span></button>
+                <button class="button button-positive" ng-click="forceOpen(door.externalId)" ng-class="{green: door.forcedOpen}"><i class="icon ion-unlocked"></i><span class='btn-text'>Force open</span></button>
+                <a href="#/door?id={{door.externalId}}&from={{getYesterday()}}&to={{getToday()}}">
+                    <button class="button button-positive"><i class="icon ion-arrow-right-b"></i><span class='btn-text'>Log</span></button>
+                </a>
+                
               </span>
               <i class="icon ion-key"></i>
               <h2>{{door.name}}</h2>
-            </a>
+            </div>
           </div>
         </ion-content>
 
@@ -263,7 +266,7 @@
             <div class="item item-icon-left" ng-repeat="record in accessLog">
               <i class="icon ion-key"></i>
               <h2>{{record.personName}}</h2>
-              <p>{{record.type}} {{record.door}} with {{record.card}} on {{record.timestamp}}</p>
+              <p>{{record.timestamp}} - {{record.type}} {{record.door}} with {{record.card}}</p>
             </div>
 
           </div>

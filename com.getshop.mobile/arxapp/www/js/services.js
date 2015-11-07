@@ -52,7 +52,6 @@ arxAppServices.factory('GetshopService', ['$window','LocalStorage', function($wi
         this.client = new GetShopApiWebSocket(hostToUse, "31330");
         this.client.connect();
         this.client.setConnectedEvent(function () {
-           console.log('Connected to getshop: ' + hostToUse);
         });
         var autocreate = this.client.StoreManager.autoCreateStore("arx_"+host);
         

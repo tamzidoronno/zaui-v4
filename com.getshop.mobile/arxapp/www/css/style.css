@@ -44,3 +44,6 @@ button.high {
   stroke: #444;
   fill: #444;
 }
+
+.green { color: #a6e598 !important; }
+.btn-text { font-size: 8px; position:absolute; top: 20px; text-align: center; width: 50px; left: 0px;}

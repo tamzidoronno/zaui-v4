@@ -96,9 +96,11 @@
           <div class="list">
             <div class="item item-thumbnail-left">
               <img src="img/getshop.png">
-              <h2>Produsert av GetShop AS</h2>
+              <h2>Created by GetShop AS</h2>
               <p>http://www.getshop.no</p>
-              <p>Tlf: 0047 483 11 484</p>
+              <p>Phone: 0047 483 11 484</p>
+      <br>
+              If you have feedback to this application or would like to get more features added to it. Contact us by calling the phone number above, or simply send us an email to post@getshop.com.<br>
             </div>
           </div>
         </ion-content>
@@ -151,7 +153,7 @@
             <a class="item item-icon-left" ng-repeat="user in persons" href="#/users/{{user.firstName}}">
               <i class="icon ion-person"></i>
               <span class="item-note item-note-small">
-                Adgangsgrupper <br>
+                Access categories <br>
                 <span class="group-badge">{{user.accessCategories.length}}</span>
               </span>
               <h2>{{user.firstName}} {{user.lastName}}</h2>
@@ -177,7 +179,7 @@
           <div class="list">
 
             <div class="item item-divider">
-              Adgangsgrupper
+              Access categories
             </div>            
             <div class="item item-icon-left" ng-repeat="ac in user.accessCategories">
               <i class="icon ion-home"></i>

@@ -255,7 +255,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
         List<Door> doors = recursiveFindDoors(nodeList, 0);
         
         for(Door door : doors) {
-            door.hostOwner = currentUser.fullName;
             saveDoor(door);
         }
         
@@ -386,8 +385,27 @@ public class ArxManager extends ManagerBase implements IArxManager {
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/door_actions?externalid="+externalId+"&type="+state;
-        if(state.equals("forceOpen") || state.equals("forceClose")) {
-            hostName += "&&value=on";
+        if(state.equals("forceOpen")) {
+            Door door = getDoor(externalId);
+            if(door.forcedOpen) {
+                hostName += "&value=off";
+                door.forcedOpen = false;
+            } else {
+                hostName += "&value=on";
+                door.forcedOpen = true;
+            }
+            saveObject(door);
+        }
+        if(state.equals("forceClose")) {
+            Door door = getDoor(externalId);
+            if(door.forcedClose) {
+                hostName += "&value=off";
+                door.forcedClose = false;
+            } else {
+                hostName += "&value=on";
+                door.forcedClose = true;
+            }
+            saveObject(door);
         }
         
         String password = userPasswords.get(currentUser.id);
@@ -737,33 +755,31 @@ public class ArxManager extends ManagerBase implements IArxManager {
     }
 
     private void saveDoor(Door door) {
-        if(door.hostOwner.isEmpty()) {
-            System.out.println("Sorry, cant save this door");
-        } else {
-            saveObject(door);
-            doorList.add(door);
-        }
-        
+        saveObject(door);
+        doorList.add(door);
     }
 
     private List<Door> getCachedDoors() {
-        User currentUser = getSession().currentUser;
-        List<Door> result = new ArrayList();
-        for(Door door : doorList) {
-            if(door.hostOwner.equals(currentUser.fullName)) {
-                result.add(door);
-            }
-        }
-        return result;
+        return doorList;
     }
 
     @Override
     public void clearDoorCache() throws Exception {
         List<Door> cachedDoors = getAllDoors();
-        doorList.removeAll(cachedDoors);
         for(Door door : cachedDoors) {
             deleteObject(door);
         }
+        doorList.removeAll(cachedDoors);
+    }
+
+    private Door getDoor(String externalId) throws Exception {
+        List<Door> allDoors = getAllDoors();
+        for(Door door : allDoors) {
+            if(door.externalId.equals(externalId)) {
+                return door;
+            }
+        }
+        return null;
     }
 
 }

@@ -4798,6 +4798,17 @@ GetShopApiWebSocket.StoreManager = function(communication) {
 }
 
 GetShopApiWebSocket.StoreManager.prototype = {
+    'autoCreateStore' : function(hostname, silent) {
+        data = {
+            args : {
+                hostname : JSON.stringify(hostname),
+            },
+            method: 'autoCreateStore',
+            interfaceName: 'core.storemanager.IStoreManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'createStore' : function(hostname,email,password,notify, silent) {
         data = {
             args : {

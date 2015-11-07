@@ -758,6 +758,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return null;
     }
 
+    
+    public User getUserUserName(String username) {
+        for(User user : getUserStoreCollection(storeId).getAllUsers()) {
+            if(user.username.equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+    
     private boolean forceUniqueEmailAddress(User user) throws ErrorException {
         
         if(user.emailAddress == null || user.emailAddress.isEmpty()) {
@@ -1023,4 +1033,5 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             storeCollection.deleteExtraAddressToGroup(groupId, addressId, getSession().currentUser);
         }
     }
+
 }

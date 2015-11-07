@@ -128,9 +128,16 @@ public class StorePool {
         //MEssage usself about creation.
         GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);
         scope.setStoreId(store.id, "");
-        messageManager.sendMail("post@getshop.com", "post@getshop.com", "Instance created", "shopname, String email; " + shopname + ", " +  email, email, "post@getshop.com");
+        messageManager.sendMail("post@getshop.com", "post@getshop.com", "Instance created", "shopname, String email; " + shopname + ", " +  email, "post@getshop.com", "post@getshop.com");
         
         return store;
+    }
+    
+    public synchronized Object autoCreateStoreObject(String name) {
+        if(isAddressTaken(name)) {
+            return null;
+        }
+        return createStoreObject(name, "", "", false);
     }
     
     public synchronized Store initialize(String webAddress, String sessionId) throws ErrorException {
@@ -271,7 +278,7 @@ public class StorePool {
         } else {
             //Check if the store has been chaged.
             Store curStore = getStoreBySessionId(sessionId);
-            if(!curStore.storeId.equals(store.storeId)) {
+            if(!curStore.id.equals(store.id)) {
                 //Store has been changed.
                 getSessionFactory().removeFromSession(sessionId);
                 getSessionFactory().addToSession(sessionId, "storeId", store.id);

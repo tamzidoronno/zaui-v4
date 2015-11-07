@@ -18,6 +18,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayInputStream;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.security.cert.CertificateException;
@@ -83,6 +85,10 @@ public class ArxManager extends ManagerBase implements IArxManager {
     
     @Autowired
     UserManager usermanager;
+    
+    @Autowired
+    StoreManager storeManager;
+    
     private List<Door> doorList = new ArrayList();
     
     @Override
@@ -100,14 +106,13 @@ public class ArxManager extends ManagerBase implements IArxManager {
         if(result.equals("401")) {
             return false;
         }
-        System.out.println(storeId);
-        String reference = hostname + "@" + username;
         
-        User user = usermanager.getUserByReference(reference);
+        System.out.println(storeId);
+        System.out.println(storeManager.getMyStore().webAddress);
+        
+        User user = usermanager.getUserUserName(username);
         if(user == null) {
             user = new User();
-            user.referenceKey = reference;
-            user.emailAddress = reference;
             user.username = username;
             user.password = password;
             user.fullName = hostname;
@@ -183,6 +188,10 @@ public class ArxManager extends ManagerBase implements IArxManager {
         } catch (UnknownHostException e) {
             client.getConnectionManager().shutdown();
             return "401";
+        } catch (SocketException e) {
+            e.printStackTrace();
+            client.getConnectionManager().shutdown();
+            return "401";
         } catch (IOException e) {
             client.getConnectionManager().shutdown();
             e.printStackTrace();
@@ -221,7 +230,9 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
     @Override
     public List<Door> getAllDoors() throws Exception {
-        
+        if(!isLoggedOn()) {
+            return new ArrayList();
+        }
         List<Door> cachedDoors = getCachedDoors();
         if(!cachedDoors.isEmpty()) {
             return cachedDoors;

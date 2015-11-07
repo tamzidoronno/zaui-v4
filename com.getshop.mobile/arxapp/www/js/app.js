@@ -39,7 +39,6 @@ function formatDateEnglish(date) {
     return [year, month, day].join('-');
 }
 
-
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules

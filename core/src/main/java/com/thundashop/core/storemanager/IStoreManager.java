@@ -109,6 +109,8 @@ public interface IStoreManager {
      */
     public Store createStore(String hostname, String email, String password, boolean notify) throws ErrorException;
     
+    public Store autoCreateStore(String hostname) throws ErrorException;
+    
     /**
      * This will set the readintroduction variable in the Store object to true.
      * @return

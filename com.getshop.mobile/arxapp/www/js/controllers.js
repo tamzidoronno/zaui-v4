@@ -65,7 +65,8 @@ arxappControllers.controller('LoginCtrl', function($scope, LoginService, LocalSt
         $scope.isProcessing = false;
     });
 
-    result.fail(function() {
+    result.fail(function(result) {
+        console.log(result);
         var alertPopup = $ionicPopup.alert({
             title: 'Login failed!',
             template: 'Please check your credentials!'

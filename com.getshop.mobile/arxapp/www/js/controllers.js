@@ -83,10 +83,12 @@ arxappControllers.controller('AboutCtrl', function($scope) {});
 arxappControllers.controller('UsersCtrl', ['GetshopService', '$scope', function(getshop, $scope) {
 
   $scope.onPersonsFetched = function(result) {
+    $scope.isProcessing = false;
     $scope.persons = result;
     $scope.$apply();
   }
-
+  
+  $scope.isProcessing = true;
   getshop.client.ArxManager.getAllPersons().done($scope.onPersonsFetched);
 
 }]);
@@ -106,9 +108,12 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
   		}
   	}
 
+    $scope.isProcessing = false;
     $scope.$apply();
   	
   }
+  
+  $scope.isProcessing = true;
   getshop.client.ArxManager.getAllPersons().done($scope.onPersonFetched);
 
 }]);
@@ -139,6 +144,7 @@ arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(
   }
 
   $scope.onDoorsFetched = function(result) {
+      $('.loadingdoorspinner').hide();
     $scope.doors = result;
     $scope.$apply();
   }
@@ -146,10 +152,14 @@ arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(
   $scope.refreshDoorList = function() {
       var done = getshop.client.ArxManager.clearDoorCache();
       done.done(function() {
-          $state.go("doors");
+        $scope.doors = [];
+        $scope.$apply();
+        $('.loadingdoorspinner').show();
+        getshop.client.ArxManager.getAllDoors().done($scope.onDoorsFetched);
       });
   }
-  $scope.isProcessing = true;
+  
+        $('.loadingdoorspinner').show();
   getshop.client.ArxManager.getAllDoors().done($scope.onDoorsFetched);
 }]);
 
@@ -159,6 +169,10 @@ $scope.onChangeDates = function() {
     var startDate = new Date($('.startDate').val());
     var endDate = new Date($('.endDate').val());
     var doorId = $('.doorId').val();
+    
+    $scope.accessLog = [];
+    $scope.$apply();
+    $scope.isProcessing = true;
     
     getshop.client.ArxManager.getLogForDoor(doorId, startDate.getTime(), endDate.getTime()).done($scope.onAccessLogFetched);
 }

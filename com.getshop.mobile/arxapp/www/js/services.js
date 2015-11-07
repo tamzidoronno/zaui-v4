@@ -33,12 +33,11 @@ arxAppServices.factory('GetshopService', ['$window', function($window) {
 
     connectToGetshop: function() {
       // Connect to getshop web api
-//      this.client = new GetShopApiWebSocket("localhost", "31332");
-      this.client = new GetShopApiWebSocket("localhost", "31330");
-      this.client.setConnectedEvent(function () {
-        console.log('Connected to getshop');
-      });
-      this.client.connect();
+        this.client = new GetShopApiWebSocket("arx.mpal.getshop.com", "31330");
+        this.client.setConnectedEvent(function () {
+           console.log('Connected to getshop');
+        });
+        this.client.connect();
 
     }
   }

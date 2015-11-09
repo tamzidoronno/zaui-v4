@@ -217,7 +217,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         String userId = getSession().currentUser.id;
         for (SedoxProduct product : products) {
-            if (product.firstUploadedByUserId != null && product.firstUploadedByUserId.equals(userId)) {
+            if (product.firstUploadedByUserId != null && product.firstUploadedByUserId.equals(userId) && !product.duplicate) {
                 finalize(product);
                 retProducts.add(product);
             }
@@ -252,7 +252,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(product.rowCreatedDate);
             int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
-            if (dayOfYear == nowDayOfYear && nowYear == calendar.get(Calendar.YEAR)) {
+            if (dayOfYear == nowDayOfYear && nowYear == calendar.get(Calendar.YEAR) && !product.duplicate) {
                 finalize(product);
                 retProducts.add(product);
             }
@@ -1060,13 +1060,27 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return null;
     }
 
-    private String getMailContent(String extraText, String productId, SedoxOrder order, SedoxUser user) {
+    private String getMailContent(String extraText, String productId, SedoxOrder order, SedoxUser user) throws ErrorException {
+        SedoxProduct product = getProductById(productId);
+        
         String content = "Your file is ready! :)";
         if (extraText != null && !extraText.equals("")) {
             content += "<br>";
             content += "<br> Please note:";
             content += "<br> " + extraText.replace("\n", "<br/>");
         }
+        
+        if (product != null 
+                && product.reference != null 
+                && product.reference.get(product.firstUploadedByUserId) != null 
+                && !product.reference.get(product.firstUploadedByUserId).isEmpty()
+            ) {
+            content += "<br>";
+            content += "<br> Reference:";
+            content += "<br> " + product.reference.get(product.firstUploadedByUserId).replace("\n", "<br/>");
+        }
+        
+        
         if (order != null) {
             content += "<br/><br/> Your account has been changed with: -" + order.creditAmount;
             content += "<br/> New account balance is now: " + user.creditAccount.getBalance() + " credit";
@@ -1473,6 +1487,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         int i = 0;
 
         for (SedoxProduct prod : reversedList) {
+            if (prod.duplicate) {
+                continue;
+            }
+            
             finalize(prod);
             retProducts.add(prod);
             i++;

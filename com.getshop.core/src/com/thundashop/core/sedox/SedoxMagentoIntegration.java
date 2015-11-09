@@ -4,7 +4,6 @@
  */
 package com.thundashop.core.sedox;
 
-import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.sedox.magentoapi.SedoxApiPort;
 import com.thundashop.core.sedox.magentoapi.SedoxApiServiceLocator;
 import java.rmi.RemoteException;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import javax.xml.rpc.ServiceException;
 import javax.xml.soap.SOAPException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -61,10 +59,11 @@ public class SedoxMagentoIntegration {
         public Integer orderId;
         public String customer_id;
         public Integer credit;
+        public String evccustomerid;
 
         @Override
         public String toString() {
-            return "orderid: " + orderId + ", customerId: " + customer_id + ", credit: " + credit;
+            return "orderid: " + orderId + ", customerId: " + customer_id + ", credit: " + credit + ", evc:  " + evccustomerid;
         }
     }
 
@@ -118,7 +117,6 @@ public class SedoxMagentoIntegration {
             SedoxApiServiceLocator locator = new SedoxApiServiceLocator();
             SedoxApiPort port = locator.getSedoxApiPort();
 
-
             HashMap<Integer, HashMap<String, Integer>> orders = (HashMap) port.getOrders(code);
             for (Integer ibjeckey : orders.keySet()) {
                 HashMap ibjec = orders.get(ibjeckey);
@@ -133,6 +131,45 @@ public class SedoxMagentoIntegration {
                         order.credit = ivalue;
                     }
                     if (val instanceof String) {
+                        String svalue = (String) val;
+                        order.customer_id = svalue;
+                    }
+                }
+                retOrders.add(order);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return retOrders;
+    }
+    
+    public List<SedoxMagentoIntegration.Order> getEvcOrders() {
+        List<Order> retOrders = new ArrayList<>();
+
+        try {
+            SedoxApiServiceLocator locator = new SedoxApiServiceLocator();
+            SedoxApiPort port = locator.getSedoxApiPort();
+
+
+            HashMap<Integer, HashMap<String, Integer>> orders = (HashMap) port.getEvcOrders(code);
+            for (Integer ibjeckey : orders.keySet()) {
+                HashMap ibjec = orders.get(ibjeckey);
+
+                Order order = new Order();
+                order.orderId = ibjeckey;
+
+                for (Object keysd : ibjec.keySet()) {
+                    Object val = ibjec.get(keysd);
+                    if (val instanceof Integer && keysd.equals("credit")) {
+                        Integer ivalue = (Integer) val;
+                        order.credit = ivalue;
+                    }
+                    if (val instanceof String && keysd.equals("evccustomerid")) {
+                        String svalue = (String) val;
+                        order.evccustomerid = svalue;
+                    }
+                    if (val instanceof String && keysd.equals("customer_id")) {
                         String svalue = (String) val;
                         order.customer_id = svalue;
                     }

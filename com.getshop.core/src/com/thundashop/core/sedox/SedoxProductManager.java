@@ -29,7 +29,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -76,6 +75,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public MailFactory mailFactory;
     private ApplicationContext context;
     private MailFactoryImpl sedoxDatabankMailAccount;
+    private List<FailedEvcOrder> failedEvcOrders = new ArrayList();
 
     @Autowired
     public SedoxProductManager(Logger log, DatabaseSaver databaseSaver) {
@@ -94,6 +94,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Autowired
     @Qualifier("SmsFactoryClickatell")
     public SMSFactory smsFactory;
+    
+    @Autowired
+    public EvcApi evcApi;
 
     @PostConstruct
     public void setupDatabankMailAccount() {
@@ -135,11 +138,22 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             if (dataCommon instanceof SedoxProduct) {
                 products.add((SedoxProduct) dataCommon);
             }
+            
+            if (dataCommon instanceof FailedEvcOrder) {
+                failedEvcOrders.add((FailedEvcOrder) dataCommon);
+            }
+            
             if (dataCommon instanceof SedoxUser) {
                 SedoxUser user = (SedoxUser) dataCommon;
                 user.checkForCreatedDate();
                 users.put(user.id, user);
             }
+        }
+        
+        try {
+            resetEvcOrders();
+        } catch (ErrorException ex) {
+            // limited
         }
     }
 
@@ -535,6 +549,17 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return null;
     }
 
+    private SedoxEvcCreditOrder getEvcCreditOrderById(int id) {
+        for (SedoxUser user : users.values()) {
+            for (SedoxEvcCreditOrder sedoxOrder : user.evcCreditOrders) {
+                if (sedoxOrder.magentoOrderId == id) {
+                    return sedoxOrder;
+                }
+            }
+        }
+        return null;
+    }
+
     private byte[] getByteContentOfProduct(SedoxProduct product, List<Integer> files) throws IOException, ErrorException {
         byte[] zippedContent;
 
@@ -843,7 +868,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public SedoxUser getSedoxUserAccountById(String userid) throws ErrorException {
+    public SedoxUser getSedoxUserAccountById(String userid) {
         return users.get(userid);
     }
 
@@ -1655,4 +1680,97 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
         product.populate(sharedProduct);
     }
+
+    @Override
+    public void updateEvcCreditAccounts() throws ErrorException {
+        List<SedoxMagentoIntegration.Order> orders = sedoxMagentoIntegration.getEvcOrders();
+        for (SedoxMagentoIntegration.Order order : orders) {
+            SedoxEvcCreditOrder evcOrder = getEvcCreditOrderById(order.orderId);
+            
+            if (evcOrder != null) {
+                continue;
+            }
+            
+            if (hasAlreadyFailed(order)) {
+                continue;
+            }
+            
+            SedoxUser user = getSedoxUserAccountById(order.customer_id);
+            if (user == null) {
+                notifyEvcError("Could not add credit to account, user with id: " + order.customer_id, order);
+                return;
+            }
+            
+            addEvcCredit(user, order);
+        }
+    }
+
+    private void notifyEvcError(String message, SedoxMagentoIntegration.Order order, boolean silent) throws ErrorException {
+        FailedEvcOrder failedOrder = new FailedEvcOrder();
+        failedOrder.message = message;
+        failedOrder.magentoOrderId = order.orderId;
+        failedOrder.storeId = storeId;
+        
+        failedEvcOrders.add(failedOrder);
+        
+        if (!silent)
+            mailFactory.send("files@tuningfiles.com", "files@tuningfiles.com", "EVC Credit automatic update failed", message);
+        
+        saveObject(failedOrder);
+    }
+    
+    private void notifyEvcError(String message, SedoxMagentoIntegration.Order order) throws ErrorException {
+        notifyEvcError(message, order, false);
+    }
+
+    private void addEvcCredit(SedoxUser user, SedoxMagentoIntegration.Order order) throws ErrorException {
+        boolean exists = evcApi.isPersonalAccount(order.evccustomerid);
+        if (!exists) {
+            boolean success = evcApi.addPersonalAccount(order.evccustomerid);
+            
+            if (!success) {
+                notifyEvcError("Was not able to automatically update evc credit, orderid: " + order.orderId + " Credit: " + order.credit + ", failed because EVC does not accept that you add account: " + order.evccustomerid, order);
+                return;
+            }
+        }
+        
+        int credit = evcApi.getPersonalAccountBalance(order.evccustomerid);
+        credit += order.credit;
+        
+        boolean success = evcApi.setPersonalAccountBalance(order.evccustomerid, credit);
+        
+        if (!success) {
+            notifyEvcError("Evc did not accept setting the new credit, orderid: " + order.orderId + " Credit: " + credit + " evcid: " + order.evccustomerid, order);
+            return;
+        }
+        
+        SedoxEvcCreditOrder creditOrder = new SedoxEvcCreditOrder();
+        creditOrder.magentoOrderId = order.orderId;
+        creditOrder.evcCustomerId = order.evccustomerid;
+        creditOrder.amount = order.credit;
+        
+        user.addEvcCreditOrder(creditOrder);
+        databaseSaver.saveObject(user, credentials);
+    }
+
+    private boolean hasAlreadyFailed(SedoxMagentoIntegration.Order order) {
+        for (FailedEvcOrder failed : failedEvcOrders) {
+            if (failed.magentoOrderId == order.orderId) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    private void resetEvcOrders() throws ErrorException {
+        if (failedEvcOrders.isEmpty()) {
+            List<SedoxMagentoIntegration.Order> orders = sedoxMagentoIntegration.getEvcOrders();
+            for (SedoxMagentoIntegration.Order order : orders) {
+                notifyEvcError("skipped", order, true);
+                System.out.println("Skipped it");
+            }
+        }
+    }
+
 }

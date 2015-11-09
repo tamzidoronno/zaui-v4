@@ -25,6 +25,9 @@ class core_sedox_SedoxUser extends core_common_DataCommon  {
 	public $creditOrders;
 
 	/** @var String */
+	public $evcCreditOrders;
+
+	/** @var String */
 	public $isActiveDelevoper;
 
 	/** @var String */

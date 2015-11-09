@@ -168,4 +168,6 @@ public interface ISedoxProductManager  {
     
     @Editor
     public void markAsFinished(String productId, boolean finished) throws ErrorException;
+    
+    public void updateEvcCreditAccounts() throws ErrorException;
 }

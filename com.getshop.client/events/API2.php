@@ -5481,6 +5481,23 @@ class APISedoxProductManager {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function updateEvcCreditAccounts() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "updateEvcCreditAccounts";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIStoreManager {
 

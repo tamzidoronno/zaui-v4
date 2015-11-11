@@ -145,7 +145,9 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         }
 
         $factory->loadJavascriptFiles();
-        $factory->showCssFiles();
+        if(!$factory->includeSeo()) {
+            $factory->showCssFiles();
+        }
 
         $factory->loadJavascriptFilesEditorMode();
         $factory->getPageTitle();
@@ -261,6 +263,12 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         $factory->renderBottom();
         ?>
     </body>
+    <?
+    if($factory->includeSeo()) {
+        $factory->showCssFiles();
+    }
+    ?>
+    
 </html>
 
 <?

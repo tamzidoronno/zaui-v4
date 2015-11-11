@@ -143,9 +143,6 @@ class Factory extends FactoryBase {
         $scopid = $_POST['scopeid'];
         echo "<script>GetShop = {}; scopeid='$scopid'</script>";
         
-        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" href="/js/photoswipe/photoswipe.css">';
-        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" href="/js/photoswipe/default-skin/default-skin.css">';
-        
         $this->isProductionMode = $this->getApi()->getUtilManager()->isInProductionMode();
         $this->startupCount = $this->getApi()->getUtilManager()->getStartupCount();
         if ($this->isProductionMode) {
@@ -207,7 +204,6 @@ class Factory extends FactoryBase {
         
         // JS TREE
         $this->addJavascriptFile("js/jstree/jstree.min.js");
-        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="js/jstree/themes/default/style.min.css">';
         
         if ($this->isProductionMode) {
             echo "\n" . '<script type="text/javascript" src="'.$fileName.'"></script>';
@@ -216,7 +212,6 @@ class Factory extends FactoryBase {
 
 
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
-        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
 
         if (preg_match('/(?i)msie[1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             echo "\n" . '<script type="text/javascript" src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
@@ -460,24 +455,29 @@ class Factory extends FactoryBase {
     public function getStyleSheet() {
         return $this->styleSheet;
     }
-
+    
     public function showCssFiles() {
         if ($this->isEditorMode()) {
-            echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="skin/default/ckeditor.css" />';
-            echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="skin/default/ckeditor.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.css" />';
         }
 
-        echo "<link ".$this->includeSeo()." href='/fonts.css' rel='stylesheet' type='text/css'>";
-        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="js/datatables/demo_table.css" />';
-        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="js/datatables/demo_page.css" />';
-        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="/skin/default/applicationPicker.css">';
-        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" href="skin/default/fontawesome/css/font-awesome.min.css">';
+        echo "<link href='/fonts.css' rel='stylesheet' type='text/css'>";
+        echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_table.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_page.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/skin/default/applicationPicker.css">';
+        echo '<link rel="stylesheet" href="skin/default/fontawesome/css/font-awesome.min.css">';
 
+        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
+        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jstree/themes/default/style.min.css">';
+        echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/photoswipe.css">';
+        echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/default-skin/default-skin.css">';
+        
         // LA STÅ!
-        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">';
-        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
-        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="/skin/default/PagePicker.css">';
-        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="/skin/default/getshop.ImageEditor.css">';
+        echo '<link rel="stylesheet" type="text/css" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">';
+        echo '<link rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
+        echo '<link rel="stylesheet" type="text/css" href="/skin/default/PagePicker.css">';
+        echo '<link rel="stylesheet" type="text/css" href="/skin/default/getshop.ImageEditor.css">';
 
         $styleSheet = new StyleSheet();
         $styleSheet->render(false);

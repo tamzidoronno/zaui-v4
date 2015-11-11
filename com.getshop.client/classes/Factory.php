@@ -220,9 +220,9 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/getshop.Settings.js");
         
         if ($this->isEffectsEnabled()) {
-            echo '<script '.$this->includeSeo().' src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.14.2/TweenMax.min.js"></script>';
-            echo '<script '.$this->includeSeo().' src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.min.js"></script>';
-            echo '<script '.$this->includeSeo().' src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/debug.addIndicators.min.js"></script>';
+            echo '<script  src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.14.2/TweenMax.min.js"></script>';
+            echo '<script  src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.min.js"></script>';
+            echo '<script  src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/debug.addIndicators.min.js"></script>';
             $this->addJavascriptFile("js/scrollmagic.Velocity.js");
             $this->addJavascriptFile("js/scrollmagic.js");
             $this->addJavascriptFile("js/getshop.ScrollMangic.js");
@@ -878,6 +878,12 @@ class Factory extends FactoryBase {
     }
 
     public function minify($fileContent) {
+        if($this->includeSeo()) {
+            $fileContent = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $fileContent);
+            $fileContent = str_replace(': ', ':', $fileContent);
+            $fileContent = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $fileContent);
+            return $fileContent;
+        }
         return $fileContent;
     }
 

@@ -143,8 +143,8 @@ class Factory extends FactoryBase {
         $scopid = $_POST['scopeid'];
         echo "<script>GetShop = {}; scopeid='$scopid'</script>";
         
-        echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/photoswipe.css">';
-        echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/default-skin/default-skin.css">';
+        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" href="/js/photoswipe/photoswipe.css">';
+        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" href="/js/photoswipe/default-skin/default-skin.css">';
         
         $this->isProductionMode = $this->getApi()->getUtilManager()->isInProductionMode();
         $this->startupCount = $this->getApi()->getUtilManager()->getStartupCount();
@@ -207,16 +207,16 @@ class Factory extends FactoryBase {
         
         // JS TREE
         $this->addJavascriptFile("js/jstree/jstree.min.js");
-        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jstree/themes/default/style.min.css">';
+        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="js/jstree/themes/default/style.min.css">';
         
         if ($this->isProductionMode) {
-            echo "\n" . '<script '.$this->includeSeo().' type="text/javascript" src="'.$fileName.'"></script>';
+            echo "\n" . '<script type="text/javascript" src="'.$fileName.'"></script>';
         }
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
 
 
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
-        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
+        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
 
         if (preg_match('/(?i)msie[1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             echo "\n" . '<script type="text/javascript" src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
@@ -837,7 +837,7 @@ class Factory extends FactoryBase {
         $singleOnGroup = $instance->getConfigurationSetting("seo");
 
         if($singleOnGroup && $singleOnGroup == "true") {
-            return " async ";
+            return "async";
         }
         return "";
     }

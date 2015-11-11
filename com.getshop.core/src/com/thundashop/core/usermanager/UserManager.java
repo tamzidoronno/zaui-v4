@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -824,6 +823,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.type > User.Type.CUSTOMER) {
             user.isMaster = false;
         }
+        
+        List<User> parents = getParentsWithinTheSameCompany(user);
+        for (User parent : parents) {
+            if (!user.parents.contains(parent.id) && !user.id.equals(parent.id)) {
+                user.parents.add(parent.id);
+            }
+        }
+        
+        if (!user.isMaster) {
+            removeUserFromAllMasters(user);
+        }
     }
 
     public void markUserAsTransferredToVisma(User user) {
@@ -1124,5 +1134,30 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public void createSubAccountEditor(String fullName, String phoneNumber, String leaderId) throws ErrorException {
         createSubAccountInternal(fullName, phoneNumber, leaderId);
+    }
+
+    private List<User> getParentsWithinTheSameCompany(User user) throws ErrorException {
+        List<User> users = getUserStoreCollection(storeId).getAllUsers();
+        
+        if (user.birthDay == null || user.birthDay.isEmpty()) {
+            return new ArrayList();
+        }
+        
+        List<User> retUsers = new ArrayList();
+        for (User iUser : users) {
+            if (iUser.isMaster && iUser.birthDay != null && iUser.birthDay.equals(user.birthDay)) {
+                retUsers.add(iUser);
+            }
+        }
+        
+        return retUsers;
+    }
+
+    private void removeUserFromAllMasters(User user) throws ErrorException {
+        List<User> users = getUserStoreCollection(storeId).getAllUsers();
+        
+        for (User iUser : users) {
+            iUser.parents.remove(user.id);
+        }
     }
 }

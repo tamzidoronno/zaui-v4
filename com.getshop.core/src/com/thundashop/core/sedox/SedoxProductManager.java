@@ -395,7 +395,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         if (newProduct != null) {
             sendNotificationEmail("files@tuningfiles.com", newProduct, comment);
-            sendNotificationEmail("contact@sedox.com", newProduct, comment);
+            sendNotificationEmail("support@sedox.com", newProduct, comment);
         }
 
         newProduct.firstUploadedByUserId = getSession().currentUser.id;
@@ -727,7 +727,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
 
         sendNotificationEmail("files@tuningfiles.com", sedoxProduct);
-        sendNotificationEmail("contact@sedox.com", sedoxProduct);
+        sendNotificationEmail("support@sedox.com", sedoxProduct);
     }
 
     private void sendAirGramMessage(String emailAddress, SedoxProduct sedoxProduct) throws ErrorException {

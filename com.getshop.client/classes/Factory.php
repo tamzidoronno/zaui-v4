@@ -209,7 +209,7 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/jstree/jstree.min.js");
         
         if ($this->isProductionMode) {
-            echo "\n" . '<script type="text/javascript" src="'.$fileName.'"></script>';
+            echo "\n" . '<script '. $this->includeSeo() .' type="text/javascript" src="'.$fileName.'"></script>';
         }
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
 

@@ -878,10 +878,7 @@ class Factory extends FactoryBase {
     }
 
     public function minify($fileContent) {
-        if(!$this->includeSeo()) {
-            return $fileContent;
-        }
-        return \JShrink\Minifier::minify($fileContent);
+        return $fileContent;
     }
 
 }

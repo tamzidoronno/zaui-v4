@@ -881,11 +881,7 @@ class Factory extends FactoryBase {
         if(!$this->includeSeo()) {
             return $fileContent;
         }
-
-        $fileContent = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $fileContent);
-        $fileContent = str_replace(': ', ':', $fileContent);
-        $fileContent = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $fileContent);
-        return $fileContent;
+        return \JShrink\Minifier::minify($fileContent);
     }
 
 }

@@ -71,7 +71,7 @@ foreach ($apps as $app) {
 
 if ($allInOne) {
     $fileName = "javascripts/".$factory->getStore()->id."_get_shop_all_$startupCount.js";
-    $factory->minify($fileContentAllInOne);
+    $fileContentAllInOne = $factory->minify($fileContentAllInOne);
     file_put_contents($fileName, $fileContentAllInOne);
     echo '<script '. $factory->includeSeo() .' type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
 }

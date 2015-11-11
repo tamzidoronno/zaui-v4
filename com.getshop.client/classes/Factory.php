@@ -132,6 +132,13 @@ class Factory extends FactoryBase {
         $this->errors = $errors;
     }
 
+    public function clearGeneratedFiles() {
+        $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
+        file_put_contents($fileName, "");
+        $fileName = "cssfolder/".$this->getStore()->id."_css_".$this->startupCount.".css";
+        file_put_contents($fileName, "");
+    }
+    
     public function addJavascriptFile($file) {
         if ($this->isProductionMode) {
             $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
@@ -163,6 +170,7 @@ class Factory extends FactoryBase {
         
         $this->isProductionMode = $this->getApi()->getUtilManager()->isInProductionMode();
         $this->startupCount = $this->getApi()->getUtilManager()->getStartupCount();
+        $this->clearGeneratedFiles();
         if ($this->isProductionMode) {
             $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
             file_put_contents($fileName, "");

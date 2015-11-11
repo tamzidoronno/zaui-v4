@@ -136,6 +136,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <meta name="keywords" content="<? echo $javapage->metaKeywords; ?>">
         <meta name="title" content="<? echo $javapage->metaTitle; ?>">
         
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <?php
         $html = init($factory);
         $pageDescription = $factory->getPage()->javapage->description;
@@ -145,9 +146,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         }
 
         $factory->loadJavascriptFiles();
-        if(!$factory->includeSeo()) {
-            $factory->showCssFiles();
-        }
+        $factory->showCssFiles();
 
         $factory->loadJavascriptFilesEditorMode();
         $factory->getPageTitle();
@@ -161,7 +160,6 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         echo "</script>";
         ?>
 
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
         <title class='pagetitle'><?php echo $title; ?></title>
     <script>
@@ -263,12 +261,6 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         $factory->renderBottom();
         ?>
     </body>
-    <?
-    if($factory->includeSeo()) {
-        $factory->showCssFiles();
-    }
-    ?>
-    
 </html>
 
 <?

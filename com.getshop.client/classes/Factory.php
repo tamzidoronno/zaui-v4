@@ -223,9 +223,9 @@ class Factory extends FactoryBase {
             echo '<script '.$this->includeSeo().' src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.14.2/TweenMax.min.js"></script>';
             echo '<script '.$this->includeSeo().' src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.min.js"></script>';
             echo '<script '.$this->includeSeo().' src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/debug.addIndicators.min.js"></script>';
-            echo '<script '.$this->includeSeo().' src="js/scrollmagic.Velocity.js"></script>';
-            echo '<script '.$this->includeSeo().' src="js/scrollmagic.js"></script>';
-            echo '<script '.$this->includeSeo().' src="js/getshop.ScrollMangic.js"></script>';
+            $this->addJavascriptFile("js/scrollmagic.Velocity.js");
+            $this->addJavascriptFile("js/scrollmagic.js");
+            $this->addJavascriptFile("js/getshop.ScrollMangic.js");
         }
         
         // JS TREE

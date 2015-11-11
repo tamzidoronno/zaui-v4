@@ -305,7 +305,10 @@ $('.Booking .savebooking').live('click', function () {
     try {
         Booking.check(data.name);
         Booking.check(data.email, true);
-        Booking.check(data.invoiceemail, true);
+        
+        if (typeof(data.invoiceemail) !== "undefined") 
+            Booking.check(data.invoiceemail, true);
+        
         Booking.check(data.cellphone);
 
         if (allowAdd) {

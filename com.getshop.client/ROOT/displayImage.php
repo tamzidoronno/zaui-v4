@@ -43,7 +43,11 @@ if(isset($_GET['width']) && isset($_GET['height'])) {
     $imageLoader->resizeToWidth($_GET['width']);
 }
 
-$imageLoader->output();
+if($factory->includeSeo()) {
+    $imageLoader->output(IMAGETYPE_JPEG);    
+} else {
+    $imageLoader->output();
+}
 
 $PageContent = ob_get_contents();
 ob_end_clean();

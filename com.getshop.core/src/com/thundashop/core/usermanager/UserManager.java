@@ -303,6 +303,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
+        User inMemUser = getUserById(user.id);
+        if (inMemUser != null && inMemUser.isMaster && !user.isMaster) {
+            removeUserFromAllMasters(user);
+        }
+        
         saveUserDirect(user);
     }
 	

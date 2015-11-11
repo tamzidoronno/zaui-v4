@@ -94,7 +94,7 @@ class StyleSheet {
         echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/breadcrumb.css">';
 
         if($this->factory->productionMode) {
-            echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="loadappcss.php">';
+            echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="loadappcss.css">';
         } else {
             $this->includeApplications();
         }

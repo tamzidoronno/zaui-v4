@@ -209,7 +209,7 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/jstree/jstree.min.js");
         
         if ($this->isProductionMode) {
-            echo "\n" . '<script '. $this->includeSeo() .' type="text/javascript" src="'.$fileName.'"></script>';
+            echo "\n" . '<script '. $this->includeSeo() .' src="'.$fileName.'"></script>';
         }
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
 
@@ -217,7 +217,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
 
         if (preg_match('/(?i)msie[1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
-            echo "\n" . '<script type="text/javascript" src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
+            echo "\n" . '<script src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
         }
 
         $appTheme = $this->getApplicationPool()->getSelectedThemeApp();
@@ -245,13 +245,13 @@ class Factory extends FactoryBase {
 
     public function loadJavascriptFilesEditorMode() {
         if ($this->isEditorMode()) {
-            echo "\n" . '<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>';
-            echo "\n" . '<script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>';
+            echo "\n" . '<script src="js/ckeditor/ckeditor.js"></script>';
+            echo "\n" . '<script src="js/ckeditor/adapters/jquery.js"></script>';
 
             //Load app files.
             foreach (AppRegister::$register as $app) {
                 if (file_exists("js/app/" . $app . "_editormode.js"))
-                    echo "\n" . '<script type="text/javascript" src="js/app/' . $app . '_editormode.js"></script>';
+                    echo "\n" . '<script src="js/app/' . $app . '_editormode.js"></script>';
             }
         }
     }

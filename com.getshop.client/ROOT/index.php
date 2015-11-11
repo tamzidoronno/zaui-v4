@@ -136,7 +136,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <meta name="keywords" content="<? echo $javapage->metaKeywords; ?>">
         <meta name="title" content="<? echo $javapage->metaTitle; ?>">
         
-        <script <? $factory->includeSeo(); ?> type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script <? echo $factory->includeSeo(); ?> type="text/javascript" src="https://www.google.com/jsapi"></script>
         <?php
         $html = init($factory);
         $pageDescription = $factory->getPage()->javapage->description;

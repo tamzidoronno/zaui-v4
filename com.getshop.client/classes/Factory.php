@@ -877,8 +877,22 @@ class Factory extends FactoryBase {
         return "";
     }
 
+    public function removeComments($string) {
+        $array = explode("\n",$string);
+        $output = array();
+        foreach($array as $arr) {
+            if(substr(trim($arr), 0, 2) != "//") {
+                $output[] = $arr;
+            }
+        }
+
+        $out = implode("\n",$output);
+        return $out;
+    }
+    
     public function minify($fileContent) {
         if($this->includeSeo()) {
+            $fileContent = $this->removeComments($fileContent);
             $fileContent = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $fileContent);
             $fileContent = str_replace(': ', ':', $fileContent);
             $fileContent = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $fileContent);

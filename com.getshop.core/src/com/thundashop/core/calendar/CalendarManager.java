@@ -996,7 +996,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             String content = settings.get("bookingmail").value;
             content = mutateText("", content, new Entry(), user);
 
-            mailFactory.send(getFromAddress(bookingAppId), user.emailAddress, settings.get("subject").value, content);
+            mailFactory.send(getFromAddress(bookingAppId), user.emailAddress != null && !user.emailAddress.isEmpty() ? user.emailAddress : user.emailAddressToInvoice, settings.get("subject").value, content);
             mailFactory.send("post@getshop.com", getFromAddress(bookingAppId), settings.get("subject").value, content);
         }
     }

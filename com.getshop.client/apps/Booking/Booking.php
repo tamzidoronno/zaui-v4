@@ -469,9 +469,13 @@ class Booking extends MarketingApplication implements Application {
     public function addSubUserToEvent() {
         $data = $_POST['data'];
         $_GET['entry'] = $data['entryId'];
-        
         $createdUser = $this->getApi()->getUserManager()->getUserById($data['userId']);
-        $this->getApi()->getCalendarManager()->addUserToEvent($createdUser->id, $data['entryId'], "", $createdUser->username, "webpage");
+        
+        if ($this->isConnectedToCurrentPage()) {
+            $this->getApi()->getCalendarManager()->addUserToPageEvent($createdUser->id, $this->getConfiguration()->id);
+        } else {
+            $this->getApi()->getCalendarManager()->addUserToEvent($createdUser->id, $data['entryId'], "", $createdUser->username, "webpage");
+        }
     }
 }
 

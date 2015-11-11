@@ -121,9 +121,19 @@ $languages['fi_FI'] = "Finish";
         </div>
     </div>
     
+    <div class="textfield gss_setting" id="seo">
+        <span class="title"><?php echo $this->__f("SEO"); ?></span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="seo">
+            <? $faclass = $this->getConfigurationSetting("seo") == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("Optimize your page by compressing images, css, javascript and lazy loading of css and javascript. (Warning might cause unstability)"); ?>
+        </div>
+    </div>
+    
     <div class="textfield gss_setting" id="singlegrouptouser">
         <span class="title"><?php echo $this->__f("Your favicon"); ?>
-        <? echo $this->getFactory()->getStore()->favicon; ?>
         </span>
         <div class="gss_onoff" gs_model="storesettings" gs_model_attr="singlegrouptouser">
             <img src="favicon.ico" id="favicondisplayer" style="border: solid 1px; width: 16px; height: 16px; float:right;">

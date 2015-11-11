@@ -197,12 +197,12 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/getshop.Settings.js");
         
         if ($this->isEffectsEnabled()) {
-            echo '<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.14.2/TweenMax.min.js"></script>';
-            echo '<script src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.min.js"></script>';
-            echo '<script src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/debug.addIndicators.min.js"></script>';
-            echo '<script src="js/scrollmagic.Velocity.js"></script>';
-            echo '<script src="js/scrollmagic.js"></script>';
-            echo '<script src="js/getshop.ScrollMangic.js"></script>';
+            echo '<script '.$this->includeSeo().' src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.14.2/TweenMax.min.js"></script>';
+            echo '<script '.$this->includeSeo().' src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.min.js"></script>';
+            echo '<script '.$this->includeSeo().' src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/debug.addIndicators.min.js"></script>';
+            echo '<script '.$this->includeSeo().' src="js/scrollmagic.Velocity.js"></script>';
+            echo '<script '.$this->includeSeo().' src="js/scrollmagic.js"></script>';
+            echo '<script '.$this->includeSeo().' src="js/getshop.ScrollMangic.js"></script>';
         }
         
         // JS TREE
@@ -210,7 +210,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jstree/themes/default/style.min.css">';
         
         if ($this->isProductionMode) {
-            echo "\n" . '<script type="text/javascript" src="'.$fileName.'"></script>';
+            echo "\n" . '<script '.$this->includeSeo().' type="text/javascript" src="'.$fileName.'"></script>';
         }
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
 
@@ -463,21 +463,21 @@ class Factory extends FactoryBase {
 
     public function showCssFiles() {
         if ($this->isEditorMode()) {
-            echo '<link rel="stylesheet" type="text/css" href="skin/default/ckeditor.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.css" />';
+            echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="skin/default/ckeditor.css" />';
+            echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.css" />';
         }
 
-        echo "<link href='/fonts.css' rel='stylesheet' type='text/css'>";
-        echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_table.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_page.css" />';
-        echo "\n" . '<link rel="stylesheet" type="text/css" href="/skin/default/applicationPicker.css">';
-        echo "\n" . '<link rel="stylesheet" href="skin/default/fontawesome/css/font-awesome.min.css">';
+        echo "<link ".$this->includeSeo()." href='/fonts.css' rel='stylesheet' type='text/css'>";
+        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="js/datatables/demo_table.css" />';
+        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="js/datatables/demo_page.css" />';
+        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="/skin/default/applicationPicker.css">';
+        echo "\n" . '<link '.$this->includeSeo().' rel="stylesheet" href="skin/default/fontawesome/css/font-awesome.min.css">';
 
         // LA STÅ!
-        echo '<link rel="stylesheet" type="text/css" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">';
-        echo '<link rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
-        echo '<link rel="stylesheet" type="text/css" href="/skin/default/PagePicker.css">';
-        echo '<link rel="stylesheet" type="text/css" href="/skin/default/getshop.ImageEditor.css">';
+        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">';
+        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
+        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="/skin/default/PagePicker.css">';
+        echo '<link '.$this->includeSeo().' rel="stylesheet" type="text/css" href="/skin/default/getshop.ImageEditor.css">';
 
         $styleSheet = new StyleSheet();
         $styleSheet->render(false);
@@ -829,5 +829,18 @@ class Factory extends FactoryBase {
     public function isEffectsEnabled() {
         return true;
     }
+
+    public function includeSeo() {
+        $settings = $this->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        $instance = $this->getApplicationPool()->createInstace($settings);
+        
+        $singleOnGroup = $instance->getConfigurationSetting("seo");
+
+        if($singleOnGroup && $singleOnGroup == "true") {
+            return " async ";
+        }
+        return "";
+    }
+
 }
 ?>

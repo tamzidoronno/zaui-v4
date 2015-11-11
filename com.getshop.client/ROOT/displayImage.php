@@ -53,7 +53,11 @@ $PageContent = ob_get_contents();
 ob_end_clean();
 $HashID = md5($PageContent);
  
-header("Content-type: image/png");
+if($factory->includeSeo()) {
+    header("Content-type: image/jpeg");
+} else {
+    header("Content-type: image/png");
+}
 header("Cache-Control: max-age=2052000");
 header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 2052000));
 header('ETag: ' . $HashID);

@@ -80,18 +80,6 @@ class StyleSheet {
     }
 
     function render($includeHeader = true) {
-        if ($includeHeader) {
-            header('Content-type: text/css;charset=utf-8');
-            header("Cache-Control: must-revalidate");
-        }
-
-        echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/framework.css">';
-//        if(!$this->factory->isMobile()) {
-            echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/frameworklayout.css">';
-//        }
-        echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/elements.css">';
-        echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/layout.css">';
-        echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/breadcrumb.css">';
 
         if($this->factory->productionMode) {
             echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="loadappcss.css">';

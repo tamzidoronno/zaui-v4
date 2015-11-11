@@ -132,13 +132,26 @@ class Factory extends FactoryBase {
         $this->errors = $errors;
     }
 
-    private function addJavascriptFile($file) {
+    public function addJavascriptFile($file) {
         if ($this->isProductionMode) {
             $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
             $fileContent = file_get_contents($file)."\n";
             file_put_contents($fileName, $fileContent, FILE_APPEND);
         } else {
             echo "\n" . '<script type="text/javascript" src="'.$file.'"></script>';
+        }
+    }
+    
+    private function addCssFile($file, $ignoreSeo = false) {
+        if ($this->includeSeo() && !$ignoreSeo) {
+            $fileName = "cssfolder/".$this->getStore()->id."_css_".$this->startupCount.".css";
+            if(substr($file, 0,1) == "/") {
+                $file = substr($file, 1);
+            }
+            $fileContent = file_get_contents($file)."\n";
+            file_put_contents($fileName, $fileContent, FILE_APPEND);
+        } else {
+            echo "\n" . '<link rel="stylesheet" type="text/css" href="'.$file.'" />';
         }
     }
     
@@ -461,26 +474,33 @@ class Factory extends FactoryBase {
     
     public function showCssFiles() {
         if ($this->isEditorMode()) {
-            echo '<link rel="stylesheet" type="text/css" href="skin/default/ckeditor.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.css" />';
+            $this->addCssFile("skin/default/ckeditor.css");
+            $this->addCssFile("js/colorpicker/css/colorpicker.css");
         }
-
-        echo "<link href='/fonts.css' rel='stylesheet' type='text/css'>";
-        echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_table.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_page.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/skin/default/applicationPicker.css">';
-        echo '<link rel="stylesheet" href="skin/default/fontawesome/css/font-awesome.min.css">';
-
-        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
-        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jstree/themes/default/style.min.css">';
-        echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/photoswipe.css">';
-        echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/default-skin/default-skin.css">';
         
-        // LA STÅ!
-        echo '<link rel="stylesheet" type="text/css" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">';
-        echo '<link rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
-        echo '<link rel="stylesheet" type="text/css" href="/skin/default/PagePicker.css">';
-        echo '<link rel="stylesheet" type="text/css" href="/skin/default/getshop.ImageEditor.css">';
+        
+        $this->addCssFile("skin/default/framework.css");
+        $this->addCssFile("skin/default/frameworklayout.css");
+        $this->addCssFile("skin/default/elements.css");
+        $this->addCssFile("skin/default/layout.css");
+        $this->addCssFile("skin/default/breadcrumb.css");
+
+        $this->addCssFile("fonts.css");
+        $this->addCssFile("js/datatables/demo_table.css");
+        $this->addCssFile("js/datatables/demo_page.css");
+        $this->addCssFile("skin/default/applicationPicker.css");
+        $this->addCssFile("skin/default/fontawesome/css/font-awesome.min.css", true);
+        $this->addCssFile("js/jcrop/css/jquery.Jcrop.css");
+        $this->addCssFile("js/jstree/themes/default/style.min.css");
+        $this->addCssFile("js/photoswipe/photoswipe.css");
+        $this->addCssFile("js/photoswipe/default-skin/default-skin.css");
+        
+        $this->addCssFile("js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css");
+        $this->addCssFile("skin/default/skeletons.css");
+        $this->addCssFile("skin/default/PagePicker.css");
+        $this->addCssFile("skin/default/getshop.ImageEditor.css");
+    
+        echo "\n" . '<link rel="stylesheet" type="text/css" href="cssfolder/'.$this->getStore()->id.'_css_'.$this->startupCount.'.css" />';
 
         $styleSheet = new StyleSheet();
         $styleSheet->render(false);
@@ -493,6 +513,8 @@ class Factory extends FactoryBase {
             }
             echo "</style>";
         }
+        
+        
     }
 
     /*

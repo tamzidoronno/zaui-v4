@@ -136,6 +136,7 @@ class Factory extends FactoryBase {
         if ($this->isProductionMode) {
             $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
             $fileContent = file_get_contents($file)."\n";
+            $fileContent = $this->minify($fileContent);
             file_put_contents($fileName, $fileContent, FILE_APPEND);
         } else {
             echo "\n" . '<script type="text/javascript" src="'.$file.'"></script>';
@@ -149,6 +150,7 @@ class Factory extends FactoryBase {
                 $file = substr($file, 1);
             }
             $fileContent = file_get_contents($file)."\n";
+            $fileContent = $this->minify($fileContent);
             file_put_contents($fileName, $fileContent, FILE_APPEND);
         } else {
             echo "\n" . '<link rel="stylesheet" type="text/css" href="'.$file.'" />';
@@ -865,6 +867,17 @@ class Factory extends FactoryBase {
             return "async";
         }
         return "";
+    }
+
+    public function minify($fileContent) {
+        if(!$this->includeSeo()) {
+            return $fileContent;
+        }
+
+        $fileContent = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $fileContent);
+        $fileContent = str_replace(': ', ':', $fileContent);
+        $fileContent = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $fileContent);
+        return $fileContent;
     }
 
 }

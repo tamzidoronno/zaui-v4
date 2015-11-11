@@ -13,7 +13,7 @@
 ob_start();
 include '../loader.php';
 session_cache_limiter('none');
-$factory = IocContainer::getFactorySingelton();
+
 ob_start();
 if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])){
   // if the browser has a cached version of this image, send 304
@@ -43,21 +43,14 @@ if(isset($_GET['width']) && isset($_GET['height'])) {
     $imageLoader->resizeToWidth($_GET['width']);
 }
 
-if($factory->includeSeo()) {
-    $imageLoader->output(IMAGETYPE_JPEG);    
-} else {
-    $imageLoader->output();
-}
+$imageLoader->output();
 
 $PageContent = ob_get_contents();
 ob_end_clean();
 $HashID = md5($PageContent);
  
-if($factory->includeSeo()) {
-    header("Content-type: image/jpeg");
-} else {
-    header("Content-type: image/png");
-}
+header("Content-type: image/png");
+
 header("Cache-Control: max-age=2052000");
 header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 2052000));
 header('ETag: ' . $HashID);

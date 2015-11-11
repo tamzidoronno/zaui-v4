@@ -890,13 +890,6 @@ class Factory extends FactoryBase {
     }
     
     public function minify($fileContent) {
-        if($this->includeSeo()) {
-            $fileContent = $this->removeComments($fileContent);
-            $fileContent = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $fileContent);
-            $fileContent = str_replace(': ', ':', $fileContent);
-            $fileContent = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $fileContent);
-            return $fileContent;
-        }
         return $fileContent;
     }
 

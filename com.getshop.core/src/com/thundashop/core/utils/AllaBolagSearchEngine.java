@@ -54,7 +54,7 @@ public class AllaBolagSearchEngine implements CompanySearchEngine {
         company.name = "GetShop AS";
         company.city = "Sokndal";
         company.streetAddress = "Strandgaten 21";
-        company.vatNumber = "123 456 789";
+        company.vatNumber = "123456789";
         company.email = "post@getshop.com";
         return company;
     }

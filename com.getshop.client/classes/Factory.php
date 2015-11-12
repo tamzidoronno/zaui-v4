@@ -899,7 +899,7 @@ class Factory extends FactoryBase {
         if($this->includeSeo()) {
             echo "<script>loadCSS('$file');</script>\n";
         } else {
-            echo '<link rel="stylesheet" type="text/css" href="" />\n';
+            echo '<link rel="stylesheet" type="text/css" href="'.$file.'" />';
         }
 
     }

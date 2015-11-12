@@ -85,11 +85,6 @@ if (isset($_GET['logonwithkey'])) {
 
 $factory = IocContainer::getFactorySingelton();
 
-if (@$factory->isMobile()) {
-    echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
-    echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';
-}
-
 if ($factory->isEditorMode()) {
     echo '<script src="/js/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>';
     echo '<link rel="stylesheet" type="text/css" href="skin/default/settings.css" />';
@@ -108,6 +103,22 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
 
 <html xmlns:fb="http://ogp.me/ns/fb#">
     <head>
+        
+        <?
+        if($factory->includeSeo()) {
+            include_once("loadcss.phtml");
+        }
+        
+        if (@$factory->isMobile()) {
+            if($factory->includeSeo()) {
+                echo "<script>loadCSS('skin/default/responsive.css');</script>";
+            } else {
+                echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';
+            }
+            echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
+        }
+
+        ?>
         
         <script>
 

@@ -498,7 +498,6 @@ class Factory extends FactoryBase {
         $this->addCssFile("js/datatables/demo_table.css");
         $this->addCssFile("js/datatables/demo_page.css");
         $this->addCssFile("skin/default/applicationPicker.css");
-        $this->addCssFile("skin/default/fontawesome/css/font-awesome.min.css", true);
         $this->addCssFile("js/jcrop/css/jquery.Jcrop.css");
         $this->addCssFile("js/jstree/themes/default/style.min.css");
         $this->addCssFile("js/photoswipe/photoswipe.css");
@@ -509,7 +508,12 @@ class Factory extends FactoryBase {
         $this->addCssFile("skin/default/PagePicker.css");
         $this->addCssFile("skin/default/getshop.ImageEditor.css");
     
-        echo "\n" . '<link rel="stylesheet" type="text/css" href="cssfolder/'.$this->getStore()->id.'_css_'.$this->startupCount.'.css" />';
+        if($this->includeSeo()) {
+            echo "<script>loadCSS('cssfolder/".$this->getStore()->id."_css_".$this->startupCount.".css');</script>";
+            echo "<script>loadCSS('skin/default/fontawesome/css/font-awesome.min.css');</script>";
+        } else {
+            echo "\n" . '<link rel="stylesheet" type="text/css" href="cssfolder/'.$this->getStore()->id.'_css_'.$this->startupCount.'.css" />';
+        }
 
         $styleSheet = new StyleSheet();
         $styleSheet->render(false);

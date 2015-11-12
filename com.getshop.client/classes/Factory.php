@@ -224,6 +224,7 @@ class Factory extends FactoryBase {
             $this->addJavascriptFile("js/ScrollMagic.min.js");
             $this->addJavascriptFile("js/debug.addIndicators.min.js");
             $this->addJavascriptFile("js/scrollmagic.Velocity.js");
+            $this->addJavascriptFile("js/scrollmagic.js");
             $this->addJavascriptFile("js/getshop.ScrollMangic.js");
         }
         

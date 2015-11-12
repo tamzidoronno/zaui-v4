@@ -82,11 +82,7 @@ class StyleSheet {
     function render($includeHeader = true) {
 
         if($this->factory->productionMode) {
-            if($this->factory->includeSeo()) {
-                echo "<script>loadCSS('loadappcss.css');</script>";
-            } else {
-                echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="loadappcss.css">';
-            }
+            $this->factory->addCssToBody("loadappcss.css");
         } else {
             $this->includeApplications();
         }

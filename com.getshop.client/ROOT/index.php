@@ -110,11 +110,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         }
         
         if (@$factory->isMobile()) {
-            if($factory->includeSeo()) {
-                echo "<script>loadCSS('skin/default/responsive.css');</script>";
-            } else {
-                echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';
-            }
+            $factory->addCssToBody("skin/default/responsive.css");
             echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
         }
 

@@ -160,7 +160,7 @@ class Factory extends FactoryBase {
             $fileContent = $this->minify($fileContent);
             file_put_contents($fileName, $fileContent, FILE_APPEND);
         } else {
-            echo "\n" . '<link rel="stylesheet" type="text/css" href="'.$file.'" />';
+            $this->addCssToBody($file);
         }
     }
     
@@ -509,12 +509,9 @@ class Factory extends FactoryBase {
         $this->addCssFile("skin/default/PagePicker.css");
         $this->addCssFile("skin/default/getshop.ImageEditor.css");
     
-        if($this->includeSeo()) {
-            echo "<script>loadCSS('cssfolder/".$this->getStore()->id."_css_".$this->startupCount.".css');</script>";
-            echo "<script>loadCSS('skin/default/fontawesome/css/font-awesome.min.css');</script>";
-        } else {
-            echo "\n" . '<link rel="stylesheet" type="text/css" href="cssfolder/'.$this->getStore()->id.'_css_'.$this->startupCount.'.css" />';
-        }
+        
+        $this->addCssToBody("cssfolder/".$this->getStore()->id."_css_".$this->startupCount.".css");
+        $this->addCssToBody("skin/default/fontawesome/css/font-awesome.min.css");
 
         $styleSheet = new StyleSheet();
         $styleSheet->render(false);
@@ -896,6 +893,15 @@ class Factory extends FactoryBase {
     
     public function minify($fileContent) {
         return $fileContent;
+    }
+
+    public function addCssToBody($file) {
+        if($this->includeSeo()) {
+            echo "<script>loadCSS('$file');</script>\n";
+        } else {
+            echo '<link rel="stylesheet" type="text/css" href="" />\n';
+        }
+
     }
 
 }

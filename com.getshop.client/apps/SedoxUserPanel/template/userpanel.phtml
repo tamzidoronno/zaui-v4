@@ -10,6 +10,9 @@
             <tr><td><b>Files uploaded:</b></td><td><? echo $this->getFileCount(); ?></td> <td><b>Slaves:</b></td><td><? echo count($this->getSlaves()); ?></td></tr>
         </table>
     </div>
+    <div class='sedox_extra_information'>
+        Looking for order history? go to <a target='_blank' href='http://www.tuningfiles.com/customer/account/login/'>www.tuningfiles.com</a>
+    </div>
 </div>
 
 <div class='sedox_box filehistory'>
@@ -117,7 +120,7 @@
                 return null;
             }
             if ($latestCreditHistory != null) {
-                echo "<div class='row header'><div class='col col1'>Sedox Id</div><div class='col col2'>Description</div><div class='col col3'>Amount</div> <div class='col col4'>Date</div></div>";
+                echo "<div class='row header'><div class='col col1'>Sedox Id</div><div class='col col2'>Description</div><div class='col col3'>Amount</div> <div class='col col4'>Date</div> <div class='col col5'>New amount</div></div>";
                 $i = 0;
                 foreach ($latestCreditHistory as $hist) {
                     $i++;
@@ -129,6 +132,7 @@
                         <div class='col col2'><? echo $hist->description; ?></div>
                         <div class='col col3'><? echo $hist->amount; ?></div>
                         <div class='col col4'><? echo $hist->dateCreated; ?></div>
+                        <div class='col col5'><? echo $hist->newBalance; ?></div>
                     </div>
                     <?
                 }

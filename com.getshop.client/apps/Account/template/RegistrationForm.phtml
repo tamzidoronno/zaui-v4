@@ -249,6 +249,10 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
 
                         <?php echo $this->__f("Is this a garage leader?"); 
                         
+                        if ($user->isMaster) {
+                            echo " ( <span class='admin_add_sub_account' leaderId='$user->id' style='color: blue; cursor: pointer;'> ".$this->__f("add subaccount")." </span> )";
+                        }
+                        
                         $subUsers = $this->getApi()->getUserManager()->getSubUsers($user->id);
                         if ($subUsers) {
                         ?>

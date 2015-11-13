@@ -9,6 +9,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	/** @var String */
 	public $lastRegisteredToken;
 
+	/** @var String */
+	public $triedToFetch;
+
 	/** @var core_usermanager_data_Address */
 	public $address;
 

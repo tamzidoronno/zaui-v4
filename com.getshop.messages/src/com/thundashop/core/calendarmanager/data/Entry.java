@@ -55,6 +55,7 @@ public class Entry implements Serializable, Comparable<Entry> {
     public String title;
     public String color;
     public String eventHelder;
+    public boolean readyToInvoice = false;
     public List<EntryComment> comments = new ArrayList();
     
     public int year;
@@ -85,6 +86,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.userId = entry.userId;
         this.title = entry.title;
         this.dropDiploma = entry.dropDiploma;
+        this.readyToInvoice = entry.readyToInvoice;
         this.color = entry.color;
         this.deffered = entry.deffered;
         this.year = entry.year;

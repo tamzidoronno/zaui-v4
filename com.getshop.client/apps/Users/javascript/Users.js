@@ -69,6 +69,28 @@ $('.Users .editCompany').live('click', function(e) {
     thundashop.common.showInformationBox(event, __f("Edit company information"));
 });
 
+$('.Users .createButton_subuser_admin').live('click', function(e) {
+    var data = {
+        leaderId : $(this).attr('leaderId'),
+        name : $('#new_subuser_name').val(),
+        phone : $('#new_subuser_cellphone').val()
+    }
+    
+    var event = thundashop.Ajax.createEvent(null, "createSubAccountAdmin", this, data);
+    thundashop.Ajax.post(event, function() {
+        document.location = '/index.php?page=users_all_users&userid=' + data.leaderId;
+    });
+});
+
+$('.Users .admin_add_sub_account').live('click', function(e) {
+    var data = {
+        leaderId : $(this).attr('leaderId')
+    }
+    
+    var event = thundashop.Ajax.createEvent(null, "showAdminAddSubUserAccount", this, data);
+    thundashop.common.showInformationBox(event, __f("Edit company information"));
+});
+
 $('.Users .saveCompanyInformation').live('click', function(e) {
     var data = {
         userId : $(this).attr('userid'),

@@ -106,6 +106,10 @@ $(function() {
             return;
         }
         
+        if ($(this).attr('ignorenavigateWithJavascript') === "true") {
+            return;
+        }
+        
         event.stopPropagation();
         event.preventDefault();
 

@@ -17,12 +17,13 @@ public class SedoxCreditAccount implements Serializable {
     public boolean allowNegativeCredit = false;
     private double balance;
 
-    void addOrderToCreditHistory(SedoxOrder order, SedoxProduct sedoxProduct, int transactionSedoxId) {
+    void addOrderToCreditHistory(SedoxOrder order, SedoxSharedProduct sedoxProduct, int transactionSedoxId) {
         SedoxCreditHistory historyEntry = new SedoxCreditHistory();
         historyEntry.amount = -1 * order.creditAmount;
-        historyEntry.description = sedoxProduct.toString();
+        historyEntry.description = sedoxProduct.getName();
         historyEntry.transactionReference = transactionSedoxId;
         balance = balance + historyEntry.amount;
+        historyEntry.newBalance = balance;
         history.add(historyEntry);
     }
     
@@ -42,6 +43,7 @@ public class SedoxCreditAccount implements Serializable {
         
         historyEntry.transactionReference = sedoxCreditOrder.magentoOrderId;
         balance = balance + historyEntry.amount;
+        historyEntry.newBalance = balance;
         history.add(historyEntry);
     }
 

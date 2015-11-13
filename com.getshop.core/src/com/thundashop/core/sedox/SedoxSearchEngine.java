@@ -18,17 +18,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SedoxSearchEngine {
-    private List<SedoxProduct> products = new ArrayList();
+    private List<SedoxSharedProduct> products = new ArrayList();
     
     private int pageSize = 10;
     
-    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxProduct> products, SedoxSearch search, User currentUser) {
+    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxSharedProduct> products, SedoxSearch search, User currentUser) {
         this.products = products;
         
         String searchString = search.searchCriteria.toLowerCase();
-        Set<SedoxProduct> retProducts = new TreeSet<>();
+        Set<SedoxSharedProduct> retProducts = new TreeSet<>();
         
-        for (SedoxProduct product : products) {
+        for (SedoxSharedProduct product : products) {
             if (product.id.equals(searchString) || inFileId(product, searchString)) {
                 retProducts.add(product);
             }
@@ -112,7 +112,7 @@ public class SedoxSearchEngine {
         return page;
     }
 
-    private boolean inFileId(SedoxProduct product, String searchString) {
+    private boolean inFileId(SedoxSharedProduct product, String searchString) {
         int searchId = 0;
         try {
             searchId = Integer.parseInt(searchString);

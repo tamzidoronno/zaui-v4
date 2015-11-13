@@ -13,6 +13,15 @@
             echo "No history";
             return;
         }
+        
+        
+        echo "<div class='row'>"
+            . "<div class='col col1'>Id</div>"
+            . "<div class='col col2'>Desc</div>"
+            . "<div class='col col3'>Amount</div>"
+            . "<div class='col col4'>Date</div>"
+            . "<div class='col col5'>New Balance</div>"
+        . "</div>";
 
         $hists = array_reverse($hists);
         foreach ( $hists as $hist) {
@@ -20,11 +29,13 @@
             $desc = $hist->description;
             $amount = $hist->amount;
             $date = $hist->dateCreated;
+            $newBalance = $hist->newBalance;
             echo "<div class='row'>"
             . "<div class='col col1'>$id</div>"
             . "<div class='col col2'>$desc</div>"
             . "<div class='col col3'>$amount</div>"
             . "<div class='col col4'>$date</div>"
+            . "<div class='col col5'>$newBalance</div>"
             . "</div>";
         }
         ?>

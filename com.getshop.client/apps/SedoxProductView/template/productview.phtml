@@ -3,6 +3,12 @@ $sedoxProduct = $this->getCurrentProduct();
 $name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct->engineSize . " " . $sedoxProduct->power . " " . $sedoxProduct->year . " " . $sedoxProduct->originalChecksum;
 $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : "";
 $reference = $this->getReference($sedoxProduct);
+
+$comment = false;
+
+if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && $sedoxProduct->firstUploadedByUserId == ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id) {
+    $comment = $sedoxProduct->comment;
+}
 ?>
 
 
@@ -46,7 +52,24 @@ $reference = $this->getReference($sedoxProduct);
         <div class='col col9'><? echo $sedoxProduct->softwareSize; ?></div>
         <div class='col col10'><? echo $sedoxProduct->tool; ?></div>
     </div>
+
 </div>
+
+
+<?
+if ($comment) {
+?>
+<div class='sedox_product_box downloadbox' style='position: relative;'>
+    <div class='title'><i class='fa fa-info-circle'></i> Comment</div>
+    <div class='row' >
+        <div class='col'><? echo $comment; ?></div>
+        
+    </div>
+<?
+}
+?>
+
+
 
 
 <div class='sedox_product_box downloadbox' style='position: relative;'>
@@ -134,7 +157,7 @@ $reference = $this->getReference($sedoxProduct);
 </div>
 
 <?
-if (!$this->hasWriteAccess()) {
+if (!$this->hasWriteAccess() || get_class($sedoxProduct) == "core_sedox_SedoxSharedProduct") {
     return;
 }
 
@@ -206,6 +229,7 @@ $class1 = array_key_exists("purchaseOnlyForCustomer", $sedoxProduct->states) ? "
 $class2 = array_key_exists("notifyForCustomer", $sedoxProduct->states) ? "active" : "";
 $class3 = array_key_exists("sendProductByMail", $sedoxProduct->states) ? "active" : "";
 $class4 = $sedoxProduct->saleAble ? "saleable" : "";
+$class5 = $sedoxProduct->started ? "active" : "";
 $text = $sedoxProduct->saleAble ? "Make product NOT salable" : "Make product saleable";
 $badCustomer = $sedoxUser->badCustomer == "true" ? "<div><i class='fa fa-warning' style='color: #CC0000;'></i> <b>THIS IS A BAD CUSTOMER!</b></div> <br/>" : "";
 
@@ -223,6 +247,31 @@ echo $badCustomer;
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button notifybyemailandsms <? echo $class2; ?>">Notify by email and sms</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button sendproductbyemail <? echo $class3; ?>">Send product by email</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button togglesalable <? echo $class4; ?>"><? echo $text; ?></div>
+            
+            <div style='padding-top: 15px; text-align: center; padding-right: 7px;'>
+                
+                <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button togglestart <? echo $class5; ?>" started='<? echo $sedoxProduct->started ? "1" : "0"; ?>'>
+                <? 
+                    if ($sedoxProduct->started) {
+                        echo "Stop"; 
+                    } else {
+                        echo "Start"; 
+                    }
+                    
+                ?>
+                </div>
+                
+                
+                <? 
+                    if (!$sedoxProduct->isFinished && !array_key_exists("sendProductByMail", $sedoxProduct->states) ) {
+                ?>
+                        <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button markasfinished" started='<? echo $sedoxProduct->started ? "1" : "0"; ?>'> Mark as finished </div>      
+                <?
+                    }     
+                ?>
+                </div>
+            </div>
+            
         </div>
 
     </div>

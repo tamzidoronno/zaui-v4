@@ -36,6 +36,9 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         if ($this->isSalesRAte())
             $this->includefile("salesrate");
         
+        if ($this->isRefresh())
+            $this->includefile("refresh");
+        
         echo "</div>";
     }
 
@@ -87,6 +90,10 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         return isset($_SESSION['sedox_admin_subpage']) && $_SESSION['sedox_admin_subpage'] == "salesrate";
     }
     
+    public function isRefresh() {
+        return isset($_SESSION['sedox_admin_subpage']) && $_SESSION['sedox_admin_subpage'] == "refresh";
+    }
+    
     public function isSettingsView() {
         if (!isset($_SESSION['sedox_admin_subpage'])) {
             return false;
@@ -104,7 +111,9 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
             return array();
         }
         
-        return $this->getApi()->getSedoxProductManager()->searchForUsers($_SESSION['sedox_admin_searchString']);
+        $results = $this->getApi()->getSedoxProductManager()->searchForUsers($_SESSION['sedox_admin_searchString']);
+        
+        return $results;
     }
     
     public function isInvoiceListView() {
@@ -113,6 +122,10 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         }
         
         return $_SESSION['sedox_admin_subpage'] == "invoicelist";
+    }
+    
+    public function synchFromMagento() {
+        $this->getApi()->getSedoxProductManager()->syncFromMagento($_POST['data']['userId']);
     }
     
     public function showUserInformation() {
@@ -157,6 +170,7 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
     
     public function searchForSlaves() {
         $results = $this->getApi()->getSedoxProductManager()->searchForUsers($_POST['data']['text']);
+        
         if (!count($results)) {
             echo "No result found";
             return;

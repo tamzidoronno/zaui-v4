@@ -16,4 +16,5 @@ public class SedoxCreditHistory implements Serializable {
     public String description;
     public double amount;
     public Date dateCreated = new Date();
+    public double newBalance;
 }

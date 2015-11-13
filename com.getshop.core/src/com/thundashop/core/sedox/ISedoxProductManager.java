@@ -6,6 +6,7 @@ package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.usermanager.data.User;
@@ -48,11 +49,13 @@ public interface ISedoxProductManager  {
     
     public SedoxProduct getProductById(String id) throws ErrorException;
     
-    @Customer
-    public SedoxProduct createSedoxProduct(SedoxProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId, String origin) throws ErrorException;
+    public SedoxSharedProduct getSharedProductById(String id) throws ErrorException;
     
     @Customer
-    public SedoxProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException;
+    public SedoxProduct createSedoxProduct(SedoxSharedProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId, String origin, String comment, String useCredit) throws ErrorException;
+    
+    @Customer
+    public SedoxSharedProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException;
     
     @Customer
     public void requestSpecialFile(String productId, String comment) throws ErrorException;
@@ -155,5 +158,16 @@ public interface ISedoxProductManager  {
     
     public List<String> getProductIds() throws ErrorException;
     
+    @Administrator
+    public void syncFromMagento(String userId) throws ErrorException;
+    
     public Double getPriceForProduct(String productId, List<Integer> files) throws ErrorException;
+    
+    @Editor
+    public int getFileNotProcessedToDayCount() throws ErrorException;
+    
+    @Editor
+    public void markAsFinished(String productId, boolean finished) throws ErrorException;
+    
+    public void updateEvcCreditAccounts() throws ErrorException;
 }

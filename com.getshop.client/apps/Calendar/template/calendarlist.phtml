@@ -26,6 +26,9 @@ foreach ($entries as $year => $months) {
             echo "<th></th>";
             echo "<th></th>";
         }
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            echo "<th></th>";
+        }
         echo "</tr>";
 
         foreach ($locations as $entry) { 
@@ -102,6 +105,12 @@ foreach ($entries as $year => $months) {
                 }
                 echo "<td style='width: 70px; text-align: center;'>$readMore</td>";
                 echo "<td style='width: 100px;'>$booking</td>";
+                if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+                    
+                    $linkToCalendar = $this->getLinkToCalendar($entry);
+                    
+                    echo "<td style='width: 30px;'><a href='$linkToCalendar'><i class='fa fa-calendar'></i></a></td>";
+                }
             }
 
             echo "</tr>";

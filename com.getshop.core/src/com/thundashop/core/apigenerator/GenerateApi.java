@@ -40,8 +40,7 @@ public class GenerateApi {
         
     public GenerateApi() throws ClassNotFoundException {
         File core = new File("../GetShop Core/");
-        File messages = new File("../GetShop Message/");
-        
+        File messages = new File("../GetShop Messages/");
         
         coreClasses = findClasses(core);
         messageClasses = findClasses(messages);

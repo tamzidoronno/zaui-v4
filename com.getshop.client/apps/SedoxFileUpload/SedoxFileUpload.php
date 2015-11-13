@@ -101,11 +101,9 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         $sedoxProduct->power = $power;
         $sedoxProduct->year = $year;
         $sedoxProduct->tool = $tool;
-        $sedoxProduct->comment = $comment;
         $sedoxProduct->gearType = $geartype;
-        $sedoxProduct->useCreditAccount = $useCredit;
-
-        $savedProduct = $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave, $origin);
+        
+        $savedProduct = $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave, $origin, $comment, $useCredit);
 		if (isset($_POST['reference']) && $_POST['reference'] != "") {
 			$this->getApi()->getSedoxProductManager()->addReference($savedProduct->id, $_POST['reference']);
 		}

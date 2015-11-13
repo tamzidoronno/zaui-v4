@@ -14,6 +14,7 @@ $fixedPrice = $sedoxUser->fixedPrice;
 <div class="useroverview" userid="<? echo $userid; ?>">
     Id: <? echo $userid; ?>
     <br> Name: <? echo $user->fullName; ?>
+    <br> Cellphone: <? echo $user->cellPhone; ?>
     <br> Company: <? echo $user->companyName; ?>
     <br> Group: <? echo $user->group; ?>
     <br> Email: <? echo $user->emailAddress; ?>
@@ -34,15 +35,23 @@ $fixedPrice = $sedoxUser->fixedPrice;
     </table>
     <div class="gs_button savecredit" userId="<? echo $userid; ?>"> Update </div>
     <hr/>
-    <b>Slave/Master Setup:</b><br><br>
+        <div class="gs_button synchfrommagento" userId="<? echo $userid; ?>"> Sync from magento </div>
+    <hr/>
+    
     <?
     if ($isASlave) {
+        echo "<div style='margin: 20px; padding: 20px; border: solid 1px'>";
+        echo '<b>Slave Config</b><br><br>';
         $sedoxMasterUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($sedoxUser->masterUserId);
         $slaveUser = $this->getApi()->getUserManager()->getUserById($sedoxMasterUser->id);
                 
         echo "This is a slave and is connected to master: <span class='showuser' userid='$slaveUser->id'>".$slaveUser->fullName ." (".$slaveUser->emailAddress.")</span>";
         echo "<br><br><input id='togglepassiveslave' $passiveslavechecked type='checkbox'/> Is this an passive slave?";
-    } else {
+        echo "</div>";
+    } 
+    
+    echo "<div style='margin: 20px; padding: 20px; border: solid 1px'>";
+        echo '<b>Master config</b><br><br>';
         $slaves = $this->getApi()->getSedoxProductManager()->getSlaves($userid);
         if (!count($slaves)) {
             echo "no slaves connected to this user";
@@ -59,12 +68,12 @@ $fixedPrice = $sedoxUser->fixedPrice;
                 $slaveUserInfo = "<span class='showuser' userid='$user->id'>".$user->fullName ." (".$user->emailAddress.")</span>";
                 echo "<div> $remove <input type='text' class='extraincometext' value='$extraIncome' userid='$id'/> $slaveUserInfo $slaveText</div>";
             }
-        }
+        }    
+    echo "<div>";
         ?>
         <br>
         <br>Search for a slave add by enter text: &nbsp;<input id='slavesearchtextfield' type='text'/>
         <div class='add_slave_result'>
 
         </div>
-    <? } ?>
 </div>

@@ -12,5 +12,8 @@ class core_sedox_SedoxCreditHistory {
 	/** @var String */
 	public $dateCreated;
 
+	/** @var String */
+	public $newBalance;
+
 }
 ?>

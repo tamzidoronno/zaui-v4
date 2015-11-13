@@ -314,4 +314,10 @@ public interface ICalendarManager {
     
     @Administrator
     public List<StatisticResult> getStatistic(Date from, Date to) throws ErrorException;
+    
+    @Administrator
+    public List<StatisticResult> getDetailedStatistic(Date from, Date to) throws ErrorException;
+    
+    @Administrator
+    public List<StatisticResult> getDetailedStatisticGroupedByLocations(Date from, Date to) throws ErrorException;
 }

@@ -26,7 +26,13 @@ class SedoxProductView extends \ApplicationBase implements \Application {
             return null;
         }
 
-        return $this->getApi()->getSedoxProductManager()->getProductById($_SESSION['sedox_current_productid']);
+        $product = $this->getApi()->getSedoxProductManager()->getProductById($_SESSION['sedox_current_productid']);
+        
+        if ($product == null) {
+            $product = $this->getApi()->getSedoxProductManager()->getSharedProductById($_SESSION['sedox_current_productid']);
+        }
+        
+        return $product;
     }
 
     public function getPriceForFile($binFile) {
@@ -188,6 +194,15 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         } else {
             echo $res;
         }
+    }
+    
+    public function toggleStartStop() {
+        $productId = $_POST['data']['productId'];
+        $this->getApi()->getSedoxProductManager()->toggleStartStop($productId, $_POST['data']['started'] == "0");
+    }
+    
+    public function markAsFinished() {
+        $this->getApi()->getSedoxProductManager()->markAsFinished($_POST['data']['productId'], true);
     }
 }
 ?>

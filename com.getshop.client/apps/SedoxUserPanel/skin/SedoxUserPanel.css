@@ -255,3 +255,9 @@
 .SedoxUserPanel .slaveslist .col {
     vertical-align: top;
 }
+
+.SedoxUserPanel .sedox_extra_information {
+    font-size: 16px;
+    text-align: center;
+    padding: 20px;
+}

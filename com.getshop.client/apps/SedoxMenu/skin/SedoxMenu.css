@@ -3,6 +3,8 @@
     height: 102px;
     width: 131px;
     
+    position: relative;
+    
     background: #cc0000; /* Old browsers */
     background: -moz-linear-gradient(top, #f12020 0%, #cc0000 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f12020), color-stop(100%,#cc0000)); /* Chrome,Safari4+ */
@@ -66,3 +68,15 @@
 
 .SedoxMenu input { line-height: 30px; padding-left: 5px; }
 .SedoxMenu .placeholder { color: #aaa; }
+
+.SedoxMenu .filecount_indicator {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #fb3737;
+    box-shadow: 0px 0px 10px #FFF;
+    color: #FFF;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+}

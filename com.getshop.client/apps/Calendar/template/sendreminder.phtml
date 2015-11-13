@@ -4,6 +4,14 @@ namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
 
 /* @var $this Calendar */
 $attendees = $this->getAttendees($this->currentEntry);
+
+if ($this->currentEntry->eventHelder) {
+    $eventHelderUser = $this->getApi()->getUserManager()->getUserById($this->currentEntry->eventHelder);
+    if ($eventHelderUser) {
+        $attendees[] =  $eventHelderUser;
+    }
+}
+
 $defaultText = $this->getConfigurationSetting("defaultreminder");
 
 if (!$defaultText) {

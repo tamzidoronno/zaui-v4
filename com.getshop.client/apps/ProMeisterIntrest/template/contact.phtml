@@ -4,7 +4,7 @@ $companyRemote = true;
 $extradep = $this->isExtraDep();
 ?>
 <table id="bookingtable" allowadd="<? echo ($allowAdd == true) ? "true" : "false"; ?>">
-    <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="name" type='textfield'/></td></tr>
+    <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="pro_intr_name" type='textfield'/></td></tr>
             <? if (!$allowAdd) { ?>
     <tr><td><? echo $this->__w("Company"); ?></td><td>
             <input type="text" placeholder="" class="search_company">
@@ -13,21 +13,21 @@ $extradep = $this->isExtraDep();
     </tr>
     <tr style="display:none;"><td class="col1"><?php echo $this->__w("orgnummer"); ?></td>
         <td>
-            <input orgLength="<? echo $this->getOrgNumberLength(); ?>" onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="birthday" type='textfield' disabled/>
+            <input orgLength="<? echo $this->getOrgNumberLength(); ?>" onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="pro_intr_birthday" type='textfield' disabled/>
         </td>
     </tr>                
     <? if (!$companyRemote) { ?>
-    <tr><td class="col1"><?php echo $this->__w("org", 'contact'); ?></td><td><input id="company" type='textfield'/></td></tr>
+    <tr><td class="col1"><?php echo $this->__w("org", 'contact'); ?></td><td><input id="pro_intr_company" type='textfield'/></td></tr>
                 <? } else { ?>
     <tr><td class="col1"></td><td><div class="companyinformation"><? echo $this->__w("Search for the company you want to enter by clicking the button above, and this box will be filled automatically."); ?></div></td></tr>
                 <? } ?>
 
                 <? if ($extradep) { ?>
-    <tr><td class="col1"><? echo $this->getTextForExtraDep(); ?></td><td><input id="extradep" checktype='<? echo $this->getCheckType(); ?>' type='textfield'/></td></tr>
+    <tr><td class="col1"><? echo $this->getTextForExtraDep(); ?></td><td><input id="pro_intr_extradep" checktype='<? echo $this->getCheckType(); ?>' type='textfield'/></td></tr>
             <? } ?>
 
         <? } else { ?>
-    <tr><tr><td class="col1"><?php echo $this->__w("Date"); ?></td><td><input id="date"  style="width:140px;" type='textfield'/> <input style="width:50px;" id="time" type='textfield'/></td></tr></tr>
+    <tr><tr><td class="col1"><?php echo $this->__w("Date"); ?></td><td><input id="pro_intr_date"  style="width:140px;" type='textfield'/> <input style="width:50px;" id="time" type='textfield'/></td></tr></tr>
         <? } ?>
     <tr>
         <td colspan="2" align="right">

@@ -18,18 +18,16 @@ app.ProMeisterIntrest = {
     
     sendForm: function() {
         var data = {
-            name : $('#name').val(),
-            email : $('#email').val(),
-            invoiceemail : $('#invoiceemail').val(),
-            cellphone : $('#cellphone').val(),
-            extradep : $('#extradep').val(),
-            vatNumber: $('#birthday').val()
+            name : $('#pro_intr_name').val(),
+            extradep : $('#pro_intr_extradep').val(),
+            vatNumber: $('#pro_intr_birthday').val()
         };
         
         try {
             Booking.check(data.name);
             Booking.check(data.vatNumber);
         } catch (error) {
+            
             if (error === "emailVal") {
                 thundashop.common.Alert(__w('Stop'), __w('Please check your email addresses'), true);
             } else {
@@ -93,14 +91,14 @@ app.ProMeisterIntrest = {
         var name = row.find('.selected_name').html();
 
         $(this).closest('.app').find('.search_company').val(name);
-        $(this).closest('.app').find('#birthday').val(brregnumber);
+        $(this).closest('.app').find('#pro_intr_birthday').val(brregnumber);
 //        $(this).closest('.app').find('#birthday').closest('tr').show();
-        $('.Booking .search_result_area').hide();
+        $('.ProMeisterIntrest .search_result_area').hide();
         app.ProMeisterIntrest.updateCompanyInformation();
     },
     
     updateCompanyInformation: function () {
-        var field = $($('.ProMeisterIntrest #birthday')[0]);
+        var field = $($('.ProMeisterIntrest #pro_intr_birthday')[0]);
         var value = $(field).val();
         var orgLength = $(field).attr('orglength');
         if (value.length == orgLength) {

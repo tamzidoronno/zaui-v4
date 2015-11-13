@@ -22,6 +22,9 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $rooms;
 
 	/** @var String */
+	public $roomtype;
+
+	/** @var String */
 	public $uploadedRoomToArx;
 
 	/** @var core_hotelbookingmanager_ContactData */

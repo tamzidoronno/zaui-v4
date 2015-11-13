@@ -23,6 +23,7 @@ public class SedoxUser extends DataCommon {
     public boolean canUseExternalProgram = false;
     public String magentoId;
     public List<SedoxCreditOrder> creditOrders = new ArrayList<>();
+    public List<SedoxEvcCreditOrder> evcCreditOrders = new ArrayList<>();
     boolean isActiveDelevoper = false;
     public String masterUserId;
     public double slaveIncome = 0;
@@ -39,5 +40,9 @@ public class SedoxUser extends DataCommon {
                 order.dateCreated = new Date();
             }
         }
+    }
+
+    void addEvcCreditOrder(SedoxEvcCreditOrder creditOrder) {
+        evcCreditOrders.add(creditOrder);
     }
 }

@@ -342,4 +342,7 @@ public interface IUserManager {
     
     @Customer
     public void createSubAccount(String fullName, String phoneNumber) throws ErrorException;
+    
+    @Editor
+    public void createSubAccountEditor(String fullName, String phoneNumber, String leaderId) throws ErrorException;
 }

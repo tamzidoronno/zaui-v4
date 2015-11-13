@@ -93,6 +93,7 @@ Calendar = {
         $(document).on('click', '.Calendar .add_comment_to_event', Calendar.addCommentToEvent);
         $(document).on('click', '.Calendar .calendar_location_createarea', Calendar.showEditArea);
         $(document).on('click', '.Calendar .selectarea', Calendar.showEditArea);
+        $(document).on('click', '.Calendar .readyToInvoice', Calendar.toggleReadyToInvoice);
         
         $(document).on('click', '.Calendar .calendar_locationarea_save', Calendar.saveLocationArea);
         
@@ -107,6 +108,17 @@ Calendar = {
         $(document).on('change', '.Calendar .diplomasettings input#textColor', Calendar.setTextColorDiploma);
         $(document).on('click', '.Calendar .list_showextrainformation', Calendar.showListExtraInformation);
     },
+    
+    toggleReadyToInvoice: function() {
+        var data = {
+            entryId : $(this).attr('entryId'),
+            ready : $(this).is(':checked')
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "toggleReadyToInvoice", this, data);
+        thundashop.Ajax.post(event);
+    },
+    
     saveCheckList: function() {
         var me = this;
         var data = {

@@ -14,6 +14,6 @@ import java.net.URISyntaxException;
  */
 public class CreateJavascriptForHotelBookingManager {
     public static void main(String[] args) throws ClassNotFoundException, IOException, URISyntaxException {
-        new GenerateJavascriptApi().start("/home/ktonder/source/getshop/3.0.0/com.getshop.hotelmanagment/public_html/js/getshopapi.js");
+//        new GenerateJavascriptApi().start("/home/ktonder/source/getshop/3.0.0/com.getshop.hotelmanagment/public_html/js/getshopapi.js");
     }
 }

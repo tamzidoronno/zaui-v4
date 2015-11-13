@@ -1,17 +1,17 @@
-<table cellspacing="0" cellpadding="0" width="100%">
-    <tr>
-        <td>
-            <input type="email" class="mailinputfield" placeholder="<? echo $this->__w("your@email.com"); ?>">
-        </td>
-        <td>
-            <span class="shop_button small mailchimpaddbutton" style="float:right; padding:0px;"><? echo $this->__w("Subscribe"); ?></span>            
-        </td>
-    </tr>
-</table>
+<? $apiKey = $this->getApiKey(); ?>
 
-<span class="incorrectinput" style='display:none;'>
-    * <? echo $this->__w("The email in invalid, please enter a valid email"); ?>
-</span>
-<span class="emailAdded" style='display:none;'>
-    * <? echo $this->__w("Thank you for subscribing to our newsletter, your email has been added"); ?>
-</span>
+
+<script>
+     $.ajax({
+
+        url: 'https://api.mailchimp.com/3.0/lists',
+        type: 'GET',
+        crossOrigin: true,
+        beforeSend: function (xhr) {
+            var hash = "<? echo base64_encode("fdsafsaf" . ':' . $apiKey); ?>";
+            xhr.setRequestHeader ("Authorization", "Basic " + hash);
+        },
+        success: function() { alert("Success"); },
+    });
+    
+</script>

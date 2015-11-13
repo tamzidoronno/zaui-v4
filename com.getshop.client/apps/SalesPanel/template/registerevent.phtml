@@ -1,0 +1,62 @@
+<?
+/* @var $this \ns_84420130_b401_44e8_a9ab_52d6458f2c0c\SalesPanel */
+$types = $this->getEventTypes();
+$eventId = "";
+$event = new core_salesmanager_SalesEvent();
+
+if(isset($_POST['data']['orgId'])) {
+    $event->orgId = $_POST['data']['orgId'];
+}
+
+if(isset($_POST['data']['eventId'])) {
+    echo "Event editing";
+    $eventId = $_POST['data']['eventId'];
+    /* @var $event core_salesmanager_SalesEvent */
+    $event = $this->getApi()->getSalesManager()->getEvent($eventId);
+    $orgId = $event->orgId;
+} else {
+    $event->date = time();
+}
+?>
+<div gstype="form" method="createEvent" style="padding:10px;color:#fff;">
+    <input type="hidden" gsname="id" value="<? echo $event->id; ?>">
+    <div>
+        <input type="hidden" gsname="orgId" value="<? echo $event->orgId; ?>">
+    <label>
+        Date
+        <input type="txt" gsname="date" class="eventDate" value="<? echo date("d.m.Y h:i", $event->date); ?>">
+    </label>
+    </div>
+    <br>
+    <label>
+        Comment
+        <textarea gsname="comment" style="width:95%;height:100px;"><? echo $event->comment; ?></textarea>
+    </label>
+    <br><br>
+    <label>
+        Type
+        <select gsname="type">
+            <? 
+            foreach($types as $type => $val) {
+                $selected = "";
+                if($event->type == $type) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$type' $selected>$val</option>";
+            }
+            ?>
+        </select>
+    </label>
+    <span class='mybutton' gstype='submit'>Register event</span>
+</div>
+
+<script>
+    $('.eventDate').datepicker({
+            dateFormat: 'dd.mm.yy',
+            onSelect: function(datetext){
+                var d = new Date(); // for now
+                datetext=datetext+" "+d.getHours()+":"+d.getMinutes();
+                $('.eventDate').val(datetext);
+            }
+    });
+</script>

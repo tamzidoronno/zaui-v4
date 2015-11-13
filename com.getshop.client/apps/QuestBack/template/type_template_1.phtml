@@ -1,16 +1,16 @@
 <?
 /* @var $this \ns_07422211_7818_445e_9f16_ad792320cb10\QuestBack */
-$isAdmin = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
+$isNotInTest = !\ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
 $headingText = $this->getConfigurationSetting("headingtext");
 $headingTextInner = $headingText;
 
-if (!$headingText && $isAdmin) {
+if (!$headingText && $isNotInTest) {
     $headingText = $this->__f("No heading text added yet");
 }
 ?>
 <div>
     <?
-    if ($isAdmin) {
+    if ($isNotInTest) {
         echo "<div style='display: none; text-align: center;' class='edit_text_header'>";
         echo "<textarea style='width: 100%; box-sizing: border-box; height: 100px;' class='headingtext'>$headingTextInner</textarea>";
         echo "<br/><span style='cursor: pointer;' onclick='app.QuestBack.saveHeading()'><i class='fa fa-save'></i> save</span>";
@@ -18,7 +18,7 @@ if (!$headingText && $isAdmin) {
     }
     
     echo "<div class='heading_text_showing'>";
-    if ($isAdmin) {
+    if ($isNotInTest) {
         echo "<div class='edit_heading_button' style='cursor: pointer; width: 100px; border:solid 1px #DDD; padding:3px; padding-left: 10px; padding-right: 10px; margin: 5px;'><i class='fa fa-edit'></i> - edit heading</div>";
     }
     
@@ -38,16 +38,16 @@ if (!$headingText && $isAdmin) {
     }
     foreach ($options as $option) {
         $id = $option->id;
-        echo "<div optionid='$id'>";
-            if ($isAdmin) {
+        echo "<div optionid='$id' class='questback_option_row'>";
+            if ($isNotInTest) {
                 
                 $correct = $option->correctAnswer ? "color: green" : "color: #DDD";
                 echo "<div class='admin_button admin_delete_option'><i class='fa fa-trash'></i></div>";
                 echo "<div class='admin_button admin_correct_option'><i class='fa fa-check' title='Mark as correct answer' style='$correct'></i></div>";
             }
             
-            echo "<input style='position: relative; top: 2px;' class='answer_option_box' type='checkbox' value='$option->id'/> ";
-            if ($isAdmin) {
+            echo "<div style='display: inline-block;' class='input_option_box'><input style='position: relative; top: 2px;' class='answer_option_box' type='checkbox' value='$option->id'/></div>";
+            if ($isNotInTest) {
                 echo "<input class='admin_option_text' type='textfield' value='".$option->text."'/>";
             } else {
                 echo $option->text;
@@ -55,10 +55,8 @@ if (!$headingText && $isAdmin) {
         echo "</div>";
     }
     echo "</div>";
-    if ($isAdmin) {
-        echo "<div class='gs_button add_option'> Add option </div>";
-    }
-    ?>
     
-    <div class='gs_button answer_question'><? echo $this->__f("Next"); ?></div>
+    $this->printOptionButton();
+    $this->printNextButton();
+    ?>
 </div>

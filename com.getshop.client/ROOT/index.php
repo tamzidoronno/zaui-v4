@@ -85,11 +85,6 @@ if (isset($_GET['logonwithkey'])) {
 
 $factory = IocContainer::getFactorySingelton();
 
-if (@$factory->isMobile()) {
-    echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
-    echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';
-}
-
 if ($factory->isEditorMode()) {
     echo '<script src="/js/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>';
     echo '<link rel="stylesheet" type="text/css" href="skin/default/settings.css" />';
@@ -108,6 +103,18 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
 
 <html xmlns:fb="http://ogp.me/ns/fb#">
     <head>
+        
+        <?
+        if($factory->includeSeo()) {
+            include_once("loadcss.phtml");
+        }
+        
+        if (@$factory->isMobile()) {
+            $factory->addCssToBody("skin/default/responsive.css");
+            echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
+        }
+
+        ?>
         
         <script>
 
@@ -136,12 +143,13 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <meta name="keywords" content="<? echo $javapage->metaKeywords; ?>">
         <meta name="title" content="<? echo $javapage->metaTitle; ?>">
         
+        <script <? echo $factory->includeSeo(); ?> type="text/javascript" src="https://www.google.com/jsapi"></script>
         <?php
         $html = init($factory);
         $pageDescription = $factory->getPage()->javapage->description;
-        if (isset($factory->getSettings()->{'favicon'})) {
-            echo '<link rel="shortcut icon" href="favicon.ico" type="image/png">';
-            echo '<link rel="shortcut icon" type="image/png" href="favicon.ico" />';
+        if (@$factory->getStore()->favicon) {
+            echo '<link rel="icon" href="/favicon.ico?r='.rand(0,1000).'" />';
+            echo '<link href="data:image/x-icon;base64,'.  base64_encode(file_get_contents("../uploadedfiles/".$factory->getStore()->favicon)).'" rel="icon" type="image/x-icon" />';
         }
 
         $factory->loadJavascriptFiles();
@@ -159,7 +167,6 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         echo "</script>";
         ?>
 
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
         <title class='pagetitle'><?php echo $title; ?></title>
     <script>
@@ -377,17 +384,7 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
 ?>    
 <script>
     google.load('visualization', '1.0', {'packages':['corechart']});
+    
+    thundashop.common.triggerTimeoutCheck();
 </script>
 
-<?
-//$res = $factory->getApi()->getQuestBackManager()->createNewQuestion("test", 1);
-//echo "<pre>";
-//print_r($res);
-//echo "</pre>";
-//echo "<a href='/?page=$res->pageId'>next</a>";
-?>
-
-<?
-if (isset($_GET['testmenow']))
-	echo "TEST"; 
-?>

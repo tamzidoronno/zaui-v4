@@ -22,6 +22,7 @@ public class Store extends DataCommon {
     public String deepFreezePassword = "";
     public boolean premium = false;
     public boolean mobileApp = false;
+    public String favicon = "";
     
     public Date expiryDate;
     

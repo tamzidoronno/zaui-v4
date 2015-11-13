@@ -44,7 +44,9 @@ class Page {
 
         
         
-        echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type'>";
+        $loggedIn = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? "true" : "false";
+        
+        echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
             $edited = $this->printArea($layout->areas->{'header'}, true);
@@ -111,12 +113,14 @@ class Page {
             }
         } else {
             echo "<div class='gsbody' pageId='" . $this->getId() . "'>";
-            $cells = $layout->areas->{'body'};
+            $cells = $this->factory->getApi()->getPageManager()->getMobileBody($this->getId());
             echo "<div class='header gsmobileheaderfull'>";
             $this->printArea($layout->areas->{'header'}, 0, null);
             echo "</div>";
             $this->printMobileHeader($layout->areas->{'header'});
+            echo "<div class='gsmobilebody'>";
             $this->printArea($cells, 0, null);
+            echo "</div>";
             echo "<div class='footer gsmobilefooter'>";
             $this->printArea($layout->areas->{'footer'}, 0, null);
             echo "</div>";
@@ -194,9 +198,16 @@ class Page {
         echo "<i class='fa fa-search'></i>";
         echo "Search";
         echo "</span>";
+        $loggedIn = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null;
         echo "<span class='gsmobilemenuentry gsmobilemenubox gsslideright'>";
-        echo "<i class='fa fa-caret-right'></i>";
-        echo "Hide";
+        
+            if ($loggedIn) {
+                echo "<i class='fa fa-lock' id='getshop_logout'></i>";
+                echo IocContainer::getFactorySingelton()->__f("Logout");
+            } else {
+                echo "<i class='fa fa-caret-right'></i>";
+                echo "Hide";
+            }
         echo "</span>";
         echo "</div>";
     }
@@ -370,6 +381,10 @@ class Page {
     }
 
     function printCell($cell, $count, $depth, $totalcells, $edit, $parent, $header=false) {
+        if ($this->factory->isMobile() && $cell->hideOnMobile) {
+             return;
+        }
+        
         if(!$this->factory->isEditorMode() && $cell->link) {
             echo "<a href='" . $cell->link . "'>";
         }
@@ -487,12 +502,17 @@ class Page {
         if($this->factory->isEditorMode()) {
             $permobject = $cell->settings;
             $permobject->{'link'} = $cell->link;
+            $permobject->{'hideOnMobile'} = $cell->hideOnMobile;
             $permissions = "data-settings='".json_encode($cell->settings) . "'";
         }
         
         $anchor = $cell->anchor;
         
         echo "<div anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        $this->printEffectTrigger($cell, $depth);
+        
+        $this->printEffectSettingsDiv($cell);
+        
         if ($anchor) {
             echo "<a id='$anchor' name='$anchor'></a>";
         }
@@ -536,6 +556,7 @@ class Page {
             echo "</a>";
         }
         
+        $this->printEffectTriggerLoaded($cell, $depth);
         return true;
     }
 
@@ -594,229 +615,26 @@ class Page {
                 <span class='tabbtn' target='css'><? echo $this->factory->__w("Css"); ?></span>
                 <span class='tabbtn' target='background'><? echo $this->factory->__w("Styling"); ?></span>
                 <span class='tabbtn' target='cellsettings'><? echo $this->factory->__w("Settings"); ?></span>
+                <span class='tabbtn' target='effects'><? echo $this->factory->__w("Effects"); ?></span>
+            </div>
+            <div class='gspage' target='effects' style='padding: 10px;'>
+                <? include("layoutbuilder/effects.php"); ?>
             </div>
             <div class='gspage' target='cellsettings' style='padding: 10px;'>
-                <div>
-                    <label><? echo $this->factory->__w("Display this cell when logged on (it will always be visible for administrators)"); ?>
-                        <span class='gscssinput'>
-                            <input type='checkbox' gsname='displayWhenLoggedOn'> 
-                        </span>
-                    </label>
-                </div>
-                <div style='clear:both;'></div>
-                <br>
-                <div>
-                    <label><? echo $this->factory->__w("Display this cell when logged out"); ?>
-                        <span class='gscssinput'>
-                            <input type='checkbox' gsname='displayWhenLoggedOut'> 
-                        </span>
-                    </label>
-                </div>
-                <div style='clear:both;'></div>
-                <br>
-                <div>
-                    <label>
-                        <? echo $this->factory->__w("User level for cell"); ?>
-                        
-                        <span class='gscssinput'>
-                            <select gsname='editorLevel'>
-                                <option value='0'>Everyone</option>
-                                <option value='10'>Users</option>
-                                <option value='50'>Editors</option>
-                                <option value='100'>Administrators</option>
-                            </select>
-                        </span>
-                    </label>
-                </div>
-                <div style='clear:both;'></div>
-                <br>
-                <div>
-                    <label><? echo $this->factory->__w("Link this cell"); ?>
-                        <span class='gscssinput'>
-                            <input type='txt' gsname='link'> 
-                        </span>
-                    </label>
-                </div>
-                <div style='clear:both;'></div>
+                <? include("layoutbuilder/settings.php"); ?>
             </div>
             <div class='gspage' target='css'>
                 <div id="cellcsseditor" style="width:500px; height: 400px;">
                 </div>
-
             </div>
             <div class='gspage' target='background' style="padding: 10px;">
-                <div class='gsheading'><? echo $this->factory->__w("Mobile settings"); ?></div>
-                <input type="checkbox" class='gskeepOriginalLayout'> <? echo $this->factory->__w("Keep original layout in mobile view."); ?>
-                <br><br>
-                <div class='gsoutercolorselectionpanel gsoutercolorselectionbg'>
-                    
-                    
-                    
-                    <div class='gsheading'><? echo $this->factory->__w("Outer background"); ?></div>
-                    <div class='gscolorselectionpanel' level=''>
-                        <table width='100%'>
-                            <tr>
-                                <td valign="top">
-                                    <? echo $this->factory->__w("Select a background image for the outer area of this cell."); ?>
-        <!--                                    <select>
-                                        <option><? echo $this->factory->__w("Cover"); ?></option>
-                                        <option><? echo $this->factory->__w("Center"); ?></option>
-                                        <option><? echo $this->factory->__w("100% width"); ?></option>
-                                        <option><? echo $this->factory->__w("Normal"); ?></option>
-                                    </select>-->
-                                </td>
-                                <td align='right'>
-                                    <div class="inputWrapper">
-                                        <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
-                                        <input type='button' value='<? echo $this->factory->__w("Choose"); ?>' class='gschoosebgimagebutton'>
-                                        <input class="fileInput gsbgimageselection" type="file" />
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class='gsoutercolorselectionpanel' >
-                    <div class='gsheading'><? echo $this->factory->__w("Inner background"); ?></div>
-                    <div class='gscolorselectionpanel' level='.gsuicell'>
-                        <table width='100%'>
-                            <tr>
-                                <td valign="top">
-                                    <? echo $this->factory->__w("Select a background image for the inner area of this cell."); ?>
-        <!--                                    <select>
-                                        <option><? echo $this->factory->__w("Cover"); ?></option>
-                                        <option><? echo $this->factory->__w("Center"); ?></option>
-                                        <option><? echo $this->factory->__w("100% width"); ?></option>
-                                        <option><? echo $this->factory->__w("Normal"); ?></option>
-                                    </select>-->
-                                </td>                                
-                                <td align='right'>
-                                    <div class="inputWrapper">
-                                        <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
-                                        <input type='button' value='<? echo $this->factory->__w("Choose"); ?>' class='gschoosebgimagebutton'>
-                                        <input class="fileInput gsbgimageselection" type="file" />
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div> 
-                </div>
-
-                <div class='gsheading'><? echo $this->factory->__w("Other attributes"); ?></div>
-
-                <div class='gscssattributes'>
-                    <div class="gscssrow">
-                        <? echo $this->factory->__w("Background color inner"); ?> <span class="gscssinput">
-                            <input type='text' data-attr="background-color"  data-level='.gsuicell' class='gsinnerbgcolor' style='width:60px; padding:0px;'>
-                            <div id="colorSelector" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
-                                <div>
-                                    <i class="fa fa-eyedropper"></i>
-                                </div>
-                            </div>
-                        </span>
-                    </div>
-                    <div class="gscssrow">
-                        <? echo $this->factory->__w("Background color outer"); ?> <span class="gscssinput">
-                            <input type='text' data-attr="background-color"  data-level='.gsucell' class='gsouterbgcolor' style='width:60px; padding:0px;'>
-                            <div id="colorSelector3" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
-                                <div>
-                                    <i class="fa fa-eyedropper"></i>
-                                </div>
-                            </div>
-                        </span>
-                    </div>
-                    <div class="gscssrow">
-                        <? echo $this->factory->__w("Text color"); ?> <span class="gscssinput">
-                            <input type='text' data-attr="color" style='width:60px; padding:0px;'>
-                            <div id="colorSelector2" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
-                                <div>
-                                    <i class="fa fa-eyedropper"></i>
-                                </div>
-                            </div>
-                        </span>
-                    </div>
-                    <div style='clear:both;'></div>
-                    <div class="gscssrow">
-                        <? echo $this->factory->__w("Height"); ?> <span class="gscssinput"><input type='text' data-attr="min-height" data-prefix="px" data-level='.gsuicell'>px</span>
-                    </div>
-                    <div style='clear:both;'></div>
-                    <span style='float:right;padding-right:23px; font-size: 10px; padding-top: 5px;'>Inner - Outer</span>
-                    <div style='clear:both;'></div>
-                    <div class="gscssrow">
-                        <? echo $this->factory->__w("Left spacing"); ?> 
-                        <span class="gscssinput">
-                            <input type='text' data-attr="padding-left" data-prefix="px" data-level='.gsuicell'> 
-                            <input type='text' data-attr="padding-left" data-prefix="px">px
-                        </span>
-                    </div>
-                    <div style='clear:both;'></div>
-                    <div class="gscssrow">
-                        <? echo $this->factory->__w("Right spacing"); ?> 
-                        <span class="gscssinput">
-                            <input type='text' data-attr="padding-right" data-prefix="px" data-level='.gsuicell'> 
-                            <input type='text' data-attr="padding-right" data-prefix="px">px
-                        </span>
-                    </div>
-                    <div style='clear:both;'></div>
-                    <div class="gscssrow">
-                        <? echo $this->factory->__w("Top spacing"); ?> 
-                        <span class="gscssinput">
-                            <input type='text' data-attr="padding-top" data-prefix="px" data-level='.gsuicell'> 
-                            <input type='text' data-attr="padding-top" data-prefix="px">px
-                        </span>
-                    </div>
-                    <div style='clear:both;'></div>
-                    <div class="gscssrow">
-                        <? echo $this->factory->__w("Bottom spacing"); ?> 
-                        <span class="gscssinput">
-                            <input type='text' data-attr="padding-bottom" data-prefix="px" data-level='.gsuicell'> 
-                            <input type='text' data-attr="padding-bottom" data-prefix="px">px
-                        </span>
-                    </div>
-                    <div style='clear:both;'></div>
-                </div>
-                <br/>
-                <br/>
-                <div class='gsheading'><? echo $this->factory->__w("Anchor"); ?></div>
-                <div class='gscolorselectionpanel' level=''>
-                    <table width='100%'>
-                        <tr>
-                            <td valign="top">
-                                <? echo $this->factory->__w("Enter anchor name"); ?>
-                            </td>
-                            <td align='right'>
-                                <input id="gs_settings_cell_anchor" type='text'/>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                <? include("layoutbuilder/designsettings.php"); ?>
             </div>
 
             <div style="border-top: solid 1px #bbb;">
                 <input type="button" value="<? echo $this->factory->__w("Save changes"); ?>" class="modifybutton gssavechanges" style="float:right;">
             </div>
         </span>
-        <script>
-            $('.gsresizingpanel').draggable({handle: ".heading"});
-            $('#colorSelector').ColorPicker({ onChange: function (hsb, hex, rgb) {
-                var field = $('.gsinnerbgcolor');
-                field.val("#" + hex);
-                field.ColorPickerHide();
-                field.keyup();
-            }});
-            $('#colorSelector2').ColorPicker({ onChange: function (hsb, hex, rgb) {
-                var field = $('[data-attr="color"]');
-                field.val("#" + hex);
-                field.ColorPickerHide();
-                field.keyup();
-            }});
-            $('#colorSelector3').ColorPicker({ onChange: function (hsb, hex, rgb) {
-                var field = $('.gsouterbgcolor');
-                field.val("#" + hex);
-                field.ColorPickerHide();
-                field.keyup();
-            }});
-        </script>
         <?
     }
 
@@ -917,9 +735,9 @@ class Page {
             echo "<div class='gsaddcontenttext'>";
             echo "</div>";
             echo "<i title='Add content' class='fa fa-plus-circle gs_show_application_add_list' $show></i> ";
-            if($depth == 1) {
+//            if($depth == 1) {
                 echo "<i title='Change layout' class='fa fa-th gs_change_cell_layoutbutton' $show></i>";
-            }
+//            }
             echo "</span>";
         } else {
             $this->renderApplication($cell);
@@ -1264,7 +1082,7 @@ class Page {
     }
 
     public function printCellContent($cell, $parent, $edit, $totalcells, $count, $depth) {
-
+        
         if ($cell->mode == "INIT") {
             echo "<div class='gsinitrow'>";
             echo "<div class='gsselectcelltype'>Select a type for this row</div>";
@@ -1354,7 +1172,7 @@ class Page {
             return false;
         }
 
-        if($depth == 1) {
+        if($depth <= 1) {
             echo "<div style='position:absolute;width:100%; bottom: -1px;' class='gscellbox' cellid='" . $cell->cellId . "'>";
             echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
             echo "<div class='gscellboxheader'>";
@@ -1648,6 +1466,29 @@ class Page {
                     </div>
 
                     <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow gscelllayout"></div>
+                        <div class="gscelllayoutrow gscelllayout"></div>
+                    </div>
+            
+
+                    <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
+                        <div class="gscelllayoutrow gscelllayout"></div>
+                    </div>
+
+                    <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow gscelllayout"></div>
+                        <div class="gscelllayoutrow">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
+                    </div>
+            
+
+                    <div class="gscelllayoutbox">
                         <div class="gscelllayoutrow gscelllayout gscelllayoutheight_3"></div>
                         <div class="gscelllayoutrow gscelllayout gscelllayoutheight_3"></div>
                         <div class="gscelllayoutrow gscelllayout gscelllayoutheight_3"></div>
@@ -1660,6 +1501,21 @@ class Page {
                         </div>
                         <div class="gscelllayoutrow gscelllayout gscelllayoutheight_3"></div>
                         <div class="gscelllayoutrow gscelllayout gscelllayoutheight_3"></div>
+                    </div>
+
+                    <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow gscelllayoutheight_3">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
+                        <div class="gscelllayoutrow gscelllayoutheight_3">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
+                        <div class="gscelllayoutrow gscelllayoutheight_3">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
                     </div>
 
                     <div class="gscelllayoutbox">
@@ -1721,7 +1577,7 @@ class Page {
 
     public function hasPermissionsOnCell($cell) {
         $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
-        if($user && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+        if($user && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $user->showHiddenFields) {
             return true;
         }
         
@@ -1753,6 +1609,34 @@ class Page {
             }
             echo "</div>";
         }
+    }
+
+    public function printEffectTrigger($cell, $depth) {
+        if (!$this->factory->isEffectsEnabled()) {
+            return;
+        }
+        
+        if ($depth == 0) {
+            echo "<div class='spacer s0 getshopScrollMagicTriggerRow' id='scrollmagic_trigger_$cell->cellId' cellId='$cell->cellId'></div>";
+        }
+    }
+
+    public function printEffectTriggerLoaded($cell, $depth) {
+        if (!$this->factory->isEffectsEnabled()) {
+            return;
+        }
+        
+        $cellId = $cell->cellId;
+        echo "<script>getshopScrollMagic.rowLoaded('$cellId');</script>";
+    }
+
+    public function printEffectSettingsDiv($cell) {
+        $attrs = "";
+        foreach ($cell->settings as $key => $value) {
+            $attrs .= " $key='$value' ";
+        }
+        
+        echo "<div style='display: none' class='gsCellSettings_attrs' $attrs></div>";
     }
 
 }

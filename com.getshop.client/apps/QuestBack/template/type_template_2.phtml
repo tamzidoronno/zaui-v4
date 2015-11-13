@@ -1,0 +1,62 @@
+<?
+/* @var $this \ns_07422211_7818_445e_9f16_ad792320cb10\QuestBack */
+$isNotInTest = !\ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
+$headingText = $this->getConfigurationSetting("headingtext");
+$headingTextInner = $headingText;
+
+if (!$headingText && $isNotInTest) {
+    $headingText = $this->__f("No heading text added yet");
+}
+?>
+<div>
+    <?
+    if ($isNotInTest) {
+        echo "<div style='display: none; text-align: center;' class='edit_text_header'>";
+        echo "<textarea style='width: 100%; box-sizing: border-box; height: 100px;' class='headingtext'>$headingTextInner</textarea>";
+        echo "<br/><span style='cursor: pointer;' onclick='app.QuestBack.saveHeading()'><i class='fa fa-save'></i> save</span>";
+        echo "</div>";
+    }
+    
+    echo "<div class='heading_text_showing'>";
+    if ($isNotInTest) {
+        echo "<div class='edit_heading_button' style='cursor: pointer; width: 100px; border:solid 1px #DDD; padding:3px; padding-left: 10px; padding-right: 10px; margin: 5px;'><i class='fa fa-edit'></i> - edit heading</div>";
+    }
+    
+    echo nl2br($headingText);
+    echo "</div>";
+    
+    ?>
+</div>
+
+<div class='options_area'>
+    <?
+    $options = $this->getOptions();
+    echo "<div class='options_area_options'>";
+    
+    if (count($options) == 0) {
+        echo $this->__f("No options added yet, click add option to add one");
+    }
+    foreach ($options as $option) {
+        $id = $option->id;
+        echo "<div optionid='$id' class='questback_option_row'>";
+            if ($isNotInTest) {
+                
+                $correct = $option->correctAnswer ? "color: green" : "color: #DDD";
+                echo "<div class='admin_button admin_delete_option'><i class='fa fa-trash'></i></div>";
+                echo "<div class='admin_button admin_correct_option'><i class='fa fa-check' title='Mark as correct answer' style='$correct'></i></div>";
+            }
+            
+            echo "<div style='display: inline-block;' class='input_option_box'><input style='position: relative; top: 2px;' class='answer_option_box' type='radio' name='question' value='$option->id'/></div> ";
+            if ($isNotInTest) {
+                echo "<input class='admin_option_text' type='textfield' value='".$option->text."'/>";
+            } else {
+                echo $option->text;
+            }
+        echo "</div>";
+    }
+    echo "</div>";
+
+    $this->printOptionButton();
+    $this->printNextButton();
+    ?>
+</div>

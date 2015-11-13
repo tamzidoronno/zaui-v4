@@ -33,6 +33,14 @@ class ApplicationManager extends FactoryBase {
         $this->getApi()->getPageManager()->swapAppWithCell($pageId, $fromCell, $toCell);
     }
     
+    function resetMobileLayout() {
+        $this->getApi()->getPageManager()->resetMobileLayout($this->getPage()->javapage->id);
+    }
+    
+    function flattenMobileLayout() {
+        $this->getApi()->getPageManager()->flattenMobileLayout($this->getPage()->javapage->id);
+    }
+    
     function setLayoutOnCell() {
         $layout = $_POST['data']['layout'];
         $cellid = $_POST['data']['cellid'];
@@ -145,9 +153,10 @@ class ApplicationManager extends FactoryBase {
         $cell->keepOriginalLayoutOnMobile = ($_POST['data']['keepOriginalLayout'] == "true");
         $cell->anchor = $_POST['data']['anchor'];
         $cell->link = $_POST['data']['settings']['link'];
+        $cell->hideOnMobile = ($_POST['data']['settings']['hideOnMobile'] == "true");
 
         $this->getApi()->getPageManager()->saveCell($pageid, $cell);
-        
+
         if(isset($_POST['data']['colsizes'])) {
             $colsizes = $_POST['data']['colsizes'];
             foreach($colsizes as $cellid => $width) {

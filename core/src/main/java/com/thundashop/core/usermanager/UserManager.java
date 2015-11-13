@@ -758,6 +758,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return null;
     }
 
+    
+    public User getUserUserName(String username) {
+        for(User user : getUserStoreCollection(storeId).getAllUsers()) {
+            if(user.username.equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+    
     private boolean forceUniqueEmailAddress(User user) throws ErrorException {
         
         if(user.emailAddress == null || user.emailAddress.isEmpty()) {
@@ -986,9 +996,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private String formatText(String text, User user, String uncryptedPassword) {
-        text = text.replace("{User.Name}", user.fullName);
-        text = text.replace("{User.Email}", user.emailAddress);
-        text = text.replace("{User.Phone}", user.cellPhone);
+        if (user.fullName != null)
+            text = text.replace("{User.Name}", user.fullName);
+        
+        if (user.emailAddress != null)
+            text = text.replace("{User.Email}", user.emailAddress);
+        
+        if (user.cellPhone != null)
+            text = text.replace("{User.Phone}", user.cellPhone);
+        
         text = text.replace("{User.Password}", uncryptedPassword);
         
         if (user.address != null) {
@@ -1017,4 +1033,5 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             storeCollection.deleteExtraAddressToGroup(groupId, addressId, getSession().currentUser);
         }
     }
+
 }

@@ -19,7 +19,7 @@ if (count($tests) == 0) {
         $questions = count($test->questions);
         $delete = "<div class='delete_test_button'><i class='fa fa-trash'></i></div>";
         $modify = "<div class='modify_questionbase_button' title='add/remove questions in test'><i class='fa fa-edit'></i></div>";
-        echo "<tr testid='$test->id'><td style='width: 20px;'>$delete</td><td style='width: 20px;'>$modify</td><td style='padding-left: 10px;'>$testName</td><td style='text-align: center'>$questions</td></tr>";
+        echo "<tr testid='$test->id'><td style='width: 20px;'>$delete</td><td style='width: 20px;'>$modify</td><td style='padding-left: 10px;'>$testName</td><td>$questions</td></tr>";
     }
     
     echo "</table>";

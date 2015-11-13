@@ -78,6 +78,7 @@ class AppRegister {
 
 include_once("events/API.php");
 include_once("events/API2.php");
+include_once("minifier.php");
 
 function symLinkIfNeeded($class_name) {
     if (!is_writeable("../app")) { 

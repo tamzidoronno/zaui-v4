@@ -102,6 +102,8 @@ thundashop.framework = {
         $(document).on('click', '.gs_close_cell_layoutbutton', this.hideChangeLayoutOption);
         $(document).on('click', '.gscelllayoutbox', this.changeCellLayout);
         $(document).on('click', '.gscell', this.checkMoveApp);
+        $(document).on('click', '.gsresetmobilelayout', this.resetMobileLayout);
+        $(document).on('click', '.gsflattenmobile', this.gsflattenmobile);
         $(document).on('keyup', '#gs_start_store_email', this.startFromCurrentStore);
 
         /* Cell operations */
@@ -109,6 +111,27 @@ thundashop.framework = {
         $(document).on('click', '.simpleaddrow', this.simpleaddrow);
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+    },
+    
+    resetMobileLayout : function() {
+        var event = thundashop.Ajax.createEvent('','resetMobileLayout',$(this),{});
+        thundashop.Ajax.postWithCallBack(event, function() {
+            var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
+            var location = window.location.protocol + "//gsmobile" + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
+            $('#gscontentframe').attr('src', location);
+            $('#gscontentframelandscape').attr('src', location);
+        });
+    },
+    
+    
+    gsflattenmobile : function() {
+        var event = thundashop.Ajax.createEvent('','flattenMobileLayout',$(this),{});
+        thundashop.Ajax.postWithCallBack(event, function() {
+            var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
+            var location = window.location.protocol + "//gsmobile" + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
+            $('#gscontentframe').attr('src', location);
+            $('#gscontentframelandscape').attr('src', location);
+        });
     },
     
     checkMoveApp : function() {
@@ -325,6 +348,11 @@ thundashop.framework = {
         if (!val) {
             return;
         }
+        
+        if(target.attr('data-partoval-prefix')) {
+            val = target.attr('data-partoval-prefix') + val;
+        }
+        
         if (prefix) {
             val += prefix + " !important";
         }
@@ -340,6 +368,14 @@ thundashop.framework = {
             var val = thundashop.framework.getCssAttr(attr, cellid, level);
             val = val.replace(prefix, "");
             val = val.trim();
+            if(!val && target.attr('value')) {
+                val = target.attr('value');
+            }
+            
+            if(target.attr('data-partoval-prefix')) {
+                val = val.replace(target.attr('data-partoval-prefix'), "");
+            }
+            
             target.val(val);
         });
     },
@@ -752,7 +788,7 @@ thundashop.framework = {
                         }
                         var event = thundashop.Ajax.createEvent('', 'saveColChanges', $(this), data);
                         thundashop.Ajax.postWithCallBack(event, function () {
-
+                            
                         });
                     }
                 }
@@ -774,6 +810,7 @@ thundashop.framework = {
         var csslines = css.split("\n");
         var newcss = "";
         var levelfound = false;
+        var levelexists = false;
         
         for (var key in csslines) {
             
@@ -781,8 +818,9 @@ thundashop.framework = {
                 levelfound = false;
             }
             
-            if(csslines[key].indexOf(level) > 0) {
+            if(csslines[key].indexOf(level + " ") > 0) {
                 levelfound = true;
+                levelexists = true;
             }
             
             var attr = csslines[key].split(":");
@@ -791,6 +829,13 @@ thundashop.framework = {
             }
             newcss += csslines[key] + "\n";
         }
+        
+        if(!levelexists) {
+            console.log('level never found: ' + level + " id: " + id);
+            var inkcellid = $('[cellid="'+id+'"]').attr('incrementcellid');
+            newcss += ".gscell_" + inkcellid + level + " {\n\n}\n";
+        }
+        
         cssEditorForCell.setValue(newcss);
     },
     getCssAttr: function (attribute, id, level) {
@@ -800,7 +845,6 @@ thundashop.framework = {
         if(!level) {
             level = ".gsucell";
         }
-        console.log(attribute + " - " + id + " - " + level);
         
         var csslines = css.split("\n");
         var newcss = "";
@@ -811,7 +855,7 @@ thundashop.framework = {
                 levelfound = false;
             }
             
-            if(csslines[key].indexOf(level) > 0) {
+            if(csslines[key].indexOf(level + " ") > 0) {
                 levelfound = true;
             }
 
@@ -839,7 +883,11 @@ thundashop.framework = {
         var incrementid = $('.gscell[cellid="' + id + '"]').attr('incrementcellid');
         var startPos = css.indexOf(".gscell_" + incrementid + level + " ");
         var endPos = css.indexOf("}", startPos);
-        css = css.substring(0, endPos) + "\t" + attribute + " : " + value + ";\n " + css.substring(endPos);
+        if(attribute.indexOf(":") <= 0) {
+            css = css.substring(0, endPos) + "\t" + attribute + " : " + value + ";\n " + css.substring(endPos);
+        } else {
+            css = css.substring(0, endPos) + "\t" + attribute + value + ";\n " + css.substring(endPos);
+        }
         thundashop.framework.setCss(id, css);
         css = css.trim();
         cssEditorForCell.setValue(css);
@@ -895,7 +943,7 @@ thundashop.framework = {
                         if (!type || type === "") {
                             thundashop.framework.addCss('background-repeat', 'no-repeat', cellid, level);
                             thundashop.framework.addCss('background-position', 'center', cellid, level);
-                            thundashop.framework.addCss('background-size', '100%', cellid, level);
+                            thundashop.framework.addCss('background-size', 'cover', cellid, level);
                             thundashop.framework.addCss('background-image', 'url("/displayImage.php?id=' + id + '")', cellid, level);
                             target.closest('.gscolorselectionpanel').find('.gschoosebgimagebutton').show();
                             target.closest('.gscolorselectionpanel').find('.gsuploadimage').hide();
@@ -969,6 +1017,19 @@ thundashop.framework = {
             }
         });
         
+        var settingsPage = $('.gspage[target="effects"]');
+        settingsPage.find("[gsname]").each(function() {
+            var name = $(this).attr('gsname');
+            if($(this).is(':checkbox')) {
+               if($(this).is(':checked')) {
+                   settings[name] = true;
+               } else {
+                   settings[name] = false;
+               }
+            } else {
+                 settings[name] = $(this).val();
+            }
+        });
         
         var data = {
             "cellid": cellid,
@@ -976,8 +1037,9 @@ thundashop.framework = {
             "anchor" : $('#gs_settings_cell_anchor').val(),
             "colsizes": colsizes,
             "settings" : settings,
-            "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked')
+            "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked'),    
         };
+        
         var event = thundashop.Ajax.createEvent('', 'saveColChanges', $(this), data);
         if (avoidreprint === true) {
             $('.gsresizingpanel').hide();
@@ -1075,8 +1137,23 @@ thundashop.framework = {
         
         //Loading permission object.
         var settings = JSON.parse(cell.attr('data-settings'));
+  
         var settingsPage = $('.gspage[target="cellsettings"]');
         settingsPage.find("[gsname]").each(function() {
+            var name = $(this).attr('gsname');
+            if($(this).is(':checkbox')) {
+               if(settings[name]) {
+                   $(this).attr('checked','cheked');
+               } else {
+                   $(this).attr('checked',null);
+               }
+            } else {
+                $(this).val(settings[name]);
+            }
+        });
+        
+        var effectsPage = $('.gspage[target="effects"]');
+        effectsPage.find("[gsname]").each(function() {
             var name = $(this).attr('gsname');
             if($(this).is(':checkbox')) {
                if(settings[name]) {

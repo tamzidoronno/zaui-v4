@@ -54,6 +54,7 @@ thundashop.Ajax = {
             data: data,
             context: document.body,
             success: function(response) {
+                thundashop.common.triggerTimeoutCheck();
                 callback(response);
                 $('#loaderbox').hide();
                 if(file !== "Chat.php") {
@@ -113,6 +114,8 @@ thundashop.Ajax = {
                 if (callback !== undefined || dontUpdate === true) {
                     PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
                 }
+                
+                thundashop.common.triggerTimeoutCheck();
             },
             xhr: function()
             {
@@ -148,6 +151,7 @@ thundashop.Ajax = {
             success: function(response) {
                 result = response;
                 PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
+                thundashop.common.triggerTimeoutCheck();
             },
             error: thundashop.handleAjaxError
         });
@@ -166,6 +170,7 @@ thundashop.Ajax = {
             dataType: "json",
             success: function(response) {
                 thundashop.Ajax.updateFromResponse(response);
+                thundashop.common.triggerTimeoutCheck();
                 if (response.errors && response.errors !== "")
                     result = false;
             },
@@ -233,6 +238,7 @@ thundashop.Ajax = {
             dataType: "json",
             data: data,
             success: function(response) {
+                thundashop.common.triggerTimeoutCheck();
                 thundashop.Ajax.updateFromResponse(response);
                 PubSub.publish('navigation_complete', variables);
                 if (typeof(callback) !== "undefined" && typeof(callback) !== "boolean" && typeof(callback) == "function") {

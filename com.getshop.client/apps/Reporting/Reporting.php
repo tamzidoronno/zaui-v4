@@ -97,7 +97,7 @@ class Reporting extends \ReportingApplication implements \Application {
     }
     
     public function render() {
-        echo "\n" . '<script type="text/javascript" src="https://www.google.com/jsapi"></script>';
+        echo "\n" . '<script '.$this->getFactory()->includeSeo() .' type="text/javascript" src="https://www.google.com/jsapi"></script>';
         echo "<script>google.load('visualization', '1.0', {'packages':['corechart']});</script>";
         if (!isset($_SESSION['Reporting']['filteronword'])) {
             $_SESSION['Reporting']['filteronword'] = array();

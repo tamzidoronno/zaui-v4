@@ -1,0 +1,28 @@
+<h1>Emails from user</h1>
+Filter:<br>
+<input type='checkbox' checked>Administrators
+<input type='checkbox' checked>Editors
+<input type='checkbox' checked>Users
+<br>
+<br>
+<br>
+<?
+/* @var $api GetShopApi */
+$api = $this->getApi();
+$users = $api->getUserManager()->getAllUsers();
+foreach($users as $user) {
+    echo $user->emailAddress . "<br>";
+}
+
+?>
+<h1>Collected emails</h1>
+<?
+$collectedEmails = $api->getMessageManager()->getCollectedEmails();
+if(is_array($collectedEmails)) {
+    foreach($collectedEmails as $email) {
+        echo $email . "<br>";
+    }
+} else {
+    echo "No collected emails found.";
+}
+?>

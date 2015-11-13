@@ -61,5 +61,7 @@ function doApp($app, $isTheme, $factory) {
 
 $content = ob_get_contents();
 
+$content = $factory->minify($content);
+
 echo $content;
 ?>

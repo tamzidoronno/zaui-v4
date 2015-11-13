@@ -13,25 +13,37 @@ app.QuestBack = {
         $(document).on('click', '.QuestBack .admin_correct_option', app.QuestBack.markAsCorrectOption)
         $(document).on('click', '.QuestBack .answer_question', app.QuestBack.answerQuestion)
         $(document).on('click', '.QuestBack .go_to_next_question', app.QuestBack.goToNextQuestion)
+        $(document).on('click', '.QuestBack .questback_option_row', app.QuestBack.toggleBoxIfPossible)
         $(document).on('change', '.QuestBack .admin_option_text', app.QuestBack.optionTextChanged)
         $(document).on('focusout', '.QuestBack .headingtext', app.QuestBack.saveHeading)
+    },
+    
+    toggleBoxIfPossible: function(e, b) {
+        if ($(e.target).is('input')) {
+            return;
+        }
+        
+        if ($(this).find('input').is(':checked')) {
+            $(this).find('input').removeAttr('checked');
+        } else {
+            $(this).find('input').attr('checked','checked');
+        }
     },
     
     goToNextQuestion: function() {
         var event = thundashop.Ajax.createEvent(null, "nextQuestion", this, {});
         thundashop.Ajax.postWithCallBack(event, function(result) {
             if (result === "done") {
-                 alert('show result!');
+                thundashop.common.goToPage('questback_result_page');
             } else {
                 thundashop.common.goToPage(result);
             }
-            
         });
     },
     
     answerQuestion: function() {
         if (app.QuestBack.inProgress) {
-            alert('true');
+            return;
         }
         
         app.QuestBack.inProgress = true;
@@ -48,6 +60,14 @@ app.QuestBack = {
         var data = {
             answers : $.makeArray( selectedAnswers )
         }
+        
+        if (data.answers.length === 0) {
+            app.QuestBack.inProgress = false;
+            $(this).html(app.QuestBack.oldButtonText);
+            alert(__f('Please select atleast one option'));
+            return;
+        }
+        
         var me = this;
         var event = thundashop.Ajax.createEvent(null, "checkAnswer", this, data);
         thundashop.Ajax.postWithCallBack(event, function(result) {
@@ -55,21 +75,30 @@ app.QuestBack = {
             $(me).html(app.QuestBack.oldButtonText);
             
             if (result === "wrong") {
-                thundashop.common.Alert(__f("Wrong answer"), __f("You have answered incorrectly, please check your answers and try again"), true);
+                thundashop.common.Alert(__f("Wrong answer"), __f("You have answered incorrectly, please check your answers and try again"), true, 2000);
             } else {
-                thundashop.common.goToPage(result);
+                if (result === "done") {
+                    thundashop.common.goToPage('questback_result_page', app.QuestBack.scrollToTop);
+                } else {
+                    thundashop.common.goToPage(result, app.QuestBack.scrollToTop);
+                }
             }
         });
+    },
+    
+    scrollToTop: function() {
+        window.scrollTo(0,0);
     },
     
     optionTextChanged: function() {
         var data = {
             text : $(this).val(),
             optionId : $(this).parent().attr('optionid')
-        }
+        };
         
         var event = thundashop.Ajax.createEvent(null, "optionTextChanged", this, data);
-        thundashop.Ajax.post(event);
+        // Silent
+        thundashop.Ajax.postWithCallBack(event, function() {});
     },
     
     deleteOption: function() {
@@ -113,8 +142,8 @@ app.QuestBack = {
         var data = {
             type: $(this).attr('type')
         }
-        
-        if (data.type == 2 || data.type == 3 ) {
+
+        if (data.type == 3 ) {
             alert('Not yet implemented');
             return;
         }

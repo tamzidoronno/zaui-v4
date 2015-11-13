@@ -21,7 +21,7 @@ public class UpgradeSlider extends UpgradeBase {
         up.start();
     }
 
-    private void start() throws UnknownHostException {
+    void start() throws UnknownHostException {
         HashMap<String, HashMap<String, Page>> pages = getAllPages();
         for(String test : pages.keySet()) {
             HashMap<String, Page> collection = pages.get(test);

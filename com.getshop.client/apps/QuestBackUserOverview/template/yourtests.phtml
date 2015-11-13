@@ -8,9 +8,12 @@ $allTests = $this->getApi()->getQuestBackManager()->getTests();
     if (!count($allTests)) {
         echo $this->__f("You currently dont have any tests, please contact admin to get access to one");
     } else {
-        echo "<center><h1>".$this->__f("Your tests")."</h1></center>";
         foreach ($allTests as $test) {
-            echo "<div class='test' testid='$test->id'>$test->name</div>";
+            echo "<div class='test' testid='$test->id'>";
+            echo $test->name;
+            $progress = $this->getApi()->getQuestBackManager()->getProgress($test->id);
+            echo "<div class='progress_in_test'>$progress %</div>";
+            echo "</div>";
         }
     }
     ?>

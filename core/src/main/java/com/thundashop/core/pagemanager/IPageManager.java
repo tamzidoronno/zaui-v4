@@ -250,6 +250,13 @@ public interface IPageManager {
      */
     public List<String> getPagesForApplication(String appId);
     
+    public List<PageCell> getMobileBody(String pageId);
+    
+    @Administrator
+    public void resetMobileLayout(String pageId);
+    
+    @Administrator
+    public void flattenMobileLayout(String pageId);
     /**
      * Need to translate a set of page ids?
      * @param pages A list (array) of page ids to translate.

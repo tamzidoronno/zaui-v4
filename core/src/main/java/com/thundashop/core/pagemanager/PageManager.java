@@ -16,6 +16,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
 import com.thundashop.core.usermanager.UserManager;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -127,8 +128,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
        
         page = finalizePage(page);
-        page = page.makeClone();
-        removeApplicationsThatHasAccessDenied(page);
         return page;
     }
 
@@ -654,9 +653,11 @@ public class PageManager extends ManagerBase implements IPageManager {
     private void updateCreateApplications(PageCell o, Page page) {
         ApplicationInstance oldApplication = instancePool.getApplicationInstance(o.appId);
         Setting appIdSetting = oldApplication.settings.get("appId");
-        if (appIdSetting != null) {
+        
+        if (appIdSetting != null && page.overrideApps.get(o.cellId) == null) {
             ApplicationInstance newInstance = instancePool.createNewInstance(appIdSetting.value);
             page.addApplication(o.cellId, newInstance.id);
+            savePage(page);
         }
     }
 
@@ -669,4 +670,36 @@ public class PageManager extends ManagerBase implements IPageManager {
             }
         }
     }
+
+    @Override
+    public Object preProcessMessage(Object object, Method executeMethod) {
+        if (object instanceof Page) {
+            Page page = ((Page)object).makeClone();
+            removeApplicationsThatHasAccessDenied(page);
+            return page;
+        }
+        
+        return super.preProcessMessage(object, executeMethod);
+    }
+
+    @Override
+    public List<PageCell> getMobileBody(String pageId) {
+        return getPage(pageId).getMobileList();
+    }
+
+    @Override
+    public void resetMobileLayout(String pageId) {
+        Page page = getPage(pageId);
+        page.resetMobileLayout();
+        savePage(page);
+    }
+
+    @Override
+    public void flattenMobileLayout(String pageId) {
+        Page page = getPage(pageId);
+        page.flattenMobileLayout();
+        savePage(page);
+    }
+    
+    
 }

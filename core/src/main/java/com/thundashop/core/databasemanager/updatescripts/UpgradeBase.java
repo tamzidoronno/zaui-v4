@@ -137,6 +137,9 @@ public class UpgradeBase {
 
         db.getCollection("col_" + object.storeId).save(morphia.toDBObject(object));
         m.close();
+        try {
+            Thread.sleep(5);
+        }catch(Exception e) {}
     }
 
     public HashMap<String, HashMap<String, Page>> getAllPages() throws UnknownHostException {

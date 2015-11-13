@@ -121,6 +121,63 @@ $languages['fi_FI'] = "Finish";
         </div>
     </div>
     
+    <div class="textfield gss_setting" id="seo">
+        <span class="title"><?php echo $this->__f("SEO"); ?></span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="seo">
+            <? $faclass = $this->getConfigurationSetting("seo") == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("Optimize your page by compressing images, css, javascript and lazy loading of css and javascript. (Warning might cause unstability)"); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting" id="singlegrouptouser">
+        <span class="title"><?php echo $this->__f("Your favicon"); ?>
+        </span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="singlegrouptouser">
+            <img src="favicon.ico" id="favicondisplayer" style="border: solid 1px; width: 16px; height: 16px; float:right;">
+
+            <input type="file" id="fileinput" />
+            <script type="text/javascript">
+              function readSingleFile(evt) {
+                //Retrieve the first (and only!) File from the FileList object
+                var f = evt.target.files[0]; 
+
+                if (f) {
+                  var r = new FileReader();
+                  r.onload = function(e) { 
+                      var contents = e.target.result;
+                    $.ajax({
+                           url: 'uploadfavicon.php',  //Server script to process data
+                           type: 'POST',
+                           //Ajax events
+                           success: function() {
+                               $('#favicondisplayer').attr('src','favicon.ico');
+                           },
+                           // Form data
+                           data: contents,
+                           //Options to tell jQuery not to process data or worry about content-type.
+                           cache: false,
+                           contentType: false,
+                           processData: false
+                       });
+                  }
+                  r.readAsDataURL(f);
+                } else { 
+                  alert("Failed to load file");
+                }
+              }
+
+              document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
+            </script>
+                
+        </div>
+        <div class="description">
+            <?php echo $this->__("Upload a favicon to your site."); ?>
+        </div>
+    </div>
+    
     <div class='gss_button_area'>
         <div class="gss_button addLanguage" ><i class='fa fa-language'></i><?php echo $this->__("Add a language"); ?></div>
         <div class="gss_button" gss_confirmation="<? echo $this->__f("Are you sure you want to delete your store? You will not be able to revert this action."); ?>" gss_method="deleteStore" gss_success_method="storeDeleted"><i class='fa fa-remove'></i><?php echo $this->__("Delete my store"); ?></div>

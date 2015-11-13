@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import java.lang.reflect.Method;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -152,5 +153,18 @@ public class ManagerSubBase {
 
     public String getSessionBasedName() {
         return null;
+    }
+    
+    /**
+     * This function is called after each interface call.
+     * 
+     * Gives you the possibility to change the data before it leaves the jvm container.
+     * 
+     * @param object
+     * @param executeMethod
+     * @return 
+     */
+    public Object preProcessMessage(Object object, Method executeMethod) {
+        return object;
     }
 }

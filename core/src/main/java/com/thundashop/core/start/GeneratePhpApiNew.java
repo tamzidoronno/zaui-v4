@@ -319,7 +319,7 @@ public class GeneratePhpApiNew {
             html += "<table width='100%' bgcolor='#BBBBBB' cellspacing='1' cellpadding='2'>";
             String converted = "";
             for (Method method : sortedMethods) {
-                Map<String, Object> parsedMethod = parseMethod(path, method, "DOC");
+                Map<String, Object> parsedMethod = parseMethod(path, method, "DOC", true);
                 parsedMethod.put("manager", entry);
                 String[] lines = (String[]) parsedMethod.get("commentLines");
                 html += buildTableToc(method, lines);
@@ -522,7 +522,7 @@ public class GeneratePhpApiNew {
                     for (Method method : methods) {
                         String path = entry.getCanonicalName();
                         path = path.replace(".", "/") + ".java";
-                        Map<String, Object> doc = parseMethod(path, method, "PHP");
+                        Map<String, Object> doc = parseMethod(path, method, "PHP", true);
 
                         content += "     " + doc.get("comment") + "\n";
                         content += "     public function " + method.getName() + "(" + doc.get("args") + ") {\r\n";
@@ -601,8 +601,8 @@ public class GeneratePhpApiNew {
         return output;
     }
 
-    public static Map<String, Object> parseMethod(String path, Method method, String type) {
-        String content = readFile(path, true);
+    public static Map<String, Object> parseMethod(String path, Method method, String type, boolean includeSource) {
+        String content = readFile(path, includeSource);
 
         List<String> splittedArgs = new ArrayList();
         String newArgs = createArgumentString(content, method, splittedArgs, type);
@@ -912,7 +912,7 @@ public class GeneratePhpApiNew {
                     for (Method method : methods) {
                         String path = entry.getCanonicalName();
                         path = path.replace(".", "/") + ".java";
-                        Map<String, Object> doc = parseMethod(path, method, "JAVA");
+                        Map<String, Object> doc = parseMethod(path, method, "JAVA", true);
 
                         content += "     " + doc.get("comment") + "\n";
                         content += "     public " + doc.get("return") + " " + method.getName() + "(" + doc.get("args") + ")  throws Exception  {\r\n";

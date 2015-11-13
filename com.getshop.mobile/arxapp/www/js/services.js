@@ -4,40 +4,61 @@ var arxAppServices = angular.module('ArxAppServices', ['ionic']);
 arxAppServices.service('LoginService', ['GetshopService', '$q', function(getshop, $q) {
     return {
         loginUser: function(host, name, pw) {
-            var deferred = $q.defer();
-            var promise = deferred.promise;
+            var deferred = $.Deferred();
  
-            if (getshop.client.ArxManager.logonToArx(host, name, pw, false)) {
-                deferred.resolve('Welcome ' + name + '!');
-            } else {
+            if(!host) {
                 deferred.reject('Wrong credentials.');
+                return deferred;
             }
-            promise.success = function(fn) {
-                promise.then(fn);
-                return promise;
-            }
-            promise.error = function(fn) {
-                promise.then(null, fn);
-                return promise;
-            }
-            return promise;
+
+            var connecting = getshop.connectToGetshop(host);
+            connecting.done(function() {
+                var res = getshop.client.ArxManager.logonToArx(host, name, pw, false);
+
+                res.done(function(test) {
+                    if(test === true) {
+                        deferred.resolve('Welcome ' + name + '!');
+                    } else {
+                        deferred.reject('Wrong credentials.');
+                    }
+                });
+            });
+            
+            return deferred;
         }
     }
 }]);
 
-arxAppServices.factory('GetshopService', ['$window', function($window) {
+arxAppServices.factory('GetshopService', ['$window','LocalStorage', function($window, LocalStorage) {
   return {
 
     client: null,
 
-    connectToGetshop: function() {
+    connectToGetshop: function(host) {
       // Connect to getshop web api
-      this.client = new GetShopApiWebSocket("arx.getshop.com");
-      this.client.setConnectedEvent(function () {
-        console.log('Connected to getshop');
-      });
-      this.client.connect();
-
+      
+      var postfixaddr = "mpal.getshop.com";
+      
+      var def = $.Deferred();
+      if(!host) {
+        var currentHost = LocalStorage.getObject("currentCredentials");
+            host = currentHost.host;
+            if(!currentHost || !currentHost.host) {
+                console.log('Do not connect');
+                return;
+            }
+        }
+        var hostToUse = "arx_"+host+"." + postfixaddr;
+        this.client = new GetShopApiWebSocket(hostToUse, "31330");
+        this.client.connect();
+        this.client.setConnectedEvent(function () {
+        });
+        var autocreate = this.client.StoreManager.autoCreateStore("arx_"+host);
+        
+        autocreate.done(function(store) {
+            def.resolve();
+        });
+        return def;
     }
   }
 }]);

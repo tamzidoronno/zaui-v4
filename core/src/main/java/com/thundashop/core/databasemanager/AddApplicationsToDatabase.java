@@ -41,107 +41,25 @@ public class AddApplicationsToDatabase {
 
     private List<Application> addApplications() {
         List<Application> apps = new ArrayList();
-
-        List<String> allowed = new ArrayList();
-        allowed.add("large");
-        allowed.add("xlarge");
-
         List<String> allowed2 = new ArrayList();
         allowed2.add("cell");
         allowed2.add("small");
         allowed2.add("medium");
         allowed2.add("large");
         allowed2.add("xlarge");
-
         
-        Application questBackManagement = createSettings("QuestBackManagement",
-                "3ff6088a-43d5-4bd4-a5bf-5c371af42534",
-                allowed2,
-                "",
-                Application.Type.Marketing, true);
-        questBackManagement.isPublic = true;
-        questBackManagement.isFrontend = true;
-        questBackManagement.moduleId = "questback";
-        questBackManagement.defaultActivate = true;
-        apps.add(questBackManagement);
-        
-        Application questBack = createSettings("QuestBack",
-                "07422211-7818-445e-9f16-ad792320cb10",
-                allowed2,
-                "",
-                Application.Type.Marketing, true);
-        questBack.isPublic = true;
-        questBack.isFrontend = true;
-        questBack.moduleId = "questback";
-        questBack.defaultActivate = true;
-        apps.add(questBack);
-        
-        Application questBackTitlePrinter = createSettings("QuestBackTitlePrinter",
-                "5366fb18-af90-44ed-99b7-5bb361fec16c",
-                allowed2,
-                "",
-                Application.Type.Marketing, true);
-        questBackTitlePrinter.isPublic = true;
-        questBackTitlePrinter.isFrontend = true;
-        questBackTitlePrinter.moduleId = "questback";
-        questBackTitlePrinter.defaultActivate = true;
-        apps.add(questBackTitlePrinter);
-        
-        Application QuestBackProgress = createSettings("QuestBackProgress",
-                "778eb415-ec18-4202-8012-092f6f5ae292",
-                allowed2,
-                "",
-                Application.Type.Marketing, true);
-        QuestBackProgress.isPublic = true;
-        QuestBackProgress.isFrontend = true;
-        QuestBackProgress.moduleId = "questback";
-        QuestBackProgress.defaultActivate = true;
-        apps.add(QuestBackProgress);
-        
-        Application IntranettTheme = createSettings("IntranettTheme",
-            "ff3fc20e-9a8b-4c8b-bfa9-97e3d0807746",
-            allowed2,
-            " ",
-            Application.Type.Theme, true);
-        IntranettTheme.isPublic = true;
-        IntranettTheme.isFrontend = true;
-        IntranettTheme.moduleId = "other";
-        IntranettTheme.defaultActivate = false;
-        apps.add(IntranettTheme);
-
-
-        Application QuestBackUserOverview = createSettings("QuestBackUserOverview",
-                "cc678bcb-0e87-4c6c-aaad-8ec24ecdf9df",
-                allowed2,
-                "",
-                Application.Type.Marketing, true);
-        QuestBackUserOverview.isPublic = true;
-        QuestBackUserOverview.isFrontend = true;
-        QuestBackUserOverview.moduleId = "questback";
-        QuestBackUserOverview.defaultActivate = true;
-        apps.add(QuestBackUserOverview);
-        
-        Application createNewInstanceApplication = createSettings("CreateNewInstanceApplication",
-                "fb19a166-5465-4ae7-9377-779a8edb848e",
-                allowed2,
-                "",
-                Application.Type.Marketing, true);
-        createNewInstanceApplication.isPublic = true;
-        createNewInstanceApplication.isFrontend = true;
-        createNewInstanceApplication.moduleId = "other";
-        createNewInstanceApplication.defaultActivate = false;
-        apps.add(createNewInstanceApplication);
-        
-        Application AuksjonenButton = createSettings("AuksjonenButton",
-        "91192b8c-19da-465e-89ee-763fcf5d97c3",
+        Application SalesPanel = createSettings("SalesPanel",
+        "84420130-b401-44e8-a9ab-52d6458f2c0c",
         allowed2,
         " ",
-        Application.Type.Webshop, true);
-        AuksjonenButton.isPublic = true;
-        AuksjonenButton.isFrontend = true;
-        AuksjonenButton.moduleId = "WebShop";
-        AuksjonenButton.defaultActivate = false;
-        apps.add(AuksjonenButton);
+        Application.Type.Marketing, true);
+        SalesPanel.isPublic = false;
+        SalesPanel.isFrontend = true;
+        SalesPanel.moduleId = "other";
+        SalesPanel.allowedStoreIds.add("efad5b1f-b679-4c2b-8774-8c2475c20137");
+        SalesPanel.defaultActivate = false;
+        apps.add(SalesPanel);
+
 
         return apps;
     }

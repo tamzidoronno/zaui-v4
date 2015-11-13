@@ -761,9 +761,9 @@ app.LasGruppenOrderSchema = {
     },
     
     goToNextPage: function(pageNumber, target) {
-        if ($('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').length) {
+        if ($('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"]').length) {
             $(target).closest('.orderpage').hide();
-            $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').show();
+            $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"]').show();
         }
     },
     
@@ -879,7 +879,7 @@ app.LasGruppenOrderSchema = {
         var pageNumber = currentPage.attr('pageNumer');
         pageNumber--;
         $(this).closest('.orderpage').hide();
-        $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').show();
+        $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"]').show();
     },
     
     securityChanged: function() {

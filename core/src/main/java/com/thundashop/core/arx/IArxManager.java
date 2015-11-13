@@ -30,4 +30,5 @@ interface IArxManager {
     public Person updatePerson(Person person) throws Exception;
     public Person getPerson(String id) throws Exception;
     public Person addCard(String personId, Card card) throws Exception;
+    public void clearDoorCache() throws Exception;
 }

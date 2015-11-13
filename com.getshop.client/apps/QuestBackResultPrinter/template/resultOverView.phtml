@@ -1,0 +1,26 @@
+<?
+
+
+/* @var $this \ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter */
+$test = $this->getCurrentTest();
+
+$cats = $this->getCategories();
+foreach ($cats as $cat) {
+    echo "<div class='category_row'>";
+        $class = ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter::getResultClass($test, $cat);
+        $text = ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter::getResultText($test, $cat);
+        
+        
+    
+        echo "<div class='trafficlight trafficlight_$class'></div>";
+        echo "<div class='category_content'>";
+            echo "<div class='category_title'>".$cat->name." ( $cat->result% riktige ) </div>";
+            echo "<div class='cat_text_description'>";
+                echo nl2br($text);  
+            echo "</div>";
+        echo "</div>";
+        
+        
+    echo "</div>";
+}
+?>

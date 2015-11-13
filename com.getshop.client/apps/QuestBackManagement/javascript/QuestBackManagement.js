@@ -12,15 +12,58 @@ app.QuestBackManagement = {
         $(document).on('click', '.QuestBackManagement .delete_test_button', app.QuestBackManagement.deleteTest)
         $(document).on('click', '.QuestBackManagement .modify_questionbase_button', app.QuestBackManagement.modifyTest)
         $(document).on('click', '.QuestBackManagement .saveTestSettings', app.QuestBackManagement.saveTestSettings)
+        $(document).on('click', '.QuestBackManagement .assignTestsToUser', app.QuestBackManagement.assignTestsToUser);
         $(document).on('click', '.QuestBackManagement .createTest', app.QuestBackManagement.createTest)
+        $(document).on('change', '.QuestBackManagement #testToSeeResultFor', app.QuestBackManagement.testToSeeResultFor)
+    },
+    
+    testToSeeResultFor: function() {
+        var data = {
+            testId : $('#testToSeeResultFor').val(),
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "showTestResults", this, data);
+        
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.test_result_view').html(result);
+        });
+    },
+    
+    assignTestsToUser: function() {
+        var data = {
+            testId : $('#testToSend').val(),
+        }
+        
+        data.usersIds = $('.QuestBackManagement .user_to_send:checked').map(function () {
+            return this.value;
+        }).get()
+        
+        var event = thundashop.Ajax.createEvent(null, "assignTestToUsers", this, data);
+        thundashop.Ajax.post(event, function() {
+            alert('Test has been sent');
+        });
     },
     
     saveTestSettings: function() {
         var data = {
             testid : $(this).attr('testid'),
             forceCorrectAnswer : $('.QuestBackManagement .force_correct_answers').is(':checked'),
-            name : $('.QuestBackManagement .testsettings .test_name').val()
+            name : $('.QuestBackManagement .testsettings .test_name').val(),
+            
+            redFrom : $('.QuestBackManagement .testsettings #red_from').val(),
+            redTo : $('.QuestBackManagement .testsettings #red_to').val(),
+            redText : $('.QuestBackManagement .testsettings #red_text').val(),
+            
+            greenFrom : $('.QuestBackManagement .testsettings #green_from').val(),
+            greenTo : $('.QuestBackManagement .testsettings #green_to').val(),
+            greenText : $('.QuestBackManagement .testsettings #green_text').val(),
+            
+            yellowFrom : $('.QuestBackManagement .testsettings #yellow_from').val(),
+            yellowTo : $('.QuestBackManagement .testsettings #yellow_to').val(),
+            yellowText : $('.QuestBackManagement .testsettings #yellow_text').val(),
+            
         };
+        
         
         var nodeIds = [];
         $('.test_qustions_added').each(function() {
@@ -108,7 +151,7 @@ app.QuestBackManagement = {
     
     navigateToQuestion: function(e, data) {
         var data = {
-            entryId : $(e.target).parent().attr('nodeid')
+            entryId : $(e.target).closest('.qb_question').attr('nodeid')
         };
 
         var event = thundashop.Ajax.createEvent(null, "getPageIdForQuestion", $(e.target), data);

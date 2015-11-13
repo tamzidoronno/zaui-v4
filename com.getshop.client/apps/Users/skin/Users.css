@@ -2,6 +2,7 @@
     width: 110px;
     margin-right: 15px;
     margin-bottom: 5px;
+    overflow: hidden;
 }
 #backsidesettings .gs_user_menu {
     margin-left: 10px;

@@ -79,6 +79,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     public double discount = 0;
     
+    public boolean showHiddenFields = false;
+    
     //ApplicationId, int = 0 rw, 1=r, 2=w
     public HashMap<String, Integer> applicationAccessList = new HashMap();
 

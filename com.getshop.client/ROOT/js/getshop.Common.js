@@ -536,7 +536,7 @@ $(document).on('click', '#messagebox .okbutton', function() {
     $('#messagebox').fadeOut(200);
 });
 
-thundashop.common.Alert = function(title, message, error) {
+thundashop.common.Alert = function(title, message, error, autoHide) {
     $("#messagebox").find('.title').html(title);
     if (typeof(message) === "undefined")
         message = "";
@@ -550,6 +550,9 @@ thundashop.common.Alert = function(title, message, error) {
 
     if (!error)
         $("#messagebox").delay(2000).fadeOut(200);
+    
+    if (autoHide) 
+        $("#messagebox").delay(autoHide).fadeOut(200);
 }
 
 thundashop.common.mask = function() {
@@ -825,7 +828,7 @@ $(document).on('click', '.tabset .tab', function() {
 
 $(function() {
     $(document).on('mousedown', '#getshop_logout', function() {
-        var event = thundashop.Ajax.createEvent(null, 'logout', $(this), {});
+        var event = thundashop.Ajax.createEvent(null, 'logout', $('.Login'), {});
         thundashop.Ajax.postSynchron(event);
         window.location = "/";
     });
@@ -1127,3 +1130,26 @@ GetShopUtil = {
         }
     }
 }
+
+thundashop.common.sessionTimeOut = 1300000;
+
+thundashop.common.timeoutCounter = 0;
+
+thundashop.common.logout = function() {
+    alert(__w('You have been inactive to long and due to security reasons you will now be logged out.'));
+    document.location = '/logout.php?goBackToHome=true';
+};
+
+thundashop.common.triggerTimeoutCheck = function() {
+    $(document).ready(function() {
+        var isLoggedIn = $('input[name="userid"]').val() != "";
+        
+        if (thundashop.common.timeoutCounter) {
+            clearTimeout(thundashop.common.timeoutCounter);
+        }
+        
+        if (isLoggedIn) {
+            thundashop.common.timeoutCounter = setTimeout(thundashop.common.logout, thundashop.common.sessionTimeOut);
+        } 
+    });
+};

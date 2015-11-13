@@ -72,6 +72,13 @@ app.ProductLists = {
                     text: "<span style='font-size: 22px;'>8</span>",
                     click: function(papp, papp) { app.ProductLists.setColumns(papp, 8); },
                     title: __f("Show as boxes")
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-circle",
+                    iconsize : "30",
+                    title: __f("Toggle decimals on product prices"),
+                    click: app.ProductLists.toggleProductListDecimals
                 }
             ]
         }
@@ -79,6 +86,11 @@ app.ProductLists = {
         var toolbox = new GetShopToolbox(config, application);
         toolbox.show();
         toolbox.attachToElement(application, 2);
+    },
+    
+    toggleProductListDecimals : function(a, app) {
+        var event = thundashop.Ajax.createEvent(null, "toggleDecimals", app, {});
+        thundashop.Ajax.post(event);
     },
     
     setSlideView: function(app, columnsize) {

@@ -74,6 +74,7 @@ class Users extends \SystemApplication implements \Application {
         $user->emailAddress = $_POST['email'];
         $user->fullName = $_POST['name'];
         $user->cellPhone = $_POST['phone_number'];
+        $user->showHiddenFields = $_POST['showHiddenFields'];
         $user->type = 10;
         
         if ($_POST['iseditor'] == "true") {
@@ -87,6 +88,8 @@ class Users extends \SystemApplication implements \Application {
         $user->discount = $_POST['discount'];
         
         $user = $this->getApi()->getUserManager()->saveUser($user);
+        
+        \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::refresh();
     }
     
     public function createUser() {

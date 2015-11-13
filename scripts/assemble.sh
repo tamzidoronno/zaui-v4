@@ -24,3 +24,6 @@ tar czvf php_$1.tar.gz *
 mv php_$1.tar.gz ../
 cd ../
 rm -rf php;
+
+#Javascript API
+cp $gradleFolder/core/build/getshopapi.js .

@@ -270,4 +270,17 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         return storePool.initStoreByStoreId(storeId, initSessionId);
     }
 
+    @Override
+    public void setImageIdToFavicon(String id) {
+        Store store = getMyStore();
+        store.favicon = id;
+        storePool.saveStore(store);
+    }
+
+    @Override
+    public Store autoCreateStore(String hostname) throws ErrorException {
+        /* not in use, goes directly to storepool */
+        return null;
+    }
+
 }

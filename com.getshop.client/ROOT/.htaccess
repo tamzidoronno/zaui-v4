@@ -14,5 +14,6 @@ RewriteRule ^(scripts)($|/) - [L]
 
 RewriteRule ^sitemap.xml$ sitemap.php [L]
 RewriteRule ^favicon.ico$ favicon.php [L]
+RewriteRule ^loadappcss.css$ loadappcss.php [L]
 
 RewriteCond %{QUERY_STRING} !index 

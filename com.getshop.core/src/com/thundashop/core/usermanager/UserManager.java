@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -88,12 +89,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 // Should never ever happend.
             }
         }
-        
-//        try {
-//            showStatistic();
-//        } catch (ErrorException ex) {
-//            java.util.logging.Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
 
     private UserStoreCollection getUserStoreCollection(String storeId) throws ErrorException {
@@ -838,6 +833,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         if (!user.isMaster) {
             removeUserFromAllMasters(user);
+        }
+        
+        if (user.group != null && !user.group.isEmpty() && (user.groups == null || user.groups.isEmpty())) {
+            user.groups = new ArrayList();
+            user.groups.add(user.group);
         }
     }
 

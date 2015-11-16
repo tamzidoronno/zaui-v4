@@ -18,6 +18,7 @@ $cellphone = "";
 $textButton = $this->__w("Register");
 $userLevel = 0;
 $mvaRegistered = false;
+$created = "";
 if ($user) {
     /* @var $user core_usermanager_data_User */
     $fullName = $user->fullName;
@@ -32,6 +33,7 @@ if ($user) {
     $birthday = $user->birthDay;
     $companyName = $user->companyName;
     $cellphone = $user->cellPhone;
+    $created = $user->rowCreatedDate;
     $hidden = "none";
     $exists = true;
     $textButton = $this->__w("Update");
@@ -65,6 +67,14 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
         </td>
         <td>
             <?php echo $username; ?>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Created"); ?>
+        </td>
+        <td>
+            <?php echo $created; ?>
         </td>
     </tr>
     <tr>

@@ -117,6 +117,18 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
   $scope.isProcessing = true;
   getshop.client.ArxManager.getAllPersons().done($scope.onPersonFetched);
 
+  $scope.addAccessCategory = function() {
+    console.log("TODO: load access categories and create form for adding access category");
+  };
+
+  $scope.editAccessCategory = function(accessCategory) {
+    console.log("TODO: allow modifying start and end date");
+  };
+
+  $scope.addCard = function() {
+    console.log("TODO: adding card form");
+  };
+
 }]);
 
 arxappControllers.controller('DoorsCtrl', ['GetshopService', '$scope', function(getshop, $scope) {

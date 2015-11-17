@@ -2422,3 +2422,9 @@ padding: 2px; }
     right: 50%;
     border: solid 1px #EEE;
 }
+
+.gsaddcontentlayoutbox { border: solid 1px;position:fixed; }
+.gsaddlayoutspacerleft { padding-left: 30px; }
+.gsaddlayoutspacerright { padding-right: 30px; }
+.gsaddlayoutspacertop { padding-top: 20px; }
+.gsaddlayoutspacerbottom { padding-bottom: 20px; }

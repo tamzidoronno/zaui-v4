@@ -22,37 +22,81 @@ class Dibs extends \PaymentApplication implements \Application {
     }
     
     public function paymentCallback() {
+        $orderId = $_GET['orderId'];
+        $nextPage = $_GET['nextpage'];
         
+        $paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
+        $paymentfailed = $this->getConfigurationSetting("paymentfailed");
+        
+        if (isset($_GET['orderId'])) {
+            if($nextPage == $paymentsuccess) {
+                $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
+                $order->status = 7;
+                $order->payment->transactionLog->{time()*1000} = "Payment completed, capturing needed.";
+                $this->getApi()->getOrderManager()->saveOrder($order);
+                header('Location: ' . "/?page=".$paymentsuccess);
+            } else {
+                $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
+                $order->status = 5;
+                $order->payment->transactionLog->{time()*1000} = "Payment failed /cancelled by user.";
+                $this->getApi()->getOrderManager()->saveOrder($order);
+                header('Location: ' . "/?page=".$paymentfailed);
+            }
+        }
     }
 
     public function preProcess() {
-        $merchid = $this->getConfiguration()->settings->{"merchantid"}->value;
-        $currency = $this->getFactory()->getCurrency();
-        $orderId = $this->getOrder()->id;
+        $prod = false;
+        $merchid = $this->getConfigurationSetting("merchantid");
+        $currency = "NOK";
+        $orderId = $this->getOrder()->incrementOrderId;
         $amount = $this->getApi()->getCartManager()->calculateTotalCost($this->order->cart)*100;
         if(isset($this->order->shipping)) {
-            $amount += ($this->order->shipping && $this->order->shipping->cost) ? $this->order->shipping : 0;
+            $amount += ($this->order->shipping && $this->order->shipping->cost) ? $this->order->shipping->cost : 0;
         }
         
         $settings = $this->getFactory()->getSettings();
-        $language = $settings->language->value;
-        $callBack = "https://". $_SERVER['SERVER_NAME']."/callback.php?orderid=".$orderId."&app=".$this->getConfiguration()->id;
-        $exitUrl = "http://". $_SERVER['SERVER_NAME']."/index.php?page=home";
+        $language = $this->getFactory()->getSelectedTranslation();
+        $store = $this->getFactory()->getStore();
+        
+        $key = $merchid;
+        if($prod) {
+            $key .= "-prod";
+        } else {
+            $key .= "-debug";
+        }
+        
+        $callBack = "http://pullserver_".$key."_".$store->id.".nettmannen.no";
+        $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
+        
+        $paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
+        $paymentfailed = $this->getConfigurationSetting("paymentfailed");
+        
+        $amount = round($amount, 2);
+        
         echo '<form method="post" id="dibsform" action="https://sat1.dibspayment.com/dibspaymentwindow/entrypoint">
             <input value="' . $merchid . '" name="merchant" type="hidden" />
             <input value="' . $currency . '" name="currency" type="hidden" />
             <input value="' . $orderId . '" name="orderId" type="hidden" />
             <input value="' . $amount . '" name="amount" type="hidden" />
-            <input value="' . $language . '" name="language" type="hidden" />
-            <input value="' . $exitUrl . '" name="acceptReturnUrl" type="hidden" />
-            <input value="' . $exitUrl . '" name="cancelReturnUrl" type="hidden" />
-            <input value="' . $callBack . '" name="callbackUrl" type="hidden" />
-            <input type="hidden" name="test" value="1"/>
-            </form>';
+            <input value="' . $language .  '" name="language" type="hidden" />
+            <input value="' . $redirect_url . $paymentsuccess . '" name="acceptReturnUrl" type="hidden" />
+            <input value="' . $redirect_url . $paymentfailed . '" name="cancelReturnUrl" type="hidden" />
+            <input value="' . $callBack . '" name="callbackUrl" type="hidden" />';
+            if(!$prod) {
+                echo '<input type="hidden" name="test" value="1"/>';
+                echo "This is in test mode...";
+            }
+        echo '</form>';
 
         echo "<script>";
         echo "$('#dibsform').submit();";
         echo "</script>";
+        
+        /* @var $order core_ordermanager_data_Order */
+        $order = $this->order;
+        $order->payment->transactionLog->{time()*1000} = "Transferred to payment window";
+        $this->getApi()->getOrderManager()->saveOrder($order);
     }
 
     /**
@@ -70,6 +114,12 @@ class Dibs extends \PaymentApplication implements \Application {
         return true;
     }
 
+    public function saveSettings() {
+        $this->setConfigurationSetting("merchantid", $_POST['merchantid']);
+        $this->setConfigurationSetting("paymentsuccess", $_POST['paymentsuccess']);
+        $this->setConfigurationSetting("paymentfailed", $_POST['paymentfailed']);
+        $this->setConfigurationSetting("paymentcancelled", $_POST['paymentcancelled']);
+    }
 }
 
 ?>

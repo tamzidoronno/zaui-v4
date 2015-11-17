@@ -11,6 +11,9 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -18,7 +21,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -115,6 +121,30 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void sendMailWithAttachments(String to, String toName, String subject, String content, String from, String fromName, HashMap<String, String> attachments) {
+        try {
+            Map<String, String> files = new HashMap();
+            
+            for (String fileName : attachments.keySet()) {
+                String tmpFile = "/tmp/"+UUID.randomUUID().toString();
+                byte[] data = Base64.decodeBase64(attachments.get(fileName));
+                
+                FileOutputStream fos = new FileOutputStream(tmpFile);
+                fos.write(data);
+                fos.close();
+                
+                files.put(tmpFile, fileName);
+            }
+            
+            mailFactory.sendWithAttachments(from, to, subject, content, files, true);
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

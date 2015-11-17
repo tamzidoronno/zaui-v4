@@ -30,6 +30,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     
     public Date startDate;
     public Date endDate;
+    public boolean captured = false;
 
     public Order jsonClone() {
         Gson gson = new Gson();
@@ -58,6 +59,8 @@ public class Order extends DataCommon implements Comparable<Order> {
         public static int CANCELED = 5;
         public static int SENT = 6;
         public static int NEEDCOLLECTING = 7;
+        public static int PAYMENT_COMPLETED = 8;
+        public static int COLLECTION_FAILED = 9;
     }
 
     public Date createdDate = new Date();

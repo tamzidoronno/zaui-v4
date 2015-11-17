@@ -37,6 +37,9 @@ class core_ordermanager_data_Order extends core_common_DataCommon  {
 	public $endDate;
 
 	/** @var String */
+	public $captured;
+
+	/** @var String */
 	public $createdDate;
 
 	/** @var String */

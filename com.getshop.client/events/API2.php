@@ -2517,6 +2517,20 @@ class APIInvoiceManager {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getBase64EncodedInvoice($orderId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data["method"] = "getBase64EncodedInvoice";
+	     $data["interfaceName"] = "core.pdf.IInvoiceManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIListManager {
 
@@ -2893,6 +2907,31 @@ class APIMessageManager {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	* Send a mail.
+	* @param to The address to send to
+	* @param toName The name of the one receiving it.
+	* @param subject The subject of the mail.
+	* @param content The content to send
+	* @param from The email sent from.
+	* @param fromName The name of the sender.
+	*/
+
+	public function sendMailWithAttachments($to, $toName, $subject, $content, $from, $fromName, $attachments) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["to"] = json_encode($this->transport->object_unset_nulls($to));
+	     $data['args']["toName"] = json_encode($this->transport->object_unset_nulls($toName));
+	     $data['args']["subject"] = json_encode($this->transport->object_unset_nulls($subject));
+	     $data['args']["content"] = json_encode($this->transport->object_unset_nulls($content));
+	     $data['args']["from"] = json_encode($this->transport->object_unset_nulls($from));
+	     $data['args']["fromName"] = json_encode($this->transport->object_unset_nulls($fromName));
+	     $data['args']["attachments"] = json_encode($this->transport->object_unset_nulls($attachments));
+	     $data["method"] = "sendMailWithAttachments";
+	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIMobileManager {
 
@@ -3140,6 +3179,23 @@ class APIOrderManager {
 	
 	function APIOrderManager($transport) {
 		$this->transport = $transport;
+	}
+
+	/**
+	* Set an expiry date for an order.
+	*
+	* @param orderId
+	* @param date
+	* @throws ErrorException
+	*/
+
+	public function captureOrder($orderId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data["method"] = "captureOrder";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

@@ -2,6 +2,7 @@ package com.thundashop.core.messagemanager;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import java.util.HashMap;
 
 /**
  * Send emails using the messagemanager.
@@ -18,7 +19,9 @@ public interface IMessageManager  {
      * @param fromName The name of the sender.
      */
     public void sendMail(String to, String toName, String subject, String content, String from, String fromName);
-    
+
+    public void sendMailWithAttachments(String to, String toName, String subject, String content, String from, String fromName, HashMap<String,String> attachments);
+
     /**
      * Get how many messages a user has sent.
      * 

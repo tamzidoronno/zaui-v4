@@ -234,7 +234,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/968059358/?label=pZlMCM7joV8Q3tPNzQM&amp;guid=ON&amp;script=0"/>
             </div>
             </noscript>
-        <?
+        <?php
         
     }
 
@@ -243,6 +243,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function render() {
+        
+        if(isset($_GET['payOrder'])) {
+            $this->repayOrder();
+            return;
+        }
+        
         //this variable is set from $this->continueToCart();
         if (isset($_GET['orderProcessed'])) {
             if ($this->partnerShipChecked() || !$this->hasPaymentAppAdded()) {
@@ -901,6 +907,60 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     public function getShowExtraInformation() {
         return $this->getConfig()->extraBookingInformation;
     }
+
+    public function repayOrder() {
+        $orderId = $_GET['payOrder'];
+        $this->startAdminImpersonation("OrderManager", "getOrder");
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $this->stopImpersionation();
+
+        if (!$order) {
+            echo "<center><br/><br/><br/>";
+            echo "<h1>Fant ikke denne bestillingen, ta kontakt med oss.</h1>";
+            echo "<br/><br/><br/><br/></center>";
+        } else if ($order->payment && ($order->payment->paymentType != "ns_def1e922_972f_4557_a315_a751a9b9eff1\Netaxept" && $order->payment->paymentType != "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
+            echo "<center><br/><br/><br/>";
+            echo "<h1>Dette er en bestilling som ikke kan betales med kort.</h1>";
+            echo "<br/><br/><br/><br/></center>";
+        } else if ($order->status == 7) {
+            echo "<center><br/><br/><br/>";
+            echo "<h1>Betalingen er allerede gjennomført for denne bestillingen.</h1>";
+            echo "<br/><br/><br/><br/></center>";
+        } else {
+            echo "<center><br/><br/><br/>";
+            echo "<h1>Vennligst vent, du blir nå overført til betalingsvinduet.</h1>";
+            echo "<br/><br/><br/><br/></center>";
+
+            $this->completeCheckout($order);
+        }        
+    }
+
+    public function completeCheckout($order) {
+        $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
+          foreach ($cartManager->getPaymentApplications() as $paymenti) {
+            $paymentId = str_replace("-","_", $paymenti->applicationSettings->id);
+            if (stristr($order->payment->paymentType, $paymentId)) {
+                $payment = $paymenti;
+            }
+        }
+        if ($payment) {
+            $payment->order = $order;
+            
+            if ($payment->order) {
+                if ($payment->order->payment && $payment->order->payment->paymentType != "" && stristr($payment->order->payment->paymentType, "InvoicePayment")) {
+                    echo "<div style='text-align:center; padding: 50px;'>";
+                    echo "<h1>" . $this->__w("Thank you for your order.") . "</h1>";
+                    echo "</div>";
+                } else {
+                    $payment->initPaymentMethod();
+                    $payment->preProcess();
+                }
+            } else {
+                echo "En feil oppstod, ordren kunne ikke bli funnet. (" . $_GET['orderId'] . ")";
+            }
+        }
+    }
+
 }
 
 ?>

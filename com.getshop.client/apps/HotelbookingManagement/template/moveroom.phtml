@@ -117,7 +117,11 @@ foreach($orders as $order) {
     } else {
         echo "<td>" . $types[$order->payment->paymentType] . "</td>";
     }
-    echo "<td>" . $status[$order->status] . "</td>";
+    echo "<td>" . $status[$order->status];
+    if($order->status == 2) {
+        echo " - <a href='/?page=88c6642a-1c28-4b86-9a15-4b69e0303e05&payOrder=".$order->id."' style='color:blue;' target='_new'> payment link</a>";
+    }
+    echo "</td>";
     echo "<td align='right'>";
     if(@$order->transferedToAccountingSystem) {
         echo "Yes";

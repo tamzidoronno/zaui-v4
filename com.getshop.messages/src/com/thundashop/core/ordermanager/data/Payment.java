@@ -8,6 +8,7 @@ import com.thundashop.core.productmanager.data.TaxGroup;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  *
@@ -18,4 +19,6 @@ public class Payment implements Serializable {
     public double paymentFee = 0D;
     public TaxGroup paymentFeeTaxGroup = null;
     public HashMap<Long, String> transactionLog = new HashMap();
+    public boolean captured = false;
+    public LinkedHashMap<String, String> callBackParameters = new LinkedHashMap();
 }

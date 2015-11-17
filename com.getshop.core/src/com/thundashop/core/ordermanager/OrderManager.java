@@ -9,12 +9,16 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.hotelbookingmanager.BookingReference;
 import com.thundashop.core.hotelbookingmanager.HotelBookingManager;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
@@ -43,6 +47,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         super(log, databaseSaver);
     }
 
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataFromDatabase : data.data) {
@@ -71,6 +76,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    
+    /**
+     * 
+     * @param orderId
+     * @return True weather or not the order where captured, just that it where able to complete the order.
+     */
+    @Override
+    public void captureOrder(String orderId) throws Exception, ErrorException {
+        Order order = getOrder(orderId);
+        if(order == null) {
+            throw new Exception("Error: not found order");
+        }
+        order.payment.transactionLog.put(System.currentTimeMillis(), "Capturing order");
+        if(order.payment.paymentType.toLowerCase().contains("dibs")) {
+            captureWithDibs(order);
+        }
+        
+    }
+
+    
     private void saveOrderInternal(Order order) throws ErrorException {
         User user = getSession().currentUser;
         if (user != null && order.userId == null) {
@@ -697,5 +722,40 @@ public class OrderManager extends ManagerBase implements IOrderManager {
          calendar.add(Calendar.DAY_OF_MONTH, -15);
          
          return calendar.getTime();
+    }
+
+    private void captureWithDibs(Order order) throws Exception, ErrorException {
+        DibsManager dibsManager = getManager(DibsManager.class);
+        CartManager cartManager = getManager(CartManager.class);
+        UserManager userManager = getManager(UserManager.class);
+        MessageManager messageManager = getManager(MessageManager.class);
+        StoreManager storeManager = getManager(StoreManager.class);
+        
+        Double amount = cartManager.calculateTotalCost(order.cart);
+        int toCapture = new Double(amount*100).intValue();
+        dibsManager.captureOrder(order, toCapture);
+        saveOrder(order);
+        if(order.captured) {
+            User user = userManager.getUserById(order.userId);
+            if(user != null) {
+                HashMap<String, String> attachments = new HashMap();
+                attachInvioce(attachments, order.id);
+                String title = "Receipt for payment";
+                String message = "Attached you will find your reciept for the payment for order id: " + order.incrementOrderId + ", amount: " + order.cart.getTotal(false);
+                String name = user.fullName;
+                String email = user.emailAddress;
+                String copyadress = storeManager.getMyStore().configuration.emailAdress;    
+                
+                messageManager.sendMailWithAttachments(email, name, title, message, copyadress, copyadress, attachments);
+            }
+        }
+    }
+    
+    private void attachInvioce(HashMap<String, String> attachments, String orderId) throws ErrorException {
+        InvoiceManager invoiceManager  = getManager(InvoiceManager.class);
+        String invoice = invoiceManager.getBase64EncodedInvoice(orderId);
+        if (invoice != null && !invoice.isEmpty()) {
+            attachments.put("reciept.pdf", invoice);
+        }
     }
 }

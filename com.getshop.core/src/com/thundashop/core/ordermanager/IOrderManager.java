@@ -9,6 +9,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -157,4 +158,6 @@ public interface IOrderManager {
 	 */
 	@Editor
 	public void setExpiryDate(String orderId, Date date) throws ErrorException;
+        @Administrator
+        public void captureOrder(String orderId) throws Exception, ErrorException;
 }

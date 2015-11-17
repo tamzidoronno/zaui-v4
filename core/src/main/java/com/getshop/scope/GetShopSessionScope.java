@@ -4,9 +4,7 @@
  */
 package com.getshop.scope;
 
-import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.pagemanager.PageManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

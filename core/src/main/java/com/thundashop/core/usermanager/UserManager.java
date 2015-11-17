@@ -1,7 +1,5 @@
 package com.thundashop.core.usermanager;
 
-import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.BookingEngineHolder;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -73,9 +71,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Autowired
     public StoreManager storeManager;
-
-    @Autowired
-    public BookingEngineHolder holder;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {

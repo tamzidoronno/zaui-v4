@@ -1,5 +1,7 @@
 package com.thundashop.core.hotelbookingmanager;
 
+import com.getshop.pullserver.PullMessage;
+import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
@@ -13,6 +15,7 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -38,6 +41,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -84,6 +88,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Autowired
     private FrameworkConfig frameworkConfig;
+    private boolean sentPollFailed = false;
 
     private MessageManager getMsgManager() {
         return getManager(MessageManager.class);
@@ -147,6 +152,60 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         super(log, databaseSaver);
     }
 
+    
+    @Override
+    public void checkForOrdersToCapture() throws ErrorException {
+        Gson gson = new Gson();
+        GetShopPullService getShopPullService = getManager(GetShopPullService.class);
+        OrderManager orderManager = getManager(OrderManager.class);
+        MessageManager messageManager = getManager(MessageManager.class);
+
+        String pollKey = "90069173";
+        if(frameworkConfig.productionMode) {
+            pollKey += "-prod";
+        } else {
+            pollKey += "-debug";
+        }
+        try {
+            //First check for polls.
+            long start = System.currentTimeMillis();
+            List<PullMessage> messages = getShopPullService.getMessages(pollKey, storeId);
+            long end = System.currentTimeMillis();
+            System.out.println(start - end);
+            for(PullMessage msg : messages) {
+                try {
+                    LinkedHashMap<String,String> polledResult = gson.fromJson(msg.postVariables, LinkedHashMap.class);
+                    if(!polledResult.containsKey("orderId")) {
+                        messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed prosessing message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                        getShopPullService.markMessageAsReceived(msg.id, storeId);
+                    } else {
+                        Order order = orderManager.getOrderByincrementOrderId(new Integer(polledResult.get("orderId")));
+                        try {
+                            order.payment.callBackParameters = polledResult;
+                            orderManager.captureOrder(order.id);
+                            getShopPullService.markMessageAsReceived(msg.id, storeId);
+                            orderManager.saveOrder(order);
+                        }catch(Exception d) {
+                            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                            getShopPullService.markMessageAsReceived(msg.id, storeId);
+                            order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
+                            d.printStackTrace();
+                        }
+                    }
+                }catch(Exception ex) {
+                    messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                    getShopPullService.markMessageAsReceived(msg.id, storeId);
+                    ex.printStackTrace();
+                }
+            }
+            sentPollFailed = false;
+        } catch (Exception ex) {
+            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed to fetch from pull server", "Is pull server down: " + ex.getMessage(), "post@getshop.com", "post@getshop.com");
+            sentPollFailed = true;
+            ex.printStackTrace();
+        }
+    }
+    
     @Override
     public Integer checkAvailable(long startDate, long endDate, String typeName) throws ErrorException {
         Calendar todayCal = getTodayCalendar();

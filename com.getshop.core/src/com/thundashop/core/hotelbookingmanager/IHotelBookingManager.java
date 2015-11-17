@@ -19,6 +19,9 @@ public interface IHotelBookingManager {
      */
     public Integer checkAvailable(long startDate, long endDate, String type) throws ErrorException;
     
+    @Administrator
+    public void checkForOrdersToCapture() throws ErrorException;
+            
     /**
      * 
      * @return

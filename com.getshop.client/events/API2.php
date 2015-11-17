@@ -2049,6 +2049,23 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Check if a room is available in the given time periode.
+	* @param startDate The first day unix timestamp.
+	* @param endDate The last day unix timestamp.
+	* @param type The type of room to search for-
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function checkForOrdersToCapture() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "checkForOrdersToCapture";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all references
 	* @return void
 	* @throws ErrorException

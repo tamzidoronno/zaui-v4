@@ -1,7 +1,15 @@
-<?
+<?php
 $refid = $_POST['data']['refid'];
 $reference = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($refid);
 echo "<div style='padding:20px;'>";
+
+/* @var $this ns_15e67fa1_c862_4bc3_9b17_dfd818f30712\HotelbookingManagement */
+$user = $this->getApi()->getUserManager()->getUserById($reference->userId);
+
+$types = array();
+$types['ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment'] = "Invoice";
+$types['ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs'] = "Dibs";
+
 for($i = 0; $i < sizeof($reference->contact->names);$i++) {
 ?>
         <input type='hidden' value='<? echo $refid; ?>' id='referenceId'>
@@ -42,7 +50,23 @@ for($i = 0; $i < sizeof($reference->contact->names);$i++) {
 </div>
 <div>
     <input type="text" class='invoicedTo' style="float:right;" value='<? echo date("d.m.Y", strtotime($reference->invoicedTo)); ?>'>
-    Invoiced to<br>
+    Next payment periode<br>
+    <br>
+</div>
+<div>
+    <select class='paymentType' style="float:right;">
+        <?php
+        foreach($types as $idx => $value) {
+            $selected = "";
+            if($user->preferredPaymentType == $idx) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='$idx' $selected>$value</option>";
+        }
+        ?>
+        
+    </select>
+    Payment type<br>
     <br>
 </div>
     <div style="text-align:right;">

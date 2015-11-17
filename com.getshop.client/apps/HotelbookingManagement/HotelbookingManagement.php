@@ -247,6 +247,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         foreach($rooms as $id => $room) {
             $this->getApi()->getHotelBookingManager()->moveRoomOnReference($refid, $id, $room);
         }
+        
+        $user = $this->getApi()->getUserManager()->getUserById($reference->userId);
+        $user->preferredPaymentType = $_POST['data']['paymentType'];
+        $this->getApi()->getUserManager()->saveUser($user);
     }
     
     public function getStoppedReferenceDate($referenceId) {

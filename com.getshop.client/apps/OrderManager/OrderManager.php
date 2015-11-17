@@ -100,8 +100,9 @@ class OrderManager extends \SystemApplication implements \Application {
             return null;
 
         foreach ($this->orders as $order) {
-            if ($order->id == $_GET['orderid'])
+            if ($order->id == $_GET['orderid']) {
                 return $order;
+            }
         }
 
         return null;

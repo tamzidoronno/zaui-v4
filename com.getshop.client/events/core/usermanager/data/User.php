@@ -87,6 +87,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	/** @var String */
 	public $isMaster;
 
+	/** @var String */
+	public $preferredPaymentType;
+
 	/** @var core_usermanager_data_Company */
 	public $company;
 

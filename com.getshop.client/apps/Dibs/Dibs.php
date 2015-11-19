@@ -27,6 +27,9 @@ class Dibs extends \PaymentApplication implements \Application {
         
         $paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
         $paymentfailed = $this->getConfigurationSetting("paymentfailed");
+
+        print_r($_POST);
+        exit(0);
         
         if (isset($_GET['orderId'])) {
             if($nextPage == $paymentsuccess) {
@@ -47,17 +50,11 @@ class Dibs extends \PaymentApplication implements \Application {
 
     public function preProcess() {
         
-        ?>
-        <center>
-        <h1>Du blir nå overført til vår betalingsterminal, vennligst vent.</h1>
-        </center>
-        <?
-        
         $merchid = $this->getConfigurationSetting("merchantid");
         $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
         $orderId = $this->getOrder()->incrementOrderId;
         $amount = $this->getApi()->getCartManager()->calculateTotalCost($this->order->cart)*100;
-        if(isset($this->order->shipping)) {
+        if(isset($this->order->shipping) && isset($this->order->shipping->cost)) {
             $amount += ($this->order->shipping && $this->order->shipping->cost) ? $this->order->shipping->cost : 0;
         }
         
@@ -89,7 +86,10 @@ class Dibs extends \PaymentApplication implements \Application {
             <input value="' . $redirect_url . $paymentsuccess . '" name="acceptReturnUrl" type="hidden" />
             <input value="' . $redirect_url . $paymentfailed . '" name="cancelReturnUrl" type="hidden" />
             <input value="' . $callBack . '" name="callbackUrl" type="hidden" />';
-            if(!$this->getApi()->getStoreManager()->isProductMode()) {
+            if($this->saveCard()) {
+                echo '<INPUT TYPE="hidden" NAME="preauth" VALUE="1">';
+            }
+        if(!$this->getApi()->getStoreManager()->isProductMode()) {
                 echo '<input type="hidden" name="test" value="1"/>';
                 echo "This is in test mode...";
             }
@@ -126,6 +126,11 @@ class Dibs extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("paymentfailed", $_POST['paymentfailed']);
         $this->setConfigurationSetting("paymentcancelled", $_POST['paymentcancelled']);
         $this->setConfigurationSetting("hmac", $_POST['hmac']);
+        $this->setConfigurationSetting("savecard", $_POST['savecard']);
+    }
+    
+    public function saveCard() {
+        return $this->getConfigurationSetting("savecard") == "true";
     }
 }
 

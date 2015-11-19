@@ -86,6 +86,9 @@ public interface IOrderManager {
     @Administrator
     public Order getOrderByReference(String referenceId) throws ErrorException;
     
+    @Administrator
+    public void checkForOrdersToCapture() throws ErrorException;
+    
     /**
      * Fetch all orders for a user.
      * @param userId

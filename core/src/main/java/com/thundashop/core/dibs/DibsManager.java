@@ -4,9 +4,15 @@ import com.braintreegateway.org.apache.commons.codec.DecoderException;
 import com.braintreegateway.org.apache.commons.codec.binary.Hex;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.getshop.pullserver.PullMessage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,6 +25,8 @@ import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -34,6 +42,22 @@ public class DibsManager extends ManagerBase implements IDibsManager {
     @Autowired
     MessageManager messageManager;
     
+    @Autowired
+    StoreApplicationPool storeApplicationPool;
+        
+    @Autowired
+    private GetShopPullService getShopPullService; 
+
+    @Autowired
+    private OrderManager orderManager;
+
+    @Autowired
+    private FrameworkConfig frameworkConfig;
+    
+    @Autowired
+    private CartManager cartManager;
+    
+    private boolean sentPollFailed = false;
     /**
      * postToDIBS Sends a post to the specified DIBS function
      *
@@ -200,7 +224,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
 
     public void captureOrder(Order order, int amount) throws Exception {
         String merchantId = order.payment.callBackParameters.get("merchant");
-        String secretMacKey = "need to fetch from configuration";
+        String secretMacKey = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("hmac");
         Map<String, String> response = captureTransaction(amount, merchantId , order.payment.callBackParameters.get("transaction"), secretMacKey);
         
         if(!order.payment.callBackParameters.get("currency").equals("NOK")) {
@@ -228,4 +252,60 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         order.payment.transactionLog.put(System.currentTimeMillis(), respresult);
     }
 
+    
+    @Override
+    public void checkForOrdersToCapture() {
+        Gson gson = new Gson();
+        
+        String pollKey = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("merchantid");
+        if(frameworkConfig.productionMode) {
+            pollKey += "-prod";
+        } else {
+            pollKey += "-debug";
+        }
+        try {
+            //First check for polls.
+            long start = System.currentTimeMillis();
+            List<PullMessage> messages = getShopPullService.getMessages(pollKey, storeId);
+            long end = System.currentTimeMillis();
+            System.out.println(start - end);
+            for(PullMessage msg : messages) {
+                try {
+                    LinkedHashMap<String,String> polledResult = gson.fromJson(msg.postVariables, LinkedHashMap.class);
+                    if(!polledResult.containsKey("orderId")) {
+                        messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed prosessing message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                        getShopPullService.markMessageAsReceived(msg.id, storeId);
+                    } else {
+                        Order order = orderManager.getOrderByincrementOrderId(new Integer(polledResult.get("orderId")));
+                        try {
+                            order.payment.callBackParameters = polledResult;
+
+                            Double amount = cartManager.calculateTotalCost(order.cart);
+                            int toCapture = new Double(amount*100).intValue();
+                            order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to capture this order");
+                            captureOrder(order, toCapture);
+                            messageManager.sendInvoiceForOrder(order.id);
+                            
+                            getShopPullService.markMessageAsReceived(msg.id, storeId);
+                            orderManager.saveOrder(order);
+                        }catch(Exception d) {
+                            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                            getShopPullService.markMessageAsReceived(msg.id, storeId);
+                            order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
+                            d.printStackTrace();
+                        }
+                    }
+                }catch(Exception ex) {
+                    messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                    getShopPullService.markMessageAsReceived(msg.id, storeId);
+                    ex.printStackTrace();
+                }
+            }
+            sentPollFailed = false;
+        } catch (Exception ex) {
+            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed to fetch from pull server", "Is pull server down: " + ex.getMessage(), "post@getshop.com", "post@getshop.com");
+            sentPollFailed = true;
+            ex.printStackTrace();
+        }
+    }
 }

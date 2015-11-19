@@ -16,7 +16,13 @@ import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshop.data.SmsResponse;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,6 +37,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -63,17 +70,26 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     private DatabaseSaver databaseSaver;
     
     @Autowired
-    private StorePool storeManager;
+    private StoreManager storeManager;
+    
+    @Autowired
+    private StorePool storePool;
     
     @Autowired
     private StoreApplicationPool storeApplicationPool;
     
     @Autowired
-    private GetShop getShop;
+    private OrderManager orderManager;
+    
+    @Autowired
+    private UserManager userManager;
+    
+    @Autowired
+    private InvoiceManager invoiceManager;
     
     @PostConstruct
     public void createSmsFactory() {
-        smsFactory = new SMSFactoryImpl(logger, database, frameworkConfig, databaseSaver, storeManager, storeApplicationPool, this);
+        smsFactory = new SMSFactoryImpl(logger, database, frameworkConfig, databaseSaver, storePool, storeApplicationPool, this);
         smsFactory.setStoreId(storeId);
     }
 
@@ -219,4 +235,27 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         return collectedEmails.emails;
     }
 
+    public void sendInvoiceForOrder(String id) {
+        Order order = orderManager.getOrderSecure(id);
+        User user = userManager.getUserById(order.userId);
+        if(user == null) {
+            return;
+        }
+        
+        HashMap<String, String> attachments = new HashMap();
+        attachInvioce(attachments, id);
+        String title = "Receipt for payment";
+        String message = "Attached you will find your reciept for the payment for order id: " + order.incrementOrderId + ", amount: " + order.cart.getTotal(false);
+        String name = user.fullName;
+        String email = user.emailAddress;
+        String copyadress = storeManager.getMyStore().configuration.emailAdress;
+        sendMailWithAttachments(email, name, title, message, copyadress, copyadress, attachments);
+    }
+    
+    private void attachInvioce(HashMap<String, String> attachments, String orderId) {
+        String invoice = invoiceManager.getBase64EncodedInvoice(orderId);
+        if (invoice != null && !invoice.isEmpty()) {
+            attachments.put("reciept.pdf", invoice);
+        }
+    }
 }

@@ -60,6 +60,19 @@ $hmac = $this->getConfigurationSetting("hmac");
                 <?php  echo $this->__f("The Merchant-ID is provided by Dibs, please contact us for more information."); ?>
             </div>
         </div>
+        
+        <div class="textfield gss_setting"  id="savecard">
+               <span class="title"><?php echo $this->__f("Save card"); ?></span>
+               <div class="gss_onoff" gs_model="dibsmodel" gs_model_attr="savecard">
+                   <?
+                   $class = $this->getConfigurationSetting("savecard") == "true" ? "fa-toggle-on" : "fa-toggle-off";
+                   ?>
+                   <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+               </div>
+               <div class="description">
+                   <?php echo $this->__w("Save the cards instead of extracting the amount?"); ?>
+               </div>
+        </div>
     </div>
 
     <div class='gss_button_area'>

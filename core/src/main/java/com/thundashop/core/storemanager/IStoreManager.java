@@ -171,5 +171,6 @@ public interface IStoreManager {
     public int generateStoreId() throws ErrorException;
     
     public void setImageIdToFavicon(String id); 
-    
+
+    public boolean isProductMode() throws ErrorException;    
 }

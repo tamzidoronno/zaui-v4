@@ -77,7 +77,7 @@ $cart = $order->cart;
             
             echo $orderStatusText; 
             
-            if($order->status == 2) {
+            if($order->status == 2 || $order->status == 5 || $order->status == 3) {
                 echo " - <a class='gsspayorder' style='color:blue; cursor:pointer;' orderid='".$order->id."'>pay order</a>";
             }
             ?>

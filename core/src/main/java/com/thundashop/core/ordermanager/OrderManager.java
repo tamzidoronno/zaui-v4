@@ -1,6 +1,7 @@
 package com.thundashop.core.ordermanager;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
@@ -10,6 +11,7 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.SalesStats;
@@ -64,6 +66,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private InvoiceManager invoiceManager;
     
+    @Autowired
+    private DibsManager dibsManager;
+    
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
         Order order = getOrder(orderId);
@@ -103,6 +108,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         saveOrder(order);
     }
+    
+    
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -362,6 +369,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return result;
+    }
+    
+    @Override
+    public void checkForOrdersToCapture() throws ErrorException {
+        dibsManager.checkForOrdersToCapture();
     }
     
     @Override

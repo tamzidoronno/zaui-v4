@@ -337,6 +337,7 @@ Hostname;-;
 How many days should be the payment thing, this must correspond to payment terms in Visma.;-;
 How many times can this coupon be used?;-;
 How should the new product look like?;-;
+I need help;-;
 If a order is canceled, should the items from the order be put back in stock?;-;
 If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;
 If the total amount in the basket is outside of the range above, use this price.;-;

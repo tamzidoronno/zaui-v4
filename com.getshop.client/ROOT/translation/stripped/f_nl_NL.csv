@@ -151,6 +151,7 @@ Height (px);-;
 Homepage;-;
 How many days should be the payment thing, this must correspond to payment terms in Visma.;-;
 How should the new product look like?;-;
+I need help;-;
 If this is activated, you will be able to show your customer a listview in additional.;-;
 If this is enabled it will override time settings and always show closed, can be used for vacations? haha, like there is such things.;-;
 If you send sms with Clickatell as provider, you can use this to configure username an passwords;-;

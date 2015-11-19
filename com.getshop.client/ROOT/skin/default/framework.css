@@ -2429,7 +2429,9 @@ padding: 2px; }
 .gsaddlayoutspacertop { padding-top: 20px; }
 .gsaddlayoutspacertoptop { padding-top: 20px; }
 .gsaddlayoutspacerbottom { padding-bottom: 20px; }
+.gsaddlayoutspacerbottombottom { padding-bottom: 20px; }
 .gsdroponlayout { background-color:green !important; }
 .gsdroppingarea { background-color: black; }
 .gsdroppingarea.ui-droppable:hover { background-color:green; }
 .gsdroppingareahover { background-color:green !important; }
+.gsuicell { border: solid 1px #00b7ea; }

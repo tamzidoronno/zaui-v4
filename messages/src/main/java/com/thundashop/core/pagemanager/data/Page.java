@@ -158,6 +158,10 @@ public class Page extends DataCommon implements Cloneable {
         layout.flattenMobileLayout();
     }
 
+    public PageCell getParentCell(String cellId) {
+        return layout.getParent(cellId);
+    }
+
     public static class DefaultPages {
 
         public static String OrderOverviewPageId = "orderoverview";

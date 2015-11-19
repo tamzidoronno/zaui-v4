@@ -96,7 +96,7 @@ thundashop.dndlayout = {
         $('.gsaddlayoutspacerbottom').removeClass('gsaddlayoutspacerbottom');
     },
     
-    drawDroppingArea : function(edge, onElement, drawRowOnTop) {
+    drawDroppingArea : function(edge, onElement, drawSpecials) {
         if(!onElement) {
             return;
         }
@@ -104,7 +104,7 @@ thundashop.dndlayout = {
         if($('.gsdroppingarea[cellid="'+cellid+'"][edge="'+edge+'"]').length > 0) {
            return; 
         }
-        if(drawRowOnTop) {
+        if(drawSpecials) {
             thundashop.dndlayout.removeGsSpacing();
             $('.gsdroppingarea').remove();
         }
@@ -119,7 +119,7 @@ thundashop.dndlayout = {
         }
         
         var area = $('<div class="gsdroppingarea" style="background-color:#000;" ></div>');
-//        console.log(onElement.attr('class'));
+        
         area.attr('cellid',cellid);
         area.attr('edge',edge);
         var topOffset = onElement.offset().top - $(window).scrollTop();
@@ -142,16 +142,22 @@ thundashop.dndlayout = {
             area.css('height',onElement.height());
         } else if(edge === "bottom") {
             area.css('left',onElement.offset().left);
-            area.css('top',topOffset+onElement.height());
             area.css('height','20px');
             area.css('width',onElement.width());
+            if(drawSpecials) {
+                area.css('top',topOffset+onElement.height());
+                onElement.addClass('gsaddlayoutspacerbottom');
+            } else {
+                area.css('top',topOffset+onElement.height()+20);
+                onElement.addClass('gsaddlayoutspacerbottombottom');
+            }
             onElement.addClass('gsaddlayoutspacerbottom');
         } else if(edge === "top") {
             area.css('left',onElement.offset().left);
             area.css('top',topOffset);
             area.css('height','20px');
             area.css('width',onElement.width());
-            if(drawRowOnTop) {
+            if(drawSpecials) {
                 onElement.addClass('gsaddlayoutspacertop');
             } else {
                 onElement.addClass('gsaddlayoutspacertoptop');
@@ -163,11 +169,10 @@ thundashop.dndlayout = {
             area.css('height',onElement.height());
             onElement.addClass('gsaddlayoutspacerright');
         }
-        
-        var row = onElement.closest('.gsrow').find('.gsinner').first();
-        if(drawRowOnTop && row.children('.gscolumn').length > 0 && thundashop.dndlayout.dragType === "row") {
-            thundashop.dndlayout.drawDroppingArea("top",row, false);
+        if(drawSpecials) {
+            thundashop.dndlayout.drawSpecialDropAreas(onElement);
         }
+        
         area.on('mouseenter', function() {
             $(this).addClass('gsdroppingareahover');
         });
@@ -175,6 +180,16 @@ thundashop.dndlayout = {
             $(this).removeClass('gsdroppingareahover');
         });
         $('body').append(area);
+    },
+    
+    drawSpecialDropAreas: function(onElement) {
+        var type = thundashop.dndlayout.dragType;
+        var parent = onElement.closest('.gscell');
+        if(type === "row" && parent.hasClass('gscolumn')) {
+            console.log('skaft');
+            thundashop.dndlayout.drawDroppingArea("top", parent.closest('.gsinner'), false);
+            thundashop.dndlayout.drawDroppingArea("bottom", parent.closest('.gsinner'), false);
+        }
     },
     
     drawlayout : function() {

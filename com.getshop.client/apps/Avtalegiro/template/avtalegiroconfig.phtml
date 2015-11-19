@@ -1,0 +1,69 @@
+<div class='gss_settings_header'>
+    <i class='fa fa-info'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Settings"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Set up the nesesarry information to configure avtalegiro.");
+            ?>	
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+    
+    <div class="textfield gss_setting"  id="account">
+        <span class="title">* Bedriftens kontonummer</span>
+        <input type="textfield" gs_model='ecommercesettings' gs_model_attr='account' value="<? echo $this->getConfigurationSetting("account"); ?>">
+        <div class="description">
+            Kontonummer Bedriften har avtale om AvtaleGiro på.
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="name">
+        <span class="title">* Bedriftens navn</span>
+        <input type="textfield" gs_model='ecommercesettings' gs_model_attr='name' value="<? echo $this->getConfigurationSetting("name"); ?>">
+        <div class="description">
+            Samme navn som Bedriften har registrert på sin AvtaleGiro avtale.
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="limit">
+        <span class="title">* Beløpsgrense</span>
+        <input type="textfield" gs_model='ecommercesettings' gs_model_attr='limit' value="<? echo $this->getConfigurationSetting("limit"); ?>">
+        <div class="description">
+            Forslag til beløpsgrense per måned i hele kroner.
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="utstederid">
+        <span class="title">* Utsteder id</span>
+        <input type="textfield" gs_model='ecommercesettings' gs_model_attr='utstederid' value="<? echo $this->getConfigurationSetting("utstederid"); ?>">
+        <div class="description">
+            Bedriftens ID for eFaktura B2C
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="brandid">
+        <span class="title">* BrandID</span>
+        <input type="textfield" gs_model='ecommercesettings' gs_model_attr='brandid' value="<? echo $this->getConfigurationSetting("brandid"); ?>">
+        <div class="description">
+            For bedrifter som har mer enn en brand pr utsteder ID. Default er 1.
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="url">
+        <span class="title">* Retur-URL</span>
+        <input type="textfield" gs_model='ecommercesettings' gs_model_attr='url' value="<? echo $this->getConfigurationSetting("url"); ?>">
+        <div class="description">
+            Retur URL som kunden skal sendes tilbake til.
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="save"  gss_model="ecommercesettings" gss_success_message="<? echo $this->__f("Saved successfully"); ?>"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
+    </div>
+</div>

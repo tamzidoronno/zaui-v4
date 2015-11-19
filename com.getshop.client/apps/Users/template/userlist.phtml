@@ -71,6 +71,18 @@ $users = $this->getApi()->getUserManager()->getAllUsers();
                 <div class="email"> <? echo $email; ?></div>
                 <div class="phone"><? echo $phone; ?></div>
                 <?
+                $instance = $this->getFactory()->getApi()->getStoreApplicationPool()->getApplication("8f5f7f8f-de42-4867-82cc-63eb0cb55fa1");
+                if($instance) {
+                    /* @var $autogiroapp ns_8f5f7f8f_de42_4867_82cc_63eb0cb55fa1\Avtalegiro */
+                    $autogiroapp = $this->getFactory()->getApplicationPool()->createInstace($instance);
+                    $link = $autogiroapp->createLink($id);
+//                    echo "<pre>";
+//                    print_r($instance);
+                    echo "Avtalegiro: ";
+                    echo "<a href='".$autogiroapp->createLink($id)."' target='_new'>Avtalegiro</a>";
+                    echo " - <a href='".$autogiroapp->createLink($id)."' target='_new'>Efaktura</a>";
+                    echo " - <a href='".$autogiroapp->createLink($id)."' target='_new'>Avtalegiro + efaktura</a>";
+                }
                 if (count($groups)) {
                     $i = 0;
                     echo "<div class='usergroups' style='font-style: italic;'>".$this->__f("Group(s)").": ";

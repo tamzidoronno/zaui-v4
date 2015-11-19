@@ -48,18 +48,18 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
         
-        Application SalesPanel = createSettings("SalesPanel",
-        "84420130-b401-44e8-a9ab-52d6458f2c0c",
+        
+        Application Avtalegiro = createSettings("Avtalegiro",
+        "8f5f7f8f-de42-4867-82cc-63eb0cb55fa1",
         allowed2,
         " ",
-        Application.Type.Marketing, true);
-        SalesPanel.isPublic = false;
-        SalesPanel.isFrontend = true;
-        SalesPanel.moduleId = "other";
-        SalesPanel.allowedStoreIds.add("efad5b1f-b679-4c2b-8774-8c2475c20137");
-        SalesPanel.defaultActivate = false;
-        apps.add(SalesPanel);
-
+        Application.Type.Payment, true);
+        Avtalegiro.isPublic = true;
+        Avtalegiro.isFrontend = false;
+        Avtalegiro.moduleId = "WebShop";
+        Avtalegiro.defaultActivate = false;
+        Avtalegiro.isSingleton = true;
+        apps.add(Avtalegiro);
 
         return apps;
     }

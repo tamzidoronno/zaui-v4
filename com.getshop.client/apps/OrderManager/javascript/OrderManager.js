@@ -4,11 +4,39 @@ app.OrderManager = {
         $(document).on('click', '.gss_overview_order', app.OrderManager.showOrder);   
         $(document).on('click', '.gss_order_back_to_orders', app.OrderManager.showOverview);   
         $(document).on('click', '.gss_changeOrderLine', app.OrderManager.changeOrderLine);   
+        $(document).on('click', '.gss_changeOrderCount', app.OrderManager.changeOrderCount);   
+        $(document).on('click', '.gss_addOrderItem', app.OrderManager.addOrderItem);   
         $(document).on('click', '.gss_order_view_select_payement_method', app.OrderManager.changePaymentType);   
         $(document).on('click', '.gss_mark_order_as_paid', app.OrderManager.markOrderAsPaid);   
+        $(document).on('click', '.creditinvoice', app.OrderManager.creditOrder);   
+        $(document).on('click', '#updateinvoiceinfo', app.OrderManager.updateInvoiceInformation);
         $(document).on('click', '.gss_changePaymentType', function() {
             $('.gss_orderview_available_payments').slideDown();
         });   
+    },
+    creditOrder : function() {
+        var orderId = $(this).attr('orderId');
+        
+        var data = {
+            gss_fragment: 'orderview',
+            gss_view: 'gss_orderview',
+            value: orderId,
+        }
+        
+        getshop.Settings.post(data, "creditOrder");
+    },
+    updateInvoiceInformation : function() {
+        var text = $('#invoiceinformationbox').val();
+         var orderId = $('.orderoverview').attr('orderid');
+        var data = {
+            gss_fragment: 'orderview',
+            gss_view: 'gss_orderview',
+            "text" : text,
+            value: orderId,
+            "orderId" : orderId
+        }
+         getshop.Settings.post(data, "updateInvoiceInformation");
+         thundashop.common.Alert('Updated', "information has been added");
     },
     
     markOrderAsPaid: function() {
@@ -34,6 +62,45 @@ app.OrderManager = {
         }
         
         getshop.Settings.post(data, "changePaymentType");
+    },
+    
+    addOrderItem : function() {
+        var orderId = $(this).closest('.orderoverview').attr('orderid');
+        var productId = $('#addproductitem').val();
+        var data = {
+            gss_fragment: 'orderview',
+            gss_view: 'gss_orderview',
+            productId: productId,
+            value: orderId
+        }
+        
+        getshop.Settings.post(data, "addItemToOrder");
+    },
+    
+    changeOrderCount : function() {
+        var cartItem = $(this).closest('.gss_order_line').attr('cartItemId');
+        var newValue = prompt(__f("Please enter the new count for this order line"));
+        var orderId = $(this).closest('.orderoverview').attr('orderid');
+        
+        if (!newValue) {
+            return;
+        }
+        
+        if (newValue === "" || isNaN(newValue)) {
+            alert(__f('You did not enter a valid number'));
+            return;
+        }
+        
+        var data = {
+            gss_fragment: 'orderview',
+            gss_view: 'gss_orderview',
+            value: orderId,
+            cartItemId: cartItem,
+            count : newValue
+        }
+        
+        getshop.Settings.post(data, "updateOrderCount");
+        
     },
     
     changeOrderLine: function() {

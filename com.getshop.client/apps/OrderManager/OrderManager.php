@@ -18,6 +18,12 @@ class OrderManager extends \WebshopApplication implements \Application {
         
     }
     
+    public function updateInvoiceInformation() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['orderId']);
+        $order->invoiceNote = $_POST['text'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
     public function renderConfig() {
         $this->includefile("orderoverview");
     }
@@ -114,7 +120,6 @@ class OrderManager extends \WebshopApplication implements \Application {
         $this->setConfigurationSetting("ordersubject", $_POST['ordersubject']);
         $this->setConfigurationSetting("orderemail", $_POST['emailconfig']);
         $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
-        $this->setConfigurationSetting("shouldSendEmailAfterCompleted", $_POST['shouldSendEmailAfterCompleted']);
     }
     
     public function updateOrder() {
@@ -131,9 +136,28 @@ class OrderManager extends \WebshopApplication implements \Application {
         
     }
     
+    /**
+     * 
+     * @param \core_ordermanager_data_Order $order
+     * @return type
+     */
     public function canChangeOrder($order) {
-        $paymentCompleted = 7;
-        return $order->status != $paymentCompleted;
+        return !$order->transferredToAccountingSystem;
+    }
+    
+    public function creditOrder() {
+        $orderId = $_POST['value'];
+        $this->getApi()->getOrderManager()->creditOrder($orderId);
+    }
+    
+    public function updateOrderCount() {
+        $this->getApi()->getOrderManager()->updateCountForOrderLine($_POST['cartItemId'], $_POST['value'], $_POST['count']);
+    }
+    
+    public function addItemToOrder() {
+        $orderID =  $_POST['value'];
+        $productId =  $_POST['productId'];
+        $this->getApi()->getOrderManager()->addProductToOrder($orderID, $productId, 1);
     }
     
     public function updateOrderLine() {

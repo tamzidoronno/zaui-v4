@@ -95,6 +95,15 @@ public interface IOrderManager {
     @Administrator
     public List<Order> getAllOrdersForUser(String userId) throws ErrorException;
     
+    @Administrator
+    public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException;
+    
+    @Administrator
+    public void updateCountForOrderLine(String cartItemId, String orderId, Integer count);
+    
+    @Editor
+    public Order creditOrder(String orderId);
+    
     /**
      * Fetch all orders on product.
      * @param userId

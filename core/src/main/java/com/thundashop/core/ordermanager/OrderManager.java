@@ -65,6 +65,46 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private InvoiceManager invoiceManager;
     
     @Override
+    public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
+        Order order = getOrder(orderId);
+        Product product = productManager.getProduct(productId).clone();
+        order.cart.createCartItem(product, count);
+        saveObject(order);
+    }
+    
+    
+    @Override
+    public Order creditOrder(String orderId) {
+        Order order = getOrderSecure(orderId);
+        Order credited = order.jsonClone();
+        for(CartItem item : credited.cart.getItems()) {
+            item.setCount(item.getCount() * -1);
+        }
+        
+        incrementingOrderId++;
+        credited.incrementOrderId = incrementingOrderId;
+        credited.isCreditNote = true;
+        order.creditOrderId.add(credited.id);
+        saveOrder(credited);
+        saveOrder(order);
+        return credited;
+    }
+    
+    @Override
+    public void updateCountForOrderLine(String cartItemId, String orderId, Integer count) {
+        Order order = getOrder(orderId);
+        if (order == null) {
+            return;
+        }
+        if(count == 0) {
+            order.cart.removeItem(cartItemId);
+        } else {
+            order.updateCount(cartItemId, count);
+        }
+        saveOrder(order);
+    }
+    
+    @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof Order) {
@@ -413,10 +453,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (order.payment != null && order.payment.paymentFee > 0) {
             toPay += order.payment.paymentFee;
-        }
-        
-        if (toPay < 0) {
-            toPay = 0D;
         }
         
         return toPay;

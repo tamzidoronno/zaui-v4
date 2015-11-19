@@ -18,4 +18,5 @@ public class Payment implements Serializable {
     public TaxGroup paymentFeeTaxGroup = null;
     public HashMap<Long, String> transactionLog = new HashMap();
     public boolean captured = false;
+    public HashMap<String, String> callBackParameters = new HashMap();
 }

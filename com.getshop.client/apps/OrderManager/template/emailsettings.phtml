@@ -12,18 +12,6 @@
         <?php echo $this->__("When a customer places a order, should he/she receive an email with a confirmation?"); ?>
     </div>
 </div>
-<div class="textfield gss_setting"  id="shouldSendEmailAfterPaymentCompleted">
-    <span class="title"><?php echo $this->__f("Send email to customers after payment completed"); ?></span>
-    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="shouldSendEmailAfterCompleted">
-        <?
-        $class = ($this->getConfigurationSetting("shouldSendEmailAfterCompleted") == "true") ? "fa-toggle-on" : "fa-toggle-off";
-        ?>
-        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
-    </div>
-    <div class="description">
-        <?php echo $this->__("When a customer places a order, should he/she receive an email with a confirmation?"); ?>
-    </div>
-</div>
 
 <div class="textfield gss_setting"  id="shouldSendEmail">
     <span class="title"><?php echo $this->__f("Order subject"); ?></span>

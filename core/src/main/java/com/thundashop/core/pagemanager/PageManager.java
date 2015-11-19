@@ -721,6 +721,9 @@ public class PageManager extends ManagerBase implements IPageManager {
                 inCell = "";
             } else {
                 inCell = parent.cellId;
+                if(currentCell.mode.equals(PageCell.CellMode.column)) {
+                    inCell = cellId;
+                }
                 beforeCell = cellId;
             }
         }
@@ -750,6 +753,9 @@ public class PageManager extends ManagerBase implements IPageManager {
                 inCell = "";
             } else {
                 inCell = parent.cellId;
+                if(currentCell.mode.equals(PageCell.CellMode.column)) {
+                    inCell = cellId;
+                }
                 beforeCell = "";
             }
         }

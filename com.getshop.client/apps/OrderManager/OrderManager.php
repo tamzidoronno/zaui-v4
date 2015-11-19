@@ -142,7 +142,14 @@ class OrderManager extends \WebshopApplication implements \Application {
      * @return type
      */
     public function canChangeOrder($order) {
-        return !$order->transferredToAccountingSystem;
+        if($order->transferredToAccountingSystem) {
+            return false;
+        }
+        if($order->status == 7) {
+            return false;
+        }
+        
+        return true;
     }
     
     public function creditOrder() {

@@ -10,9 +10,20 @@ app.OrderManager = {
         $(document).on('click', '.gss_mark_order_as_paid', app.OrderManager.markOrderAsPaid);   
         $(document).on('click', '.creditinvoice', app.OrderManager.creditOrder);   
         $(document).on('click', '#updateinvoiceinfo', app.OrderManager.updateInvoiceInformation);
+        $(document).on('click', '.gsspayorder', app.OrderManager.payorder);
         $(document).on('click', '.gss_changePaymentType', function() {
             $('.gss_orderview_available_payments').slideDown();
         });   
+    },
+    payorder : function() {
+        var orderid = $(this).attr('orderid');
+    $('#backsidesettings').fadeOut(0, function () {
+            $('#gsbody').fadeIn(300);
+            var event = thundashop.Ajax.createEvent(null, "unsetShowingSettings", null, {});
+            thundashop.Ajax.postWithCallBack(event, function() {
+                window.location.href="/?page=cart&payorder=" + orderid;
+            });
+        });
     },
     creditOrder : function() {
         var orderId = $(this).attr('orderId');

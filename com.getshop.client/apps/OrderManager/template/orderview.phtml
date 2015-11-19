@@ -50,8 +50,8 @@ $cart = $order->cart;
                     echo '<input type="button" gss_view="gss_orderview" gss_fragment="orderview" gss_method="showOrder" gss_value="'.$creditId.'" value="Open credited order '.$i.'" style="float:right;">';
                 }
             }  ?>
-        <? } ?>
             <input type="button" value="Credit order" class="creditinvoice" style="float:right;" orderid="<? echo $order->id; ?>" style='margin-right:10px;'>
+        <? } ?>
         </div>
         
         <div class='gss_label'><? echo $this->__f("Incremental order id"); ?></div>
@@ -75,7 +75,12 @@ $cart = $order->cart;
                 echo "<br/>";
             }
             
-            echo $orderStatusText; ?>
+            echo $orderStatusText; 
+            
+            if($order->status == 2) {
+                echo " - <a class='gsspayorder' style='color:blue; cursor:pointer;' orderid='".$order->id."'>pay order</a>";
+            }
+            ?>
             
             <div class="gss_orderview_available_payments">
                 <?

@@ -700,6 +700,40 @@ public class PageManager extends ManagerBase implements IPageManager {
         page.flattenMobileLayout();
         savePage(page);
     }
+
+    @Override
+    public String addLayoutCellDragAndDrop(String pageId, String cellId, String type, String edge, String area) throws ErrorException {
+        String inCell = "";
+        String beforeCell = "";
+        String mode = type.toUpperCase();
+        
+        if(edge.equals("top")) {
+            beforeCell = cellId;
+            inCell = cellId;
+        }
+        if(edge.equals("center-left")) {
+            inCell = cellId;
+            beforeCell = cellId;
+        }
+        if(edge.equals("center-right")) {
+            inCell = cellId;
+            beforeCell = "";
+        }
+        if(edge.equals("left")) {
+            inCell = cellId;
+            beforeCell = cellId;
+        }
+        if(edge.equals("right")) {
+            inCell = cellId;
+            beforeCell = "";
+        }
+        if(edge.equals("bottom")) {
+            inCell = cellId;
+            beforeCell = "";
+        }
+        
+        return addLayoutCell(pageId, inCell, beforeCell, mode, area);
+    }
     
     
 }

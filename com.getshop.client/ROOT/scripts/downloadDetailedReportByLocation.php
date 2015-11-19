@@ -1,8 +1,13 @@
 <?php
-header("Content-type: text/csv");
-header("Content-Disposition: attachment; filename=file.csv");
 header("Pragma: no-cache");
-header("Expires: 0");
+header('Expires: 0');
+header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+header('Content-Description: File Transfer');
+header('Content-Type: text/csv');
+header("Content-Disposition: attachment; filename=file.csv");
+header('Content-Transfer-Encoding: binary'); 
+
+echo chr(0xEF) . chr(0xBB) . chr(0xBF);
 
 $start = urldecode($_GET['from']);
 $end = urldecode($_GET['to']);

@@ -94,7 +94,7 @@ arxappControllers.controller('UsersCtrl', ['GetshopService', '$scope', function(
 
 }]);
 
-arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$stateParams', function(getshop, $scope, $stateParams) {
+arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$stateParams', '$ionicModal', function(getshop, $scope, $stateParams, $ionicModal) {
 
   // This should be replaced with api call to get only one person details
   $scope.onPersonFetched = function(result) {
@@ -117,6 +117,15 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
   $scope.isProcessing = true;
   getshop.client.ArxManager.getAllPersons().done($scope.onPersonFetched);
 
+
+  // Inject modal forms for editing cards and access categories
+  $ionicModal.fromTemplateUrl('card-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.cardModal = modal
+  })  
+
   $scope.addAccessCategory = function() {
     console.log("TODO: load access categories and create form for adding access category");
   };
@@ -126,8 +135,16 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
   };
 
   $scope.addCard = function() {
-    console.log("TODO: adding card form");
+    $scope.cardModal.show();
+    $scope.newCard = { cardid: 'xxx', format: 'what is this?', description: 'new and shiny card' }
+    $scope.newCard.personId = $scope.user.id;
   };
+
+  $scope.saveCard = function() {
+    $scope.user.cards.push($scope.newCard);
+    getshop.client.ArxManager.updatePerson($scope.user);
+    $scope.cardModal.hide();
+  }
 
 }]);
 

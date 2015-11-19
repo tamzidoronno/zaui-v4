@@ -24,23 +24,24 @@ $files = array();
 
 foreach ($orders as $product) {
     /* @var $product SedoxProduct */
-	$data = array();
-    
-	$data['Car'] = $product->brand;
-	$data['Model'] = $product->model;
-	$data['EngineSize'] = $product->engineSize;
-	$data['HorsePower'] = $product->power;
-	$data['Year'] = $product->year;
+    $data = array();
+
+    $data['Car'] = $product->brand;
+    $data['Model'] = $product->model;
+    $data['EngineSize'] = $product->engineSize;
+    $data['HorsePower'] = $product->power;
+    $data['Year'] = $product->year;
     $data['originalFileName'] = getTuningfile($product, true);
-	$data['tuningfileid'] = getTuningfile($product);
-	$data['ProductId'] = (int)$product->id;
-	$data['dateCreated'] = $product->rowCreatedDate;
+    $data['tuningfileid'] = getTuningfile($product);
+    $data['ProductId'] = (int)$product->id;
+    $data['dateCreated'] = $product->rowCreatedDate;
     $data['comment'] = $product->comment;
     $data['tool'] = $product->tool;
     $data['gear'] = $product->gearType;
     $data['started'] = $product->started == true;
     $data['reference'] = ns_23fac58b_5066_4222_860c_a9e88196b8a1\SedoxProductView::getReference($product);
-	$files[] = $data;
+    $data['originalChecksum'] = $product->originalChecksum;
+    $files[] = $data;
 }
 
 echo json_encode($files);

@@ -381,6 +381,14 @@ if (isset($_GET['showlogin']) || $factory->isEditorMode()) {
 if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
     echo "<script>getshop.Settings.showSettings(false);</script>";
 }
+
+$orders = $factory->getApi()->getOrderManager()->getAllOrdersForUser("d7a295bb-fe13-474e-9ce0-b0ba8e3f8c3c");
+foreach($orders as $order) {
+    $order->status = 2;
+    $order->payment->triedAutoPay = [];
+    $factory->getApi()->getOrderManager()->saveOrder($order);
+}
+
 ?>    
 <script>
     google.load('visualization', '1.0', {'packages':['corechart']});

@@ -13,6 +13,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.getshop.pullserver.PullMessage;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
@@ -232,26 +233,21 @@ public class DibsManager extends ManagerBase implements IDibsManager {
     public void captureOrder(Order order, int amount) throws Exception {
         String merchantId = order.payment.callBackParameters.get("merchant");
         
-        String createTicket = order.payment.callBackParameters.get("createTicket");
-        if(createTicket != null && !createTicket.isEmpty()) {
-            String status =  order.payment.callBackParameters.get("ticketStatus");
-            if(!status.equals("ACCEPTED")) {
-                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Ticket status failure", "for order: " + order.incrementOrderId, "post@getshop.com", "post@getshop.com");
-            } else {
-                System.out.println("This is a save card procedure...");
-                saveCardOnUser(order);
-                order.status = Order.Status.WAITING_FOR_PAYMENT;
-                orderManager.saveOrder(order);
-            }
-            return;
-        }
-
         
         String secretMacKey = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("hmac");
-        Map<String, String> response = captureTransaction(amount, merchantId , order.payment.callBackParameters.get("transaction"), secretMacKey);
+        String transaction = order.payment.callBackParameters.get("transaction");
+        order.payment.transactionLog.put(System.currentTimeMillis(), "Starting capture of transaction (DIBS) : " + transaction);
+        orderManager.saveOrder(order);
         
+        Map<String, String> response = captureTransaction(amount, merchantId , transaction, secretMacKey);
         
-        if(!order.payment.callBackParameters.get("currency").equals("NOK")) {
+        Application ecommerceSettings = storeApplicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+        String currency = ecommerceSettings.getSetting("currency");
+        if(currency == null || currency.isEmpty()) {
+            currency = "NOK";
+        }
+        
+        if(!order.payment.callBackParameters.get("currency").equals(currency)) {
             throw new Exception("Incorrect currency set");
         }
         
@@ -306,7 +302,13 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                             Double amount = cartManager.calculateTotalCost(order.cart);
                             int toCapture = new Double(amount*100).intValue();
                             order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to capture this order");
-                            captureOrder(order, toCapture);
+                            
+                            String createTicket = order.payment.callBackParameters.get("createTicket");
+                            if(createTicket != null && !createTicket.isEmpty()) {
+                                saveTicket(order);
+                            } else {
+                                captureOrder(order, toCapture);
+                            }
                             messageManager.sendInvoiceForOrder(order.id);
                             
                             orderManager.saveOrder(order);
@@ -345,23 +347,30 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         userManager.saveUser(user);
     }
 
-    public void payWithCard(Order order, UserCard card) {
+    public void payWithCard(Order order, UserCard card) throws Exception {
         order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to extract with saved card: " + card.card + " expire: " + card.expireMonth + "/" + card.expireYear);
         order.payment.triedAutoPay.add(new Date());
         orderManager.saveOrder(order);
         
         String merchantId = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("merchantid");
-        String currency = "NOK";
+        Application ecommerceSettings = storeApplicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+        String currency = ecommerceSettings.getSetting("currency");
+        
+        if(currency == null || currency.isEmpty()) {
+            currency = "NOK";
+        }
         
         Double amount = order.cart.getTotal(false);
         int toTicket = new Double(amount*100).intValue();
         
-        Map<String, String> result = AuthorizeTicket(toTicket, currency, merchantId, order.incrementOrderId+ "", card.card, storeId);
+        String secretMacKey = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("hmac");
+        Map<String, String> result = AuthorizeTicket(toTicket, currency, merchantId, order.incrementOrderId+ "", card.card, secretMacKey);
         if (result.get("status").equals("ACCEPT")) {
-            order.status = Order.Status.PAYMENT_COMPLETED;
+            String transactionId = result.get("transactionId");
+            order.payment.callBackParameters.put("transaction", transactionId);
+            captureOrder(order, toTicket);
         } else if(order.payment.triedAutoPay.size() >= 3) {
             order.status = Order.Status.PAYMENT_FAILED;
-            orderManager.notifyAboutFailedPaymentOnOrder(order);
        }
         
         Gson gson = new Gson();
@@ -422,4 +431,16 @@ public class DibsManager extends ManagerBase implements IDibsManager {
      
      return resp;
    }
+
+    private void saveTicket(Order order) {
+        String status =  order.payment.callBackParameters.get("ticketStatus");
+        if(!status.equals("ACCEPTED")) {
+            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Ticket status failure", "for order: " + order.incrementOrderId, "post@getshop.com", "post@getshop.com");
+        } else {
+            System.out.println("This is a save card procedure...");
+            saveCardOnUser(order);
+            order.status = Order.Status.WAITING_FOR_PAYMENT;
+            orderManager.saveOrder(order);
+        }
+    }
 }

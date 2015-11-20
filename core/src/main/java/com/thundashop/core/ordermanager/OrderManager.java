@@ -138,7 +138,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     private void saveOrderInternal(Order order) throws ErrorException {
         
-        validatePaymentStatus(order);
+//        validatePaymentStatus(order);
         
         User user = getSession().currentUser;
         if (user != null && order.userId == null) {
@@ -1091,33 +1091,29 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void checkForOrdersToAutoPay() throws ErrorException {
         for(Order order : orders.values()) {
-            if(order.status != Order.Status.WAITING_FOR_PAYMENT) {
+            if(!orderNeedAutoPay(order)) {
                 continue;
             }
-            
-            if(order.triedAutoPay()) {
-                continue;
-            }
-            
+            System.out.println("autopay for order: " + order.incrementOrderId);
             User user = userManager.getUserById(order.userId);
-            if(user == null) {
-                continue;
-            }
-
-            if(user.savedCards.isEmpty()) {
-                continue;
-            }
-
             for(UserCard card : user.savedCards) {
                 if(card.isExpired()) {
                     continue;
                 }
                 
-                if(card.savedByVendor.equals("DIBS")) {
-                    dibsManager.payWithCard(order, card);
+                try {
+                    if(card.savedByVendor.equals("DIBS")) {
+                        dibsManager.payWithCard(order, card);
+                    }
                     if(order.status == Order.Status.PAYMENT_COMPLETED) {
                         break;
                     }
+                    if(order.status == Order.Status.PAYMENT_FAILED) {
+                        notifyAboutFailedPaymentOnOrder(order);
+                    }
+                }catch(Exception e) {
+                    order.payment.transactionLog.put(System.currentTimeMillis(), "Fatal error when trying autopay.");
+                    saveOrder(order);
                 }
             }
         }
@@ -1125,5 +1121,33 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public void notifyAboutFailedPaymentOnOrder(Order order) {
         System.out.println("Need to notify about failed payment");
+    }
+
+    private boolean orderNeedAutoPay(Order order) {
+        System.out.println("Checking order: " + order.incrementOrderId);
+        if(order.cart.getTotal(true) <= 0) {
+            System.out.println("Negative amount");
+            return false;
+        }
+        if(order.status != Order.Status.WAITING_FOR_PAYMENT) {
+            System.out.println("Not waiting for payment");
+            return false;
+        }
+
+        if(order.triedAutoPay()) {
+            System.out.println("Already tried");
+            return false;
+        }
+
+        User user = userManager.getUserById(order.userId);
+        if(user == null) {
+            System.out.println("No user");
+            return false;
+        }
+
+        if(user.savedCards.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 }

@@ -248,10 +248,12 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         }
         
         if(!order.payment.callBackParameters.get("currency").equals(currency)) {
+            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Fraud attempt on order (" + order.incrementOrderId + ")", "", "post@getshop.com", "post@getshop.com");
             throw new Exception("Incorrect currency set");
         }
         
         if(response == null) {
+            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Invalid response on order (" + order.incrementOrderId + ")", "", "post@getshop.com", "post@getshop.com");
             throw new Exception("Invalid response from dibs");
         }
         

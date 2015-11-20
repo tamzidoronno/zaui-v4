@@ -137,9 +137,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
 
     private void saveOrderInternal(Order order) throws ErrorException {
-        
-//        validatePaymentStatus(order);
-        
         User user = getSession().currentUser;
         if (user != null && order.userId == null) {
             order.userId = user.id;
@@ -1124,9 +1121,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private boolean orderNeedAutoPay(Order order) {
-        System.out.println("Checking order: " + order.incrementOrderId);
         if(order.cart.getTotal(true) <= 0) {
-            System.out.println("Negative amount");
             return false;
         }
         if(order.status != Order.Status.WAITING_FOR_PAYMENT) {
@@ -1135,13 +1130,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
 
         if(order.triedAutoPay()) {
-            System.out.println("Already tried");
             return false;
         }
 
         User user = userManager.getUserById(order.userId);
         if(user == null) {
-            System.out.println("No user");
             return false;
         }
 

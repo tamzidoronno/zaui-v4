@@ -11,6 +11,7 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -74,6 +75,27 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         
         payment.paymentType = "ns_"+paymentApplication.id.replace("-", "_")+"\\"+paymentApplication.appName;
+    }
+
+    public boolean triedAutoPay() {
+        if(payment.triedAutoPay.isEmpty()) {
+            return false;
+        }
+        
+        if(payment.triedAutoPay.size() >= 3) {
+            return true;
+        }
+        Calendar yestercal = Calendar.getInstance();
+        yestercal.add(Calendar.DAY_OF_YEAR, -1);
+        Date yesterdate = yestercal.getTime();
+        for(Date lastTime : payment.triedAutoPay) {
+            if(lastTime.after(yesterdate)) {
+                return true;
+            }
+        }
+        
+        return false;
+       
     }
     
     public static class Status  {

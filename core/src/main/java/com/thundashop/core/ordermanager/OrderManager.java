@@ -26,6 +26,7 @@ import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserCard;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -1085,5 +1086,44 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order != null) {
             sendMail(order);
         }
+    }
+
+    @Override
+    public void checkForOrdersToAutoPay() throws ErrorException {
+        for(Order order : orders.values()) {
+            if(order.status != Order.Status.WAITING_FOR_PAYMENT) {
+                continue;
+            }
+            
+            if(order.triedAutoPay()) {
+                continue;
+            }
+            
+            User user = userManager.getUserById(order.userId);
+            if(user == null) {
+                continue;
+            }
+
+            if(user.savedCards.isEmpty()) {
+                continue;
+            }
+
+            for(UserCard card : user.savedCards) {
+                if(card.isExpired()) {
+                    continue;
+                }
+                
+                if(card.savedByVendor.equals("DIBS")) {
+                    dibsManager.payWithCard(order, card);
+                    if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public void notifyAboutFailedPaymentOnOrder(Order order) {
+        System.out.println("Need to notify about failed payment");
     }
 }

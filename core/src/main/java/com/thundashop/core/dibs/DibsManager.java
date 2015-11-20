@@ -13,6 +13,9 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.getshop.pullserver.PullMessage;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserCard;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,6 +27,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -56,6 +60,9 @@ public class DibsManager extends ManagerBase implements IDibsManager {
     
     @Autowired
     private CartManager cartManager;
+    
+    @Autowired
+    private UserManager userManager;
     
     private boolean sentPollFailed = false;
     /**
@@ -224,8 +231,25 @@ public class DibsManager extends ManagerBase implements IDibsManager {
 
     public void captureOrder(Order order, int amount) throws Exception {
         String merchantId = order.payment.callBackParameters.get("merchant");
+        
+        String createTicket = order.payment.callBackParameters.get("createTicket");
+        if(createTicket != null && !createTicket.isEmpty()) {
+            String status =  order.payment.callBackParameters.get("ticketStatus");
+            if(!status.equals("ACCEPTED")) {
+                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Ticket status failure", "for order: " + order.incrementOrderId, "post@getshop.com", "post@getshop.com");
+            } else {
+                System.out.println("This is a save card procedure...");
+                saveCardOnUser(order);
+                order.status = Order.Status.WAITING_FOR_PAYMENT;
+                orderManager.saveOrder(order);
+            }
+            return;
+        }
+
+        
         String secretMacKey = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("hmac");
         Map<String, String> response = captureTransaction(amount, merchantId , order.payment.callBackParameters.get("transaction"), secretMacKey);
+        
         
         if(!order.payment.callBackParameters.get("currency").equals("NOK")) {
             throw new Exception("Incorrect currency set");
@@ -274,7 +298,6 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                     LinkedHashMap<String,String> polledResult = gson.fromJson(msg.postVariables, LinkedHashMap.class);
                     if(!polledResult.containsKey("orderId")) {
                         messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed prosessing message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
-                        getShopPullService.markMessageAsReceived(msg.id, storeId);
                     } else {
                         Order order = orderManager.getOrderByincrementOrderId(new Integer(polledResult.get("orderId")));
                         try {
@@ -286,20 +309,18 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                             captureOrder(order, toCapture);
                             messageManager.sendInvoiceForOrder(order.id);
                             
-                            getShopPullService.markMessageAsReceived(msg.id, storeId);
                             orderManager.saveOrder(order);
                         }catch(Exception d) {
                             messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
-                            getShopPullService.markMessageAsReceived(msg.id, storeId);
                             order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
                             d.printStackTrace();
                         }
                     }
                 }catch(Exception ex) {
                     messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
-                    getShopPullService.markMessageAsReceived(msg.id, storeId);
                     ex.printStackTrace();
                 }
+                getShopPullService.markMessageAsReceived(msg.id, storeId);
             }
             sentPollFailed = false;
         } catch (Exception ex) {
@@ -308,4 +329,97 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             ex.printStackTrace();
         }
     }
+
+    private void saveCardOnUser(Order order) {
+        User user = userManager.getUserById(order.userId);
+        if(user == null) {
+            System.out.println("Failed to find user?" + order.userId);
+            return;
+        }
+        UserCard card = new UserCard();
+        card.card = order.payment.callBackParameters.get("ticket");
+        card.expireYear = new Integer(order.payment.callBackParameters.get("expYear"));
+        card.expireMonth = new Integer(order.payment.callBackParameters.get("expMonth"));
+        card.savedByVendor = "DIBS";
+        user.savedCards.add(card);
+        userManager.saveUser(user);
+    }
+
+    public void payWithCard(Order order, UserCard card) {
+        order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to extract with saved card: " + card.card + " expire: " + card.expireMonth + "/" + card.expireYear);
+        order.payment.triedAutoPay.add(new Date());
+        orderManager.saveOrder(order);
+        
+        String merchantId = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("merchantid");
+        String currency = "NOK";
+        
+        Double amount = order.cart.getTotal(false);
+        int toTicket = new Double(amount*100).intValue();
+        
+        Map<String, String> result = AuthorizeTicket(toTicket, currency, merchantId, order.incrementOrderId+ "", card.card, storeId);
+        if (result.get("status").equals("ACCEPT")) {
+            order.status = Order.Status.PAYMENT_COMPLETED;
+        } else if(order.payment.triedAutoPay.size() >= 3) {
+            order.status = Order.Status.PAYMENT_FAILED;
+            orderManager.notifyAboutFailedPaymentOnOrder(order);
+       }
+        
+        Gson gson = new Gson();
+        String toLog = gson.toJson(result);
+        order.payment.transactionLog.put(System.currentTimeMillis(), toLog);
+        orderManager.saveObject(order);
+    }
+    
+    
+    /**
+    * Dependencies:
+    * Apache-Commons/Commons-Codec for Hex encoding/decoding
+    * Codehaus/Jackson for JSON mapping
+    */
+   /**
+    * AuthorizeTicket Makes a new authorization on an existing ticket using the AuthorizeTicket JSON service
+    *
+    * @param amount The amount of the purchase in smallest unit
+    * @param clientIp The customers IP address
+    * @param currency The currency either in numeric or string format (e.g. 208/DKK)
+    * @param merchantId DIBS Merchant ID / customer number
+    * @param orderId The shops order ID for the purchase
+    * @param ticketId The ticket number on which the authorization should be done
+    * @param macKeyHex The secret HMAC key from DIBS Admin
+    */
+   public Map<String, String> AuthorizeTicket(int amount, String currency, String merchantId, String orderId, String ticketId, String macKeyHex) {
+
+     // Create JSON object and add parameters
+     Map<String, String> parameters = new HashMap<String, String>();
+     parameters.put("amount", String.valueOf(amount));
+     parameters.put("currency", currency);
+     parameters.put("merchantId", merchantId);
+     parameters.put("orderId", orderId);
+     parameters.put("ticketId", ticketId);
+
+     // Add MAC value for request
+     parameters.put("MAC", calculateMac(parameters, macKeyHex));
+
+     // Post to the DIBS system and receive response
+     Map<String, String> resp = postToDIBS(parameters, "AuthorizeTicket");
+     
+     if (resp.get("status").equals("ACCEPT")) {
+       // Authorization accepted. Check resp.get("transactionId") for transaction ID
+       // ...
+       System.out.println("Ticket Auth accepted. Response:");
+       System.out.println(resp.toString());
+     } else if (resp.get("status").equals("DECLINE")) {
+       // Authorization declined. Check resp.get("declineReason") for more information
+       // ...
+       System.out.println("Ticket Auth declined. Response:");
+       System.out.println(resp.toString());
+     } else {
+       // An error happened. Check Check resp.get("declineReason") for more information
+       // ...
+       System.out.println("An error happened during Auth. Response:");
+       System.out.println(resp.toString());
+     }
+     
+     return resp;
+   }
 }

@@ -89,6 +89,9 @@ public interface IOrderManager {
     @Administrator
     public void checkForOrdersToCapture() throws ErrorException;
     
+    @Administrator
+    public void checkForOrdersToAutoPay() throws ErrorException;
+    
     /**
      * Fetch all orders for a user.
      * @param userId

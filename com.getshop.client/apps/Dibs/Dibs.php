@@ -27,9 +27,6 @@ class Dibs extends \PaymentApplication implements \Application {
         
         $paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
         $paymentfailed = $this->getConfigurationSetting("paymentfailed");
-
-        print_r($_POST);
-        exit(0);
         
         if (isset($_GET['orderId'])) {
             if($nextPage == $paymentsuccess) {
@@ -87,7 +84,7 @@ class Dibs extends \PaymentApplication implements \Application {
             <input value="' . $redirect_url . $paymentfailed . '" name="cancelReturnUrl" type="hidden" />
             <input value="' . $callBack . '" name="callbackUrl" type="hidden" />';
             if($this->saveCard()) {
-                echo '<INPUT TYPE="hidden" NAME="preauth" VALUE="1">';
+                echo '<INPUT TYPE="hidden" NAME="createTicket" VALUE="1">';
             }
         if(!$this->getApi()->getStoreManager()->isProductMode()) {
                 echo '<input type="hidden" name="test" value="1"/>';

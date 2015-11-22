@@ -402,6 +402,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         saveObject(newProduct);
         saveObject(sharedProduct);
 
+        UserManager userManager = getManager(UserManager.class);
+        sendAirgramMessages(userManager, newProduct);
         sendNotificationToUploadedUser(newProduct);
     }
 
@@ -718,14 +720,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private void sendFileCreatedNotification(SedoxProduct sedoxProduct) throws ErrorException {
         UserManager userManager = getManager(UserManager.class);
 
+        sendAirgramMessages(userManager, sedoxProduct);
+
+        sendNotificationEmail("files@tuningfiles.com", sedoxProduct);
+    }
+
+    private void sendAirgramMessages(UserManager userManager, SedoxProduct sedoxProduct) throws ErrorException {
         for (SedoxUser developer : getDevelopers()) {
             User user = userManager.getUserById(developer.id);
             if (developer.isActiveDelevoper) {
                 sendAirGramMessage(user.emailAddress, sedoxProduct);
             }
         }
-
-        sendNotificationEmail("files@tuningfiles.com", sedoxProduct);
     }
 
     private void sendAirGramMessage(String emailAddress, SedoxProduct sedoxProduct) throws ErrorException {

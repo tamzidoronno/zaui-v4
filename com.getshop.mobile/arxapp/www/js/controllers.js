@@ -140,6 +140,11 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
     $scope.newCard.personId = $scope.user.id;
   };
 
+  $scope.deleteCard = function(idx) {
+    $scope.user.cards.splice(idx, 1);
+    getshop.client.ArxManager.updatePerson($scope.user);    
+  }
+
   $scope.saveCard = function() {
     $scope.user.cards.push($scope.newCard);
     getshop.client.ArxManager.updatePerson($scope.user);

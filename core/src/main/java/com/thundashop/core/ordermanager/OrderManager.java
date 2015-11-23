@@ -13,6 +13,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -66,6 +67,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private InvoiceManager invoiceManager;
+    
+    @Autowired
+    private MessageManager messageManager;
     
     @Autowired
     private DibsManager dibsManager;
@@ -1103,6 +1107,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         dibsManager.payWithCard(order, card);
                     }
                     if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                        messageManager.sendInvoiceForOrder(order.id);
                         break;
                     }
                     if(order.status == Order.Status.PAYMENT_FAILED) {

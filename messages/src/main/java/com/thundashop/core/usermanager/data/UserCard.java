@@ -8,6 +8,7 @@ public class UserCard implements Serializable {
     public Integer expireMonth = -1;
     public Integer expireYear = -1;
     public String savedByVendor = "";
+    public String mask = "";
 
     public boolean isExpired() {
         Calendar cal = Calendar.getInstance();

@@ -345,6 +345,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         card.expireYear = new Integer(order.payment.callBackParameters.get("expYear"));
         card.expireMonth = new Integer(order.payment.callBackParameters.get("expMonth"));
         card.savedByVendor = "DIBS";
+        card.mask = order.payment.callBackParameters.get("cardNumberMasked");
         user.savedCards.add(card);
         userManager.saveUser(user);
     }

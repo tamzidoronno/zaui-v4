@@ -80,7 +80,7 @@
             </button>
           </div>
       </ion-content>
-      </ion-view>
+      </ion-view>T
     </script>
     
     <script id="about.html" type="text/ng-template">
@@ -176,31 +176,53 @@
           <h1 class="title">{{user.firstName}} {{user.lastName}}</h1>
         </ion-header-bar>
         <ion-content>
-          <div class="list">
-
+          <!--Access Categories-->
+          <ion-list can-swipe="true">
             <div class="item item-divider">
-              Access categories
-            </div>            
-            <div class="item item-icon-left" ng-repeat="ac in user.accessCategories">
+              <strong>Access Categories</strong>
+            </div>
+            <!-- Access Category Items-->
+            <ion-item ng-repeat="ac in user.accessCategories" class="item item-icon-left">
               <i class="icon ion-home"></i>
               <h2>{{ac.name}}</h2>
               <p>{{ac.description}}</p>
               <p>{{ac.startDate}} - {{ac.endDate}}</p>
-            </div>
+              <ion-option-button class="button-positive" ng-click="editAccessCategory(ac)">
+                Edit
+              </ion-option-button>
+              <ion-option-button class="button-assertive" ng-click="user.accessCategories.splice($index, 1)">
+                Delete
+              </ion-option-button>
+            </ion-item>
+            <!-- Add new Access Category-->
+            <button class="button button-block button-positive" ng-click="addAccessCategory()">
+              Add new
+            </button>
+          </ion-list>
+          <!-- Cards-->
+          <ion-list can-swipe="true">
             <div class="item item-divider">
-              Cards
+              <strong>Cards</strong>
             </div>
-            <div class="item item-icon-left" ng-repeat="card in user.cards">
+            <!-- Card Items-->
+            <ion-item ng-repeat="card in user.cards" class="item item-icon-left">
               <i class="icon ion-card"></i>
               <h2>{{card.cardid}}</h2>
               <p>{{card.format}}</p>
               <p>{{card.description}}</p>
-            </div>
-          </div>
+              <ion-option-button class="button-assertive" ng-click="user.cards.splice($index, 1)">
+                Delete
+              </ion-option-button>
+            </ion-item>
+            <!-- Add new Card-->
+            <button class="button button-block button-positive" ng-click="addCard()">
+              Add new
+            </button>
+          </ion-list>
   
-            <div ng-if="isProcessing" style="text-align:center; padding-top: 20px;">
-                <ion-spinner icon="ripple" class="largeripple"></ion-spinner>
-            </div>
+          <div ng-if="isProcessing" style="text-align:center; padding-top: 20px;">
+              <ion-spinner icon="ripple" class="largeripple"></ion-spinner>
+          </div>
   
           </ion-content>
         <!--
@@ -210,6 +232,35 @@
         -->
       </ion-view>
     </script>
+
+
+    <script id="card-modal.html" type="text/ng-template">
+      <div class="modal">
+        <ion-header-bar>
+          <h1 class="title">Add/Edit Card</h1>
+        </ion-header-bar>
+        <ion-content>
+          <div class="list">
+            <label class="item item-input">
+              <span class="input-label">Card Id</span>
+              <input type="text" ng-model="newCard.cardid">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Format</span>
+              <input type="text" ng-model="newCard.format">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Description</span>
+              <input type="text" ng-model="newCard.description">
+            </label>
+          </div>
+
+          <button class="button button-full button-energized" ng-click="saveCard()">Done</button>
+        </ion-content>
+      </div>
+    </script>
+
+
     <script id="doors.html" type="text/ng-template">
       <ion-view title="Doors">
        <ion-header-bar class="bar bar-header bar-light">

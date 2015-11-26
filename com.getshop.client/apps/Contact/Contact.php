@@ -38,6 +38,15 @@ class Contact extends \WebshopApplication implements \Application {
         return "";
     }
     
+    public function getThankYouPage() {
+         $config = $this->getContactConfig();
+        if(isset($config) && isset($config['thankyoupage'])) {
+            return $config['thankyoupage'];
+        }
+        
+        return "";
+    }
+    
     public function saveContact() {
         unset($_SESSION['contact']['edit']);
         $email = $_POST['data']['email'];
@@ -59,14 +68,20 @@ class Contact extends \WebshopApplication implements \Application {
         $type = $this->getCurrentType();
         $label = $this->getEventLabel();
         if(isset($_POST['event']) && $_POST['event'] == "sendContactForm") {
-            echo $this->getThankYouMessage();
-            /* if google analythics is activated */
-            if($this->getApi()->getStoreApplicationPool()->isActivated("0cf21aa0-5a46-41c0-b5a6-fd52fb90216f")) {
-                ?>
-                <script>
-                     _gaq.push(['_trackEvent', "contactform", "send", "<? echo $label; ?>"]);
-                </script>
-                <?
+            if($this->getThankYouPage()) {
+                echo "<script>";
+                echo "window.location.href='" . $this->getThankYouPage() . "';";
+                echo "</script>";
+            } else {
+                echo $this->getThankYouMessage();
+                /* if google analythics is activated */
+                if($this->getApi()->getStoreApplicationPool()->isActivated("0cf21aa0-5a46-41c0-b5a6-fd52fb90216f")) {
+                    ?>
+                    <script>
+                         _gaq.push(['_trackEvent', "contactform", "send", "<? echo $label; ?>"]);
+                    </script>
+                    <?
+                }
             }
         } else {
             $this->includefile("ContactTemplate".$type);

@@ -174,7 +174,7 @@ class CartManager extends \SystemApplication implements \Application {
         
         $this->init();
         
-        if ($this->canGoToPayment() && $_GET['payOrderId'] && $this->order) {
+        if ($this->canGoToPayment() && isset($_GET['payOrderId']) && $this->order) {
             $this->doPayment();
         }
         

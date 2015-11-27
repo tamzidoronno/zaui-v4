@@ -14,6 +14,7 @@ thundashop.app.account.registerUser = function(target) {
     var expireDate = container.find('#expireDate').val();
     
     var birthDay = container.find('#birthDay').val();
+    var reference = container.find('#referenceKey').val();
     var companyName = container.find('#companyName').val();
     var cellPhone = container.find('#cellPhone').val();
     var invoiceemail = container.find('#invoiceemail').val();
@@ -29,6 +30,7 @@ thundashop.app.account.registerUser = function(target) {
         postalCode : postalCode,
         city : city,
         expireDate : expireDate,
+        reference: reference,
         userlevel : userlevel,
         birthDay : birthDay,
         companyName : companyName,

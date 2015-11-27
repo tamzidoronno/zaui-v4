@@ -105,6 +105,13 @@ class GenerateReport {
     
     public function createExcelRow($user, $entry, $all=false, $stackedGroups) {
         $line = array();
+        $vatNumber = "";
+        
+        if (isset($user->company->vatNumber)) {
+            $vatNumber = $user->company->vatNumber;
+        }
+        
+        $line[] = $vatNumber;
         $line[] = $user->referenceKey;
         
 
@@ -127,7 +134,7 @@ class GenerateReport {
         if (isset($user->company->city)) {
             $companyInformation .= " - ".$user->company->city;
         }
-        
+
         $line[] = $companyInformation;
         $line[] = $user->fullName;
         $line[] = $entry->title;
@@ -190,7 +197,7 @@ class GenerateReport {
     }
 
     public function getUserHeading() {
-        return ["Group reference id", "Address", "Name", "Event name", "Ort", "Email", "Comments:"];
+        return ["VAT Number", "Group reference id", "Address", "Name", "Event name", "Ort", "Email", "Comments:"];
     }
 
     public function getParticipateData($data) {

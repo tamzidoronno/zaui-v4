@@ -124,6 +124,7 @@ class Account extends \SystemApplication implements \Application {
         $user->address->address = $street;
         $user->address->postCode = $postCode;
         $user->type = $userlevel;
+        $user->referenceKey = $_POST['data']['reference'];
         $user->cellPhone = $cellPhone;
         $user->companyName = $companyName;
         $user->birthDay = $birthDay;

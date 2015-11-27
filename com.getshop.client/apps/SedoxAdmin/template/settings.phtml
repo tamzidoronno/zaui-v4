@@ -11,7 +11,8 @@
         /* @var $developer \core_sedox_SedoxUser */
         $id = $developer->id;
         $checked = $developer->isActiveDelevoper ? "checked" : "";
-        echo "<br/><input type='checkbox' id='$id' $checked/> " . $this->getApi()->getUserManager()->getUserById($id)->fullName;
+        $normalUser = $this->getApi()->getUserManager()->getUserById($id);
+        echo "<br/><input type='checkbox' id='$id' $checked/> " . $normalUser->fullName." - ".$normalUser->emailAddress;
     }
     ?>
     <br><br><div class='gs_button savedevelopers'>Save</div>

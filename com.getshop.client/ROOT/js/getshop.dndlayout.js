@@ -5,12 +5,25 @@ thundashop.dndlayout = {
     dragElement : null,
     
     stopDragging : function() {
-        var droppedOn = $('.gsdroppingareahover');
+        var droppedOn = $('.gsborderpointerhover');
         if(droppedOn.length > 0) {
-            console.log('Dropped on: ' + droppedOn.attr('cellId') + " egde: " + droppedOn.attr('edge') + " type: " + thundashop.dndlayout.dragType);
+            var cellid = droppedOn.attr('cellid');
+            var edge = "";
+            if(thundashop.dndlayout.dragType === "row") {
+                edge = "top";
+                if(droppedOn.hasClass('gsborderpointer_column_bottom')) {
+                    edge = "bottom";
+                }
+            } else {
+                edge = "left";
+                if(droppedOn.hasClass('gsborderpointer_column_bottom')) {
+                    edge = "right";
+                }
+            }
+            console.log('Dropped on: ' + cellid + " egde: "  + edge + " type: " + thundashop.dndlayout.dragType);
             var data = {
-                "cellid" : droppedOn.attr('cellId'),
-                "edge" : droppedOn.attr('edge'),
+                "cellid" : cellid,
+                "edge" : edge,
                 "type" : thundashop.dndlayout.dragType
             }
             var event = thundashop.Ajax.createEvent('','dndAddCell',$(this), data);
@@ -157,7 +170,6 @@ thundashop.dndlayout = {
         }
 
         cellToWorkOn.addClass('gsborderpointerhover_'+dragtype+'_'+type);
-//        thundashop.dndlayout.hideDndBorders();
         target.show();
     },
     dndBorderMouseLeave : function() {

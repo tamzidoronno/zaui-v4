@@ -581,4 +581,68 @@ public class PageLayout implements Serializable {
         mobileList = new LinkedList();
         buildMobileList(areas.get("body"), false);
     }
+
+    PageCell getParent(String cellId) {
+        for(ArrayList<PageCell> cell : areas.values()) {
+            PageCell result = findParent(cell, cellId);
+            if(result != null) {
+                if(result.cellId.equals(cellId)) {
+                    return null;
+                }
+                return result;
+            }
+        }
+        return null;
+    }
+
+    private PageCell findParent(ArrayList<PageCell> cells, String cellId) {
+        for(PageCell cell : cells) {
+            if(cell.cellId.equals(cellId)) {
+                return cell;
+            } else {
+                PageCell result = findParent(cell.cells, cellId);
+                if(result != null) {
+                    if(result.cellId.equals(cellId)) {
+                        return cell;
+                    } else {
+                        return result;
+                    }
+                }
+               
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Row inside of row is not allowed and should not happen. Same with column in column.
+     */
+    public void checkAndFixDoubles() {
+        for(ArrayList<PageCell> allCells : areas.values()) {
+            checkAndFixDoublesOnCells(allCells);
+        }
+    }
+
+    private void checkAndFixDoublesOnCells(ArrayList<PageCell> allCells) {
+        for(PageCell cell : allCells) {
+            if(cell.cells.size() > 0) {
+                PageCell subcell = cell.cells.get(0);
+                if(subcell.mode.equals(cell.mode)) {
+                    if(subcell.mode.equals(PageCell.CellMode.column)) {
+                        PageCell newCell = initNewCell(PageCell.CellMode.row);
+                        newCell.cells.addAll(cell.cells);
+                        cell.cells.clear();
+                        cell.cells.add(newCell);
+                    }
+                    if(subcell.mode.equals(PageCell.CellMode.row)) {
+                        PageCell newCell = initNewCell(PageCell.CellMode.column);
+                        newCell.cells.addAll(cell.cells);
+                        cell.cells.clear();
+                        cell.cells.add(newCell);
+                    }
+                }
+                checkAndFixDoublesOnCells(cell.cells);
+            }
+        }
+    }
 }

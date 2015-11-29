@@ -218,6 +218,9 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/getshop.rotate.js");
         $this->addJavascriptFile("js/getshop.PagePicker.js");
         $this->addJavascriptFile("js/getshop.Settings.js");
+        if($this->isEditorMode()) {
+            $this->addJavascriptFile("js/getshop.dndlayout.js");
+        }
         
         if ($this->isEffectsEnabled()) {
             $this->addJavascriptFile("js/scrollmagic.TweenMax.min.js");

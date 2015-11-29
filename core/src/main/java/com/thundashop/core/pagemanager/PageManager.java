@@ -336,6 +336,8 @@ public class PageManager extends ManagerBase implements IPageManager {
             page.layout.getCell(cell).hideOnMobile = false;
         }
         
+        page.layout.checkAndFixDoubles();
+        
         savePage(page);
         return cell;
     }
@@ -576,6 +578,10 @@ public class PageManager extends ManagerBase implements IPageManager {
     public PageCell getCell(String pageId, String cellId) throws ErrorException {
         return getPage(pageId).getCell(cellId);
     }
+    
+    public PageCell getParentCell(String pageId, String cellId) {
+        return getPage(pageId).getParentCell(cellId);
+    }
 
     @Override
     public void linkPageCell(String pageId, String cellId, String link) throws ErrorException {
@@ -700,6 +706,63 @@ public class PageManager extends ManagerBase implements IPageManager {
         page.flattenMobileLayout();
         savePage(page);
     }
+
+    @Override
+    public String addLayoutCellDragAndDrop(String pageId, String cellId, String type, String edge, String area) throws ErrorException {
+        String inCell = "";
+        String beforeCell = "";
+        String mode = type.toUpperCase();
+        PageCell currentCell = getCell(pageId, cellId);
+        PageCell parent = getParentCell(pageId, cellId);
+
+        if(edge.equals("top")) {
+             if(parent == null) {
+                beforeCell = cellId;
+                inCell = "";
+            } else {
+                inCell = parent.cellId;
+                if(currentCell.mode.equals(PageCell.CellMode.column)) {
+                    inCell = cellId;
+                }
+                beforeCell = cellId;
+            }
+        }
+        if(edge.equals("center-left")) {
+            inCell = cellId;
+            beforeCell = cellId;
+        }
+        if(edge.equals("center-right")) {
+            inCell = cellId;
+            beforeCell = "";
+        }
+        if(edge.equals("left")) {
+            if(currentCell.mode.equals(PageCell.CellMode.row)) {
+                inCell = cellId;
+            } else {
+                inCell = parent.cellId;
+            }
+            beforeCell = cellId;
+        }
+        if(edge.equals("right")) {
+            inCell = cellId;
+            beforeCell = "";
+        }
+        if(edge.equals("bottom")) {
+             if(parent == null) {
+                beforeCell = "";
+                inCell = "";
+            } else {
+                inCell = parent.cellId;
+                if(currentCell.mode.equals(PageCell.CellMode.column)) {
+                    inCell = cellId;
+                }
+                beforeCell = "";
+            }
+        }
+        
+        return addLayoutCell(pageId, inCell, beforeCell, mode, area);
+    }
+
     
     
 }

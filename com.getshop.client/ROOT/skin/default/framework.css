@@ -106,7 +106,7 @@ h1 {
 .gscelllayouts { position: absolute; top: 20px; left: 0px; background-color:#fff; padding: 10px; z-index: 15; border: solid 1px #bbb; width: 296px; display:none; }
 .gsaddcontenttext { font-size: 10px; margin-top: 10px; margin-bottom: 3px; }
 .gsaddcontent { width: 100%; display: inline-block; height: 100%; text-align: center; border: solid 1px rgba(0,0,0,0); }
-.gsaddcontent i {  font-size: 30px; margin-bottom: 10px; }
+.gsaddcontent i {  font-size: 20px; margin-bottom: 10px; }
 .gsaddcontent i:hover { opacity: 1; }
 .gs_close_cell_layoutbutton { position:absolute; right: 2px; top: 2px; cursor: pointer; }
 .gscelllayoutbox { display:inline-block; width: 70px; float:left; padding: 2px; cursor: pointer; }
@@ -117,6 +117,10 @@ h1 {
 .gscelllayout { background:linear-gradient(to bottom, #71c8ff, #56b2ed); border: solid 1px #fff; display:inline-block; height: 30px; width: 30px; box-sizing: border-box; }
 .gscelllayoutrow { clear: both; width: 100%; }
 .gswidth_50 { width: 50%; float:left; }
+.gswidth_33 { width: 33.3%; float:left; }
+.gswidth_25 { width: 25%; float:left; }
+.gswidth_20 { width: 20%; float:left; }
+.gswidth_75 { width: 75%; float:left; }
 .gscelllayoutheight_3,.gscelllayoutheight_3 .gswidth_50 { height: 20px; }
 
 
@@ -2422,3 +2426,37 @@ padding: 2px; }
     right: 50%;
     border: solid 1px #EEE;
 }
+
+.gsaddcontentlayoutbox { border: solid 1px;position:fixed; }
+.gsaddlayoutspacerleft { padding-left: 30px; }
+.gsaddlayoutspacerright { padding-right: 30px; }
+.gsaddlayoutspacertop { padding-top: 20px; }
+.gsaddlayoutspacertoptop { padding-top: 20px; }
+.gsaddlayoutspacerbottom { padding-bottom: 20px; }
+.gsaddlayoutspacerbottombottom { padding-bottom: 20px; }
+.gsdroponlayout { background-color:green !important; }
+.gsdroppingarea { background-color: black; }
+.gsdroppingarea.ui-droppable:hover { background-color:green; }
+
+.gsdndhelpertext { background: linear-gradient(to bottom, #2f8dc9, #146da6); color:#fff;  width: 100px; padding: 20px; border-radius: 3px; border: solid 1px #000; z-index: 10001; }
+.gsborderpointer { position: fixed; 
+}
+.gsborderpointer .fa { display:none; }
+.gsborderpointerhover { 
+        -webkit-transition: width 2s; /* Safari */
+    transition: width 2s;
+    background: linear-gradient(to bottom, #2f8dc9, #146da6); border: solid 1px #bbb !important; border-radius: 3px; border-top: 0px; }
+.gsborderpointerhover .fa { display: inline; color:#a1bbec;  }
+.gsborderpointerhover .fa.fa-arrow-down { position: absolute; right: 2px; top: 1px; }
+.gsborderpointerhover .fa.fa-arrow-up { position: absolute; left: 3px; top: 1px; }
+.gsborderpointerhover .fa.fa-arrow-right { position: absolute; bottom: 2px; left: 4px; }
+.gsborderpointerhover .fa.fa-arrow-left { position: absolute; left: 4px; top: 2px; }
+.gsborderpointer_row_top { border-top: solid 1px #000; }
+.gsborderpointer_row_bottom { border-bottom: solid 1px #000; }
+.gsborderpointer_column_top { border-left: solid 1px #000; }
+.gsborderpointer_column_bottom { border-right: solid 1px #000; }
+
+.gsborderpointerhover_column_top { padding-left: 0px; }
+.gsborderpointerhover_column_bottom { padding-right: 0px; }
+.gsborderpointerhover_row_top { padding-top: 0px; }
+.gsborderpointerhover_row_bottom { padding-bottom: 0px; }

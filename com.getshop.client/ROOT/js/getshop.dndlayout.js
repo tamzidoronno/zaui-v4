@@ -12,7 +12,7 @@ thundashop.dndlayout = {
             if(thundashop.dndlayout.dragType === "row") {
                 edge = "top";
                 if(droppedOn.hasClass('gsborderpointer_row_bottom')) {
-                    edge = "bottom";
+                    edge = "right";
                 }
             } else {
                 edge = "left";

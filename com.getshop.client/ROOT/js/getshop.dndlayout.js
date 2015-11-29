@@ -20,15 +20,14 @@ thundashop.dndlayout = {
         thundashop.dndlayout.removeGsSpacing();
         $('.gsuicell').off('mouseover',thundashop.dndlayout.drawlayout);
         $('.gsdroppingarea').remove();
-        $('.gsaddlayoutspacertoptop').removeClass('gsaddlayoutspacertoptop');
+        thundashop.dndlayout.removeDndBorders();
         thundashop.dndlayout.dragElement = null;
     },
     dragHelper : function() {
-        return $("<div class='ui-widget-header'>Drag to location where you want to add content.</div>");
+        return $("<div class='gsdndhelpertext'>Drag to location where you want to create a new row or column.</div>");
     },
     
     init: function () {
-
         $(".gsaddrowcontentdnd").draggable({
             cursor: "move",
             cursorAt: {top: -12, left: -20},
@@ -38,7 +37,7 @@ thundashop.dndlayout = {
             },
             helper: thundashop.dndlayout.dragHelper,
             stop: thundashop.dndlayout.stopDragging,
-            drag : thundashop.dndlayout.doMagic
+            drag : thundashop.dndlayout.addDndBorders
         });
         $(".gsaddcolumncontentdnd").draggable({
             cursor: "move",
@@ -49,44 +48,124 @@ thundashop.dndlayout = {
             },
             helper: thundashop.dndlayout.dragHelper,
             stop: thundashop.dndlayout.stopDragging,
-            drag : thundashop.dndlayout.doMagic
+            drag : thundashop.dndlayout.addDndBorders
         });
     },
-    doMagic : function(event, ui) {
-//        console.log(ui);
-        var edge = thundashop.dndlayout.getEdge(ui);
-        var onElement = thundashop.dndlayout.dragElement;
-        thundashop.dndlayout.drawDroppingArea(edge, onElement, true);
-//        console.log(edge);
+    removeDndBorders : function() {
+        $('.gsborderpointer').remove();
     },
-    getEdge : function(ui) {
+    addDndBorders : function(event, ui) {
         if(!thundashop.dndlayout.dragElement) {
-            return "";
+            return;
         }
+        var type = thundashop.dndlayout.dragType;
         var onElement = thundashop.dndlayout.dragElement;
-        var offset = onElement.offset();
-        var leftDiff = ui.offset.left - offset.left -20;
-        var topDiff = ui.offset.top - offset.top - 10;
-        var percentageToLeft = (leftDiff / onElement.width()) * 100;
-        var percentageToTop = (topDiff / onElement.height()) * 100;
-        if(thundashop.dndlayout.dragType === "row") {
-            if(percentageToTop < 50) {
-                return "top";
-            }
-            return "bottom";
-        } else {
-            if(percentageToLeft < 25) {
-                return "left";
-            }
-            if(percentageToLeft < 50) {
-                return "center-left";
-            }
-            if(percentageToLeft < 75) {
-                return "center-right";
-            }
-            return "right";
+        if(onElement.hasClass('gsdndbordersadded')) {
+            return;
+        }
+        thundashop.dndlayout.removeDndBorders();
+        $('.gsdndbordersadded').removeClass('gsdndbordersadded');
+        var toAddOn = onElement;
+        var index = 1;
+        var size = toAddOn.parents('.gsuicell').length+1;
+        thundashop.dndlayout.drawDndBorder(toAddOn, 0,size);
+        toAddOn.parents('.gsuicell').each(function() {
+            thundashop.dndlayout.drawDndBorder($(this), index,size);
+            index++;
+        });
+    },
+    hideDndBorders : function() {
+        var type = thundashop.dndlayout.dragType;
+        $('.gsborderpointer').hide();
+    },
+    showDndBorders : function() {
+        var type = thundashop.dndlayout.dragType;
+        $('.gsborderpointer').show();
+    },
+    drawDndBorder : function(onElement, index, size) {
+        onElement.addClass('gsdndbordersadded');
+        var cellid = onElement.closest('.gsucell').attr('cellid');
+        
+        var type = thundashop.dndlayout.dragType;
+        
+        var border = $('<span></span>');
+        var border2 = $('<span></span>');
+        border.addClass('gsborderpointer_'+type+'_top');
+        border.addClass('gsborderpointer');
+        border2.addClass('gsborderpointer_'+type+'_bottom');
+        border2.addClass('gsborderpointer');
+        
+        border.attr('cellid',cellid);
+        border2.attr('cellid',cellid);
+        var size = 10 + ((size - index) * 5);
+        
+        var top = onElement.offset().top - $(window).scrollTop();
+        
+        if(type === "row") {
+            border.css('width',onElement.outerWidth());
+            border.css('top',top-index);
+            border.css('left',onElement.offset().left);
+            border.height(size);
+            
+            border2.css('width',onElement.outerWidth());
+            border2.css('left',onElement.offset().left);
+            border2.css('top',top+onElement.outerHeight()-size-index);
+            border2.height(size);
+        }
+        if(type === "column") {
+            border.css('height',onElement.outerHeight());
+            border.css('top',top);
+            border.css('left',onElement.offset().left-index);
+            border.width(size);
+            
+            border2.css('height',onElement.outerHeight());
+            border2.css('left',onElement.offset().left+onElement.outerWidth()+index-size);
+            border2.css('top',top);
+            border2.width(size);
         }
         
+        border.mouseenter(thundashop.dndlayout.dndBorderMouseOver);
+        border2.mouseenter(thundashop.dndlayout.dndBorderMouseOver);
+        border.mouseleave(thundashop.dndlayout.dndBorderMouseLeave);
+        border2.mouseleave(thundashop.dndlayout.dndBorderMouseLeave);
+        
+        thundashop.dndlayout.addArrows(border, type, size);
+        thundashop.dndlayout.addArrows(border2, type, size);
+        
+        $('body').append(border);
+        $('body').append(border2);
+    },
+    addArrows : function(element, type, size) {
+        element.css('font-size', (size-5)+"px");
+        if(type === "row") {
+            element.append("<i class='fa fa-arrow-up'></i>");
+            element.append("<i class='fa fa-arrow-down'></i>");
+        } else {
+            element.append("<i class='fa fa-arrow-right'></i>");
+            element.append("<i class='fa fa-arrow-left'></i>");
+        }
+    },
+    dndBorderMouseOver : function(event) {
+        var target = $(event.currentTarget);
+        var cellid = target.attr('cellid');
+        var cellToWorkOn = $('.gsucell[cellid="'+cellid+'"]').children('.gsinner');
+        target.addClass('gsborderpointerhover');        
+        var dragtype = thundashop.dndlayout.dragType;
+        var type = "top";
+        if(target.hasClass('gsborderpointer_'+dragtype+'_bottom')) {
+            type = "bottom";
+        }
+
+        cellToWorkOn.addClass('gsborderpointerhover_'+dragtype+'_'+type);
+//        thundashop.dndlayout.hideDndBorders();
+        target.show();
+    },
+    dndBorderMouseLeave : function() {
+        var dragtype = thundashop.dndlayout.dragType;
+        $('.gsborderpointerhover_'+dragtype+'_top').removeClass('gsborderpointerhover_'+dragtype+'_top');
+        $('.gsborderpointerhover_'+dragtype+'_bottom').removeClass('gsborderpointerhover_'+dragtype+'_bottom');
+        $(event.currentTarget).removeClass('gsborderpointerhover');
+        thundashop.dndlayout.showDndBorders();
     },
     removeGsSpacing : function() {
         $('.gsaddcontentlayoutbox').removeClass('gsaddcontentlayoutbox');
@@ -169,10 +248,6 @@ thundashop.dndlayout = {
             area.css('height',onElement.height());
             onElement.addClass('gsaddlayoutspacerright');
         }
-        if(drawSpecials) {
-            thundashop.dndlayout.drawSpecialDropAreas(onElement);
-        }
-        
         area.on('mouseenter', function() {
             $(this).addClass('gsdroppingareahover');
         });
@@ -181,17 +256,6 @@ thundashop.dndlayout = {
         });
         $('body').append(area);
     },
-    
-    drawSpecialDropAreas: function(onElement) {
-        var type = thundashop.dndlayout.dragType;
-        var parent = onElement.closest('.gscell');
-        if(type === "row" && parent.hasClass('gscolumn')) {
-            console.log('skaft');
-            thundashop.dndlayout.drawDroppingArea("top", parent.closest('.gsinner'), false);
-            thundashop.dndlayout.drawDroppingArea("bottom", parent.closest('.gsinner'), false);
-        }
-    },
-    
     drawlayout : function() {
         var element = $(this);
         if(element.find('.gsuicell').length > 0) {

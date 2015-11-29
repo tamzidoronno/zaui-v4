@@ -2434,4 +2434,27 @@ padding: 2px; }
 .gsdroppingarea { background-color: black; }
 .gsdroppingarea.ui-droppable:hover { background-color:green; }
 .gsdroppingareahover { background-color:green !important; }
-.gsuicell { border: solid 1px #00b7ea; }
+
+.gsdndhelpertext { background: linear-gradient(to bottom, #2f8dc9, #146da6); color:#fff;  width: 100px; padding: 20px; border-radius: 3px; border: solid 1px #000; z-index: 10001; }
+.gsborderpointer { position: fixed; 
+}
+.gsborderpointer .fa { display:none; }
+.gsborderpointerhover { 
+        -webkit-transition: width 2s; /* Safari */
+    transition: width 2s;
+
+    background: linear-gradient(to bottom, #2f8dc9, #146da6); border: solid 1px #bbb !important; border-radius: 3px; border-top: 0px; }
+.gsborderpointerhover .fa { display: inline; color:#fff;  }
+.gsborderpointerhover .fa.fa-arrow-down { position: absolute; right: 2px; top: 1px; }
+.gsborderpointerhover .fa.fa-arrow-up { position: absolute; left: 3px; top: 1px; }
+.gsborderpointerhover .fa.fa-arrow-right { position: absolute; bottom: 2px; left: 4px; }
+.gsborderpointerhover .fa.fa-arrow-left { position: absolute; left: 4px; top: 2px; }
+.gsborderpointer_row_top { border-top: solid 1px #000; }
+.gsborderpointer_row_bottom { border-bottom: solid 1px #000; }
+.gsborderpointer_column_top { border-left: solid 1px #000; }
+.gsborderpointer_column_bottom { border-right: solid 1px #000; }
+
+.gsborderpointerhover_column_top { padding-left: 0px; }
+.gsborderpointerhover_column_bottom { padding-right: 0px; }
+.gsborderpointerhover_row_top { padding-top: 0px; }
+.gsborderpointerhover_row_bottom { padding-bottom: 0px; }

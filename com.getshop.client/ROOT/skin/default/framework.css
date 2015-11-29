@@ -117,6 +117,10 @@ h1 {
 .gscelllayout { background:linear-gradient(to bottom, #71c8ff, #56b2ed); border: solid 1px #fff; display:inline-block; height: 30px; width: 30px; box-sizing: border-box; }
 .gscelllayoutrow { clear: both; width: 100%; }
 .gswidth_50 { width: 50%; float:left; }
+.gswidth_33 { width: 33.3%; float:left; }
+.gswidth_25 { width: 25%; float:left; }
+.gswidth_20 { width: 20%; float:left; }
+.gswidth_75 { width: 75%; float:left; }
 .gscelllayoutheight_3,.gscelllayoutheight_3 .gswidth_50 { height: 20px; }
 
 
@@ -2441,9 +2445,8 @@ padding: 2px; }
 .gsborderpointerhover { 
         -webkit-transition: width 2s; /* Safari */
     transition: width 2s;
-
     background: linear-gradient(to bottom, #2f8dc9, #146da6); border: solid 1px #bbb !important; border-radius: 3px; border-top: 0px; }
-.gsborderpointerhover .fa { display: inline; color:#fff;  }
+.gsborderpointerhover .fa { display: inline; color:#a1bbec;  }
 .gsborderpointerhover .fa.fa-arrow-down { position: absolute; right: 2px; top: 1px; }
 .gsborderpointerhover .fa.fa-arrow-up { position: absolute; left: 3px; top: 1px; }
 .gsborderpointerhover .fa.fa-arrow-right { position: absolute; bottom: 2px; left: 4px; }

@@ -11,7 +11,7 @@ thundashop.dndlayout = {
             var edge = "";
             if(thundashop.dndlayout.dragType === "row") {
                 edge = "top";
-                if(droppedOn.hasClass('gsborderpointer_column_bottom')) {
+                if(droppedOn.hasClass('gsborderpointer_row_bottom')) {
                     edge = "bottom";
                 }
             } else {

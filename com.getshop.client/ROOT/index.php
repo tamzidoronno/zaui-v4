@@ -171,9 +171,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <title class='pagetitle'><?php echo $title; ?></title>
     <script>
      $(function() {
-         if(typeof(CKEDITOR) !== "undefined") {
-            CKEDITOR.dtd.$removeEmpty['span'] = false;
-        }
+        CKEDITOR.dtd.$removeEmpty['span'] = false;
      });
     </script>
     </head>

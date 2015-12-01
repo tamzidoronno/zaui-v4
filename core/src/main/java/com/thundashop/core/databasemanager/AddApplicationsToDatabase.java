@@ -61,6 +61,20 @@ public class AddApplicationsToDatabase {
         Avtalegiro.isSingleton = true;
         apps.add(Avtalegiro);
 
+        Application SemLagerhotellTheme = createSettings("SemLagerhotellTheme",
+        "d91e4e20-f4af-425c-8468-2202ccc0db1e",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        SemLagerhotellTheme.isPublic = false;
+        SemLagerhotellTheme.isFrontend = true;
+        SemLagerhotellTheme.moduleId = "other";
+        SemLagerhotellTheme.defaultActivate = false;
+        SemLagerhotellTheme.allowedStoreIds = new ArrayList();
+        SemLagerhotellTheme.allowedStoreIds.add("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7");
+        apps.add(SemLagerhotellTheme);
+
+        
         return apps;
     }
 

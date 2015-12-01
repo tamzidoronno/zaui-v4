@@ -1,4 +1,8 @@
 .gsarea[area="header"] { background-color:#000; color:#fff; height: 70px; }
 .gsarea[area="header"] .Menu a { color:#fff; text-shadow: 1px 1px 1px rgba(0,0,0,0.75); }
-.gsarea[area="footer"] { background-color:#3e3e40; color:#fff; height: 70px; }
+.gsarea[area="footer"] { background-color:#3e3e40; color:#fff; height: 230px; }
 .gs_page_width { width:1024px; margin: auto; }
+body {font-family: 'Open Sans', sans-serif;}
+h2,h1 { font-weight: 500; }
+.Menu { position:absolute; right: 0px; text-align: right; }
+.Menu .entry { padding: 20px; }

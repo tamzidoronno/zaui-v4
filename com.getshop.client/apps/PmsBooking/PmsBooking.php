@@ -14,6 +14,10 @@ class PmsBooking extends \WebshopApplication implements \Application {
         $this->includefile("pmsfront_1");
     }
     
+    public function initBooking() {
+        
+    }
+    
     public function getText($key) {
         return $this->getConfigurationSetting($key);
     }

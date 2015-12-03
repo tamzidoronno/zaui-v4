@@ -1,5 +1,8 @@
 <?
 $date = date("d.m.Y", time());
+if(!$this->getText("next_page")) {
+    echo "<b>Next page not set up yet, please fix.</b>";
+}
 ?>
 
 <div class="pmsfront">
@@ -26,7 +29,7 @@ $date = date("d.m.Y", time());
     
     <div class='productlist'>
         <span class='inputhelpertext'><? echo $this->getText("select_product"); ?></span>
-        <select>
+        <select class='selected_product'>
             <option value='id'>6kvm bod, blabla</option>
         </select>
         
@@ -36,7 +39,7 @@ $date = date("d.m.Y", time());
     <div class='infotext'>
         <? echo $this->getText("info_text"); ?>
     </div>
-    <span class='check_available_button'><? echo $this->getText("check_availability"); ?></span>
+    <span class='check_available_button' next_page='<? echo $this->getText("next_page"); ?>'><? echo $this->getText("check_availability"); ?></span>
 </div>
 
 <script>

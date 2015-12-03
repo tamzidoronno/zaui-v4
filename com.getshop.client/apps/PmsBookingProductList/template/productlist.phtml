@@ -4,6 +4,12 @@
 $products = $this->getAllProducts();
 $booking = $this->getCurrentBooking();
 
+?>
+<div class='continue_button_outer'>
+    <div class='continue_button'><? echo $this->getText("next_button"); ?></div>
+</div>
+<?php
+
 foreach($products as $product) {
     /* @var $product core_productmanager_data_Product */
     $selected = "";
@@ -18,5 +24,7 @@ foreach($products as $product) {
     </div>
     <?php
 }
-
 ?>
+<div class='continue_button_outer'>
+    <div class='continue_button'><? echo $this->getText("next_button"); ?></div>
+</div>

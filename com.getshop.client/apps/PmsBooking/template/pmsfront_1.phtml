@@ -1,0 +1,40 @@
+<?
+$date = date("d.m.Y", time());
+?>
+
+<div class="pmsfront">
+    <span class="heading">
+        <? echo $this->getText("title"); ?>
+    </span>
+    <span class='start_date dates'>
+        <div><span class='inputhelpertext'><? echo $this->getText("start_date"); ?></span></div>
+        <span class='dates_inner'>
+            <input class='start_date_input' value='<? echo $date; ?>'></input>
+            <span></span>
+            <i class='fa fa-calendar'></i>
+        </span>
+    </span>
+    <span class='end_date dates'>
+        <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
+        <span class='dates_inner'>
+            <input class='start_date_input' value='<? echo $date; ?>'></input>
+            <span></span>
+            <i class='fa fa-calendar'></i>
+        </span>
+    </span>
+    <div style='clear:both;'></div>
+    
+    <div class='productlist'>
+        <span class='inputhelpertext'><? echo $this->getText("select_product"); ?></span>
+        <select>
+            <option value='id'>6kvm bod, blabla</option>
+        </select>
+        
+    </div>
+    
+    
+    <div class='infotext'>
+        <? echo $this->getText("info_text"); ?>
+    </div>
+    <span class='check_available_button'><? echo $this->getText("check_availability"); ?></span>
+</div>

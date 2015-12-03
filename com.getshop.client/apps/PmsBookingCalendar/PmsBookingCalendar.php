@@ -10,11 +10,25 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         return "PmsBookingCalendar";
     }
 
+    public function showSettings() {
+        $this->includefile("settings");
+    }
+    
     public function getSelectedDate() {
         if(isset($_SESSION[$this->getAppInstanceId()]['selected_day'])) {
             return $_SESSION[$this->getAppInstanceId()]['selected_day'];
         }        
         return time();
+    }
+    
+    public function getText($key) {
+        return $this->getConfigurationSetting($key);
+    }
+    
+    public function saveSettings() {
+        foreach($_POST['data'] as $key => $value) {
+            $this->setConfigurationSetting($key, $value);
+        }
     }
     
     public function selectDay() {
@@ -68,7 +82,10 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         $this->includefile("calendar");
     }
     public function render() {
+        echo "<div class='calendar'>";
         $this->includefile("calendar");
+        echo "</div>";
+        
     }
 }
 ?>

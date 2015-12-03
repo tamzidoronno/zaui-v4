@@ -22,6 +22,11 @@ class ApplicationBase extends FactoryBase {
         
     }
     
+    public function getAppInstanceId() {
+//        print_r($this->getConfiguration());
+        return $this->getConfiguration()->id;
+    }
+    
     public function startAdminImpersonation($managerName, $function) {
         $userToImersonate = $this->getCredentials($managerName, $function);
         if ($userToImersonate != null) {

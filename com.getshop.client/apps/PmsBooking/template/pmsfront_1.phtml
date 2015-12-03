@@ -11,15 +11,15 @@ $date = date("d.m.Y", time());
         <span class='dates_inner'>
             <input class='start_date_input' value='<? echo $date; ?>'></input>
             <span></span>
-            <i class='fa fa-calendar'></i>
+            <i class='fa fa-calendar start_cal'></i>
         </span>
     </span>
     <span class='end_date dates'>
         <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
         <span class='dates_inner'>
-            <input class='start_date_input' value='<? echo $date; ?>'></input>
+            <input class='end_date_input' value='<? echo $date; ?>'></input>
             <span></span>
-            <i class='fa fa-calendar'></i>
+            <i class='fa fa-calendar end_cal'></i>
         </span>
     </span>
     <div style='clear:both;'></div>
@@ -38,3 +38,10 @@ $date = date("d.m.Y", time());
     </div>
     <span class='check_available_button'><? echo $this->getText("check_availability"); ?></span>
 </div>
+
+<script>
+    $('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", maxDate: "+30d", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", maxDate: "+30d", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.start_cal').on('click', function() { $('.start_date_input').focus(); });
+    $('.end_cal').on('click', function() { $('.end_date_input').focus(); });
+</script>

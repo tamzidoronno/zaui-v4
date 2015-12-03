@@ -1,0 +1,6 @@
+.PmsBookingCalendar .calendar .day { cursor: pointer; border: solid 1px #bbb; width: 15%; line-height: 20px; display:inline-block; text-align: center; margin: 4px;background-color:#efefef; }
+.PmsBookingCalendar .calendar .calendar_header { position: relative; text-align: center; border: solid 1px #bbb; font-size: 16px; padding: 5px; background-color:#f09325; color:#fff; }
+.PmsBookingCalendar .calendar .calendar_header .fa { cursor:pointer; }
+.PmsBookingCalendar .calendar .calendar_header .fa-arrow-left { position: absolute; left: 5px; top: 5px; }
+.PmsBookingCalendar .calendar .calendar_header .fa-arrow-right { position: absolute; right: 5px; top: 5px; }
+.PmsBookingCalendar .calendar .day.selected { background-color:#f09325; color:#fff; }

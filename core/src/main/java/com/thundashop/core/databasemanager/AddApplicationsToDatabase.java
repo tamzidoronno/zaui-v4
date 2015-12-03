@@ -74,7 +74,17 @@ public class AddApplicationsToDatabase {
         SemLagerhotellTheme.allowedStoreIds.add("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7");
         apps.add(SemLagerhotellTheme);
 
-        
+        Application PmsBooking = createSettings("PmsBooking",
+        "8dcbf529-72ae-47dd-bd6b-bd2d0c54b30a",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsBooking.isPublic = true;
+        PmsBooking.isFrontend = true;
+        PmsBooking.moduleId = "WebShop";
+        PmsBooking.defaultActivate = false;
+        apps.add(PmsBooking);
+
         return apps;
     }
 

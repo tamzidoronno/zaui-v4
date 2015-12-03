@@ -96,6 +96,18 @@ public class AddApplicationsToDatabase {
         PmsBookingCalendar.defaultActivate = false;
         apps.add(PmsBookingCalendar);
 
+        Application PmsBookingProductList = createSettings("PmsBookingProductList",
+        "ed7efba0-de37-4cd8-915b-cc7be10b8b8b",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsBookingProductList.isPublic = true;
+        PmsBookingProductList.isFrontend = true;
+        PmsBookingProductList.moduleId = "WebShop";
+        PmsBookingProductList.defaultActivate = false;
+        apps.add(PmsBookingProductList);
+        
+        
         return apps;
     }
 

@@ -13,10 +13,10 @@ import java.io.IOException;
  */
 public class GenerateApiLocalPal {
     public static void main(String[] args) throws ClassNotFoundException, IOException, Exception {
-        GenerateApi ga = new GenerateApi("/home/boggi/projects/3.0.0/GetShop Core/", "/home/boggi/projects/3.0.0/GetShop Messages/", "/source/getshop/3.0.0/com.getshop.client/", "/source/getshop/3.0.0/core", false);
+        GenerateApi ga = new GenerateApi("/home/boggi/netbeans/3.0.0/GetShop Core/", "/home/boggi/netbeans/3.0.0/GetShop Messages/", "/source/getshop/3.0.0/com.getshop.client/", "/source/getshop/3.0.0/core", false);
         ga.generate();
 
-        ga = new GenerateApi("/home/boggi/projects/3.0.0/GetShop Core/", "/home/boggi/netbeans/3.0.0/GetShop Messages/", "/source/getshop/3.0.0/com.getshop.pullserver/", "/source/getshop/3.0.0/core", false);
+        ga = new GenerateApi("/home/boggi/netbeans/3.0.0/GetShop Core/", "/home/boggi/netbeans/3.0.0/GetShop Messages/", "/source/getshop/3.0.0/com.getshop.pullserver/", "/source/getshop/3.0.0/core", false);
         ga.generate();
     }
 

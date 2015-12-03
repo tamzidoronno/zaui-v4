@@ -1,0 +1,22 @@
+<?php
+/* @var $this ns_ed7efba0_de37_4cd8_915b_cc7be10b8b8b\PmsBookingProductList */
+
+$products = $this->getAllProducts();
+$booking = $this->getCurrentBooking();
+
+foreach($products as $product) {
+    /* @var $product core_productmanager_data_Product */
+    $selected = "";
+    if(in_array($product->id, $booking->products)) {
+        $selected = "selected";
+    }
+    ?>
+    <div class='productentry <? echo $selected; ?>'>
+    <span class='name'><? echo $product->name; ?></span>
+    <span class='price'><? echo $product->price; ?></span>
+    <span class='select_button'><? echo $this->getText("select_button"); ?></span>
+    </div>
+    <?php
+}
+
+?>

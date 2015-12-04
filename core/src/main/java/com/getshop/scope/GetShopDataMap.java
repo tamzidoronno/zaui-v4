@@ -140,7 +140,7 @@ public class GetShopDataMap<K, V>  implements Map<K,V>  {
                     && dataCommon.id != null 
                     && !dataCommon.storeId.equals("") 
                     && !dataCommon.id.equals("")) {
-                databaseSaver.saveObject(dataCommon, parentManager.credentials);
+                databaseSaver.saveObject(dataCommon, parentManager.getCredentials());
             }
         }
     }

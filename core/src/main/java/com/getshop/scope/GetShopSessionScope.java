@@ -49,7 +49,7 @@ public class GetShopSessionScope implements Scope {
                     }
                     
                     GetShopSessionBeanNamed bean = (GetShopSessionBeanNamed)object;
-                    bean.storeId = storeId;
+                    bean.setStoreId(storeId);
                     bean.setName(sessionBeanName);
                     bean.initialize();
                     namedSessionObjects.put(name+"_"+storeId+"_"+sessionBeanName, bean);
@@ -58,7 +58,7 @@ public class GetShopSessionScope implements Scope {
                 
                 if (object instanceof ManagerBase) {
                     ManagerBase managerBase = (ManagerBase) object;
-                    managerBase.storeId = storeId;
+                    managerBase.setStoreId(storeId);
                     managerBase.initialize();
                 }
                 

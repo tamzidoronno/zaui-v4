@@ -97,7 +97,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     
     @PostConstruct
     public void setStoreId() {
-        storeId = storeApplicationPool.storeId;
+        storeId = storeApplicationPool.getStoreId();
     }
     
     public static DefaultHttpClient wrapClient(DefaultHttpClient base) {

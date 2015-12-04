@@ -18,21 +18,21 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author ktonder
  */
 public class ManagerSubBase {
-    public String storeId = "";
-    public Credentials credentials = null;
+    protected String storeId = "";
+    protected Credentials credentials = null;
     
     @Autowired
-    public DatabaseSaver databaseSaver;
+    protected DatabaseSaver databaseSaver;
     
     @Autowired
-    public Logger log;
+    protected Logger log;
     
     @Autowired
     private GetShopSessionScope scope;
     
-    public boolean isSingleton = false;
-    public boolean ready = false;
-    public Session session;
+    protected boolean isSingleton = false;
+    protected boolean ready = false;
+    protected Session session;
 
 	private ManagerSetting managerSettings = new ManagerSetting();
     
@@ -166,5 +166,25 @@ public class ManagerSubBase {
      */
     public Object preProcessMessage(Object object, Method executeMethod) {
         return object;
+    }
+    
+    public String getStoreId() {
+        return storeId;
+    }
+    
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
+    }
+    
+    public void setSession(Session session) {
+        this.session = session;
+    }
+    
+    public Credentials getCredentials() {
+        return credentials;
+    }
+    
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
     }
 }

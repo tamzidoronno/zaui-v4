@@ -39,3 +39,7 @@ body {
     text-align:center;
     padding-top: 10px;
 }
+
+
+.Menu { text-align: center; border-left: solid 1px; border-right: solid 1px; border-bottom: solid 1px; border-color: #3a3a3a; background-color:#1b1b1b; }
+.Menu .entry { padding: 10px; }

@@ -37,7 +37,7 @@ arxAppServices.factory('GetshopService', ['$window','LocalStorage', function($wi
     connectToGetshop: function(host) {
       // Connect to getshop web api
       
-      var postfixaddr = "mpal.getshop.com";
+      var postfixaddr = "getshop.com";
       
       var def = $.Deferred();
       if(!host) {
@@ -49,7 +49,7 @@ arxAppServices.factory('GetshopService', ['$window','LocalStorage', function($wi
             }
         }
         var hostToUse = "arx_"+host+"." + postfixaddr;
-        this.client = new GetShopApiWebSocket(hostToUse, "31330");
+        this.client = new GetShopApiWebSocket(hostToUse, "31332");
         this.client.connect();
         this.client.setConnectedEvent(function () {
         });
@@ -62,6 +62,8 @@ arxAppServices.factory('GetshopService', ['$window','LocalStorage', function($wi
     }
   }
 }]);
+
+
 
 arxAppServices.factory('LocalStorage', ['$window', function($window) {
   return {

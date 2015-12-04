@@ -1,0 +1,20 @@
+<?
+$type = array();
+$type['start_date'] = "Start date";
+$type['end_date'] = "End date";
+$dateType = $this->getConfigurationSetting("date_type");
+?>
+
+<div gstype="form" method="saveSettings">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%"><? echo $this->__w("Button text"); ?></td>
+        <td width="50%"><input type="text" gsname="select_button" style='width:100%;' value="<? echo $this->getText("select_button"); ?>"></td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Next button text"); ?></td>
+        <td width="50%"><input type="text" gsname="next_button" style='width:100%;' value="<? echo $this->getText("next_button"); ?>"></td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

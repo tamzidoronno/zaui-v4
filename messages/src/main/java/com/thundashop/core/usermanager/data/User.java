@@ -27,7 +27,7 @@ public class User extends DataCommon implements Comparable<User> {
     public int resetCode;
 
     public List<UserPrivilege> privileges = new ArrayList();
-
+    public List<UserCard> savedCards = new ArrayList();
 
  
     public static class Type {

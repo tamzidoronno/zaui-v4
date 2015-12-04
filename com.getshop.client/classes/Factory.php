@@ -52,7 +52,10 @@ class Factory extends FactoryBase {
             return true;
         }
         
-        $useragent=$_SERVER['HTTP_USER_AGENT'];
+        $useragent = "";
+        if(isset($_SERVER['HTTP_USER_AGENT'])) {
+            $useragent=$_SERVER['HTTP_USER_AGENT'];
+        }
         if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i',$useragent)||preg_match('/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i',substr($useragent,0,4)))
             return true;
         
@@ -129,13 +132,35 @@ class Factory extends FactoryBase {
         $this->errors = $errors;
     }
 
-    private function addJavascriptFile($file) {
+    public function clearGeneratedFiles() {
+        $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
+        file_put_contents($fileName, "");
+        $fileName = "cssfolder/".$this->getStore()->id."_css_".$this->startupCount.".css";
+        file_put_contents($fileName, "");
+    }
+    
+    public function addJavascriptFile($file) {
         if ($this->isProductionMode) {
             $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
             $fileContent = file_get_contents($file)."\n";
+            $fileContent = $this->minify($fileContent);
             file_put_contents($fileName, $fileContent, FILE_APPEND);
         } else {
             echo "\n" . '<script type="text/javascript" src="'.$file.'"></script>';
+        }
+    }
+    
+    private function addCssFile($file, $ignoreSeo = false) {
+        if ($this->includeSeo() && !$ignoreSeo) {
+            $fileName = "cssfolder/".$this->getStore()->id."_css_".$this->startupCount.".css";
+            if(substr($file, 0,1) == "/") {
+                $file = substr($file, 1);
+            }
+            $fileContent = file_get_contents($file)."\n";
+            $fileContent = $this->minify($fileContent);
+            file_put_contents($fileName, $fileContent, FILE_APPEND);
+        } else {
+            $this->addCssToBody($file);
         }
     }
     
@@ -143,11 +168,9 @@ class Factory extends FactoryBase {
         $scopid = $_POST['scopeid'];
         echo "<script>GetShop = {}; scopeid='$scopid'</script>";
         
-        echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/photoswipe.css">';
-        echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/default-skin/default-skin.css">';
-        
         $this->isProductionMode = $this->getApi()->getUtilManager()->isInProductionMode();
         $this->startupCount = $this->getApi()->getUtilManager()->getStartupCount();
+        $this->clearGeneratedFiles();
         if ($this->isProductionMode) {
             $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
             file_put_contents($fileName, "");
@@ -195,31 +218,32 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/getshop.rotate.js");
         $this->addJavascriptFile("js/getshop.PagePicker.js");
         $this->addJavascriptFile("js/getshop.Settings.js");
+        if($this->isEditorMode()) {
+            $this->addJavascriptFile("js/getshop.dndlayout.js");
+        }
         
         if ($this->isEffectsEnabled()) {
-            echo '<script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.14.2/TweenMax.min.js"></script>';
-            echo '<script src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.min.js"></script>';
-            echo '<script src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/debug.addIndicators.min.js"></script>';
-            echo '<script src="js/scrollmagic.Velocity.js"></script>';
-            echo '<script src="js/scrollmagic.js"></script>';
-            echo '<script src="js/getshop.ScrollMangic.js"></script>';
+            $this->addJavascriptFile("js/scrollmagic.TweenMax.min.js");
+            $this->addJavascriptFile("js/ScrollMagic.min.js");
+            $this->addJavascriptFile("js/debug.addIndicators.min.js");
+            $this->addJavascriptFile("js/scrollmagic.Velocity.js");
+            $this->addJavascriptFile("js/scrollmagic.js");
+            $this->addJavascriptFile("js/getshop.ScrollMangic.js");
         }
         
         // JS TREE
         $this->addJavascriptFile("js/jstree/jstree.min.js");
-        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jstree/themes/default/style.min.css">';
         
         if ($this->isProductionMode) {
-            echo "\n" . '<script type="text/javascript" src="'.$fileName.'"></script>';
+            echo "\n" . '<script  src="'.$fileName.'"></script>';
         }
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
 
 
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
-        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
 
         if (preg_match('/(?i)msie[1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
-            echo "\n" . '<script type="text/javascript" src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
+            echo "\n" . '<script src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
         }
 
         $appTheme = $this->getApplicationPool()->getSelectedThemeApp();
@@ -247,13 +271,13 @@ class Factory extends FactoryBase {
 
     public function loadJavascriptFilesEditorMode() {
         if ($this->isEditorMode()) {
-            echo "\n" . '<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>';
-            echo "\n" . '<script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>';
+            echo "\n" . '<script src="js/ckeditor/ckeditor.js"></script>';
+            echo "\n" . '<script src="js/ckeditor/adapters/jquery.js"></script>';
 
             //Load app files.
             foreach (AppRegister::$register as $app) {
                 if (file_exists("js/app/" . $app . "_editormode.js"))
-                    echo "\n" . '<script type="text/javascript" src="js/app/' . $app . '_editormode.js"></script>';
+                    echo "\n" . '<script src="js/app/' . $app . '_editormode.js"></script>';
             }
         }
     }
@@ -460,24 +484,37 @@ class Factory extends FactoryBase {
     public function getStyleSheet() {
         return $this->styleSheet;
     }
-
+    
     public function showCssFiles() {
         if ($this->isEditorMode()) {
-            echo '<link rel="stylesheet" type="text/css" href="skin/default/ckeditor.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.css" />';
+            $this->addCssFile("skin/default/ckeditor.css");
+            $this->addCssFile("js/colorpicker/css/colorpicker.css");
         }
+        
+        
+        $this->addCssFile("skin/default/framework.css");
+        $this->addCssFile("skin/default/frameworklayout.css");
+        $this->addCssFile("skin/default/elements.css");
+        $this->addCssFile("skin/default/layout.css");
+        $this->addCssFile("skin/default/breadcrumb.css");
 
-        echo "<link href='/fonts.css' rel='stylesheet' type='text/css'>";
-        echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_table.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_page.css" />';
-        echo "\n" . '<link rel="stylesheet" type="text/css" href="/skin/default/applicationPicker.css">';
-        echo "\n" . '<link rel="stylesheet" href="skin/default/fontawesome/css/font-awesome.min.css">';
-
-        // LA STÅ!
-        echo '<link rel="stylesheet" type="text/css" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">';
-        echo '<link rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
-        echo '<link rel="stylesheet" type="text/css" href="/skin/default/PagePicker.css">';
-        echo '<link rel="stylesheet" type="text/css" href="/skin/default/getshop.ImageEditor.css">';
+        $this->addCssFile("fonts.css");
+        $this->addCssFile("js/datatables/demo_table.css");
+        $this->addCssFile("js/datatables/demo_page.css");
+        $this->addCssFile("skin/default/applicationPicker.css");
+        $this->addCssFile("js/jcrop/css/jquery.Jcrop.css");
+        $this->addCssFile("js/jstree/themes/default/style.min.css");
+        $this->addCssFile("js/photoswipe/photoswipe.css");
+        $this->addCssFile("js/photoswipe/default-skin/default-skin.css");
+        
+        $this->addCssFile("js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css");
+        $this->addCssFile("skin/default/skeletons.css");
+        $this->addCssFile("skin/default/PagePicker.css");
+        $this->addCssFile("skin/default/getshop.ImageEditor.css");
+    
+        
+        $this->addCssToBody("cssfolder/".$this->getStore()->id."_css_".$this->startupCount.".css");
+        $this->addCssToBody("skin/default/fontawesome/css/font-awesome.min.css");
 
         $styleSheet = new StyleSheet();
         $styleSheet->render(false);
@@ -490,6 +527,8 @@ class Factory extends FactoryBase {
             }
             echo "</style>";
         }
+        
+        
     }
 
     /*
@@ -829,5 +868,44 @@ class Factory extends FactoryBase {
     public function isEffectsEnabled() {
         return true;
     }
+
+    public function includeSeo() {
+        $settings = $this->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        $instance = $this->getApplicationPool()->createInstace($settings);
+        
+        $singleOnGroup = $instance->getConfigurationSetting("seo");
+
+        if($singleOnGroup && $singleOnGroup == "true") {
+            return "async";
+        }
+        return "";
+    }
+
+    public function removeComments($string) {
+        $array = explode("\n",$string);
+        $output = array();
+        foreach($array as $arr) {
+            if(substr(trim($arr), 0, 2) != "//") {
+                $output[] = $arr;
+            }
+        }
+
+        $out = implode("\n",$output);
+        return $out;
+    }
+    
+    public function minify($fileContent) {
+        return $fileContent;
+    }
+
+    public function addCssToBody($file) {
+        if($this->includeSeo()) {
+            echo "<script>loadCSS('$file');</script>\n";
+        } else {
+            echo '<link rel="stylesheet" type="text/css" href="'.$file.'" />';
+        }
+
+    }
+
 }
 ?>

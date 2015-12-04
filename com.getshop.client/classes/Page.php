@@ -735,9 +735,8 @@ class Page {
             echo "<div class='gsaddcontenttext'>";
             echo "</div>";
             echo "<i title='Add content' class='fa fa-plus-circle gs_show_application_add_list' $show></i> ";
-//            if($depth == 1) {
-                echo "<i title='Change layout' class='fa fa-th gs_change_cell_layoutbutton' $show></i>";
-//            }
+            echo "<i title='Change layout' class='fa fa-th gs_change_cell_layoutbutton' $show></i> ";
+            echo "<i title='Delete this cell' class='fa fa-trash gs_drop_cell' $show></i>";
             echo "</span>";
         } else {
             $this->renderApplication($cell);
@@ -1465,6 +1464,38 @@ class Page {
                         Choose a layout for this cell that suits you.
                     </div>
 
+                    <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow">
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_50 gscelllayout"></div>
+                        </div>
+                    </div>
+                    <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow">
+                            <div class="gscelllayoutcol gswidth_33 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_33 gscelllayout"></div>
+                            <div class="gscelllayoutcol gswidth_33 gscelllayout"></div>
+                        </div>
+                    </div>
+                    <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow">
+                            <div class="gscelllayoutcol gswidth_25 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_25 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_25 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_25 gscelllayout "></div>
+                        </div>
+                    </div>
+                    <div class="gscelllayoutbox">
+                        <div class="gscelllayoutrow">
+                            <div class="gscelllayoutcol gswidth_20 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_20 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_20 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_20 gscelllayout "></div>
+                            <div class="gscelllayoutcol gswidth_20 gscelllayout "></div>
+                        </div>
+                    </div>
+
+            
                     <div class="gscelllayoutbox">
                         <div class="gscelllayoutrow gscelllayout"></div>
                         <div class="gscelllayoutrow gscelllayout"></div>

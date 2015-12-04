@@ -3,23 +3,24 @@
  * For licensing, see LICENSE.html or http://ckeditor.com/license
  */
 CKEDITOR.editorConfig = function(config) {
-    config.protectedSource.push(/<i[^>]*><\/i>/g);
-    
     config.resize_minWidth = 100;
     config.width = 100;
     config.toolbar = [
         {name: 'document', items: ['Save', 'Source']},
         {name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
         {name: 'editing', items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt', 'JustifyLeft', 'JustifyCenter', 'JustifyRight']},
-        {name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar']},
+        {name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'FontAwesome', 'SpecialChar']},
         {name: 'links', items: ['Link', 'Unlink', 'Anchor']},
         '/',
         {name: 'styles', items: ['Styles', 'Format', 'FontSize']},
         {name: 'colors', items: ['TextColor', 'BGColor', 'Center']},
         {name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']},
-        {name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote','FontAwesome']}
+        {name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']}
     ];
-    config.contentsCss = '/skin/default/fontawesome/css/font-awesome.css';
+    
+    config.extraPlugins = 'fontAwesome,widget,lineutils';
+    config.contentsCss = '/skin/default/fontawesome/css/font-awesome.min.css';
+    config.fontAwesome_version = '4.4';
     config.allowedContent = true; 
 
 };

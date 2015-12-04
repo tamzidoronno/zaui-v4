@@ -2,6 +2,10 @@
 /* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
 
 $dibs = $this->getConfigurationSetting("merchantid");
+$paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
+$paymentfailed = $this->getConfigurationSetting("paymentfailed");
+$paymentcancelled = $this->getConfigurationSetting("paymentcancelled");
+$hmac = $this->getConfigurationSetting("hmac");
 ?>
 
 <div class='gss_settings_header'>
@@ -27,6 +31,47 @@ $dibs = $this->getConfigurationSetting("merchantid");
             <div class="description">
                 <?php  echo $this->__f("The Merchant-ID is provided by Dibs, please contact us for more information."); ?>
             </div>
+        </div>
+        <div class="textfield gss_setting"  id="paymentsuccess">
+            <span class="title"><?php echo $this->__f("Payment success page"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='paymentsuccess' value="<? echo $paymentsuccess; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The Merchant-ID is provided by Dibs, please contact us for more information."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="paymentfailed">
+            <span class="title"><?php echo $this->__f("Payment failed page"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='paymentfailed' value="<? echo $paymentfailed; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The Merchant-ID is provided by Dibs, please contact us for more information."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="paymentcancelled">
+            <span class="title"><?php echo $this->__f("Payment cancelled page"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='paymentcancelled' value="<? echo $paymentcancelled; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The Merchant-ID is provided by Dibs, please contact us for more information."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="hmac">
+            <span class="title"><?php echo $this->__f("HMAC key provided by dibs"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='hmac' value="<? echo $hmac; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The Merchant-ID is provided by Dibs, please contact us for more information."); ?>
+            </div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="savecard">
+               <span class="title"><?php echo $this->__f("Save card"); ?></span>
+               <div class="gss_onoff" gs_model="dibsmodel" gs_model_attr="savecard">
+                   <?
+                   $class = $this->getConfigurationSetting("savecard") == "true" ? "fa-toggle-on" : "fa-toggle-off";
+                   ?>
+                   <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+               </div>
+               <div class="description">
+                   <?php echo $this->__w("Save the cards instead of extracting the amount?"); ?>
+               </div>
         </div>
     </div>
 

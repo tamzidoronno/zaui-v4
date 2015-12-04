@@ -29,8 +29,7 @@ app.ContentManager = {
         ;
 
         function guid() {
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                    s4() + '-' + s4() + s4() + s4();
+            return "ckeditor_" + s4() + "_" + s4() + "_" + s4() + "_" + s4();
         }
         var id = guid();
         var simpleMode = false;

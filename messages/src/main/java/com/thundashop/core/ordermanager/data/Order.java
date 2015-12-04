@@ -4,13 +4,17 @@
  */
 package com.thundashop.core.ordermanager.data;
 
+import com.google.gson.Gson;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -29,7 +33,30 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean captured = false;
     public List<CardTransaction> transactions = new ArrayList();
     public List<OrderLog> logLines = new ArrayList();
+    public String invoiceNote = "";
+    public boolean closed = false;
+    public List<String> creditOrderId = new ArrayList();
+    public boolean isCreditNote = false;
+    public Date startDate = null;
+    public Date endDate = null;
+    
+    public Order jsonClone() {
+        Gson gson = new Gson();
+        String gsonOrder = gson.toJson(this);
+        Order orderNew = gson.fromJson(gsonOrder, Order.class);
+        orderNew.id = UUID.randomUUID().toString();
+        orderNew.rowCreatedDate = new Date();
+        orderNew.transferredToAccountingSystem = false;
+        orderNew.createdDate = new Date();
 
+        if (orderNew.cart != null) {
+            orderNew.cart.rowCreatedDate = new Date();
+        }
+
+        return orderNew;
+    }
+
+    
     public boolean useForStatistic() {
         if (status == Order.Status.CANCELED || status == Order.Status.PAYMENT_FAILED) {
             return false;
@@ -41,13 +68,34 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         return true;
     }
-
+    
     public void changePaymentType(Application paymentApplication) {
         if (payment == null) {
             payment = new Payment();
         }
         
         payment.paymentType = "ns_"+paymentApplication.id.replace("-", "_")+"\\"+paymentApplication.appName;
+    }
+
+    public boolean triedAutoPay() {
+        if(payment.triedAutoPay.isEmpty()) {
+            return false;
+        }
+        
+        if(payment.triedAutoPay.size() >= 3) {
+            return true;
+        }
+        Calendar yestercal = Calendar.getInstance();
+        yestercal.add(Calendar.DAY_OF_YEAR, -1);
+        Date yesterdate = yestercal.getTime();
+        for(Date lastTime : payment.triedAutoPay) {
+            if(lastTime.after(yesterdate)) {
+                return true;
+            }
+        }
+        
+        return false;
+       
     }
     
     public static class Status  {
@@ -104,6 +152,26 @@ public class Order extends DataCommon implements Comparable<Order> {
             return 0;
         }
         return createdDate.compareTo(o.createdDate);
+    }
+    
+    public void updateCount(String cartItemId, Integer count) {
+        if (cart.getCartItem(cartItemId) == null) {
+            return;
+        }
+        cart.setProductCount(cartItemId, count);
+    }
+    
+    public void removeAllItemsExcept(List<String> ids) {
+        List<String> toRemove = new ArrayList();
+        for(CartItem item : cart.getItems()) {
+            toRemove.add(item.getCartItemId());
+        }
+        
+        toRemove.removeAll(ids);
+        
+        for(String remove : toRemove) {
+            cart.removeItem(remove);
+        }
     }
     
     public void updatePrice(String cartItemId, double price) {

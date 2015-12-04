@@ -15,6 +15,15 @@ class ApplicationManager extends FactoryBase {
         $this->app = $app;
     }
 
+    function dndAddCell() {
+        $egde = $_POST['data']['edge'];
+        $pageId = $this->getPage()->javapage->id;
+        $cellid = $_POST['data']['cellid'];
+        $area = "body";
+        $type = strtoupper($_POST['data']['type']);
+        $this->getApi()->getPageManager()->addLayoutCellDragAndDrop($pageId, $cellid, $type, $egde, $area);
+    }
+    
     function switchArea() {
         $pageId = $this->getPage()->id;
         $fromArea = $_POST['data']['area'];

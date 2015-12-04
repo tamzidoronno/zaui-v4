@@ -1,0 +1,28 @@
+<?php
+ /* @var $this \ns_d925273e_b9fc_480f_96fa_8fb8df6edbbe\PmsBookingCalendar */
+$selectedDate = $this->getSelectedDate();
+$month = $this->getSelectedMonth();
+$year = $this->getSelectedYear();
+
+$number = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+if(!$this->getConfigurationSetting("date_type")) {
+    echo "Warning no date type set yet.. configure it";
+}
+?>
+
+<div class='calendar_header'>
+    <i class='fa fa-arrow-left'></i>
+    <? echo $month . "/" . $year; ?>
+    <i class='fa fa-arrow-right'></i>
+</div>
+<?php
+for($i = 1;$i <= $number; $i++) {
+    $dayToPrint = strtotime($i.".".$month.".".$year);
+    if($this->isSelectedDate($dayToPrint)) {
+        echo "<span class='day selected' time='$dayToPrint'>$i</span>";
+    } else {
+        echo "<span class='day' time='$dayToPrint'>$i</span>";
+    }
+}
+?>

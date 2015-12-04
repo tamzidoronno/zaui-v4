@@ -355,6 +355,7 @@ thundashop.common.activateCKEditor = function(id, config) {
 //        extraPlugins : 'fontawesome',
         on: {
             blur: function(event) {
+                return;
                 var data = event.editor.getData();
                 if (notdestroyonblur) {
                     return;
@@ -424,15 +425,20 @@ thundashop.common.activateCKEditor = function(id, config) {
         config.autoGrow_maxHeight = 10;
         config.autoGrow_minHeight = 10;
     }
-
+    
     CKEDITOR.disableAutoInline = false;
+    var instance = null;
     if (notinline) {
         config.extraPlugins = 'autogrow';
         config.width = '100%';
-        CKEDITOR.replace(id, config);
+        instance = CKEDITOR.replace(id, config);
     } else {
-        CKEDITOR.inline(id, config);
+        instance = CKEDITOR.inline(id, config);
     }
+    
+    instance.on('blur',function( e ){
+        return false;
+     });
 }
 
 thundashop.common.resizeOrderMask = function() {

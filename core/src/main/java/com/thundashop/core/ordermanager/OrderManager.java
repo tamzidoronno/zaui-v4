@@ -1,6 +1,7 @@
 package com.thundashop.core.ordermanager;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
@@ -10,7 +11,9 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -24,6 +27,7 @@ import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserCard;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -64,6 +68,54 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private InvoiceManager invoiceManager;
     
+    @Autowired
+    private MessageManager messageManager;
+    
+    @Autowired
+    private DibsManager dibsManager;
+    
+    @Override
+    public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
+        Order order = getOrder(orderId);
+        Product product = productManager.getProduct(productId).clone();
+        order.cart.createCartItem(product, count);
+        saveObject(order);
+    }
+    
+    
+    @Override
+    public Order creditOrder(String orderId) {
+        Order order = getOrderSecure(orderId);
+        Order credited = order.jsonClone();
+        for(CartItem item : credited.cart.getItems()) {
+            item.setCount(item.getCount() * -1);
+        }
+        
+        incrementingOrderId++;
+        credited.incrementOrderId = incrementingOrderId;
+        credited.isCreditNote = true;
+        order.creditOrderId.add(credited.id);
+        saveOrder(credited);
+        saveOrder(order);
+        return credited;
+    }
+    
+    @Override
+    public void updateCountForOrderLine(String cartItemId, String orderId, Integer count) {
+        Order order = getOrder(orderId);
+        if (order == null) {
+            return;
+        }
+        if(count == 0) {
+            order.cart.removeItem(cartItemId);
+        } else {
+            order.updateCount(cartItemId, count);
+        }
+        saveOrder(order);
+    }
+    
+    
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataFromDatabase : data.data) {
@@ -89,9 +141,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
 
     private void saveOrderInternal(Order order) throws ErrorException {
-        
-        validatePaymentStatus(order);
-        
         User user = getSession().currentUser;
         if (user != null && order.userId == null) {
             order.userId = user.id;
@@ -325,6 +374,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     @Override
+    public void checkForOrdersToCapture() throws ErrorException {
+        dibsManager.checkForOrdersToCapture();
+    }
+    
+    @Override
     public void saveOrder(Order order) throws ErrorException {
         saveOrderInternal(order);
     }
@@ -413,10 +467,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (order.payment != null && order.payment.paymentFee > 0) {
             toPay += order.payment.paymentFee;
-        }
-        
-        if (toPay < 0) {
-            toPay = 0D;
         }
         
         return toPay;
@@ -1037,5 +1087,65 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order != null) {
             sendMail(order);
         }
+    }
+
+    @Override
+    public void checkForOrdersToAutoPay() throws ErrorException {
+        for(Order order : orders.values()) {
+            if(!orderNeedAutoPay(order)) {
+                continue;
+            }
+            System.out.println("autopay for order: " + order.incrementOrderId);
+            User user = userManager.getUserById(order.userId);
+            for(UserCard card : user.savedCards) {
+                if(card.isExpired()) {
+                    continue;
+                }
+                
+                try {
+                    if(card.savedByVendor.equals("DIBS")) {
+                        dibsManager.payWithCard(order, card);
+                    }
+                    if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                        messageManager.sendInvoiceForOrder(order.id);
+                        break;
+                    }
+                    if(order.status == Order.Status.PAYMENT_FAILED) {
+                        notifyAboutFailedPaymentOnOrder(order);
+                    }
+                }catch(Exception e) {
+                    order.payment.transactionLog.put(System.currentTimeMillis(), "Fatal error when trying autopay.");
+                    saveOrder(order);
+                }
+            }
+        }
+    }
+
+    public void notifyAboutFailedPaymentOnOrder(Order order) {
+        System.out.println("Need to notify about failed payment");
+    }
+
+    private boolean orderNeedAutoPay(Order order) {
+        if(order.cart.getTotal(true) <= 0) {
+            return false;
+        }
+        if(order.status != Order.Status.WAITING_FOR_PAYMENT) {
+            System.out.println("Not waiting for payment");
+            return false;
+        }
+
+        if(order.triedAutoPay()) {
+            return false;
+        }
+
+        User user = userManager.getUserById(order.userId);
+        if(user == null) {
+            return false;
+        }
+
+        if(user.savedCards.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 }

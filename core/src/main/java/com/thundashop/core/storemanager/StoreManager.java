@@ -31,6 +31,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Autowired
     public MailFactory mailFactory;
     
+    @Autowired
+    public FrameworkConfig FrameworkConfig;
+    
     private HashMap<String, KeyData> keyDataStore = new HashMap();
 
     @PostConstruct
@@ -54,7 +57,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         return storePool.initialize(webAddress, sessionId);
     }
 
-
+    @Override
     public Store getMyStore() throws ErrorException {
         return storePool.getStoreBySessionId(getSession().id);
     }
@@ -283,4 +286,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         return null;
     }
 
+    @Override
+    public boolean isProductMode() throws ErrorException {
+        return FrameworkConfig.productionMode;
+    }
 }

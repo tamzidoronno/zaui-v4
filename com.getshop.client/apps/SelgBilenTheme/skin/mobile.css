@@ -39,3 +39,5 @@ body { background-color:#000; color:#fff; }
 body { padding-bottom: 0px; }
 .gsmobilefooter { display:block; background-color:#ba0000; font-size: 20px !important; color:#fff !important; text-align: center; padding-top: 10px; }
 .gsmobilefooter a { color:#fff; text-decoration: underline; }
+.gsmobileheaderfull { display: block; }
+.Menu .menuentries.horizontal .entry { width: 33% !important; float:left !important; display:inline-block !important; }

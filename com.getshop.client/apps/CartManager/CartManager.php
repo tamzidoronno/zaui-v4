@@ -167,9 +167,14 @@ class CartManager extends \SystemApplication implements \Application {
     }
         
     public function render() {
+        if(isset($_GET['payorder'])) {
+            echo "Pay order";
+            $this->payOrderDirect();
+        }
+        
         $this->init();
         
-        if ($this->canGoToPayment() && $_GET['payOrderId'] && $this->order) {
+        if ($this->canGoToPayment() && isset($_GET['payOrderId']) && $this->order) {
             $this->doPayment();
         }
         
@@ -518,9 +523,53 @@ class CartManager extends \SystemApplication implements \Application {
         $this->getApi()->getCartManager()->clear();
         echo $this->__w("Please wait while you are being transferred to dibs payment service.");
     }
-    
- 
+
+    public function payOrderDirect() {
+        $orderId = $_GET['payorder'];
         
+        $this->startAdminImpersonation("OrderManager", "getOrder");
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $this->stopImpersionation();
+        
+        if (!$order) {
+            echo "<center><br/><br/><br/>";
+            echo "<h1>Fant ikke denne bestillingen, ta kontakt med oss.</h1>";
+            echo "<br/><br/><br/><br/></center>";
+        } else if ($order->payment && ($order->payment->paymentType != "ns_def1e922_972f_4557_a315_a751a9b9eff1\Netaxept" && $order->payment->paymentType != "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
+            echo "<center><br/><br/><br/>";
+            echo "<h1>Dette er en bestilling som ikke kan betales med kort.</h1>";
+            echo "<br/><br/><br/><br/></center>";
+        } else if ($order->status == 7) {
+            echo "<center><br/><br/><br/>";
+            echo "<h1>Betalingen er allerede gjennomført for denne bestillingen.</h1>";
+            echo "<br/><br/><br/><br/></center>";
+        } else {
+            echo "<center><br/><br/><br/>";
+            echo "<h1>Vennligst vent, du blir nå overført til betalingsvinduet.</h1>";
+            echo "<br/><br/><br/><br/></center>";
+
+            $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
+            $payment = null;
+
+            foreach ($cartManager->getPaymentApplications() as $paymenti) {
+                $paymentId = str_replace("-","_", $paymenti->applicationSettings->id);
+                if (stristr($order->payment->paymentType, $paymentId)) {
+                    $payment = $paymenti;
+                }
+            }
+
+            if ($payment) {
+                $payment->order = $order;
+                if ($payment->order) {
+                    $payment->initPaymentMethod();
+                    $payment->preProcess();
+                } else {
+                    echo "En feil oppstod, ordren kunne ikke bli funnet. (" . $_GET['orderId'] . ")";
+                }
+            }
+        }
+    }
+
 }
     
 ?>

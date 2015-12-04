@@ -85,11 +85,6 @@ if (isset($_GET['logonwithkey'])) {
 
 $factory = IocContainer::getFactorySingelton();
 
-if (@$factory->isMobile()) {
-    echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
-    echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';
-}
-
 if ($factory->isEditorMode()) {
     echo '<script src="/js/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>';
     echo '<link rel="stylesheet" type="text/css" href="skin/default/settings.css" />';
@@ -108,6 +103,18 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
 
 <html xmlns:fb="http://ogp.me/ns/fb#">
     <head>
+        
+        <?
+        if($factory->includeSeo()) {
+            include_once("loadcss.phtml");
+        }
+        
+        if (@$factory->isMobile()) {
+            $factory->addCssToBody("skin/default/responsive.css");
+            echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
+        }
+
+        ?>
         
         <script>
 
@@ -136,6 +143,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <meta name="keywords" content="<? echo $javapage->metaKeywords; ?>">
         <meta name="title" content="<? echo $javapage->metaTitle; ?>">
         
+        <script <? echo $factory->includeSeo(); ?> type="text/javascript" src="https://www.google.com/jsapi"></script>
         <?php
         $html = init($factory);
         $pageDescription = $factory->getPage()->javapage->description;
@@ -159,12 +167,11 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         echo "</script>";
         ?>
 
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
         <title class='pagetitle'><?php echo $title; ?></title>
     <script>
      $(function() {
-         if(typeof(CKEDITOR) !== "undefined") {
+        if (typeof(CKEDITOR) !== "undefined") {         
             CKEDITOR.dtd.$removeEmpty['span'] = false;
         }
      });
@@ -195,6 +202,8 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
                 echo "<div title='".$factory->__f("Preview mobile and settings")."' class='gs_site_main_button store_mobile_view_button '><i class='fa fa-mobile'></i></div>";
                 echo "<div title='".$factory->__f("Global CSS editing")."' class='gs_site_main_button store_design_button'><i class='fa fa-image'></i></div>";
                 echo "<div title='".$factory->__f("Toggle advanced mode")."' class='gs_site_main_button gs_toggle_advanced_mode'><i class='fa fa-rocket'></i></div>";
+                echo "<div title='".$factory->__f("Create a new row? Drag this row to where you want it.")."' class='gs_site_main_button gsaddrowcontentdnd'><i class='fa fa-minus'></i></div>";
+                echo "<div title='".$factory->__f("Create a new column? Drag this column to where you want it.")."' class='gs_site_main_button gsaddcolumncontentdnd'><i class='fa fa-columns'></i></div>";
                 echo "<a href='/logout.php'><div title='".$factory->__f("Logout")."' class='gs_site_main_button'><i class='fa fa-lock'></i></div></a>";
             echo "</div>";
             
@@ -374,6 +383,14 @@ if (isset($_GET['showlogin']) || $factory->isEditorMode()) {
 if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
     echo "<script>getshop.Settings.showSettings(false);</script>";
 }
+
+$orders = $factory->getApi()->getOrderManager()->getAllOrdersForUser("d7a295bb-fe13-474e-9ce0-b0ba8e3f8c3c");
+foreach($orders as $order) {
+    $order->status = 2;
+    $order->payment->triedAutoPay = [];
+    $factory->getApi()->getOrderManager()->saveOrder($order);
+}
+
 ?>    
 <script>
     google.load('visualization', '1.0', {'packages':['corechart']});

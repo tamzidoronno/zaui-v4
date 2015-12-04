@@ -1,0 +1,29 @@
+<?
+$type = array();
+$type['start_date'] = "Start date";
+$type['end_date'] = "End date";
+$dateType = $this->getConfigurationSetting("date_type");
+?>
+
+<div gstype="form" method="saveSettings">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%"><? echo $this->__w("What type of date is this"); ?></td>
+        <td width="50%">
+            <select gsname="date_type">
+                <option value="">Type of date</option>
+                <? 
+                foreach($type as $key => $value) {
+                    $seleted = "";
+                    if($dateType == $key) {
+                        $seleted = "SELECTED";
+                    }
+                    echo "<option value='$key' $seleted>$value</option>";
+                }
+                ?>
+            </select>
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

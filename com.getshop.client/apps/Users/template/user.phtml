@@ -185,3 +185,11 @@ if (!$user->address) {
         <div class="gss_button" gss_method="deleteAccount" gss_confirmation="<? echo $this->__f("Are you sure you want to delete the user?"); ?>"  gss_model="usermodel"><i class='fa fa-remove'></i><?php echo $this->__("Delete account"); ?></div>
     </div>
 </div>
+
+<div class='gss_settings_content'>
+    <div class="gss_settings_title"><? echo $this->__f("Saved cards"); ?></div>
+
+    <?
+    print_r($user->savedCards);
+    ?>
+</div>

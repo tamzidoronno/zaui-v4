@@ -48,19 +48,66 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
         
-        Application SalesPanel = createSettings("SalesPanel",
-        "84420130-b401-44e8-a9ab-52d6458f2c0c",
+        
+        Application Avtalegiro = createSettings("Avtalegiro",
+        "8f5f7f8f-de42-4867-82cc-63eb0cb55fa1",
         allowed2,
         " ",
-        Application.Type.Marketing, true);
-        SalesPanel.isPublic = false;
-        SalesPanel.isFrontend = true;
-        SalesPanel.moduleId = "other";
-        SalesPanel.allowedStoreIds.add("efad5b1f-b679-4c2b-8774-8c2475c20137");
-        SalesPanel.defaultActivate = false;
-        apps.add(SalesPanel);
+        Application.Type.Payment, true);
+        Avtalegiro.isPublic = true;
+        Avtalegiro.isFrontend = false;
+        Avtalegiro.moduleId = "WebShop";
+        Avtalegiro.defaultActivate = false;
+        Avtalegiro.isSingleton = true;
+        apps.add(Avtalegiro);
 
+        Application SemLagerhotellTheme = createSettings("SemLagerhotellTheme",
+        "d91e4e20-f4af-425c-8468-2202ccc0db1e",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        SemLagerhotellTheme.isPublic = false;
+        SemLagerhotellTheme.isFrontend = true;
+        SemLagerhotellTheme.moduleId = "other";
+        SemLagerhotellTheme.defaultActivate = false;
+        SemLagerhotellTheme.allowedStoreIds = new ArrayList();
+        SemLagerhotellTheme.allowedStoreIds.add("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7");
+        apps.add(SemLagerhotellTheme);
 
+        Application PmsBooking = createSettings("PmsBooking",
+        "8dcbf529-72ae-47dd-bd6b-bd2d0c54b30a",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsBooking.isPublic = true;
+        PmsBooking.isFrontend = true;
+        PmsBooking.moduleId = "WebShop";
+        PmsBooking.defaultActivate = false;
+        apps.add(PmsBooking);
+        
+        Application PmsBookingCalendar = createSettings("PmsBookingCalendar",
+        "d925273e-b9fc-480f-96fa-8fb8df6edbbe",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsBookingCalendar.isPublic = true;
+        PmsBookingCalendar.isFrontend = true;
+        PmsBookingCalendar.moduleId = "WebShop";
+        PmsBookingCalendar.defaultActivate = false;
+        apps.add(PmsBookingCalendar);
+
+        Application PmsBookingProductList = createSettings("PmsBookingProductList",
+        "ed7efba0-de37-4cd8-915b-cc7be10b8b8b",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsBookingProductList.isPublic = true;
+        PmsBookingProductList.isFrontend = true;
+        PmsBookingProductList.moduleId = "WebShop";
+        PmsBookingProductList.defaultActivate = false;
+        apps.add(PmsBookingProductList);
+        
+        
         return apps;
     }
 

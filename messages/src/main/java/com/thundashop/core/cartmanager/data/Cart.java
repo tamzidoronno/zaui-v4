@@ -135,10 +135,6 @@ public class Cart extends DataCommon {
             }
         }
         
-        if (retValue > total) {
-            retValue = total;
-        }
-        
         return retValue;
     }
     

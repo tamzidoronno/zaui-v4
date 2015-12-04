@@ -73,6 +73,10 @@ $numberOfTypes = 2;
         <td><? echo $this->__w("Event label (google analythics)"); ?></td>
         <td><input type="text" style='width:100%;' name="eventlabel" value='<? echo $this->getEventLabel(); ?>'></td>
     </tr>
+    <tr>
+        <td><? echo $this->__w("Thank you page"); ?></td>
+        <td><input type="text" style='width:100%;' name="thankyoupage" value='<? echo $this->getThankYouPage(); ?>'></td>
+    </tr>
 </table>
 <span class="saveContactConfiguration"><? echo $this->__w("Save"); ?></span>
 <script>app.Contact.updateFormFields();</script>

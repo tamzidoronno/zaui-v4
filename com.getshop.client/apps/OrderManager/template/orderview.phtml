@@ -25,6 +25,7 @@ $orderStatusText = $order->status == 6 ? $this->__f("Sent") : $orderStatusText;
 $orderStatusText = $order->status == 7 ? $this->__f("Payment completed") : $orderStatusText;
 $orderStatusText = $order->status == 8 ? $this->__f("Capture failed") : $orderStatusText;
         
+        
 $cart = $order->cart;
 ?>
 <div class='orderoverview' orderId='<? echo $_POST['value']; ?>'>
@@ -34,6 +35,25 @@ $cart = $order->cart;
         ?>
         <div class='gss_label'><? echo $this->__f("Name"); ?></div>
         <div class='gss_label_content'><? echo $address->fullName; ?></div>
+        <div class='gss_label'><? echo $this->__f("Invoice information"); ?></div>
+        <div class='gss_label_content'><textarea id="invoiceinformationbox" style="position:relative;height: 100px; width: 100%;"><? echo $order->invoiceNote; ?></textarea><br><br>
+        <? if($this->canChangeOrder($order)) { ?>
+            <input type="button" value="Update invoice information" id="updateinvoiceinfo">
+        <? } ?>
+        </div>
+        
+        <div class='gss_label_content'>
+        <? if(!$this->canChangeOrder($order)) { ?>
+            <? if(sizeof($order->creditOrderId) > 0) {
+                for($i = 1; $i <= sizeof($order->creditOrderId); $i++) {
+                    $creditId = $order->creditOrderId[($i-1)];
+                    echo '<input type="button" gss_view="gss_orderview" gss_fragment="orderview" gss_method="showOrder" gss_value="'.$creditId.'" value="Open credited order '.$i.'" style="float:right;">';
+                }
+            }  ?>
+            <input type="button" value="Credit order" class="creditinvoice" style="float:right;" orderid="<? echo $order->id; ?>" style='margin-right:10px;'>
+        <? } ?>
+        </div>
+        
         <div class='gss_label'><? echo $this->__f("Incremental order id"); ?></div>
         <div class='gss_label_content'><? echo $order->incrementOrderId; ?></div>
         <div class='gss_label'><? echo $this->__f("Transferred to accounting"); ?></div>
@@ -52,13 +72,15 @@ $cart = $order->cart;
             if ($order->payment->paymentType) {
                 $paymentApp = new $order->payment->paymentType();
                 echo $changeText.$paymentApp->getName();
-                if ($order->paymentTransactionId) {
-                    echo " ( ".$order->paymentTransactionId." )";
-                }
                 echo "<br/>";
             }
             
-            echo $orderStatusText; ?>
+            echo $orderStatusText; 
+            
+            if($order->status == 2 || $order->status == 5 || $order->status == 3) {
+                echo " - <a class='gsspayorder' style='color:blue; cursor:pointer;' orderid='".$order->id."'>pay order</a>";
+            }
+            ?>
             
             <div class="gss_orderview_available_payments">
                 <?
@@ -92,11 +114,36 @@ $cart = $order->cart;
     foreach ($cart->items as $cartItem) {
 //        echo "<div class='gss_label_content'>";
         $editButton = $canChangeOrder ? "<i class='fa fa-edit gss_changeOrderLine'></i>" : "";
+        $editCountButton = $canChangeOrder ? "<i class='fa fa-edit gss_changeOrderCount'></i>" : "";
         $metaText = $cartItem->product->metaData ? " ( " .$cartItem->product->metaData." )" : "";
-        echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>".$cartItem->count." x ".$cartItem->product->name." $metaText<span class='gss_order_line_price'>".$cartItem->product->price." $editButton</span></div>";
+        
+        $dates = "";
+        if($cartItem->startDate) {
+            $dates .= date("d.m.Y H:i", strtotime($cartItem->startDate));
+        }
+        if($cartItem->endDate) {
+            $dates .= " - " . date("d.m.Y H:i", strtotime($cartItem->endDate));
+        }
+        echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>$editCountButton ".$cartItem->count." x ".$cartItem->product->name." $metaText $dates<span class='gss_order_line_price'>".$cartItem->product->price." $editButton</span></div>";
 //        echo "</div>";
     }
+    if($this->canChangeOrder($order)) {
     ?>
+    <div class='gss_label'>
+        <? echo $this->__f("Add item"); ?>
+    </div>
+    <div class='gss_label_content'>
+        <select id='addproductitem'>
+            <?
+            $products = $this->getApi()->getProductManager()->getAllProducts();
+            foreach($products as $product) {
+                echo "<option value='".$product->id."'>" . $product->name."</option>";
+            }
+            ?>
+        </select>
+        <i class='fa fa-plus-circle gss_addOrderItem' style="cursor:pointer;"></i>
+    </div>
+    <? } ?>
     <div class='gss_label'>
         <? echo $this->__f("Total price"); ?>
     </div>
@@ -115,13 +162,14 @@ if ($order->transactions) {
     }
     echo "<br/><br/>";
 }
+if($this->canChangeOrder($order)) {
 ?>
 
 &nbsp;
 <div class="gss_button" onclick="$('.gss_more_order_settings').slideDown();">
-    <? echo $this->__f("Show more settinsg"); ?>
+    <? echo $this->__f("Show more settings"); ?>
 </div>
-
+<? } ?>
 
 
 <?
@@ -132,6 +180,8 @@ if ($canChangeOrder) {
     </div>
 <?
 }
+echo "<a href='/scripts/downloadInvoice.php?orderId=$order->id&incrementalOrderId=$order->incrementOrderId'><div class='gss_button'> Download receipt </div></a>";
+echo "<div class='gss_button' style='float:right;' onclick='$(\".gshiddenlogparams\").show();'>Advance settings</div>";
 ?>
 <div class="gss_more_order_settings">
     <center>
@@ -174,4 +224,34 @@ if ($canChangeOrder) {
     <div class="gss_button" gss_value="<? echo $order->id; ?>" gss_method="updateOrder" gss_model="ordermodel" gss_fragment="orderview" gss_view="gss_orderview">
         <? echo $this->__f("Save"); ?>
     </div>
+</div>
+<div class='gshiddenlogparams' style='display:none;'>
+    <hr>
+    <h1>Advance settings</h1>
+    <h1>Transaction log</h1>
+    <?
+
+    $log = array();
+    foreach($order->payment->transactionLog as $time => $value) {
+        $log[$time] = $value;
+    }
+    ksort($log);
+
+    foreach($log as $time => $value) {
+        echo date("d.m.Y - H:i:s", ($time/1000)) . " - " . $value . "<br>";
+    }
+
+    echo "<br>";
+    echo "<br>";
+    echo "<h1>Return values from payment gateway</h1>";
+    echo "<table>";
+    foreach($order->payment->callBackParameters as $key => $value) {
+        echo "<tr>";
+        echo "<td>" . $key . "</td>";
+        echo "<td>" . $value . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+
+    ?>
 </div>

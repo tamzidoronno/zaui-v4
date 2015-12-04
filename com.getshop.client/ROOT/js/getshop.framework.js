@@ -99,6 +99,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_templatehaeaderfunctions .color_select.close', this.hideColors);
         $(document).on('click', '.gslinkcell', this.doLinkCell);
         $(document).on('click', '.gs_change_cell_layoutbutton', this.showChangeLayoutOption);
+        $(document).on('click', '.gs_drop_cell', this.dropCell);
         $(document).on('click', '.gs_close_cell_layoutbutton', this.hideChangeLayoutOption);
         $(document).on('click', '.gscelllayoutbox', this.changeCellLayout);
         $(document).on('click', '.gscell', this.checkMoveApp);
@@ -188,6 +189,18 @@ thundashop.framework = {
         panel.css('top', button.offset().top + 50);
         panel.fadeIn();
         panel.attr('cellid',$(this).closest('.gscell').attr('cellid'));
+    },
+    
+    dropCell : function() {
+        var confirmed = confirm("Are you sure your want to delete this cell?");
+        if(confirmed) {
+            var cellid = $(this).closest('.gscell').attr('cellid');
+            var event = thundashop.Ajax.createEvent('','operateCell',$(this), {
+                "cellid" : cellid,
+                "type" : "delete"
+            });
+            thundashop.Ajax.post(event);
+        }
     },
     
     doLinkCell : function() {

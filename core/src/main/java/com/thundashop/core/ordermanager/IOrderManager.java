@@ -86,6 +86,12 @@ public interface IOrderManager {
     @Administrator
     public Order getOrderByReference(String referenceId) throws ErrorException;
     
+    @Administrator
+    public void checkForOrdersToCapture() throws ErrorException;
+    
+    @Administrator
+    public void checkForOrdersToAutoPay() throws ErrorException;
+    
     /**
      * Fetch all orders for a user.
      * @param userId
@@ -94,6 +100,15 @@ public interface IOrderManager {
      */
     @Administrator
     public List<Order> getAllOrdersForUser(String userId) throws ErrorException;
+    
+    @Administrator
+    public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException;
+    
+    @Administrator
+    public void updateCountForOrderLine(String cartItemId, String orderId, Integer count);
+    
+    @Editor
+    public Order creditOrder(String orderId);
     
     /**
      * Fetch all orders on product.

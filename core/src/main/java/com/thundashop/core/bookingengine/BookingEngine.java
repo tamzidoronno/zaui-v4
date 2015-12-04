@@ -264,6 +264,8 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
     }
 
     private void checkIfCanAddBookings(List<Booking> bookings) {
+        List<Booking> checkedBookings = new ArrayList();
+        
         for (Booking booking : bookings) {
             String bookingItemTypeId = booking.bookingItemTypeId;
             int totalSpots = getTotalSpotsForBookingItemType(bookingItemTypeId);
@@ -271,12 +273,15 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
                     .filter(o -> o.bookingItemTypeId.equals(bookingItemTypeId))
                     .collect(Collectors.toList());
             
+            bookingsToConsider.addAll(checkedBookings);
             BookingTimeLineFlatten flattenTimeLine = new BookingTimeLineFlatten(totalSpots);
+            bookingsToConsider.stream().forEach(o -> flattenTimeLine.add(o));
+            
             if (!flattenTimeLine.canAdd(booking)) {
                 throw new BookingEngineException("There is no space for this booking");
             }
             
-            bookingsToConsider.add(booking);
+            checkedBookings.add(booking);
         }
     }
 

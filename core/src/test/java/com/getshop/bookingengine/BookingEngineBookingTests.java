@@ -207,7 +207,7 @@ public class BookingEngineBookingTests extends TestCommon {
      * Booking throws expection if there is not enough free spots.
      */
     
-    @Test
+    @Test(expected = BookingEngineException.class)
     public void addBooking_expectionThrownWhenFull() {
         List<Booking> bookings = new ArrayList();
         BookingItemType type = bookingEngine.createABookingItemType("Type");
@@ -218,7 +218,7 @@ public class BookingEngineBookingTests extends TestCommon {
         bookings.add(helper.getValidBooking(1, bookingEngine, item));
         bookings.add(helper.getValidBooking(1, bookingEngine, item));
         
-        BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
+        bookingEngine.addBookings(bookings);
     }
     
 }

@@ -68,7 +68,7 @@ public class BookingTimeLineFlattenTest {
         Assert.assertEquals(getDate("2015-01-05 12:00"), secondTimeLine.end);
         
         BookingTimeLine thirdTimeLine = timeLines.get(2);
-        Assert.assertEquals(2, thirdTimeLine.count);
+        Assert.assertEquals(1, thirdTimeLine.count);
         Assert.assertEquals(getDate("2015-01-05 12:00"), thirdTimeLine.start);
         Assert.assertEquals(getDate("2015-01-06 08:00"), thirdTimeLine.end);
     }

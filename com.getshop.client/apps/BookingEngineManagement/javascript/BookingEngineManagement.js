@@ -6,11 +6,13 @@ app.BookingEngineManagement = {
     },
     renameBookingItemButton : function() {
         var currentName = $(this).closest('tr').find('.currentname').text();
-        var id = $(this).closest('tr').attr('bookingItemTypeId');
+        var id = $(this).closest('tr').attr('entryid');
+        var type = $(this).closest('tr').attr('type');
         var name = prompt("New name of group", currentName);
         var event = thundashop.Ajax.createEvent('','updateName',$(this), {
             "name" : name,
-            "bookingItemTypeId" : id
+            "entryid" : id,
+            "type" : type
         });
         thundashop.Ajax.post(event);
     },
@@ -27,7 +29,7 @@ app.BookingEngineManagement = {
         var confirmed = confirm("Are you sure you want to delete this item?");
         if(confirmed) {
             var event = thundashop.Ajax.createEvent('','deletetype',$(this), {
-                "id" : $(this).closest('tr').attr('bookingitemid')
+                "entryid" : $(this).closest('tr').attr('entryid')
             });
             thundashop.Ajax.post(event);
         }

@@ -24,7 +24,7 @@ $bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getS
                         <?php
                         foreach ($bookingtypes as $type) {
                             /* @var $type core_bookingengine_data_BookingItemType */
-                            echo "<tr bookingItemTypeId='" . $type->id . "'>";
+                            echo "<tr entryid='" . $type->id . "' type='itemtype'>";
                             echo "<td><i class='fa fa-trash-o deletegroupid' bookingitemtypeid='" . $type->id . "'></i></td><td><span class='currentname'>" . $type->name . "</span></td>";
                             echo "<td align='right'><span class='pmsbutton renameBookingItemButton pmsbuttonsmall'>Rename</span> ";
                             echo "<span class='pmsbutton pmsbuttonsmall'>Edit content</span></td>";
@@ -54,10 +54,9 @@ $bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getS
                         if(is_array($bookingitems)) {
                             foreach ($bookingitems as $item) {
                                 /* @var $type core_bookingengine_data_BookingItem */
-                                echo "<tr bookingItemId='" . $item->id . "'>";
+                                echo "<tr entryid='" . $item->id . "'type='item'>";
                                 echo "<td><i class='fa fa-trash-o deletetype' bookingitemid='" . $item->id . "'></i></td><td><span class='currentname'>" . $item->bookingItemName . "</span></td>";
                                 echo "<td align='right'><span class='pmsbutton renameBookingItemButton pmsbuttonsmall'>Rename</span> ";
-                                echo "<span class='pmsbutton pmsbuttonsmall'>Edit content</span></td>";
                                 echo "</tr>";
                             }
                         }

@@ -12,9 +12,16 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
 
     public function updateName() {
         $name = $_POST['data']['name'];
-        $id = $_POST['data']['bookingItemTypeId'];
-        $type = $this->getApi()->getBookingEngine()->getABookingItemType($this->getSelectedName(), $id);
-        $this->getApi()->getBookingEngine()->saveABookingItemType($this->getSelectedName(), $type);
+        $id = $_POST['data']['entryid'];
+        if($_POST['data']['type'] == "item") {
+            $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $id);
+            $item->bookingItemName = $name;
+            $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
+        } else {
+            $type = $this->getApi()->getBookingEngine()->getABookingItemType($this->getSelectedName(), $id);
+            $type->name = $name;
+            $this->getApi()->getBookingEngine()->saveABookingItemType($this->getSelectedName(), $type);
+        }
         
     }
     

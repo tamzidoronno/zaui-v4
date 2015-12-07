@@ -14,4 +14,5 @@ import com.thundashop.core.common.DataCommon;
  */
 public class BookingItemType extends DataCommon {
     public String name;
+    public String productId;
 }

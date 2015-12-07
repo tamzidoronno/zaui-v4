@@ -1,5 +1,13 @@
 app.PmsManagement = {
     init: function () {
+        $(document).on('change', '.PmsManagement .attachedProduct', app.PmsManagement.attachProduct);
+    },
+    attachProduct : function() {
+        var event = thundashop.Ajax.createEvent('','attachProduct',$(this), {
+            "typeid" : $(this).attr('typeid'),
+            "productid" : $(this).val()
+        });
+        thundashop.Ajax.post(event);
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
@@ -27,4 +35,4 @@ app.PmsManagement = {
         toolbox.attachToElement(application, 2);
     }
 };
-app.PmsBooking.init();
+app.PmsManagement.init();

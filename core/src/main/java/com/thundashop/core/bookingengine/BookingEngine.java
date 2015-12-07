@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @GetShopSession
-public class BookingEngine extends GetShopSessionBeanNamed  {
+public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEngine {
     
     private final Map<String, Booking> bookings = new HashMap();
     private final Map<String, Availability> availabilities = new HashMap();
@@ -50,10 +50,12 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
     
     private final BookingEngineVerifier verifier = new BookingEngineVerifier();
 
+    @Override
     public List<BookingItemType> getBookingItemTypes() {
         return new ArrayList(types.values());
     }
     
+    @Override
     public BookingItemType createABookingItemType(String name) {
         BookingItemType type = new BookingItemType();
         type.name = name;
@@ -61,6 +63,15 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
         types.put(type.id, type);
         
         return type;
+    }
+    
+    @Override
+    public void deleteABookingItemType(String id) {
+    }
+    
+    @Override
+    public BookingItemType  getABookingItemType(String id) {
+        return null;
     }
 
     @Override
@@ -290,5 +301,10 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
                 .filter(item -> item.bookingItemTypeId.equals(bookingItemTypeId))
                 .mapToInt(item -> item.bookingSize)
                 .sum();
+    }
+
+    @Override
+    public BookingItemType saveABookingItemType(BookingItemType type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

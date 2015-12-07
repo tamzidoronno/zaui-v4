@@ -28,15 +28,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("settings");
     }
     
-    public function addRoom() {
-        $room = $_POST['data']['name'];
-        $this->getApi()->getPmsManager()->addRoom($this->getSelectedName(), $room);
-    }
-
     public function saveSettings() {
         foreach($_POST['data'] as $key => $value) {
             $this->setConfigurationSetting($key, $value);
         }
     }    
+        
 }
 ?>

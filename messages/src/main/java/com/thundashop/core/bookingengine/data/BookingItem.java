@@ -17,6 +17,8 @@ import org.mongodb.morphia.annotations.Transient;
 public class BookingItem extends DataCommon {
     public String bookingItemTypeId;
     
+    public String bookingItemName = "";
+    
     /**
      * How many bookings is allowed to be on this bookingitem.
      */

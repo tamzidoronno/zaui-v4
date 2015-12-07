@@ -51,6 +51,18 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $room = $_POST['data']['name'];
         $this->getApi()->getBookingEngine()->createABookingItemType($this->getSelectedName(), $room);
     }
+
+    public function addBookingItem() {
+        $item = new \core_bookingengine_data_BookingItem();
+        $item->bookingItemName = $_POST['data']['name'];
+        $item->bookingItemTypeId = "273bb2f0-da4a-483d-8684-bae95164b10d";
+        $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
+    }
+    
+    public function deletetype() {
+        $id = $_POST['data']['id'];
+        $this->getApi()->getBookingEngine()->deleteBookingItem($this->getSelectedName(), $id);
+    }
     
 }
 ?>

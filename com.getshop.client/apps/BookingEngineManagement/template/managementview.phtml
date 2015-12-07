@@ -1,33 +1,73 @@
 <?php
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $bookingtypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 ?>
-
 <div class='addRoomBox'>
-    <div gstype="form" method="addBookingItemType" class='addGroupOptions'>
-        <h2 style='float:left;'><? echo $this->getSelectedName(); ?></h2>
-        <input gsname="name" value="">
-        <span gstype="submit" class="pmsbutton addGroupOptions"><? echo $this->__w("Create a booking group"); ?></span>
-    </div>
+    <h2 ><? echo $this->getSelectedName(); ?></h2>
+    <table width='100%' cellspacing='2' class='mgrtable'>
+        <tr>
+            <td valign='top' width='50%'>
+                <h3>Booking item types</h3>
+                <div gstype="form" method="addBookingItemType" class='addGroupOptions'>
+                    <input gsname="name" value="">
+                    <span gstype="submit" class="pmsbutton addGroupOptions"><? echo $this->__w("Create a booking item type"); ?></span>
+                </div>
 
-    <div class="roomlist">
-        <table width='100%'>
-            <tr>
-                <th width='10'></th>
-                <th align='left'>Group name</th>
-            </tr>
-            
-             <?php 
-            foreach($bookingtypes as $room) {
-                /* @var $room core_bookingengine_data_BookingItemType */
-                echo "<tr bookingItemTypeId='".$room->id."'>";
-                echo "<td><i class='fa fa-trash-o deletegroupid' bookingitemtypeid='".$room->id."'></i></td><td><span class='currentname'>" . $room->name . "</span></td>";
-                echo "<td align='right'><span class='pmsbutton renameBookingItemButton pmsbuttonsmall'>Rename</span> ";
-                echo "<span class='pmsbutton pmsbuttonsmall'>Edit content</span></td>";
-                echo "</tr>";
-            }
-            ?>
-        </table>
-    </div>
+                <div class="roomlist">
+                    <table width='100%'>
+                        <tr>
+                            <th width='10'></th>
+                            <th align='left'>Booking item name</th>
+                        </tr>
+
+                        <?php
+                        foreach ($bookingtypes as $type) {
+                            /* @var $type core_bookingengine_data_BookingItemType */
+                            echo "<tr bookingItemTypeId='" . $type->id . "'>";
+                            echo "<td><i class='fa fa-trash-o deletegroupid' bookingitemtypeid='" . $type->id . "'></i></td><td><span class='currentname'>" . $type->name . "</span></td>";
+                            echo "<td align='right'><span class='pmsbutton renameBookingItemButton pmsbuttonsmall'>Rename</span> ";
+                            echo "<span class='pmsbutton pmsbuttonsmall'>Edit content</span></td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </table>
+                </div>
+                <br>
+                <br>
+            </td>
+            <td valign='top' width='50%'>
+                <h3>Booking items</h3>
+                <div gstype="form" method="addBookingItem" class='addGroupOptions'>
+                    <input gsname="name" value="">
+                    <span gstype="submit" class="pmsbutton addGroupOptions"><? echo $this->__w("Create a booking item"); ?></span>
+                </div>
+
+                <div class="roomlist">
+                    <table width='100%'>
+                        <tr>
+                            <th width='10'></th>
+                            <th align='left'>Booking item</th>
+                        </tr>
+
+                        <?php
+                        if(is_array($bookingitems)) {
+                            foreach ($bookingitems as $item) {
+                                /* @var $type core_bookingengine_data_BookingItem */
+                                echo "<tr bookingItemId='" . $item->id . "'>";
+                                echo "<td><i class='fa fa-trash-o deletetype' bookingitemid='" . $item->id . "'></i></td><td><span class='currentname'>" . $item->bookingItemName . "</span></td>";
+                                echo "<td align='right'><span class='pmsbutton renameBookingItemButton pmsbuttonsmall'>Rename</span> ";
+                                echo "<span class='pmsbutton pmsbuttonsmall'>Edit content</span></td>";
+                                echo "</tr>";
+                            }
+                        }
+                        ?>
+                    </table>
+                </div>
+                <br>
+                <br>
+            </td>
+        </tr>
+    </table>
 </div>
 

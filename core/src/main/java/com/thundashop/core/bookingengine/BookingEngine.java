@@ -67,11 +67,12 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     
     @Override
     public void deleteABookingItemType(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @Override
     public BookingItemType  getABookingItemType(String id) {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -305,6 +306,16 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     @Override
     public BookingItemType saveABookingItemType(BookingItemType type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<BookingItem> getBookingItems() {
+        return new ArrayList(items.values());
+    }
+
+    @Override
+    public List<BookingItem> deleteBookingItem(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

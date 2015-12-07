@@ -105,6 +105,7 @@ public class PHPApiBuilder {
 
     public void generate() throws IOException {
         String result = generatePHPApi();
+        System.out.println("Writing php api to : " + eventsPath);
         this.generator.writeFile(result, eventsPath + "API2.php");
         
         for (Class dataobject : dataObjects) {

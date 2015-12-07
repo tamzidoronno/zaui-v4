@@ -108,6 +108,18 @@ public class AddApplicationsToDatabase {
         apps.add(PmsBookingProductList);
         
         
+        Application PmsManagement = createSettings("PmsManagement",
+        "7e828cd0-8b44-4125-ae4f-f61983b01e0a",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsManagement.isPublic = true;
+        PmsManagement.isFrontend = true;
+        PmsManagement.moduleId = "WebShop";
+        PmsManagement.defaultActivate = false;
+        apps.add(PmsManagement);
+
+        
         return apps;
     }
 

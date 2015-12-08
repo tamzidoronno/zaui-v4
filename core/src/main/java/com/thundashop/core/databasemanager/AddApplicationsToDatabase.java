@@ -141,6 +141,17 @@ public class AddApplicationsToDatabase {
         PmsBookingSummary.defaultActivate = false;
         apps.add(PmsBookingSummary);
 
+        Application PmsBookingContactData = createSettings("PmsBookingContactData",
+        "d3951fc4-6929-4230-a275-f2a7314f97c1",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsBookingContactData.isPublic = true;
+        PmsBookingContactData.isFrontend = true;
+        PmsBookingContactData.moduleId = "WebShop";
+        PmsBookingContactData.defaultActivate = false;
+        apps.add(PmsBookingContactData);
+        
         return apps;
     }
 

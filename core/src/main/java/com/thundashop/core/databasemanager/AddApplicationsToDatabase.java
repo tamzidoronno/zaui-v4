@@ -107,7 +107,17 @@ public class AddApplicationsToDatabase {
         PmsBookingProductList.defaultActivate = false;
         apps.add(PmsBookingProductList);
         
-        
+        Application AbbBetalingsTheme = createSettings("AbbBetalingsTheme",
+        "69f5da4a-ffca-422a-b134-72d0345997c9",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        AbbBetalingsTheme.isPublic = true;
+        AbbBetalingsTheme.isFrontend = true;
+        AbbBetalingsTheme.moduleId = "other";
+        AbbBetalingsTheme.defaultActivate = false;
+        apps.add(AbbBetalingsTheme);
+
         return apps;
     }
 

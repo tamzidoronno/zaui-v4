@@ -13,3 +13,5 @@
   width: 90% !important;
 }
 .FormItem .submitForm { width: 85% !important; background-color:#00509d; color:#fff; }
+
+.gsportraitimage,.gslandscapeimage { display:none !important; }

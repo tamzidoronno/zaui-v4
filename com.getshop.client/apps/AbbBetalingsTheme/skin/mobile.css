@@ -15,3 +15,33 @@
 .FormItem .submitForm { width: 85% !important; background-color:#00509d; color:#fff; }
 
 .gsportraitimage,.gslandscapeimage { display:none !important; }
+
+.Contact .shop_button {
+  display: inline-block;
+  padding-right: 20px;
+  padding-left: 20px;
+  width: 80%;
+}
+.shop_button {
+  border: solid 1px #ccc;
+  background-color: #ccc;
+  border-radius: 5px;
+}
+.shop_button {
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 7px;
+  padding-left: 10px;
+  padding-right: 10px;
+  display: inline-block;
+  background: -moz-linear-gradient(top, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.15) 53%, rgba(255,255,255,0.1) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.6)), color-stop(50%,rgba(255,255,255,0.3)), color-stop(53%,rgba(255,255,255,0.15)), color-stop(100%,rgba(255,255,255,0.1)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99ffffff', endColorstr='#1affffff',GradientType=0 );
+}

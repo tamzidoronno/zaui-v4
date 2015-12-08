@@ -5,13 +5,19 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 /**
  *
  * @author boggi
  */
 public class PmsBookingRooms {
     public String bookingItemTypeId = "";
-    public String contactData = "";
+    public String pmsBookingRoomId = UUID.randomUUID().toString();
+    public List<PmsGuests> guests = new ArrayList();
+    public Integer numberOfGuests = 0;
     public double count = 1;
     public double price = 108;
     public double taxes = 8;

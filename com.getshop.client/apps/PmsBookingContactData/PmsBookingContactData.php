@@ -29,6 +29,10 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         return $this->getConfigurationSetting("booking_engine_name");
     }
     
+    public function setContactData() {
+        
+    }
+    
     public function showSettings() {
         $this->includefile("settings");
     }

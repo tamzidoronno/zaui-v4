@@ -5,18 +5,22 @@ $items = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 foreach($items as $item) {
     $items[$item->id] = $item;
 }
-echo "<h3><i class='fa fa-clock-o'></i> " . $this->__w("Selected time periode") . "</h3>";
+echo "<h3 class='bottomborder'>" . $this->__w("Selected time periode") . "</h3>";
 foreach($booking->dates as $date) {
+    echo "<div class='itemrow'>";
     if(!$date->end) {
         echo $this->__w("Starting from") . " ";
     }
-    echo date("d.m.Y h:i", strtotime($date->start));
+    echo "<span class='price'>" . date("d.m.Y h:i", strtotime($date->start));
     if($date->end) {
          echo " - " . date("d.m.Y h:i", strtotime($date->end));
     }
+    echo "</span>";
+    echo "</div>";
 }
+echo "<br>";
 
-echo "<h3><i class='fa fa-home'></i> " . $this->__w("Rooms selected") . "</h3>";
+echo "<h3 class='bottomborder'>" . $this->__w("Rooms selected") . "</h3>";
 foreach($booking->rooms as $room) {
     /* @var $room core_pmsmanager_PmsBookingRooms */
     $price = $room->price;
@@ -36,12 +40,12 @@ if($printAddons) {
     print_r($booking->addons);
 }
 
-echo "<hr>";
-
+echo "<br>";
 foreach($booking->rooms as $room) {
     $prices[$room->taxes] = $room->price;
 }
 
+echo "<h3 class='bottomborder'> " . $this->__w("Total") . "</h3>";
 $total = 0;
 foreach($prices as $taxgroup => $price) {
     $taxes = $price - ($price / (($taxgroup + 100) / 100));
@@ -50,7 +54,7 @@ foreach($prices as $taxgroup => $price) {
     echo "MVA " . $taxes . "% <span class='price'>" . $taxes . " kr </span>";
     echo "</div>";
 }
-echo "<div class='itemrow'>";
+echo "<div class='itemrow ' style='padding-top: 10px;'>";
 echo "Totalt <span class='price'>" . $total . " kr </span>";
 echo "</div>";
 ?>

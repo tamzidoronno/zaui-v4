@@ -7,7 +7,7 @@ $booking = $this->getCurrentBooking();
 
 ?>
 <div class='continue_button_outer'>
-    <div class='continue_button'><? echo $this->getText("next_button"); ?></div>
+    <div class='continue_button' next_page="<? echo $this->getText("next_page"); ?>"><? echo $this->getText("next_button"); ?></div>
 </div>
 <?php
 
@@ -30,5 +30,5 @@ foreach($rooms as $room) {
 }
 ?>
 <div class='continue_button_outer'>
-    <div class='continue_button'><? echo $this->getText("next_button"); ?></div>
+    <div class='continue_button' next_page="<? echo $this->getText("next_page"); ?>"><? echo $this->getText("next_button"); ?></div>
 </div>

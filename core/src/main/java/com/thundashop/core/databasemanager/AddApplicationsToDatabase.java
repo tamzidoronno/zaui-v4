@@ -129,6 +129,17 @@ public class AddApplicationsToDatabase {
         BookingEngineManagement.moduleId = "WebShop";
         BookingEngineManagement.defaultActivate = false;
         apps.add(BookingEngineManagement);
+        
+        Application PmsBookingSummary = createSettings("PmsBookingSummary",
+        "46b52a59-de5d-4878-aef6-13b71af2fc75",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsBookingSummary.isPublic = true;
+        PmsBookingSummary.isFrontend = true;
+        PmsBookingSummary.moduleId = "WebShop";
+        PmsBookingSummary.defaultActivate = false;
+        apps.add(PmsBookingSummary);
 
         return apps;
     }

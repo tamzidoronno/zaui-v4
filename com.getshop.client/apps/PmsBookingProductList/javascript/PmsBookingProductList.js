@@ -1,6 +1,11 @@
 app.PmsBookingProductList = {
     init : function() {
         $(document).on('click', '.PmsBookingProductList .select_button', app.PmsBookingProductList.selectRoom);
+        $(document).on('click', '.PmsBookingProductList .continue_button', app.PmsBookingProductList.continueToPage);
+    },
+    continueToPage : function() {
+        var attr = $(this).attr('next_page');
+        window.location.href=attr;
     },
     selectRoom : function() {
         var data = {

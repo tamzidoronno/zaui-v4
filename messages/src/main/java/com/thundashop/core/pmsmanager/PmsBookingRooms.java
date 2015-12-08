@@ -12,5 +12,7 @@ package com.thundashop.core.pmsmanager;
 public class PmsBookingRooms {
     public String bookingItemTypeId = "";
     public String contactData = "";
-    public int count = 1;
+    public double count = 1;
+    public double price = 108;
+    public double taxes = 8;
 }

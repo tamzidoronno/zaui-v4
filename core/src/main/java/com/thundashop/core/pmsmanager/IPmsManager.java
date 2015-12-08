@@ -13,4 +13,7 @@ import java.util.List;
 @GetShopMultiLayerSession
 public interface IPmsManager {
     public List<Room> getAllRoomTypes(long start, long end);
+    public void setBooking(PmsBooking addons) throws Exception;
+    public PmsBooking getCurrentBooking();
+    public PmsBooking startBooking();
 }

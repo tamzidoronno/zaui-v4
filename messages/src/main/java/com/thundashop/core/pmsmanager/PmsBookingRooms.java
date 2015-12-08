@@ -10,5 +10,5 @@ package com.thundashop.core.pmsmanager;
  * @author boggi
  */
 public class PmsBookingRooms {
-    
+    public String bookingItemTypeId = "";
 }

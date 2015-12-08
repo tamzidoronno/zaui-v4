@@ -19,14 +19,16 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
             <i class='fa fa-calendar start_cal'></i>
         </span>
     </span>
-    <span class='end_date dates'>
-        <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
-        <span class='dates_inner'>
-            <input class='end_date_input' value='<? echo $date; ?>'></input>
-            <span></span>
-            <i class='fa fa-calendar end_cal'></i>
+    <?php if($this->getText("display_end_date") == "no") { ?>
+        <span class='end_date dates'>
+            <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
+            <span class='dates_inner'>
+                <input class='end_date_input' value='<? echo $date; ?>'></input>
+                <span></span>
+                <i class='fa fa-calendar end_cal'></i>
+            </span>
         </span>
-    </span>
+    <? } ?>
     <div style='clear:both;'></div>
     
     <div class='productlist'>

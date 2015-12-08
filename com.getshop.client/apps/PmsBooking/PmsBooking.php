@@ -19,6 +19,24 @@ class PmsBooking extends \WebshopApplication implements \Application {
     }
     
     public function initBooking() {
+        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
+        /* @var $booking \core_pmsmanager_PmsBooking */
+        $range = new \core_pmsmanager_PmsBookingDateRange();
+        $range->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        if(isset($_POST['date']['end'])) {
+            $range->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        }
+        
+        $room = new \core_pmsmanager_PmsBookingRooms();
+        $room->bookingItemTypeId = $_POST['data']['product'];
+        
+        $booking->products = array();
+        $booking->dates = array();
+        $booking->dates[] = $range;
+        $booking->products[] = $room;
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+        
         
     }
     

@@ -5,7 +5,10 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +16,8 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
+    public HashMap<String, PmsBooking> bookings = new HashMap();
+    
     @Autowired
     BookingEngine bookingEngine;
 
@@ -27,6 +32,42 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result.add(room);
         }
         return result;
+    }
+
+    @Override
+    public void setBooking(PmsBooking booking) throws Exception {
+        if(getCurrentBooking() != null) {
+            if(!getCurrentBooking().id.equals(booking.id)) {
+                throw new Exception("Invalid booking update");
+            }
+        }
+        
+        booking.sessionId = getSession().id;
+        saveObject(booking);
+        bookings.put(booking.sessionId, booking);
+    }
+
+    @Override
+    public PmsBooking getCurrentBooking() {
+        return bookings.get(getSession().id);
+    }
+
+    @Override
+    public PmsBooking startBooking() {
+        PmsBooking currentBooking = getCurrentBooking();
+        
+        bookings.remove(getSession().id);
+        if(currentBooking != null) {
+            deleteObject(currentBooking);
+        }
+        
+        PmsBooking booking = new PmsBooking();
+        try {
+            setBooking(booking);
+        } catch (Exception ex) {
+            Logger.getLogger(PmsManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return booking;
     }
     
 }

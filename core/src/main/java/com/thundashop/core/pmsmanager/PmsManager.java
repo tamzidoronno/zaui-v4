@@ -5,6 +5,7 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,8 +37,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
-        if(getCurrentBooking() != null) {
-            if(!getCurrentBooking().id.equals(booking.id)) {
+        PmsBooking result = bookings.get(getSession().id);
+        if(result != null) {
+            if(!result.id.equals(booking.id)) {
                 throw new Exception("Invalid booking update");
             }
         }
@@ -52,12 +54,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(getSession() == null) {
             System.out.println("Warning, no session set yet");
         }
-        return bookings.get(getSession().id);
+        PmsBooking result = bookings.get(getSession().id);
+        if(result == null) {
+            return startBooking();
+        }
+        return result;
     }
 
     @Override
     public PmsBooking startBooking() {
-        PmsBooking currentBooking = getCurrentBooking();
+        PmsBooking currentBooking = bookings.get(getSession().id);
         
         bookings.remove(getSession().id);
         if(currentBooking != null) {
@@ -65,6 +71,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         PmsBooking booking = new PmsBooking();
+        
+        PmsBookingDateRange range = new PmsBookingDateRange();
+        range.start = new Date();
+        booking.dates.add(range);
+        
         try {
             setBooking(booking);
         } catch (Exception ex) {

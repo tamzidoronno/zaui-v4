@@ -30,10 +30,10 @@ class PmsBooking extends \WebshopApplication implements \Application {
         $room = new \core_pmsmanager_PmsBookingRooms();
         $room->bookingItemTypeId = $_POST['data']['product'];
         
-        $booking->products = array();
+        $booking->rooms = array();
         $booking->dates = array();
         $booking->dates[] = $range;
-        $booking->products[] = $room;
+        $booking->rooms[] = $room;
         
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
         

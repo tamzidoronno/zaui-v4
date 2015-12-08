@@ -1,5 +1,13 @@
 app.PmsBookingProductList = {
     init : function() {
+        $(document).on('click', '.PmsBookingProductList .select_button', app.PmsBookingProductList.selectRoom);
+    },
+    selectRoom : function() {
+        var data = {
+            "typeid" : $(this).attr('typeid')
+        }
+        var event = thundashop.Ajax.createEvent('','selectRoom',$(this), data);
+        thundashop.Ajax.post(event);
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
@@ -28,4 +36,4 @@ app.PmsBookingProductList = {
     }
 };
 
-app.PmsBookingCalendar.init();
+app.PmsBookingProductList.init();

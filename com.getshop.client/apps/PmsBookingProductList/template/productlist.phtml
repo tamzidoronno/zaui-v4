@@ -14,14 +14,17 @@ $booking = $this->getCurrentBooking();
 foreach($rooms as $room) {
     /* @var $room core_pmsmanager_Room */
     $selected = "";
-    if(in_array($room->type->id, $booking->products)) {
-        $selected = "selected";
+    foreach($booking->rooms as $bookedroom) {
+        /* @var $product core_pmsmanager_PmsBookingRooms */
+        if($bookedroom->bookingItemTypeId == $room->type->id) {
+            $selected = "selected";
+        }
     }
     ?>
     <div class='productentry <? echo $selected; ?>'>
     <span class='name'><? echo $room->type->name; ?></span>
     <span class='price'><? echo $room->price; ?>,-</span>
-    <span class='select_button'><? echo $this->getText("select_button"); ?></span>
+    <span class='select_button' typeid="<? echo $room->type->id; ?>"><? echo $this->getText("select_button"); ?></span>
     </div>
     <?php
 }

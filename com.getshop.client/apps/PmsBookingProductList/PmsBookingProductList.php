@@ -19,9 +19,7 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
     }
 
     public function getCurrentBooking() {
-        $booking = new \core_pmsmanager_PmsBooking();
-        $booking->products[] = "78f15eb3-a998-471f-ae80-10cc61bf39a0";
-        return $booking;
+        return $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
     }
     
     public function getSelectedName() {
@@ -38,6 +36,18 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
             return;
         }
         $this->includefile("productlist");
+    }
+    
+    public function selectRoom() {
+        $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        /* @var $current \core_pmsmanager_PmsBooking */
+        $current->rooms = array();
+        
+        $room = new \core_pmsmanager_PmsBookingRooms();
+        $room->bookingItemTypeId = $_POST['data']['typeid'];
+        $current->rooms[] = $room;
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
     }
     
     public function saveSettings() {

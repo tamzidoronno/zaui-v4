@@ -11,4 +11,6 @@ package com.thundashop.core.pmsmanager;
  */
 public class PmsBookingRooms {
     public String bookingItemTypeId = "";
+    public String contactData = "";
+    public int count = 1;
 }

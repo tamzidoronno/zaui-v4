@@ -1,0 +1,15 @@
+.gsmobilemenu { display: none; }
+.gsmobilefooter,.gsmobileheaderfull { display:block; }
+.gsmobilefooter,.gsmobileheaderfull { background-color:rgba(0,0,0,0.8); color:#fff; text-align: center; }
+.gsmobilefooter { height: 200px; margin-top: 50px; }
+.gs_page_width { padding-left: 20px; padding-right: 20px; }
+.Menu .menuentries.horizontal .entry { width: 33% !important; float:left !important; display:inline-block !important; }
+
+.FormItem input { 
+  border-radius: 2px;
+  border: solid 1px #e1e1e1;
+  padding: 13px;
+  background-color: #fcfcfc;
+  width: 90% !important;
+}
+.FormItem .submitForm { width: 85% !important; background-color:#00509d; color:#fff; }

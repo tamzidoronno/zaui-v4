@@ -119,7 +119,7 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function convertToJavaDate($time) {
-        return date("M d, Y h:m:s A", strtotime($time));
+        return date("M d, Y h:m:s A", $time);
     }
     
     /**

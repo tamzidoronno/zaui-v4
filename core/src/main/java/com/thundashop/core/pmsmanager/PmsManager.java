@@ -49,6 +49,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getCurrentBooking() {
+        if(getSession() == null) {
+            System.out.println("Warning, no session set yet");
+        }
         return bookings.get(getSession().id);
     }
 

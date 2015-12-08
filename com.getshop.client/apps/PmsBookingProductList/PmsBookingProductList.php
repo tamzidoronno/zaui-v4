@@ -24,11 +24,19 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
         return $booking;
     }
     
+    public function getSelectedName() {
+        return $this->getConfigurationSetting("engine_name");
+    }
+    
     public function getText($key) {
         return $this->getConfigurationSetting($key);
     }
     
     public function render() {
+        if(!$this->getSelectedName()) {
+            echo "Please specify a booking engine.";
+            return;
+        }
         $this->includefile("productlist");
     }
     

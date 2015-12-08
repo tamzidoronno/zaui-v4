@@ -11,6 +11,10 @@ class PmsBooking extends \WebshopApplication implements \Application {
     }
 
     public function render() {
+        if(!$this->getSelectedName()) {
+            echo "Please set name of booking engine.";
+            return;
+        }
         $this->includefile("pmsfront_1");
     }
     
@@ -20,6 +24,10 @@ class PmsBooking extends \WebshopApplication implements \Application {
     
     public function getText($key) {
         return $this->getConfigurationSetting($key);
+    }
+    
+    public function getSelectedName() {
+        return $this->getConfigurationSetting("booking_engine_name");
     }
     
     public function showSettings() {

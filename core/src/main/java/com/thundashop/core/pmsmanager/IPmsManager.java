@@ -12,4 +12,5 @@ import java.util.List;
 @GetShopApi
 @GetShopMultiLayerSession
 public interface IPmsManager {
+    public List<Room> getAllRoomTypes(long start, long end);
 }

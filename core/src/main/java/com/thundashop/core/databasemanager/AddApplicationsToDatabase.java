@@ -118,6 +118,51 @@ public class AddApplicationsToDatabase {
         AbbBetalingsTheme.defaultActivate = false;
         apps.add(AbbBetalingsTheme);
 
+        
+        Application PmsManagement = createSettings("PmsManagement",
+        "7e828cd0-8b44-4125-ae4f-f61983b01e0a",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsManagement.isPublic = true;
+        PmsManagement.isFrontend = true;
+        PmsManagement.moduleId = "WebShop";
+        PmsManagement.defaultActivate = false;
+        apps.add(PmsManagement);
+
+        Application BookingEngineManagement = createSettings("BookingEngineManagement",
+        "3b18f464-5494-4f4a-9a49-662819803c4a",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        BookingEngineManagement.isPublic = true;
+        BookingEngineManagement.isFrontend = true;
+        BookingEngineManagement.moduleId = "WebShop";
+        BookingEngineManagement.defaultActivate = false;
+        apps.add(BookingEngineManagement);
+        
+        Application PmsBookingSummary = createSettings("PmsBookingSummary",
+        "46b52a59-de5d-4878-aef6-13b71af2fc75",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsBookingSummary.isPublic = true;
+        PmsBookingSummary.isFrontend = true;
+        PmsBookingSummary.moduleId = "WebShop";
+        PmsBookingSummary.defaultActivate = false;
+        apps.add(PmsBookingSummary);
+
+        Application PmsBookingContactData = createSettings("PmsBookingContactData",
+        "d3951fc4-6929-4230-a275-f2a7314f97c1",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsBookingContactData.isPublic = true;
+        PmsBookingContactData.isFrontend = true;
+        PmsBookingContactData.moduleId = "WebShop";
+        PmsBookingContactData.defaultActivate = false;
+        apps.add(PmsBookingContactData);
+        
         return apps;
     }
 

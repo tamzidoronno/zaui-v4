@@ -8,7 +8,7 @@ $userId = $_GET['userid'];
 
 $user = $factory->getApi()->getUserManager()->getUserById($userId);
 $order = $factory->getApi()->getHotelBookingManager()->getReservationByReferenceId($_GET['refid']);
-$room = $factory->getApi()->getHotelBookingManager()->getRoom($order->roomIds[0]);
+$type = $factory->getApi()->getHotelBookingManager()->getRoom($order->roomIds[0]);
 $types = $factory->getApi()->getHotelBookingManager()->getRoomTypes();
 $products = $factory->getApi()->getProductManager()->getAllProducts();
 
@@ -25,16 +25,16 @@ foreach($apps as $app) {
 $selectedType = false;
 foreach($types as $type) {
     /* @var $type core_hotelbookingmanager_RoomType */
-    if($type->id == $room->roomType) {
+    if($type->id == $type->roomType) {
         $selectedType = $type;
         break;
     }
 }
 
 if(!$selectedType) {
-    echo "Room type: " . $room->roomType . " not found, please set up room type on room: " . $room->roomName;
+    echo "Room type: " . $type->roomType . " not found, please set up room type on room: " . $type->roomName;
     echo "<hr>";
-    print_r($room);
+    print_r($type);
     exit(0);
 }
 
@@ -67,11 +67,11 @@ if($foundgroup) {
 }
 
 function replacevariables($content) {
-    global $user, $room, $selectedProduct, $selectedType, $order, $hotelbookingmanagementapp, $taxes, $totalPrice;
+    global $user, $type, $selectedProduct, $selectedType, $order, $hotelbookingmanagementapp, $taxes, $totalPrice;
     $content = str_replace("gsnavn", $user->fullName, $content);
     $content = str_replace("gsorgfnr", $user->birthDay, $content);
     $content = str_replace("gspostaddr", $user->address->address . ", " . $user->address->postCode . " " . $user->address->city, $content);
-    $content = str_replace("gsrom", $room->roomName, $content);
+    $content = str_replace("gsrom", $type->roomName, $content);
     $content = str_replace("gsareal", $selectedType->name, $content);
     $content = str_replace("gsstartdato", date("d.m.Y", strtotime($order->startDate)), $content);
     $content = str_replace("gsdagensdato", date("d.m.Y", time()), $content);

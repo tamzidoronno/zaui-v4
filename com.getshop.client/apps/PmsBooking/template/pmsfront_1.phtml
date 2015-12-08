@@ -1,8 +1,10 @@
 <?
+/* @var $this ns_8dcbf529_72ae_47dd_bd6b_bd2d0c54b30a\PmsBooking */
 $date = date("d.m.Y", time());
 if(!$this->getText("next_page")) {
     echo "<b>Next page not set up yet, please fix.</b>";
 }
+$rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), 0, 10);
 ?>
 
 <div class="pmsfront">
@@ -17,20 +19,27 @@ if(!$this->getText("next_page")) {
             <i class='fa fa-calendar start_cal'></i>
         </span>
     </span>
-    <span class='end_date dates'>
-        <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
-        <span class='dates_inner'>
-            <input class='end_date_input' value='<? echo $date; ?>'></input>
-            <span></span>
-            <i class='fa fa-calendar end_cal'></i>
+    <?php if($this->getText("display_end_date") == "no") { ?>
+        <span class='end_date dates'>
+            <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
+            <span class='dates_inner'>
+                <input class='end_date_input' value='<? echo $date; ?>'></input>
+                <span></span>
+                <i class='fa fa-calendar end_cal'></i>
+            </span>
         </span>
-    </span>
+    <? } ?>
     <div style='clear:both;'></div>
     
     <div class='productlist'>
         <span class='inputhelpertext'><? echo $this->getText("select_product"); ?></span>
         <select class='selected_product'>
-            <option value='id'>6kvm bod, blabla</option>
+            <?php
+            foreach($rooms as $room) {
+                /* @var $room core_bookingengine_data_Booking */
+                echo "<option value='".$room->type->id."'>" . $room->price . " NOK " . $room->type->name . "</option>";
+            }
+            ?>
         </select>
         
     </div>

@@ -118,6 +118,10 @@ class ApplicationBase extends FactoryBase {
         return false;
     }
     
+    public function convertToJavaDate($time) {
+        return date("M d, Y h:m:s A", $time);
+    }
+    
     /**
      * This function should be overridden when 
      * an application need to ask for admin rights.

@@ -39,6 +39,7 @@ foreach ($orders as $product) {
     $data['tool'] = $product->tool;
     $data['gear'] = $product->gearType;
     $data['started'] = $product->started == true;
+    $data['originalChecksum'] = $product->originalChecksum;
 	$files[] = $data;
 }
 

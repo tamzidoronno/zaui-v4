@@ -2,6 +2,8 @@
 namespace ns_d925273e_b9fc_480f_96fa_8fb8df6edbbe;
 
 class PmsBookingCalendar extends \WebshopApplication implements \Application {
+    private $booking;
+    
     public function getDescription() {
         
     }
@@ -14,10 +16,21 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         $this->includefile("settings");
     }
     
+    public function getSelectedName() {
+        return $this->getConfigurationSetting("booking_engine_name");
+    }
+    
     public function getSelectedDate() {
-        if(isset($_SESSION[$this->getAppInstanceId()]['selected_day'])) {
-            return $_SESSION[$this->getAppInstanceId()]['selected_day'];
-        }        
+        /* @var $booking \core_pmsmanager_PmsBooking */
+        $booking = $this->booking;
+        if(sizeof($booking->dates) > 0) {
+            if($this->isStartDate()) {
+                return strtotime($booking->dates[0]->start);
+            } else {
+                return strtotime($booking->dates[0]->end);
+            }
+        }
+        
         return time();
     }
     
@@ -31,8 +44,19 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         }
     }
     
+    
     public function selectDay() {
-        $_SESSION[$this->getAppInstanceId()]['selected_day'] = $_POST['data']['time'];
+        $this->booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        if(sizeof($this->booking->dates) == 0) {
+            $this->booking->dates[] = new \core_pmsmanager_PmsBookingDateRange();
+        }
+        
+        if($this->isStartDate()) {
+            $this->booking->dates[0]->start = $this->convertToJavaDate($_POST['data']['time']);
+        } else {
+            $this->booking->dates[0]->end = $this->convertToJavaDate($_POST['data']['time']);
+        }
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $this->booking);
         $this->includefile("calendar");
     }
     
@@ -81,11 +105,21 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         
         $this->includefile("calendar");
     }
+    
+    public function  isStartDate() {
+        return $this->getConfigurationSetting("date_type") == "start_date";
+    }
+    
     public function render() {
+        if(!$this->getSelectedName()) {
+            echo "Please specify a booking engine first";
+            return;
+        }
+
+        $this->booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
         echo "<div class='calendar'>";
         $this->includefile("calendar");
         echo "</div>";
-        
     }
 }
 ?>

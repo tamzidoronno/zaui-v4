@@ -4,9 +4,7 @@
  */
 package com.getshop.scope;
 
-import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.pagemanager.PageManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,7 +49,7 @@ public class GetShopSessionScope implements Scope {
                     }
                     
                     GetShopSessionBeanNamed bean = (GetShopSessionBeanNamed)object;
-                    bean.storeId = storeId;
+                    bean.setStoreId(storeId);
                     bean.setName(sessionBeanName);
                     bean.initialize();
                     namedSessionObjects.put(name+"_"+storeId+"_"+sessionBeanName, bean);
@@ -60,7 +58,7 @@ public class GetShopSessionScope implements Scope {
                 
                 if (object instanceof ManagerBase) {
                     ManagerBase managerBase = (ManagerBase) object;
-                    managerBase.storeId = storeId;
+                    managerBase.setStoreId(storeId);
                     managerBase.initialize();
                 }
                 

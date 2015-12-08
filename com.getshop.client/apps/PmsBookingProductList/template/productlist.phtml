@@ -1,30 +1,34 @@
 <?php
 /* @var $this ns_ed7efba0_de37_4cd8_915b_cc7be10b8b8b\PmsBookingProductList */
 
-$products = $this->getAllProducts();
+$rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), 0, 10);
+
 $booking = $this->getCurrentBooking();
 
 ?>
 <div class='continue_button_outer'>
-    <div class='continue_button'><? echo $this->getText("next_button"); ?></div>
+    <div class='continue_button' next_page="<? echo $this->getText("next_page"); ?>"><? echo $this->getText("next_button"); ?></div>
 </div>
 <?php
 
-foreach($products as $product) {
-    /* @var $product core_productmanager_data_Product */
+foreach($rooms as $room) {
+    /* @var $room core_pmsmanager_Room */
     $selected = "";
-    if(in_array($product->id, $booking->products)) {
-        $selected = "selected";
+    foreach($booking->rooms as $bookedroom) {
+        /* @var $product core_pmsmanager_PmsBookingRooms */
+        if($bookedroom->bookingItemTypeId == $room->type->id) {
+            $selected = "selected";
+        }
     }
     ?>
     <div class='productentry <? echo $selected; ?>'>
-    <span class='name'><? echo $product->name; ?></span>
-    <span class='price'><? echo $product->price; ?></span>
-    <span class='select_button'><? echo $this->getText("select_button"); ?></span>
+    <span class='name'><? echo $room->type->name; ?></span>
+    <span class='price'><? echo $room->price; ?>,-</span>
+    <span class='select_button' typeid="<? echo $room->type->id; ?>"><? echo $this->getText("select_button"); ?></span>
     </div>
     <?php
 }
 ?>
 <div class='continue_button_outer'>
-    <div class='continue_button'><? echo $this->getText("next_button"); ?></div>
+    <div class='continue_button' next_page="<? echo $this->getText("next_page"); ?>"><? echo $this->getText("next_button"); ?></div>
 </div>

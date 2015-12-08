@@ -63,7 +63,7 @@ public class StorePool {
         try {
             Method method = getMethod(object);
             return (Class<?>[]) method.getParameterTypes();
-        } catch (ClassNotFoundException ex) {
+        } catch (Exception ex) {
             throw new ErrorException(81);
         }
     }

@@ -9,8 +9,6 @@ import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.BookingManager;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;

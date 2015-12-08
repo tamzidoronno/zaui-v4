@@ -1,5 +1,18 @@
 app.PmsBookingProductList = {
     init : function() {
+        $(document).on('click', '.PmsBookingProductList .select_button', app.PmsBookingProductList.selectRoom);
+        $(document).on('click', '.PmsBookingProductList .continue_button', app.PmsBookingProductList.continueToPage);
+    },
+    continueToPage : function() {
+        var attr = $(this).attr('next_page');
+        window.location.href=attr;
+    },
+    selectRoom : function() {
+        var data = {
+            "typeid" : $(this).attr('typeid')
+        }
+        var event = thundashop.Ajax.createEvent('','selectRoom',$(this), data);
+        thundashop.Ajax.post(event);
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
@@ -28,4 +41,4 @@ app.PmsBookingProductList = {
     }
 };
 
-app.PmsBookingCalendar.init();
+app.PmsBookingProductList.init();

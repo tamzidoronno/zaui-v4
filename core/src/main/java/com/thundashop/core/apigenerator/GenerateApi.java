@@ -1,5 +1,6 @@
 package com.thundashop.core.apigenerator;
 
+import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
@@ -59,6 +60,7 @@ public class GenerateApi {
         coreClasses = findClasses(core);
         messageClasses = findClasses(messages);
         allManagers = filterClasses(coreClasses);
+        System.out.println("Done finding datasource");
     }
 
     public void analyseApplications() throws UnknownHostException, IOException, ClassNotFoundException {
@@ -244,6 +246,7 @@ public class GenerateApi {
     }
 
     public void generate() throws ClassNotFoundException, IOException, Exception {
+        System.out.println("Starting generate api");
         generatePHPApi();
         generateJavaApi();
 //        generatePythonApi();
@@ -254,12 +257,13 @@ public class GenerateApi {
     
 
     public LinkedList<Class> filterClasses(List<Class> apiClasses) {
+        System.out.println("Filtering classes");
         LinkedList<Class> filteredApiClasses = new LinkedList();
         for (Class apiClass : apiClasses) {
             for (Annotation anno : apiClass.getAnnotations()) {
                 if (anno instanceof GetShopApi) {
                     filteredApiClasses.add(apiClass);
-                }
+                } 
                 if (anno instanceof DataCommon) {
                     filteredApiClasses.add(apiClass);
                 }
@@ -331,7 +335,6 @@ public class GenerateApi {
             result.manager = filteredClass;
             result.method = method;
             result.methodName = method.getName();
-            
             File filePath = pathToSource == null ? new File(".") :  new File(pathToSource);
             String path = filePath.getAbsolutePath() + "/src/main/java/" + filteredClass.getName().replace(".", "/") + ".java";
             String javafile = readContent(path);

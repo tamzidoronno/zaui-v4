@@ -21,7 +21,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function getSelectedName() {
-        return $this->getConfigurationSetting("pmsname");
+        return $this->getConfigurationSetting("engine_name");
     }
     
     public function showSettings() {

@@ -321,5 +321,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return false;
     }
+
+    @Override
+    public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        if(filter.state == null) {
+            filter.state = 0;
+        }
+        
+        List<PmsBooking> result = new ArrayList();
+        if(filter.state == 0) {
+            result = new ArrayList(bookings.values());
+        } else {
+            for(PmsBooking booking : bookings.values()) {
+                if(booking.state == filter.state) {
+                    result.add(booking);
+                }
+            }
+        }
+        
+        return result;
+        
+       
+    }
     
 }

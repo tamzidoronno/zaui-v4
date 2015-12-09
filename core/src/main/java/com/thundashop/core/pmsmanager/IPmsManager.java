@@ -1,6 +1,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.util.HashMap;
@@ -19,4 +20,7 @@ public interface IPmsManager {
     public PmsBooking startBooking();
     public HashMap<String,Integer> validateCurrentBooking();
     public Integer completeCurrentBooking();
+    
+    @Administrator
+    public List<PmsBooking> getAllBookings(PmsBookingFilter state);
 }

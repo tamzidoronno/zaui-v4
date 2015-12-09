@@ -1,6 +1,7 @@
 
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,4 +13,5 @@ public class PmsBooking extends DataCommon {
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public BookingContactData contactData = new BookingContactData();
     public String language = "nb_NO";
+    List<Booking> bookingEngineItems = new ArrayList();
 }

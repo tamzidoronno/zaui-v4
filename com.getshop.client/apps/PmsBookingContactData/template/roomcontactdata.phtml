@@ -8,6 +8,7 @@ $errors = $this->getValidation();
 foreach($booking->rooms as $room) {
     for($i = 0; $i < $room->count; $i++) {
         $guestData = new core_pmsmanager_PmsGuests();
+        $guestData->prefix = "47";
         if(isset($room->guests[$i])) {
             $guestData = $room->guests[$i];
         }

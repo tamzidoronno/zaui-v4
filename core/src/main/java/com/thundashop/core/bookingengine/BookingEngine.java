@@ -318,4 +318,13 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public List<BookingItem> deleteBookingItem(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public BookingEngineConfiguration getConfig() {
+        return config;
+    }
+
+    public boolean isAvailable(List<Booking> bookingsToAdd) {
+        return false;
+    }
 }

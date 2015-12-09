@@ -72,9 +72,13 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
 
         if(empty((array)$this->validation)) {
             $result = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
-            if(!$result) {
+            if($result == -1) {
                 $this->validation = new \stdClass();
                 $this->validation->{'common'} = "An unknown error occured while completing the booking. The error has been logged and will be investegated.";
+            }
+            if($result == -2) {
+                $this->validation = new \stdClass();
+                $this->validation->{'common'} = "The reservation could not be completed because the room you are trying to book has been taken since you started booking";
             }
         }
     }

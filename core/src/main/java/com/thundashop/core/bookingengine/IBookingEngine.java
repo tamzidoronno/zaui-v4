@@ -1,5 +1,6 @@
 package com.thundashop.core.bookingengine;
 
+import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.Administrator;
@@ -40,4 +41,10 @@ public interface IBookingEngine {
     
     @Administrator
     public List<BookingItem> deleteBookingItem(String id);
+    
+    @Administrator
+    public void setConfirmationRequired(boolean confirmationRequired);
+    
+    @Administrator
+    public BookingEngineConfiguration getConfig();
 }

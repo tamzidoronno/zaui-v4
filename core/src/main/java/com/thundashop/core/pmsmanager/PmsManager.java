@@ -9,7 +9,10 @@ import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.pkkcontrol.PkkControlData;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,6 +34,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     MessageManager messageManager;
 
+         
+    @Override
+    public void dataFromDatabase(DataRetreived data) {
+        for (DataCommon dataCommon : data.data) {
+            if (dataCommon instanceof PmsBooking) {
+                PmsBooking booking = (PmsBooking) dataCommon;
+                bookings.put(booking.id, booking);
+            }
+        }
+    }
+    
     @Override
     public List<Room> getAllRoomTypes(long start, long end) {
         List<Room> result = new ArrayList();
@@ -46,16 +60,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
-        PmsBooking result = bookings.get(getSession().id);
-        if(result != null) {
-            if(!result.id.equals(booking.id)) {
-                throw new Exception("Invalid booking update");
-            }
-        }
+        PmsBooking result = findBookingForSession();
         
         booking.sessionId = getSession().id;
         saveObject(booking);
-        bookings.put(booking.sessionId, booking);
+        bookings.put(booking.id, booking);
     }
 
     @Override
@@ -63,7 +72,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(getSession() == null) {
             System.out.println("Warning, no session set yet");
         }
-        PmsBooking result = bookings.get(getSession().id);
+        PmsBooking result = findBookingForSession();
         if(result == null) {
             return startBooking();
         }
@@ -72,11 +81,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking startBooking() {
-        PmsBooking currentBooking = bookings.get(getSession().id);
+        PmsBooking currentBooking = findBookingForSession();
         
-        bookings.remove(getSession().id);
         if(currentBooking != null) {
             deleteObject(currentBooking);
+            bookings.remove(currentBooking.id);
         }
         
         PmsBooking booking = new PmsBooking();
@@ -209,9 +218,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
+    /**
+     * @return Error codes returned to the ui in case of failure.
+     */
     @Override
-    public String completeCurrentBooking() {
+    public Integer completeCurrentBooking() {
         PmsBooking booking = getCurrentBooking();
+        Integer result = 0;
+        if(!bookingEngine.isConfirmationRequired()) {
+            bookingEngine.setConfirmationRequired(true);
+        }
         
         List<Booking> bookingsToAdd = new ArrayList();
         for(PmsBookingDateRange dates : booking.dates) {
@@ -223,22 +239,48 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 bookingToAdd.endDate = dates.end;
                 bookingToAdd.bookingItemTypeId = room.bookingItemTypeId;
+                bookingToAdd.externalReference = room.pmsBookingRoomId;
+                
                 bookingsToAdd.add(bookingToAdd);
             }
         }
         try {
-            bookingEngine.addBookings(bookingsToAdd);
+            if(!bookingEngine.isAvailable(bookingsToAdd)) {
+                bookingEngine.addBookings(bookingsToAdd);
+                booking.bookingEngineItems = bookingsToAdd;
+                booking.sessionId = null;
+            } else {
+                result = -2;
+            }
+            
         }catch(Exception e) {
             messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id);
+            e.printStackTrace();
+            result = -1;
         }
         
-        return null;
+
+        return 0;
     }
 
     private Date createInifinteDate() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, 100);
         return cal.getTime();
+    }
+
+    private PmsBooking findBookingForSession() {
+        String sessionId = getSession().id;
+        if(sessionId == null) {
+            return null;
+        }
+        
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.sessionId.equals(sessionId)) {
+                return booking;
+            }
+        }
+        return null;
     }
     
 }

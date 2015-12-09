@@ -3,6 +3,17 @@ app.BookingEngineManagement = {
         $(document).on('click', '.BookingEngineManagement .deletegroupid', app.BookingEngineManagement.deleteBookingItemType);
         $(document).on('click', '.BookingEngineManagement .renameBookingItemButton', app.BookingEngineManagement.renameBookingItemButton);
         $(document).on('click', '.BookingEngineManagement .deletetype', app.BookingEngineManagement.deletetype);
+        $(document).on('change', '.BookingEngineManagement .itemTypeSelector', app.BookingEngineManagement.setItemType);
+    },
+    setItemType : function() {
+        var id = $(this).closest('tr').attr('entryid');
+        var itemTypeId = $(this).val();
+        var event = thundashop.Ajax.createEvent('','updateType',$(this), {
+            "id" : id,
+            "itemTypeId" : itemTypeId
+        });
+        thundashop.Ajax.post(event);
+        
     },
     renameBookingItemButton : function() {
         var currentName = $(this).closest('tr').find('.currentname').text();

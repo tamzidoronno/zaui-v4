@@ -216,7 +216,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Booking> bookingsToAdd = new ArrayList();
         for(PmsBookingDateRange dates : booking.dates) {
             for(PmsBookingRooms room : booking.rooms) {
-                System.out.println("TEST");
                 Booking bookingToAdd = new Booking();
                 bookingToAdd.startDate = dates.start;
                 if(dates.end == null) {

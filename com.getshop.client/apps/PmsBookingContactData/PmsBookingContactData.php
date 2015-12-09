@@ -2,6 +2,8 @@
 namespace ns_d3951fc4_6929_4230_a275_f2a7314f97c1;
 
 class PmsBookingContactData extends \WebshopApplication implements \Application {
+    var $validation;
+    
     public function getDescription() {
         
     }
@@ -66,12 +68,53 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
         
-        $validation = $this->getApi()->getPmsManager()->validateCurrentBooking($this->getSelectedName());
+        $this->validation = $this->getApi()->getPmsManager()->validateCurrentBooking($this->getSelectedName());
 //        print_r($validation);
     }
     
     public function showSettings() {
         $this->includefile("settings");
     }
+
+    public function getValidation() {
+        return $this->validation;
+    }
+
+    public function validateRoom($id, $type, $offset) {
+        $validation = $this->getValidation();
+        $key = "room_".$id."_".$offset."_".$type;
+        if($validation) {
+            if(isset($validation->{$key})) {
+                echo "<span class='errordesc'>";
+                switch($type) {
+                    case "name":
+                        echo "* Full name please";
+                        break;
+                    case "email":
+                        echo "* Invalid email";
+                        break;
+                    case "phone":
+                        echo "* Invalid phone number";
+                        break;
+                }
+                echo "</span>";
+            }
+        }
+    }
+    
+    public function validateContactData($field) {
+        $validation = $this->getValidation();
+        $key = "contact_".$field;
+        if($validation) {
+            if(isset($validation->{$key})) {
+                echo "<span class='errordesc'>";
+                echo "Field is required";
+                echo "</span>";
+            }
+        }
+    }
+    
+    
+
 }
 ?>

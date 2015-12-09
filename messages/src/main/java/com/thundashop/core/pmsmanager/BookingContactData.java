@@ -10,11 +10,11 @@ public class BookingContactData implements Serializable {
     }
     
     public Integer type = -1;
-    public String orgid;
-    public String birthday;
-    public String name;
-    public String address;
-    public String postalCode;
-    public String city;
-    public String email;
+    public String orgid = "";
+    public String birthday = "";
+    public String name = "";
+    public String address = "";
+    public String postalCode = "";
+    public String city = "";
+    public String email = "";
 }

@@ -10,3 +10,4 @@
     background-color: #f29400;
 }
 .PmsBookingContactData .bottomborder { padding-bottom: 10px; border-bottom: solid 1px #bbb;  }
+.PmsBookingContactData .errordesc { display:inline-block; padding-top: 10px; color:red; }

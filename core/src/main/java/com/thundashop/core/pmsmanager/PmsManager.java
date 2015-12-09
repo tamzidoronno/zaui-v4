@@ -99,15 +99,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingRooms room : currentBooking.rooms) {
             Integer offset = 0;
             for(PmsGuests guest : room.guests) {
-                if(!guest.name.contains(" ")) {
+                if(guest.name == null || !guest.name.contains(" ")) {
                     result.put("room_" + room.pmsBookingRoomId + "_" + offset + "_name", 1);
                 }
-                if(!guest.email.contains("@")) {
+                if(guest.email == null || !guest.email.contains("@")) {
                     result.put("room_" + room.pmsBookingRoomId + "_" + offset + "_email", 1);
                 }
 
                 HashMap<String, String> phoneNumber = validatePhone("+" + guest.prefix + guest.phone, "NO");
-                if(phoneNumber == null) {
+                if(guest.name == null || phoneNumber == null) {
                     result.put("room_" + room.pmsBookingRoomId + "_" + offset + "_phone", 1);
                 } else {
                     guest.phone = phoneNumber.get("phone");
@@ -117,7 +117,32 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        //Validate the contact data.
+        //Validate the contact data
+        if(currentBooking.contactData.city.isEmpty()) {
+            result.put("contact_city", 1);
+        }
+        if(currentBooking.contactData.postalCode.isEmpty()) {
+            result.put("contact_postalCode", 1);
+        }
+        if(currentBooking.contactData.email.isEmpty()) {
+            result.put("contact_email", 1);
+        }
+        if(currentBooking.contactData.address.isEmpty()) {
+            result.put("contact_address", 1);
+        }
+        
+        if(currentBooking.contactData.type == 1) {
+            if(currentBooking.contactData.birthday.isEmpty()) {
+                result.put("contact_birthday", 1);
+            }
+        } else {
+            if(currentBooking.contactData.name.isEmpty()) {
+                result.put("contact_name", 1);
+            }
+            if(currentBooking.contactData.orgid.isEmpty()) {
+                result.put("contact_orgid", 1);
+            }
+        }
         
         
         return result;

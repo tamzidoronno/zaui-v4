@@ -13,5 +13,7 @@ public class PmsBooking extends DataCommon {
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public BookingContactData contactData = new BookingContactData();
     public String language = "nb_NO";
+    public String userId = "";
     List<Booking> bookingEngineItems = new ArrayList();
+    
 }

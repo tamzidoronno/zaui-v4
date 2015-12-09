@@ -3,6 +3,7 @@ namespace ns_d3951fc4_6929_4230_a275_f2a7314f97c1;
 
 class PmsBookingContactData extends \WebshopApplication implements \Application {
     var $validation;
+    var $bookingCompleted = false;
     
     public function getDescription() {
         
@@ -17,7 +18,11 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             echo "Please specify a booking engine first";
             return;
         }
-        $this->includefile("roomcontactdata");
+        if($this->bookingCompleted) {
+            $this->includefile("completedbooking");
+        } else {
+            $this->includefile("roomcontactdata");
+        }
     }
     
     public function saveSettings() {
@@ -75,10 +80,11 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             if($result == -1) {
                 $this->validation = new \stdClass();
                 $this->validation->{'common'} = "An unknown error occured while completing the booking. The error has been logged and will be investegated.";
-            }
-            if($result == -2) {
+            } else if($result == -2) {
                 $this->validation = new \stdClass();
                 $this->validation->{'common'} = "The reservation could not be completed because the room you are trying to book has been taken since you started booking";
+            } else {
+                $this->bookingCompleted = true;
             }
         }
     }

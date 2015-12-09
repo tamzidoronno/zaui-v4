@@ -4,6 +4,8 @@ package com.thundashop.core.pmsmanager;
 import java.io.Serializable;
 
 public class BookingContactData implements Serializable {
+
+
     static class ContactType {
         public static Integer privat = 1;
         public static Integer company = 2;
@@ -17,4 +19,6 @@ public class BookingContactData implements Serializable {
     public String postalCode = "";
     public String city = "";
     public String email = "";
+    public String phone = "";
+    public String prefix = "47";
 }

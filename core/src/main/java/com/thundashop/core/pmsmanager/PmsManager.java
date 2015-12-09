@@ -13,6 +13,12 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pkkcontrol.PkkControlData;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Address;
+import com.thundashop.core.usermanager.data.User;
+import static java.lang.Math.random;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,6 +40,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     MessageManager messageManager;
 
+    @Autowired
+    UserManager userManager;
          
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -228,6 +236,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
         }
+        if(booking.userId != null && !booking.userId.isEmpty()) {
+            if(!hasAccessUser(booking.userId)) {
+                return -3;
+            }
+        }
         
         List<Booking> bookingsToAdd = new ArrayList();
         for(PmsBookingDateRange dates : booking.dates) {
@@ -249,6 +262,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 bookingEngine.addBookings(bookingsToAdd);
                 booking.bookingEngineItems = bookingsToAdd;
                 booking.sessionId = null;
+                if(booking.userId == null) {
+                    booking.userId = createUser(booking).id;
+                }
             } else {
                 result = -2;
             }
@@ -276,11 +292,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         for(PmsBooking booking : bookings.values()) {
-            if(booking.sessionId.equals(sessionId)) {
+            if(booking.sessionId != null && booking.sessionId.equals(sessionId)) {
                 return booking;
             }
         }
         return null;
+    }
+
+    private User createUser(PmsBooking booking) {
+        SecureRandom random = new SecureRandom();
+        
+        User user = new User();
+        user.address = new Address();
+        user.address.address = booking.contactData.address;
+        user.address.city = booking.contactData.city;
+        user.emailAddress = booking.contactData.email;
+        user.cellPhone = booking.contactData.phone;
+        user.prefix = booking.contactData.prefix;
+        user.password = new BigInteger(130, random).toString(32);
+        userManager.createUser(user);
+        return user;
+    }
+
+    private boolean hasAccessUser(String userId) {
+        User loggedOn = userManager.getLoggedOnUser();
+        if(loggedOn.isAdministrator() || loggedOn.id.equals(userId)) {
+            return true;
+        }
+        return false;
     }
     
 }

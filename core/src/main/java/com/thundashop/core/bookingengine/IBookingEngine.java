@@ -18,7 +18,6 @@ public interface IBookingEngine {
     @Administrator
     public BookingItemType createABookingItemType(String name);
     
-    @Administrator
     public List<BookingItemType> getBookingItemTypes();
     
     @Administrator

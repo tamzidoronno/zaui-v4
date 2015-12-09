@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class PHPApiBuilder {
         return entry.getName().split("\\.")[entry.getName().split("\\.").length - 1];
     }
     
-    private String createPhpClassName(Class entry, String filename) {
+    private String createPhpClassName(Class entry, String filename, Type type) {
         String[] paths = entry.getName().split("\\.");
         String classname = "WHAT_IS_THIS";
 
@@ -41,7 +42,17 @@ public class PHPApiBuilder {
             classname = paths[2] + "_" + paths[3] + "_" + filename;
         } else if (paths.length == 6) {
             classname = paths[2] + "_" + paths[3] + "_" + paths[4] + "_" + filename;
-        } 
+        }  else {
+            classname = entry.getCanonicalName();
+            if(classname.contains("java.util.List")) {
+                ParameterizedType stringListType = (ParameterizedType) type;
+                Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+                classname = stringListClass.toGenericString();
+                classname = classname.replace("public class com.thundashop.", "");
+                classname = classname.replace(".", "_");
+                classname += "[]";                
+            }
+        }
         return classname;
     }
 
@@ -53,7 +64,7 @@ public class PHPApiBuilder {
         String extendsstring = "";
 
         if (superClassName != null) {
-            String parentClassName = createPhpClassName(superClassName, getFileName(superClassName));
+            String parentClassName = createPhpClassName(superClassName, getFileName(superClassName), null);
             if (!parentClassName.equals("") && superClassName.getName().contains("thundashop")) {
                 extendsstring = " extends " + parentClassName + " ";
             }
@@ -65,11 +76,11 @@ public class PHPApiBuilder {
         phpResult += "class " + classname + extendsstring + " {\r\n";
 
         for (int j = 0; j < fields.length; j++) {
-            String type = fields[j].getType().toString();
+            String type = fields[j].getGenericType().toString();
             String toType = type.getClass().getSimpleName();
             String varName = fields[j].getName();
             if (type.contains("thundashop")) {
-                toType = createPhpClassName(fields[j].getType(), getFileName(fields[j].getType()));
+                toType = createPhpClassName(fields[j].getType(), getFileName(fields[j].getType()), fields[j].getGenericType());
             }
             
             if(varName.contains("$")) {

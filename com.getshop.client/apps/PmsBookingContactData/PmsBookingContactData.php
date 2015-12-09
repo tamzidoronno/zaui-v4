@@ -30,7 +30,41 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     }
     
     public function setContactData() {
+        $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
         
+        
+        foreach($_POST['data']['roomdata'] as $roomId => $guests) {
+            $result = array();
+            foreach($guests as $index => $guest) {
+                $guestData = new \core_pmsmanager_PmsGuests();
+                $guestData->email = $guest['email'];
+                $guestData->phone = $guest['phone'];
+                $guestData->name = $guest['name'];
+                $result[] = $guestData;
+            }
+            foreach($current->rooms as $room) {
+                /* @var $room \core_pmsmanager_PmsBookingRooms */
+                if($room->pmsBookingRoomId == $roomId) {
+                    $room->guests = $result;
+                }
+            }
+        }
+        
+        //Setting contact data.
+        $current->contactData->type = 1;
+        $current->contactData->address = $_POST['data']['billingdata']['address'];
+        $current->contactData->postalCode = $_POST['data']['billingdata']['postalCode'];
+        $current->contactData->city = $_POST['data']['billingdata']['city'];
+        $current->contactData->email = $_POST['data']['billingdata']['email'];
+        $current->contactData->name = $_POST['data']['billingdata']['name'];
+        if(isset($_POST['data']['billingdata']['orgid'])) {
+            $current->contactData->orgid = $_POST['data']['billingdata']['orgid'];
+            $current->contactData->type = 2;
+        } else {
+            $current->contactData->birthday = $_POST['data']['billingdata']['birthday'];
+        }
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
     }
     
     public function showSettings() {

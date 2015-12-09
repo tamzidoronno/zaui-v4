@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -158,6 +159,30 @@ public class PHPApiBuilder {
         return result + "\n?>";
     }
 
+    private String addReturnValue(String existingComment, GenerateApi.ApiMethod method) {
+        String returnValue = method.method.getReturnType().toGenericString();
+        
+        if(returnValue.contains("java.util.List")) {
+            ParameterizedType stringListType = (ParameterizedType) method.method.getGenericReturnType();
+            Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+            returnValue = stringListClass.toGenericString();
+            returnValue = returnValue.replace("public class com.thundashop.", "");
+            returnValue = returnValue.replace(".", "_");
+            returnValue += "[]";
+        } else {
+            returnValue = returnValue.replace("public class com.thundashop.", "");
+            returnValue = returnValue.replace(".", "_");
+        }
+        
+        returnValue = returnValue.replace("public final class ", "");
+        returnValue = returnValue.replace("java_lang_", "");
+        returnValue = returnValue.replace("java_util_", "");
+       
+        
+        existingComment = existingComment.replace("*/", "* @return "+returnValue+" \n\t*/");
+        return existingComment;
+    }
+    
     public String generatePHPApiClass(Class manager, List<GenerateApi.ApiMethod> methods) {
         String phpClass = "class API" + manager.getSimpleName().substring(1) + " {\n";
 
@@ -194,17 +219,20 @@ public class PHPApiBuilder {
                 returnvalue = method.method.getReturnType().getSimpleName();
             }
 
+            String commentToAdd = "";
             for (String comment : method.commentLines) {
                 if (comment.trim().isEmpty()) {
                     continue;
                 }
                 if (comment.indexOf("@return") > 0) {
-                    phpClass += "\t* @return " + returnvalue + "\n";
+//                    phpClass += "\t* @return " + returnvalue + "\n";
                 } else {
-                    phpClass += "\t" + comment + "\n";
+                    commentToAdd += "\t" + comment + "\n";
                 }
             }
 
+            phpClass += addReturnValue(commentToAdd, method);
+            
             phpClass += "\n\tpublic function " + method.methodName + "(" + args + ") {\n";
             phpClass += "\t     $data = array();\n";
             phpClass += "\t     $data['args'] = array();\n";

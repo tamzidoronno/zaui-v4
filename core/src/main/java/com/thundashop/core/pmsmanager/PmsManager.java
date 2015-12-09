@@ -5,8 +5,11 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.messagemanager.MessageManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,6 +27,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     BookingEngine bookingEngine;
+    
+    @Autowired
+    MessageManager messageManager;
 
     @Override
     public List<Room> getAllRoomTypes(long start, long end) {
@@ -201,6 +207,39 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         result.put("prefix", prefix);
         result.put("phone", phone);
         return result;
+    }
+
+    @Override
+    public String completeCurrentBooking() {
+        PmsBooking booking = getCurrentBooking();
+        
+        List<Booking> bookingsToAdd = new ArrayList();
+        for(PmsBookingDateRange dates : booking.dates) {
+            for(PmsBookingRooms room : booking.rooms) {
+                System.out.println("TEST");
+                Booking bookingToAdd = new Booking();
+                bookingToAdd.startDate = dates.start;
+                if(dates.end == null) {
+                    dates.end = createInifinteDate();
+                }
+                bookingToAdd.endDate = dates.end;
+                bookingToAdd.bookingItemTypeId = room.bookingItemTypeId;
+                bookingsToAdd.add(bookingToAdd);
+            }
+        }
+        try {
+            bookingEngine.addBookings(bookingsToAdd);
+        }catch(Exception e) {
+            messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id);
+        }
+        
+        return null;
+    }
+
+    private Date createInifinteDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, 100);
+        return cal.getTime();
     }
     
 }

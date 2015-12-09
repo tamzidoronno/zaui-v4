@@ -55,7 +55,9 @@ foreach($booking->rooms as $room) {
 </div>
 <div style='clear:both;'></div>
 <span class='complete_button'><? echo $this->__w("Complete order"); ?></span>
-
+<?
+echo $this->displayFailedBookingErrors();
+?>
 <script>
     <? if($booking->contactData->type == 2) {
         ?>

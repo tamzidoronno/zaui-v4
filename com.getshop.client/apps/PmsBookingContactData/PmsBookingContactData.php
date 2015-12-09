@@ -69,7 +69,14 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
         
         $this->validation = $this->getApi()->getPmsManager()->validateCurrentBooking($this->getSelectedName());
-//        print_r($validation);
+
+        if(empty((array)$this->validation)) {
+            $result = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
+            if(!$result) {
+                $this->validation = new \stdClass();
+                $this->validation->{'common'} = "An unknown error occured while completing the booking. The error has been logged and will be investegated.";
+            }
+        }
     }
     
     public function showSettings() {
@@ -113,8 +120,12 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             }
         }
     }
-    
-    
+
+    public function displayFailedBookingErrors() {
+        if(isset($this->validation->{'common'})) {
+            echo $this->validation->{'common'};
+        }
+    }
 
 }
 ?>

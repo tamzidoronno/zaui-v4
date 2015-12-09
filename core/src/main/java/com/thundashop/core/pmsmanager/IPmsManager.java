@@ -18,4 +18,5 @@ public interface IPmsManager {
     public PmsBooking getCurrentBooking();
     public PmsBooking startBooking();
     public HashMap<String,Integer> validateCurrentBooking();
+    public String completeCurrentBooking();
 }

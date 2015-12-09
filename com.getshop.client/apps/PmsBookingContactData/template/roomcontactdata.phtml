@@ -14,7 +14,12 @@ foreach($booking->rooms as $room) {
         
         echo "<div class='roomdata' pmsBookingRoomId='".$room->pmsBookingRoomId."' offset='$i'>";
         echo "<span class='col-33'><label>".$this->__w("Name")."<input type='text' name='name' value='".$guestData->name."'></label></span>";
-        echo "<span class='col-33'><label>".$this->__w("Phone")."<input type='text' name='phone' value='".$guestData->phone."'></label></span>";
+        echo "<span class='col-33'>";
+        echo "<label>";
+        echo $this->__w("Phone") . "<bR>";
+        echo "<input type='text' name='prefix' value='".$guestData->prefix."' style='width:15%;'>";
+        echo "<input type='text' name='phone' value='".$guestData->phone."' style='width:75%;'>";
+        echo "</label></span>";
         echo "<span class='col-33'><label>".$this->__w("Email")."<input type='text' name='email' value='".$guestData->email."'></label></span>";
         echo "</div>";
     }

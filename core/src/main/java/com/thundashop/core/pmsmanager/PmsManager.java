@@ -2,6 +2,9 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import java.util.ArrayList;
@@ -82,6 +85,97 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Logger.getLogger(PmsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return booking;
+    }
+
+    /**
+     * 1. Invalid
+     */
+    @Override
+    public HashMap<String, Integer> validateCurrentBooking() {
+        PmsBooking currentBooking = getCurrentBooking();
+        HashMap<String,Integer> result = new HashMap();
+        
+        //First check if the contact data is fine.
+        for(PmsBookingRooms room : currentBooking.rooms) {
+            Integer offset = 0;
+            for(PmsGuests guest : room.guests) {
+                if(!guest.name.contains(" ")) {
+                    result.put("room_" + room.pmsBookingRoomId + "_" + offset + "_name", 1);
+                }
+                if(!guest.email.contains("@")) {
+                    result.put("room_" + room.pmsBookingRoomId + "_" + offset + "_email", 1);
+                }
+
+                HashMap<String, String> phoneNumber = validatePhone("+" + guest.prefix + guest.phone, "NO");
+                if(phoneNumber == null) {
+                    result.put("room_" + room.pmsBookingRoomId + "_" + offset + "_phone", 1);
+                } else {
+                    guest.phone = phoneNumber.get("phone");
+                    guest.prefix = phoneNumber.get("prefix");
+                }
+                offset++;
+            }
+        }
+        
+        //Validate the contact data.
+        
+        
+        return result;
+    }
+
+    private HashMap<String, String> validatePhone(String phone, String countryCode) {
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        String prefix = "";
+        try {
+            PhoneNumber phonecheck = phoneUtil.parse(phone, countryCode);
+            if (!phoneUtil.isValidNumber(phonecheck)) {
+                String phone2 = phone;
+                if (phone.startsWith("0000")) {
+                    phone2 = phone.substring(4);
+                } else if (phone.startsWith("000")) {
+                    phone2 = phone.substring(3);
+                } else if (phone.startsWith("00")) {
+                    phone2 = phone.substring(2);
+                }
+
+                phonecheck = phoneUtil.parse(phone2, countryCode);
+                prefix = phonecheck.getCountryCode() + "";
+                phone = phonecheck.getNationalNumber() + "";
+
+                if (!phoneUtil.isValidNumber(phonecheck)) {
+                    phone2 = "00" + phone;
+                    phonecheck = phoneUtil.parse(phone2, countryCode);
+
+                    if (!phoneUtil.isValidNumber(phonecheck)) {
+                        if(phone.length() == 10 && phone.startsWith("07")) {
+                            phone = phone.substring(1);
+                            prefix = "46";
+                        } else if (phone.length() == 9 && phone.startsWith("7")) {
+                            prefix = "46";
+                        } else {
+                            return null;
+                        }
+                    } else {
+                        prefix = phonecheck.getCountryCode() + "";
+                        phone = phonecheck.getNationalNumber() + "";
+                    }
+                } else {
+                    prefix = phonecheck.getCountryCode() + "";
+                    phone = phonecheck.getNationalNumber() + "";
+                }
+            } else {
+                prefix = phonecheck.getCountryCode() + "";
+                phone = phonecheck.getNationalNumber() + "";
+            }
+        } catch (NumberParseException e) {
+            return null;
+        }
+
+        
+        HashMap<String,String> result = new HashMap();
+        result.put("prefix", prefix);
+        result.put("phone", phone);
+        return result;
     }
     
 }

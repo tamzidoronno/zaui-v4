@@ -56,15 +56,18 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         $current->contactData->postalCode = $_POST['data']['billingdata']['postalCode'];
         $current->contactData->city = $_POST['data']['billingdata']['city'];
         $current->contactData->email = $_POST['data']['billingdata']['email'];
-        $current->contactData->name = $_POST['data']['billingdata']['name'];
         if(isset($_POST['data']['billingdata']['orgid'])) {
             $current->contactData->orgid = $_POST['data']['billingdata']['orgid'];
+            $current->contactData->name = $_POST['data']['billingdata']['name'];
             $current->contactData->type = 2;
         } else {
             $current->contactData->birthday = $_POST['data']['billingdata']['birthday'];
         }
         
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
+        
+        $validation = $this->getApi()->getPmsManager()->validateCurrentBooking($this->getSelectedName());
+//        print_r($validation);
     }
     
     public function showSettings() {

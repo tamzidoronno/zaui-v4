@@ -1,12 +1,98 @@
 <?php
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 
-$filter = new core_pmsmanager_PmsBookingFilter();
-$filter->state = 0;
+$filter = $this->getSelectedFilter();
+
+$searchtypes = array();
+$searchtypes['registered'] = "Registered";
+$searchtypes['active'] = "Active";
+$searchtypes['inactive'] = "Inactive";
+$searchtypes['checkin'] = "Checkin in";
+$searchtypes['checkout'] = "Checkin out";
+$searchtypes['deleted'] = "Deleted";
 
 $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
-echo sizeof($bookings);
-echo "<pre>";
-print_r($bookings);
-echo "</pre>";
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+foreach($types as $type) {
+    $types[$type->id] = $type;
+}
 ?>
+
+
+
+<div class='booking_options'>
+    <span style="float:left;">
+        <input type='text' class="start pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>">
+        <input type='text' class="end pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
+
+        <select class="pmsinput filterType">
+            <option value="registered">Registered</option>
+            <option value="registered">Active</option>
+            <option value="registered">Checking in</option>
+            <option value="registered">Checking out</option>
+            <option value="registered">Deleted</option>
+        </select>
+        <span gstype="submit" class="pmsbutton setFilter">Show</span>
+    </span>
+    
+    <input type='text' placeholder='Search' class='pmsinput searchword' value="<? echo $filter->searchWord; ?>">
+    <span gstype="submit" class="pmsbutton addGroupOptions setFilter">Search</span>
+</div>
+<br><br>
+
+<?php
+echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+echo "<tr>";
+echo "<th></th>";
+echo "<th>Dates</th>";
+echo "<th>Visitor</th>";
+echo "<th>Room</th>";
+echo "<th align='center'><center>State</center></th>";
+echo "</tr>";
+foreach($bookings as $booking) {
+    foreach($booking->rooms as $room) {
+        echo "<tr>";
+        echo "<td>";
+        echo "<i class='fa fa-trash-o removebooking actions'></i>";
+        echo "<i class='fa fa-info moreinformationaboutbooking actions'></i> ";
+        echo "</td>";
+        echo "<td>";
+        foreach($booking->dates as $date) {
+            echo date("d.m.Y H:i", strtotime($date->start));
+            if($date->end) {
+                echo $date->end;
+            }
+        }
+        echo "<div class='secondary_text'>Registered " . $booking->rowCreatedDate . "</div>";
+        echo "</td>";
+        echo "<td>";
+        foreach($room->guests as $guest) {
+            echo $guest->name . " - " . $guest->email . " - " . $guest->phone . "<br>";
+        }
+        echo "<div class='secondary_text'>Room type " . $types[$room->bookingItemTypeId]->name . "</div>";
+        echo "</td>";
+        echo "<td>";
+        echo "</td>";
+        echo "<td align='center'>";
+        switch($booking->state) {
+            case "0":
+                echo "Booking";
+                break;
+            case "1":
+                echo "Booked";
+                break;
+            case "2":
+                echo "Deleted";
+                break;
+        }
+        echo "</td>";
+        echo "</tr>";
+    }
+} 
+echo "</table>";
+ ?>
+
+<script>
+    $('.start.pmsinput').datepicker({ dateFormat: "dd.mm.yy", maxDate: "+30d", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.end.pmsinput').datepicker({ dateFormat: "dd.mm.yy", maxDate: "+30d", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

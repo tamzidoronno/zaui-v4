@@ -1,6 +1,18 @@
 app.PmsManagement = {
     init: function () {
         $(document).on('change', '.PmsManagement .attachedProduct', app.PmsManagement.attachProduct);
+        $(document).on('click', '.PmsManagement .setFilter', app.PmsManagement.setFilter);
+    },
+    setFilter : function() {
+        var app = $(this).closest('.app');
+        var data = {
+            "start" : app.find('.pmsinput.start').val(),
+            "end" : app.find('.pmsinput.end').val(),
+            "filterType" : app.find('.filterType').val(),
+            "searchWord" : app.find('.pmsinput.searchword').val()
+        };
+        var event = thundashop.Ajax.createEvent('','setFilter',$(this), data);
+        thundashop.Ajax.post(event);
     },
     attachProduct : function() {
         var event = thundashop.Ajax.createEvent('','attachProduct',$(this), {

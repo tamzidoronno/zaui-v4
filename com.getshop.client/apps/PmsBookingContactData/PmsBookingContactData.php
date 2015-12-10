@@ -75,7 +75,8 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         
         $this->validation = $this->getApi()->getPmsManager()->validateCurrentBooking($this->getSelectedName());
 
-        if(empty((array)$this->validation)) {
+        $check = (array)$this->validation; 
+        if(!$this->validation || empty($check)) {
             $result = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
             if($result == -1) {
                 $this->validation = new \stdClass();

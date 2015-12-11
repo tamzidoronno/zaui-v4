@@ -54,7 +54,7 @@ foreach($bookings as $booking) {
         echo "<tr>";
         echo "<td>";
         echo "<i class='fa fa-trash-o removebooking actions'></i>";
-        echo "<i class='fa fa-info moreinformationaboutbooking actions'></i> ";
+        echo "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."'></i> ";
         echo "</td>";
         echo "<td>";
         foreach($booking->dates as $date) {
@@ -69,7 +69,11 @@ foreach($bookings as $booking) {
         foreach($room->guests as $guest) {
             echo $guest->name . " - " . $guest->email . " - " . $guest->phone . "<br>";
         }
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
         echo "<div class='secondary_text'>Room type " . $types[$room->bookingItemTypeId]->name . "</div>";
+        if($user) {
+            echo "<div class='secondary_text'>Registered by " . $user->fullName . "</div>";
+        }
         echo "</td>";
         echo "<td>";
         echo "</td>";

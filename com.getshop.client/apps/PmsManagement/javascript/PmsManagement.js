@@ -2,6 +2,16 @@ app.PmsManagement = {
     init: function () {
         $(document).on('change', '.PmsManagement .attachedProduct', app.PmsManagement.attachProduct);
         $(document).on('click', '.PmsManagement .setFilter', app.PmsManagement.setFilter);
+        $(document).on('click', '.PmsManagement .moreinformationaboutbooking', app.PmsManagement.showMoreInformation);
+    },
+    showMoreInformation : function() {
+        var data = {
+            "roomid" : $(this).attr('roomid'),
+            "bookingid" : $(this).attr('bookingid')
+        }
+        
+        var event = thundashop.Ajax.createEvent('','showBookingInformation',$(this), data);
+        thundashop.common.showInformationBox(event, 'Booking information');
     },
     setFilter : function() {
         var app = $(this).closest('.app');

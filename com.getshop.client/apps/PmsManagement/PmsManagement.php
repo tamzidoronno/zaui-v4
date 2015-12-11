@@ -5,6 +5,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public function showBookingInformation() {
+        $this->includefile("bookinginformation");
+    }
 
     public function getName() {
         return "PmsManagement";

@@ -23,11 +23,11 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     public function getSelectedDate() {
         /* @var $booking \core_pmsmanager_PmsBooking */
         $booking = $this->booking;
-        if(sizeof($booking->dates) > 0) {
+        if(sizeof($booking->rooms) > 0) {
             if($this->isStartDate()) {
-                return strtotime($booking->dates[0]->start);
+                return strtotime($booking->rooms[0]->date->start);
             } else {
-                return strtotime($booking->dates[0]->end);
+                return strtotime($booking->rooms[0]->date->end);
             }
         }
         
@@ -47,14 +47,14 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     
     public function selectDay() {
         $this->booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
-        if(sizeof($this->booking->dates) == 0) {
-            $this->booking->dates[] = new \core_pmsmanager_PmsBookingDateRange();
+        if(sizeof($this->booking->rooms) == 0) {
+            return;
         }
         
         if($this->isStartDate()) {
-            $this->booking->dates[0]->start = $this->convertToJavaDate($_POST['data']['time']);
+            $this->booking->rooms[0]->date->start = $this->convertToJavaDate($_POST['data']['time']);
         } else {
-            $this->booking->dates[0]->end = $this->convertToJavaDate($_POST['data']['time']);
+            $this->booking->rooms[0]->date->end = $this->convertToJavaDate($_POST['data']['time']);
         }
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $this->booking);
         $this->includefile("calendar");

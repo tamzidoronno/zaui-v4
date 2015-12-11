@@ -17,7 +17,9 @@ public class PmsBookingRooms {
     public String bookingItemTypeId = "";
     public String pmsBookingRoomId = UUID.randomUUID().toString();
     public List<PmsGuests> guests = new ArrayList();
+    public PmsBookingDateRange date = new PmsBookingDateRange();
     public Integer numberOfGuests = 0;
+    public String bookingEngineItemId = "";
     public double count = 1;
     public double price = 108;
     public double taxes = 8;

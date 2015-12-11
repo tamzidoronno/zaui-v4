@@ -98,10 +98,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         PmsBooking booking = new PmsBooking();
         
-        PmsBookingDateRange range = new PmsBookingDateRange();
-        range.start = new Date();
-        booking.dates.add(range);
-        
         try {
             setBooking(booking);
         } catch (Exception ex) {
@@ -243,19 +239,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         List<Booking> bookingsToAdd = new ArrayList();
-        for(PmsBookingDateRange dates : booking.dates) {
-            for(PmsBookingRooms room : booking.rooms) {
-                Booking bookingToAdd = new Booking();
-                bookingToAdd.startDate = dates.start;
-                if(dates.end == null) {
-                    dates.end = createInifinteDate();
-                }
-                bookingToAdd.endDate = dates.end;
-                bookingToAdd.bookingItemTypeId = room.bookingItemTypeId;
-                bookingToAdd.externalReference = room.pmsBookingRoomId;
-                
-                bookingsToAdd.add(bookingToAdd);
+        for(PmsBookingRooms room : booking.rooms) {
+            Booking bookingToAdd = new Booking();
+            bookingToAdd.startDate = room.date.start;
+            if(room.date.end == null) {
+                room.date.end = createInifinteDate();
             }
+            bookingToAdd.endDate = room.date.end;
+            bookingToAdd.bookingItemTypeId = room.bookingItemTypeId;
+            bookingToAdd.externalReference = room.pmsBookingRoomId;
+
+            bookingsToAdd.add(bookingToAdd);
         }
         try {
             if(!bookingEngine.isAvailable(bookingsToAdd)) {
@@ -340,8 +334,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return result;
-        
-       
+    }
+
+    @Override
+    public PmsBooking getBooking(String bookingId) {
+        return finalize(bookings.get(bookingId));
+    }
+
+    private PmsBooking finalize(PmsBooking booking) {
+        return booking;
     }
     
 }

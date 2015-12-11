@@ -2,6 +2,7 @@
 namespace ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a;
 
 class PmsManagement extends \WebshopApplication implements \Application {
+    private $selectedBooking;
     public function getDescription() {
         
     }
@@ -10,6 +11,30 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("bookinginformation");
     }
 
+    /**
+     * @return core_bookingengine_data_BookingItemType[]
+     */
+    public function getTypes() {
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        foreach ($types as $idx => $type) {
+            $types[$type->id] = $type;
+        }
+        return $types;
+    }
+    
+    /**
+     * @return \core_pmsmanager_PmsBooking
+     */
+    public function getSelectedBooking() {
+        if($this->selectedBooking) {
+            return $this->selectedBooking;
+        }
+        $bookingid = $_POST['data']['bookingid'];
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingid);
+        $this->selectedBooking = $booking;
+        return $booking;
+    }
+    
     public function getName() {
         return "PmsManagement";
     }

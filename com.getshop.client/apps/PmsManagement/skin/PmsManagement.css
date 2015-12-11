@@ -1,6 +1,6 @@
 .PmsManagement .actions { color:#fff; background-color: #2f6627;  cursor:pointer; border: solid 1px; padding: 2px; width: 20px; height: 20px; font-size: 20px; text-align: center; border-radius: 3px; }
-.PmsManagement .actions.removebooking { background-color:red; }
-.PmsManagement .actions.removebooking:hover { background-color:darkred; }
+.PmsManagement .actions.removebooking,.PmsManagement .actions.removedates { background-color:red; }
+.PmsManagement .actions.removebooking:hover,.PmsManagement .actions.removedates:hover { background-color:darkred; }
 .PmsManagement .secondary_text { color:#aaa; font-size: 12px; margin-top: 2px; }
 .PmsManagement .actions:hover {
      -moz-transition: all 0.2s ease-in;
@@ -61,3 +61,9 @@
 }
 
 .PmsManagement .booking_options { text-align: right; }
+.PmsManagement .datesbooked input { font-size: 16px; }
+.PmsManagement .bookedrooms input { width: 25%; font-size: 16px; }
+.PmsManagement .bookedrooms,
+.PmsManagement .contactdata,
+.PmsManagement .orderinformation,
+.PmsManagement .datesbooked { width: 50%; display:inline-block; float:left; }

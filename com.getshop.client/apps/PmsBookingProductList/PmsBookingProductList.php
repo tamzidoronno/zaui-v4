@@ -41,11 +41,15 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
     public function selectRoom() {
         $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
         /* @var $current \core_pmsmanager_PmsBooking */
-        $current->rooms = array();
         
-        $room = new \core_pmsmanager_PmsBookingRooms();
-        $room->bookingItemTypeId = $_POST['data']['typeid'];
-        $current->rooms[] = $room;
+        if(sizeof($current->rooms) > 0) {
+            $current->rooms[0]->bookingItemTypeId = $_POST['data']['typeid'];
+        } else {
+            $room = new \core_pmsmanager_PmsBookingRooms();
+            $current->rooms = array();
+            $room->bookingItemTypeId = $_POST['data']['typeid'];
+            $current->rooms[] = $room;
+        }
         
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
     }

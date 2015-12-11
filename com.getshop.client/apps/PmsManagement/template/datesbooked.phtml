@@ -1,0 +1,57 @@
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+
+$booking = $this->getSelectedBooking();
+
+?>
+
+<div class='datesbooked'>
+    <h2>Dates booked</h2>
+    <span style='float:left; width: 154px;    padding-left: 26px;'>Starting at</span>
+    <span style='float:left;'>Ending at</span>
+    <div style='clear:both;'></div>
+    <?
+    foreach ($booking->dates as $date) {
+        ?>
+        <span style='float:left; width: 180px;'>
+            <i class='fa fa-trash-o removedates actions' style='float:left; font-size: 18px; height: 18px;'></i>
+            <input type='text' value='<?php echo date("d.m.Y", strtotime($date->start)); ?>' style='width:80px;'>
+            <input type='text' value='<?php echo date("H", strtotime($date->start)); ?>' style='width:20px'>
+            <input type='text' value='<?php echo date("i", strtotime($date->start)); ?>' style='width:20px'>
+        </span>
+
+        <span style='float:left;'>
+            <?php
+            $endDate = "";
+            $endHour = "12";
+            $endMinute = "00";
+            if ($date->end) {
+                $endDate = date("d.m.Y", strtotime($date->end));
+                $endHour = date("H", strtotime($date->end));
+                $endMinute = date("i", strtotime($date->end));
+            }
+            ?>
+            <input type='text' value='<?php echo $endDate; ?>' style='width:80px;'>
+            <input type='text' value='<?php echo $endHour; ?>' style='width:20px'>
+            <input type='text' value='<?php echo $endMinute; ?>' style='width:20px'>
+        </span>
+
+        <div style='clear:both;'></div>
+    <?php } ?>
+
+    <div style='clear:both; padding-bottom: 5px;'></div>
+    <span style='float:left; width: 154px; padding-left: 26px;'>
+        <input type='text' value='' style='width:80px;'>
+        <input type='text' value='15' style='width:20px'>
+        <input type='text' value='00' style='width:20px'>
+    </span>
+
+    <span style='float:left;'>
+        <input type='text' value='' style='width:80px;'>
+        <input type='text' value='12' style='width:20px'>
+        <input type='text' value='00' style='width:20px'>
+    </span>
+    
+    <span class='pmsbutton' style='padding: 2px 10px; margin-left: 5px;'>Add date</span>
+    <div style='clear:both;'></div>
+</div>

@@ -254,7 +254,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             if(!bookingEngine.isAvailable(bookingsToAdd)) {
                 bookingEngine.addBookings(bookingsToAdd);
-                booking.bookingEngineItems = bookingsToAdd;
+                booking.attachBookingItems(bookingsToAdd);
                 booking.sessionId = null;
                 if(booking.userId == null) {
                     booking.userId = createUser(booking).id;
@@ -270,7 +270,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
 
-        return 0;
+        return result;
     }
 
     private Date createInifinteDate() {
@@ -342,6 +342,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private PmsBooking finalize(PmsBooking booking) {
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.booking == null && room.bookingId != null) {
+                room.booking = bookingEngine.getBooking(room.bookingId);
+            }
+        }
         return booking;
     }
     

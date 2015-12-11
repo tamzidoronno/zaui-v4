@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PmsBooking extends DataCommon {
+    
     public static class BookingStates {
         public static Integer STARTED = 0;
         public static Integer COMPLETED = 1;
@@ -20,5 +21,14 @@ public class PmsBooking extends DataCommon {
     public String language = "nb_NO";
     public String userId = "";
     public Integer state = 0;
-    List<Booking> bookingEngineItems = new ArrayList();
+
+    void attachBookingItems(List<Booking> bookingsToAdd) {
+        for(PmsBookingRooms room : rooms) {
+            for(Booking booking : bookingsToAdd) {
+                if(room.pmsBookingRoomId.equals(booking.externalReference)) {
+                    room.bookingId = booking.id;
+                }
+            }
+        }
+    }
 }

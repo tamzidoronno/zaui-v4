@@ -63,7 +63,6 @@
 .PmsManagement .booking_options { text-align: right; }
 .PmsManagement .datesbooked input { font-size: 16px; }
 .PmsManagement .bookedrooms input { width: 25%; font-size: 16px; }
-.PmsManagement .bookedrooms,
-.PmsManagement .contactdata,
-.PmsManagement .orderinformation,
-.PmsManagement .datesbooked { width: 50%; display:inline-block; float:left; }
+.PmsManagement .roomprefix { display: inline-block; width: 20%; float:left; font-size: 16px; margin-bottom: 10px; }
+.PmsManagement .roompostfix { display: inline-block; width: 80%; float:left; font-size: 16px; }
+.PmsManagement .fa { border: solid 1px; padding: 3px; border-radius: 3px; background-color:#18ab29; color:#fff; }

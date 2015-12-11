@@ -2,25 +2,57 @@
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $booking = $this->getSelectedBooking();
 $types = $this->getTypes();
-
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+foreach($items as $item) {
+    $items[$item->id] = $item;
+}
 ?>
 <div class='bookedrooms'>
     <h2>Rooms booked</h2>
-    <?php
-    foreach ($booking->rooms as $room) {
-        ?>
-        Room type: <? echo $types[$room->bookingItemTypeId]->name; ?>
+    <div style='padding-left: 10px;'>
         <?php
-        $i = 0;
-        foreach($room->guests as $guest) {
-            $i++;
+        foreach ($booking->rooms as $room) {
+            $date = $room->date;
             ?>
-            <div>
-                Guest no. <? echo $i; ?> <input type='text' name='name' value='<? echo $guest->name; ?>'>
-                <input type='text' name='phone' value='<? echo $guest->phone; ?>'>
-                <input type='text' name='email' value='<? echo $guest->email; ?>'>
-            </div>
-        <? }
-    }
-    ?>
+            <span class='roomprefix'>
+                <i class='fa fa-edit'></i> Room type
+            </span>
+            <span class='roompostfix'>
+                <? echo $types[$room->bookingItemTypeId]->name; ?>
+            </span>
+            <div style='clear:both;'></div>
+            <span class='roomprefix'>
+                <i class='fa fa-edit'></i> Dates
+            </span> 
+            <span class='roompostfix'>
+                <?php echo date("d.m.Y H:i", strtotime($date->start)); ?>
+                <?php if ($date->end) { ?>
+                    -> 
+                    <?php echo date("d.m.Y H:i", strtotime($date->end)); ?>
+                <? } ?>
+            </span>
+            <div style='clear:both;'></div>
+            <span class='roomprefix'>
+                <i class='fa fa-edit'></i> <?php echo $room->numberOfGuests; ?> guests
+            </span>
+            <span class='roompostfix'>
+                <?php
+                foreach ($room->guests as $guest) {
+                    echo $guest->name . " - " . $guest->email . " - +" . $guest->prefix . $guest->phone;
+                }
+            }
+            ?></span>
+        <div style='clear:both;'></div>
+        <span class='roomprefix'>
+            <i class='fa fa-edit'></i> Assigned room
+        </span>
+        <span class='roompostfix'>
+            <? 
+            print_r($room->booking);
+            ?>
+        </span>
+
+    </div>
+    <div style='clear:both;'></div>
+</div>
 </div>

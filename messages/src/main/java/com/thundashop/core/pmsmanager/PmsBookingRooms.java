@@ -5,9 +5,11 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.bookingengine.data.Booking;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -19,8 +21,14 @@ public class PmsBookingRooms {
     public List<PmsGuests> guests = new ArrayList();
     public PmsBookingDateRange date = new PmsBookingDateRange();
     public Integer numberOfGuests = 0;
-    public String bookingEngineItemId = "";
     public double count = 1;
     public double price = 108;
     public double taxes = 8;
+    public String bookingId;
+    
+    /**
+     * Finalized entries
+     */
+    @Transient
+    public Booking booking;
 }

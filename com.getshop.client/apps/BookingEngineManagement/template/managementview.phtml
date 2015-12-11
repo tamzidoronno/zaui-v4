@@ -1,8 +1,13 @@
 <?php
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $bookingtypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$allbookingtypes = array();
+foreach($bookingtypes as $tp) {
+    $allbookingtypes[$tp->id] = $tp;
+}
 $bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 $config = $this->getApi()->getBookingEngine()->getConfig($this->getSelectedName());
+$bookings = $this->getApi()->getBookingEngine()->getAllBookings($this->getSelectedName());
 ?>
 <div class='addRoomBox'>
     <h2 ><? echo $this->getSelectedName(); ?></h2>
@@ -81,5 +86,24 @@ $config = $this->getApi()->getBookingEngine()->getConfig($this->getSelectedName(
             </td>
         </tr>
     </table>
+    
+    <h2>All booking added</h2>
+    <table width='100%'>
+        <tr>
+            <th align='left'>Start date</th>
+            <th align='left'>end date</th>
+            <th align='left'>Group</th>
+        </tr>
+        <?php
+        foreach($bookings as $booking) {
+            echo "<tr>";
+            echo "<td>" . $booking->startDate . "</td>";
+            echo "<td>" . $booking->endDate . "</td><td>";
+            echo $allbookingtypes[$booking->bookingItemTypeId]->name . "</td>";
+            echo "</tr>";
+        }
+        ?>
+    </table>
+    
 </div>
 

@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @GetShopSession
-public class BookingEngine extends GetShopSessionBeanNamed  {
+public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEngine {
     
     private final Map<String, Booking> bookings = new HashMap();
     private final Map<String, Availability> availabilities = new HashMap();
@@ -41,10 +41,12 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
     
     private final BookingEngineVerifier verifier = new BookingEngineVerifier();
 
+    @Override
     public List<BookingItemType> getBookingItemTypes() {
         return new ArrayList(types.values());
     }
     
+    @Override
     public BookingItemType createABookingItemType(String name) {
         BookingItemType type = new BookingItemType();
         type.name = name;
@@ -52,6 +54,16 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
         types.put(type.id, type);
         
         return type;
+    }
+    
+    @Override
+    public void deleteABookingItemType(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public BookingItemType  getABookingItemType(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -269,7 +281,7 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
                 .mapToInt(item -> item.bookingSize)
                 .sum();
     }
-    
+
     /**
      * Returns a list of availability 
      * within a given timePeriode
@@ -290,4 +302,28 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
         
         return flatten;
     } 
+
+    @Override
+    public BookingItemType saveABookingItemType(BookingItemType type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<BookingItem> getBookingItems() {
+        return new ArrayList(items.values());
+    }
+
+    @Override
+    public List<BookingItem> deleteBookingItem(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BookingEngineConfiguration getConfig() {
+        return config;
+    }
+
+    public boolean isAvailable(List<Booking> bookingsToAdd) {
+        return false;
+    }
 }

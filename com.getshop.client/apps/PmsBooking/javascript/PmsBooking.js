@@ -6,12 +6,12 @@ app.PmsBooking = {
         var next = $(this).attr('next_page');
         var app = $(this).closest('.app');
         var event = thundashop.Ajax.createEvent('','initBooking',$(this), {
-            start : app.find('.start_date').val(),
-            end : app.find('.end_date').val(),
+            start : app.find('.start_date_input').val(),
+            end : app.find('.end_date_input').val(),
             product : app.find('.selected_product').val()
         });
         thundashop.Ajax.postWithCallBack(event, function() {
-            window.location.href =next;
+            window.location.href = next;
         });
     },
     showSettings : function() {

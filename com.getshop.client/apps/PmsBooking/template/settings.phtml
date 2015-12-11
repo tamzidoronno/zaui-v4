@@ -26,11 +26,20 @@
     </tr>
     <tr>
         <td width="50%"><? echo $this->__w("Name for booking engine to use"); ?></td>
-        <td width="50%"><input type="text" gsname="select_product" style='width:100%;' value="<? echo $this->getText("booking_engine_name"); ?>"></td>
+        <td width="50%"><input type="text" gsname="booking_engine_name" style='width:100%;' value="<? echo $this->getText("booking_engine_name"); ?>"></td>
     </tr>
     <tr>
         <td width="50%"><? echo $this->__w("Next page to go to example: /order.html"); ?></td>
         <td width="50%"><input type="text" gsname="next_page" style='width:100%;' value="<? echo $this->getText("next_page"); ?>"></td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Display end date"); ?></td>
+        <td width="50%">
+            <select gsname="display_end_date">
+                <option value='yes'>Yes</option>
+                <option value='no' <? if($this->getText("display_end_date") == "no") { echo "SELECTED"; } ?>>No</option>
+            </select>
+        </td>
     </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>

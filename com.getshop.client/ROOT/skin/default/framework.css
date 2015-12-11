@@ -426,9 +426,9 @@ h1 {
     z-index: 99999999;
     position: relative;
     -moz-border-radius: 0px;
-    -webkit-border-radius: 20px 20px 10px 10px;
-    border-radius: 20px 20px 10px 10px; 
-    background-color: #3f3f3f;
+    -webkit-border-radius: 3px;
+    border-radius: 3px; 
+    background-color: #146da6;
 }
 
 #informationboxtitle {
@@ -437,7 +437,7 @@ h1 {
     font-size: 30px;
     color: #FFF;
     padding-left: 20px;
-    background-color: #3f3f3f;
+    background-color: #146da6;
     z-index: 1;
     top: 17px;
     font-family: Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif;
@@ -1525,10 +1525,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
 }
 
 #informationbox {
-    background-color: #666666;
+    background-color: #fff;
     -moz-border-radius: 0px;
-    -webkit-border-radius: 0px 0px 10px 10px;
-    border-radius: 0px 0px 10px 10px; 
+    -webkit-border-radius: 0px 0px 3px 3px;
+    border-radius: 0px 0px 3px 3px; 
+    padding: 10px;
+    box-sizing: border-box;
 }
 #informationbox .GetShopColorPicker {
     text-align:center;
@@ -1662,7 +1664,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
     border-top-left-radius:8px;
     border-top-right-radius:8px;
     font-size: 12px;
-    background-color: #3f3f3f;
+    background-color: #146da6;
     cursor: move;
     border-left: solid 1px #CCC;
     border-right: solid 1px #CCC;

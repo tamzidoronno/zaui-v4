@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class PHPApiBuilder {
         return entry.getName().split("\\.")[entry.getName().split("\\.").length - 1];
     }
     
-    private String createPhpClassName(Class entry, String filename) {
+    private String createPhpClassName(Class entry, String filename, Type type) {
         String[] paths = entry.getName().split("\\.");
         String classname = "WHAT_IS_THIS";
 
@@ -40,7 +42,17 @@ public class PHPApiBuilder {
             classname = paths[2] + "_" + paths[3] + "_" + filename;
         } else if (paths.length == 6) {
             classname = paths[2] + "_" + paths[3] + "_" + paths[4] + "_" + filename;
-        } 
+        }  else {
+            classname = entry.getCanonicalName();
+            if(classname.contains("java.util.List")) {
+                ParameterizedType stringListType = (ParameterizedType) type;
+                Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+                classname = stringListClass.toGenericString();
+                classname = classname.replace("public class com.thundashop.", "");
+                classname = classname.replace(".", "_");
+                classname += "[]";                
+            }
+        }
         return classname;
     }
 
@@ -52,7 +64,7 @@ public class PHPApiBuilder {
         String extendsstring = "";
 
         if (superClassName != null) {
-            String parentClassName = createPhpClassName(superClassName, getFileName(superClassName));
+            String parentClassName = createPhpClassName(superClassName, getFileName(superClassName), null);
             if (!parentClassName.equals("") && superClassName.getName().contains("thundashop")) {
                 extendsstring = " extends " + parentClassName + " ";
             }
@@ -64,11 +76,11 @@ public class PHPApiBuilder {
         phpResult += "class " + classname + extendsstring + " {\r\n";
 
         for (int j = 0; j < fields.length; j++) {
-            String type = fields[j].getType().toString();
+            String type = fields[j].getGenericType().toString();
             String toType = type.getClass().getSimpleName();
             String varName = fields[j].getName();
             if (type.contains("thundashop")) {
-                toType = createPhpClassName(fields[j].getType(), getFileName(fields[j].getType()));
+                toType = createPhpClassName(fields[j].getType(), getFileName(fields[j].getType()), fields[j].getGenericType());
             }
             
             if(varName.contains("$")) {
@@ -158,6 +170,30 @@ public class PHPApiBuilder {
         return result + "\n?>";
     }
 
+    private String addReturnValue(String existingComment, GenerateApi.ApiMethod method) {
+        String returnValue = method.method.getReturnType().toGenericString();
+        
+        if(returnValue.contains("java.util.List")) {
+            ParameterizedType stringListType = (ParameterizedType) method.method.getGenericReturnType();
+            Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+            returnValue = stringListClass.toGenericString();
+            returnValue = returnValue.replace("public class com.thundashop.", "");
+            returnValue = returnValue.replace(".", "_");
+            returnValue += "[]";
+        } else {
+            returnValue = returnValue.replace("public class com.thundashop.", "");
+            returnValue = returnValue.replace(".", "_");
+        }
+        
+        returnValue = returnValue.replace("public final class ", "");
+        returnValue = returnValue.replace("java_lang_", "");
+        returnValue = returnValue.replace("java_util_", "");
+       
+        
+        existingComment = existingComment.replace("*/", "* @return "+returnValue+" \n\t*/");
+        return existingComment;
+    }
+    
     public String generatePHPApiClass(Class manager, List<GenerateApi.ApiMethod> methods) {
         String phpClass = "class API" + manager.getSimpleName().substring(1) + " {\n";
 
@@ -194,17 +230,20 @@ public class PHPApiBuilder {
                 returnvalue = method.method.getReturnType().getSimpleName();
             }
 
+            String commentToAdd = "";
             for (String comment : method.commentLines) {
                 if (comment.trim().isEmpty()) {
                     continue;
                 }
                 if (comment.indexOf("@return") > 0) {
-                    phpClass += "\t* @return " + returnvalue + "\n";
+//                    phpClass += "\t* @return " + returnvalue + "\n";
                 } else {
-                    phpClass += "\t" + comment + "\n";
+                    commentToAdd += "\t" + comment + "\n";
                 }
             }
 
+            phpClass += addReturnValue(commentToAdd, method);
+            
             phpClass += "\n\tpublic function " + method.methodName + "(" + args + ") {\n";
             phpClass += "\t     $data = array();\n";
             phpClass += "\t     $data['args'] = array();\n";

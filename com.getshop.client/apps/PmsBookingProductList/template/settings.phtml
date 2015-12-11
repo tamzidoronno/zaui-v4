@@ -15,6 +15,14 @@ $dateType = $this->getConfigurationSetting("date_type");
         <td width="50%"><? echo $this->__w("Next button text"); ?></td>
         <td width="50%"><input type="text" gsname="next_button" style='width:100%;' value="<? echo $this->getText("next_button"); ?>"></td>
     </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Name of the booking engine"); ?></td>
+        <td width="50%"><input type="text" gsname="engine_name" style='width:100%;' value="<? echo $this->getText("engine_name"); ?>"></td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Next page"); ?></td>
+        <td width="50%"><input type="text" gsname="next_page" style='width:100%;' value="<? echo $this->getText("next_page"); ?>"></td>
+    </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

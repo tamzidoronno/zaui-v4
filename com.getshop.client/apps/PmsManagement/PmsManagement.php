@@ -5,6 +5,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public function showBookingInformation() {
+        $this->includefile("bookinginformation");
+    }
 
     public function getName() {
         return "PmsManagement";
@@ -20,23 +24,42 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function setFilter() {
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $filter->endDate = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $filter->filterType = $_POST['data']['filterType'];
+        $filter->state = 0;
+        $filter->searchWord = $_POST['data']['searchWord'];
+        
+        $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
+    }
+    
     public function getSelectedName() {
-        return $this->getConfigurationSetting("pmsname");
+        return $this->getConfigurationSetting("engine_name");
     }
     
     public function showSettings() {
         $this->includefile("settings");
     }
     
-    public function addRoom() {
-        $room = $_POST['data']['name'];
-        $this->getApi()->getPmsManager()->addRoom($room);
-    }
-
     public function saveSettings() {
         foreach($_POST['data'] as $key => $value) {
             $this->setConfigurationSetting($key, $value);
         }
-    }    
+    }
+
+    public function getSelectedFilter() {
+        if(isset($_SESSION['pmfilter'][$this->getSelectedName()])) {
+            return unserialize($_SESSION['pmfilter'][$this->getSelectedName()]);
+        }
+        
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->state = 0;
+        $filter->startDate = $this->formatTimeToJavaDate(time()-(86400*3));
+        $filter->endDate = $this->formatTimeToJavaDate(time()+(86400*3));
+        return $filter;
+    }
+
 }
 ?>

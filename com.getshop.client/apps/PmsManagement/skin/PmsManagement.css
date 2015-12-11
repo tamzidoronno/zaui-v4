@@ -1,22 +1,63 @@
+.PmsManagement .actions { color:#fff; background-color: #2f6627;  cursor:pointer; border: solid 1px; padding: 2px; width: 20px; height: 20px; font-size: 20px; text-align: center; border-radius: 3px; }
+.PmsManagement .actions.removebooking { background-color:red; }
+.PmsManagement .actions.removebooking:hover { background-color:darkred; }
+.PmsManagement .secondary_text { color:#aaa; font-size: 12px; margin-top: 2px; }
+.PmsManagement .actions:hover {
+     -moz-transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+    background-color:#44c767;  }
+.PmsManagement th {
+	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica,
+	sans-serif;
+	color: #6D929B;
+	border-right: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	border-top: 1px solid #C1DAD7;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 6px 6px 6px 12px;
+	background: #CAE8EA url(images/bg_header.jpg) no-repeat;
+}
+
+.PmsManagement td {
+	border-right: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	background: #fff;
+	padding: 6px 6px 6px 12px;
+	color: #000;
+}
+.PmsManagement td:nth-child(1) {
+    border-left: 1px solid #C1DAD7;
+    text-align: center;
+}
+
+.PmsManagement tr:nth-child(2) {
+	background: #F5FAFA;
+	color: #B4AA9D;
+}
+
+.PmsManagement .pmsinput {
+    font-size: 17px;
+    padding: 5px;
+}
+
 .PmsManagement .pmsbutton {
-	background-color:#44c767;
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	border-radius:4px;
-	border:1px solid #18ab29;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:17px;
-	padding:6px 20px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #2f6627;
+      background-color: #44c767;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #18ab29;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 17px;
+  padding: 6px 20px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #2f6627;
 }
-.PmsManagement .pmsbutton:hover {
-	background-color:#5cbf2a;
-}
-.PmsManagement .pmsbutton:active {
-	position:relative;
-	top:1px;
-}
+
+.PmsManagement .booking_options { text-align: right; }

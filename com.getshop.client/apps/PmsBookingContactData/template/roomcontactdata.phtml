@@ -1,0 +1,73 @@
+<?php
+/* @var $this ns_d3951fc4_6929_4230_a275_f2a7314f97c1\PmsBookingContactData */
+$booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+$errors = $this->getValidation();
+?>
+<h3 class='bottomborder'><? echo $this->__w("Room information"); ?></h3>
+<?
+foreach($booking->rooms as $room) {
+    for($i = 0; $i < $room->count; $i++) {
+        $guestData = new core_pmsmanager_PmsGuests();
+        $guestData->prefix = "47";
+        if(isset($room->guests[$i])) {
+            $guestData = $room->guests[$i];
+        }
+        
+        echo "<div class='roomdata' pmsBookingRoomId='".$room->pmsBookingRoomId."' offset='$i'>";
+        echo "<span class='col-33'><label>".$this->__w("Name")."<input type='text' name='name' value='".$guestData->name."'>";
+        $this->validateRoom($room->pmsBookingRoomId, "name", $i);
+        echo "</label></span>";
+        echo "<span class='col-33'>";
+        echo "<label>";
+        echo $this->__w("Phone") . "<bR>";
+        echo "<input type='text' name='prefix' value='+".$guestData->prefix."' style='width:15%;'>";
+        echo "<input type='text' name='phone' value='".$guestData->phone."' style='width:75%;'>";
+        echo "</label>";
+        echo "<div style='clear:both;'></div>";
+        $this->validateRoom($room->pmsBookingRoomId, "phone", $i);
+        echo "</span>";
+        echo "<span class='col-33'><label>".$this->__w("Email")."<input type='text' name='email' value='".$guestData->email."'>";
+        $this->validateRoom($room->pmsBookingRoomId, "email", $i);
+        echo "</label></span>";
+        echo "</div>";
+    }
+}
+?>
+<div style='clear:both;'></div>
+<br><br>
+<h3 class='bottomborder'><? echo $this->__w("Billing information"); ?></h3>
+<span class='col-33'><label><input type='radio' name='type' class="typeSelection" view='private_person_form'><? echo $this->__w("Private person"); ?></label></span>
+<span class='col-33'><label><input type='radio' name='type' class="typeSelection" view='company_form'><? echo $this->__w("Company"); ?></label></span>
+<div style='clear:both;'></div>
+<div class='private_person_form billingform' style='display:none;'>
+    <span class='col-33'><label><? echo $this->__w("Birth date"); ?><input type='text' name='birthday' value="<? echo $booking->contactData->birthday; ?>"><? $this->validateContactData("birthday"); ?></label></span>
+    <span class='col-33'><label><? echo $this->__w("Address"); ?><input type='text' name='address'  value="<? echo $booking->contactData->address; ?>"><? $this->validateContactData("address"); ?></label></span>
+    <span class='col-33'><label><? echo $this->__w("Postal code"); ?><input type='text' name='postalCode' value="<? echo $booking->contactData->postalCode; ?>"><? $this->validateContactData("postalCode"); ?></label></span>
+    <span class='col-33'><label><? echo $this->__w("City"); ?><input type='text' name='city' value="<? echo $booking->contactData->city; ?>"><? $this->validateContactData("city"); ?></label></span>
+    <span class='col-33'><label><? echo $this->__w("Email"); ?><input type='text' name='email' value="<? echo $booking->contactData->email; ?>"><? $this->validateContactData("email"); ?></label></span>
+</div>
+<div class='company_form billingform' style='display:none;'>
+    <span class='col-33'><label><? echo $this->__w("Orgnr"); ?><input type='text' name='orgid' value="<? echo $booking->contactData->orgid; ?>"><? $this->validateContactData("orgid"); ?></label></span>
+    <span class='col-33'><label><? echo $this->__w("Organisation name"); ?><input type='text' name='name' value="<? echo $booking->contactData->name; ?>"><? $this->validateContactData("name"); ?></label></span>
+    <span class='col-33'><label><? echo $this->__w("Address"); ?><input type='text' name='address' value="<? echo $booking->contactData->address; ?>"><? $this->validateContactData("address"); ?></label></span>
+    <span class='col-33'><label><? echo $this->__w("Postal code"); ?><input type='text' name='postalCode' value="<? echo $booking->contactData->postalCode; ?>"><? $this->validateContactData("postalCode"); ?></label></span>
+    <span class='col-33'><label><? echo $this->__w("City"); ?><input type='text' name='city' value="<? echo $booking->contactData->city; ?>"><? $this->validateContactData("city"); ?></label></span>
+    <span class='col-33'><label><? echo $this->__w("Email"); ?><input type='text' name='email' value="<? echo $booking->contactData->email; ?>"><? $this->validateContactData("email"); ?></label></span>
+</div>
+<div style='clear:both;'></div>
+<span class='complete_button'><? echo $this->__w("Complete order"); ?></span>
+<?
+echo $this->displayFailedBookingErrors();
+?>
+<script>
+    <? if($booking->contactData->type == 2) {
+        ?>
+        $('.typeSelection[view="company_form"]').click();
+        <?
+    } else {
+        ?>
+        $('.typeSelection[view="private_person_form"]').click();
+        <?
+    }
+    ?>
+</script>

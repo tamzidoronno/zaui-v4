@@ -11,15 +11,41 @@ class PmsBooking extends \WebshopApplication implements \Application {
     }
 
     public function render() {
+        if(!$this->getSelectedName()) {
+            echo "Please set name of booking engine.";
+            return;
+        }
         $this->includefile("pmsfront_1");
     }
     
     public function initBooking() {
+        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
+        /* @var $booking \core_pmsmanager_PmsBooking */
+        $range = new \core_pmsmanager_PmsBookingDateRange();
+        $range->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        if(isset($_POST['date']['end'])) {
+            $range->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        }
+        
+        $room = new \core_pmsmanager_PmsBookingRooms();
+        $room->bookingItemTypeId = $_POST['data']['product'];
+        
+        $booking->rooms = array();
+        $booking->dates = array();
+        $booking->dates[] = $range;
+        $booking->rooms[] = $room;
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+        
         
     }
     
     public function getText($key) {
         return $this->getConfigurationSetting($key);
+    }
+    
+    public function getSelectedName() {
+        return $this->getConfigurationSetting("booking_engine_name");
     }
     
     public function showSettings() {

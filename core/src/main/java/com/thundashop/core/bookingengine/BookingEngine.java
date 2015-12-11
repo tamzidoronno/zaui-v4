@@ -13,11 +13,11 @@ import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.bookingengine.data.BookingRequiredConfirmationList;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,15 +36,6 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
     private final Map<String, Availability> availabilities = new HashMap();
     private final Map<String, BookingItem> items = new HashMap();
     private final Map<String, BookingItemType> types = new HashMap();
-    
-    /**
-     * The keys and values.
-     * 
-     * This list contains all the bookings that require a confirmation.
-     * 
-     * Key = bookingItemTypeId
-     */
-    private final Map<String, BookingRequiredConfirmationList> requiredConfirmation = new HashMap();
     
     private BookingEngineConfiguration config = new BookingEngineConfiguration();
     
@@ -88,11 +79,6 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
             if (dataCommon instanceof Booking) {
                 Booking booking = (Booking)dataCommon;
                 bookings.put(booking.id, booking);
-            }
-            
-            if (dataCommon instanceof BookingRequiredConfirmationList) {
-                BookingRequiredConfirmationList confirmationList = (BookingRequiredConfirmationList)dataCommon;
-                requiredConfirmation.put(confirmationList.bookingItemTypeId, confirmationList);
             }
         }
     }
@@ -213,14 +199,15 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
             bookingGroup.bookingItemIds.add(booking.id);
         
             if (config.confirmationRequired) {
-                BookingRequiredConfirmationList list = getConfirmationListInternal(booking.bookingItemTypeId);
-                list.bookings.add(booking.id);
-                saveObject(list);
+                booking.needConfirmation = true;
+                saveObject(booking);
             } else {
                 BookingItem bookingItem = items.get(booking.bookingItemId);
                 bookingItem.bookingIds.add(booking.id);
                 saveObject(bookingItem);
             }
+            
+            this.bookings.put(booking.id, booking);
         }
         
         
@@ -245,22 +232,13 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
     public Booking getBooking(String id) {
         return bookings.get(id);
     }
-
-    private BookingRequiredConfirmationList getConfirmationListInternal(String bookingItemTypeId) {
-       BookingRequiredConfirmationList bookingsThatRequireConfirmation = requiredConfirmation.get(bookingItemTypeId);
-       
-       if (bookingsThatRequireConfirmation == null) {
-           bookingsThatRequireConfirmation = new BookingRequiredConfirmationList();
-           bookingsThatRequireConfirmation.bookingItemTypeId = bookingItemTypeId;
-           requiredConfirmation.put(bookingItemTypeId, bookingsThatRequireConfirmation);
-       }
-       
-       return bookingsThatRequireConfirmation;
-    }
     
-    public BookingRequiredConfirmationList getConfirmationList(String bookingItemTypeId) {
-       BookingRequiredConfirmationList bookingsThatRequireConfirmation = getConfirmationListInternal(bookingItemTypeId);
-       return bookingsThatRequireConfirmation.jsonClone();
+    public List<Booking> getConfirmationList(String bookingItemTypeId) {
+        return bookings.values().stream()
+                .filter(booking -> booking.bookingItemTypeId.equals(bookingItemTypeId))
+                .filter(booking -> booking.needConfirmation)
+                .collect(Collectors.toList());
+        
     }
 
     private void checkIfCanAddBookings(List<Booking> bookings) {
@@ -278,7 +256,7 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
             bookingsToConsider.stream().forEach(o -> flattenTimeLine.add(o));
             
             if (!flattenTimeLine.canAdd(booking)) {
-                throw new BookingEngineException("There is no space for this booking");
+                throw new BookingEngineException("There is no space for this booking, " + booking.getInformation());
             }
             
             checkedBookings.add(booking);
@@ -291,4 +269,25 @@ public class BookingEngine extends GetShopSessionBeanNamed  {
                 .mapToInt(item -> item.bookingSize)
                 .sum();
     }
+    
+    /**
+     * Returns a list of availability 
+     * within a given timePeriode
+     * 
+     * @param bookingItemTypeId
+     * @param start
+     * @param end
+     * @return 
+     */
+    public BookingTimeLineFlatten getTimelines(String bookingItemTypeId, Date start, Date end) {
+        int totalAvailble = getTotalSpotsForBookingItemType(bookingItemTypeId);
+        BookingTimeLineFlatten flatten = new BookingTimeLineFlatten(totalAvailble);
+        
+        bookings.values().stream()
+                .filter(booking -> booking.bookingItemTypeId.equals(bookingItemTypeId))
+                .filter(booking -> booking.conflictsWith(start, end))
+                .forEach(o -> flatten.add(o));
+        
+        return flatten;
+    } 
 }

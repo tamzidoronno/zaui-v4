@@ -6,11 +6,11 @@
 package com.getshop.bookingengine;
 
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.bookingengine.data.BookingRequiredConfirmationList;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -135,20 +135,6 @@ public class BookingEngineBookingTests extends TestCommon {
     }
     
     /**
-     * Feeding confirmationlist from database.
-     */
-    @Test
-    public void testRequiredListIsAddedFromDatabase() {
-        BookingRequiredConfirmationList req = new BookingRequiredConfirmationList();
-        req.id = UUID.randomUUID().toString();
-        req.bookingItemTypeId = "thisone";
-        
-        feedDataFromDatabase(bookingEngine, req);
-        BookingRequiredConfirmationList fetchedOne = bookingEngine.getConfirmationList("thisone");
-        Assert.assertEquals(req.id, fetchedOne.id);
-    }
-    
-    /**
      * If a booking is added and confirmation is required, is it then added to the list and
      * not directly to the booking item?
      */
@@ -164,8 +150,8 @@ public class BookingEngineBookingTests extends TestCommon {
         bookingEngine.addBookings(bookings);
         verify(databaseSaver, times(3)).saveObject(any(DataCommon.class), any(Credentials.class));
         
-        BookingRequiredConfirmationList requireConfirmation = bookingEngine.getConfirmationList(bookings.get(0).bookingItemTypeId);
-        Assert.assertEquals(1, requireConfirmation.bookings.size());
+        List<Booking> required = bookingEngine.getConfirmationList(bookings.get(0).bookingItemTypeId);
+        Assert.assertEquals(1, required.size());
         Assert.assertEquals(0, bookingEngine.getBookingItem(bookings.get(0).bookingItemId).bookingIds.size());
     }
  
@@ -185,8 +171,8 @@ public class BookingEngineBookingTests extends TestCommon {
         bookingEngine.addBookings(bookings);
         verify(databaseSaver, times(3)).saveObject(any(DataCommon.class), any(Credentials.class));
         
-        BookingRequiredConfirmationList requireConfirmation = bookingEngine.getConfirmationList(bookings.get(0).bookingItemTypeId);
-        Assert.assertEquals(0, requireConfirmation.bookings.size());
+        List<Booking> required = bookingEngine.getConfirmationList(bookings.get(0).bookingItemTypeId);
+        Assert.assertEquals(0, required.size());
         Assert.assertEquals(1, bookingEngine.getBookingItem(bookings.get(0).bookingItemId).bookingIds.size());
     }
  
@@ -206,7 +192,6 @@ public class BookingEngineBookingTests extends TestCommon {
     /**
      * Booking throws expection if there is not enough free spots.
      */
-    
     @Test(expected = BookingEngineException.class)
     public void addBooking_expectionThrownWhenFull() {
         List<Booking> bookings = new ArrayList();
@@ -221,4 +206,20 @@ public class BookingEngineBookingTests extends TestCommon {
         bookingEngine.addBookings(bookings);
     }
     
+    @Test
+    public void testGetTimeLineFunction() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        item.bookingSize = 1;
+        bookingEngine.saveBookingItem(item);
+        
+        List<Booking> bookings = new ArrayList();
+        bookings.add(helper.getValidBooking(1, bookingEngine, item));
+        bookings.add(helper.getValidBooking(2, bookingEngine, item));
+        
+        BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
+        BookingTimeLineFlatten timeLine = bookingEngine.getTimelines(type.id, bookings.get(0).startDate, bookings.get(1).endDate);
+        
+        Assert.assertEquals(2, timeLine.timeLines.size());
+    }
 }

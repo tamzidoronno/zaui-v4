@@ -21,8 +21,30 @@ public class Booking extends DataCommon {
     
     public Date startDate;
     public Date endDate;
+    public boolean needConfirmation = false;
 
     public String getInformation() {
         return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",startDate="+startDate+",endDate="+endDate+"]";
+    }
+
+    public boolean conflictsWith(Date start, Date end) {
+        if (start.equals(start) || start.equals(end) || end.equals(start) || end.equals(end)) {
+            return true;
+        }
+        
+        if (start.after(startDate) && start.before(endDate)) {
+            return true;
+        }
+        
+        if (end.after(startDate) && end.before(endDate)) {
+            return true;
+        }
+        
+        if (start.equals(startDate) && end.equals(endDate)) {
+            return true;
+        }
+        
+        return false;
+        
     }
 }

@@ -326,4 +326,16 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public boolean isAvailable(List<Booking> bookingsToAdd) {
         return false;
     }
+
+    @Override
+    public List<Booking> getAllBookings() {
+        ArrayList result = new ArrayList(bookings.values());
+        return result;
+    }
+
+    public void deleteBooking(String id) {
+        Booking booking = getBooking(id);
+        bookings.remove(id);
+        deleteObject(booking);
+    }
 }

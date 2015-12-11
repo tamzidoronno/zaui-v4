@@ -327,13 +327,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result = new ArrayList(bookings.values());
         } else {
             for(PmsBooking booking : bookings.values()) {
-                if(booking.state == filter.state) {
+                if(booking.state.equals(filter.state)) {
                     result.add(booking);
                 }
             }
         }
         
-        return result;
+        List<PmsBooking> finalized = finalizeList(result);
+        checkForIncosistentBookings();
+        return finalized;
+    }
+
+    private List<PmsBooking> finalizeList(List<PmsBooking> result) {
+        List<PmsBooking> finalized = new ArrayList();
+        for(PmsBooking toReturn : result) {
+            toReturn = finalize(toReturn);
+            if(toReturn != null) {
+                finalized.add(toReturn);
+            }
+        }
+        return finalized;
     }
 
     @Override
@@ -342,12 +355,60 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private PmsBooking finalize(PmsBooking booking) {
+        if(booking.rooms == null) {
+            deleteBooking(booking);
+            return null;
+        }
+        
         for(PmsBookingRooms room : booking.rooms) {
             if(room.booking == null && room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
             }
         }
+        
+        //make sure the booking is sane.
+        List<PmsBookingRooms> toRemove = new ArrayList();
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.booking == null) {
+                toRemove.add(room);
+            }
+        }
+        
+        if(!toRemove.isEmpty()) {
+            booking.rooms.removeAll(toRemove);
+            saveObject(booking);
+        }
+        if(booking.rooms.isEmpty()) {
+            deleteBooking(booking);
+            return null;
+        }
+        
         return booking;
+    }
+
+    private void deleteBooking(PmsBooking booking) {
+        bookings.remove(booking.id);
+        deleteObject(booking);
+    }
+
+    private void checkForIncosistentBookings() {
+        List<String> added = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.rooms != null) {
+                for(PmsBookingRooms room : booking.rooms) {
+                    if(room.bookingId != null) {
+                        added.add(room.bookingId);
+                    }
+                }
+            }
+        }
+        
+        List<Booking> allBookings = bookingEngine.getAllBookings();
+        for(Booking booking : allBookings) {
+            if(!added.contains(booking.id)) {
+                bookingEngine.deleteBooking(booking.id);
+            }
+        }
     }
     
 }

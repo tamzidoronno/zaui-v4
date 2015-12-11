@@ -1,5 +1,6 @@
 package com.thundashop.core.bookingengine;
 
+import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -47,4 +48,7 @@ public interface IBookingEngine {
     
     @Administrator
     public BookingEngineConfiguration getConfig();
+    
+    @Administrator
+    public List<Booking> getAllBookings();
 }

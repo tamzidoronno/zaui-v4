@@ -3,9 +3,11 @@
 $booking = $this->getSelectedBooking();
 $types = $this->getTypes();
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
-foreach($items as $item) {
-    $items[$item->id] = $item;
+$items2 = array();
+foreach ($items as $item) {
+    $items2[$item->id] = $item;
 }
+$items = $items2;
 ?>
 <div class='bookedrooms'>
     <h2>Rooms booked</h2>
@@ -47,12 +49,22 @@ foreach($items as $item) {
             <i class='fa fa-edit'></i> Assigned room
         </span>
         <span class='roompostfix'>
-            <? 
-            print_r($room->booking);
+            <?
+            if (!$room->booking->bookingItemId) {
+                echo "Not assigned yet";
+            } else {
+                $items[$room->booking->bookingItemId]->bookingItemName;
+            }
             ?>
+        </span>
+        <div style='clear:both;'></div>
+        <span class='roomprefix'>
+            <i class='fa fa-edit'></i> Price
+        </span>
+        <span class='roompostfix'>
+            <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
         </span>
 
     </div>
     <div style='clear:both;'></div>
-</div>
 </div>

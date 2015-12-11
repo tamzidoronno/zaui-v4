@@ -2,6 +2,7 @@
 .PmsManagement .actions.removebooking,.PmsManagement .actions.removedates { background-color:red; }
 .PmsManagement .actions.removebooking:hover,.PmsManagement .actions.removedates:hover { background-color:darkred; }
 .PmsManagement .secondary_text { color:#aaa; font-size: 12px; margin-top: 2px; }
+.PmsManagement .bookinginfo h2 { border-bottom: solid 1px #efefef; padding-bottom: 5px; }
 .PmsManagement .actions:hover {
      -moz-transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
@@ -64,5 +65,11 @@
 .PmsManagement .datesbooked input { font-size: 16px; }
 .PmsManagement .bookedrooms input { width: 25%; font-size: 16px; }
 .PmsManagement .roomprefix { display: inline-block; width: 20%; float:left; font-size: 16px; margin-bottom: 10px; }
-.PmsManagement .roompostfix { display: inline-block; width: 80%; float:left; font-size: 16px; }
-.PmsManagement .fa { border: solid 1px; padding: 3px; border-radius: 3px; background-color:#18ab29; color:#fff; }
+.PmsManagement .roompostfix { display: inline-block; width: 80%; float:left; font-size: 16px; line-height: 25px; }
+.PmsManagement .fa.fa-edit { border: solid 1px; padding: 3px; border-radius: 3px; background-color:#18ab29; color:#fff; cursor:pointer; }
+.PmsManagement .fa.fa-edit:hover { 
+      -moz-transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+    background-color: darkgreen; }

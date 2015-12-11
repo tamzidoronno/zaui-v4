@@ -149,15 +149,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(currentBooking.contactData.address.isEmpty()) {
             result.put("contact_address", 1);
         }
+        if(currentBooking.contactData.name.isEmpty()) {
+            result.put("contact_name", 1);
+        }
         
         if(currentBooking.contactData.type == 1) {
             if(currentBooking.contactData.birthday.isEmpty()) {
                 result.put("contact_birthday", 1);
             }
         } else {
-            if(currentBooking.contactData.name.isEmpty()) {
-                result.put("contact_name", 1);
-            }
             if(currentBooking.contactData.orgid.isEmpty()) {
                 result.put("contact_orgid", 1);
             }

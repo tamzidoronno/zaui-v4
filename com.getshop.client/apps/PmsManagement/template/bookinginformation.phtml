@@ -11,11 +11,14 @@ foreach ($types as $idx => $type) {
 }
 
 $booking = $pmsManager->getBooking($this->getSelectedName(), $bookingid);
+echo "<div class='bookinginfo'>";
 $this->includefile("contactdata");
 echo "<div style='clear:both;'></div>";
 $this->includefile("roomsbooked");
+$this->includefile("addons");
 $this->includefile("orderinformation");
-echo "<div style='clear:both;'></div>";
 ?>
-
+<br><br><br>
 <span class='pmsbutton' style='float:right;'>Done editing</span>
+<div style='clear:both;'></div>
+</div>

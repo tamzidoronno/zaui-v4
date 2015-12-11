@@ -1,3 +1,52 @@
+<?php
+ /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$booking = $this->getSelectedBooking();
+?>
+
 <div class='contactdata'>
     <h2>Contact data</h2>
+    <div style='padding-left: 10px;'>
+        <span class='roomprefix'>Type</span>
+        <span class='roompostfix'>
+        <? 
+        if($booking->contactData->type === 1) {
+            echo "Private";
+        } else {
+            echo "Company";
+        }
+        ?>
+        </span>
+        <div style='clear:both;'></div>
+        <? if($booking->contactData->type === 1) { ?>
+            <span class='roomprefix'>Birthday</span>
+            <span class='roompostfix'><? echo $booking->contactData->birthday; ?></span>
+            <div style='clear:both;'></div>
+        <? } else { ?>
+            <span class='roomprefix'>Orgid</span>
+            <span class='roompostfix'><? echo $booking->contactData->orgid; ?></span>
+            <div style='clear:both;'></div>
+        <? } ?>
+        <span class='roomprefix'>Name</span>
+        <span class='roompostfix'><? echo $booking->contactData->name; ?></span>
+        <div style='clear:both;'></div>
+        <span class='roomprefix'>Address</span>
+        <span class='roompostfix'><? echo $booking->contactData->address; ?></span>
+        <div style='clear:both;'></div>
+        <span class='roomprefix'>Postal code</span>
+        <span class='roompostfix'><? echo $booking->contactData->postalCode; ?></span>
+        <div style='clear:both;'></div>
+        <span class='roomprefix'>City</span>
+        <span class='roompostfix'><? echo $booking->contactData->city; ?></span>
+        <div style='clear:both;'></div>
+        <span class='roomprefix'>Email</span>
+        <span class='roompostfix'><? echo $booking->contactData->email; ?></span>
+        <div style='clear:both;'></div>
+        <span class='roomprefix'>Phone</span>
+        <span class='roompostfix'>+<? echo $booking->contactData->prefix . " " . $booking->contactData->phone; ?></span>
+        <div style='clear:both;'></div>
+        <span class='roomprefix'>User id</span>
+        <span class='roompostfix'><? echo $booking->userId; ?></span>
+        <div style='clear:both;'></div>
+        
+    </div>
 </div>

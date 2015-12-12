@@ -1,0 +1,38 @@
+<?php
+/* @var $this \ns_1be25b17_c17e_4308_be55_ae2988fecc7c\PmsPricing */
+$itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$start = $this->getStart();
+$end = $this->getEnd();
+$prices = $this->getPrices();
+?>
+<div gstype='form' method="selectDates">
+    <input type='text' gsname='start' value='<? echo $start; ?>'>
+    <input type='text' gsname='stop' value='<? echo $end; ?>'>
+    <span gstype='clicksubmit' class='pmsbutton'>Set date range</span>
+</div>
+
+<div class='pricetableview'>
+    <table>
+        <tr>
+            <th align='left'>Item</th>
+            <th>Default</th>
+            <?php
+            for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
+                echo "<td>".date("d.m.y", $i)."</td>";
+            }
+            ?>
+        </tr>
+    <?
+    foreach($itemTypes as $type) {
+        $defaultPrice = 0;
+        echo "<tr>";
+        echo "<td>" . $type->name . "</td><td><input type='text' value='".$defaultPrice."' class='priceinput'></td>";
+        for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
+            $date = date("d.m.Y", $i);
+            echo "<td><input type='text' value='".$defaultPrice."' class='priceinput'></td>";
+        }
+        echo "</tr>";
+    }
+    ?>
+    </table>    
+</div>

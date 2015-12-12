@@ -499,5 +499,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return "";
     }
 
+    @Override
+    public PmsPricing getPrices(Date start, Date end) {
+        return new PmsPricing();
+    }
+
     
 }

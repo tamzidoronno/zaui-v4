@@ -163,6 +163,17 @@ public class AddApplicationsToDatabase {
         PmsBookingContactData.defaultActivate = false;
         apps.add(PmsBookingContactData);
         
+        Application PmsPricing = createSettings("PmsPricing",
+        "1be25b17-c17e-4308-be55-ae2988fecc7c",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsPricing.isPublic = true;
+        PmsPricing.isFrontend = true;
+        PmsPricing.moduleId = "other";
+        PmsPricing.defaultActivate = false;
+        apps.add(PmsPricing);
+        
         return apps;
     }
 

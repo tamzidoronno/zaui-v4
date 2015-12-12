@@ -6,9 +6,15 @@
 package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSessionScope;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,4 +193,30 @@ public class ManagerSubBase {
     public void setStoreId(String storeId) {
         this.storeId = storeId;
     }
+  
+    
+    protected <V> V deepClone(V object) {
+        try {
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          ObjectOutputStream oos = new ObjectOutputStream(baos);
+          oos.writeObject(object);
+          ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+          ObjectInputStream ois = new ObjectInputStream(bais);
+          return (V) ois.readObject();
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+          return null;
+        }
+      }
+//        if (result == null) {
+//            return result;
+//        }
+//        
+//        Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
+//        String json = gson.toJson((Object) result);
+//        V retObject = (V)gson.fromJson(json, result.getClass());
+//        
+//        return retObject;
+//    }
 }

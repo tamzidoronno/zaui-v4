@@ -6,6 +6,7 @@
 package com.getshop.bookingengine;
 
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingEngineAbstract;
 import com.thundashop.core.bookingengine.data.Availability;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.BookingEngineException;
@@ -21,6 +22,7 @@ import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -32,7 +34,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/All.xml")
 public class BookingEngineAvailabilityTests extends TestCommon {
-    
+    @InjectMocks
+    @Spy
+    BookingEngineAbstract abstractEngine;
+
     @InjectMocks
     BookingEngine bookingEngine;
     
@@ -41,6 +46,7 @@ public class BookingEngineAvailabilityTests extends TestCommon {
     
     @After
     public void setup() {
+        abstractEngine.setCredentials(new Credentials(BookingEngine.class));
         bookingEngine.setCredentials(new Credentials(BookingEngine.class));
     }
     
@@ -210,6 +216,9 @@ public class BookingEngineAvailabilityTests extends TestCommon {
         availability.id = "TESTME";
         feedDataFromDatabase(bookingEngine, availability);
         
-        assertEquals(availability, bookingEngine.getAvailbility("TESTME"));
+        Availability fromDb = bookingEngine.getAvailbility("TESTME");
+        
+        assertEquals(availability.id, fromDb.id);
     }
+    
 }

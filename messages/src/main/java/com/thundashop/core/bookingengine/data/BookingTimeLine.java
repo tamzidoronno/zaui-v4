@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.bookingengine.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.UUID;
  *
  * @author ktonder
  */
-public class BookingTimeLine implements Comparable<BookingTimeLine> {
+public class BookingTimeLine implements Comparable<BookingTimeLine>, Serializable {
     public String id = UUID.randomUUID().toString();
     public List<String> bookingIds = new ArrayList();
     public int count;

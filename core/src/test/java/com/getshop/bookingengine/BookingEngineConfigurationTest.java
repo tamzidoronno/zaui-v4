@@ -6,6 +6,7 @@
 package com.getshop.bookingengine;
 
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingEngineAbstract;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Matchers.any;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -25,10 +27,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/All.xml")
 public class BookingEngineConfigurationTest extends TestCommon {
-    
+    @InjectMocks
+    @Spy
+    BookingEngineAbstract abstractEngine;
+
     @InjectMocks
     BookingEngine bookingEngine;
 
+    
     @Test
     public void testIsConfirmationRequired() {
         bookingEngine.setConfirmationRequired(true);

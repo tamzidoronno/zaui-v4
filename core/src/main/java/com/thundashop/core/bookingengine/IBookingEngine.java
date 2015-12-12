@@ -30,7 +30,7 @@ public interface IBookingEngine {
     public BookingItemType getABookingItemType(String id);
     
     @Administrator
-    public BookingItemType saveABookingItemType(BookingItemType type);
+    public BookingItemType updateBookingItemType(BookingItemType type);
     
     @Administrator
     public BookingItem saveBookingItem(BookingItem item);
@@ -42,7 +42,7 @@ public interface IBookingEngine {
     public List<BookingItem> getBookingItems();
     
     @Administrator
-    public List<BookingItem> deleteBookingItem(String id);
+    public void deleteBookingItem(String id);
     
     @Administrator
     public void setConfirmationRequired(boolean confirmationRequired);

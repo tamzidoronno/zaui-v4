@@ -41,4 +41,7 @@ public interface IPmsManager {
     
     @Administrator
     public String updateType(String roomId, String bookingId, Integer priceType);
+    
+    @Administrator
+    public void saveBooking(PmsBooking booking);
 }

@@ -11,6 +11,7 @@ import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pkkcontrol.PkkControlData;
@@ -171,6 +172,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private HashMap<String, String> validatePhone(String phone, String countryCode) {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         String prefix = "";
+        phone = phone.replace("++", "+");
+        phone = phone.replace("++", "+");
+        phone = phone.replace("++", "+");
+        phone = phone.replace("++", "+");
         try {
             PhoneNumber phonecheck = phoneUtil.parse(phone, countryCode);
             if (!phoneUtil.isValidNumber(phonecheck)) {
@@ -457,8 +462,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void saveBooking(PmsBooking booking) {
+    @Override
+    public void saveBooking(PmsBooking booking) throws ErrorException {
+        if(booking.id == null || booking.id.isEmpty() || getBooking(booking.id) == null) {
+            throw new ErrorException(1000015);
+        }
+        validatePhoneNumbers(booking);
+        bookings.put(booking.id, booking);
         saveObject(booking);
     }
+
+    private void validatePhoneNumbers(PmsBooking booking) {
+        for(PmsBookingRooms room : booking.rooms) {
+            for(PmsGuests guest : room.guests) {
+                HashMap<String, String> result = validatePhone("+" + guest.prefix + "" + guest.phone, "no");
+                if(result != null) {
+                    guest.prefix = result.get("prefix");
+                    guest.phone = result.get("phone");
+                } else {
+                    guest.prefix = "47";
+                    guest.phone = "";
+                }
+            }
+        }
+    }
+
     
 }

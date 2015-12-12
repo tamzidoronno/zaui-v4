@@ -4,6 +4,19 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .setFilter', app.PmsManagement.setFilter);
         $(document).on('click', '.PmsManagement .moreinformationaboutbooking', app.PmsManagement.showMoreInformation);
         $(document).on('click', '.PmsManagement .roomprefix .fa-edit', app.PmsManagement.toggleEditMode);
+        $(document).on('click', '.PmsManagement .editGuestToggle', app.PmsManagement.editGuestToggle);
+        $(document).on('change', '.PmsManagement [gsname="numberofguests"]', app.PmsManagement.editGuestToggle);
+    },
+    editGuestToggle : function() {
+        var row = $(this).closest('.roomattribute');
+        var guests = $('[gsname="numberofguests"]').val();
+        for(var i = 1; i <= 20; i++) {
+            if(i >= guests) {
+                $('.guestrow_'+i).hide();
+            } else {
+                $('.guestrow_'+i).show();
+            }
+        }
     },
     toggleEditMode : function() {
         console.log('togglign');

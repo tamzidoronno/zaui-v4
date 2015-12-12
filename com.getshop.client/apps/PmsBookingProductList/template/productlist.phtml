@@ -1,7 +1,9 @@
 <?php
 /* @var $this ns_ed7efba0_de37_4cd8_915b_cc7be10b8b8b\PmsBookingProductList */
 
-$rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()+86400));
+$rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), 
+        $this->convertToJavaDate($this->getStartDate()), 
+        $this->convertToJavaDate($this->getEndDate()));
 $booking = $this->getCurrentBooking();
 
 ?>

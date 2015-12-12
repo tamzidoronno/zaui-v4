@@ -59,5 +59,18 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
             $this->setConfigurationSetting($key, $value);
         }
     }
+
+    public function getStartDate() {
+        return strtotime($this->getCurrentBooking()->rooms[0]->date->start);
+    }
+
+    public function getEndDate() {
+        $end = $this->getCurrentBooking()->rooms[0]->date->end;
+        if($end) {
+            return strtotime($end);
+        }
+        return $this->getStartDate()+86400;
+    }
+
 }
 ?>

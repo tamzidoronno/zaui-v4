@@ -21,6 +21,7 @@ import com.thundashop.core.usermanager.data.User;
 import static java.lang.Math.random;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -60,13 +61,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     @Override
-    public List<Room> getAllRoomTypes(long start, long end) {
+    public List<Room> getAllRoomTypes(Date start, Date end) {
         List<Room> result = new ArrayList();
         List<BookingItemType> allGroups = bookingEngine.getBookingItemTypes();
         for(BookingItemType type : allGroups) {
             Room room = new Room();
             room.type = type;
-            room.price = 1.0;
+            room.price = calculatePrice(type.id, start, end);
             result.add(room);
         }
         return result;
@@ -250,6 +251,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         List<Booking> bookingsToAdd = new ArrayList();
         for(PmsBookingRooms room : booking.rooms) {
+            room.priceType = prices.defaultPriceType;
             Booking bookingToAdd = new Booking();
             bookingToAdd.startDate = room.date.start;
             if(room.date.end == null) {
@@ -511,6 +513,46 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveObject(newPrices);
         
         return prices;
+    }
+
+
+    private Double calculatePrice(String typeId, Date start, Date end) {
+        HashMap<String, Double> priceRange = prices.specifiedPrices.get(typeId);
+        if(priceRange == null) {
+            return 0.0;
+        }
+        
+        Double defaultPrice = priceRange.get("default");
+        if(defaultPrice == null) {
+            defaultPrice = 0.0;
+        }
+        
+        if(prices.defaultPriceType != 1) {
+            return defaultPrice;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        int days = 0;
+        Double total = 0.0;
+        while(true) {
+            days++;
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            String dateToUse = formatter.format(cal.getTime());
+            if(priceRange.get(dateToUse) != null) {
+                total += priceRange.get(dateToUse);
+            } else {
+                total += defaultPrice;
+            }
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(cal.getTime().after(end) || cal.getTime().equals(end)) {
+                break;
+            }
+        }
+        
+        total = total / days;
+        
+        return total;
     }
 
     

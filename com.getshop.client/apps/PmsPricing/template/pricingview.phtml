@@ -94,7 +94,7 @@ foreach($itemTypes as $item) {
             echo "<tr itemtype='".$type->id."'>";
             echo "<td><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td><td><input date='default' type='text' value='".$price."' class='priceinput'></td>";
             for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
-                $date = date("d.m.Y", $i);
+                $date = date("d-m-Y", $i);
                 $weekday = date("w", $i);
                 $price = "";
                 if(isset($prices->{$type->id}->{$date})) {

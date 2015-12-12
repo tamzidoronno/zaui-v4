@@ -14,6 +14,6 @@ import java.util.List;
  * @author ktonder
  */
 public class BookingGroup extends DataCommon {
-    public List<String> bookingItemIds = new ArrayList();
+    public List<String> bookingIds = new ArrayList();
     public String userCreatedByUserId;
 }

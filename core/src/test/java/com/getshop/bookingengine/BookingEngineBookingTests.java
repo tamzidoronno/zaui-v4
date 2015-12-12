@@ -6,6 +6,7 @@
 package com.getshop.bookingengine;
 
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingEngineAbstract;
 import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingGroup;
@@ -26,6 +27,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -38,6 +40,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("/All.xml")
 public class BookingEngineBookingTests extends TestCommon {
     @InjectMocks
+    @Spy
+    BookingEngineAbstract abstractEngine;
+
+    @InjectMocks
     BookingEngine bookingEngine;
     
     @Autowired
@@ -45,6 +51,7 @@ public class BookingEngineBookingTests extends TestCommon {
     
     @After
     public void setup() {
+        abstractEngine.setCredentials(new Credentials(BookingEngine.class));
         bookingEngine.setCredentials(new Credentials(BookingEngine.class));
     }
     
@@ -70,7 +77,7 @@ public class BookingEngineBookingTests extends TestCommon {
         bookings.add(helper.getValidBooking(1, bookingEngine));
         bookings.add(helper.getValidBooking(2, bookingEngine));
         
-        setUserLoggedIn(bookingEngine);
+        setUserLoggedIn(abstractEngine);
         BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
         Assert.assertNotNull(bookingGroup.userCreatedByUserId);
     }
@@ -221,5 +228,177 @@ public class BookingEngineBookingTests extends TestCommon {
         BookingTimeLineFlatten timeLine = bookingEngine.getTimelines(type.id, bookings.get(0).startDate, bookings.get(1).endDate);
         
         Assert.assertEquals(2, timeLine.timeLines.size());
+    }
+    
+    @Test
+    public void testCanAdd() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        item.bookingSize = 1;
+        bookingEngine.saveBookingItem(item);
+        
+        List<Booking> bookings = new ArrayList();
+        bookings.add(helper.getValidBooking(1, bookingEngine, item));
+        bookings.add(helper.getValidBooking(2, bookingEngine, item));
+        
+        boolean canAdd = bookingEngine.canAdd(bookings);
+        Assert.assertEquals(true, canAdd);
+        
+        bookings.add(helper.getValidBooking(2, bookingEngine, item));
+        canAdd = bookingEngine.canAdd(bookings);
+        Assert.assertEquals(false, canAdd);
+    }
+    
+    @Test
+    public void testDeleteBooking() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        bookingEngine.saveBookingItem(item);
+        
+        List<Booking> bookings = new ArrayList();
+        bookings.add(helper.getValidBooking(1, bookingEngine, item));
+        BookingGroup group = bookingEngine.addBookings(bookings);
+        
+        
+        reset(databaseSaver);
+        bookingEngine.deleteBooking(group.bookingIds.get(0));
+        verify(databaseSaver, times(1)).deleteObject(any(Booking.class), any(Credentials.class));
+       
+        Booking deletedBooking = bookingEngine.getBooking(group.bookingIds.get(0));
+        Assert.assertNull(deletedBooking);
+    }
+    
+    @Test(expected = BookingEngineException.class)
+    public void testDeleteBookingItem_failsIfBookingNotExists() {
+        bookingEngine.deleteBookingItem("not exists");
+    }
+   
+    @Test
+    public void testDeleteBookingItem() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        bookingEngine.saveBookingItem(item);
+        
+        reset(databaseSaver);
+        bookingEngine.deleteBookingItem(item.id);
+        verify(databaseSaver, times(1)).deleteObject(any(Booking.class), any(Credentials.class));
+    }
+    
+    @Test(expected = BookingEngineException.class)
+    public void testDeleteBookingItem_ifBookingItemHasBookings() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        BookingItem savedItem = bookingEngine.saveBookingItem(item);
+        
+        List<Booking> bookings = new ArrayList();
+        bookings.add(helper.getValidBooking(1, bookingEngine, item));
+        BookingGroup group = bookingEngine.addBookings(bookings);
+        
+        bookingEngine.deleteBookingItem(savedItem.id);
+    }
+    
+    @Test
+    public void testChangeBookingType() {
+        bookingEngine.setConfirmationRequired(true);
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItemType type2 = bookingEngine.createABookingItemType("Type2");
+        
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        BookingItem item2 = helper.createAValidBookingItem(type2.id);
+        BookingItem savedItem = bookingEngine.saveBookingItem(item);
+        BookingItem savedItem2 = bookingEngine.saveBookingItem(item2);
+        
+        List<Booking> bookings = new ArrayList();
+        bookings.add(helper.getValidBooking(1, bookingEngine, savedItem));
+        bookings.get(0).bookingItemId = null;
+        bookings.get(0).bookingItemTypeId = type.id;
+        
+        BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
+        String bookingId = bookingGroup.bookingIds.get(0);
+        
+        reset(databaseSaver);
+        bookingEngine.changeTypeOnBooking(bookingId, type2.id);
+        verify(databaseSaver, times(1)).saveObject(any(Booking.class), any(Credentials.class));
+    }
+    
+    @Test(expected = BookingEngineException.class)
+    public void testChangeBookingType_throwsException_bookingItemTypeExists() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        BookingItem savedItem = bookingEngine.saveBookingItem(item);
+        
+        List<Booking> bookings = new ArrayList();
+        bookings.add(helper.getValidBooking(1, bookingEngine, savedItem));
+        BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
+        
+        bookingEngine.changeTypeOnBooking(bookingGroup.bookingIds.get(0), "not_exists");
+    }
+    
+    @Test(expected = BookingEngineException.class)
+    public void testChangeBookingType_throwsException_ifBookingItemAlreadySetToBooking() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        BookingItem savedItem = bookingEngine.saveBookingItem(item);
+ 
+        List<Booking> bookings = new ArrayList();
+        bookings.add(helper.getValidBooking(1, bookingEngine, savedItem));
+ 
+        BookingItemType type2 = bookingEngine.createABookingItemType("Type2");
+        BookingItem item2 = helper.createAValidBookingItem(type2.id);
+        BookingItem savedItem2 = bookingEngine.saveBookingItem(item2);
+        
+        bookings.get(0).bookingItemTypeId = type.id;
+        
+        Assert.assertNotNull(bookings.get(0).bookingItemId);
+        BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
+        String bookingId = bookingGroup.bookingIds.get(0);
+        
+        bookingEngine.changeTypeOnBooking(bookingId, type2.id);
+    }
+    
+    public void testChangeBookingType_throwsException_bookingNotExists() {
+        bookingEngine.changeTypeOnBooking("not exists", "not_exists");
+    }
+       
+    @Test(expected = BookingEngineException.class)
+    public void testChangeBookingType_throwsException_notAvailableSpots() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        BookingItem savedItem = bookingEngine.saveBookingItem(item);
+        
+        BookingItemType type2 = bookingEngine.createABookingItemType("Type2");
+        BookingItem item2 = helper.createAValidBookingItem(type2.id);
+        BookingItem savedItem2 = bookingEngine.saveBookingItem(item2);
+        
+        List<Booking> bookings = new ArrayList();
+        bookings.add(helper.getValidBooking(1, bookingEngine, savedItem));
+        bookings.add(helper.getValidBooking(1, bookingEngine, savedItem2));
+        
+        bookings.get(0).bookingItemTypeId = type.id;
+        bookings.get(1).bookingItemTypeId = type2.id;
+        
+        BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
+        
+        bookingEngine.changeTypeOnBooking(bookingGroup.bookingIds.get(1), type.id);
+    }
+    
+    @Test
+    public void testCanAddBookingsIfParalellByItemTypeIds() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        BookingItem savedItem = bookingEngine.saveBookingItem(item);
+        
+        BookingItemType type2 = bookingEngine.createABookingItemType("Type2");
+        BookingItem item2 = helper.createAValidBookingItem(type2.id);
+        BookingItem savedItem2 = bookingEngine.saveBookingItem(item2);
+        
+        List<Booking> bookings = new ArrayList();
+        bookings.add(helper.getValidBooking(1, bookingEngine, savedItem));
+        bookings.add(helper.getValidBooking(1, bookingEngine, savedItem2));
+        
+        bookings.get(0).bookingItemTypeId = type.id;
+        bookings.get(1).bookingItemTypeId = type2.id;
+        
+        bookingEngine.addBookings(bookings);
     }
 }

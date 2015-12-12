@@ -6,10 +6,12 @@
 package com.getshop.bookingengine;
 
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingEngineAbstract;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.databasemanager.data.Credentials;
+import java.util.UUID;
 import org.junit.After;
 import org.junit.Assert;
 import static org.junit.Assert.assertNotNull;
@@ -17,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import static org.mockito.Mockito.*;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -32,6 +35,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class BookingEngineTest extends TestCommon {
    
     @InjectMocks
+    @Spy
+    BookingEngineAbstract abstractEngine;
+    
+    @InjectMocks
     BookingEngine bookingEngine;
     
     @Autowired
@@ -39,6 +46,7 @@ public class BookingEngineTest extends TestCommon {
     
     @After
     public void setup() {
+        abstractEngine.setCredentials(new Credentials(BookingEngine.class));
         bookingEngine.setCredentials(new Credentials(BookingEngine.class));
     }
     
@@ -58,6 +66,26 @@ public class BookingEngineTest extends TestCommon {
         
         verify(databaseSaver, times(1)).saveObject(any(BookingItemType.class), any(Credentials.class));
         assertNotNull(type2);
+    }
+    
+    @Test(expected = BookingEngineException.class)
+    public void throwExecptionIfUpdatingANoneExsistingType() {
+        BookingItemType type = new BookingItemType();
+        type.id = UUID.randomUUID().toString();
+        bookingEngine.updateBookingItemType(type);
+    }
+    
+    @Test
+    public void canUpdateBookingItemType() {
+        BookingItemType type = bookingEngine.createABookingItemType("Booking Item Test");
+        type.name = "New Booking Item Name";
+        
+        reset(databaseSaver);
+        bookingEngine.updateBookingItemType(type);
+        String newName = bookingEngine.getBookingItemType(type.id).name;
+        verify(databaseSaver, times(1)).saveObject(any(BookingItemType.class), any(Credentials.class));
+        
+        Assert.assertEquals("New Booking Item Name", newName);
     }
     
     /**
@@ -93,7 +121,7 @@ public class BookingEngineTest extends TestCommon {
         item.id = "TESTME";
         feedDataFromDatabase(bookingEngine, item);
         
-        Assert.assertEquals(item, bookingEngine.getBookingItem("TESTME"));
+        Assert.assertEquals(item.id, bookingEngine.getBookingItem("TESTME").id);
     }
     
     /**
@@ -103,9 +131,9 @@ public class BookingEngineTest extends TestCommon {
     public void testUsingDataFromDatabaseBookingItemType() {
         BookingItemType itemType = new BookingItemType();
         itemType.id = "TESTME";
-        feedDataFromDatabase(bookingEngine, itemType);
+        feedDataFromDatabase(abstractEngine, itemType);
         
-        Assert.assertEquals(itemType, bookingEngine.getBookingItemType("TESTME"));
-    }
-   
+        Assert.assertEquals(itemType.id, bookingEngine.getBookingItemType("TESTME").id);
+    }  
+    
 }

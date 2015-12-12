@@ -54,7 +54,9 @@ public class TestCommon implements ApplicationContextAware {
                 Object ret = invocation.getMock();
                 
                 DataCommon data = (DataCommon) args[0];
-                data.id = UUID.randomUUID().toString();
+                if (data.id == null || data.id.isEmpty()) {
+                    data.id = UUID.randomUUID().toString();
+                }
                 
                 return invocation;
             }}).when(databaseSaver).saveObject(any(DataCommon.class), any(Credentials.class));

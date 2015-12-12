@@ -30,7 +30,7 @@ public class BookingTimeLineFlattenTest {
      */
     @Test
     public void allInRow() {
-        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10);
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 08:00"));
         flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-06 08:00"));
         flattenTimeline.add(getBooking("2015-01-08 08:00", "2015-01-10 08:00"));
@@ -49,7 +49,7 @@ public class BookingTimeLineFlattenTest {
     
     @Test
     public void twoLinesOverlapping() {
-        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10);
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
         flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-06 08:00"));
         
@@ -82,7 +82,7 @@ public class BookingTimeLineFlattenTest {
     
     @Test
     public void twoLinesOverlapping_2() {
-        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10);
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
         flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-06 08:00"));
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
         
@@ -117,7 +117,7 @@ public class BookingTimeLineFlattenTest {
     
     @Test
     public void twoLinesOverlapping_3() {
-        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10);
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
         flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-06 08:00"));
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
         flattenTimeline.add(getBooking("2015-01-06 06:00", "2015-01-08 12:00"));
@@ -163,7 +163,7 @@ public class BookingTimeLineFlattenTest {
     
     @Test
     public void twoLinesOverlapping_4() {
-        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10);
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
         flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-06 08:00"));
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
         flattenTimeline.add(getBooking("2015-01-06 06:00", "2015-01-08 12:00"));
@@ -208,7 +208,7 @@ public class BookingTimeLineFlattenTest {
      */
     @Test
     public void testExact() {
-        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10);
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
@@ -225,6 +225,7 @@ public class BookingTimeLineFlattenTest {
         booking.id = UUID.randomUUID().toString();
         booking.startDate = getDate(startDate);
         booking.endDate = getDate(endDate);
+        booking.bookingItemTypeId = "bookingTypeId";
 
         return booking;
     }

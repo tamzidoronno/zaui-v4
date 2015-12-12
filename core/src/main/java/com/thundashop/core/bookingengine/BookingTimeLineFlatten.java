@@ -7,6 +7,7 @@ package com.thundashop.core.bookingengine;
 
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,16 +20,22 @@ import java.util.Map;
  * 
  * @author ktonder
  */
-public class BookingTimeLineFlatten {
+public class BookingTimeLineFlatten implements Serializable { 
     public Map<String, BookingTimeLine> timeLines = new HashMap();
     
     private final int totalAvailableSpots;
+    private final String bookingItemTypeId;
 
-    public BookingTimeLineFlatten(int totalAvailableSpots) {
+    public BookingTimeLineFlatten(int totalAvailableSpots, String bookingItemTypeId) {
         this.totalAvailableSpots = totalAvailableSpots;
+        this.bookingItemTypeId = bookingItemTypeId;
     }
     
     public void add(Booking booking) {
+        if (!booking.bookingItemTypeId.equals(bookingItemTypeId)) {
+            return;
+        }
+        
         List<BookingTimeLine> overlappingLines = getLinesOverlapping(booking);
         if (overlappingLines.size() > 0) {
             split(overlappingLines, booking);

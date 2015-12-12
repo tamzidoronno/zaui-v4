@@ -7,7 +7,15 @@ $items2 = array();
 foreach ($items as $item) {
     $items2[$item->id] = $item;
 }
+
 $items = $items2;
+$pricetypes = array();
+$pricetypes[1] = "Daily";
+$pricetypes[2] = "Monthly";
+$pricetypes[3] = "Weekly";
+$pricetypes[4] = "Per minute";
+$pricetypes[5] = "Per hour";
+$pricetypes[6] = "Per seconds";
 ?>
 <div class='bookedrooms'>
     <h2>Rooms booked</h2>
@@ -64,6 +72,14 @@ $items = $items2;
         <span class='roompostfix'>
             <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
         </span>
+        <div style='clear:both;'></div>
+        <span class='roomprefix'>
+            <i class='fa fa-edit'></i> Price type
+        </span>
+        <span class='roompostfix'>
+            <? echo $pricetypes[$room->priceType]; ?>
+        </span>
+        <div style='clear:both;'></div>
 
     </div>
     <div style='clear:both;'></div>

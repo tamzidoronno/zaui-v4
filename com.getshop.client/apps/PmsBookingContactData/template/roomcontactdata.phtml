@@ -2,6 +2,15 @@
 /* @var $this ns_d3951fc4_6929_4230_a275_f2a7314f97c1\PmsBookingContactData */
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
 $errors = $this->getValidation();
+
+$pricetypes = array();
+$pricetypes[1] = "Daily";
+$pricetypes[2] = "Monthly";
+$pricetypes[3] = "Weekly";
+$pricetypes[4] = "Per minut";
+$pricetypes[5] = "Hourly";
+$pricetypes[6] = "Per second";
+
 ?>
 <h3 class='bottomborder'><? echo $this->__w("Room information"); ?></h3>
 <?

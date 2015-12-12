@@ -256,7 +256,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 bookingEngine.addBookings(bookingsToAdd);
                 booking.attachBookingItems(bookingsToAdd);
                 booking.sessionId = null;
-                if(booking.userId == null) {
+                if(booking.userId == null || booking.userId.isEmpty()) {
                     booking.userId = createUser(booking).id;
                 }
             } else {

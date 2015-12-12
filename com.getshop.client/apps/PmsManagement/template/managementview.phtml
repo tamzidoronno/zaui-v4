@@ -35,7 +35,7 @@ foreach($types as $type) {
         <span gstype="submit" class="pmsbutton setFilter">Show</span>
     </span>
     
-    <input type='text' placeholder='Search' class='pmsinput searchword' value="<? echo $filter->searchWord; ?>">
+    <input type='text' placeholder='Search' class='pmsinput searchword' value="<? echo @$filter->searchWord; ?>">
     <span gstype="submit" class="pmsbutton addGroupOptions setFilter">Search</span>
 </div>
 <br><br>

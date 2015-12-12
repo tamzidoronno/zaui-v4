@@ -111,7 +111,17 @@ thundashop.framework = {
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('click', '.simpleaddrow', this.simpleaddrow);
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
+        $(document).on('click', '[gstype="submitToInfoBox"]', thundashop.framework.postToInformationBox);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+    },
+    
+    postToInformationBox : function() {
+        var form = $(this).closest('[gstype="form"]');
+        var data = thundashop.framework.createGsArgs(form);
+        var method = form.attr('method');
+        var event = thundashop.Ajax.createEvent('',method,$(this),data);
+        var title = $('#informationboxtitle').text();
+        thundashop.common.showInformationBox(event, title);
     },
     
     resetMobileLayout : function() {

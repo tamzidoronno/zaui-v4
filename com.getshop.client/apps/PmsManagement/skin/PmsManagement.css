@@ -73,3 +73,7 @@
     -o-transition: all 0.2s ease-in;
     transition: all 0.2s ease-in;
     background-color: darkgreen; }
+
+.PmsManagement .pmsbutton.tiny { padding-top: 2px; padding-bottom: 2px; }
+.PmsManagement .bookinginfo select { font-size: 16px; }
+.PmsManagement .bookinginfo .editmode { display: none; }

@@ -3,6 +3,22 @@ app.PmsManagement = {
         $(document).on('change', '.PmsManagement .attachedProduct', app.PmsManagement.attachProduct);
         $(document).on('click', '.PmsManagement .setFilter', app.PmsManagement.setFilter);
         $(document).on('click', '.PmsManagement .moreinformationaboutbooking', app.PmsManagement.showMoreInformation);
+        $(document).on('click', '.PmsManagement .roomprefix .fa-edit', app.PmsManagement.toggleEditMode);
+        $(document).on('click', '.PmsManagement .setNewData', app.PmsManagement.setNewData);
+    },
+    setNewData : function() {
+    },
+    toggleEditMode : function() {
+        var row = $(this).closest('.roomattribute');
+        var view = row.find('.viewmode');
+        var edit = row.find('.editmode');
+        if(view.is(':visible')) {
+            view.hide();
+            edit.show();
+        } else {
+            view.show();
+            edit.hide();
+        }
     },
     showMoreInformation : function() {
         var data = {

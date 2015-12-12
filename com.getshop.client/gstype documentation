@@ -1,8 +1,13 @@
 attribute gstypes;
-    form, need method attribute
-        example: <div gstype="form" method="addEntry">
-                    <input gstype="submit" type="button">
-                 </div>
+    form, need method attribute example: 
+        <div gstype="form" method="addEntry">
+            <input gstype="submit" type="button">
+        </div>
+
+    form posted to information box, need method attribute example: 
+        <div gstype="form" method="addEntry">
+            <input gstype="submitToInfoBox" type="button">
+        </div>
 
     submit, when click event is triggered, form is submitted
         example: <input gstype="submit" type="button">

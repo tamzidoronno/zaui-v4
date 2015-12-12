@@ -16,10 +16,17 @@ class PmsManagement extends \WebshopApplication implements \Application {
      */
     public function getTypes() {
         $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        $types2 = array();
         foreach ($types as $idx => $type) {
-            $types[$type->id] = $type;
+            $types2[$type->id] = $type;
         }
-        return $types;
+        return $types2;
+    }
+    
+    public function setItemType() {
+        
+        
+        $this->showBookingInformation();
     }
     
     /**
@@ -85,6 +92,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->endDate = $this->formatTimeToJavaDate(time()+(86400*3));
         return $filter;
     }
+
 
 }
 ?>

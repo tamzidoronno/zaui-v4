@@ -22,6 +22,13 @@ class PmsPricing extends \WebshopApplication implements \Application {
         }
     }
 
+    public function selectDates() {
+        $start = $_POST['data']['start'];
+        $end = $_POST['data']['end'];
+        
+        $_SESSION['pmspricing'][$this->getSelectedName()]['start'] = $start;
+        $_SESSION['pmspricing'][$this->getSelectedName()]['end'] = $end;
+    }
 
     public function showSettings() {
         $this->includefile("settings");
@@ -34,17 +41,23 @@ class PmsPricing extends \WebshopApplication implements \Application {
     }
 
     public function getStart() {
+        if(isset($_SESSION['pmspricing'][$this->getSelectedName()]['start'])) {
+            return $_SESSION['pmspricing'][$this->getSelectedName()]['start'];
+        }
         return date("m.d.Y", time());
     }
 
     public function getEnd() {
-        return date("m.d.Y", time()+(86400*365));        
+        if(isset($_SESSION['pmspricing'][$this->getSelectedName()]['end'])) {
+            return $_SESSION['pmspricing'][$this->getSelectedName()]['end'];
+        }
+        return date("m.d.Y", time()+(86400*90));        
     }
 
     public function getPrices() {
         return $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), 
-                $this->convertToJavaDate(strtotime($this->getStart())),
-                $this->convertToJavaDate(strtotime($this->getEnd())));
+            $this->convertToJavaDate(strtotime($this->getStart())),
+            $this->convertToJavaDate(strtotime($this->getEnd())));
     }
 
 }

@@ -7,32 +7,84 @@ $prices = $this->getPrices();
 ?>
 <div gstype='form' method="selectDates">
     <input type='text' gsname='start' value='<? echo $start; ?>'>
-    <input type='text' gsname='stop' value='<? echo $end; ?>'>
-    <span gstype='clicksubmit' class='pmsbutton'>Set date range</span>
+    <input type='text' gsname='end' value='<? echo $end; ?>'>
+    <span gstype='submit' class='pmsbutton'>Set date range</span>
 </div>
+<br><br>
+<br><br>
 
+<table>
+    <tr>
+        <th align='left'>Item</th>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
+        <th>Sun</th>
+        <th align='left'>Price</th>
+<?php
+foreach($itemTypes as $item) {
+    echo "<tr itemid='".$item->id."'>";
+    echo "<td>" . $item->name . "</td>";
+    echo "<td><input type='checkbox' weekday='1' class='pricecheckbox'></td>";
+    echo "<td><input type='checkbox' weekday='2' class='pricecheckbox'></td>";
+    echo "<td><input type='checkbox' weekday='3' class='pricecheckbox'></td>";
+    echo "<td><input type='checkbox' weekday='4' class='pricecheckbox'></td>";
+    echo "<td><input type='checkbox' weekday='5' class='pricecheckbox'></td>";
+    echo "<td><input type='checkbox' weekday='6' class='pricecheckbox'></td>";
+    echo "<td><input type='checkbox' weekday='0' class='pricecheckbox'></td>";
+    echo "<td><input type='txt' class='priceinput'></td>";
+    echo "</tr>";
+}
+?>
+    <tr>
+        <td colspan='8'></td>
+        <td>
+            <span class='pmsbutton updatePricingTable'>Set prices</span>
+        </td>
+    </tr>
+</table>
+<br><br>
+<br><br>
 <div class='pricetableview'>
-    <table>
+    <table cellspacing='0' cellpadding='0'>
         <tr>
             <th align='left'>Item</th>
             <th>Default</th>
             <?php
             for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
-                echo "<td>".date("d.m.y", $i)."</td>";
+                $weekday = date("w", $i);
+                $weekend = '';
+                if($weekday == 6 || $weekday == 0) {
+                    $weekend = "weeked";
+                }
+                echo "<td class='$weekend'>".date("d.m.y", $i)."</td>";
             }
             ?>
         </tr>
-    <?
-    foreach($itemTypes as $type) {
-        $defaultPrice = 0;
-        echo "<tr>";
-        echo "<td>" . $type->name . "</td><td><input type='text' value='".$defaultPrice."' class='priceinput'></td>";
-        for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
-            $date = date("d.m.Y", $i);
-            echo "<td><input type='text' value='".$defaultPrice."' class='priceinput'></td>";
+        <?
+        foreach($itemTypes as $type) {
+            $defaultPrice = "";
+            echo "<tr itemtype='".$type->id."'>";
+            echo "<td><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td><td><input type='text' value='".$defaultPrice."' class='priceinput'></td>";
+            for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
+                $date = date("d.m.Y", $i);
+                $weekday = date("w", $i);
+
+                $weekend = '';
+                if($weekday == 6 || $weekday == 0) {
+                    $weekend = "weeked";
+                }
+                echo "<td class='$weekend'><input type='text' weekday='$weekday' date='$date' value='".$defaultPrice."' class='priceinput'></td>";
+            }
+            echo "</tr>";
         }
-        echo "</tr>";
-    }
-    ?>
+        ?>
     </table>    
 </div>
+<script>
+    $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('input[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

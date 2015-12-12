@@ -1,5 +1,16 @@
 app.PmsPricing = {
     init: function () {
+        $(document).on('click', '.PmsPricing .updatePricingTable', app.PmsPricing.updatePricingTable);
+    },
+    updatePricingTable : function() {
+        $('.pricecheckbox').each(function() {
+            if($(this).is(':checked')) {
+                var item = $(this).closest('tr').attr('itemid');
+                var price = $(this).closest('tr').find('.priceinput').val();
+                var weekday = $(this).attr('weekday');
+                $('tr[itemtype="'+item+'"]').find('.priceinput[weekday="'+weekday+'"]').val(price);
+            }
+        });
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});

@@ -148,7 +148,15 @@ $pricetypes[6] = "Per seconds";
                         <i class='fa fa-edit'></i> Price
                     </span>
                     <span class='roompostfix'>
-                        <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
+                        <span class='viewmode'>
+                            <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
+                        </span>
+                        <span class='editmode' method='changePrice' gstype='form'>
+                            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                            <input type='text' gsname='price' value='<? echo $room->price; ?>'>
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
                     </span>
                 </span>
                 <div style='clear:both;'></div>
@@ -157,7 +165,21 @@ $pricetypes[6] = "Per seconds";
                         <i class='fa fa-edit'></i> Price type
                     </span>
                     <span class='roompostfix'>
-                <? echo $pricetypes[$room->priceType]; ?>
+                        <span class='viewmode'>
+                            <? echo $pricetypes[$room->priceType]; ?>
+                        </span>
+                        <span class='editmode' gstype='form' method='changePriceType'>
+                            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                            <?php
+                            echo "<select gsname='pricetype'>";
+                            foreach($pricetypes as $idx => $value) {
+                                echo "<option value='$idx'>$value</option>";
+                            }
+                            echo "</select>";
+                            ?>
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
                     </span>
                 </span>
                 <div style='clear:both;'></div>

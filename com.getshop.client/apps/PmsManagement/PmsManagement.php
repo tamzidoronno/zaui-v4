@@ -125,6 +125,32 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function changePrice() {
+        $booking = $this->getSelectedBooking();
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $room->price = $_POST['data']['price'];
+            }
+        }
+        
+        $this->getManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = $this->getManager()->getBooking($this->getSelectedName(), $booking->id);
+        $this->showBookingInformation();
+    }
+    
+    public function changePriceType() {
+        $booking = $this->getSelectedBooking();
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $room->priceType = $_POST['data']['pricetype'];
+            }
+        }
+        
+        $this->getManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = $this->getManager()->getBooking($this->getSelectedName(), $booking->id);
+        $this->showBookingInformation();
+    }
+    
     public function setGuests() {
         $guests = array();
         for($i = 0; $i < $_POST['data']['numberofguests']; $i++) {

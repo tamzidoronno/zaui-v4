@@ -429,7 +429,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String changeDates(String roomId, String bookingId, Date start, Date end) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         PmsBooking booking = getBooking(bookingId);
+        try {
+            PmsBookingRooms room = booking.findRoom(roomId);
+            bookingEngine.changeDatesOnBooking(bookingId, start, end);
+            room.date.start = start;
+            room.date.end = end;
+            saveBooking(booking);
+        }catch(BookingEngineException ex) {
+            return ex.getMessage();
+        }
+        return "";
     }
 
     @Override

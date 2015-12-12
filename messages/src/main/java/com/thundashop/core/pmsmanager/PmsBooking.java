@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PmsBooking extends DataCommon {
+
     
     public static class BookingStates {
         public static Integer STARTED = 0;
@@ -30,5 +31,14 @@ public class PmsBooking extends DataCommon {
                 }
             }
         }
+    }
+    
+    PmsBookingRooms findRoom(String roomId) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.pmsBookingRoomId.equals(roomId)) {
+                return room;
+            }
+        }
+        return null;
     }
 }

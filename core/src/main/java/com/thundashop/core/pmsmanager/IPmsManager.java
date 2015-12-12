@@ -1,9 +1,9 @@
 package com.thundashop.core.pmsmanager;
 
-import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,4 +26,19 @@ public interface IPmsManager {
     
     @Administrator
     public PmsBooking getBooking(String bookingId);
+    
+    @Administrator
+    public String setNewRoomType(String roomId, String bookingId, String newType);
+    
+    @Administrator
+    public String changeDates(String roomId, String bookingId, Date start, Date end);
+    
+    @Administrator
+    public String setVisitors(String roomId, String bookingId, Integer numberOfVisitors, List<PmsGuests> guests);
+    
+    @Administrator
+    public String updatePrice(String roomId, String bookingId, Double price);
+    
+    @Administrator
+    public String updateType(String roomId, String bookingId, Integer priceType);
 }

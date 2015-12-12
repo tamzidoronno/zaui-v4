@@ -3,6 +3,8 @@ namespace ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a;
 
 class PmsManagement extends \WebshopApplication implements \Application {
     private $selectedBooking;
+    public $errors = array();
+    
     public function getDescription() {
         
     }
@@ -24,8 +26,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function setItemType() {
-        
-        
+        $error = $this->getManager()->setNewRoomType($this->getSelectedName(), $_POST['data']['roomid'], $_POST['data']['bookingid'], $_POST['data']['itemtype']);
+        if($error) {
+            $this->errors[] = $error;
+        }
         $this->showBookingInformation();
     }
     
@@ -93,6 +97,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $filter;
     }
 
+    public function getManager() {
+        return $this->getApi()->getPmsManager();
+    }
 
 }
 ?>

@@ -9,6 +9,7 @@ import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -409,6 +410,45 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 bookingEngine.deleteBooking(booking.id);
             }
         }
+    }
+
+    @Override
+    public String setNewRoomType(String roomId, String bookingId, String newType) {
+        PmsBooking booking = getBooking(bookingId);
+        try {
+            PmsBookingRooms room = booking.findRoom(roomId);
+            bookingEngine.changeTypeOnBooking(room.bookingId, newType);
+            room.bookingItemTypeId = newType;
+            saveBooking(booking);
+        }catch(BookingEngineException ex) {
+            return ex.getMessage();
+        }
+        return "";
+
+    }
+
+    @Override
+    public String changeDates(String roomId, String bookingId, Date start, Date end) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String setVisitors(String roomId, String bookingId, Integer numberOfVisitors, List<PmsGuests> guests) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String updatePrice(String roomId, String bookingId, Double price) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String updateType(String roomId, String bookingId, Integer priceType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void saveBooking(PmsBooking booking) {
+        saveObject(booking);
     }
     
 }

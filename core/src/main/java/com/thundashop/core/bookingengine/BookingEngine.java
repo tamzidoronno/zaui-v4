@@ -338,4 +338,17 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         bookings.remove(id);
         deleteObject(booking);
     }
+
+    @Override
+    public void changeTypeOnBooking(String bookingId, String itemTypeId) {
+        throw new BookingEngineException("This is impossible");
+    }
+
+    @Override
+    public void changeDatesOnBooking(String bookingId, Date start, Date end) {
+    }
+
+    @Override
+    public void changeBookingItemOnBooking(String booking, String item) {
+    }
 }

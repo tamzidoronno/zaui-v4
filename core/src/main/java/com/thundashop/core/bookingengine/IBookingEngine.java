@@ -7,6 +7,7 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import java.util.Date;
 import java.util.List;
 
 
@@ -51,4 +52,13 @@ public interface IBookingEngine {
     
     @Administrator
     public List<Booking> getAllBookings();
+    
+    @Administrator
+    public void changeTypeOnBooking(String bookingId, String itemTypeId);
+    
+    @Administrator
+    public void changeDatesOnBooking(String bookingId, Date start, Date end);
+    
+    @Administrator
+    public void changeBookingItemOnBooking(String booking, String item);
 }

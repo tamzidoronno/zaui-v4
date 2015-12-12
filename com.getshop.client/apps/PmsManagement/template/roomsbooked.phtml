@@ -34,9 +34,11 @@ $pricetypes[6] = "Per seconds";
                     </span>
                     <span class="editmode" gstype='form' method="setItemType">
                         <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                         <select gsname='itemtype'>
                             <?php foreach ($types as $type) { ?>
-                                <option value='<? echo $type->id; ?>'><? echo $type->name; ?></option>
+                            <?php $selected = ""; if($type->id == $room->bookingItemTypeId) { $selected = "SELECTED"; } ?>
+                                <option value='<? echo $type->id; ?>' <? echo $selected; ?>><? echo $type->name; ?></option>
                             <? }  ?>
                         </select>
                         <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>

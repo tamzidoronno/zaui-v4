@@ -119,13 +119,27 @@ $pricetypes[6] = "Per seconds";
                         <i class='fa fa-edit'></i> Assigned room
                     </span>
                     <span class='roompostfix'>
-                        <?
-                        if (!$room->booking->bookingItemId) {
-                            echo "Not assigned yet";
-                        } else {
-                            $items[$room->booking->bookingItemId]->bookingItemName;
-                        }
-                        ?>
+                        <span class="viewmode">
+                            <?
+                            if (!$room->booking->bookingItemId) {
+                                echo "Not assigned yet";
+                            } else {
+                                $items[$room->booking->bookingItemId]->bookingItemName;
+                            }
+                            ?>
+                        </span>
+                        <span class="editmode" gstype='form' method='setBookingItem' >
+                            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                            <select gsname='itemid'>
+                                <?php 
+                                foreach($items as $item) {
+                                    echo "<option value='".$item->id."'>" . $item->bookingItemName . "</option>";
+                                }
+                                ?>
+                            </select>
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
                     </span>
                 </span>
                 <div style='clear:both;'></div>

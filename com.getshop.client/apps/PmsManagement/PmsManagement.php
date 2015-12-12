@@ -113,6 +113,18 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $this->getApi()->getPmsManager();
     }
     
+    public function setBookingItem() {
+        $error = $this->getManager()->setBookingItem($this->getSelectedName(),
+                $_POST['data']['roomid'], 
+                $_POST['data']['bookingid'], 
+                $_POST['data']['itemid']);
+        if($error) {
+            $this->errors[] = $error;
+        }
+        $this->selectedBooking = $this->getManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
+        $this->showBookingInformation();
+    }
+    
     public function setGuests() {
         $guests = array();
         for($i = 0; $i < $_POST['data']['numberofguests']; $i++) {

@@ -31,6 +31,9 @@ public interface IPmsManager {
     public String setNewRoomType(String roomId, String bookingId, String newType);
     
     @Administrator
+    public String setBookingItem(String roomId, String bookingId, String itemId);
+    
+    @Administrator
     public String changeDates(String roomId, String bookingId, Date start, Date end);
     
     @Administrator

@@ -21,6 +21,16 @@ class PmsPricing extends \WebshopApplication implements \Application {
             $this->includefile("pricingview");
         }
     }
+    
+    public function setNewPrices() {
+        $prices = $_POST['data']['prices'];
+        
+        $pricingObject = new \core_pmsmanager_PmsPricing();
+        $pricingObject->specifiedPrices = $prices;
+        $pricingObject->defaultPriceType = $_POST['data']['pricetype'];
+        
+        $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $pricingObject);
+    }
 
     public function selectDates() {
         $start = $_POST['data']['start'];

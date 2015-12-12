@@ -1,6 +1,7 @@
 app.PmsPricing = {
     init: function () {
         $(document).on('click', '.PmsPricing .updatePricingTable', app.PmsPricing.updatePricingTable);
+        $(document).on('click', '.PmsPricing .setnewprices', app.PmsPricing.setnewprices);
     },
     updatePricingTable : function() {
         $('.pricecheckbox').each(function() {
@@ -11,6 +12,34 @@ app.PmsPricing = {
                 $('tr[itemtype="'+item+'"]').find('.priceinput[weekday="'+weekday+'"]').val(price);
             }
         });
+    },
+    setnewprices : function() {
+        if($(this).find('.fa-spin').length > 0) {
+            return;
+        }
+        
+        $(this).html('<i class="fa fa-spin fa-spinner"></i>');
+        
+        var data = {};
+        var prices = {};
+        $('.pricetableview tr').each(function() {
+            var itemid = $(this).attr('itemtype');
+            var itemPriceRow = {};
+            $(this).find('.priceinput').each(function() {
+                var price = $(this).val();
+                if(price) {
+                    var date = $(this).attr('date');
+                    itemPriceRow[date] = price;
+                }
+            });
+            prices[itemid] = itemPriceRow;
+        });
+        
+        data['prices'] = prices;
+        data['pricetype'] = $('.pricetypeselection').val();
+        
+        var event = thundashop.Ajax.createEvent('','setNewPrices',$(this), data);
+        thundashop.Ajax.post(event);
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});

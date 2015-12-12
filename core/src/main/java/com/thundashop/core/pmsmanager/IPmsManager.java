@@ -37,17 +37,11 @@ public interface IPmsManager {
     public String changeDates(String roomId, String bookingId, Date start, Date end);
     
     @Administrator
-    public String setVisitors(String roomId, String bookingId, Integer numberOfVisitors, List<PmsGuests> guests);
-    
-    @Administrator
-    public String updatePrice(String roomId, String bookingId, Double price);
-    
-    @Administrator
-    public String updateType(String roomId, String bookingId, Integer priceType);
-    
-    @Administrator
     public void saveBooking(PmsBooking booking);
     
     @Administrator
     public PmsPricing getPrices(Date start, Date end); 
+    
+    @Administrator
+    public PmsPricing setPrices(PmsPricing prices); 
 }

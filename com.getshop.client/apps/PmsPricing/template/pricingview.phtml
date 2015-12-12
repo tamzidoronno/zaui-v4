@@ -3,7 +3,17 @@
 $itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 $start = $this->getStart();
 $end = $this->getEnd();
-$prices = $this->getPrices();
+$priceObject = $this->getPrices();
+$prices = $priceObject->specifiedPrices;
+
+$pricetypes = array();
+$pricetypes[1] = "Daily";
+$pricetypes[2] = "Monthly";
+$pricetypes[3] = "Weekly";
+$pricetypes[4] = "Per minute";
+$pricetypes[5] = "Per hour";
+$pricetypes[6] = "Per seconds";
+
 ?>
 <div gstype='form' method="selectDates">
     <input type='text' gsname='start' value='<? echo $start; ?>'>
@@ -49,6 +59,18 @@ foreach($itemTypes as $item) {
 <br><br>
 <br><br>
 <div class='pricetableview'>
+        <?php
+        echo "<select class='pricetypeselection'>";
+        foreach($pricetypes as $idx => $type) {
+            $selected = "";
+            if($idx == $priceObject->defaultPriceType) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='$idx' $selected>$type</option>";
+        }
+        echo "</select>";
+        ?>
+        
     <table cellspacing='0' cellpadding='0'>
         <tr>
             <th align='left'>Item</th>
@@ -66,23 +88,32 @@ foreach($itemTypes as $item) {
         </tr>
         <?
         foreach($itemTypes as $type) {
-            $defaultPrice = "";
+            if(isset($prices->{$type->id}->{'default'})) {
+                $price = $prices->{$type->id}->{'default'};
+            }
             echo "<tr itemtype='".$type->id."'>";
-            echo "<td><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td><td><input type='text' value='".$defaultPrice."' class='priceinput'></td>";
+            echo "<td><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td><td><input date='default' type='text' value='".$price."' class='priceinput'></td>";
             for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
                 $date = date("d.m.Y", $i);
                 $weekday = date("w", $i);
-
+                $price = "";
+                if(isset($prices->{$type->id}->{$date})) {
+                    $price = $prices->{$type->id}->{$date};
+                }
                 $weekend = '';
                 if($weekday == 6 || $weekday == 0) {
                     $weekend = "weeked";
                 }
-                echo "<td class='$weekend'><input type='text' weekday='$weekday' date='$date' value='".$defaultPrice."' class='priceinput'></td>";
+                echo "<td class='$weekend'><input type='text' weekday='$weekday' date='$date' value='".$price."' class='priceinput'></td>";
             }
             echo "</tr>";
         }
         ?>
     </table>    
+</div>
+<br>
+<div style='text-align: right;'>
+    <span class='pmsbutton setnewprices'>Update prices</span>
 </div>
 <script>
     $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });

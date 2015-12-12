@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public HashMap<String, PmsBooking> bookings = new HashMap();
+    public PmsPricing prices = new PmsPricing();
     
     @Autowired
     BookingEngine bookingEngine;
@@ -51,6 +52,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
                 bookings.put(booking.id, booking);
+            }
+            if (dataCommon instanceof PmsPricing) {
+                prices = (PmsPricing) dataCommon;
             }
         }
     }
@@ -447,20 +451,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return "";
     }
 
-    @Override
-    public String setVisitors(String roomId, String bookingId, Integer numberOfVisitors, List<PmsGuests> guests) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String updatePrice(String roomId, String bookingId, Double price) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String updateType(String roomId, String bookingId, Integer priceType) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
@@ -501,7 +491,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsPricing getPrices(Date start, Date end) {
-        return new PmsPricing();
+        return prices;
+    }
+
+    @Override
+    public PmsPricing setPrices(PmsPricing newPrices) {
+        prices.defaultPriceType = newPrices.defaultPriceType;
+        for(String typeId : newPrices.specifiedPrices.keySet()) {
+            HashMap<String, Double> priceMap = newPrices.specifiedPrices.get(typeId);
+            for(String date : priceMap.keySet()) {
+                HashMap<String, Double> existingPriceRange = prices.specifiedPrices.get(typeId);
+                if(existingPriceRange == null) {
+                    existingPriceRange = new HashMap();
+                    prices.specifiedPrices.put(typeId, existingPriceRange);
+                }
+                existingPriceRange.put(date, priceMap.get(date));
+            }
+        }
+        saveObject(newPrices);
+        
+        return prices;
     }
 
     

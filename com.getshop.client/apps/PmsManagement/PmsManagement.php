@@ -33,6 +33,18 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function setNewDates() {
+        $error = $this->getManager()->changeDates($this->getSelectedName(),
+                $_POST['data']['roomid'], 
+                $_POST['data']['bookingid'], 
+                $this->convertToJavaDate(strtotime($_POST['data']['start'])),
+                $this->convertToJavaDate(strtotime($_POST['data']['end'])));
+        if($error) {
+            $this->errors[] = $error;
+        }
+        $this->showBookingInformation();
+    }
+    
     /**
      * @return \core_pmsmanager_PmsBooking
      */

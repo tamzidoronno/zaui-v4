@@ -50,13 +50,22 @@ $pricetypes[6] = "Per seconds";
                 <span class='roomprefix'>
                     <i class='fa fa-edit'></i> Dates
                 </span> 
-                <span class='roompostfix'>
-                    <?php echo date("d.m.Y H:i", strtotime($date->start)); ?>
-                    <?php if ($date->end) { ?>
-                        -> 
-                        <?php echo date("d.m.Y H:i", strtotime($date->end)); ?>
-                    <? } ?>
-                </span>
+                    <span class='roompostfix'>
+                        <span class="viewmode">
+                            <?php echo date("d.m.Y H:i", strtotime($date->start)); ?>
+                            <?php if ($date->end) { ?>
+                                -> 
+                                <?php echo date("d.m.Y H:i", strtotime($date->end)); ?>
+                            <? } ?>
+                        </span>
+                        <span class='editmode' gstype='form' method="setNewDates">
+                            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                            <input type='text' gsname='start' value='<? echo date("d.m.Y H:i", strtotime($room->date->start)); ?>'>
+                            <input type='text' gsname='end' value='<? echo date("d.m.Y H:i", strtotime($room->date->end)); ?>'>
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
+                    </span>
             </span>
             <div style='clear:both;'></div>
             <span class='roomattribute'>
@@ -70,43 +79,42 @@ $pricetypes[6] = "Per seconds";
                     }
                 }
                 ?>
+                </span>
             </span>
-        </span>
-        <div style='clear:both;'></div>
-        <span class='roomattribute'>
-            <span class='roomprefix'>
-                <i class='fa fa-edit'></i> Assigned room
+            <div style='clear:both;'></div>
+            <span class='roomattribute'>
+                <span class='roomprefix'>
+                    <i class='fa fa-edit'></i> Assigned room
+                </span>
+                <span class='roompostfix'>
+                    <?
+                    if (!$room->booking->bookingItemId) {
+                        echo "Not assigned yet";
+                    } else {
+                        $items[$room->booking->bookingItemId]->bookingItemName;
+                    }
+                    ?>
+                </span>
             </span>
-            <span class='roompostfix'>
-                <?
-                if (!$room->booking->bookingItemId) {
-                    echo "Not assigned yet";
-                } else {
-                    $items[$room->booking->bookingItemId]->bookingItemName;
-                }
-                ?>
+            <div style='clear:both;'></div>
+            <span class='roomattribute'>
+                <span class='roomprefix'>
+                    <i class='fa fa-edit'></i> Price
+                </span>
+                <span class='roompostfix'>
+                    <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
+                </span>
             </span>
-        </span>
-        <div style='clear:both;'></div>
-        <span class='roomattribute'>
-            <span class='roomprefix'>
-                <i class='fa fa-edit'></i> Price
+            <div style='clear:both;'></div>
+            <span class='roomattribute'>
+                <span class='roomprefix'>
+                    <i class='fa fa-edit'></i> Price type
+                </span>
+                <span class='roompostfix'>
+                    <? echo $pricetypes[$room->priceType]; ?>
+                </span>
             </span>
-            <span class='roompostfix'>
-                <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
-            </span>
-        </span>
-        <div style='clear:both;'></div>
-        <span class='roomattribute'>
-            <span class='roomprefix'>
-                <i class='fa fa-edit'></i> Price type
-            </span>
-            <span class='roompostfix'>
-                <? echo $pricetypes[$room->priceType]; ?>
-            </span>
-        </span>
-        <div style='clear:both;'></div>
-
-    </div>
+            <div style='clear:both;'></div>
+        </div>
     <div style='clear:both;'></div>
 </div>

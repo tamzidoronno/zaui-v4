@@ -38,7 +38,7 @@ public class ManagerSubBase {
     protected boolean ready = false;
     private Session session;
 
-	private ManagerSetting managerSettings = new ManagerSetting();
+    private ManagerSetting managerSettings = new ManagerSetting();
     
     private Database database;
 

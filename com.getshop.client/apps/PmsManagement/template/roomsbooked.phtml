@@ -113,76 +113,81 @@ $pricetypes[6] = "Per seconds";
                         <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
                     </span>
                 </span>
-                <div style='clear:both;'></div>
-                <span class='roomattribute'>
-                    <span class='roomprefix'>
-                        <i class='fa fa-edit'></i> Assigned room
+            </span>
+            <div style='clear:both;'></div>
+            <span class='roomattribute'>
+                <span class='roomprefix'>
+                    <i class='fa fa-edit'></i> Assigned room
+                </span>
+                <span class='roompostfix'>
+                    <span class="viewmode">
+                        <?
+                        if (!$room->booking->bookingItemId) {
+                            echo "Not assigned yet";
+                        } else {
+                            echo $items[$room->booking->bookingItemId]->bookingItemName;
+                        }
+                        ?>
                     </span>
-                    <span class='roompostfix'>
-                        <span class="viewmode">
-                            <?
-                            if (!$room->booking->bookingItemId) {
-                                echo "Not assigned yet";
-                            } else {
-                                $items[$room->booking->bookingItemId]->bookingItemName;
-                            }
-                            ?>
-                        </span>
-                        <span class="editmode" gstype='form' method='setBookingItem' >
-                            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <select gsname='itemid'>
-                                <?php 
-                                foreach($items as $item) {
-                                    echo "<option value='".$item->id."'>" . $item->bookingItemName . "</option>";
+                    <span class="editmode" gstype='form' method='setBookingItem' >
+                        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                        <select gsname='itemid'>
+                            <?php 
+                            foreach($items as $item) {
+                                $selected = "";
+                                if($room->booking->bookingItemId == $item->id) {
+                                    $selected = "SELECTED";
                                 }
-                                ?>
-                            </select>
-                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                        </span>
-                    </span>
-                </span>
-                <div style='clear:both;'></div>
-                <span class='roomattribute'>
-                    <span class='roomprefix'>
-                        <i class='fa fa-edit'></i> Price
-                    </span>
-                    <span class='roompostfix'>
-                        <span class='viewmode'>
-                            <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
-                        </span>
-                        <span class='editmode' method='changePrice' gstype='form'>
-                            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <input type='text' gsname='price' value='<? echo $room->price; ?>'>
-                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                        </span>
-                    </span>
-                </span>
-                <div style='clear:both;'></div>
-                <span class='roomattribute'>
-                    <span class='roomprefix'>
-                        <i class='fa fa-edit'></i> Price type
-                    </span>
-                    <span class='roompostfix'>
-                        <span class='viewmode'>
-                            <? echo $pricetypes[$room->priceType]; ?>
-                        </span>
-                        <span class='editmode' gstype='form' method='changePriceType'>
-                            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <?php
-                            echo "<select gsname='pricetype'>";
-                            foreach($pricetypes as $idx => $value) {
-                                echo "<option value='$idx'>$value</option>";
+                                echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . "</option>";
                             }
-                            echo "</select>";
                             ?>
-                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                        </span>
+                        </select>
+                        <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
                     </span>
                 </span>
-                <div style='clear:both;'></div>
+            </span>
+            <div style='clear:both;'></div>
+            <span class='roomattribute'>
+                <span class='roomprefix'>
+                    <i class='fa fa-edit'></i> Price
+                </span>
+                <span class='roompostfix'>
+                    <span class='viewmode'>
+                        <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
+                    </span>
+                    <span class='editmode' method='changePrice' gstype='form'>
+                        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                        <input type='text' gsname='price' value='<? echo $room->price; ?>'>
+                        <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                    </span>
+                </span>
+            </span>
+            <div style='clear:both;'></div>
+            <span class='roomattribute'>
+                <span class='roomprefix'>
+                    <i class='fa fa-edit'></i> Price type
+                </span>
+                <span class='roompostfix'>
+                    <span class='viewmode'>
+                        <? echo $pricetypes[$room->priceType]; ?>
+                    </span>
+                    <span class='editmode' gstype='form' method='changePriceType'>
+                        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                        <?php
+                        echo "<select gsname='pricetype'>";
+                        foreach($pricetypes as $idx => $value) {
+                            echo "<option value='$idx'>$value</option>";
+                        }
+                        echo "</select>";
+                        ?>
+                        <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                    </span>
+                </span>
+            </span>
+            <div style='clear:both;'></div>
             <?php } ?>
         </div>
     <div style='clear:both;'></div>

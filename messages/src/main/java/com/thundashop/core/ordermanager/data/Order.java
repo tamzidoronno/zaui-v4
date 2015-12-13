@@ -21,6 +21,9 @@ import java.util.UUID;
  * @author ktonder
  */
 public class Order extends DataCommon implements Comparable<Order> {
+
+    public boolean triedTransferredToAccountingSystem = false;
+    public boolean transferedToAccountingSystem = false;
     public String paymentTransactionId = "";
     public Shipping shipping;
     public Payment payment = new Payment();
@@ -28,6 +31,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String trackingNumber = "";
     public long incrementOrderId = 0;
     public String reference = "";
+    public boolean activated = false;
     public boolean transferredToAccountingSystem = false;
     public boolean testOrder = false;
     public boolean captured = false;
@@ -45,8 +49,10 @@ public class Order extends DataCommon implements Comparable<Order> {
         String gsonOrder = gson.toJson(this);
         Order orderNew = gson.fromJson(gsonOrder, Order.class);
         orderNew.id = UUID.randomUUID().toString();
+        orderNew.expiryDate = null;
         orderNew.rowCreatedDate = new Date();
-        orderNew.transferredToAccountingSystem = false;
+        orderNew.triedTransferredToAccountingSystem = false;
+        orderNew.transferedToAccountingSystem = false;
         orderNew.createdDate = new Date();
 
         if (orderNew.cart != null) {
@@ -107,14 +113,24 @@ public class Order extends DataCommon implements Comparable<Order> {
         public static int SENT = 6;
         public static int PAYMENT_COMPLETED = 7;
         public static int COLLECTION_FAILED = 8;
+        public static int NEEDCOLLECTING = 9;
     }
     
     public Date createdDate = new Date();
     
     /**
-     * The users id for whom placed the order
-     * if order is created without user been logged in, this
-     * will be empty
+     * This expiry date is used for recurring orders. Orders that has an expiry
+     * date will automatically be renewed with a new order when it expires.
+     */
+    public Date expiryDate;
+
+    public Integer recurringDays;
+
+    public Integer recurringMonths = 1;
+
+    /**
+     * The users id for whom placed the order if order is created without user
+     * been logged in, this will be empty
      */
     public String userId;
     

@@ -13,6 +13,7 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DatabaseSaver;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,9 +81,6 @@ public class BookingEngineTestHelper {
      * booking 4: 2014-01-01 06:00 - 2014-01-02 12:00
      */
     Booking getValidBooking(int i, BookingEngine bookingEngine, BookingItem item) {
-        
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        
         List<BookingItemType> types = bookingEngine.getBookingItemTypes();
         BookingItemType type = null;
         if (types.isEmpty()) {
@@ -103,39 +101,47 @@ public class BookingEngineTestHelper {
         booking.bookingItemTypeId = type.id;
         booking.bookingItemId = item.id;
         
+        if (i == 0) {
+            booking.startDate = getDate("2014-01-01 08:00");
+            booking.endDate = getDate("2014-01-02 10:00");
+        }
+        if (i == 1) {
+            booking.startDate = getDate("2014-01-01 08:00");
+            booking.endDate = getDate("2014-01-02 08:00");
+        }
+        if (i == 2) {
+            booking.startDate = getDate("2014-01-02 08:00");
+            booking.endDate = getDate("2014-01-03 08:00");
+        }
+        if (i == 3) {
+            booking.startDate = getDate("2014-01-02 06:00");
+            booking.endDate = getDate("2014-01-03 08:00");
+        }
+        if (i == 4) {
+            booking.startDate = getDate("2014-01-02 06:00");
+            booking.endDate = getDate("2014-01-03 08:00");
+        }
+        if (i == 5) {
+            booking.startDate = getDate("2014-01-03 08:00");
+            booking.endDate = getDate("2014-01-04 08:00");
+        }
+        if (i == 6) {
+            booking.startDate = getDate("2014-01-01 12:00");
+            booking.endDate = getDate("2014-01-01 16:00");
+        }
+        
+        return booking;
+    }
+    
+    public Date getDate(String date) {
         try {
-            if (i == 0) {
-                booking.startDate = formatter.parse("2014-01-01 08:00");
-                booking.endDate = formatter.parse("2014-01-02 10:00");
-            }
-            if (i == 1) {
-                booking.startDate = formatter.parse("2014-01-01 08:00");
-                booking.endDate = formatter.parse("2014-01-02 08:00");
-            }
-            if (i == 2) {
-                booking.startDate = formatter.parse("2014-01-02 08:00");
-                booking.endDate = formatter.parse("2014-01-03 08:00");
-            }
-            if (i == 3) {
-                booking.startDate = formatter.parse("2014-01-02 06:00");
-                booking.endDate = formatter.parse("2014-01-03 08:00");
-            }
-            if (i == 4) {
-                booking.startDate = formatter.parse("2014-01-02 06:00");
-                booking.endDate = formatter.parse("2014-01-03 08:00");
-            }
-            if (i == 5) {
-                booking.startDate = formatter.parse("2014-01-03 08:00");
-                booking.endDate = formatter.parse("2014-01-04 08:00");
-            }
-            if (i == 6) {
-                booking.startDate = formatter.parse("2014-01-01 12:00");
-                booking.endDate = formatter.parse("2014-01-01 16:00");
-            }
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            return formatter.parse(date);
         } catch (ParseException ex) {
             Logger.getLogger(BookingEngineTestHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return booking;
+        return null;
+        
     }
 }

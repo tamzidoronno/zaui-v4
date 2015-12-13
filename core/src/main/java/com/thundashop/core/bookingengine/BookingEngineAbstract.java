@@ -258,6 +258,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         for (Booking booking : bookings) {
             String bookingItemTypeId = booking.bookingItemTypeId;
             List<Booking> bookingsToConsider = this.bookings.values().stream()
+                    .filter(o -> booking.id != null && !booking.id.isEmpty() && !o.id.equals(booking.id))
                     .filter(o -> o.bookingItemTypeId.equals(bookingItemTypeId))
                     .collect(Collectors.toList());
             
@@ -384,14 +385,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         saveObject(booking);
     }
 
-    public void changeDatesOnBooking(String bookingId, Date start, Date end) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void changeBookingItemOnBooking(String booking, String item) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     private void validateChange(Booking bookingClone) {
         List<Booking> oldBookings = bookings.values().stream()
                 .filter(o -> !o.id.equals(bookingClone.id))
@@ -420,6 +413,45 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             }
         }
     }
+    
+    public void changeDatesOnBooking(String bookingId, Date start, Date end) {
+        Booking booking = getBooking(bookingId);
+        if (booking == null) {
+            throw new BookingEngineException("Can not change dates on a booking that does not exists");
+        }
+        
+        Booking newBooking = deepClone(booking);
+        newBooking.startDate = start;
+        newBooking.endDate = end;
+        
+        validateChange(newBooking);
+        
+        booking.startDate = start;
+        booking.endDate = end;
+        
+        saveObject(booking);
+    }
 
+    public void changeBookingItemOnBooking(String bookingId, String itemId) {
+        Booking booking = getBooking(bookingId);
+        
+        if (booking == null) {
+            throw new BookingEngineException("Can not change bookingitem, the booking does not exists");
+        }
+        
+        BookingItem bookingItem = getBookingItem(itemId);
+        if (bookingItem == null) {
+            throw new BookingEngineException("Can not change to a bookingItem that does not exists");
+        }
+        
+        Booking newBooking = deepClone(booking);
+        newBooking.bookingItemId = itemId;
+        newBooking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+        validateChange(newBooking);
+        
+        booking.bookingItemId = itemId;
+        booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+        saveObject(booking);
+    }
     
 }

@@ -63,7 +63,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setSession(Session session) {
-        System.out.println("Setting session");
         super.setSession(session); //To change body of generated methods, choose Tools | Templates.
     }
     

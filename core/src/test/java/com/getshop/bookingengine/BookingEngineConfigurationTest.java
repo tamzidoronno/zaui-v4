@@ -52,7 +52,7 @@ public class BookingEngineConfigurationTest extends TestCommon {
     public void testUsingConfigurationFromDatabase() {
         BookingEngineConfiguration dataObject = new BookingEngineConfiguration(); 
         dataObject.confirmationRequired = true;
-        feedDataFromDatabase(bookingEngine, dataObject);
+        feedDataFromDatabase(abstractEngine, dataObject);
         
         boolean isConfirmationRequired2 = bookingEngine.isConfirmationRequired();
         Assert.assertEquals(true, isConfirmationRequired2);

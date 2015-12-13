@@ -119,7 +119,7 @@ public class BookingEngineTest extends TestCommon {
     public void testUsingDataFromDatabase() {
         BookingItem item = new BookingItem();
         item.id = "TESTME";
-        feedDataFromDatabase(bookingEngine, item);
+        feedDataFromDatabase(abstractEngine, item);
         
         Assert.assertEquals(item.id, bookingEngine.getBookingItem("TESTME").id);
     }

@@ -1142,8 +1142,9 @@ thundashop.common.sessionTimeOut = 1300000;
 thundashop.common.timeoutCounter = 0;
 
 thundashop.common.logout = function() {
-    alert(__w('You have been inactive to long and due to security reasons you will now be logged out.'));
-    document.location = '/logout.php?goBackToHome=true';
+/* This is too buggy to be in production yet. */
+//    alert(__w('You have been inactive to long and due to security reasons you will now be logged out.'));
+//    document.location = '/logout.php?goBackToHome=true';
 };
 
 thundashop.common.triggerTimeoutCheck = function() {

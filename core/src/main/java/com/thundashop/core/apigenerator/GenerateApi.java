@@ -76,7 +76,7 @@ public class GenerateApi {
     }
 
     public void generateJavaApi() throws IOException {
-        JavaApiBuilder javaapi = new JavaApiBuilder(this, coreClasses, messageClasses);
+        JavaApiBuilder javaapi = new JavaApiBuilder(this, coreClasses, messageClasses, pathToSource);
         javaapi.generate();
     }
 
@@ -119,7 +119,7 @@ public class GenerateApi {
         public String generics;
         public Method method;
         public String[] commentLines;
-        public HashMap<String, String> arguments;
+        public LinkedHashMap<String, String> arguments;
         String userLevel;
     }
 

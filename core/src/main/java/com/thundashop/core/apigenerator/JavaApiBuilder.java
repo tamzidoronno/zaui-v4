@@ -6,6 +6,7 @@ package com.thundashop.core.apigenerator;
 
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.apigenerator.GenerateApi.ApiMethod;
+import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -28,10 +29,11 @@ public class JavaApiBuilder {
     private final List<Class> allManagers;
     private final List<Class> dataObjects;
 
-    public JavaApiBuilder(GenerateApi generator, List<Class> allManagers, List<Class> dataObjects) {
+    public JavaApiBuilder(GenerateApi generator, List<Class> allManagers, List<Class> dataObjects, String pathToSource) {
         this.generator = generator;
         this.allManagers = allManagers;
         this.dataObjects = dataObjects;
+        apiPath = pathToSource + "/" + apiPath;
 
     }
 
@@ -50,7 +52,11 @@ public class JavaApiBuilder {
         content += "          JsonObject2 gs_json_object_data = new JsonObject2();\r\n";
         content += "          gs_json_object_data.args = new LinkedHashMap();\r\n";
         for (String method : args.keySet()) {
-            content += "          gs_json_object_data.args.put(\"" + method + "\",new Gson().toJson(" + method + "));\n";
+            if(method.equals("multiLevelName")) {
+                content += "          gs_json_object_data.multiLevelName = " + method + ";\n";
+            } else {
+                content += "          gs_json_object_data.args.put(\"" + method + "\",new Gson().toJson(" + method + "));\n";
+            }
         }
 
         content += "          gs_json_object_data.method = \"" + methodName + "\";\r\n";
@@ -109,6 +115,14 @@ public class JavaApiBuilder {
                         }
                         addedClasses.add(method.method.getReturnType());
                         String args = "";
+                       
+                        boolean multiLevel = entry.getAnnotation(GetShopMultiLayerSession.class) != null;
+                        if(multiLevel) {
+                            LinkedHashMap res = method.arguments;
+                            method.arguments = new LinkedHashMap();
+                            method.arguments.put("multiLevelName", "String");
+                            method.arguments.putAll(res);
+                        }
                         for(String arg : method.arguments.keySet()) {
                             args += method.arguments.get(arg) + " " + arg + ", ";
                         }
@@ -138,6 +152,10 @@ public class JavaApiBuilder {
             resultHeader += "import com.getshop.common.Transporter;\n";
 
             String fname = "API" + entry.getSimpleName().substring(1) + ".java";
+            
+            File file = new File(apiPath + "/");
+            file.mkdirs();
+            
             generator.writeFile(resultHeader+content, apiPath + "/" + fname);
         }
 

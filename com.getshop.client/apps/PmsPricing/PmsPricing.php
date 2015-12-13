@@ -54,14 +54,14 @@ class PmsPricing extends \WebshopApplication implements \Application {
         if(isset($_SESSION['pmspricing'][$this->getSelectedName()]['start'])) {
             return $_SESSION['pmspricing'][$this->getSelectedName()]['start'];
         }
-        return date("m.d.Y", time());
+        return date("d.m.Y", time());
     }
 
     public function getEnd() {
         if(isset($_SESSION['pmspricing'][$this->getSelectedName()]['end'])) {
             return $_SESSION['pmspricing'][$this->getSelectedName()]['end'];
         }
-        return date("m.d.Y", time()+(86400*90));        
+        return date("d.m.Y", time()+(86400*90));        
     }
 
     public function getPrices() {

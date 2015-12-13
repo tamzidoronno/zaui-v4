@@ -49,7 +49,7 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         }
 
         if (strtolower($binFile->fileType) == "power") {
-            return 70;
+            return 60;
         }
 
         if (strtolower($binFile->fileType) == "various") {

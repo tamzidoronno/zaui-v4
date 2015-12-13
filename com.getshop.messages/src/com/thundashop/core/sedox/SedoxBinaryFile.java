@@ -62,7 +62,7 @@ public class SedoxBinaryFile implements Serializable {
         }
         
         if (fileType.toLowerCase().equals("power")) {
-            return 70;
+            return 60;
         }
         
         if (fileType.toLowerCase().equals("eco")) {

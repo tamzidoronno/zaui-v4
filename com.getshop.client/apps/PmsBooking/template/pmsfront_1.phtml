@@ -4,7 +4,7 @@ $date = date("d.m.Y", time());
 if(!$this->getText("next_page")) {
     echo "<b>Next page not set up yet, please fix.</b>";
 }
-$rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), 0, 10);
+$rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()+86400));
 ?>
 
 <div class="pmsfront">

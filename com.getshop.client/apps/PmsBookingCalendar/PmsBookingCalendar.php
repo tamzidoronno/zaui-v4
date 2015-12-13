@@ -57,7 +57,6 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
             $this->booking->rooms[0]->date->end = $this->convertToJavaDate($_POST['data']['time']);
         }
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $this->booking);
-        $this->includefile("calendar");
     }
     
     public function isSelectedDate($date) {

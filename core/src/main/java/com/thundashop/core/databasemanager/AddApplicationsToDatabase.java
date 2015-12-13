@@ -81,7 +81,7 @@ public class AddApplicationsToDatabase {
         Application.Type.Webshop, true);
         PmsBooking.isPublic = true;
         PmsBooking.isFrontend = true;
-        PmsBooking.moduleId = "WebShop";
+        PmsBooking.moduleId = "booking";
         PmsBooking.defaultActivate = false;
         apps.add(PmsBooking);
         
@@ -92,7 +92,7 @@ public class AddApplicationsToDatabase {
         Application.Type.Webshop, true);
         PmsBookingCalendar.isPublic = true;
         PmsBookingCalendar.isFrontend = true;
-        PmsBookingCalendar.moduleId = "WebShop";
+        PmsBookingCalendar.moduleId = "booking";
         PmsBookingCalendar.defaultActivate = false;
         apps.add(PmsBookingCalendar);
 
@@ -103,7 +103,7 @@ public class AddApplicationsToDatabase {
         Application.Type.Webshop, true);
         PmsBookingProductList.isPublic = true;
         PmsBookingProductList.isFrontend = true;
-        PmsBookingProductList.moduleId = "WebShop";
+        PmsBookingProductList.moduleId = "booking";
         PmsBookingProductList.defaultActivate = false;
         apps.add(PmsBookingProductList);
         
@@ -126,7 +126,7 @@ public class AddApplicationsToDatabase {
         Application.Type.Webshop, true);
         PmsManagement.isPublic = true;
         PmsManagement.isFrontend = true;
-        PmsManagement.moduleId = "WebShop";
+        PmsManagement.moduleId = "booking";
         PmsManagement.defaultActivate = false;
         apps.add(PmsManagement);
 
@@ -137,7 +137,7 @@ public class AddApplicationsToDatabase {
         Application.Type.Webshop, true);
         BookingEngineManagement.isPublic = true;
         BookingEngineManagement.isFrontend = true;
-        BookingEngineManagement.moduleId = "WebShop";
+        BookingEngineManagement.moduleId = "booking";
         BookingEngineManagement.defaultActivate = false;
         apps.add(BookingEngineManagement);
         
@@ -148,7 +148,7 @@ public class AddApplicationsToDatabase {
         Application.Type.Webshop, true);
         PmsBookingSummary.isPublic = true;
         PmsBookingSummary.isFrontend = true;
-        PmsBookingSummary.moduleId = "WebShop";
+        PmsBookingSummary.moduleId = "booking";
         PmsBookingSummary.defaultActivate = false;
         apps.add(PmsBookingSummary);
 
@@ -159,9 +159,20 @@ public class AddApplicationsToDatabase {
         Application.Type.Webshop, true);
         PmsBookingContactData.isPublic = true;
         PmsBookingContactData.isFrontend = true;
-        PmsBookingContactData.moduleId = "WebShop";
+        PmsBookingContactData.moduleId = "booking";
         PmsBookingContactData.defaultActivate = false;
         apps.add(PmsBookingContactData);
+        
+        Application PmsPricing = createSettings("PmsPricing",
+        "1be25b17-c17e-4308-be55-ae2988fecc7c",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsPricing.isPublic = true;
+        PmsPricing.isFrontend = true;
+        PmsPricing.moduleId = "booking";
+        PmsPricing.defaultActivate = false;
+        apps.add(PmsPricing);
         
         return apps;
     }

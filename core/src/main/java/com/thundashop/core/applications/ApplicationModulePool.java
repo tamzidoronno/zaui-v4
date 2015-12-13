@@ -69,6 +69,13 @@ class ApplicationModulePool {
         questback.description = "Questback applications, this module is containing all the applications that is required to setup a proper questback";
         modules.put(questback.id, questback);
         
+        ApplicationModule booking = new ApplicationModule();
+        booking.moduleName = "Booking";
+        booking.id = "booking";
+        booking.faIcon = "fa-calendar";
+        booking.description = "Booking for properties and events.";
+        modules.put(booking.id, booking);
+        
     }
     
     public ApplicationModule getModule(String id) {

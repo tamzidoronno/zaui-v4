@@ -1,0 +1,19 @@
+
+.PmsPricing .pmsbutton {
+      background-color: #44c767;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #18ab29;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 17px;
+  padding: 6px 20px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #2f6627;
+}
+.PmsPricing .weeked { border: solid 1px red; }
+.PmsPricing .priceinput { width: 50px; }
+.PmsPricing .pricetableview { width: 100%; overflow: auto; }

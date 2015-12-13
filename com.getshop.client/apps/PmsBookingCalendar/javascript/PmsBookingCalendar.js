@@ -9,9 +9,7 @@ app.PmsBookingCalendar = {
             "time" : $(this).attr('time')
         });
         var box = $(this).closest('.applicationinner .calendar');
-        thundashop.Ajax.postWithCallBack(event, function(result) {
-            box.html(result);
-        });
+        thundashop.Ajax.post(event);
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});

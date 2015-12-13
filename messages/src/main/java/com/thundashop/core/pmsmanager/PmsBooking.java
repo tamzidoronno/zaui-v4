@@ -22,6 +22,7 @@ public class PmsBooking extends DataCommon {
     public String language = "nb_NO";
     public String userId = "";
     public Integer state = 0;
+    public List<String> orderIds = new ArrayList();
 
     void attachBookingItems(List<Booking> bookingsToAdd) {
         for(PmsBookingRooms room : rooms) {

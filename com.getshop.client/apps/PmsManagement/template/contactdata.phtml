@@ -10,7 +10,7 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
         <span class='roomprefix'>Type</span>
         <span class='roompostfix'>
         <? 
-        if($booking->contactData->type === 1) {
+        if($user->isPrivatePerson) {
             echo "Private";
         } else {
             echo "Company";
@@ -18,13 +18,13 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
         ?>
         </span>
         <div style='clear:both;'></div>
-        <? if($booking->contactData->type === 1) { ?>
+        <? if($user->isPrivatePerson) { ?>
             <span class='roomprefix'>Birthday</span>
-            <span class='roompostfix'><? echo $user->birthday; ?></span>
+            <span class='roompostfix'><? echo $user->birthDay; ?></span>
             <div style='clear:both;'></div>
         <? } else { ?>
             <span class='roomprefix'>Orgid</span>
-            <span class='roompostfix'><? echo @$user->orgid; ?></span>
+            <span class='roompostfix'><? echo $user->birthDay; ?></span>
             <div style='clear:both;'></div>
         <? } ?>
         <span class='roomprefix'>Name</span>
@@ -46,7 +46,7 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
         <span class='roompostfix'>+<? echo $user->prefix . " " . $user->cellPhone; ?></span>
         <div style='clear:both;'></div>
         <span class='roomprefix'>User id</span>
-        <span class='roompostfix'><? echo $booking->userId; ?></span>
+        <span class='roompostfix'><? echo $user->customerId; ?></span>
         <div style='clear:both;'></div>
         
     </div>

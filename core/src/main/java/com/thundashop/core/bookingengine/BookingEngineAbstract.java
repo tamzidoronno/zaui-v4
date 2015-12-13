@@ -54,14 +54,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return type;
     }
     
-    public void deleteABookingItemType(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    public BookingItemType  getABookingItemType(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof BookingEngineConfiguration) {
@@ -452,6 +444,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         booking.bookingItemId = itemId;
         booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
         saveObject(booking);
+    }
+
+    public void deleteBookingItemType(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

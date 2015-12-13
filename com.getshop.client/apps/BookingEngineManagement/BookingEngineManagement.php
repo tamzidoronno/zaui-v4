@@ -18,9 +18,9 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
             $item->bookingItemName = $name;
             $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
         } else {
-            $type = $this->getApi()->getBookingEngine()->getABookingItemType($this->getSelectedName(), $id);
+            $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $id);
             $type->name = $name;
-            $this->getApi()->getBookingEngine()->saveABookingItemType($this->getSelectedName(), $type);
+            $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $type);
         }
         
     }
@@ -51,7 +51,7 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     
     public function deleteBookingItemType() {
         $id = $_POST['data']['bookingitemtypeid'];
-        $this->getApi()->getBookingEngine()->deleteABookingItemType($this->getSelectedName(), $id);
+        $this->getApi()->getBookingEngine()->deleteBookingItemType($this->getSelectedName(), $id);
     }
     
     public function addBookingItemType() {

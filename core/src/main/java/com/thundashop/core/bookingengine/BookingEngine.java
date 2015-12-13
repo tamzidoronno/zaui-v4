@@ -41,16 +41,6 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
 
     @Override
-    public void deleteABookingItemType(String id) {
-        bookingEngineAbstract.deleteABookingItemType(id);
-    }
-
-    @Override
-    public BookingItemType getABookingItemType(String id) {
-        return deepClone(bookingEngineAbstract.getABookingItemType(id));
-    }
-
-    @Override
     public BookingItemType updateBookingItemType(BookingItemType type) {
         return deepClone(bookingEngineAbstract.updateBookingItemType(type));
     }
@@ -125,6 +115,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         bookingEngineAbstract.deleteBooking(id);
     }
 
+    @Override
     public BookingItemType getBookingItemType(String id) {
         return deepClone(bookingEngineAbstract.getBookingItemType(id));
     }
@@ -143,6 +134,11 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     public BookingTimeLineFlatten getTimelines(String id, Date startDate, Date endDate) {
         return deepClone(bookingEngineAbstract.getTimelines(id, startDate, endDate));
+    }
+
+    @Override
+    public void deleteBookingItemType(String id) {
+        bookingEngineAbstract.deleteBookingItemType(id);
     }
     
 }

@@ -76,7 +76,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
         PmsBooking result = findBookingForSession();
-        
         booking.sessionId = getSession().id;
         saveObject(booking);
         bookings.put(booking.id, booking);
@@ -99,8 +98,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking currentBooking = findBookingForSession();
         
         if(currentBooking != null) {
-            deleteObject(currentBooking);
-            bookings.remove(currentBooking.id);
+            deleteBooking(currentBooking);
         }
         
         PmsBooking booking = new PmsBooking();
@@ -248,6 +246,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return -3;
             }
         }
+
+        if(booking.rooms.isEmpty()) {
+            return -4;
+        }
         
         List<Booking> bookingsToAdd = new ArrayList();
         for(PmsBookingRooms room : booking.rooms) {
@@ -264,7 +266,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookingsToAdd.add(bookingToAdd);
         }
         try {
-            if(!bookingEngine.canAdd(bookingsToAdd)) {
+            if(bookingEngine.canAdd(bookingsToAdd)) {
                 bookingEngine.addBookings(bookingsToAdd);
                 booking.attachBookingItems(bookingsToAdd);
                 booking.sessionId = null;
@@ -292,6 +294,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private PmsBooking findBookingForSession() {
+        if(getSession() == null) {
+            return null;
+        }
         String sessionId = getSession().id;
         if(sessionId == null) {
             return null;
@@ -363,18 +368,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBooking(String bookingId) {
-        return finalize(bookings.get(bookingId));
+        PmsBooking booking = bookings.get(bookingId);
+        if(booking == null) {
+            return null;
+        }
+        return finalize(booking);
     }
 
     private PmsBooking finalize(PmsBooking booking) {
         if(booking.rooms == null) {
+            System.out.println("Removing booking due to no rooms");
             deleteBooking(booking);
             return null;
         }
         
         for(PmsBookingRooms room : booking.rooms) {
-            if(room.booking == null && room.bookingId != null) {
+            if(room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
+                if(room.booking.bookingItemTypeId != null) {
+                    room.bookingItemTypeId = room.booking.bookingItemTypeId;
+                }
             }
         }
         
@@ -391,6 +404,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveObject(booking);
         }
         if(booking.rooms.isEmpty()) {
+            System.out.println("Removing booking after finalizing");
             deleteBooking(booking);
             return null;
         }
@@ -399,6 +413,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void deleteBooking(PmsBooking booking) {
+        System.out.println("Booking are being deleted");
         bookings.remove(booking.id);
         deleteObject(booking);
     }
@@ -482,8 +497,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public String setBookingItem(String roomId, String bookingId, String itemId) {
         PmsBooking booking = getBooking(bookingId);
+        if(booking == null) {
+            return "Booking does not exists";
+        }
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
+            if(room == null) {
+                return "Room does not exists";
+            }
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
         }catch(BookingEngineException ex) {
             return ex.getMessage();

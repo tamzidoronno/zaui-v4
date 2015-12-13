@@ -336,11 +336,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
-        //Reset the password.
-        user.password = savedUser.password;
-        
-        // Keep comments from prev saved user. (has seperated functions for adding and deleting)
-        user.comments = savedUser.comments;
+        if(savedUser != null) {
+            //Reset the password.
+            user.password = savedUser.password;
+
+            // Keep comments from prev saved user. (has seperated functions for adding and deleting)
+            user.comments = savedUser.comments;
+        }
         
         user.company = getCompany(user);
         collection.addUser(user);

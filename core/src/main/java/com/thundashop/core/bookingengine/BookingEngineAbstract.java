@@ -329,7 +329,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         } catch (BookingEngineException exception) {
             return false;
         }
-        
+
         return true;
     }
 

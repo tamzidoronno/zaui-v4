@@ -136,7 +136,7 @@ public class BookingEngineBookingTests extends TestCommon {
         String id = UUID.randomUUID().toString();
         Booking booking = new Booking();
         booking.id = id;
-        feedDataFromDatabase(bookingEngine, booking);
+        feedDataFromDatabase(abstractEngine, booking);
         booking = bookingEngine.getBooking(id);
         Assert.assertNotNull(booking);
     }

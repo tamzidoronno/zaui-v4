@@ -5,6 +5,7 @@
 package com.getshop.scope;
 
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Session;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class GetShopSessionScope implements Scope {
     
     private Map<Long, String> threadStoreIds = Collections.synchronizedMap(new HashMap<Long, String>());
     private Map<Long, String> threadSessionBeanNames = Collections.synchronizedMap(new HashMap<Long, String>());
+    private Map<Long, Session> threadSessions = Collections.synchronizedMap(new HashMap<Long, Session>());
     private Map<String, Object> objectMap = Collections.synchronizedMap(new HashMap<String, Object>());
     private Map<String, Object> namedSessionObjects = Collections.synchronizedMap(new HashMap<String, Object>());
 
@@ -52,6 +54,11 @@ public class GetShopSessionScope implements Scope {
                     bean.setStoreId(storeId);
                     bean.setName(sessionBeanName);
                     bean.initialize();
+                    
+                    if (threadSessions.get(threadId) != null) {
+                        bean.setSession(threadSessions.get(threadId));
+                    }
+                    
                     namedSessionObjects.put(name+"_"+storeId+"_"+sessionBeanName, bean);
                     return bean;
                 }
@@ -112,9 +119,10 @@ public class GetShopSessionScope implements Scope {
         objectMap.clear();
     }
 
-    public void setStoreId(String storeId, String multiLevelName) {
+    public void setStoreId(String storeId, String multiLevelName, Session session) {
         long threadId = Thread.currentThread().getId();
         threadStoreIds.put(threadId, storeId);
+        threadSessions.put(threadId, session);
         threadSessionBeanNames.put(threadId, multiLevelName);
     }
 

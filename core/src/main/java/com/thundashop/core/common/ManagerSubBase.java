@@ -6,8 +6,6 @@
 package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSessionScope;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -38,7 +36,7 @@ public class ManagerSubBase {
     
     protected boolean isSingleton = false;
     protected boolean ready = false;
-    protected Session session;
+    private Session session;
 
 	private ManagerSetting managerSettings = new ManagerSetting();
     

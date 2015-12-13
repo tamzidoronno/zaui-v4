@@ -42,7 +42,7 @@ public class TestCommon implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext ac) throws BeansException {
         GetShopSessionScope scope = ac.getBean(GetShopSessionScope.class);
-        scope.setStoreId("junit_test_store", "level1");
+        scope.setStoreId("junit_test_store", "level1", new Session());
     }
     
     @Before

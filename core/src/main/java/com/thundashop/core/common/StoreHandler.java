@@ -44,7 +44,7 @@ public class StoreHandler {
     }
         
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        scope.setStoreId(storeId, inObject.multiLevelName);
+        scope.setStoreId(storeId, inObject.multiLevelName, getSession(inObject.sessionId));
         Class getShopInterfaceClass = loadClass(inObject.realInterfaceName);
         setSessionObject(inObject.sessionId, getShopInterfaceClass, inObject);
 
@@ -74,8 +74,7 @@ public class StoreHandler {
     }
 
     public synchronized boolean isAdministrator(String sessionId, JsonObject2 object) throws ErrorException {
-
-        scope.setStoreId(storeId, object.multiLevelName);
+        scope.setStoreId(storeId, object.multiLevelName, getSession(sessionId));
 
         UserManager manager = getManager(UserManager.class, null, null);
         User user = manager.getUserBySessionId(sessionId);
@@ -154,11 +153,24 @@ public class StoreHandler {
         }
         return stackTrace;
     }
+    
+    private Session getSession(String sessionId) {
+        if (!sessions.containsKey(sessionId)) {
+            Session session = new Session();
+            session.storeId = storeId;
+            session.id = sessionId;
+            sessions.put(sessionId, session);
+            return session;
+        } else {
+            return sessions.get(sessionId);
+        }
+    }
 
     private void setSessionObject(String sessionId, Class getShopInterfaceClass, JsonObject2 inObject) {
         IUserManager userManager = getManager(IUserManager.class, getShopInterfaceClass, inObject);
 
-        Session session = null;
+        Session session = getSession(sessionId);
+                
         if (!sessions.containsKey(sessionId)) {
             session = new Session();
             session.storeId = storeId;
@@ -176,7 +188,7 @@ public class StoreHandler {
             System.out.println("Throws bean exception?");
         }
         for (ManagerBase base : messageHandler) {
-            base.session = session;
+            base.setSession(session);
         }
         
         // Set sessions for maps
@@ -190,7 +202,7 @@ public class StoreHandler {
         }
         
         for (GetShopSessionBeanNamed bean : scope.getSessionNamedObjects()) {
-            bean.session = session;
+            bean.setSession(session);
         }
         
         try {
@@ -202,7 +214,7 @@ public class StoreHandler {
 
     private void clearSessionObject() {
         for (ManagerBase base : messageHandler) {
-            base.session = null;
+            base.setSession(null);
         }
         for (GetShopSessionObject base : sessionScopedBeans) {
             base.clearSession();

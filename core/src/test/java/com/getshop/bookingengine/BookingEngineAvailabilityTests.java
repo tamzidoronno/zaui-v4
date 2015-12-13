@@ -214,7 +214,7 @@ public class BookingEngineAvailabilityTests extends TestCommon {
     public void testAvailbilityFromDatabaseUsed() {
         Availability availability = new Availability();
         availability.id = "TESTME";
-        feedDataFromDatabase(bookingEngine, availability);
+        feedDataFromDatabase(abstractEngine, availability);
         
         Availability fromDb = bookingEngine.getAvailbility("TESTME");
         

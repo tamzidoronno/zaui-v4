@@ -34,6 +34,11 @@ $slave = null;
 $comment = $json['extraComment'];
 $geartype = $json['ManualGear'] == true ? "man" : "auto";
 $useCredit = "true";
+
+if (isset($json['reference'])) {
+    $_POST['reference'] = $json['reference'];
+}
+
 $sedoxFileUpload->saveFileContent($brand, $model, $engineSize, $power, $year, $tool, $comment, $geartype, $useCredit, $slave, $filename, $filecontent, "Windows Application");
 
 ?>

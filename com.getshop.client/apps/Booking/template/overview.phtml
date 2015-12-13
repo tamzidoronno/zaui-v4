@@ -1,6 +1,8 @@
 <?
 if ($this->hasReadAccess()) {
     $users = $this->getUsersConnectedToSchema();
+    usort($users, array($this, "usortUsersByCommentDate"));
+    
     if (count($users)) {
 
         echo "<hr>";
@@ -16,7 +18,7 @@ if ($this->hasReadAccess()) {
             $found = true;
             $link = "?page=users_all_users&userid=" . $user->id;
             $donemarker = "<div class='donemarker' userId='" . $user->id . "'>" . $this->__f("Mark as done") . "</div>";
-            echo "<div class='userentry'><a href='$link'>" . $user->fullName . "<div class='datecreated'>" . $user->rowCreatedDate . "</a></div>$donemarker</div>";
+            echo "<div class='userentry'><a href='$link'>" . $user->fullName . "<div class='datecreated'>" . $comment->dateCreated . "</a></div>$donemarker</div>";
         }
 
         if (!$found) {
@@ -35,7 +37,7 @@ if ($this->hasReadAccess()) {
             $id = $user->id;
             $link = "?page=users_all_users&userid=" . $user->id;
             $color = $this->isInvoiced($user->id) ? "green" : "red";
-            echo "<div class='userentryouter'><div class='userentry'><a href='$link'>" . $user->fullName . "<div class='datecreated'>" . $user->rowCreatedDate . "</a></div></div><i style='color: $color;' class='fa fa-dollar toggleUserId' userId='$id' ></i></div> ";
+            echo "<div class='userentryouter'><div class='userentry'><a href='$link'>" . $user->fullName . "<div class='datecreated'>" . $comment->dateCreated . "</a></div></div><i style='color: $color;' class='fa fa-dollar toggleUserId' userId='$id' ></i></div> ";
         }
 
         if (!$found) {

@@ -477,6 +477,16 @@ class Booking extends MarketingApplication implements Application {
             $this->getApi()->getCalendarManager()->addUserToEvent($createdUser->id, $data['entryId'], "", $createdUser->username, "webpage");
         }
     }
+    
+    public function usortUsersByCommentDate($c, $d) {
+        $comment1 = $this->getComment($c);
+        $comment2 = $this->getComment($d);
+        
+        $date1 = strtotime($comment1->dateCreated);
+        $date2 = strtotime($comment2->dateCreated);
+        
+        return $date1 < $date2;
+    }
 }
 
 ?>

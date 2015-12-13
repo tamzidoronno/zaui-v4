@@ -94,7 +94,7 @@ if ($comment) {
                 </div>
 
                 <?
-                $filePrice = strtolower($binFile->fileType) == "original" ? $this->getPriceForFile($binFile) : $this->getPriceForFile($binFile) + 40; 
+                $filePrice = strtolower($binFile->fileType) == "original" || strtolower($binFile->fileType) == "cmdencrypted" || strtolower($binFile->fileType) == "cmd original" ? $this->getPriceForFile($binFile) : $this->getPriceForFile($binFile) + 40; 
                 $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
                 if ($user != null) {
                     $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccount();

@@ -12,6 +12,7 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pkkcontrol.PkkControlData;
@@ -59,6 +60,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
     }
+
+    @Override
+    public void setSession(Session session) {
+        System.out.println("Setting session");
+        super.setSession(session); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
     
     @Override
     public List<Room> getAllRoomTypes(Date start, Date end) {

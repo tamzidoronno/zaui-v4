@@ -312,7 +312,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);
             User user = createUser(startData, newStoreId, newAddress);
             
-            scope.setStoreId(newStoreId, "");
+            scope.setStoreId(newStoreId, "", null);
             UserManager userManager = AppContext.appContext.getBean(UserManager.class);
             userManager.saveUser(user);
             
@@ -423,7 +423,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         User customer = user.jsonClone();
         customer.type = User.Type.CUSTOMER;
 
-        scope.setStoreId(getshopStoreId, "");
+        scope.setStoreId(getshopStoreId, "", null);
         UserManager getShopUserManager = AppContext.appContext.getBean(UserManager.class);
         getShopUserManager.saveCustomerDirect(customer);
     }

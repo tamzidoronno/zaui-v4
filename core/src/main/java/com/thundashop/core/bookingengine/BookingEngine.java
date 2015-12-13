@@ -27,12 +27,6 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEngine {
 
-    @Override
-    public void dataFromDatabase(DataRetreived data) {
-        bookingEngineAbstract.dataFromDatabase(data);
-    }
-
-    
     @Autowired
     public BookingEngineAbstract bookingEngineAbstract;
     

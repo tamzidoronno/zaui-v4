@@ -106,7 +106,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking currentBooking = findBookingForSession();
         
         if(currentBooking != null) {
-            deleteBooking(currentBooking);
+            deleteBooking(currentBooking, true);
         }
         
         PmsBooking booking = new PmsBooking();
@@ -387,7 +387,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private PmsBooking finalize(PmsBooking booking) {
         if(booking.rooms == null) {
             System.out.println("Removing booking due to no rooms");
-            deleteBooking(booking);
+            deleteBooking(booking, false);
             return null;
         }
         
@@ -414,15 +414,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         if(booking.rooms.isEmpty()) {
             System.out.println("Removing booking after finalizing");
-            deleteBooking(booking);
+            deleteBooking(booking, false);
             return null;
         }
         
         return booking;
     }
 
-    private void deleteBooking(PmsBooking booking) {
-        System.out.println("Booking are being deleted");
+    private void deleteBooking(PmsBooking booking, boolean onInit) {
+        if(!onInit) {
+            System.out.println("Booking are being deleted");
+        }
         bookings.remove(booking.id);
         deleteObject(booking);
     }

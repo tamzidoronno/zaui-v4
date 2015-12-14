@@ -31,7 +31,7 @@ public class PmsBookingRooms {
     public PmsBookingDateRange date = new PmsBookingDateRange();
     public Integer numberOfGuests = 0;
     public double count = 1;
-    public double price = 108;
+    public double price = 0;
     public double taxes = 8;
     public Integer priceType = 1;
     public String bookingId;

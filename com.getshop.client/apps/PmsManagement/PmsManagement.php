@@ -178,5 +178,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
 
+    public function translatePaymenttype($type, $paymentTypes) {
+        foreach($paymentTypes as $paymentType) {
+            $idString = str_replace("-", "_", $paymentType->id);
+            if(stristr($type, $idString)) {
+                return $paymentType->appName;
+            }
+        }
+        return "";
+    }
+
 }
 ?>

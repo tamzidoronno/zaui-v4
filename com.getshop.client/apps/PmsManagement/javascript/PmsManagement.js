@@ -6,6 +6,11 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .roomprefix .fa-edit', app.PmsManagement.toggleEditMode);
         $(document).on('click', '.PmsManagement .editGuestToggle', app.PmsManagement.editGuestToggle);
         $(document).on('change', '.PmsManagement [gsname="numberofguests"]', app.PmsManagement.editGuestToggle);
+        $(document).on('click', '.PmsManagement .showorderbutton', app.PmsManagement.showOrder);
+    },
+    showOrder : function() {
+        thundashop.common.hideInformationBox();
+        app.OrderManager.gssinterface.showOrder($(this).attr('orderid'));
     },
     editGuestToggle : function() {
         var row = $(this).closest('.roomattribute');

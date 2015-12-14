@@ -32,6 +32,13 @@ $pricetypes[3] = "Weekly";
 $pricetypes[4] = "Per minute";
 $pricetypes[5] = "Per hour";
 $pricetypes[6] = "Per seconds";
+
+$instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$instances2 = array();
+foreach($instances as $instance) {
+    $instances2[$instance->id] = $instance;
+}
+$instances = $instances2;
 ?>
 
 <div class='orderinformation'>
@@ -75,15 +82,19 @@ if($booking->orderIds) {
     echo "<th>Order date</th>";
     echo "<th>Price</th>";
     echo "<th>Payment status</th>";
+    echo "<th>Payment type</th>";
     echo "<th>Transferred</th>";
     echo "</tr>";
     foreach($result as $order) {
         $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
         echo "<tr>";
-        echo "<td>" . $order->incrementOrderId . "</td>";
+        echo "<td><a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a></td>";
         echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate))  . "</td>";
         echo "<td>" . $total . "</td>";
         echo "<td>" . $paymentTypes[$order->status] . "</td>";
+        echo "<td>";
+        echo $this->translatePaymenttype($order->payment->paymentType, $instances);
+        echo "</td>";
         echo "<td align='center'>";
         if($order->transferedToAccountingSystem) {
             echo "<i class='fa fa-check'>";

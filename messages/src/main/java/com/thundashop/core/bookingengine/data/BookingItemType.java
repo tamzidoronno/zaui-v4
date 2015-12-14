@@ -16,4 +16,5 @@ public class BookingItemType extends DataCommon {
     public String name;
     public String productId;
     public String pageId;
+    public Boolean visibleForBooking = true;
 }

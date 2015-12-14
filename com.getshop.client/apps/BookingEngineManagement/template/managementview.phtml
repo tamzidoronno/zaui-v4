@@ -8,6 +8,10 @@ foreach($bookingtypes as $tp) {
 $bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 $config = $this->getApi()->getBookingEngine()->getConfig($this->getSelectedName());
 $bookings = $this->getApi()->getBookingEngine()->getAllBookings($this->getSelectedName());
+$products = $this->getApi()->getProductManager()->getAllProducts();
+foreach($products as $prod) {
+    $products[$prod->id] = $prod;
+}
 ?>
 <div class='addRoomBox'>
     <h2 ><? echo $this->getSelectedName(); ?></h2>
@@ -31,7 +35,20 @@ $bookings = $this->getApi()->getBookingEngine()->getAllBookings($this->getSelect
                         foreach ($bookingtypes as $type) {
                             /* @var $type core_bookingengine_data_BookingItemType */
                             echo "<tr entryid='" . $type->id . "' type='itemtype'>";
-                            echo "<td><i class='fa fa-trash-o deletegroupid' bookingitemtypeid='" . $type->id . "'></i></td><td><span class='currentname'>" . $type->name . "</span></td>";
+                            echo "<td><i class='fa fa-trash-o deletegroupid' bookingitemtypeid='" . $type->id . "'></i></td><td><span class='currentname'>" . $type->name . "</span>";
+                            echo "<div class='secondary'>";
+                            if($type->productId) {
+                                echo "product : " . $products[$type->productId]->name;
+                            } else {
+                                echo "Visible for booking, ";
+                                if($type->visibleForBooking) {
+                                    echo "yes";
+                                } else {
+                                    echo "No";
+                                }
+                            }
+                            echo "</div>";
+                            echo "</td>";
                             echo "<td align='right'><span class='pmsbutton renameBookingItemButton pmsbuttonsmall'>Rename</span> ";
                             echo "<span class='pmsbutton pmsbuttonsmall'>Edit content</span></td>";
                             echo "</tr>";

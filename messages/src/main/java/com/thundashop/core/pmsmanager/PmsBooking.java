@@ -4,11 +4,20 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PmsBooking extends DataCommon {
 
-    
+    public static class PriceType {
+        public static Integer daily = 1;
+        public static Integer monthly = 2;
+        public static Integer weekly = 3;
+        public static Integer minutly = 4;
+        public static Integer hourly = 5;
+        public static Integer secondly = 6;
+    }
+       
     public static class BookingStates {
         public static Integer STARTED = 0;
         public static Integer COMPLETED = 1;
@@ -23,6 +32,8 @@ public class PmsBooking extends DataCommon {
     public String userId = "";
     public Integer state = 0;
     public List<String> orderIds = new ArrayList();
+    public Date invoicedTo = null;
+    public Integer priceType = 1;
 
     void attachBookingItems(List<Booking> bookingsToAdd) {
         for(PmsBookingRooms room : rooms) {

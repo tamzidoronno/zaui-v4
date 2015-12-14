@@ -1,11 +1,66 @@
 <? 
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $booking = $this->getSelectedBooking();
+
+/*Æ
+ * public static int CREATED = 1;
+        public static int WAITING_FOR_PAYMENT = 2;
+        public static int PAYMENT_FAILED = 3;
+        public static int COMPLETED = 4;
+        public static int CANCELED = 5;
+        public static int SENT = 6;
+        public static int PAYMENT_COMPLETED = 7;
+        public static int COLLECTION_FAILED = 8;
+        public static int NEEDCOLLECTING = 9;
+ */
+
+$paymentTypes = array();
+$paymentTypes[1] = "CREATED";
+$paymentTypes[2] = "WAITING FOR PAYMENT";
+$paymentTypes[3] = "FAILED";
+$paymentTypes[4] = "COMPLETED";
+$paymentTypes[5] = "CANCELED";
+$paymentTypes[6] = "SENT";
+$paymentTypes[7] = "PAYMENT COMPLETED";
+$paymentTypes[8] = "COLLECTION_FAILED";
+$paymentTypes[9] = "NEEDCOLLECTING";
+
+$pricetypes = array();
+$pricetypes[1] = "Daily";
+$pricetypes[2] = "Monthly";
+$pricetypes[3] = "Weekly";
+$pricetypes[4] = "Per minute";
+$pricetypes[5] = "Per hour";
+$pricetypes[6] = "Per seconds";
 ?>
 
 <div class='orderinformation'>
     <h2>Orders</h2>
 </div>
+
+<span class='roomattribute'>
+    <span class='roomprefix'>
+        <i class='fa fa-edit'></i> Price type
+    </span>
+    <span class='roompostfix'>
+        <span class='viewmode'>
+            <? echo $pricetypes[$booking->priceType]; ?>
+        </span>
+        <span class='editmode' gstype='form' method='changePriceType'>
+            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+            <?php
+            echo "<select gsname='pricetype'>";
+            foreach($pricetypes as $idx => $value) {
+                echo "<option value='$idx'>$value</option>";
+            }
+            echo "</select>";
+            ?>
+            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+        </span>
+    </span>
+</span>
+<div style='clear:both;'></div>
+
 <?php
 if($booking->orderIds) {
     foreach($booking->orderIds as $orderId) {
@@ -14,9 +69,30 @@ if($booking->orderIds) {
     }
     
     ksort($result);
+    echo "<table cellspacing='0' cellpadding='0'>";
+    echo "<tr>";
+    echo "<th>Orderid</th>";
+    echo "<th>Order date</th>";
+    echo "<th>Price</th>";
+    echo "<th>Payment status</th>";
+    echo "<th>Transferred</th>";
+    echo "</tr>";
     foreach($result as $order) {
         $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
-        echo $order->incrementOrderId . " - " . $total . "<br>";
+        echo "<tr>";
+        echo "<td>" . $order->incrementOrderId . "</td>";
+        echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate))  . "</td>";
+        echo "<td>" . $total . "</td>";
+        echo "<td>" . $paymentTypes[$order->status] . "</td>";
+        echo "<td align='center'>";
+        if($order->transferedToAccountingSystem) {
+            echo "<i class='fa fa-check'>";
+        } else {
+            echo "<i class='fa fa-close'>";
+        }
+        echo "</td>";
+        echo "</tr>";
     }
+    echo "</table>";
 }
 ?>

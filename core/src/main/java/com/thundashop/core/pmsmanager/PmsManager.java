@@ -259,9 +259,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return -4;
         }
         
+        booking.priceType = prices.defaultPriceType;
+        
         List<Booking> bookingsToAdd = new ArrayList();
         for(PmsBookingRooms room : booking.rooms) {
-            room.priceType = prices.defaultPriceType;
             Booking bookingToAdd = new Booking();
             bookingToAdd.startDate = room.date.start;
             if(room.date.end == null) {

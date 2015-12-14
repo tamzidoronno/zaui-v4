@@ -140,14 +140,17 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function changePriceType() {
         $booking = $this->getSelectedBooking();
-        foreach($booking->rooms as $room) {
-            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
-                $room->priceType = $_POST['data']['pricetype'];
-            }
-        }
-        
+        $booking->priceType = $_POST['data']['pricetype'];
         $this->getManager()->saveBooking($this->getSelectedName(), $booking);
         $this->selectedBooking = $this->getManager()->getBooking($this->getSelectedName(), $booking->id);
+        $this->showBookingInformation();
+    }
+    
+    public function setNewPaymentType() {
+        $booking = $this->getSelectedBooking();
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        $user->preferredPaymentType = $_POST['data']['newtype'];
+        $this->getApi()->getUserManager()->saveUser($user);
         $this->showBookingInformation();
     }
     

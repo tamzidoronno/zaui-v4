@@ -2,11 +2,26 @@
  /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $booking = $this->getSelectedBooking();
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$instances2 = array();
+foreach($instances as $instance) {
+    $instances2[$instance->id] = $instance;
+}
+$instances = $instances2;
 ?>
 
 <div class='contactdata'>
     <h2>Contact data</h2>
     <div style='padding-left: 10px;'>
+        <?php if($booking->invoicedTo) { ?>
+            <span class='roomprefix'>Invoiced until</span>
+            <span class='roompostfix'>
+            <? 
+            echo date("d.m.Y", strtotime($booking->invoicedTo));
+            ?>
+            </span>
+            <div style='clear:both;'></div>
+        <? } ?>
         <span class='roomprefix'>Type</span>
         <span class='roompostfix'>
         <? 
@@ -48,6 +63,35 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
         <span class='roomprefix'>User id</span>
         <span class='roompostfix'><? echo $user->customerId; ?></span>
         <div style='clear:both;'></div>
-        
+        <span class='roomattribute'>
+                <span class='roomprefix'>
+                    <i class='fa fa-edit'></i> Payment type
+                </span>
+            <span class='roompostfix'>
+            <span class="viewmode">
+                    <?
+                    $appSettings = $instances[$user->preferredPaymentType];
+                    $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);
+                    echo $appSettings->appName;
+                    ?>
+                </span>
+                <span class="editmode" gstype='form' method="setNewPaymentType">
+                    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                    <select gsname="newtype">
+                        <?php 
+                        foreach($instances  as $instance) {
+                            $selected = "";
+                            if($instance->id == $user->preferredPaymentType) {
+                                $selected = "SELECTED";
+                            }
+                            echo "<option value='".$instance->id."' $selected>".$instance->appName."</option>";
+                        }
+                        ?>
+                    </select>
+                    <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                </span>
+            </span>
+        </span>
+        <div style='clear:both;'></div>
     </div>
 </div>

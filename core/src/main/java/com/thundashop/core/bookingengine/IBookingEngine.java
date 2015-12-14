@@ -24,10 +24,10 @@ public interface IBookingEngine {
     public List<BookingItemType> getBookingItemTypes();
     
     @Administrator
-    public void deleteABookingItemType(String id);
+    public void deleteBookingItemType(String id);
     
     @Administrator
-    public BookingItemType getABookingItemType(String id);
+    public BookingItemType getBookingItemType(String id);
     
     @Administrator
     public BookingItemType updateBookingItemType(BookingItemType type);

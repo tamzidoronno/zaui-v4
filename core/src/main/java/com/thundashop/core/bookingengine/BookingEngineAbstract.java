@@ -54,14 +54,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return type;
     }
     
-    public void deleteABookingItemType(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    public BookingItemType  getABookingItemType(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof BookingEngineConfiguration) {
@@ -452,6 +444,20 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         booking.bookingItemId = itemId;
         booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
         saveObject(booking);
+    }
+
+    public void deleteBookingItemType(String id) {
+        BookingItemType type = types.remove(id);
+        if (type != null) {
+            
+            long count = items.values().stream().filter( o -> o.bookingItemTypeId.equals(id)).count();
+            
+            if (count > 0) {
+                throw new BookingEngineException("Can not delete a bookingitemtype that already has booking items, Existing items: " + count);
+            }
+            
+            deleteObject(type);
+        }
     }
     
 }

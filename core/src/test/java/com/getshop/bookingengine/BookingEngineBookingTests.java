@@ -527,4 +527,25 @@ public class BookingEngineBookingTests extends TestCommon {
         String bookingId = bookingGroup.bookingIds.stream().filter(o -> bookingEngine.getBooking(o).bookingItemTypeId.equals(type.id)).findFirst().get();
         bookingEngine.changeBookingItemOnBooking(bookingId, savedItem2.id);
     }
+    
+    @Test
+    public void testDeleteBookingItemType() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        
+        reset(databaseSaver);
+        bookingEngine.deleteBookingItemType(type.id);
+        verify(databaseSaver, times(1)).deleteObject(any(BookingItemType.class), any(Credentials.class));
+        
+        BookingItemType bookingType = bookingEngine.getBookingItemType(type.id);
+        Assert.assertNull(bookingType);
+    }
+    
+    @Test(expected = BookingEngineException.class)
+    public void testDeleteBookingItemType_typeAlreadyHasBookingItems() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        BookingItem savedItem = bookingEngine.saveBookingItem(item);
+        
+        bookingEngine.deleteBookingItemType(type.id);
+    }
 }

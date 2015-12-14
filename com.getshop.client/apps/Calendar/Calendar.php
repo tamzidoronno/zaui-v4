@@ -946,6 +946,10 @@ class Calendar extends MarketingApplication implements Application {
         
         return [];
     }
+    
+    public function getStoreId() {
+        return $this->getFactory()->getStore()->id;
+    }
 }
 
 class checkListComment {

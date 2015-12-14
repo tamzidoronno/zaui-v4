@@ -110,6 +110,12 @@ Calendar = {
     },
     
     toggleReadyToInvoice: function() {
+        if ($(this).attr('checkAble') === "false") {
+            alert('Et kurs kan ikke ferdigstilles før det er lagt inn minst en kommentar.');
+            $(this).attr('checked', false);
+            return;
+        }
+        
         var data = {
             entryId : $(this).attr('entryId'),
             ready : $(this).is(':checked')

@@ -259,8 +259,9 @@ usort($day->entries, array("ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar", "
             <div>
                 <?
                 $checked = $entry->readyToInvoice ? "checked='checked'" : "";
+                $canCheckIt = count($entry->comments) == 0 && $this->getStoreId() == "2fac0e57-de1d-4fdf-b7e4-5f93e3225445" ? "checkAble='false'" : "checkAble='true'";
                 ?>
-                <input type='checkbox' entryId='<? echo $entry->entryId; ?>' class='readyToInvoice' <? echo $checked; ?>/> <? echo $this->__f("Ready to invoice"); ?>
+                <input type='checkbox' entryId='<? echo $entry->entryId; ?>' class='readyToInvoice' <? echo $checked." ".$canCheckIt; ?>/> <? echo $this->__f("Ready to invoice"); ?>
             </div>
             <br/>
             <div class="comment_area">

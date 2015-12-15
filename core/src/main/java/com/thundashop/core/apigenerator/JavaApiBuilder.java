@@ -33,6 +33,11 @@ public class JavaApiBuilder {
         this.generator = generator;
         this.allManagers = allManagers;
         this.dataObjects = dataObjects;
+        if(pathToSource == null || pathToSource.isEmpty()) {
+            System.out.println("No path to source specified");
+            apiPath = null;
+            return;
+        }
         apiPath = pathToSource + "/" + apiPath;
 
     }
@@ -87,7 +92,10 @@ public class JavaApiBuilder {
     private String BuildJavaApi(List<Class> list) throws IOException {
         String content = "";
         List<String> apiclasses = new ArrayList();
-        
+        if(apiPath == null) {
+            System.out.println("Not building java api, the path to source is not specified");
+            return "";
+        }
         System.out.println("Building java api to: " + apiPath + "/");
 
         for (Class entry : list) {

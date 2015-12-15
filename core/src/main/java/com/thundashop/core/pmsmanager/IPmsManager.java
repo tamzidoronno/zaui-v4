@@ -44,4 +44,7 @@ public interface IPmsManager {
     
     @Administrator
     public PmsPricing setPrices(PmsPricing prices); 
+    
+    @Administrator
+    public String createOrder(String bookingId, NewOrderFilter filter);
 }

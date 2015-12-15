@@ -117,4 +117,20 @@ if($booking->orderIds) {
     }
     echo "</table>";
 }
+
+echo "<div "
 ?>
+<div gstype="form" method="createNewOrder">
+    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+    <?php
+    if($booking->priceType == 2) {
+        if(!$booking->invoicedTo) {
+            $booking->invoicedTo = $booking->rooms[0]->date->start;
+        }
+        $startingFrom = date("d.m.Y", strtotime($booking->invoicedTo));
+        echo "Number of months, start invoicing from. :<br><input type='text' gsname='numberofmonths' value='1' style='font-size: 18px; width: 25px;padding: 4px;' />";
+        echo "<input type='text' gsname='startingFrom' value='$startingFrom' style='font-size: 18px; width: 100px;padding: 4px;' />";
+    }
+    ?>
+    <span class='pmsbutton' gstype="submitToInfoBox">Create new order</span>
+</div>

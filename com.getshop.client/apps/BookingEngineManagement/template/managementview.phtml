@@ -9,9 +9,11 @@ $bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getS
 $config = $this->getApi()->getBookingEngine()->getConfig($this->getSelectedName());
 $bookings = $this->getApi()->getBookingEngine()->getAllBookings($this->getSelectedName());
 $products = $this->getApi()->getProductManager()->getAllProducts();
+$products2 = array();
 foreach($products as $prod) {
-    $products[$prod->id] = $prod;
+    $products2[$prod->id] = $prod;
 }
+$products=$products2;
 ?>
 <div class='addRoomBox'>
     <h2 ><? echo $this->getSelectedName(); ?></h2>
@@ -37,15 +39,21 @@ foreach($products as $prod) {
                             echo "<tr entryid='" . $type->id . "' type='itemtype'>";
                             echo "<td><i class='fa fa-trash-o deletegroupid' bookingitemtypeid='" . $type->id . "'></i></td><td><span class='currentname'>" . $type->name . "</span>";
                             echo "<div class='secondary'>";
-                            if($type->productId) {
-                                echo "product : " . $products[$type->productId]->name;
-                            } else {
-                                echo "Visible for booking, ";
-                                if($type->visibleForBooking) {
-                                    echo "yes";
-                                } else {
-                                    echo "No";
+                                echo "<select class='selectedProductForGroup'>";
+                                echo "<option value=''>None selected</option>";
+                                foreach($products as $product) {
+                                    $selected = "";
+                                    if($product->id == $type->productId) {
+                                        $selected = "SELECTED";
+                                    }
+                                    echo "<option value='".$product->id."' $selected>" . $product->name . "</option>";
                                 }
+                                echo "</select><br>";
+                            echo "Visible for booking, ";
+                            if($type->visibleForBooking) {
+                                echo "yes";
+                            } else {
+                                echo "No";
                             }
                             echo "</div>";
                             echo "</td>";

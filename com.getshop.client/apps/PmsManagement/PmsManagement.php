@@ -13,6 +13,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("bookinginformation");
     }
 
+    public function createNewOrder() {
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        foreach($_POST['data'] as $name => $val) {
+            $filter->{$name} = $val;
+        }
+        $bookingId = $_POST['data']['bookingid'];
+        if(isset($_POST['data']['startingFrom'])) {
+            $filter->startInvoiceFrom = $this->convertToJavaDate(strtotime($_POST['data']['startingFrom']));
+        }
+        $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
+        $this->showBookingInformation();
+    }
+    
     /**
      * @return core_bookingengine_data_BookingItemType[]
      */

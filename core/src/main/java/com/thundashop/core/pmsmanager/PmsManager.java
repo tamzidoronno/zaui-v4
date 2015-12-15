@@ -9,12 +9,17 @@ import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.pkkcontrol.PkkControlData;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
@@ -29,6 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +54,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     UserManager userManager;
+    
+    @Autowired
+    OrderManager orderManager;
+    
+    @Autowired
+    CartManager cartManager;
          
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -598,6 +611,82 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         total = total / days;
         
         return total;
+    }
+
+    @Override
+    public String createOrder(String bookingId, NewOrderFilter filter) {
+        
+        PmsBooking booking = getBooking(bookingId);
+        Order order = null;
+        if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
+            order = createMonthlyOrder(booking, filter);
+        }
+        
+        booking.orderIds.add(order.id);
+        saveBooking(booking);
+        return order.id;
+    }
+
+    private Order createMonthlyOrder(PmsBooking booking, NewOrderFilter filter) {
+
+        Date startDate = filter.startInvoiceFrom;
+        for(int i = 0; i < filter.numberOfMonths; i++) {
+            Date endDate = addMonthsToDate(startDate, 1);
+            int daysInMonth = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
+            
+            for(PmsBookingRooms room : booking.rooms) {
+                String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+                if(productId == null) {
+                    System.out.println("Product no set for this booking item type");
+                }
+                int numberOfDays = getNumberOfDays(room, startDate, endDate);
+                
+                double price = room.price / daysInMonth;
+                price *= numberOfDays;
+                
+                CartItem item = cartManager.addProductItem(productId, 1);
+                item.startDate = startDate;
+                item.endDate = endDate;
+                
+                item.getProduct().discountedPrice = price;
+                cartManager.saveCartItem(item);
+            }
+            
+            startDate = addMonthsToDate(startDate, 1);
+        }
+        
+        User user = userManager.getUserById(booking.userId);
+        
+        Order order = orderManager.createOrder(user.address);
+        
+        order.payment = new Payment();
+        order.payment.paymentType = user.preferredPaymentType;
+        
+        return order;
+    }
+
+    private Date addMonthsToDate(Date startDate, Integer numberOfMonths) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        cal.add(Calendar.MONTH, numberOfMonths);
+        return cal.getTime();
+    }
+
+    private int getNumberOfDays(PmsBookingRooms room, Date startDate, Date endDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(room.date.start);
+        int days = 0;
+        while(true) {
+            if(cal.after(startDate)) {
+                days++;
+            }
+            
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(cal.getTime().after(endDate)) {
+                break;
+            }
+        }
+        return days;
     }
 
     

@@ -4,6 +4,16 @@ app.BookingEngineManagement = {
         $(document).on('click', '.BookingEngineManagement .renameBookingItemButton', app.BookingEngineManagement.renameBookingItemButton);
         $(document).on('click', '.BookingEngineManagement .deletetype', app.BookingEngineManagement.deletetype);
         $(document).on('change', '.BookingEngineManagement .itemTypeSelector', app.BookingEngineManagement.setItemType);
+        $(document).on('change', '.BookingEngineManagement .selectedProductForGroup', app.BookingEngineManagement.selectedProductForGroup);
+    },
+    selectedProductForGroup : function() {
+        var productId = $(this).val();
+        var typeid = $(this).closest('tr').attr('entryid');
+        var event = thundashop.Ajax.createEvent('','setProductToItemType',$(this), {
+            "productid" : productId,
+            "typeid" : typeid
+        });
+        thundashop.Ajax.post(event);
     },
     setItemType : function() {
         var id = $(this).closest('tr').attr('entryid');

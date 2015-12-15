@@ -71,8 +71,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Autowired
     public SedoxAirgram sedoxAirgram;
-
-    breaktest2
             
     @Autowired
     public MailFactory mailFactory;

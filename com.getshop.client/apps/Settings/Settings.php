@@ -74,6 +74,13 @@ class Settings extends \SystemApplication implements \Application {
         }
         return "";
     }
+    
+    public function getPaymentMethod() {
+        if (isset($this->getFactory()->getStoreConfiguration()->paymentMethod)) {
+            return $this->getFactory()->getStoreConfiguration()->paymentMethod;
+        }
+        return "";
+    }
 
     public function isAvailable() {
         return false;
@@ -92,6 +99,8 @@ class Settings extends \SystemApplication implements \Application {
         $storeSettings = $this->getFactory()->getStoreConfiguration();
         $storeSettings->emailAdress = $_POST['emailaddress'];
         $storeSettings->phoneNumber = $_POST['phoneNumber'];
+        $storeSettings->paymentMethod = $_POST['paymentMethod'];
+        
         $this->getApi()->getStoreManager()->saveStore($storeSettings);
         
         $this->setConfigurationSetting("language", $_POST['language']);

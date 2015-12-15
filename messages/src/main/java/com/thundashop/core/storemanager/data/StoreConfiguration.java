@@ -30,6 +30,7 @@ public class StoreConfiguration extends DataCommon {
     public String city;
     public String state;
     public String country;
+    public String paymentMethod = "";
     @Translation
     public List<TranslationObject> translationMatrix = new ArrayList();
     public HashMap<String, String> configurationFlags;

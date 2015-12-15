@@ -86,9 +86,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
-        PmsBooking result = findBookingForSession();
         booking.sessionId = getSession().id;
         saveObject(booking);
+        for(PmsBookingRooms room : booking.rooms) {
+            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end);
+        }
         bookings.put(booking.id, booking);
     }
 
@@ -330,10 +332,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         user.address = new Address();
         user.address.address = booking.contactData.address;
         user.address.city = booking.contactData.city;
+        user.address.postCode = booking.contactData.postalCode;
         user.emailAddress = booking.contactData.email;
         user.cellPhone = booking.contactData.phone;
         user.prefix = booking.contactData.prefix;
         user.password = new BigInteger(130, random).toString(32);
+        user.fullName = booking.contactData.name;
+        if(booking.contactData.type == 1) {
+            user.birthDay = booking.contactData.birthday;
+        } else {
+            user.birthDay = booking.contactData.orgid;
+        }
         userManager.createUser(user);
         return user;
     }
@@ -581,7 +590,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 total += defaultPrice;
             }
             cal.add(Calendar.DAY_OF_YEAR, 1);
-            if(cal.getTime().after(end) || cal.getTime().equals(end)) {
+            if(end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
                 break;
             }
         }

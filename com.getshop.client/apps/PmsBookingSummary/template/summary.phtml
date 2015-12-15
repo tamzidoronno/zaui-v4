@@ -49,7 +49,7 @@ foreach($prices as $taxgroup => $price) {
     $taxes = $price - ($price / (($taxgroup + 100) / 100));
     $total += $price;
     echo "<div class='itemrow'>";
-    echo "MVA " . $taxes . "% <span class='price'>" . $taxes . " kr </span>";
+    echo "MVA " . $taxgroup . "% <span class='price'>" . round($taxes) . " kr </span>";
     echo "</div>";
 }
 echo "<div class='itemrow ' style='padding-top: 10px;'>";

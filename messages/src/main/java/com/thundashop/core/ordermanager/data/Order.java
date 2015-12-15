@@ -22,8 +22,14 @@ import java.util.UUID;
  */
 public class Order extends DataCommon implements Comparable<Order> {
 
-    public boolean triedTransferredToAccountingSystem = false;
-    public boolean transferedToAccountingSystem = false;
+    public Boolean triedTransferredToAccountingSystem = false;
+    public Boolean transferredToAccountingSystem = false;
+    
+    /**
+     * This variable is wrong and should be removed. The one above is the corrent one.
+     */
+    private Boolean transferedToAccountingSystem = false;
+    
     public String paymentTransactionId = "";
     public Shipping shipping;
     public Payment payment = new Payment();
@@ -32,7 +38,6 @@ public class Order extends DataCommon implements Comparable<Order> {
     public long incrementOrderId = 0;
     public String reference = "";
     public boolean activated = false;
-    public boolean transferredToAccountingSystem = false;
     public boolean testOrder = false;
     public boolean captured = false;
     public List<CardTransaction> transactions = new ArrayList();
@@ -52,7 +57,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         orderNew.expiryDate = null;
         orderNew.rowCreatedDate = new Date();
         orderNew.triedTransferredToAccountingSystem = false;
-        orderNew.transferedToAccountingSystem = false;
+        orderNew.transferredToAccountingSystem = false;
         orderNew.createdDate = new Date();
 
         if (orderNew.cart != null) {
@@ -62,6 +67,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         return orderNew;
     }
 
+    public void checkForCorrectingTransferredToAccounting() {
+        transferredToAccountingSystem = transferedToAccountingSystem;
+    }
     
     public boolean useForStatistic() {
         if (status == Order.Status.CANCELED || status == Order.Status.PAYMENT_FAILED) {
@@ -134,7 +142,7 @@ public class Order extends DataCommon implements Comparable<Order> {
      */
     public String userId;
     
-    public int status;
+    public int status = Order.Status.CREATED;
     public Cart cart;
     
     public String getDateCreated() {

@@ -440,7 +440,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         Booking newBooking = deepClone(booking);
         newBooking.bookingItemId = itemId;
         newBooking.bookingItemTypeId = bookingItem.bookingItemTypeId;
-        validateChange(newBooking);
+//        validateChange(newBooking);
         
         booking.bookingItemId = itemId;
         booking.bookingItemTypeId = bookingItem.bookingItemTypeId;

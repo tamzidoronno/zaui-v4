@@ -628,7 +628,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private Order createMonthlyOrder(PmsBooking booking, NewOrderFilter filter) {
-
+        cartManager.clear();
+        
         Date startDate = filter.startInvoiceFrom;
         for(int i = 0; i < filter.numberOfMonths; i++) {
             Date endDate = addMonthsToDate(startDate, 1);
@@ -649,6 +650,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 item.endDate = endDate;
                 
                 item.getProduct().discountedPrice = price;
+                item.getProduct().price = price;
                 cartManager.saveCartItem(item);
             }
             
@@ -661,6 +663,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         order.payment = new Payment();
         order.payment.paymentType = user.preferredPaymentType;
+        orderManager.saveOrder(order);
+        
+        booking.invoicedTo = startDate;
         
         return order;
     }

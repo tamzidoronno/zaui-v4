@@ -5,7 +5,8 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 $instances2 = array();
 foreach($instances as $instance) {
-    $instances2[$instance->id] = $instance;
+    $ns = "ns_" . str_replace("-","_", $instance->id) ."\\".$instance->appName;
+    $instances2[$ns] = $instance;
 }
 $instances = $instances2;
 ?>
@@ -70,12 +71,12 @@ $instances = $instances2;
                     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
                     <select gsname="newtype">
                         <?php 
-                        foreach($instances  as $instance) {
+                        foreach($instances  as $ns => $instance) {
                             $selected = "";
-                            if($instance->id == $user->preferredPaymentType) {
+                            if($ns == $user->preferredPaymentType) {
                                 $selected = "SELECTED";
                             }
-                            echo "<option value='".$instance->id."' $selected>".$instance->appName."</option>";
+                            echo "<option value='".$ns."' $selected>".$instance->appName."</option>";
                         }
                         ?>
                     </select>

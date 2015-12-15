@@ -85,7 +85,6 @@ if($booking->orderIds) {
         $order = $this->getApi()->getOrderManager()->getOrder($orderId);
         $result[$order->incrementOrderId] = $order;
     }
-    
     ksort($result);
     echo "<table cellspacing='0' cellpadding='0'>";
     echo "<tr>";
@@ -107,7 +106,8 @@ if($booking->orderIds) {
         echo $this->translatePaymenttype($order->payment->paymentType, $instances);
         echo "</td>";
         echo "<td align='center'>";
-        if($order->transferedToAccountingSystem) {
+
+        if(isset($order->transferedToAccountingSystem) && $order->transferedToAccountingSystem) {
             echo "<i class='fa fa-check'>";
         } else {
             echo "<i class='fa fa-close'>";
@@ -128,7 +128,7 @@ echo "<div "
             $booking->invoicedTo = $booking->rooms[0]->date->start;
         }
         $startingFrom = date("d.m.Y", strtotime($booking->invoicedTo));
-        echo "Number of months, start invoicing from. :<br><input type='text' gsname='numberofmonths' value='1' style='font-size: 18px; width: 25px;padding: 4px;' />";
+        echo "Number of months, start invoicing from. :<br><input type='text' gsname='numberOfMonths' value='1' style='font-size: 18px; width: 25px;padding: 4px;' />";
         echo "<input type='text' gsname='startingFrom' value='$startingFrom' style='font-size: 18px; width: 100px;padding: 4px;' />";
     }
     ?>

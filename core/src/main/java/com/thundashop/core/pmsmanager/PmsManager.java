@@ -375,12 +375,49 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         List<PmsBooking> result = new ArrayList();
-        if(filter.state == 0) {
-            result = new ArrayList(bookings.values());
-        } else {
+        
+        if(filter.searchWord != null && !filter.searchWord.isEmpty()) {
             for(PmsBooking booking : bookings.values()) {
-                if(booking.state.equals(filter.state)) {
+                if(booking.containsSearchWord(filter.searchWord)) {
                     result.add(booking);
+                }
+            }
+        } else {
+            if(filter.filterType.equals("registered")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate)) {
+                        result.add(booking);
+                    }
+                }
+            } else if(filter.filterType.equals("active")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
+                        result.add(booking);
+                    }
+                }
+            } else if(filter.filterType.equals("uncofirmed")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(!booking.confirmed) {
+                        result.add(booking);
+                    }
+                }
+            } else if(filter.filterType.equals("checkin")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(booking.checkingInBetween(filter.startDate, filter.endDate)) {
+                        result.add(booking);
+                    }
+                }
+            } else if(filter.filterType.equals("checkout")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(booking.checkingOutBetween(filter.startDate, filter.endDate)) {
+                        result.add(booking);
+                    }
+                }
+            } else if(filter.filterType.equals("deleted")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(booking.isDeleted) {
+                        result.add(booking);
+                    }
                 }
             }
         }

@@ -9,6 +9,25 @@ import java.util.List;
 
 public class PmsBooking extends DataCommon {
 
+    boolean containsSearchWord(String searchWord) {
+        searchWord = searchWord.toLowerCase();
+        for(PmsBookingRooms room : rooms) {
+            for(PmsGuests guest :room.guests) {
+                if(guest.email != null && guest.email.toLowerCase().contains(searchWord)) {
+                    return true;
+                }
+                if(guest.phone != null && guest.phone.toLowerCase().contains(searchWord)) {
+                    return true;
+                }
+                if(guest.name != null && guest.name.toLowerCase().contains(searchWord)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;
@@ -35,6 +54,7 @@ public class PmsBooking extends DataCommon {
     public Date invoicedTo = null;
     public Integer priceType = 1;
     public boolean confirmed = false;
+    public boolean isDeleted = false;
 
     void attachBookingItems(List<Booking> bookingsToAdd) {
         for(PmsBookingRooms room : rooms) {
@@ -53,5 +73,32 @@ public class PmsBooking extends DataCommon {
             }
         }
         return null;
+    }
+
+    boolean isActiveInPeriode(Date startDate, Date endDate) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.date.start.before(endDate) && room.date.end.after(startDate)) {
+                return true;
+            }
+        }
+        return false;
+    }    
+
+    boolean checkingInBetween(Date startDate, Date endDate) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.date.start.after(startDate) && room.date.start.before(endDate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean checkingOutBetween(Date startDate, Date endDate) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.date.end.after(startDate) && room.date.end.before(endDate)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -6,7 +6,7 @@ $filter = $this->getSelectedFilter();
 $searchtypes = array();
 $searchtypes['registered'] = "Registered";
 $searchtypes['active'] = "Active";
-$searchtypes['inactive'] = "Inactive";
+$searchtypes['uncofirmed'] = "Unconfirmed";
 $searchtypes['checkin'] = "Checkin in";
 $searchtypes['checkout'] = "Checkin out";
 $searchtypes['deleted'] = "Deleted";
@@ -30,11 +30,15 @@ foreach($types as $type) {
         <input type='text' class="end pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
 
         <select class="pmsinput filterType">
-            <option value="registered">Registered</option>
-            <option value="registered">Active</option>
-            <option value="registered">Checking in</option>
-            <option value="registered">Checking out</option>
-            <option value="registered">Deleted</option>
+            <?php
+            foreach($searchtypes as $idx => $type) {
+                $selected = "";
+                if($filter->filterType == $idx) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$idx' $selected>$type</option>";
+            }
+            ?>
         </select>
         <span gstype="submit" class="pmsbutton setFilter">Show</span>
     </span>
@@ -45,6 +49,7 @@ foreach($types as $type) {
 <br><br>
 
 <?php
+$rows = 0;
 echo "<table width='100%' cellspacing='0' cellpadding='0'>";
 echo "<tr>";
 echo "<th></th>";
@@ -56,6 +61,7 @@ echo "<th align='center'><center>State</center></th>";
 echo "</tr>";
 foreach($bookings as $booking) {
     foreach($booking->rooms as $room) {
+        $rows++;
         echo "<tr>";
         echo "<td style='width:70px;'>";
         echo "<i class='fa fa-trash-o removebooking actions'></i>";
@@ -115,6 +121,9 @@ foreach($bookings as $booking) {
     }
 } 
 echo "</table>";
+echo "<br>";
+echo "$rows rows in total.";
+
  ?>
 
 <script>

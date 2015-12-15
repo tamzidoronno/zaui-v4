@@ -13,15 +13,6 @@ $instances = $instances2;
 <div class='contactdata'>
     <h2>Contact data</h2>
     <div style='padding-left: 10px;'>
-        <?php if($booking->invoicedTo) { ?>
-            <span class='roomprefix'>Invoiced until</span>
-            <span class='roompostfix'>
-            <? 
-            echo date("d.m.Y", strtotime($booking->invoicedTo));
-            ?>
-            </span>
-            <div style='clear:both;'></div>
-        <? } ?>
         <span class='roomprefix'>Type</span>
         <span class='roompostfix'>
         <? 

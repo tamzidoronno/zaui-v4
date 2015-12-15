@@ -67,6 +67,17 @@ $instances = $instances2;
     </span>
 </span>
 <div style='clear:both;'></div>
+<?php if($booking->invoicedTo) { ?>
+    <span class='roomprefix'>Invoiced until</span>
+    <span class='roompostfix'>
+    <? 
+    echo date("d.m.Y", strtotime($booking->invoicedTo));
+    ?>
+    </span>
+    <div style='clear:both;'></div>
+<? } ?>
+<div style='clear:both;'></div>
+
 
 <?php
 if($booking->orderIds) {

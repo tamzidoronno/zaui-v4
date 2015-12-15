@@ -66,7 +66,10 @@ foreach($bookings as $booking) {
         echo "</td>";
         echo "<td>";
         if($room->date->end) {
-            echo date("d.m.Y", strtotime($room->date->end));
+            //Dont show end date if this is a atleast 75 years booking
+            if(((strtotime($room->date->end) - strtotime($room->date->start)) /86400) < 20000) {
+                echo date("d.m.Y", strtotime($room->date->end));
+            }
         }
         echo "</td>";
         echo "<td>";
@@ -79,6 +82,14 @@ foreach($bookings as $booking) {
         if($user) {
             echo "<span class='secondary_text'>registered by " . $user->fullName . "</span>";
         }
+        echo "<span class='secondary_text'>";
+        if($booking->confirmed) {
+            echo ", confirmed ";
+        } else {
+            echo ", not confirmed ";
+        }
+        echo "</span>";
+
         echo "<span class='secondary_text' style='float:right;'>Registered " . $booking->rowCreatedDate . "</span>";
         echo "</div>";
         echo "</td>";

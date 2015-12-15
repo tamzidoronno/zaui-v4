@@ -34,6 +34,7 @@ public class PmsBooking extends DataCommon {
     public List<String> orderIds = new ArrayList();
     public Date invoicedTo = null;
     public Integer priceType = 1;
+    public boolean confirmed = false;
 
     void attachBookingItems(List<Booking> bookingsToAdd) {
         for(PmsBookingRooms room : rooms) {

@@ -87,6 +87,8 @@ public class JavaApiBuilder {
     private String BuildJavaApi(List<Class> list) throws IOException {
         String content = "";
         List<String> apiclasses = new ArrayList();
+        
+        System.out.println("Building java api to: " + apiPath + "/");
 
         for (Class entry : list) {
             String filename = getFileName(entry);
@@ -155,7 +157,6 @@ public class JavaApiBuilder {
             
             File file = new File(apiPath + "/");
             file.mkdirs();
-            
             generator.writeFile(resultHeader+content, apiPath + "/" + fname);
         }
 

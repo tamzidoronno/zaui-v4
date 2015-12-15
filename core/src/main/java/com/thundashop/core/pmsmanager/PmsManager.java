@@ -621,10 +621,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
             order = createMonthlyOrder(booking, filter);
         }
-        
+        if(order == null) {
+            return "Could not create order.";
+        }
         booking.orderIds.add(order.id);
         saveBooking(booking);
-        return order.id;
+        return "";
     }
 
     private Order createMonthlyOrder(PmsBooking booking, NewOrderFilter filter) {
@@ -641,7 +643,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     System.out.println("Product no set for this booking item type");
                 }
                 int numberOfDays = getNumberOfDays(room, startDate, endDate);
-                
+                if(numberOfDays == 0) {
+                    return null;
+                }
                 double price = room.price / daysInMonth;
                 price *= numberOfDays;
                 
@@ -682,12 +686,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         cal.setTime(room.date.start);
         int days = 0;
         while(true) {
-            if(cal.after(startDate)) {
+            if(cal.getTime().after(startDate) && cal.getTime().before(endDate)) {
                 days++;
             }
             
             cal.add(Calendar.DAY_OF_YEAR, 1);
-            if(cal.getTime().after(endDate)) {
+            if(cal.getTime().after(room.date.end)) {
                 break;
             }
         }

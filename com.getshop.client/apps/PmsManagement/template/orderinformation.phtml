@@ -128,7 +128,7 @@ echo "<div "
             $booking->invoicedTo = $booking->rooms[0]->date->start;
         }
         $startingFrom = date("d.m.Y", strtotime($booking->invoicedTo));
-        echo "Number of months, start invoicing from. :<br><input type='text' gsname='numberOfMonths' value='1' style='font-size: 18px; width: 25px;padding: 4px;' />";
+        echo "<br><br>Number of months, start invoicing from. :<br><input type='text' gsname='numberOfMonths' value='1' style='font-size: 18px; width: 25px;padding: 4px;' />";
         echo "<input type='text' gsname='startingFrom' value='$startingFrom' style='font-size: 18px; width: 100px;padding: 4px;' />";
     }
     ?>

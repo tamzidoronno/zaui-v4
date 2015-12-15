@@ -33,12 +33,12 @@ public class JavaApiBuilder {
         this.generator = generator;
         this.allManagers = allManagers;
         this.dataObjects = dataObjects;
-        if(pathToSource == null || pathToSource.isEmpty()) {
-            System.out.println("No path to source specified");
-            apiPath = null;
-            return;
+        if(pathToSource != null && !pathToSource.isEmpty()) {
+            apiPath = pathToSource + "/" + apiPath;
         }
-        apiPath = pathToSource + "/" + apiPath;
+        
+        File file = new File(apiPath);
+        System.out.println("Writing java api classes to: " + file.getAbsolutePath());
 
     }
 

@@ -27,3 +27,4 @@ rm -rf php;
 
 #Javascript API
 cp $gradleFolder/core/build/getshopapi.js .
+cp $gradleFolder/javaapi/build/libs/javaapi-3.0.0.jar .

@@ -7,4 +7,5 @@ public class PmsNotifications extends DataCommon {
     public HashMap<String, String> emails = new HashMap();
     public HashMap<String, String> smses = new HashMap();
     public HashMap<String, String> adminmessages = new HashMap();
+    public String emailTemplate = "";
 }

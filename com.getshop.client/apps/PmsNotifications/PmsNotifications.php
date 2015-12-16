@@ -30,8 +30,34 @@ class PmsNotifications extends \WebshopApplication implements \Application {
     }
     
     public function saveNotifications() {
-        echo "haha";
+        $notifications = $this->getApi()->getPmsManager()->getNotifications($this->getSelectedName());
+        foreach($_POST['data'] as $key => $value) {
+            if($this->endsWith($key, "_email")) {
+                $key = substr($key, 0, strlen($key)-6);
+                $notifications->emails->{$key} = $value;
+            }
+        }
+        foreach($_POST['data'] as $key => $value) {
+            if($this->endsWith($key, "_sms")) {
+                $key = substr($key, 0, strlen($key)-4);
+                $notifications->smses->{$key} = $value;
+            }
+        }
+        foreach($_POST['data'] as $key => $value) {
+            if($this->endsWith($key, "_admin")) {
+                $key = substr($key, 0, strlen($key)-6);
+                $notifications->adminmessages->{$key} = $value;
+            }
+        }
+        $notifications->emailTemplate = $_POST['data']['email_template'];
+        
+        $this->getApi()->getPmsManager()->saveNotification($this->getSelectedName(), $notifications);
     }
+    
+    function endsWith($haystack, $needle) {
+    // search forward starting from end minus needle length characters
+    return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+}
     
     public function showSettings() {
         $this->includefile("settings");

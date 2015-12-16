@@ -8,6 +8,9 @@ $notifications['booking_confirmed'] = "Booking has been confirmed";
 $notifications['booking_started'] = "Booking is started";
 $notifications['booking_ended'] = "Booking is ended";
 $notifications['booking_ended_2_days'] = "Two days since booking ended";
+
+/* @var $this \ns_9de81608_5cec_462d_898c_1266d1749320\PmsNotifications */
+$notificationSettings = $this->getApi()->getPmsManager()->getNotifications($this->getSelectedName());
 ?>
 
 <h1>Booking notification system</h1>
@@ -15,13 +18,18 @@ $notifications['booking_ended_2_days'] = "Two days since booking ended";
 <span class="changeview pmsbutton active" data-panel='email_notifcations'>Emails</span>
 <span class="changeview pmsbutton" data-panel='sms_notifcations'>Sms'es</span>
 <span class="changeview pmsbutton" data-panel='admin_notifications'>Admin messages</span>
+<span class="changeview pmsbutton" data-panel='email_template'>Email template</span>
 
 <div gstype="form" method="saveNotifications">
     <div class='email_notifcations notificationpanel'>
         <?php
         foreach($notifications as $index => $name) {
             echo "<h2>$name</h2>";
-            echo "<textarea gsname='$index' style='width: 100%; height: 400px;'></textarea>";
+            echo "<textarea gsname='".$index."_email' style='width: 100%; height: 400px;'>";
+            if(isset($notificationSettings->emails->{$index})) {
+                echo $notificationSettings->emails->{$index};
+            }
+            echo "</textarea>";
         }
         ?>
     </div>
@@ -30,7 +38,11 @@ $notifications['booking_ended_2_days'] = "Two days since booking ended";
         <?php
         foreach($notifications as $index => $name) {
             echo "<h2>$name</h2>";
-            echo "<textarea gsname='".$index."_sms' style='width: 100%; height: 100px;'></textarea>";
+            echo "<textarea gsname='".$index."_sms' style='width: 100%; height: 100px;'>";
+            if(isset($notificationSettings->smses->{$index})) {
+                echo $notificationSettings->smses->{$index};
+            }
+            echo "</textarea>";
         }
         ?>
     </div>
@@ -39,10 +51,22 @@ $notifications['booking_ended_2_days'] = "Two days since booking ended";
         <?php
         foreach($notifications as $index => $name) {
             echo "<h2>$name</h2>";
-            echo "<textarea gsname='".$index."_admin' style='width: 100%; height: 100px;'></textarea>";
+            echo "<textarea gsname='".$index."_admin' style='width: 100%; height: 100px;'>";
+            if(isset($notificationSettings->adminmessages->{$index})) {
+                echo $notificationSettings->adminmessages->{$index};
+            }
+            echo "</textarea>";
         }
         ?>
-    </div><br><br>
+    </div>
+    
+
+    <div class='email_template notificationpanel'>
+        <h2>The email template to use when sending emails</h2>
+        <textarea gsname='email_template' style='width: 100%; height: 300px;'><?php echo $notificationSettings->emailTemplate; ?></textarea>
+    </div>
+    
+    <br><br>
     <div style='text-align: right;'>
         <span class='pmsbutton' gstype='submit'>Save changes</span>
     </div>

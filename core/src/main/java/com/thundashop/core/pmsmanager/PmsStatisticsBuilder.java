@@ -1,8 +1,11 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,8 +29,6 @@ class PmsStatisticsBuilder {
             entry.date = cal.getTime();
             entry.totalRooms = totalRooms;
             statics.addEntry(entry);
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            
             for(PmsBooking booking : bookings) {
                 if(!booking.confirmed) {
                     continue;
@@ -42,6 +43,7 @@ class PmsStatisticsBuilder {
             
             entry.finalize();
             
+            cal.add(Calendar.DAY_OF_YEAR, 1);
             if(cal.getTime().after(filter.endDate)) {
                 break;
             }
@@ -50,6 +52,39 @@ class PmsStatisticsBuilder {
         statics.buildTotal();
         
         return statics;
+    }
+    
+    public LinkedList<SalesStatisticsEntry> buildOrderStatistics(PmsBookingFilter filter, OrderManager orderManager) {
+        LinkedList<SalesStatisticsEntry> result = new LinkedList();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(filter.startDate);
+        while(true) {
+            SalesStatisticsEntry entry = new SalesStatisticsEntry();
+            entry.date = cal.getTime();
+            result.add(entry);
+
+            for(PmsBooking booking : bookings) {
+                for(String orderId : booking.orderIds) {
+                    Order order = orderManager.getOrderSecure(orderId);
+                    if(order.createdOnDay(cal.getTime())) {
+                        Double total = orderManager.getTotalAmount(order);
+                        entry.totalPrice += total;
+                        entry.numberOfOrders++;
+                        entry.date = cal.getTime();
+                        entry.addPayment(order.payment.paymentType, total);
+                    }
+                }
+            }
+            
+            entry.finalize();
+            
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(cal.getTime().after(filter.endDate)) {
+                break;
+            }
+        }
+        
+        return result;
     }
 
     private StatisticsEntry buildStatsEntry(Calendar cal) {

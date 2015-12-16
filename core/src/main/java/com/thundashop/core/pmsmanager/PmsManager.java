@@ -20,11 +20,9 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
-import com.thundashop.core.pkkcontrol.PkkControlData;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
-import static java.lang.Math.random;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
@@ -849,7 +847,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBooking> allBookings = getAllBookings(null);
         PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings);
         int totalRooms = bookingEngine.getBookingItems().size();
-        return builder.buildStatistics(filter, totalRooms);
+        PmsStatistics result = builder.buildStatistics(filter, totalRooms);
+        result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
+        
+        return result;
     }
 
 }

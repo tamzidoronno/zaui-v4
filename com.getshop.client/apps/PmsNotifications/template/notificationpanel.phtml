@@ -1,13 +1,13 @@
 <?php
 $notifications = array();
-$notifications['booking_starting_1_day'] = "Booking starting in 1 day";
-$notifications['booking_starting_2_days'] = "Booking starting in 2 days";
-$notifications['booking_starting_today'] = "Booking is starting today";
+$notifications['room_starting_1_day'] = "Booking starting in 1 day";
+$notifications['room_starting_2_days'] = "Booking starting in 2 days";
+$notifications['room_starting_today'] = "Booking is starting today";
 $notifications['booking_completed'] = "Booking has been completed";
 $notifications['booking_confirmed'] = "Booking has been confirmed";
-$notifications['booking_started'] = "Booking is started";
-$notifications['booking_ended'] = "Booking is ended";
-$notifications['booking_ended_2_days'] = "Two days since booking ended";
+$notifications['room_started'] = "Booking is started";
+$notifications['room_ended'] = "Booking is ended";
+$notifications['room_ended_2_days'] = "Two days since booking ended";
 
 /* @var $this \ns_9de81608_5cec_462d_898c_1266d1749320\PmsNotifications */
 $notificationSettings = $this->getApi()->getPmsManager()->getNotifications($this->getSelectedName());
@@ -37,6 +37,11 @@ $notificationSettings = $this->getApi()->getPmsManager()->getNotifications($this
     <div class='sms_notifcations notificationpanel'>
         <?php
         foreach($notifications as $index => $name) {
+            if($this->startsWith($index, "room_")) {
+                $name = $name . " sent to all guests";
+            } else {
+                $name = $name . " sent to booker";
+            }
             echo "<h2>$name</h2>";
             echo "<textarea gsname='".$index."_sms' style='width: 100%; height: 100px;'>";
             if(isset($notificationSettings->smses->{$index})) {

@@ -752,6 +752,76 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         this.notifications = notifications;
         saveObject(notifications);
     }
+    
+    private void doNotification(String key, PmsBooking booking) {
+        System.out.println("Notification done");
+        notify(key, booking, "sms");
+        notify(key, booking, "email");
+        notifyAdmin(key, booking);
+    }
+
+    private void notify(String key, PmsBooking booking, String type) {
+        String message = notifications.smses.get(key);
+        if(type.equals("email")) {
+            message = notifications.emails.get(key);
+        }
+        if(message == null || message.isEmpty()) {
+            return;
+        }
+        message = formatMessage(message, booking, null, null);
+        
+        if(key.startsWith("room_")) {
+            notifyGuest(booking, message, type, key);
+        } else {
+            notifyBooker(booking, message, type, key);
+        }
+    }
+
+    private void notifyBooker(PmsBooking booking, String message, String type, String key) throws ErrorException {
+        User user = userManager.getUserById(booking.userId);
+        if(type.equals("email")) {
+            messageManager.sendSms(user.cellPhone, message, user.prefix);
+        } else {
+            String title = notifications.emailTitles.get(key);
+            title = formatMessage(message, booking, null, null);
+            messageManager.sendMailWithDefaults(user.fullName, user.emailAddress, title, message);
+        }
+    }
+
+    private String notifyGuest(PmsBooking booking, String message, String type, String key) {
+        for(PmsBookingRooms room : booking.rooms) {
+            for(PmsGuests guest : room.guests) {
+                if(guest.phone == null || guest.phone.isEmpty()) {
+                    continue;
+                }
+                if(type.equals("email")) {
+                    String title = notifications.emailTitles.get(key);
+                    title = formatMessage(message, booking, room, guest);
+                    messageManager.sendMailWithDefaults(guest.name, guest.email, title, message);
+                } else {
+                    messageManager.sendSms(guest.phone, message, guest.prefix);
+                }
+            }
+        }
+        return message;
+    }
+
+    private void notifyAdmin(String key, PmsBooking booking) {
+        String message = notifications.adminmessages.get(key);
+        if(message == null) {
+            return;
+        }
+        
+        message = formatMessage(message, booking, null, null);
+        String email = getStoreSettingsApplicationKey("emailaddress");
+        String phone = getStoreSettingsApplicationKey("phoneNumber");
+        messageManager.sendMailWithDefaults("Administrator", email, "Notification", message);
+        messageManager.sendSms(phone, message);
+    }
+
+    private String formatMessage(String smsMsg, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     
 }

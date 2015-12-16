@@ -19,6 +19,10 @@ class PmsNotifications extends \WebshopApplication implements \Application {
         $this->includefile("notificationpanel");
     }
     
+    public function startsWith($haystack, $needle) {
+        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+    }
+
     public function getSelectedName() {
         return $this->getConfigurationSetting("engine_name");
     }

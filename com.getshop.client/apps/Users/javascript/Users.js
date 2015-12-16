@@ -5,7 +5,8 @@ thundashop.app.users = {
             var data = {
                 userid : userId
             };
-            event = thundashop.Ajax.createEvent('Users', 'deleteUser', domElement, data);
+            
+            var event = thundashop.Ajax.createEvent('Users', 'deleteUser', domElement, data);
             thundashop.Ajax.post(event);
         }
     }

@@ -105,8 +105,9 @@
     margin-left: 10px;
     margin-right: 10px;
     display: inline-block;
-    width: 400px;
+    width: 50%;
     vertical-align: top;
+    text-align: left;
 }
 
 .Menu .toolbox {

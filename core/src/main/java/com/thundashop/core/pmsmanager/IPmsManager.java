@@ -47,4 +47,11 @@ public interface IPmsManager {
     
     @Administrator
     public String createOrder(String bookingId, NewOrderFilter filter);
+    
+    @Administrator
+    public PmsNotifications getNotifications();
+    
+    @Administrator
+    public void saveNotification(PmsNotifications notifications);
+    
 }

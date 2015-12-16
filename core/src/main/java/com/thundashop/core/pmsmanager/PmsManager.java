@@ -45,6 +45,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public HashMap<String, PmsBooking> bookings = new HashMap();
     public PmsPricing prices = new PmsPricing();
+    public PmsNotifications notifications = new PmsNotifications();
     
     @Autowired
     BookingEngine bookingEngine;
@@ -70,6 +71,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsPricing) {
                 prices = (PmsPricing) dataCommon;
+            }
+            if (dataCommon instanceof PmsNotifications) {
+                notifications = (PmsNotifications) dataCommon;
             }
         }
     }
@@ -457,6 +461,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingRooms room : booking.rooms) {
             if(room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
+                room.date.start = room.booking.startDate;
+                room.date.end = room.booking.endDate;
+                
                 if(room.booking.bookingItemTypeId != null) {
                     room.bookingItemTypeId = room.booking.bookingItemTypeId;
                 }
@@ -733,6 +740,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return days;
+    }
+
+    @Override
+    public PmsNotifications getNotifications() {
+        return notifications;
+    }
+
+    @Override
+    public void saveNotification(PmsNotifications notifications) {
+        this.notifications = notifications;
+        saveObject(notifications);
     }
 
     

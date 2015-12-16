@@ -1,1 +1,32 @@
-fdsafsfd
+<?
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->getSelectedFilter());
+
+echo "<table cellspacing='0' cellpadding='0' class='statisticstable'>";
+echo "<tr>";
+echo "<th>Date</th>";
+echo "<th>Total</th>";
+echo "<th>Avg.<br>price</th>";
+echo "<th>Rented<br>out</th>";
+echo "<th>Spear<br>rooms</th>";
+echo "<th>Budget</th>";
+echo "<th>Coverage</th>";
+echo "</tr>";
+
+foreach($stats->entries as $entry) {
+    echo "<tr>";
+    echo "<td>";
+    if($entry->date) {
+        echo date("d.m.Y", strtotime($entry->date));
+    }
+    echo "</td>";
+    echo "<td>" . $entry->totalPrice . "</td>";
+    echo "<td>" . $entry->avgPrice . "</td>";
+    echo "<td>" . $entry->roomsRentedOut . "</td>";
+    echo "<td>" . $entry->spearRooms . "</td>";
+    echo "<td>" . $entry->bugdet . "%</td>";
+    echo "<td>" . $entry->coverage . "%</td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>

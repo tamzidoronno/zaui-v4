@@ -6,7 +6,10 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
@@ -32,4 +35,29 @@ public class PmsBookingRooms {
      */
     @Transient
     public Booking booking;
+
+    boolean isActiveOnDay(Date time) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(time);
+        cal.set(Calendar.HOUR_OF_DAY, 17);
+        if(cal.getTime().after(date.start) && cal.getTime().before(date.end)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public Double getDailyPrice(Integer type, Calendar cal) {
+        int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        
+        if(type.equals(PriceType.monthly)) {
+            return price / days;
+        }
+        
+        if(type.equals(PriceType.daily)) {
+            return price;
+        }
+        
+        throw new UnsupportedOperationException("Not implented yet");
+    }
 }

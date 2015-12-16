@@ -111,6 +111,19 @@ public class Order extends DataCommon implements Comparable<Order> {
         return false;
        
     }
+
+    public boolean createdOnDay(Date time) {
+        Calendar createdCal = Calendar.getInstance();
+        createdCal.setTime(rowCreatedDate);
+        Calendar timeCal = Calendar.getInstance();
+        timeCal.setTime(time);
+        
+        if((createdCal.get(Calendar.YEAR) == timeCal.get(Calendar.YEAR)) && 
+            (createdCal.get(Calendar.DAY_OF_YEAR) == timeCal.get(Calendar.DAY_OF_YEAR))) {
+            return true;
+        }
+        return false;
+    }
     
     public static class Status  {
         public static int CREATED = 1;

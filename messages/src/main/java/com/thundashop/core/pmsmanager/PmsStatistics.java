@@ -4,7 +4,8 @@ import java.util.LinkedList;
 
 public class PmsStatistics {
     public LinkedList<StatisticsEntry> entries = new LinkedList();
-
+    public LinkedList<SalesStatisticsEntry> salesEntries = new LinkedList(); 
+    
     void addEntry(StatisticsEntry entry) {
         entries.add(entry);
     }

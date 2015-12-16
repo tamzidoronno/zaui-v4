@@ -56,4 +56,7 @@ public interface IPmsManager {
     
     @Administrator
     public void confirmBooking(String bookingId);
+    
+    @Administrator
+    public PmsStatistics getStatistics(PmsBookingFilter filter);
 }

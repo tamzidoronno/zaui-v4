@@ -375,6 +375,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        if(filter == null) {
+            return finalizeList(new ArrayList(bookings.values()));
+        }
         if(filter.state == null) {
             filter.state = 0;
         }
@@ -428,7 +431,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         List<PmsBooking> finalized = finalizeList(result);
-        checkForIncosistentBookings();
         return finalized;
     }
 
@@ -440,6 +442,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 finalized.add(toReturn);
             }
         }
+       checkForIncosistentBookings();
         return finalized;
     }
 
@@ -839,6 +842,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.confirmed = true;
         saveBooking(booking);
         doNotification("booking_confirmed", booking);
+    }
+
+    @Override
+    public PmsStatistics getStatistics(PmsBookingFilter filter) {
+        List<PmsBooking> allBookings = getAllBookings(null);
+        PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings);
+        return builder.buildStatistics(filter);
     }
 
 }

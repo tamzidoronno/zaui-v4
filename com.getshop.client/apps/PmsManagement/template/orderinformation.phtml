@@ -104,6 +104,9 @@ if($booking->orderIds) {
         echo "<td>" . $paymentTypes[$order->status] . "</td>";
         echo "<td>";
         echo $this->translatePaymenttype($order->payment->paymentType, $instances);
+        if($order->status <= 2) {
+            echo " - <a href='/?page=cart&payorder=" . $order->id."'>pay</a>";
+        }
         echo "</td>";
         echo "<td align='center'>";
 

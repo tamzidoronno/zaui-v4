@@ -24,12 +24,12 @@ $booking = $pmsManager->getBooking($this->getSelectedName(), $bookingid);
 if(!$booking->confirmed) {
     ?>
     <div class='needconfirmation'>
-    This booking has not been confirmed yet.<br><br>
-    <div gstype="form" method="confirmBooking">
-        <input type='hidden' gsname='bookingid' value='<? echo $booking->id; ?>'>
-        <span gstype="submitToInfoBox" class='pmsbutton'>Confirm booking</span>
+        This booking has not been confirmed yet.<br><br>
+        <div gstype="form" method="confirmBooking">
+            <input type='hidden' gsname='bookingid' value='<? echo $booking->id; ?>'>
+            <span gstype="submitToInfoBox" class='pmsbutton'>Confirm booking</span>
+        </div>
     </div>
-    </div>";
     <?php
 }
 

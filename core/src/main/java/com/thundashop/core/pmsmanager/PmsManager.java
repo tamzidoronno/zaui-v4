@@ -766,7 +766,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String message = notifications.smses.get(key);
         if(type.equals("email")) {
             message = notifications.emails.get(key);
-            message = notifications.emailTemplate.replace("{content}", message);
+            if(message != null) {
+                message = notifications.emailTemplate.replace("{content}", message);
+            }
         }
         if(message == null || message.isEmpty()) {
             return;

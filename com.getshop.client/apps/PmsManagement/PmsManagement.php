@@ -207,5 +207,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return "";
     }
 
+    public function translateText($type) {
+        return substr($type, strpos($type, "\\")+1);
+    }
+
 }
 ?>

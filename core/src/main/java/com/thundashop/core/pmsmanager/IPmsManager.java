@@ -54,4 +54,6 @@ public interface IPmsManager {
     @Administrator
     public void saveNotification(PmsNotifications notifications);
     
+    @Administrator
+    public void confirmBooking(String bookingId);
 }

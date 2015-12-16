@@ -305,6 +305,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     booking.userId = createUser(booking).id;
                 }
                 saveBooking(booking);
+                doNotification("booking_completed", booking);
             } else {
                 result = -2;
             }
@@ -387,7 +388,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         } else {
-            if(filter.filterType.equals("registered")) {
+            if(filter.filterType== null || filter.filterType.equals("registered")) {
                 for(PmsBooking booking : bookings.values()) {
                     if(booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate)) {
                         result.add(booking);
@@ -764,6 +765,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String message = notifications.smses.get(key);
         if(type.equals("email")) {
             message = notifications.emails.get(key);
+            message = notifications.emailTemplate.replace("{content}", message);
         }
         if(message == null || message.isEmpty()) {
             return;
@@ -819,9 +821,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         messageManager.sendSms(phone, message);
     }
 
-    private String formatMessage(String smsMsg, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
+        PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+        
+        if(room != null) {
+            message = formater.formatRoomData(message, room, bookingEngine);
+        }
+        message = formater.formatContactData(message, userManager.getUserById(booking.userId), null);
+        message = formater.formatBookingData(message, booking, bookingEngine);
+        
+        return message;
     }
 
-    
+    @Override
+    public void confirmBooking(String bookingId) {
+        PmsBooking booking = getBooking(bookingId);
+        booking.confirmed = true;
+        saveBooking(booking);
+        doNotification("booking_confirmed", booking);
+    }
+
 }

@@ -38,6 +38,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $types2;
     }
     
+    public function confirmBooking() {
+        $id = $_POST['data']['bookingid'];
+        $this->getManager()->confirmBooking($this->getSelectedName(), $id);
+        $this->showBookingInformation();
+    }
+    
     public function setItemType() {
         $error = $this->getManager()->setNewRoomType($this->getSelectedName(), $_POST['data']['roomid'], $_POST['data']['bookingid'], $_POST['data']['itemtype']);
         if($error) {

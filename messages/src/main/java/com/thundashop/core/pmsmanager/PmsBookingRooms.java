@@ -25,6 +25,7 @@ public class PmsBookingRooms {
     public double price = 0;
     public double taxes = 8;
     public String bookingId;
+    String code = "";
     
     /**
      * Finalized entries

@@ -184,6 +184,18 @@ public class AddApplicationsToDatabase {
         PmsNotifications.moduleId = "booking";
         PmsNotifications.defaultActivate = false;
         apps.add(PmsNotifications);
+        
+        Application bjaroytheme = createSettings("bjaroytheme",
+"2dc6c222-527d-4297-aa8c-dc9830dc3404",
+allowed2,
+" ",
+Application.Type.Theme, true);
+bjaroytheme.isPublic = true;
+bjaroytheme.isFrontend = true;
+bjaroytheme.moduleId = "other";
+bjaroytheme.defaultActivate = false;
+apps.add(bjaroytheme);
+
 
         return apps;
     }

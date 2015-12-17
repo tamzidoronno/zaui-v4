@@ -2,7 +2,18 @@ app.PmsBookingContactData = {
     init : function() {
         $(document).on('click','.PmsBookingContactData .typeSelection', app.PmsBookingContactData.selectTypeView);
         $(document).on('click','.PmsBookingContactData .complete_button', app.PmsBookingContactData.completeRegistration);
+        $(document).on('keyup','.PmsBookingContactData .roomdata input', app.PmsBookingContactData.updateBillingInformation);
     },
+    
+    updateBillingInformation : function() {
+        var name = $(this).attr('name');
+        var row = $(this).closest('.roomdata');
+        if($('.roomdata').first().attr('pmsbookingroomid') === row.attr('pmsbookingroomid')) {
+            $('.private_person_form input[name="'+name+'"]').val($(this).val());
+            $('.company_form input[name="'+name+'"]').val($(this).val());
+        }
+    },
+    
     completeRegistration : function() {
         var billingdataform = $('.billingform:visible');
         var billingdata = {};

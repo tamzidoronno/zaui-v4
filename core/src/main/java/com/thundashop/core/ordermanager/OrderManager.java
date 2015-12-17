@@ -149,6 +149,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         order.storeId = storeId;
         databaseSaver.saveObject(order, credentials);
+        if(order.incrementOrderId > incrementingOrderId) {
+            incrementingOrderId = order.incrementOrderId;
+        }
+
         orders.put(order.id, order);
     }
     
@@ -274,17 +278,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (CartItem item : cart.getItems()) {
             Product product = item.getProduct();
             double price = productManager.getPrice(item.getProduct().id, item.getVariations());
-            product.price = price;
+            if(!getSession().currentUser.isAdministrator()) {
+                product.price = price;
+            }
             
             if (user != null && user.discount > 0) {
                 product.price = getPriceBasedOnUserDiscount(item, user);
             } else if (product.prices != null && product.prices.size() > 0) {
-                if (product.progressivePriceModel) {
-                    product.price = getPriceBasedOnProgressiveModel(item);
-                } else {
-                    product.price = getPriceBasedOnCount(item);
-                }
-                
                 product.original_price = productManager.getPriceWithoutDiscount(product.id, item.getVariations());
             }
             

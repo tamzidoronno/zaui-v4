@@ -12,7 +12,10 @@ foreach($booking->rooms as $room) {
     /* @var $room core_pmsmanager_PmsBookingRooms */
     $price = $room->price;
     echo "<div class='itemrow'>";
-    echo $items[$room->bookingItemTypeId]->name . "<span class='price'>" . $price . " kr </span>";
+    echo $items[$room->bookingItemTypeId]->name;
+    if($price > 0) {
+        echo "<span class='price'>" . $price . " kr </span>";
+    }
     $date =$room->date;
     echo " (";
     if(!$date->end) {
@@ -48,11 +51,15 @@ $total = 0;
 foreach($prices as $taxgroup => $price) {
     $taxes = $price - ($price / (($taxgroup + 100) / 100));
     $total += $price;
-    echo "<div class='itemrow'>";
-    echo "MVA " . $taxes . "% <span class='price'>" . $taxes . " kr </span>";
+    if($total > 0) {
+        echo "<div class='itemrow'>";
+        echo "MVA " . $taxgroup . "% <span class='price'>" . round($taxes) . " kr </span>";
+        echo "</div>";
+    }
+}
+if($total > 0) {
+    echo "<div class='itemrow ' style='padding-top: 10px;'>";
+    echo "Totalt <span class='price'>" . $total . " kr </span>";
     echo "</div>";
 }
-echo "<div class='itemrow ' style='padding-top: 10px;'>";
-echo "Totalt <span class='price'>" . $total . " kr </span>";
-echo "</div>";
 ?>

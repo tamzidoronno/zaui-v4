@@ -1,6 +1,8 @@
 <?
 $countrycodes = $this->getFactory()->getTerritoriesList();
-
+/* @var $factory Factory */
+$factory = $this->getFactory();
+$paymentMethods = $factory->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 
 $languages = array();
 $languages['nb_NO'] = "Norwegian";
@@ -52,6 +54,24 @@ $languages['fi_FI'] = "Finish";
             
             ?>
         </div>
+    </div>
+    
+    <div class="gss_setting" id="paymentMethod">
+        <div class="text inline title"><?php echo $this->__f("Please select your language"); ?></div>
+
+        <div class="gss_dropdown">
+            <select class="config" gs_model='storesettings' gs_model_attr='paymentMethod'>
+                <option value="">Select payment method</option>
+                <? foreach ($paymentMethods as $key => $method) { 
+                    $selected = $this->getPaymentMethod() == $method->id ? "SELECTED" : "";
+                    ?>
+                    <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $method->appName; ?></option>
+                <? } ?>
+            </select>
+        </div>
+        <div class="description">
+            <?php echo $this->__("This will be the default payment method for the users on creation of the user."); ?>
+        </div>        
     </div>
 
     <div class="textfield gss_setting"  id="mainemailaddress">

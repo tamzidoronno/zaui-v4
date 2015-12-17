@@ -76,7 +76,6 @@ foreach($itemTypes as $item) {
             <th align='left'>Item</th>
             <th>Default</th>
             <?php
-            echo "start: " . strtotime($this->getStart()) . " - " . $this->getStart();
             for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
                 $weekday = date("w", $i);
                 $weekend = '';

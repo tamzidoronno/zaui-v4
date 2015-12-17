@@ -172,6 +172,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (users.isEmpty()) {
             user.type = User.Type.ADMINISTRATOR;
         }
+        if(storeManager.getMyStore().configuration != null) {
+            String paymentMethod = storeManager.getMyStore().configuration.paymentMethod;
+            if(paymentMethod != null && !paymentMethod.isEmpty()) {
+                Application apps = applicationPool.getApplication(paymentMethod);
+                user.preferredPaymentType = "ns_" + apps.id.replace("-", "_") + "\\" + apps.appName;
+            }
+        }
+        
         users.addUser(user);
         
         String uncryptedPassword = user.password;

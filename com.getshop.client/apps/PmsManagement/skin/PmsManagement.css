@@ -5,6 +5,7 @@
 .PmsManagement .bookinginfo h2 { border-bottom: solid 1px #efefef; padding-bottom: 5px; }
 .PmsManagement .errorlist { font-size: 16px; color: red; padding-left: 20px; }
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
+.PmsManagement .bookinginfo a { color: blue; }
 .PmsManagement .actions:hover {
      -moz-transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
@@ -79,3 +80,4 @@
 .PmsManagement .pmsbutton.tiny { padding-top: 2px; padding-bottom: 2px; }
 .PmsManagement .bookinginfo select { font-size: 16px; }
 .PmsManagement .bookinginfo .editmode { display: none; }
+.PmsManagement .needconfirmation { margin: 20px; font-size: 20px; background-color:red; color:#fff; padding: 10px;text-align: center; }

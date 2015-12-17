@@ -6,6 +6,8 @@
 package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSessionScope;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -34,6 +36,9 @@ public class ManagerSubBase {
     @Autowired
     private GetShopSessionScope scope;
     
+    @Autowired
+    public StoreApplicationPool applicationPool;
+    
     protected boolean isSingleton = false;
     protected boolean ready = false;
     private Session session;
@@ -51,7 +56,16 @@ public class ManagerSubBase {
         return database;
     }
 
+    public Application getStoreSettingsApplication() {
+        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        return settingsApplication;
+    }
     
+    public String getStoreSettingsApplicationKey(String key) {
+        String result = getStoreSettingsApplication().getSetting(key);
+        return result;
+    }
+
     
     public ManagerSubBase() {
     }

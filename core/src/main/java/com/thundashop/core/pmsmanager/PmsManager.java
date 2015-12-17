@@ -9,17 +9,20 @@ import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
-import com.thundashop.core.pkkcontrol.PkkControlData;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
-import static java.lang.Math.random;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
@@ -29,6 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +43,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public HashMap<String, PmsBooking> bookings = new HashMap();
     public PmsPricing prices = new PmsPricing();
+    public PmsNotifications notifications = new PmsNotifications();
     
     @Autowired
     BookingEngine bookingEngine;
@@ -47,6 +53,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     UserManager userManager;
+    
+    @Autowired
+    OrderManager orderManager;
+    
+    @Autowired
+    CartManager cartManager;
          
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -57,6 +69,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsPricing) {
                 prices = (PmsPricing) dataCommon;
+            }
+            if (dataCommon instanceof PmsNotifications) {
+                notifications = (PmsNotifications) dataCommon;
             }
         }
     }
@@ -86,9 +101,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
-        PmsBooking result = findBookingForSession();
         booking.sessionId = getSession().id;
         saveObject(booking);
+        for(PmsBookingRooms room : booking.rooms) {
+            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end);
+        }
         bookings.put(booking.id, booking);
     }
 
@@ -286,6 +303,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     booking.userId = createUser(booking).id;
                 }
                 saveBooking(booking);
+                doNotification("booking_completed", booking);
             } else {
                 result = -2;
             }
@@ -330,10 +348,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         user.address = new Address();
         user.address.address = booking.contactData.address;
         user.address.city = booking.contactData.city;
+        user.address.postCode = booking.contactData.postalCode;
         user.emailAddress = booking.contactData.email;
         user.cellPhone = booking.contactData.phone;
         user.prefix = booking.contactData.prefix;
         user.password = new BigInteger(130, random).toString(32);
+        user.fullName = booking.contactData.name;
+        if(booking.contactData.type == 1) {
+            user.birthDay = booking.contactData.birthday;
+        } else {
+            user.birthDay = booking.contactData.orgid;
+        }
         userManager.createUser(user);
         return user;
     }
@@ -348,23 +373,62 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        if(filter == null) {
+            return finalizeList(new ArrayList(bookings.values()));
+        }
         if(filter.state == null) {
             filter.state = 0;
         }
         
         List<PmsBooking> result = new ArrayList();
-        if(filter.state == 0) {
-            result = new ArrayList(bookings.values());
-        } else {
+        
+        if(filter.searchWord != null && !filter.searchWord.isEmpty()) {
             for(PmsBooking booking : bookings.values()) {
-                if(booking.state.equals(filter.state)) {
+                if(booking.containsSearchWord(filter.searchWord)) {
                     result.add(booking);
+                }
+            }
+        } else {
+            if(filter.filterType== null || filter.filterType.equals("registered")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate)) {
+                        result.add(booking);
+                    }
+                }
+            } else if(filter.filterType.equals("active")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
+                        result.add(booking);
+                    }
+                }
+            } else if(filter.filterType.equals("uncofirmed")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(!booking.confirmed) {
+                        result.add(booking);
+                    }
+                }
+            } else if(filter.filterType.equals("checkin")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(booking.checkingInBetween(filter.startDate, filter.endDate)) {
+                        result.add(booking);
+                    }
+                }
+            } else if(filter.filterType.equals("checkout")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(booking.checkingOutBetween(filter.startDate, filter.endDate)) {
+                        result.add(booking);
+                    }
+                }
+            } else if(filter.filterType.equals("deleted")) {
+                for(PmsBooking booking : bookings.values()) {
+                    if(booking.isDeleted) {
+                        result.add(booking);
+                    }
                 }
             }
         }
         
         List<PmsBooking> finalized = finalizeList(result);
-        checkForIncosistentBookings();
         return finalized;
     }
 
@@ -376,6 +440,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 finalized.add(toReturn);
             }
         }
+       checkForIncosistentBookings();
         return finalized;
     }
 
@@ -398,6 +463,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingRooms room : booking.rooms) {
             if(room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
+                room.date.start = room.booking.startDate;
+                room.date.end = room.booking.endDate;
+                
                 if(room.booking.bookingItemTypeId != null) {
                     room.bookingItemTypeId = room.booking.bookingItemTypeId;
                 }
@@ -581,7 +649,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 total += defaultPrice;
             }
             cal.add(Calendar.DAY_OF_YEAR, 1);
-            if(cal.getTime().after(end) || cal.getTime().equals(end)) {
+            if(end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
                 break;
             }
         }
@@ -591,5 +659,200 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return total;
     }
 
+    @Override
+    public String createOrder(String bookingId, NewOrderFilter filter) {
+        
+        PmsBooking booking = getBooking(bookingId);
+        Order order = null;
+        if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
+            order = createMonthlyOrder(booking, filter);
+        }
+        if(order == null) {
+            return "Could not create order.";
+        }
+        booking.orderIds.add(order.id);
+        saveBooking(booking);
+        return "";
+    }
+
+    private Order createMonthlyOrder(PmsBooking booking, NewOrderFilter filter) {
+        cartManager.clear();
+        
+        Date startDate = filter.startInvoiceFrom;
+        for(int i = 0; i < filter.numberOfMonths; i++) {
+            Date endDate = addMonthsToDate(startDate, 1);
+            int daysInMonth = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
+            
+            for(PmsBookingRooms room : booking.rooms) {
+                String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+                if(productId == null) {
+                    System.out.println("Product no set for this booking item type");
+                }
+                int numberOfDays = getNumberOfDays(room, startDate, endDate);
+                if(numberOfDays == 0) {
+                    return null;
+                }
+                double price = room.price / daysInMonth;
+                price *= numberOfDays;
+                
+                CartItem item = cartManager.addProductItem(productId, 1);
+                item.startDate = startDate;
+                item.endDate = endDate;
+                
+                item.getProduct().discountedPrice = price;
+                item.getProduct().price = price;
+                cartManager.saveCartItem(item);
+            }
+            
+            startDate = addMonthsToDate(startDate, 1);
+        }
+        
+        User user = userManager.getUserById(booking.userId);
+        
+        Order order = orderManager.createOrder(user.address);
+        
+        order.payment = new Payment();
+        order.payment.paymentType = user.preferredPaymentType;
+        orderManager.saveOrder(order);
+        
+        booking.invoicedTo = startDate;
+        
+        return order;
+    }
+
+    private Date addMonthsToDate(Date startDate, Integer numberOfMonths) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        cal.add(Calendar.MONTH, numberOfMonths);
+        return cal.getTime();
+    }
+
+    private int getNumberOfDays(PmsBookingRooms room, Date startDate, Date endDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(room.date.start);
+        int days = 0;
+        while(true) {
+            if(cal.getTime().after(startDate) && cal.getTime().before(endDate)) {
+                days++;
+            }
+            
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(cal.getTime().after(room.date.end)) {
+                break;
+            }
+        }
+        return days;
+    }
+
+    @Override
+    public PmsNotifications getNotifications() {
+        return notifications;
+    }
+
+    @Override
+    public void saveNotification(PmsNotifications notifications) {
+        this.notifications = notifications;
+        saveObject(notifications);
+    }
     
+    private void doNotification(String key, PmsBooking booking) {
+        System.out.println("Notification done");
+        notify(key, booking, "sms");
+        notify(key, booking, "email");
+        notifyAdmin(key, booking);
+    }
+
+    private void notify(String key, PmsBooking booking, String type) {
+        String message = notifications.smses.get(key);
+        if(type.equals("email")) {
+            message = notifications.emails.get(key);
+            if(message != null) {
+                message = notifications.emailTemplate.replace("{content}", message);
+            }
+        }
+        if(message == null || message.isEmpty()) {
+            return;
+        }
+        message = formatMessage(message, booking, null, null);
+        
+        if(key.startsWith("room_")) {
+            notifyGuest(booking, message, type, key);
+        } else {
+            notifyBooker(booking, message, type, key);
+        }
+    }
+
+    private void notifyBooker(PmsBooking booking, String message, String type, String key) throws ErrorException {
+        User user = userManager.getUserById(booking.userId);
+        if(type.equals("email")) {
+            messageManager.sendSms(user.cellPhone, message, user.prefix);
+        } else {
+            String title = notifications.emailTitles.get(key);
+            title = formatMessage(message, booking, null, null);
+            messageManager.sendMailWithDefaults(user.fullName, user.emailAddress, title, message);
+        }
+    }
+
+    private String notifyGuest(PmsBooking booking, String message, String type, String key) {
+        for(PmsBookingRooms room : booking.rooms) {
+            for(PmsGuests guest : room.guests) {
+                if(guest.phone == null || guest.phone.isEmpty()) {
+                    continue;
+                }
+                if(type.equals("email")) {
+                    String title = notifications.emailTitles.get(key);
+                    title = formatMessage(message, booking, room, guest);
+                    messageManager.sendMailWithDefaults(guest.name, guest.email, title, message);
+                } else {
+                    messageManager.sendSms(guest.phone, message, guest.prefix);
+                }
+            }
+        }
+        return message;
+    }
+
+    private void notifyAdmin(String key, PmsBooking booking) {
+        String message = notifications.adminmessages.get(key);
+        if(message == null) {
+            return;
+        }
+        
+        message = formatMessage(message, booking, null, null);
+        String email = getStoreSettingsApplicationKey("emailaddress");
+        String phone = getStoreSettingsApplicationKey("phoneNumber");
+        messageManager.sendMailWithDefaults("Administrator", email, "Notification", message);
+        messageManager.sendSms(phone, message);
+    }
+
+    private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
+        PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+        
+        if(room != null) {
+            message = formater.formatRoomData(message, room, bookingEngine);
+        }
+        message = formater.formatContactData(message, userManager.getUserById(booking.userId), null);
+        message = formater.formatBookingData(message, booking, bookingEngine);
+        
+        return message;
+    }
+
+    @Override
+    public void confirmBooking(String bookingId) {
+        PmsBooking booking = getBooking(bookingId);
+        booking.confirmed = true;
+        saveBooking(booking);
+        doNotification("booking_confirmed", booking);
+    }
+
+    @Override
+    public PmsStatistics getStatistics(PmsBookingFilter filter) {
+        List<PmsBooking> allBookings = getAllBookings(null);
+        PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings);
+        int totalRooms = bookingEngine.getBookingItems().size();
+        PmsStatistics result = builder.buildStatistics(filter, totalRooms);
+        result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
+        result.buildTotalSales();
+        return result;
+    }
+
 }

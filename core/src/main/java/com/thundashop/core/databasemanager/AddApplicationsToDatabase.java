@@ -187,7 +187,18 @@ public class AddApplicationsToDatabase {
         PmsPricing.moduleId = "booking";
         PmsPricing.defaultActivate = false;
         apps.add(PmsPricing);
-        
+
+        Application PmsNotifications = createSettings("PmsNotifications",
+        "9de81608-5cec-462d-898c-1266d1749320",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsNotifications.isPublic = true;
+        PmsNotifications.isFrontend = true;
+        PmsNotifications.moduleId = "booking";
+        PmsNotifications.defaultActivate = false;
+        apps.add(PmsNotifications);
+
         return apps;
     }
 

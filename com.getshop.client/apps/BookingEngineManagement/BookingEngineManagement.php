@@ -81,5 +81,12 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $this->getApi()->getBookingEngine()->deleteBookingItem($this->getSelectedName(), $id);
     }
     
+    public function setProductToItemType() {
+        $id = $_POST['data']['typeid'];
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $id);
+        $type->productId = $_POST['data']['productid'];
+        $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $type);
+    }
+    
 }
 ?>

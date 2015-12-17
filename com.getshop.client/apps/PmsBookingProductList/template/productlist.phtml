@@ -24,7 +24,9 @@ foreach($rooms as $room) {
     ?>
     <div class='productentry <? echo $selected; ?>'>
     <span class='name'><? echo $room->type->name; ?></span>
-    <span class='price'><? echo $room->price; ?>,-</span>
+    <?php if($room->price > 0) { ?>
+        <span class='price'><? echo $room->price; ?>,-</span>
+    <?php } ?>
     <span class='select_button' typeid="<? echo $room->type->id; ?>"><? echo $this->getText("select_button"); ?></span>
     </div>
     <?php

@@ -4,6 +4,7 @@
  */ 
 package com.thundashop.core.common;
 
+import com.thundashop.core.appmanager.data.Application;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,5 +13,5 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ManagerBase extends ManagerSubBase {
-    
+
 }

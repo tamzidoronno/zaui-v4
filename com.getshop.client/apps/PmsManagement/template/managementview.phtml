@@ -6,20 +6,11 @@ $filter = $this->getSelectedFilter();
 $searchtypes = array();
 $searchtypes['registered'] = "Registered";
 $searchtypes['active'] = "Active";
-$searchtypes['inactive'] = "Inactive";
+$searchtypes['uncofirmed'] = "Unconfirmed";
 $searchtypes['checkin'] = "Checkin in";
 $searchtypes['checkout'] = "Checkin out";
 $searchtypes['deleted'] = "Deleted";
-
-$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
-$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
-foreach($items as $item) {
-    $items[$item->id] = $item;
-}
-foreach($types as $type) {
-    $types[$type->id] = $type;
-}
+$searchtypes['stats'] = "Statistics";
 ?>
 
 
@@ -30,11 +21,15 @@ foreach($types as $type) {
         <input type='text' class="end pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
 
         <select class="pmsinput filterType">
-            <option value="registered">Registered</option>
-            <option value="registered">Active</option>
-            <option value="registered">Checking in</option>
-            <option value="registered">Checking out</option>
-            <option value="registered">Deleted</option>
+            <?php
+            foreach($searchtypes as $idx => $type) {
+                $selected = "";
+                if($filter->filterType == $idx) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$idx' $selected>$type</option>";
+            }
+            ?>
         </select>
         <span gstype="submit" class="pmsbutton setFilter">Show</span>
     </span>
@@ -45,76 +40,12 @@ foreach($types as $type) {
 <br><br>
 
 <?php
-echo "<table width='100%' cellspacing='0' cellpadding='0'>";
-echo "<tr>";
-echo "<th></th>";
-echo "<th>Start</th>";
-echo "<th>End</th>";
-echo "<th>Visitor</th>";
-echo "<th>Room</th>";
-echo "<th align='center'><center>State</center></th>";
-echo "</tr>";
-foreach($bookings as $booking) {
-    foreach($booking->rooms as $room) {
-        echo "<tr>";
-        echo "<td style='width:70px;'>";
-        echo "<i class='fa fa-trash-o removebooking actions'></i>";
-        echo "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."'></i> ";
-        echo "</td>";
-        echo "<td>";
-        echo date("d.m.Y", strtotime($room->date->start));
-        echo "</td>";
-        echo "<td>";
-        if($room->date->end) {
-            //Dont show end date if this is a atleast 75 years booking
-            if(((strtotime($room->date->end) - strtotime($room->date->start)) /86400) < 20000) {
-                echo date("d.m.Y", strtotime($room->date->end));
-            }
-        }
-        echo "</td>";
-        echo "<td>";
-        foreach($room->guests as $guest) {
-            echo $guest->name . " - " . $guest->email . " - " . $guest->phone . "<br>";
-        }
-        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
-        echo "<div style='padding-top: 5px;'>";
-        echo "<span class='secondary_text'>Room type " . $types[$room->bookingItemTypeId]->name . "</span>, ";
-        if($user) {
-            echo "<span class='secondary_text'>registered by " . $user->fullName . "</span>";
-        }
-        echo "<span class='secondary_text'>";
-        if($booking->confirmed) {
-            echo ", confirmed ";
-        } else {
-            echo ", not confirmed ";
-        }
-        echo "</span>";
+if($filter->filterType == "stats") {
+    $this->includefile("statistics");
+} else {
+    $this->includefile("managementviewtable");
+}
 
-        echo "<span class='secondary_text' style='float:right;'>Registered " . $booking->rowCreatedDate . "</span>";
-        echo "</div>";
-        echo "</td>";
-        echo "<td align='center'>";
-        if($room->booking->bookingItemId) {
-            echo $items[$room->booking->bookingItemId]->bookingItemName;
-        }
-        echo "</td>";
-        echo "<td align='center'>";
-        switch($booking->state) {
-            case "0":
-                echo "Booking";
-                break;
-            case "1":
-                echo "Booked";
-                break;
-            case "2":
-                echo "Deleted";
-                break;
-        }
-        echo "</td>";
-        echo "</tr>";
-    }
-} 
-echo "</table>";
  ?>
 
 <script>

@@ -52,6 +52,14 @@ public class PHPApiBuilder {
                 classname = classname.replace(".", "_");
                 classname += "[]";                
             }
+            if(classname.contains("java.util.LinkedList")) {
+                ParameterizedType stringListType = (ParameterizedType) type;
+                Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+                classname = stringListClass.toGenericString();
+                classname = classname.replace("public class com.thundashop.", "");
+                classname = classname.replace(".", "_");
+                classname += "[]";                
+            }
         }
         return classname;
     }

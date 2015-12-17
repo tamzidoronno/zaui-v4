@@ -13,6 +13,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("bookinginformation");
     }
 
+    public function createNewOrder() {
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        foreach($_POST['data'] as $name => $val) {
+            $filter->{$name} = $val;
+        }
+        $bookingId = $_POST['data']['bookingid'];
+        if(isset($_POST['data']['startingFrom'])) {
+            $filter->startInvoiceFrom = $this->convertToJavaDate(strtotime($_POST['data']['startingFrom']));
+        }
+        $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
+        $this->showBookingInformation();
+    }
+    
     /**
      * @return core_bookingengine_data_BookingItemType[]
      */
@@ -23,6 +36,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $types2[$type->id] = $type;
         }
         return $types2;
+    }
+    
+    public function confirmBooking() {
+        $id = $_POST['data']['bookingid'];
+        $this->getManager()->confirmBooking($this->getSelectedName(), $id);
+        $this->showBookingInformation();
     }
     
     public function setItemType() {
@@ -186,6 +205,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         return "";
+    }
+
+    public function translateText($type) {
+        return substr($type, strpos($type, "\\")+1);
     }
 
 }

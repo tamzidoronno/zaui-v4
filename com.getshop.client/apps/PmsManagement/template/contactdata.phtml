@@ -5,9 +5,11 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 $instances2 = array();
 foreach($instances as $instance) {
-    $instances2[$instance->id] = $instance;
+    $ns = "ns_" . str_replace("-","_", $instance->id) ."\\".$instance->appName;
+    $instances2[$ns] = $instance;
 }
 $instances = $instances2;
+$avtalegiro = $this->getApi()->getStoreApplicationPool()->getApplication("8f5f7f8f-de42-4867-82cc-63eb0cb55fa1");
 ?>
 
 <div class='contactdata'>
@@ -54,6 +56,20 @@ $instances = $instances2;
         <span class='roomprefix'>User id</span>
         <span class='roompostfix'><? echo $user->customerId; ?></span>
         <div style='clear:both;'></div>
+        <?php if($avtalegiro) { 
+            echo "<span class='roomprefix'>Avtalegiro</span>";
+            echo "<span class='roompostfix'>";
+            /* @var $autogiroapp ns_8f5f7f8f_de42_4867_82cc_63eb0cb55fa1\Avtalegiro */
+            $autogiroapp = $this->getFactory()->getApplicationPool()->createInstace($avtalegiro);
+            $link = $autogiroapp->createLink($user->id);
+            echo "<a href='".$autogiroapp->createLink($user->id)."' target='_new'>Avtalegiro</a>";
+            echo " - <a href='".$autogiroapp->createLink($user->id)."' target='_new'>Efaktura</a>";
+            echo " - <a href='".$autogiroapp->createLink($user->id)."' target='_new'>Avtalegiro + efaktura</a>";
+            echo "</span>";
+            echo "<div style='clear:both;'></div>";
+            ?>
+        <? } ?>
+        <div style='clear:both;'></div>
         <span class='roomattribute'>
                 <span class='roomprefix'>
                     <i class='fa fa-edit'></i> Payment type
@@ -70,12 +86,12 @@ $instances = $instances2;
                     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
                     <select gsname="newtype">
                         <?php 
-                        foreach($instances  as $instance) {
+                        foreach($instances  as $ns => $instance) {
                             $selected = "";
-                            if($instance->id == $user->preferredPaymentType) {
+                            if($ns == $user->preferredPaymentType) {
                                 $selected = "SELECTED";
                             }
-                            echo "<option value='".$instance->id."' $selected>".$instance->appName."</option>";
+                            echo "<option value='".$ns."' $selected>".$instance->appName."</option>";
                         }
                         ?>
                     </select>

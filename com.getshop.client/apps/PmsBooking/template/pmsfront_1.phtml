@@ -37,7 +37,11 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
             <?php
             foreach($rooms as $room) {
                 /* @var $room core_bookingengine_data_Booking */
-                echo "<option value='".$room->type->id."'>" . $room->price . " NOK " . $room->type->name . "</option>";
+                echo "<option value='".$room->type->id."'>";
+                if($room->price > 0) {
+                    echo $room->price . " NOK ";
+                }
+                echo $room->type->name . "</option>";
             }
             ?>
         </select>

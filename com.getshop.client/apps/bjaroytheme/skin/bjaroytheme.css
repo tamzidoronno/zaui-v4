@@ -1,0 +1,17 @@
+.gs_page_width { width: 1024px; margin: auto;}
+.Menu { text-align:  left; color: #aaa; padding-top: 20px !important; }
+.Menu .entry a { color: #aaa; font-size: 12px; text-transform: uppercase;
+          letter-spacing: 3px;
+          font-family: 'Hind', sans-serif;
+          font-weight: 100;text-spacing: 20px; }
+.Menu .entry { padding: 10px; padding-right: 30px; }
+.Menu { float: right; padding-top: 10px; }
+.gsarea[area="header"] .gsinner.gsdepth_0 { width: 100%; padding-right: 20px;}
+body {
+    font-weight: 100;
+    font-family: 'Quicksand', sans-serif;
+    letter-spacing: 2px;
+}
+body {
+    font-weight: 100 !important;
+}

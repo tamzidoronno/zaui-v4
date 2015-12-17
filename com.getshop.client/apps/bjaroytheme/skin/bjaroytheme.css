@@ -1,0 +1,5 @@
+.gs_page_width { width: 1024px; margin: auto;}
+.Menu { text-align:  left; color: #aaa; }
+.Menu .entry a { color: #aaa; font-size: 20px; text-transform: uppercase;  }
+.Menu .entry { padding: 10px; }
+.Menu { float: right; padding-top: 10px; }

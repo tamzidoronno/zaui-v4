@@ -5,6 +5,8 @@ body {
     font-size: 16px;
 }
 
+.gsarea[area="header"] {
+}
 .gsarea[area="header"] .gsdepth_0.gscount_1.gsrow {
     margin-top: 0px;
 }
@@ -37,7 +39,7 @@ body {
 }
 
 .gsarea[area="header"] .Menu .entry a div {
-    font-size: 16px;
+    font-size: 15px;
     line-height: 25px;
     margin-top: 15px;
     margin-bottom: 15px;

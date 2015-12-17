@@ -2462,3 +2462,23 @@ padding: 2px; }
 .gsborderpointerhover_column_bottom { padding-right: 0px; }
 .gsborderpointerhover_row_top { padding-top: 0px; }
 .gsborderpointerhover_row_bottom { padding-bottom: 0px; }
+
+
+.left_side_bar {
+    display: inline-block;
+    vertical-align: top;
+    width: 200px;
+}
+
+.gsbody_inner.gseditormode {
+    margin-left: 61px;
+    margin-right: 30px;
+    border-right: solid 1px #DDD;
+}
+
+.gs_main_column {
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    width: calc(100% - 200px);
+}

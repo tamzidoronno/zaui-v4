@@ -1160,3 +1160,21 @@ thundashop.common.triggerTimeoutCheck = function() {
         } 
     });
 };
+
+var resizeLeftBar = function() {
+    if ($(".left_side_bar").length) {
+        var windowHeight = $(window).height() - $('.gsarea[area="header"]').outerHeight() - $('.gsarea[area="footer"]').outerHeight();
+        var gsAreaHeight = $('.gs_main_column').height();
+        if (windowHeight > gsAreaHeight) {
+            $(".left_side_bar").css("min-height", windowHeight+"px");
+        } else {
+            $(".left_side_bar").css("min-height", gsAreaHeight+"px");
+        } 
+    }
+}
+
+
+$(document).ready(function() {
+    PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', resizeLeftBar);
+    PubSub.subscribe('NAVIGATION_COMPLETED', resizeLeftBar);
+});

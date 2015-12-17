@@ -56,6 +56,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_closecarouselsettings', this.closeCarouselSettings);
         $(document).on('click', '.gs_start_template_button', this.startTemplateClicked);
         $(document).on('click', '.gs_toggle_advanced_mode', this.toggleAdvancedMode);
+        $(document).on('click', '.gs_toggle_sidebar', this.toggleSideBar);
         $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
         $(document).on('click', '.gsresizecolumn', this.activateResizeColumn);
@@ -113,6 +114,11 @@ thundashop.framework = {
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('click', '[gstype="submitToInfoBox"]', thundashop.framework.postToInformationBox);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+    },
+    
+    toggleSideBar: function() {
+        var postEvent = thundashop.Ajax.createEvent(null, "toggleSideBar", this, {});
+        thundashop.Ajax.post(postEvent);
     },
     
     postToInformationBox : function() {
@@ -1342,7 +1348,7 @@ thundashop.framework = {
         return element;
     },
     simpleaddrow: function () {
-
+        
         var button = $(this);
         var metaData = {
             rowId: "",
@@ -1380,6 +1386,8 @@ thundashop.framework = {
         }
         if (cellobj.attr('cellid')) {
             thundashop.framework.rowPicker.toggleRowPicker('left', this, selected, metaData);
+        } else if(cellobj.closest('.left_side_bar')) {
+            thundashop.framework.rowPicker.toggleRowPicker('right', this, selected, metaData, false);
         } else {
             thundashop.framework.rowPicker.toggleRowPicker('down', this, selected, metaData, false);
         }

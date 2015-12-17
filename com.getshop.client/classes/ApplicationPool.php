@@ -300,6 +300,15 @@ class ApplicationPool {
         $app = $this->factory->getApi()->getStoreApplicationPool()->getThemeApplication();
         return $app;
     }
+    
+    public function getSelectedThemeAppInstance() {
+        $app = $this->getSelectedThemeApp();
+        if ($app != null) {
+            return $this->createInstace($app);
+        }
+        
+        return null;
+    }
 
     public function getAllPaymentInstances() {
         $instances = $this->getAllAddedInstances();

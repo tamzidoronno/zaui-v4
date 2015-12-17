@@ -61,6 +61,20 @@ public class AddApplicationsToDatabase {
         Avtalegiro.isSingleton = true;
         apps.add(Avtalegiro);
 
+        
+        Application SedoxDatabankTheme = createSettings("SedoxDatabankTheme",
+        "4f89c95c-99dc-4ed7-9352-1e1c51f4630c",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        SedoxDatabankTheme.isPublic = false;
+        SedoxDatabankTheme.isFrontend = true;
+        SedoxDatabankTheme.moduleId = "other";
+        SedoxDatabankTheme.defaultActivate = false;
+        SedoxDatabankTheme.allowedStoreIds = new ArrayList();
+        SedoxDatabankTheme.allowedStoreIds.add("eafea78d-1eea-403f-abbb-3b23a6e61dae");
+        apps.add(SedoxDatabankTheme);
+
         Application SemLagerhotellTheme = createSettings("SemLagerhotellTheme",
         "d91e4e20-f4af-425c-8468-2202ccc0db1e",
         allowed2,

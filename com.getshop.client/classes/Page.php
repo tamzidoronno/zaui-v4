@@ -57,22 +57,24 @@ class Page {
             }
             echo "</div>";
             echo "<div class='gsarea' area='body'>";
-            if (isset($layout->areas->{'body'}) && sizeof($layout->areas->{'body'})) {
-                $edited = $this->printArea($layout->areas->{'body'});
+                $leftBarEnabled = $this->javapage->leftSideBar;
+                if ($leftBarEnabled)  {
+                    echo "<div class='gsarea left_side_bar' area='left_side_bar'>";
+                    $edited = $this->printArea($layout->areas->{'left_side_bar'});
+                    echo "</div>";
+                    
+                    echo "<div class='gs_main_column'>";
+                    $edited = $this->printArea($layout->areas->{'body'});
+                    echo "</div>";
+                } else {
+                    $edited = $this->printArea($layout->areas->{'body'});
+                }
+                
                 if ($edited) {
                     $editedCellid = $edited;
                 }
-            } else {
-                if($this->factory->isEditorMode()) {
-                        echo "<div class='gscell'>";
-                        echo "<div class='gsemptyarea gsinner'>";
-                        echo "<span class='shop_button'>".$this->factory->__f("Create your first row for the page")."</span>";
-                        echo "</div>";
-                        echo "</div>";
-                }
-            }
-            echo "</div>";
 
+            echo "</div>";
 
             echo "<div class='gsarea' area='footer'>";
             $edited = $this->printArea($layout->areas->{'footer'});
@@ -132,6 +134,8 @@ class Page {
         echo "<script>";
         echo "$(function() { $('.pagetitle').html('".$this->factory->getPageTitle()."'); });";
         echo "</script>";
+        
+        echo '<script>resizeLeftBar();</script>';
     }
 
     private function printMobileHeader($headerCells) {
@@ -839,6 +843,16 @@ class Page {
     }
 
     public function printArea($rowsToPrint, $header=false) {
+        
+        if($this->factory->isEditorMode() && !$rowsToPrint) {
+            echo "<div class='gscell'>";
+            echo "<div class='gsemptyarea gsinner'>";
+            echo "<span class='shop_button'>".$this->factory->__f("Create the first row")."</span>";
+            echo "</div>";
+            echo "</div>";
+            return;
+        }
+        
         $count = 0;
         $editedCellid = null;
         $printed = false;

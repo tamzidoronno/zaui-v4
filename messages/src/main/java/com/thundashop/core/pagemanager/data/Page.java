@@ -36,6 +36,8 @@ public class Page extends DataCommon implements Cloneable {
     public String metaKeywords = "";
     public String metaTitle = "";
     public String overridePageTitle = "";
+
+    public boolean leftSideBar = false;
     
     public String masterPageId = "";
     

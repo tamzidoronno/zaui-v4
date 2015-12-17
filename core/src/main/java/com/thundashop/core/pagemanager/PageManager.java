@@ -763,6 +763,14 @@ public class PageManager extends ManagerBase implements IPageManager {
         return addLayoutCell(pageId, inCell, beforeCell, mode, area);
     }
 
-    
+    @Override
+    public void toggleLeftSideBar(String pageId) throws ErrorException {
+        Page page = pages.get(pageId);
+        if (page != null) {
+            page.leftSideBar = !page.leftSideBar;
+            saveObject(page);
+        }
+    }
+
     
 }

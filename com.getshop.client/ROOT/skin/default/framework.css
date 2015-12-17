@@ -1529,7 +1529,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
     -moz-border-radius: 0px;
     -webkit-border-radius: 0px 0px 3px 3px;
     border-radius: 0px 0px 3px 3px; 
-    padding: 10px;
     box-sizing: border-box;
 }
 #informationbox .GetShopColorPicker {
@@ -2325,11 +2324,12 @@ padding: 2px; }
 }
 
 .gs_site_main_buttons_view {
-    background-color: #333;
+    background-color: #2885c0;
     position: fixed;
+    height: 100%;
     width: 60px;
     z-index: 3;
-    border-right: solid 1px;
+    border-right: solid 1px #005387;
 }
 
 .gs_advanced_mode_activated i {

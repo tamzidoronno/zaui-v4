@@ -15,3 +15,17 @@ body {
 body {
     font-weight: 100 !important;
 }
+
+
+.gsarea[area="header"] { padding-top: 20px; background-color:#181411; height: 100px !important; position: relative; padding-bottom: 0px; margin-bottom: 0px;}
+.gsarea[area="footer"] { padding-top: 20px; background-color:#181411; height: 200px !important; position: relative; padding-bottom: 0px; 
+
+margin-bottom: 0px;
+    
+    color: #efefef !important;
+    
+}
+
+.gsarea[area="footer"] .ContentManager { color:#aaa !important;  }
+
+gsarea[area="body"] { margin-top: 0px; }

@@ -110,6 +110,7 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("singlegrouptouser", $_POST['singlegrouptouser']);
         $this->getApi()->getStoreManager()->setPrimaryDomainName($_POST['url']);
         $this->setConfigurationSetting("currencycode", "NOK");
+        $this->setConfigurationSetting("autonavigatetocart", $_POST['autonavigatetocart']);
         $this->setConfigurationSetting("seo",  $_POST['seo']);
     }
 

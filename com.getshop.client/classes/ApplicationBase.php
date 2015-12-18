@@ -286,7 +286,10 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function getGlobalConfigurationSetting($key) {
-        return $this->applicationSettings->settings->{$key}->value;
+        if(isset($this->applicationSettings->settings->{$key})) {
+            return $this->applicationSettings->settings->{$key}->value;
+        }
+        return null;
     }
     
     public function getConfigurationSetting($key) {

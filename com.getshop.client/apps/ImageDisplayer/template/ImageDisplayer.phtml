@@ -43,17 +43,39 @@ if($originalSize == "true") {
     $origSize = "originalSize";
 }
 
+$imageCompressionEnabled = $this->isCompressionActivated();
+$containerId = uniqid()."_".  uniqid();
+$imageSrc = "";
+
 ?>
-<div class='displayimagecontainer'>
-    <span class='imagecontainer <? echo $origSize .  " " . $adjustment; ?>' >
-        <? if ($id) { ?>
-            <img zoomable='<? echo $this->isZoomAble() ? "true" : "false"; ?>' src="/displayImage.php?id=<? echo $id . $crop; ?>"/>
+<div class='displayimagecontainer' containerId="<? echo $containerId ?>">
+    <span class='imagecontainer <? echo $origSize .  " " . $adjustment; ?>'  >
+        <? if ($id) { 
+            $imageSrc = "/displayImage.php?id=".$id.$crop; 
+            
+            if ($imageCompressionEnabled) {
+                echo '<div style="text-align: center; font-size: 30px; padding: 20px; color: #DDD;"><i class="fa fa-spinner fa-spin"></i></div>';
+            } else {
+                ?>
+                <img zoomable='<? echo $this->isZoomAble() ? "true" : "false"; ?>' src="<? echo $imageSrc; ?>"/>
+                <?
+            }
+            ?>            
         <? } ?>
     </span>
 </div>
 <? echo "</a>"; ?>
+
+<script>
+    <? if ($imageCompressionEnabled) { ?>
+    $(document).ready(function() {  
+        app.ImageDisplayer.loadImage('<? echo $containerId; ?>', '<? echo $imageSrc; ?>');
+    });    
+    <? } ?>
+</script>
+
 <? if (!$id) { ?>
-    <script>
+    <script>        
         var appId = '<? echo $this->getConfiguration()->id; ?>';
         var currentApp = $('.app[appid='+appId+']');
         var editor = getshop.ImageEditorApi.get(appId);

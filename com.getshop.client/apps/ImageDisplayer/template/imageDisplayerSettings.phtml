@@ -1,0 +1,36 @@
+<div class='gss_settings_header'>
+    <i class='fa fa-image'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Image displayer global settings"); ?>
+        </div>
+
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Some global settings for the image displayer");
+            ?>	
+        </div>
+    </div>       
+</div>
+
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting"  id="global_compression">
+        <span class="title"><?php echo $this->__f("Enable compression on image"); ?></span>
+        <div class="gss_onoff" gs_model="imagemodel" gs_model_attr="isGlobalCompression">
+            <?
+            $faclass = $this->getConfigurationSetting("isGlobalCompression") == "true" ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("Enable this and the images will be loaded smarter and compressed on serverside."); ?>
+        </div>
+    </div>
+    
+    
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveGlobalSettings" gss_model="imagemodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    </div>
+
+</div>

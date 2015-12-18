@@ -119,6 +119,14 @@ app.ImageDisplayer = {
                 }
             });
         }
+    },
+    
+    loadImage: function(domId, imgSrc) {
+        if (imgSrc) {
+            var container = $('.displayimagecontainer[containerId="'+domId+'"] span');
+            var width = $('.displayimagecontainer[containerId="'+domId+'"]').width();
+            container.html("<img src='"+imgSrc+"&width="+width+"'>");
+        }
     }
 };
 

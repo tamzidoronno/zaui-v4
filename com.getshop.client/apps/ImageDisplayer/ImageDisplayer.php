@@ -168,12 +168,31 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
             return true;
         }
         
+        
         return $zoomable === "true";
+    }
+    
+    public function isCompressionActivated() {
+        $globalCompression = $this->getGlobalConfigurationSetting("isGlobalCompression");
+        if ($globalCompression && $globalCompression == "true") {
+            return true;
+        }
+        
+        return false;
     }
     
     public function toggleZoomImage() {
         $value = $this->isZoomAble() ? "false" : "true";
         $this->setConfigurationSetting("zoom_able", $value);
     }
+    
+    public function renderConfig() {
+        $this->includefile("imageDisplayerSettings");
+    }
+    
+    public function saveGlobalSettings() {
+        $this->setConfigurationSetting("isGlobalCompression", $_POST['isGlobalCompression']);
+    }
+
 }
 ?>

@@ -278,7 +278,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (CartItem item : cart.getItems()) {
             Product product = item.getProduct();
             double price = productManager.getPrice(item.getProduct().id, item.getVariations());
-            if(getSession().currentUser == null && !getSession().currentUser.isAdministrator()) {
+            if(getSession() == null || getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
                 product.price = price;
             }
             

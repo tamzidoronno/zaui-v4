@@ -92,7 +92,18 @@ if (!$mainImage && count($product->imagesAdded)) {
     <div productId='<? echo $product->id; ?>' class="shop_button addProductToCart"><? echo $this->__f("Add to cart"); ?></div>
 </div>
 
+
 <script>
+<?php
+$settings = $this->getFactory()->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
+$settingsInstance = $this->getFactory()->getApplicationPool()->createInstace($settings);
+if($settingsInstance->getConfigurationSetting("autonavigatetocart") == "true") {
+    echo "autonavigatetocart=true;";
+} else {
+    echo "autonavigatetocart=false;";
+}
+?>
+
     var parent = $('.product_contentbox').parent();
     var containerWidth = parent.innerWidth();
     var imagecontainerwidth = parent.find('.images').outerWidth();

@@ -11,7 +11,13 @@ app.Product = {
         if ($('.gsmobilemenu').is(':visible')) {
             button.effect("transfer", {to: $('.gsmobilemenucart')}, 1000, function () {
                 var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
-                thundashop.Ajax.post(event);
+                thundashop.Ajax.postWithCallBack(event, function() {
+                    if(typeof(autonavigatetocart) !== "undefined" && autonavigatetocart) {
+                        window.location.href="/?page=cart";
+                    } else {
+                        thundashop.framework.reprintPage();
+                    }
+                });
             });
         } else {
             $('.gsarea[area="header"] .checkout_area').each(function () {
@@ -22,7 +28,13 @@ app.Product = {
                 button.effect("transfer", {to: $(this)}, 1000, function () {
                     $(dom).parent().css('position', 'relative');
                     var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
-                    thundashop.Ajax.post(event);
+                    thundashop.Ajax.postWithCallBack(event, function() {
+                        if(typeof(autonavigatetocart) !== "undefined" && autonavigatetocart) {
+                            window.location.href="/?page=cart";
+                        } else {
+                            thundashop.framework.reprintPage();
+                        }
+                    });
                 });
             });
         }

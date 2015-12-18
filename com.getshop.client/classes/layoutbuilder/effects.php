@@ -6,6 +6,14 @@ if (!$this->factory->isEffectsEnabled()) {
     ?>
     <h2>Scroll effect - Fadein</h2>
     <div>
+        <label><? echo $this->factory->__w("Flip contect to add content underneat this cell"); ?>
+            <span class='gscssinput'>
+                <input type='checkbox' gsname='isFlipping'> 
+            </span>
+        </label>
+    </div>
+    <div style='clear:both;'></div>
+    <div>
         <label><? echo $this->factory->__w("Fade in when scrolling"); ?>
             <span class='gscssinput'>
                 <input type='checkbox' gsname='scrollFadeIn'> 

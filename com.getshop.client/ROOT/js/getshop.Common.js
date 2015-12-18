@@ -1173,8 +1173,18 @@ var resizeLeftBar = function() {
     }
 }
 
+var initializeFlipping = function() {
+    $('.gsflipback').hide();
+    $(".gsflipcard").each(function() {
+        $(this).css('height',$(this).height());
+    });
+    $(".gsflipcard").flip();
+    $('.gsflipback').css('display','block');
+    console.log('navcompleted');
+};
 
 $(document).ready(function() {
     PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', resizeLeftBar);
     PubSub.subscribe('NAVIGATION_COMPLETED', resizeLeftBar);
+    PubSub.subscribe('NAVIGATION_COMPLETED', initializeFlipping);
 });

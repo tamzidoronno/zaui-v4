@@ -175,7 +175,6 @@ class Factory extends FactoryBase {
             $fileName = "javascripts/".$this->getStore()->id."_framework_".$this->startupCount.".js";
             file_put_contents($fileName, "");
         }
-        
         $this->addJavascriptFile("js/jquery-1.9.0.js");
         $this->addJavascriptFile("js/watch.js");
         $this->addJavascriptFile("js/jquery-migrate-1.2.1.js");
@@ -229,6 +228,7 @@ class Factory extends FactoryBase {
             $this->addJavascriptFile("js/scrollmagic.Velocity.js");
             $this->addJavascriptFile("js/scrollmagic.js");
             $this->addJavascriptFile("js/getshop.ScrollMangic.js");
+            $this->addJavascriptFile("js/jquery.flip.min.js");
         }
         
         // JS TREE

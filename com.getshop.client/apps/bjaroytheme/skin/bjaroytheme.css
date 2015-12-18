@@ -29,3 +29,6 @@ margin-bottom: 0px;
 .gsarea[area="footer"] .ContentManager { color:#aaa !important;  }
 
 gsarea[area="body"] { margin-top: 0px; }
+
+.front, .back  { background-color:#fff; }
+.gsflipback { display:none; }

@@ -359,6 +359,9 @@ public class PageLayout implements Serializable {
             if(areas != null && areas.get(area) != null) {
                 for (PageCell row : areas.get(area)) {
                     arrayList.addAll(row.getCellsFlatList());
+                    if(row.back != null) {
+                        arrayList.add(row.back);
+                    }
                 }
             }
         }
@@ -646,4 +649,12 @@ public class PageLayout implements Serializable {
             }
         }
     }
+
+    void finalizeLayout() {
+        ArrayList<PageCell> allCells = getCellsFlatList();
+        for(PageCell cell : allCells) {
+            cell.finalizeCell();
+        }
+    }
+
 }

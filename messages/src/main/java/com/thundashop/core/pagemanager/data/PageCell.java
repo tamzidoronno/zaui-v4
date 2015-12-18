@@ -50,6 +50,7 @@ public class PageCell implements Serializable {
     public Double width = -1.0;
     public int outerWidth = -1;
     public int outerWidthWithMargins = -1;
+    public PageCell back = null;
     public boolean keepOriginalLayoutOnMobile = false;
     
     //Permissions.
@@ -106,6 +107,16 @@ public class PageCell implements Serializable {
 
     public boolean isTab() {   
         return PageCell.CellMode.tab.equalsIgnoreCase(mode); 
+    }
+
+    void finalizeCell() {
+        if(settings.isFlipping) {
+            back = new PageCell();
+            back.mode = mode;
+            back.type = type;
+            back.finalizeCell();
+        }
+        
     }
     
     

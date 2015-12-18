@@ -514,7 +514,6 @@ class Page {
         
         echo "<div anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
         $this->printEffectTrigger($cell, $depth);
-        
         $this->printEffectSettingsDiv($cell);
         
         if ($anchor) {
@@ -538,7 +537,6 @@ class Page {
         $this->printEasyModeLayer($edit, $cell, $parent);
 
         echo "<div $innerstyles class='$gscellinner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
-
         if ($header && $depth == 0 && $count == 0) {
             $this->printLanguageSelection();
         }
@@ -546,8 +544,15 @@ class Page {
         if($this->factory->isEditorMode()) {
             $this->printCellBox($edit, $cell, $parent, $depth);
         }
-        $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
+        
+        /* @var $cell core_pagemanager_data_PageCell */
+        if($cell->settings->isFlipping) {
+            $this->printFlipBoxes($cell, $parent, $edit, $totalcells, $count, $depth);
+        } else {
+            $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
+        }
 
+        
         echo "</div>";
         echo "</div>";
 
@@ -1094,6 +1099,16 @@ class Page {
         <?
     }
 
+    /**
+     * 
+     * @param core_pagemanager_data_PageCell $cell
+     * @param core_pagemanager_data_PageCell $parent
+     * @param core_pagemanager_data_PageCell $edit
+     * @param type $totalcells
+     * @param type $count
+     * @param type $depth
+     * @return type
+     */
     public function printCellContent($cell, $parent, $edit, $totalcells, $count, $depth) {
         
         if ($cell->mode == "INIT") {
@@ -1682,6 +1697,33 @@ class Page {
         }
         
         echo "<div style='display: none' class='gsCellSettings_attrs' $attrs></div>";
+    }
+
+    /**
+     * 
+     * @param core_pagemanager_data_PageCell $cell
+     * @param core_pagemanager_data_PageCell $parent
+     * @param core_pagemanager_data_PageCell $edit
+     * @param type $totalcells
+     * @param type $count
+     * @param type $depth
+     * @return type
+     */
+    public function printFlipBoxes($cell, $parent, $edit, $totalcells, $count, $depth) {
+        ?>
+        <div class='gsflipcard'> 
+          <div class="front gsflipfront"> 
+            <?
+                $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
+            ?>
+            </div> 
+            <div class="back gsflipback">
+            <?
+                $this->printCellContent($cell->back, $parent, $edit, $totalcells, $count, $depth);
+            ?>
+            </div> 
+          </div>
+       <?php
     }
 
 }

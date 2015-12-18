@@ -89,6 +89,16 @@ class ProductLists extends \ApplicationBase implements \Application {
 
     public function render() {
         $this->showLists();
+        
+        $settings = $this->getFactory()->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        $settingsInstance = $this->getFactory()->getApplicationPool()->createInstace($settings);
+        echo "<script>";
+        if($settingsInstance->getConfigurationSetting("autonavigatetocart") == "true") {
+            echo "autonavigatetocart=true;";
+        } else {
+            echo "autonavigatetocart=false;";
+        }
+        echo "</script>";
     }
     
     public function renderConfig() {

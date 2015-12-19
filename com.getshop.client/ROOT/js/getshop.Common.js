@@ -1184,14 +1184,20 @@ var initializeFlipping = function() {
         $(this).css('height',height);
         app.css('width','auto');
         app.css('float','none');
-//        $(this).css('height',$(this).find('.gsucell').height());
-//        $(this).css('width',$(this).find('.gsucell').width());
     });
+    
     $(".gsflipcard").flip({
         forceWidth : true,
         forceHeight : true,
         trigger: 'manual'
     });
+    
+    for(var key in thundashop.framework.flipped) {
+        if(thundashop.framework.flipped[key]) {
+            $('.gsflipcard[flipcardid="'+key+'"]').flip("toggle");
+        }
+    }
+    
     $('.gsflipback').css('display','block');
 };
 

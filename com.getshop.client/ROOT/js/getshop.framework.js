@@ -9,6 +9,7 @@ thundashop.framework = {
     activeContainerCellId: {},
     lastRotatedCell: {},
     activeBoxTimeout: {},
+    flipped: {},
     cellRotatingWait: {},
     advancedMode: false,
     cssEditorCount: 0,
@@ -456,6 +457,11 @@ thundashop.framework = {
         var flipcard = $(this).closest('.gsflipcard');
         flipcard.flip("toggle");
         thundashop.framework.hideCellBoxHeader();
+        if(thundashop.framework.flipped[flipcard.attr('flipcardid')]) {
+            thundashop.framework.flipped[flipcard.attr('flipcardid')] = false;
+        } else {
+            thundashop.framework.flipped[flipcard.attr('flipcardid')] = true;
+        }
     },
     activateResizeColumn: function () {
         var cellid = $(this).closest('.gsrow').attr('cellid');

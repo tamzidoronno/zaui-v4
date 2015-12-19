@@ -1717,7 +1717,7 @@ class Page {
      */
     public function printFlipBoxes($innercell, $counter, $depthprint, $size, $edit, $cell) {
         ?>
-        <div class='gsflipcard'> 
+        <div class='gsflipcard' flipcardid="<? echo $innercell->cellId; ?>"> 
           <div class="front gsflipfront"> 
             <?
                 $this->printCell($innercell, $counter, $depthprint, $size, $edit, $cell);

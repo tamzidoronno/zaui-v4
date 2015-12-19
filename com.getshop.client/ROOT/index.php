@@ -206,7 +206,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
                 echo "<div title='".$factory->__f("Create a new column? Drag this column to where you want it.")."' class='gs_site_main_button gsaddcolumncontentdnd'><i class='fa fa-arrows-h'></i></div>";
                 
                 $selectedThemeApp = $factory->getApplicationPool()->getSelectedThemeAppInstance();
-                if ($selectedThemeApp != null && $selectedThemeApp->isAllowingSideBar()) {
+                if ($selectedThemeApp != null && method_exists($selectedThemeApp, "isAllowingSideBar") && $selectedThemeApp->isAllowingSideBar()) {
                     echo "<div title='".$factory->__f("Toggle sidebar.")."' class='gs_site_main_button gs_toggle_sidebar'><i class='fa fa-columns'></i></div>";
                 }
                 

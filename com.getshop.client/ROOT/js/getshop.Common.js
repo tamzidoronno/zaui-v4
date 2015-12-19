@@ -1197,9 +1197,16 @@ var initializeFlipping = function() {
         $(this).flip({
             forceWidth : true,
             forceHeight : true,
-            trigger: trigger
+            trigger: "click"
         });
-
+        if(trigger === "hover") {
+            $(this).on('mouseenter', function() {
+                $(this).flip("toggle");
+            });
+            $(this).on('mouseleave', function() {
+                $(this).flip("toggle");
+            });
+        }
     });
     if(isAdministrator) {
         $(".gsflipcard").dblclick(function() {

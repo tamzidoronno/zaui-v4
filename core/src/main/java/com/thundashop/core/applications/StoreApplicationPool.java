@@ -209,7 +209,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public List<ApplicationModule> getAllAvailableModules() {
-        return getShopApplicationPool.getModules();
+        return getShopApplicationPool.getModules(storeId);
     }
 
     @Override
@@ -218,7 +218,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     }
 
     private void addActivatedModules() {
-        getShopApplicationPool.getModules().stream()
+        getShopApplicationPool.getModules(storeId).stream()
                 .filter(module -> getManagerSetting("module_actived_" + module.id) != null)
                 .filter(module -> getManagerSetting("module_actived_" + module.id).equals("activated"))
                 .forEach(module -> activatedModules.add(module));

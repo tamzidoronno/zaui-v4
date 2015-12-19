@@ -92,8 +92,10 @@ public class GetShopApplicationPool extends ManagerBase implements IGetShopAppli
         return app;
     }
     
-    public List<ApplicationModule> getModules() {
-        return modulePool.getModules();
+    public List<ApplicationModule> getModules(String storeId) {
+        return modulePool.getModules().stream()
+                .filter(mod -> mod.allowedStoreIds.isEmpty() || mod.allowedStoreIds.contains(storeId))
+                .collect(Collectors.toList());
     }
 
     public void addListener(GetShopApplicationsChanged listener) {

@@ -200,15 +200,37 @@ public class AddApplicationsToDatabase {
         apps.add(PmsNotifications);
         
         Application bjaroytheme = createSettings("bjaroytheme",
-"2dc6c222-527d-4297-aa8c-dc9830dc3404",
-allowed2,
-" ",
-Application.Type.Theme, true);
-bjaroytheme.isPublic = true;
-bjaroytheme.isFrontend = true;
-bjaroytheme.moduleId = "other";
-bjaroytheme.defaultActivate = false;
-apps.add(bjaroytheme);
+        "2dc6c222-527d-4297-aa8c-dc9830dc3404",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        bjaroytheme.isPublic = true;
+        bjaroytheme.isFrontend = true;
+        bjaroytheme.moduleId = "other";
+        bjaroytheme.defaultActivate = false;
+        apps.add(bjaroytheme);
+
+        Application SedoxProfileSmall = createSettings("SedoxProfileSmall",
+        "f64275fa-bae6-47c4-a988-0a0f99f0dfd6",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxProfileSmall.isPublic = true;
+        SedoxProfileSmall.isFrontend = true;
+        SedoxProfileSmall.moduleId = "sedox";
+        SedoxProfileSmall.defaultActivate = false;
+        apps.add(SedoxProfileSmall);
+        
+        Application SedoxCreditViewSmall = createSettings("SedoxCreditViewSmall",
+        "665c6c9d-5212-45e5-8c6b-aa0cf85dc6a2",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxCreditViewSmall.isPublic = true;
+        SedoxCreditViewSmall.isFrontend = true;
+        SedoxCreditViewSmall.moduleId = "sedox";
+        SedoxCreditViewSmall.defaultActivate = false;
+        apps.add(SedoxCreditViewSmall);
 
 
         return apps;

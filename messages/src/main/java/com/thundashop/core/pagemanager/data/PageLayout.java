@@ -11,15 +11,13 @@ import java.util.List;
 
 public class PageLayout implements Serializable {
 
-    HashMap<String, ArrayList<PageCell>> areas = new HashMap();
+    private HashMap<String, ArrayList<PageCell>> areas = new HashMap();
     LinkedList<String> mobileList = new LinkedList();
     private LinkedList<String> mobileTmpList;
     private boolean flatMobileList = false;
     
     void clear() {
         areas.put("body", new ArrayList());
-        areas.put("left_side_bar", new ArrayList());
-//        areas.get("body").add(initNewCell(PageCell.CellMode.row));
     }
 
     public void moveCell(String cellid, boolean moveUp) {
@@ -651,4 +649,9 @@ public class PageLayout implements Serializable {
         }
     }
 
+    void clearOnFinalizePage() {
+        if (areas.get("body") == null || areas.get("body").isEmpty()) {
+            clear();
+        }
+    }
 }

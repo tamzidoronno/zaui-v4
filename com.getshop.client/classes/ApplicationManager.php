@@ -982,7 +982,7 @@ class ApplicationManager extends FactoryBase {
     
     public function toggleSideBar() {
         $pageId = $this->getFactory()->getPage()->getId();
-        $this->getApi()->getPageManager()->toggleSideBar($pageId);
+        $this->getApi()->getPageManager()->toggleLeftSideBar($pageId);
     }
 }
 ?>

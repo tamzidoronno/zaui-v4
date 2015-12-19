@@ -453,8 +453,10 @@ thundashop.framework = {
         }
         $(this).find('.gseditrowbuttons').hide();
     },
-    flipcontent : function() {
-        var flipcard = $(this).closest('.gsflipcard');
+    flipcontent : function(flipcard) {
+        if(!flipcard) {
+            flipcard = $(this).closest('.gsflipcard');
+        }
         flipcard.flip("toggle");
         thundashop.framework.hideCellBoxHeader();
         if(thundashop.framework.flipped[flipcard.attr('flipcardid')]) {

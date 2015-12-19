@@ -86,14 +86,7 @@ public class PageLayout implements Serializable {
     }
 
     private ArrayList<PageCell> getAllCells() {
-        ArrayList<PageCell> cells = new ArrayList();
-        for (String area : areas.keySet()) {
-            ArrayList<PageCell> areastoadd = areas.get(area);
-            if(areastoadd != null) {
-                cells.addAll(areastoadd);
-            }
-        }
-        return cells;
+        return getCellsFlatList();
     }
 
     public String createCell(String incell, String before, String mode, String area) throws ErrorException {

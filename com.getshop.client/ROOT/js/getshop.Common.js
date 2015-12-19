@@ -1199,9 +1199,11 @@ var initializeFlipping = function() {
         forceHeight : true,
         trigger: trigger
     });
-    $(".gsflipcard").dblclick(function() {
-        $(this).flip('toggle');
-    });
+    if(isAdministrator) {
+        $(".gsflipcard").dblclick(function() {
+            thundashop.framework.flipcontent($(this));
+        });
+    }
     
     for(var key in thundashop.framework.flipped) {
         if(thundashop.framework.flipped[key]) {

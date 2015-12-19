@@ -43,7 +43,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public HashMap<String, PmsBooking> bookings = new HashMap();
     public PmsPricing prices = new PmsPricing();
-    public PmsNotifications notifications = new PmsNotifications();
+    public PmsConfiguration notifications = new PmsConfiguration();
     
     @Autowired
     BookingEngine bookingEngine;
@@ -70,8 +70,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsPricing) {
                 prices = (PmsPricing) dataCommon;
             }
-            if (dataCommon instanceof PmsNotifications) {
-                notifications = (PmsNotifications) dataCommon;
+            if (dataCommon instanceof PmsConfiguration) {
+                notifications = (PmsConfiguration) dataCommon;
             }
         }
     }
@@ -745,12 +745,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public PmsNotifications getNotifications() {
+    public PmsConfiguration getNotifications() {
         return notifications;
     }
 
     @Override
-    public void saveNotification(PmsNotifications notifications) {
+    public void saveNotification(PmsConfiguration notifications) {
         this.notifications = notifications;
         saveObject(notifications);
     }

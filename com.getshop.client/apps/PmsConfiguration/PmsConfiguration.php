@@ -1,13 +1,13 @@
 <?php
 namespace ns_9de81608_5cec_462d_898c_1266d1749320;
 
-class PmsNotifications extends \WebshopApplication implements \Application {
+class PmsConfiguration extends \WebshopApplication implements \Application {
     public function getDescription() {
         
     }
 
     public function getName() {
-        return "PmsNotifications";
+        return "PmsConfiguration";
     }
 
     public function render() {

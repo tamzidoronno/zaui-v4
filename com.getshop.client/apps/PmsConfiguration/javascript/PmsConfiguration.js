@@ -1,6 +1,6 @@
-app.PmsNotifications = {
+app.PmsConfiguration = {
     init: function () {
-        $(document).on('click', '.PmsNotifications .changeview', app.PmsNotifications.changeview);
+        $(document).on('click', '.PmsConfiguration .changeview', app.PmsConfiguration.changeview);
     },
     changeview : function() {
         $('.pmsbutton.active').removeClass('active');
@@ -35,4 +35,4 @@ app.PmsNotifications = {
         toolbox.attachToElement(application, 2);
     }
 };
-app.PmsNotifications.init();
+app.PmsConfiguration.init();

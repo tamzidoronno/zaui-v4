@@ -61,9 +61,8 @@ public class Page extends DataCommon implements Cloneable {
     public void finalizePage(CommonPageData pagedata) {
         layout.setNewList(pagedata.header, "header", true);
         layout.setNewList(pagedata.footer, "footer", true);
-        if (layout.areas.get("body") == null || layout.areas.get("body").isEmpty()) {
-            layout.clear();
-        }
+        layout.setNewList(pagedata.leftSideBar, "left_side_bar", true);
+        layout.clearOnFinalizePage();
     }
 
     public PageCell getCell(String pageCellId) {
@@ -74,36 +73,36 @@ public class Page extends DataCommon implements Cloneable {
         return layout.getCellsFlatList();
     }
 
-    public void dumpLayout() {
-        System.out.println("\n\n PAGE");
-        for (String area : layout.areas.keySet()) {
-            System.out.println("-----------------------------------------------");
-            System.out.println(area);
-            ArrayList<PageCell> rows = layout.areas.get(area);
-            dumpRows(rows, 1);
-            System.out.println("-----------------------------------------------\n");
-        }
-    }
-
-    private void dumpRows(ArrayList<PageCell> rows, int depth) {
-        for (PageCell row : rows) {
-            for (int i = 0; i < depth; i++) {
-                System.out.print("\t");
-            }
-            System.out.print(row.cellId);
-            System.out.print(" subcells: " + row.cells.size());
-            System.out.print(", mode: " + row.mode);
-            System.out.print(", type: " + row.type);
-            System.out.print(", styles: " + row.styles.replaceAll("\\\n", ""));
-            if (row.cellName != null && !row.cellName.isEmpty()) {
-                System.out.println("(" + row.cellName + ")");
-            }
-            System.out.println();
-            if (row.cells.size() > 0) {
-                dumpRows(row.cells, depth + 1);
-            }
-        }
-    }
+//    public void dumpLayout() {
+//        System.out.println("\n\n PAGE");
+//        for (String area : layout.areas.keySet()) {
+//            System.out.println("-----------------------------------------------");
+//            System.out.println(area);
+//            ArrayList<PageCell> rows = layout.areas.get(area);
+//            dumpRows(rows, 1);
+//            System.out.println("-----------------------------------------------\n");
+//        }
+//    }
+//
+//    private void dumpRows(ArrayList<PageCell> rows, int depth) {
+//        for (PageCell row : rows) {
+//            for (int i = 0; i < depth; i++) {
+//                System.out.print("\t");
+//            }
+//            System.out.print(row.cellId);
+//            System.out.print(" subcells: " + row.cells.size());
+//            System.out.print(", mode: " + row.mode);
+//            System.out.print(", type: " + row.type);
+//            System.out.print(", styles: " + row.styles.replaceAll("\\\n", ""));
+//            if (row.cellName != null && !row.cellName.isEmpty()) {
+//                System.out.println("(" + row.cellName + ")");
+//            }
+//            System.out.println();
+//            if (row.cells.size() > 0) {
+//                dumpRows(row.cells, depth + 1);
+//            }
+//        }
+//    }
 
     public Page jsonClone() {
         Page newPage = makeClone();

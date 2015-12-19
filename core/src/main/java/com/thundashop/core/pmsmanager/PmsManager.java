@@ -43,7 +43,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public HashMap<String, PmsBooking> bookings = new HashMap();
     public PmsPricing prices = new PmsPricing();
-    public PmsConfiguration notifications = new PmsConfiguration();
+    public PmsConfiguration configuration = new PmsConfiguration();
     
     @Autowired
     BookingEngine bookingEngine;
@@ -71,7 +71,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 prices = (PmsPricing) dataCommon;
             }
             if (dataCommon instanceof PmsConfiguration) {
-                notifications = (PmsConfiguration) dataCommon;
+                configuration = (PmsConfiguration) dataCommon;
             }
         }
     }
@@ -745,13 +745,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public PmsConfiguration getNotifications() {
-        return notifications;
+    public PmsConfiguration getConfiguration() {
+        return configuration;
     }
 
     @Override
-    public void saveNotification(PmsConfiguration notifications) {
-        this.notifications = notifications;
+    public void saveConfiguration(PmsConfiguration notifications) {
+        this.configuration = notifications;
         saveObject(notifications);
     }
     
@@ -763,11 +763,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void notify(String key, PmsBooking booking, String type) {
-        String message = notifications.smses.get(key);
+        String message = configuration.smses.get(key);
         if(type.equals("email")) {
-            message = notifications.emails.get(key);
+            message = configuration.emails.get(key);
             if(message != null) {
-                message = notifications.emailTemplate.replace("{content}", message);
+                message = configuration.emailTemplate.replace("{content}", message);
             }
         }
         if(message == null || message.isEmpty()) {
@@ -787,7 +787,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(type.equals("email")) {
             messageManager.sendSms(user.cellPhone, message, user.prefix);
         } else {
-            String title = notifications.emailTitles.get(key);
+            String title = configuration.emailTitles.get(key);
             title = formatMessage(message, booking, null, null);
             messageManager.sendMailWithDefaults(user.fullName, user.emailAddress, title, message);
         }
@@ -800,7 +800,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 if(type.equals("email")) {
-                    String title = notifications.emailTitles.get(key);
+                    String title = configuration.emailTitles.get(key);
                     title = formatMessage(message, booking, room, guest);
                     messageManager.sendMailWithDefaults(guest.name, guest.email, title, message);
                 } else {
@@ -812,7 +812,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void notifyAdmin(String key, PmsBooking booking) {
-        String message = notifications.adminmessages.get(key);
+        String message = configuration.adminmessages.get(key);
         if(message == null) {
             return;
         }

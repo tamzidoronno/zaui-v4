@@ -26,3 +26,5 @@
 .PmsConfiguration .notificationpanel.email_notifcations {
     display:block;
 }
+.PmsConfiguration .configentry { float:right; }
+.PmsConfiguration .configrow { clear:both; padding-bottom: 10px; }

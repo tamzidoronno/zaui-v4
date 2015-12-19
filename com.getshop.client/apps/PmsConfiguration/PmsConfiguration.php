@@ -19,6 +19,12 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->includefile("notificationpanel");
     }
     
+    public function saveContent() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config->contracts->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['content'];
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
     public function startsWith($haystack, $needle) {
         return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
     }
@@ -34,7 +40,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     }
     
     public function saveNotifications() {
-        $notifications = $this->getApi()->getPmsManager()->getNotifications($this->getSelectedName());
+        $notifications = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         foreach($_POST['data'] as $key => $value) {
             if($this->endsWith($key, "_email")) {
                 $key = substr($key, 0, strlen($key)-6);
@@ -53,9 +59,14 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 $notifications->adminmessages->{$key} = $value;
             }
         }
-        $notifications->emailTemplate = $_POST['data']['email_template'];
         
-        $this->getApi()->getPmsManager()->saveNotification($this->getSelectedName(), $notifications);
+        foreach($_POST['data'] as $key => $value) {
+            if(property_exists($notifications, $key)) {
+                $notifications->{$key} = $value;
+            }
+        }
+
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $notifications);
     }
     
     function endsWith($haystack, $needle) {

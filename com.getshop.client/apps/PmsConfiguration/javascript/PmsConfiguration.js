@@ -1,8 +1,14 @@
 app.PmsConfiguration = {
     init: function () {
         $(document).on('click', '.PmsConfiguration .changeview', app.PmsConfiguration.changeview);
+        $(document).on('click', '.PmsConfiguration #contractfield', function() {
+            thundashop.common.activateCKEditor('contractfield', {
+                autogrow : false
+            });
+        });
     },
     changeview : function() {
+        thundashop.common.destroyCKEditors();
         $('.pmsbutton.active').removeClass('active');
         $(this).addClass('active');
         $('.notificationpanel').hide();

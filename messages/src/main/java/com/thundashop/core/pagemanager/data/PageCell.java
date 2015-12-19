@@ -110,7 +110,7 @@ public class PageCell implements Serializable {
     }
 
     public void updateCellForSavingCell() {
-        if(settings.isFlipping) {
+        if(!settings.isFlipping.isEmpty()) {
             if(back == null) {
                 System.out.println("Initializing back");
                 back = new PageCell();

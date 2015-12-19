@@ -1189,15 +1189,17 @@ var initializeFlipping = function() {
         $(this).css('height',height);
         app.css('width','auto');
         app.css('float','none');
-    });
-    var trigger = "click";
-    if(isAdministrator) {
-        trigger = "manual";
-    }
-    $(".gsflipcard").flip({
-        forceWidth : true,
-        forceHeight : true,
-        trigger: trigger
+        
+        var trigger = $(this).attr('fliptype');
+        if(isAdministrator) {
+            trigger = "manual";
+        }
+        $(this).flip({
+            forceWidth : true,
+            forceHeight : true,
+            trigger: trigger
+        });
+
     });
     if(isAdministrator) {
         $(".gsflipcard").dblclick(function() {

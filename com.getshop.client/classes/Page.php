@@ -545,12 +545,7 @@ class Page {
             $this->printCellBox($edit, $cell, $parent, $depth);
         }
         
-        /* @var $cell core_pagemanager_data_PageCell */
-        if($cell->settings->isFlipping) {
-            $this->printFlipBoxes($cell, $parent, $edit, $totalcells, $count, $depth);
-        } else {
-            $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
-        }
+        $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
         
         echo "</div>";
@@ -1050,6 +1045,9 @@ class Page {
                 echo "<i class='fa fa-arrow-right gsoperatecell' type='movedown' title='" . $this->factory->__w("Move column to the right") . "'></i> ";
             }
         }
+        if($cell->settings->isFlipping) {
+            echo "<i class='fa fa-repeat gsflipcontent' title='" . $this->factory->__w("Rotate column") . "'></i> ";
+        }
     }
 
     public function printEasyRowMode($row) {
@@ -1149,7 +1147,12 @@ class Page {
 
             $cellsToPrint = $this->getCellsToPrint($cell->cells, $cell->mode);
             foreach ($cellsToPrint as $innercell) {
-                $this->printCell($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
+                /* @var $cellsToPrint core_pagemanager_data_PageCell */
+                if($innercell->settings->isFlipping) {
+                    $this->printFlipBoxes($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
+                } else {
+                    $this->printCell($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
+                }
                 $counter++;
             }
 
@@ -1636,6 +1639,9 @@ class Page {
     }
 
     public function hasPermissionsOnCell($cell) {
+        echo "<span style='display:none;'>";
+        print_r($cell);
+        echo "</span>";
         $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
         if($user && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $user->showHiddenFields) {
             return true;
@@ -1709,17 +1715,18 @@ class Page {
      * @param type $depth
      * @return type
      */
-    public function printFlipBoxes($cell, $parent, $edit, $totalcells, $count, $depth) {
+    public function printFlipBoxes($innercell, $counter, $depthprint, $size, $edit, $cell) {
         ?>
         <div class='gsflipcard'> 
           <div class="front gsflipfront"> 
             <?
-                $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
+                $this->printCell($innercell, $counter, $depthprint, $size, $edit, $cell);
             ?>
             </div> 
             <div class="back gsflipback">
             <?
-                $this->printCellContent($cell->back, $parent, $edit, $totalcells, $count, $depth);
+                $innercell->back->settings->isFlipping = true;
+                $this->printCell($innercell->back, $counter, $depthprint, $size, $edit, $cell);
             ?>
             </div> 
           </div>

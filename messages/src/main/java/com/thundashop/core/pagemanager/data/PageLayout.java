@@ -218,7 +218,8 @@ public class PageLayout implements Serializable {
     }
 
     public PageCell getCell(String pageCellId) {
-        for (PageCell cell : getAllCells()) {
+        ArrayList<PageCell> flatCellList = getCellsFlatList();
+        for (PageCell cell : flatCellList) {
             PageCell cell4 = cell.getCell(pageCellId);
             if (cell4 != null) {
                 return cell4;

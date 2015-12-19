@@ -1174,13 +1174,25 @@ var resizeLeftBar = function() {
 }
 
 var initializeFlipping = function() {
-    $('.gsflipback').hide();
     $(".gsflipcard").each(function() {
-        $(this).css('height',$(this).height());
+        var app = $(this).find('.gsucell');
+        var height = app.height();
+        var width = app.width();
+        $(this).css('display','inline-block');
+        $(this).css('width',width);
+        $(this).css('float','left');
+        $(this).css('height',height);
+        app.css('width','auto');
+        app.css('float','none');
+//        $(this).css('height',$(this).find('.gsucell').height());
+//        $(this).css('width',$(this).find('.gsucell').width());
     });
-    $(".gsflipcard").flip();
+    $(".gsflipcard").flip({
+        forceWidth : true,
+        forceHeight : true,
+        trigger: 'manual'
+    });
     $('.gsflipback').css('display','block');
-    console.log('navcompleted');
 };
 
 $(document).ready(function() {

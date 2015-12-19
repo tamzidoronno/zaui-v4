@@ -396,4 +396,3 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
     
     thundashop.common.triggerTimeoutCheck();
 </script>
-

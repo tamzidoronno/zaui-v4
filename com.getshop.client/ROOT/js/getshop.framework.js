@@ -9,6 +9,7 @@ thundashop.framework = {
     activeContainerCellId: {},
     lastRotatedCell: {},
     activeBoxTimeout: {},
+    flipped: {},
     cellRotatingWait: {},
     advancedMode: false,
     cssEditorCount: 0,
@@ -60,6 +61,7 @@ thundashop.framework = {
         $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
         $(document).on('click', '.gsresizecolumn', this.activateResizeColumn);
+        $(document).on('click', '.gsflipcontent', this.flipcontent);
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
         $(document).on('mouseenter', '.gscell', this.showCellPanel);
         $(document).on('mouseleave', '.gscell', this.mouseLeftPanel);
@@ -450,6 +452,18 @@ thundashop.framework = {
             return;
         }
         $(this).find('.gseditrowbuttons').hide();
+    },
+    flipcontent : function(flipcard) {
+        if(!flipcard) {
+            flipcard = $(this).closest('.gsflipcard');
+        }
+        flipcard.flip("toggle");
+        thundashop.framework.hideCellBoxHeader();
+        if(thundashop.framework.flipped[flipcard.attr('flipcardid')]) {
+            thundashop.framework.flipped[flipcard.attr('flipcardid')] = false;
+        } else {
+            thundashop.framework.flipped[flipcard.attr('flipcardid')] = true;
+        }
     },
     activateResizeColumn: function () {
         var cellid = $(this).closest('.gsrow').attr('cellid');
@@ -1266,13 +1280,17 @@ thundashop.framework = {
         cell.find('.gsactivebox').attr('entered', 'false');
         thundashop.framework.activeBoxTimeout[cellid] = setTimeout(function () {
             if (cell.find('.gsactivebox').attr('entered') === 'false') {
-                cell.find('.gsactiveboxheader').first().removeClass('gsactiveboxheader');
-                cell.find('.gscellheadermin').first().show();
-                cell.find('.gsactivebox').removeClass('gsactivebox');
+                thundashop.framework.hideCellBoxHeader();
             }
         }, timer);
         
         $('.gscellboxinner').hide();
+    },
+    hideCellBoxHeader : function() {
+        var cell = $('.gsactivebox').closest('.gsucell');
+        cell.find('.gsactiveboxheader').first().removeClass('gsactiveboxheader');
+        cell.find('.gscellheadermin').first().show();
+        cell.find('.gsactivebox').removeClass('gsactivebox');        
     },
     showEditIcon: function (event) {
         if (!thundashop.framework.isAdvancedMode()) {

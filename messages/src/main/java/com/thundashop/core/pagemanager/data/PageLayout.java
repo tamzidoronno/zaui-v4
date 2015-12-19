@@ -84,14 +84,7 @@ public class PageLayout implements Serializable {
     }
 
     private ArrayList<PageCell> getAllCells() {
-        ArrayList<PageCell> cells = new ArrayList();
-        for (String area : areas.keySet()) {
-            ArrayList<PageCell> areastoadd = areas.get(area);
-            if(areastoadd != null) {
-                cells.addAll(areastoadd);
-            }
-        }
-        return cells;
+        return getCellsFlatList();
     }
 
     public String createCell(String incell, String before, String mode, String area) throws ErrorException {
@@ -216,7 +209,8 @@ public class PageLayout implements Serializable {
     }
 
     public PageCell getCell(String pageCellId) {
-        for (PageCell cell : getAllCells()) {
+        ArrayList<PageCell> flatCellList = getCellsFlatList();
+        for (PageCell cell : flatCellList) {
             PageCell cell4 = cell.getCell(pageCellId);
             if (cell4 != null) {
                 return cell4;
@@ -357,6 +351,9 @@ public class PageLayout implements Serializable {
             if(areas != null && areas.get(area) != null) {
                 for (PageCell row : areas.get(area)) {
                     arrayList.addAll(row.getCellsFlatList());
+                    if(row.back != null) {
+                        arrayList.add(row.back);
+                    }
                 }
             }
         }
@@ -645,9 +642,20 @@ public class PageLayout implements Serializable {
         }
     }
 
+    void finalizeLayout() {
+        ArrayList<PageCell> allCells = getCellsFlatList();
+        for(PageCell cell : allCells) {
+            cell.finalizeCell();
+        }
+    }
+
     void clearOnFinalizePage() {
         if (areas.get("body") == null || areas.get("body").isEmpty()) {
             clear();
         }
+    }
+
+    public HashMap<String, ArrayList<PageCell>> getAreas() {
+        return areas;
     }
 }

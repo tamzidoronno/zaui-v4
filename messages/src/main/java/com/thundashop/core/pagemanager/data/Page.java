@@ -61,6 +61,10 @@ public class Page extends DataCommon implements Cloneable {
     public void finalizePage(CommonPageData pagedata) {
         layout.setNewList(pagedata.header, "header", true);
         layout.setNewList(pagedata.footer, "footer", true);
+        if (layout.getAreas().get("body") == null || layout.getAreas().get("body").isEmpty()) {
+            layout.clear();
+        }
+        layout.finalizeLayout();
         layout.setNewList(pagedata.leftSideBar, "left_side_bar", true);
         layout.clearOnFinalizePage();
     }
@@ -134,7 +138,8 @@ public class Page extends DataCommon implements Cloneable {
         if (isASlavePage()) {
             overrideApps.put(cellId, instanceId);
         } else {
-            getCell(cellId).appId = instanceId;
+            PageCell cell = getCell(cellId);
+            cell.appId = instanceId;
         }
     }
 

@@ -514,7 +514,6 @@ class Page {
         
         echo "<div anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
         $this->printEffectTrigger($cell, $depth);
-        
         $this->printEffectSettingsDiv($cell);
         
         if ($anchor) {
@@ -538,7 +537,6 @@ class Page {
         $this->printEasyModeLayer($edit, $cell, $parent);
 
         echo "<div $innerstyles class='$gscellinner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
-
         if ($header && $depth == 0 && $count == 0) {
             $this->printLanguageSelection();
         }
@@ -546,8 +544,10 @@ class Page {
         if($this->factory->isEditorMode()) {
             $this->printCellBox($edit, $cell, $parent, $depth);
         }
+        
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
+        
         echo "</div>";
         echo "</div>";
 
@@ -1045,6 +1045,9 @@ class Page {
                 echo "<i class='fa fa-arrow-right gsoperatecell' type='movedown' title='" . $this->factory->__w("Move column to the right") . "'></i> ";
             }
         }
+        if($cell->settings->isFlipping) {
+            echo "<i class='fa fa-repeat gsflipcontent' title='" . $this->factory->__w("Rotate column") . "'></i> ";
+        }
     }
 
     public function printEasyRowMode($row) {
@@ -1094,6 +1097,16 @@ class Page {
         <?
     }
 
+    /**
+     * 
+     * @param core_pagemanager_data_PageCell $cell
+     * @param core_pagemanager_data_PageCell $parent
+     * @param core_pagemanager_data_PageCell $edit
+     * @param type $totalcells
+     * @param type $count
+     * @param type $depth
+     * @return type
+     */
     public function printCellContent($cell, $parent, $edit, $totalcells, $count, $depth) {
         
         if ($cell->mode == "INIT") {
@@ -1134,7 +1147,12 @@ class Page {
 
             $cellsToPrint = $this->getCellsToPrint($cell->cells, $cell->mode);
             foreach ($cellsToPrint as $innercell) {
-                $this->printCell($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
+                /* @var $cellsToPrint core_pagemanager_data_PageCell */
+                if($innercell->settings->isFlipping && $innercell->settings->isFlipping != "") {
+                    $this->printFlipBoxes($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
+                } else {
+                    $this->printCell($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
+                }
                 $counter++;
             }
 
@@ -1621,6 +1639,9 @@ class Page {
     }
 
     public function hasPermissionsOnCell($cell) {
+        echo "<span style='display:none;'>";
+        print_r($cell);
+        echo "</span>";
         $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
         if($user && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $user->showHiddenFields) {
             return true;
@@ -1682,6 +1703,34 @@ class Page {
         }
         
         echo "<div style='display: none' class='gsCellSettings_attrs' $attrs></div>";
+    }
+
+    /**
+     * 
+     * @param core_pagemanager_data_PageCell $innercell
+     * @param core_pagemanager_data_PageCell $parent
+     * @param core_pagemanager_data_PageCell $edit
+     * @param type $totalcells
+     * @param type $count
+     * @param type $depth
+     * @return type
+     */
+    public function printFlipBoxes($innercell, $counter, $depthprint, $size, $edit, $cell) {
+        ?>
+        <div class='gsflipcard' flipcardid="<? echo $innercell->cellId; ?>" fliptype='<? echo $innercell->settings->isFlipping; ?>'> 
+          <div class="front gsflipfront"> 
+            <?
+                $this->printCell($innercell, $counter, $depthprint, $size, $edit, $cell);
+            ?>
+            </div> 
+            <div class="back gsflipback">
+            <?
+                $innercell->back->settings->isFlipping = $innercell->settings->isFlipping;
+                $this->printCell($innercell->back, $counter, $depthprint, $size, $edit, $cell);
+            ?>
+            </div> 
+          </div>
+       <?php
     }
 
 }

@@ -2482,3 +2482,4 @@ padding: 2px; }
     box-sizing: border-box;
     width: calc(100% - 200px);
 }
+.gsflipcard { box-sizing: border-box; cursor:pointer; }

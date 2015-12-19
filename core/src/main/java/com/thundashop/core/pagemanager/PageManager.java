@@ -99,6 +99,8 @@ public class PageManager extends ManagerBase implements IPageManager {
         if (page != null && page.getCell(pageCellId) != null) {
             page.addApplication(pageCellId, instance.id); 
             savePage(page);
+        } else {
+            System.out.println("Could not find cell to add app to");
         }
         
         return instance;
@@ -641,6 +643,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         PageCell cell = page.getCell(cellId);
         cell.settings = settings;
+        cell.updateCellForSavingCell();
         saveObject(page);
     }
 

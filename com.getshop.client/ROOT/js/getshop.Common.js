@@ -452,6 +452,8 @@ thundashop.common.hideInformationBox = function(event) {
     return thundashop.common.unmask();
 }
 
+thundashop.common.fliptrigger = "click";
+
 thundashop.common.showLargeInformationBox = function(event, title) {
     var box = thundashop.common.showInformationBox(event, title);
 //    box.removeClass('normalinformationbox');
@@ -1173,8 +1175,56 @@ var resizeLeftBar = function() {
     }
 }
 
+var initializeFlipping = function() {
+    $(".gsflipcard").each(function() {
+        var app = $(this).find('.gsucell');
+        var height = app.height();
+        var width = app.width();
+        var widthPercentage = $(this).closest('.gsuicell').width();
+        widthPercentage = (width / widthPercentage)*10000; 
+        widthPercentage = Math.round(widthPercentage) / 100;
+        $(this).css('display','inline-block');
+        $(this).css('width',app.attr('width') +"%");
+        $(this).css('float','left');
+        $(this).css('height',height);
+        app.css('width','auto');
+        app.css('float','none');
+        
+        var trigger = $(this).attr('fliptype');
+        if(isAdministrator) {
+            trigger = "manual";
+        }
+        $(this).flip({
+            forceWidth : true,
+            forceHeight : true,
+            trigger: "click"
+        });
+        if(trigger === "hover") {
+            $(this).on('mouseenter', function() {
+                $(this).flip("toggle");
+            });
+            $(this).on('mouseleave', function() {
+                $(this).flip("toggle");
+            });
+        }
+    });
+    if(isAdministrator) {
+        $(".gsflipcard").dblclick(function() {
+            thundashop.framework.flipcontent($(this));
+        });
+    }
+    
+    for(var key in thundashop.framework.flipped) {
+        if(thundashop.framework.flipped[key]) {
+            $('.gsflipcard[flipcardid="'+key+'"]').flip("toggle");
+        }
+    }
+    
+    $('.gsflipback').css('display','block');
+};
 
 $(document).ready(function() {
     PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', resizeLeftBar);
     PubSub.subscribe('NAVIGATION_COMPLETED', resizeLeftBar);
+    PubSub.subscribe('NAVIGATION_COMPLETED', initializeFlipping);
 });

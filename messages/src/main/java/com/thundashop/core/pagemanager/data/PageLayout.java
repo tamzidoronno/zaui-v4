@@ -654,4 +654,8 @@ public class PageLayout implements Serializable {
             clear();
         }
     }
+
+    public HashMap<String, ArrayList<PageCell>> getAreas() {
+        return areas;
+    }
 }

@@ -452,6 +452,8 @@ thundashop.common.hideInformationBox = function(event) {
     return thundashop.common.unmask();
 }
 
+thundashop.common.fliptrigger = "click";
+
 thundashop.common.showLargeInformationBox = function(event, title) {
     var box = thundashop.common.showInformationBox(event, title);
 //    box.removeClass('normalinformationbox');
@@ -1178,18 +1180,27 @@ var initializeFlipping = function() {
         var app = $(this).find('.gsucell');
         var height = app.height();
         var width = app.width();
+        var widthPercentage = $(this).closest('.gsuicell').width();
+        widthPercentage = (width / widthPercentage)*10000; 
+        widthPercentage = Math.round(widthPercentage) / 100;
         $(this).css('display','inline-block');
-        $(this).css('width',width);
+        $(this).css('width',app.attr('width') +"%");
         $(this).css('float','left');
         $(this).css('height',height);
         app.css('width','auto');
         app.css('float','none');
     });
-    
+    var trigger = "click";
+    if(isAdministrator) {
+        trigger = "manual";
+    }
     $(".gsflipcard").flip({
         forceWidth : true,
         forceHeight : true,
-        trigger: 'manual'
+        trigger: trigger
+    });
+    $(".gsflipcard").dblclick(function() {
+        $(this).flip('toggle');
     });
     
     for(var key in thundashop.framework.flipped) {

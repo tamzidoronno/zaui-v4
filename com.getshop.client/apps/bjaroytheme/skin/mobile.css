@@ -1,0 +1,43 @@
+
+.front, .back  { background-color:#fff; }
+.gsflipback { display:none; background-color:#181411; color:#fff; padding: 10px; }
+
+.gsmobilefooter,.gsmobileheaderfull { display:block;background:#181411 !important; }
+.gsmobilefooter {  padding-top: 20px;background-color:#181411; color:#efefef; text-align: center; }
+
+.gsportraitimage,.gslandscapeimage{ display:none !important; }
+.gsmobileheaderfull img { width: 100% !important; margin-bottom: 10px; float:left; }
+.gsmobileheaderfull .ContentManager { float:right; }
+.gsmobileheaderfull {  
+  padding-top: 20px; 
+  background: #ffffff;
+  background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
+  background: -webkit-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+  background: -o-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+  background: -ms-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+  background: linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
+}
+.gsarea[area="header"] { padding-top: 20px; background-color:#181411; height: 100px !important; position: relative; padding-bottom: 0px; margin-bottom: 0px;}
+.gsarea[area="footer"] { padding-top: 20px; background-color:#181411; position: relative; padding-bottom: 0px; }
+.gsmobilemenu { display: none; }
+.gsmobilefooter { padding-bottom: 70px; }
+body { padding-bottom: 0px; }
+.Menu .menuentries { background-color: inherit !important; }
+.Menu .menuentries .entry { 
+    width: 50% !important; background-color: #181411 !important; display:inline-block; 
+    box-sizing: border-box; 
+    background-color:#201b17 !important;float:left;
+    border: solid 1px #181411;
+}
+.Menu .entry a { color: #aaa; font-size: 12px; text-transform: uppercase;
+          letter-spacing: 3px;
+          font-family: 'Hind', sans-serif;
+          font-weight: 100;text-spacing: 20px; 
+}
+body {
+    font-weight: 100;
+    font-family: 'Quicksand', sans-serif;
+}
+.

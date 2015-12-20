@@ -1,0 +1,47 @@
+<h1>Select the day you want to book for</h1>
+<?php
+/* @var $this ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
+$month = $this->getSelectedMonth();
+$year = $this->getSelectedYear();
+$roomName = $_GET['roomName'];
+$dates = $this->getDates($year);
+$monthDates = $dates[$month];
+$pageId = $this->getPage()->javapage->id;
+
+echo "<span class='day dayheader weekentry'>" . $this->__w("Week") . "</span>";
+echo "<span class='day dayheader'>" . $this->__w("Mon") . "</span>";
+echo "<span class='day dayheader'>" . $this->__w("Tue") . "</span>";
+echo "<span class='day dayheader'>" . $this->__w("Wed") . "</span>";
+echo "<span class='day dayheader'>" . $this->__w("Thu") . "</span>";
+echo "<span class='day dayheader'>" . $this->__w("Fri") . "</span>";
+echo "<span class='day dayheader'>" . $this->__w("Sat") . "</span>";
+echo "<span class='day dayheader'>" . $this->__w("Sun") . "</span>";
+echo "<div style='clear:both;'></div>";
+
+foreach($monthDates as $week => $days) {
+    echo "<div>";
+    echo "<span class='day weekentry'>$week</span>";
+    for($i = 1; $i <= 7; $i++) {
+        $css = "";
+        $day="";
+        if(isset($days[$i])) {
+            $css = "dayentry";
+            $day = $days[$i]."-".$month."-".$year;
+        }
+        if($day) {
+           echo "<a href='?roomName=".$roomName."&page=$pageId&day=$day'>";
+        }
+         echo "<span class='day $css'>";
+        if(isset($days[$i])) {
+            echo $days[$i];
+        }
+        echo "</span>";
+        if($day) {
+            echo "</a>";
+        }
+    }
+    echo "</div>";
+    echo "<div style='clear:both;'></div>";
+}
+
+?>

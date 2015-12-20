@@ -1177,34 +1177,55 @@ var resizeLeftBar = function() {
 
 var initializeFlipping = function() {
     $(".gsflipcard").each(function() {
+        var card = $(this);
         var app = $(this).find('.gsucell');
         var height = app.height();
-        var width = app.width();
-        var widthPercentage = $(this).closest('.gsuicell').width();
-        widthPercentage = (width / widthPercentage)*10000; 
-        widthPercentage = Math.round(widthPercentage) / 100;
-        $(this).css('display','inline-block');
-        $(this).css('width',app.attr('width') +"%");
-        $(this).css('float','left');
-        $(this).css('height',height);
+        var widthPercentage = app.attr('width');
+        if(isMobile) {
+            widthPercentage=100;
+        }
+        card.css('display','inline-block');
+        card.css('width',widthPercentage +"%");
+        if(isMobile) {
+            height = app.height();
+        }
+        card.css('float','left');
+        card.css('height',height);
         app.css('width','auto');
         app.css('float','none');
         
+        var fliptype = $(this).attr('fliptype');
         var trigger = "click";
+        
         if(isAdministrator) {
+            fliptype = "manual";
             trigger = "manual";
         }
+        if(isMobile) {
+           fliptype = "click";
+        } else if(fliptype == "hover" && !isMobile) {
+            trigger = "manual";
+        }
+        
         $(this).flip({
             forceWidth : true,
             forceHeight : true,
             trigger: trigger
         });
-        if(trigger === "hover") {
-            $(this).on('mouseenter', function() {
-                $(this).flip("toggle");
+        
+        if(fliptype === "hover") {
+            card.on('mouseenter', function() {
+                card.flip("toggle");
             });
-            $(this).on('mouseleave', function() {
-                $(this).flip("toggle");
+            card.on('mouseleave', function() {
+                card.flip("toggle");
+            });
+        } else if(fliptype === "click") {
+            card.on('click', function() {
+                card.flip("toggle");
+            });
+            card.on('click', function() {
+                card.flip("toggle");
             });
         }
     });
@@ -1226,5 +1247,12 @@ var initializeFlipping = function() {
 $(document).ready(function() {
     PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', resizeLeftBar);
     PubSub.subscribe('NAVIGATION_COMPLETED', resizeLeftBar);
-    PubSub.subscribe('NAVIGATION_COMPLETED', initializeFlipping);
+    PubSub.subscribe('NAVIGATION_COMPLETED', function() {
+        $(document).find('img').batchImageLoad({
+                loadingCompleteCallback: function() {
+                    initializeFlipping();
+                }
+        });
+    });
+
 });

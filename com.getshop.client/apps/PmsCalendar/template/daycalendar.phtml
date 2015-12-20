@@ -1,0 +1,13 @@
+<div class='daycalendar'>
+    <?php
+    $iteration = 60;
+    $time = strtotime($_GET['day']. " 07:00");
+    for($i = 0; $i < 11; $i++) {
+        $next = $time + ($iteration*60);
+        echo "<div class='dayslot free' start='$time' end='$next'>";
+        echo date("H:i", $time);
+        echo "</div>";
+        $time = $next;
+    }
+    ?>
+</div>

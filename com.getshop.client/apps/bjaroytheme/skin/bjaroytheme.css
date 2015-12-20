@@ -18,7 +18,7 @@ body {
 
 
 .gsarea[area="header"] { padding-top: 20px; background-color:#181411; height: 100px !important; position: relative; padding-bottom: 0px; margin-bottom: 0px;}
-.gsarea[area="footer"] { padding-top: 20px; background-color:#181411; height: 200px !important; position: relative; padding-bottom: 0px; 
+.gsarea[area="footer"] { padding-top: 20px; background-color:#181411; position: relative; padding-bottom: 0px; 
 
 margin-bottom: 0px;
     
@@ -31,4 +31,4 @@ margin-bottom: 0px;
 gsarea[area="body"] { margin-top: 0px; }
 
 .front, .back  { background-color:#fff; }
-.gsflipback { display:none; }
+.gsflipback { display:none; background-color:#181411; color:#fff; padding: 10px; border-radius: 3px; }

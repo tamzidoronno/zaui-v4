@@ -3,7 +3,7 @@ namespace ns_8dcbf529_72ae_47dd_bd6b_bd2d0c54b30a;
 
 class PmsBooking extends \WebshopApplication implements \Application {
     public function getDescription() {
-        
+        return "A simple booking view";
     }
 
     public function getName() {

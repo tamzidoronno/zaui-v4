@@ -157,7 +157,7 @@ class ApplicationManager extends FactoryBase {
         }
         
         $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, $styles, "", -1);
-        
+
         $cell = $this->getApi()->getPageManager()->getCell($pageid, $cellid);
         $cell->keepOriginalLayoutOnMobile = ($_POST['data']['keepOriginalLayout'] == "true");
         $cell->anchor = $_POST['data']['anchor'];
@@ -166,7 +166,7 @@ class ApplicationManager extends FactoryBase {
         $cell->selectedThemeClass = isset($_POST['data']['selectedThemeClass']) ? $_POST['data']['selectedThemeClass'] : "";
 
         $this->getApi()->getPageManager()->saveCell($pageid, $cell);
-
+        
         if(isset($_POST['data']['colsizes'])) {
             $colsizes = $_POST['data']['colsizes'];
             foreach($colsizes as $cellid => $width) {

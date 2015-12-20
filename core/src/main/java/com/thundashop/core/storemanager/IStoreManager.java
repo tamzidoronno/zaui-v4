@@ -1,11 +1,15 @@
 package com.thundashop.core.storemanager;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.storemanager.data.KeyData;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
+import java.util.List;
 
 /**
  * Aaah, the StoreManager.<br>
@@ -173,4 +177,12 @@ public interface IStoreManager {
     public void setImageIdToFavicon(String id); 
 
     public boolean isProductMode() throws ErrorException;    
+    
+    @Administrator
+    public void syncData(String environment, String username, String password) throws ErrorException;
+    
+    @Administrator
+    public void receiveSyncData(String json) throws ErrorException;
+    
+    public List<String> getAllEnvironments();
 }

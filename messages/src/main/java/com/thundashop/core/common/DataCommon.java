@@ -28,6 +28,8 @@ public class DataCommon extends TranslationHandler implements Serializable {
     public String className = getClass().getName();
     public Date rowCreatedDate;
     public Date lastModified = null;
+    public String gs_manager;
+    public String colection;
     
     private void checkAnnotations(Field field, boolean Administrator) throws IllegalArgumentException, IllegalAccessException {
         Object emptyObject = new Product();

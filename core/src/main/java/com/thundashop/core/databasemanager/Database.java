@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.mapping.MappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -136,6 +137,7 @@ public class Database {
     }
 
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
+        data.gs_manager = credentials.manangerName;
         DBObject dbObject = morphia.toDBObject(data);
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
     }
@@ -144,6 +146,29 @@ public class Database {
         DB mongoDb = mongo.getDB(credentials.manangerName);
         DBCollection collection = mongoDb.getCollection("col_" + credentials.storeid);
         return getData(collection);
+    }
+    
+    public List<DataCommon> getAllDataForStore(String storeId) {
+        ArrayList<DataCommon> datas = new ArrayList();
+        
+        for (String db : mongo.getDatabaseNames()) {
+            DB mongoDb = mongo.getDB(db);
+            for (String colName : mongoDb.getCollectionNames()) {
+                if (colName.contains(storeId)) {
+                    DBCollection collection = mongoDb.getCollection(colName);
+                    DBCursor cur = collection.find();
+                    
+                    while (cur.hasNext()) {
+                        DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, cur.next());
+                        dataCommon.gs_manager = mongoDb.getName();
+                        dataCommon.colection = collection.getName();
+                        datas.add(dataCommon);
+                    }
+                }
+            }
+        }
+        
+        return datas;
     }
 
     private List<DataCommon> getData(DBCollection collection) {
@@ -164,6 +189,8 @@ public class Database {
             try {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
                 if (dataCommon.deleted == null) {
+                    dataCommon.colection = collection.getName();
+                    dataCommon.gs_manager = collection.getDB().getName();
                     all.add(dataCommon);
                 }
             } catch (ClassCastException ex) {
@@ -301,6 +328,14 @@ public class Database {
         DBCollection col = mongo.getDB(dbName).getCollection("col_" + storeId);
         return col.find().toArray().stream()
                 .map(o -> morphia.fromDBObject(DataCommon.class, o));
+    }
+
+    public void refreshDatabase(List<DataCommon> datas) {
+        for (DataCommon data : datas) {
+            DBCollection col = mongo.getDB(data.gs_manager).getCollection(data.colection);
+            DBObject obj = morphia.toDBObject(data);
+            col.save(obj);
+       }
     }
 }
 

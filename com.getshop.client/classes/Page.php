@@ -535,10 +535,11 @@ class Page {
             }
         }
 
+        $themeClassInner = $cell->selectedThemeClass ? $cell->selectedThemeClass."_inner" : "";
         $this->printRowEditButtons($depth, $edit, $cell);
         $this->printEasyModeLayer($edit, $cell, $parent);
 
-        echo "<div $innerstyles class='$gscellinner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
+        echo "<div $innerstyles class='$gscellinner $themeClassInner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
         if ($header && $depth == 0 && $count == 0) {
             $this->printLanguageSelection();
         }

@@ -1191,15 +1191,22 @@ var initializeFlipping = function() {
         app.css('float','none');
         
         var trigger = "click";
+        var fliptype = $(this).attr('fliptype');
+        
         if(isAdministrator) {
             trigger = "manual";
+            fliptype = "manual";
         }
+        if(fliptype == "hover" && !isMobile) {
+            trigger = "manual";
+        } 
+        
         $(this).flip({
             forceWidth : true,
             forceHeight : true,
             trigger: trigger
         });
-        if(trigger === "hover") {
+        if(fliptype === "hover") {
             $(this).on('mouseenter', function() {
                 $(this).flip("toggle");
             });

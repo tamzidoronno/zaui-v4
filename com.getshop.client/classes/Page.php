@@ -1045,9 +1045,6 @@ class Page {
                 echo "<i class='fa fa-arrow-right gsoperatecell' type='movedown' title='" . $this->factory->__w("Move column to the right") . "'></i> ";
             }
         }
-        if($cell->settings->isFlipping) {
-            echo "<i class='fa fa-repeat gsflipcontent' title='" . $this->factory->__w("Rotate column") . "'></i> ";
-        }
     }
 
     public function printEasyRowMode($row) {
@@ -1725,7 +1722,7 @@ class Page {
             </div> 
             <div class="back gsflipback">
             <?
-                $innercell->back->settings->isFlipping = $innercell->settings->isFlipping;
+//                $innercell->back->settings->isFlipping = $innercell->settings->isFlipping;
                 $this->printCell($innercell->back, $counter, $depthprint, $size, $edit, $cell);
             ?>
             </div> 

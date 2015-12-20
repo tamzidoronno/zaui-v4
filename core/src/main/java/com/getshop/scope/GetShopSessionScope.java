@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
@@ -124,6 +125,18 @@ public class GetShopSessionScope implements Scope {
         threadStoreIds.put(threadId, storeId);
         threadSessions.put(threadId, session);
         threadSessionBeanNames.put(threadId, multiLevelName);
+    }
+
+    public void clearStore(String storeId) {
+        List<String> keysToRemove = namedSessionObjects.keySet().stream().filter(o -> o.contains(storeId)).collect(Collectors.toList());
+        for (String key : keysToRemove) {
+            namedSessionObjects.remove(key);
+        }
+        
+        List<String> keysToRemove2 = objectMap.keySet().stream().filter(o -> o.contains(storeId)).collect(Collectors.toList());
+        for (String key : keysToRemove2) {
+            objectMap.remove(key);
+        }
     }
 
 }

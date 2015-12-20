@@ -1,6 +1,8 @@
 package com.thundashop.core.pagemanager.data;
 
-public class CarouselConfig {
+import java.io.Serializable;
+
+public class CarouselConfig implements Serializable {
     public Integer height = 200;
     public Integer heightMobile = 200;
     public Integer time = 5000;

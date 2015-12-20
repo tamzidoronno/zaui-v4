@@ -37,6 +37,7 @@ public class PageCell implements Serializable {
     public boolean isHidden = false;
     public String systemCellName = "";
     public Integer incrementalCellId;
+    public String selectedThemeClass = "";
     public String cellId = UUID.randomUUID().toString();
     public String mode = CellMode.column;
     public String type = "normal";
@@ -61,6 +62,7 @@ public class PageCell implements Serializable {
         styles = cell.styles;
         anchor = cell.anchor;
         link = cell.link;
+        selectedThemeClass = cell.selectedThemeClass;
         keepOriginalLayoutOnMobile = cell.keepOriginalLayoutOnMobile;
         hideOnMobile = cell.hideOnMobile;
     }

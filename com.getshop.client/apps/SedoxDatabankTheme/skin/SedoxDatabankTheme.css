@@ -118,7 +118,18 @@ body {
     font-size: 25px;
     color: #FFF;
     padding-top: 10px;
-    line-height: 40px;
-    
-    
+    line-height: 40px;      
 }
+
+.banner_redbox {
+    background-image: url('{IMAGEFOLDER}/banner_text_box1.png');
+    width: 364px;
+    height: 54px !important;
+    line-height: 45px;
+    color: #FFF;
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+}
+

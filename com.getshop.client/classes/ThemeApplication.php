@@ -139,6 +139,10 @@ class ThemeApplication extends PredefinedPagesConfig {
     public function isAllowingSideBar() {
         return false;
     }
+    
+    public function getThemeClasses() {
+        return [];
+    }
 }
 
 ?>

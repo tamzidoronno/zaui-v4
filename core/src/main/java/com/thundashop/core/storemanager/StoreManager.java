@@ -1,16 +1,38 @@
 package com.thundashop.core.storemanager;
 
+
+import com.getshop.javaapi.GetShopApi;
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.common.*;
+import com.getshop.scope.GetShopSessionScope;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.KeyData;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
+import com.thundashop.core.usermanager.data.User;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +54,13 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     public MailFactory mailFactory;
     
     @Autowired
+    public GSEnvironments environments; 
+    
+    @Autowired
     public FrameworkConfig FrameworkConfig;
+//    
+    @Autowired
+    public GetShopSessionScope getShopScope;
     
     private HashMap<String, KeyData> keyDataStore = new HashMap();
 
@@ -289,5 +317,72 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public boolean isProductMode() throws ErrorException {
         return FrameworkConfig.productionMode;
+    }
+
+    @Override
+    public void syncData(String environment, String username, String password) throws ErrorException {
+        if (FrameworkConfig.productionMode) {
+            System.out.println("This function is not allowed in production mode");
+            return;
+        }
+        
+        GSEnvironment environMent = environments.get(environment);
+        
+        try {
+            GetShopApi api = environMent.getApi(getMyStore().webAddress);    
+            List<DataCommon> datas = database.getAllDataForStore(storeId);
+
+            Runnable task = () -> {
+                try {
+                    User user = api.getUserManager().logOn(username, password);
+                    if (user == null || user.id.isEmpty() || !user.isAdministrator()) {
+                        throw new ErrorException(26);
+                    }
+                    
+                    api.getStoreManager().receiveSyncData(StoreManager.toString((Serializable) datas));
+                } catch (Exception ex) {
+                    Logger.getLogger(StoreManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            };
+
+            Thread thread = new Thread(task);
+            thread.start();     
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private static Object fromString( String s ) throws IOException ,
+                                                       ClassNotFoundException {
+        byte [] data = Base64.getDecoder().decode( s );
+        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(  data ) );
+        Object o  = ois.readObject();
+        ois.close();
+        return o;
+   }
+
+    private static String toString( Serializable o ) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream( baos );
+        oos.writeObject( o );
+        oos.close();
+        return Base64.getEncoder().encodeToString(baos.toByteArray()); 
+    }
+     
+    @Override
+    public void receiveSyncData(String json) throws ErrorException {
+        try {
+            List<DataCommon> datas = (List<DataCommon>) StoreManager.fromString(json);
+            database.refreshDatabase(datas);
+            getShopScope.clearStore(storeId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<String> getAllEnvironments() {
+        return new ArrayList(environments.getEnvironments().keySet());
     }
 }

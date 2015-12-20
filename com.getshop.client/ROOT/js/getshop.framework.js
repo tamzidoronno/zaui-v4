@@ -1080,6 +1080,7 @@ thundashop.framework = {
             "anchor" : $('#gs_settings_cell_anchor').val(),
             "colsizes": colsizes,
             "settings" : settings,
+            "selectedThemeClass" : $('#gs_select_cell_theme_class').val(),
             "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked'),    
         };
         
@@ -1230,7 +1231,19 @@ thundashop.framework = {
         resizingpanel.find('.tabbtn[target="background"]').click();
         thundashop.framework.loadCssEditor();
         thundashop.framework.loadCssAttributes();
+        thundashop.framework.loadThemeClasses(cell, resizingpanel);
     },
+    loadThemeClasses: function(cell, resizingpanel) {
+        var selectedThemeClass = cell.attr('selectedThemeClass');
+        if (selectedThemeClass) {
+            resizingpanel.find('#gs_select_cell_theme_class option').each(function() {
+                if ($(this).val() === selectedThemeClass) {
+                    $(this).attr('selected', 'selected');
+                }
+            });
+        }
+        
+   },
     closeCellEdit: function () {
         $('.gscellsettingspanel').hide();
     },

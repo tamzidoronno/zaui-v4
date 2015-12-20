@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -101,7 +102,7 @@ public class ManagerSubBase {
 
             dataFromDatabase(dataRetreived);
         }
-		
+
         this.ready = true;
     }
 

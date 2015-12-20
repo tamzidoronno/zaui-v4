@@ -29,6 +29,7 @@ body { padding-bottom: 0px; }
     width: 50% !important; background-color: #181411 !important; display:inline-block; 
     box-sizing: border-box; 
     background-color:#201b17 !important;float:left;
+    border: solid 1px #201b17;
 }
 .Menu .entry a { color: #aaa; font-size: 12px; text-transform: uppercase;
           letter-spacing: 3px;

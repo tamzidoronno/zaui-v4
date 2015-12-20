@@ -1195,19 +1195,24 @@ var initializeFlipping = function() {
         app.css('float','none');
         
         var fliptype = $(this).attr('fliptype');
+        var trigger = "click";
         
         if(isAdministrator) {
             fliptype = "manual";
+            trigger = "manual";
         }
         if(isMobile) {
            fliptype = "click";
+        } else if(fliptype == "hover" && !isMobile) {
+            trigger = "manual";
         }
         
         $(this).flip({
             forceWidth : true,
             forceHeight : true,
-            trigger: "click"
+            trigger: trigger
         });
+        
         if(fliptype === "hover") {
             card.on('mouseenter', function() {
                 card.flip("toggle");

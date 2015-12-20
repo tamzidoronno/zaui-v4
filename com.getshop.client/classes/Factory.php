@@ -240,6 +240,7 @@ class Factory extends FactoryBase {
         
         // JS TREE
         $this->addJavascriptFile("js/jstree/jstree.min.js");
+        $this->addJavascriptFile("js/fastclick.js");
         
         if ($this->isProductionMode) {
             echo "\n" . '<script  src="'.$fileName.'"></script>';

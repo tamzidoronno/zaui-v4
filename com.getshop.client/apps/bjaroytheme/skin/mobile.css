@@ -24,3 +24,14 @@
 .gsmobilemenu { display: none; }
 .gsmobilefooter { padding-bottom: 70px; }
 body { padding-bottom: 0px; }
+
+.Menu .menuentries .entry { width: 50% !important; float:left; background-color: #181411 !important; display:inline-block; }
+.Menu .entry a { color: #aaa; font-size: 12px; text-transform: uppercase;
+          letter-spacing: 3px;
+          font-family: 'Hind', sans-serif;
+          font-weight: 100;text-spacing: 20px; 
+}
+body {
+    font-weight: 100;
+    font-family: 'Quicksand', sans-serif;
+}

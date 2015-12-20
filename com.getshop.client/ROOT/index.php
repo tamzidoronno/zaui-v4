@@ -397,6 +397,8 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
 ?>    
 <script>
     google.load('visualization', '1.0', {'packages':['corechart']});
-    
     thundashop.common.triggerTimeoutCheck();
+    $(function() {
+        FastClick.attach(document.body);
+    });
 </script>

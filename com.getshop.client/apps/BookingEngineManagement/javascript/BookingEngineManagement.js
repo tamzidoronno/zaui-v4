@@ -5,6 +5,14 @@ app.BookingEngineManagement = {
         $(document).on('click', '.BookingEngineManagement .deletetype', app.BookingEngineManagement.deletetype);
         $(document).on('change', '.BookingEngineManagement .itemTypeSelector', app.BookingEngineManagement.setItemType);
         $(document).on('change', '.BookingEngineManagement .selectedProductForGroup', app.BookingEngineManagement.selectedProductForGroup);
+        $(document).on('click', '.BookingEngineManagement .editbookingitemtype', app.BookingEngineManagement.editbookingitemtype);
+    },
+    editbookingitemtype : function() {
+        var data = {
+            "typeid" : $(this).closest('tr').attr('entryid')
+        }
+        var event = thundashop.Ajax.createEvent('','loadTypeSettings', $(this), data);
+        thundashop.common.showInformationBox(event, 'Item type configuration');
     },
     selectedProductForGroup : function() {
         var productId = $(this).val();

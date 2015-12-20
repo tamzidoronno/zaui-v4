@@ -67,6 +67,10 @@ $whenToPay[4] = "After stay";
         ?>
     </div>
 
+    <div class='sms_notifcations addons'>
+        Addons
+    </div>
+    
     <div class='sms_notifcations notificationpanel'>
         <?php
         foreach($notifications as $index => $name) {
@@ -141,6 +145,18 @@ $whenToPay[4] = "After stay";
                 <input type='checkbox' gsname='requirePayments' <? echo $checked; ?>>
             </span>
             Payments are required
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->needToAgreeOnContract) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='needToAgreeOnContract' <? echo $checked; ?>>
+            </span>
+            Make sure the customers agree to the terms and conditions
         </div>
         <div class='configrow'>
             <span class='configentry'>

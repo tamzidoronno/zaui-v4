@@ -37,28 +37,27 @@ $products=$products2;
                         foreach ($bookingtypes as $type) {
                             /* @var $type core_bookingengine_data_BookingItemType */
                             echo "<tr entryid='" . $type->id . "' type='itemtype'>";
-                            echo "<td><i class='fa fa-trash-o deletegroupid' bookingitemtypeid='" . $type->id . "'></i></td><td><span class='currentname'>" . $type->name . "</span>";
-                            echo "<div class='secondary'>";
-                                echo "<select class='selectedProductForGroup'>";
-                                echo "<option value=''>None selected</option>";
-                                foreach($products as $product) {
-                                    $selected = "";
-                                    if($product->id == $type->productId) {
-                                        $selected = "SELECTED";
-                                    }
-                                    echo "<option value='".$product->id."' $selected>" . $product->name . "</option>";
-                                }
-                                echo "</select><br>";
-                            echo "Visible for booking, ";
+                            echo "<td style='white-space: nowrap;'>";
+                            echo "<i class='fa fa-trash-o deletegroupid' bookingitemtypeid='" . $type->id . "'></i>";
+                            $selected = "";
                             if($type->visibleForBooking) {
-                                echo "yes";
-                            } else {
-                                echo "No";
+                                $selected = "selected";
+                            }
+                            echo " <i class='fa fa-eye $selected' title='Visible for booking'></i>";
+                            $selected = "";
+                            if($type->addon) {
+                                $selected = "selected";
+                            }
+                            echo " <i class='fa fa-plus $selected' title='Is addon'></i>";
+                            echo "</td><td><span class='currentname'>" . $type->name . "</span>";
+                            echo "<div class='secondary'>";
+                            if(isset($products[$type->productId])) {
+                                echo $products[$type->productId]->name;
                             }
                             echo "</div>";
                             echo "</td>";
                             echo "<td align='right'><span class='pmsbutton renameBookingItemButton pmsbuttonsmall'>Rename</span> ";
-                            echo "<span class='pmsbutton pmsbuttonsmall'>Edit content</span></td>";
+                            echo "<span class='pmsbutton pmsbuttonsmall editbookingitemtype'>Edit type</span></td>";
                             echo "</tr>";
                         }
                         ?>

@@ -1,0 +1,57 @@
+<?
+/* @var $this \ns_3b18f464_5494_4f4a_9a49_662819803c4a\BookingEngineManagement */
+$id = $_POST['data']['typeid'];
+$item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $id);
+$product = $this->getApi()->getProductManager()->getAllProducts();
+$addons = array();
+$addons[0] = "None";
+$addons[1] = "One time";
+$addons[2] = "Per timeslot";
+?>
+<div gstype="form" method="saveItemType">
+    <input type='hidden' gsname='typeid' value='<? echo $id;?>'>
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%"><? echo $this->__w("Connect this to a product"); ?></td>
+        <td width="50%">
+            <select gsname="productId">
+                <? 
+                foreach($product as $key => $product) {
+                    $seleted = "";
+                    if($item->productId == $product->id) {
+                        $seleted = "SELECTED";
+                    }
+                    echo "<option value='".$product->id."' $seleted>".$product->name."</option>";
+                }
+                ?>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Addon type"); ?></td>
+        <td width="50%">
+            <select gsname="addon">
+                <? 
+                foreach($addons as $key => $addon) {
+                    $seleted = "";
+                    if($key == $item->addon) {
+                        $seleted = "SELECTED";
+                    }
+                    echo "<option value='".$key."' $seleted>".$addon."</option>";
+                }
+                ?>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Is visible for booking"); ?></td>
+        <td width="50%">
+            <select gsname="visibleForBooking">
+                <option value='false'>No</option>
+                <option value='true' <?php if($item->visibleForBooking) { echo "SELECTED"; } ?>>Yes</option>
+            </select>
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

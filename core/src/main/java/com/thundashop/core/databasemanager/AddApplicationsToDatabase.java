@@ -200,16 +200,26 @@ public class AddApplicationsToDatabase {
         apps.add(PmsNotifications);
         
         Application bjaroytheme = createSettings("bjaroytheme",
-"2dc6c222-527d-4297-aa8c-dc9830dc3404",
-allowed2,
-" ",
-Application.Type.Theme, true);
-bjaroytheme.isPublic = true;
-bjaroytheme.isFrontend = true;
-bjaroytheme.moduleId = "other";
-bjaroytheme.defaultActivate = false;
-apps.add(bjaroytheme);
+        "2dc6c222-527d-4297-aa8c-dc9830dc3404",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        bjaroytheme.isPublic = true;
+        bjaroytheme.isFrontend = true;
+        bjaroytheme.moduleId = "other";
+        bjaroytheme.defaultActivate = false;
+        apps.add(bjaroytheme);
 
+        Application PmsCalendar = createSettings("PmsCalendar",
+        "2059b00f-8bcb-466d-89df-3de79acdf3a1",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsCalendar.isPublic = true;
+        PmsCalendar.isFrontend = true;
+        PmsCalendar.moduleId = "booking";
+        PmsCalendar.defaultActivate = false;
+        apps.add(PmsCalendar);
 
         return apps;
     }

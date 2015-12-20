@@ -1,6 +1,7 @@
 
 .front, .back  { background-color:#fff; }
-.gsflipback { display:none; background-color:#181411; color:#fff; padding: 10px; }
+
+.gsflipback { display:none; background-color:#1b1714; border: solid 5px #403c39; color:#e4e3e1; font-weight: bold; letter-spacing: 0px; padding: 10px; }
 
 .gsmobilefooter,.gsmobileheaderfull { display:block;background:#181411 !important; }
 .gsmobilefooter {  padding-top: 20px;background-color:#181411; color:#efefef; text-align: center; }
@@ -40,4 +41,3 @@ body {
     font-weight: 100;
     font-family: 'Quicksand', sans-serif;
 }
-.

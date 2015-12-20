@@ -23,7 +23,7 @@ class SedoxDatabankTheme extends \ThemeApplication implements \Application {
     }   
     
     public function getThemeClasses() {
-        return ["banner_redbox"];
+        return ["banner_redbox", "front_page_box", "front_page_box_red"];
     }
     
 }

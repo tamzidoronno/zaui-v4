@@ -133,3 +133,48 @@ body {
     font-size: 18px;
 }
 
+.front_page_box_red_inner {
+    background-image: url('{IMAGEFOLDER}/corners_white.png');
+    width: 234px !important;
+    height: 322px !important;
+    margin: 0 auto;
+    background-color: #992122;
+    padding: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #FFF;
+}
+
+.front_page_box_inner {
+    background-image: url('{IMAGEFOLDER}/corners.png');
+    width: 234px !important;
+    height: 322px !important;
+    margin: 0 auto;
+    background-color: #fefefe;
+    border: solid 1px #d5d5d5;
+    padding: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.front_page_box_red_inner .gscount_1,
+.front_page_box_inner .gscount_1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    line-height: 23px;
+}
+
+.front_page_box_red_inner .gscount_2,
+.front_page_box_inner .gscount_2 {
+    color: #757575;
+    font-size: 13px;
+    text-align: center;
+}
+
+.front_page_box_red_inner .gscount_0,
+.front_page_box_inner .gscount_0 {
+    height: 153px;
+    box-sizing: border-box;
+    padding-top: 30px;
+}

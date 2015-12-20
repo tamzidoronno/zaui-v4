@@ -5,7 +5,7 @@
 .gsmobilefooter,.gsmobileheaderfull { display:block;background:#181411 !important; }
 .gsmobilefooter {  padding-top: 20px;background-color:#181411; color:#efefef; text-align: center; }
 
-.gsportraitimage { display:none !important; }
+.gsportraitimage,.gslandscapeimage{ display:none !important; }
 .gsmobileheaderfull img { width: 100% !important; margin-bottom: 10px; float:left; }
 .gsmobileheaderfull .ContentManager { float:right; }
 .gsmobileheaderfull {  
@@ -40,3 +40,4 @@ body {
     font-weight: 100;
     font-family: 'Quicksand', sans-serif;
 }
+.

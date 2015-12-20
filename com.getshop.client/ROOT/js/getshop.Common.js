@@ -1247,5 +1247,12 @@ var initializeFlipping = function() {
 $(document).ready(function() {
     PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', resizeLeftBar);
     PubSub.subscribe('NAVIGATION_COMPLETED', resizeLeftBar);
-    PubSub.subscribe('NAVIGATION_COMPLETED', initializeFlipping);
+    PubSub.subscribe('NAVIGATION_COMPLETED', function() {
+        $(document).find('img').batchImageLoad({
+                loadingCompleteCallback: function() {
+                    initializeFlipping();
+                }
+        });
+    });
+
 });

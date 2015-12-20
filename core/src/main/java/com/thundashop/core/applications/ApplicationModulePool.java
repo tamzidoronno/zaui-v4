@@ -76,6 +76,14 @@ class ApplicationModulePool {
         booking.description = "Booking for properties and events.";
         modules.put(booking.id, booking);
         
+        ApplicationModule sedoxPerformance = new ApplicationModule();
+        sedoxPerformance.moduleName = "Sedox Performance";
+        sedoxPerformance.id = "sedox";
+        sedoxPerformance.faIcon = "fa-gears";
+        sedoxPerformance.allowedStoreIds.add("eafea78d-1eea-403f-abbb-3b23a6e61dae");
+        sedoxPerformance.description = "Special apps for sedox performance.";
+        modules.put(sedoxPerformance.id, sedoxPerformance);
+        
     }
     
     public ApplicationModule getModule(String id) {

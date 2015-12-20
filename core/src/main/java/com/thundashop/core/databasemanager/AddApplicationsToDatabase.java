@@ -210,6 +210,28 @@ public class AddApplicationsToDatabase {
         bjaroytheme.defaultActivate = false;
         apps.add(bjaroytheme);
 
+        Application SedoxProfileSmall = createSettings("SedoxProfileSmall",
+        "f64275fa-bae6-47c4-a988-0a0f99f0dfd6",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxProfileSmall.isPublic = true;
+        SedoxProfileSmall.isFrontend = true;
+        SedoxProfileSmall.moduleId = "sedox";
+        SedoxProfileSmall.defaultActivate = false;
+        apps.add(SedoxProfileSmall);
+        
+        Application SedoxCreditViewSmall = createSettings("SedoxCreditViewSmall",
+        "665c6c9d-5212-45e5-8c6b-aa0cf85dc6a2",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxCreditViewSmall.isPublic = true;
+        SedoxCreditViewSmall.isFrontend = true;
+        SedoxCreditViewSmall.moduleId = "sedox";
+        SedoxCreditViewSmall.defaultActivate = false;
+        apps.add(SedoxCreditViewSmall);
+
         Application PmsCalendar = createSettings("PmsCalendar",
         "2059b00f-8bcb-466d-89df-3de79acdf3a1",
         allowed2,

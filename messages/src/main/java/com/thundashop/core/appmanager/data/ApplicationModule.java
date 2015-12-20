@@ -5,6 +5,9 @@
  */
 package com.thundashop.core.appmanager.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author boggi
@@ -15,4 +18,9 @@ public class ApplicationModule {
     public String id;
     public String description;
     public String faIcon;
+    
+    /**
+     * If empty = all stores allowed to this module.
+     */
+    public List<String> allowedStoreIds = new ArrayList();
 }

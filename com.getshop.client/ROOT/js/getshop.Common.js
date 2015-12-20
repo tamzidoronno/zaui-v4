@@ -1177,41 +1177,47 @@ var resizeLeftBar = function() {
 
 var initializeFlipping = function() {
     $(".gsflipcard").each(function() {
+        var card = $(this);
         var app = $(this).find('.gsucell');
-        var height = app.height();
-        var width = app.width();
-        var widthPercentage = $(this).closest('.gsuicell').width();
-        widthPercentage = (width / widthPercentage)*10000; 
-        widthPercentage = Math.round(widthPercentage) / 100;
-        $(this).css('display','inline-block');
-        $(this).css('width',app.attr('width') +"%");
-        $(this).css('float','left');
-        $(this).css('height',height);
+
+        var widthPercentage = app.attr('width');
+        if(isMobile) {
+            widthPercentage=100;
+        }
+        card.css('display','inline-block');
+        card.css('width',widthPercentage +"%");
+        card.css('float','left');
+        card.css('height',app.height());
         app.css('width','auto');
         app.css('float','none');
         
-        var trigger = "click";
         var fliptype = $(this).attr('fliptype');
         
         if(isAdministrator) {
-            trigger = "manual";
             fliptype = "manual";
         }
-        if(fliptype == "hover" && !isMobile) {
-            trigger = "manual";
-        } 
+        if(isMobile) {
+           fliptype = "click";
+        }
         
         $(this).flip({
             forceWidth : true,
             forceHeight : true,
-            trigger: trigger
+            trigger: "click"
         });
         if(fliptype === "hover") {
-            $(this).on('mouseenter', function() {
-                $(this).flip("toggle");
+            card.on('mouseenter', function() {
+                card.flip("toggle");
             });
-            $(this).on('mouseleave', function() {
-                $(this).flip("toggle");
+            card.on('mouseleave', function() {
+                card.flip("toggle");
+            });
+        } else if(fliptype === "click") {
+            card.on('click', function() {
+                card.flip("toggle");
+            });
+            card.on('click', function() {
+                card.flip("toggle");
             });
         }
     });

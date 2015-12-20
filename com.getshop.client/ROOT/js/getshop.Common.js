@@ -1190,14 +1190,14 @@ var initializeFlipping = function() {
         app.css('width','auto');
         app.css('float','none');
         
-        var trigger = $(this).attr('fliptype');
+        var trigger = "click";
         if(isAdministrator) {
             trigger = "manual";
         }
         $(this).flip({
             forceWidth : true,
             forceHeight : true,
-            trigger: "click"
+            trigger: trigger
         });
         if(trigger === "hover") {
             $(this).on('mouseenter', function() {

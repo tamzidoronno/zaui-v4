@@ -49,10 +49,10 @@ public interface IPmsManager {
     public String createOrder(String bookingId, NewOrderFilter filter);
     
     @Administrator
-    public PmsNotifications getNotifications();
+    public PmsConfiguration getConfiguration();
     
     @Administrator
-    public void saveNotification(PmsNotifications notifications);
+    public void saveConfiguration(PmsConfiguration notifications);
     
     @Administrator
     public void confirmBooking(String bookingId);

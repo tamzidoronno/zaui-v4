@@ -188,7 +188,7 @@ public class AddApplicationsToDatabase {
         PmsPricing.defaultActivate = false;
         apps.add(PmsPricing);
 
-        Application PmsNotifications = createSettings("PmsNotifications",
+        Application PmsNotifications = createSettings("PmsConfiguration",
         "9de81608-5cec-462d-898c-1266d1749320",
         allowed2,
         " ",
@@ -232,6 +232,16 @@ public class AddApplicationsToDatabase {
         SedoxCreditViewSmall.defaultActivate = false;
         apps.add(SedoxCreditViewSmall);
 
+        Application PmsCalendar = createSettings("PmsCalendar",
+        "2059b00f-8bcb-466d-89df-3de79acdf3a1",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsCalendar.isPublic = true;
+        PmsCalendar.isFrontend = true;
+        PmsCalendar.moduleId = "booking";
+        PmsCalendar.defaultActivate = false;
+        apps.add(PmsCalendar);
 
         return apps;
     }

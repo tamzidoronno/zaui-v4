@@ -7,6 +7,10 @@ h2,h1 { font-weight: 500; }
 .Menu { position:absolute; right: 0px; text-align: right; }
 .Menu .entry { padding: 20px; }
 .Menu .entries .entries { border: solid 1px #efefef; margin-top: 10px; border-top: solid 0px #efefef; }
+.Menu .entries .entries .entry {
+    font-family: 'Alegreya Sans SC', sans-serif;
+    padding: 5px; text-align: left; border-top: solid 1px #efefef; background-color:rgba(0,0,0,0.8); 
+}
 
 #informationbox-holder {
   -webkit-border-radius: 3px;
@@ -24,3 +28,4 @@ background-color: #146da6;
 }
 
 #informationbox { background-color:#fff }
+.informationboxbackground { padding: 10px; }

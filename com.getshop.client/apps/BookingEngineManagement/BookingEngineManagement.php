@@ -25,6 +25,10 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function loadTypeSettings() {
+        $this->includefile("typeconfigurations");
+    }
+    
     public function render() {
         if($this->isEditorMode()) {
             if(!$this->getSelectedName()) {
@@ -33,6 +37,15 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
             }
             $this->includefile("managementview");
         }
+    }
+    
+    public function saveItemType() {
+        $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $_POST['data']['typeid']);
+        $item->addon = $_POST['data']['addon'];
+        $item->productId = $_POST['data']['productId'];
+        $item->visibleForBooking = $_POST['data']['visibleForBooking'];
+        
+        $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $item);
     }
     
     public function getSelectedName() {

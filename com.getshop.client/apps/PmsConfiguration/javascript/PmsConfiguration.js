@@ -1,8 +1,14 @@
-app.PmsNotifications = {
+app.PmsConfiguration = {
     init: function () {
-        $(document).on('click', '.PmsNotifications .changeview', app.PmsNotifications.changeview);
+        $(document).on('click', '.PmsConfiguration .changeview', app.PmsConfiguration.changeview);
+        $(document).on('click', '.PmsConfiguration #contractfield', function() {
+            thundashop.common.activateCKEditor('contractfield', {
+                autogrow : false
+            });
+        });
     },
     changeview : function() {
+        thundashop.common.destroyCKEditors();
         $('.pmsbutton.active').removeClass('active');
         $(this).addClass('active');
         $('.notificationpanel').hide();
@@ -35,4 +41,4 @@ app.PmsNotifications = {
         toolbox.attachToElement(application, 2);
     }
 };
-app.PmsNotifications.init();
+app.PmsConfiguration.init();

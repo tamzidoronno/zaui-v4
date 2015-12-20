@@ -1179,15 +1179,18 @@ var initializeFlipping = function() {
     $(".gsflipcard").each(function() {
         var card = $(this);
         var app = $(this).find('.gsucell');
-
+        var height = app.height();
         var widthPercentage = app.attr('width');
         if(isMobile) {
             widthPercentage=100;
         }
         card.css('display','inline-block');
         card.css('width',widthPercentage +"%");
+        if(isMobile) {
+            height = app.height();
+        }
         card.css('float','left');
-        card.css('height',app.height());
+        card.css('height',height);
         app.css('width','auto');
         app.css('float','none');
         

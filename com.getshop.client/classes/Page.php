@@ -244,6 +244,10 @@ class Page {
                 $area->styles = str_replace("{incrementcellid}", $area->incrementalCellId, $area->styles);
                 echo "<style cellid='" . $area->cellId . "'>" . $styles . "</style>" . "\n";
             }
+            if (isset($area->back) && $area->back->styles) {
+                $area->back->styles = str_replace("{incrementcellid}", $area->back->incrementalCellId, $area->back->styles);
+                echo "<style cellid='" . $area->back->cellId . "'>" . $area->back->styles . "</style>" . "\n";
+            }
 
             if (sizeof($area->cells) > 0) {
                 $this->printCss($area->cells) . "\n";

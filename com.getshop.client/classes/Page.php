@@ -390,7 +390,7 @@ class Page {
         }
         
         if(!$this->factory->isEditorMode() && $cell->link) {
-            echo "<a href='" . $cell->link . "'>";
+            echo "<a href='" . $cell->link . "'>";  
         }
         
         if(!$this->hasPermissionsOnCell($cell)) {
@@ -512,7 +512,9 @@ class Page {
         
         $anchor = $cell->anchor;
         
-        echo "<div anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        $themeClass = $cell->selectedThemeClass;
+        
+        echo "<div selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $themeClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
         $this->printEffectTrigger($cell, $depth);
         $this->printEffectSettingsDiv($cell);
         
@@ -1639,9 +1641,6 @@ class Page {
     }
 
     public function hasPermissionsOnCell($cell) {
-        echo "<span style='display:none;'>";
-        print_r($cell);
-        echo "</span>";
         $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
         if($user && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $user->showHiddenFields) {
             return true;

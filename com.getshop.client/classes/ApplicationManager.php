@@ -163,6 +163,7 @@ class ApplicationManager extends FactoryBase {
         $cell->anchor = $_POST['data']['anchor'];
         $cell->link = $_POST['data']['settings']['link'];
         $cell->hideOnMobile = ($_POST['data']['settings']['hideOnMobile'] == "true");
+        $cell->selectedThemeClass = isset($_POST['data']['selectedThemeClass']) ? $_POST['data']['selectedThemeClass'] : "";
 
         $this->getApi()->getPageManager()->saveCell($pageid, $cell);
 

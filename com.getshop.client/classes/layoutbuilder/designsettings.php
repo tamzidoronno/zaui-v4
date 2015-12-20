@@ -1,4 +1,6 @@
-
+<?
+$factory = IocContainer::getFactorySingelton();
+?>
 <table width='100%'>
     <tr>
         <td>
@@ -165,7 +167,35 @@
         </span>
     </div>
     <div style='clear:both;'></div>
+    
+    <?
+        $themeClasses = $factory->getApplicationPool()->getSelectedThemeAppInstance();
+        if (method_exists($themeClasses, "getThemeClasses")) {
+            $themeClasses = $themeClasses->getThemeClasses();
+            if (count($themeClasses) > 0) {
+    ?>
+            <div style="border-top: solid 1px #DDD; margin-top: 20px; padding-top: 20px;" id="themeClasses">
+                <div class="gscssrow">
+                    <? echo $this->factory->__w("Use a predefined layout for cell"); ?> 
+                    <span class="gscssinput">
+                        <select id="gs_select_cell_theme_class">
+                            <option id="none_selected" value="">-</option>
+                        <?
+                            foreach ($themeClasses as $themeClass) {
+                                echo "<option value='$themeClass'>$themeClass</option>";
+                            }
+                        ?>
+                        </select>
+                    </span>
+                </div>
+            </div>
+    <?
+            }
+        }
+    ?>
 </div>
+
+
 <br/>
 <br/>
 

@@ -22,5 +22,9 @@ class SedoxDatabankTheme extends \ThemeApplication implements \Application {
         echo "\n" . "<link href='https://fonts.googleapis.com/css?family=Lato|Roboto' rel='stylesheet' type='text/css'>";
     }   
     
+    public function getThemeClasses() {
+        return ["banner_redbox"];
+    }
+    
 }
 ?>

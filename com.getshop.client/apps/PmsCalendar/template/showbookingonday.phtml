@@ -1,0 +1,49 @@
+<?php
+/* @var $this ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
+$month = $this->getSelectedMonth();
+$year = $this->getSelectedYear();
+$roomName = $_GET['roomName'];
+$dates = $this->getDates($year);
+$monthDates = $dates[$month];
+$pageId = $this->getPage()->javapage->id;
+$day = date("d.m.Y", strtotime($_GET['day']));
+$dayToPrint = date("d", strtotime($_GET['day']));
+$monthToPrint = date("m", strtotime($_GET['day']));
+
+?>
+<table width='100%'>
+    <tr>
+        <td valign='top' width='50%'>
+            <div gstype='form'>
+                <h1><? echo $this->__w("Book room"); ?> <?php echo $roomName; ?> - <? echo $day; ?></h1>
+                <? echo $this->__w("Start date"); ?>
+                <div class='starttime'>
+                    <input type='number' value='<? echo $dayToPrint; ?>' class='small' min='1' max='31'>
+                    <input type='number' value='<? echo $monthToPrint; ?>' class='small' min='1' max='12'>
+                    <input type='number' value='2015' class='small2' min='2015' max='2017'>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type='number' value='12' class='small hour' min='00' max='23'>
+                    <input type='number' value='00' class='small minute' min='00' max='59'>
+                </div>
+                <br>
+                <? echo $this->__w("Ending at"); ?>
+                <div class='endtime'>
+                    <input type='number' value='<? echo $dayToPrint; ?>' class='small' min='1' max='31'>
+                    <input type='number' value='<? echo $monthToPrint; ?>' class='small' min='1' max='12'>
+                    <input type='number' value='2015' class='small2' min='2015' max='2017'>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type='number' value='12' class='small hour' min='00' max='23'>
+                    <input type='number' value='00' class='small minute' min='00' max='59'>
+                </div>
+            </div>
+        </td>
+        <td valign='top' width='50%'>
+                <h1><? echo $this->__w("Availability"); ?> <?php echo $roomName; ?> - <? echo $day; ?></h1>
+            <?php
+            $this->printDayCalendar($dayToPrint, $roomName);
+            ?>        
+        </td>
+    </tr>
+</table>
+
+<div style='text-align: right;'>
+    <span class='continue_button'><? echo $this->__w("Continue"); ?></span>
+</div>

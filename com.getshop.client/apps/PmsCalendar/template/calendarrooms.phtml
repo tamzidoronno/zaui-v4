@@ -1,0 +1,21 @@
+<?
+/* @var $this ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$pageId = $this->getPage()->javapage->id;
+
+echo "<h1>Select a room you want to book at</h1>";
+foreach($types as $type) {
+    if(!$type->visibleForBooking) {
+        continue;
+    }
+    foreach($items as $item) {
+        echo "<a href='?roomName=".$item->bookingItemName."&page=$pageId'>";
+        echo "<span class='roomentry'>";
+        echo $item->bookingItemName;
+        echo "</span>";
+        echo "</a>";
+    }
+}
+?>
+

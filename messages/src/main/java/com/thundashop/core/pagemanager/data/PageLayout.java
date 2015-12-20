@@ -593,7 +593,7 @@ public class PageLayout implements Serializable {
 
     private PageCell findParent(ArrayList<PageCell> cells, String cellId) {
         for(PageCell cell : cells) {
-            if(cell.cellId.equals(cellId)) {
+            if(cell.cellId.equals(cellId) || (cell.back != null && cell.back.cellId.equals(cellId))) {
                 return cell;
             } else {
                 PageCell result = findParent(cell.cells, cellId);

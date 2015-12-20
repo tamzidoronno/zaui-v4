@@ -24,8 +24,12 @@
 .gsmobilemenu { display: none; }
 .gsmobilefooter { padding-bottom: 70px; }
 body { padding-bottom: 0px; }
-
-.Menu .menuentries .entry { width: 50% !important; float:left; background-color: #181411 !important; display:inline-block; }
+.Menu .menuentries { background-color: inherit !important; }
+.Menu .menuentries .entry { 
+    width: 50% !important; background-color: #181411 !important; display:inline-block; 
+    box-sizing: border-box; 
+    background-color:#201b17 !important;float:left;
+}
 .Menu .entry a { color: #aaa; font-size: 12px; text-transform: uppercase;
           letter-spacing: 3px;
           font-family: 'Hind', sans-serif;

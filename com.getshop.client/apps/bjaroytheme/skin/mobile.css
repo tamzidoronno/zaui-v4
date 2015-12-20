@@ -6,7 +6,7 @@
 .gsmobilefooter {  padding-top: 20px;background-color:#181411; color:#efefef; text-align: center; }
 
 .gsportraitimage { display:none !important; }
-.gsmobileheaderfull img { width: 100% !important; margin-bottom: 70px; float:left; }
+.gsmobileheaderfull img { width: 100% !important; margin-bottom: 10px; float:left; }
 .gsmobileheaderfull .ContentManager { float:right; }
 .gsmobileheaderfull {  
   padding-top: 20px; 
@@ -29,7 +29,7 @@ body { padding-bottom: 0px; }
     width: 50% !important; background-color: #181411 !important; display:inline-block; 
     box-sizing: border-box; 
     background-color:#201b17 !important;float:left;
-    border: solid 1px #201b17;
+    border: solid 1px #181411;
 }
 .Menu .entry a { color: #aaa; font-size: 12px; text-transform: uppercase;
           letter-spacing: 3px;

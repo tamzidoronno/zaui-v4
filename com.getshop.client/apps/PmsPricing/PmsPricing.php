@@ -3,7 +3,7 @@ namespace ns_1be25b17_c17e_4308_be55_ae2988fecc7c;
 
 class PmsPricing extends \WebshopApplication implements \Application {
     public function getDescription() {
-        
+        return "Set prices for your booking, by setting default prices or daily prices for a given time periode";
     }
 
     public function getName() {

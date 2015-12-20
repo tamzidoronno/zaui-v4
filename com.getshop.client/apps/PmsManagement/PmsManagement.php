@@ -6,7 +6,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public $errors = array();
     
     public function getDescription() {
-        
+        return "Administrate all your bookings from this application";
     }
     
     public function showBookingInformation() {

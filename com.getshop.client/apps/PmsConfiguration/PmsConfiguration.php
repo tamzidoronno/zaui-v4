@@ -3,7 +3,7 @@ namespace ns_9de81608_5cec_462d_898c_1266d1749320;
 
 class PmsConfiguration extends \WebshopApplication implements \Application {
     public function getDescription() {
-        
+        return "Configure your booking engine to fit your needs";
     }
 
     public function getName() {

@@ -5,7 +5,7 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     private $booking;
     
     public function getDescription() {
-        
+        return "A calendar for selecting start and dates while booking";
     }
 
     public function getName() {

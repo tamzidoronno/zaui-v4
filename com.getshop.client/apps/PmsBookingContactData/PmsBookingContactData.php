@@ -6,7 +6,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     var $bookingCompleted = false;
     
     public function getDescription() {
-        
+        return "Asks the user for to enter the nessesary contact data to complete the booking";
     }
 
     public function getName() {

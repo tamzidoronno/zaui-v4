@@ -3,7 +3,7 @@ namespace ns_3b18f464_5494_4f4a_9a49_662819803c4a;
 
 class BookingEngineManagement extends \WebshopApplication implements \Application {
     public function getDescription() {
-        
+        return "Configure the core of the booking engine";
     }
 
     public function getName() {

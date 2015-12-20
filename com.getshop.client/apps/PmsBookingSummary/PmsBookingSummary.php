@@ -3,7 +3,7 @@ namespace ns_46b52a59_de5d_4878_aef6_13b71af2fc75;
 
 class PmsBookingSummary extends \WebshopApplication implements \Application {
     public function getDescription() {
-        
+        return "Displays a view with a summary for the current booking that is processed";
     }
 
     public function getName() {

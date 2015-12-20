@@ -3,7 +3,7 @@ namespace ns_ed7efba0_de37_4cd8_915b_cc7be10b8b8b;
 
 class PmsBookingProductList extends \WebshopApplication implements \Application {
     public function getDescription() {
-        
+        return "Display all that the user can book in a list view";
     }
 
     public function getName() {

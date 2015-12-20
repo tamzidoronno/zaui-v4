@@ -31,4 +31,4 @@ margin-bottom: 0px;
 gsarea[area="body"] { margin-top: 0px; }
 
 .front, .back  { background-color:#fff; }
-.gsflipback { display:none; background-color:#181411; color:#fff; padding: 10px; border-radius: 3px; }
+.gsflipback { display:none; }

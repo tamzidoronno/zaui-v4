@@ -30,6 +30,11 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         foreach($_POST['data'] as $key => $value) {
             $this->setConfigurationSetting($key, $value);
         }
-    }    
+    }
+    
+    public function addAddon() {
+        $itemType = $_POST['data']['itemtypeid'];
+        
+    }
 }
 ?>

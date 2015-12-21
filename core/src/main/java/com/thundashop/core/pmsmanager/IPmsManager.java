@@ -59,4 +59,7 @@ public interface IPmsManager {
     
     @Administrator
     public PmsStatistics getStatistics(PmsBookingFilter filter);
+    
+    public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
+    public void removeAddonFromCurrentBooking(String itemtypeId) throws Exception;
 }

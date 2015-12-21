@@ -863,4 +863,52 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
+    @Override
+    public void addAddonToCurrentBooking(String itemtypeId) throws Exception {
+        PmsBooking booking = getCurrentBooking();
+        Date start = null;
+        Date end = null;
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.date.start != null) {
+                if(start == null) {
+                    start = room.date.start;
+                } else {
+                    if(start.after(room.date.start)) {
+                        start = room.date.start;
+                    }
+                }
+            }
+            if(room.date.end != null) {
+                if(end == null) {
+                    end = room.date.end;
+                } else {
+                    if(end.before(room.date.end)) {
+                        end = room.date.end;
+                    }
+                }
+            }
+        }
+        
+        PmsBookingRooms room = new PmsBookingRooms();
+        room.date = new PmsBookingDateRange();
+        room.date.start = start;
+        room.date.end = end;
+        room.bookingItemTypeId = itemtypeId;
+        booking.rooms.add(room);
+        setBooking(booking);
+    }
+
+    @Override
+    public void removeAddonFromCurrentBooking(String itemtypeId) throws Exception {
+        PmsBooking booking = getCurrentBooking();
+        ArrayList toRemove = new ArrayList();
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.bookingItemTypeId.equals(itemtypeId)) {
+                toRemove.add(room);
+            }
+        }
+        booking.rooms.removeAll(toRemove);
+        setBooking(booking);
+    }
+
 }

@@ -167,16 +167,16 @@ class ApplicationManager extends FactoryBase {
 
         $this->getApi()->getPageManager()->saveCell($pageid, $cell);
         
+        if(isset($_POST['data']['settings'])) {
+            $settings = $_POST['data']['settings'];
+            $this->getApi()->getPageManager()->savePageCellSettings($pageid, $cellid, $settings);
+        }
+        
         if(isset($_POST['data']['colsizes'])) {
             $colsizes = $_POST['data']['colsizes'];
             foreach($colsizes as $cellid => $width) {
                 $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, "notset", "notset", $width);
             }
-        }
-        
-        if(isset($_POST['data']['settings'])) {
-            $settings = $_POST['data']['settings'];
-            $this->getApi()->getPageManager()->savePageCellSettings($pageid, $cellid, $settings);
         }
         
     }

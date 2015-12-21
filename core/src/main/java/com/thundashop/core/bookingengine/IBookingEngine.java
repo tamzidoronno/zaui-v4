@@ -38,7 +38,6 @@ public interface IBookingEngine {
     @Administrator
     public BookingItem getBookingItem(String id);
     
-    @Administrator
     public List<BookingItem> getBookingItems();
     
     @Administrator

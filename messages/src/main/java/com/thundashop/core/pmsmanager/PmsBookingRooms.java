@@ -20,6 +20,7 @@ import org.mongodb.morphia.annotations.Transient;
  */
 public class PmsBookingRooms {
     public String bookingItemTypeId = "";
+    public String bookingItemId = "";
     public String pmsBookingRoomId = UUID.randomUUID().toString();
     public List<PmsGuests> guests = new ArrayList();
     public PmsBookingDateRange date = new PmsBookingDateRange();

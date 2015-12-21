@@ -1,6 +1,13 @@
 app.PmsCalendar = {
     init : function() {
         $(document).on('click','.PmsCalendar .dayslot.free', app.PmsCalendar.changeTime);
+        $(document).on('click','.PmsCalendar .continue_button', app.PmsCalendar.reserveBooking);
+    },
+    reserveBooking : function() {
+        var continuehref = $(this).attr('continue');
+         PubSub.subscribe('NAVIGATION_COMPLETED', function() {
+             window.location.href=continuehref;
+         });
     },
     changeTime : function() {
         var start = $(this).attr('start');

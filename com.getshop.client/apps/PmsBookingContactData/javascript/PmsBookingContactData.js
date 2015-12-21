@@ -28,7 +28,7 @@ app.PmsBookingContactData = {
                 guest[$(this).attr('name')] = $(this).val();
             });
             var offset = $(this).attr('pmsBookingRoomId');
-            console.log(offset);
+
             if(!roomdata[offset]) {
                 roomdata[offset]=[];
             }
@@ -40,7 +40,6 @@ app.PmsBookingContactData = {
             "roomdata" : roomdata
         }
         
-        console.log(data);
         var event = thundashop.Ajax.createEvent('','setContactData',$(this), data);
         thundashop.Ajax.post(event);
     },

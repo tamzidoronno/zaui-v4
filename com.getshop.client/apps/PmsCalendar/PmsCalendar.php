@@ -69,6 +69,37 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     public function printDayCalendar($dayToPrint, $roomName) {
         $this->includefile("daycalendar");
     }
+    
+    public function reserveBooking() {
+        $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+        
+        $start = $_POST['data']['startday'].".".$_POST['data']['startmonth'].".".$_POST['data']['startyear']." ".$_POST['data']['starthour'].":".$_POST['data']['startminute'];
+        $end = $_POST['data']['endday'].".".$_POST['data']['endmonth'].".".$_POST['data']['endyear']." ".$_POST['data']['endhour'].":".$_POST['data']['endminute'];
+        $itemName = $_POST['data']['roomname'];
+        $bookedItem = null;
+        foreach($items as $item) {
+            if($item->bookingItemName == $itemName) {
+                $bookedItem = $item;
+            }
+        }
+        
+        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
+ 
+        $range = new \core_pmsmanager_PmsBookingDateRange();
+        $range->start = $this->convertToJavaDate(strtotime($start));
+        if(isset($_POST['date']['end'])) {
+            $range->end = $this->convertToJavaDate(strtotime($end));
+        }
+        
+        $room = new \core_pmsmanager_PmsBookingRooms();
+        $room->bookingItemId = $bookedItem->id;
+        $room->date = $range;
+        
+        $booking->rooms = array();
+        $booking->rooms[] = $room;
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+    }
 
 }
 ?>

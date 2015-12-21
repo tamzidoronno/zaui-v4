@@ -215,6 +215,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
                 }
                 
                 echo "<a href='/logout.php'><div title='".$factory->__f("Logout")."' class='gs_site_main_button'><i class='fa fa-lock'></i></div></a>";
+                echo "<a href='http://download.teamviewer.com/download/version_10x/TeamViewerQS.exe'><div title='".$factory->__f("Teamviewer")."' class='gs_site_main_button'><i class='fa fa-support'></i></div></a>";
             echo "</div>";
             
             include_once("mobileeditor.phtml");

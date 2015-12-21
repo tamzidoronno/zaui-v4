@@ -83,7 +83,7 @@ getshopScrollMagic = {
 
             new ScrollMagic.Scene({triggerElement: $('#parallax_'+triggerId), duration: duration, offset: cellSettings.parallaxoffset})
                 .setTween(inner, {y: cellSettings.easey+"%", ease: Linear.easeNone})
-                .addIndicators()
+//                .addIndicators()
                 .addTo(getshopScrollMagic.controller);
 
             

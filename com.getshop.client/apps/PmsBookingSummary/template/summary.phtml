@@ -7,7 +7,7 @@ foreach($items as $item) {
     $items2[$item->id] = $item;
 }
 $items = $items2;
-
+$addonsAdded = array();
 $bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 foreach($bookingitems as $item) {
     $bookingitems[$item->id] = $item;
@@ -20,23 +20,30 @@ foreach($booking->rooms as $room) {
     /* @var $room core_pmsmanager_PmsBookingRooms */
     $price = $room->price;
     echo "<div class='itemrow'>";
+    if($items[$room->bookingItemTypeId]->addon > 0) {
+        echo "<i class='fa fa-trash-o removeAddon bookedaction' itemtypeid='".$room->bookingItemTypeId."'></i> ";
+        $addonsAdded[$room->bookingItemTypeId] = true;
+    } else {
+        echo "<span class='bookedaction'></span> ";
+    }
+    echo "<span class='itemname'>";
     if($room->bookingItemId) {
         echo $bookingitems[$room->bookingItemId]->bookingItemName;
     } else {
         echo $items[$room->bookingItemTypeId]->name;
     }
+    echo "</span>";
     if($price > 0) {
         echo "<span class='price'>" . $price . " kr </span>";
     }
     $date =$room->date;
     
-    echo ", ";
     if(!$date->end) {
         echo $this->__w("Starting from") . " ";
     }
-    echo "<span>" . date("d.m.Y h:i", strtotime($date->start));
+    echo "<span>" . date("d.m.Y H:i", strtotime($date->start));
     if($date->end) {
-         echo " - " . date("d.m.Y h:i", strtotime($date->end));
+         echo " - " . date("d.m.Y H:i", strtotime($date->end));
     }
     echo "</span>";
     echo "</div>";
@@ -83,6 +90,9 @@ if($total > 0) {
 $addons = "<h3 class='bottomborder'>Addons</h3>";
 $addonsFound = false;
 foreach($items as $item) {
+    if(key_exists($item->id, $addonsAdded)) {
+        continue;
+    }
     if($item->addon > 0) {
         $addonsFound = true;
         $addons .= "<div class='itemrow ' itemid='".$item->id."' style='padding-top: 10px;'>";

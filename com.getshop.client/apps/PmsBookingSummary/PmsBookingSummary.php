@@ -34,7 +34,12 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
     
     public function addAddon() {
         $itemType = $_POST['data']['itemtypeid'];
-        
+        $this->getApi()->getPmsManager()->addAddonToCurrentBooking($this->getSelectedName(), $itemType);
+    }
+    
+    public function removeAddon() {
+        $itemType = $_POST['data']['itemtypeid'];
+        $this->getApi()->getPmsManager()->removeAddonFromCurrentBooking($this->getSelectedName(), $itemType);
     }
 }
 ?>

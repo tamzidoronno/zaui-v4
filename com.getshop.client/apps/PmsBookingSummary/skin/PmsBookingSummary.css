@@ -1,3 +1,7 @@
 .PmsBookingSummary .itemrow .price {float: right; }
 .PmsBookingSummary .bottomborder { padding-bottom: 10px; border-bottom: solid 1px #bbb;}
 .PmsBookingSummary .addaddonsbutton { border: solid 1px #bbb; color:#fff; border-radius: 3px; padding: 3px; background-color:#0063DC; cursor:pointer; }
+.PmsBookingSummary .removeAddon { cursor:pointer; }
+.PmsBookingSummary .itemname { display:inline-block; width: 100px; }
+.PmsBookingSummary .bookedaction { font-size: 16px; display:inline-block; width: 20px; text-align: center; }
+.PmsBookingSummary .itemrow { font-size: 14px; margin-bottom: 10px; }

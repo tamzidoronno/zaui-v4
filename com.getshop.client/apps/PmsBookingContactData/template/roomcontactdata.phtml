@@ -2,6 +2,13 @@
 /* @var $this ns_d3951fc4_6929_4230_a275_f2a7314f97c1\PmsBookingContactData */
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
 $errors = $this->getValidation();
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$types2 = array();
+foreach($types as $type) {
+    $types2[$type->id] = $type;
+}
+$types = $types2;
+
 
 $pricetypes = array();
 $pricetypes[1] = "Daily";
@@ -21,7 +28,9 @@ foreach($booking->rooms as $room) {
         if(isset($room->guests[$i])) {
             $guestData = $room->guests[$i];
         }
-        
+        if($types[$room->bookingItemTypeId]->addon > 0) {
+            continue;
+        }
         echo "<div class='roomdata' pmsBookingRoomId='".$room->pmsBookingRoomId."' offset='$i'>";
         echo "<span class='col-33'><label>".$this->__w("Name")."<input type='text' name='name' value='".$guestData->name."'>";
         $this->validateRoom($room->pmsBookingRoomId, "name", $i);
@@ -29,8 +38,8 @@ foreach($booking->rooms as $room) {
         echo "<span class='col-33'>";
         echo "<label>";
         echo $this->__w("Phone") . "<bR>";
-        echo "<input type='text' name='prefix' value='+".$guestData->prefix."' style='width:15%;'>";
-        echo "<input type='text' name='phone' value='".$guestData->phone."' style='width:75%;'>";
+        echo "<input type='text' name='prefix' value='+".$guestData->prefix."' style='width:20%;'>";
+        echo "<input type='text' name='phone' value='".$guestData->phone."' style='width:70%;'>";
         echo "</label>";
         echo "<div style='clear:both;'></div>";
         $this->validateRoom($room->pmsBookingRoomId, "phone", $i);

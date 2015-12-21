@@ -9,160 +9,185 @@ foreach ($items as $item) {
 }
 
 $items = $items2;
-?>
-<div class='bookedrooms'>
-    <h2>Rooms booked</h2>
-    <div style='padding-left: 10px;'>
-        <?php
-        foreach ($booking->rooms as $room) {
-            $date = $room->date;
-            ?>
-            <span class='roomattribute'>
-                <span class='roomprefix'>
-                    <i class='fa fa-edit'></i> Room type
-                </span>
-                <span class='roompostfix'>
-                    <span class="viewmode">
-                        <? echo $types[$room->bookingItemTypeId]->name; ?>
-                    </span>
-                    <span class="editmode" gstype='form' method="setItemType">
-                        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                        <select gsname='itemtype'>
-                            <?php foreach ($types as $type) { ?>
-                                <?php $selected = "";
-                                if ($type->id == $room->bookingItemTypeId) {
-                                    $selected = "SELECTED";
-                                }  ?>
-                                <option value='<? echo $type->id; ?>' <? echo $selected; ?>><? echo $type->name; ?></option>
-                            <? }  ?>
-                        </select>
-                        <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                    </span>
-                </span>
-            </span>
-            <span class='roomattribute'>
-                <div style='clear:both;'></div>
-                <span class='roomprefix'>
-                    <i class='fa fa-edit'></i> Dates
-                </span> 
-                <span class='roompostfix'>
-                    <span class="viewmode">
-                        <?php echo date("d.m.Y H:i", strtotime($date->start)); ?>
-                        <?php if ($date->end) { ?>
-                            -> 
-                        <?php echo date("d.m.Y H:i", strtotime($date->end)); ?>
-                        <? } ?>
-                    </span>
-                    <span class='editmode' gstype='form' method="setNewDates">
-                        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                        <input type='text' gsname='start' value='<? echo date("d.m.Y H:i", strtotime($room->date->start)); ?>'>
-                        <input type='text' gsname='end' value='<? echo date("d.m.Y H:i", strtotime($room->date->end)); ?>'>
-                        <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                    </span>
-                </span>
-            </span>
-            <div style='clear:both;'></div>
-            <span class='roomattribute'>
-                <span class='roomprefix'>
-                    <i class='fa fa-edit editGuestToggle'></i> <?php echo $room->numberOfGuests; ?> guests
-                </span>
-                <span class='roompostfix'>
-                    <span class="viewmode">
-                        <?php
-                        foreach ($room->guests as $guest) {
-                            echo $guest->name . " - " . $guest->email . " - +" . $guest->prefix . $guest->phone;
-                        }
-                        ?>
-                    </span>
-                    <span class="editmode" gstype='form' method="setGuests">
-                        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                        <select gsname='numberofguests'>
-                        <?php
-                        for($i = 1; $i <= 20; $i++) {
-                            $selected = "";
-                            if($i == $room->numberOfGuests) {
-                                $selected = "SELECTED";
-                            }
-                            echo "<option value='$i' $selected>$i</option>";
-                        }
-                        ?>
-                        </select><br>
-                        <?php for($i = 0; $i < 20; $i++) {
-                            $guest = new core_pmsmanager_PmsGuests();
-                            if(isset($room->guests[$i])) {
-                                $guest = $room->guests[$i];
-                            }
-                            echo "<span class='guestrow_$i'>";
-                            echo "<input type='text' value='".$guest->name."' gsname='name_$i'>";
-                            echo "<input type='text' value='".$guest->email."' gsname='email_$i'>";
-                            echo "<input type='text' value='+".$guest->prefix."' gsname='prefix_$i' style='width:30px;'>";
-                            echo "<input type='text' value='".$guest->phone."' gsname='phone_$i'>";
-                            echo "</span>";
-                        }
-                        ?><br>
-                        <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                    </span>
-                </span>
-            </span>
-            <div style='clear:both;'></div>
-            <span class='roomattribute'>
-                <span class='roomprefix'>
-                    <i class='fa fa-edit'></i> Assigned room
-                </span>
-                <span class='roompostfix'>
-                    <span class="viewmode">
-                        <?
-                        if (!$room->booking->bookingItemId) {
-                            echo "Not assigned yet";
-                        } else {
-                            echo $items[$room->booking->bookingItemId]->bookingItemName;
-                        }
-                        ?>
-                    </span>
-                    <span class="editmode" gstype='form' method='setBookingItem' >
-                        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                        <select gsname='itemid'>
-                            <?php 
-                            foreach($items as $item) {
-                                $selected = "";
-                                if($types[$item->bookingItemTypeId]->addon > 0) {
-                                    continue;
-                                }
 
-                                if($room->booking->bookingItemId == $item->id) {
-                                    $selected = "SELECTED";
-                                }
-                                echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . "</option>";
+$toPrint = array();
+$addons = array();
+
+foreach($booking->rooms as $room) {
+    if($types[$room->bookingItemTypeId]->addon == 0) {
+        $toPrint[] = $room;
+    } else {
+        $addons[] = $room;
+    }
+}
+
+ echo '<h2>Rooms booked</h2>';
+ 
+printRooms($toPrint, $types, $items, $booking->id);
+
+if(sizeof($addons) > 0) {
+    echo '<h2>Addons</h2>';
+    printRooms($addons, $types, $items, $booking->id);
+}
+
+function printRooms($rooms, $types, $items, $bookingId) {
+    ?>
+    <div class='bookedrooms'>
+        <div style='padding-left: 10px;'>
+            <?php
+            foreach ($rooms as $room) {
+                $date = $room->date;
+                ?>
+                <span class='roomattribute'>
+                    <span class='roomprefix'>
+                        <i class='fa fa-edit'></i> Room type
+                    </span>
+                    <span class='roompostfix'>
+                        <span class="viewmode">
+                            <? echo $types[$room->bookingItemTypeId]->name; ?>
+                        </span>
+                        <span class="editmode" gstype='form' method="setItemType">
+                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                            <select gsname='itemtype'>
+                                <?php foreach ($types as $type) { ?>
+                                    <?php $selected = "";
+                                    if ($type->id == $room->bookingItemTypeId) {
+                                        $selected = "SELECTED";
+                                    }  ?>
+                                    <option value='<? echo $type->id; ?>' <? echo $selected; ?>><? echo $type->name; ?></option>
+                                <? }  ?>
+                            </select>
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
+                    </span>
+                </span>
+                <span class='roomattribute'>
+                    <div style='clear:both;'></div>
+                    <span class='roomprefix'>
+                        <i class='fa fa-edit'></i> Dates
+                    </span> 
+                    <span class='roompostfix'>
+                        <span class="viewmode">
+                            <?php echo date("d.m.Y H:i", strtotime($date->start)); ?>
+                            <?php if ($date->end) { ?>
+                                -> 
+                            <?php echo date("d.m.Y H:i", strtotime($date->end)); ?>
+                            <? } ?>
+                        </span>
+                        <span class='editmode' gstype='form' method="setNewDates">
+                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                            <input type='text' gsname='start' value='<? echo date("d.m.Y H:i", strtotime($room->date->start)); ?>'>
+                            <input type='text' gsname='end' value='<? echo date("d.m.Y H:i", strtotime($room->date->end)); ?>'>
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
+                    </span>
+                </span>
+                <div style='clear:both;'></div>
+                <span class='roomattribute'>
+                    <span class='roomprefix'>
+                        <i class='fa fa-edit editGuestToggle'></i> <?php echo $room->numberOfGuests; ?> guests
+                    </span>
+                    <span class='roompostfix'>
+                        <span class="viewmode">
+                            <?php
+                            foreach ($room->guests as $guest) {
+                                echo $guest->name . " - " . $guest->email . " - +" . $guest->prefix . $guest->phone;
                             }
                             ?>
-                        </select>
-                        <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
+                        <span class="editmode" gstype='form' method="setGuests">
+                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                            <select gsname='numberofguests'>
+                            <?php
+                            for($i = 1; $i <= 20; $i++) {
+                                $selected = "";
+                                if($i == $room->numberOfGuests) {
+                                    $selected = "SELECTED";
+                                }
+                                echo "<option value='$i' $selected>$i</option>";
+                            }
+                            ?>
+                            </select><br>
+                            <?php for($i = 0; $i < 20; $i++) {
+                                $guest = new core_pmsmanager_PmsGuests();
+                                if(isset($room->guests[$i])) {
+                                    $guest = $room->guests[$i];
+                                }
+                                echo "<span class='guestrow_$i'>";
+                                echo "<input type='text' value='".$guest->name."' gsname='name_$i'>";
+                                echo "<input type='text' value='".$guest->email."' gsname='email_$i'>";
+                                echo "<input type='text' value='+".$guest->prefix."' gsname='prefix_$i' style='width:30px;'>";
+                                echo "<input type='text' value='".$guest->phone."' gsname='phone_$i'>";
+                                echo "</span>";
+                            }
+                            ?><br>
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
                     </span>
                 </span>
-            </span>
-            <div style='clear:both;'></div>
-            <span class='roomattribute'>
-                <span class='roomprefix'>
-                    <i class='fa fa-edit'></i> Price
-                </span>
-                <span class='roompostfix'>
-                    <span class='viewmode'>
-                        <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
+                <div style='clear:both;'></div>
+                <span class='roomattribute'>
+                    <span class='roomprefix'>
+                        <i class='fa fa-edit'></i> Assigned room
                     </span>
-                    <span class='editmode' method='changePrice' gstype='form'>
-                        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                        <input type='text' gsname='price' value='<? echo $room->price; ?>'>
-                        <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                    <span class='roompostfix'>
+                        <span class="viewmode">
+                            <?
+                            if (!$room->booking->bookingItemId) {
+                                echo "Not assigned yet";
+                            } else {
+                                echo $items[$room->booking->bookingItemId]->bookingItemName;
+                            }
+                            ?>
+                        </span>
+                        <span class="editmode" gstype='form' method='setBookingItem' >
+                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                            <select gsname='itemid'>
+                                <?php 
+                                foreach($items as $item) {
+                                    $selected = "";
+                                    if($types[$item->bookingItemTypeId]->addon > 0) {
+                                        continue;
+                                    }
+
+                                    if($room->booking->bookingItemId == $item->id) {
+                                        $selected = "SELECTED";
+                                    }
+                                    echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . "</option>";
+                                }
+                                ?>
+                            </select>
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
                     </span>
                 </span>
-            </span>
-            <div style='clear:both;'></div>
-            <?php } ?>
-        </div>
-    <div style='clear:both;'></div>
-</div>
+                <div style='clear:both;'></div>
+                <span class='roomattribute'>
+                    <span class='roomprefix'>
+                        <i class='fa fa-edit'></i> Price
+                    </span>
+                    <span class='roompostfix'>
+                        <span class='viewmode'>
+                            <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
+                        </span>
+                        <span class='editmode' method='changePrice' gstype='form'>
+                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                            <input type='text' gsname='price' value='<? echo $room->price; ?>'>
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
+                    </span>
+                </span>
+                <div style='clear:both;'></div>
+                <?php } ?>
+            </div>
+        <div style='clear:both;'></div>
+    </div>
+<?php
+}
+
+?>

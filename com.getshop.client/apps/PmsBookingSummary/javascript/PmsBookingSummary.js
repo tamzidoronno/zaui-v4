@@ -1,6 +1,14 @@
 app.PmsBookingSummary = {
     init : function() {
         $(document).on('click','.PmsBookingSummary .addaddonsbutton', app.PmsBookingSummary.addAddon);
+        $(document).on('click','.PmsBookingSummary .removeAddon', app.PmsBookingSummary.removeAddon);
+    },
+    removeAddon : function() {
+        var data = {
+            itemtypeid : $(this).attr('itemtypeid')
+        };
+        var event = thundashop.Ajax.createEvent('','removeAddon', $(this),data);
+        thundashop.Ajax.post(event);
     },
     addAddon : function() {
         var data = {

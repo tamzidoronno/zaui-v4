@@ -35,10 +35,12 @@ $pricetypes[6] = "Per seconds";
 
 $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 $instances2 = array();
-foreach($instances as $instance) {
-    $instances2[$instance->id] = $instance;
+if($instances) {
+    foreach($instances as $instance) {
+        $instances2[$instance->id] = $instance;
+    }
+    $instances = $instances2;
 }
-$instances = $instances2;
 ?>
 
 <div class='orderinformation'>

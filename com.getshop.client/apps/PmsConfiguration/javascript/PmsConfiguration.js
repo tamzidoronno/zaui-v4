@@ -31,7 +31,7 @@ app.PmsConfiguration = {
                     icon: "fa-edit",
                     iconsize : "30",
                     title: __f("Add / Remove products to this list"),
-                    click: app.PmsNotifications.showSettings
+                    click: app.PmsConfiguration.showSettings
                 }
             ]
         };

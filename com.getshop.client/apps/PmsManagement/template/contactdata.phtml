@@ -3,12 +3,14 @@
 $booking = $this->getSelectedBooking();
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-$instances2 = array();
-foreach($instances as $instance) {
-    $ns = "ns_" . str_replace("-","_", $instance->id) ."\\".$instance->appName;
-    $instances2[$ns] = $instance;
+if($instances) {
+    $instances2 = array();
+    foreach($instances as $instance) {
+        $ns = "ns_" . str_replace("-","_", $instance->id) ."\\".$instance->appName;
+        $instances2[$ns] = $instance;
+    }
+    $instances = $instances2;
 }
-$instances = $instances2;
 $avtalegiro = $this->getApi()->getStoreApplicationPool()->getApplication("8f5f7f8f-de42-4867-82cc-63eb0cb55fa1");
 ?>
 
@@ -70,35 +72,37 @@ $avtalegiro = $this->getApi()->getStoreApplicationPool()->getApplication("8f5f7f
             ?>
         <? } ?>
         <div style='clear:both;'></div>
-        <span class='roomattribute'>
-                <span class='roomprefix'>
-                    <i class='fa fa-edit'></i> Payment type
-                </span>
-            <span class='roompostfix'>
-            <span class="viewmode">
-                    <?
-                    $appSettings = $instances[$user->preferredPaymentType];
-                    $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);
-                    echo $appSettings->appName;
-                    ?>
-                </span>
-                <span class="editmode" gstype='form' method="setNewPaymentType">
-                    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-                    <select gsname="newtype">
-                        <?php 
-                        foreach($instances  as $ns => $instance) {
-                            $selected = "";
-                            if($ns == $user->preferredPaymentType) {
-                                $selected = "SELECTED";
-                            }
-                            echo "<option value='".$ns."' $selected>".$instance->appName."</option>";
-                        }
+        <? if($instances) { ?>
+            <span class='roomattribute'>
+                    <span class='roomprefix'>
+                        <i class='fa fa-edit'></i> Payment type
+                    </span>
+                <span class='roompostfix'>
+                <span class="viewmode">
+                        <?
+                        $appSettings = $instances[$user->preferredPaymentType];
+                        $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);
+                        echo $appSettings->appName;
                         ?>
-                    </select>
-                    <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                    </span>
+                    <span class="editmode" gstype='form' method="setNewPaymentType">
+                        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                        <select gsname="newtype">
+                            <?php 
+                            foreach($instances  as $ns => $instance) {
+                                $selected = "";
+                                if($ns == $user->preferredPaymentType) {
+                                    $selected = "SELECTED";
+                                }
+                                echo "<option value='".$ns."' $selected>".$instance->appName."</option>";
+                            }
+                            ?>
+                        </select>
+                        <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                    </span>
                 </span>
             </span>
-        </span>
-        <div style='clear:both;'></div>
+            <div style='clear:both;'></div>
+        <? } ?>
     </div>
 </div>

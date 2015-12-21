@@ -13,6 +13,7 @@ if(sizeof($this->errors) > 0) {
 $bookingid = $_POST['data']['bookingid'];
 
 $pmsManager = $this->getApi()->getPmsManager();
+$config = $pmsManager->getConfiguration($this->getSelectedName());
 
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 foreach ($types as $idx => $type) {
@@ -38,7 +39,9 @@ $this->includefile("contactdata");
 echo "<div style='clear:both;'></div>";
 $this->includefile("roomsbooked");
 $this->includefile("addons");
-$this->includefile("orderinformation");
+if($config->requirePayments) {
+    $this->includefile("orderinformation");
+}
 ?>
 <br><br><br>
 <span class='pmsbutton' style='float:right;'>Done editing</span>

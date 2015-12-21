@@ -5,6 +5,11 @@ $items = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 foreach($items as $item) {
     $items[$item->id] = $item;
 }
+$bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+foreach($bookingitems as $item) {
+    $bookingitems[$item->id] = $item;
+}
+
 echo "<br>";
 
 echo "<h3 class='bottomborder'>" . $this->__w("Rooms selected") . "</h3>";
@@ -12,12 +17,17 @@ foreach($booking->rooms as $room) {
     /* @var $room core_pmsmanager_PmsBookingRooms */
     $price = $room->price;
     echo "<div class='itemrow'>";
-    echo $items[$room->bookingItemTypeId]->name;
+    if($room->bookingItemId) {
+        echo $bookingitems[$room->bookingItemId]->bookingItemName;
+    } else {
+        echo $items[$room->bookingItemTypeId]->name;
+    }
     if($price > 0) {
         echo "<span class='price'>" . $price . " kr </span>";
     }
     $date =$room->date;
-    echo " (";
+    
+    echo ", ";
     if(!$date->end) {
         echo $this->__w("Starting from") . " ";
     }
@@ -26,7 +36,6 @@ foreach($booking->rooms as $room) {
          echo " - " . date("d.m.Y h:i", strtotime($date->end));
     }
     echo "</span>";
-    echo ")";
     echo "</div>";
 }
 $printAddons = false;
@@ -46,20 +55,23 @@ foreach($booking->rooms as $room) {
     $prices[$room->taxes] = $room->price;
 }
 
-echo "<h3 class='bottomborder'> " . $this->__w("Total") . "</h3>";
+$bottom = "<h3 class='bottomborder'> " . $this->__w("Total") . "</h3>";
 $total = 0;
 foreach($prices as $taxgroup => $price) {
     $taxes = $price - ($price / (($taxgroup + 100) / 100));
     $total += $price;
-    if($total > 0) {
-        echo "<div class='itemrow'>";
-        echo "MVA " . $taxgroup . "% <span class='price'>" . round($taxes) . " kr </span>";
-        echo "</div>";
+    if($taxes > 0) {
+        $bottom .= "<div class='itemrow'>";
+        $bottom .= "MVA " . $taxgroup . "% <span class='price'>" . round($taxes) . " kr </span>";
+        $bottom .= "</div>";
     }
 }
 if($total > 0) {
-    echo "<div class='itemrow ' style='padding-top: 10px;'>";
-    echo "Totalt <span class='price'>" . $total . " kr </span>";
-    echo "</div>";
+    $bottom .= "<div class='itemrow ' style='padding-top: 10px;'>";
+    $bottom .= "Totalt <span class='price'>" . $total . " kr </span>";
+    $bottom .= "</div>";
+}
+if($total > 0) {
+    echo $bottom;
 }
 ?>

@@ -129,6 +129,10 @@ $items = $items2;
                             <?php 
                             foreach($items as $item) {
                                 $selected = "";
+                                if($types[$item->bookingItemTypeId]->addon > 0) {
+                                    continue;
+                                }
+
                                 if($room->booking->bookingItemId == $item->id) {
                                     $selected = "SELECTED";
                                 }

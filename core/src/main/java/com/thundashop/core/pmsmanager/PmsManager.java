@@ -102,6 +102,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
         booking.sessionId = getSession().id;
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.bookingItemTypeId == null || room.bookingItemTypeId.isEmpty()) {
+                if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                    room.bookingItemTypeId = bookingEngine.getBookingItem(room.bookingItemId).bookingItemTypeId;
+                }
+            }
+        }
         saveObject(booking);
         for(PmsBookingRooms room : booking.rooms) {
             room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end);
@@ -291,6 +298,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookingToAdd.endDate = room.date.end;
             bookingToAdd.bookingItemTypeId = room.bookingItemTypeId;
             bookingToAdd.externalReference = room.pmsBookingRoomId;
+            bookingToAdd.bookingItemId = room.bookingItemId;
 
             bookingsToAdd.add(bookingToAdd);
         }

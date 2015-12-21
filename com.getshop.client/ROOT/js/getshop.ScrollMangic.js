@@ -55,9 +55,9 @@ getshopScrollMagic = {
         
         if (cellSettings.paralexxRow) {
             
-//            if ($('.gseditormode').length > 0) {
-//                return;
-//            }
+            if ($('.gseditormode').length > 0) {
+                return;
+            }
             
             var parent = $('.gs_cell_outer[cellid="'+cellId+'"]');
             var inner = $('.gsucell[cellid="'+cellId+'"]');

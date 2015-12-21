@@ -80,6 +80,24 @@ if (!$this->factory->isEffectsEnabled()) {
             </span>
         </label>
     </div>
+    <div style='clear:both;'></div>
+    <br>
+    <div>
+        <label><? echo $this->factory->__w("Offset"); ?>
+            <span class='gscssinput'>
+                <input type='textfield' gsname='parallaxoffset'> 
+            </span>
+        </label>
+    </div>
+    <div style='clear:both;'></div>
+    <br>
+    <div>    
+        <label><? echo $this->factory->__w("Ease Y (percent)"); ?>
+            <span class='gscssinput'>
+                <input type='textfield' gsname='easey'> 
+            </span>
+        </label>
+    </div>
     <?
 }
 ?>

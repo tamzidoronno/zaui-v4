@@ -15,4 +15,7 @@ public class PageCellSettings implements Serializable {
     public Double scrollFadeInEndOpacity = 1D;
     public int slideLeft = 0;
     public int slideTop = 0;
+    
+    public int parallaxoffset = 0;
+    public int easey = 0;
 }

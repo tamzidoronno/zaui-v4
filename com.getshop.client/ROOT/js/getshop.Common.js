@@ -1178,8 +1178,14 @@ var resizeLeftBar = function() {
 var initializeFlipping = function() {
     $(".gsflipcard").each(function() {
         var card = $(this);
-        var app = $(this).find('.gsucell');
-        var height = app.height();
+        var app = card.find('.gsucell');
+        var appback = card.find('.back .gsucell');
+        
+        var height = app.outerHeight(true);
+        if(appback.outerHeight(true) > height) {
+            height = appback.outerHeight(true);
+        }
+        
         var widthPercentage = app.attr('width');
         if(isMobile) {
             widthPercentage=100;
@@ -1187,9 +1193,14 @@ var initializeFlipping = function() {
         card.css('display','inline-block');
         card.css('width',widthPercentage +"%");
         if(isMobile) {
-            height = app.height();
+            height = app.outerHeight(true);
+            if(appback.outerHeight(true) > height) {
+                height = appback.outerHeight(true);
+            }
         }
-        card.css('float','left');
+        
+
+        card.css('float','left')
         card.css('height',height);
         app.css('width','auto');
         app.css('float','none');
@@ -1213,6 +1224,12 @@ var initializeFlipping = function() {
             trigger: trigger
         });
         
+        var height = app.outerHeight(true);
+        if(appback.outerHeight(true) > height) {
+            height = appback.outerHeight(true);
+        }
+        card.css('height',height);
+        
         if(fliptype === "hover") {
             card.on('mouseenter', function() {
                 card.flip("toggle");
@@ -1228,6 +1245,7 @@ var initializeFlipping = function() {
                 card.flip("toggle");
             });
         }
+        card.find('.back').css('visibility','visible');
     });
     if(isAdministrator) {
         $(".gsflipcard").dblclick(function() {

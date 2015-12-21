@@ -1726,7 +1726,7 @@ class Page {
             </div> 
             <div class="back gsflipback">
             <?
-//                $innercell->back->settings->isFlipping = $innercell->settings->isFlipping;
+                $innercell->back->settings->isFlipping = $innercell->settings->isFlipping;
                 $this->printCell($innercell->back, $counter, $depthprint, $size, $edit, $cell);
             ?>
             </div> 

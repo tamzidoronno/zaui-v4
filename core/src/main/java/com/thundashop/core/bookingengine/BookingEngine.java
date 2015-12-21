@@ -14,6 +14,8 @@ import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +59,15 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     @Override
     public List<BookingItem> getBookingItems() {
-        return deepClone(bookingEngineAbstract.getBookingItems());
+        List<BookingItem> result = deepClone(bookingEngineAbstract.getBookingItems());
+        Collections.sort(result, new Comparator<BookingItem>(){
+            public int compare(BookingItem o1, BookingItem o2){
+                if(o1.bookingItemName.equals(o2.bookingItemName))
+                    return 0;
+                return o1.bookingItemName.compareTo(o2.bookingItemName);
+            }
+       });
+        return result;
     }
 
     @Override

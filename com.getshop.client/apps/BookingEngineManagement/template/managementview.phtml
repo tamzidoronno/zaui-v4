@@ -10,8 +10,10 @@ $config = $this->getApi()->getBookingEngine()->getConfig($this->getSelectedName(
 $bookings = $this->getApi()->getBookingEngine()->getAllBookings($this->getSelectedName());
 $products = $this->getApi()->getProductManager()->getAllProducts();
 $products2 = array();
-foreach($products as $prod) {
-    $products2[$prod->id] = $prod;
+if($products) {
+    foreach($products as $prod) {
+        $products2[$prod->id] = $prod;
+    }
 }
 $products=$products2;
 ?>
@@ -119,12 +121,14 @@ $products=$products2;
             <th align='left'>Group</th>
         </tr>
         <?php
-        foreach($bookings as $booking) {
-            echo "<tr>";
-            echo "<td>" . $booking->startDate . "</td>";
-            echo "<td>" . $booking->endDate . "</td><td>";
-            echo $allbookingtypes[$booking->bookingItemTypeId]->name . "</td>";
-            echo "</tr>";
+        if($bookings) {
+            foreach($bookings as $booking) {
+                echo "<tr>";
+                echo "<td>" . $booking->startDate . "</td>";
+                echo "<td>" . $booking->endDate . "</td><td>";
+                echo $allbookingtypes[$booking->bookingItemTypeId]->name . "</td>";
+                echo "</tr>";
+            }
         }
         ?>
     </table>

@@ -243,6 +243,18 @@ public class AddApplicationsToDatabase {
         PmsCalendar.defaultActivate = false;
         apps.add(PmsCalendar);
 
+        Application OsloTheme = createSettings("OsloTheme",
+        "b2ba3713-c655-4f48-b5ac-2822edb8a38e",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        OsloTheme.isPublic = true;
+        OsloTheme.isFrontend = true;
+        OsloTheme.moduleId = "other";
+        OsloTheme.defaultActivate = false;
+        apps.add(OsloTheme);
+
+        
         return apps;
     }
 

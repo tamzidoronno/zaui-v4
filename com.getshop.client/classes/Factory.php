@@ -502,6 +502,7 @@ class Factory extends FactoryBase {
         
         
         $this->addCssFile("skin/default/framework.css");
+        $this->addCssFile("skin/default/framework2.css");
         $this->addCssFile("skin/default/frameworklayout.css");
         $this->addCssFile("skin/default/elements.css");
         $this->addCssFile("skin/default/layout.css");

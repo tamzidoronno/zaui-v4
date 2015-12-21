@@ -11,21 +11,3 @@ h2,h1 { font-weight: 500; }
     font-family: 'Alegreya Sans SC', sans-serif;
     padding: 5px; text-align: left; border-top: solid 1px #efefef; background-color:rgba(0,0,0,0.8); 
 }
-
-#informationbox-holder {
-  -webkit-border-radius: 3px;
-    border-radius: 3px; 
-    background-color: #146da6;
-}
-
-#informationboxtitle {
-background-color: #146da6;
-}
-
-.GetShopToolbox .seperator,
-.GetShopToolbox .title {
-    background-color: #146da6;
-}
-
-#informationbox { background-color:#fff }
-.informationboxbackground { padding: 10px; }

@@ -502,7 +502,10 @@ class Factory extends FactoryBase {
         
         
         $this->addCssFile("skin/default/framework.css");
-        $this->addCssFile("skin/default/framework2.css");
+        if($this->isNewDesign()) {
+            $this->addCssFile("skin/default/framework2.css");
+        }
+        
         $this->addCssFile("skin/default/frameworklayout.css");
         $this->addCssFile("skin/default/elements.css");
         $this->addCssFile("skin/default/layout.css");
@@ -915,6 +918,13 @@ class Factory extends FactoryBase {
             echo '<link rel="stylesheet" type="text/css" href="'.$file.'" />';
         }
 
+    }
+
+    public function isNewDesign() {
+        if(strtotime($this->getStore()->rowCreatedDate) > 1449000686) {;
+            return true;
+        }
+        return false;
     }
 
 }

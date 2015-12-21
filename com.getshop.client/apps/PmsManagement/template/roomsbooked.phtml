@@ -23,14 +23,14 @@ foreach($booking->rooms as $room) {
 
  echo '<h2>Rooms booked</h2>';
  
-printRooms($toPrint, $types, $items, $booking->id);
+printRooms($toPrint, $types, $items, $booking->id, false);
 
 if(sizeof($addons) > 0) {
     echo '<h2>Addons</h2>';
-    printRooms($addons, $types, $items, $booking->id);
+    printRooms($addons, $types, $items, $booking->id, true);
 }
 
-function printRooms($rooms, $types, $items, $bookingId) {
+function printRooms($rooms, $types, $items, $bookingId, $addons) {
     ?>
     <div class='bookedrooms'>
         <div style='padding-left: 10px;'>
@@ -85,6 +85,7 @@ function printRooms($rooms, $types, $items, $bookingId) {
                     </span>
                 </span>
                 <div style='clear:both;'></div>
+            <? if(!$addons) { ?>
                 <span class='roomattribute'>
                     <span class='roomprefix'>
                         <i class='fa fa-edit editGuestToggle'></i> <?php echo $room->numberOfGuests; ?> guests
@@ -128,6 +129,7 @@ function printRooms($rooms, $types, $items, $bookingId) {
                         </span>
                     </span>
                 </span>
+            <? } ?>
                 <div style='clear:both;'></div>
                 <span class='roomattribute'>
                     <span class='roomprefix'>

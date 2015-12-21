@@ -20,14 +20,31 @@
   background: linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
 }
+.gsmobileheaderfull .Menu {
+    display:none;
+}
+    
+
 .gsarea[area="header"] { padding-top: 20px; background-color:#181411; height: 100px !important; position: relative; padding-bottom: 0px; margin-bottom: 0px;}
 .gsarea[area="footer"] { padding-top: 20px; background-color:#181411; position: relative; padding-bottom: 0px; }
-.gsmobilemenu { display: none; }
+.gsmobilesearch,
+.gsslideright,
+.gsmobilemenucart {
+    display: none;
+}
+.gsmobilemenuentry { text-align: center;
+                     width: 100%;
+               background-color:#181411 !important;
+               background: #181411 !important;
+               border-top: solid 1px;
+}
+.gsmobilemenuinstance { background-color: #181411; }
 .gsmobilefooter { padding-bottom: 70px; }
 body { padding-bottom: 0px; }
+
 .Menu .menuentries { background-color: inherit !important; }
 .Menu .menuentries .entry { 
-    width: 50% !important; background-color: #181411 !important; display:inline-block; 
+     background-color: #181411 !important; display:inline-block; 
     box-sizing: border-box; 
     background-color:#201b17 !important;float:left;
     border: solid 1px #181411;

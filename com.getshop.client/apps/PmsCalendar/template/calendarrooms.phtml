@@ -10,6 +10,9 @@ foreach($types as $type) {
         continue;
     }
     foreach($items as $item) {
+        if($item->bookingItemTypeId != $type->id) {
+            continue;
+        }
         echo "<a href='?roomName=".$item->bookingItemName."&page=$pageId'>";
         echo "<span class='roomentry'>";
         echo $item->bookingItemName;

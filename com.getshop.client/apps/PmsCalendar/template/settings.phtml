@@ -15,6 +15,18 @@ $dateType = $this->getConfigurationSetting("date_type");
             <td width="50%"><? echo $this->__w("Continue to page"); ?></td>
             <td width="50%"><input type="text" gsname="continue" style='width:100%;' value="<? echo $this->getConfigurationSetting("continue"); ?>"></td>
         </tr>
+        <tr>
+            <td width="50%"><? echo $this->__w("Heading for room overview"); ?></td>
+            <td width="50%"><input type="text" gsname="headingroomoverview" style='width:100%;' value="<? echo $this->getConfigurationSetting("headingroomoverview"); ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%"><? echo $this->__w("Heading text for calendar view"); ?></td>
+            <td width="50%"><input type="text" gsname="headingcalendarview" style='width:100%;' value="<? echo $this->getConfigurationSetting("headingcalendarview"); ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%"><? echo $this->__w("Heading text for single room view"); ?></td>
+            <td width="50%"><input type="text" gsname="headingbookroom" style='width:100%;' value="<? echo $this->getConfigurationSetting("headingbookroom"); ?>"></td>
+        </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

@@ -9,6 +9,11 @@ $pageId = $this->getPage()->javapage->id;
 $day = date("d.m.Y", strtotime($_GET['day']));
 $dayToPrint = date("d", strtotime($_GET['day']));
 $monthToPrint = date("m", strtotime($_GET['day']));
+$headingText = $this->getConfigurationSetting("headingbookroom");
+if(!$headingText) {
+    $headingText = "Book room";
+}
+
 
 ?>
 <div  gstype='form' method='reserveBooking'>
@@ -17,7 +22,7 @@ $monthToPrint = date("m", strtotime($_GET['day']));
         <tr>
             <td valign='top' width='50%'>
                 <div gstype='form'>
-                    <h1><? echo $this->__w("Book room"); ?> <?php echo $roomName; ?> - <? echo $day; ?></h1>
+                    <h1><? echo $headingText; ?> <?php echo $roomName; ?> - <? echo $day; ?></h1>
                     <? echo $this->__w("Start date"); ?>
                     <div class='starttime'>
                         <input type='number' gsname='startday' value='<? echo $dayToPrint; ?>' class='small' min='1' max='31'>

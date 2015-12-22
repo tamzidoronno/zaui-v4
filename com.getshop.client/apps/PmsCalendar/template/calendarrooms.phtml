@@ -13,7 +13,12 @@ $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedN
 
 $pageId = $this->getPage()->javapage->id;
 
-echo "<h1>Select a room you want to book at</h1>";
+$headingText = $this->getConfigurationSetting("headingroomoverview");
+if(!$headingText) {
+    $headingText = "SELECT A ROOM";
+}
+echo "<div class='roombookingpanel'>";
+echo "<h1>".$headingText."</h1>";
 foreach($types as $type) {
     if(!$type->visibleForBooking) {
         continue;
@@ -42,5 +47,6 @@ foreach($types as $type) {
         echo "</a>";
     }
 }
+echo "</div>";
 ?>
 

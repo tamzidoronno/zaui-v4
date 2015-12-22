@@ -1,4 +1,3 @@
-<h1>Select the day you want to book for</h1>
 <?php
 /* @var $this ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
 $month = $this->getSelectedMonth();
@@ -17,6 +16,11 @@ $filter->needToBeConfirmed = true;
 
 $bookingsForMonth = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
 
+$headingText = "Select the day you want to book for";
+if($this->getConfigurationSetting("headingcalendarview")) {
+    $headingText = $this->getConfigurationSetting("headingcalendarview");
+}
+echo '<h1>'.$headingText.'</h1>';
 echo "<span class='day dayheader weekentry'>" . $this->__w("Week") . "</span>";
 echo "<span class='day dayheader'>" . $this->__w("Mon") . "</span>";
 echo "<span class='day dayheader'>" . $this->__w("Tue") . "</span>";

@@ -94,17 +94,23 @@ getshopScrollMagic = {
 
     
 //    This one works for the intended usage ( a row becomes parallaxed.
-    addParalaxxScene: function(cell, cellSettings, trigger) {;
+    addParalaxxScene: function(cell, cellSettings, trigger) {
         var inner =  $('.gsucell[cellid="'+cell.attr("cellid")+'"] div.gsinner').first();
         var height = cell.outerHeight(true);
         var doubleHeight = $(window).height();
-        var duration =doubleHeight*2;
-         
+        var duration = doubleHeight*2;
+        var fromTop = ""+doubleHeight*0.25;
+        
         inner.css('height',doubleHeight+"px");
-        inner.css('top',"-"+(doubleHeight*0.25)+height+"px");
+        inner.css('top',"-"+fromTop+"px");
 
         cell.css('height',height+"px");
         cell.css('overflow',"hidden");
+        
+        console.log("========");
+        console.log(doubleHeight);
+        console.log(Math.floor((doubleHeight*0.25)+height));
+        console.log(duration);
         
         new ScrollMagic.Scene({triggerElement: '#'+trigger.attr("id"), triggerHook: "onEnter", duration: duration, offset: cellSettings.parallaxoffset})
             .setTween(inner, {y: cellSettings.easey+"%", ease: Linear.easeNone})

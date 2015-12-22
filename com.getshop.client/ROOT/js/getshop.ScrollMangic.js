@@ -44,11 +44,11 @@ getshopScrollMagic = {
     addParalaxxScene: function(cell, cellSettings, trigger) {
         var inner =  $('.gscell[cellid="'+cell.attr("cellid")+'"] > div.gsinner');
         var height = cell.outerHeight(true);
-        var doubleHeight = height*2;
-        var duration = height*4;
+        var doubleHeight = $(window).height();
+        var duration =doubleHeight*2;
         
         inner.css('height',doubleHeight+"px");
-        inner.css('top',"-"+(height*0.75)+"px");
+        inner.css('top',"-"+(doubleHeight*0.25)+height+"px");
 
         cell.css('height',height+"px");
         cell.css('overflow',"hidden");

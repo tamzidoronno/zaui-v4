@@ -507,20 +507,22 @@ class Page {
         }
         
         $permissions = "";
-        if($this->factory->isEditorMode()) {
-            $permobject = $cell->settings;
-            $permobject->{'link'} = $cell->link;
-            $permobject->{'hideOnMobile'} = $cell->hideOnMobile;
-            $permissions = "data-settings='".json_encode($cell->settings) . "'";
-        }
-        
+        $permobject = $cell->settings;
+        $permobject->{'link'} = $cell->link;
+        $permobject->{'hideOnMobile'} = $cell->hideOnMobile;
+        $permissions = "data-settings='".json_encode($cell->settings) . "'";
+      
         $anchor = $cell->anchor;
         
         $themeClass = $cell->selectedThemeClass;
         
+        if ($depth === 0) {
+            echo "<div class='gsucell_extra_outer'>";
+            $this->printEffectTrigger($cell, $depth, "outside");
+            echo "<div class='gsucell_outer' cellid='$cell->cellId'>";
+        }
         echo "<div selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $themeClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
         $this->printEffectTrigger($cell, $depth);
-        $this->printEffectSettingsDiv($cell);
         
         if ($anchor) {
             echo "<a id='$anchor' name='$anchor'></a>";
@@ -557,6 +559,10 @@ class Page {
         
         echo "</div>";
         echo "</div>";
+        if ($depth === 0) {
+            echo "</div>";
+            echo "</div>";
+        }
 
         $this->printFloatingEnd($cell);
         if ($cell->mode == "ROTATING" && $this->factory->isMobile()) {
@@ -766,7 +772,7 @@ class Page {
         if($config->keepAspect && !$this->factory->isMobile()) {
             ?>
             <script>
-                $(function() {
+//                $(function() {
                     var origWindowWidth = <? echo $config->windowWidth; ?>;
                     var origHeight = <? echo $config->height; ?>;
                     var innerWidth = <? echo $config->innerWidth; ?>;
@@ -798,7 +804,7 @@ class Page {
                         }
                         $(this).css('top',curTop);
                     });
-                });
+//                });
             </script>
             <?
         } else if($this->factory->isMobile()) {
@@ -1678,13 +1684,13 @@ class Page {
         }
     }
 
-    public function printEffectTrigger($cell, $depth) {
+    public function printEffectTrigger($cell, $depth, $type="normal") {
         if (!$this->factory->isEffectsEnabled()) {
             return;
         }
         
         if ($depth == 0) {
-            echo "<div class='spacer s0 getshopScrollMagicTriggerRow' id='scrollmagic_trigger_$cell->cellId' cellId='$cell->cellId'></div>";
+            echo "<div class='spacer s0 getshopScrollMagicTriggerRow' type='$type' id='scrollmagic_trigger_$cell->cellId' cellId='$cell->cellId'></div>";
         }
     }
 
@@ -1697,14 +1703,6 @@ class Page {
         echo "<script>getshopScrollMagic.rowLoaded('$cellId');</script>";
     }
 
-    public function printEffectSettingsDiv($cell) {
-        $attrs = "";
-        foreach ($cell->settings as $key => $value) {
-            $attrs .= " $key='$value' ";
-        }
-        
-        echo "<div style='display: none' class='gsCellSettings_attrs' $attrs></div>";
-    }
 
     /**
      * 

@@ -23,56 +23,109 @@ getshopScrollMagic = {
     },
     
     rowLoadedInner: function(cellId) {
-        var cell = $('.gscell[cellid="'+cellId+'"]');
-        var cellSettings = cell.find('.gsCellSettings_attrs');
+        var cell = $('.gsucell[cellid="'+cellId+'"]');
+        var cellSettings = cell.attr('data-settings');
 
-        var trigger = cell.closest('.gsdepth_0.gsucell').find('.getshopScrollMagicTriggerRow');
+        if (!cellSettings) {
+            return;
+        }
+        
+        cellSettings = JSON.parse(cellSettings);
+        
+        var trigger = cell.closest('.gsucell_extra_outer').find('.getshopScrollMagicTriggerRow[type="normal"]');
+        var triggerOutside = cell.closest('.gsucell_extra_outer').find('.getshopScrollMagicTriggerRow[type="outside"]');
         
         if ($('.gseditormode').length > 0) {
             return;
         }
         
-        if (cellSettings.attr('scrollFadeIn')) {
+        if (cellSettings.scrollFadeIn) {
            getshopScrollMagic.addFadeScene(cell, cellSettings, trigger);
         }
 
-        if (cellSettings.attr('paralexxRow')) {
-            getshopScrollMagic.addParalaxxScene(cell, cellSettings, trigger);
+        if (cellSettings.paralexxRow) {
+            if (cellSettings.parallaxEffectType === "parallax1") {
+                getshopScrollMagic.addParalaxxScene2(cell, cellSettings, triggerOutside);                
+            }
+            
+            if (cellSettings.parallaxEffectType === "parallax2") {
+                getshopScrollMagic.addParalaxxScene(cell, cellSettings, trigger);
+            }
+
         }
     },
     
-    addParalaxxScene: function(cell, cellSettings, trigger) {
-        var inner =  $('.gscell[cellid="'+cell.attr("cellid")+'"] > div.gsinner');
+    addParalaxxScene2: function(cell, cellSettings, trigger) {;
+        var cell = cell.closest('.gsucell_outer');
+        var inner =  $('.gsucell[cellid="'+cell.attr("cellid")+'"]');
+        var extraInner =  inner.find('div.gsinner').first();
+        var height = cell.outerHeight(true);
+        
+        var doubleHeight = height*2;
+        var duration = doubleHeight;
+        var offset = cellSettings.parallaxoffset;
+        
+        if (cell.position().top < $(window).height()) {
+            offset += $(window).height()-cell.position().top;
+        }
+        
+        var fromTop = 0;
+
+        var ease = cellSettings.easey;
+        
+        inner.css('height',doubleHeight+"px");
+        inner.css('top',"-"+fromTop+"px");
+        extraInner.css('top',fromTop+"px");
+        inner.css('position',"relative");
+
+        cell.css('height',(height)+"px");
+        cell.css('overflow',"hidden");
+        
+        new ScrollMagic.Scene({triggerElement: '#'+trigger.attr("id"), triggerHook: "onEnter", duration: duration, offset: offset})
+            .setTween(inner, {y: ease+"%", ease: Linear.easeNone})
+            .addTo(getshopScrollMagic.controller);
+    
+        // Sticks the applications so they move with the page.
+        new ScrollMagic.Scene({triggerElement: '#'+trigger.attr("id"), triggerHook: "onEnter", duration: duration, offset: offset})
+            .setTween(extraInner, {y: "-"+ease+"%", ease: Linear.easeNone})
+            .addTo(getshopScrollMagic.controller);
+    },
+    
+
+    
+//    This one works for the intended usage ( a row becomes parallaxed.
+    addParalaxxScene: function(cell, cellSettings, trigger) {;
+        var inner =  $('.gsucell[cellid="'+cell.attr("cellid")+'"] div.gsinner').first();
         var height = cell.outerHeight(true);
         var doubleHeight = $(window).height();
         var duration =doubleHeight*2;
-        
+         
         inner.css('height',doubleHeight+"px");
         inner.css('top',"-"+(doubleHeight*0.25)+height+"px");
 
         cell.css('height',height+"px");
         cell.css('overflow',"hidden");
         
-        new ScrollMagic.Scene({triggerElement: '#'+trigger.attr("id"), triggerHook: "onEnter", duration: duration})
-            .setTween('.gscell[cellid="'+cell.attr("cellid")+'"] > div', {y: "100%", ease: Linear.easeNone})
+        new ScrollMagic.Scene({triggerElement: '#'+trigger.attr("id"), triggerHook: "onEnter", duration: duration, offset: cellSettings.parallaxoffset})
+            .setTween(inner, {y: cellSettings.easey+"%", ease: Linear.easeNone})
             .addTo(getshopScrollMagic.controller);
     },
     
     addFadeScene: function(cell, cellSettings, trigger) {
-        cell.css('opacity', cellSettings.attr('scrollFadeInStartOpacity'));
-        cell.css('right', cellSettings.attr('slideLeft')+'px');
-        cell.css('top', (cellSettings.attr('slideTop')*-1)+'px');
+        cell.css('opacity', cellSettings.scrollFadeInStartOpacity);
+        cell.css('right', cellSettings.slideLeft+'px');
+        cell.css('top', (cellSettings.slideTop*-1)+'px');
 
         var scrollSettings = {
-            opacity: cellSettings.attr('scrollFadeInEndOpacity'),
-            translateX: cellSettings.attr('slideLeft'),
-            translateY: cellSettings.attr('slideTop')
+            opacity: cellSettings.scrollFadeInEndOpacity,
+            translateX: cellSettings.slideLeft,
+            translateY: cellSettings.slideTop
         }
 
         new ScrollMagic.Scene({triggerElement: '#'+trigger.attr("id")})
             .setVelocity('.gscell[cellid="'+cell.attr("cellid")+'"]', scrollSettings,
                 {
-                    duration: cellSettings.attr('scrollFadeInDuration')
+                    duration: cellSettings.scrollFadeInDuration
                 })
             .addTo(getshopScrollMagic.controller);
     }

@@ -135,8 +135,7 @@ class Page {
         echo "$(function() { $('.pagetitle').html('".$this->factory->getPageTitle()."'); });";
         echo "</script>";
         
-        echo '<script>resizeLeftBar(); </script>';
-        echo "<script>getshopScrollMagic.rowLoadeded();</script>";
+        echo '<script>resizeLeftBar();</script>';
     }
 
     private function printMobileHeader($headerCells) {
@@ -508,21 +507,20 @@ class Page {
         }
         
         $permissions = "";
-//        if($this->factory->isEditorMode()) {
+        if($this->factory->isEditorMode()) {
             $permobject = $cell->settings;
             $permobject->{'link'} = $cell->link;
             $permobject->{'hideOnMobile'} = $cell->hideOnMobile;
             $permissions = "data-settings='".json_encode($cell->settings) . "'";
-//        }
+        }
         
         $anchor = $cell->anchor;
         
         $themeClass = $cell->selectedThemeClass;
         
-        $this->printEffectTrigger($cell, $depth, "parallax_");
-        echo "<div class='gs_cell_outer' cellid='".$cell->cellId ."' >";
-        echo "<div hasParalaxEffect='".$cell->settings->paralexxRow."' selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $themeClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
-        $this->printEffectTrigger($cell, $depth, "parallax_");
+        echo "<div selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $themeClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        $this->printEffectTrigger($cell, $depth);
+        $this->printEffectSettingsDiv($cell);
         
         if ($anchor) {
             echo "<a id='$anchor' name='$anchor'></a>";
@@ -559,7 +557,6 @@ class Page {
         
         echo "</div>";
         echo "</div>";
-        echo "</div>";
 
         $this->printFloatingEnd($cell);
         if ($cell->mode == "ROTATING" && $this->factory->isMobile()) {
@@ -570,6 +567,7 @@ class Page {
             echo "</a>";
         }
         
+        $this->printEffectTriggerLoaded($cell, $depth);
         return true;
     }
 
@@ -768,37 +766,38 @@ class Page {
         if($config->keepAspect && !$this->factory->isMobile()) {
             ?>
             <script>
-                /* This function needs to be loaded syncron, otherwise it will mess up the parallax effects.*/
-                var origWindowWidth = <? echo $config->windowWidth; ?>;
-                var origHeight = <? echo $config->height; ?>;
-                var innerWidth = <? echo $config->innerWidth; ?>;
+                $(function() {
+                    var origWindowWidth = <? echo $config->windowWidth; ?>;
+                    var origHeight = <? echo $config->height; ?>;
+                    var innerWidth = <? echo $config->innerWidth; ?>;
 
-                var aspectRatio =  origHeight / origWindowWidth;
-                var newHeight = $(window).width() * aspectRatio;
-                var heightDiff = newHeight / origHeight;
-                var innerWidthChange = $('.gs_page_width').width() / innerWidth;
+                    var aspectRatio =  origHeight / origWindowWidth;
+                    var newHeight = $(window).width() * aspectRatio;
+                    var heightDiff = newHeight / origHeight;
+                    var innerWidthChange = $('.gs_page_width').width() / innerWidth;
 
-                $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').height(newHeight);
-                $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').height(newHeight);
-                $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').css('min-height',newHeight);
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').height(newHeight);
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').height(newHeight);
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"] .gsrotatingrow').css('min-height',newHeight);
 
-                $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').find('.gsfloatingframe').each(function() {
-
-                    //Calculate left position
-                    var left = $(this).position().left;
-                    var newLeft = left * innerWidthChange;
-                    if((newLeft + $(this).width()) > $(window).width()) {
-                        newLeft = $('.gs_page_width').width() - $(this).width();
-                    }
-                    $(this).css('left',newLeft);
-
-
-                    //Calculate top postion
-                    var curTop = $(this).position().top;
-                    if(heightDiff > 0) {
-                        curTop *= heightDiff;
-                    }
-                    $(this).css('top',curTop);
+                    $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').find('.gsfloatingframe').each(function() {
+                        
+                        //Calculate left position
+                        var left = $(this).position().left;
+                        var newLeft = left * innerWidthChange;
+                        if((newLeft + $(this).width()) > $(window).width()) {
+                            newLeft = $('.gs_page_width').width() - $(this).width();
+                        }
+                        $(this).css('left',newLeft);
+                        
+                        
+                        //Calculate top postion
+                        var curTop = $(this).position().top;
+                        if(heightDiff > 0) {
+                            curTop *= heightDiff;
+                        }
+                        $(this).css('top',curTop);
+                    });
                 });
             </script>
             <?
@@ -1679,14 +1678,23 @@ class Page {
         }
     }
 
-    public function printEffectTrigger($cell, $depth, $idAddon="") {
+    public function printEffectTrigger($cell, $depth) {
         if (!$this->factory->isEffectsEnabled()) {
             return;
         }
         
         if ($depth == 0) {
-            echo "<div class='spacer s0 getshopScrollMagicTriggerRow' id='".$idAddon."scrollmagic_trigger_$cell->cellId' cellId='$cell->cellId'></div>";
+            echo "<div class='spacer s0 getshopScrollMagicTriggerRow' id='scrollmagic_trigger_$cell->cellId' cellId='$cell->cellId'></div>";
         }
+    }
+
+    public function printEffectTriggerLoaded($cell, $depth) {
+        if (!$this->factory->isEffectsEnabled()) {
+            return;
+        }
+        
+        $cellId = $cell->cellId;
+        echo "<script>getshopScrollMagic.rowLoaded('$cellId');</script>";
     }
 
     public function printEffectSettingsDiv($cell) {
@@ -1695,7 +1703,7 @@ class Page {
             $attrs .= " $key='$value' ";
         }
         
-        echo "<div style='display: none' cellid='".$cell->cellId."' class='gsCellSettings_attrs' $attrs></div>";
+        echo "<div style='display: none' class='gsCellSettings_attrs' $attrs></div>";
     }
 
     /**

@@ -1,6 +1,8 @@
 package com.thundashop.core.pmsmanager;
 
-public class PmsGuests {
+import java.io.Serializable;
+
+public class PmsGuests implements Serializable {
     public String name;
     public String phone;
     public String email;

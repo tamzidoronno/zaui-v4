@@ -7,6 +7,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,7 +19,7 @@ import org.mongodb.morphia.annotations.Transient;
  *
  * @author boggi
  */
-public class PmsBookingRooms {
+public class PmsBookingRooms implements Serializable {
     public String bookingItemTypeId = "";
     public String bookingItemId = "";
     public String pmsBookingRoomId = UUID.randomUUID().toString();

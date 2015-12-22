@@ -29,6 +29,10 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
 
     public function render() {
+        if(isset($_POST['event']) && $_POST['event'] == "reserveBooking") {
+            return;
+        }
+        
         if (!$this->getSelectedName()) {
             echo "You need to specify a booking engine first.";
             return;
@@ -178,12 +182,6 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             return "";
         }
         foreach ($bookings as $booking) {
-            if (!$booking->confirmed) {
-                continue;
-            }
-//            echo $roomId;
-//            print_r($booking);
-//            exit(0);
             foreach ($booking->rooms as $room) {
                 if ($room->bookingItemId == $roomId) {
                     if ($time >= strtotime($room->date->start) &&

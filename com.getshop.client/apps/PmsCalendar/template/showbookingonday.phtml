@@ -23,8 +23,8 @@ $monthToPrint = date("m", strtotime($_GET['day']));
                         <input type='number' gsname='startday' value='<? echo $dayToPrint; ?>' class='small' min='1' max='31'>
                         <input type='number' gsname='startmonth' value='<? echo $monthToPrint; ?>' class='small' min='1' max='12'>
                         <input type='number' gsname='startyear' value='2015' class='small2' min='2015' max='2017'>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type='number' gsname='starthour' value='12' class='small hour' min='00' max='23'>
-                        <input type='number' gsname='startminute' value='00' class='small minute' min='00' max='59'>
+                        <input type='number' gsname='starthour' value='' class='small hour' min='00' max='23'>
+                        <input type='number' gsname='startminute' value='' class='small minute' min='00' max='59'>
                     </div>
                     <br>
                     <? echo $this->__w("Ending at"); ?>
@@ -32,8 +32,8 @@ $monthToPrint = date("m", strtotime($_GET['day']));
                         <input type='number' gsname='endday' value='<? echo $dayToPrint; ?>' class='small' min='1' max='31'>
                         <input type='number' gsname='endmonth' value='<? echo $monthToPrint; ?>' class='small' min='1' max='12'>
                         <input type='number' gsname='endyear' value='2015' class='small2' min='2015' max='2017'>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type='number' gsname='endhour' value='12' class='small hour' min='00' max='23'>
-                        <input type='number' gsname='endminute' value='00' class='small minute' min='00' max='59'>
+                        <input type='number' gsname='endhour' value='' class='small hour' min='00' max='23'>
+                        <input type='number' gsname='endminute' value='' class='small minute' min='00' max='59'>
                     </div>
                 </div>
             </td>

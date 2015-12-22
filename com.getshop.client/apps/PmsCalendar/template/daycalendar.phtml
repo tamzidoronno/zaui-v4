@@ -6,13 +6,7 @@ $filter->startDate = $this->convertToJavaDate($this->getSelectedDay());
 $filter->endDate = $this->convertToJavaDate($this->getSelectedDay()+86400);
 
 $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
-$rooms = $this->getRooms();
-foreach($rooms as $room) {
-    if($room->bookingItemName == $_GET['roomName']) {
-        $selectedRoom = $room;
-        break;
-    }
-}
+$selectedRoom = $this->getRoomFromName($_GET['roomName']);
 ?>
 
 <div class='daycalendar'>
@@ -22,11 +16,13 @@ foreach($rooms as $room) {
     for($i = 0; $i < 11; $i++) {
         $next = $time + ($iteration*60);
         $freeClass = "free";
-        if($this->isBookedAtSlot($time, $bookings, $selectedRoom->id)) {
+        $taken = $this->isBookedAtSlot($time, $bookings, $selectedRoom->id);
+        if($taken) {
             $freeClass = "taken";
         }
         echo "<div class='dayslot $freeClass' start='$time' end='$next'>";
         echo date("H:i", $time);
+        echo " " . $taken;
         echo "</div>";
         $time = $next;
     }

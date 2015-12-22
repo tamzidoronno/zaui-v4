@@ -7,6 +7,7 @@ $roomName = $_GET['roomName'];
 $dates = $this->getDates($year);
 $monthDates = $dates[$month];
 $pageId = $this->getPage()->javapage->id;
+$room = $this->getRoomFromName($roomName);
 
 $filter = new core_pmsmanager_PmsBookingFilter();
 $filter->filterType = "active";
@@ -40,7 +41,7 @@ foreach($monthDates as $week => $days) {
         }
          echo "<span class='day $css'>";
         if($day) {
-            echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth);
+            echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, $room->id);
         }
         if(isset($days[$i])) {
             echo "<span style='z-index:2;position:absolute;left: 50%;'>". $days[$i] ."</span>";

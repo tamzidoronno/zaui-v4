@@ -7,6 +7,7 @@
     text-align: center;
     line-height: 80px;
     margin: 2px;
+    position:relative;
 }
 
 .PmsCalendar .roomentry:hover {
@@ -30,3 +31,4 @@
     cursor:pointer;
     color:#000;
     display:inline-block; border: solid 1px #bbb; padding: 8px; width: 200px; text-align: center; background-color:#94c48d; margin-top: 10px; }
+.PmsCalendar .nobookings { background-color:#bbb; position:absolute; bottom: 0px; left:-1px; border: solid 1px #bbb; width: 100%; padding: 0px; height: 14px; line-height: 14px; }

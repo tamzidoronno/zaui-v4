@@ -436,6 +436,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
+        List<PmsBooking> toRemove = new ArrayList();
+        if(filter.needToBeConfirmed) {
+            for(PmsBooking booking : result) {
+                if(!booking.confirmed) {
+                    toRemove.add(booking);
+                }
+            }
+        }
+        result.removeAll(toRemove);
+        
         List<PmsBooking> finalized = finalizeList(result);
         return finalized;
     }

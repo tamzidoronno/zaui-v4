@@ -119,9 +119,6 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     public function printEventsAtDay($day, $bookingsForMonth, $roomId) {
         $day = strtotime($day);
         foreach ($bookingsForMonth as $booking) {
-            if (!$booking->confirmed) {
-                continue;
-            }
             $this->printEventsAtDayFromRooms($day, $booking->rooms, $roomId);
         }
     }

@@ -13,6 +13,7 @@ $filter = new core_pmsmanager_PmsBookingFilter();
 $filter->filterType = "active";
 $filter->startDate = $this->convertToJavaDate(strtotime("01.".$this->getSelectedMonth().".".$this->getSelectedYear()));
 $filter->endDate = $this->convertToJavaDate(strtotime("31.".$this->getSelectedMonth().".".$this->getSelectedYear()));
+$filter->needToBeConfirmed = true;
 
 $bookingsForMonth = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
 

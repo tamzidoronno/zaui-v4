@@ -4,6 +4,7 @@ $filter = new core_pmsmanager_PmsBookingFilter();
 $filter->filterType = "active";
 $filter->startDate = $this->convertToJavaDate($this->getSelectedDay());
 $filter->endDate = $this->convertToJavaDate($this->getSelectedDay()+86400);
+$filter->needToBeConfirmed = true;
 
 $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
 $selectedRoom = $this->getRoomFromName($_GET['roomName']);

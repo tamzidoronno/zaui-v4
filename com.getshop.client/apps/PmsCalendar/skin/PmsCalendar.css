@@ -17,13 +17,15 @@
 .PmsCalendar .day { border: solid 1px #efefef; width: 13.5%; display:inline-block; height: 80px; float:left; box-sizing: border-box; text-align: center; line-height:  80px; background-color:#efefef; }
 .PmsCalendar .dayheader { height: 20px; line-height: 20px; background-color:#efefef; }
 .PmsCalendar .weekentry { width: 5.5%; }
-.PmsCalendar .dayentry { background-color:#fff; }
+.PmsCalendar .dayentry { background-color:#fff; position:relative; overflow:hidden; padding: 5px; }
 .PmsCalendar .dayentry:hover { background-color:#94c48d; cursor:pointer; color:#fff; }
 .PmsCalendar .small,.PmsCalendar .small2 { width: 40px; padding: 2px; font-size: 20px; border-radius: 3px; border: solid 1px #efefef;text-align: center; }
 .PmsCalendar .small2 { width: 70px; }
 .PmsCalendar .daycalendar { border: solid 1px #bbb; width: 100%;   }
 .PmsCalendar .dayslot { border-top: solid 1px #efefef;font-size: 10px; padding: 2px; }
 .PmsCalendar .dayslot.free:hover { cursor:pointer; background-color:#94c48d; }
+.PmsCalendar .dayslot.taken { background-color:#bbb; }
+.PmsCalendar .bookingentyrincal { background-color:#bbb; display:inline-block; height: 10px; width: 10px; border: solid 1px #bbb; float:left; margin-right: 5px; }
 .PmsCalendar .continue_button { 
     cursor:pointer;
     color:#000;

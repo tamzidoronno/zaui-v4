@@ -39,6 +39,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
 
     public function getSelectedDay() {
+        if(isset($_GET['day'])) {
+            return strtotime($_GET['day'] . " 00:00:00");
+        }
         return time();
     }
     
@@ -97,6 +100,92 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         $booking->rooms[] = $room;
         
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+    }
+
+    /**
+     * 
+     * @param type $day
+     * @param \core_pmsmanager_PmsBooking[] $bookingsForMonth
+     */
+    public function printEventsAtDay($day, $bookingsForMonth) {
+        $day = strtotime($day);
+        foreach($bookingsForMonth as $booking) {
+            $this->printEventsAtDayFromRooms($day,$booking->rooms);
+        }
+    }
+
+    /**
+     * 
+     * @param type $day
+     * @param \core_pmsmanager_PmsBookingRooms $rooms
+     */
+    public function printEventsAtDayFromRooms($day, $rooms) {
+        foreach($rooms as $room) {
+            if($this->isAddon($room)) {
+                continue;
+            }
+            if(($day >= strtotime($room->date->start) && $day <= strtotime($room->date->end))
+                    || (date("m.d.Y", $day) == date("m.d.Y", strtotime($room->date->start)))
+                    || (date("m.d.Y", $day) == date("m.d.Y", strtotime($room->date->end)))
+                    ) {
+                echo "<span class='bookingentyrincal' style='top: 30px;'></span>";
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     */
+    public function isAddon($room) {
+        $types = $this->getTypes();
+        return $types[$room->bookingItemTypeId]->addon > 0;
+    }
+
+    public function getTypes() {
+        if($this->types) {
+            return $this->types;
+        }
+        
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        $types2 = array();
+        foreach($types as $type) {
+            $types2[$type->id] = $type;
+        }
+        $this->types = $types2;
+        return $types2;
+    }
+
+    /**
+     * 
+     * @param type $time
+     * @param \core_pmsmanager_PmsBooking[] $bookings
+     * @param type $room
+     * @return boolean
+     */
+    public function isBookedAtSlot($time, $bookings, $roomId) {
+        foreach($bookings as $booking) {
+            foreach($booking->rooms as $room) {
+                if($room->bookingItemId == $roomId) {
+                    if($time >= strtotime($room->date->start) && $time < strtotime($room->date->end)) {
+                        return true;
+                    }
+                } 
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @return \core_bookingengine_data_BookingItem[]
+     */
+    public function getRooms() {
+        $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+        foreach($rooms as $room) {
+            $rooms[$room->id] = $room;
+        }
+        return $rooms;
     }
 
 }

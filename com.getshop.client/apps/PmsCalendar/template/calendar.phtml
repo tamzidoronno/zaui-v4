@@ -8,6 +8,13 @@ $dates = $this->getDates($year);
 $monthDates = $dates[$month];
 $pageId = $this->getPage()->javapage->id;
 
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->filterType = "active";
+$filter->startDate = $this->convertToJavaDate(strtotime("01.".$this->getSelectedMonth().".".$this->getSelectedYear()));
+$filter->endDate = $this->convertToJavaDate(strtotime("31.".$this->getSelectedMonth().".".$this->getSelectedYear()));
+
+$bookingsForMonth = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+
 echo "<span class='day dayheader weekentry'>" . $this->__w("Week") . "</span>";
 echo "<span class='day dayheader'>" . $this->__w("Mon") . "</span>";
 echo "<span class='day dayheader'>" . $this->__w("Tue") . "</span>";
@@ -32,8 +39,11 @@ foreach($monthDates as $week => $days) {
            echo "<a href='?roomName=".$roomName."&page=$pageId&day=$day'>";
         }
          echo "<span class='day $css'>";
+        if($day) {
+            echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth);
+        }
         if(isset($days[$i])) {
-            echo $days[$i];
+            echo "<span style='z-index:2;position:absolute;left: 50%;'>". $days[$i] ."</span>";
         }
         echo "</span>";
         if($day) {

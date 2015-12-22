@@ -6,55 +6,75 @@
 
 
 getshopScrollMagic = {
-    controllers : {},
+    controller : new ScrollMagic.Controller(),
 
     rowLoaded: function(cellId) {
+        var data = {
+            cellId : cellId
+        }
+        
+        var execFuntion = $.proxy(function() {
+            getshopScrollMagic.rowLoadedInner(data.cellId);
+        }, data);
+
+        $(document).ready(function() {
+            execFuntion();
+        });
+    },
+    
+    rowLoadedInner: function(cellId) {
         var cell = $('.gscell[cellid="'+cellId+'"]');
         var cellSettings = cell.find('.gsCellSettings_attrs');
 
         var trigger = cell.closest('.gsdepth_0.gsucell').find('.getshopScrollMagicTriggerRow');
-        var triggerId = trigger.attr('id');
-
-        var sceneFadeIn = false;
+        
+        if ($('.gseditormode').length > 0) {
+            return;
+        }
         
         if (cellSettings.attr('scrollFadeIn')) {
-            cell.css('opacity', cellSettings.attr('scrollFadeInStartOpacity'));
-
-            cell.css('right', cellSettings.attr('slideLeft')+'px');
-            cell.css('top', (cellSettings.attr('slideTop')*-1)+'px');
-
-
-            var scrollSettings = {
-                opacity: cellSettings.attr('scrollFadeInEndOpacity'),
-                translateX: cellSettings.attr('slideLeft'),
-                translateY: cellSettings.attr('slideTop')
-            }
-
-            sceneFadeIn = new ScrollMagic.Scene({triggerElement: '#'+triggerId})
-                .setVelocity('.gscell[cellid="'+cellId+'"]', scrollSettings,
-                    {
-                        duration: cellSettings.attr('scrollFadeInDuration')
-                    });
+           getshopScrollMagic.addFadeScene(cell, cellSettings, trigger);
         }
 
         if (cellSettings.attr('paralexxRow')) {
-            cell.height(cell.find('.gsinner').height()*2);
-            var controller2 = new ScrollMagic.Controller({globalSceneOptions: {triggerHook: "onEnter", duration: "200%"}});
-            new ScrollMagic.Scene({triggerElement: '#'+triggerId})
-                .setTween('.gscell[cellid="'+cellId+'"] > div', {y: "80%", ease: Linear.easeNone})
-                .addIndicators()
-                .addTo(controller2);
+            getshopScrollMagic.addParalaxxScene(cell, cellSettings, trigger);
+        }
+    },
+    
+    addParalaxxScene: function(cell, cellSettings, trigger) {
+        var inner =  $('.gscell[cellid="'+cell.attr("cellid")+'"] > div.gsinner');
+        var height = cell.outerHeight(true);
+        var doubleHeight = height*2;
+        var duration = height*4;
+        
+        inner.css('height',doubleHeight+"px");
+        inner.css('top',"-"+(height*0.75)+"px");
+
+        cell.css('height',height+"px");
+        cell.css('overflow',"hidden");
+        
+        new ScrollMagic.Scene({triggerElement: '#'+trigger.attr("id"), triggerHook: "onEnter", duration: duration})
+            .setTween('.gscell[cellid="'+cell.attr("cellid")+'"] > div', {y: "100%", ease: Linear.easeNone})
+            .addTo(getshopScrollMagic.controller);
+    },
+    
+    addFadeScene: function(cell, cellSettings, trigger) {
+        cell.css('opacity', cellSettings.attr('scrollFadeInStartOpacity'));
+        cell.css('right', cellSettings.attr('slideLeft')+'px');
+        cell.css('top', (cellSettings.attr('slideTop')*-1)+'px');
+
+        var scrollSettings = {
+            opacity: cellSettings.attr('scrollFadeInEndOpacity'),
+            translateX: cellSettings.attr('slideLeft'),
+            translateY: cellSettings.attr('slideTop')
         }
 
-        if (sceneFadeIn) {
-            var controller = new ScrollMagic.Controller();
-
-            if (sceneFadeIn)
-                sceneFadeIn.addTo(controller);
-
-        }
-
-
+        new ScrollMagic.Scene({triggerElement: '#'+trigger.attr("id")})
+            .setVelocity('.gscell[cellid="'+cell.attr("cellid")+'"]', scrollSettings,
+                {
+                    duration: cellSettings.attr('scrollFadeInDuration')
+                })
+            .addTo(getshopScrollMagic.controller);
     }
 
 }

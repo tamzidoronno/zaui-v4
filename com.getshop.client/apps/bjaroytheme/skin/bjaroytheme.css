@@ -7,12 +7,12 @@
 .Menu .entry { padding: 10px; padding-right: 30px; }
 .Menu { float: right; padding-top: 10px; }
 .gsarea[area="header"] .gsinner.gsdepth_0 { width: 100%; padding-right: 20px;}
-body {
+#gsbody {
     font-weight: 100;
     font-family: 'Quicksand', sans-serif;
     letter-spacing: 2px;
 }
-body {
+#gsbody {
     font-weight: 100 !important;
 }
 

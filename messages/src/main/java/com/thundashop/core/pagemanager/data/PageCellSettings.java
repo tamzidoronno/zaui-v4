@@ -10,9 +10,13 @@ public class PageCellSettings implements Serializable {
     public boolean paralexxRow = false;
     public boolean scrollFadeIn = false;
     public String isFlipping = "";
+    public String parallaxEffectType = "";
     public int scrollFadeInDuration = 300;
     public Double scrollFadeInStartOpacity = 0.5;
     public Double scrollFadeInEndOpacity = 1D;
     public int slideLeft = 0;
     public int slideTop = 0;
+    
+    public int parallaxoffset = 0;
+    public int easey = 0;
 }

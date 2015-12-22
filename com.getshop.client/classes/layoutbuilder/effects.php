@@ -72,11 +72,42 @@ if (!$this->factory->isEffectsEnabled()) {
     </div>
     <br/>
     <br/>
-    <h2>Scroll effect - Parallex (works best on outer row)</h2>
+    <h2>Scroll effect - Parallex (works only on outer rows)</h2>
+
     <div>
         <label><? echo $this->factory->__w("If you enable this, the parallex effect will be enabled. The background will scroll faster then the cell on top"); ?>
             <span class='gscssinput'>
                 <input type='checkbox' gsname='paralexxRow'> 
+            </span>
+        </label>
+    </div>
+    <div style='clear:both;'></div>
+    <br>
+        <div>
+        <label><? echo $this->factory->__w("What kind of parallax effect?"); ?>
+            <span class='gscssinput'>
+                <select gsname='parallaxEffectType'>
+                    <option value='parallax1'>Parallax 1 - Only background moving</option>
+                    <option value='parallax2'>Parallax 2 - The row is rendered as it is in background</option>
+                </select>
+            </span>
+        </label>
+    </div>
+    <div style='clear:both;'></div>
+    <br>
+    <div>
+        <label><? echo $this->factory->__w("Offset"); ?>
+            <span class='gscssinput'>
+                <input type='textfield' gsname='parallaxoffset'> 
+            </span>
+        </label>
+    </div>
+    <div style='clear:both;'></div>
+    <br>
+    <div>    
+        <label><? echo $this->factory->__w("Ease Y (percent)"); ?>
+            <span class='gscssinput'>
+                <input type='textfield' gsname='easey'> 
             </span>
         </label>
     </div>

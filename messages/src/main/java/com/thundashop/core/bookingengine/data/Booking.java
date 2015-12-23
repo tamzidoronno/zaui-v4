@@ -45,4 +45,24 @@ public class Booking extends DataCommon {
         return false;
         
     }
+
+    public boolean interCepts(Date startDate, Date endDate) {
+        if (this.startDate.before(endDate) && this.startDate.after(startDate)) {
+            return true;
+        }
+        
+        if (this.endDate.before(endDate) && this.endDate.after(startDate)) {
+            return true;
+        }
+        
+        if (this.endDate.equals(endDate) && this.startDate.equals(startDate)) {
+            return true;
+        }
+        
+        if (this.startDate.before(startDate) && this.endDate.after(endDate)) {
+            return true;
+        }
+        
+        return false;
+    }
 }

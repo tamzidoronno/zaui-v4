@@ -13,7 +13,6 @@ import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;

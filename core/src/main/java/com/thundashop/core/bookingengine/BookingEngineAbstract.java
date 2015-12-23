@@ -243,16 +243,21 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
 
     private void checkIfCanAddBookings(List<Booking> bookings) {
-        List<Booking> checkedBookings = new ArrayList();
+        List<Booking> checkedBookings = new ArrayList(); 
         
         HashMap<String, BookingTimeLineFlatten> flattenTimeLines = new HashMap();
         
         for (Booking booking : bookings) {
             String bookingItemTypeId = booking.bookingItemTypeId;
-            List<Booking> bookingsToConsider = this.bookings.values().stream()
-                    .filter(o -> booking.id != null && !booking.id.isEmpty() && !o.id.equals(booking.id))
+            
+            List<Booking> bookingsToConsider = this.bookings.values().parallelStream()
                     .filter(o -> o.bookingItemTypeId.equals(bookingItemTypeId))
+                    .filter(o -> o.interCepts(booking.startDate, booking.endDate))
                     .collect(Collectors.toList());
+        
+            if (booking.id == null || !booking.id.isEmpty()) {
+                bookingsToConsider.removeIf(o -> o.id.equals(booking.id));
+            }
             
             bookingsToConsider.addAll(checkedBookings);
             BookingTimeLineFlatten flattenTimeLine = getFlattenTimelinesFromBooking(flattenTimeLines, booking);

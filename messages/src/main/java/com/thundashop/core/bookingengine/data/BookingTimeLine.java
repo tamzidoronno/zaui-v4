@@ -40,6 +40,10 @@ public class BookingTimeLine implements Comparable<BookingTimeLine>, Serializabl
             return true;
         }
         
+        if (booking.startDate.before(start) && booking.endDate.after(end)) {
+            return true;
+        }
+        
         return false;
     }
 

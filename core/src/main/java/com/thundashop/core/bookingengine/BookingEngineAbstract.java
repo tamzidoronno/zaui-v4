@@ -385,8 +385,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
 
     private void validateChange(Booking bookingClone) {
-        List<Booking> oldBookings = bookings.values().stream()
+        List<Booking> oldBookings = bookings.values().parallelStream()
+                .filter(o -> o.bookingItemTypeId.equals(bookingClone.bookingItemTypeId))
                 .filter(o -> !o.id.equals(bookingClone.id))
+                .filter(o -> o.interCepts(bookingClone.startDate, bookingClone.endDate))
                 .collect(Collectors.toList());
         
         oldBookings.add(bookingClone);

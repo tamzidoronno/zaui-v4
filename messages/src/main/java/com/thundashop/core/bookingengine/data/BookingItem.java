@@ -22,7 +22,7 @@ public class BookingItem extends DataCommon {
     /**
      * How many bookings is allowed to be on this bookingitem.
      */
-    public int bookingSize = 0;
+    public int bookingSize = 1;
     
     /**
      * If a booking an event is full the candidates can sign up 
@@ -34,7 +34,7 @@ public class BookingItem extends DataCommon {
      * This bookingitem will be full if this counter is hit.
      * if 0 then the bookingSize variable is the one that is used.
      */
-    public int fullWhenCountHit = 0;
+    public int fullWhenCountHit = 1;
      
     /**
      * A bookingitem has a list of availabilities, 

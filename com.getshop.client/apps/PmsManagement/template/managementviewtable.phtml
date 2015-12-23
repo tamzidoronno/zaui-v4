@@ -34,13 +34,13 @@ foreach($bookings as $booking) {
         echo "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."'></i> ";
         echo "</td>";
         echo "<td>";
-        echo date("d.m.Y", strtotime($room->date->start));
+        echo date("d.m.Y H:i", strtotime($room->date->start));
         echo "</td>";
         echo "<td>";
         if($room->date->end) {
             //Dont show end date if this is a atleast 75 years booking
             if(((strtotime($room->date->end) - strtotime($room->date->start)) /86400) < 20000) {
-                echo date("d.m.Y", strtotime($room->date->end));
+                echo date("d.m.Y H:i", strtotime($room->date->end));
             }
         }
         echo "</td>";

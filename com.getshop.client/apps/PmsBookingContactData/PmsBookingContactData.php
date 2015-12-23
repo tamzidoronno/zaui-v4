@@ -141,5 +141,12 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         }
     }
 
+    public function getNameText() {
+        if($this->getConfigurationSetting("name_text")) {
+            return $this->getConfigurationSetting("name_text");
+        }
+        return $this->__w("Name");
+    }
+
 }
 ?>

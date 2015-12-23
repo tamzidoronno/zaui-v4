@@ -2,23 +2,51 @@
 /* @var $this ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->needToBeConfirmed = true;
+$filter->startDate = $this->convertToJavaDate(strtotime("01.01.2000"));
+$filter->endDate = $this->convertToJavaDate(strtotime("01.01.2200"));
+
+$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+
+
 $pageId = $this->getPage()->javapage->id;
 
-echo "<h1>Select a room you want to book at</h1>";
+$headingText = $this->getConfigurationSetting("headingroomoverview");
+if(!$headingText) {
+    $headingText = "SELECT A ROOM";
+}
+echo "<div class='roombookingpanel'>";
+echo "<h1>".$headingText."</h1>";
 foreach($types as $type) {
     if(!$type->visibleForBooking) {
         continue;
     }
+    
     foreach($items as $item) {
+        $counter = 0;
+        if($bookings) {
+            foreach($bookings as $booking) {
+                foreach($booking->rooms as $room) {
+                    if($room->bookingItemId == $item->id) {
+                        $counter++;
+                    }
+                }
+            }
+        }
+        
         if($item->bookingItemTypeId != $type->id) {
             continue;
         }
         echo "<a href='?roomName=".$item->bookingItemName."&page=$pageId'>";
         echo "<span class='roomentry'>";
         echo $item->bookingItemName;
+        echo "<span class='nobookings'>$counter bookinger</span>";
         echo "</span>";
         echo "</a>";
     }
 }
+echo "</div>";
 ?>
 

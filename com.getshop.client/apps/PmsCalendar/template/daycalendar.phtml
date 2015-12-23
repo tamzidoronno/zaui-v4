@@ -1,11 +1,29 @@
+<?php
+/* @var $this \ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->filterType = "active";
+$filter->startDate = $this->convertToJavaDate($this->getSelectedDay());
+$filter->endDate = $this->convertToJavaDate($this->getSelectedDay()+86400);
+$filter->needToBeConfirmed = true;
+
+$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+$selectedRoom = $this->getRoomFromName($_GET['roomName']);
+?>
+
 <div class='daycalendar'>
     <?php
     $iteration = 60;
     $time = strtotime($_GET['day']. " 07:00");
     for($i = 0; $i < 11; $i++) {
         $next = $time + ($iteration*60);
-        echo "<div class='dayslot free' start='$time' end='$next'>";
+        $freeClass = "free";
+        $taken = $this->isBookedAtSlot($time, $bookings, $selectedRoom->id);
+        if($taken) {
+            $freeClass = "taken";
+        }
+        echo "<div class='dayslot $freeClass' start='$time' end='$next'>";
         echo date("H:i", $time);
+        echo " " . $taken;
         echo "</div>";
         $time = $next;
     }

@@ -6,6 +6,12 @@ foreach($bookingtypes as $tp) {
     $allbookingtypes[$tp->id] = $tp;
 }
 $bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+$bookingitems2 = array();
+foreach($bookingitems as $item) {
+    $bookingitems2[$item->id] = $item;
+}
+$bookingitems = $bookingitems2;
+
 $config = $this->getApi()->getBookingEngine()->getConfig($this->getSelectedName());
 $bookings = $this->getApi()->getBookingEngine()->getAllBookings($this->getSelectedName());
 $products = $this->getApi()->getProductManager()->getAllProducts();
@@ -118,15 +124,21 @@ $products=$products2;
         <tr>
             <th align='left'>Start date</th>
             <th align='left'>end date</th>
+            <th align='left'>Item</th>
             <th align='left'>Group</th>
         </tr>
         <?php
         if($bookings) {
             foreach($bookings as $booking) {
                 echo "<tr>";
-                echo "<td>" . $booking->startDate . "</td>";
-                echo "<td>" . $booking->endDate . "</td><td>";
-                echo $allbookingtypes[$booking->bookingItemTypeId]->name . "</td>";
+                echo "<td>" . date("d.m.Y H:i", strtotime($booking->startDate)) . "</td>";
+                echo "<td>" . date("d.m.Y H:i", strtotime($booking->endDate)) . "</td>";
+                echo "<td>";
+                if(isset($bookingitems[$booking->bookingItemId])) {
+                    echo $bookingitems[$booking->bookingItemId]->bookingItemName;
+                }
+                echo "</td>";
+                echo "<td>" . $allbookingtypes[$booking->bookingItemTypeId]->name . "</td>";
                 echo "</tr>";
             }
         }

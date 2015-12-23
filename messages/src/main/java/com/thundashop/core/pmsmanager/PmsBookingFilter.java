@@ -8,4 +8,5 @@ public class PmsBookingFilter {
     public Date endDate;
     public String filterType;
     public String searchWord;
+    public Boolean needToBeConfirmed = false;
 }

@@ -1,4 +1,4 @@
-package com.thundashop.core.apigenerator;
+ package com.thundashop.core.apigenerator;
 
 import java.io.IOException;
 

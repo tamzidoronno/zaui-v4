@@ -13,6 +13,25 @@ $dateType = $this->getConfigurationSetting("date_type");
         <td width="50%"><input type="text" gsname="booking_engine_name" style='width:100%;' value="<? echo $this->getConfigurationSetting("booking_engine_name"); ?>"></td>
     </tr>
     
+    <tr>
+        <td width="50%"><? echo $this->__w("Heading room information"); ?></td>
+        <td width="50%"><input type="text" gsname="headingroominfo" style='width:100%;' value="<? echo $this->getConfigurationSetting("headingroominfo"); ?>"></td>
+    </tr>
+    
+    <tr>
+        <td width="50%"><? echo $this->__w("Heading billing information"); ?></td>
+        <td width="50%"><input type="text" gsname="headingbillinginfo" style='width:100%;' value="<? echo $this->getConfigurationSetting("headingbillinginfo"); ?>"></td>
+    </tr>
+    
+    <tr>
+        <td width="50%"><? echo $this->__w("Override name label on room"); ?></td>
+        <td width="50%"><input type="text" gsname="name_text" style='width:100%;' value="<? echo $this->getConfigurationSetting("name_text"); ?>"></td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Complete order button text"); ?></td>
+        <td width="50%"><input type="text" gsname="complete_order_button" style='width:100%;' value="<? echo $this->getConfigurationSetting("complete_order_button"); ?>"></td>
+    </tr>
+
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

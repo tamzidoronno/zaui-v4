@@ -1,4 +1,3 @@
-<h1>Select the day you want to book for</h1>
 <?php
 /* @var $this ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
 $month = $this->getSelectedMonth();
@@ -7,7 +6,21 @@ $roomName = $_GET['roomName'];
 $dates = $this->getDates($year);
 $monthDates = $dates[$month];
 $pageId = $this->getPage()->javapage->id;
+$room = $this->getRoomFromName($roomName);
 
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->filterType = "active";
+$filter->startDate = $this->convertToJavaDate(strtotime("01.".$this->getSelectedMonth().".".$this->getSelectedYear()));
+$filter->endDate = $this->convertToJavaDate(strtotime("31.".$this->getSelectedMonth().".".$this->getSelectedYear()));
+$filter->needToBeConfirmed = true;
+
+$bookingsForMonth = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+
+$headingText = "Select the day you want to book for";
+if($this->getConfigurationSetting("headingcalendarview")) {
+    $headingText = $this->getConfigurationSetting("headingcalendarview");
+}
+echo '<h1>'.$headingText.'</h1>';
 echo "<span class='day dayheader weekentry'>" . $this->__w("Week") . "</span>";
 echo "<span class='day dayheader'>" . $this->__w("Mon") . "</span>";
 echo "<span class='day dayheader'>" . $this->__w("Tue") . "</span>";
@@ -32,8 +45,11 @@ foreach($monthDates as $week => $days) {
            echo "<a href='?roomName=".$roomName."&page=$pageId&day=$day'>";
         }
          echo "<span class='day $css'>";
+        if($day) {
+            echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, $room->id);
+        }
         if(isset($days[$i])) {
-            echo $days[$i];
+            echo "<span style='z-index:2;position:absolute;left: 50%;'>". $days[$i] ."</span>";
         }
         echo "</span>";
         if($day) {

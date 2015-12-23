@@ -14,8 +14,11 @@ foreach($bookingitems as $item) {
 }
 
 echo "<br>";
-
-echo "<h3 class='bottomborder'>" . $this->__w("Rooms selected") . "</h3>";
+$addonsText = $this->getConfigurationSetting("heading_summary");
+if(!$addonsText) {
+    $addonsText = $this->__w("Rooms selected");
+}
+echo "<h3 class='bottomborder'>" . $addonsText . "</h3>";
 foreach($booking->rooms as $room) {
     /* @var $room core_pmsmanager_PmsBookingRooms */
     $price = $room->price;
@@ -55,11 +58,6 @@ foreach($booking->addons as $addon) {
     }
 }
 
-if($printAddons) {
-    echo "<h3>" . $this->__w("Additional selections") . "</h3>";
-    print_r($booking->addons);
-}
-
 echo "<br>";
 foreach($booking->rooms as $room) {
     $prices[$room->taxes] = $room->price;
@@ -87,7 +85,11 @@ if($total > 0) {
 ?>
 
 <?
-$addons = "<h3 class='bottomborder'>Addons</h3>";
+$addonsText = $this->getConfigurationSetting("heading_addons");
+if(!$addonsText) {
+    $addonsText = $this->__w("Addons");
+}
+$addons = "<h3 class='bottomborder'>$addonsText</h3>";
 $addonsFound = false;
 foreach($items as $item) {
     if(key_exists($item->id, $addonsAdded)) {

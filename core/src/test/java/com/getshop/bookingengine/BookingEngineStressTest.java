@@ -8,6 +8,7 @@ package com.getshop.bookingengine;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingEngineAbstract;
 import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -38,6 +39,9 @@ public class BookingEngineStressTest extends TestCommon {
     BookingEngine bookingEngine;
     private BookingItemType type1;
     
+    private BookingItem bookingItem1;
+    private BookingItem bookingItem2;
+    
     @Before
     public void setup() {
         abstractEngine.setCredentials(new Credentials(BookingEngine.class));
@@ -45,29 +49,38 @@ public class BookingEngineStressTest extends TestCommon {
         bookingEngine.setConfirmationRequired(true);
         
         type1 = bookingEngine.createABookingItemType("type1");
-        createBookintItem(type1);
+        bookingItem1 = createBookintItem(type1);
+        bookingItem2 = createBookintItem(type1);
     }   
     
     
     /* Test that the booking engine is fast enough 
      *
-     * Adding 5000 bookings to the engine.
+     * Adding 5000 bookings one by one to the engine.
      *
      */
     @Test(timeout = 5000)
     public void test() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
+        
+        BookingGroup bookingGroup = null;
         for (int i=0;i<5000;i++) {
             
             Date start = cal.getTime();
             cal.add(Calendar.DAY_OF_YEAR, 1);
             Date endDate = cal.getTime();
-            Booking booking = getBooking(start, endDate, type1, null);
+            Booking booking = getBooking(start, endDate, type1, bookingItem1);
             ArrayList<Booking> bookings = new ArrayList();
             bookings.add(booking);
-            bookingEngine.addBookings(bookings);
+            bookingGroup = bookingEngine.addBookings(bookings);
         }
+        
+        // Changing booking id.
+        long time = System.currentTimeMillis();
+        bookingEngine.changeBookingItemOnBooking(bookingGroup.bookingIds.get(0), bookingItem2.id);
+        System.out.println("Done: " + (System.currentTimeMillis() - time));
+        
     }
     
     private BookingItem createBookintItem(BookingItemType type) {

@@ -12,6 +12,7 @@ import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
 import com.thundashop.core.pagemanager.data.PageCellSettings;
+import com.thundashop.core.pagemanager.data.SavedCommonPageData;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
@@ -37,6 +38,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     HashMap<String, Page> pages = new HashMap();
     CommonPageData commonPageData = new CommonPageData();
+    SavedCommonPageData savedCommonPageData = new SavedCommonPageData();
 
     @Autowired
     private StoreApplicationInstancePool instancePool;
@@ -86,6 +88,9 @@ public class PageManager extends ManagerBase implements IPageManager {
             }
             if (obj instanceof CommonPageData) {
                 commonPageData = (CommonPageData) obj;
+            }
+            if (obj instanceof SavedCommonPageData) {
+                savedCommonPageData = (SavedCommonPageData) obj;
             }
         }
         createDefaultPages();
@@ -339,7 +344,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
         
         page.layout.checkAndFixDoubles();
-        
+
+        page.backupCurrentLayout();
+        savedCommonPageData.saveData(commonPageData);
+
         savePage(page);
         return cell;
     }
@@ -348,6 +356,10 @@ public class PageManager extends ManagerBase implements IPageManager {
     public Page dropCell(String pageId, String cellId) throws ErrorException {
         Page page = getPage(pageId);
         page.layout.deleteCell(cellId);
+        
+        page.backupCurrentLayout();
+        savedCommonPageData.saveData(commonPageData);
+        
         savePage(page);
         return page;
     }
@@ -367,6 +379,10 @@ public class PageManager extends ManagerBase implements IPageManager {
     public void setStylesOnCell(String pageId, String cellId, String styles, String innerStyles, Double width) {
         Page page = getPage(pageId);
         page.layout.updateStyle(cellId, styles, width, innerStyles);
+        
+        page.backupCurrentLayout();
+        savedCommonPageData.saveData(commonPageData);
+        
         savePage(page);
         saveCommonAreas();
     }
@@ -635,6 +651,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         PageCell cellToChange = page.getCell(cell.cellId);
         cellToChange.overWrite(cell);
+        
+        page.backupCurrentLayout();
+        savedCommonPageData.saveData(commonPageData);
+
         saveObject(page);
     }
 
@@ -644,6 +664,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         PageCell cell = page.getCell(cellId);
         cell.settings = settings;
         checkIfNeedToFlip(page, cellId, settings);
+        
+        page.backupCurrentLayout();
+        savedCommonPageData.saveData(commonPageData);
+        
         saveObject(page);
     }
 
@@ -784,6 +808,16 @@ public class PageManager extends ManagerBase implements IPageManager {
         } else {
             cell.appId = cell.cells.get(0).cells.get(0).appId;
             cell.cells.clear();
+        }
+    }
+
+    @Override
+    public void restoreLayout(String pageId, Long fromTime) throws ErrorException {
+        Page page = getPage(pageId);
+        page.restoreLayout(fromTime);
+        CommonPageData newArea = savedCommonPageData.getClosestLayout(fromTime);
+        if(newArea != null) {
+            commonPageData = newArea;
         }
     }
 

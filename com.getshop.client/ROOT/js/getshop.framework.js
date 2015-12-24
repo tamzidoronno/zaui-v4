@@ -12,6 +12,7 @@ thundashop.framework = {
     flipped: {},
     cellRotatingWait: {},
     advancedMode: false,
+    historyboxshown : false,
     cssEditorCount: 0,
     firstCellIdToMove : null,
     bindEvents: function () {
@@ -88,6 +89,8 @@ thundashop.framework = {
         $(document).on('click', '.gsdoneresizing', this.deleteResizing);
         $(document).on('click', '.store_mobile_view_button', this.displayMobileView);
         $(document).on('click', '.store_design_button', this.loadGlobalCssEditor);
+        $(document).on('click', '.gschangelayoutfromtime', this.gschangelayoutfromtime);
+        $(document).on('click', '.gslayouthistorybtn', this.gslayouthistory);
         $(document).on('click', '.gsmobileeditor', this.hideMobileView);
         $(document).on('click', '.gsmobilemenu .gsslideleft', this.slideMobileMenu);
         $(document).on('click', '.gsmobilemenu .gsslideright', this.slideMobileMenu);
@@ -258,6 +261,14 @@ thundashop.framework = {
             $(this).addClass('gs_advanced_mode_activated');
             thundashop.framework.advancedMode = true;
         }
+    },
+    gslayouthistory : function() {
+        $('.gslayouthistory').toggle();
+        thundashop.framework.historyboxshown = $('.gslayouthistory').is(':visible');
+    },
+    gschangelayoutfromtime : function() {
+        var event = thundashop.Ajax.createEvent('','changeLayoutToTime', $(this), { "time" : $(this).attr('time') });
+        thundashop.Ajax.post(event);
     },
     loadGlobalCssEditor: function () {
         var pageId = $('#gspageid').val();

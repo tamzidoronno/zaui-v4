@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,6 +59,9 @@ public class PageLayout implements Serializable {
 
     public void removeCellFromList(PageCell cell) {
         for (String area : areas.keySet()) {
+            if(areas.get(area) == null) {
+                continue;
+            }
             areas.get(area).remove(cell);
         }
     }
@@ -666,13 +670,6 @@ public class PageLayout implements Serializable {
                 }
                 checkAndFixDoublesOnCells(cell.cells);
             }
-        }
-    }
-
-    void finalizeLayout() {
-        ArrayList<PageCell> allCells = getCellsFlatList();
-        for(PageCell cell : allCells) {
-            cell.finalizeCell();
         }
     }
 

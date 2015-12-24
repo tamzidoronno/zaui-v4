@@ -46,6 +46,10 @@ class Page {
         
         $loggedIn = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? "true" : "false";
         
+        if($this->factory->isEditorMode()) {
+            $this->includeLayoutHistory();
+        }
+        
         echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
@@ -1729,6 +1733,21 @@ class Page {
             </div> 
           </div>
        <?php
+    }
+
+    public function includeLayoutHistory() {
+        echo "<div class='gslayouthistory'>";
+        echo "<div style='text-align:center;'>Layout history</div>";
+        echo "<hr>";
+        foreach($this->javapage->layoutBackups as $key => $value) {
+            echo "<div class='gschangelayoutfromtime' time='$key'>";
+            echo "select - " . date("d.m.y H:i:s", ($key/1000));
+            echo "</div>";
+        }
+        echo "</div>";
+        echo "<script>";
+        echo "if(thundashop.framework.historyboxshown) { thundashop.framework.gslayouthistory(); }";
+        echo "</script>";
     }
 
 }

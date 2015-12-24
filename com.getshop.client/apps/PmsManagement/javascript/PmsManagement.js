@@ -46,7 +46,7 @@ app.PmsManagement = {
         }
         
         var event = thundashop.Ajax.createEvent('','showBookingInformation',$(this), data);
-        thundashop.common.showInformationBox(event, 'Booking information');
+        thundashop.common.showInformationBoxNew(event, 'Booking information');
     },
     setFilter : function() {
         var app = $(this).closest('.app');
@@ -68,7 +68,7 @@ app.PmsManagement = {
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
-        thundashop.common.showInformationBox(event,'Pms form settings');
+        thundashop.common.showInformationBoxNew(event,'Pms form settings');
     },
     loadSettings : function(element, application) {
          var config = {

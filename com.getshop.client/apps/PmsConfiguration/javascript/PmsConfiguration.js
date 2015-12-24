@@ -17,7 +17,7 @@ app.PmsConfiguration = {
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
-        thundashop.common.showInformationBox(event,'Pms form settings');
+        thundashop.common.showInformationBoxNew(event,'Pms form settings');
     },
     loadSettings : function(element, application) {
          var config = {

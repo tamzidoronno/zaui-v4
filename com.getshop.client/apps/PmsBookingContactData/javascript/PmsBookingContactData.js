@@ -50,7 +50,7 @@ app.PmsBookingContactData = {
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
-        thundashop.common.showInformationBox(event, 'Settings');
+        thundashop.common.showInformationBoxNew(event, 'Settings');
     },
     loadSettings: function (element, application) {
         var config = {

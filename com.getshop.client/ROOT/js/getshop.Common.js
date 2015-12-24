@@ -488,6 +488,12 @@ thundashop.common.createInformationBox = function(appid, title, open) {
 
 }
 
+thundashop.common.showInformationBoxNew = function(event, title, avoidScroll) {
+    var box = thundashop.common.showInformationBox(event, title, avoidScroll);
+    box.closest('#informationbox-holder').addClass('gsnewinfobox');
+    return box;
+}
+
 thundashop.common.showInformationBox = function(event, title, avoidScroll) {
     var alreadyvisible = false;
     var timer = 300;
@@ -531,6 +537,7 @@ thundashop.common.showInformationBox = function(event, title, avoidScroll) {
     if (!avoidScroll) {
         $('.informationbox-outer').scrollTop(0);
     }
+    infoBox.closest('#informationbox-holder').removeClass('gsnewinfobox');
 
     return infoBox;
 }

@@ -45,7 +45,7 @@ app.ImageDisplayer = {
     showEditImage: function(application) {
         var app = $(application).hasClass('app') ? application : this;
         var event = thundashop.Ajax.createEvent("", "showImageEditor", app);
-        thundashop.common.showInformationBox(event, __f('Image Editor'));
+        thundashop.common.showInformationBoxNew(event, __f('Image Editor'));
     },
             
     showImageDisplayer : function() {
@@ -57,7 +57,7 @@ app.ImageDisplayer = {
         if($(document).width() < 1000) {
             return;
         }
-        thundashop.common.showInformationBox();
+        thundashop.common.showInformationBoxNew();
         var src = $(this).attr('src');
         $('#informationbox').html('<div style="background-color:#FFF;padding-top:10px;"><center><img src="'+src+'" style="max-width:90%"></div>');
     },

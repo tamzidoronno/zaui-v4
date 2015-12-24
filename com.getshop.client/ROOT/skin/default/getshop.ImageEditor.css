@@ -73,8 +73,8 @@
 
 .gs_image_editor_menu .entry {
     position: relative;
-    border: solid 1px #444;
-    background: linear-gradient(to bottom, #3f3f3f, #2f2f2f); /* Standard syntax */
+    border: solid 1px #bbb;
+    background: #146da6;
     font-size: 11px;
     font-weight: bold;
     color: #FFF;
@@ -97,9 +97,6 @@
     user-select: none;
 }
 
-.gs_image_editor_menu .entry:active {
-    background: none;
-}
 
 .gs_image_editor_menu .entry:hover {
     border: solid 1px #FFF;
@@ -118,7 +115,7 @@
     display: inline-block;
     box-sizing: border-box;
     vertical-align: top;
-    background-color: rgba(255,255,255, 0.3);
+    background-color: #146da6;
     padding: 20px;
 }
 
@@ -261,7 +258,7 @@
 }
 
 .gs_bigstock .searchContainer {
-    background-color: rgba(0,0,0,0.5);
+    background-color: #146da6;
     position: absolute;
     left: 20px;
     right: 20px;
@@ -321,7 +318,7 @@
     width: 150px;
     padding: 10px;
     border: solid 1px;
-    color: #FFF;
+    color: #000;
     font-size: 14px;
     vertical-align: top;
 }
@@ -399,7 +396,6 @@
 .gs_bigstock .paging .paginginner {
     text-align: center;
     line-height: 26px;
-    color: #FFF;
 }
 .gs_bigstock .paging {
     position: absolute;
@@ -419,7 +415,7 @@
 .gs_bigstock .backpaging {
     position: absolute;
     font-size: 13px;
-    color: #FFF;
+    color: #000;
     border: solid 1px #666;
     padding: 5px;
     width: 20px;

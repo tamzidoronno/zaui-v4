@@ -135,9 +135,6 @@ public class PageCell implements Serializable {
         retCells.add(this);
 
         for (PageCell cell : cells) {
-            if(cell.cellId.startsWith("e4861")) {
-                System.out.println("Hit");
-            }
             retCells.addAll(cell.getCellsFlatList());
         }
         

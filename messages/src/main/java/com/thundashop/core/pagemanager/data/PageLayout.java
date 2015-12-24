@@ -427,6 +427,10 @@ public class PageLayout implements Serializable {
             PageCell front = initNewCell(PageCell.CellMode.row);
             PageCell back = initNewCell(PageCell.CellMode.row);
             
+            front.appId = cell.appId;
+            front.cells = cell.cells;
+            cell.cells = new ArrayList();
+            
             PageCell flipBox = initNewCell(PageCell.CellMode.flip);
             flipBox.cells.add(front);
             flipBox.cells.add(back);
@@ -636,7 +640,9 @@ public class PageLayout implements Serializable {
      */
     public void checkAndFixDoubles() {
         for(ArrayList<PageCell> allCells : areas.values()) {
-            checkAndFixDoublesOnCells(allCells);
+            if(allCells != null) {
+                checkAndFixDoublesOnCells(allCells);
+            }
         }
     }
 

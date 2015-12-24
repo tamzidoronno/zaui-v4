@@ -632,6 +632,7 @@ public class PageManager extends ManagerBase implements IPageManager {
             }
         }
         cell.cells.remove(0);
+        backupPage(page);
     }
 
     @Override
@@ -823,6 +824,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         if(newArea != null) {
             commonPageData = newArea;
         }
+        savePage(page);
     }
 
     private String getCellAfter(String cellId, String pageId, String area) {
@@ -843,7 +845,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     private void backupPage(Page page) {
         savedCommonPageData.backupCurrentLayout(page.id, page.layout);
         savedCommonPageData.saveData(commonPageData);
-        saveObject(commonPageData);
+        saveObject(savedCommonPageData);
     }
 
     

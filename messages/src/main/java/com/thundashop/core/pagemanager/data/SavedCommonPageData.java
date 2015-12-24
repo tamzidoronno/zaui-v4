@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,8 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SavedCommonPageData extends DataCommon {
-    public LinkedHashMap<Long, CommonPageData> datas = new LinkedHashMap();
-    private HashMap<String, LinkedHashMap<Long, PageLayout>> layoutBackups = new LinkedHashMap();
+    public HashMap<Long, CommonPageData> datas = new LinkedHashMap();
+    private HashMap<String, HashMap<Long, PageLayout>> layoutBackups = new HashMap();
 
     public void saveData(CommonPageData data) {
         int i = 0;
@@ -34,7 +35,7 @@ public class SavedCommonPageData extends DataCommon {
     }
 
     public void backupCurrentLayout(String pageId, PageLayout layout) {
-        LinkedHashMap<Long, PageLayout> backups = layoutBackups.get(pageId);
+        HashMap<Long, PageLayout> backups = layoutBackups.get(pageId);
         if(backups == null) {
             backups = new LinkedHashMap();
         }
@@ -84,12 +85,15 @@ public class SavedCommonPageData extends DataCommon {
         return copyLayout(layout);
     }
 
-    public Collection<? extends Long> getSavedLayouts(String id) {
+    public LinkedList<Long> getSavedLayouts(String id) {
         LinkedList<Long> result = new LinkedList();
-        LinkedHashMap<Long, PageLayout> backups = layoutBackups.get(id);
+        HashMap<Long, PageLayout> backups = layoutBackups.get(id);
         if(backups != null) {
             result.addAll(backups.keySet());
         }
+        
+        Collections.sort(result);
+        Collections.reverse(result);      
         
         return result;
     }

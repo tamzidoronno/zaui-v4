@@ -1739,7 +1739,7 @@ class Page {
         echo "<div class='gslayouthistory'>";
         echo "<div style='text-align:center;'>Layout history</div>";
         echo "<hr>";
-        foreach($this->javapage->layoutBackups as $key => $value) {
+        foreach($this->javapage->layoutBackups as $key) {
             echo "<div class='gschangelayoutfromtime' time='$key'>";
             echo "select - " . date("d.m.y H:i:s", ($key/1000));
             echo "</div>";

@@ -30,7 +30,7 @@ public class Page extends DataCommon implements Cloneable {
     public String type;
     public int userLevel = 0;
     public String description = "";
-    private LinkedHashMap<Long, PageLayout> layoutBackups = new LinkedHashMap();
+    public LinkedList<Long> layoutBackups = new LinkedList();
     public PageLayout layout = new PageLayout();
     @Translation
     public String title;
@@ -165,50 +165,6 @@ public class Page extends DataCommon implements Cloneable {
 
     public PageCell getParentCell(String cellId) {
         return layout.getParent(cellId);
-    }
-
-    public void backupCurrentLayout() {
-        Gson gson = new Gson();
-        String oldLayout = gson.toJson(layout);
-        
-        int i = 0;
-        List<Long> toRemove = new ArrayList();
-        for(Long date : layoutBackups.keySet()) {
-            if(i > 200) {
-                toRemove.add(date);
-            }
-            i++;
-        }
-        
-        for(Long date : toRemove) {
-            layoutBackups.remove(date);
-        }
-        
-        PageLayout layout = new PageLayout();
-        layout = gson.fromJson(oldLayout, layout.getClass());
-        
-        LinkedHashMap<Long, PageLayout> newMap = new LinkedHashMap();
-        
-        newMap.put(new Date().getTime(), layout);
-        newMap.putAll(layoutBackups);
-        layoutBackups = newMap;
-        
-    }
-
-    public void restoreLayout(Long fromTime) {
-        layout = layoutBackups.get(fromTime);
-    }
-
-    public Page clonePage() {
-        Gson gson = new Gson();
-        String res = gson.toJson(this);
-        return gson.fromJson(res, this.getClass());
-    }
-
-    public void readyForWeb() {
-        for(Long key : layoutBackups.keySet()) {
-            layoutBackups.put(key, new PageLayout());
-        }
     }
 
     public static class DefaultPages {

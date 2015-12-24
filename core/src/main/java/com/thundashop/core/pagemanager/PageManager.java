@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -135,8 +136,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
        
         page = finalizePage(page);
-        Page pagetoReturn = page.clonePage();
-        pagetoReturn.readyForWeb();
         return page;
     }
 
@@ -175,6 +174,9 @@ public class PageManager extends ManagerBase implements IPageManager {
                 .forEach(o -> updateCreateApplications(o, page));
             page.finalizeSlavePage(getPage(page.masterPageId));
         }
+        
+        page.layoutBackups = new LinkedList();
+        page.layoutBackups.addAll(savedCommonPageData.getSavedLayouts(page.id));
         
         return page;
     }
@@ -347,8 +349,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         
         page.layout.checkAndFixDoubles();
 
-        page.backupCurrentLayout();
-        savedCommonPageData.saveData(commonPageData);
+        backupPage(page);
 
         savePage(page);
         return cell;
@@ -359,8 +360,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         page.layout.deleteCell(cellId);
         
-        page.backupCurrentLayout();
-        savedCommonPageData.saveData(commonPageData);
+        backupPage(page);
         
         savePage(page);
         return page;
@@ -382,8 +382,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         page.layout.updateStyle(cellId, styles, width, innerStyles);
         
-        page.backupCurrentLayout();
-        savedCommonPageData.saveData(commonPageData);
+        backupPage(page);
         
         savePage(page);
         saveCommonAreas();
@@ -654,8 +653,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         PageCell cellToChange = page.getCell(cell.cellId);
         cellToChange.overWrite(cell);
         
-        page.backupCurrentLayout();
-        savedCommonPageData.saveData(commonPageData);
+        backupPage(page);
 
         saveObject(page);
     }
@@ -667,8 +665,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         cell.settings = settings;
         checkIfNeedToFlip(page, cellId, settings);
         
-        page.backupCurrentLayout();
-        savedCommonPageData.saveData(commonPageData);
+        backupPage(page);
         
         saveObject(page);
     }
@@ -773,8 +770,13 @@ public class PageManager extends ManagerBase implements IPageManager {
             beforeCell = cellId;
         }
         if(edge.equals("right")) {
-            inCell = cellId;
-            beforeCell = "";
+            if(parent == null) {
+                inCell = "";
+                beforeCell = getCellAfter(cellId, pageId, area);
+            } else {
+                inCell = cellId;
+                beforeCell = "";
+            }
         }
         if(edge.equals("bottom")) {
              if(parent == null) {
@@ -816,11 +818,32 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public void restoreLayout(String pageId, Long fromTime) throws ErrorException {
         Page page = getPage(pageId);
-        page.restoreLayout(fromTime);
+        page.layout = savedCommonPageData.getSavedLayout(pageId, fromTime);
         CommonPageData newArea = savedCommonPageData.getClosestLayout(fromTime);
         if(newArea != null) {
             commonPageData = newArea;
         }
+    }
+
+    private String getCellAfter(String cellId, String pageId, String area) {
+        Page page = getPage(pageId);
+        HashMap<String, ArrayList<PageCell>> areas = page.layout.getAreas();
+        boolean found = false;
+        for(PageCell cell : areas.get(area)) {
+            if(found) {
+                return cell.cellId;
+            }
+            if(cell.cellId.equals(cellId)) {
+                found = true;
+            }
+        }
+        return null;
+    }
+
+    private void backupPage(Page page) {
+        savedCommonPageData.backupCurrentLayout(page.id, page.layout);
+        savedCommonPageData.saveData(commonPageData);
+        saveObject(commonPageData);
     }
 
     

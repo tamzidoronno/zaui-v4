@@ -135,6 +135,8 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
        
         page = finalizePage(page);
+        Page pagetoReturn = page.clonePage();
+        pagetoReturn.readyForWeb();
         return page;
     }
 

@@ -199,6 +199,18 @@ public class Page extends DataCommon implements Cloneable {
         layout = layoutBackups.get(fromTime);
     }
 
+    public Page clonePage() {
+        Gson gson = new Gson();
+        String res = gson.toJson(this);
+        return gson.fromJson(res, this.getClass());
+    }
+
+    public void readyForWeb() {
+        for(Long key : layoutBackups.keySet()) {
+            layoutBackups.put(key, new PageLayout());
+        }
+    }
+
     public static class DefaultPages {
 
         public static String OrderOverviewPageId = "orderoverview";

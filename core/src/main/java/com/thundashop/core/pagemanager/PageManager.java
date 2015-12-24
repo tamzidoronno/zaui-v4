@@ -643,7 +643,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         PageCell cell = page.getCell(cellId);
         cell.settings = settings;
-        cell.updateCellForSavingCell();
+        checkIfNeedToFlip(page, cellId, settings);
         saveObject(page);
     }
 
@@ -772,6 +772,17 @@ public class PageManager extends ManagerBase implements IPageManager {
         if (page != null) {
             page.leftSideBar = !page.leftSideBar;
             saveObject(page);
+        }
+    }
+
+    private void checkIfNeedToFlip(Page page, String cellId, PageCellSettings settings) {
+        PageCell cell = page.getCell(cellId);
+        cell.settings = settings;
+        
+        if(settings.isFlipping != null && !settings.isFlipping.isEmpty()) {
+            setCellMode(page.id, cellId, PageCell.CellMode.flip);
+        } else {
+            cell.cells.clear();
         }
     }
 

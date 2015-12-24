@@ -1178,7 +1178,7 @@ var resizeLeftBar = function() {
 var initializeFlipping = function() {
     $(".gsflipcard").each(function() {
         var card = $(this);
-        var app = card.find('.gsucell');
+        var app = card.find('.front .gsucell');
         var appback = card.find('.back .gsucell');
         
         var height = app.outerHeight(true);
@@ -1228,7 +1228,11 @@ var initializeFlipping = function() {
         if(appback.outerHeight(true) > height) {
             height = appback.outerHeight(true);
         }
+        
         card.css('height',height);
+        card.find('.gsflipfront').css('height',height);
+        card.find('.gsflipback').css('height',height);
+        
         
         if(fliptype === "hover") {
             card.on('mouseenter', function() {

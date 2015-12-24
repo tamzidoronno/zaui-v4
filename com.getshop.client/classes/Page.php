@@ -1158,7 +1158,7 @@ class Page {
             $cellsToPrint = $this->getCellsToPrint($cell->cells, $cell->mode);
             foreach ($cellsToPrint as $innercell) {
                 /* @var $cellsToPrint core_pagemanager_data_PageCell */
-                if($innercell->settings->isFlipping && $innercell->settings->isFlipping != "") {
+                if($innercell->mode == "FLIP") {
                     $this->printFlipBoxes($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
                 } else {
                     $this->printCell($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
@@ -1719,13 +1719,12 @@ class Page {
         <div class='gsflipcard' flipcardid="<? echo $innercell->cellId; ?>" fliptype='<? echo $innercell->settings->isFlipping; ?>'> 
           <div class="front gsflipfront"> 
             <?
-                $this->printCell($innercell, $counter, $depthprint, $size, $edit, $cell);
+                $this->printCell($innercell->cells[0], $counter, $depthprint, $size, $edit, $cell);
             ?>
             </div> 
             <div class="back gsflipback">
             <?
-                $innercell->back->settings->isFlipping = $innercell->settings->isFlipping;
-                $this->printCell($innercell->back, $counter, $depthprint, $size, $edit, $cell);
+                $this->printCell($innercell->cells[1], $counter, $depthprint, $size, $edit, $cell);
             ?>
             </div> 
           </div>

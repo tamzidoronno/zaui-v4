@@ -65,8 +65,6 @@ public class Page extends DataCommon implements Cloneable {
             layout.clear();
         }
         layout.finalizeLayout();
-        layout.setNewList(pagedata.leftSideBar, "left_side_bar", true);
-        layout.clearOnFinalizePage();
     }
 
     public PageCell getCell(String pageCellId) {
@@ -138,8 +136,7 @@ public class Page extends DataCommon implements Cloneable {
         if (isASlavePage()) {
             overrideApps.put(cellId, instanceId);
         } else {
-            PageCell cell = getCell(cellId);
-            cell.appId = instanceId;
+            getCell(cellId).appId = instanceId;
         }
     }
 

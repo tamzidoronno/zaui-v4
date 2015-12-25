@@ -29,8 +29,8 @@ public class BookingTimeLineFlattenTest {
     
     @Before
     public void testName() {
-        System.out.println(" ");
-        System.out.println(name.getMethodName());
+//        System.out.println(" ");
+//        System.out.println(name.getMethodName());
     }
     
     /**
@@ -48,6 +48,65 @@ public class BookingTimeLineFlattenTest {
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
         Assert.assertEquals(3, timeLines.size());
+    }
+    
+    /**
+     * Splitting
+     * |-------1--------|
+     *                  |-----2-------|
+     *                                          |-------3-------|
+     *                     |--------------4---------------|
+     */
+    @Test
+    public void allInRow_1() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 08:00")); // 1
+        flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-06 08:00")); // 2
+        flattenTimeline.add(getBooking("2015-01-08 08:00", "2015-01-11 08:00")); // 3
+        flattenTimeline.add(getBooking("2015-01-05 16:00", "2015-01-10 08:00")); // 4
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        printTimeLines(timeLines);
+        Assert.assertEquals(6, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 1);
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-05 08:00"), getDate("2015-01-05 16:00"), 1);
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-05 16:00"), getDate("2015-01-06 08:00"), 2);
+        
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-06 08:00"), getDate("2015-01-08 08:00"), 1);
+        assertDateAndCount(timeLines.get(4), getDate("2015-01-08 08:00"), getDate("2015-01-10 08:00"), 2);
+        assertDateAndCount(timeLines.get(5), getDate("2015-01-10 08:00"), getDate("2015-01-11 08:00"), 1);
+    }
+    
+    /**
+     * Splitting
+     *                     |--------------4---------------|
+     * |-------1--------|
+     *                  |-----2-------|
+     *                                          |-------3-------|
+     *                     |--------------4---------------|
+     */
+    @Test
+    public void allInRow_2() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-05 16:00", "2015-01-10 08:00")); // 4
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 08:00")); // 1
+        flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-06 08:00")); // 2
+        flattenTimeline.add(getBooking("2015-01-08 08:00", "2015-01-11 08:00")); // 3
+        flattenTimeline.add(getBooking("2015-01-05 16:00", "2015-01-10 08:00")); // 4
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        printTimeLines(timeLines);
+        Assert.assertEquals(6, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 1);
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-05 08:00"), getDate("2015-01-05 16:00"), 1);
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-05 16:00"), getDate("2015-01-06 08:00"), 3);
+        
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-06 08:00"), getDate("2015-01-08 08:00"), 2);
+        assertDateAndCount(timeLines.get(4), getDate("2015-01-08 08:00"), getDate("2015-01-10 08:00"), 3);
+        assertDateAndCount(timeLines.get(5), getDate("2015-01-10 08:00"), getDate("2015-01-11 08:00"), 1);
     }
     
     
@@ -102,6 +161,36 @@ public class BookingTimeLineFlattenTest {
         assertDateAndCount(timeLines.get(3), getDate("2015-01-06 08:00"), getDate("2015-01-08 08:00"), 1);
         assertDateAndCount(timeLines.get(4), getDate("2015-01-08 08:00"), getDate("2015-01-10 08:00"), 2);
         assertDateAndCount(timeLines.get(5), getDate("2015-01-10 08:00"), getDate("2115-01-05 08:00"), 1);
+    }
+    
+    /**
+     * Splitting
+     * |---------------------------0----------------------------------------------|
+     *    |--------1-------|
+     *                     |-------2------|
+     *                                          |-------3------|
+     * |---------------------------0----------------------------------------------|
+     */
+    @Test
+    public void allInRowWithALongDate_inEnd_2() {
+        
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-03 08:00", "2115-01-05 08:00")); // 0
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 08:00")); // 1
+        flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-06 08:00")); // 2
+        flattenTimeline.add(getBooking("2015-01-08 08:00", "2015-01-10 08:00")); // 3
+        flattenTimeline.add(getBooking("2015-01-03 08:00", "2115-01-05 08:00")); // 0
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        Assert.assertEquals(6, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 2);
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 3);
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-05 08:00"), getDate("2015-01-06 08:00"), 3);
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-06 08:00"), getDate("2015-01-08 08:00"), 2);
+        assertDateAndCount(timeLines.get(4), getDate("2015-01-08 08:00"), getDate("2015-01-10 08:00"), 3);
+        assertDateAndCount(timeLines.get(5), getDate("2015-01-10 08:00"), getDate("2115-01-05 08:00"), 2);
+        
     }
     
     /**
@@ -286,7 +375,6 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-09 08:00")); // 3
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(5, timeLines.size());
         
         
@@ -315,7 +403,6 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-09 08:00", "2015-01-12 08:00")); // 4
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(6, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1);
@@ -345,12 +432,99 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-09 08:00", "2015-01-12 08:00")); // 4
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(6, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1);
         assertDateAndCount(timeLines.get(1), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 2);
         assertDateAndCount(timeLines.get(2), getDate("2015-01-05 08:00"), getDate("2015-01-08 08:00"), 2);
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-08 08:00"), getDate("2015-01-09 08:00"), 2);
+        assertDateAndCount(timeLines.get(4), getDate("2015-01-09 08:00"), getDate("2015-01-10 08:00"), 2);
+        assertDateAndCount(timeLines.get(5), getDate("2015-01-10 08:00"), getDate("2015-01-12 08:00"), 1);
+    }
+    
+    /**
+     * Splitting
+     *    |-------------------3.-----------------|
+     * |--------0-------|
+     *                  |-------1------|
+     *                                 |-------2-----|
+     *                                           |---4---|
+     */
+    @Test
+    public void allInRowWithALongDate_10_3() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-09 08:00")); // 3
+        flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-05 08:00")); // 0
+        flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-08 08:00")); // 1
+        flattenTimeline.add(getBooking("2015-01-08 08:00", "2015-01-10 08:00")); // 2
+        flattenTimeline.add(getBooking("2015-01-09 08:00", "2015-01-12 08:00")); // 4
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        Assert.assertEquals(6, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1);
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 2);
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-05 08:00"), getDate("2015-01-08 08:00"), 2);
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-08 08:00"), getDate("2015-01-09 08:00"), 2);
+        assertDateAndCount(timeLines.get(4), getDate("2015-01-09 08:00"), getDate("2015-01-10 08:00"), 2);
+        assertDateAndCount(timeLines.get(5), getDate("2015-01-10 08:00"), getDate("2015-01-12 08:00"), 1);
+    }
+    
+    /**
+     * Splitting
+     *    
+     * |--------0-------|
+     *     |-------------------3.-----------------|
+     *                  |-------1------|
+     *                                 |-------2-----|
+     *                                           |---4---|
+     */
+    @Test
+    public void allInRowWithALongDate_10_4() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-05 08:00")); // 0
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-09 08:00")); // 3
+        flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-08 08:00")); // 1
+        flattenTimeline.add(getBooking("2015-01-08 08:00", "2015-01-10 08:00")); // 2
+        flattenTimeline.add(getBooking("2015-01-09 08:00", "2015-01-12 08:00")); // 4
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        Assert.assertEquals(6, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1);
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 2);
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-05 08:00"), getDate("2015-01-08 08:00"), 2);
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-08 08:00"), getDate("2015-01-09 08:00"), 2);
+        assertDateAndCount(timeLines.get(4), getDate("2015-01-09 08:00"), getDate("2015-01-10 08:00"), 2);
+        assertDateAndCount(timeLines.get(5), getDate("2015-01-10 08:00"), getDate("2015-01-12 08:00"), 1);
+    }
+    
+    /**
+     * Splitting
+     *    
+     * |--------0-------|
+     *     |-------------------3.-----------------|
+     *                  |-------1------|
+     *                                 |-------2-----|
+     *                                           |---4---|
+     *                  |-------1------|
+     */
+    @Test
+    public void allInRowWithALongDate_10_5() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-05 08:00")); // 0
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-09 08:00")); // 3
+        flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-08 08:00")); // 1
+        flattenTimeline.add(getBooking("2015-01-08 08:00", "2015-01-10 08:00")); // 2
+        flattenTimeline.add(getBooking("2015-01-09 08:00", "2015-01-12 08:00")); // 4
+        flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-08 08:00")); // 1
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        Assert.assertEquals(6, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1);
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 2);
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-05 08:00"), getDate("2015-01-08 08:00"), 3);
         assertDateAndCount(timeLines.get(3), getDate("2015-01-08 08:00"), getDate("2015-01-09 08:00"), 2);
         assertDateAndCount(timeLines.get(4), getDate("2015-01-09 08:00"), getDate("2015-01-10 08:00"), 2);
         assertDateAndCount(timeLines.get(5), getDate("2015-01-10 08:00"), getDate("2015-01-12 08:00"), 1);
@@ -370,7 +544,6 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-06 08:00")); // 2
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(4, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-02 08:00"), getDate("2015-01-03 08:00"), 1);
@@ -393,7 +566,6 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-05 08:00")); // 0
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(4, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-02 08:00"), getDate("2015-01-03 08:00"), 1);
@@ -402,13 +574,38 @@ public class BookingTimeLineFlattenTest {
         assertDateAndCount(timeLines.get(3), getDate("2015-01-05 08:00"), getDate("2015-01-06 08:00"), 1);
     }
     
+    /*
+     * Splitting
+     * 
+     *    |---1---|---2---|
+     *         |--0--|           
+     *            |---4---|
+     */    
+    @Test
+    public void allInRowWithALongDate_13() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-02 08:00", "2015-01-04 08:00")); // 1
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-06 08:00")); // 2
+        flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-05 08:00")); // 0
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-06 08:00")); // 4
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        printTimeLines(timeLines);
+        Assert.assertEquals(4, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-02 08:00"), getDate("2015-01-03 08:00"), 1);
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 2);
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 3);
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-05 08:00"), getDate("2015-01-06 08:00"), 2);
+    }
+    
     /**
      * Splitting
      * |--------------------------------------------------------------------------|
      *                     |--------------|
      */
     @Test
-    public void allInRowWithALongDate_inEnd_2() {
+    public void allInRowWithALongDate_inEnd_3() {
         BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
         flattenTimeline.add(getBooking("2015-01-03 08:00", "2115-01-05 08:00"));
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 08:00"));
@@ -594,7 +791,129 @@ public class BookingTimeLineFlattenTest {
         Assert.assertEquals(1, timeLines.size());
         Assert.assertEquals(3, timeLines.get(0).count);   
         Assert.assertEquals(7, timeLines.get(0).getAvailableSpots());   
+    }
+    
+    /**
+     * Splitting:
+     * 
+     * |------------------| |------------------|  
+     * |------------------| |------------------|  
+     * |------------------| |------------------|  
+     */
+    @Test
+    public void testExact_2() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
         
+        flattenTimeline.add(getBooking("2015-01-14 08:00", "2015-01-15 12:00"));
+        flattenTimeline.add(getBooking("2015-01-14 08:00", "2015-01-15 12:00"));
+        flattenTimeline.add(getBooking("2015-01-14 08:00", "2015-01-15 12:00"));
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        Assert.assertEquals(2, timeLines.size());
+        Assert.assertEquals(3, timeLines.get(0).count);   
+        Assert.assertEquals(3, timeLines.get(1).count);   
+        Assert.assertEquals(7, timeLines.get(0).getAvailableSpots());   
+        Assert.assertEquals(7, timeLines.get(1).getAvailableSpots());   
+    }
+    
+    
+    /**
+     * Splitting:
+     * 
+     * |------------------| |------------------|  
+     * |------------------| |------------------|  
+     * |------------------| |------------------|  
+     * |---------------------------------------|
+     */
+    @Test
+    public void testExact_3() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        
+        flattenTimeline.add(getBooking("2015-01-14 08:00", "2015-01-15 12:00"));
+        flattenTimeline.add(getBooking("2015-01-14 08:00", "2015-01-15 12:00"));
+        flattenTimeline.add(getBooking("2015-01-14 08:00", "2015-01-15 12:00"));
+        
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-15 12:00"));
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        printTimeLines(timeLines);
+        Assert.assertEquals(3, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-04 08:00"), getDate("2015-01-05 12:00"), 4); 
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-05 12:00"), getDate("2015-01-14 08:00"), 1); 
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-14 08:00"), getDate("2015-01-15 12:00"), 4); 
+    }
+    
+    /**
+     * Splitting:
+     * 
+     * |--------------------------------------------|
+     *   |------------------| |------------------|  
+     *   |------------------| |------------------|  
+     *   |------------------| |------------------|  
+     */
+    @Test
+    public void testExact_4() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-14 12:00")); 
+        
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        
+        flattenTimeline.add(getBooking("2015-01-07 08:00", "2015-01-08 12:00"));
+        flattenTimeline.add(getBooking("2015-01-07 08:00", "2015-01-08 12:00"));
+        flattenTimeline.add(getBooking("2015-01-07 08:00", "2015-01-08 12:00"));
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        printTimeLines(timeLines);
+        Assert.assertEquals(5, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1); 
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-04 08:00"), getDate("2015-01-05 12:00"), 4); 
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-05 12:00"), getDate("2015-01-07 08:00"), 1); 
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-07 08:00"), getDate("2015-01-08 12:00"), 4); 
+        assertDateAndCount(timeLines.get(4), getDate("2015-01-08 12:00"), getDate("2015-01-14 12:00"), 1); 
+    }
+    
+    /**
+     * Splitting:
+     * 
+     *   |------------------| |------------------|  
+     *   |------------------| |------------------|  
+     *   |------------------| |------------------|  
+     * |--------------------------------------------|
+     */
+    @Test
+    public void testExact_5() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        
+        
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-05 12:00"));
+        
+        flattenTimeline.add(getBooking("2015-01-07 08:00", "2015-01-08 12:00"));
+        flattenTimeline.add(getBooking("2015-01-07 08:00", "2015-01-08 12:00"));
+        flattenTimeline.add(getBooking("2015-01-07 08:00", "2015-01-08 12:00"));
+        
+        flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-14 12:00")); 
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        printTimeLines(timeLines);
+        Assert.assertEquals(5, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1); 
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-04 08:00"), getDate("2015-01-05 12:00"), 4); 
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-05 12:00"), getDate("2015-01-07 08:00"), 1); 
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-07 08:00"), getDate("2015-01-08 12:00"), 4); 
+        assertDateAndCount(timeLines.get(4), getDate("2015-01-08 12:00"), getDate("2015-01-14 12:00"), 1); 
     }
     
     private Booking getBooking(String startDate, String endDate) {        

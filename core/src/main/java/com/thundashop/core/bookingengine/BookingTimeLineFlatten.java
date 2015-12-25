@@ -38,6 +38,12 @@ public class BookingTimeLineFlatten implements Serializable {
         }
         
         if (bookingOverlapFullWidth(booking)) {
+            List<BookingTimeLine> overlappingLines = getLinesOverlapping(booking);
+            if (overlappingLines.size() == 2 && !overlappingLines.get(0).end.equals(overlappingLines.get(1).start)) {
+                BookingTimeLine line = addBookingTimeLine(booking);
+                line.start = overlappingLines.get(0).end;
+                line.end = overlappingLines.get(1).start;
+            }
             return;
         }
         
@@ -64,17 +70,19 @@ public class BookingTimeLineFlatten implements Serializable {
                 timelines.add(line);
             }
         }
-        
+    
+        Collections.sort(timelines);
         return timelines;
     }
 
-    private void addBookingTimeLine(Booking booking) {
+    private BookingTimeLine addBookingTimeLine(Booking booking) {
         BookingTimeLine line = new BookingTimeLine(totalAvailableSpots);
         line.bookingIds.add(booking.id);
         line.start = booking.startDate;
         line.end = booking.endDate;
         line.count = 1;
         timeLines.put(line.id, line);
+        return line;
     }
 
     private void split(List<BookingTimeLine> overlappingLines, Booking booking) {
@@ -86,6 +94,13 @@ public class BookingTimeLineFlatten implements Serializable {
                     timeLines.put(partLine.id, partLine);
                 }
             }
+            
+            if (overlappingLines.size() == 2 && !overlappingLines.get(0).end.equals(overlappingLines.get(1).start)) {
+                BookingTimeLine line = addBookingTimeLine(booking);
+                line.start = overlappingLines.get(0).end;
+                line.end = overlappingLines.get(1).start;
+            }
+            
         } else {
             for (BookingTimeLine timeLine : overlappingLines) {
                 timeLines.remove(timeLine.id);
@@ -195,13 +210,14 @@ public class BookingTimeLineFlatten implements Serializable {
             }
         } 
         
-        if (!timeLinesOverlaping.isEmpty()) {
+        if (!timeLinesOverlaping.isEmpty() && !timeLines.isEmpty()) {
             doPartialSplit(booking, linesToAdd);
         } 
         
         addAll(linesToAdd);
         
-        return !timeLinesOverlaping.isEmpty();
+        
+        return !timeLinesOverlaping.isEmpty() && !timeLines.isEmpty();
     }
 
     private void doPartialSplit(Booking booking, List<BookingTimeLine> linesToAdd) {

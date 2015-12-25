@@ -15,7 +15,7 @@ import org.mongodb.morphia.annotations.Transient;
  * @author ktonder
  */
 public class BookingItem extends DataCommon {
-    public String bookingItemTypeId;
+    public String bookingItemTypeId; 
     
     public String bookingItemName = "";
     

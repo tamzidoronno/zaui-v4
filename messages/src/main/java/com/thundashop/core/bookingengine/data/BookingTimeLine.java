@@ -106,6 +106,33 @@ public class BookingTimeLine implements Comparable<BookingTimeLine>, Serializabl
             splitted.add(three);
             return splitted;
         }
+        
+        /**
+         * This is: 
+         * Timeline:       | ------------|
+         * Booking    |------------------------|
+         */
+        if (booking.startDate.before(start) && booking.endDate.after(end)) {
+//            BookingTimeLine one = cloneMe();
+//            BookingTimeLine two = cloneMe();
+//            BookingTimeLine three = cloneMe();
+//            
+//            two.count++;
+//            
+//            one.start = booking.startDate;
+//            one.end = start;
+//            
+//            two.start = start;
+//            two.end = end;
+//            
+//            three.start = end;
+//            three.end = booking.endDate;
+//            
+//            splitted.add(one);
+//            splitted.add(two);
+//            splitted.add(three);
+//            return splitted;
+        }
 
         /**
          * This is: 
@@ -201,7 +228,6 @@ public class BookingTimeLine implements Comparable<BookingTimeLine>, Serializabl
         if (special && booking.endDate.equals(end)) {
             
         }
-        
        
         /**
          * timeline:   |----------|
@@ -224,10 +250,8 @@ public class BookingTimeLine implements Comparable<BookingTimeLine>, Serializabl
             if (needToAddExtra) {
                 partSplitts.add(one);
             }
-            
 
             partSplitts.add(two);
-//            
         }
         
         if (special && booking.startDate.equals(start)) {
@@ -258,8 +282,6 @@ public class BookingTimeLine implements Comparable<BookingTimeLine>, Serializabl
             
             one.start = start;
             one.end = booking.startDate;
-            
-           
             
             two.start = booking.startDate;
             two.end = end;

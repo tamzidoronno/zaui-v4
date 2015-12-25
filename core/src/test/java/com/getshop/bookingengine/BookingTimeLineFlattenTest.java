@@ -14,10 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID; 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestName;
 
 /**
  *
@@ -25,13 +22,6 @@ import org.junit.rules.TestName;
  */
 public class BookingTimeLineFlattenTest {
     
-    @Rule public TestName name = new TestName();
-    
-    @Before
-    public void testName() {
-//        System.out.println(" ");
-//        System.out.println(name.getMethodName());
-    }
     
     /**
      * Splitting
@@ -67,7 +57,6 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-05 16:00", "2015-01-10 08:00")); // 4
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(6, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 1);
@@ -97,7 +86,6 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-05 16:00", "2015-01-10 08:00")); // 4
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(6, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 1);
@@ -590,7 +578,6 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-06 08:00")); // 4
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(4, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-02 08:00"), getDate("2015-01-03 08:00"), 1);
@@ -842,7 +829,6 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-15 12:00"));
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(3, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-04 08:00"), getDate("2015-01-05 12:00"), 4); 
@@ -872,7 +858,6 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-07 08:00", "2015-01-08 12:00"));
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(5, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1); 
@@ -906,7 +891,6 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-14 12:00")); 
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        printTimeLines(timeLines);
         Assert.assertEquals(5, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1); 
@@ -943,15 +927,5 @@ public class BookingTimeLineFlattenTest {
         Assert.assertEquals(end, timeLine.end);
     }
 
-    private void printTimeLines(List<BookingTimeLine> timeLines) {
-        System.out.println("Result:");
-        for (BookingTimeLine timeLine : timeLines) {
-            System.out.println(timeLine);
-        }
-    }
-
-    private void printMarker(String string) {
-        System.out.println("Mark:" + string);
-    }
 
 }

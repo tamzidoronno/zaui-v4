@@ -227,7 +227,7 @@ public class BookingEngineBookingTests extends TestCommon {
         BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
         BookingTimeLineFlatten timeLine = bookingEngine.getTimelines(type.id, bookings.get(0).startDate, bookings.get(1).endDate);
         
-        Assert.assertEquals(2, timeLine.timeLines.size());
+        Assert.assertEquals(2, timeLine.getTimelines().size());
     }
     
     @Test

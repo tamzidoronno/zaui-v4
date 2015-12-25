@@ -3,6 +3,7 @@
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
 $errors = $this->getValidation();
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $types2 = array();
 foreach($types as $type) {
     $types2[$type->id] = $type;
@@ -96,8 +97,18 @@ if($this->getConfigurationSetting("headingbillinginfo")) {
     <span class='col-33'><label><? echo $this->__w("Phone"); ?><input type='text' name='phone' value="<? echo $booking->contactData->phone; ?>"><? $this->validateContactData("phone"); ?></label></span>
 </div>
 <div style='clear:both;'></div>
+<?php
+if($config->needToAgreeOnContract) {
+    $checked = "";
+    if($booking->contactData->agreedToTerms) {
+        $checked = "CHECKED";
+    }
+    echo "<div>";
+    echo "<input type='checkbox' gsname='agreeonterms' $checked> I agree to the <a class='termslink' target='_new' onclick='window.open(\"/scripts/loadContract.php?engine=".$this->getSelectedName()."\")'>terms and conditions</a>";
+    echo "</div>";
+    $this->validateContactData("agreedToTerms");
+}
 
-<?
 $text = $this->getConfigurationSetting("complete_order_button");
 if(!$text) {
     $text = $this->__w("Complete order");

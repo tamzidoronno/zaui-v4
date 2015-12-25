@@ -43,7 +43,7 @@ class PmsBookingMessageFormatter {
             message = message.replace("{email}", guest.email);
             message = message.replace("{prefix}", guest.prefix);
             message = message.replace("{phone}", guest.phone);
-        } else {
+        } else if(user != null) {
             message = message.replace("{name}", user.fullName);
             message = message.replace("{email}", user.emailAddress);
             message = message.replace("{prefix}", user.prefix);
@@ -66,11 +66,11 @@ class PmsBookingMessageFormatter {
     String formatBookingData(String message, PmsBooking booking, BookingEngine bookingEngine) {
         String bookingData = "";
         for(PmsBookingRooms room : booking.rooms) {
-            if(room.booking.bookingItemTypeId != null) {
+            if(room.booking != null && room.booking.bookingItemTypeId != null) {
                 bookingData += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "<br>";
             }
             bookingData += formatDate(room.date.start) + " - " + formatDate(room.date.end);
-            if(room.booking.bookingItemId != null) {
+            if(room.booking != null && room.booking.bookingItemId != null) {
                 BookingItem item = bookingEngine.getBookingItem(room.booking.bookingItemId);
                 if(item != null) {
                     bookingData += item.bookingItemName + "<br>";

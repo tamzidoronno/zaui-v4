@@ -178,6 +178,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
+        if(configuration.needToAgreeOnContract && !currentBooking.contactData.agreedToTerms) {
+            result.put("agreedToTerms", 1);
+        }
+        
         //Validate the contact data
         if(currentBooking.contactData.type == 3) {
             User validuser = userManager.checkUserNameAndPassword(currentBooking.contactData.username, currentBooking.contactData.password);
@@ -996,6 +1000,28 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return -4;
         }    
         return 0;
+    }
+
+    @Override
+    public String getContract(String bookingId) throws Exception {
+        PmsBooking booking = getCurrentBooking();
+        if(booking == null || !booking.id.equals(bookingId)) {
+            booking = getBooking(bookingId);
+        }
+        if(booking == null) {
+            return "Booking could not be found";
+        }
+        String contract = configuration.contracts.get(booking.language);
+        if(contract == null) {
+            return "";
+        }
+        return formatMessage(contract, booking, null, null);
+    }
+
+    @Override
+    public String getCurrenctContract() throws Exception {
+        PmsBooking current = getCurrentBooking();
+        return getContract(current.id);
     }
 
 }

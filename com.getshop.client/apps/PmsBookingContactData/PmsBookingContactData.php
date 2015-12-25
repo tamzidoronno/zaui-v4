@@ -79,6 +79,8 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 $current->contactData->birthday = $_POST['data']['billingdata']['birthday'];
             }
         }
+        $current->contactData->agreedToTerms = ($_POST['data']['agreetoterms'] == "true");
+        
         
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
         
@@ -143,6 +145,13 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             if(isset($validation->{$field})) {
                 echo "<span class='errordesc'>";
                 echo $this->__w("Username or password is incorrect");
+                echo "</span>";
+            }
+        }
+        if($field == "agreedToTerms") {
+            if(isset($validation->{$field})) {
+                echo "<span class='errordesc'>";
+                echo $this->__w("You need to agree to the terms and conditions first");
                 echo "</span>";
             }
         }

@@ -29,6 +29,7 @@ public class BookingTimeLineFlattenTest {
     
     @Before
     public void testName() {
+        System.out.println(" ");
         System.out.println(name.getMethodName());
     }
     
@@ -285,7 +286,9 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-09 08:00")); // 3
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        printTimeLines(timeLines);
         Assert.assertEquals(5, timeLines.size());
+        
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1);
         assertDateAndCount(timeLines.get(1), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 2);
@@ -299,8 +302,8 @@ public class BookingTimeLineFlattenTest {
      * 
      * |--------0-------|
      *                  |-------1------|
-     *                                 |-------2------|
-     *    |-------------------3------------------||---4---|
+     *                                 |-------2-----|
+     *    |-------------------3------------------|---4---|
      */
     @Test
     public void allInRowWithALongDate_10() {
@@ -312,14 +315,45 @@ public class BookingTimeLineFlattenTest {
         flattenTimeline.add(getBooking("2015-01-09 08:00", "2015-01-12 08:00")); // 4
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
-        Assert.assertEquals(5, timeLines.size());
+        printTimeLines(timeLines);
+        Assert.assertEquals(6, timeLines.size());
         
         assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1);
         assertDateAndCount(timeLines.get(1), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 2);
         assertDateAndCount(timeLines.get(2), getDate("2015-01-05 08:00"), getDate("2015-01-08 08:00"), 2);
         assertDateAndCount(timeLines.get(3), getDate("2015-01-08 08:00"), getDate("2015-01-09 08:00"), 2);
         assertDateAndCount(timeLines.get(4), getDate("2015-01-09 08:00"), getDate("2015-01-10 08:00"), 2);
-        assertDateAndCount(timeLines.get(4), getDate("2015-01-10 08:00"), getDate("2015-01-12 08:00"), 1);
+        assertDateAndCount(timeLines.get(5), getDate("2015-01-10 08:00"), getDate("2015-01-12 08:00"), 1);
+    }
+    
+    /**
+     * Splitting
+     * 
+     * |--------0-------|
+     *                  |-------1------|
+     *    |-------------------3.-----------------|
+     *                                 |-------2-----|
+     *                                           |---4---|
+     */
+    @Test
+    public void allInRowWithALongDate_10_2() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-05 08:00")); // 0
+        flattenTimeline.add(getBooking("2015-01-05 08:00", "2015-01-08 08:00")); // 1
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-09 08:00")); // 3
+        flattenTimeline.add(getBooking("2015-01-08 08:00", "2015-01-10 08:00")); // 2
+        flattenTimeline.add(getBooking("2015-01-09 08:00", "2015-01-12 08:00")); // 4
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        printTimeLines(timeLines);
+        Assert.assertEquals(6, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 1);
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 2);
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-05 08:00"), getDate("2015-01-08 08:00"), 2);
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-08 08:00"), getDate("2015-01-09 08:00"), 2);
+        assertDateAndCount(timeLines.get(4), getDate("2015-01-09 08:00"), getDate("2015-01-10 08:00"), 2);
+        assertDateAndCount(timeLines.get(5), getDate("2015-01-10 08:00"), getDate("2015-01-12 08:00"), 1);
     }
     
     /*
@@ -331,12 +365,32 @@ public class BookingTimeLineFlattenTest {
     @Test
     public void allInRowWithALongDate_11() {
         BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
-        printMarker("1");
         flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-05 08:00")); // 0
-        printMarker("2");
         flattenTimeline.add(getBooking("2015-01-02 08:00", "2015-01-04 08:00")); // 1
-        printMarker("3");
         flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-06 08:00")); // 2
+        
+        List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
+        printTimeLines(timeLines);
+        Assert.assertEquals(4, timeLines.size());
+        
+        assertDateAndCount(timeLines.get(0), getDate("2015-01-02 08:00"), getDate("2015-01-03 08:00"), 1);
+        assertDateAndCount(timeLines.get(1), getDate("2015-01-03 08:00"), getDate("2015-01-04 08:00"), 2);
+        assertDateAndCount(timeLines.get(2), getDate("2015-01-04 08:00"), getDate("2015-01-05 08:00"), 2);
+        assertDateAndCount(timeLines.get(3), getDate("2015-01-05 08:00"), getDate("2015-01-06 08:00"), 1);
+    }
+    
+    /*
+     * Splitting
+     * 
+     *    |---1---|---2---|
+     *         |--0--|
+     */
+    @Test
+    public void allInRowWithALongDate_12() {
+        BookingTimeLineFlatten flattenTimeline = new BookingTimeLineFlatten(10, "bookingTypeId");
+        flattenTimeline.add(getBooking("2015-01-02 08:00", "2015-01-04 08:00")); // 1
+        flattenTimeline.add(getBooking("2015-01-04 08:00", "2015-01-06 08:00")); // 2
+        flattenTimeline.add(getBooking("2015-01-03 08:00", "2015-01-05 08:00")); // 0
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
         printTimeLines(timeLines);
@@ -571,7 +625,7 @@ public class BookingTimeLineFlattenTest {
     }
 
     private void printTimeLines(List<BookingTimeLine> timeLines) {
-        System.out.println("TIMES:");
+        System.out.println("Result:");
         for (BookingTimeLine timeLine : timeLines) {
             System.out.println(timeLine);
         }

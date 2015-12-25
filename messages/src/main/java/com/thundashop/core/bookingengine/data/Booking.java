@@ -30,27 +30,6 @@ public class Booking extends DataCommon {
         return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",startDate="+dateFormat.format(startDate)+",endDate="+dateFormat.format(endDate)+"]";
     }
 
-    public boolean conflictsWith(Date start, Date end) {
-        if (start.equals(start) || start.equals(end) || end.equals(start) || end.equals(end)) {
-            return true;
-        }
-        
-        if (start.after(startDate) && start.before(endDate)) {
-            return true;
-        }
-        
-        if (end.after(startDate) && end.before(endDate)) {
-            return true;
-        }
-        
-        if (start.equals(startDate) && end.equals(endDate)) {
-            return true;
-        }
-        
-        return false;
-        
-    }
-
     // Got this solution from: http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
     public boolean interCepts(Date startDate, Date endDate) {
         long StartDate1 = startDate.getTime();
@@ -58,5 +37,29 @@ public class Booking extends DataCommon {
         long EndDate1 = endDate.getTime();
         long EndDate2 = this.endDate.getTime()-1;
         return (StartDate1 <= EndDate2) && (StartDate2 <= EndDate1);
+    }
+    
+    public boolean within(Date startDate, Date endDate) { 
+        long StartDate1 = startDate.getTime();
+        long StartDate2 = this.startDate.getTime();
+        long EndDate1 = endDate.getTime(); 
+        long EndDate2 = this.endDate.getTime();
+        return (StartDate1 < EndDate2) && (StartDate2 < EndDate1);
+    }
+
+    public boolean completlyWithin(Date start, Date end) {
+        if (startDate.equals(start) && endDate.equals(end))
+            return true;
+        
+        if (start.after(startDate) && end.before(endDate))
+            return true;
+        
+        if (start.equals(startDate) && end.before(endDate))
+            return true;
+
+        if (start.after(startDate) && end.equals(endDate))
+            return true;
+
+        return false;
     }
 }

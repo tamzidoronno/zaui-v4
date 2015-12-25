@@ -298,7 +298,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         bookings.values().stream()
                 .filter(booking -> booking.bookingItemTypeId.equals(bookingItemTypeId))
-                .filter(booking -> booking.conflictsWith(start, end))
+                .filter(booking -> booking.interCepts(start, end))
                 .forEach(o -> flatten.add(o));
         
         return flatten;

@@ -9,6 +9,7 @@ import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +51,7 @@ public class BookingTimeLineFlatten implements Serializable {
 
     public List<BookingTimeLine> getTimelines() {
         List<BookingTimeLine> lines = new ArrayList(timeLines.values());
-        Collections.sort(lines);
+        Collections.sort(lines); 
         return lines;
     }
 
@@ -77,11 +78,21 @@ public class BookingTimeLineFlatten implements Serializable {
     }
 
     private void split(List<BookingTimeLine> overlappingLines, Booking booking) {
-        for (BookingTimeLine timeLine : overlappingLines) {
-            timeLines.remove(timeLine.id);
-            List<BookingTimeLine> splittedLines = timeLine.split(booking, true);
-            for (BookingTimeLine splitted : splittedLines) {
-                timeLines.put(splitted.id, splitted);
+        
+        if (overlappingLines.size() > 1) {
+            for (BookingTimeLine timeLine : overlappingLines) {
+                timeLines.remove(timeLine.id);
+                for (BookingTimeLine partLine : timeLine.partialSplit(booking, true, false)) {
+                    timeLines.put(partLine.id, partLine);
+                }
+            }
+        } else {
+            for (BookingTimeLine timeLine : overlappingLines) {
+                timeLines.remove(timeLine.id);
+                List<BookingTimeLine> splittedLines = timeLine.split(booking, true);
+                for (BookingTimeLine splitted : splittedLines) {
+                    timeLines.put(splitted.id, splitted);
+                }
             }
         }
     }
@@ -96,8 +107,7 @@ public class BookingTimeLineFlatten implements Serializable {
         return true;
     }
     
-    private boolean isAFullWidthOverlap(BookingTimeLine timeLine, Booking booking) {
-                   
+    private boolean timeLineWithinBooking(BookingTimeLine timeLine, Booking booking) {
         /*
          * Timeline:     |---------------|
          * Booking:  |------------------------|
@@ -105,31 +115,7 @@ public class BookingTimeLineFlatten implements Serializable {
         if (timeLine.start.after(booking.startDate) && timeLine.end.before(booking.endDate)) {
             return true;
         }
-
-        /**
-         * Timeline: |------------------------|
-         * Booking:     |------------------|
-         */
-        if (timeLine.start.before(booking.startDate) && timeLine.end.after(booking.endDate)) {
-            return true;
-        }
-
-        /**
-         * Timeline: |------------------------|
-         * Booking:  |------------------|
-         */
-        if (timeLine.start.equals(booking.startDate) && timeLine.end.after(booking.endDate)) {
-            return true;
-        }
-
-        /**
-         * Timeline: |------------------------|
-         * Booking:        |------------------|
-         */
-        if (timeLine.start.before(booking.startDate) && timeLine.end.equals(booking.endDate)) {
-            return true;
-        }
-
+        
         /**
          * Timeline:       |------------------|
          * Booking:  |------------------------|      
@@ -145,11 +131,51 @@ public class BookingTimeLineFlatten implements Serializable {
         if (timeLine.start.equals(booking.startDate) && timeLine.end.before(booking.endDate)) {
             return true;
         }
+        
+        return false;
+    }
+    
+    private boolean bookingWithinBooking(BookingTimeLine timeLine, Booking booking) {
+        /**
+         * Timeline: |------------------------|
+         * Booking:     |------------------|
+         */
+        if (timeLine.start.before(booking.startDate) && timeLine.end.after(booking.endDate)) {
+            return true;
+        }
+        
+        /**
+         * Timeline: |------------------------|
+         * Booking:  |------------------|
+         */
+        if (timeLine.start.equals(booking.startDate) && timeLine.end.after(booking.endDate)) {
+            return true;
+        }
+        
+        /**
+         * Timeline: |------------------------|
+         * Booking:        |------------------|
+         */
+        if (timeLine.start.before(booking.startDate) && timeLine.end.equals(booking.endDate)) {
+            return true;
+        }
+
+        return false;
+    }
+    
+    private boolean isAFullWidthOverlap(BookingTimeLine timeLine, Booking booking) {
+                   
+        if (timeLineWithinBooking(timeLine, booking))
+            return true;
+        
+        if (bookingWithinBooking(timeLine, booking))
+            return true;
 
         return false;
     }
 
     private boolean bookingOverlapFullWidth(Booking booking) {
+        System.out.println("Booking: " + booking.getInformation());
         List<BookingTimeLine> timeLinesOverlaping = new ArrayList();
         
         for (BookingTimeLine timeLine : timeLines.values()) {
@@ -159,41 +185,61 @@ public class BookingTimeLineFlatten implements Serializable {
         }
         
         Collections.sort(timeLinesOverlaping);
-        
         List<BookingTimeLine> linesToAdd = new ArrayList();
-        int i = 1;
-        for (BookingTimeLine timeLine : timeLinesOverlaping) {
-            this.timeLines.remove(timeLine.id);
-            List<BookingTimeLine> splittedLines = timeLine.split(booking, true);
-            linesToAdd.addAll(splittedLines);
-        }
         
-        List<String> toRemove = new ArrayList();
-        List<BookingTimeLine> timeLinesToTest = new ArrayList();
-        timeLinesToTest.addAll(timeLines.values());
+        for (BookingTimeLine timeLine : timeLinesOverlaping) {
+            List<BookingTimeLine> splittedLines = timeLine.split(booking, false);
+            if (!splittedLines.isEmpty()) {
+                this.timeLines.remove(timeLine.id);
+                linesToAdd.addAll(splittedLines);
+            }
+        } 
         
         if (!timeLinesOverlaping.isEmpty()) {
-            for (BookingTimeLine timeLine : timeLinesToTest) {
-                boolean firstInRow = isLastOrFirstInList(timeLine, timeLinesToTest).equals("FIRST");
-                boolean lastInRow = isLastOrFirstInList(timeLine, timeLinesToTest).equals("LAST");
-                boolean isFullWidthOverlap = isAFullWidthOverlap(timeLine, booking);
-                
-                if ((firstInRow || lastInRow) && timeLine.intercepts(booking)) {
-                    toRemove.add(timeLine.id);
-                    linesToAdd.addAll(timeLine.partialSplit(booking, firstInRow, lastInRow, isFullWidthOverlap));
-                }
-            }
-        }
-        
-        for (String removeId : toRemove) {
-            timeLines.remove(removeId);
-        }
+            doPartialSplit(booking, linesToAdd);
+        } 
         
         addAll(linesToAdd);
         
         return !timeLinesOverlaping.isEmpty();
     }
 
+    private void doPartialSplit(Booking booking, List<BookingTimeLine> linesToAdd) {
+        List<BookingTimeLine> allTimeLines = new ArrayList();
+        allTimeLines.addAll(timeLines.values());
+        allTimeLines.addAll(linesToAdd);
+        
+        List<BookingTimeLine> allTimeLines2 = new ArrayList();
+        allTimeLines2.addAll(timeLines.values());
+        
+        Collections.sort(allTimeLines);
+
+        int count = 0;
+        for (BookingTimeLine line : linesToAdd) {
+            if (booking.within(line.start, line.end)) {
+                count++;
+            }
+        }
+        
+        String specialPartial = "";
+        if (count == 1 && linesToAdd.size() == 1) {
+            allTimeLines2.addAll(linesToAdd);
+            specialPartial = linesToAdd.get(0).id;
+        }
+        
+        
+        boolean needToAddExtra = getLinesOverlapping(booking).size() == 1;
+         
+        for (BookingTimeLine timeLine : allTimeLines2) {
+            if (booking.within(timeLine.start, timeLine.end)) {
+                timeLines.remove(timeLine.id);
+                
+                linesToAdd.removeIf(o -> o.id.equals(timeLine.id));
+                linesToAdd.addAll(timeLine.partialSplit(booking, timeLine.id.equals(specialPartial),needToAddExtra));    
+            }
+        }
+    }
+    
     private void addAll(List<BookingTimeLine> splittedLines) {
         for (BookingTimeLine timeLine : splittedLines) {
             if (timeLine.start.equals(timeLine.end)) {
@@ -201,30 +247,6 @@ public class BookingTimeLineFlatten implements Serializable {
             }
             timeLines.put(timeLine.id, timeLine);
         }
-    }
-
-    private String isLastOrFirstInList(BookingTimeLine timeLine, List<BookingTimeLine> timeLinesToTest) {
-        List<BookingTimeLine> timeLinesToCheck = new ArrayList(timeLinesToTest);
-        Collections.sort(timeLinesToCheck);
-        
-        if (timeLinesToCheck.size() == 1) {
-            return "";
-        }
-        
-        int i = 1;
-        for (BookingTimeLine itimeLine : timeLinesToCheck) {
-            if (itimeLine.equals(timeLine) && i == 1) {
-                return "FIRST";
-            }
-            
-            if (itimeLine.equals(timeLine) && i == timeLinesToCheck.size()) {
-                return "LAST";
-            }
-            
-            i++;
-        }
-        
-        return "";
     }
     
 }

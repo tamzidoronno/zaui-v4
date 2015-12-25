@@ -172,6 +172,18 @@ $whenToPay[4] = "After stay";
         </div>
         <div class='configrow'>
             <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->autoconfirmRegisteredUsers) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoconfirmRegisteredUsers' <? echo $checked; ?>>
+            </span>
+            Registered users are autoconfirmed.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
                 <select gsname='whenToPay'>
                     <? 
                     foreach($whenToPay as $idx => $value) {

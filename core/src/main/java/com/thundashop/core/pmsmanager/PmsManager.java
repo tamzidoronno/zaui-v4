@@ -27,6 +27,8 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -313,44 +315,42 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result = completeBooking(bookingsToAdd, booking);
             
             if(!booking.confirmed) {
-                doNotification("booking_confirmed", booking);
-            } else {
                 doNotification("booking_completed", booking);
+            } else {
+                doNotification("booking_confirmed", booking);
             }
            
+            return result;
         }catch(Exception e) {
             messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id);
             e.printStackTrace();
-            result = -1;
+            return -1;
         }
         
 
-        return result;
     }
 
     private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking) throws ErrorException {
-        Integer result = 0;
-        if(bookingEngine.canAdd(bookingsToAdd)) {
-            bookingEngine.addBookings(bookingsToAdd);
-            booking.attachBookingItems(bookingsToAdd);
-            booking.sessionId = null;
-            if(booking.userId == null || booking.userId.isEmpty()) {
-                booking.userId = createUser(booking).id;
-            } else {
-                if(configuration.autoconfirmRegisteredUsers) {
-                    booking.confirmed = true;
-                }
-            }
-            
-            if(!configuration.needConfirmation) {
+        if(!bookingEngine.canAdd(bookingsToAdd)) {
+            return -2;
+        }
+        bookingEngine.addBookings(bookingsToAdd);
+        booking.attachBookingItems(bookingsToAdd);
+        booking.sessionId = null;
+        if(booking.userId == null || booking.userId.isEmpty()) {
+            booking.userId = createUser(booking).id;
+        } else {
+            if(configuration.autoconfirmRegisteredUsers) {
                 booking.confirmed = true;
             }
-            
-            saveBooking(booking);
-        } else {
-            result = -2;
         }
-        return result;
+
+        if(!configuration.needConfirmation) {
+            booking.confirmed = true;
+        }
+
+        saveBooking(booking);
+        return 0;
     }
 
     private Date createInifinteDate() {
@@ -474,6 +474,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         result.removeAll(toRemove);
         
         List<PmsBooking> finalized = finalizeList(result);
+        
+        Collections.sort(finalized, new Comparator<PmsBooking>(){
+            public int compare(PmsBooking o1, PmsBooking o2){
+               return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+            }
+         });
+        
         return finalized;
     }
 

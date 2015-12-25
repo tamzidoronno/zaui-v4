@@ -44,6 +44,7 @@ class News extends \MarketingApplication implements \Application {
         $news->content = nl2br($news->content);
         $news->image = $image->getImageId();
         $newsId = $this->getApi()->getNewsManager()->addNews($news);
+        $this->clearAutoSavedText();
         $image->deleteImage();
     }
     
@@ -68,6 +69,7 @@ class News extends \MarketingApplication implements \Application {
         $res = $this->getFactory()->getApplicationPool()->getApplicationInstance($imgInstance);
         return $res;
     }
+
 
 }
 

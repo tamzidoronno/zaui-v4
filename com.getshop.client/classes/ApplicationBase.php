@@ -22,6 +22,15 @@ class ApplicationBase extends FactoryBase {
         $_SESSION[$key] = $_POST['data']['value'];
     }
     
+    public function clearAutoSavedText() {
+        foreach($_SESSION as $key => $value) {
+            if(stristr($key, "autosaved_")) {
+                unset($_SESSION[$key]);
+            }
+        }
+    }
+
+    
     public function getAutoSaved($name) {
         $key = 'autosaved_'.$this->getConfiguration()->id . "_" . $name;
         if(isset($_SESSION[$key])) {

@@ -385,9 +385,11 @@ class Page {
         $this->factory->includefile("applicationlist", 'Common');
     }
 
-    private function renderApplication($cell) {
+    private function renderApplication($cell, $depth = 0) {
         $instance = $this->factory->getApplicationPool()->getApplicationInstance($cell->appId);
         if ($instance) {
+            $instance->setDepth($depth);
+            $instance->setCell($cell);
             $instance->renderApplication();
         }
     }
@@ -742,6 +744,15 @@ class Page {
         <?
     }
 
+    public function renderApplicationSimple($appInstanceId, $fromAppBase) {
+        $cell = $fromAppBase->getCell();
+        $cell = json_encode($cell);
+        $cell = json_decode($cell);
+        $depth = $fromAppBase->getDepth();
+        $cell->appId = $appInstanceId;
+        $this->printApplicationArea($cell, $depth);
+    }
+    
     public function printApplicationArea($cell, $depth) {
         if ($cell->type == "FLOATING") {
             return;
@@ -760,7 +771,7 @@ class Page {
             echo "<i title='Delete this cell' class='fa fa-trash gs_drop_cell' $show></i>";
             echo "</span>";
         } else {
-            $this->renderApplication($cell);
+            $this->renderApplication($cell, $depth);
         }
 
         echo "</div>";

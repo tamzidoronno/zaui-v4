@@ -61,6 +61,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_toggle_sidebar', this.toggleSideBar);
         $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
+        $(document).on('keyup', '.gsautosave', this.autoSaveText);
         $(document).on('click', '.gsresizecolumn', this.activateResizeColumn);
         $(document).on('click', '.gsflipcontent', this.flipcontent);
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
@@ -124,6 +125,23 @@ thundashop.framework = {
     toggleSideBar: function() {
         var postEvent = thundashop.Ajax.createEvent(null, "toggleSideBar", this, {});
         thundashop.Ajax.post(postEvent);
+    },
+    
+    autoSaveText : function() {
+        var name = $(this).attr('gsname');
+        if(!name) {
+            name = $(this).attr('name');
+        }
+        var event = thundashop.Ajax.createEvent('','autosavetext',$(this),{
+            "name" : name,
+            "value" : $(this).val()
+        });
+        if(typeof(autosavetimeout) !== "undefined") {
+            clearTimeout(autosavetimeout);
+        }
+        autosavetimeout = setTimeout(function() {
+            thundashop.Ajax.postSynchron(event, function() {});
+        }, "500");
     },
     
     postToInformationBox : function() {

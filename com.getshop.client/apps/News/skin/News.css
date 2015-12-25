@@ -12,10 +12,9 @@
 }
 
 .News .outeraddnewscontainer input {
-    border: solid 1px;
-    border-radius: 4px;
     padding: 5px;
-    margin-left: 10px;
+    width:100%;
+    box-sizing: border-box;
 }
 
 
@@ -34,19 +33,30 @@
     text-align: right;
     font-size: 10px;
 }
-.News .news_container .content {
-    padding-left: 10px;
-}
 .News .news_container {
     margin-top: 5px;
     padding: 10px;
     position: relative;
 }
+.News .news_entry_footer {
+    clear:both;
+}
 
-.News .gs_button {
+.News .news_container img { float:left; max-width: 200px; margin: 10px; }
+
+.News .gs_button.addevent,
+.News .gs_button.delete
+{
     position: absolute;
     right: 0px;
     bottom: 10px;
+}
+.News .gs_button.delete {
+    display:none;
+}
+
+.News .news_container:hover .delete {
+    display:inline-block;
 }
 
 .News .news_entry_header {
@@ -77,9 +87,15 @@
 .News .news_container .gs_button {
     top: 5px;
     bottom: inherit;
-    right: 120px;
+    right: 0px;
+    font-size: 12px;
+    padding: 2px;
+    height: 20px;
+    line-height: 20px;
 }
 
 .News .gs_button.publish {
     right: 180px;
 }
+
+.News .addnewsrow { border: solid 1px; background-color:#efefef; }

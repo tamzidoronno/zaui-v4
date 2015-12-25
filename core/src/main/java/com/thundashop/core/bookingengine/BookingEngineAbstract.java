@@ -259,14 +259,19 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 bookingsToConsider.removeIf(o -> o.id.equals(booking.id));
             }
             
-            bookingsToConsider.addAll(checkedBookings);
-            BookingTimeLineFlatten flattenTimeLine = getFlattenTimelinesFromBooking(flattenTimeLines, booking);
+            List<Booking> oldBookingsToConsider = checkedBookings.stream()
+                    .filter(o -> o.bookingItemTypeId.equals(bookingItemTypeId))
+                    .filter(o -> o.interCepts(booking.startDate, booking.endDate))
+                    .collect(Collectors.toList());
+            
+            bookingsToConsider.addAll(oldBookingsToConsider);
+            BookingTimeLineFlatten flattenTimeLine = getFlattenTimelinesFromBooking(booking);
             bookingsToConsider.stream().forEach(o -> flattenTimeLine.add(o));
             
             if (!flattenTimeLine.canAdd(booking)) {
                 throw new BookingEngineException("There is no space for this booking, " + booking.getInformation());
             }
-            
+           
             checkedBookings.add(booking);
         }
     }
@@ -385,26 +390,15 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
 
     private void validateChange(Booking bookingClone) {
-        List<Booking> oldBookings = bookings.values().parallelStream()
-                .filter(o -> o.bookingItemTypeId.equals(bookingClone.bookingItemTypeId))
-                .filter(o -> !o.id.equals(bookingClone.id))
-                .filter(o -> o.interCepts(bookingClone.startDate, bookingClone.endDate))
-                .collect(Collectors.toList());
-        
+        List<Booking> oldBookings = new ArrayList();
         oldBookings.add(bookingClone);
         preProcessBookings(oldBookings);
     }
 
-    private BookingTimeLineFlatten getFlattenTimelinesFromBooking(HashMap<String, BookingTimeLineFlatten> flattenTimeLines, Booking booking) {
+    private BookingTimeLineFlatten getFlattenTimelinesFromBooking(Booking booking) {
         String bookingItemTypeId = booking.bookingItemTypeId;
-        BookingTimeLineFlatten flatten = flattenTimeLines.get(bookingItemTypeId);
-        if (flatten == null) {
-            int totalSpots = getTotalSpotsForBookingItemType(bookingItemTypeId);
-            flatten = new BookingTimeLineFlatten(totalSpots, bookingItemTypeId);
-            flattenTimeLines.put(bookingItemTypeId, flatten);
-        }
-        
-        return flatten;
+        int totalSpots = getTotalSpotsForBookingItemType(bookingItemTypeId);
+        return new BookingTimeLineFlatten(totalSpots, bookingItemTypeId);
     }
 
     private void checkBookingItemIds(List<Booking> bookings) {

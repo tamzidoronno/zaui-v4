@@ -1,6 +1,8 @@
 package com.thundashop.core.bookingengine.data;
 
 import com.thundashop.core.common.DataCommon;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -22,7 +24,10 @@ public class Booking extends DataCommon {
     public String externalReference;
 
     public String getInformation() {
-        return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",startDate="+startDate+",endDate="+endDate+"]";
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");
+//        return "From:  to: " + dateFormat.format(end) + " count: " + count;
+        
+        return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",startDate="+dateFormat.format(startDate)+",endDate="+dateFormat.format(endDate)+"]";
     }
 
     public boolean conflictsWith(Date start, Date end) {
@@ -46,23 +51,12 @@ public class Booking extends DataCommon {
         
     }
 
+    // Got this solution from: http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
     public boolean interCepts(Date startDate, Date endDate) {
-        if (this.startDate.before(endDate) && this.startDate.after(startDate)) {
-            return true;
-        }
-        
-        if (this.endDate.before(endDate) && this.endDate.after(startDate)) {
-            return true;
-        }
-        
-        if (this.endDate.equals(endDate) && this.startDate.equals(startDate)) {
-            return true;
-        }
-        
-        if (this.startDate.before(startDate) && this.endDate.after(endDate)) {
-            return true;
-        }
-        
-        return false;
+        long StartDate1 = startDate.getTime();
+        long StartDate2 = this.startDate.getTime()+1;
+        long EndDate1 = endDate.getTime();
+        long EndDate2 = this.endDate.getTime()-1;
+        return (StartDate1 <= EndDate2) && (StartDate2 <= EndDate1);
     }
 }

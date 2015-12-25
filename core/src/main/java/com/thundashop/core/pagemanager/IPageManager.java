@@ -111,6 +111,9 @@ public interface IPageManager {
     @Administrator
     public void createHeaderFooter(String type) throws ErrorException;
     
+    @Administrator
+    public void restoreLayout(String pageId, Long fromTime) throws ErrorException;
+    
     /**
      * Set the page description.
      * @param description The description to add.

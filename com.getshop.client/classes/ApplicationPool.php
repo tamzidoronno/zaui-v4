@@ -61,6 +61,10 @@ class ApplicationPool {
             }
         }
     }
+    
+    public function createNewInstance($appid) {
+        return $this->factory->getApi()->getStoreApplicationInstancePool()->createNewInstance($appid);
+    }
 
     public function createAppInstance($appConfig) {
         $settings = $this->getApplicationSetting($appConfig->appSettingsId);

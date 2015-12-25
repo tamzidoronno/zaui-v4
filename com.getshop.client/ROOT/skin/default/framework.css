@@ -2484,3 +2484,9 @@ padding: 2px; }
 }
 .gsflipcard { box-sizing: border-box; cursor:pointer; }
 .gsflipback { visibility: hidden;position:absolute;  }
+.gslayouthistory { display:none; border: solid 1px;position:fixed; z-index: 3; background-color:#fff; padding: 10px; left: 60px; top: 30px;
+    overflow-y : auto; 
+    height: 306px;
+    width: 270px;
+}
+.gslayouthistory div:hover { cursor:pointer; font-weight: bold; }

@@ -3,6 +3,7 @@
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
 $errors = $this->getValidation();
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $types2 = array();
 foreach($types as $type) {
     $types2[$type->id] = $type;
@@ -69,6 +70,7 @@ if($this->getConfigurationSetting("headingbillinginfo")) {
 <h3 class='bottomborder'><? echo $headingContactData; ?></h3>
 <span class='col-33'><label><input type='radio' name='type' class="typeSelection" view='private_person_form'><? echo $this->__w("Private person"); ?></label></span>
 <span class='col-33'><label><input type='radio' name='type' class="typeSelection" view='company_form'><? echo $this->__w("Company"); ?></label></span>
+<span class='col-33'><label><input type='radio' name='type' class="typeSelection" view='registered'><? echo $this->__w("Registered customer"); ?></label></span>
 <div style='clear:both;'></div>
 <div class='private_person_form billingform' style='display:none;'>
     <span class='col-33 hidenonsingleroom'><label><? echo $this->__w("Name"); ?><input type='text' name='name'  value="<? echo $booking->contactData->name; ?>"><? $this->validateContactData("name"); ?></label></span>
@@ -79,6 +81,10 @@ if($this->getConfigurationSetting("headingbillinginfo")) {
     <span class='col-33 hidenonsingleroom'><label><? echo $this->__w("Email"); ?><input type='text' name='email' value="<? echo $booking->contactData->email; ?>"><? $this->validateContactData("email"); ?></label></span>
     <span class='col-33 hidenonsingleroom'><label><? echo $this->__w("Prefix"); ?><input type='text' name='prefix' value="<? echo $booking->contactData->prefix; ?>"><? $this->validateContactData("prefi"); ?></label></span>
     <span class='col-33 hidenonsingleroom'><label><? echo $this->__w("Phone"); ?><input type='text' name='phone' value="<? echo $booking->contactData->phone; ?>"><? $this->validateContactData("phone"); ?></label></span>
+</div>
+<div class='registered billingform' style='display:none;'>
+    <span class='col-33'><label><? echo $this->__w("Username/email"); ?><input type='text' name='username' value="<? echo $booking->contactData->orgid; ?>"><? $this->validateContactData("username"); ?></label></span>
+    <span class='col-33'><label><? echo $this->__w("Password"); ?><input type='password' name='password' value="<? echo $booking->contactData->name; ?>"><? $this->validateContactData("password"); ?></label></span>
 </div>
 <div class='company_form billingform' style='display:none;'>
     <span class='col-33'><label><? echo $this->__w("Orgnr"); ?><input type='text' name='orgid' value="<? echo $booking->contactData->orgid; ?>"><? $this->validateContactData("orgid"); ?></label></span>
@@ -91,8 +97,18 @@ if($this->getConfigurationSetting("headingbillinginfo")) {
     <span class='col-33'><label><? echo $this->__w("Phone"); ?><input type='text' name='phone' value="<? echo $booking->contactData->phone; ?>"><? $this->validateContactData("phone"); ?></label></span>
 </div>
 <div style='clear:both;'></div>
+<?php
+if($config->needToAgreeOnContract) {
+    $checked = "";
+    if($booking->contactData->agreedToTerms) {
+        $checked = "CHECKED";
+    }
+    echo "<div>";
+    echo "<input type='checkbox' gsname='agreeonterms' $checked> I agree to the <a class='termslink' target='_new' onclick='window.open(\"/scripts/loadContract.php?engine=".$this->getSelectedName()."\")'>terms and conditions</a>";
+    echo "</div>";
+    $this->validateContactData("agreedToTerms");
+}
 
-<?
 $text = $this->getConfigurationSetting("complete_order_button");
 if(!$text) {
     $text = $this->__w("Complete order");
@@ -107,6 +123,10 @@ echo $this->displayFailedBookingErrors();
     <? if($booking->contactData->type == 2) {
         ?>
         $('.typeSelection[view="company_form"]').click();
+        <?
+    } else if($booking->contactData->type == 3) {
+        ?>
+        $('.typeSelection[view="registered"]').click();
         <?
     } else {
         ?>

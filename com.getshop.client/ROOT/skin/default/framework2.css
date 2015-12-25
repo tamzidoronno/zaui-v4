@@ -1,11 +1,11 @@
 
-#informationbox-holder {
+#informationbox-holder.gsnewinfobox {
   -webkit-border-radius: 3px;
     border-radius: 3px; 
     background-color: #146da6;
 }
 
-#informationboxtitle {
+#informationbox-holder.gsnewinfobox #informationboxtitle {
 background-color: #146da6;
 }
 
@@ -13,7 +13,7 @@ background-color: #146da6;
 .GetShopToolbox .title {
     background-color: #146da6;
 }
-
-#informationbox { background-color:#fff }
-.informationboxbackground { padding: 10px; }
 .GetShopToolbox .row { background-color:#2885c0; }
+
+#informationbox-holder.gsnewinfobox #informationbox { background-color:#fff }
+#informationbox-holder.gsnewinfobox .informationboxbackground { padding: 10px; }

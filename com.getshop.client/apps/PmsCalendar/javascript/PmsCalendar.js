@@ -2,6 +2,21 @@ app.PmsCalendar = {
     init : function() {
         $(document).on('click','.PmsCalendar .dayslot.free', app.PmsCalendar.changeTime);
         $(document).on('click','.PmsCalendar .continue_button', app.PmsCalendar.reserveBooking);
+        $(document).on('click','.PmsCalendar .topheader .fa-arrow-left', app.PmsCalendar.changeCalendarMonth);
+        $(document).on('click','.PmsCalendar .topheader .fa-arrow-right', app.PmsCalendar.changeCalendarMonth);
+    },
+    changeCalendarMonth: function() {
+        var header= $(this).closest('.topheader');
+        var direction = "up";
+        if($(this).hasClass('fa-arrow-left')) {
+            direction = "down";
+        }
+        var event = thundashop.Ajax.createEvent('','changeCalendarMonth',$(this),{
+            "direction" : direction,
+            "page" : header.attr('page'),
+            "roomName" : header.attr('roomName')
+        });
+        thundashop.Ajax.post(event);
     },
     reserveBooking : function() {
         var continuehref = $(this).attr('continue');
@@ -42,7 +57,7 @@ app.PmsCalendar = {
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
-        thundashop.common.showInformationBox(event, 'Settings');
+        thundashop.common.showInformationBoxNew(event, 'Settings');
     },
     loadSettings: function (element, application) {
         var config = {

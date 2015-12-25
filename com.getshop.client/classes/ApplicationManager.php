@@ -30,6 +30,11 @@ class ApplicationManager extends FactoryBase {
         $toArea = $_POST['data']['newarea'];
         $this->getApi()->getPageManager()->switchApplicationAreas($pageId, $fromArea, $toArea);
     }
+    
+    function changeLayoutToTime() {
+        $time = $_POST['data']['time'];
+        $this->getApi()->getPageManager()->restoreLayout($this->getPage()->javapage->id, $time);
+    }
 
     function showThemeSelection() {
         include("initdata/themeselection.phtml");

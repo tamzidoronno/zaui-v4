@@ -1,0 +1,78 @@
+        
+<center><div id="imagedisplayer" style="position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"> </div></center>
+
+<?
+$prefix = $this->getPrefix();
+    $serCrops = $this->getTranslatedConfigurationSettings("image_cords".$prefix);
+    $rotation = $this->getTranslatedConfigurationSettings("rotation".$prefix);
+    
+    $link = $this->getConfigurationSetting("link".$prefix);
+    $adjust = $this->getConfigurationSetting("adjustment".$prefix);
+    $originalSize = $this->getConfigurationSetting("originalSize".$prefix);
+    
+    $textFields = $this->getTexts();
+    
+    if ($rotation == null) {
+        $rotation = 0;
+    }
+    
+    if ($serCrops) {
+        $exploded = explode(":", $serCrops);
+        $crops = "[".$exploded[0].",".$exploded[2].",".$exploded[1].",".$exploded[3]."]";
+    } else {
+        $crops = "null";
+    }
+    
+?>
+
+<script>
+    var appId = '<? echo $this->getConfiguration()->id; ?>';
+    var config = {
+        app : $('.app[appid='+appId+']:not(".informationbox")'),
+        crops: <? echo $crops; ?> 
+        <?
+        $id = $this->getTranslatedConfigurationSettings("image");
+        if ($id) {
+            echo ",imageId : '$id'";
+        }
+        ?>,
+        'adjust' : '<? echo $adjust; ?>',
+        'originalSize' : '<? echo $originalSize; ?>',
+        'link' : '<? echo $link; ?>',
+        'rotation' : <? echo $rotation ?>,
+        'textFields' : <? echo $textFields ?>
+    }
+    
+    var div = $('#imagedisplayer');
+    
+    var imageDisplayer = new getshop.ImageEditor(div, config, appId);
+    imageDisplayer.imageDeleted = function() {
+        var event = thundashop.Ajax.createEvent("", "imageDeleted", config.app, { imageId: this.config.imageId });
+        thundashop.Ajax.postWithCallBack(event, function() {});
+    };
+    
+    
+    
+    addIt = function(editor) {
+        var event = thundashop.Ajax.createEvent(null, "render", config.app, {});
+        event['synchron'] = true;
+        thundashop.Ajax.postWithCallBack(event, function(response) {
+            config.app.find('.displayimagecontainer').remove();
+            config.app.append(response);
+        }, true);
+    }
+    
+    imageDisplayer.onUploadCompleted(addIt);
+    
+    imageDisplayer.onUploadStarted(function(editor) {
+        thundashop.common.hideInformationBox(null);
+        
+        config.app.find('.imagedisplayer_upload_form_menu').hide();
+        var imageContainer = config.app.find('.displayimagecontainer');
+        imageContainer.show();
+        
+        var holder = imageContainer.find('.imagecontainer')
+        var image = imageDisplayer.getImage();
+        holder.html(image);
+    });
+</script>

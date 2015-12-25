@@ -1,6 +1,7 @@
 
 package com.thundashop.core.pmsmanager;
 
+import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
@@ -25,6 +26,27 @@ public class PmsBooking extends DataCommon {
             }
         }
         return false;
+    }
+
+    PmsBooking copy() {
+        Gson res = new Gson();
+        String copytext = res.toJson(this);
+        return res.fromJson(copytext, PmsBooking.class);
+    }
+
+    PmsBooking copyUnsecure() {
+        PmsBooking result = new PmsBooking();
+        PmsBooking currentCopy = copy();
+        for(PmsBookingRooms room : currentCopy.rooms) {
+            PmsBookingRooms roomCopied = new PmsBookingRooms();
+            roomCopied.date = room.date;
+            roomCopied.guests = room.guests;
+            roomCopied.bookingItemId = room.bookingItemId;
+            roomCopied.bookingItemTypeId = room.bookingItemTypeId;
+            result.rooms.add(roomCopied);
+        }
+        
+        return result;
     }
 
 

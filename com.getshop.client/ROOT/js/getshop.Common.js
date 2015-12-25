@@ -488,6 +488,12 @@ thundashop.common.createInformationBox = function(appid, title, open) {
 
 }
 
+thundashop.common.showInformationBoxNew = function(event, title, avoidScroll) {
+    var box = thundashop.common.showInformationBox(event, title, avoidScroll);
+    box.closest('#informationbox-holder').addClass('gsnewinfobox');
+    return box;
+}
+
 thundashop.common.showInformationBox = function(event, title, avoidScroll) {
     var alreadyvisible = false;
     var timer = 300;
@@ -531,6 +537,7 @@ thundashop.common.showInformationBox = function(event, title, avoidScroll) {
     if (!avoidScroll) {
         $('.informationbox-outer').scrollTop(0);
     }
+    infoBox.closest('#informationbox-holder').removeClass('gsnewinfobox');
 
     return infoBox;
 }
@@ -1178,7 +1185,7 @@ var resizeLeftBar = function() {
 var initializeFlipping = function() {
     $(".gsflipcard").each(function() {
         var card = $(this);
-        var app = card.find('.gsucell');
+        var app = card.find('.front .gsucell');
         var appback = card.find('.back .gsucell');
         
         var height = app.outerHeight(true);
@@ -1228,7 +1235,11 @@ var initializeFlipping = function() {
         if(appback.outerHeight(true) > height) {
             height = appback.outerHeight(true);
         }
+        
         card.css('height',height);
+        card.find('.gsflipfront').css('height',height);
+        card.find('.gsflipback').css('height',height);
+        
         
         if(fliptype === "hover") {
             card.on('mouseenter', function() {

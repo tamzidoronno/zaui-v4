@@ -35,9 +35,15 @@ app.PmsBookingContactData = {
             roomdata[offset].push(guest);
         });
         
+        var agreeonterms = "false";
+        if($('input[gsname="agreeonterms"]').is(':checked')) {
+            agreeonterms = "true";
+        }
+        
         var data = {
             "billingdata" : billingdata,
-            "roomdata" : roomdata
+            "roomdata" : roomdata,
+            "agreetoterms" : agreeonterms
         }
         
         var event = thundashop.Ajax.createEvent('','setContactData',$(this), data);
@@ -50,7 +56,7 @@ app.PmsBookingContactData = {
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
-        thundashop.common.showInformationBox(event, 'Settings');
+        thundashop.common.showInformationBoxNew(event, 'Settings');
     },
     loadSettings: function (element, application) {
         var config = {

@@ -1,11 +1,16 @@
 app.News = { 
     
     init: function() {
-        $(document).on('click', '.News .addevent', $.proxy(this.addEvent, app.News))
-        $(document).on('click', '.News .delete', this.deleteEvent )
-        $(document).on('click', '.News .publish', this.publishEvent )
+        $(document).on('click', '.News .addevent', $.proxy(this.addEvent, app.News));
+        $(document).on('click', '.News .delete', this.deleteEvent );
+        $(document).on('click', '.News .publish', this.publishEvent );
+        $(document).on('click', '.News .showimageeditor', app.News.showEditImage);
     },
-            
+    showEditImage: function(application) {
+        var app = $(application).hasClass('app') ? application : this;
+        var event = thundashop.Ajax.createEvent("", "showImageEditor", app);
+        thundashop.common.showInformationBoxNew(event, __f('Image Editor'));
+    },            
     publishEvent: function() {
         var id = $(this).closest('.news_container').attr('id');
         var data = {

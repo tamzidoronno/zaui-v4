@@ -12,6 +12,7 @@ thundashop.framework = {
     flipped: {},
     cellRotatingWait: {},
     advancedMode: false,
+    historyboxshown : false,
     cssEditorCount: 0,
     firstCellIdToMove : null,
     bindEvents: function () {
@@ -60,6 +61,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_toggle_sidebar', this.toggleSideBar);
         $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
+        $(document).on('keyup', '.gsautosave', this.autoSaveText);
         $(document).on('click', '.gsresizecolumn', this.activateResizeColumn);
         $(document).on('click', '.gsflipcontent', this.flipcontent);
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
@@ -88,6 +90,8 @@ thundashop.framework = {
         $(document).on('click', '.gsdoneresizing', this.deleteResizing);
         $(document).on('click', '.store_mobile_view_button', this.displayMobileView);
         $(document).on('click', '.store_design_button', this.loadGlobalCssEditor);
+        $(document).on('click', '.gschangelayoutfromtime', this.gschangelayoutfromtime);
+        $(document).on('click', '.gslayouthistorybtn', this.gslayouthistory);
         $(document).on('click', '.gsmobileeditor', this.hideMobileView);
         $(document).on('click', '.gsmobilemenu .gsslideleft', this.slideMobileMenu);
         $(document).on('click', '.gsmobilemenu .gsslideright', this.slideMobileMenu);
@@ -123,13 +127,30 @@ thundashop.framework = {
         thundashop.Ajax.post(postEvent);
     },
     
+    autoSaveText : function() {
+        var name = $(this).attr('gsname');
+        if(!name) {
+            name = $(this).attr('name');
+        }
+        var event = thundashop.Ajax.createEvent('','autosavetext',$(this),{
+            "name" : name,
+            "value" : $(this).val()
+        });
+        if(typeof(autosavetimeout) !== "undefined") {
+            clearTimeout(autosavetimeout);
+        }
+        autosavetimeout = setTimeout(function() {
+            thundashop.Ajax.postSynchron(event, function() {});
+        }, "500");
+    },
+    
     postToInformationBox : function() {
         var form = $(this).closest('[gstype="form"]');
         var data = thundashop.framework.createGsArgs(form);
         var method = form.attr('method');
         var event = thundashop.Ajax.createEvent('',method,$(this),data);
         var title = $('#informationboxtitle').text();
-        thundashop.common.showInformationBox(event, title);
+        thundashop.common.showInformationBoxNew(event, title);
     },
     
     resetMobileLayout : function() {
@@ -258,6 +279,14 @@ thundashop.framework = {
             $(this).addClass('gs_advanced_mode_activated');
             thundashop.framework.advancedMode = true;
         }
+    },
+    gslayouthistory : function() {
+        $('.gslayouthistory').toggle();
+        thundashop.framework.historyboxshown = $('.gslayouthistory').is(':visible');
+    },
+    gschangelayoutfromtime : function() {
+        var event = thundashop.Ajax.createEvent('','changeLayoutToTime', $(this), { "time" : $(this).attr('time') });
+        thundashop.Ajax.post(event);
     },
     loadGlobalCssEditor: function () {
         var pageId = $('#gspageid').val();

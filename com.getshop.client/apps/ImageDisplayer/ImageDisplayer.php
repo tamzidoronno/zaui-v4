@@ -103,7 +103,7 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("image".$prefix, $id);
     }
     
-    private function deleteImage() {
+    public function deleteImage() {
         $prefix = $this->getPrefix();
         $this->setConfigurationSetting("original_image".$prefix, null);
         $this->setConfigurationSetting("image".$prefix, null);

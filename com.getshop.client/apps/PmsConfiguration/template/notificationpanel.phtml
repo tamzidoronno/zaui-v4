@@ -150,6 +150,18 @@ $whenToPay[4] = "After stay";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->exposeUnsecureBookings) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='exposeUnsecureBookings' <? echo $checked; ?>>
+            </span>
+            Expose bookings unsecure (for visibility in calendar)
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->needToAgreeOnContract) {
                     $checked = "CHECKED";
                 }
@@ -157,6 +169,18 @@ $whenToPay[4] = "After stay";
                 <input type='checkbox' gsname='needToAgreeOnContract' <? echo $checked; ?>>
             </span>
             Make sure the customers agree to the terms and conditions
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->autoconfirmRegisteredUsers) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoconfirmRegisteredUsers' <? echo $checked; ?>>
+            </span>
+            Registered users are autoconfirmed.
         </div>
         <div class='configrow'>
             <span class='configentry'>

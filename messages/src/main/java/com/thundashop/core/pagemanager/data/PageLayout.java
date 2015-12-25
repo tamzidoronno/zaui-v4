@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,6 +59,9 @@ public class PageLayout implements Serializable {
 
     public void removeCellFromList(PageCell cell) {
         for (String area : areas.keySet()) {
+            if(areas.get(area) == null) {
+                continue;
+            }
             areas.get(area).remove(cell);
         }
     }
@@ -84,7 +88,14 @@ public class PageLayout implements Serializable {
     }
 
     private ArrayList<PageCell> getAllCells() {
-        return getCellsFlatList();
+        ArrayList<PageCell> cells = new ArrayList();
+        for (String area : areas.keySet()) {
+            ArrayList<PageCell> areastoadd = areas.get(area);
+            if(areastoadd != null) {
+                cells.addAll(areastoadd);
+        }
+        }
+        return cells;
     }
 
     public String createCell(String incell, String before, String mode, String area) throws ErrorException {
@@ -351,9 +362,6 @@ public class PageLayout implements Serializable {
             if(areas != null && areas.get(area) != null) {
                 for (PageCell row : areas.get(area)) {
                     arrayList.addAll(row.getCellsFlatList());
-                    if(row.back != null) {
-                        arrayList.add(row.back);
-                    }
                 }
             }
         }
@@ -414,6 +422,27 @@ public class PageLayout implements Serializable {
         if (cell.mode.equals(mode)) {
             return;
         }
+        
+        if(PageCell.CellMode.flip.equalsIgnoreCase(mode)) {
+            if(!cell.cells.isEmpty() && cell.cells.get(0).mode.equalsIgnoreCase(PageCell.CellMode.flip)) {
+                return;
+            }
+            
+            PageCell front = initNewCell(PageCell.CellMode.row);
+            PageCell back = initNewCell(PageCell.CellMode.row);
+            
+            front.appId = cell.appId;
+            front.cells = cell.cells;
+            cell.cells = new ArrayList();
+            
+            PageCell flipBox = initNewCell(PageCell.CellMode.flip);
+            flipBox.cells.add(front);
+            flipBox.cells.add(back);
+            
+            cell.cells.clear();
+            cell.cells.add(flipBox);
+            return;
+       }
 
         if (PageCell.CellMode.rotating.equals(mode) || PageCell.CellMode.tab.equalsIgnoreCase(mode)) {
             boolean convertToSub = true;
@@ -593,7 +622,7 @@ public class PageLayout implements Serializable {
 
     private PageCell findParent(ArrayList<PageCell> cells, String cellId) {
         for(PageCell cell : cells) {
-            if(cell.cellId.equals(cellId) || (cell.back != null && cell.back.cellId.equals(cellId))) {
+            if(cell.cellId.equals(cellId)) {
                 return cell;
             } else {
                 PageCell result = findParent(cell.cells, cellId);
@@ -615,7 +644,9 @@ public class PageLayout implements Serializable {
      */
     public void checkAndFixDoubles() {
         for(ArrayList<PageCell> allCells : areas.values()) {
-            checkAndFixDoublesOnCells(allCells);
+            if(allCells != null) {
+                checkAndFixDoublesOnCells(allCells);
+            }
         }
     }
 
@@ -639,19 +670,6 @@ public class PageLayout implements Serializable {
                 }
                 checkAndFixDoublesOnCells(cell.cells);
             }
-        }
-    }
-
-    void finalizeLayout() {
-        ArrayList<PageCell> allCells = getCellsFlatList();
-        for(PageCell cell : allCells) {
-            cell.finalizeCell();
-        }
-    }
-
-    void clearOnFinalizePage() {
-        if (areas.get("body") == null || areas.get("body").isEmpty()) {
-            clear();
         }
     }
 

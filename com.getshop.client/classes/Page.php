@@ -46,6 +46,10 @@ class Page {
         
         $loggedIn = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? "true" : "false";
         
+        if($this->factory->isEditorMode()) {
+            $this->includeLayoutHistory();
+        }
+        
         echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
@@ -381,9 +385,11 @@ class Page {
         $this->factory->includefile("applicationlist", 'Common');
     }
 
-    private function renderApplication($cell) {
+    private function renderApplication($cell, $depth = 0) {
         $instance = $this->factory->getApplicationPool()->getApplicationInstance($cell->appId);
         if ($instance) {
+            $instance->setDepth($depth);
+            $instance->setCell($cell);
             $instance->renderApplication();
         }
     }
@@ -738,6 +744,15 @@ class Page {
         <?
     }
 
+    public function renderApplicationSimple($appInstanceId, $fromAppBase) {
+        $cell = $fromAppBase->getCell();
+        $cell = json_encode($cell);
+        $cell = json_decode($cell);
+        $depth = $fromAppBase->getDepth();
+        $cell->appId = $appInstanceId;
+        $this->printApplicationArea($cell, $depth);
+    }
+    
     public function printApplicationArea($cell, $depth) {
         if ($cell->type == "FLOATING") {
             return;
@@ -756,7 +771,7 @@ class Page {
             echo "<i title='Delete this cell' class='fa fa-trash gs_drop_cell' $show></i>";
             echo "</span>";
         } else {
-            $this->renderApplication($cell);
+            $this->renderApplication($cell, $depth);
         }
 
         echo "</div>";
@@ -1158,7 +1173,7 @@ class Page {
             $cellsToPrint = $this->getCellsToPrint($cell->cells, $cell->mode);
             foreach ($cellsToPrint as $innercell) {
                 /* @var $cellsToPrint core_pagemanager_data_PageCell */
-                if($innercell->settings->isFlipping && $innercell->settings->isFlipping != "") {
+                if($innercell->mode == "FLIP") {
                     $this->printFlipBoxes($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
                 } else {
                     $this->printCell($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
@@ -1716,20 +1731,34 @@ class Page {
      */
     public function printFlipBoxes($innercell, $counter, $depthprint, $size, $edit, $cell) {
         ?>
-        <div class='gsflipcard' flipcardid="<? echo $innercell->cellId; ?>" fliptype='<? echo $innercell->settings->isFlipping; ?>'> 
+        <div class='gsflipcard' flipcardid="<? echo $innercell->cellId; ?>" fliptype='<? echo $cell->settings->isFlipping; ?>'> 
           <div class="front gsflipfront"> 
             <?
-                $this->printCell($innercell, $counter, $depthprint, $size, $edit, $cell);
+                $this->printCell($innercell->cells[0], $counter, $depthprint, $size, $edit, $cell);
             ?>
             </div> 
             <div class="back gsflipback">
             <?
-                $innercell->back->settings->isFlipping = $innercell->settings->isFlipping;
-                $this->printCell($innercell->back, $counter, $depthprint, $size, $edit, $cell);
+                $this->printCell($innercell->cells[1], $counter, $depthprint, $size, $edit, $cell);
             ?>
             </div> 
           </div>
        <?php
+    }
+
+    public function includeLayoutHistory() {
+        echo "<div class='gslayouthistory'>";
+        echo "<div style='text-align:center;'>Layout history</div>";
+        echo "<hr>";
+        foreach($this->javapage->layoutBackups as $key) {
+            echo "<div class='gschangelayoutfromtime' time='$key'>";
+            echo "select - " . date("d.m.y H:i:s", ($key/1000));
+            echo "</div>";
+        }
+        echo "</div>";
+        echo "<script>";
+        echo "if(thundashop.framework.historyboxshown) { thundashop.framework.gslayouthistory(); }";
+        echo "</script>";
     }
 
 }

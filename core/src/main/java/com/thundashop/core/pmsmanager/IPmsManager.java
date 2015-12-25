@@ -24,6 +24,8 @@ public interface IPmsManager {
     @Administrator
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
+    public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
+    
     @Administrator
     public PmsBooking getBooking(String bookingId);
     
@@ -48,7 +50,6 @@ public interface IPmsManager {
     @Administrator
     public String createOrder(String bookingId, NewOrderFilter filter);
     
-    @Administrator
     public PmsConfiguration getConfiguration();
     
     @Administrator
@@ -62,4 +63,8 @@ public interface IPmsManager {
     
     public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
     public void removeAddonFromCurrentBooking(String itemtypeId) throws Exception;
+    
+    @Administrator
+    public String getContract(String bookingId) throws Exception;
+    public String getCurrenctContract() throws Exception;
 }

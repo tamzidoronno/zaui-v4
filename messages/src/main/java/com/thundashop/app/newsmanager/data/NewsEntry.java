@@ -15,5 +15,6 @@ public class NewsEntry extends DataCommon {
     public Date date = new Date();
     public String content = "";
     public String subject = "";
+    public String image = "";
     public boolean isPublished = false;
 }

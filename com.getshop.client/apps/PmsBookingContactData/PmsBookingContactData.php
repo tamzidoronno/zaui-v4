@@ -58,21 +58,29 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         }
         
         //Setting contact data.
-        $current->contactData->type = 1;
-        $current->contactData->address = $_POST['data']['billingdata']['address'];
-        $current->contactData->postalCode = $_POST['data']['billingdata']['postalCode'];
-        $current->contactData->city = $_POST['data']['billingdata']['city'];
-        $current->contactData->email = $_POST['data']['billingdata']['email'];
-        $current->contactData->name = $_POST['data']['billingdata']['name'];
-        $current->contactData->prefix = $_POST['data']['billingdata']['prefix'];
-        $current->contactData->phone = $_POST['data']['billingdata']['phone'];
-        $current->language = $this->getFactory()->getSelectedLanguage();
-        if(isset($_POST['data']['billingdata']['orgid'])) {
-            $current->contactData->orgid = $_POST['data']['billingdata']['orgid'];
-            $current->contactData->type = 2;
+        if(isset($_POST['data']['billingdata']['username'])) {
+            $current->contactData->type = 3;
+            $current->contactData->username = $_POST['data']['billingdata']['username'];
+            $current->contactData->password = $_POST['data']['billingdata']['password'];
         } else {
-            $current->contactData->birthday = $_POST['data']['billingdata']['birthday'];
+            $current->contactData->type = 1;
+            $current->contactData->address = $_POST['data']['billingdata']['address'];
+            $current->contactData->postalCode = $_POST['data']['billingdata']['postalCode'];
+            $current->contactData->city = $_POST['data']['billingdata']['city'];
+            $current->contactData->email = $_POST['data']['billingdata']['email'];
+            $current->contactData->name = $_POST['data']['billingdata']['name'];
+            $current->contactData->prefix = $_POST['data']['billingdata']['prefix'];
+            $current->contactData->phone = $_POST['data']['billingdata']['phone'];
+            $current->language = $this->getFactory()->getSelectedLanguage();
+            if(isset($_POST['data']['billingdata']['orgid'])) {
+                $current->contactData->orgid = $_POST['data']['billingdata']['orgid'];
+                $current->contactData->type = 2;
+            } else {
+                $current->contactData->birthday = $_POST['data']['billingdata']['birthday'];
+            }
         }
+        $current->contactData->agreedToTerms = ($_POST['data']['agreetoterms'] == "true");
+        
         
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
         
@@ -130,6 +138,20 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             if(isset($validation->{$key})) {
                 echo "<span class='errordesc'>";
                 echo "Field is required";
+                echo "</span>";
+            }
+        }
+        if($field == "username") {
+            if(isset($validation->{$field})) {
+                echo "<span class='errordesc'>";
+                echo $this->__w("Username or password is incorrect");
+                echo "</span>";
+            }
+        }
+        if($field == "agreedToTerms") {
+            if(isset($validation->{$field})) {
+                echo "<span class='errordesc'>";
+                echo $this->__w("You need to agree to the terms and conditions first");
                 echo "</span>";
             }
         }

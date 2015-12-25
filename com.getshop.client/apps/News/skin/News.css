@@ -12,10 +12,9 @@
 }
 
 .News .outeraddnewscontainer input {
-    border: solid 1px;
-    border-radius: 4px;
     padding: 5px;
-    margin-left: 10px;
+    width:100%;
+    box-sizing: border-box;
 }
 
 
@@ -31,22 +30,36 @@
 }
 
 .News .news_container .news_entry_footer {
-    text-align: right;
+    text-align: center;
     font-size: 10px;
+    padding-top: 10px;
 }
-.News .news_container .content {
-    padding-left: 10px;
-}
+
+.News .newscontainerbox { display:none; }
 .News .news_container {
     margin-top: 5px;
     padding: 10px;
     position: relative;
 }
+.News .news_entry_footer {
+    clear:both;
+}
 
-.News .gs_button {
+.News .news_container img { float:left; max-width: 200px; margin: 10px; }
+
+.News .gs_button.addevent,
+.News .gs_button.delete
+{
     position: absolute;
     right: 0px;
     bottom: 10px;
+}
+.News .gs_button.delete {
+    display:none;
+}
+
+.News .news_container:hover .delete {
+    display:inline-block;
 }
 
 .News .news_entry_header {
@@ -77,9 +90,46 @@
 .News .news_container .gs_button {
     top: 5px;
     bottom: inherit;
-    right: 120px;
+    right: 0px;
+    font-size: 12px;
+    padding: 2px;
+    height: 20px;
+    line-height: 20px;
 }
 
 .News .gs_button.publish {
     right: 180px;
+}
+
+.News .addnewsrow { border: solid 1px; background-color:#efefef; }
+
+.News .news_container { 
+    border-bottom: 0px;
+    box-shadow: 0 10px 10px -5px #ccc;
+    background-color: #fff;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+    box-sizing: border-box;
+}
+.News .news_container img { margin: 0px; width:100%; }
+
+.News .news_container,
+.News .grid-sizer {
+  width: 245px;
+}
+
+.News .newscontainerbox:after {
+  content: ' ';
+  display: block;
+  clear: both;
+}
+
+.News .newscontainerbox { padding-left: 8px; }
+.News .newscontainerbox_loading { font-size: 30px; text-align: center; }
+@media only all and (max-width: 800px) {
+    .News .newscontainerbox { padding: 0px; }
+    .News .news_container img { width: 100%; max-width: 100%; margin-bottom: 20px; }
+    .News .news_container { display:block; width: auto; box-sizing: border-box; margin: 10px; }
 }

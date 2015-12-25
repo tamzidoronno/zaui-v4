@@ -22,6 +22,7 @@ public class PageCell implements Serializable {
         public static String tab = "TAB";
         public static String floating = "FLOATING";
         public static String init = "INIT";
+        public static String flip = "FLIP";
     }
     
     public static class CellType {
@@ -51,7 +52,6 @@ public class PageCell implements Serializable {
     public Double width = -1.0;
     public int outerWidth = -1;
     public int outerWidthWithMargins = -1;
-    public PageCell back = null;
     public boolean keepOriginalLayoutOnMobile = false;
     
     //Permissions.
@@ -111,21 +111,6 @@ public class PageCell implements Serializable {
         return PageCell.CellMode.tab.equalsIgnoreCase(mode); 
     }
 
-    public void updateCellForSavingCell() {
-        if(!settings.isFlipping.isEmpty()) {
-            if(back == null) {
-                System.out.println("Initializing back");
-                back = new PageCell();
-                back.mode = mode;
-                back.type = type;
-                back.settings = new PageCellSettings();
-                back.finalizeCell();
-            }
-        } else {
-            back = null;
-        }
-    }
-    
     void finalizeCell() {
     }
     
@@ -148,22 +133,9 @@ public class PageCell implements Serializable {
     public List<PageCell> getCellsFlatList() {
         List<PageCell> retCells = new ArrayList();
         retCells.add(this);
-        
-        if(back != null) {
-            retCells.add(back);
-        }
-        if(cellId.startsWith("e4861")) {
-            System.out.println("Hit");
-        }
 
         for (PageCell cell : cells) {
-            if(cell.cellId.startsWith("e4861")) {
-                System.out.println("Hit");
-            }
             retCells.addAll(cell.getCellsFlatList());
-            if(cell.back != null) {
-                retCells.add(cell.back);
-            }
         }
         
         return retCells;

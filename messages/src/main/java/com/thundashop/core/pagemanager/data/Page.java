@@ -13,7 +13,9 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +30,7 @@ public class Page extends DataCommon implements Cloneable {
     public String type;
     public int userLevel = 0;
     public String description = "";
+    public LinkedList<Long> layoutBackups = new LinkedList();
     public PageLayout layout = new PageLayout();
     @Translation
     public String title;
@@ -64,9 +67,6 @@ public class Page extends DataCommon implements Cloneable {
         if (layout.getAreas().get("body") == null || layout.getAreas().get("body").isEmpty()) {
             layout.clear();
         }
-        layout.finalizeLayout();
-        layout.setNewList(pagedata.leftSideBar, "left_side_bar", true);
-        layout.clearOnFinalizePage();
     }
 
     public PageCell getCell(String pageCellId) {
@@ -138,8 +138,7 @@ public class Page extends DataCommon implements Cloneable {
         if (isASlavePage()) {
             overrideApps.put(cellId, instanceId);
         } else {
-            PageCell cell = getCell(cellId);
-            cell.appId = instanceId;
+            getCell(cellId).appId = instanceId;
         }
     }
 

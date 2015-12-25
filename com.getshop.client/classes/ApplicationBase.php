@@ -4,6 +4,8 @@ class ApplicationBase extends FactoryBase {
     public $pageSingleton = false;
     private $events = array();
     private $skinVariables;
+    private $cell;
+    private $depth;
     
     /** @var core_common_AppConfiguration */
     public $configuration;
@@ -13,6 +15,28 @@ class ApplicationBase extends FactoryBase {
     
     public function getYoutubeId() {
         return false;
+    }
+    
+    public function autosavetext() {
+        $key = 'autosaved_'.$this->getConfiguration()->id . "_" . $_POST['data']['name'];
+        $_SESSION[$key] = $_POST['data']['value'];
+    }
+    
+    public function clearAutoSavedText() {
+        foreach($_SESSION as $key => $value) {
+            if(stristr($key, "autosaved_")) {
+                unset($_SESSION[$key]);
+            }
+        }
+    }
+
+    
+    public function getAutoSaved($name) {
+        $key = 'autosaved_'.$this->getConfiguration()->id . "_" . $name;
+        if(isset($_SESSION[$key])) {
+            return $_SESSION[$key];
+        }
+        return "";
     }
     
     public function postProcess() {
@@ -436,6 +460,21 @@ class ApplicationBase extends FactoryBase {
         $this->applicationSettings = $applicationSettings;
     }
 
+    public function setCell($cell) {
+        $this->cell = $cell;
+    }
+    
+    public function getCell() {
+        return $this->cell;
+    }
+    
+    public function setDepth($depth) {
+        $this->depth = $depth;
+    }
+    
+    public function getDepth() {
+        return $this->depth;
+    }
 
     public function gs_show_fragment() {
         $this->includefile($_POST['gss_fragment']);

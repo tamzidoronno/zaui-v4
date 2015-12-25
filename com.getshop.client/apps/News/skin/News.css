@@ -128,3 +128,8 @@
 
 .News .newscontainerbox { padding-left: 8px; }
 .News .newscontainerbox_loading { font-size: 30px; text-align: center; }
+@media only all and (max-width: 800px) {
+    .News .newscontainerbox { padding: 0px; }
+    .News .news_container img { width: 100%; max-width: 100%; margin-bottom: 20px; }
+    .News .news_container { display:block; width: auto; box-sizing: border-box; margin: 10px; }
+}

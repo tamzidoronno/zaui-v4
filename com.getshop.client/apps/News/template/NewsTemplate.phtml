@@ -63,14 +63,16 @@ foreach($entries as $entry) {
 }
 ?>
 </div>
-<script>
-    $(function() {
-        $(document).find('img').batchImageLoad({
-                loadingCompleteCallback: function() {
-                    $('.newscontainerbox_loading').hide();
-                    $('.newscontainerbox').show();
-                    $('.newscontainerbox').packery({ gutter: 10 });
-                }
+    <script>
+        $(function() {
+            $(document).find('img').batchImageLoad({
+                    loadingCompleteCallback: function() {
+                        $('.newscontainerbox_loading').hide();
+                        $('.newscontainerbox').show();
+                        <?php if(!$this->getFactory()->isMobile()) { ?>
+                            $('.newscontainerbox').packery({ gutter: 10 });
+                        <?php } ?>
+    }
+            });
         });
-    });
-</script>
+    </script>

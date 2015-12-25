@@ -150,7 +150,7 @@ thundashop.framework = {
         var method = form.attr('method');
         var event = thundashop.Ajax.createEvent('',method,$(this),data);
         var title = $('#informationboxtitle').text();
-        thundashop.common.showInformationBox(event, title);
+        thundashop.common.showInformationBoxNew(event, title);
     },
     
     resetMobileLayout : function() {

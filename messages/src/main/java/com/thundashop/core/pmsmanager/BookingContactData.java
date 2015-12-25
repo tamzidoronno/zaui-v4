@@ -21,4 +21,6 @@ public class BookingContactData implements Serializable {
     public String email = "";
     public String phone = "";
     public String prefix = "47";
+    public String username = "";
+    public String password = "";
 }

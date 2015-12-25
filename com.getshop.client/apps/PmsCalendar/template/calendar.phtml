@@ -21,6 +21,11 @@ if($this->getConfigurationSetting("headingcalendarview")) {
     $headingText = $this->getConfigurationSetting("headingcalendarview");
 }
 echo '<h1>'.$headingText.'</h1>';
+echo "<div class='topheader' page='$pageId' roomName='$roomName'>";
+echo "<i class='fa fa-arrow-left'></i>";
+echo $this->getSelectedMonth() . " - " . $this->getSelectedYear();
+echo "<i class='fa fa-arrow-right'></i>";
+echo "</div>";
 echo "<span class='day dayheader weekentry'>" . $this->__w("Week") . "</span>";
 echo "<span class='day dayheader'>" . $this->__w("Mon") . "</span>";
 echo "<span class='day dayheader'>" . $this->__w("Tue") . "</span>";

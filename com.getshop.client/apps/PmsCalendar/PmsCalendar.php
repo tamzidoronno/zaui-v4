@@ -50,6 +50,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         if (isset($_GET['day'])) {
             return strtotime($_GET['day'] . " 00:00:00");
         }
+        if(isset($_SESSION['calendarselectedday'])) {
+            return $_SESSION['calendarselectedday'];
+        }
         return time();
     }
 
@@ -110,6 +113,20 @@ class PmsCalendar extends \WebshopApplication implements \Application {
 
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
     }
+    
+    public function changeCalendarMonth() {
+        $_GET['roomName'] = $_POST['data']['roomName'];
+        $_GET['page'] = $_POST['data']['page'];
+        $direction = $_POST['data']['direction'];
+        $curtime = $this->getSelectedDay();
+        if($direction == "up") {
+            $curtime = strtotime("+1 month", $curtime);
+        } else {
+            $curtime = strtotime("-1 month", $curtime);
+        }
+        $_SESSION['calendarselectedday'] = $curtime;
+        
+    }
 
     /**
      * 
@@ -118,8 +135,10 @@ class PmsCalendar extends \WebshopApplication implements \Application {
      */
     public function printEventsAtDay($day, $bookingsForMonth, $roomId) {
         $day = strtotime($day);
-        foreach ($bookingsForMonth as $booking) {
-            $this->printEventsAtDayFromRooms($day, $booking->rooms, $roomId);
+        if($bookingsForMonth) {
+            foreach ($bookingsForMonth as $booking) {
+                $this->printEventsAtDayFromRooms($day, $booking->rooms, $roomId);
+            }
         }
     }
 

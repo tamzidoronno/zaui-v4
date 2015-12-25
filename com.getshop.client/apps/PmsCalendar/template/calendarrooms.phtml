@@ -7,6 +7,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedN
 if(!$config->exposeUnsecureBookings && $this->isEditorMode()) {
     echo "Warning: Bookings not showing inside of calendar, due to not configured to expose data when not administrator";
 }
+unset($_SESSION['calendarselectedday']);
 
 $filter = new core_pmsmanager_PmsBookingFilter();
 $filter->needToBeConfirmed = true;

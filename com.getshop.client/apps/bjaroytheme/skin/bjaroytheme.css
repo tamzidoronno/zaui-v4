@@ -32,3 +32,5 @@ gsarea[area="body"] { margin-top: 0px; }
 
 .front, .back  { background-color:#fff; }
 .gsflipback .gsucell.gsdepth_2 { padding: 20px; background-color:#1b1714; border: solid 5px #403c39; color:#e4e3e1; font-weight: bold; letter-spacing: 0px; }
+.News h2 { text-transform: uppercase;  }
+.News .news_container { letter-spacing: 0px; color:#000 !important; }

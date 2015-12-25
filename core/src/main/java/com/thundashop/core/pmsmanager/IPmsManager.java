@@ -24,6 +24,8 @@ public interface IPmsManager {
     @Administrator
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
+    public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
+    
     @Administrator
     public PmsBooking getBooking(String bookingId);
     

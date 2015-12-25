@@ -16,6 +16,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean needConfirmation = true;
     public boolean requirePayments = true;
     public boolean needToAgreeOnContract = true;
+    public boolean exposeUnsecureBookings = false;
     
     /*
     1. Pay when booking.

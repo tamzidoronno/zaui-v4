@@ -14,7 +14,7 @@ $filter->startDate = $this->convertToJavaDate(strtotime("01.".$this->getSelected
 $filter->endDate = $this->convertToJavaDate(strtotime("31.".$this->getSelectedMonth().".".$this->getSelectedYear()));
 $filter->needToBeConfirmed = true;
 
-$bookingsForMonth = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+$bookingsForMonth = $this->getApi()->getPmsManager()->getAllBookingsUnsecure($this->getSelectedName(), $filter);
 
 $headingText = "Select the day you want to book for";
 if($this->getConfigurationSetting("headingcalendarview")) {

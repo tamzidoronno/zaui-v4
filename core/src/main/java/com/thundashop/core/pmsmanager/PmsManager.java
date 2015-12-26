@@ -524,6 +524,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private PmsBooking finalize(PmsBooking booking) {
+        if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
+            Calendar nowCal = Calendar.getInstance();
+            nowCal.add(Calendar.HOUR_OF_DAY, -4);
+            if(!booking.rowCreatedDate.after(nowCal.getTime())) {
+                deleteBooking(booking.id);
+                return null;
+            }
+        }
         if(booking.isDeleted) {
             booking.state = 2;
             return booking;
@@ -838,7 +846,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
-        System.out.println("Notification done");
+        System.out.println("Doing notification: " + key);
         notify(key, booking, "sms");
         notify(key, booking, "email");
         notifyAdmin(key, booking);
@@ -1073,6 +1081,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void processor() {
         PmsManagerProcessor processor = new PmsManagerProcessor(this);
+        processor.doProcessing();
     }
 
     void warnArxDown() {

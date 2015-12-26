@@ -26,6 +26,10 @@ public class PmsManagerProcessor {
     private void processStarting(int hoursAhead, int maxAhead) {
         List<PmsBooking> bookings = manager.getAllBookings(null);
         for(PmsBooking booking : bookings) {
+            if(!booking.confirmed) {
+                continue;
+            }
+            
             boolean save = false;
             for(PmsBookingRooms room : booking.rooms) {
                 if(!isBetween(room.date.start, hoursAhead, maxAhead)) {
@@ -62,6 +66,9 @@ public class PmsManagerProcessor {
     }
 
     private boolean pushToArx(PmsBookingRooms room, boolean deleted) {
+        if(manager.configuration.arxHostname.isEmpty()) {
+            return true;
+        }
         if(deleted && room.ended) {
             return false;
         }
@@ -104,9 +111,12 @@ public class PmsManagerProcessor {
     private void processEndings(int hoursAhead, int maxAhead) {
         List<PmsBooking> bookings = manager.getAllBookings(null);
         for(PmsBooking booking : bookings) {
+            if(!booking.confirmed) {
+                continue;
+            }
             boolean save = false;
             for(PmsBookingRooms room : booking.rooms) {
-                if(!isBetween(room.date.end, hoursAhead, maxAhead)) {
+                if(!isBetween(room.date.end, (maxAhead*-1), (hoursAhead*-1))) {
                     continue;
                 }
                 
@@ -115,12 +125,14 @@ public class PmsManagerProcessor {
                     continue;
                 }
                 
-                if(pushToArx(room, true)) {
-                    room.ended = true;
-                    manager.doNotification("room_ended", booking, room, null);
-                    save = true;
-                } else {
-                    continue;
+                if(hoursAhead == 0) {
+                    if(pushToArx(room, true)) {
+                        room.ended = true;
+                        manager.doNotification("room_ended", booking, room, null);
+                        save = true;
+                    } else {
+                        continue;
+                    }
                 }
                 
                 String key = "room_ended_" + hoursAhead + "_hours";

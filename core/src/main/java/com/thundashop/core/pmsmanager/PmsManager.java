@@ -308,6 +308,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.date.end == null) {
                 room.date.end = createInifinteDate();
             }
+            if(room.numberOfGuests < room.guests.size()) {
+                room.numberOfGuests = room.guests.size();
+            }
+            
             bookingToAdd.endDate = room.date.end;
             bookingToAdd.bookingItemTypeId = room.bookingItemTypeId;
             bookingToAdd.externalReference = room.pmsBookingRoomId;
@@ -317,11 +321,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         try {
             result = completeBooking(bookingsToAdd, booking);
-            
-            if(!booking.confirmed) {
-                doNotification("booking_completed", booking);
-            } else {
-                doNotification("booking_confirmed", booking);
+            if(result == 0) {
+                if(!booking.confirmed) {
+                    doNotification("booking_completed", booking);
+                } else {
+                    doNotification("booking_confirmed", booking);
+                }
             }
            
             return result;
@@ -516,6 +521,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private PmsBooking finalize(PmsBooking booking) {
         if(booking.isDeleted) {
+            booking.state = 2;
             return booking;
         }
         if(booking.rooms == null) {

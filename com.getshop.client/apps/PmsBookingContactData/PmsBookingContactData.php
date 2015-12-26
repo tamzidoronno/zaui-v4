@@ -117,13 +117,13 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 echo "<span class='errordesc'>";
                 switch($type) {
                     case "name":
-                        echo "* Full name please";
+                        echo "* " . $this->__w("Full name please");
                         break;
                     case "email":
-                        echo "* Invalid email";
+                        echo "* " . $this->__w("Invalid email");
                         break;
                     case "phone":
-                        echo "* Invalid phone number";
+                        echo "* " . $this->__w("Invalid phone number");
                         break;
                 }
                 echo "</span>";
@@ -137,7 +137,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         if($validation) {
             if(isset($validation->{$key})) {
                 echo "<span class='errordesc'>";
-                echo "Field is required";
+                echo "* " . $this->__w("Field is required");
                 echo "</span>";
             }
         }
@@ -151,7 +151,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         if($field == "agreedToTerms") {
             if(isset($validation->{$field})) {
                 echo "<span class='errordesc'>";
-                echo $this->__w("You need to agree to the terms and conditions first");
+                echo "* " . $this->__w("You need to agree to the terms and conditions first");
                 echo "</span>";
             }
         }

@@ -52,6 +52,7 @@ if(!$headingText) {
     </table>
 
     <div style='text-align: right;'>
-        <span class='continue_button' continue='<? echo $this->getConfigurationSetting("continue"); ?>' gstype="submit"><? echo $this->__w("Continue"); ?></span>
+        <div class="needtimetext"><?php echo $this->__w("Select a time period to booking for before continue"); ?></div>
+        <span class='continue_button disabled' continue='<? echo $this->getConfigurationSetting("continue"); ?>' gstype="submit"><? echo $this->__w("Continue"); ?></span>
     </div>
 </div>

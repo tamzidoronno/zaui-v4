@@ -82,16 +82,12 @@ foreach($bookings as $booking) {
         }
         echo "</td>";
         echo "<td align='center'>";
-        switch($booking->state) {
-            case "0":
-                echo "Booking";
-                break;
-            case "1":
-                echo "Booked";
-                break;
-            case "2":
-                echo "Deleted";
-                break;
+        if($booking->isDeleted) {
+            echo "Deleted";
+        } else if($booking->confirmed) {
+            echo "Confirmed";
+        } else if(!$booking->confirmed) {
+            echo "Unconfirmed";
         }
         echo "</td>";
         echo "</tr>";

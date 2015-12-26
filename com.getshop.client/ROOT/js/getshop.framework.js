@@ -17,6 +17,9 @@ thundashop.framework = {
     firstCellIdToMove : null,
     bindEvents: function () {
         $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
+            if($(this).hasClass('disabled')) {
+                return;
+            }
             thundashop.framework.submitFromEvent(e);
         });
         $('*[gstype="changesubmit"]').live('change', function (e) {

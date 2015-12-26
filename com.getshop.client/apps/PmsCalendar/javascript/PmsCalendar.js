@@ -4,6 +4,29 @@ app.PmsCalendar = {
         $(document).on('click','.PmsCalendar .continue_button', app.PmsCalendar.reserveBooking);
         $(document).on('click','.PmsCalendar .topheader .fa-arrow-left', app.PmsCalendar.changeCalendarMonth);
         $(document).on('click','.PmsCalendar .topheader .fa-arrow-right', app.PmsCalendar.changeCalendarMonth);
+        $(document).on('keyup','.PmsCalendar .starttime input', app.PmsCalendar.inputChanged);
+        $(document).on('keyup','.PmsCalendar .endtime input', app.PmsCalendar.inputChanged);
+    },
+    inputChanged : function() {
+        var failed = false;
+        $('.PmsCalendar .starttime input').each(function() {
+            if(!$(this).val()) {
+                failed = true;
+            }
+        });
+        $('.PmsCalendar .endtime input').each(function() {
+            if(!$(this).val()) {
+                failed = true;
+            }
+        });
+        
+        if(failed) {
+            $('.PmsCalendar').find('.continue_button').addClass('disabled');
+            $('.needtimetext').show();
+        } else {
+            $('.PmsCalendar').find('.continue_button').removeClass('disabled');
+            $('.needtimetext').hide();
+        }
     },
     changeCalendarMonth: function() {
         var header= $(this).closest('.topheader');
@@ -19,6 +42,9 @@ app.PmsCalendar = {
         thundashop.Ajax.post(event);
     },
     reserveBooking : function() {
+        if($(this).hasClass('disabled')) {
+            return;
+        }
         var continuehref = $(this).attr('continue');
          PubSub.subscribe('NAVIGATION_COMPLETED', function() {
              window.location.href=continuehref;
@@ -54,6 +80,7 @@ app.PmsCalendar = {
             min = "0" + min;
         }
         $('.endtime .minute').val(min);
+        app.PmsCalendar.inputChanged();
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});

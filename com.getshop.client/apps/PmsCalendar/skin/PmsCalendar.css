@@ -37,3 +37,5 @@
 .PmsCalendar .topheader .fa-arrow-left { float:left; }
 .PmsCalendar .topheader .fa-arrow-right { float:right; }
 .PmsCalendar .topheader .fa { cursor:pointer; }
+.PmsCalendar .continue_button.disabled { color:#bbb; cursor: inherit; }
+.PmsCalendar .needtimetext { padding-top: 10px; }

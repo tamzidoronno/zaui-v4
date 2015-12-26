@@ -44,6 +44,7 @@ if($config->requirePayments) {
 }
 ?>
 <br><br><br>
-<span class='pmsbutton doneediting' style='float:right;'><? echo $this->__w("Done editing"); ?></span>
+<span class='pmsbutton doneediting' style='float:right;'><? echo $this->__w("Done editing"); ?></span> 
+<span class='pmsbutton deletebooking' bookingid='<? echo $booking->id; ?>' style='margin-right: 50px; background-color:red;'><? echo $this->__w("Delete booking"); ?></span>
 <div style='clear:both;'></div>
 </div>

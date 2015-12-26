@@ -21,6 +21,9 @@ echo "<th>Visitor</th>";
 echo "<th>Room</th>";
 echo "<th align='center'><center>State</center></th>";
 echo "</tr>";
+if(!$bookings) {
+    $bookings = array();
+}
 foreach($bookings as $booking) {
     foreach($booking->rooms as $room) {
         $rows++;
@@ -30,7 +33,6 @@ foreach($bookings as $booking) {
         
         echo "<tr>";
         echo "<td style='width:70px;'>";
-        echo "<i class='fa fa-trash-o removebooking actions'></i>";
         echo "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."'></i> ";
         echo "</td>";
         echo "<td>";

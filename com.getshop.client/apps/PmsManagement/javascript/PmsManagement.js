@@ -8,6 +8,19 @@ app.PmsManagement = {
         $(document).on('change', '.PmsManagement [gsname="numberofguests"]', app.PmsManagement.editGuestToggle);
         $(document).on('click', '.PmsManagement .showorderbutton', app.PmsManagement.showOrder);
         $(document).on('click', '.PmsManagement .doneediting', app.PmsManagement.doneediting);
+        $(document).on('click', '.PmsManagement .deletebooking', app.PmsManagement.deletebooking);
+    },
+    deletebooking : function() {
+        var confirmed = confirm("Are you sure you want to delete this booking?");
+        if(confirmed) {
+            var event = thundashop.Ajax.createEvent('','deleteBooking', $(this), {
+                "bookingid" : $(this).attr('bookingid')
+            });
+            thundashop.Ajax.postWithCallBack(event, function() {
+                thundashop.common.hideInformationBox();
+                thundashop.framework.reprintPage();
+            });
+        }
     },
     doneediting : function() {
         thundashop.framework.reprintPage();

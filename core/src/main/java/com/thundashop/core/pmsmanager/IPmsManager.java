@@ -39,6 +39,9 @@ public interface IPmsManager {
     public String changeDates(String roomId, String bookingId, Date start, Date end);
     
     @Administrator
+    public void deleteBooking(String bookingId);
+    
+    @Administrator
     public void saveBooking(PmsBooking booking);
     
     @Administrator

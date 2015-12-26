@@ -26,6 +26,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function deleteBooking() {
+        $id = $_POST['data']['bookingid'];
+        $this->getApi()->getPmsManager()->deleteBooking($this->getSelectedName(), $id);
+    }
+    
     /**
      * @return core_bookingengine_data_BookingItemType[]
      */
@@ -117,6 +122,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function getSelectedFilter() {
+        if(!isset($_POST['event'])) {
+            unset($_SESSION['pmfilter'][$this->getSelectedName()]);
+        }
         if(isset($_SESSION['pmfilter'][$this->getSelectedName()])) {
             return unserialize($_SESSION['pmfilter'][$this->getSelectedName()]);
         }

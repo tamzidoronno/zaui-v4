@@ -85,6 +85,7 @@ public class UtilManager extends ManagerBase implements IUtilManager {
 
     @Override
     public String getBase64EncodedPDFWebPage(String urlToPage) {
+        urlToPage = urlToPage.replaceAll("&amp;", "&");
         String tmpPdfName = "/tmp/"+UUID.randomUUID().toString() + ".pdf";
         boolean executed = executeCommand("/usr/local/bin/wkhtmltopdf.sh " + urlToPage + " " + tmpPdfName);
         

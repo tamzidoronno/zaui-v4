@@ -104,7 +104,8 @@ if($config->needToAgreeOnContract) {
         $checked = "CHECKED";
     }
     echo "<div>";
-    echo "<input type='checkbox' gsname='agreeonterms' $checked> I agree to the <a class='termslink' target='_new' onclick='window.open(\"/scripts/loadContract.php?engine=".$this->getSelectedName()."\")'>terms and conditions</a>";
+    $terms = $this->__w("I agree to the terms and conditions");
+    echo "<input type='checkbox' gsname='agreeonterms' $checked><a class='termslink' target='_new' onclick='window.open(\"/scripts/loadContractPdf.php?engine=".$this->getSelectedName()."\")'>$terms</a>";
     echo "</div>";
     $this->validateContactData("agreedToTerms");
 }

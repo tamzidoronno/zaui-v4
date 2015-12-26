@@ -811,8 +811,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         if(settings.isFlipping != null && !settings.isFlipping.isEmpty()) {
             setCellMode(page.id, cellId, PageCell.CellMode.flip);
         } else {
-            cell.appId = cell.cells.get(0).cells.get(0).appId;
-            cell.cells.clear();
+            if(!cell.cells.isEmpty() && cell.cells.get(0).mode.equals(PageCell.CellMode.flip)) {
+                cell.appId = cell.cells.get(0).cells.get(0).appId;
+                cell.cells.clear();
+            }
         }
     }
 

@@ -597,7 +597,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
          PmsBooking booking = getBooking(bookingId);
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
-            bookingEngine.changeDatesOnBooking(bookingId, start, end);
+            bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
             room.date.start = start;
             room.date.end = end;
             saveBooking(booking);
@@ -644,11 +644,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room == null) {
                 return "Room does not exists";
             }
-            long start = System.currentTimeMillis();
-            System.out.println("Setting booking item");
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
-            long end = System.currentTimeMillis();
-            System.out.println("ENding now: " + (end-start));
         }catch(BookingEngineException ex) {
             ex.printStackTrace();
             return ex.getMessage();

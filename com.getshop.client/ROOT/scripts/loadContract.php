@@ -1,8 +1,7 @@
 <?php
-if (isset($_GET['id'])) {
-    session_id($_GET['id']);
+if (isset($_GET['sessid'])) {
+    session_id($_GET['sessid']);
 }
-
 session_start();
 
 echo $_SESSION['contractLoaded'];

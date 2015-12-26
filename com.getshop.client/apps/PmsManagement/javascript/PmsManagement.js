@@ -7,6 +7,11 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .editGuestToggle', app.PmsManagement.editGuestToggle);
         $(document).on('change', '.PmsManagement [gsname="numberofguests"]', app.PmsManagement.editGuestToggle);
         $(document).on('click', '.PmsManagement .showorderbutton', app.PmsManagement.showOrder);
+        $(document).on('click', '.PmsManagement .doneediting', app.PmsManagement.doneediting);
+    },
+    doneediting : function() {
+        thundashop.framework.reprintPage();
+        thundashop.common.hideInformationBox();
     },
     showOrder : function() {
         thundashop.common.hideInformationBox();

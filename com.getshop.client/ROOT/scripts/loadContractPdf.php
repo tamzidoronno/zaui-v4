@@ -17,7 +17,7 @@ if(isset($_GET['bookingid'])) {
 }
 $id = session_id();
 $engine = $_GET['engine'];
-$address = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']."/scripts/loadContract.php?engine=".$engine."&bookingid=".$bookingid."&id=$id";
+$address = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']."/scripts/loadContract.php?engine=".$engine."&bookingid=".$bookingid."&sessid=$id";
 
 
 if(isset($_GET['bookingid']) && $_GET['bookingid']) {
@@ -25,7 +25,6 @@ if(isset($_GET['bookingid']) && $_GET['bookingid']) {
 } else {
     $_SESSION['contractLoaded'] = $factory->getApi()->getPmsManager()->getCurrenctContract($_GET['engine']);
 }
-
 session_write_close();
 
 $base64 = $factory->getApi()->getUtilManager()->getBase64EncodedPDFWebPage($address);

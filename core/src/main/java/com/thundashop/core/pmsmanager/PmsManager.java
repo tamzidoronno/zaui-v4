@@ -327,9 +327,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result = completeBooking(bookingsToAdd, booking);
             if(result == 0) {
                 if(!booking.confirmed) {
-                    doNotification("booking_completed", booking, null, null);
+                    doNotification("booking_completed", booking, null);
                 } else {
-                    doNotification("booking_confirmed", booking, null, null);
+                    doNotification("booking_confirmed", booking, null);
                 }
             }
            
@@ -846,17 +846,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveObject(notifications);
     }
     
-    public void doNotification(String key, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
-        System.out.println("Doing notification: " + key);
-        if(room != null) {
-            System.out.println(room.guests.get(0).name);
-        }
-        notify(key, booking, "sms");
-        notify(key, booking, "email");
+    public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
+        key = key + "_" + booking.language;
+        notify(key, booking, "sms", room);
+        notify(key, booking, "email", room);
         notifyAdmin(key, booking);
     }
 
-    private void notify(String key, PmsBooking booking, String type) {
+    private void notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
         String message = configuration.smses.get(key);
         if(type.equals("email")) {
             message = configuration.emails.get(key);
@@ -865,11 +862,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         if(message == null || message.isEmpty()) {
+            System.out.println("Email not configured correctly, email template missing?");
             return;
         }
-        message = formatMessage(message, booking, null, null);
         
-        if(key.startsWith("room_")) {
+        message = formatMessage(message, booking, room, null);
+        if(room != null) {
             notifyGuest(booking, message, type, key);
         } else {
             notifyBooker(booking, message, type, key);
@@ -935,7 +933,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(bookingId);
         booking.confirmed = true;
         saveBooking(booking);
-        doNotification("booking_confirmed", booking, null, null);
+        doNotification("booking_confirmed", booking, null);
     }
 
     @Override

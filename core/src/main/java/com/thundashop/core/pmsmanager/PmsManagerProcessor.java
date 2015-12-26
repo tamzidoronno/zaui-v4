@@ -63,7 +63,7 @@ public class PmsManagerProcessor {
                     continue;
                 }
                 save = true;
-                manager.doNotification(key, booking, room, null);
+                manager.doNotification(key, booking, room);
                 room.notificationsSent.add(key);
                 
                 
@@ -148,7 +148,7 @@ public class PmsManagerProcessor {
                     continue;
                 }
                 save = true;
-                manager.doNotification(key, booking, room, null);
+                manager.doNotification(key, booking, room);
                 room.notificationsSent.add(key);
             }
             if(save) {

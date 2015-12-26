@@ -269,6 +269,6 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     public void sendMailWithDefaults(String name, String email, String title, String message) {
         String fromName = "GetShop";
         String from = "post@getshop.com";
-        sendMail(from, fromName, storeId, title, from, fromName);
+        sendMail(email, name, storeId, title, from, fromName);
     }
 }

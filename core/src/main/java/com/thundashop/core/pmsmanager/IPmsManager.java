@@ -70,4 +70,6 @@ public interface IPmsManager {
     @Administrator
     public String getContract(String bookingId) throws Exception;
     public String getCurrenctContract() throws Exception;
+    
+    public void processor();
 }

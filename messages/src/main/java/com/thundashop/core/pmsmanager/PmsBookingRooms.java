@@ -32,6 +32,11 @@ public class PmsBookingRooms implements Serializable {
     public String bookingId;
     String code = "";
     
+    //Processor stuff.
+    public boolean started = false;
+    public boolean ended = false;
+    public List<String> notificationsSent = new ArrayList();
+    
     /**
      * Finalized entries
      */

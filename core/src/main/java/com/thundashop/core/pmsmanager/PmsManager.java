@@ -6,6 +6,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar;
+import com.thundashop.core.arx.ArxManager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -61,6 +62,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     CartManager cartManager;
+    
+    @Autowired 
+    ArxManager arxManager;
          
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -323,9 +327,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result = completeBooking(bookingsToAdd, booking);
             if(result == 0) {
                 if(!booking.confirmed) {
-                    doNotification("booking_completed", booking);
+                    doNotification("booking_completed", booking, null, null);
                 } else {
-                    doNotification("booking_confirmed", booking);
+                    doNotification("booking_confirmed", booking, null, null);
                 }
             }
            
@@ -833,7 +837,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveObject(notifications);
     }
     
-    private void doNotification(String key, PmsBooking booking) {
+    public void doNotification(String key, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
         System.out.println("Notification done");
         notify(key, booking, "sms");
         notify(key, booking, "email");
@@ -919,7 +923,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(bookingId);
         booking.confirmed = true;
         saveBooking(booking);
-        doNotification("booking_confirmed", booking);
+        doNotification("booking_confirmed", booking, null, null);
     }
 
     @Override
@@ -1064,6 +1068,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         result.removeAll(toRemove);
+    }
+
+    @Override
+    public void processor() {
+        PmsManagerProcessor processor = new PmsManagerProcessor(this);
+    }
+
+    void warnArxDown() {
+        System.out.println("Arx is down");
     }
 
 }

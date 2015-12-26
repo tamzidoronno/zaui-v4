@@ -13,6 +13,18 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("bookinginformation");
     }
 
+    public function resetnotifications() {
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $room->started = false;
+                $room->ended = false;
+                $room->notificationsSent = array();
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+    }
+    
     public function createNewOrder() {
         $filter = new \core_pmsmanager_NewOrderFilter();
         foreach($_POST['data'] as $name => $val) {

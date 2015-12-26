@@ -9,7 +9,17 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .showorderbutton', app.PmsManagement.showOrder);
         $(document).on('click', '.PmsManagement .doneediting', app.PmsManagement.doneediting);
         $(document).on('click', '.PmsManagement .deletebooking', app.PmsManagement.deletebooking);
+        $(document).on('click', '.PmsManagement .resetnotifications', app.PmsManagement.resetnotifications);
     },
+    resetnotifications : function() {
+        var event = thundashop.Ajax.createEvent('','resetnotifications',$(this), {
+            "roomid" : $(this).attr('roomid'),
+            "bookingid" : $(this).attr('bookingid')
+        });
+        
+        thundashop.Ajax.post(event);
+    },
+    
     deletebooking : function() {
         var confirmed = confirm("Are you sure you want to delete this booking?");
         if(confirmed) {

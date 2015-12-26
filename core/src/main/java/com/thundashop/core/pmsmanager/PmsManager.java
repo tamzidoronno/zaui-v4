@@ -586,6 +586,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!onInit) {
             System.out.println("Booking are being deleted");
         }
+        
         bookings.remove(booking.id);
         deleteObject(booking);
     }
@@ -847,6 +848,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
         System.out.println("Doing notification: " + key);
+        if(room != null) {
+            System.out.println(room.guests.get(0).name);
+        }
         notify(key, booking, "sms");
         notify(key, booking, "email");
         notifyAdmin(key, booking);

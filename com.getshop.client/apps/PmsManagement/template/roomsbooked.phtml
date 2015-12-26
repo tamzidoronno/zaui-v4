@@ -36,6 +36,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons) {
         <div style='padding-left: 10px;'>
             <?php
             foreach ($rooms as $room) {
+                /* @var $room core_pmsmanager_PmsBookingRooms */
                 $date = $room->date;
                 ?>
                 <span class='roomattribute'>
@@ -141,7 +142,9 @@ function printRooms($rooms, $types, $items, $bookingId, $addons) {
                             if (!$room->booking->bookingItemId) {
                                 echo "Not assigned yet";
                             } else {
-                                echo $items[$room->booking->bookingItemId]->bookingItemName;
+                                $notifications = "notifications: " . join(",", $room->notificationsSent);
+                                echo "<span title='$notifications'>" . $items[$room->booking->bookingItemId]->bookingItemName . "</span>";
+                                echo "<span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
                             }
                             ?>
                         </span>

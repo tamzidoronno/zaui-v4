@@ -68,4 +68,12 @@ public class PmsBookingRooms implements Serializable {
         
         throw new UnsupportedOperationException("Not implented yet");
     }
+
+    boolean isEnded() {
+        return date.end.before(new Date());
+    }
+
+    boolean isStarted() {
+        return date.start.before(new Date());
+    }
 }

@@ -32,11 +32,20 @@ public class PmsManagerProcessor {
             
             boolean save = false;
             for(PmsBookingRooms room : booking.rooms) {
-                if(!isBetween(room.date.start, hoursAhead, maxAhead)) {
+                if(room.guests.get(0).name.equals("rwar dsa")) {
+                    System.out.println("found");
+                }
+                if(!isBetween(room.date.start, hoursAhead-24, maxAhead-24)) {
+                    continue;
+                }
+                if(room.isEnded()) {
                     continue;
                 }
                 
                 if(hoursAhead == 0) {
+                    if(!room.isStarted()) {
+                        continue;
+                    }
                     if(pushToArx(room, booking.isDeleted)) {
                         save = true;
                         if(booking.isDeleted) {
@@ -119,17 +128,16 @@ public class PmsManagerProcessor {
                 if(!isBetween(room.date.end, (maxAhead*-1), (hoursAhead*-1))) {
                     continue;
                 }
-                
-                if(room.ended) {
-                    //Already ended.
+                if(!room.isEnded()) {
                     continue;
                 }
                 
                 if(hoursAhead == 0) {
+                    if(!room.isEnded() || room.ended) {
+                        continue;
+                    }
                     if(pushToArx(room, true)) {
                         room.ended = true;
-                        manager.doNotification("room_ended", booking, room, null);
-                        save = true;
                     } else {
                         continue;
                     }
@@ -168,6 +176,15 @@ public class PmsManagerProcessor {
         }
         
         return true;
+    }
+
+    private boolean isAfter(int hoursAhead, Date date) {
+        Calendar nowCal = Calendar.getInstance();
+        nowCal.setTime(new Date());
+        nowCal.add(Calendar.HOUR_OF_DAY, hoursAhead);
+        Date now = nowCal.getTime();
+        
+        return now.after(date);
     }
     
 }

@@ -15,28 +15,20 @@ public class PmsManagerProcessor {
     }
     
     public void doProcessing() {
-        processStarting(0);
-        processStarting(24);
-        processStarting(48);
-        processEndings(0);
-        processEndings(24);
-        processEndings(48);
+        processStarting(0, 24*1);
+        processStarting(24, 24*2);
+        processStarting(48, 24*3);
+        processEndings(0, 24*1);
+        processEndings(24, 24*2);
+        processEndings(48, 24*3);
     }
 
-    private void processStarting(int hoursAhead) {
+    private void processStarting(int hoursAhead, int maxAhead) {
         List<PmsBooking> bookings = manager.getAllBookings(null);
-        Calendar nowCalendar = Calendar.getInstance();
-        nowCalendar.add(Calendar.HOUR_OF_DAY, hoursAhead);
-        Date now = nowCalendar.getTime();
-        
         for(PmsBooking booking : bookings) {
             boolean save = false;
             for(PmsBookingRooms room : booking.rooms) {
-                
-                if(!room.date.start.after(now)) {
-                    continue;
-                }
-                if(!room.date.end.after(now)) {
+                if(!isBetween(room.date.start, hoursAhead, maxAhead)) {
                     continue;
                 }
                 
@@ -92,10 +84,11 @@ public class PmsManagerProcessor {
         category.name = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
         person.accessCategories.add(category);
         
-        logonToArx();
         try {
+            logonToArx();
             manager.arxManager.updatePerson(person);
         }catch(Exception e) {
+            e.printStackTrace();
             manager.warnArxDown();
             return false;
         }
@@ -108,25 +101,12 @@ public class PmsManagerProcessor {
                 manager.configuration.arxPassword);
     }
 
-    private void processEndings(int hoursAhead) {
+    private void processEndings(int hoursAhead, int maxAhead) {
         List<PmsBooking> bookings = manager.getAllBookings(null);
-        Calendar endFuture = Calendar.getInstance();
-        endFuture.add(Calendar.HOUR_OF_DAY, 6+hoursAhead);
-        Date end = endFuture.getTime();
-        
-        Calendar nowCalendar = Calendar.getInstance();
-        nowCalendar.add(Calendar.HOUR_OF_DAY, hoursAhead);
-        Date now = nowCalendar.getTime();
-        
         for(PmsBooking booking : bookings) {
             boolean save = false;
             for(PmsBookingRooms room : booking.rooms) {
-                if(!room.date.end.after(now)) {
-                    //Not yet ended
-                    continue;
-                }
-                if(room.date.end.after(end)) {
-                    //Ending sometimes in the future.
+                if(!isBetween(room.date.end, hoursAhead, maxAhead)) {
                     continue;
                 }
                 
@@ -155,6 +135,27 @@ public class PmsManagerProcessor {
                 manager.saveBooking(booking);
             }
         }
+    }
+
+    private boolean isBetween(Date date, int hoursAhead, int maxAhead) {
+        Calendar nowCal = Calendar.getInstance();
+        nowCal.setTime(new Date());
+        nowCal.add(Calendar.HOUR_OF_DAY, hoursAhead);
+        Date now = nowCal.getTime();
+        
+        nowCal.setTime(new Date());
+        nowCal.add(Calendar.HOUR_OF_DAY, maxAhead);
+        Date max = nowCal.getTime();
+        
+        if(date.before(now)) {
+            return false;
+        }
+        
+        if(date.after(max)) {
+            return false;
+        }
+        
+        return true;
     }
     
 }

@@ -31,6 +31,7 @@ public class PmsBookingRooms implements Serializable {
     public double taxes = 8;
     public String bookingId;
     String code = "";
+    public boolean isClean = true;
     
     //Processor stuff.
     public boolean started = false;

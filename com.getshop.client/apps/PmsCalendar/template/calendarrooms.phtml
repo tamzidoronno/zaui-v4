@@ -45,12 +45,16 @@ foreach($types as $type) {
         if($item->bookingItemTypeId != $type->id) {
             continue;
         }
-        echo "<a href='?roomName=".$item->bookingItemName."&page=$pageId'>";
         echo "<span class='roomentry'>";
+        echo "<a href='?roomName=".$item->bookingItemName."&page=$pageId'>";
+        echo "<span class='roomentryinner'>";
         echo $item->bookingItemName;
-        echo "<span class='nobookings'>$counter bookinger</span>";
+        echo "<span class='nobookings'>$counter bookinger<br>";
+        echo "</span>";
         echo "</span>";
         echo "</a>";
+        echo "<a class='description' href='?page=".$item->id."'>Beskrivelse</a>";
+        echo "</span>";
     }
 }
 echo "</div>";

@@ -286,7 +286,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         if($found) {
             echo $res;
         } else {
-            echo "No bookings registered so far";
+            echo $this->__w("No bookings registered so far");
         }
         
     }

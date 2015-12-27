@@ -39,3 +39,8 @@
 .PmsCalendar .topheader .fa { cursor:pointer; }
 .PmsCalendar .continue_button.disabled { color:#bbb; cursor: inherit; }
 .PmsCalendar .needtimetext { padding-top: 10px; }
+.PmsCalendar .dayrow { border: solid 1px #efefef; margin: 1px; padding: 3px;  }
+.PmsCalendar .bookingrow { padding-left: 5px;  }
+.PmsCalendar .nonefoundrow { color:#bbb; }
+.PmsCalendar .registerbutton { float:right; border: solid 1px #bbb; background-color:#94c48d; border-radius: 3px; padding: 2px; }
+.PmsCalendar .selectedslot { background-color:green; color:#fff; }

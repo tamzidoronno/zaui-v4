@@ -6,6 +6,8 @@ app.PmsCalendar = {
         $(document).on('click','.PmsCalendar .topheader .fa-arrow-right', app.PmsCalendar.changeCalendarMonth);
         $(document).on('keyup','.PmsCalendar .starttime input', app.PmsCalendar.inputChanged);
         $(document).on('keyup','.PmsCalendar .endtime input', app.PmsCalendar.inputChanged);
+        $(document).on('change','.PmsCalendar .starttime input', app.PmsCalendar.inputChanged);
+        $(document).on('change','.PmsCalendar .endtime input', app.PmsCalendar.inputChanged);
         $(document).on('change','.PmsCalendar .roomselectiononday', app.PmsCalendar.changeRoom);
     },
     changeRoom : function() {
@@ -20,14 +22,47 @@ app.PmsCalendar = {
         var failed = false;
         $('.PmsCalendar .starttime input').each(function() {
             if(!$(this).val()) {
+                console.log('failing here 3');
                 failed = true;
             }
         });
         $('.PmsCalendar .endtime input').each(function() {
             if(!$(this).val()) {
+                console.log('failing here 2');
                 failed = true;
             }
         });
+        
+        var startHour = parseInt($('input[gsname="starthour"]').val());
+        var endHour = parseInt($('input[gsname="endhour"]').val());
+        
+        
+        $('.selectedslot').removeClass('selectedslot');
+        
+        $('.dayslot').each(function() {
+            var start = $(this).attr('start');
+            var date = new Date(start*1000);
+            var selectedHour = date.getHours();
+
+            if(selectedHour < startHour) {
+                return;
+            }
+            if(selectedHour >= endHour) {
+                return;
+            }
+            
+            if($(this).hasClass('taken')) {
+                console.log('failing');
+                failed = true;
+            }
+            
+            $(this).addClass('selectedslot');
+        });
+        
+        if(endHour <= startHour) {
+            console.log('failing here: ' + endHour + " - " + startHour);
+            failed = true;
+        }
         
         if(failed) {
             $('.PmsCalendar').find('.continue_button').addClass('disabled');
@@ -36,6 +71,8 @@ app.PmsCalendar = {
             $('.PmsCalendar').find('.continue_button').removeClass('disabled');
             $('.needtimetext').hide();
         }
+        
+        console.log('awesome');
     },
     changeCalendarMonth: function() {
         var header= $(this).closest('.topheader');

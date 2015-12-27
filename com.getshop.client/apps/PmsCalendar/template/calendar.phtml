@@ -24,49 +24,75 @@ echo '<h1>'.$headingText.'</h1>';
 echo "<div class='topheader' page='$pageId' roomName='$roomName'>";
 echo "<i class='fa fa-arrow-left'></i>";
 echo $this->getSelectedMonth() . " - " . $this->getSelectedYear();
+if($this->getViewType() == "list") {
+    echo " - <a href='?roomName=$roomName&page=$pageId&viewtype=calendar'>view as calendar</a>";
+} else {
+    echo " - <a href='?roomName=$roomName&page=$pageId&viewtype=list'>view as list</a>";
+}
 echo "<i class='fa fa-arrow-right'></i>";
 echo "</div>";
-echo "<span class='day dayheader weekentry'>" . $this->__w("Week") . "</span>";
-echo "<span class='day dayheader'>" . $this->__w("Mon") . "</span>";
-echo "<span class='day dayheader'>" . $this->__w("Tue") . "</span>";
-echo "<span class='day dayheader'>" . $this->__w("Wed") . "</span>";
-echo "<span class='day dayheader'>" . $this->__w("Thu") . "</span>";
-echo "<span class='day dayheader'>" . $this->__w("Fri") . "</span>";
-echo "<span class='day dayheader'>" . $this->__w("Sat") . "</span>";
-echo "<span class='day dayheader'>" . $this->__w("Sun") . "</span>";
-echo "<div style='clear:both;'></div>";
 
-foreach($monthDates as $week => $days) {
-    echo "<div>";
-    echo "<span class='day weekentry'>$week</span>";
-    for($i = 1; $i <= 7; $i++) {
-        $css = "";
-        $day="";
-        if(isset($days[$i])) {
-            $css = "dayentry";
-            $day = $days[$i]."-".$month."-".$year;
+if($this->getViewType() == "list") {
+    for($i = 1; $i <= 31; $i++) {
+        echo "<div class='dayrow'>";
+        if($i < 10) {
+            $i = "0" . $i;
         }
-        if($day) {
-           echo "<a href='?roomName=".$roomName."&page=$pageId&day=$day'>";
+        $date = $i."." . $this->getSelectedMonth() . "." . $this->getSelectedYear();
+        echo "<a class='registerbutton' href='?roomName=".$roomName."&page=$pageId&day=$date'>";
+        echo $this->__w("Register");
+        echo "</a>";
+        echo $date . "<br>";
+        echo "<div class='bookingrow'>";
+        if(!$this->printEventsAtDay($date . " 02:00:00", $bookingsForMonth, $room->id, true)) {
+            echo "<span class='nonefoundrow'>Ingenting registrert på denne dagen</span>";
         }
-         echo "<span class='day $css'>";
-        if($day) {
-            if($room) {
-                echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, $room->id);
-            } else {
-                echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, null);
+        echo "</div>";
+        echo "</div>";
+    }
+} else {
+    echo "<span class='day dayheader weekentry'>" . $this->__w("Week") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Mon") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Tue") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Wed") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Thu") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Fri") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Sat") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Sun") . "</span>";
+    echo "<div style='clear:both;'></div>";
+
+    foreach($monthDates as $week => $days) {
+        echo "<div>";
+        echo "<span class='day weekentry'>$week</span>";
+        for($i = 1; $i <= 7; $i++) {
+            $css = "";
+            $day="";
+            if(isset($days[$i])) {
+                $css = "dayentry";
+                $day = $days[$i]."-".$month."-".$year;
+            }
+            if($day) {
+               echo "<a href='?roomName=".$roomName."&page=$pageId&day=$day'>";
+            }
+             echo "<span class='day $css'>";
+            if($day) {
+                if($room) {
+                    echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, $room->id);
+                } else {
+                    echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, null);
+                }
+            }
+            if(isset($days[$i])) {
+                echo "<span style='z-index:2;position:absolute;left: 50%;'>". $days[$i] ."</span>";
+            }
+            echo "</span>";
+            if($day) {
+                echo "</a>";
             }
         }
-        if(isset($days[$i])) {
-            echo "<span style='z-index:2;position:absolute;left: 50%;'>". $days[$i] ."</span>";
-        }
-        echo "</span>";
-        if($day) {
-            echo "</a>";
-        }
+        echo "</div>";
+        echo "<div style='clear:both;'></div>";
     }
-    echo "</div>";
-    echo "<div style='clear:both;'></div>";
 }
 
 ?>

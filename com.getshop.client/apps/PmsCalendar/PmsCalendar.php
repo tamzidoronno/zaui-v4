@@ -133,13 +133,17 @@ class PmsCalendar extends \WebshopApplication implements \Application {
      * @param type $day
      * @param \core_pmsmanager_PmsBooking[] $bookingsForMonth
      */
-    public function printEventsAtDay($day, $bookingsForMonth, $roomId) {
+    public function printEventsAtDay($day, $bookingsForMonth, $roomId, $printName = false) {
         $day = strtotime($day);
+        $found = false;
         if($bookingsForMonth) {
             foreach ($bookingsForMonth as $booking) {
-                $this->printEventsAtDayFromRooms($day, $booking->rooms, $roomId);
+                if($this->printEventsAtDayFromRooms($day, $booking->rooms, $roomId, $printName)) {
+                    $found = true;
+                }
             }
         }
+        return $found;
     }
 
     /**
@@ -147,7 +151,8 @@ class PmsCalendar extends \WebshopApplication implements \Application {
      * @param type $day
      * @param \core_pmsmanager_PmsBookingRooms $rooms
      */
-    public function printEventsAtDayFromRooms($day, $rooms, $roomId) {
+    public function printEventsAtDayFromRooms($day, $rooms, $roomId, $printName) {
+        $found = false;
         foreach ($rooms as $room) {
             if ($this->isAddon($room)) {
                 continue;
@@ -158,9 +163,15 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             
             if (($day >= strtotime($room->date->start) && $day <= strtotime($room->date->end)) || (date("m.d.Y", $day) == date("m.d.Y", strtotime($room->date->start))) || (date("m.d.Y", $day) == date("m.d.Y", strtotime($room->date->end)))
             ) {
-                echo "<span class='bookingentyrincal' style='top: 30px;' title='" . $room->guests[0]->name . "'></span>";
+                $found = true;
+                if($printName) {
+                    echo $room->guests[0]->name;
+                } else {
+                    echo "<span class='bookingentyrincal' style='top: 30px;' title='" . $room->guests[0]->name . "'></span>";
+                }
             }
         }
+        return $found;
     }
 
     /**
@@ -218,6 +229,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
         $rooms2 = array();
         foreach ($rooms as $room) {
+            if($this->isAddon($room)) {
+                continue;
+            }
             $rooms2[$room->id] = $room;
         }
         return $rooms2;
@@ -304,6 +318,18 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             }
         }
         return null;
+    }
+
+    public function getViewType() {
+        $viewtype = "";
+        if(isset($_GET['viewtype'])) {
+            $viewtype = $_GET['viewtype'];
+            $_SESSION['viewtypesetforcalendar'] = $viewtype;
+        } else if(isset($_SESSION['viewtypesetforcalendar'])) {
+            $viewtype = $_SESSION['viewtypesetforcalendar'];
+        }
+        
+        return $viewtype;
     }
 
 }

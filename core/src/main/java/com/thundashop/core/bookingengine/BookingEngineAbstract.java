@@ -245,8 +245,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     private void checkIfCanAddBookings(List<Booking> bookings) {
         List<Booking> checkedBookings = new ArrayList(); 
         
-        HashMap<String, BookingTimeLineFlatten> flattenTimeLines = new HashMap();
-        
         for (Booking booking : bookings) {
             String bookingItemTypeId = booking.bookingItemTypeId;
             

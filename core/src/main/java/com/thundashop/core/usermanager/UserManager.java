@@ -72,6 +72,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Autowired
     public StoreManager storeManager;
     
+    @Autowired
+    public GSAdmins gsAdmins;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -96,6 +99,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 ex.printStackTrace();
                 // Should never ever happend.
             }
+        }
+        
+        for (User user : gsAdmins.getAllAdmins()) {
+            user.storeId = storeId;
+            getUserStoreCollection(storeId).addUserDirect(user);
         }
     }
 
@@ -201,7 +209,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public User logOn(String username, String password) throws ErrorException {
-        if (this.isDoubleAuthenticationActivated()) {   
+        // Require double auth for gs admins
+        if (this.isDoubleAuthenticationActivated() || gsAdmins.getGSAdmin(username) != null) {   
             throw new ErrorException(13);
         }
         

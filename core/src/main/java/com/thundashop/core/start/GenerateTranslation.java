@@ -61,7 +61,7 @@ public class GenerateTranslation {
         
         GenerateTranslation gt = new GenerateTranslation();
         System.out.println("0.3");
-        gt.parsePath("../com.getshop.client/");
+        gt.parsePath("/source/getshop/3.0.0/com.getshop.client/");
         System.out.println("0.4");
         
         System.out.println("1");
@@ -94,7 +94,7 @@ public class GenerateTranslation {
     private void writeTranslationFile(String filename, ArrayList<String> webShopTranslation, boolean includeSuffix) {
         try {
             // Create file 
-            FileWriter fstream = new FileWriter("../com.getshop.client/ROOT/translation/" + filename + ".csv");
+            FileWriter fstream = new FileWriter("/source/getshop/3.0.0/com.getshop.client/ROOT/translation/" + filename + ".csv");
             BufferedWriter out = new BufferedWriter(fstream);
 
             HashMap<String, List<TranslationKey>> sortedTranslation = buildSortedTranslation(webShopTranslation);

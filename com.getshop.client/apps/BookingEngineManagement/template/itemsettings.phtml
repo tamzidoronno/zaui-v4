@@ -12,15 +12,15 @@ $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedNa
             <td width="50%"><input type="text" gsname="bookingItemName" style='width:100%;' value="<? echo $item->bookingItemName; ?>"></td>
         </tr>
         <tr>
-            <td width="50%"><? echo $this->__w("How many bookings is allowed to be on this bookingitem"); ?></td>
+            <td width="50%">How many bookings is allowed to be on this bookingitem</td>
             <td width="50%"><input type="text" gsname="bookingSize" style='width:100%;' value="<? echo $item->bookingSize; ?>"></td>
         </tr>
         <tr>
-            <td width="50%"><? echo $this->__w("Waiting list size"); ?></td>
+            <td width="50%">Waiting list size</td>
             <td width="50%"><input type="text" gsname="waitingListSize" style='width:100%;' value="<? echo $item->waitingListSize; ?>"></td>
         </tr>
         <tr>
-            <td width="50%"><? echo $this->__w("This bookingitem will be full if this counter is hit"); ?></td>
+            <td width="50%">This bookingitem will be full if this counter is hit</td>
             <td width="50%"><input type="text" gsname="fullWhenCountHit" style='width:100%;' value="<? echo $item->fullWhenCountHit; ?>"></td>
         </tr>
     </table>

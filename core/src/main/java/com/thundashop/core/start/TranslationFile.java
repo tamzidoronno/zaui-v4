@@ -42,7 +42,7 @@ public class TranslationFile {
     }
 
     private void readFile(String fileName) throws FileNotFoundException, IOException {
-        String path = "../com.getshop.client/ROOT/translation/";
+        String path = "/source/getshop/3.0.0/com.getshop.client/ROOT/translation/";
 
         File file = new File(path + fileName + ".csv");
         if (!file.exists()) {
@@ -69,9 +69,9 @@ public class TranslationFile {
 
     public void save(boolean translation) {
         try {
-            String path = "../com.getshop.client/ROOT/translation/" + filename + ".csv";
+            String path = "/source/getshop/3.0.0/com.getshop.client/ROOT/translation/" + filename + ".csv";
             if (translation) {
-                path = "../com.getshop.client/ROOT/translation/stripped/" + filename + ".csv";
+                path = "/source/getshop/3.0.0/com.getshop.client/ROOT/translation/stripped/" + filename + ".csv";
             }
             FileWriter fstream = new FileWriter(path);
             BufferedWriter out = new BufferedWriter(fstream);

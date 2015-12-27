@@ -2,9 +2,9 @@
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
 * PayOnDelivery fee;-;Gebyr henting 
 0-100 km/h;-;0-100 km/h
-100% width;-;100% bredde
 A confirmation email has been sent to your email.;-;En bekreftelse er sendt til din e-post.
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
+Add;-;Legg til
 Add a button to your page. This button can be a add to cart button, go to page button, etc;-;Legg til en knapp på websiden din. Knapper som legg i handlekurv, gå til en annen side, osv.
 Add another slide;-;Legg til en til slider
 Add another slider;-;Legg inn til slider
@@ -19,6 +19,8 @@ Add text to your page with one of the best text editors on the web for manipulat
 Add this to the header or to the body to make a new login form, can be added anywhere on the page.;-;Legge denne i headeren eller på hoveddelen av siden for å lage en ny pålogginsområde. 
 Add this to the page and you can allow your customers to search for products.;-;Legg til et produktsøk på siden din, og du gir deretter dine kunder mulighet til å søke opp dine produkter.
 Add youtube vidoes to your page. Just search for the video you want to add and click add.;-;Legg inn youtube videor på websiden din. Bare søk etter den filmen du ønsker og trykk på legg til.
+Addon type;-;Tilleggs type
+Addons;-;Tilegg
 Address;-;Adresse
 Adult;-;Voksne
 All fields are required.;-;Alle felt er påkrevd
@@ -30,14 +32,17 @@ Apply coupon;-;Bruk kupong
 April;-;April
 Attributes;-;Attributter
 August;-;August
+Availability;-;Tilgjengelighet
 Available positions;-;Ledige plasser
 Back to page;-;Tilbake til siden
-Background color inner;-;Indre bakgrundsfarge
-Background color outer;-;Ytre bakgrundsfarge
+Background color;-;Bakgrundsfarge
 Background image / styling;-;Bakgrunnsbilde / Styling
+Billing information;-;Faktura informasjon
 Birth Date;-;Fødselsdato
+Birth date;-;Fødselsdato
 Body title;-;Tittel
 Booking;-;Påmelding
+Booking engine name;-;Bookingengine navn
 Bottom spacing;-;Nedre spacing
 BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Very simple to use and gets you started with visa payment immediatly;-;BrainTree er en internasjonal betalingsmetode som eies av PayPal. De tilbyr betaling med Visa, MasterCard, PayPal, osv. Veldig enkel å bruke og gir det mulighet til å ta imot betaling online med gang.
 Building your store;-;Lag din webbutikk
@@ -49,7 +54,6 @@ Carousel settings;-;Instillinger for karusellen
 Cart overview;-;Handlekurv oversikt
 Cell phone;-;Mobil tlf
 Cell settings;-;Instillinger for celle
-Center;-;Centrert
 Change password;-;Endre passord
 Change to carousel mode;-;Bytt til karusellmodus
 Change to row mode;-;Bytt til rad modus
@@ -61,16 +65,21 @@ Children;-;Barn
 Choose;-;Velg
 City;-;By
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
+Color transition;-;Fargetransisjoner
 Comments;-;Kommentarer
+Company;-;Selskap
+Complete order;-;Fullfør ordren
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
+Connect this to a product;-;Koble denne til et produkt
 Container operations;-;Operasjoner for kontaineren
 Continue;-;Fortsett
 Cookies are being stored;-;Cookier blir lagret
 Country;-;Land
 Coupon;-;Kupong
 Coupon discount;-;Kupong avslag
-Cover;-;Cover
+Create a booking item;-;Opprett et booking item
+Create a booking item type;-;Opprett en booking item type
 Create a new slide;-;Opprett en ny slide
 Create left column;-;Lag en ny venstrekolonne
 Create right column;-;Lag en ny høyrekolonne
@@ -84,34 +93,48 @@ Day;-;Dag
 December;-;Desember
 Delete;-;Slett
 Delete area;-;Slett området
+Delete booking;-;Slett booking
 Delete column;-;Slett kolonnen
 Delete image;-;Slett bilde
 Delete row;-;Slett raden
 Delete selected slide;-;Slett valgte slide
 Display numbers on dots;-;Vis tall på dottene
 Display product lists in your webshop;-;Vis produkt lister i din nettbutikk.
+Display this cell when logged on (it will always be visible for administrators);-;Vis denne cellen når du er logget på (den vil alltid være synlig for administratorer)
+Display this cell when logged out;-;Vis denne cellen når du er logget ut
 Disploma is disabled;-;Diploma er deaktivert
 Do not rotate;-;Ikke roter
 Done editing;-;Ferdig å editere
 Download ebill;-;Last ned ebill
+Duraction (ms);-;Tid (ms)
 Ecommerce settings;-;Netthandel instillinger
 Edit row;-;Editer raden
+Effects;-;Effekter
 Email;-;Epost
 Email address;-;Epost adresse
+Email form type;-;Epost form type
 Email is incorrect;-;E-posten er feil
 Email to this address;-;E-post til denne adressen
 Embed your own code into the page;-;Embed din egen kode på websiden
 End date;-;Slutt dato
+End opacity;-;Slutt opacity
+Ending at;-;Slutt dato
 Enter a new password.;-;Skriv inn ditt nye passord
 Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
+Event label (google analythics);-;Event label (google analythics)
 Fade;-;Fade
+Fade in when scrolling;-;Fade når du scroller
 Failed;-;Feilet
 February;-;Februar
 Field has not been configured yet, configure it first.;-;Feltet har ikke blitt konfigurert enda, konfigurer det først.
+Field is required;-;Feltet er påkrevd
 Fixed price;-;Fast pris
+Flip contect to add content underneat this cell;-;Flipp cellen for å legge til innhold under denne cellen
+Fri;-;Fre
 Friday;-;Fredag
 Full name;-;Hele navnet
+Full name please;-;Vennligst skriv inn fullt navn
 Gallery;-;Galleri
 Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Group;-;Gruppe
@@ -119,9 +142,11 @@ Height;-;Høyde
 Height (px);-;Høyde (px)
 Height (px) mobile;-;Høyde (px) mobil
 Hide on mobile;-;Ikke vis på mobilen
+Hide this cell on a cell phone;-;Gjem denne cellen på mobiltelefonen
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
+If you enable this, the parallex effect will be enabled. The background will scroll faster then the cell on top;-;Hvis du aktiverer dette vil du aktivere paralaxx effekter, bakgrunnen vil da scrolle raskere enn cellen over.
 Image;-;Bilde
 Information;-;Informasjon
 Inner background;-;Indre bakgrunn
@@ -129,12 +154,15 @@ Insert column;-;Sett inn kolonne
 Insert column to the left;-;Legg inn en kolonne til venstre
 Insert column to the right;-;Legg inn en kolonne til høyre
 Insert row;-;Sett inn rad
+Invalid email;-;Ugyldig epost
 Invalid email address;-;Ugyldig epost adresse
 Invalid payment method;-;Ugyldig betalings metode
+Invalid phone number;-;Ugyldig telefonnummer
 Invalid reset code.;-;Ugyldig tilbakestillings kode
 Invoice email;-;Epost Teknisk Leder
 InvoicePayment;-;Faktura
 Is private person;-;Er privat person
+Is visible for booking;-;Er synlig for booking
 It's all about selling products online, GetShop is where you start!;-;Det handler å selge produkter online, GetShop er hvor du starter!
 Items;-;Varer
 January;-;Januar
@@ -145,6 +173,7 @@ Keep original layout in mobile view.;-;Behold original layout på mobilen
 Leave label open;-;La teksten stå åpen
 Left spacing;-;Venstre spacing
 Les mer;-;Les mer
+Link this cell;-;Link denne cellen
 Loading;-;Laster
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
@@ -153,9 +182,11 @@ May;-;Mai
 Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på kontoen din hos braintree.
 Message;-;Melding
 Message from a customer;-;Melding fra en kunde
-Mobile settings;-;Mobil instillinger
+Mon;-;Man
 Monday;-;Mandag
 More information;-;Mer informasjon
+Mouse over background;-;Mus over bakgrundsfarge
+Mouse over text color;-;Mus over tekst farge
 Move cell to the left;-;Flytt celle til venstre
 Move cell to the right;-;Flytt celle til høytre
 Move column to the left;-;Flytt kolonnen et steg til venstre
@@ -173,6 +204,8 @@ My account;-;Min konto
 My images speeks for itself;-;Mine bilder snakker for seg selv
 My name is:;-;Mitt navn er
 Name;-;Navn
+Name for booking engine to use;-;Navn på booking engine som skal brukes
+Name of the booking engine;-;Navn på booking enginen
 Navigate on cell;-;Naviger på cellen
 Navigate on mouseover;-;Naviger når musen er over
 New message;-;Ny melding
@@ -186,17 +219,18 @@ No code added yet;-;Ingen kode er lagt til enda
 No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
 No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen header har blitt lastet opp for potrait modus på mobil enda, vennligst last opp et.
 No items;-;Ingen elementer
-Normal;-;Normal
 November;-;November
 Number of fields;-;Antall felt
 Number of instances added;-;Antall av instanser lagt til
 October;-;Oktober
+Offset;-;Offset
 Old password;-;Gammelt passord
 Open styling;-;Åpne styling
 Order;-;Ordre
 Order cleaning;-;Bestill vask
 Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
+Orgnr;-;Orgnr
 Original (hp);-;Orginal hp
 Original (nm);-;Original nm
 Other attributes;-;Andre attributter
@@ -224,7 +258,6 @@ Please enter your email address:;-;Skriv inn din epost
 Please enter your room number;-;Skriv inn nom nummeret ditt
 Please enter your username and password;-;Skriv inn ditt brukernavn og passord
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
-Please select a option;-;Vennligst gjør et valg
 Please select a payment method.;-;Vennligst velg en betalingsmetode
 Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
 Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
@@ -234,19 +267,21 @@ Please wait while you are being transferred to dibs payment service.;-;-Vennligs
 Please wait...;-;Vennligst vent...
 Post code;-;Post.nr
 Postal code;-;Postnummer
+Prefix;-;Prefix
 Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
 Private key is found in braintree account.;-;Den privat nøkkelen er noe du finner på kontoen din hos braintree.
+Private person;-;Privatperson
 Product List;-;Produktliste
 Product Search;-;Produkt søk
 Product view for your store.;-;Produkt visningen for din nettbutikk.
 Products;-;Produkter
 Public key is found in braintree account.;-;Den offentlig nøkkelen er noe du finner på kontoen din hos braintree.
-Read more;-;Les mer
 Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
 Register;-;Registrer
+Registered user;-;Registrert bruker
 Registration details;-;Registrerings detaljer.
 Related products;-;Relaterte produkter
 Reminder;-;Påminnelse
@@ -257,24 +292,31 @@ Repeat new password;-;Gjenta passord
 Repeat password;-;Gjenta passord
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
+Room information;-;Rom informasjon
+Rooms selected;-;Rommene som er valgt
 Row is not displayed on mobile, click for make it reappear;-;Raden vises ikke på mobiltelefon, trykk her for å vise den.
 Row options;-;Rad instillinger
 Run account in sandbox?;-;Kjør kontoen i sandbox modus?
+Sat;-;Lør
 Saturday;-;Lørdag
 Save;-;Lagre
 Save changes;-;Lagre endringer
 Save settings;-;Lagre instillinger
+Save the cards instead of extracting the amount?;-;Lagre kortet insteden for å trekke beløpet.
 Search for a product;-;Søk etter et produkt
 Searching....;-;Søker....
-Select a background image for the inner area of this cell.;-;Velg et bakgrunds bilde for den indre cellen.
-Select a background image for the outer area of this cell.;-;Velg et bakgrunds bilde for den ytre cellen.
+Select a background image.;-;Velg et bakgrundsbilde
+Select a time period to booking for before continue;-;Velg en tidsperiode for bookingen før du fortsetter
 Select your car;-;Velg din bil
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
 September;-;September
+Set key;-;Sett nøkkel
 Set new password;-;Sett nytt passord
+Settings;-;Instillinger
 Setup and manage your products;-;Legg inn og administrer dine produkter.
+Setup for norwegian avtalegiro.;-;Oppsett for norsk avtalegiro
 Shipment information;-;Forsendelse informasjon
 Shipment settings;-;Forsendelse
 Shipping;-;Utsendelse
@@ -285,8 +327,11 @@ Sign up;-;Registrer deg
 Sign up with facebook;-;Logg inn me facebook
 Sign up with google;-;Logg inn med google
 Slide left;-;Slide til venstre
+Slide left (px) (negative is from right);-;Slide til venstre (px) (negativt vil være for høyre side)
 Slide right;-;Slide til høyre
+Slide top (px) (negative is from bottom);-;Slide til toppen (px) (negativt vil være fra bunnen)
 Sorry;-;Beklager
+Sorry, this user does not exists, are you sure this is the correct username / email?;-;Beklager, men denne brukereren eksisterer ikke, er du sikker på at det er riktig brukernavn og passord?
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
 Stage 2 (hp):;-;Stage 2 hp:
@@ -295,12 +340,14 @@ Stage 3 (hp):;-;Stage 3 hp:
 Stage 3 (nm):;-;Stage 3 nm:
 Start;-;Start
 Start date;-;Start dato
+Start opacity;-;Start opacity
 Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
+Starting from;-;Starter fra
 Style row;-;Styling på rad
 Styling;-;Design
 Subject to recipient;-;Tittel på motaker
-Subscribe;-;Registrer
 Success;-;Success
+Sun;-;Søn
 Sunday;-;Søndag
 Tab name;-;Tab navn
 Tab settings;-;Tab instillinger
@@ -309,14 +356,15 @@ Terms and Conditions;-;Bruksvilkår
 Text color;-;Tekst farge
 Text editor;-;Tekst editor
 Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
-Thank you for subscribing to our newsletter, your email has been added;-;Takk for at du har valgt å registrere deg på vårt nyhetsbrev, din epost er nå lagt til.
+Thank you for your message;-;Takk for din melding
 Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;Takk for din bestilling, en epost har blitt sendt med fakturaen vedlagt. Vi sender bestillingen når vi har mottat betalingen.
 Thank you for your order.;-;Takk for din bestilling.
+Thank you message;-;Takkemelding
+Thank you page;-;Takkeside
 Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
 The carousel is not rotating while logged in as administrator.;-;Karusellen roterer ikke når man er logget inn som administrator.
 The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
-The email in invalid, please enter a valid email;-;Eposten er ikke gyldig, vennligst skriv inn en gyldig adresse.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
 The newsletter application allowes you to send emails to all of your customers without. Create a news letter, select your customers and send.;-;Denne nyhetsbrev applikasjonen gjør det mulig for deg å sende epost til alle dine kunder. Opprett et nyhetsbrev og send det til dine registrerte kunder.
 The passwords does not match.;-;Passordet stemmer ikke overens.
@@ -324,6 +372,7 @@ There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
 This event has the following entries;-;Dette kurset finner du i kalenderen på følgende dager
 This is a {} days event.;-;Dette er et {} dagers event.
 This user has not attended any events yet;-;Denne brukeren har ikke deltatt på noen eventer enda
+Thu;-;Tor
 Thursday;-;Torsdag
 Timeless black and white design.;-;Tidsløst svart og hvitt design
 Timer (ms);-;Timer (ms)
@@ -331,26 +380,37 @@ To be able to serve you we need to store a tiny amount of data about your browse
 Top spacing;-;Øvre spacing
 Top speed;-;Topp hastighet
 Total;-;Total
+Tue;-;Tir
 Tuesday;-;Tirsdag
 Tune your online store by setting currency, does customers need to register to buy from your store, show cookie warning, etc;-;Finjuster nettbutikken din ved å f.eks velge valutta, bestemme om kundene dine må registrere seg for å handle, vis cookie advarsel, osv.
 Unpin area;-;Unpin område
 Update;-;Oppdater
 Upload and manipulate on images or add this to be able to search for professional images trough our image stock.;-;Last og behandle bilder, eventuelt så kan du søke opp profesjonelle bilder gjennom vår bildebank.
 Use a different email;-;Bruk en annen epost
+Use a predefined layout for cell;-;Bruk en predifinert layout for denne cellen
+User level for cell;-;Brukernivå for cellen
 Username / Email;-;Brukernavn / Epost
+Username or password is incorrect;-;Brukernavn og passord er feil
+Username/email;-;Brukernavn/epost
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 Was not able to process your payment, check your card details and try again.;-;Klarte ikke å gjennomføre betalingen, sjekk betalingsopplysningene dine og prøv igjen.
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
+Wed;-;Ons
 Wednesday;-;Onsdag
+Week;-;Uke
 Welcome to my page;-;Velkommen til min side
 What email address do you want the ebill to be sent to?;-;Hvilken epost ønsker du at ebill skal sendes til?
+What kind of parallax effect?;-;Hvilken type parallax effekt?
+What type of date is this;-;Hvilken type dato er dette
 What's on your mind?;-;Hva ønsker du å formidle?
 Wrong delivery method;-;Feil forsendelses metode.
 Yes;-;Ja
 You are here:;-;Du er her:
 You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.;-;Du er nå i edit modus for denne raden, du kan nå legge til kolonner, rader over og under, og mye mer.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
+You have been inactive to long and due to security reasons you will now be logged out.;-;Du har vært inaktiv for lenge, og på grunn av sikkerhetsmessige årsaker vil du nå bli logget ut.
+You need to agree to the terms and conditions first;-;Du må godta bruksvilkårene før du kan fortsette.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your email;-;Din epost
 Your message has been delivered;-;Din melding har blitt sendt.
@@ -369,6 +429,8 @@ included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn
 read;-;les
+view as calendar;-;Vis som kalender
+view as list;-;Vis som liste
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
 your@email.com;-;din@epost.no
 

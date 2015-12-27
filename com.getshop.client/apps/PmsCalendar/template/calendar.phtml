@@ -25,9 +25,9 @@ echo "<div class='topheader' page='$pageId' roomName='$roomName'>";
 echo "<i class='fa fa-arrow-left'></i>";
 echo $this->getSelectedMonth() . " - " . $this->getSelectedYear();
 if($this->getViewType() == "list") {
-    echo " - <a href='?roomName=$roomName&page=$pageId&viewtype=calendar'>view as calendar</a>";
+    echo " - <a href='?roomName=$roomName&page=$pageId&viewtype=calendar'>".$this->__w("view as calendar") ."</a>";
 } else {
-    echo " - <a href='?roomName=$roomName&page=$pageId&viewtype=list'>view as list</a>";
+    echo " - <a href='?roomName=$roomName&page=$pageId&viewtype=list'>".$this->__w("view as list")."</a>";
 }
 echo "<i class='fa fa-arrow-right'></i>";
 echo "</div>";
@@ -77,9 +77,9 @@ if($this->getViewType() == "list") {
              echo "<span class='day $css'>";
             if($day) {
                 if($room) {
-                    echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, $room->id);
+                    $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, $room->id);
                 } else {
-                    echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, null);
+                    $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, null);
                 }
             }
             if(isset($days[$i])) {

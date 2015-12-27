@@ -1059,7 +1059,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void deleteBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
         for(PmsBookingRooms room : booking.rooms) {
-            bookingEngine.deleteBooking(room.bookingId);
+            if(room.bookingId != null && room.bookingId.isEmpty()) {
+                bookingEngine.deleteBooking(room.bookingId);
+            }
         }
         booking.isDeleted = true;
         saveBooking(booking);

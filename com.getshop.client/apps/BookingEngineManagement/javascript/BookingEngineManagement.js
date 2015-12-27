@@ -1,7 +1,7 @@
 app.BookingEngineManagement = {
     init: function () {
         $(document).on('click', '.BookingEngineManagement .deletegroupid', app.BookingEngineManagement.deleteBookingItemType);
-        $(document).on('click', '.BookingEngineManagement .renameBookingItemButton', app.BookingEngineManagement.renameBookingItemButton);
+        $(document).on('click', '.BookingEngineManagement .editBookingItemButton', app.BookingEngineManagement.editBookingItemButton);
         $(document).on('click', '.BookingEngineManagement .deletetype', app.BookingEngineManagement.deletetype);
         $(document).on('change', '.BookingEngineManagement .itemTypeSelector', app.BookingEngineManagement.setItemType);
         $(document).on('change', '.BookingEngineManagement .selectedProductForGroup', app.BookingEngineManagement.selectedProductForGroup);
@@ -12,7 +12,7 @@ app.BookingEngineManagement = {
             "typeid" : $(this).closest('tr').attr('entryid')
         }
         var event = thundashop.Ajax.createEvent('','loadTypeSettings', $(this), data);
-        thundashop.common.showInformationBox(event, 'Item type configuration');
+        thundashop.common.showInformationBoxNew(event, 'Item type configuration');
     },
     selectedProductForGroup : function() {
         var productId = $(this).val();
@@ -33,17 +33,13 @@ app.BookingEngineManagement = {
         thundashop.Ajax.post(event);
         
     },
-    renameBookingItemButton : function() {
-        var currentName = $(this).closest('tr').find('.currentname').text();
-        var id = $(this).closest('tr').attr('entryid');
-        var type = $(this).closest('tr').attr('type');
-        var name = prompt("New name of group", currentName);
-        var event = thundashop.Ajax.createEvent('','updateName',$(this), {
-            "name" : name,
-            "entryid" : id,
-            "type" : type
-        });
-        thundashop.Ajax.post(event);
+    editBookingItemButton : function() {
+        var data = {
+            "typeid" : $(this).closest('tr').attr('entryid')
+        }
+        var event = thundashop.Ajax.createEvent('','loadItemSettings', $(this), data);
+        thundashop.common.showInformationBoxNew(event, 'Item type configuration');
+        
     },
     deleteBookingItemType : function() {
         var confirmed = confirm("Are you sure you want to delete this item type?");
@@ -65,7 +61,7 @@ app.BookingEngineManagement = {
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
-        thundashop.common.showInformationBox(event,'Pms form settings');
+        thundashop.common.showInformationBoxNew(event,'Pms form settings');
     },
     loadSettings : function(element, application) {
          var config = {

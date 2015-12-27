@@ -1,0 +1,28 @@
+<?php
+/* @var $this \ns_3b18f464_5494_4f4a_9a49_662819803c4a\BookingEngineManagement */
+$id = $_POST['data']['typeid'];
+$item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $id);
+?>
+
+<div gstype="form" method="saveItem">
+    <table width="80%" class="contactConfigTable">
+        <input type="hidden" value='<? echo $id; ?>' gsname='itemid'>
+        <tr>
+            <td width="50%"><? echo $this->__w("Name"); ?></td>
+            <td width="50%"><input type="text" gsname="bookingItemName" style='width:100%;' value="<? echo $item->bookingItemName; ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%"><? echo $this->__w("How many bookings is allowed to be on this bookingitem"); ?></td>
+            <td width="50%"><input type="text" gsname="bookingSize" style='width:100%;' value="<? echo $item->bookingSize; ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%"><? echo $this->__w("Waiting list size"); ?></td>
+            <td width="50%"><input type="text" gsname="waitingListSize" style='width:100%;' value="<? echo $item->waitingListSize; ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%"><? echo $this->__w("This bookingitem will be full if this counter is hit"); ?></td>
+            <td width="50%"><input type="text" gsname="fullWhenCountHit" style='width:100%;' value="<? echo $item->fullWhenCountHit; ?>"></td>
+        </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

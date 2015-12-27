@@ -39,6 +39,14 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         }
     }
     
+    public function saveItem() {
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $_POST['data']['itemid']);
+        foreach($_POST['data'] as $key => $value) {
+            $item->{$key} = $value;
+        }
+        $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
+    }
+    
     public function saveItemType() {
         $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $_POST['data']['typeid']);
         $item->addon = $_POST['data']['addon'];
@@ -60,6 +68,10 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         foreach($_POST['data'] as $key => $value) {
             $this->setConfigurationSetting($key, $value);
         }
+    }
+    
+    public function loadItemSettings() {
+        $this->includefile("itemsettings");
     }
     
     public function deleteBookingItemType() {

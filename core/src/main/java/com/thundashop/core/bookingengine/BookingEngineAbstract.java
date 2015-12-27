@@ -331,6 +331,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         try {
             preProcessBookings(bookingsToAdd);
         } catch (BookingEngineException exception) {
+            exception.printStackTrace();
             return false;
         }
 

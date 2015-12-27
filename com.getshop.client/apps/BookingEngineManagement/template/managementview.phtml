@@ -86,6 +86,8 @@ $products=$products2;
                         <tr>
                             <th width='10'></th>
                             <th align='left'>Booking item</th>
+                            <th align='right'>Item type</th>
+                            <th align='left' width='10'></th>
                         </tr>
 
                         <?php
@@ -93,7 +95,7 @@ $products=$products2;
                             foreach ($bookingitems as $item) {
                                 /* @var $type core_bookingengine_data_BookingItem */
                                 echo "<tr entryid='" . $item->id . "'type='item'>";
-                                echo "<td><i class='fa fa-trash-o deletetype' bookingitemid='" . $item->id . "'></i></td><td><span class='currentname'>" . $item->bookingItemName . "</span></td>";
+                                echo "<td><i class='fa fa-trash-o deletetype' bookingitemid='" . $item->id . "'></i></td><td><span class='currentname'>" . $item->bookingItemName . " (" . $item->bookingSize . ")" . "</span></td>";
                                 echo "<td align='right'>";
                                 echo "<select class='itemTypeSelector'>";
                                 foreach($bookingtypes as $type) {
@@ -106,7 +108,7 @@ $products=$products2;
                                 echo "</select>";
                                 echo  "</td>";
                                 
-                                echo "<td align='right'><span class='pmsbutton renameBookingItemButton pmsbuttonsmall'>Rename</span> ";
+                                echo "<td align='right' width='10'><span class='pmsbutton editBookingItemButton pmsbuttonsmall'>Edit</span> ";
                                 echo "</tr>";
                             }
                         }

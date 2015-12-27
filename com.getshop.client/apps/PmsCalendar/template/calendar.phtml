@@ -51,7 +51,11 @@ foreach($monthDates as $week => $days) {
         }
          echo "<span class='day $css'>";
         if($day) {
-            echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, $room->id);
+            if($room) {
+                echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, $room->id);
+            } else {
+                echo $this->printEventsAtDay($day . " 02:00:00", $bookingsForMonth, null);
+            }
         }
         if(isset($days[$i])) {
             echo "<span style='z-index:2;position:absolute;left: 50%;'>". $days[$i] ."</span>";

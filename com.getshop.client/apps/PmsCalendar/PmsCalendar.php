@@ -203,12 +203,12 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                     if ($time >= strtotime($room->date->start) &&
                             $time < strtotime($room->date->end)) {
                         return $room->guests[0]->name;
+                        }
                     }
                 }
             }
-        }
         return "";
-    }
+        }
 
     /**
      * 
@@ -216,16 +216,90 @@ class PmsCalendar extends \WebshopApplication implements \Application {
      */
     public function getRooms() {
         $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+        $rooms2 = array();
         foreach ($rooms as $room) {
-            $rooms[$room->id] = $room;
+            $rooms2[$room->id] = $room;
         }
-        return $rooms;
+        return $rooms2;
     }
 
+    /**
+     * 
+     * @param type $name
+     * @return \core_bookingengine_data_BookingItem
+     */
     public function getRoomFromName($name) {
         $rooms = $this->getRooms();
         foreach ($rooms as $room) {
             if ($room->bookingItemName == $name) {
+                return $room;
+            }
+        }
+        return null;
+    }
+
+    public function printExistingBookingsList($roomId) {
+        $bookings = $this->getConfirmedBookingsForDay();
+        $res = "<table width='100%'>";
+        $res .= "<tr>";
+        if(!$roomId) {
+            $res .= "<th align='left'>Room</th>";
+        }
+        $res .= "<th align='left'>Start</th>";
+        $res .= "<th align='left'>End</th>";
+        $res .= "<th></th>";
+        $res .= "</tr>";
+        
+        $found = false;
+        foreach($bookings as $booking) {
+            foreach($booking->rooms as $room) {
+                if($roomId && ($roomId != $room->bookingItemId)) {
+                    continue;
+                }
+                $found = true;
+                $res .= "<tr>";
+                if(!$roomId) {
+                    $res .= "<td>" . $this->getRoomFromId($room->bookingItemId)->bookingItemName . "</td>";
+                }
+                $res .= "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . "</td>";
+                $res .= "<td>" . date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
+                $res .= "<td>" . $room->guests[0]->name  . "</td>";
+                $res .= "</tr>";
+            }
+        }
+        $res .= "</table>";
+        
+        if($found) {
+            echo $res;
+        } else {
+            echo "No bookings registered so far";
+        }
+        
+    }
+
+    public function getConfirmedBookingsForDay() {
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->filterType = "active";
+        $filter->startDate = $this->convertToJavaDate($this->getSelectedDay());
+        $filter->endDate = $this->convertToJavaDate($this->getSelectedDay()+86400);
+        $filter->needToBeConfirmed = true;
+        
+        $bookings = $this->getApi()->getPmsManager()->getAllBookingsUnsecure($this->getSelectedName(), $filter);
+        if(!$bookings) {
+            $bookings = array();
+        }
+        return $bookings;
+    }
+
+    /**
+     * 
+     * @param type $id
+     * @return \core_bookingengine_data_BookingItem
+     */
+    public function getRoomFromId($id) {
+        $rooms = $this->getRooms();
+        foreach($rooms as $room) {
+            if($room->id == $id) {
                 return $room;
             }
         }

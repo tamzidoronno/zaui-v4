@@ -6,7 +6,16 @@ app.PmsCalendar = {
         $(document).on('click','.PmsCalendar .topheader .fa-arrow-right', app.PmsCalendar.changeCalendarMonth);
         $(document).on('keyup','.PmsCalendar .starttime input', app.PmsCalendar.inputChanged);
         $(document).on('keyup','.PmsCalendar .endtime input', app.PmsCalendar.inputChanged);
+        $(document).on('change','.PmsCalendar .roomselectiononday', app.PmsCalendar.changeRoom);
     },
+    changeRoom : function() {
+        var room = $(this).val();
+        var day = $(this).attr('day');
+        var page = $(this).attr('page');
+        
+        window.location.href = "/?page=" + page + "&day=" + day + "&roomName=" + room;
+    },
+    
     inputChanged : function() {
         var failed = false;
         $('.PmsCalendar .starttime input').each(function() {

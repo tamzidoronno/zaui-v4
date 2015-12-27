@@ -1,13 +1,11 @@
 <?php
 /* @var $this \ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
-$filter = new core_pmsmanager_PmsBookingFilter();
-$filter->filterType = "active";
-$filter->startDate = $this->convertToJavaDate($this->getSelectedDay());
-$filter->endDate = $this->convertToJavaDate($this->getSelectedDay()+86400);
-$filter->needToBeConfirmed = true;
 
-$bookings = $this->getApi()->getPmsManager()->getAllBookingsUnsecure($this->getSelectedName(), $filter);
-$selectedRoom = $this->getRoomFromName($_GET['roomName']);
+$bookings = $this->getConfirmedBookingsForDay();
+$selectedRoom = false;
+if(isset($_GET['roomName']) && $_GET['roomName']) {
+    $selectedRoom = $this->getRoomFromName($_GET['roomName']);
+}
 ?>
 
 <div class='daycalendar'>
@@ -17,7 +15,10 @@ $selectedRoom = $this->getRoomFromName($_GET['roomName']);
     for($i = 0; $i < 11; $i++) {
         $next = $time + ($iteration*60);
         $freeClass = "free";
-        $taken = $this->isBookedAtSlot($time, $bookings, $selectedRoom->id);
+        $taken = "";
+        if($selectedRoom) {
+            $taken = $this->isBookedAtSlot($time, $bookings, $selectedRoom->id);
+        }
         if($taken) {
             $freeClass = "taken";
         }

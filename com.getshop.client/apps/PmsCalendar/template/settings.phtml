@@ -27,6 +27,14 @@ $dateType = $this->getConfigurationSetting("date_type");
             <td width="50%"><? echo $this->__w("Heading text for single room view"); ?></td>
             <td width="50%"><input type="text" gsname="headingbookroom" style='width:100%;' value="<? echo $this->getConfigurationSetting("headingbookroom"); ?>"></td>
         </tr>
+        <tr>
+            <td width="50%"><? echo $this->__w("Heading text for existing bookings in day view"); ?></td>
+            <td width="50%"><input type="text" gsname="existingBookingsText" style='width:100%;' value="<? echo $this->getConfigurationSetting("existingBookingsText"); ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%"><? echo $this->__w("Heading text for select room in day view"); ?></td>
+            <td width="50%"><input type="text" gsname="roomSelectedText" style='width:100%;' value="<? echo $this->getConfigurationSetting("roomSelectedText"); ?>"></td>
+        </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

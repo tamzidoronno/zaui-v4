@@ -1057,7 +1057,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void deleteBooking(String bookingId) {
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = bookings.get(bookingId);
         for(PmsBookingRooms room : booking.rooms) {
             bookingEngine.deleteBooking(room.bookingId);
         }

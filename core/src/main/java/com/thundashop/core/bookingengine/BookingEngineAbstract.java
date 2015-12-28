@@ -17,6 +17,8 @@ import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -217,6 +219,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     private void preProcessBookings(List<Booking> bookings) {
         validateBookings(bookings);
         checkIfCanAddBookings(bookings);
+        checkIfAssigningPossible(bookings);
     }
 
     private void validateBookings(List<Booking> bookings) {
@@ -248,7 +251,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         for (Booking booking : bookings) {
             String bookingItemTypeId = booking.bookingItemTypeId;
             
-            List<Booking> bookingsToConsider = this.bookings.values().parallelStream()
+            List<Booking> bookingsToConsider = this.bookings.values().stream()
                     .filter(o -> o.bookingItemTypeId.equals(bookingItemTypeId))
                     .filter(o -> o.interCepts(booking.startDate, booking.endDate))
                     .collect(Collectors.toList());
@@ -329,7 +332,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         try {
             preProcessBookings(bookingsToAdd);
         } catch (BookingEngineException exception) {
-            exception.printStackTrace();
             return false;
         }
 
@@ -461,5 +463,59 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             deleteObject(type);
         }
     }
+
+    private void checkIfAssigningPossible(List<Booking> bookings) {
+        Map<String, List<Booking>> groupedBookings = bookings.stream()
+                .collect(Collectors.groupingBy(o -> o.bookingItemTypeId, Collectors.toList()));
+        
+        for (String bookingTypeId : groupedBookings.keySet()) {
+            BookingItemType type = getBookingItemType(bookingTypeId);
+            if (type == null) {
+                throw new BookingEngineException("Did not find the booking item type for the booking");
+            }
+            
+            List<Booking> checkBookings = groupedBookings.get(bookingTypeId);
+            
+            checkBookings.addAll(getBookingsNotAssigned(type.id));
+            checkBookings.addAll(getAssignedBookingsAfterFirstBooking(type.id, bookings));
+            
+            BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, checkBookings, getItemsByType(type.id));
+            
+            // This throws exception if not possible.
+            assigner.canAssign();
+        }
+    }
+
+    private List<BookingItem> getItemsByType(String typeId) {
+        return items.values().stream()
+                .filter(o -> o.bookingItemTypeId.equals(typeId))
+                .collect(Collectors.toList());
+    }
+
+    private List<Booking> getBookingsNotAssigned(String typeId) {
+        return bookings.values().stream()
+                .filter(o -> o.bookingItemId == null || o.bookingItemId.isEmpty())
+                .filter(o -> o.bookingItemTypeId.equals(typeId))
+                .collect(Collectors.toList());
+    }
+
+    private List<Booking> getAssignedBookingsAfterFirstBooking(String typeId, List<Booking> bookings) {
+        List<Booking> sortedBookings = new ArrayList(bookings);
+        Collections.sort(sortedBookings);
+        
+        if (sortedBookings.isEmpty()) {
+            return new ArrayList();
+        }
+        
+        long firstDate = bookings.get(0).startDate.getTime();
+        
+        return this.bookings.values().stream()
+                .filter(booking -> booking.startDate.getTime() >= firstDate)
+                .filter(booking -> booking.bookingItemTypeId.equals(typeId))
+                .filter(booking -> booking.bookingItemId != null && !booking.bookingItemId.isEmpty())
+                .collect(Collectors.toList()); 
+    }
+    
+   
     
 }

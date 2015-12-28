@@ -281,7 +281,7 @@ public class BookingEngineBookingOverlapTest extends TestCommon {
      *  |************|-----------|
      * 
      */
-    @Test()
+    @Test
     public void allowedAdded_4() {
         List<Booking> bookings = new ArrayList();
         bookings.add(getBooking(helper.getDate("2014-01-02 08:00"), helper.getDate("2014-01-02 16:00"), type1, null));

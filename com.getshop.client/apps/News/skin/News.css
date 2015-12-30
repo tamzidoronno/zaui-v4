@@ -45,7 +45,7 @@
     clear:both;
 }
 
-.News .news_container img { float:left; max-width: 200px; margin: 10px; }
+.News .news_container img { max-width: 200px; margin: 10px; }
 
 .News .gs_button.addevent,
 .News .gs_button.delete

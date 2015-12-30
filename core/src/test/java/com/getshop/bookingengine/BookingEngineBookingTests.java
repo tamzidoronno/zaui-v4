@@ -479,6 +479,7 @@ public class BookingEngineBookingTests extends TestCommon {
         
         List<Booking> bookings = new ArrayList();
         bookings.add(helper.getValidBooking(1, bookingEngine, savedItem));
+        bookings.get(0).bookingItemTypeId = type.id;
         BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
         
         bookingEngine.changeBookingItemOnBooking(bookingGroup.bookingIds.get(0), savedItem2.id);

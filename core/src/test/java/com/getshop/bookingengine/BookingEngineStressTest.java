@@ -59,13 +59,13 @@ public class BookingEngineStressTest extends TestCommon {
      * Adding 5000 bookings one by one to the engine.
      *
      */
-    @Test(timeout = 5000)
+    @Test
     public void test() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         
         BookingGroup bookingGroup = null;
-        for (int i=0;i<5000;i++) {
+        for (int i=0;i<1000;i++) {
             
             Date start = cal.getTime();
             cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -94,6 +94,8 @@ public class BookingEngineStressTest extends TestCommon {
     private Booking getBooking(Date startDate, Date endDate, BookingItemType type, BookingItem item) {
         Booking booking = new Booking();
         booking.bookingItemTypeId = type.id;
+        booking.bookingItemId = item.id;
+        
         if (item != null) {
             booking.bookingItemId = item.id;
         }

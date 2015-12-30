@@ -9,7 +9,7 @@ import java.util.Date;
  *
  * @author ktonder
  */
-public class Booking extends DataCommon {
+public class Booking extends DataCommon implements Comparable<Booking> {
     public String bookingItemId = "";
     public int incrementalBookingId = 0;
     public boolean bookingDeleted = false;
@@ -28,6 +28,11 @@ public class Booking extends DataCommon {
 //        return "From:  to: " + dateFormat.format(end) + " count: " + count;
         
         return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",startDate="+dateFormat.format(startDate)+",endDate="+dateFormat.format(endDate)+"]";
+    }
+    
+    public String getHumanReadableDates() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");
+        return dateFormat.format(startDate)+" - "+dateFormat.format(endDate);
     }
 
     // Got this solution from: http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
@@ -61,5 +66,10 @@ public class Booking extends DataCommon {
             return true;
 
         return false;
+    }
+
+    @Override
+    public int compareTo(Booking o) {
+        return startDate.compareTo(o.startDate);
     }
 }

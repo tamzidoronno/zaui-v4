@@ -6,7 +6,7 @@ $instance->preProcess();
 
 $settings = $factory->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
 $settingsInstance = $factory->getApplicationPool()->createInstace($settings);
-$doubleauth = $settingsInstance->getConfigurationSetting("doubleauthentication") == "true";
+$doubleauth = $settingsInstance->getConfigurationSetting("doubleauthentication") == "true" || isset($_GET['doubleauth']);
 
 $username = "";
 $password = "";
@@ -112,7 +112,7 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
                     <br>
     <div class="inner <? echo $notloggedInClass; ?>">
         <div  style="max-width: 400px; width:100%; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 2px #000; border-radius: 5px; padding: 20px; text-align:left;">
-            <form id='getshoploginform' method="POST" action="/login.php" name="loginform" class="loginform">
+            <form id='getshoploginform' method="POST" action="/login.php<? echo $doubleauth ? "?doubleauth=true" : ""; ?>" name="loginform" class="loginform">
                     <div class="form">
                         <div class="username">Username / Email<br><input class="tstextfield" name="username" type="textfield" value='<? echo $username; ?>' style="height:40px;width:100%;"></input></div>
                         <bR>

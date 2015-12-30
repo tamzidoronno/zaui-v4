@@ -30,7 +30,7 @@ class Login extends \SystemApplication implements \Application {
                 return;
             }
             
-            if ($this->isDoubleAuthRequired()) {
+            if ($this->isDoubleAuthRequired() || isset($_GET['doubleauth'])) {
                 $username = $_POST['username'];
                 $password = $_POST['password'];
                 $pincode = $_POST['pincode'];

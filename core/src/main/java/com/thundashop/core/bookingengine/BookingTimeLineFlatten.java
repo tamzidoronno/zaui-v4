@@ -60,6 +60,7 @@ public class BookingTimeLineFlatten implements Serializable {
     boolean canAdd(Booking booking) {
         for (BookingTimeLine itemLine : getTimelines()) {
             if (itemLine.intercepts(booking) && itemLine.getAvailableSpots() < 1) {
+                System.out.println("Booking is full between: " + itemLine.start + " and " + itemLine.end);
                 return false;
             }
         }

@@ -72,4 +72,7 @@ public interface IPmsManager {
     public String getCurrenctContract() throws Exception;
     
     public void processor();
+    
+    @Administrator
+    public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter);
 }

@@ -1059,7 +1059,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void deleteBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
         for(PmsBookingRooms room : booking.rooms) {
-            if(room.bookingId != null && room.bookingId.isEmpty()) {
+            if(room.bookingId != null && !room.bookingId.isEmpty()) {
                 bookingEngine.deleteBooking(room.bookingId);
             }
         }
@@ -1090,6 +1090,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     void warnArxDown() {
         System.out.println("Arx is down");
+    }
+
+    @Override
+    public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter) {
+        System.out.println("Filter");
+        return new PmsIntervalResult();
     }
 
 }

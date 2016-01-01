@@ -50,7 +50,7 @@ public class BookingItemAssignerOptimal {
         long maximumNumberOfLines = items.stream().mapToInt(o -> o.bookingSize).count();
         
         if (bookingLines.size() > maximumNumberOfLines) {
-            throw new BookingEngineException("The setup of bookings can not be fitted into the booking");
+            throw new BookingEngineException("The setup of bookings can not be fitted into the booking, you have more bookings than you have items of this type");
         }
         
         return bookingLines;
@@ -149,7 +149,7 @@ public class BookingItemAssignerOptimal {
             }
             
             if (!removeIfExists(bookingWithItem.bookingItemId, bookingItemsFlatten)) {
-                throw new BookingEngineException("There is not enough bookingitems to complete the assignment.");
+                throw new BookingEngineException("There is not enough bookingitems to complete the assignment, we dont really know why, migt be already in use or does not exists, or count is too small?");
             }
             
             BookingItem item = getBookingItem(bookingWithItem.bookingItemId);

@@ -253,8 +253,18 @@ public class AddApplicationsToDatabase {
         OsloTheme.moduleId = "other";
         OsloTheme.defaultActivate = false;
         apps.add(OsloTheme);
-
         
+        Application PmsAvailabilityTimeline = createSettings("PmsAvailabilityTimeline",
+        "176ea989-c7bb-4cef-a4bd-0c8421567e0b",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsAvailabilityTimeline.isPublic = true;
+        PmsAvailabilityTimeline.isFrontend = true;
+        PmsAvailabilityTimeline.moduleId = "booking";
+        PmsAvailabilityTimeline.defaultActivate = false;
+        apps.add(PmsAvailabilityTimeline);
+
         return apps;
     }
 

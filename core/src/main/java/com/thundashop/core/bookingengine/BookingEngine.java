@@ -149,5 +149,16 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public void deleteBookingItemType(String id) {
         bookingEngineAbstract.deleteBookingItemType(id);
     }
+
+    /**
+     * @todo Make unit tests for this.
+     * @param start
+     * @param end
+     * @param itemId
+     * @return 
+     */
+    public BookingTimeLineFlatten getTimeLinesForItem(Date start, Date end, String itemId) {
+        return deepClone(bookingEngineAbstract.getTimeLinesForItem(start,end,itemId));
+    }
     
 }

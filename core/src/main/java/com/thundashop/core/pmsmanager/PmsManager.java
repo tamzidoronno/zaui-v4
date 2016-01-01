@@ -10,6 +10,7 @@ import com.thundashop.core.arx.ArxManager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.cartmanager.CartManager;
@@ -1100,6 +1101,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(BookingItemType type : bookingEngine.getBookingItemTypes()) {
             BookingTimeLineFlatten line = bookingEngine.getTimelines(type.id, filter.start, filter.end);
             res.typeTimeLines.put(type.id, line.getTimelines(filter.interval));
+        }
+        
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        
+        int itemcount = 0;
+        for(BookingItem item : items) {
+           BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
+            List<BookingTimeLine> timelines = line.getTimelines(filter.interval);
+            HashMap<Long, Integer> itemCountLine = new HashMap();
+            timelines.stream().forEach(o -> itemCountLine.put(o.start.getTime(), o.count));
+            res.itemTimeLines.put(item.id, itemCountLine);
+            itemcount++;
         }
         
         return res;

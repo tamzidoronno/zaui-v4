@@ -29,6 +29,9 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
             echo "You need to specify a booking engine first.";
             return;
         }
+        if(!isset($_POST['event'])) {
+//            unset($_SESSION['pmsavailabilitytimelinedata']);
+        }
         $this->includefile("timelineview");
     }
     
@@ -64,11 +67,18 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     }
 
     public function showTimeLine() {
-        $data = array();
-        $data['start'] = strtotime($_POST['data']['start']);
-        $data['end'] = strtotime($_POST['data']['end']);
-        $data['interval'] = $_POST['data']['interval'];
-        $_SESSION['pmsavailabilitytimelinedata'] = serialize($data);
-    }    
+        $_POST['data']['start'] = strtotime($_POST['data']['start']);
+        $_POST['data']['end'] = strtotime($_POST['data']['end']);
+        $_SESSION['pmsavailabilitytimelinedata'] = serialize($_POST['data']);
+    }
+
+    public function printTypes() {
+        $data = $this->getData();
+        if(isset($data['viewtype'])) {
+            return ($data['viewtype'] == "types");
+        }
+        return true;
+    }
+
 }
 ?>

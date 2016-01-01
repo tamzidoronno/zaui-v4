@@ -10,13 +10,21 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 foreach($types as $type) {
     $types[$type->id] = $type;
 }
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+foreach($items as $item) {
+    $items[$item->id] = $item;
+}
+$viewtype = array();
+$viewtype['types'] = "Types";
+$viewtype['items'] = "Rooms";
+
+$printTypeOverview = $this->printTypes();
 
 /* @var $this ns_176ea989_c7bb_4cef_a4bd_0c8421567e0b\PmsAvailabilityTimeline */
 $start = date("d.m.Y", $this->getStart());
 $end = date("d.m.Y", $this->getEnd());
 $selectedInterval = $this->getInterval();
 ?>
-
 <div gstype="form" method="showTimeLine">
     <input type="text" gsname='start' value='<? echo $start; ?>'>
     <input type="text" gsname='end' value='<? echo $end; ?>'>
@@ -31,7 +39,14 @@ $selectedInterval = $this->getInterval();
         }
         ?>
     </select>
-    <input gstype="submit" type="button" value="<? echo $this->__w("Load settings"); ?>">
+    <select gsname='viewtype'>
+        <?php
+        foreach($viewtype as $type => $value) {
+            echo "<option value='$type'>$value</option>";
+        }
+        ?>
+    </select>
+    <input gstype="submit" type="button" value="<? echo $this->__w("Load"); ?>">
 </div>
 
 <div class='timelineresult'>
@@ -42,37 +57,95 @@ $selectedInterval = $this->getInterval();
     $filter->interval = $this->getInterval();
     
     $result = $this->getApi()->getPmsManager()->getIntervalAvailability($this->getSelectedName(), $filter);
-    echo "<table cellspacing='1'>";
-    
-    $printHeading = true;
+
+    $numberOfDays = 0;
     foreach($result->typeTimeLines as $type => $lines) {
-        if($printHeading) {
+        foreach($lines as $line) {
+            $numberOfDays++;
+        }
+        break;
+    }
+
+    if($printTypeOverview) {
+        echo "<div class='timelineoverviewouter'>";
+        echo "<div class='timelineoverview'>";
+        echo "<table cellspacing='1'>";
+
+        $printHeading = true;
+        foreach($result->typeTimeLines as $type => $lines) {
+            if($printHeading) {
+                echo "<tr>";
+                echo "<th></th>";
+                foreach($lines as $line) {
+                    echo "<th>" . date("d.m.y", strtotime($line->start)) . "</th>";
+                }
+                echo "</tr>";
+                $printHeading= false;
+            }
+            /* @var $line core_bookingengine_data_BookingTimeLine */
             echo "<tr>";
-            echo "<th></th>";
+            echo "<td>" . $types[$type]->name .  "</td>";
             foreach($lines as $line) {
-                echo "<th>" . date("m.d.y", strtotime($line->start)) . "</th>";
+                $full = "available";
+                if($lines[0]->totalAvailableSpots == $line->count) {
+                    $full = "full";
+                }
+                $title = $line->count . " of " . $lines[0]->totalAvailableSpots . " taken";
+                echo "<td align='center' title='$title' class='$full'>" . $line->count . "/" . $line->totalAvailableSpots . "</td>";
             }
             echo "</tr>";
-            $printHeading= false;
         }
-        /* @var $line core_bookingengine_data_BookingTimeLine */
-        echo "<tr>";
-        echo "<td>" . $types[$type]->name .  "</td>";
-        foreach($lines as $line) {
-            $full = "available";
-            if($lines[0]->totalAvailableSpots == $line->count) {
-                $full = "full";
+        echo "</table>";
+        echo "</div>";
+        echo "</div>";
+    } else {
+        $printHeader = true;
+
+        echo "<div class='timelineoverviewouter'>";
+        echo "<div class='timelineoverview'>";
+        echo "<div class='topspacingitemoverview'></div>";
+        foreach($result->itemTimeLines as $itemId => $days) {
+            if($printHeader) {
+                echo "<div class='dateheadingrow'>";
+                echo "<span class='valueentry_placeholder'>&nbsp;</span>";
+                foreach($days as $time => $value) {
+                    echo "<span class='valueentry date'>" . date("d.m.y", $time/1000) . "</span>";
+                }
+                echo "</div>";
+                echo "<div style='clear:both;'></div>";
+                $printHeader = false;
             }
-            $title = $line->count . " of " . $lines[0]->totalAvailableSpots . " taken";
-            echo "<td align='center' title='$title' class='$full'>" . $line->count . "/" . $line->totalAvailableSpots . "</td>";
+
+            echo "<span class='valueentry_item'>" . $items[$itemId]->bookingItemName . "</span>";
+            echo "<span class='valueentry_placeholder'>&nbsp;</span>";
+            foreach($days as $time => $value) {
+                $free = "full";
+                if($value == 0) {
+                    $free = "available";
+                }
+                echo "<span class='valueentry $free'>&nbsp;</span>";
+            }
+            echo "<div style='clear:both;'></div>";
         }
-        echo "</tr>";
+        echo "</div>";
+        echo "</div>";
     }
-    echo "</table>";
     ?>
 </div>
 
 <script>
+    $('.PmsAvailabilityTimeline .timelineoverview').width('<? echo ($numberOfDays*14)+200; ?>px');
+    $('.PmsAvailabilityTimeline .dateheadingrow').width('<? echo ($numberOfDays*14)+200; ?>px');
+    $('.PmsAvailabilityTimeline .dateheadingrow').css('position','absolute');
+    $('.PmsAvailabilityTimeline .dateheadingrow').css('top','0px');
     $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
     $('input[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    <?php if(!$printTypeOverview) { ?>
+        $('select[gsname="viewtype"]').val('items');
+    <?php } ?>
+        $('.timelineoverviewouter').scroll(function() {
+            var left = $(this).scrollLeft();
+            $('.valueentry_item').css('left',left+"px");
+            $('.PmsAvailabilityTimeline .dateheadingrow').css('top',$(this).scrollTop());
+        });
 </script>

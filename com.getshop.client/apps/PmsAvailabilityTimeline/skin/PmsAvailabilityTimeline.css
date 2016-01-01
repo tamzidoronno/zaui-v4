@@ -2,3 +2,18 @@
 .PmsAvailabilityTimeline .full { background-color:red; color: white; }
 .PmsAvailabilityTimeline .available { background-color:green; color: white; }
 .PmsAvailabilityTimeline th { background-color:#efefef; padding-left: 5px; padding-right: 5px; }
+.PmsAvailabilityTimeline .valueentry_item { width: 80px; font-size: 10px; position:absolute; border-bottom: solid 1px #efefef; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }
+.PmsAvailabilityTimeline .valueentry_placeholder { border: solid 0px; width: 80px; font-size: 10px; float:left; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }
+.PmsAvailabilityTimeline .valueentry { border-top: solid 1px #efefef; border-left: solid 1px #efefef; display:inline-block; float: left; width: 13px; width: 12px; text-align: center; font-size: 10px; }
+.PmsAvailabilityTimeline .valueentry.date { 
+    transform: rotate(-45deg);
+    width: 13px;
+    float: left;
+    font-size: 10px; 
+    border: 0px;
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+.PmsAvailabilityTimeline .timelineoverviewouter { width: 100%;  max-height: 400px;overflow: scroll; box-sizing: border-box; position:relative; }
+.PmsAvailabilityTimeline .dateheadingrow { background-color:#fff; height: 20px; padding-top: 30px; }
+.PmsAvailabilityTimeline .topspacingitemoverview { height: 50px; clear:both;}

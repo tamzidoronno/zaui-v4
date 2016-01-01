@@ -27,7 +27,7 @@ import java.util.stream.Stream;
  * @author ktonder
  */
 public class BookingTimeLineFlatten implements Serializable { 
-    List<Booking> bookings = new ArrayList();
+    private List<Booking> bookings = new ArrayList();
     private final int totalAvailableSpots;
     private final String bookingItemTypeId;
     Date end;
@@ -113,7 +113,7 @@ public class BookingTimeLineFlatten implements Serializable {
     }
 
     /**
-     * 
+     * @todo Make unit tests.
      * @param interval Number of seconds intervals.
      * @return 
      */
@@ -122,7 +122,6 @@ public class BookingTimeLineFlatten implements Serializable {
         List<BookingTimeLine> allLines = getTimelines();
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
-        
         while(true) {
             Date startTime = cal.getTime();
             cal.add(Calendar.SECOND, interval);

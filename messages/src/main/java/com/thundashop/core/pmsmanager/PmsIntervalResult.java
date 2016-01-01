@@ -7,4 +7,5 @@ import java.util.List;
 
 public class PmsIntervalResult implements Serializable {
     public HashMap<String, List<BookingTimeLine>> typeTimeLines = new HashMap();
+    public HashMap<String, HashMap<Long, Integer>> itemTimeLines = new HashMap();
 }

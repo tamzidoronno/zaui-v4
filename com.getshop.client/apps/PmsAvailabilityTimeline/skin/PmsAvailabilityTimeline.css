@@ -1,0 +1,4 @@
+.PmsAvailabilityTimeline .timelineresult { margin-top: 30px; }
+.PmsAvailabilityTimeline .full { background-color:red; color: white; }
+.PmsAvailabilityTimeline .available { background-color:green; color: white; }
+.PmsAvailabilityTimeline th { background-color:#efefef; padding-left: 5px; padding-right: 5px; }

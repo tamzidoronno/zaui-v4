@@ -8,8 +8,10 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.arx.ArxManager;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.BookingEngineException;
@@ -1094,8 +1096,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter) {
-        System.out.println("Filter");
-        return new PmsIntervalResult();
+        PmsIntervalResult res = new PmsIntervalResult();
+        for(BookingItemType type : bookingEngine.getBookingItemTypes()) {
+            BookingTimeLineFlatten line = bookingEngine.getTimelines(type.id, filter.start, filter.end);
+            res.typeTimeLines.put(type.id, line.getTimelines(filter.interval));
+        }
+        
+        return res;
     }
 
 }

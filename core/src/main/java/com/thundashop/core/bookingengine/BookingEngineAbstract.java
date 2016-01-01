@@ -302,6 +302,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .filter(booking -> booking.interCepts(start, end))
                 .forEach(o -> flatten.add(o));
         
+        flatten.start = start;
+        flatten.end = end;
         return flatten;
     } 
 

@@ -21,10 +21,10 @@ public class BookingTimeLine implements Comparable<BookingTimeLine>, Serializabl
     public String id = UUID.randomUUID().toString();
     public String originalSplitId = "";
     public List<String> bookingIds = new ArrayList();
-    public int count;
+    public Integer count;
     public Date start;
     public Date end;
-    private final int totalAvailableSpots;
+    public final int totalAvailableSpots;
 
     public BookingTimeLine(int totalAvailableSpots) {
         this.totalAvailableSpots = totalAvailableSpots;
@@ -36,6 +36,14 @@ public class BookingTimeLine implements Comparable<BookingTimeLine>, Serializabl
         long EndDate1 = booking.endDate.getTime();
         long EndDate2 = end.getTime();
         return (StartDate1 < EndDate2) && (StartDate2 < EndDate1);
+    }
+
+    public boolean withIn(Date start, Date end) {
+        long StartDate1 = start.getTime();
+        long StartDate2 = this.start.getTime();
+        long EndDate1 = end.getTime();
+        long EndDate2 = this.end.getTime();
+        return (StartDate1 <= EndDate2) && (StartDate2 <= EndDate1);
     }
 
 

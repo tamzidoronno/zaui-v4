@@ -18,6 +18,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean needToAgreeOnContract = true;
     public boolean exposeUnsecureBookings = false;
     public boolean autoconfirmRegisteredUsers = false;
+    public Integer cleaningInterval = 0;
     
     /*
     1. Pay when booking.

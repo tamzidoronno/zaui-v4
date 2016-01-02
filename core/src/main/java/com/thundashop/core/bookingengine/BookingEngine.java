@@ -7,6 +7,7 @@ package com.thundashop.core.bookingengine;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.data.Availability;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
@@ -159,6 +160,14 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      */
     public BookingTimeLineFlatten getTimeLinesForItem(Date start, Date end, String itemId) {
         return deepClone(bookingEngineAbstract.getTimeLinesForItem(start,end,itemId));
+    }
+
+    public boolean hasBookingsStartingBetweenTime(Date start, Date end, String itemId) {
+        return true;
+    }
+
+    public boolean itemInUseBetweenTime(Date start, Date end, String itemId) {
+        return true;
     }
     
 }

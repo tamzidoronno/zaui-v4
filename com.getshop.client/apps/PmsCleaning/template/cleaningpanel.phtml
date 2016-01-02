@@ -1,0 +1,30 @@
+<?php
+ /* @var $this ns_ae42328b_3726_4875_8546_212cd8cc3cde\PmsCleaning */
+$time = strtotime($this->getCleaningDate());
+?> 
+<div gstype="form" method="changeDate">
+    <input type='text' gsname="date" value='<? echo $this->getCleaningDate(); ?>'>
+    <input gstype="submit" type="button" value='Change date'>
+</div>
+
+<h1>Guests arriving today</h1>
+<?php
+$this->print_guests_table($time, true);
+?>
+<h1>Guests leaving today</h1>
+<?php
+$this->print_guests_table($time, false);
+?>
+<h1>Guests arriving tomorrow</h1>
+<?php
+$this->print_guests_table($time+86400, true);
+?>
+<h1>Cleaning table</h1>
+<?php
+$this->printCleaningTable($time);
+?>
+
+<h1>Total room overview</h1>
+<?php
+$this->printRoomOverview();
+?>

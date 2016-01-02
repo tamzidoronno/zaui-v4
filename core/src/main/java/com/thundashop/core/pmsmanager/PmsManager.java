@@ -48,6 +48,7 @@ import org.springframework.stereotype.Component;
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public HashMap<String, PmsBooking> bookings = new HashMap();
+    public HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
     public PmsPricing prices = new PmsPricing();
     public PmsConfiguration configuration = new PmsConfiguration();
     
@@ -81,6 +82,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsConfiguration) {
                 configuration = (PmsConfiguration) dataCommon;
+            }
+            if (dataCommon instanceof PmsAdditionalItemInformation) {
+                PmsAdditionalItemInformation res = (PmsAdditionalItemInformation) dataCommon;
+                addiotionalItemInfo.put(res.itemId, res);
             }
         }
     }
@@ -1118,4 +1123,62 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return res;
     }
 
+    @Override
+    public Boolean isClean(String itemId) {
+        PmsAdditionalItemInformation addiotionalInfo = getAdditionalInfo(itemId);
+        return addiotionalInfo.isClean();
+    }
+
+    private PmsAdditionalItemInformation getAdditionalInfo(String itemId) {
+        PmsAdditionalItemInformation result = addiotionalItemInfo.get(itemId);
+        if(result == null) {
+            result = new PmsAdditionalItemInformation();
+            result.itemId = itemId;
+            addiotionalItemInfo.put(itemId, result);
+            saveAdditionalInfo(result);
+        }
+        
+        return result;
+    }
+    
+    private void saveAdditionalInfo(PmsAdditionalItemInformation data) {
+        saveObject(data);
+    }
+
+    @Override
+    public void markRoomAsCleaned(String itemId) {
+        PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
+        Date start = new Date();
+        Calendar end = Calendar.getInstance();
+        end.setTime(start);
+        boolean bookingStartingToday = bookingEngine.hasBookingsStartingBetweenTime(start, end.getTime(), itemId);
+        boolean itemInUse = bookingEngine.itemInUseBetweenTime(start, end.getTime(), itemId);
+        if(bookingStartingToday || !itemInUse) {
+            //Only mark room cleaned if a new booking is 
+            additional.markCleaned();
+        } else {
+            additional.addCleaningDate();
+        }
+        saveAdditionalInfo(additional);
+    }
+
+    @Override
+    public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms() {
+        List<PmsAdditionalItemInformation> result = new ArrayList();
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        for(BookingItem item : items) {
+            result.add(finalizeAdditionalItem(getAdditionalInfo(item.id)));
+        }
+        return result;
+    }
+
+    private PmsAdditionalItemInformation finalizeAdditionalItem(PmsAdditionalItemInformation additionalInfo) {
+        Calendar start = Calendar.getInstance();
+        Calendar end = start.getInstance();
+        end.add(Calendar.MINUTE, 1);
+        
+        additionalInfo.isClean();
+        additionalInfo.inUse = bookingEngine.itemInUseBetweenTime(start.getTime(), end.getTime(), additionalInfo.itemId);
+        return additionalInfo;
+    }
 }

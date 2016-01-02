@@ -265,6 +265,17 @@ public class AddApplicationsToDatabase {
         PmsAvailabilityTimeline.defaultActivate = false;
         apps.add(PmsAvailabilityTimeline);
 
+        Application PmsCleaning = createSettings("PmsCleaning",
+        "ae42328b-3726-4875-8546-212cd8cc3cde",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsCleaning.isPublic = true;
+        PmsCleaning.isFrontend = true;
+        PmsCleaning.moduleId = "booking";
+        PmsCleaning.defaultActivate = false;
+        apps.add(PmsCleaning);
+        
         return apps;
     }
 

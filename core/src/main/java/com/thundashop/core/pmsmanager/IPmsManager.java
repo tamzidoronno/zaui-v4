@@ -84,4 +84,7 @@ public interface IPmsManager {
     
     @Administrator
     public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms();
+    
+    @Administrator
+    public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
 }

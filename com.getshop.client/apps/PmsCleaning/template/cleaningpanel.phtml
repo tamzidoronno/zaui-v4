@@ -15,6 +15,10 @@ $this->print_guests_table($time, true);
 <?php
 $this->print_guests_table($time, false);
 ?>
+<h1>Guests need interval cleaning</h1>
+<?php
+$this->print_interval_cleaning($time);
+?>
 <h1>Guests arriving tomorrow</h1>
 <?php
 $this->print_guests_table($time+86400, true);

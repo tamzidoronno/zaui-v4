@@ -4,6 +4,7 @@ namespace ns_ae42328b_3726_4875_8546_212cd8cc3cde;
 class PmsCleaning extends \WebshopApplication implements \Application {
     var $items;
     var $additionalInfo;
+    var $counter = 0;
     
     public function getDescription() {
         
@@ -37,8 +38,6 @@ class PmsCleaning extends \WebshopApplication implements \Application {
     }
     
     function print_guests_table($time, $arriving) {
-        $items = $this->getItems();
-        $additional = $this->getAdditionalInfo();
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
         if($arriving) {
@@ -54,50 +53,15 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             $bookings = array();
         }
         echo "<table width='100%' cellspacing='0' cellpadding='0'>";
-        echo "<tr>";
-        echo "<th align='left'></th>";
-        echo "<th align='left'>Room</th>";
-        echo "<th align='left'>Action</th>";
-        echo "<th align='left'>Guest information</th>";
-        echo "<th align='left'>Last cleaned</th>";
-        echo "<th align='right'>Duration</th>";
-        echo "</tr>";
+        $this->printRowHeader();
         
         foreach($bookings as $booking) {
             foreach($booking->rooms as $room) {
-                echo "<tr>";
-                echo "<td>" . $room->numberOfGuests . "</td>";
-                echo "<td>";
-                if($room->bookingItemId) {
-                    echo $items[$room->bookingItemId]->bookingItemName;
-                } else {
-                    echo "Not assigned yet";
-                }
-                echo "</td>";
-                echo "<td>";
-                if($room->bookingItemId) {
-                    if($this->getApi()->getPmsManager()->isClean($this->getSelectedName(), $room->bookingItemId)) {
-                        echo "<span class='roomIsReady'>Room is marked as ready</span>";
-                    } else {
-                        echo "<span gstype=\"clicksubmit\" class='roomNotReady' method=\"markCleaned\" gsname=\"id\" gsvalue=\"".$room->bookingItemId."\">Mark room as ready</span>";
-                    }
-                }
-                echo "</td>";
-                echo "<td>";
-                foreach($room->guests as $guest) {
-                    echo $guest->name . " - " . $guest->phone . " - " . $guest->email . "<br>";
-                }
-                echo "</td>";
-                echo "<td>";
-                if($room->bookingItemId) {
-                    echo date("d.m.Y H:i", strtotime($additional[$room->bookingItemId]->lastCleaned));
-                }
-                echo "</td>";
-                echo "<td align='right'>From " .date("d.m.Y H:i", strtotime($room->date->start)). "<br>To ". date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
-                echo "</tr>";
+                $this->printRoomRow($room);
             }
         }
         echo "</table>";
+        echo $this->counter . " rows found";
     }
 
     public function markCleaned() {
@@ -189,6 +153,72 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         }
         $this->additionalInfo = $add2;
         return $add2;
+    }
+
+    public function print_interval_cleaning($time) {
+        $items = $this->getItems();
+        $result = $this->getApi()->getPmsManager()->getRoomsNeedingIntervalCleaning($this->getSelectedName(), $this->convertToJavaDate($time));
+        if(!$result) {
+            $result = array();
+        }
+        echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+        $this->printRowHeader();
+        foreach($result as $res) {
+            $this->printRoomRow($res);
+        }
+        echo "</table>";
+        echo $this->counter . " rows found";
+    }
+
+    public function printRoomRow($room) {
+        $this->counter++;
+        $items = $this->getItems();
+        $additional = $this->getAdditionalInfo();
+        
+        echo "<tr>";
+        echo "<td>" . $room->numberOfGuests . "</td>";
+        echo "<td>";
+        if($room->bookingItemId) {
+            echo $items[$room->bookingItemId]->bookingItemName;
+        } else {
+            echo "Not assigned yet";
+        }
+        echo "</td>";
+        echo "<td>";
+        if($room->bookingItemId) {
+            if($this->getApi()->getPmsManager()->isClean($this->getSelectedName(), $room->bookingItemId)) {
+                echo "<span class='roomIsReady'>Room is marked as ready</span>";
+            } else {
+                echo "<span gstype=\"clicksubmit\" class='roomNotReady' method=\"markCleaned\" gsname=\"id\" gsvalue=\"".$room->bookingItemId."\">Mark room as ready</span>";
+            }
+        }
+        echo "</td>";
+        echo "<td>";
+        foreach($room->guests as $guest) {
+            echo $guest->name . " - " . $guest->phone . " - " . $guest->email . "<br>";
+        }
+        echo "</td>";
+        echo "<td>";
+        if($room->bookingItemId) {
+            if($additional[$room->bookingItemId]->lastCleaned) {
+                echo date("d.m.Y H:i", strtotime($additional[$room->bookingItemId]->lastCleaned));
+            }
+        }
+        echo "</td>";
+        echo "<td align='right'>From " .date("d.m.Y H:i", strtotime($room->date->start)). "<br>To ". date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
+        echo "</tr>";
+    }
+
+    public function printRowHeader() {
+        $this->counter = 0;
+        echo "<tr>";
+        echo "<th align='left'></th>";
+        echo "<th align='left'>Room</th>";
+        echo "<th align='left'>Action</th>";
+        echo "<th align='left'>Guest information</th>";
+        echo "<th align='left'>Last cleaned</th>";
+        echo "<th align='right'>Duration</th>";
+        echo "</tr>";
     }
 
 }

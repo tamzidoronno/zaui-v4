@@ -32,6 +32,7 @@ public class PmsBookingRooms implements Serializable {
     public String bookingId;
     String code = "";
     public boolean isClean = true;
+    public Integer intervalCleaning = null;
     
     //Processor stuff.
     public boolean started = false;

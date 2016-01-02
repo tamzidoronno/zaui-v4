@@ -1181,4 +1181,46 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         additionalInfo.inUse = bookingEngine.itemInUseBetweenTime(start.getTime(), end.getTime(), additionalInfo.itemId);
         return additionalInfo;
     }
+
+    @Override
+    public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day) {
+        Calendar endcal = Calendar.getInstance();
+        endcal.setTime(day);
+        endcal.add(Calendar.DAY_OF_YEAR, 1);
+        
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = PmsBookingFilter.PmsBookingFilterTypes.active;
+        filter.startDate = day;
+        filter.endDate = endcal.getTime();
+        
+        List<PmsBookingRooms> rooms = new ArrayList<PmsBookingRooms>();
+        List<PmsBooking> allBookings = getAllBookings(filter);
+        for(PmsBooking booking :allBookings) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if(needIntervalCleaning(room, day)) {
+                    rooms.add(room);
+                }
+            }
+        }
+        
+        return rooms;
+    }
+
+    private boolean needIntervalCleaning(PmsBookingRooms room, Date day) {
+        int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(day)).getDays();
+        if(days == 0) {
+            return false;
+        }
+        int interval = configuration.cleaningInterval;
+        if(room.intervalCleaning != null) {
+            interval = room.intervalCleaning;
+        }
+        if(interval == 0) {
+            return false;
+        }
+        if(days % interval == 0) {
+            return true;
+        }
+        return false;
+    }
 }

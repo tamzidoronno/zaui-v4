@@ -161,7 +161,7 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
 
   $scope.saveCard = function() {
     $scope.user.cards.push($scope.newCard);
-    getshop.client.ArxManager.updatePerson($scope.user);
+    getshop.client.ArxManager.addCard($scope.user.id, $scope.newCard);
     $scope.cardModal.hide();
   }
 

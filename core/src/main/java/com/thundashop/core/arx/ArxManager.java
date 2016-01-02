@@ -107,8 +107,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
             return false;
         }
         
-        System.out.println(storeId);
-        System.out.println(storeManager.getMyStore().webAddress);
         
         User user = usermanager.getUserUserName(username);
         if(user == null) {
@@ -653,7 +651,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
                 card.personId = child.getTextContent();
             }
             if(child.getNodeName().equals("format_name")) {
-                card.format = child.getNodeValue();
+                card.format = child.getTextContent();
             }
         }
         return card;
@@ -667,7 +665,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         toPost += "<card>\n";
         toPost += "<number>00" + card.cardid + "</number>\n";
         toPost += "<format_name>" + card.format + "</format_name>\n";
-        toPost += "<description></description>\n";
+        toPost += "<description>"+card.description+"</description>\n";
         toPost += "<person_id>" + personId + "</person_id>\n";
         if(card.deleted) {
             toPost += "<deleted>1</person_id>\n";
@@ -709,7 +707,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
         String[] dacs = result.split("<dac>");
         for(String dac : dacs) {
             for(Door door : doors) {
-                System.out.println(door.externalId);
                 if(dac.contains(door.externalId) && dac.contains("motor_lock_state")) {
                     String[] lines = dac.split("\n");
                     for(String line : lines) {
@@ -737,7 +734,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
                 + "<mask>controller.door.pulseOpenRequest</mask>"
                 + "</name>"
                 + "</filter>");
-        System.out.println("Looking up: " + hostName);
         String password = userPasswords.get(currentUser.id);
         String result = httpLoginRequest(hostName, currentUser.username, password, "");
         return result;

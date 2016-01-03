@@ -54,7 +54,8 @@ $imageSrc = "";
             $imageSrc = "/displayImage.php?id=".$id.$crop; 
             
             if ($imageCompressionEnabled) {
-                echo '<div style="text-align: center; font-size: 30px; padding: 20px; color: #DDD;"><i class="fa fa-spinner fa-spin"></i></div>';
+                $zoomable=  $this->isZoomAble() ? "true" : "false";
+                echo '<div zoomable="'.$zoomable.'" style="text-align: center; font-size: 30px; padding: 20px; color: #DDD;" class="loadshower"><i class="fa fa-spinner fa-spin"></i></div>';
             } else {
                 ?>
                 <img zoomable='<? echo $this->isZoomAble() ? "true" : "false"; ?>' src="<? echo $imageSrc; ?>"/>

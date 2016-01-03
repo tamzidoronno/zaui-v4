@@ -125,7 +125,10 @@ app.ImageDisplayer = {
         if (imgSrc) {
             var container = $('.displayimagecontainer[containerId="'+domId+'"] span');
             var width = $('.displayimagecontainer[containerId="'+domId+'"]').width();
-            container.html("<img src='"+imgSrc+"&width="+width+"'>");
+            var image = $("<img src='"+imgSrc+"&width="+width+"'>");
+            var zoomAble = container.find('.loadshower').attr('zoomable');
+            image.attr('zoomable', zoomAble);
+            container.html(image);
         }
     }
 };

@@ -38,6 +38,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean started = false;
     public boolean ended = false;
     public List<String> notificationsSent = new ArrayList();
+    boolean addedToArx = false;
     
     /**
      * Finalized entries
@@ -71,7 +72,9 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean isEnded() {
-        return date.end.before(new Date());
+        Date now = new Date();
+        boolean result = now.after(date.end);
+        return result;
     }
 
     boolean isStarted() {

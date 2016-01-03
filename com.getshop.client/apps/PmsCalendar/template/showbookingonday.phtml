@@ -9,6 +9,8 @@ $pageId = $this->getPage()->javapage->id;
 $day = date("d.m.Y", strtotime($_GET['day']));
 $dayToPrint = date("d", strtotime($_GET['day']));
 $monthToPrint = date("m", strtotime($_GET['day']));
+$yearToPrint = date("Y", strtotime($_GET['day']));
+
 $headingText = $this->getConfigurationSetting("headingbookroom");
 if(!$headingText) {
     $headingText = "Book room";
@@ -37,7 +39,7 @@ if(!$roomSelectedText) {
                     <div class='starttime'>
                         <input type='number' gsname='startday' value='<? echo $dayToPrint; ?>' class='small' min='1' max='31'>
                         <input type='number' gsname='startmonth' value='<? echo $monthToPrint; ?>' class='small' min='1' max='12'>
-                        <input type='number' gsname='startyear' value='2015' class='small2' min='2015' max='2017'>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type='number' gsname='startyear' value='<? echo $yearToPrint; ?>' class='small2' min='2015' max='2017'>&nbsp;&nbsp;&nbsp;&nbsp;
                         <input type='number' gsname='starthour' value='' class='small hour' min='00' max='23'>
                         <input type='number' gsname='startminute' value='' class='small minute' min='00' max='59'>
                     </div>
@@ -46,7 +48,7 @@ if(!$roomSelectedText) {
                     <div class='endtime'>
                         <input type='number' gsname='endday' value='<? echo $dayToPrint; ?>' class='small' min='1' max='31'>
                         <input type='number' gsname='endmonth' value='<? echo $monthToPrint; ?>' class='small' min='1' max='12'>
-                        <input type='number' gsname='endyear' value='2015' class='small2' min='2015' max='2017'>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type='number' gsname='endyear' value='<? echo $yearToPrint; ?>' class='small2' min='2015' max='2017'>&nbsp;&nbsp;&nbsp;&nbsp;
                         <input type='number' gsname='endhour' value='' class='small hour' min='00' max='23'>
                         <input type='number' gsname='endminute' value='' class='small minute' min='00' max='59'>
                     </div>

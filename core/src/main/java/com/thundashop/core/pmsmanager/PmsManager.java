@@ -652,7 +652,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
-        if(booking.id == null || booking.id.isEmpty() || getBooking(booking.id) == null) {
+        if(booking.id == null || booking.id.isEmpty() || bookings.get(booking.id) == null) {
             throw new ErrorException(1000015);
         }
         validatePhoneNumbers(booking);
@@ -1110,14 +1110,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         List<BookingItem> items = bookingEngine.getBookingItems();
         
-        int itemcount = 0;
         for(BookingItem item : items) {
            BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
             List<BookingTimeLine> timelines = line.getTimelines(filter.interval);
             HashMap<Long, Integer> itemCountLine = new HashMap();
             timelines.stream().forEach(o -> itemCountLine.put(o.start.getTime(), o.count));
             res.itemTimeLines.put(item.id, itemCountLine);
-            itemcount++;
         }
         
         return res;

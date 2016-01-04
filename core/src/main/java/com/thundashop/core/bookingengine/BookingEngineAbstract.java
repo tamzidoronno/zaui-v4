@@ -302,6 +302,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .filter(booking -> booking.interCepts(start, end))
                 .forEach(o -> flatten.add(o));
         
+        flatten.start = start;
+        flatten.end = end;
         return flatten;
     } 
 
@@ -332,6 +334,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         try {
             preProcessBookings(bookingsToAdd);
         } catch (BookingEngineException exception) {
+            exception.printStackTrace();
             return false;
         }
 
@@ -515,7 +518,18 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .filter(booking -> booking.bookingItemId != null && !booking.bookingItemId.isEmpty())
                 .collect(Collectors.toList()); 
     }
-    
+
+    BookingTimeLineFlatten getTimeLinesForItem(Date start, Date end, String itemId) {
+        BookingItem item = getBookingItem(itemId);
+        BookingTimeLineFlatten line = new BookingTimeLineFlatten(item.bookingSize, item.bookingItemTypeId);
+        line.start = start;
+        line.end = end;
+        bookings.values().parallelStream().
+                filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(itemId))).
+                forEach(o -> line.add(o));
+        return line;
+   }
+   
    
     
 }

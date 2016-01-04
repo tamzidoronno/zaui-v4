@@ -224,7 +224,7 @@ getshop.MenuEditor = {
 
     open: function(app) {
         var event = thundashop.Ajax.createEvent('', 'renderSetup', app, {});
-        thundashop.common.showInformationBox(event, __f('Menu Editor'));
+        thundashop.common.showInformationBoxNew(event, __f('Menu Editor'));
     },
             
     menuEntryClicked: function(item) {

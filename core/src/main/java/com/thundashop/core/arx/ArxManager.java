@@ -68,6 +68,9 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.xerces.dom.ElementNSImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -90,6 +93,9 @@ public class ArxManager extends ManagerBase implements IArxManager {
     StoreManager storeManager;
     
     private List<Door> doorList = new ArrayList();
+    private String arxHostname = null;
+    private String arxUsername = null;
+    private String arxPassword = null;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -102,13 +108,15 @@ public class ArxManager extends ManagerBase implements IArxManager {
             
     @Override
     public boolean logonToArx(String hostname, String username, String password) {
-        String result = httpLoginRequest("https://" + hostname + ":5002/arx/export?external_id=fasdfsadfasf", username, password, "");
-        if(result.equals("401")) {
-            return false;
-        }
+        String result = "";
+        try {
+            result = httpLoginRequest("https://" + hostname + ":5002/arx/export?external_id=fasdfsadfasf", username, password, "");
+            if(result.equals("401")) {
+                return false;
+            }
+        }catch(Exception e) {}
         
-        System.out.println(storeId);
-        System.out.println(storeManager.getMyStore().webAddress);
+        
         
         User user = usermanager.getUserUserName(username);
         if(user == null) {
@@ -129,11 +137,32 @@ public class ArxManager extends ManagerBase implements IArxManager {
     }
 
     
-    public String httpLoginRequest(String address, String username, String password, String content) {
+    public String httpLoginRequest(String address, String username, String password, String content) throws Exception {
+        User currentUser = getSession().currentUser;
+        
+        if(arxHostname != null) {
+            address = "https://" + arxHostname + address;
+            username = arxUsername;
+            password = arxPassword;
+            
+            arxHostname = null;
+            arxPassword = null;
+            arxUsername = null;
+        }
+        
+        if(!address.startsWith("http")) {
+            String arxHost = "https://" + currentUser.fullName;
+            address = arxHost + address;
+        }
+
         String loginToken = null;
         String loginUrl = address;
-        //
-        DefaultHttpClient client = new DefaultHttpClient();
+        
+        HttpParams my_httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(my_httpParams, 3000);
+        HttpConnectionParams.setSoTimeout(my_httpParams, 6000);
+        
+        DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
         client = wrapClient(client);
         HttpResponse httpResponse;
         
@@ -156,46 +185,32 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
         request.setEntity(reqEntity);
 
-        try {
-            System.out.println("Now sending to arx");
-            httpResponse = client.execute(request);
-            
-            Integer statusCode = httpResponse.getStatusLine().getStatusCode();
-            if(statusCode == 401) {
-                return "401";
-            }
+        System.out.println("Now sending to arx");
+        httpResponse = client.execute(request);
 
-            
-            entity = httpResponse.getEntity();
-            
-            
-            
-            System.out.println("Done sending to arx");
-
-            if (entity != null) {
-                InputStream instream = entity.getContent();
-                int ch;
-                StringBuilder sb = new StringBuilder();
-                while ((ch = instream.read()) != -1) {
-                    sb.append((char) ch);
-                }
-                String result = sb.toString();
-                return result.trim();
-            }
-        } catch (ClientProtocolException e) {
-            client.getConnectionManager().shutdown();
+        Integer statusCode = httpResponse.getStatusLine().getStatusCode();
+        if(statusCode == 401) {
             return "401";
-        } catch (UnknownHostException e) {
-            client.getConnectionManager().shutdown();
-            return "401";
-        } catch (SocketException e) {
-            e.printStackTrace();
-            client.getConnectionManager().shutdown();
-            return "401";
-        } catch (IOException e) {
-            client.getConnectionManager().shutdown();
-            e.printStackTrace();
         }
+
+
+        entity = httpResponse.getEntity();
+
+
+
+        System.out.println("Done sending to arx");
+
+        if (entity != null) {
+            InputStream instream = entity.getContent();
+            int ch;
+            StringBuilder sb = new StringBuilder();
+            while ((ch = instream.read()) != -1) {
+                sb.append((char) ch);
+            }
+            String result = sb.toString();
+            return result.trim();
+        }
+            
         return "failed";
     }
     
@@ -547,8 +562,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         toPost += "</arxdata>\n";
         
         User currentUser = getSession().currentUser;
-        String arxHost = "https://" + currentUser.fullName;
-        String hostName = arxHost + ":5002/arx/import";
+        String hostName = ":5002/arx/import";
         String password = userPasswords.get(currentUser.id);
         
         httpLoginRequest(hostName, currentUser.username, password, toPost);
@@ -653,7 +667,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
                 card.personId = child.getTextContent();
             }
             if(child.getNodeName().equals("format_name")) {
-                card.format = child.getNodeValue();
+                card.format = child.getTextContent();
             }
         }
         return card;
@@ -667,10 +681,10 @@ public class ArxManager extends ManagerBase implements IArxManager {
         toPost += "<card>\n";
         toPost += "<number>00" + card.cardid + "</number>\n";
         toPost += "<format_name>" + card.format + "</format_name>\n";
-        toPost += "<description></description>\n";
+        toPost += "<description>"+card.description+"</description>\n";
         toPost += "<person_id>" + personId + "</person_id>\n";
         if(card.deleted) {
-            toPost += "<deleted>1</person_id>\n";
+            toPost += "<deleted>1</deleted>\n";
         }
         toPost += "</card>\n";
         toPost += "</cards>\n";
@@ -696,35 +710,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
         return result;
     }
 
-    private void findDoorStatus(List<Door> doors) {
-        User currentUser = getSession().currentUser;
-        String arxHost = "https://" + currentUser.fullName;
-
-        String hostName = arxHost + ":5002/arx/statusexport";
-        String password = userPasswords.get(currentUser.id);
-        System.out.println("Looking at : " + hostName);
-        
-        
-        String result = httpLoginRequest(hostName, currentUser.username, password, "");
-        String[] dacs = result.split("<dac>");
-        for(String dac : dacs) {
-            for(Door door : doors) {
-                System.out.println(door.externalId);
-                if(dac.contains(door.externalId) && dac.contains("motor_lock_state")) {
-                    String[] lines = dac.split("\n");
-                    for(String line : lines) {
-                        if(line.contains("motor_lock_state")) {
-                            String state = line;
-                            state.replace("<motor_lock_state>", "");
-                            state.replace("</motor_lock_state>", "");
-                            door.state = state;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private String getDoorLog(long start, long end) {
          User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
@@ -737,9 +722,12 @@ public class ArxManager extends ManagerBase implements IArxManager {
                 + "<mask>controller.door.pulseOpenRequest</mask>"
                 + "</name>"
                 + "</filter>");
-        System.out.println("Looking up: " + hostName);
         String password = userPasswords.get(currentUser.id);
-        String result = httpLoginRequest(hostName, currentUser.username, password, "");
+        String result = "";
+        try {
+            result = httpLoginRequest(hostName, currentUser.username, password, "");
+        }catch(Exception e) {}
+        
         return result;
     }
 
@@ -780,6 +768,18 @@ public class ArxManager extends ManagerBase implements IArxManager {
             }
         }
         return null;
+    }
+
+    /**
+     * A One time override of username and password.
+     * @param arxHostname
+     * @param arxUsername
+     * @param arxPassword 
+     */
+    public void overrideCredentials(String arxHostname, String arxUsername, String arxPassword) {
+        this.arxHostname = arxHostname;
+        this.arxUsername = arxUsername;
+        this.arxPassword = arxPassword;
     }
 
 }

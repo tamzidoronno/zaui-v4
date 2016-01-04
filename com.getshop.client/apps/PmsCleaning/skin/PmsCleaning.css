@@ -1,0 +1,36 @@
+.PmsCleaning .roomNotReady { cursor:pointer; color: red; font-weight: bold; }
+.PmsCleaning .roomIsReady { color: green; font-weight: bold; }
+
+.PmsCleaning th {
+	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica,
+	sans-serif;
+	color: #6D929B;
+	border-right: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	border-top: 1px solid #C1DAD7;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	padding: 6px 6px 6px 12px;
+	background: #CAE8EA url(images/bg_header.jpg) no-repeat;
+}
+
+.PmsCleaning td {
+	border-right: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	background: #fff;
+	padding: 6px 6px 6px 12px;
+	color: #000;
+}
+.PmsCleaning td:nth-child(1) {
+    border-left: 1px solid #C1DAD7;
+}
+
+.PmsCleaning tr:nth-child(2) {
+	background: #F5FAFA;
+	color: #B4AA9D;
+}
+
+.PmsCleaning .roombox {  color:#fff; display: inline-block; margin: 3px; padding: 3px; border: solid 1px #bbb; width: 60px; text-align: center; }
+.PmsCleaning .notclean { background-color: red; }
+.PmsCleaning .inUse { background-color: purple; }
+.PmsCleaning .clean { background-color: green; }

@@ -8,8 +8,11 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.arx.ArxManager;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.BookingEngineException;
@@ -45,6 +48,7 @@ import org.springframework.stereotype.Component;
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public HashMap<String, PmsBooking> bookings = new HashMap();
+    public HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
     public PmsPricing prices = new PmsPricing();
     public PmsConfiguration configuration = new PmsConfiguration();
     
@@ -78,6 +82,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsConfiguration) {
                 configuration = (PmsConfiguration) dataCommon;
+            }
+            if (dataCommon instanceof PmsAdditionalItemInformation) {
+                PmsAdditionalItemInformation res = (PmsAdditionalItemInformation) dataCommon;
+                addiotionalItemInfo.put(res.itemId, res);
             }
         }
     }
@@ -552,12 +560,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room.date.start = room.booking.startDate;
                 room.date.end = room.booking.endDate;
                 
-                if(room.booking.bookingItemTypeId != null) {
-                    room.bookingItemTypeId = room.booking.bookingItemTypeId;
-                }
-                if(room.booking.bookingItemId != null) {
-                    room.bookingItemId = room.booking.bookingItemId;
-                }
+                room.bookingItemTypeId = room.booking.bookingItemTypeId;
+                room.bookingItemId = room.booking.bookingItemId;
             }
         }
         
@@ -644,7 +648,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
-        if(booking.id == null || booking.id.isEmpty() || getBooking(booking.id) == null) {
+        if(booking.id == null || booking.id.isEmpty() || bookings.get(booking.id) == null) {
             throw new ErrorException(1000015);
         }
         validatePhoneNumbers(booking);
@@ -1059,7 +1063,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void deleteBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
         for(PmsBookingRooms room : booking.rooms) {
-            if(room.bookingId != null && room.bookingId.isEmpty()) {
+            if(room.bookingId != null && !room.bookingId.isEmpty()) {
                 bookingEngine.deleteBooking(room.bookingId);
             }
         }
@@ -1092,4 +1096,125 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         System.out.println("Arx is down");
     }
 
+    @Override
+    public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter) {
+        PmsIntervalResult res = new PmsIntervalResult();
+        for(BookingItemType type : bookingEngine.getBookingItemTypes()) {
+            BookingTimeLineFlatten line = bookingEngine.getTimelines(type.id, filter.start, filter.end);
+            res.typeTimeLines.put(type.id, line.getTimelines(filter.interval));
+        }
+        
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        
+        for(BookingItem item : items) {
+           BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
+            List<BookingTimeLine> timelines = line.getTimelines(filter.interval);
+            HashMap<Long, Integer> itemCountLine = new HashMap();
+            timelines.stream().forEach(o -> itemCountLine.put(o.start.getTime(), o.count));
+            res.itemTimeLines.put(item.id, itemCountLine);
+        }
+        
+        return res;
+    }
+
+    @Override
+    public Boolean isClean(String itemId) {
+        PmsAdditionalItemInformation addiotionalInfo = getAdditionalInfo(itemId);
+        return addiotionalInfo.isClean();
+    }
+
+    private PmsAdditionalItemInformation getAdditionalInfo(String itemId) {
+        PmsAdditionalItemInformation result = addiotionalItemInfo.get(itemId);
+        if(result == null) {
+            result = new PmsAdditionalItemInformation();
+            result.itemId = itemId;
+            addiotionalItemInfo.put(itemId, result);
+            saveAdditionalInfo(result);
+        }
+        
+        return result;
+    }
+    
+    private void saveAdditionalInfo(PmsAdditionalItemInformation data) {
+        saveObject(data);
+    }
+
+    @Override
+    public void markRoomAsCleaned(String itemId) {
+        PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
+        Date start = new Date();
+        Calendar end = Calendar.getInstance();
+        end.setTime(start);
+        boolean bookingStartingToday = bookingEngine.hasBookingsStartingBetweenTime(start, end.getTime(), itemId);
+        boolean itemInUse = bookingEngine.itemInUseBetweenTime(start, end.getTime(), itemId);
+        if(bookingStartingToday || !itemInUse) {
+            //Only mark room cleaned if a new booking is 
+            additional.markCleaned();
+        } else {
+            additional.addCleaningDate();
+        }
+        saveAdditionalInfo(additional);
+    }
+
+    @Override
+    public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms() {
+        List<PmsAdditionalItemInformation> result = new ArrayList();
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        for(BookingItem item : items) {
+            result.add(finalizeAdditionalItem(getAdditionalInfo(item.id)));
+        }
+        return result;
+    }
+
+    private PmsAdditionalItemInformation finalizeAdditionalItem(PmsAdditionalItemInformation additionalInfo) {
+        Calendar start = Calendar.getInstance();
+        Calendar end = start.getInstance();
+        end.add(Calendar.MINUTE, 1);
+        
+        additionalInfo.isClean();
+        additionalInfo.inUse = bookingEngine.itemInUseBetweenTime(start.getTime(), end.getTime(), additionalInfo.itemId);
+        return additionalInfo;
+    }
+
+    @Override
+    public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day) {
+        Calendar endcal = Calendar.getInstance();
+        endcal.setTime(day);
+        endcal.add(Calendar.DAY_OF_YEAR, 1);
+        
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = PmsBookingFilter.PmsBookingFilterTypes.active;
+        filter.startDate = day;
+        filter.endDate = endcal.getTime();
+        
+        List<PmsBookingRooms> rooms = new ArrayList<PmsBookingRooms>();
+        List<PmsBooking> allBookings = getAllBookings(filter);
+        for(PmsBooking booking :allBookings) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if(needIntervalCleaning(room, day)) {
+                    rooms.add(room);
+                }
+            }
+        }
+        
+        return rooms;
+    }
+
+    private boolean needIntervalCleaning(PmsBookingRooms room, Date day) {
+        int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(day)).getDays();
+        if(days == 0) {
+            return false;
+        }
+        int interval = configuration.cleaningInterval;
+        if(room.intervalCleaning != null) {
+            interval = room.intervalCleaning;
+        }
+        if(interval == 0) {
+            return false;
+        }
+        if(days % interval == 0) {
+            return true;
+        }
+        return false;
+    }
 }

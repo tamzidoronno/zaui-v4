@@ -126,13 +126,27 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
     $scope.cardModal = modal
   })  
 
+  $ionicModal.fromTemplateUrl('accessCategory-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.acModal = modal
+  })  
+
   $scope.addAccessCategory = function() {
-    console.log("TODO: load access categories and create form for adding access category");
+    $scope.acModal.show();
+    $scope.ac = { accessId: 'xxx', name: 'new category', description: 'new and shiny access category' }
   };
 
   $scope.editAccessCategory = function(accessCategory) {
-    console.log("TODO: allow modifying start and end date");
+    $scope.acModal.show();
+    $scope.ac = accessCategory;
   };
+
+  $scope.saveAccessCategory = function() {
+    getshop.client.ArxManager.updatePerson($scope.user);
+    $scope.acModal.hide();
+  }
 
   $scope.addCard = function() {
     $scope.cardModal.show();
@@ -147,7 +161,7 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
 
   $scope.saveCard = function() {
     $scope.user.cards.push($scope.newCard);
-    getshop.client.ArxManager.updatePerson($scope.user);
+    getshop.client.ArxManager.addCard($scope.user.id, $scope.newCard);
     $scope.cardModal.hide();
   }
 

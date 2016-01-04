@@ -7,6 +7,7 @@ package com.thundashop.core.bookingengine;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.data.Availability;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
@@ -148,6 +149,29 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     @Override
     public void deleteBookingItemType(String id) {
         bookingEngineAbstract.deleteBookingItemType(id);
+    }
+
+    /**
+     * @todo Make unit tests for this.
+     * @param start
+     * @param end
+     * @param itemId
+     * @return 
+     */
+    public BookingTimeLineFlatten getTimeLinesForItem(Date start, Date end, String itemId) {
+        return deepClone(bookingEngineAbstract.getTimeLinesForItem(start,end,itemId));
+    }
+
+    public boolean hasBookingsStartingBetweenTime(Date start, Date end, String itemId) {
+        return true;
+    }
+
+    public boolean itemInUseBetweenTime(Date start, Date end, String itemId) {
+        return true;
+    }
+
+    public void autoAssignItem(String bookingId) {
+        System.out.println("This need to give the booking a booking item");
     }
     
 }

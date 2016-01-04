@@ -39,12 +39,12 @@ public class GSAdmins extends ManagerBase {
         user2.id = "gspal";
         user2.fullName = "Pål Tønder";
         user2.cellPhone = "46774240";
-        user2.username = user.id;
+        user2.username = user2.id;
         user2.prefix = "47";
-        user.type = 100;
-        user2.password = "F2A97CE64180EAF7EEDD487FB03CE3ABDC0009684CB41EE4E6DF4268774A9922";
+        user2.type = 100;
+        user2.password = "839AEB0CCC08E57D476A51F850C58AE49C0A5809CAFC3233D7FBC4A018C9C45C";
         
-        admins.put(user2.id, user); 
+        admins.put(user2.id, user2); 
     }
     
     
@@ -53,7 +53,7 @@ public class GSAdmins extends ManagerBase {
     }
     
     public static void main(String[] args) {
-        System.out.println(encryptPassword("TheMasterMindOfJews"));
+        System.out.println(encryptPassword("micemice"));
     }
     
     private static String encryptPassword(String password) throws ErrorException {

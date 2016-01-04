@@ -20,6 +20,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $room->started = false;
                 $room->ended = false;
                 $room->notificationsSent = array();
+                $room->addedToArx = false;
             }
         }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);

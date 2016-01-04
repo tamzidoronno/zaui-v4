@@ -22,6 +22,9 @@ public interface IPmsManager {
     public Integer completeCurrentBooking();
     
     @Administrator
+    public void markRoomAsCleaned(String itemId);
+    
+    @Administrator
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
     public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
@@ -72,4 +75,16 @@ public interface IPmsManager {
     public String getCurrenctContract() throws Exception;
     
     public void processor();
+    
+    @Administrator
+    public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter);
+    
+    @Administrator
+    public Boolean isClean(String itemId);
+    
+    @Administrator
+    public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms();
+    
+    @Administrator
+    public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
 }

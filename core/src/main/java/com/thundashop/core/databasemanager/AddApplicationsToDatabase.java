@@ -253,8 +253,51 @@ public class AddApplicationsToDatabase {
         OsloTheme.moduleId = "other";
         OsloTheme.defaultActivate = false;
         apps.add(OsloTheme);
-
         
+        Application PmsAvailabilityTimeline = createSettings("PmsAvailabilityTimeline",
+        "176ea989-c7bb-4cef-a4bd-0c8421567e0b",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsAvailabilityTimeline.isPublic = true;
+        PmsAvailabilityTimeline.isFrontend = true;
+        PmsAvailabilityTimeline.moduleId = "booking";
+        PmsAvailabilityTimeline.defaultActivate = false;
+        apps.add(PmsAvailabilityTimeline);
+
+        Application PmsCleaning = createSettings("PmsCleaning",
+        "ae42328b-3726-4875-8546-212cd8cc3cde",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsCleaning.isPublic = true;
+        PmsCleaning.isFrontend = true;
+        PmsCleaning.moduleId = "booking";
+        PmsCleaning.defaultActivate = false;
+        apps.add(PmsCleaning);
+        
+        Application SydvarangerEquipments = createSettings("SydvarangerEquipments",
+        "ff895865-f22c-492d-acb9-0d6c825f89ad",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        SydvarangerEquipments.isPublic = true;
+        SydvarangerEquipments.isFrontend = true;
+        SydvarangerEquipments.moduleId = "other";
+        SydvarangerEquipments.defaultActivate = false;
+        apps.add(SydvarangerEquipments);
+        
+        Application EmailCollector = createSettings("EmailCollector",
+        "34981104-5a56-436f-b897-f9d7a9b80427",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        EmailCollector.isPublic = true;
+        EmailCollector.isFrontend = true;
+        EmailCollector.moduleId = "Marketing";
+        EmailCollector.defaultActivate = false;
+        apps.add(EmailCollector);
+
         return apps;
     }
 

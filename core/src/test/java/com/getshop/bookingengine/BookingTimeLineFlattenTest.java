@@ -618,18 +618,18 @@ public class BookingTimeLineFlattenTest {
         Assert.assertEquals(3, timeLines.size());
         
         BookingTimeLine firstTimeLine = timeLines.get(0);
-        Assert.assertEquals(1, firstTimeLine.count);
+        Assert.assertEquals(new Integer(1), firstTimeLine.count);
         Assert.assertEquals(getDate("2015-01-04 08:00"), firstTimeLine.start);
         Assert.assertEquals(getDate("2015-01-05 08:00"), firstTimeLine.end);
         
         
         BookingTimeLine secondTimeLine = timeLines.get(1);
-        Assert.assertEquals(2, secondTimeLine.count);
+        Assert.assertEquals(new Integer(2), secondTimeLine.count);
         Assert.assertEquals(getDate("2015-01-05 08:00"), secondTimeLine.start);
         Assert.assertEquals(getDate("2015-01-05 12:00"), secondTimeLine.end);
         
         BookingTimeLine thirdTimeLine = timeLines.get(2);
-        Assert.assertEquals(1, thirdTimeLine.count);
+        Assert.assertEquals(new Integer(1), thirdTimeLine.count);
         Assert.assertEquals(getDate("2015-01-05 12:00"), thirdTimeLine.start);
         Assert.assertEquals(getDate("2015-01-06 08:00"), thirdTimeLine.end);
     }
@@ -651,18 +651,18 @@ public class BookingTimeLineFlattenTest {
         Assert.assertEquals(3, timeLines.size());
         
         BookingTimeLine firstTimeLine = timeLines.get(0);
-        Assert.assertEquals(1, firstTimeLine.count);
+        Assert.assertEquals(new Integer(1), firstTimeLine.count);
         Assert.assertEquals(getDate("2015-01-04 08:00"), firstTimeLine.start);
         Assert.assertEquals(getDate("2015-01-05 08:00"), firstTimeLine.end);
         
         
         BookingTimeLine secondTimeLine = timeLines.get(1);
-        Assert.assertEquals(2, secondTimeLine.count);
+        Assert.assertEquals(new Integer(2), secondTimeLine.count);
         Assert.assertEquals(getDate("2015-01-05 08:00"), secondTimeLine.start);
         Assert.assertEquals(getDate("2015-01-05 12:00"), secondTimeLine.end);
         
         BookingTimeLine thirdTimeLine = timeLines.get(2);
-        Assert.assertEquals(1, thirdTimeLine.count);
+        Assert.assertEquals(new Integer(1), thirdTimeLine.count);
         Assert.assertEquals(getDate("2015-01-05 12:00"), thirdTimeLine.start);
         Assert.assertEquals(getDate("2015-01-06 08:00"), thirdTimeLine.end);
     }
@@ -687,28 +687,28 @@ public class BookingTimeLineFlattenTest {
         Assert.assertEquals(5, timeLines.size());
         
         BookingTimeLine firstTimeLine = timeLines.get(0);
-        Assert.assertEquals(1, firstTimeLine.count);
+        Assert.assertEquals(new Integer(1), firstTimeLine.count);
         Assert.assertEquals(getDate("2015-01-04 08:00"), firstTimeLine.start);
         Assert.assertEquals(getDate("2015-01-05 08:00"), firstTimeLine.end);
         
         
         BookingTimeLine secondTimeLine = timeLines.get(1);
-        Assert.assertEquals(2, secondTimeLine.count);
+        Assert.assertEquals(new Integer(2), secondTimeLine.count);
         Assert.assertEquals(getDate("2015-01-05 08:00"), secondTimeLine.start);
         Assert.assertEquals(getDate("2015-01-05 12:00"), secondTimeLine.end);
         
         BookingTimeLine thirdTimeLine = timeLines.get(2);
-        Assert.assertEquals(1, thirdTimeLine.count);
+        Assert.assertEquals(new Integer(1), thirdTimeLine.count);
         Assert.assertEquals(getDate("2015-01-05 12:00"), thirdTimeLine.start);
         Assert.assertEquals(getDate("2015-01-06 06:00"), thirdTimeLine.end);
         
         BookingTimeLine fourTimeLine = timeLines.get(3);
-        Assert.assertEquals(2, fourTimeLine.count);
+        Assert.assertEquals(new Integer(2), fourTimeLine.count);
         Assert.assertEquals(getDate("2015-01-06 06:00"), fourTimeLine.start);
         Assert.assertEquals(getDate("2015-01-06 08:00"), fourTimeLine.end);
         
         BookingTimeLine fifthTimeLine = timeLines.get(4);
-        Assert.assertEquals(1, fifthTimeLine.count);
+        Assert.assertEquals(new Integer(1), fifthTimeLine.count);
         Assert.assertEquals(getDate("2015-01-06 08:00"), fifthTimeLine.start);
         Assert.assertEquals(getDate("2015-01-08 12:00"), fifthTimeLine.end);
     }
@@ -734,28 +734,28 @@ public class BookingTimeLineFlattenTest {
         Assert.assertEquals(5, timeLines.size());
         
         BookingTimeLine firstTimeLine = timeLines.get(0);
-        Assert.assertEquals(1, firstTimeLine.count);
+        Assert.assertEquals(new Integer(1), firstTimeLine.count);
         Assert.assertEquals(getDate("2015-01-04 08:00"), firstTimeLine.start);
         Assert.assertEquals(getDate("2015-01-05 08:00"), firstTimeLine.end);
         
         
         BookingTimeLine secondTimeLine = timeLines.get(1);
-        Assert.assertEquals(2, secondTimeLine.count);
+        Assert.assertEquals(new Integer(2), secondTimeLine.count);
         Assert.assertEquals(getDate("2015-01-05 08:00"), secondTimeLine.start);
         Assert.assertEquals(getDate("2015-01-05 12:00"), secondTimeLine.end);
         
         BookingTimeLine thirdTimeLine = timeLines.get(2);
-        Assert.assertEquals(2, thirdTimeLine.count);
+        Assert.assertEquals(new Integer(2), thirdTimeLine.count);
         Assert.assertEquals(getDate("2015-01-05 12:00"), thirdTimeLine.start);
         Assert.assertEquals(getDate("2015-01-06 06:00"), thirdTimeLine.end);
         
         BookingTimeLine fourTimeLine = timeLines.get(3);
-        Assert.assertEquals(2, fourTimeLine.count);
+        Assert.assertEquals(new Integer(2), fourTimeLine.count);
         Assert.assertEquals(getDate("2015-01-06 06:00"), fourTimeLine.start);
         Assert.assertEquals(getDate("2015-01-06 08:00"), fourTimeLine.end);
         
         BookingTimeLine fifthTimeLine = timeLines.get(4);
-        Assert.assertEquals(1, fifthTimeLine.count);
+        Assert.assertEquals(new Integer(1), fifthTimeLine.count);
         Assert.assertEquals(getDate("2015-01-06 08:00"), fifthTimeLine.start);
         Assert.assertEquals(getDate("2015-01-08 12:00"), fifthTimeLine.end);
     }
@@ -776,7 +776,7 @@ public class BookingTimeLineFlattenTest {
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
         Assert.assertEquals(1, timeLines.size());
-        Assert.assertEquals(3, timeLines.get(0).count);   
+        Assert.assertEquals(new Integer(3), timeLines.get(0).count);   
         Assert.assertEquals(7, timeLines.get(0).getAvailableSpots());   
     }
     
@@ -800,8 +800,8 @@ public class BookingTimeLineFlattenTest {
         
         List<BookingTimeLine> timeLines = flattenTimeline.getTimelines();
         Assert.assertEquals(2, timeLines.size());
-        Assert.assertEquals(3, timeLines.get(0).count);   
-        Assert.assertEquals(3, timeLines.get(1).count);   
+        Assert.assertEquals(new Integer(3), timeLines.get(0).count);   
+        Assert.assertEquals(new Integer(3), timeLines.get(1).count);   
         Assert.assertEquals(7, timeLines.get(0).getAvailableSpots());   
         Assert.assertEquals(7, timeLines.get(1).getAvailableSpots());   
     }
@@ -922,7 +922,7 @@ public class BookingTimeLineFlattenTest {
     }
 
     private void assertDateAndCount(BookingTimeLine timeLine, Date start, Date end, int count) {
-        Assert.assertEquals(count, timeLine.count);
+        Assert.assertEquals(new Integer(count), timeLine.count);
         Assert.assertEquals(start, timeLine.start);
         Assert.assertEquals(end, timeLine.end);
     }

@@ -1,11 +1,19 @@
 <?
 /* @var $this \ns_f64275fa_bae6_47c4_a988_0a0f99f0dfd6\SedoxProfileSmall */
 $user = $this->getUser();
+$verified = "Verified account";
+
+if (!$user) {
+    $user = new core_usermanager_data_User();
+    $user->fullName = "Not logged in";
+    $verified = "";
+}
 
 ?>
 
 <div class="avatar"><i class="fa  fa-picture-o"></i></div>
+
 <div class="userInformation">
     <div class="fullName boldFont"><? echo $user->fullName; ?></div>
-    <div class="verified">Verified account</div>
+    <div class="verified"><? echo $verified; ?></div>
 </div>

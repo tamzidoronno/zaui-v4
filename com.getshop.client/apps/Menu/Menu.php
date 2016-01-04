@@ -165,22 +165,32 @@ class Menu extends \SystemApplication implements \Application {
             
         return false;
     }
+    
+    public function renderConfig() {
+        $this->includefile("config");
+    }
 
+    private function isDisabledDueToAccessLevel($entry) {
+        if (isset($entry->userLevel) && $entry->userLevel) {
+            $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+            if ($user == null) {
+                return true;
+            }
+
+            if ($user->type < $entry->userLevel) {
+                return true;
+            }
+        }        
+    }
+    
     public function printEntries($entries, $level) {
         echo "<div class='entries'>";
         
         foreach ($entries as $entry) {
-            if (isset($entry->userLevel) && $entry->userLevel) {
-                $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
-                if ($user == null) {
-                    continue;
-                }
-                
-                if ($user->type < $entry->userLevel) {
-                    continue;
-                }
-            } 
-       
+            if ($this->isDisabledDueToAccessLevel($entry) && !$this->isDisabledEnabled()) {
+                continue;
+            }
+            
             if ($this->isDisabledDueToLanaguage($entry)) {
                 continue;
             }
@@ -204,14 +214,21 @@ class Menu extends \SystemApplication implements \Application {
                 }
             }
             
+            $disabledClass = ""; 
+            if ($this->isDisabledEnabled() && $this->isDisabledDueToAccessLevel($entry)) {
+                $disabledClass = "gs_menu_disabled";
+                $link = "?page=login";
+                $linkName = "?page=login";
+            }
+            
             if ($entry->scrollPageId && $entry->scrollAnchor) {
-                echo "<div class='entry'><div scrollPageId='$entry->scrollPageId' scrollAnchor='$entry->scrollAnchor' class='gs_scrollitem'>$fontAwesome $name</div>";
+                echo "<div class='entry $disabledClass'><div scrollPageId='$entry->scrollPageId' scrollAnchor='$entry->scrollAnchor' class='gs_scrollitem'>$fontAwesome $name</div>";
                 if ($entry->subentries) {
                     $this->printEntries($entry->subentries, $level+1);
                 }
                 echo "</div>";
             } else {
-               echo "<div class='entry $activate'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
+               echo "<div class='entry $activate $disabledClass'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
                 if ($entry->subentries) {
                     $this->printEntries($entry->subentries, $level+1);
                 }
@@ -221,6 +238,20 @@ class Menu extends \SystemApplication implements \Application {
         echo "</div>";
     }
 
+    public function saveGlobalSettings() {
+        $this->setConfigurationSetting("disableMenuItemsInsteadOfHide", $_POST['disableMenuItemsInsteadOfHide']);
+    }
+    
+    public function isDisabledEnabled() {
+        $disabled = $this->getGlobalConfigurationSetting("disableMenuItemsInsteadOfHide");
+        
+        if (isset($disabled) && $disabled == "true") {
+            return true;
+        }
+        
+        return false;
+        
+    }
 }
 
 class EntryItem {

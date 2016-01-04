@@ -28,6 +28,11 @@ public interface SedoxApiPort extends java.rmi.Remote {
      * Finds the correct phone number
      */
     public java.lang.Object getOrders(java.lang.Object code) throws java.rmi.RemoteException;
+    
+    /**
+     * Finds the correct phone number
+     */
+    public java.lang.Object getEvcOrders(java.lang.Object code) throws java.rmi.RemoteException;
 
     /**
      * Search for customer

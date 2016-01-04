@@ -5,6 +5,7 @@
 package com.thundashop.core.sedox;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -13,4 +14,5 @@ import java.io.Serializable;
 public class SedoxOrder implements Serializable {
     public String productId;
     public double creditAmount;
+    public Date dateCreated;
 }

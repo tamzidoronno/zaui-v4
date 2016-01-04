@@ -1,5 +1,10 @@
+<?php
+if(isset($_POST['event']) && $_POST['event'] == "addEmail") {
+    echo "<h1>" . $this->__w("Thank you, you have now registered your email") . "</h1>";
+} else {
+?>
 <div gstype="form" method="addEmail">
     <input gsname='email' type='text' placeholder="<? echo $this->__w("your@email.com"); ?>" gstype="submitenter">
     <input gstype="submit" type="button" value='<? echo $this->__w("Register email"); ?>'>
 </div>
-
+<?php } ?>

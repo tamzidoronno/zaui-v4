@@ -109,6 +109,7 @@ public class PageManager extends ManagerBase implements IPageManager {
             System.out.println("Could not find cell to add app to");
         }
         
+        backupPage(page);
         return instance;
     }
 
@@ -201,6 +202,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
         
         savePage(page);
+        backupPage(page);
         return page;
     }
 

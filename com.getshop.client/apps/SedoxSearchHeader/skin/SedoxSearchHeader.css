@@ -1,0 +1,25 @@
+.SedoxSearchHeader {
+    background-color: #303030;
+    border-radius: 3px;
+    color: #807e8b;
+    line-height: 25px;
+    border: solid 1px #3a3a3a;
+    padding: 3px;
+    margin-top: 15px;
+    max-width: 270px;
+}
+.SedoxSearchHeader i {
+    padding-left: 20px;
+    padding-right: 10px;
+}
+.SedoxSearchHeader input:focus {
+    outline: 0;
+}
+
+.SedoxSearchHeader input {
+    background-color: transparent;
+    border: 0px solid;
+    height: 20px;
+    width: 160px;
+    color: #CCC;
+}

@@ -1,5 +1,12 @@
 package com.thundashop.core.pmsmanager;
 
+import biweekly.Biweekly;
+import biweekly.ICalendar;
+import biweekly.component.VEvent;
+import biweekly.property.Summary;
+import biweekly.util.Duration;
+import biweekly.util.Recurrence;
+import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.i18n.phonenumbers.NumberParseException;
@@ -24,9 +31,13 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
@@ -69,7 +80,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired 
     ArxManager arxManager;
-         
+    
+    @Autowired
+    StoreManager storeManager;
+    
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -880,12 +895,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void notifyBooker(PmsBooking booking, String message, String type, String key) throws ErrorException {
         User user = userManager.getUserById(booking.userId);
-        if(type.equals("email")) {
+        if(type.equals("sms")) {
             messageManager.sendSms(user.cellPhone, message, user.prefix);
         } else {
             String title = configuration.emailTitles.get(key);
-            title = formatMessage(message, booking, null, null);
-            messageManager.sendMailWithDefaults(user.fullName, user.emailAddress, title, message);
+            if(key.startsWith("booking_confirmed")) {
+                HashMap<String, String> attachments = createICalEntry(booking);
+                String copyadress = storeManager.getMyStore().configuration.emailAdress;
+                messageManager.sendMailWithAttachments(user.emailAddress, user.fullName, title, message, copyadress, copyadress, attachments);
+            } else {
+                messageManager.sendMailWithDefaults(user.fullName, user.emailAddress, title, message);
+            }
         }
     }
 
@@ -1216,5 +1236,46 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return true;
         }
         return false;
+    }
+
+    private HashMap<String, String> createICalEntry(PmsBooking booking) {
+        ICalendar ical = new ICalendar();
+        for(PmsBookingRooms room : booking.rooms) {
+            VEvent event = new VEvent();
+            String title = "Booking of";
+            
+            if(room.booking.bookingItemId != null) {
+                title += " room " + bookingEngine.getBookingItem(room.booking.bookingItemId).bookingItemName;
+            } else {
+                title += " " + bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+            }
+            
+            Summary summary = event.setSummary(title);
+            summary.setLanguage("en-us");
+
+            event.setDateStart(room.date.start);
+            
+            int minutes = (int)((room.date.end.getTime()/60000) - (room.date.start.getTime()/60000));
+
+            Duration duration = new Duration.Builder().minutes(minutes).build();
+            event.setDuration(duration);
+
+            ical.addEvent(event);
+        }
+
+        HashMap<String, String> attachments = new HashMap();
+        try {
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+
+            String str = Biweekly.write(ical).go();
+            byte[] encoded = Base64.encodeBase64(str.getBytes());
+            String encodedString = new String(encoded);
+
+            attachments.put("calendar.ics", encodedString);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+            
+        return attachments;
     }
 }

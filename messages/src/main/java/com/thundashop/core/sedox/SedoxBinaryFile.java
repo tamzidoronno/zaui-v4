@@ -34,15 +34,24 @@ public class SedoxBinaryFile implements Serializable {
     void updateParametersFromFileName(String fileName) {
         String[] productAttributes = fileName.split(";");
         
-        if (productAttributes.length != 16 && productAttributes.length != 17) {
+        if (productAttributes.length != 17 && productAttributes.length != 18) { 
             System.out.println("WARNING! Cant update attributes, the filename is not the correct parameters. Check winols settings");
             return;
         }
         
-        checksumCorrected = !productAttributes[15].equals("csnone");
+        checksumCorrected = !productAttributes[16].equals("csnone"); //% ECU.Checksumstatus % (checksum is corrected or not)
     }
 
-    public double getPrice() {
+    public double getPrice(SedoxUser sedoxUser) {
+        
+        if (sedoxUser.fixedPrice != null 
+                && !sedoxUser.fixedPrice.isEmpty() 
+                && !fileType.toLowerCase().equals("cmdencrypted") 
+                && !fileType.toLowerCase().equals("cmd original") 
+                && !fileType.toLowerCase().equals("original") 
+                ) {
+            return Double.parseDouble(sedoxUser.fixedPrice);
+        }
         
         if (fileType.toLowerCase().equals("tune")) {
             return 60;
@@ -53,7 +62,7 @@ public class SedoxBinaryFile implements Serializable {
         }
         
         if (fileType.toLowerCase().equals("power")) {
-            return 70;
+            return 60;
         }
         
         if (fileType.toLowerCase().equals("eco")) {

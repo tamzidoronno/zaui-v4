@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.sedox;
 
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,18 +18,21 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SedoxSearchEngine {
-    private List<SedoxProduct> products = new ArrayList();
+    private List<SedoxSharedProduct> products = new ArrayList();
     
     private int pageSize = 10;
     
-    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxProduct> products, SedoxSearch search) {
+    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxSharedProduct> products, SedoxSearch search, User currentUser) {
         this.products = products;
         
         String searchString = search.searchCriteria.toLowerCase();
-        Set<SedoxProduct> retProducts = new TreeSet<>();
+        Set<SedoxSharedProduct> retProducts = new TreeSet<>();
         
-        for (SedoxProduct product : products) {
-            if (!product.saleAble ) {
+        for (SedoxSharedProduct product : products) {
+            if (product.id.equals(searchString) || inFileId(product, searchString)) {
+                retProducts.add(product);
+            }
+            if (!product.saleAble  && (currentUser == null || currentUser.type < 100)) {
                 continue;
             }
             
@@ -47,11 +51,42 @@ public class SedoxSearchEngine {
             if (product.model != null && product.model.toLowerCase().contains(searchString)) {
                 retProducts.add(product);
             }
+			
+            if (product.ecuBrand != null && product.ecuBrand.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+			
+            if (product.ecuHardwareNumber != null && product.ecuHardwareNumber.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
+            if (product.ecuPartNumber != null && product.ecuPartNumber.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+			
+            if (product.ecuSoftwareNumber != null && product.ecuSoftwareNumber.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
+            if (product.ecuSoftwareVersion != null && product.ecuSoftwareVersion.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
+            if (product.ecuType != null && product.ecuType.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
+            if (product.engineSize != null && product.engineSize.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
+            if (product.softwareNumber != null && product.softwareNumber.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
             
             if (product.originalChecksum != null && product.originalChecksum.toLowerCase().contains(searchString)) {
                 retProducts.add(product);
             }
-            
         }
         
         SedoxProductSearchPage page = new SedoxProductSearchPage();
@@ -75,5 +110,22 @@ public class SedoxSearchEngine {
         
         page.pageNumber = 1;
         return page;
+    }
+
+    private boolean inFileId(SedoxSharedProduct product, String searchString) {
+        int searchId = 0;
+        try {
+            searchId = Integer.parseInt(searchString);
+        } catch (Exception ex) {
+            return false;
+        }
+        
+        for (SedoxBinaryFile file : product.binaryFiles) {
+            if (file.id == searchId) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

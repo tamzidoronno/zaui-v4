@@ -374,6 +374,10 @@
     
 }
 
+.Menu .gs_menu_disabled a {
+    color: #BBB !important;
+}
+
 .Menu .mobilenavigatemenu { display:none; }
 #informationbox.Menu { color:#000; }
 

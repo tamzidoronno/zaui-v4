@@ -78,26 +78,25 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
-            try {
-                UserStoreCollection userStoreCollection = getUserStoreCollection(dataCommon.storeId);
-                if (dataCommon instanceof User) {
-                    userStoreCollection.addUserDirect((User) dataCommon);
-                }
-                if (dataCommon instanceof LoginHistory) {
-                    loginHistory = (LoginHistory) dataCommon;
-                }
-                if (dataCommon instanceof Group) {
-                    userStoreCollection.addGroup((Group)dataCommon);
-                }
-                if (dataCommon instanceof UserCounter) {
-                    counter = (UserCounter) dataCommon;
-                }
-                if (dataCommon instanceof SessionFactory) {
-                    sessionFactory = (SessionFactory) dataCommon;
-                }
-            } catch (ErrorException ex) {
-                ex.printStackTrace();
-                // Should never ever happend.
+            if (!dataCommon.storeId.equals(storeId)) {
+                dataCommon.storeId = storeId;
+                saveObject(dataCommon);
+            }
+            UserStoreCollection userStoreCollection = getUserStoreCollection(dataCommon.storeId);
+            if (dataCommon instanceof User) {
+                userStoreCollection.addUserDirect((User) dataCommon);
+            }
+            if (dataCommon instanceof LoginHistory) {
+                loginHistory = (LoginHistory) dataCommon;
+            }
+            if (dataCommon instanceof Group) {
+                userStoreCollection.addGroup((Group)dataCommon);
+            }
+            if (dataCommon instanceof UserCounter) {
+                counter = (UserCounter) dataCommon;
+            }
+            if (dataCommon instanceof SessionFactory) {
+                sessionFactory = (SessionFactory) dataCommon;
             }
         }
         

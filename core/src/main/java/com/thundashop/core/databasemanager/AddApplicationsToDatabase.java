@@ -221,6 +221,18 @@ public class AddApplicationsToDatabase {
         SedoxProfileSmall.defaultActivate = false;
         apps.add(SedoxProfileSmall);
         
+        Application SedoxSearchHeader = createSettings("SedoxSearchHeader",
+        "238d74e7-4c06-4429-85bd-40648121d1cb",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxSearchHeader.isPublic = true;
+        SedoxSearchHeader.isFrontend = true;
+        SedoxSearchHeader.moduleId = "sedox";
+        SedoxSearchHeader.defaultActivate = false;
+        apps.add(SedoxSearchHeader);
+
+        
         Application SedoxCreditViewSmall = createSettings("SedoxCreditViewSmall",
         "665c6c9d-5212-45e5-8c6b-aa0cf85dc6a2",
         allowed2,

@@ -4,7 +4,6 @@
  */
 package com.thundashop.core.sedox;
 
-import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.usermanager.data.User;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -13,51 +12,28 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.BinaryRefAddr;
 
 /**
  *
  * @author ktonder
  */
-public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct> {
-    public List<SedoxBinaryFile> binaryFiles = new ArrayList();
-    public List<SedoxProductHistory> histories = new ArrayList();
-    public String filedesc;
-    
-    public String brand;
-    public String model;
-    public String engineSize;
-    public String year;
-    public String power;
-    public String ecuType;
-    public String build;
-    public String ecuBrand;
-    public String softwareNumber; 
-    public String softwareSize;
-    
-    public String tool;
-    public String status;
-    public boolean saleAble = true;
+public class SedoxProduct extends SedoxProductCopiedData implements Comparable<SedoxProduct> {
+
     public String firstUploadedByUserId;
-    public String originalChecksum;
-    public String gearType;
     public String useCreditAccount;
     public String comment;
-    
     public boolean started;
-    public boolean isCmdEncryptedProduct=false;
-    public String channel;
-    public String ecuPartNumber;
-    public String ecuHardwareNumber;
-    public String ecuSoftwareNumber;
-    public String ecuSoftwareVersion;
-    
+    public Boolean isFinished = false;
     public String uploadOrigin;
-    
+    public Map<String,String> reference = new HashMap();
     public Map<String, Date> states = new HashMap();
-
+    public String startedByUserId = "";
+    public List<SedoxProductHistory> histories = new ArrayList();
+    public Date startedDate;
+    public String sharedProductId = "";
+    public boolean isBuiltFromSpecialRequest = false;
+    public boolean duplicate = false;
+    
     @Override
     public int compareTo(SedoxProduct o) {
         if (rowCreatedDate.after(o.rowCreatedDate)) {
@@ -69,66 +45,14 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         }  
     }
     
-    public void setParametersBasedOnFileString(String fileName) {
-        String[] productAttributes = fileName.split(";");
-        
-        if (productAttributes.length != 16 &&  productAttributes.length != 17) {
-            saleAble = false;
-            return;
-        }
-        
-        brand = productAttributes[0]; // %Vehicle.Producer%; (bmw / audi)
-        model = productAttributes[1]; // %Vehicle.Series% (e90 / passat etc)
-        engineSize = productAttributes[3]; // %Vehicle.Model% 
-        build = productAttributes[2]; // %Vehicle.Build%;
-        year = productAttributes[5]; // %Vehicle.Modelyear%
-        power = productAttributes[6]; // %Engine.OutputPS%
-        ecuBrand = productAttributes[7]; // %ECU.Producer%
-        ecuType = productAttributes[8]; // %ECU.Build% 
-        ecuPartNumber = productAttributes[9];
-        ecuHardwareNumber = productAttributes[10]; // %ECU.ECUStg%;
-        ecuSoftwareNumber = productAttributes[11]; // %ECU.ECUStg%;
-        ecuSoftwareVersion = productAttributes[12]; // %ECU.ECUStg%;
-        if (productAttributes.length > 16) {
-            tool = productAttributes[16]; 
-        }
-    }
-
-    public SedoxBinaryFile getFileById(int fileId) {
-        for (SedoxBinaryFile binFile : binaryFiles) {
-            if (binFile.id == fileId) {
-                return binFile;
-            }
-        }
-        
-        return null;
-    }
-    
-    public String fileSafeName() {
+    public String fileSafeName(String fileName) {
         try {
-            String name = toString();
-            return URLEncoder.encode(name, "UTF-8");
+            return URLEncoder.encode(fileName, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException("Failed to make safe filename", ex);
         }
     }
 
-    @Override
-    public String toString() {
-        String checksumaddon = originalChecksum == null ? "" : " " + originalChecksum;
-        return brand + " " + model + " " + engineSize + " " + power + " " + year + checksumaddon;
-    }
-
-    void removeBinaryFile(int fileId) {
-        List<SedoxBinaryFile> sedoxBinFiles = new ArrayList();
-        for (SedoxBinaryFile binFile : binaryFiles) {
-            if (binFile.id != fileId) {
-                sedoxBinFiles.add(binFile);
-            }
-        }
-        this.binaryFiles = sedoxBinFiles;
-    }
-    
     private SedoxProductHistory getHistoryEntry(String userId, String comment) {
         SedoxProductHistory hist = new SedoxProductHistory();
         hist.dateCreated = new Date();
@@ -170,12 +94,9 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
             histories.add(getHistoryEntry(userId, "Product has been marked as stopped"));
         }
     }
-    
-    boolean hasMoreThenOriginalFile() {
-        if (binaryFiles != null && binaryFiles.size() < 2) {
-            return false;
-        }
-        
-        return true;
+
+    @Override
+    public String toString() {
+        throw new RuntimeException("This is no longe in use, use shared sedox product");
     }
 }

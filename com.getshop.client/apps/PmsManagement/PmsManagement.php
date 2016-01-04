@@ -15,6 +15,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function resetnotifications() {
         $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
+        $booking->confirmed = false;
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
                 $room->started = false;

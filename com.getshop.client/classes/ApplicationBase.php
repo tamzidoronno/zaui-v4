@@ -483,5 +483,9 @@ class ApplicationBase extends FactoryBase {
     public function formatTimeToJavaDate($time) {
         return date("M d, Y h:m:s A", $time);
     }
+    
+    public function formatJavaDateToTime($time) {
+        return strtotime($time);
+    }
 }
 ?>

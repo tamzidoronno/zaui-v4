@@ -1,0 +1,71 @@
+.SedoxDownloadHistory {
+    padding: 20px;
+}
+
+.SedoxDownloadHistory .header {
+    background-color: #f9fafc;
+    border-top: solid 1px #e1e5e9;
+    border-left: solid 1px #e1e5e9;
+    border-right: solid 1px #e1e5e9;
+    border-bottom: solid 2px #bdbec0;
+    font-size: 0px;
+}
+
+.SedoxDownloadHistory .header .col_header {
+    display: inline-block;
+    line-height: 46px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+.SedoxDownloadHistory .header .col_header.col1 {
+    width: 150px;
+    padding-left: 30px;
+} 
+
+.SedoxDownloadHistory .header .col_header.col2 {
+    width: 150px;
+} 
+
+.SedoxDownloadHistory .header .col_header.col3 {
+    width: calc(100% - 500px);  
+}
+
+.SedoxDownloadHistory .header .col_header.col4 {
+    width: 200px;
+}
+
+.SedoxDownloadHistory .tablecontent {
+    font-size: 0px;
+}
+
+.SedoxDownloadHistory .tablecontent .col_content {
+    display: inline-block;
+    font-size: 14px;
+    line-height: 46px;
+}
+
+.SedoxDownloadHistory .tablecontent .col_row_content:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+.SedoxDownloadHistory .tablecontent .col_row_content:nth-child(odd) {
+    background-color: #fcfcfc;
+}
+
+.SedoxDownloadHistory .tablecontent .col_content.col1 {
+    width: 120px;
+    padding-left: 30px;
+} 
+
+.SedoxDownloadHistory .tablecontent .col_content.col2 {
+    width: 150px;
+} 
+
+.SedoxDownloadHistory .tablecontent .col_content.col3 {
+    width: calc(100% - 500px);  
+}
+
+.SedoxDownloadHistory .tablecontent .col_content.col4 {
+    width: 200px;
+}

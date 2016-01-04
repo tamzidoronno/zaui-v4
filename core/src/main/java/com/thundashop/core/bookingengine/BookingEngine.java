@@ -169,5 +169,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public boolean itemInUseBetweenTime(Date start, Date end, String itemId) {
         return true;
     }
+
+    public void autoAssignItem(String bookingId) {
+        System.out.println("This need to give the booking a booking item");
+    }
     
 }

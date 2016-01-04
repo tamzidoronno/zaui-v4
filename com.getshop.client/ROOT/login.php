@@ -114,7 +114,7 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
         <div  style="max-width: 400px; width:100%; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 2px #000; border-radius: 5px; padding: 20px; text-align:left;">
             <form id='getshoploginform' method="POST" action="/login.php<? echo $doubleauth ? "?doubleauth=true" : ""; ?>" name="loginform" class="loginform">
                     <div class="form">
-                        <div class="username">Username / Email<br><input class="tstextfield" name="username" type="textfield" value='<? echo $username; ?>' style="height:40px;width:100%;"></input></div>
+                        <div class="username">Username / Email<br><input id='gsloginusername' class="tstextfield" name="username" type="textfield" value='<? echo $username; ?>' style="height:40px;width:100%;"></input></div>
                         <bR>
                         <div class="password">Password<br><input class="tstextfield" name="password" type="password" value='<? echo $password; ?>' style="height:40px;width:100%;"></input></div>
                         <input type="hidden" name="loginbutton" value="true"/>
@@ -147,3 +147,6 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
     echo "<script>document.location = '/'</script>";
 }
 ?>
+<script>
+    document.getElementById("gsloginusername").focus();
+</script>

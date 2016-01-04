@@ -4,6 +4,7 @@ import com.ibm.icu.util.Calendar;
 import com.thundashop.core.arx.AccessCategory;
 import com.thundashop.core.arx.Card;
 import com.thundashop.core.arx.Person;
+import com.thundashop.core.bookingengine.BookingEngine;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -22,6 +23,7 @@ public class PmsManagerProcessor {
         processEndings(0, 24*1);
         processEndings(24, 24*2);
         processEndings(48, 24*3);
+        processAutoAssigning();
         if(manager.configuration.arxHostname != null && !manager.configuration.arxHostname.isEmpty()) {
             processArx();
         }
@@ -203,6 +205,33 @@ public class PmsManagerProcessor {
             }
         }
         return false;
+    }
+
+    private void processAutoAssigning() {
+        List<PmsBooking> bookings = manager.getAllBookings(null);
+        for(PmsBooking booking : bookings) {
+            
+            if(booking.id.equals("fbee75cb-cd15-4ab6-8076-ed19c0cd466a")) {
+                System.out.println("this is it");
+            }
+            if(!booking.confirmed) {
+                continue;
+            }
+            
+            boolean save = false;
+            for(PmsBookingRooms room : booking.rooms) {
+                if(!room.isStarted()) {
+                    continue;
+                }
+                if(room.isEnded()) {
+                    continue;
+                }
+                
+                if(room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+                    manager.bookingEngine.autoAssignItem(room.bookingId);
+                }
+            }
+        }
     }
     
 }

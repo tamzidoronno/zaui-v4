@@ -560,12 +560,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room.date.start = room.booking.startDate;
                 room.date.end = room.booking.endDate;
                 
-                if(room.booking.bookingItemTypeId != null) {
-                    room.bookingItemTypeId = room.booking.bookingItemTypeId;
-                }
-                if(room.booking.bookingItemId != null) {
-                    room.bookingItemId = room.booking.bookingItemId;
-                }
+                room.bookingItemTypeId = room.booking.bookingItemTypeId;
+                room.bookingItemId = room.booking.bookingItemId;
             }
         }
         

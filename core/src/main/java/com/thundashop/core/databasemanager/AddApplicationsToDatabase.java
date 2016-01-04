@@ -276,6 +276,28 @@ public class AddApplicationsToDatabase {
         PmsCleaning.defaultActivate = false;
         apps.add(PmsCleaning);
         
+        Application SydvarangerEquipments = createSettings("SydvarangerEquipments",
+        "ff895865-f22c-492d-acb9-0d6c825f89ad",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        SydvarangerEquipments.isPublic = true;
+        SydvarangerEquipments.isFrontend = true;
+        SydvarangerEquipments.moduleId = "other";
+        SydvarangerEquipments.defaultActivate = false;
+        apps.add(SydvarangerEquipments);
+        
+        Application EmailCollector = createSettings("EmailCollector",
+        "34981104-5a56-436f-b897-f9d7a9b80427",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        EmailCollector.isPublic = true;
+        EmailCollector.isFrontend = true;
+        EmailCollector.moduleId = "Marketing";
+        EmailCollector.defaultActivate = false;
+        apps.add(EmailCollector);
+
         return apps;
     }
 

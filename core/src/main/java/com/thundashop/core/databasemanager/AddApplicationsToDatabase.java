@@ -210,16 +210,28 @@ public class AddApplicationsToDatabase {
         bjaroytheme.defaultActivate = false;
         apps.add(bjaroytheme);
 
-        Application SedoxProfileSmall = createSettings("SedoxProfileSmall",
-        "f64275fa-bae6-47c4-a988-0a0f99f0dfd6",
+        Application SedoxDownloadHistory = createSettings("SedoxDownloadHistory",
+        "5278fb21-3c0a-4ea1-b282-be1b76896a4b",
         allowed2,
         " ",
         Application.Type.Marketing, true);
-        SedoxProfileSmall.isPublic = true;
-        SedoxProfileSmall.isFrontend = true;
-        SedoxProfileSmall.moduleId = "sedox";
-        SedoxProfileSmall.defaultActivate = false;
-        apps.add(SedoxProfileSmall);
+        SedoxDownloadHistory.isPublic = true;
+        SedoxDownloadHistory.isFrontend = true;
+        SedoxDownloadHistory.moduleId = "sedox";
+        SedoxDownloadHistory.defaultActivate = false;
+        apps.add(SedoxDownloadHistory);
+
+        Application SedoxPager = createSettings("SedoxPager",
+        "5876c6fd-af9b-48a2-a034-d93c9809c346",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxPager.isPublic = true;
+        SedoxPager.isFrontend = true;
+        SedoxPager.moduleId = "sedox";
+        SedoxPager.defaultActivate = false;
+        apps.add(SedoxPager);
+
         
         Application SedoxSearchHeader = createSettings("SedoxSearchHeader",
         "238d74e7-4c06-4429-85bd-40648121d1cb",

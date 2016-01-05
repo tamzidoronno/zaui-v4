@@ -23,6 +23,7 @@ attribute gstypes;
 
     clicksubmit, submit whenever someone click this element:
         example: <div gstype="clicksubmit" method="renameEntry" gsname="id" gsvalue="somevalue">
+        example: <input type='checkbox' gstype="clicksubmitforce" method="renameEntry" gsname="id" gsvalue="somevalue">
         example submits on enter: <input gstype="clicksubmit" method="renameEntry" gsname="id" gsvalue="somevalue">
        
 

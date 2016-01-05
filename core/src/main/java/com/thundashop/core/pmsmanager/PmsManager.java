@@ -508,6 +508,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         finalized = sortList(finalized, filter.sorting);
         
+        finalized = filterTypes(finalized, filter.typeFilter);
+        
         return finalized;
     }
 
@@ -1327,6 +1329,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Collections.reverse(result);
         }
         
+        return result;
+    }
+
+    private List<PmsBooking> filterTypes(List<PmsBooking> finalized, List<String> typeFilter) {
+        if(typeFilter == null || typeFilter.isEmpty()) {
+            return finalized;
+        }
+        
+        List<PmsBooking> result = new LinkedList();
+        for(PmsBooking booking : finalized) {
+            boolean add = false;
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.bookingItemTypeId != null && typeFilter.contains(room.bookingItemTypeId))
+                    add = true;
+            }
+            if(add) {
+                result.add(booking);
+            }
+        }
         return result;
     }
 }

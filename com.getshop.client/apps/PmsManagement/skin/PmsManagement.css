@@ -81,3 +81,4 @@
 .PmsManagement .bookinginfo select { font-size: 16px; }
 .PmsManagement .bookinginfo .editmode { display: none; }
 .PmsManagement .needconfirmation { margin: 20px; font-size: 20px; background-color:red; color:#fff; padding: 10px;text-align: center; }
+.PmsManagement .typefilter { display:inline-block; min-width: 100px; }

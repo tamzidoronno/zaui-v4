@@ -1,6 +1,8 @@
 package com.thundashop.core.pmsmanager;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class PmsBookingFilter {
     static class PmsBookingFilterTypes {
@@ -20,4 +22,5 @@ public class PmsBookingFilter {
     public Boolean needToBeConfirmed = false;
     public Boolean includeDeleted = false;
     public String sorting;
+    public List<String> typeFilter = new ArrayList();
 }

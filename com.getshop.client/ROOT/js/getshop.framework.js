@@ -38,9 +38,10 @@ thundashop.framework = {
                 }
             }
         });
-        $('*[gstype="clicksubmit"]').live('click', function (e) {
+        $('*[gstype="clicksubmit"],*[gstype="clicksubmitforce"]').live('click', function (e) {
             var target = $(e.target);
-            if (target.prop("tagName") == "INPUT") {
+            var gstype = $(this).attr('gstype');
+            if (target.prop("tagName") === "INPUT" && gstype === "clicksubmit") {
                 return;
             }
             thundashop.framework.submitElement(e);

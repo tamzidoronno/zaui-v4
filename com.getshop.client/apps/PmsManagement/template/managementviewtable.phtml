@@ -7,9 +7,11 @@ $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelected
 foreach($items as $item) {
     $items[$item->id] = $item;
 }
+$types2 = array();
 foreach($types as $type) {
-    $types[$type->id] = $type;
+    $types2[$type->id] = $type;
 }
+$types = $types2;
 
 $rows = 0;
 $headers = array();
@@ -21,6 +23,22 @@ $headers['price'] = "Price";
 if(!isset($filter->sorting)) {
     $filter->sorting = "regdate";
 }
+
+if(!isset($filter->typeFilter)) {
+    $filter->typeFilter = array();
+}
+
+foreach($types as $id => $type) {
+    echo "<span class='typefilter'>";
+    $checked = "";
+    if(in_array($id, $filter->typeFilter)) {
+        $checked = "CHECKED";
+    }
+    echo "<input type='checkbox' gstype='clicksubmitforce' method='addTypeFilter' gsname='id' gsvalue='$id' $checked>";
+    echo $type->name . "</span>";
+}
+echo "<br>";
+echo "<br>";
 
 echo "<table width='100%' cellspacing='0' cellpadding='0'>";
 echo "<tr>";

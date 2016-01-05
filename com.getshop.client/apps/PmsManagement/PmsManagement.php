@@ -13,6 +13,34 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("bookinginformation");
     }
     
+    public function addTypeFilter() {
+        $filter = $this->getSelectedFilter();
+        $id = $_POST['data']['id'];
+        
+        $newfilter = array();
+        
+        
+        if(!$filter->typeFilter || !isset($filter->typeFilter)) {
+            $filter->typeFilter= array();
+        }
+        $add = true;
+        foreach($filter->typeFilter as $tmpid) {
+            if($id == $tmpid) {
+                $add = false;
+            } else {
+                $newfilter[] = $tmpid;
+            }
+        }
+        if($add) {
+            $newfilter[] = $id;
+        }
+        
+        $filter->typeFilter = $newfilter;
+        
+        
+        $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
+    }
+    
     public function sortTable() {
         $filter = $this->getSelectedFilter();
         if($filter->sorting == $_POST['data']['column'] || !$filter->sorting) {

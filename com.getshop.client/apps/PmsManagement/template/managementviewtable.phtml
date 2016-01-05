@@ -12,13 +12,29 @@ foreach($types as $type) {
 }
 
 $rows = 0;
+$headers = array();
+$headers['regdate'] = "Reg";
+$headers['periode'] = "Periode";
+$headers['visitor'] = "Visitor";
+$headers['room'] = "Room";
+$headers['price'] = "Price";
+if(!isset($filter->sorting)) {
+    $filter->sorting = "regdate";
+}
+
 echo "<table width='100%' cellspacing='0' cellpadding='0'>";
 echo "<tr>";
 echo "<th></th>";
-echo "<th>Start</th>";
-echo "<th>End</th>";
-echo "<th>Visitor</th>";
-echo "<th>Room</th>";
+foreach($headers as $header => $value) {
+    echo "<th gstype='clicksubmit' gsvalue='$header' method='sortTable' gsname='column' style='cursor:pointer;'>";
+    if($filter->sorting == $header) {
+        echo "<i class='fa fa-arrow-down'></i>";
+    } else if($filter->sorting == $header . "_desc") {
+        echo "<i class='fa fa-arrow-up'></i>";
+    }
+    echo $value;
+    echo "</th>";
+}
 echo "<th align='center'><center>State</center></th>";
 echo "</tr>";
 if(!$bookings) {
@@ -29,17 +45,20 @@ foreach($bookings as $booking) {
         $rows++;
         if($types[$room->bookingItemTypeId]->addon > 0) {
             continue;
-        } 
+        }
         
         echo "<tr>";
         echo "<td style='width:70px;'>";
         echo "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."'></i> ";
         echo "</td>";
         echo "<td>";
-        echo date("d.m.Y H:i", strtotime($room->date->start));
+        echo date("d.m.Y", strtotime($booking->rowCreatedDate));
         echo "</td>";
-        echo "<td>";
+
+        echo "<td style='width:120px;'>";
+        echo date("d.m.Y H:i", strtotime($room->date->start));
         if($room->date->end) {
+            echo "<br>";
             //Dont show end date if this is a atleast 75 years booking
             if(((strtotime($room->date->end) - strtotime($room->date->start)) /86400) < 20000) {
                 echo date("d.m.Y H:i", strtotime($room->date->end));
@@ -61,25 +80,20 @@ foreach($bookings as $booking) {
         }
         $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
         echo "<div style='padding-top: 5px;'>";
-        echo "<span class='secondary_text'>Room type " . $types[$room->bookingItemTypeId]->name . "</span>, ";
         if($user) {
-            echo "<span class='secondary_text'>registered by " . $user->fullName . "</span>";
+            echo "<span class='secondary_text'>By " . $user->fullName . "</span>";
         }
-        echo "<span class='secondary_text'>";
-        if($booking->confirmed) {
-            echo ", confirmed ";
-        } else {
-            echo ", not confirmed ";
-        }
-        echo "</span>";
-
-        echo "<span class='secondary_text' style='float:right;'>Registered " . $booking->rowCreatedDate . "</span>";
         echo "</div>";
         echo "</td>";
-        echo "<td align='center'>";
+        echo "<td>";
         if($room->booking->bookingItemId) {
             echo $items[$room->booking->bookingItemId]->bookingItemName;
         }
+        echo "<br><span class='secondary_text'>" . $types[$room->bookingItemTypeId]->name . "</span>";
+
+        echo "</td>";
+        echo "<td>";
+        echo $room->price;
         echo "</td>";
         echo "<td align='center'>";
         if($booking->isDeleted) {

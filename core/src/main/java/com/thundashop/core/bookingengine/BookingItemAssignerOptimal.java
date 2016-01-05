@@ -47,7 +47,7 @@ public class BookingItemAssignerOptimal {
     
     private List<List<Booking>> preCheck() {
         List<List<Booking>> bookingLines = makeOptimalTimeLines();
-        long maximumNumberOfLines = items.stream().mapToInt(o -> o.bookingSize).count();
+        long maximumNumberOfLines = items.stream().mapToInt(o -> o.bookingSize).sum();
         
         if (bookingLines.size() > maximumNumberOfLines) {
             throw new BookingEngineException("The setup of bookings can not be fitted into the booking, you have more bookings than you have items of this type");
@@ -122,14 +122,14 @@ public class BookingItemAssignerOptimal {
         // Do the rest of the timelines
         for (List<Booking> bookingLine : bookingLines) {
             if (bookingItemsFlatten.isEmpty()) {
-                throw new BookingEngineException("Not enough bookingitems to make all timelines");
+                throw new BookingEngineException("Not enough bookingitems to make all timelines, no more space left.");
             }
             
             String bookingItem = bookingItemsFlatten.remove(0);
             
             BookingItem item = getBookingItem(bookingItem);
             if (item == null) {
-                throw new BookingEngineException("Did not find the booking item with id: " + bookingItem);
+                throw new BookingEngineException("Did not find the booking item with id (it possible has been deleted): " + bookingItem);
             }
             
             assignBookingsToItem(bookingLine, item);
@@ -148,8 +148,17 @@ public class BookingItemAssignerOptimal {
                 continue;
             }
             
+            if (bookingWithItem.bookingItemId.equals("3f516f4f-6863-4df3-a978-39a433188dcb")) {
+                System.out.println(bookingWithItem.getInformation());
+            }
+            
             if (!removeIfExists(bookingWithItem.bookingItemId, bookingItemsFlatten)) {
-                throw new BookingEngineException("There is not enough bookingitems to complete the assignment, we dont really know why, migt be already in use or does not exists, or count is too small?");
+                /*
+                1. Already in use
+                2. Does not exits
+                3. Not enouygh available rooms
+                */
+                throw new BookingEngineException("Could not complete the assignment, already in use.");
             }
             
             BookingItem item = getBookingItem(bookingWithItem.bookingItemId);

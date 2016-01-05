@@ -19,12 +19,6 @@
     color: #FFF;
 }
 
-/* BETA FLAG */
-#backsidesettings {
-    background-image: url('images/beta_label.png');
-    background-repeat: no-repeat;
-    background-position: -5px 55px;
-}
 
 #backsidesettings .gss_slogan {
     font-family: Raleway, sans-serif;

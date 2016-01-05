@@ -190,7 +190,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons) {
                 <div style='clear:both;'></div>
                 <span class='roomattribute'>
                     <span class='roomprefix'>
-                        <i class='fa fa-edit'></i> Pushed to arx
+                        Pushed to arx
                     </span>
                     <span class='roompostfix'>
                         <span class='viewmode'>
@@ -200,12 +200,6 @@ function printRooms($rooms, $types, $items, $bookingId, $addons) {
                                 echo "no";
                             }
                             ?>
-                        </span>
-                        <span class='editmode' method='changePrice' gstype='form'>
-                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
-                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <input type='text' gsname='price' value='<? echo $room->price; ?>'>
-                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
                         </span>
                     </span>
                 </span>

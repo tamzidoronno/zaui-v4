@@ -513,9 +513,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         long firstDate = bookings.get(0).startDate.getTime();
         
         return this.bookings.values().stream()
-                .filter(booking -> booking.startDate.getTime() >= firstDate)
                 .filter(booking -> booking.bookingItemTypeId.equals(typeId))
                 .filter(booking -> booking.bookingItemId != null && !booking.bookingItemId.isEmpty())
+                .filter(booking -> booking.within(bookings.get(0).startDate, bookings.get(0).endDate))
+                
                 .collect(Collectors.toList()); 
     }
 

@@ -6,6 +6,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class PmsBookingRooms implements Serializable {
     public PmsBookingDateRange date = new PmsBookingDateRange();
     public Integer numberOfGuests = 0;
     public double count = 1;
-    public double price = 0;
+    public Double price = 0.0;
     public double taxes = 8;
     public String bookingId;
     String code = "";
@@ -45,6 +46,8 @@ public class PmsBookingRooms implements Serializable {
      */
     @Transient
     public Booking booking;
+    @Transient
+    public BookingItem item;
 
     boolean isActiveOnDay(Date time) {
         Calendar cal = Calendar.getInstance();

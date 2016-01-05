@@ -42,10 +42,12 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -504,11 +506,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         List<PmsBooking> finalized = finalizeList(result);
         
-        Collections.sort(finalized, new Comparator<PmsBooking>(){
-            public int compare(PmsBooking o1, PmsBooking o2){
-               return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
-            }
-         });
+        finalized = sortList(finalized, filter.sorting);
         
         return finalized;
     }
@@ -568,15 +566,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingRooms room : booking.rooms) {
             if(room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
-                if(room.booking == null) {
-                    continue;
+                if(room.booking != null) {
+                    room.date.start = room.booking.startDate;
+                    room.date.end = room.booking.endDate;
+                    room.bookingItemTypeId = room.booking.bookingItemTypeId;
+                    room.bookingItemId = room.booking.bookingItemId;
+                } else {
+                    room.bookingItemId = null;
                 }
                 
-                room.date.start = room.booking.startDate;
-                room.date.end = room.booking.endDate;
+                if(room.bookingItemId != null) {
+                    room.item = bookingEngine.getBookingItem(room.bookingItemId);
+                }
                 
-                room.bookingItemTypeId = room.booking.bookingItemTypeId;
-                room.bookingItemId = room.booking.bookingItemId;
             }
         }
         
@@ -881,7 +883,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         if(message == null || message.isEmpty()) {
-            System.out.println("Email not configured correctly, email template missing?");
             return;
         }
         
@@ -1277,5 +1278,55 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
             
         return attachments;
+    }
+
+    private List<PmsBooking> sortList(List<PmsBooking> result, String sorting) {
+        if(sorting == null) {
+            sorting = "";
+        }
+        
+        if(sorting.equals("visitor") || sorting.equals("visitor_desc")) {
+            Collections.sort(result, new Comparator<PmsBooking>(){
+                public int compare(PmsBooking o1, PmsBooking o2){
+                    return o1.rooms.get(0).guests.get(0).name.compareTo(o2.rooms.get(0).guests.get(0).name);
+                }
+            });
+        } else if(sorting.equals("periode") || sorting.equals("periode_desc")) {
+            Collections.sort(result, new Comparator<PmsBooking>(){
+                public int compare(PmsBooking o1, PmsBooking o2){
+                    return o1.rooms.get(0).date.start.compareTo(o2.rooms.get(0).date.start);
+                }
+            });
+        } else if(sorting.equals("room") || sorting.equals("room_desc")) {
+            Collections.sort(result, new Comparator<PmsBooking>(){
+                public int compare(PmsBooking o1, PmsBooking o2){
+                    if(o1.rooms == null || o1.rooms.isEmpty() || o1.rooms.get(0).item == null) {
+                        return -1;
+                    }
+                    if(o2.rooms == null || o2.rooms.isEmpty() || o2.rooms.get(0).item == null) {
+                        return -1;
+                    }
+                    return o1.rooms.get(0).item.bookingItemName.compareTo(o2.rooms.get(0).item.bookingItemName);
+                }
+            });
+        } else if(sorting.equals("price") || sorting.equals("price_desc")) {
+            Collections.sort(result, new Comparator<PmsBooking>(){
+                public int compare(PmsBooking o1, PmsBooking o2){
+                    return o1.rooms.get(0).price.compareTo(o2.rooms.get(0).price);
+                }
+            });
+        } else {
+            Collections.sort(result, new Comparator<PmsBooking>(){
+                public int compare(PmsBooking o1, PmsBooking o2){
+                   return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+                }
+             });
+        }
+        
+        if(sorting.contains("_desc")) {
+            Collections.reverse(result);
+        }
+        
+        return result;
     }
 }

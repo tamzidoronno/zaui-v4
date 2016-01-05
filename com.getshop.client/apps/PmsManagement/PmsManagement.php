@@ -12,6 +12,17 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function showBookingInformation() {
         $this->includefile("bookinginformation");
     }
+    
+    public function sortTable() {
+        $filter = $this->getSelectedFilter();
+        if($filter->sorting == $_POST['data']['column'] || !$filter->sorting) {
+            $filter->sorting = $_POST['data']['column'] . "_desc";
+        } else {
+            $filter->sorting = $_POST['data']['column'];
+        }
+        
+        $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
+    }
 
     public function resetnotifications() {
         $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
@@ -147,6 +158,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->state = 0;
         $filter->startDate = $this->formatTimeToJavaDate(time()-(86400*3));
         $filter->endDate = $this->formatTimeToJavaDate(time()+(86400*3));
+        $filter->sorting = "regdate";
         return $filter;
     }
 

@@ -15,12 +15,12 @@ $searchtypes['stats'] = "Statistics";
 
 
 
-<div class='booking_options'>
+<div class='booking_options' gstype='form' method='setFilter'>
     <span style="float:left;">
-        <input type='text' class="start pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>">
-        <input type='text' class="end pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
+        <input type='text' gsname='start' class="start pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>">
+        <input type='text' gsname='end' class="end pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
 
-        <select class="pmsinput filterType">
+        <select class="pmsinput filterType" gsname='filterType'>
             <?php
             foreach($searchtypes as $idx => $type) {
                 $selected = "";
@@ -34,8 +34,8 @@ $searchtypes['stats'] = "Statistics";
         <span gstype="submit" class="pmsbutton setFilter">Show</span>
     </span>
     
-    <input type='text' placeholder='Search' class='pmsinput searchword' value="<? echo @$filter->searchWord; ?>">
-    <span gstype="submit" class="pmsbutton addGroupOptions setFilter">Search</span>
+    <input type="txt" gsname='searchWord' placeholder="Search" gstype="submitenter" class="pmsinput searchword" value="<? echo @$filter->searchWord; ?>">
+    <span gstype="submit" class="pmsbutton addGroupOptions">Search</span>
 </div>
 <br><br>
 

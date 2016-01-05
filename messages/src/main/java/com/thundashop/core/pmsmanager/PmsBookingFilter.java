@@ -19,4 +19,5 @@ public class PmsBookingFilter {
     public String searchWord;
     public Boolean needToBeConfirmed = false;
     public Boolean includeDeleted = false;
+    public String sorting;
 }

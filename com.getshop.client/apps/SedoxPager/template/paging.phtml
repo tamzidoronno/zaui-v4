@@ -1,0 +1,60 @@
+<?
+/* @var $this \ns_5876c6fd_af9b_48a2_a034_d93c9809c346\SedoxPager */
+$app = $this->getConnectedApplication();
+
+$currentPage = $app->getCurrentPage();
+$currentTotalPages = $app->getTotalPages();
+$buttonsHalf = 3;
+$buttons = $buttonsHalf*2;
+
+
+$startFrom = 1;
+$stop = $currentPage+$buttonsHalf;
+        
+if (($currentPage-$buttonsHalf) > 0) {
+    $startFrom = $currentPage-$buttonsHalf+1;
+}
+
+if (($currentTotalPages - $currentPage) < $buttonsHalf) {
+    
+    $startFrom = $currentTotalPages-$buttons + 2;
+    
+}
+
+if ($stop <= $buttons) {
+    $stop = $buttons;
+}
+
+if ($stop > $currentTotalPages) {
+    $stop = $currentTotalPages+1;
+}
+
+if ($startFrom < 1) {
+    $startFrom = 1;
+}
+
+if ($stop < 2) {
+    $stop = 2;
+}
+
+$prevPage = false;
+if ($currentPage > 1) {
+    $prevPage = $currentPage - 1;
+}
+
+$nextPage = false;
+if ($currentPage < $currentTotalPages) {
+    $nextPage = $currentPage + 1;
+}
+?>
+
+<div class="pagerbutton prev" go_to_page_number='<? echo $prevPage ?>'><i class="fa fa-chevron-left"></i></div>
+
+<?
+for ($i=$startFrom; $i < $stop; $i++) {
+    $active = $i == $currentPage ? "active" : "";
+    echo "<div class='pagerbutton $active' go_to_page_number='$i'>$i</div>";
+}
+?>
+
+<div class="pagerbutton next" go_to_page_number='<? echo $nextPage ?>'><i class="fa fa-chevron-right"></i></div>

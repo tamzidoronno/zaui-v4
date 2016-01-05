@@ -2,9 +2,7 @@
 /* @var $this \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxDownloadHistory */
 
 $orders = $this->getCurrentOrders();
-//echo "<pre>";
-//print_r($orders);
-//echo "</pre>";
+
 ?>
 
 <div class="header">
@@ -12,7 +10,7 @@ $orders = $this->getCurrentOrders();
     <div class="col_header col2">Date</div>
     <div class="col_header col3">File</div>
     <div class="col_header col4">
-        <input type="textfield"/>
+        <input type="textfield" class='filterTextBox' value="<? echo $this->getFilterText(); ?>"/>
         <div class="sedox_download"></div>
     </div>
 </div>

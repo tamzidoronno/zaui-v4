@@ -11,7 +11,31 @@ class SedoxPager extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        echo "TEST";
+        $connectedTo = $this->getConfigurationSetting("connectedAppId");
+        
+        if (!$connectedTo) {
+            echo "Please! this app needs to be connected to another app";
+        } else {
+            $this->includefile("paging");
+        }
+    }
+    
+    public function getConnectedApplication() {
+        $connectedTo = $this->getConfigurationSetting("connectedAppId");
+//        $app = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($connectedTo);
+        $appInstance = $this->getFactory()->getApplicationPool()->getApplicationInstance($connectedTo);
+//        echo "TEST: ".$appInstance->getAppInstanceId();
+        return $appInstance;
+//        return $appInstance;
+    }
+    
+    public function setConnectedAppId() {
+        $this->setConfigurationSetting("connectedAppId", $_POST['data']['appId']);
+    }
+    
+    public function setPageNumber() {
+        $appId = $this->getConfigurationSetting("connectedAppId");
+        $_SESSION[$appId."_currentPage"] = $_POST['data']['pageNumber'];
     }
 }
 ?>

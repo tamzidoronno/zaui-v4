@@ -6,9 +6,7 @@ package com.thundashop.core.sedox;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -16,7 +14,6 @@ import com.thundashop.core.messagemanager.MailFactoryImpl;
 import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
 import com.thundashop.core.socket.WebSocketServerImpl;
-import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayOutputStream;
@@ -42,17 +39,14 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -65,7 +59,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Autowired
     private SedoxSearchEngine sedoxSearchEngine;
-    private List<SedoxProduct> products = new ArrayList();
+    private Map<String, SedoxProduct> products = new HashMap();
     private Map<String, SedoxSharedProduct> productsShared = new HashMap();
     private Map<String, SedoxUser> users = new HashMap();
 
@@ -117,7 +111,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
             
             if (dataCommon instanceof SedoxProduct) {
-                products.add((SedoxProduct) dataCommon);
+                SedoxProduct product = (SedoxProduct) dataCommon;
+                products.put(product.id, product);
             }
             
             if (dataCommon instanceof FailedEvcOrder) {
@@ -193,7 +188,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         Set<SedoxProduct> retProducts = new TreeSet();
 
         String userId = getSession().currentUser.id;
-        for (SedoxProduct product : products) {
+        for (SedoxProduct product : products.values()) {
             if (product.firstUploadedByUserId != null && product.firstUploadedByUserId.equals(userId) && !product.duplicate) {
                 finalize(product);
                 retProducts.add(product);
@@ -225,7 +220,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         int nowDayOfYear = nowCalendar.get(Calendar.DAY_OF_YEAR) - daysBack;
         int nowYear = nowCalendar.get(Calendar.YEAR);
 
-        for (SedoxProduct product : products) {
+        for (SedoxProduct product : products.values()) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(product.rowCreatedDate);
             int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
@@ -242,7 +237,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public synchronized SedoxProduct getProductById(String id) throws ErrorException {
-        for (SedoxProduct product : products) {
+        for (SedoxProduct product : products.values()) {
             if (product.id.equals(id)) {
                 finalize(product);
                 return product;
@@ -251,7 +246,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         if (getSession().currentUser != null) {
 
-            for (SedoxProduct product : products) {
+            for (SedoxProduct product : products.values()) {
                 if (product.sharedProductId.equals(id) && product.firstUploadedByUserId.equals(getSession().currentUser.id)) {
                     finalize(product);
                     return product;
@@ -271,7 +266,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 sedoxProduct.duplicate = true;
                 saveObject(sedoxProduct);
                 finalize(sedoxProduct);
-                products.add(sedoxProduct);
+                products.put(sedoxProduct.id, sedoxProduct);
             }
         }
 
@@ -298,7 +293,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxProduct.useCreditAccount = useCredit;
         sedoxProduct.comment = comment;
         
-        products.add(sedoxProduct);
+        products.put(sedoxProduct.id, sedoxProduct);
 
         SedoxBinaryFile cmdEncryptedFile = saveCmdEncryptedFile(base64EncodeString, originalFileName);
         if (cmdEncryptedFile != null) {
@@ -371,7 +366,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             newProduct.storeId = storeId;
             newProduct.isBuiltFromSpecialRequest = true;
             newProduct.firstUploadedByUserId = getSession().currentUser.id;
-            products.add(newProduct);
+            products.put(newProduct.id, newProduct);
         } else {
             newProduct = customerProduct;
             newProduct.rowCreatedDate = new Date();
@@ -727,7 +722,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     private String getNextProductId() {
         int lowest = 0;
-        for (SedoxProduct sedoxProduct : products) {
+        for (SedoxProduct sedoxProduct : products.values()) {
             try {
                 int sedoxId = Integer.parseInt(sedoxProduct.id);
                 if (sedoxId > lowest) {
@@ -1453,7 +1448,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public List<SedoxProduct> getLatestProductsList(int count) throws ErrorException {
-        Set<SedoxProduct> reversedList = new TreeSet(products);
+        Set<SedoxProduct> reversedList = new TreeSet(products.values());
 
         List<SedoxProduct> retProducts = new ArrayList();
         int i = 0;
@@ -1547,7 +1542,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             statistic.startDate = startDate;
             statistic.endDate = endDate;
             
-            for (SedoxProduct product : products) {
+            for (SedoxProduct product : products.values()) {
                 if (product.rowCreatedDate.after(startDate) && product.rowCreatedDate.before(endDate))
                     statistic.count++;
             }
@@ -1561,7 +1556,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public List<String> getProductIds() throws ErrorException {
         List<String> productIds = new ArrayList();
-        for (SedoxProduct product : products) {
+        for (SedoxProduct product : products.values()) {
             productIds.add(product.id);
         }
         
@@ -1770,13 +1765,95 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             return null;
         }
         
-        for (SedoxProduct product: products) {
+        for (SedoxProduct product: products.values()) {
             if (product.sharedProductId != null && product.sharedProductId.equals(shareProductId) && product.firstUploadedByUserId != null && product.firstUploadedByUserId.equals(loggedInUser.id)) {
                 return product;
             }
         }
         
         return null;
+    }
+
+    @Override
+    public List<SedoxOrder> getOrders(String filterText, int pageSize, int page) {
+        List<SedoxOrder> orders = getOrdersInternal(filterText, pageSize, page);
+        return pageIt(orders, pageSize, page);
+    }
+    
+    private boolean filterMatch(String productId, String filterText) {
+        SedoxProduct product = products.get(productId);
+        
+        if (product == null) {
+            return false;
+        }
+        
+        SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
+        if (sharedProduct == null) {
+            return false;
+        }
+        
+        if (sharedProduct.getName().toLowerCase().contains(filterText)) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    private List<SedoxOrder> pageIt(List<SedoxOrder> filteredOrders, int pageSize, int page) {
+        if (page == 0) 
+            page = 1;
+        
+        int end = (page*pageSize) ;
+        int start = ((page-1)*pageSize);
+        
+//        if (start > 0)
+//            start--;
+        
+        filteredOrders = new ArrayList(filteredOrders);
+        Collections.reverse(filteredOrders);
+        
+        if (filteredOrders.size() >= end) {
+            return new ArrayList(filteredOrders.subList(start, end));
+        } 
+        
+        if (filteredOrders.size() >= start) {
+            return new ArrayList(filteredOrders.subList(start, filteredOrders.size()));
+        }
+        
+        
+        return new ArrayList(filteredOrders);
+    }
+
+    private List<SedoxOrder> getOrdersInternal(String filterText, int pageSize, int page) {
+            if (getSedoxUserAccount() == null) {
+            return new ArrayList();
+        }
+
+        List<SedoxOrder> orders = getSedoxUserById(getSession().currentUser.id).orders;
+        
+        if (filterText != null && !filterText.isEmpty()) {
+            ArrayList<SedoxOrder> filteredOrders = new ArrayList();
+            
+            for (SedoxOrder order : orders) {
+                if (filterMatch(order.productId, filterText)) {
+                    filteredOrders.add(order);
+                }
+            }
+
+            orders = filteredOrders;
+        }
+        
+        return orders;
+    }
+
+    @Override
+    public int getOrdersPageCount(String filterText, int pageSize) {
+        List<SedoxOrder> orders = getOrdersInternal(filterText, pageSize, pageSize);
+        if (orders.isEmpty()) {
+            return 1;
+        }
+        
+        return (int)Math.ceil((double)orders.size() / (double)pageSize);
     }
 
 }

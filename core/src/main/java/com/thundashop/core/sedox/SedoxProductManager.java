@@ -30,6 +30,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1775,9 +1776,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public List<SedoxOrder> getOrders(String filterText, int pageSize, int page) {
-        List<SedoxOrder> orders = getOrdersInternal(filterText, pageSize, page);
-        return pageIt(orders, pageSize, page);
+    public List<SedoxOrder> getOrders(FilterData filterData) {
+        List<SedoxOrder> orders = getOrdersInternal(filterData);
+        return pageIt(orders, filterData);
     }
     
     private boolean filterMatch(String productId, String filterText) {
@@ -1799,18 +1800,20 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return false;
     }
 
-    private List<SedoxOrder> pageIt(List<SedoxOrder> filteredOrders, int pageSize, int page) {
-        if (page == 0) 
-            page = 1;
+    private List<SedoxOrder> pageIt(List<SedoxOrder> filteredOrders, FilterData filterData) {
+        if (filterData.pageNumber == 0) 
+            filterData.pageNumber = 1;
         
-        int end = (page*pageSize) ;
-        int start = ((page-1)*pageSize);
+        int end = (filterData.pageNumber*filterData.pageSize) ;
+        int start = ((filterData.pageNumber-1)*filterData.pageSize);
         
-//        if (start > 0)
-//            start--;
         
         filteredOrders = new ArrayList(filteredOrders);
-        Collections.reverse(filteredOrders);
+        
+        Comparator sorter = new Sorters(products, productsShared).getSorter(filterData);
+        if (sorter != null) {
+            Collections.sort(filteredOrders, sorter);
+        }
         
         if (filteredOrders.size() >= end) {
             return new ArrayList(filteredOrders.subList(start, end));
@@ -1824,18 +1827,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return new ArrayList(filteredOrders);
     }
 
-    private List<SedoxOrder> getOrdersInternal(String filterText, int pageSize, int page) {
+    private List<SedoxOrder> getOrdersInternal(FilterData filterData) {
             if (getSedoxUserAccount() == null) {
             return new ArrayList();
         }
 
         List<SedoxOrder> orders = getSedoxUserById(getSession().currentUser.id).orders;
         
-        if (filterText != null && !filterText.isEmpty()) {
+        if (filterData.filterText != null && !filterData.filterText.isEmpty()) {
             ArrayList<SedoxOrder> filteredOrders = new ArrayList();
             
             for (SedoxOrder order : orders) {
-                if (filterMatch(order.productId, filterText)) {
+                if (filterMatch(order.productId, filterData.filterText)) {
                     filteredOrders.add(order);
                 }
             }
@@ -1847,13 +1850,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public int getOrdersPageCount(String filterText, int pageSize) {
-        List<SedoxOrder> orders = getOrdersInternal(filterText, pageSize, pageSize);
+    public int getOrdersPageCount(FilterData filterData) {
+        List<SedoxOrder> orders = getOrdersInternal(filterData);
         if (orders.isEmpty()) {
             return 1;
         }
         
-        return (int)Math.ceil((double)orders.size() / (double)pageSize);
+        return (int)Math.ceil((double)orders.size() / (double)filterData.pageSize);
     }
 
 }

@@ -6,9 +6,9 @@ $orders = $this->getCurrentOrders();
 ?>
 
 <div class="header">
-    <div class="col_header col1">Sedox ID</div>
-    <div class="col_header col2">Date</div>
-    <div class="col_header col3">File</div>
+    <div class="col_header col1" sortby="sedoxorder_sedoxid">Sedox ID <div class="sorter <? echo $this->getSorting() == 'sedoxorder_sedoxid' ? "active" : "";?> "></div></div>
+    <div class="col_header col2" sortby="sedoxorder_date">Date <div class="sorter <? echo $this->getSorting() == 'sedoxorder_date' ? "active" : "";?> "></div></div>
+    <div class="col_header col3" sortby="sedoxorder_product_name">File <div class="sorter <? echo $this->getSorting() == 'sedoxorder_product_name' ? "active" : "";?> "></div></div>
     <div class="col_header col4">
         <input type="textfield" class='filterTextBox' value="<? echo $this->getFilterText(); ?>"/>
         <div class="sedox_download"></div>
@@ -19,16 +19,26 @@ $orders = $this->getCurrentOrders();
     <?
     foreach ($orders as $order) {
         $product = $this->getApi()->getSedoxProductManager()->getProductById($order->productId);
-        $productName = \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxDownloadHistory::createProductName($product);
+        $productName = $product->printableName;
         
         $time = $this->formatJavaDateToTime($order->dateCreated);
         $date = date("d M Y", $time);
+        
         echo "<div class='col_row_content'>";
-            echo "<div class='col_content col1'>$order->productId</div>";
-            echo "<div class='col_content col2'>$date</div>";
-            echo "<div class='col_content col3'>$productName</div>";
-            echo "<div class='col_content col4'>View Product</div>";
+            echo "<div class='col_row_content_inner'>";
+                echo "<div class='col_content col1'>$order->productId</div>";
+                echo "<div class='col_content col2'>$date</div>";
+                echo "<div class='col_content col3'>$productName</div>";
+                echo "<div class='col_content col4'>View Product <div class='expandproduct'></div></div>";
+            echo "</div>";
+            $this->setCurrentProduct($product);
+            $this->includefile("productview");
+            
         echo "</div>";
     }
     ?>
 </div>
+
+<script>
+    getshop.SedoxDatabankTheme.setAll();
+</script>

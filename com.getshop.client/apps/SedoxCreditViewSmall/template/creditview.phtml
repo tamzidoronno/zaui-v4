@@ -1,8 +1,18 @@
+<?
+/* @var $this \ns_665c6c9d_5212_45e5_8c6b_aa0cf85dc6a2\SedoxCreditViewSmall */
+$user = $this->getApi()->getSedoxProductManager()->getSedoxUserAccount();
+$credit = $user->creditAccount->balance;
+$creditClass = $credit > 0 ? "green" : "red";
+?>
 <div class="evc">
     EVC Credit
-    <div class="creditValue boldFont green">200</div>
+    <div class="creditValue boldFont green">
+       0
+    </div>
 </div>
 <div class="sedoxCredit">
     File Credit
-    <div class="creditValue boldFont red">-4080</div>
+    <div class="creditValue boldFont <? echo $creditClass; ?>">
+        <? echo $credit > 0 ? $credit : "-".$credit; ?> 
+    </div>
 </div>

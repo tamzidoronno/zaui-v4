@@ -43,6 +43,11 @@
     display: inline-block;
     font-size: 14px;
     line-height: 46px;
+    cursor: pointer;
+}
+
+.SedoxDownloadHistory .tablecontent .col_row_content {
+    color: #344758;
 }
 
 .SedoxDownloadHistory .tablecontent .col_row_content:nth-child(even) {
@@ -68,4 +73,38 @@
 
 .SedoxDownloadHistory .tablecontent .col_content.col4 {
     width: 200px;
+}
+
+.SedoxDownloadHistory .sorter {
+    background-image: url('{IMAGEFOLDER}/sorter.png');
+    width: 9px;
+    height: 12px;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.SedoxDownloadHistory .expandproduct {
+    background-image: url('{IMAGEFOLDER}/arrow_down.png');
+    width: 9px;
+    height: 5px;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 22px;
+    margin-left: 10px;
+}
+
+.SedoxDownloadHistory .tablecontent .col_row_content .col4 {
+    color: #40b30e;
+}
+
+.SedoxDownloadHistory .tablecontent .col_row_content.row_selected .col4 {
+    color: #344758;
+}
+
+.SedoxDownloadHistory .tablecontent .col_row_content.row_selected .expandproduct {
+    background-image: url('{IMAGEFOLDER}/arrow_green_up.png');
+}
+
+.SedoxDownloadHistory .sorter.active {
+    background-image: url('{IMAGEFOLDER}/sorter_active.png');
 }

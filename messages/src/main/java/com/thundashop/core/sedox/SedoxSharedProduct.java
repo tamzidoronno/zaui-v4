@@ -132,6 +132,20 @@ public class SedoxSharedProduct extends DataCommon implements Comparable<SedoxSh
 
     public String getName() {
         String checksumaddon = originalChecksum == null ? "" : " " + originalChecksum;
+        brand = checkNull(brand);
+        model = checkNull(model);
+        engineSize = checkNull(engineSize);
+        power = checkNull(power);
+        year = checkNull(year);
+        checksumaddon = checkNull(checksumaddon);
         return brand + " " + model + " " + engineSize + " " + power + " " + year + checksumaddon;
+    }
+
+    private String checkNull(String stringToCheck) {
+        if (stringToCheck == null) {
+            return "";
+        }
+        
+        return stringToCheck;
     }
 }

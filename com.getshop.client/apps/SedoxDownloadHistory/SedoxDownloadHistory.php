@@ -4,6 +4,7 @@ namespace ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b;
 class SedoxDownloadHistory extends \MarketingApplication implements \Application {
     private $orders = null;
     private $pageSize = 15;
+    private $currentProduct = null;
     
     public function getDescription() {
         
@@ -24,7 +25,7 @@ class SedoxDownloadHistory extends \MarketingApplication implements \Application
         
         $this->orders = $this->getApi()
                 ->getSedoxProductManager()
-                ->getOrders($this->getFilterText(), $this->pageSize, $this->getCurrentPage());
+                ->getOrders($this->createFilterData());
         
     }
     
@@ -44,11 +45,7 @@ class SedoxDownloadHistory extends \MarketingApplication implements \Application
     public function setFilter() {
         $_SESSION[$this->getAppInstanceId()."_filterText"] = $_POST['data']['filterText'];
     }
-    
-    public static function createProductName($product) {
-        return $product->brand." ".$product->model." ".$product->engineSize." ".$product->power." ".$product->year;
-    }
-    
+  
     public function getCurrentPage() {
         if (isset($_SESSION[$this->getAppInstanceId()."_currentPage"])) {
             return $_SESSION[$this->getAppInstanceId()."_currentPage"];
@@ -60,7 +57,47 @@ class SedoxDownloadHistory extends \MarketingApplication implements \Application
     public function getTotalPages() {
         return $this->getApi()
                 ->getSedoxProductManager()
-                ->getOrdersPageCount($this->getFilterText(), $this->pageSize);
+                ->getOrdersPageCount($this->createFilterData());
     }
+    
+    public function setSortering() {
+        $_SESSION[$this->getAppInstanceId()."_sortby"] = $_POST['data']['sortBy'];
+        $_SESSION[$this->getAppInstanceId()."_ascending"] = !$this->isAscending();
+    }
+    
+    private function isAscending() {
+        if (!isset($_SESSION[$this->getAppInstanceId()."_ascending"])) {
+            return true;
+        }
+        
+        return $_SESSION[$this->getAppInstanceId()."_ascending"];
+    }
+
+    public function getSorting() {
+        if (isset($_SESSION[$this->getAppInstanceId()."_sortby"])) {
+            return $_SESSION[$this->getAppInstanceId()."_sortby"];
+        }
+        
+        return "sedoxorder_date";
+    }
+    
+    public function createFilterData() {
+        $filterdata = new \core_sedox_FilterData();
+        $filterdata->ascending = $this->isAscending();
+        $filterdata->filterText = $this->getFilterText();
+        $filterdata->pageNumber = $this->getCurrentPage();
+        $filterdata->pageSize = $this->pageSize;
+        $filterdata->sortBy = $this->getSorting();
+        return $filterdata;
+    }
+
+    public function setCurrentProduct($product) {
+        $this->currentProduct = $product;
+    }
+    
+    public function getCurrentProduct() {
+        return $this->currentProduct;
+    }
+
 }
 ?>

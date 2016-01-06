@@ -172,8 +172,8 @@ public interface ISedoxProductManager  {
     public void updateEvcCreditAccounts() throws ErrorException;
     
     @Customer
-    public List<SedoxOrder> getOrders(String filterText, int pageSize, int page);
+    public List<SedoxOrder> getOrders(FilterData filterData);
     
     @Customer
-    public int getOrdersPageCount(String filterText, int pageSize);
+    public int getOrdersPageCount(FilterData filterData);
 }

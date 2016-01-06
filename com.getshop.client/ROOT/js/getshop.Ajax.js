@@ -36,6 +36,10 @@ thundashop.Ajax = {
     doPreProcess: function() {
         PubSub.publish('NAVIGATED', {});
     },
+    simplePost: function(from, functionName, data) {
+        var event = thundashop.Ajax.createEvent(null, functionName, from, data);
+        thundashop.Ajax.post(event);
+    },
     postWithCallBack: function(data, callback, dontShowLoaderbox, xtra) {
         var file = this.ajaxFile;
         if (xtra !== undefined) {

@@ -48,6 +48,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
         
+        Application HybelhotellTheme = createSettings("HybelhotellTheme",
+        "9a164494-5d42-46ee-885f-308b188205d9",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        HybelhotellTheme.isPublic = true;
+        HybelhotellTheme.isFrontend = true;
+        HybelhotellTheme.moduleId = "other";
+        HybelhotellTheme.defaultActivate = false;
+        apps.add(HybelhotellTheme);
+
         
         Application Avtalegiro = createSettings("Avtalegiro",
         "8f5f7f8f-de42-4867-82cc-63eb0cb55fa1",

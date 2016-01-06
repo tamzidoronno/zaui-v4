@@ -61,7 +61,7 @@ $whenToPay[4] = "After stay";
         <?php
         foreach($notifications as $index => $name) {
             echo "<h2>$name</h2>";
-            echo "<textarea gsname='".$index."_email' style='width: 100%; height: 400px;'>";
+            echo "<textarea gsname='".$index."_email' style='width: 100%; height: 400px; box-sizing:border-box;'>";
             if(isset($notificationSettings->emails->{$index})) {
                 echo $notificationSettings->emails->{$index};
             }
@@ -137,18 +137,7 @@ $whenToPay[4] = "After stay";
             </span>
             Need confirmation
         </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->requirePayments) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='requirePayments' <? echo $checked; ?>>
-            </span>
-            Payments are required
-        </div>
+        
         <div class='configrow'>
             <span class='configentry'>
                 <?
@@ -173,6 +162,7 @@ $whenToPay[4] = "After stay";
             </span>
             Make sure the customers agree to the terms and conditions
         </div>
+        
         <div class='configrow'>
             <span class='configentry'>
                 <?
@@ -187,25 +177,44 @@ $whenToPay[4] = "After stay";
         </div>
         <div class='configrow'>
             <span class='configentry'>
-                <select gsname='whenToPay'>
-                    <? 
-                    foreach($whenToPay as $idx => $value) {
-                        $selected = "";
-                        if($notificationSettings->whenToPay ==$idx) {
-                            $selected = "SELECTED";
-                        }
-                        echo "<option value='$idx' $selected>$value</option>";
-                    }
-                    ?>
-                </select>
-            </span>
-            When does the customers need to pay
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
                 <input type='number' style='width: 40px;' gsname='cleaningInterval' value='<? echo $notificationSettings->cleaningInterval; ?>'>
             </span>
             Cleaning interval default
+        </div>
+        <br><br>
+        <h2>
+            Payment and order creations
+        </h2>
+<div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->prepayment) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='prepayment' <? echo $checked; ?>>
+            </span>
+            Prepayment, customers pay ahead of their stay
+        </div>
+
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='number' style='width: 40px;' gsname='cleaningInterval' value='<? echo $notificationSettings->createOrderAtDayInMonth; ?>'>
+            </span>
+            Specify a specific date in month to create the orders (0 is turned off).
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->requirePayments) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='requirePayments' <? echo $checked; ?>>
+            </span>
+            Payments are required (force payment view when booking is completed)
         </div>
         <br><br>
         <h2>Arx settings</h2>

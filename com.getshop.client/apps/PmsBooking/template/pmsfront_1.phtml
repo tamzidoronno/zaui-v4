@@ -1,6 +1,7 @@
 <?
 /* @var $this ns_8dcbf529_72ae_47dd_bd6b_bd2d0c54b30a\PmsBooking */
 $date = date("d.m.Y", time());
+$date2 = date("d.m.Y", time()+86400);
 if(!$this->getText("next_page")) {
     echo "<b>Next page not set up yet, please fix.</b>";
 }
@@ -19,11 +20,11 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
             <i class='fa fa-calendar start_cal'></i>
         </span>
     </span>
-    <?php if($this->getText("display_end_date") == "no") { ?>
+    <?php if($this->getText("display_end_date") == "yes") { ?>
         <span class='end_date dates'>
             <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
             <span class='dates_inner'>
-                <input class='end_date_input' value='<? echo $date; ?>'></input>
+                <input class='end_date_input' value='<? echo $date2; ?>'></input>
                 <span></span>
                 <i class='fa fa-calendar end_cal'></i>
             </span>

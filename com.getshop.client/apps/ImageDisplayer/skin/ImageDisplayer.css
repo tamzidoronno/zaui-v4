@@ -14,7 +14,7 @@
 .ImageDisplayer .progressbar_outer {z-index:2; display: none; position:absolute; width: 100%; top: 0px; left: 0px; height: 36px; border: solid 1px #626b68; }
 .ImageDisplayer .progressbar_outer .uploading_text { height: 18px; border-bottom: solid 1px; background-color:rgba(255,255,255,0.8); text-align: center; position:absolute; width:100%; z-index: 1; }
 .ImageDisplayer .progressbar_outer .progressbar { background-color: rgba(32,131,93,1.0); position:absolute; height:100%; }
-.ImageDisplayer .pictureicon { font-size: 100px; }
+.ImageDisplayer .pictureicon { font-size: 20px; }
 .ImageDisplayer .imagecontainer img { width: 100%; height: auto; }
 .ImageDisplayer .imagecontainer.originalSize img { width: auto; height: auto; max-width: 100%; }
 .ImageDisplayer .imagecontainer.adjust_left { text-align: left; width: 100%; display:block;}

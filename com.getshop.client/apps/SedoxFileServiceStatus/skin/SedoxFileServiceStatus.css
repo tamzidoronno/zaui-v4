@@ -1,0 +1,49 @@
+.SedoxFileServiceStatus {
+    background-color: #860c0b;
+    display: inline-block;
+}
+
+.SedoxFileServiceStatus .status1,
+.SedoxFileServiceStatus .status2 {
+    display: inline-block; 
+    line-height: 45px;
+    color: #ff8c8f;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: relative;
+}
+
+.SedoxFileServiceStatus .status2 {
+    border-left: solid 1px #ff8c8f;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    line-height: 25px;
+    padding-left: 20px;
+    margin-left: 10px;
+    padding-right: 40px;
+}
+
+.SedoxFileServiceStatus .status2 i {
+    padding-right: 6px;
+}
+
+.SedoxFileServiceStatus .status2 .filestatus {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    border: solid 1px;
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+}
+
+.SedoxFileServiceStatus .status2 .filestatus.green {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a9db80+0,96c56f+100;Green+3D+%232 */
+    background: #a9db80; /* Old browsers */
+    background: -moz-linear-gradient(top,  #a9db80 0%, #96c56f 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #a9db80 0%,#96c56f 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #a9db80 0%,#96c56f 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9db80', endColorstr='#96c56f',GradientType=0 ); /* IE6-9 */
+
+}

@@ -4,6 +4,13 @@ body {
 }
 
 /* HEADER SETTINGS */
+.gsarea[area="header"] .gscell[cellid="04869e19-a87b-41de-82ed-59241eccc920"] {
+    float: right !important;
+    width: inherit !important;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
 .gsarea[area="header"] .gscell[cellid="0283146d-48ac-4814-ab4a-3b4602608558"],
 .gsarea[area="header"] .gscell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] {
     width: 300px !important;

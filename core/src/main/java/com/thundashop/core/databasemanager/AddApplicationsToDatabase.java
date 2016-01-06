@@ -242,6 +242,18 @@ public class AddApplicationsToDatabase {
         SedoxPager.moduleId = "sedox";
         SedoxPager.defaultActivate = false;
         apps.add(SedoxPager);
+        
+        Application SedoxFileServiceStatus = createSettings("SedoxFileServiceStatus",
+        "b9642995-2bb2-474c-b1e8-5c859dad67a1",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxFileServiceStatus.isPublic = true;
+        SedoxFileServiceStatus.isFrontend = true;
+        SedoxFileServiceStatus.moduleId = "sedox";
+        SedoxFileServiceStatus.defaultActivate = false;
+        apps.add(SedoxFileServiceStatus);
+
 
         
         Application SedoxSearchHeader = createSettings("SedoxSearchHeader",

@@ -1,5 +1,9 @@
 <?
 /* @var $this \ns_665c6c9d_5212_45e5_8c6b_aa0cf85dc6a2\SedoxCreditViewSmall */
+if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() == null) {
+    return;
+}
+
 $user = $this->getApi()->getSedoxProductManager()->getSedoxUserAccount();
 $credit = $user->creditAccount->balance;
 $creditClass = $credit > 0 ? "green" : "red";

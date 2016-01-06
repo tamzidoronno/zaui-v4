@@ -19,6 +19,9 @@ app.SedoxDownloadHistory = {
     }, 
    
     applySortering: function() {
+        if (!$(this).attr('sortby')) {
+            return;
+        }
         thundashop.Ajax.simplePost(this, "setSortering", {
             sortBy : $(this).attr('sortby')
         });

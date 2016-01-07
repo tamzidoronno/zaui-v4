@@ -23,7 +23,7 @@ class PmsBooking extends \WebshopApplication implements \Application {
         /* @var $booking \core_pmsmanager_PmsBooking */
         $range = new \core_pmsmanager_PmsBookingDateRange();
         $range->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-        if(isset($_POST['date']['end'])) {
+        if(isset($_POST['data']['end'])) {
             $range->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
         }
         
@@ -33,7 +33,7 @@ class PmsBooking extends \WebshopApplication implements \Application {
         
         $booking->rooms = array();
         $booking->rooms[] = $room;
-        
+
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
         
         

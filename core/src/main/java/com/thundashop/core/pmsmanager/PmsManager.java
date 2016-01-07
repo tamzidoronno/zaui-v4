@@ -846,7 +846,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         cal.setTime(room.date.start);
         int days = 0;
         while(true) {
-            if(cal.getTime().after(startDate) && cal.getTime().before(endDate)) {
+            if(cal.getTime().after(startDate) && (cal.getTime().before(endDate) || cal.getTime().equals(endDate))) {
                 days++;
             }
             

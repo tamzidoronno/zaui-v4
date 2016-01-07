@@ -4,7 +4,7 @@ import com.ibm.icu.util.Calendar;
 import com.thundashop.core.arx.AccessCategory;
 import com.thundashop.core.arx.Card;
 import com.thundashop.core.arx.Person;
-import com.thundashop.core.bookingengine.BookingEngine;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -27,14 +27,12 @@ public class PmsManagerProcessor {
         if(manager.configuration.arxHostname != null && !manager.configuration.arxHostname.isEmpty()) {
             processArx();
         }
+        processOrdersToCreate();
     }
 
     private void processStarting(int hoursAhead, int maxAhead) {
-        List<PmsBooking> bookings = manager.getAllBookings(null);
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for(PmsBooking booking : bookings) {
-            if(!booking.confirmed) {
-                continue;
-            }
             
             boolean save = false;
             for(PmsBookingRooms room : booking.rooms) {
@@ -93,11 +91,8 @@ public class PmsManagerProcessor {
     }
 
     private void processEndings(int hoursAhead, int maxAhead) {
-        List<PmsBooking> bookings = manager.getAllBookings(null);
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for(PmsBooking booking : bookings) {
-            if(!booking.confirmed) {
-                continue;
-            }
             boolean save = false;
             for(PmsBookingRooms room : booking.rooms) {
                 if(!isBetween(room.date.end, (maxAhead*-1), (hoursAhead*-1))) {
@@ -143,15 +138,8 @@ public class PmsManagerProcessor {
     }
 
     private void processArx() {
-        List<PmsBooking> bookings = manager.getAllBookings(null);
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for(PmsBooking booking : bookings) {
-            
-            if(booking.id.equals("fbee75cb-cd15-4ab6-8076-ed19c0cd466a")) {
-                System.out.println("this is it");
-            }
-            if(!booking.confirmed) {
-                continue;
-            }
             boolean save = false;
             for(PmsBookingRooms room : booking.rooms) {
                 if(!manager.isClean(room.bookingItemId) && manager.configuration.cleaningInterval > 0) {
@@ -196,7 +184,7 @@ public class PmsManagerProcessor {
     }
 
     private boolean codeExist(int newcode) {
-        List<PmsBooking> bookings = manager.getAllBookings(null);
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for(PmsBooking booking : bookings) {
             for(PmsBookingRooms room : booking.rooms) {
                 if(room.code.equals(newcode) && room.addedToArx) {
@@ -208,16 +196,8 @@ public class PmsManagerProcessor {
     }
 
     private void processAutoAssigning() {
-        List<PmsBooking> bookings = manager.getAllBookings(null);
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for(PmsBooking booking : bookings) {
-            
-            if(booking.id.equals("fbee75cb-cd15-4ab6-8076-ed19c0cd466a")) {
-                System.out.println("this is it");
-            }
-            if(!booking.confirmed) {
-                continue;
-            }
-            
             boolean save = false;
             for(PmsBookingRooms room : booking.rooms) {
                 if(!room.isStarted()) {
@@ -232,6 +212,109 @@ public class PmsManagerProcessor {
                 }
             }
         }
+    }
+
+    private void processOrdersToCreate() {
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
+        for(PmsBooking booking : bookings) {
+            if(booking.isEndedOverTwoMonthsAgo()) {
+                continue;
+            }
+            
+            if(booking.isEnded() && !manager.configuration.prepayment) {
+                createEndingOrder(booking);
+            } else {
+                createPeriodeInvoices(booking);
+            }
+        }
+    }
+
+    private void createPeriodeInvoices(PmsBooking booking) {
+        int type = booking.priceType;
+        
+        NewOrderFilter filter = new NewOrderFilter();
+        filter.numberOfMonths = 1;
+        
+        if(type != PmsBooking.PriceType.monthly) {
+            System.out.println("Not yet supporting other payment periods than months");
+            return;
+        }
+        System.out.println("\t" + booking.invoicedTo);
+        if(booking.invoicedTo.before(new Date())) {
+            System.out.println("this one should be");
+        }
+        
+        if(type == PmsBooking.PriceType.monthly) {
+            filter.startInvoiceFrom = null;
+            if(isAfterOrToday(booking.invoicedTo)) {
+                if(manager.configuration.prepayment) {
+                    filter.startInvoiceFrom = booking.invoicedTo;
+                } else {
+                    filter.startInvoiceFrom = substractOneMonth(booking.invoicedTo);
+                }
+                manager.createOrder(booking.id, filter);
+                booking.invoicedTo = addOneMonth(booking.invoicedTo);
+                manager.saveBooking(booking);
+            }
+        }
+    }
+
+    private boolean isSameDay(Date date1, Date date2) {
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(date1);
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(date2);
+        boolean sameYear = calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR);
+        boolean sameMonth = calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH);
+        boolean sameDay = calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH);
+        return (sameDay && sameMonth && sameYear);
+    }
+
+    private Date addOneMonth(Date invoicedTo) {
+        Calendar toCheckCal = Calendar.getInstance();
+        toCheckCal.setTime(invoicedTo);
+        toCheckCal.add(Calendar.MONTH, 1);
+        return toCheckCal.getTime();
+    }
+
+    private boolean isAfterOrToday(Date invoicedTo) {
+        return (invoicedTo.before(new Date()) || isSameDay(new Date(), invoicedTo));
+    }
+
+    private Date substractOneMonth(Date invoicedTo) {
+        Calendar toCheckCal = Calendar.getInstance();
+        toCheckCal.setTime(invoicedTo);
+        toCheckCal.add(Calendar.MONTH, -1);
+        return toCheckCal.getTime();
+    }
+
+    private void createEndingOrder(PmsBooking booking) {
+        Date endDate = booking.getEndDate();
+        if(isSameDay(endDate, booking.invoicedTo)) {
+            return;
+        }
+        
+        NewOrderFilter filter = new NewOrderFilter();
+        filter.numberOfMonths = 1;
+        filter.startInvoiceFrom = booking.invoicedTo;
+        manager.createOrder(booking.id, filter);
+        booking.invoicedTo = endDate;
+        manager.saveBooking(booking);
+    }
+
+    private List<PmsBooking> getAllConfirmedNotDeleted() {
+        List<PmsBooking> res = manager.getAllBookings(null);
+        List<PmsBooking> toRemove = new ArrayList();
+        for(PmsBooking booking : res) {
+            if(!booking.confirmed) {
+                toRemove.add(booking);
+            }
+            if(booking.isDeleted) {
+                toRemove.add(booking);
+            }
+        }
+        res.removeAll(toRemove);
+        return res;
     }
     
 }

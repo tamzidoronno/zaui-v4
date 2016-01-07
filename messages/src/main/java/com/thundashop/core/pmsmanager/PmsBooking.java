@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +50,43 @@ public class PmsBooking extends DataCommon {
         return result;
     }
 
+    boolean hasStayAfter(Date startInvoiceFrom) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.date.end.after(startInvoiceFrom)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean isEnded() {
+        for(PmsBookingRooms room : rooms) {
+            if(room.date.end.after(new Date())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    Date getEndDate() {
+        Date endDate = null;
+        for(PmsBookingRooms room : rooms) {
+            if(endDate == null || room.date.end.after(endDate)) {
+                endDate = room.date.end;
+            }
+        }
+        return endDate;
+    }
+
+    boolean isEndedOverTwoMonthsAgo() {
+        Date ended = getEndDate();
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.MONTH, -2);
+        if(now.getTime().after(ended)) {
+            return true;
+        }
+        return false;
+    }
 
     public static class PriceType {
         public static Integer daily = 1;

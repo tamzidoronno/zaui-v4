@@ -19,14 +19,9 @@ public class PmsConfiguration extends DataCommon {
     public boolean exposeUnsecureBookings = false;
     public boolean autoconfirmRegisteredUsers = false;
     public Integer cleaningInterval = 0;
+    public boolean prepayment = true;
+    public Integer createOrderAtDayInMonth = 0;
     
-    /*
-    1. Pay when booking.
-    2. Pay on confirmation
-    3. Pay at check in date.
-    4. Pay after stay
-    */
-    public Integer whenToPay = 1;
     public String arxHostname = "";
     public String arxUsername = "";
     public String arxPassword = "";

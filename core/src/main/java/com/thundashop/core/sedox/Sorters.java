@@ -35,6 +35,18 @@ class Sorters {
             return sedoxProductName(filterData);
         }
         
+        if (filterData.sortBy.equals("sedoxproduct_sedoxid")) {
+            return sortBySedoxProduct(filterData);
+        }
+        
+        if (filterData.sortBy.equals("sedoxproduct_name")) {
+            return sortBySedoxProductName(filterData);
+        }
+        
+        if (filterData.sortBy.equals("sedoxproduct_date")) {
+            return sortBySedoxProductDate(filterData);
+        }
+        
         return null;
     }
 
@@ -78,6 +90,54 @@ class Sorters {
                 return product1.getName().compareTo(product2.getName());
             } else {
                 return product2.getName().compareTo(product1.getName());
+            }
+        };
+    }
+
+    private Comparator sortBySedoxProduct(FilterData filterData) {
+        return (Comparator<SedoxProduct>) (SedoxProduct o1, SedoxProduct o2) -> {
+            
+            Integer int1 = null;
+            Integer int2 = null;
+            
+            try {
+                int1 = new Integer(o1.id);
+                int2 = new Integer(o2.id);
+            } catch (Exception ex) {
+                return -1;
+            }
+            
+            if (filterData.ascending) {
+                return int1.compareTo(int2);
+            } else {
+                return int2.compareTo(int1);
+            }
+        };
+    }
+
+    private Comparator sortBySedoxProductName(FilterData filterData) {
+        return (Comparator<SedoxProduct>) (SedoxProduct o1, SedoxProduct o2) -> {
+            SedoxSharedProduct product1 = sharedProducts.get(o1.sharedProductId);
+            SedoxSharedProduct product2 = sharedProducts.get(o2.sharedProductId);
+            
+            if (product1 == null || product2 == null) {
+                return -1;
+            }
+            
+            if (filterData.ascending) {
+                return product1.getName().compareTo(product2.getName());
+            } else {
+                return product2.getName().compareTo(product1.getName());
+            }
+        };
+    }
+
+    private Comparator sortBySedoxProductDate(FilterData filterData) {
+        return (Comparator<SedoxProduct>) (SedoxProduct o1, SedoxProduct o2) -> {
+            if (filterData.ascending) {
+                return o1.rowCreatedDate.compareTo(o2.rowCreatedDate);
+            } else {
+                return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
             }
         };
     }

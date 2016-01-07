@@ -1,0 +1,43 @@
+<?
+/* @var $this \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxDownloadHistory */
+/* @var $products core_sedox_SedoxProduct[] */
+$products = $this->getCurrentUploadedFiles();
+
+?>
+<div class="SedoxDownloadHistory">
+<div class="header">
+    <div class="col_header col1" sortby="sedoxproduct_sedoxid">Sedox ID <div class="sorter <? echo $this->getSorting() == 'sedoxproduct_sedoxid' ? "active" : "";?> "></div></div>
+    <div class="col_header col2" sortby="sedoxproduct_date">Date <div class="sorter <? echo $this->getSorting() == 'sedoxproduct_date' ? "active" : "";?> "></div></div>
+    <div class="col_header col3" sortby="sedoxproduct_name">File <div class="sorter <? echo $this->getSorting() == 'sedoxproduct_name' ? "active" : "";?> "></div></div>
+    <div class="col_header col4">
+        <input type="textfield" class='filterTextBox' value="<? echo $this->getFilterText(); ?>"/>
+        <div class="sedox_download"></div>
+    </div>
+</div>
+
+<div class="tablecontent">
+    <?
+    foreach ($products as $product) {
+        $productName = $product->printableName;
+        
+        $time = $this->formatJavaDateToTime($product->rowCreatedDate);
+        $date = date("d M Y", $time);
+        
+        echo "<div class='col_row_content'>";
+            echo "<div class='col_row_content_inner'>";
+                echo "<div class='col_content col1'>$product->id</div>";
+                echo "<div class='col_content col2'>$date</div>";
+                echo "<div class='col_content col3'>$productName</div>";
+                echo "<div class='col_content col4'>View Product <div class='expandproduct'></div></div>";
+            echo "</div>";
+            $this->setCurrentProduct($product);
+            $this->includefile("productview");
+            
+        echo "</div>";
+    }
+    ?>
+</div>
+</div>
+<script>
+    getshop.SedoxDatabankTheme.setAll();
+</script>

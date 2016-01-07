@@ -84,7 +84,7 @@ public class SedoxProductCopiedData extends DataCommon {
     @Transient
     private boolean saleAble = true;
     
-    private String printableName = "";
+    public String printableName = "";
     
     void populate(SedoxSharedProduct sharedProduct) {
         this.binaryFiles = sharedProduct.binaryFiles;

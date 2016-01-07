@@ -30,7 +30,10 @@ public interface ISedoxProductManager  {
     public SedoxUser getSedoxUserAccountById(String userid) throws ErrorException;
     
     @Customer
-    public List<SedoxProduct> getProductsFirstUploadedByCurrentUser() throws ErrorException;
+    public List<SedoxProduct> getProductsFirstUploadedByCurrentUser(FilterData filterData);
+    
+    @Customer
+    public int getProductsFirstUploadedByCurrentUserTotalPages(FilterData filterData);
     
     @Administrator
     public List<SedoxUser> getAllUsersWithNegativeCreditLimit() throws ErrorException;

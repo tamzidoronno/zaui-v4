@@ -17,6 +17,8 @@ chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
+// TODO : FIX THIS - SORTING AND PAGING ADDED TO API CALL.
+// ALSO REMEMBER TO TAKE THE LATEST VERSION.
 $orders = $factory->getApi()->getSedoxProductManager()->getProductsFirstUploadedByCurrentUser();
 $orders = array_splice($orders , 0, 10);
 

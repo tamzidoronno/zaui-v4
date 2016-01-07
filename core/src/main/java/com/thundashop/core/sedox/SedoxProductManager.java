@@ -40,6 +40,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.annotation.PostConstruct;
@@ -184,19 +187,37 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return user;
     }
 
-    @Override
-    public synchronized List<SedoxProduct> getProductsFirstUploadedByCurrentUser() throws ErrorException {
-        Set<SedoxProduct> retProducts = new TreeSet();
-
+    
+    private Stream<SedoxProduct> getProductsUploadedByCurrentUser() {
         String userId = getSession().currentUser.id;
-        for (SedoxProduct product : products.values()) {
-            if (product.firstUploadedByUserId != null && product.firstUploadedByUserId.equals(userId) && !product.duplicate) {
-                finalize(product);
-                retProducts.add(product);
-            }
-        }
+        
+        return products.values().parallelStream()
+                .filter(product -> product.firstUploadedByUserId != null
+                    && product.firstUploadedByUserId.equals(userId)
+                    && !product.duplicate);
+    }
+    
+    @Override
+    public synchronized List<SedoxProduct> getProductsFirstUploadedByCurrentUser(FilterData filterData) {
+        Stream<SedoxProduct> productStream = getProductsUploadedByCurrentUser();
+        
 
-        return new ArrayList(retProducts);
+        if (filterData.filterText != null && !filterData.filterText.isEmpty()) {
+            productStream = productStream.filter(getFilterProductByName(filterData));
+        }
+        
+//        productStream.forEach(o -> finalize(o));
+        
+        List<SedoxProduct> pagedProducts = new ArrayList(pageIt(productStream.collect(Collectors.toList()), filterData));
+        pagedProducts.stream().forEach(o -> finalize(o));
+        return pagedProducts;
+    }
+    
+    @Override
+    public int getProductsFirstUploadedByCurrentUserTotalPages(FilterData filterData) {
+        long count = getProductsUploadedByCurrentUser().count();
+        
+        return (int)Math.ceil((double)count / (double)filterData.pageSize);
     }
 
     @Override
@@ -1800,7 +1821,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return false;
     }
 
-    private List<SedoxOrder> pageIt(List<SedoxOrder> filteredOrders, FilterData filterData) {
+    private List pageIt(List filteredOrders, FilterData filterData) {
         if (filterData.pageNumber == 0) 
             filterData.pageNumber = 1;
         
@@ -1857,6 +1878,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         
         return (int)Math.ceil((double)orders.size() / (double)filterData.pageSize);
+    }
+
+    private Predicate<? super SedoxProduct> getFilterProductByName(FilterData filterData) {
+        return o -> productsShared.get(o.sharedProductId) != null 
+                && productsShared.get(o.sharedProductId).getName().contains(filterData.filterText);
     }
 
 }

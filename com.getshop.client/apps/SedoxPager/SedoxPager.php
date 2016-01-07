@@ -14,7 +14,7 @@ class SedoxPager extends \MarketingApplication implements \Application {
         $connectedTo = $this->getConfigurationSetting("connectedAppId");
         
         if (!$connectedTo) {
-            echo "Please! this app needs to be connected to another app";
+            echo "<span style='font-size:10px;'>Please! this app needs to be connected to another app</span>";
         } else {
             $this->includefile("paging");
         }
@@ -22,11 +22,8 @@ class SedoxPager extends \MarketingApplication implements \Application {
     
     public function getConnectedApplication() {
         $connectedTo = $this->getConfigurationSetting("connectedAppId");
-//        $app = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($connectedTo);
         $appInstance = $this->getFactory()->getApplicationPool()->getApplicationInstance($connectedTo);
-//        echo "TEST: ".$appInstance->getAppInstanceId();
         return $appInstance;
-//        return $appInstance;
     }
     
     public function setConnectedAppId() {

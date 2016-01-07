@@ -1,0 +1,22 @@
+.SedoxPager .pagerbutton {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+    border: solid 1px #dee2e5;
+    background-color: #f4f4f4;
+    line-height: 30px;
+    text-align: center;
+    font-size: 14px;
+    margin-left: 1px;
+    margin-right: 1px;
+    cursor: pointer;
+}
+
+.SedoxPager .pagerbutton.active {
+    font-weight: bold;
+}
+
+.SedoxPager {
+    font-size: 0px;
+}

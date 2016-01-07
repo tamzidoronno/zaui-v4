@@ -170,4 +170,10 @@ public interface ISedoxProductManager  {
     public void markAsFinished(String productId, boolean finished) throws ErrorException;
     
     public void updateEvcCreditAccounts() throws ErrorException;
+    
+    @Customer
+    public List<SedoxOrder> getOrders(String filterText, int pageSize, int page);
+    
+    @Customer
+    public int getOrdersPageCount(String filterText, int pageSize);
 }

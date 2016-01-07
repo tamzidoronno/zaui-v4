@@ -30,7 +30,7 @@ $products=$products2;
             <td valign='top' width='50%'>
                 <h3>Booking item types</h3>
                 <div gstype="form" method="addBookingItemType" class='addGroupOptions'>
-                    <input gsname="name" value="">
+                    <input gsname="name" value="" gstype='clicksubmit'>
                     <span gstype="submit" class="pmsbutton addGroupOptions"><? echo $this->__w("Create a booking item type"); ?></span>
                 </div>
 
@@ -77,7 +77,7 @@ $products=$products2;
             <td valign='top' width='50%'>
                 <h3>Booking items</h3>
                 <div gstype="form" method="addBookingItem" class='addGroupOptions'>
-                    <input gsname="name" value="">
+                    <input gsname="name" gstype="submitenter" value="" class='newitemfield'>
                     <span gstype="submit" class="pmsbutton addGroupOptions"><? echo $this->__w("Create a booking item"); ?></span>
                 </div>
 
@@ -149,3 +149,6 @@ $products=$products2;
     
 </div>
 
+<script>
+    $('.newitemfield').focus();
+</script>

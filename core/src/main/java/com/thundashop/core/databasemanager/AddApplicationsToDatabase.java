@@ -70,6 +70,17 @@ public class AddApplicationsToDatabase {
         SedoxCreditHistory.defaultActivate = false;
         apps.add(SedoxCreditHistory);
 
+        Application SedoxSearchResult = createSettings("SedoxSearchResult",
+        "366dbe67-0829-47c8-b6ed-47bc3a136338",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxSearchResult.isPublic = true;
+        SedoxSearchResult.isFrontend = true;
+        SedoxSearchResult.moduleId = "sedox";
+        SedoxSearchResult.defaultActivate = false;
+        apps.add(SedoxSearchResult);
+
         return apps;
     }
 

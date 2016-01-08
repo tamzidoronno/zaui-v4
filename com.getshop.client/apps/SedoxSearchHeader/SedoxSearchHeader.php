@@ -13,5 +13,13 @@ class SedoxSearchHeader extends \WebshopApplication implements \Application {
     public function render() {
         $this->includefile("searchfield");
     }
+    
+    public function getSearchString() {
+        if(isset($_SESSION['sedox_search_value'])) {
+            return $_SESSION['sedox_search_value'];
+        }
+        
+        return "";
+    }
 }
 ?>

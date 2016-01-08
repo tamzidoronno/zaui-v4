@@ -1,0 +1,39 @@
+<?
+/* @var $this \ns_366dbe67_0829_47c8_b6ed_47bc3a136338\SedoxSearchResult */
+/* @var $products core_sedox_SedoxProduct[] */
+$products = $this->getProducts();
+
+?>
+<div class="SedoxDownloadHistory">
+<div class="header">
+    <div class="col_header col1" sortby="sedoxproduct_date">Date <div class="sorter <? echo $this->getSorting() == 'sedoxproduct_date' ? "active" : "";?> "></div></div>
+    <div class="col_header col2" sortby="sedoxproduct_checksum">Checksum <div class="sorter <? echo $this->getSorting() == 'sedoxproduct_checksum' ? "active" : "";?> "></div></div>
+    <div class="col_header col3" sortby="sedoxproduct_name">File <div class="sorter <? echo $this->getSorting() == 'sedoxproduct_name' ? "active" : "";?> "></div></div>
+</div>
+
+<div class="tablecontent">
+    <?
+    foreach ($products as $product) {
+        $productName = $product->printableName;
+        
+        $time = $this->formatJavaDateToTime($product->rowCreatedDate);
+        $date = date("d M Y", $time);
+        
+        echo "<div class='col_row_content'>";
+            echo "<div class='col_row_content_inner'>";
+                echo "<div class='col_content col1'>$date</div>";
+                echo "<div class='col_content col2'>$product->originalChecksum</div>";
+                echo "<div class='col_content col3'>$productName</div>";
+                echo "<div class='col_content col4'>View Product <div class='expandproduct'></div></div>";
+            echo "</div>";
+            $this->setCurrentProduct($product);
+            $this->includefile("productview");
+            
+        echo "</div>";
+    }
+    ?>
+</div>
+</div>
+<script>
+    getshop.SedoxDatabankTheme.setAll();
+</script>

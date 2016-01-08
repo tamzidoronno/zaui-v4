@@ -144,7 +144,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public synchronized SedoxProductSearchPage search(SedoxSearch search) {
         User user = getSession() != null ? getSession().currentUser : null;
-        return sedoxSearchEngine.getSearchResult(new ArrayList(productsShared.values()), search, user);
+        SedoxProductSearchPage result = sedoxSearchEngine.getSearchResult(new ArrayList(productsShared.values()), search, user);
+        result.products.parallelStream().forEach(o -> finalize(o));
+        return result;
     }
 
     @Override
@@ -1705,6 +1707,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return productsShared.get(sharedProductId);
     }
 
+    private void finalize(SedoxSharedProduct product) {
+        product.printableName = product.getName();
+    }
+    
     private void finalize(SedoxProduct product) {
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
         product.populate(sharedProduct);

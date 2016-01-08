@@ -2,6 +2,11 @@
 /* @var $this \ns_5876c6fd_af9b_48a2_a034_d93c9809c346\SedoxPager */
 $app = $this->getConnectedApplication();
 
+if (!$app) {
+    $this->printWarning();
+    return;
+}
+
 $currentPage = $app->getCurrentPage();
 $currentTotalPages = $app->getTotalPages();
 $buttonsHalf = 3;

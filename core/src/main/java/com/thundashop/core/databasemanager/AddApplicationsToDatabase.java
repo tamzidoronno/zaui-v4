@@ -59,6 +59,17 @@ public class AddApplicationsToDatabase {
         SedoxUploadHistory.defaultActivate = false;
         apps.add(SedoxUploadHistory);
 
+        Application SedoxCreditHistory = createSettings("SedoxCreditHistory",
+        "07c7565c-040d-4425-962d-a326c782bb4e",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxCreditHistory.isPublic = true;
+        SedoxCreditHistory.isFrontend = true;
+        SedoxCreditHistory.moduleId = "sedox";
+        SedoxCreditHistory.defaultActivate = false;
+        apps.add(SedoxCreditHistory);
+
         return apps;
     }
 

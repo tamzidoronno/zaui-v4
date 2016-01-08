@@ -646,6 +646,34 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return i;
     }
 
+    public List<SedoxCreditHistory> getFilteredResult(FilterData filterData) {
+        SedoxUser userAccount = getSedoxUserAccount();
+        
+        Stream<SedoxCreditHistory> history = userAccount.creditAccount.history.stream();
+        
+        if (filterData.filterText != null && !filterData.filterText.isEmpty()) {
+            history = history.filter(getFilterText(filterData));
+        }
+        
+        return history.collect(Collectors.toList());
+    }
+    @Override
+    public List<SedoxCreditHistory> getCurrentUserCreditHistory(FilterData filterData) {
+        return pageIt(getFilteredResult(filterData), filterData);
+    }
+    
+    @Override
+    public int getCurrentUserCreditHistoryCount(FilterData filterData) {
+        double count = getFilteredResult(filterData).size();
+        
+        if (count == 0) {
+            return 1;
+        }
+        
+        return (int)(Math.ceil((count/(double)filterData.pageSize)));
+        
+    }
+    
     private int getNextFileId() {
         int i = 0;
         for (SedoxSharedProduct sedoxProduct : productsShared.values()) {
@@ -1883,6 +1911,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private Predicate<? super SedoxProduct> getFilterProductByName(FilterData filterData) {
         return o -> productsShared.get(o.sharedProductId) != null 
                 && productsShared.get(o.sharedProductId).getName().contains(filterData.filterText);
+    }
+
+    private Predicate<? super SedoxCreditHistory> getFilterText(FilterData filterData) {
+        return o -> o.description.toLowerCase().contains(filterData.filterText.toLowerCase());
     }
 
 }

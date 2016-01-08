@@ -47,6 +47,18 @@ class Sorters {
             return sortBySedoxProductDate(filterData);
         }
         
+        if (filterData.sortBy.equals("sedoxcredithist_sedoxid")) {
+            return sortSedoxCreditHistoryBy_sedoxid(filterData);
+        }
+        
+        if (filterData.sortBy.equals("sedoxcredithist_date")) {
+            return sortSedoxCreditHistoryBy_date(filterData);
+        }
+        
+        if (filterData.sortBy.equals("sedoxcredithist_name")) {
+            return sortSedoxCreditHistoryBy_description(filterData);
+        }
+        
         return null;
     }
 
@@ -138,6 +150,36 @@ class Sorters {
                 return o1.rowCreatedDate.compareTo(o2.rowCreatedDate);
             } else {
                 return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+            }
+        };
+    }
+
+    private Comparator sortSedoxCreditHistoryBy_sedoxid(FilterData filterData) {
+        return (Comparator<SedoxCreditHistory>) (SedoxCreditHistory o1, SedoxCreditHistory o2) -> {
+            if (filterData.ascending) {
+                return new Integer(o1.transactionReference).compareTo(new Integer(o2.transactionReference));
+            } else {
+                return new Integer(o2.transactionReference).compareTo(new Integer(o1.transactionReference));
+            }
+        };
+    }
+    
+    private Comparator sortSedoxCreditHistoryBy_date(FilterData filterData) {
+        return (Comparator<SedoxCreditHistory>) (SedoxCreditHistory o1, SedoxCreditHistory o2) -> {
+            if (filterData.ascending) {
+                return o2.dateCreated.compareTo(o1.dateCreated);
+            } else {
+                return o1.dateCreated.compareTo(o2.dateCreated);
+            }
+        };
+    }
+    
+    private Comparator sortSedoxCreditHistoryBy_description(FilterData filterData) {
+        return (Comparator<SedoxCreditHistory>) (SedoxCreditHistory o1, SedoxCreditHistory o2) -> {
+            if (filterData.ascending) {
+                return o1.description.compareTo(o2.description);
+            } else {
+                return o2.description.compareTo(o1.description);
             }
         };
     }

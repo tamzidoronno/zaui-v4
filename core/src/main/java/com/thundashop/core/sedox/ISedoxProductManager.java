@@ -179,4 +179,10 @@ public interface ISedoxProductManager  {
     
     @Customer
     public int getOrdersPageCount(FilterData filterData);
+    
+    @Customer
+    public List<SedoxCreditHistory> getCurrentUserCreditHistory(FilterData filterData);
+    
+    @Customer
+    public int getCurrentUserCreditHistoryCount(FilterData filterData);
 }

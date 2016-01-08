@@ -1,0 +1,35 @@
+<?
+/* @var $this \ns_07c7565c_040d_4425_962d_a326c782bb4e\SedoxCreditHistory */
+$creditHistories = $this->getCreditHistory();
+
+?>
+<div class="SedoxDownloadHistory">
+    <div class="header">
+        <div class="col_header col1" sortby="sedoxcredithist_sedoxid">Sedox ID <div class="sorter <? echo $this->getSorting() == 'sedoxcredithist_sedoxid' ? "active" : "";?> "></div></div>
+        <div class="col_header col2" sortby="sedoxcredithist_date">Date <div class="sorter <? echo $this->getSorting() == 'sedoxcredithist_date' ? "active" : "";?> "></div></div>
+        <div class="col_header col3" sortby="sedoxcredithist_name">File <div class="sorter <? echo $this->getSorting() == 'sedoxcredithist_name' ? "active" : "";?> "></div></div>
+        <div class="col_header col4">
+            <input type="textfield" class='filterTextBox' value="<? echo $this->getFilterText(); ?>"/>
+            <div class="sedox_download"></div>
+        </div>
+    </div>
+
+    <div class="tablecontent">
+        <?
+        foreach ($creditHistories as $creditHistory) {
+            $time = $this->formatJavaDateToTime($creditHistory->dateCreated);
+            $date = date("d M Y", $time);
+
+            echo "<div class='col_row_content'>";
+                echo "<div class='col_row_content_inner'>";
+                    echo "<div class='col_content col1'>$creditHistory->transactionReference</div>";
+                    echo "<div class='col_content col2'>$date</div>";
+                    echo "<div class='col_content col3'>$creditHistory->description</div>";
+                    echo "<div class='col_content col4 normaltext'>$creditHistory->amount</div>";
+                echo "</div>";
+                $this->setCurrentProduct($product);
+            echo "</div>";
+        }
+        ?>
+    </div>
+</div>

@@ -14,10 +14,14 @@ class SedoxPager extends \MarketingApplication implements \Application {
         $connectedTo = $this->getConfigurationSetting("connectedAppId");
         
         if (!$connectedTo) {
-            echo "<span style='font-size:10px;'>Please! this app needs to be connected to another app</span>";
+            $this->printWarning();
         } else {
             $this->includefile("paging");
         }
+    }
+    
+    public function printWarning() {
+        echo "<span style='font-size:10px;'>Please! this app needs to be connected to another app</span>";
     }
     
     public function getConnectedApplication() {

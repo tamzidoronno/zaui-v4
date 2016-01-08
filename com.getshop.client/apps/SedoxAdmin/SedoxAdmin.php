@@ -162,6 +162,14 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
             $active = in_array($devId, $activeDevelopers);
             $sedoxProductManager->changeDeveloperStatus($devId, $active);
         }
+        
+        $count = count($_POST['data']['pushoverids']);
+        for ($i=0; $i < $count; $i++) {
+            $data = $_POST['data']['pushoverids'][$i];
+            $user = $this->getApi()->getUserManager()->getUserById($data['userid']);
+            $user->pushoverId = $data['id'];
+            $this->getApi()->getUserManager()->saveUser($user);            
+        }
     }
     
     public function addCreditToSlave() {

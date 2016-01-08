@@ -17,12 +17,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SedoxAirgram {
-    private String sendurl = "http://api.airgramapp.com/1/send";
-    private String key = "Xb3qhIp8qe";
-    private String secret = "zVXPetTK7i5BaZTFRMp9";
+    private String sendurl = "https://api.pushover.net/1/messages.json";
+    private String applicationToken = "agzzgGjfWKovkVCvGQrhjQxNNc7P5n";
     
-    public void sendMessage(String email, String message) throws ErrorException {
-        String data = "email=" + email + "&msg=" + message;
+    public void sendMessage(String pushoverUserId, String message) throws ErrorException {
+        String data = "token="+applicationToken+"&user=" + pushoverUserId + "&message=" + message;
         sendToAirgramHttp(data);
     }
     
@@ -36,10 +35,6 @@ public class SedoxAirgram {
             conn.setRequestProperty("Content-Length", String.valueOf(data.length()));
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
-
-            String userpass = key + ":" + secret;
-            String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes("UTF-8"));
-            conn.setRequestProperty("Authorization", basicAuth);
 
             OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
             out.write(data);

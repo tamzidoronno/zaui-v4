@@ -62,6 +62,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     public String companyName;
     
+    public String pushoverId;
+    
     public String cellPhone;
     
     public HashMap<String, Comment> comments = new HashMap();

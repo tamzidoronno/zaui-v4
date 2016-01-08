@@ -49,6 +49,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	public $companyName;
 
 	/** @var String */
+	public $pushoverId;
+
+	/** @var String */
 	public $cellPhone;
 
 	/** @var String */

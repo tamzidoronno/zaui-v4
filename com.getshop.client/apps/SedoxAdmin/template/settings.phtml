@@ -5,6 +5,10 @@
     Are you on vacation ? please let me know so I dont bother you ;D
     <br> checked = You are ready for business.
     <br>
+    <br>
+    <br>
+    <table>
+        <th>Name / Active</th><th>Email</th> <th>Pushover ID</th>
     <?
     $developers = $this->getApi()->getSedoxProductManager()->getDevelopers();
     foreach ($developers as $developer) {
@@ -12,8 +16,9 @@
         $id = $developer->id;
         $checked = $developer->isActiveDelevoper ? "checked" : "";
         $normalUser = $this->getApi()->getUserManager()->getUserById($id);
-        echo "<br/><input type='checkbox' id='$id' $checked/> " . $normalUser->fullName." - ".$normalUser->emailAddress;
+        echo "<tr><td><input type='checkbox' id='$id' $checked/> " . $normalUser->fullName."</td><td>".$normalUser->emailAddress."</td><td><input type='textfield' class='pushoverid' userid='$normalUser->id' value='$normalUser->pushoverId'/></td></tr>";
     }
     ?>
+    </table>
     <br><br><div class='gs_button savedevelopers'>Save</div>
 </div>

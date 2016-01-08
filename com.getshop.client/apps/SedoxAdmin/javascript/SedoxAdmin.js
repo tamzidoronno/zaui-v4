@@ -303,8 +303,18 @@ app.SedoxAdmin = {
             ids.push(id);
         });
         
+        var pushoverids = [];
+        $('.pushoverid').each(function() {
+            
+            pushoverids.push({
+                userid: $(this).attr('userid'),
+                id : $(this).val()
+            });
+        });
+        
         var data = {
-            activeDevelopers : ids
+            activeDevelopers : ids,
+            pushoverids : pushoverids
         };
         
         var event = thundashop.Ajax.createEvent("", "toggleDevelopers", this, data);

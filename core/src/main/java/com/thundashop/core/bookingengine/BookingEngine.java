@@ -181,7 +181,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
         double result = Math.random()* 100;
         if(result < 50) {
-            return 0;
+            return 20;
         }
         return 10;
     }

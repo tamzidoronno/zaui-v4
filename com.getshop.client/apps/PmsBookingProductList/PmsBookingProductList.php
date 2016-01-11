@@ -54,6 +54,30 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
     }
     
+    public function selectRoomCount() {
+        $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        /* @var $current \core_pmsmanager_PmsBooking */
+        
+        $newRooms = array();
+        foreach($current->rooms as $idx => $room) {
+            if($room->bookingItemTypeId != $_POST['data']['typeid']) {
+                $newRooms[] = $room;
+            }
+        }
+        
+        for($i = 0; $i < $_POST['data']['count']; $i++) {
+            $room = new \core_pmsmanager_PmsBookingRooms();
+            $room->bookingItemTypeId = $_POST['data']['typeid'];
+            $room->date->start = $this->convertToJavaDate($this->getStartDate());
+            $room->date->end = $this->convertToJavaDate($this->getEndDate());
+            $newRooms[] = $room;
+        }
+        
+        $current->rooms = $newRooms;
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
+    }
+    
     public function saveSettings() {
         foreach($_POST['data'] as $key => $value) {
             $this->setConfigurationSetting($key, $value);

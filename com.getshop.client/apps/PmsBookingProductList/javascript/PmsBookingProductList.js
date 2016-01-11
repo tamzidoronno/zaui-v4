@@ -2,6 +2,7 @@ app.PmsBookingProductList = {
     init : function() {
         $(document).on('click', '.PmsBookingProductList .select_button', app.PmsBookingProductList.selectRoom);
         $(document).on('click', '.PmsBookingProductList .continue_button', app.PmsBookingProductList.continueToPage);
+        $(document).on('change', '.PmsBookingProductList .roomcountselection', app.PmsBookingProductList.selectRoomCount);
     },
     continueToPage : function() {
         var attr = $(this).attr('next_page');
@@ -12,6 +13,14 @@ app.PmsBookingProductList = {
             "typeid" : $(this).attr('typeid')
         }
         var event = thundashop.Ajax.createEvent('','selectRoom',$(this), data);
+        thundashop.Ajax.post(event);
+    },
+    selectRoomCount : function() {
+        var data = {
+            "typeid" : $(this).attr('typeid'),
+            "count" : $(this).val()
+        }
+        var event = thundashop.Ajax.createEvent('','selectRoomCount',$(this), data);
         thundashop.Ajax.post(event);
     },
     showSettings : function() {

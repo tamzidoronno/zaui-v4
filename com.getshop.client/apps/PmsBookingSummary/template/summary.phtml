@@ -60,7 +60,10 @@ foreach($booking->addons as $addon) {
 
 echo "<br>";
 foreach($booking->rooms as $room) {
-    $prices[$room->taxes] = $room->price;
+    if(!isset($prices[$room->taxes])) {
+        $prices[$room->taxes] = 0;
+    }
+    $prices[$room->taxes] += $room->price;
 }
 
 $bottom = "<h3 class='bottomborder'> " . $this->__w("Total") . "</h3>";

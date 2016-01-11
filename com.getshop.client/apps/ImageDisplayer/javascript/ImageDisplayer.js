@@ -125,6 +125,10 @@ app.ImageDisplayer = {
         if (imgSrc) {
             var container = $('.displayimagecontainer[containerId="'+domId+'"] span');
             var width = $('.displayimagecontainer[containerId="'+domId+'"]').width();
+            if(container.closest('.gsflipcard').length > 0) {
+                width = container.closest('.gsflipcard').width();
+            }
+            console.log(width);
             var image = $("<img src='"+imgSrc+"&width="+width+"'>");
             var zoomAble = container.find('.loadshower').attr('zoomable');
             image.attr('zoomable', zoomAble);

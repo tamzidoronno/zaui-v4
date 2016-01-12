@@ -1,5 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.bookingengine.data.RegistrationRules;
 import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
@@ -1349,5 +1350,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return result;
+    }
+
+    @Override
+    public RegistrationRules initBookingRules() {
+        return new RegistrationRules();
     }
 }

@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
@@ -16,10 +17,6 @@ import java.util.List;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
 
-/**
- *
- * @author boggi
- */
 public class PmsBookingRooms implements Serializable {
     public String bookingItemTypeId = "";
     public String bookingItemId = "";

@@ -360,7 +360,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.comments = savedUser.comments;
         }
         
-        user.company = getCompany(user);
         collection.addUser(user);
     }
 
@@ -719,27 +718,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return null;
     }
     
-    /**
-     * This function returns the userid if the given store is for
-     * autoa-akademiet. This should be changed to check if
-     * the company brregengine is activate for the given store.
-     * 
-     * @param user
-     * @return 
-     */
-    private Company getCompany(User user) {
-        if (!this.storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
-            return user.company;
-        }
-        
-        if (user.birthDay == null || user.birthDay.equals("")) {
-            return null;
-        }
-        
-        Company company = brRegEngine.getCompany(user.birthDay);
-        return company;
-    }
-
     public void directSaveUser(User user) throws ErrorException {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         collection.addUser(user);

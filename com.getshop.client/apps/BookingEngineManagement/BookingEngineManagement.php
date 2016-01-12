@@ -25,6 +25,14 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function editFormFields() {
+        $id = $_POST['data']['itemid'];
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $id);
+        $generator = new \FieldGenerator();
+        $rules = $item->rules;
+        $generator->load($rules, $this->getFactory(), $this->getSelectedName());
+    }
+    
     public function loadTypeSettings() {
         $this->includefile("typeconfigurations");
     }

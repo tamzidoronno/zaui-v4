@@ -61,7 +61,7 @@ public class BrRegEngine {
             company.country = brRegCompany.forradrland;
             company.city = brRegCompany.forradrpoststed;
             company.postnumber = brRegCompany.forradrpostnr;
-            company.streetAddress = brRegCompany.forretningsadr;
+            company.address.address = brRegCompany.forretningsadr;
             company.type = brRegCompany.organisasjonsform;
             company.vatNumber = brRegCompany.orgnr.trim();
             return company;

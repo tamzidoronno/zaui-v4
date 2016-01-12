@@ -8,9 +8,7 @@ class EmailCollector extends \MarketingApplication implements \Application {
     
     public function addEmail() {
         $email = $_POST['data']['email'];
-        $list = $this->getEmailList();
-        $list[] = $email;
-        $this->setConfigurationSetting("emaillist", serialize($list));
+        $this->getApi()->getMessageManager()->collectEmail($email);
     }
 
     public function getName() {
@@ -25,7 +23,7 @@ class EmailCollector extends \MarketingApplication implements \Application {
     }
 
     public function printEmailList() {
-        $list = $this->getEmailList();
+        $list = $this->getApi()->getMessageManager()->getCollectedEmails();
         foreach($list as $email) {
             echo $email . "<br>";
         }

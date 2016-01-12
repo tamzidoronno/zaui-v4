@@ -301,20 +301,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return result;
     }
 
-    @Override
-    public void saveUser(User user) throws ErrorException {
-        
-        UserStoreCollection collection = getUserStoreCollection(storeId);
-        User savedUser = collection.getUser(user.id);
-        
-        
-        // Save the first user
-        if (collection.getAllUsers().size() == 0) {
-            user.password = encryptPassword(user.password);
-            collection.saveFirstUser(user);
-            return;
-        }
-        
+    private void checkUserAccess(User user) {
         // Avoid degradation of the same user.
         if (getSession().currentUser != null && getSession().currentUser.id.equals(user.id)) {
             if ((user.type < getSession().currentUser.type) && getSession().currentUser.type < User.Type.GETSHOPADMINISTRATOR) {
@@ -326,6 +313,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (session.currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }
+        
         if (session.currentUser.type < user.type) {
             throw new ErrorException(26);
         }
@@ -341,7 +329,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
-        // Check group access.
+         // Check group access.
         if (user != null && user.groups != null) {
             for (String group : user.groups) {
                 if (getSession().currentUser.groups != null 
@@ -351,15 +339,38 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 }
             }
         }
-        
-        if(savedUser != null) {
+    }
+    
+    private void preventOverwriteOfData(User user, User savedUser) {
+         if(savedUser != null) {
             //Reset the password.
             user.password = savedUser.password;
 
             // Keep comments from prev saved user. (has seperated functions for adding and deleting)
             user.comments = savedUser.comments;
+            
+            // Keep metadata from savedUser, we have seperated api calls to set this data.
+            user.metaData = savedUser.metaData;
+        }
+    }
+    
+    @Override
+    public void saveUser(User user) throws ErrorException {
+        
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        User savedUser = collection.getUser(user.id);
+        
+        
+        // Save the first user
+        if (collection.getAllUsers().size() == 0) {
+            user.password = encryptPassword(user.password);
+            collection.saveFirstUser(user);
+            return;
         }
         
+        checkUserAccess(user);
+        preventOverwriteOfData(user, savedUser);
+       
         user.company = getCompany(user);
         collection.addUser(user);
     }
@@ -1045,6 +1056,30 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (getSession() != null && getSession().currentUser != null) {
             storeCollection.deleteExtraAddressToGroup(groupId, addressId, getSession().currentUser);
         }
+    }
+
+    @Override
+    public void addMetaData(String userId, String key, String value) {
+        User user = getUserById(userId);
+        if (user == null) {
+            throw new ErrorException(26);
+        }
+        
+        checkUserAccess(user);
+        user.metaData.put(key, value);
+        getUserStoreCollection(storeId).addUser(user);
+    }
+
+    @Override
+    public void removeMetaData(String userId, String key) {
+        User user = getUserById(userId);
+        if (user == null) {
+            throw new ErrorException(26);
+        }
+        
+        checkUserAccess(user);
+        user.metaData.remove(key);
+        getUserStoreCollection(storeId).addUser(user);
     }
 
 }

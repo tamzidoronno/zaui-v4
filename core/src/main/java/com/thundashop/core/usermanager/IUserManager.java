@@ -1,6 +1,7 @@
 package com.thundashop.core.usermanager;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -339,4 +340,10 @@ public interface IUserManager {
     public void saveExtraAddressToGroup(Group group, Address address);
     
     public void deleteExtraAddressToGroup(String groupId, String addressId);
+    
+    @Customer
+    public void addMetaData(String userId, String key, String value);
+    
+    @Customer
+    public void removeMetaData(String userId, String key);
 }

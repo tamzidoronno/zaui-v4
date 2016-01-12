@@ -59,6 +59,17 @@ public class AddApplicationsToDatabase {
         SedoxUploadHistory.defaultActivate = false;
         apps.add(SedoxUploadHistory);
 
+        Application SedoxPushover = createSettings("SedoxPushover",
+        "2ccaebd8-12f0-4c00-99be-feb5f4da9d79",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxPushover.isPublic = true;
+        SedoxPushover.isFrontend = true;
+        SedoxPushover.moduleId = "sedox";
+        SedoxPushover.defaultActivate = false;
+        apps.add(SedoxPushover);
+
         Application SedoxFiluploadCount = createSettings("SedoxFiluploadCount",
         "ae288b19-9934-4e34-ade7-e8abba43b477",
         allowed2,

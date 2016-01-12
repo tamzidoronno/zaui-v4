@@ -1,19 +1,10 @@
 package com.thundashop.core.bookingengine.data;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 
-public class RegistrationRules {
-    public class PmsRegistrationRulesField {
-        public boolean required = false;
-        public String type = "";
-        public List<String> additional = new ArrayList();
-        public String dependsOnCondition = "";
-        public String title = "";
-    }
-    
+public class RegistrationRules implements Serializable {
     public boolean includeGuestData = false;
-    public HashMap<String, PmsRegistrationRulesField> userData = new HashMap();
-    public HashMap<String, PmsRegistrationRulesField> additionalFields = new HashMap();
+    public HashMap<String, RegistrationRulesField> userData = new HashMap();
+    public HashMap<String, RegistrationRulesField> additionalFields = new HashMap();
 }

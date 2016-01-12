@@ -47,6 +47,17 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         }
     }
     
+    public function saveBookingRules() {
+        $generator = new \FieldGenerator();
+        $rules = $generator->createBookingRules();
+       
+        $id = $_POST['data']['itemid'];
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $id);
+        $generator = new \FieldGenerator();
+        $item->rules = $generator->createBookingRules();
+        $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
+    }
+    
     public function saveItem() {
         $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $_POST['data']['itemid']);
         foreach($_POST['data'] as $key => $value) {

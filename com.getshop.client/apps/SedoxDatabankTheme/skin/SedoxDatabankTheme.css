@@ -339,3 +339,24 @@ body {
     padding-left: 50px;
 }
 
+.profile_box {
+    
+}
+.profile_box .gsdepth_2.gscount_0:first-child {
+    background-color: #f9fafc;
+    line-height: 50px;
+    padding-left: 10px;
+    color: #34465a;
+    font-weight: bold;
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+    border-bottom: solid 1px #e4ebf1;
+    box-shadow: 0 16px 8px -8px rgba(31, 73, 125, 0.03);
+}
+
+.profile_box .gsdepth_1.gsinner:first-child {
+    /*border: solid 1px;*/
+    border: solid 1px #e4ebf1;
+    box-shadow: 0px 0px 8px rgba(31, 73, 125, 0.1);
+    margin: 20px !important;
+}

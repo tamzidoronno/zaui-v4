@@ -1,0 +1,34 @@
+.SedoxFiluploadCount {
+    text-align: center;
+}
+.SedoxFiluploadCount .uploadcounter {
+    width: 207px;
+    height: 207px;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 35px;
+    background-repeat: no-repeat;
+}
+
+
+.SedoxFiluploadCount .uploadcounter .subinfo {
+    font-size: 20px;
+}
+
+.SedoxFiluploadCount .uploadcounter .filecount { 
+    padding-top: 50px;
+    /*border: solid 1px;*/
+    font-size: 70px;
+}
+
+.SedoxFiluploadCount .uploadcounter.counter1 {
+    color: #33455b;
+    background-image: url('{IMAGEFOLDER}/background1.png');
+} 
+
+.SedoxFiluploadCount .uploadcounter.counter2 {
+    color: #6dcef8;
+    background-image: url('{IMAGEFOLDER}/background2.png');
+    padding-bottom: 35px !important;
+    
+}

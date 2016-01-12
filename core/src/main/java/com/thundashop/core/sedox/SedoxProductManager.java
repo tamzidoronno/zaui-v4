@@ -1923,4 +1923,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return o -> o.description.toLowerCase().contains(filterData.filterText.toLowerCase());
     }
 
+    @Override
+    public long getUserFileUploadCount() {
+        Stream<SedoxProduct> productStream = getProductsUploadedByCurrentUser();
+        return productStream.count();
+    }
+
+    @Override
+    public long getUserFileDownloadCount() {
+        return getSedoxUserAccount().orders.size();
+    }
+
 }

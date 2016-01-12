@@ -1934,4 +1934,34 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return new Long(getSedoxUserAccount().orders.size());
     }
 
+    @Override
+    public List<SedoxFileHistory> getUploadHistory() {
+        Stream<SedoxProduct> productStream = getProductsUploadedByCurrentUser();
+        List<SedoxProduct> products = productStream.collect(Collectors.toList());
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.add(Calendar.MONTH, 1);
+        
+        List<SedoxFileHistory> hists = new ArrayList();
+        for (int i=0;i<12;i++) {
+            Date endDate = cal.getTime();
+            cal.add(Calendar.MONTH, -1);
+            Date startDate = cal.getTime();
+            long count = products.stream().filter(o -> o.rowCreatedDate.after(startDate) && o.rowCreatedDate.before(endDate)).count();
+            
+            SedoxFileHistory fileHistory = new SedoxFileHistory();
+            fileHistory.count = count;
+            fileHistory.month = cal.get(Calendar.MONTH) + 1;
+            fileHistory.year = cal.get(Calendar.YEAR);
+            hists.add(fileHistory);
+            
+        }
+        
+        return hists;
+    }
+
 }

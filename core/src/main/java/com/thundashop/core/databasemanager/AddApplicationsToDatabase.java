@@ -48,71 +48,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
         
-        Application SedoxUploadHistory = createSettings("SedoxUploadHistory",
-        "783ecee4-382b-4803-ba54-046ddd1ecf7e",
+        Application SedoxHistoryGraph = createSettings("SedoxHistoryGraph",
+        "a2d81cfe-eaec-4936-8c5a-167ed555d384",
         allowed2,
         " ",
         Application.Type.Marketing, true);
-        SedoxUploadHistory.isPublic = true;
-        SedoxUploadHistory.isFrontend = true;
-        SedoxUploadHistory.moduleId = "sedox";
-        SedoxUploadHistory.defaultActivate = false;
-        apps.add(SedoxUploadHistory);
+        SedoxHistoryGraph.isPublic = true;
+        SedoxHistoryGraph.isFrontend = true;
+        SedoxHistoryGraph.moduleId = "sedox";
+        SedoxHistoryGraph.defaultActivate = false;
+        apps.add(SedoxHistoryGraph);
 
-        Application SedoxProfileUpdater = createSettings("SedoxProfileUpdater",
-        "b485ee62-3163-4612-93d4-a36b44e05a8d",
-        allowed2,
-        " ",
-        Application.Type.Marketing, true);
-        SedoxProfileUpdater.isPublic = true;
-        SedoxProfileUpdater.isFrontend = true;
-        SedoxProfileUpdater.moduleId = "sedox";
-        SedoxProfileUpdater.defaultActivate = false;
-        apps.add(SedoxProfileUpdater);
-
-        Application SedoxPushover = createSettings("SedoxPushover",
-        "2ccaebd8-12f0-4c00-99be-feb5f4da9d79",
-        allowed2,
-        " ",
-        Application.Type.Marketing, true);
-        SedoxPushover.isPublic = true;
-        SedoxPushover.isFrontend = true;
-        SedoxPushover.moduleId = "sedox";
-        SedoxPushover.defaultActivate = false;
-        apps.add(SedoxPushover);
-
-        Application SedoxFiluploadCount = createSettings("SedoxFiluploadCount",
-        "ae288b19-9934-4e34-ade7-e8abba43b477",
-        allowed2,
-        " ",
-        Application.Type.Marketing, true);
-        SedoxFiluploadCount.isPublic = true;
-        SedoxFiluploadCount.isFrontend = true;
-        SedoxFiluploadCount.moduleId = "sedox";
-        SedoxFiluploadCount.defaultActivate = false;
-        apps.add(SedoxFiluploadCount);
-
-        Application SedoxCreditHistory = createSettings("SedoxCreditHistory",
-        "07c7565c-040d-4425-962d-a326c782bb4e",
-        allowed2,
-        " ",
-        Application.Type.Marketing, true);
-        SedoxCreditHistory.isPublic = true;
-        SedoxCreditHistory.isFrontend = true;
-        SedoxCreditHistory.moduleId = "sedox";
-        SedoxCreditHistory.defaultActivate = false;
-        apps.add(SedoxCreditHistory);
-
-        Application SedoxSearchResult = createSettings("SedoxSearchResult",
-        "366dbe67-0829-47c8-b6ed-47bc3a136338",
-        allowed2,
-        " ",
-        Application.Type.Marketing, true);
-        SedoxSearchResult.isPublic = true;
-        SedoxSearchResult.isFrontend = true;
-        SedoxSearchResult.moduleId = "sedox";
-        SedoxSearchResult.defaultActivate = false;
-        apps.add(SedoxSearchResult);
 
         return apps;
     }

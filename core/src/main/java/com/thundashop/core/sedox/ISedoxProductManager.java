@@ -191,4 +191,7 @@ public interface ISedoxProductManager  {
     
     @Customer
     public Long getUserFileDownloadCount();
+    
+    @Customer
+    public List<SedoxFileHistory> getUploadHistory();
 }

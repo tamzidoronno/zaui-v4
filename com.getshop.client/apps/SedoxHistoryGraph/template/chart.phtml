@@ -1,0 +1,27 @@
+<?
+/* @var $this ns_a2d81cfe_eaec_4936_8c5a_167ed555d384\SedoxHistoryGraph */
+$hists = $this->getApi()->getSedoxProductManager()->getUploadHistory();
+
+echo "<script>";
+echo "var sedoxHistoryData = [";
+foreach ($hists as $hist) {
+    $monthName = date('F', mktime(0, 0, 0, $hist->month, 10)) . " " . $hist->year; 
+    echo "['$monthName', $hist->count, '#40c1e1'],";
+}
+echo "];";
+echo "</script>";
+
+?>
+<div id="sedox_graph_history"></div>
+    <div class="sedox_chart_the_loader" style="text-align: center; color: #DDD; font-size: 25px; padding: 30px;">
+        <i class="fa fa-spinner fa-spin"></i> Loading
+    </div>
+<script>
+    
+    var executeChartFucntion = function() {
+        app.SedoxHistoryGraph.drawItAll();
+    }
+    
+    google.setOnLoadCallback(executeChartFucntion);
+    executeChartFucntion();
+</script>

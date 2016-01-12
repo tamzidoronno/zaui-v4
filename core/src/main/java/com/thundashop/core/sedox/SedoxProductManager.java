@@ -1924,14 +1924,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public long getUserFileUploadCount() {
+    public Long getUserFileUploadCount() {
         Stream<SedoxProduct> productStream = getProductsUploadedByCurrentUser();
         return productStream.count();
     }
 
     @Override
-    public long getUserFileDownloadCount() {
-        return getSedoxUserAccount().orders.size();
+    public Long getUserFileDownloadCount() {
+        return new Long(getSedoxUserAccount().orders.size());
     }
 
 }

@@ -1,0 +1,32 @@
+.SedoxProfileUpdater .updaterow {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+}
+
+.SedoxProfileUpdater .updaterow .label {
+    color: #707070;
+    padding-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.SedoxProfileUpdater .updaterow:last-child {
+    padding-bottom: 20px;
+}
+
+.SedoxProfileUpdater input[type="text"] {
+    padding: 14px;
+    border: solid 1px #dcdcdc;
+    transition: box-shadow 0.3s, border 0.3s;
+    width: 100%;
+    box-sizing : border-box;
+}
+.SedoxProfileUpdater input[type="text"]:focus,
+.SedoxProfileUpdater input[type="text"].focus {
+    border: solid 1px #707070;
+    box-shadow: 0 0 5px 1px #969696;
+}
+
+.SedoxProfileUpdater .saveprofile {
+    margin: 20px;
+}

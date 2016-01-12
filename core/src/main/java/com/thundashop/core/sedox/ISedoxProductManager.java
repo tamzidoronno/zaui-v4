@@ -187,8 +187,8 @@ public interface ISedoxProductManager  {
     public int getCurrentUserCreditHistoryCount(FilterData filterData);
     
     @Customer
-    public long getUserFileUploadCount();
+    public Long getUserFileUploadCount();
     
     @Customer
-    public long getUserFileDownloadCount();
+    public Long getUserFileDownloadCount();
 }

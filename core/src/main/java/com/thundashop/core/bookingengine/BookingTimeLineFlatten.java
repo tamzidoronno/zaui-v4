@@ -148,4 +148,5 @@ public class BookingTimeLineFlatten implements Serializable {
         
         return result;
     }
+
 }

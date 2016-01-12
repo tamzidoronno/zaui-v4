@@ -52,6 +52,8 @@ public interface IBookingEngine {
     @Administrator
     public List<Booking> getAllBookings();
     
+    public Integer getNumberOfAvailable(String itemType, Date start, Date end);
+    
     @Administrator
     public void changeTypeOnBooking(String bookingId, String itemTypeId);
     

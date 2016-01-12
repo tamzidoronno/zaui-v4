@@ -24,7 +24,7 @@ class ImageLoader {
             $filename = "../demoimages/$id";
         }
         $image_info = getimagesize($filename);
-//        print_r($image_info);
+//        print_r($image_info);s
         $this->raw = file_get_contents($filename);
         $this->image_type = $image_info[2];
         

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.thundashop.core.bookingengine;
 
 import com.getshop.scope.GetShopSession;
@@ -172,6 +168,22 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     public void autoAssignItem(String bookingId) {
         System.out.println("This need to give the booking a booking item");
+    }
+
+    /**
+     * @TODO Add unit tests to this, and make sure it returns number of available items for the given type in the given time periode.
+     * @param itemType
+     * @param start
+     * @param end
+     * @return 
+     */
+    @Override
+    public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
+        double result = Math.random()* 100;
+        if(result < 50) {
+            return 20;
+        }
+        return 10;
     }
     
 }

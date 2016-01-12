@@ -23,6 +23,14 @@ $dateType = $this->getConfigurationSetting("date_type");
         <td width="50%">Next page</td>
         <td width="50%"><input type="text" gsname="next_page" style='width:100%;' value="<? echo $this->getText("next_page"); ?>"></td>
     </tr>
+    <tr>
+        <td width="50%">Selected room drop down text variable {count} for drop down, example:  "{count} number of rooms selected."</td>
+        <td width="50%"><input type="text" gsname="selected_room_count_text" style='width:100%;' value="<? echo $this->getText("selected_room_count_text"); ?>"></td>
+    </tr>
+    <tr>
+        <td width="50%">No rooms available Example: We are out of this type of room, select a different one."</td>
+        <td width="50%"><input type="text" gsname="no_rooms_available" style='width:100%;' value="<? echo $this->getText("no_rooms_available"); ?>"></td>
+    </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

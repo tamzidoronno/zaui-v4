@@ -14,6 +14,7 @@ public class FilterData {
     public int pageSize = 10;
     public String filterText = "";
     public int pageNumber = 1;
+    public String slaveId = "";
     public String sortBy = "";
     public boolean ascending;
 }

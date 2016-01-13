@@ -48,16 +48,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
         
-        Application SedoxHistoryGraph = createSettings("SedoxHistoryGraph",
-        "a2d81cfe-eaec-4936-8c5a-167ed555d384",
+        Application SedoxPartners = createSettings("SedoxPartners",
+        "cb8e7f1e-8659-4e08-9e26-145c548d5873",
         allowed2,
         " ",
         Application.Type.Marketing, true);
-        SedoxHistoryGraph.isPublic = true;
-        SedoxHistoryGraph.isFrontend = true;
-        SedoxHistoryGraph.moduleId = "sedox";
-        SedoxHistoryGraph.defaultActivate = false;
-        apps.add(SedoxHistoryGraph);
+        SedoxPartners.isPublic = true;
+        SedoxPartners.isFrontend = true;
+        SedoxPartners.moduleId = "sedox";
+        SedoxPartners.defaultActivate = false;
+        apps.add(SedoxPartners);
+
 
 
         return apps;

@@ -73,6 +73,7 @@ class SedoxCommon extends \MarketingApplication {
         $filterdata->pageNumber = $this->getCurrentPage();
         $filterdata->pageSize = $this->pageSize;
         $filterdata->sortBy = $this->getSorting();
+        $filterdata->slaveId = $this->getSlaveId();
         return $filterdata;
     }
 
@@ -80,4 +81,21 @@ class SedoxCommon extends \MarketingApplication {
         return "sedoxorder_date";
     }
 
+    public function preProcess() {
+        $this->setSlaveId();
+    }
+    
+    public function setSlaveId() {
+        if (isset($_GET['slaveid'])) {
+            $_SESSION[$this->getAppInstanceId()."_slaveid"] = $_GET['slaveid'];
+        }
+    }
+    
+    public function getSlaveId() {
+        if (isset($_SESSION[$this->getAppInstanceId()."_slaveid"])) {
+            return $_SESSION[$this->getAppInstanceId()."_slaveid"];
+        }
+        
+        return "";
+    }
 }

@@ -651,6 +651,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public List<SedoxCreditHistory> getFilteredResult(FilterData filterData) {
         SedoxUser userAccount = getSedoxUserAccount();
         
+        if (filterData.slaveId != null && !filterData.slaveId.isEmpty()) {
+            userAccount = getSlave(filterData.slaveId);
+        }
+        
         Stream<SedoxCreditHistory> history = userAccount.creditAccount.history.stream();
         
         if (filterData.filterText != null && !filterData.filterText.isEmpty()) {
@@ -1962,6 +1966,20 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         
         return hists;
+    }
+
+    private SedoxUser getSlave(String slaveId) {
+        
+        String masterId = getSession().currentUser.id;
+        boolean foundSlave = getSlaves(masterId)
+                .stream()
+                .anyMatch(o -> o.id.equals(slaveId));
+        
+        if (!foundSlave) {
+            throw new ErrorException(26);
+        }
+        
+        return getSedoxUserById(slaveId);
     }
 
 }

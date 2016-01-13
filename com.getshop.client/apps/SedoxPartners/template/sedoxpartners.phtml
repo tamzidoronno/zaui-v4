@@ -1,0 +1,40 @@
+<?
+/* @var $this ns_cb8e7f1e_8659_4e08_9e26_145c548d5873\SedoxPartners */
+$partners = $this->getApi()->getSedoxProductManager()->getSlaves(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);
+
+if (!$partners) {
+    $this->includefile("nopartners");
+    return;
+}
+?>
+
+<div class="SedoxDownloadHistory">
+    <div class="header">
+        <div class="col_header col1">User id </div>
+        <div class="col_header col2">Date </div>
+        <div class="col_header col3">File </div>
+        <div class="col_header col4">Credit each / 100 </div>
+        
+    </div>
+
+    <div class="tablecontent">
+        <?
+        foreach ($partners as $partner) {
+            $time = $this->formatJavaDateToTime($partner->rowCreatedDate);
+            $user = $this->getApi()->getUserManager()->getUserById($partner->id);
+            $date = date("d M Y", $time);
+
+            echo "<div class='col_row_content'>";
+                echo "<div class='col_row_content_inner'>";
+                    echo "<div class='col_content col1'>$partner->id</div>";
+                    echo "<div class='col_content col2'>$date</div>";
+                    echo "<div class='col_content col3'>$user->fullName ($user->emailAddress)</div>";
+                    echo "<div class='col_content col4 normaltext'>$partner->slaveIncome</div>";
+                echo "</div>";
+                $this->setCurrentProduct($partner);
+                $this->includefile("productview");
+            echo "</div>";
+        }
+        ?>
+    </div>
+</div>

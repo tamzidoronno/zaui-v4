@@ -13,4 +13,5 @@ import com.thundashop.core.common.DataCommon;
  */
 public class BookingEngineConfiguration extends DataCommon {
     public boolean confirmationRequired = false;
+    public RegistrationRules rules = new RegistrationRules();
 }

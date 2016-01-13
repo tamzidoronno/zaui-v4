@@ -30,7 +30,15 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $id);
         $generator = new \FieldGenerator();
         $rules = $item->rules;
-        $generator->load($rules, $this->getFactory(), $this->getSelectedName());
+        $generator->load($rules, $this->getFactory(), $this->getSelectedName(), $id, "saveBookingRules");
+    }
+    
+    public function editFormFieldForType() {
+        $id = $_POST['data']['typeid'];
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $id);
+        $generator = new \FieldGenerator();
+        $rules = $type->rules;
+        $generator->load($rules, $this->getFactory(), $this->getSelectedName(), $id, "saveBookingRulesForType");
     }
     
     public function loadTypeSettings() {
@@ -56,6 +64,17 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $generator = new \FieldGenerator();
         $item->rules = $generator->createBookingRules();
         $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
+    }
+    
+    public function saveBookingRulesForType() {
+        $generator = new \FieldGenerator();
+        $rules = $generator->createBookingRules();
+       
+        $id = $_POST['data']['itemid'];
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $id);
+        $generator = new \FieldGenerator();
+        $type->rules = $generator->createBookingRules();
+        $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $type);
     }
     
     public function saveItem() {

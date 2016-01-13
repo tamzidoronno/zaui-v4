@@ -7,7 +7,7 @@ class FieldGenerator {
     /**
      * @param core_pmsmanager_PmsRegistrationRules $rules
      */
-    public function load($rules, $factory, $name) {
+    public function load($rules, $factory, $name, $id, $saveMethod) {
         $this->factory = $factory;
         $this->name = $name;
         
@@ -16,8 +16,8 @@ class FieldGenerator {
         }
         
         $userFields = $this->getUserFields();
-        echo "<div gstype='form' method='saveBookingRules'>";
-        echo "<input type='hidden' value='".$_POST['data']['itemid']."' gsname='itemid'>";
+        echo "<div gstype='form' method='$saveMethod'>";
+        echo "<input type='hidden' value='$id' gsname='itemid'>";
         echo "<h1>Guest information</h1>";
         echo "Print guest information";
         echo "<h1>User / billing data</h1>";

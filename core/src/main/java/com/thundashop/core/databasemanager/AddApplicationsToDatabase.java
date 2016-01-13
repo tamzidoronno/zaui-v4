@@ -58,6 +58,19 @@ public class AddApplicationsToDatabase {
         SedoxPartners.moduleId = "sedox";
         SedoxPartners.defaultActivate = false;
         apps.add(SedoxPartners);
+        
+        Application AutotekTheme = createSettings("AutotekTheme",
+        "ca8104cd-92ac-4826-8bf0-09609a48f294",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        AutotekTheme.isPublic = false;
+        AutotekTheme.isFrontend = false;
+        AutotekTheme.moduleId = "other";
+        AutotekTheme.defaultActivate = false;
+        AutotekTheme.allowedStoreIds.add("ba6ef325-58a4-4bee-ac56-6f1420a150f1");
+        apps.add(AutotekTheme);
+
 
 
 

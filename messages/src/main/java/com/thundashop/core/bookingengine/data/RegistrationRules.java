@@ -2,9 +2,10 @@ package com.thundashop.core.bookingengine.data;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class RegistrationRules implements Serializable {
     public boolean includeGuestData = false;
-    public HashMap<String, RegistrationRulesField> userData = new HashMap();
-    public HashMap<String, RegistrationRulesField> additionalFields = new HashMap();
+    public LinkedHashMap<String, RegistrationRulesField> userData = new LinkedHashMap();
+    public LinkedHashMap<String, RegistrationRulesField> additionalFields = new LinkedHashMap();
 }

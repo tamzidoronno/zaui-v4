@@ -13,5 +13,5 @@ public class RegistrationRulesField implements Serializable {
     public String dependsOnCondition = "";
     public String title = "";
     public String name = "";
-    
+    public String width = "100";
 }

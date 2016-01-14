@@ -11,6 +11,12 @@ class FieldGenerator {
         $this->factory = $factory;
         $this->name = $name;
         
+        $width = array();
+        $width[] = 25;
+        $width[] = 33;
+        $width[] = 50;
+        $width[] = 100;
+        
         if(!$rules) {
             $rules = $factory->getApi()->getPmsManager()->initBookingRules($name);
         }
@@ -42,6 +48,15 @@ class FieldGenerator {
             } else {
                 echo "<span class='whatever' style='float:right;'>";
                 echo "<input type='text' title='Field name' gsname='user;".$field.";name' value='$title' style='margin-right:10px; width: 400px;'>";
+                echo "<select gsname='user;".$field.";width'>";
+                foreach($width as $w) {
+                    $s = "";
+                    if($w == $fieldData->width) {
+                        $s = "selected";
+                    }
+                    echo "<option value='$w' $s>$w%</option>";
+                }
+                echo "</select>";
                 echo "<input type='checkbox' title='Active' gsname='user;".$field.";active' $active>";
                 echo "<input type='checkbox' title='Required' gsname='user;".$field.";required' $required>";
                 echo "</span>";
@@ -55,31 +70,60 @@ class FieldGenerator {
         echo "</div>";
     }
     
+    private function getType($field) {
+        $fields = array();
+        $fields['cellPhone'] = "mobile";
+        $fields['emailAddress'] = "email";
+       
+        if(isset($fields[$field])) {
+            return $fields[$field];
+        }
+        
+        return "text";
+    }
+    
+    private function getWidth($field) {
+        $fields = array();
+        $fields['fullName'] = "50";
+        $fields['cellPhone'] = "50";
+        $fields['user_address_address'] = "33";
+        $fields['user_address_postCode'] = "33";
+        $fields['user_address_city'] = "33";
+        
+        if(isset($fields[$field])) {
+            return $fields[$field];
+        }
+        
+        return "100";
+    }
+    
     private function getUserFields() {
                 
         $fields = array();
         $fields["title_0"] = "Users information details";
+        $fields["fullName"] = "Name of the user";
+        $fields["cellPhone"] = "Cell phone number";
         $fields["emailAddress"] = "Email address";
         $fields["prefix"] = "Phone prefix";
-        $fields["cellPhone"] = "Cell phone number";
-        $fields["birthDay"] = "Users birth date";
         
         $fields["title_2"] = "Users address details";
-        $fields["address_postCode"] = "Users postal code";
-        $fields["address_address"] = "Users street address";
-        $fields["address_city"] = "Users city";
-        $fields["address_countrycode"] = "Users country code";
-        $fields["address_countryname"] = "Name of the country";
+        $fields["user_address_address"] = "Users street address";
+        $fields["user_address_postCode"] = "Users postal code";
+        $fields["user_address_city"] = "Users city";
+        $fields["user_address_countrycode"] = "Users country code";
+        $fields["user_address_countryname"] = "Name of the country";
         
         $fields["title_3"] = "<hr>Company description details";
-        $fields["company_email"] = "Company email";
-        $fields["company_prefix"] = "Phone prefix";
-        $fields["company_phone"] = "Company phone number";
-        $fields["company_postnumber"] = "Company postal code";
         $fields["company_vatNumber"] = "Company organisation number";
+        $fields["company_name"] = "Name of the company";
+        $fields["company_phone"] = "Company phone number";
+        $fields["company_website"] = "Companys website";
+        $fields["company_email"] = "Company email";
+        $fields["company_contact"] = "Contact person";
+        $fields["company_prefix"] = "Phone prefix";
+        $fields["company_postnumber"] = "Company postal code";
         $fields["company_country"] = "Country company registered in";
         $fields["company_city"] = "City company registered in";
-        $fields["company_name"] = "Name of the company";
         $fields["company_vatRegistered"] = "Is registered into the mva register";
         $fields["company_emailAddressToInvoice"] = "Email invoice address";
         
@@ -110,8 +154,21 @@ class FieldGenerator {
             if(sizeof($field) != 3) {
                 echo $key;
             }
-            @$result[$field[0]][$field[1]][$field[2]] = $value;
+            @$result[$field[0]][$field[1]][$field[2]] = $_POST['data'][$key];
         }
+        
+        $oldFields = $this->getUserFields();
+        $usr = array();
+        $add = array();
+
+        foreach($oldFields as $key => $val) {
+            if(isset($result['user'][$key])) {
+                $usr[$key] = $result['user'][$key];
+                $usr[$key]['type'] = $this->getType($key); 
+            }
+        }
+        
+        $result['user'] = $usr;
         
         foreach($result['additional'] as $field => $data) {
             $formData = new \core_bookingengine_data_RegistrationRulesField();
@@ -121,6 +178,7 @@ class FieldGenerator {
             $formData->active = $data['active'] == "true";
             $formData->type = $data['type'];
             $formData->name = $data['fieldname'];
+            $formData->width = $data['width'];
             $rules->additionalFields->{$field} = $formData;
         }
         
@@ -129,7 +187,9 @@ class FieldGenerator {
             $formData->title = $data['name'];
             $formData->active = $data['active'] == "true";
             $formData->required = $data['required'] == "true";
+            $formData->type = $data['type'];
             $formData->name = $field;
+            $formData->width = $data['width'];
             $rules->userData->{$field} = $formData;
         }
         
@@ -145,6 +205,14 @@ class FieldGenerator {
         $types['select']="Dropdown";
         $types['radio']="Radio buttons";
         $types['checkbox']="Checkbox";
+        $types['textarea']="Text area";
+        $types['title']="Title text";
+        
+          $width = array();
+        $width[] = 25;
+        $width[] = 33;
+        $width[] = 50;
+        $width[] = 100;
         
         ?>
         <div gstype="form" method="editFormFields">
@@ -185,6 +253,14 @@ class FieldGenerator {
             }
             echo "</select>";
             echo "<input gsname='additional;field_$i;title' type='text' title='Title of the field' placeholder='Field title' style='margin-right:10px; width: 300px;' value='$title'>";
+            echo "<select gsname='additional;field_$i;width'>";
+            foreach($width as $w) {
+                $s = "";
+                if($w == $fieldData->width) {
+                    $s = "selected";
+                }
+                echo "<option value='$w' $s>$w%</option>";
+              }
             echo "<input type='checkbox' title='Active' gsname='additional;field_$i;active' $active>";
             echo "<input type='checkbox' title='Required' gsname='additional;field_$i;required' $required>";
             echo "<select gsname='additional;field_$i;dependency'>";

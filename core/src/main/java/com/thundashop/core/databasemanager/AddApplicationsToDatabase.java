@@ -59,6 +59,18 @@ public class AddApplicationsToDatabase {
         SedoxUploadHistory.defaultActivate = false;
         apps.add(SedoxUploadHistory);
 
+        Application Company = createSettings("Company",
+        "a6d68820-a8e3-4eac-b2b6-b05043c28d78",
+        allowed2,
+        " ",
+        Application.Type.System, true);
+        Company.isPublic = true;
+        Company.isFrontend = true;
+        Company.defaultActivate = true;
+        Company.moduleId = "other";
+        apps.add(Company);
+
+        
         Application SedoxFiluploadCount = createSettings("SedoxFiluploadCount",
         "ae288b19-9934-4e34-ade7-e8abba43b477",
         allowed2,

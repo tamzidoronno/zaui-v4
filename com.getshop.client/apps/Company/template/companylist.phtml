@@ -1,0 +1,20 @@
+<div class='gss_settings_content'>
+    
+<?php
+/* @var $this ns_a6d68820_a8e3_4eac_b2b6_b05043c28d78\Company */
+$companies = $this->getApi()->getUserManager()->getAllCompanies();
+
+if(!$companies) {
+    echo $this->__w("No companies registered yet!");
+    $companies = array();
+}
+foreach($companies as $company) {
+    $id = $company->id;
+    echo "<div class='companyentry' gss_fragment='company' gss_view='gs_company_workarea' gss_value='$id'>";
+    echo "<i class='fa fa-building-o' style='font-size:30px; float:left; margin-right: 10px; '></i>";
+    echo "<b>" . $company->name . "</b><br>vat number: " . $company->vatNumber;
+    echo "<span style='float:right; color:#bbb; font-size: 10px;'>Registered " . date("m.d.Y H:i", strtotime($company->rowCreatedDate)) . "</span>";
+    echo "</div>";
+}
+?>
+</div>

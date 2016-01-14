@@ -35,6 +35,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -302,8 +303,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.attachBookingItems(bookingsToAdd);
         booking.sessionId = null;
         if(booking.userId == null || booking.userId.isEmpty()) {
-            booking.userId = createUser(booking).id;
-            createCompany(booking);
+            User newuser = createUser(booking);
+            booking.userId = newuser.id;
+            Company curcompany = createCompany(booking);
+            if(curcompany != null) {
+                curcompany = userManager.saveCompany(curcompany);
+                newuser.company.add(curcompany.id);
+                userManager.saveUserSecure(newuser);
+            }
         } else {
             if(configuration.autoconfirmRegisteredUsers) {
                 booking.confirmed = true;
@@ -314,6 +321,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.confirmed = true;
         }
 
+        booking.sessionId = "";
+        
         saveBooking(booking);
         return 0;
     }
@@ -1263,7 +1272,41 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return userManager.createUser(user);
     }
 
-    private void createCompany(PmsBooking booking) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private Company createCompany(PmsBooking booking) {
+        LinkedHashMap<String, String> result = booking.registrationData.resultAdded;
+        if(result.get("choosetyperadio") == null || result.get("choosetyperadio").equals("registration_private")) {
+            return null;
+        }
+        
+        Company company = new Company();
+        company.vatNumber = result.get("company_vatNumber");
+        company.name = result.get("company_name");
+        company.phone = result.get("company_phone");
+        company.website = result.get("company_website");
+        company.email = result.get("company_email");
+        company.contactPerson = result.get("company_contact");
+        company.prefix = result.get("company_prefix");
+        company.phone = result.get("company_postnumber");
+        company.vatRegisterd = true;
+        if(result.get("company_vatRegistered") != null) {
+            company.vatRegisterd = result.get("company_vatRegistered").equals("true");
+        }
+        company.invoiceEmail = result.get("company_emailAddressToInvoice");
+        
+        company.address = new Address();
+        company.address.address = result.get("company_address_address");
+        company.address.postCode = result.get("company_address_postCode");
+        company.address.city = result.get("company_address_city");
+        company.address.countrycode = result.get("company_address_countrycode");
+        company.address.countryname = result.get("company_address_countryname");
+        
+        company.invoiceAddress = new Address();
+        company.invoiceAddress.address = result.get("company_invoiceAddress_address");
+        company.invoiceAddress.postCode = result.get("company_invoiceAddress_postCode");
+        company.invoiceAddress.city = result.get("company_invoiceAddress_city");
+        company.invoiceAddress.countrycode = result.get("company_invoiceAddress_countrycode");
+        company.invoiceAddress.countryname = result.get("company_invoiceAddress_countryname");
+        
+        return company;
     }
 }

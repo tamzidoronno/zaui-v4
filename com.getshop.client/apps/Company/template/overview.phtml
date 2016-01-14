@@ -1,0 +1,10 @@
+<div class="gs_user_menu">
+    <div class="gss_button" gss_fragment='companylist' gss_view='gs_company_workarea'><i class="fa fa-list"></i><? echo $this->__f("All companies"); ?></div>
+    <br/><div class="gss_button" gss_fragment='newcompany' gss_view='gs_company_workarea'><i class="fa fa-plus"></i><? echo $this->__f("New company"); ?></div>
+</div>
+
+<div class="gs_company_workarea">
+    <?
+    $this->includefile('companylist');
+    ?>
+</div>

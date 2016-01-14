@@ -141,12 +141,13 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         //First validate user data.
         
         $originalForm = $this->getConfigurationToUse();
-//        echo "<pre>";
-//        print_r($originalForm);
-//        echo "</pre>";
         
         foreach($originalForm->data as $key => $requirements) {
             $this->validateField($key, $requirements);
+        }
+        
+        if(isset($_POST['data']['agreetoterms']) && $_POST['data']['agreetoterms'] != "true") {
+            $this->validation['agreetoterms'] = "You need to agree to the terms and conditions";
         }
         
         return true;
@@ -160,6 +161,16 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         if(!$requirements->active) {
             return;
         }
+        
+        
+        
+        if($_POST['data']['choosetyperadio'] == "registration_private" && stristr($key, "company_")) {
+            return;
+        }
+        if($_POST['data']['choosetyperadio'] == "registration_company" && stristr($key, "user_")) {
+            return;
+        }
+        
         $res = $_POST['data'][$requirements->name];
         
         if($requirements->required && !$res) {

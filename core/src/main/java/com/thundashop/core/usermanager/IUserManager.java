@@ -7,6 +7,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Comment;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.GroupInformation;
 
@@ -339,4 +340,14 @@ public interface IUserManager {
     public void saveExtraAddressToGroup(Group group, Address address);
     
     public void deleteExtraAddressToGroup(String groupId, String addressId);
+    
+    public List<Company> getAllCompanies();
+    
+    public Company getCompany(String id);
+    
+    @Administrator
+    public Company saveCompany(Company company);
+    
+    @Administrator
+    public void deleteCompany(String companyId);
 }

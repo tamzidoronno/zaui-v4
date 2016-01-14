@@ -122,15 +122,12 @@ class FieldGenerator {
         $fields["company_email"] = "Company email";
         $fields["company_contact"] = "Contact person";
         $fields["company_prefix"] = "Phone prefix";
-        $fields["company_postnumber"] = "Company postal code";
-        $fields["company_country"] = "Country company registered in";
-        $fields["company_city"] = "City company registered in";
         $fields["company_vatRegistered"] = "Is registered into the mva register";
         $fields["company_emailAddressToInvoice"] = "Email invoice address";
         
-        $fields["title_4"] = "Company invoice details";
-        $fields["company_address_postCode"] = "Users postal code";
+        $fields["title_4"] = "Company address details";
         $fields["company_address_address"] = "Users street address";
+        $fields["company_address_postCode"] = "Users postal code";
         $fields["company_address_city"] = "Users city";
         $fields["company_address_countrycode"] = "Users country code";
         $fields["company_address_countryname"] = "Name of the country";

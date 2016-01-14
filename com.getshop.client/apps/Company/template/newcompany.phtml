@@ -1,0 +1,29 @@
+
+<div class='gss_settings_header'>
+    <i class='fa fa-edit'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__w("Create a new company"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?php
+            echo $this->__f("Start adding a new company");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting"  id="orgid">
+        <span class="title"><?php echo $this->__f("Orgid"); ?></span>
+        <input type="textfield" gs_model='companymodel' gs_model_attr='orgid' value="" placeholder="985421221">
+        <div class="description">
+            <?php echo $this->__("The org id for the company to add"); ?>
+        </div>
+    </div>
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_fragment="company" gss_view="gs_company_workarea" gss_method="createCompany" gss_model="companymodel"><i class='fa fa-plus'></i><?php echo $this->__("Create company"); ?></div>
+    </div>
+    
+</div>

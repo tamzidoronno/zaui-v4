@@ -41,7 +41,7 @@ Billing information;-;Faktura informasjon
 Birth Date;-;Fødselsdato
 Birth date;-;Fødselsdato
 Body title;-;Tittel
-Booking;-;Påmelding
+Booking;-;Booking
 Booking engine name;-;Bookingengine navn
 Bottom spacing;-;Nedre spacing
 BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Very simple to use and gets you started with visa payment immediatly;-;BrainTree er en internasjonal betalingsmetode som eies av PayPal. De tilbyr betaling med Visa, MasterCard, PayPal, osv. Veldig enkel å bruke og gir det mulighet til å ta imot betaling online med gang.
@@ -159,7 +159,7 @@ Invalid email address;-;Ugyldig epost adresse
 Invalid payment method;-;Ugyldig betalings metode
 Invalid phone number;-;Ugyldig telefonnummer
 Invalid reset code.;-;Ugyldig tilbakestillings kode
-Invoice email;-;Epost Teknisk Leder
+Invoice email;-;Faktura epost
 InvoicePayment;-;Faktura
 Is private person;-;Er privat person
 Is visible for booking;-;Er synlig for booking

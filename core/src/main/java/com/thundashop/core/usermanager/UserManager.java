@@ -28,6 +28,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,6 +49,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private UserCounter counter = new UserCounter();
 
     private SecureRandom random = new SecureRandom();
+    
+    private HashMap<String, Company> companies = new HashMap();
     
     private LoginHistory loginHistory = new LoginHistory();
     
@@ -85,6 +88,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             UserStoreCollection userStoreCollection = getUserStoreCollection(dataCommon.storeId);
             if (dataCommon instanceof User) {
                 userStoreCollection.addUserDirect((User) dataCommon);
+            }
+            if (dataCommon instanceof Company) {
+                Company comp = (Company) dataCommon;
+                companies.put(comp.id, comp);
             }
             if (dataCommon instanceof LoginHistory) {
                 loginHistory = (LoginHistory) dataCommon;
@@ -299,6 +306,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         
         return result;
+    }
+    
+    public void saveUserSecure(User user) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        collection.addUser(user);
     }
 
     @Override
@@ -1024,5 +1036,32 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             storeCollection.deleteExtraAddressToGroup(groupId, addressId, getSession().currentUser);
         }
     }
+
+    @Override
+    public Company saveCompany(Company curcompany) {
+        saveObject(curcompany);
+        companies.put(curcompany.id, curcompany);
+        return curcompany;
+    }
+
+    @Override
+    public List<Company> getAllCompanies() {
+        return new ArrayList(companies.values());
+    }
+
+    @Override
+    public Company getCompany(String id) {
+        return companies.get(id);
+    }
+
+    @Override
+    public void deleteCompany(String companyId) {
+        Company toDelete = companies.get(companyId);
+        if(toDelete != null) {
+            companies.remove(companyId);
+            deleteObject(toDelete);
+        }
+    }
+
 
 }

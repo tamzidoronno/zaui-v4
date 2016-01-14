@@ -2,8 +2,8 @@
 namespace ns_3b18f464_5494_4f4a_9a49_662819803c4a;
 
 class BookingEngineManagement extends \WebshopApplication implements \Application {
-    public function getDescription() {
-        return "Configure the core of the booking engine";
+    public function getDescription() { 
+       return "Configure the core of the booking engine";
     }
 
     public function getName() {
@@ -33,6 +33,13 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $generator->load($rules, $this->getFactory(), $this->getSelectedName(), $id, "saveBookingRules");
     }
     
+    public function configureBookingFields() {
+        $generator = new \FieldGenerator();
+        $rules = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
+        $generator->load($rules, $this->getFactory(), $this->getSelectedName(), "", "saveDefaultBookingFields");
+    }
+    
+    
     public function editFormFieldForType() {
         $id = $_POST['data']['typeid'];
         $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $id);
@@ -54,7 +61,13 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
             $this->includefile("managementview");
         }
     }
-    
+        
+    public function saveDefaultBookingFields() {
+        $generator = new \FieldGenerator();
+        $rules = $generator->createBookingRules();
+        $this->getApi()->getBookingEngine()->saveDefaultRegistrationRules($this->getSelectedName(), $rules);
+    }
+
     public function saveBookingRules() {
         $generator = new \FieldGenerator();
         $rules = $generator->createBookingRules();

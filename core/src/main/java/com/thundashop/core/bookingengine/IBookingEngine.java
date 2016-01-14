@@ -4,6 +4,7 @@ import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
@@ -62,4 +63,9 @@ public interface IBookingEngine {
     
     @Administrator
     public void changeBookingItemOnBooking(String booking, String item);
+    
+    public RegistrationRules getDefaultRegistrationRules();
+    
+    @Administrator
+    public void saveDefaultRegistrationRules(RegistrationRules rules);
 }

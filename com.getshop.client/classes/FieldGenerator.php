@@ -12,10 +12,10 @@ class FieldGenerator {
         $this->name = $name;
         
         $width = array();
-        $width[] = 25;
-        $width[] = 33;
-        $width[] = 50;
         $width[] = 100;
+        $width[] = 50;
+        $width[] = 33;
+        $width[] = 25;
         
         if(!$rules) {
             $rules = $factory->getApi()->getPmsManager()->initBookingRules($name);
@@ -33,8 +33,8 @@ class FieldGenerator {
             $active = "";
             $required = "";
             $title = $text;
-            if(isset($rules->userData->{$field})) {
-                $fieldData = $rules->userData->{$field};
+            if(isset($rules->data->{$field})) {
+                $fieldData = $rules->data->{$field};
                 $title = $fieldData->title;
                 if($fieldData->active)
                     $active = "CHECKED";
@@ -107,6 +107,7 @@ class FieldGenerator {
         $fields["prefix"] = "Phone prefix";
         
         $fields["title_2"] = "Users address details";
+        $fields["user_birthday"] = "Birth day of user";
         $fields["user_address_address"] = "Users street address";
         $fields["user_address_postCode"] = "Users postal code";
         $fields["user_address_city"] = "Users city";
@@ -146,8 +147,7 @@ class FieldGenerator {
 
     public function createBookingRules() {
         $rules = new \core_bookingengine_data_RegistrationRules();
-        $rules->additionalFields = new \stdClass();
-        $rules->userData= new \stdClass();
+        $rules->data = new \stdClass();
         
         foreach($_POST['data'] as $key => $value) {
             $field = explode(";", $key);
@@ -179,7 +179,7 @@ class FieldGenerator {
             $formData->type = $data['type'];
             $formData->name = $data['fieldname'];
             $formData->width = $data['width'];
-            $rules->additionalFields->{$field} = $formData;
+            $rules->data->{$field} = $formData;
         }
         
         foreach($result['user'] as $field => $data) {
@@ -190,7 +190,7 @@ class FieldGenerator {
             $formData->type = $data['type'];
             $formData->name = $field;
             $formData->width = $data['width'];
-            $rules->userData->{$field} = $formData;
+            $rules->data->{$field} = $formData;
         }
         
         return $rules;
@@ -208,17 +208,11 @@ class FieldGenerator {
         $types['textarea']="Text area";
         $types['title']="Title text";
         
-          $width = array();
-        $width[] = 25;
-        $width[] = 33;
-        $width[] = 50;
+        $width = array();
         $width[] = 100;
-        
-        ?>
-        <div gstype="form" method="editFormFields">
-            <input type="button" gstype="submitToInfoBox" type="button" value="Open field configuration">
-        </div>
-        <?php
+        $width[] = 50;
+        $width[] = 33;
+        $width[] = 25;
 
         $numberOfFields = 20;
         for($i = 1; $i <= $numberOfFields; $i++) {
@@ -229,8 +223,8 @@ class FieldGenerator {
             $title = "";
             $name = "";
             $dep = -1;
-            if(isset($rules->additionalFields->{"field_".$i})) {
-                $fieldData = $rules->additionalFields->{"field_".$i};
+            if(isset($rules->data->{"field_".$i})) {
+                $fieldData = $rules->data->{"field_".$i};
                 $title = $fieldData->title;
                 $name = $fieldData->name;
                 $dep = $fieldData->dependsOnCondition;

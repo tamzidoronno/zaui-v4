@@ -4,11 +4,11 @@
 .PmsBookingContactData label input[type="password"] { width: 100%; margin-top: 5px; box-sizing: border-box; display:inline-block;  }
 .PmsBookingContactData label textarea { height: 100px; }
 .PmsBookingContactData label.type_radio { display:inline; width: inherit;}
-.PmsBookingContactData label { padding-bottom: 10px; }
 .PmsBookingContactData .col-33 { width: 33.33%; display:inline-block; box-sizing: border-box; float:left; padding-right: 10px; }
 .PmsBookingContactData .col-100 { width: 100%; display:inline-block; }
 .PmsBookingContactData .col-50 { width: 50%; display:inline-block; box-sizing: border-box; float:left; padding-right: 10px;  }
 .PmsBookingContactData .lastone { padding-right: 0px;  }
+.PmsBookingContactData .chooseregform { clear: both; }
 
 .PmsBookingContactData .complete_button {
     color: #fff;

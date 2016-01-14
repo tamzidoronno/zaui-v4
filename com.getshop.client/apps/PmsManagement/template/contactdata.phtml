@@ -17,26 +17,12 @@ $avtalegiro = $this->getApi()->getStoreApplicationPool()->getApplication("8f5f7f
 <div class='contactdata'>
     <h2>Contact data</h2>
     <div style='padding-left: 10px;'>
-        <span class='roomprefix'>Type</span>
-        <span class='roompostfix'>
-        <? 
-        if($user->isPrivatePerson) {
-            echo "Private";
-        } else {
-            echo "Company";
-        }
-        ?>
-        </span>
         <div style='clear:both;'></div>
-        <? if($user->isPrivatePerson) { ?>
+        <? if($user->birthDay) { ?>
             <span class='roomprefix'>Birthday</span>
             <span class='roompostfix'><? echo $user->birthDay; ?></span>
             <div style='clear:both;'></div>
-        <? } else { ?>
-            <span class='roomprefix'>Orgid</span>
-            <span class='roompostfix'><? echo $user->birthDay; ?></span>
-            <div style='clear:both;'></div>
-        <? } ?>
+        <? }  ?>
         <span class='roomprefix'>Name</span>
         <span class='roompostfix'><? echo $user->fullName; ?></span>
         <div style='clear:both;'></div>

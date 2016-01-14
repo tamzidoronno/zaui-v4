@@ -2,26 +2,27 @@
 /* @var $this \ns_d3951fc4_6929_4230_a275_f2a7314f97c1\PmsBookingContactData */
 $config = $this->getConfigurationToUse();
 
-echo "<div gstype='form' method='createForm'>";
-foreach($config->additionalFields as $key => $value) {
+echo "<div gstype='form' method='submitForm'>";
+foreach($config->data as $key => $value) {
     /* @var $value core_bookingengine_data_RegistrationRulesField */
-    if(!stristr($key, "company_")) {
+    if(stristr($key, "field_")) {
         $this->printField($value);
     }
 }
-foreach($config->userData as $key => $value) {
+foreach($config->data as $key => $value) {
     /* @var $value core_bookingengine_data_RegistrationRulesField */
-    if(!stristr($key, "company_") && !stristr($key, "user_")) {
+    if(!stristr($key, "company_") && !stristr($key, "user_") && !stristr($key, "field_")) {
         $this->printField($value);
     }
 }
 echo "<div class='chooseregform'>";
-echo "<input type='radio' name='choosetyperadio' value='registration_private'> Privatperson";
-echo "<input type='radio' name='choosetyperadio' value='registration_company'> Organisasjon";
+echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_private'> Privatperson";
+echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_company'> Organisasjon";
 echo "</div>";
 
 echo "<div class='registration_private regforminput'>";
-foreach($config->userData as $key => $value) {
+$this->counter = 0;
+foreach($config->data as $key => $value) {
     /* @var $value core_bookingengine_data_RegistrationRulesField */
     if(stristr($key, "user_")) {
         $this->printField($value);
@@ -30,7 +31,8 @@ foreach($config->userData as $key => $value) {
 echo "</div>";
 
 echo "<div class='registration_company regforminput'>";
-foreach($config->userData as $key => $value) {
+$this->counter = 0;
+foreach($config->data as $key => $value) {
     /* @var $value core_bookingengine_data_RegistrationRulesField */
     if(stristr($key, "company_")) {
         $this->printField($value);
@@ -43,7 +45,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedN
 echo "<div class='whenTypeIsSelected'>";
 if($config->needToAgreeOnContract) {
     echo "<div>";
-    echo "<span class='col-50'><div style='padding-bottom: 5px;'><input type='checkbox'> I agree to the terms and conditions</div>";
+    echo "<span class='col-50'><div style='padding-bottom: 5px;'><input type='checkbox' gsname='agreetoterms'> I agree to the terms and conditions</div>";
     echo "&nbsp;&nbsp;&nbsp;<a href=''>Read the terms and conditions</a><br>";
     echo "&nbsp;&nbsp;&nbsp;<a href=''>Download the terms and conditions</a>";
     echo "</span>";
@@ -55,4 +57,12 @@ if($config->needToAgreeOnContract) {
 echo "</div>";
 
 echo "</div>";
+
+$curAddedFields = $this->getCurrentBooking()->registrationData->resultAdded;
+if(isset($curAddedFields->{'choosetyperadio'})) {
+    echo "<script>";
+    echo "$('input[name=\"choosetyperadio\"][value=\"".$curAddedFields->{'choosetyperadio'}."\"]').click();";
+    echo "</script>";
+}
+
 ?>

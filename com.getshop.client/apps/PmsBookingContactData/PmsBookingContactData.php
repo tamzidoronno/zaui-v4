@@ -4,6 +4,7 @@ namespace ns_d3951fc4_6929_4230_a275_f2a7314f97c1;
 class PmsBookingContactData extends \WebshopApplication implements \Application {
     var $validation;
     var $bookingCompleted = false;
+    var $currentBooking = null;
     var $counter = 0;
     
     public function getDescription() {
@@ -49,13 +50,13 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     }
 
     public function getConfigurationToUse() {
-        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        $booking = $this->getCurrentBooking();
         $defaultRule = null;
         foreach($booking->rooms as $room) {
-            if($room->item && $room->item->rules) {
+            if(isset($room->item) && $room->item && $room->item->rules) {
                 return $room->item->rules;
             }
-            if($room->type && $room->type->rules) {
+            if(isset($room->type) && $room->type && $room->type->rules) {
                 return $room->type->rules;
             }
         }
@@ -67,6 +68,8 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
      * @param \core_bookingengine_data_RegistrationRulesField $value
      */
     public function printField($value) {
+        $currentlyAdded = $this->getCurrentBooking();
+        $curAddedFields = $currentlyAdded->registrationData->resultAdded;
         if ($value->active) {
             $lastone = "";
             if($value->width == 100) {
@@ -82,11 +85,16 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 $this->counter++;
             }
             
+            $valueSet = "";
+            if(isset($curAddedFields->{$value->name})) {
+                $valueSet = $curAddedFields->{$value->name};
+            }
+            
             echo "<label class='col-".$value->width. " " . $lastone . " type_".$value->type."'>";
             
             if ($value->type == "text" || $value->type == "mobile" || $value->type == "email") {
-                 $this->printTitle($value->title, $value->required, $value->type);
-               echo "<input type='text' gsname='".$value->name."'>";
+               $this->printTitle($value->title, $value->required, $value->type);
+               echo "<input type='text' gsname='".$value->name."' value='$valueSet'>";
             } else if($value->type == "radio") {
                 echo "<input type='radio' gsname='".$value->name."' name='".$value->name."'>";
                 $this->printTitle($value->title, $value->required, $value->type);
@@ -94,11 +102,28 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 $this->printTitle($value->title, $value->required, $value->type);
             } else if($value->type == "textarea") {
                 $this->printTitle($value->title, $value->required, $value->type);
-                echo "<textarea gsname='".$value->name."'></textarea>";
+                echo "<textarea gsname='".$value->name."'>".$valueSet."</textarea>";
             } else {
                 echo "Type not set yet: " . " (" . $value->type . ")";
             }
+            echo "<span class='errordesc'>";
+            if(isset($this->validation[$value->name])) {
+                echo "* " . $this->validation[$value->name];
+            } else {
+                echo "&nbsp;";
+            }
+            echo "</span>";
+            
             echo "</label>";
+        }
+    }
+    
+    public function submitForm() {
+        $this->savePostedForm();
+        $this->validatePostedForm();
+        if(!sizeof($this->validation) > 0) {
+            $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
+            echo "<script>alert('it is done');</script>";
         }
     }
 
@@ -109,6 +134,57 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         }
 
         echo $title . "</span>";
+    }
+
+    public function validatePostedForm() {
+        $validation = array();
+        //First validate user data.
+        
+        $originalForm = $this->getConfigurationToUse();
+//        echo "<pre>";
+//        print_r($originalForm);
+//        echo "</pre>";
+        
+        foreach($originalForm->data as $key => $requirements) {
+            $this->validateField($key, $requirements);
+        }
+        
+        return true;
+    }
+
+    /**
+     * @param type $key
+     * @param \core_bookingengine_data_RegistrationRulesField $requirements
+     */
+    public function validateField($key, $requirements) {
+        if(!$requirements->active) {
+            return;
+        }
+        $res = $_POST['data'][$requirements->name];
+        
+        if($requirements->required && !$res) {
+            $this->validation[$requirements->name] = "Field is required";
+        }
+    }
+
+    public function savePostedForm() {
+        $originalForm = $this->getConfigurationToUse();
+        foreach($_POST['data'] as $key => $val) {
+            $originalForm->resultAdded->{$key} = $val;
+        }
+        $selected = $this->getCurrentBooking();
+        $selected->registrationData = $originalForm;
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $selected);
+    }
+
+    /**
+     * @return \core_pmsmanager_PmsBooking 
+     */
+    public function getCurrentBooking() {
+        if(!$this->currentBooking) {
+            $this->currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        }
+        return $this->currentBooking;
     }
 
 }

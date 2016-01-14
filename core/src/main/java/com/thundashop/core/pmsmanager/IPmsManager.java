@@ -19,7 +19,6 @@ public interface IPmsManager {
     public void setBooking(PmsBooking addons) throws Exception;
     public PmsBooking getCurrentBooking();
     public PmsBooking startBooking();
-    public HashMap<String,Integer> validateCurrentBooking();
     public Integer completeCurrentBooking();
     
     @Administrator

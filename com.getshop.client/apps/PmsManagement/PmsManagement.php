@@ -52,6 +52,22 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
     }
 
+    public function getConfigurationToUse() {
+        $booking = $this->getSelectedBooking();
+        $defaultRule = null;
+        foreach($booking->rooms as $room) {
+            if(isset($room->item) && $room->item && $room->item->rules) {
+                return $room->item->rules;
+            }
+            if(isset($room->type) && $room->type && $room->type->rules) {
+                return $room->type->rules;
+            }
+        }
+        
+        return $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
+    }
+
+    
     public function resetnotifications() {
         $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
         $booking->confirmed = false;

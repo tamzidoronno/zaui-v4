@@ -12,38 +12,48 @@ if($instances) {
     $instances = $instances2;
 }
 $avtalegiro = $this->getApi()->getStoreApplicationPool()->getApplication("8f5f7f8f-de42-4867-82cc-63eb0cb55fa1");
+$config = $this->getConfigurationToUse();
+?>
+<h2>Form filled out when registering</h2>
+<?
+foreach($booking->registrationData->resultAdded as $key => $value) {
+    if(!isset($booking->registrationData->data->{$key})) {
+        continue;
+    }
+?>
+    <span class='roomprefix'><? echo $booking->registrationData->data->{$key}->title; ?></span>
+    <span class='roompostfix'><? echo $value; ?></span>
+    <div style='clear:both;'></div>
+<?php
+}
 ?>
 
 <div class='contactdata'>
-    <h2>Contact data</h2>
+    <h2>User data</h2>
     <div style='padding-left: 10px;'>
+        <span class='roomprefix'>User id</span>
+        <span class='roompostfix'><a onclick="thundashop.common.hideInformationBox();app.Users.gssinterface.showUser('<? echo $user->id; ?>')"><? echo $user->customerId; ?></a></span>
+        <div style='clear:both;'></div>
+        
         <div style='clear:both;'></div>
         <? if($user->birthDay) { ?>
             <span class='roomprefix'>Birthday</span>
             <span class='roompostfix'><? echo $user->birthDay; ?></span>
             <div style='clear:both;'></div>
         <? }  ?>
-        <span class='roomprefix'>Name</span>
-        <span class='roompostfix'><? echo $user->fullName; ?></span>
-        <div style='clear:both;'></div>
-        <span class='roomprefix'>Address</span>
-        <span class='roompostfix'><? echo $user->address->address; ?></span>
-        <div style='clear:both;'></div>
-        <span class='roomprefix'>Postal code</span>
-        <span class='roompostfix'><? echo $user->address->postCode; ?></span>
-        <div style='clear:both;'></div>
-        <span class='roomprefix'>City</span>
-        <span class='roompostfix'><? echo $user->address->city; ?></span>
-        <div style='clear:both;'></div>
-        <span class='roomprefix'>Email</span>
-        <span class='roompostfix'><? echo $user->emailAddress; ?></span>
-        <div style='clear:both;'></div>
-        <span class='roomprefix'>Phone</span>
-        <span class='roompostfix'>+<? echo str_replace("+", "", $user->prefix) . " " . $user->cellPhone; ?></span>
-        <div style='clear:both;'></div>
-        <span class='roomprefix'>User id</span>
-        <span class='roompostfix'><? echo $user->customerId; ?></span>
-        <div style='clear:both;'></div>
+        <? if($user->company && sizeof($user->company) > 0) { ?>
+            <span class='roomprefix'>Company</span>
+            <span class='roompostfix'>
+            <? 
+            foreach($user->company as $companyId) {
+                $company = $this->getApi()->getUserManager()->getCompany($companyId);
+                echo '<a onclick="thundashop.common.hideInformationBox();app.Company.gssinterface.showCompany(\''.$companyId.'\')">';
+                echo $company->name;
+                echo '</a>';
+            }
+            ?></span>
+            <div style='clear:both;'></div>
+        <? } ?>
         <?php if($avtalegiro) { 
             echo "<span class='roomprefix'>Avtalegiro</span>";
             echo "<span class='roompostfix'>";

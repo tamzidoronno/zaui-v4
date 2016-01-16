@@ -5,6 +5,7 @@ namespace ns_2059b00f_8bcb_466d_89df_3de79acdf3a1;
 class PmsCalendar extends \WebshopApplication implements \Application {
 
     private $types = false;
+    private $isItemPage = false;
 
     public function getDescription() {
         return "Calendar view for displaying booked entries in a calendar.";
@@ -60,7 +61,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         return strtotime(date("d.m.Y", $day) . " 22:00:00");
     }
     
-    public function printBlocks($day, $type, $room) {
+    public function printBlocks($day, $type, $room, $withSideBar) {
         $size = "";
         $start = $this->getStartTime($day);
         $hours = $this->getHoursAtDay();
@@ -72,7 +73,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             $size = "small";
             $numberOfSlots = $hours;
         }
-        echo "<span class='timeslots'>";
+        $width = 100 / $numberOfSlots;
         for($i = 1; $i <= $numberOfSlots; $i++) {
             if($type == "day") {
                 $endTime = $start + ((60*30)*$i); 
@@ -80,10 +81,11 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                 $endTime = $start + (60*60*$i); 
             }
             $state = $this->getBlockState($room, $day, $startTime, $endTime);
-            echo "<span class='timeblock $size $state' startTime='$startTime' endTime='$endTime' title='".date("H:i", $startTime)." - ".date("H:i", $endTime)."' day='".date("d.m.Y", $day)."'></span>";
+            echo "<span class='outerblock $size' style='width: $width%'>";
+            echo "<span class='timeblock $state' startTime='$startTime' endTime='$endTime' title='".date("H:i", $startTime)." - ".date("H:i", $endTime)."' day='".date("d.m.Y", $day)."'></span>";
+            echo "</span>";
             $startTime = $endTime;
         }
-        echo '</span>';
     }
 
     public function setDayType() {
@@ -91,10 +93,15 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
     
     public function getDayType() {
+        $day = "day";
         if(isset($_SESSION['calendardaytype'])) {
-            return $_SESSION['calendardaytype'];
+            $day = $_SESSION['calendardaytype'];
         }
-        return "day";
+        if($day == "month" && !$this->isItemPage()) {
+            $day = "day";
+        }
+        
+        return $day;
     }
     
     function continueToForm() {
@@ -143,15 +150,18 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                 if($i < 10) {
                     $text = "0" . $i;
                 }
-                echo "<span class='timeheader'>" . $text . ".00</span>";
+                $width = 100 / ($this->getHoursAtDay());
+                echo "<span class='outerblock headerouterblock ' style='width:$width%;'><span class='timeheader available'>" . $text . ".00</span></span>";
             }
         }
         
-        if($type == "week") {
-            echo "<span class='weektimeheader'>";
+        if($type == "week" || $type == "month") {
+            echo "<span class='weekdaycontainer weektimeheader'>";
+            echo "<span class='weektimeheaderinner'>";
             echo "<div>" . date('l', $day) . "</div>";
             echo "<span style='float:left; padding-left: 5px; font-size: 8px;'>".date("H.i", $this->getStartTime($day)) ."</span>";
             echo "<span style='float:right;padding-right: 5px; font-size: 8px;'>".date("H.i", $this->getEndTime($day)) ."</span>";
+            echo "</span>";
             echo "</span>";
         }
     }
@@ -211,6 +221,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         if($this->getDayType() == "week") {
             $time += (86400 * 7);
         }
+        if($this->getDayType() == "month") {
+            $time = strtotime("+1 month", $this->getSelectedDay());
+        }
         $_SESSION['calday'] = $time;
     }
     
@@ -221,6 +234,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         }
         if($this->getDayType() == "week") {
             $time -= (86400 * 7);
+        }
+        if($this->getDayType() == "month") {
+            $time = strtotime("-1 month", $this->getSelectedDay());
         }
         $_SESSION['calday'] = $time;
     }
@@ -297,6 +313,19 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         return "available";
     }
 
+    public function isItemPage() {
+        if($this->isItemPage) {
+            return true;
+        }
+        $rooms = $this->getAllRooms();
+        $page = $this->getPage();
+        foreach($rooms as $id => $test) {
+            if($page->javapage->id == $id) {
+                return $this->isItemPage = true;
+            }
+        }
+        return false;
+    }
 
 }
 

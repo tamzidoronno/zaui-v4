@@ -10,7 +10,7 @@ app.PmsCalendar = {
     selectField : function() {
         $('.startfield').removeClass('startfield');
         $('.selected_periode').removeClass('selected_periode');
-        $(this).closest('.timeslots').addClass('selected_row');
+        $(this).closest('.timecontainer').addClass('selected_row');
 
         app.PmsCalendar.mouseDown = true;
         if($(this).hasClass('selected_periode')) {
@@ -52,12 +52,13 @@ app.PmsCalendar = {
         if(!app.PmsCalendar.mouseDown) {
             return;
         }
-        var row = $(this).closest('.timeslots');
+        var row = $(this).closest('.timecontainer');
         if(!row.hasClass('selected_row')) {
+            console.log('norow');
             return;
         }
-        console.log($(this).prev());
-        if(!$(this).prev().hasClass('selected_periode') && !$(this).next().hasClass('selected_periode')) {
+
+        if(!$(this).parent().prev().find('.timeblock').hasClass('selected_periode') && !$(this).parent().next().find('.timeblock').hasClass('selected_periode')) {
             return;
         }
         if(!row.find('.selected_periode').length === 0) {

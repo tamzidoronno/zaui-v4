@@ -16,10 +16,20 @@ $this->__w("Sunday");
 ?>
 <div class='calendartopheader'>
     <h2><?php echo $this->getConfigurationSetting("headingroomoverview"); ?></h2>
-    <?php $this->includefile("tinycalendar"); ?>
+    <?php 
+    if($type != "month") {
+        $this->includefile("tinycalendar"); 
+    }
+    ?>
     <div style='padding-top: 70px;'>
         <div>
-            <span class='typebutton <?php if($type =="day") echo "selected"; ?>' gstype="clicksubmit" method="setDayType" gsname="type" gsvalue="day">Dag</span><span class='typebutton <?php if($type =="week") echo "selected"; ?>' gstype="clicksubmit" method="setDayType" gsname="type" gsvalue="week">Uke</span>
+        <?php
+            echo "<span class='typebutton "; if($type =="day") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='day'>Dag</span>";
+            echo "<span class='typebutton "; if($type =="week") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='week'>Uke</span>";
+            if($this->isItemPage()) {
+                echo "<span class='typebutton "; if($type =="month") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='month'>Måned</span>";
+            }
+        ?>
         </div>
         <div style='padding-top: 10px;'>
             <span style='padding-right: 30px; cursor:pointer;' gstype="clicksubmit" method="setPrevious" gsname="type" gsvalue="day">
@@ -31,6 +41,9 @@ $this->__w("Sunday");
             } 
             if($type == "week") {
                 echo $this->__w("Week") . " " . date("W", $this->getSelectedDay());
+            }
+            if($type == "month") {
+                echo date("M Y", $this->getSelectedDay());
             }
             ?>
             <span style='padding-left: 30px; cursor:pointer;' gstype="clicksubmit" method="setNext" gsname="type" gsvalue="day">
@@ -48,44 +61,105 @@ $this->__w("Sunday");
 </div>
 <?
 
-echo "<div class='timeheaderrow'>";
+
+$withSideBar = "";
+if(!$this->isItemPage() || $type == "month") {
+    $withSideBar = "withSideBar";
+}
+
+echo "<div class='roomrow $withSideBar'>";
+if($withSideBar) {
+    echo "<span class='roomdescouter roomdesc_$type'></span>";
+}
+echo "<span class='timecontainer $withSideBar timecontainer_$type'>";
 if($type == "day") {
     $this->printHeader($this->getSelectedDay(), $type);
-} else if($type == "week") {
+}
+if($type == "week" || $type == "month") {
     $start = strtotime('this week', $this->getSelectedDay());
     for($i = 0; $i < 7; $i++) {
         $this->printHeader($start, $type);
         $start += 86400;
     }
 }
+echo "<div style='clear:both;'></div>";
+echo "</span>";
 echo "</div>";
 
-
-foreach($rooms as $room) {
-    if(!$types[$room->bookingItemTypeId]->visibleForBooking) {
-        continue;
-    }
-    ?>
-    <div class='roomrow' itemid='<? echo $room->id; ?>'>
-    <img src='fsadf'>
-    <span class='roomdesc'>
-        <span class='roomname'><? echo $room->bookingItemName; ?></span><br>
-        <span class='roomcap'>Kap: 8 personer.</span><br>
-        <span class='roomequipment'>Utstyr: Prosjektor, smartboard, lydanlegg.</span>
-        <span class='readmorelink'><a href='?page=<? echo $room->id; ?>'><? echo $this->__w("Read more"); ?></a></span>
-    </span>
+if($type == "month") {
+    $dates = $this->getDates($this->getSelectedYear());
+    $month = $this->getSelectedMonth();
+    $year = $this->getSelectedYear();
+    $monthDates = $dates[$month];
+    
+    foreach($monthDates as $week => $days) {
+        echo "<div class='roomrow itemlist' itemid='".$this->getPage()->javapage->id."'>";
+        ?>
+        <span class='roomdescouter roomdesc_<? echo $type; ?>'>
+            <span class='roomdesc'>
+                <? echo $week; ?>
+            </span>
+        </span>
         <?php
-        if($type == "day") {
-            $this->printBlocks($this->getSelectedDay(), $type, $room->id);
-        } else if($type == "week") {
-            $start = strtotime('this week', $this->getSelectedDay());
-            for($i = 0; $i < 7; $i++) {
-                $this->printBlocks(($start+(86400*$i)), $type, $room->id);
+         echo "<span class='timecontainer $withSideBar timecontainer_$type'>";
+        for($i = 0; $i < 7; $i++) {
+            $day="";
+            if(isset($days[$i])) {
+                $day = $days[$i]."-".$month."-".$year;
+            }
+
+            echo "<div class='weekdaycontainer'>";
+            $this->printBlocks(strtotime($day), $type, $this->getPage()->javapage->id, $withSideBar);
+            echo "</div>";
+        }
+        echo "</span>";
+        echo "</div>";
+     }
+} else {
+    foreach($rooms as $room) {
+        if(!$types[$room->bookingItemTypeId]->visibleForBooking) {
+            continue;
+        }
+        if($this->isItemPage()) {
+            if($room->id != $this->getPage()->javapage->id) {
+                continue;
             }
         }
         ?>
-    </div>
-    <?
+        <div class='roomrow itemlist' itemid='<? echo $room->id; ?>'>
+            <?php
+            if(!$this->isItemPage()) {
+            ?>
+                <span class='roomdescouter roomdesc_<? echo $type; ?>'>
+                    <span class='roomdesc'>
+                        <img src='fsadf'>
+                        <span class='roomattributes'>
+                            <span class='roomname'><? echo $room->bookingItemName; ?></span><br>
+                            <span class='roomcap'>Kap: 8 personer.</span><br>
+                            <span class='roomequipment'>Utstyr: Prosjektor, smartboard, lydanlegg.</span>
+                            <span class='readmorelink'><a href='?page=<? echo $room->id; ?>'><? echo $this->__w("Read more"); ?></a></span>
+                        </span>
+                    </span>
+                </span>
+                <?php
+            }
+            echo "<span class='timecontainer $withSideBar timecontainer_$type'>";
+            if($type == "day") {
+                $this->printBlocks($this->getSelectedDay(), $type, $room->id, $withSideBar);
+            }
+            if($type == "week") {
+                $start = strtotime('this week', $this->getSelectedDay());
+                for($i = 0; $i < 7; $i++) {
+                    echo "<div class='weekdaycontainer'>";
+                    $this->printBlocks(($start+(86400*$i)), $type, $room->id, $withSideBar);
+                    echo "</div>";
+                }
+            }
+            echo '</span>';
+            ?>
+        </div>
+        <?
+    }    
 }
 ?>
 <div class='calendarfooter'>

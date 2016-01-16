@@ -527,7 +527,10 @@ class Page {
             $this->printEffectTrigger($cell, $depth, "outside");
             echo "<div class='gsucell_outer' cellid='$cell->cellId'>";
         }
-        echo "<div selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $themeClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        
+        $lastInRow = (count(@$parent->cells) - 1) == $count ?  "gs_last_in_row" : "";
+        $firstInRowClass = $count == 0 ?  "gs_first_in_row" : "";
+        echo "<div selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $themeClass $lastInRow $firstInRowClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
         $this->printEffectTrigger($cell, $depth);
         
         if ($anchor) {
@@ -1759,6 +1762,10 @@ class Page {
         echo "<script>";
         echo "if(thundashop.framework.historyboxshown) { thundashop.framework.gslayouthistory(); }";
         echo "</script>";
+    }
+
+    public function isLastInRow($cell) {
+        
     }
 
 }

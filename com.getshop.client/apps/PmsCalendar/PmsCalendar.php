@@ -6,6 +6,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
 
     private $types = false;
     private $isItemPage = false;
+    private $bookingresultforday = array();
 
     public function getDescription() {
         return "Calendar view for displaying booked entries in a calendar.";
@@ -270,16 +271,18 @@ class PmsCalendar extends \WebshopApplication implements \Application {
      * @return \core_pmsmanager_PmsBooking[]
      */
     public function getBookingsForDay($day) {
-        if(isset($this->result[$day])) {
-            return $this->result[$day];
+        $key = date("dmY", $day);
+
+        if(key_exists($key, $this->bookingresultforday)) {
+            return $this->bookingresultforday[$key];
         }
+        
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00:00", $day)));
         $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59:59", $day)));
         $filter->filterType = "active";
         $bookings = $this->getApi()->getPmsManager()->getAllBookingsUnsecure($this->getSelectedName(), $filter);
-        $this->result[$day] = $bookings;
-        
+        $this->bookingresultforday[$key] = $bookings;
         return $bookings;
     }
     

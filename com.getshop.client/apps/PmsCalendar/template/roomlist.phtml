@@ -161,7 +161,13 @@ if($type == "month") {
         <?
     }    
 }
+
+$nextPage = $this->getConfigurationSetting("continue");
+if(!$nextPage) {
+    $nextPage = "/" . $this->__w("summary") . "_" . $this->getSelectedName() . ".html";
+}
+
 ?>
 <div class='calendarfooter'>
-    <span class='continue_button' continue="<?php echo $this->getConfigurationSetting("continue"); ?>">Continue</span>
+    <span class='continue_button' continue="<?php echo $nextPage; ?>"><? echo $this->__w("Continue"); ?></span>
 </div>

@@ -373,9 +373,13 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public void receiveSyncData(String json) throws ErrorException {
         try {
+            System.out.println("Sync data received");
             List<DataCommon> datas = (List<DataCommon>) StoreManager.fromString(json);
+            System.out.println("Adding data to database");
             database.refreshDatabase(datas);
+            System.out.println("Clearing store: " + storeId);
             getShopScope.clearStore(storeId);
+            System.out.println("Done");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -515,7 +515,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             user.emailAddress = magentoUser.emailAddress;
             user.cellPhone = magentoUser.phone;
             user.group = magentoUser.group;
-            user.companyName = magentoUser.companyName;
             userManager.saveUser(user);
         }
     }

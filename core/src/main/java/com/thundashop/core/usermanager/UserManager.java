@@ -28,6 +28,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,6 +49,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private UserCounter counter = new UserCounter();
 
     private SecureRandom random = new SecureRandom();
+    
+    private HashMap<String, Company> companies = new HashMap();
     
     private LoginHistory loginHistory = new LoginHistory();
     
@@ -85,6 +88,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             UserStoreCollection userStoreCollection = getUserStoreCollection(dataCommon.storeId);
             if (dataCommon instanceof User) {
                 userStoreCollection.addUserDirect((User) dataCommon);
+            }
+            if (dataCommon instanceof Company) {
+                Company comp = (Company) dataCommon;
+                companies.put(comp.id, comp);
             }
             if (dataCommon instanceof LoginHistory) {
                 loginHistory = (LoginHistory) dataCommon;
@@ -300,6 +307,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return result;
     }
+    
+    public void saveUserSecure(User user) {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        collection.addUser(user);
+    }
 
     private void checkUserAccess(User user) {
         // Avoid degradation of the same user.
@@ -370,8 +382,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         checkUserAccess(user);
         preventOverwriteOfData(user, savedUser);
-       
-        user.company = getCompany(user);
+
         collection.addUser(user);
     }
 
@@ -730,27 +741,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return null;
     }
     
-    /**
-     * This function returns the userid if the given store is for
-     * autoa-akademiet. This should be changed to check if
-     * the company brregengine is activate for the given store.
-     * 
-     * @param user
-     * @return 
-     */
-    private Company getCompany(User user) {
-        if (!this.storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
-            return user.company;
-        }
-        
-        if (user.birthDay == null || user.birthDay.equals("")) {
-            return null;
-        }
-        
-        Company company = brRegEngine.getCompany(user.birthDay);
-        return company;
-    }
-
     public void directSaveUser(User user) throws ErrorException {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         collection.addUser(user);
@@ -1081,5 +1071,31 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         user.metaData.remove(key);
         getUserStoreCollection(storeId).addUser(user);
     }
+
+    public Company saveCompany(Company curcompany) {
+        saveObject(curcompany);
+        companies.put(curcompany.id, curcompany);
+        return curcompany;
+    }
+
+    @Override
+    public List<Company> getAllCompanies() {
+        return new ArrayList(companies.values());
+    }
+
+    @Override
+    public Company getCompany(String id) {
+        return companies.get(id);
+    }
+
+    @Override
+    public void deleteCompany(String companyId) {
+        Company toDelete = companies.get(companyId);
+        if(toDelete != null) {
+            companies.remove(companyId);
+            deleteObject(toDelete);
+        }
+    }
+
 
 }

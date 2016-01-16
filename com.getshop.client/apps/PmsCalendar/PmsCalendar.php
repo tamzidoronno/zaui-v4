@@ -5,6 +5,8 @@ namespace ns_2059b00f_8bcb_466d_89df_3de79acdf3a1;
 class PmsCalendar extends \WebshopApplication implements \Application {
 
     private $types = false;
+    private $isItemPage = false;
+    private $bookingresultforday = array();
 
     public function getDescription() {
         return "Calendar view for displaying booked entries in a calendar.";
@@ -29,41 +31,95 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
 
     public function render() {
-        if(isset($_POST['event']) && $_POST['event'] == "reserveBooking") {
-            return;
-        }
-        
         if (!$this->getSelectedName()) {
             echo "You need to specify a booking engine first.";
             return;
         }
-        if (isset($_GET['day'])) {
-            $this->includefile("showbookingonday");
-        } else if (isset($_GET['roomName'])) {
-            $this->includefile("calendar");
+        $this->includefile("roomlist");
+    }
+    
+    /**
+     * @return \core_bookingengine_data_BookingItemType[]
+     */
+    public function getAllTypes() {
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        return $this->indexList($types);
+    }
+
+    /**
+     * @return \core_bookingengine_data_BookingItem[]
+     */
+    public function getAllRooms() {
+        $list = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+        return $this->indexList($list);
+    }
+
+    public function getStartTime($day) {
+        return strtotime(date("d.m.Y", $day) . " 07:00:00");
+    }
+    
+    public function getEndTime($day) {
+        return strtotime(date("d.m.Y", $day) . " 22:00:00");
+    }
+    
+    public function printBlocks($day, $type, $room, $withSideBar) {
+        $size = "";
+        $start = $this->getStartTime($day);
+        $hours = $this->getHoursAtDay();
+
+        $startTime = $start;
+        if($type == "day") {
+            $numberOfSlots = $hours * 2;
         } else {
-            $this->includefile("calendarrooms");
+            $size = "small";
+            $numberOfSlots = $hours;
+        }
+        $width = 100 / $numberOfSlots;
+        for($i = 1; $i <= $numberOfSlots; $i++) {
+            if($type == "day") {
+                $endTime = $start + ((60*30)*$i); 
+            } else {
+                $endTime = $start + (60*60*$i); 
+            }
+            $state = $this->getBlockState($room, $day, $startTime, $endTime);
+            echo "<span class='outerblock $size' style='width: $width%'>";
+            echo "<span class='timeblock $state' startTime='$startTime' endTime='$endTime' title='".date("H:i", $startTime)." - ".date("H:i", $endTime)."' day='".date("d.m.Y", $day)."'></span>";
+            echo "</span>";
+            $startTime = $endTime;
         }
     }
 
-    public function getSelectedDay() {
-        if (isset($_GET['day'])) {
-            return strtotime($_GET['day'] . " 00:00:00");
+    public function setDayType() {
+        $_SESSION['calendardaytype'] = $_POST['data']['type'];
+    }
+    
+    public function getDayType() {
+        $day = "day";
+        if(isset($_SESSION['calendardaytype'])) {
+            $day = $_SESSION['calendardaytype'];
         }
-        if(isset($_SESSION['calendarselectedday'])) {
-            return $_SESSION['calendarselectedday'];
+        if($day == "month" && !$this->isItemPage()) {
+            $day = "day";
         }
-        return time();
+        
+        return $day;
     }
-
-    public function getSelectedMonth() {
-        return date("m", $this->getSelectedDay());
+    
+    function continueToForm() {
+        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
+        
+        $room = new \core_pmsmanager_PmsBookingRooms();
+        $room->date = new \core_pmsmanager_PmsBookingDateRange();
+        $room->date->start = $this->convertToJavaDate($_POST['data']['start']);
+        $room->date->end = $this->convertToJavaDate($_POST['data']['end']);
+        $room->bookingItemId = $_POST['data']['room'];
+        
+        $booking->rooms = array();
+        $booking->rooms[] = $room;
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
     }
-
-    public function getSelectedYear() {
-        return date("Y", $this->getSelectedDay());
-    }
-
+    
     function getDates($year) {
         $dates = array();
 
@@ -80,256 +136,198 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         }
         return $dates;
     }
-
-    public function printDayCalendar($dayToPrint, $roomName) {
-        $this->includefile("daycalendar");
-    }
-
-    public function reserveBooking() {
-        $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
-
-        $start = $_POST['data']['startday'] . "." . $_POST['data']['startmonth'] . "." . $_POST['data']['startyear'] . " " . $_POST['data']['starthour'] . ":" . $_POST['data']['startminute'] . ":00";
-        $end = $_POST['data']['endday'] . "." . $_POST['data']['endmonth'] . "." . $_POST['data']['endyear'] . " " . $_POST['data']['endhour'] . ":" . $_POST['data']['endminute'] . ":00";
-        $itemName = $_POST['data']['roomname'];
-        $bookedItem = null;
-        foreach ($items as $item) {
-            if ($item->bookingItemName == $itemName) {
-                $bookedItem = $item;
-            }
+    
+    public function getSelectedDay() {
+        if(isset($_SESSION['calday'])) {
+            return $_SESSION['calday'];
         }
-
-        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
-
-        $range = new \core_pmsmanager_PmsBookingDateRange();
-        $range->start = $this->convertToJavaDate(strtotime($start));
-        $range->end = $this->convertToJavaDate(strtotime($end));
-
-        $room = new \core_pmsmanager_PmsBookingRooms();
-        $room->bookingItemId = $bookedItem->id;
-        $room->date = $range;
-
-        $booking->rooms = array();
-        $booking->rooms[] = $room;
-
-        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+        return time();
     }
     
-    public function changeCalendarMonth() {
-        $_GET['roomName'] = $_POST['data']['roomName'];
-        $_GET['page'] = $_POST['data']['page'];
-        $direction = $_POST['data']['direction'];
-        $curtime = $this->getSelectedDay();
-        if($direction == "up") {
-            $curtime = strtotime("+1 month", $curtime);
+    public function printHeader($day, $type) {
+        if($type == "day") {
+            for($i = 7; $i <= 22; $i++) {
+                $text = $i;
+                if($i < 10) {
+                    $text = "0" . $i;
+                }
+                $width = 100 / ($this->getHoursAtDay());
+                echo "<span class='outerblock headerouterblock ' style='width:$width%;'><span class='timeheader available'>" . $text . ".00</span></span>";
+            }
+        }
+        
+        if($type == "week" || $type == "month") {
+            echo "<span class='weekdaycontainer weektimeheader'>";
+            echo "<span class='weektimeheaderinner'>";
+            echo "<div>" . date('l', $day) . "</div>";
+            echo "<span style='float:left; padding-left: 5px; font-size: 8px;'>".date("H.i", $this->getStartTime($day)) ."</span>";
+            echo "<span style='float:right;padding-right: 5px; font-size: 8px;'>".date("H.i", $this->getEndTime($day)) ."</span>";
+            echo "</span>";
+            echo "</span>";
+        }
+    }
+
+    public function printCalendar() {
+        /* @var $this \ns_d925273e_b9fc_480f_96fa_8fb8df6edbbe\PmsBookingCalendar */
+       $selectedDate = $this->getSelectedDay();
+       $month = $this->getSelectedMonth();
+       $year = $this->getSelectedYear();
+
+       $number = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+       if(!$this->getConfigurationSetting("date_type")) {
+           echo "Warning no date type set yet.. configure it";
+       }
+       ?>
+
+       <div class='calendar_header'>
+           <i class='fa fa-arrow-left'></i>
+           <? echo $month . "/" . $year; ?>
+           <i class='fa fa-arrow-right'></i>
+       </div>
+       <?php
+       for($i = 1;$i <= $number; $i++) {
+           $dayToPrint = strtotime($i.".".$month.".".$year);
+           if($this->isSelectedDate($dayToPrint)) {
+               echo "<span class='day selected' time='$dayToPrint'>$i</span>";
+           } else {
+               echo "<span class='day' time='$dayToPrint'>$i</span>";
+           }
+        }
+    }
+    public function isSelectedDate($date) {
+        $current = $this->getSelectedDay();
+        if(date("Y-m-d", $date) == date("Y-m-d", $current)) {
+            return true;
+        }
+        return false;
+    }
+    
+
+    public function isSelectedWeek($time) {
+        $current = $this->getSelectedDay();
+        if(date("Y-W", $time) == date("Y-W", $current)) {
+            return true;
+        }
+        return false;
+        
+    }
+    
+    
+    public function setNext() {
+        $time = $this->getSelectedDay();
+        if($this->getDayType() == "day") {
+            $time += 86400;
+        }
+        if($this->getDayType() == "week") {
+            $time += (86400 * 7);
+        }
+        if($this->getDayType() == "month") {
+            $time = strtotime("+1 month", $this->getSelectedDay());
+        }
+        $_SESSION['calday'] = $time;
+    }
+    
+    public function setPrevious() {
+        $time = $this->getSelectedDay();
+        if($this->getDayType() == "day") {
+            $time -= 86400;
+        }
+        if($this->getDayType() == "week") {
+            $time -= (86400 * 7);
+        }
+        if($this->getDayType() == "month") {
+            $time = strtotime("-1 month", $this->getSelectedDay());
+        }
+        $_SESSION['calday'] = $time;
+    }
+    
+    public function setCalendarDay() {
+        $_SESSION['calday'] = strtotime($_POST['data']['day']);
+    }
+    
+    public function changeMonth() {
+        if($_POST['data']['type'] == "prev") {
+           $_SESSION['calday'] = strtotime("-1 month", $this->getSelectedDay());
         } else {
-            $curtime = strtotime("-1 month", $curtime);
+           $_SESSION['calday'] = strtotime("+1 month", $this->getSelectedDay());
         }
-        $_SESSION['calendarselectedday'] = $curtime;
-        
+    }
+    
+    public function getSelectedMonth() {
+        return date("m", $this->getSelectedDay());
+    }
+
+    public function getSelectedYear() {
+        return date("Y", $this->getSelectedDay());
+    }
+
+    public function getHoursAtDay() {
+        $diff = $this->getEndTime($this->getSelectedDay()) - $this->getStartTime($this->getSelectedDay());
+        return ($diff / 3600)+1;
     }
 
     /**
-     * 
-     * @param type $day
-     * @param \core_pmsmanager_PmsBooking[] $bookingsForMonth
+     * @return \core_pmsmanager_PmsBooking[]
      */
-    public function printEventsAtDay($day, $bookingsForMonth, $roomId, $printName = false) {
-        $day = strtotime($day);
-        $found = false;
-        if($bookingsForMonth) {
-            foreach ($bookingsForMonth as $booking) {
-                if($this->printEventsAtDayFromRooms($day, $booking->rooms, $roomId, $printName)) {
-                    $found = true;
-                }
-            }
-        }
-        return $found;
-    }
+    public function getBookingsForDay($day) {
+        $key = date("dmY", $day);
 
-    /**
-     * 
-     * @param type $day
-     * @param \core_pmsmanager_PmsBookingRooms $rooms
-     */
-    public function printEventsAtDayFromRooms($day, $rooms, $roomId, $printName) {
-        $found = false;
-        foreach ($rooms as $room) {
-            if ($this->isAddon($room)) {
-                continue;
-            }
-            if($roomId != $room->bookingItemId) {
-                continue;
-            }
-            
-            if (($day >= strtotime($room->date->start) && $day <= strtotime($room->date->end)) || (date("m.d.Y", $day) == date("m.d.Y", strtotime($room->date->start))) || (date("m.d.Y", $day) == date("m.d.Y", strtotime($room->date->end)))
-            ) {
-                $found = true;
-                if($printName) {
-                    echo $room->guests[0]->name;
-                } else {
-                    echo "<span class='bookingentyrincal' style='top: 30px;' title='" . $room->guests[0]->name . "'></span>";
-                }
-            }
-        }
-        return $found;
-    }
-
-    /**
-     * 
-     * @param \core_pmsmanager_PmsBookingRooms $room
-     */
-    public function isAddon($room) {
-        $types = $this->getTypes();
-        return $types[$room->bookingItemTypeId]->addon > 0;
-    }
-
-    public function getTypes() {
-        if ($this->types) {
-            return $this->types;
-        }
-
-        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
-        $types2 = array();
-        foreach ($types as $type) {
-            $types2[$type->id] = $type;
-        }
-        $this->types = $types2;
-        return $types2;
-    }
-
-    /**
-     * 
-     * @param type $time
-     * @param \core_pmsmanager_PmsBooking[] $bookings
-     * @param type $room
-     * @return boolean
-     */
-    public function isBookedAtSlot($time, $bookings, $roomId) {
-        if(!$bookings) {
-            return "";
-        }
-        foreach ($bookings as $booking) {
-            foreach ($booking->rooms as $room) {
-                if ($room->bookingItemId == $roomId) {
-                    if ($time >= strtotime($room->date->start) &&
-                            $time < strtotime($room->date->end)) {
-                        return $room->guests[0]->name;
-                        }
-                    }
-                }
-            }
-        return "";
-        }
-
-    /**
-     * 
-     * @return \core_bookingengine_data_BookingItem[]
-     */
-    public function getRooms() {
-        $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
-        $rooms2 = array();
-        foreach ($rooms as $room) {
-            if($this->isAddon($room)) {
-                continue;
-            }
-            $rooms2[$room->id] = $room;
-        }
-        return $rooms2;
-    }
-
-    /**
-     * 
-     * @param type $name
-     * @return \core_bookingengine_data_BookingItem
-     */
-    public function getRoomFromName($name) {
-        $rooms = $this->getRooms();
-        foreach ($rooms as $room) {
-            if ($room->bookingItemName == $name) {
-                return $room;
-            }
-        }
-        return null;
-    }
-
-    public function printExistingBookingsList($roomId) {
-        $bookings = $this->getConfirmedBookingsForDay();
-        $res = "<table width='100%'>";
-        $res .= "<tr>";
-        if(!$roomId) {
-            $res .= "<th align='left'>Room</th>";
-        }
-        $res .= "<th align='left'>Start</th>";
-        $res .= "<th align='left'>End</th>";
-        $res .= "<th></th>";
-        $res .= "</tr>";
-        
-        $found = false;
-        foreach($bookings as $booking) {
-            foreach($booking->rooms as $room) {
-                if($roomId && ($roomId != $room->bookingItemId)) {
-                    continue;
-                }
-                $found = true;
-                $res .= "<tr>";
-                if(!$roomId) {
-                    $res .= "<td>" . $this->getRoomFromId($room->bookingItemId)->bookingItemName . "</td>";
-                }
-                $res .= "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . "</td>";
-                $res .= "<td>" . date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
-                $res .= "<td>" . $room->guests[0]->name  . "</td>";
-                $res .= "</tr>";
-            }
-        }
-        $res .= "</table>";
-        
-        if($found) {
-            echo $res;
-        } else {
-            echo $this->__w("No bookings registered so far");
+        if(key_exists($key, $this->bookingresultforday)) {
+            return $this->bookingresultforday[$key];
         }
         
-    }
-
-    public function getConfirmedBookingsForDay() {
         $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00:00", $day)));
+        $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59:59", $day)));
         $filter->filterType = "active";
-        $filter->startDate = $this->convertToJavaDate($this->getSelectedDay());
-        $filter->endDate = $this->convertToJavaDate($this->getSelectedDay()+86400);
-        $filter->needToBeConfirmed = true;
-        
         $bookings = $this->getApi()->getPmsManager()->getAllBookingsUnsecure($this->getSelectedName(), $filter);
+        $this->bookingresultforday[$key] = $bookings;
+        return $bookings;
+    }
+    
+    public function getBlockState($roomId, $day, $startTime, $endTime) {
+        $bookings = $this->getBookingsForDay($day);
         if(!$bookings) {
             $bookings = array();
         }
-        return $bookings;
-    }
-
-    /**
-     * 
-     * @param type $id
-     * @return \core_bookingengine_data_BookingItem
-     */
-    public function getRoomFromId($id) {
-        $rooms = $this->getRooms();
-        foreach($rooms as $room) {
-            if($room->id == $id) {
-                return $room;
+        foreach($bookings as $booking) {
+            /* @var $booking \core_pmsmanager_PmsBooking */
+            foreach($booking->rooms as $room) {
+                $roomStart = strtotime($room->date->start);
+                $roomEnd = strtotime($room->date->end);
+                if($room->bookingItemId != $roomId) {
+                    continue;
+                }
+                if($roomStart >= $endTime) {
+                    continue;
+                }
+                if($roomEnd <= $startTime) {
+                    continue;
+                }
+                
+                if($booking->confirmed) {
+                    return "occupied";
+                } else {
+                    return "notconfirmed";
+                }
             }
         }
-        return null;
+        return "available";
     }
 
-    public function getViewType() {
-        $viewtype = "";
-        if(isset($_GET['viewtype'])) {
-            $viewtype = $_GET['viewtype'];
-            $_SESSION['viewtypesetforcalendar'] = $viewtype;
-        } else if(isset($_SESSION['viewtypesetforcalendar'])) {
-            $viewtype = $_SESSION['viewtypesetforcalendar'];
+    public function isItemPage() {
+        if($this->isItemPage) {
+            return true;
         }
-        
-        return $viewtype;
+        $rooms = $this->getAllRooms();
+        $page = $this->getPage();
+        foreach($rooms as $id => $test) {
+            if($page->javapage->id == $id) {
+                return $this->isItemPage = true;
+            }
+        }
+        return false;
     }
 
 }

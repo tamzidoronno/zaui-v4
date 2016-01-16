@@ -8,6 +8,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Comment;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.GroupInformation;
 
@@ -346,4 +347,13 @@ public interface IUserManager {
     
     @Customer
     public void removeMetaData(String userId, String key);
+    public List<Company> getAllCompanies();
+    
+    public Company getCompany(String id);
+    
+    @Administrator
+    public Company saveCompany(Company company);
+    
+    @Administrator
+    public void deleteCompany(String companyId);
 }

@@ -13,6 +13,7 @@ import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -318,6 +319,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         savedItem.pageId = type.pageId;
         savedItem.visibleForBooking = type.visibleForBooking;
         savedItem.addon = type.addon;
+        savedItem.rules = type.rules;
         saveObject(savedItem);
         return savedItem;
     }
@@ -530,6 +532,11 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 forEach(o -> line.add(o));
         return line;
    }
+
+    void saveRules(RegistrationRules rules) {
+        config.rules = rules;
+        saveObject(config);
+    }
    
    
     

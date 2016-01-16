@@ -1,58 +1,53 @@
 app.PmsBookingContactData = {
     init : function() {
-        $(document).on('click','.PmsBookingContactData .typeSelection', app.PmsBookingContactData.selectTypeView);
-        $(document).on('click','.PmsBookingContactData .complete_button', app.PmsBookingContactData.completeRegistration);
-        $(document).on('keyup','.PmsBookingContactData .roomdata input', app.PmsBookingContactData.updateBillingInformation);
+        $(document).on('click', '.PmsBookingContactData .chooseregform input', app.PmsBookingContactData.choseRegType);
+        $(document).on('keyup', '.PmsBookingContactData input[gsname="user_address_postCode"]', app.PmsBookingContactData.updatePostalPlace);
+        $(document).on('keyup', '.PmsBookingContactData input[gsname="company_vatNumber"]', app.PmsBookingContactData.updateBrreg);
     },
-    
-    updateBillingInformation : function() {
-        var name = $(this).attr('name');
-        var row = $(this).closest('.roomdata');
-        if($('.roomdata').first().attr('pmsbookingroomid') === row.attr('pmsbookingroomid')) {
-            $('.private_person_form input[name="'+name+'"]').val($(this).val());
-            $('.company_form input[name="'+name+'"]').val($(this).val());
+    updatePostalPlace: function () {
+        var val = $(this).val();
+        if(val.length !== 4) {
+            return;
         }
-    },
-    
-    completeRegistration : function() {
-        var billingdataform = $('.billingform:visible');
-        var billingdata = {};
-        billingdataform.find('input').each(function() {
-            billingdata[$(this).attr('name')] = $(this).val();
-        });
-        
-        var roomdata = {};
-        $('.roomdata').each(function() {
-            var guest = {};
-            $(this).find('input').each(function() {
-                guest[$(this).attr('name')] = $(this).val();
-            });
-            var offset = $(this).attr('pmsBookingRoomId');
-
-            if(!roomdata[offset]) {
-                roomdata[offset]=[];
+        $.ajax({
+            "dataType" : "jsonp",
+            "url": "https://api.bring.com/shippingguide/api/postalCode.json?clientUrl=insertYourClientUrlHere&country=no&pnr=" + val,
+            "success": function (data) {
+                if(data.valid) {
+                    $('input[gsname="user_address_city"]').val(data.result);
+                }
             }
-            roomdata[offset].push(guest);
-        });
-        
-        var agreeonterms = "false";
-        if($('input[gsname="agreeonterms"]').is(':checked')) {
-            agreeonterms = "true";
         }
-        
-        var data = {
-            "billingdata" : billingdata,
-            "roomdata" : roomdata,
-            "agreetoterms" : agreeonterms
-        }
-        
-        var event = thundashop.Ajax.createEvent('','setContactData',$(this), data);
-        thundashop.Ajax.post(event);
+        );
     },
-    selectTypeView : function() {
-        var view = $(this).attr('view');
-        $('.billingform').hide();
-        $('.'+view).show();
+    updateBrreg : function() {
+        var val = $(this).val();
+        if(val.indexOf(".") >= 0) {
+            return;
+        } 
+        if(val.length === 9) {
+            $.ajax({
+                "url" : "http://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + val,
+                "success" : function(data) {
+                    var data = data.entries[0];
+                    $('input[gsname="company_vatNumber"]').val(data.orgnr);
+                    $('input[gsname="company_address_address"]').val(data.forretningsadr);
+                    $('input[gsname="company_address_postCode"]').val(data.forradrpostnr);
+                    $('input[gsname="company_address_city"]').val(data.forradrpoststed);
+                    $('input[gsname="company_name"]').val(data.navn);
+                }
+            });
+        }
+    },    
+    
+    searchPostalCode : function() {
+       alert('test'); 
+    },
+    choseRegType : function() {
+        var type = $(this).val();
+        $('.regforminput').hide();
+        $('.whenTypeIsSelected').show();
+        $('.'+type).fadeIn();
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});

@@ -10,6 +10,7 @@ import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.RegistrationRules;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -184,6 +185,24 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
             return 20;
         }
         return 10;
+    }
+
+    /**
+     * @TODO Make unit tests for this?
+     * @return 
+     */
+    @Override
+    public RegistrationRules getDefaultRegistrationRules() {
+        return bookingEngineAbstract.getConfig().rules;
+    }
+
+     /**
+     * @TODO Make unit tests for this?
+     * @return 
+     */
+    @Override
+    public void saveDefaultRegistrationRules(RegistrationRules rules) {
+        bookingEngineAbstract.saveRules(rules);
     }
     
 }

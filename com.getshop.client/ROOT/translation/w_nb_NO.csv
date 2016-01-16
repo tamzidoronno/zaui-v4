@@ -37,11 +37,9 @@ Available positions;-;Ledige plasser
 Back to page;-;Tilbake til siden
 Background color;-;Bakgrundsfarge
 Background image / styling;-;Bakgrunnsbilde / Styling
-Billing information;-;Faktura informasjon
 Birth Date;-;Fødselsdato
-Birth date;-;Fødselsdato
 Body title;-;Tittel
-Booking;-;Påmelding
+Booking;-;Booking
 Booking engine name;-;Bookingengine navn
 Bottom spacing;-;Nedre spacing
 BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Very simple to use and gets you started with visa payment immediatly;-;BrainTree er en internasjonal betalingsmetode som eies av PayPal. De tilbyr betaling med Visa, MasterCard, PayPal, osv. Veldig enkel å bruke og gir det mulighet til å ta imot betaling online med gang.
@@ -67,8 +65,6 @@ City;-;By
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Color transition;-;Fargetransisjoner
 Comments;-;Kommentarer
-Company;-;Selskap
-Complete order;-;Fullfør ordren
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
 Connect this to a product;-;Koble denne til et produkt
@@ -80,6 +76,7 @@ Coupon;-;Kupong
 Coupon discount;-;Kupong avslag
 Create a booking item;-;Opprett et booking item
 Create a booking item type;-;Opprett en booking item type
+Create a new company;-;Opprett et nytt firma
 Create a new slide;-;Opprett en ny slide
 Create left column;-;Lag en ny venstrekolonne
 Create right column;-;Lag en ny høyrekolonne
@@ -108,6 +105,7 @@ Done editing;-;Ferdig å editere
 Download ebill;-;Last ned ebill
 Duraction (ms);-;Tid (ms)
 Ecommerce settings;-;Netthandel instillinger
+Edit input fields;-;Endre input felter
 Edit row;-;Editer raden
 Effects;-;Effekter
 Email;-;Epost
@@ -128,13 +126,11 @@ Fade in when scrolling;-;Fade når du scroller
 Failed;-;Feilet
 February;-;Februar
 Field has not been configured yet, configure it first.;-;Feltet har ikke blitt konfigurert enda, konfigurer det først.
-Field is required;-;Feltet er påkrevd
 Fixed price;-;Fast pris
 Flip contect to add content underneat this cell;-;Flipp cellen for å legge til innhold under denne cellen
 Fri;-;Fre
 Friday;-;Fredag
 Full name;-;Hele navnet
-Full name please;-;Vennligst skriv inn fullt navn
 Gallery;-;Galleri
 Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Group;-;Gruppe
@@ -154,12 +150,10 @@ Insert column;-;Sett inn kolonne
 Insert column to the left;-;Legg inn en kolonne til venstre
 Insert column to the right;-;Legg inn en kolonne til høyre
 Insert row;-;Sett inn rad
-Invalid email;-;Ugyldig epost
 Invalid email address;-;Ugyldig epost adresse
 Invalid payment method;-;Ugyldig betalings metode
-Invalid phone number;-;Ugyldig telefonnummer
 Invalid reset code.;-;Ugyldig tilbakestillings kode
-Invoice email;-;Epost Teknisk Leder
+Invoice email;-;Faktura epost
 InvoicePayment;-;Faktura
 Is private person;-;Er privat person
 Is visible for booking;-;Er synlig for booking
@@ -174,6 +168,7 @@ Leave label open;-;La teksten stå åpen
 Left spacing;-;Venstre spacing
 Les mer;-;Les mer
 Link this cell;-;Link denne cellen
+Load;-;Last
 Loading;-;Laster
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
@@ -215,8 +210,8 @@ Next;-; Neste
 Nice modern theme. Could be used for clothing, skateboarding, snowboarding etc.;-;Fint moderne tema. Kan bli brukt for klær, skateboards, snowbards, osv.
 Nice modern theme. Suitable for different carmarkeds.;-;Pent og moderne tema. Godt brukbart i bil markedet.
 No;-;Nei
-No bookings registered so far;-;Ingen bookinger registrert enda.
 No code added yet;-;Ingen kode er lagt til enda
+No companies registered yet!;-;Ingen firma er registrert enda.
 No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
 No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen header har blitt lastet opp for potrait modus på mobil enda, vennligst last opp et.
 No items;-;Ingen elementer
@@ -231,7 +226,6 @@ Order;-;Ordre
 Order cleaning;-;Bestill vask
 Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
-Orgnr;-;Orgnr
 Original (hp);-;Orginal hp
 Original (nm);-;Original nm
 Other attributes;-;Andre attributter
@@ -268,21 +262,20 @@ Please wait while you are being transferred to dibs payment service.;-;-Vennligs
 Please wait...;-;Vennligst vent...
 Post code;-;Post.nr
 Postal code;-;Postnummer
-Prefix;-;Prefix
 Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
 Private key is found in braintree account.;-;Den privat nøkkelen er noe du finner på kontoen din hos braintree.
-Private person;-;Privatperson
 Product List;-;Produktliste
 Product Search;-;Produkt søk
 Product view for your store.;-;Produkt visningen for din nettbutikk.
 Products;-;Produkter
 Public key is found in braintree account.;-;Den offentlig nøkkelen er noe du finner på kontoen din hos braintree.
+Read more;-;Les mer
 Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
 Register;-;Registrer
-Registered user;-;Registrert bruker
+Register email;-;Registrer epost
 Registration details;-;Registrerings detaljer.
 Related products;-;Relaterte produkter
 Reminder;-;Påminnelse
@@ -293,7 +286,6 @@ Repeat new password;-;Gjenta passord
 Repeat password;-;Gjenta passord
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
-Room information;-;Rom informasjon
 Rooms selected;-;Rommene som er valgt
 Row is not displayed on mobile, click for make it reappear;-;Raden vises ikke på mobiltelefon, trykk her for å vise den.
 Row options;-;Rad instillinger
@@ -362,6 +354,7 @@ Thank you for your order, an email has been sent to you with the invoice attache
 Thank you for your order.;-;Takk for din bestilling.
 Thank you message;-;Takkemelding
 Thank you page;-;Takkeside
+Thank you, you have now registered your email;-;Takk, du har nå registrert din epost.
 Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
 The carousel is not rotating while logged in as administrator.;-;Karusellen roterer ikke når man er logget inn som administrator.
 The email address is invalid.;-;Eposten din er ugyldig.
@@ -391,8 +384,6 @@ Use a different email;-;Bruk en annen epost
 Use a predefined layout for cell;-;Bruk en predifinert layout for denne cellen
 User level for cell;-;Brukernivå for cellen
 Username / Email;-;Brukernavn / Epost
-Username or password is incorrect;-;Brukernavn og passord er feil
-Username/email;-;Brukernavn/epost
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 Was not able to process your payment, check your card details and try again.;-;Klarte ikke å gjennomføre betalingen, sjekk betalingsopplysningene dine og prøv igjen.
@@ -411,7 +402,6 @@ You are here:;-;Du er her:
 You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.;-;Du er nå i edit modus for denne raden, du kan nå legge til kolonner, rader over og under, og mye mer.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You have been inactive to long and due to security reasons you will now be logged out.;-;Du har vært inaktiv for lenge, og på grunn av sikkerhetsmessige årsaker vil du nå bli logget ut.
-You need to agree to the terms and conditions first;-;Du må godta bruksvilkårene før du kan fortsette.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your email;-;Din epost
 Your message has been delivered;-;Din melding har blitt sendt.
@@ -430,6 +420,7 @@ included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn
 read;-;les
+summary;-;oppsummering
 view as calendar;-;Vis som kalender
 view as list;-;Vis som liste
 will be added to your invoice.;-;vil bli lagt på sluttsummen.

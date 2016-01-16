@@ -2,8 +2,8 @@
 namespace ns_3b18f464_5494_4f4a_9a49_662819803c4a;
 
 class BookingEngineManagement extends \WebshopApplication implements \Application {
-    public function getDescription() {
-        return "Configure the core of the booking engine";
+    public function getDescription() { 
+       return "Configure the core of the booking engine";
     }
 
     public function getName() {
@@ -25,6 +25,29 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function editFormFields() {
+        $id = $_POST['data']['itemid'];
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $id);
+        $generator = new \FieldGenerator();
+        $rules = $item->rules;
+        $generator->load($rules, $this->getFactory(), $this->getSelectedName(), $id, "saveBookingRules");
+    }
+    
+    public function configureBookingFields() {
+        $generator = new \FieldGenerator();
+        $rules = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
+        $generator->load($rules, $this->getFactory(), $this->getSelectedName(), "", "saveDefaultBookingFields");
+    }
+    
+    
+    public function editFormFieldForType() {
+        $id = $_POST['data']['typeid'];
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $id);
+        $generator = new \FieldGenerator();
+        $rules = $type->rules;
+        $generator->load($rules, $this->getFactory(), $this->getSelectedName(), $id, "saveBookingRulesForType");
+    }
+    
     public function loadTypeSettings() {
         $this->includefile("typeconfigurations");
     }
@@ -37,6 +60,34 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
             }
             $this->includefile("managementview");
         }
+    }
+        
+    public function saveDefaultBookingFields() {
+        $generator = new \FieldGenerator();
+        $rules = $generator->createBookingRules();
+        $this->getApi()->getBookingEngine()->saveDefaultRegistrationRules($this->getSelectedName(), $rules);
+    }
+
+    public function saveBookingRules() {
+        $generator = new \FieldGenerator();
+        $rules = $generator->createBookingRules();
+       
+        $id = $_POST['data']['itemid'];
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $id);
+        $generator = new \FieldGenerator();
+        $item->rules = $generator->createBookingRules();
+        $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
+    }
+    
+    public function saveBookingRulesForType() {
+        $generator = new \FieldGenerator();
+        $rules = $generator->createBookingRules();
+       
+        $id = $_POST['data']['itemid'];
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $id);
+        $generator = new \FieldGenerator();
+        $type->rules = $generator->createBookingRules();
+        $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $type);
     }
     
     public function saveItem() {

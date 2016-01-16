@@ -1,5 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.bookingengine.data.RegistrationRules;
 import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
@@ -34,6 +35,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -47,6 +49,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -177,77 +180,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return booking;
     }
 
-    /**
-     * 1. Invalid
-     */
-    @Override
-    public HashMap<String, Integer> validateCurrentBooking() {
-        PmsBooking currentBooking = getCurrentBooking();
-        HashMap<String,Integer> result = new HashMap();
-        
-        //First check if the room data is fine.
-        for(PmsBookingRooms room : currentBooking.rooms) {
-            Integer offset = 0;
-            for(PmsGuests guest : room.guests) {
-                if(guest.name == null || !guest.name.contains(" ")) {
-                    result.put("room_" + room.pmsBookingRoomId + "_" + offset + "_name", 1);
-                }
-                if(guest.email == null || !guest.email.contains("@")) {
-                    result.put("room_" + room.pmsBookingRoomId + "_" + offset + "_email", 1);
-                }
-
-                HashMap<String, String> phoneNumber = validatePhone("+" + guest.prefix + guest.phone, "NO");
-                if(guest.name == null || phoneNumber == null) {
-                    result.put("room_" + room.pmsBookingRoomId + "_" + offset + "_phone", 1);
-                } else {
-                    guest.phone = phoneNumber.get("phone");
-                    guest.prefix = phoneNumber.get("prefix");
-                }
-                offset++;
-            }
-        }
-        
-        if(configuration.needToAgreeOnContract && !currentBooking.contactData.agreedToTerms) {
-            result.put("agreedToTerms", 1);
-        }
-        
-        //Validate the contact data
-        if(currentBooking.contactData.type == 3) {
-            User validuser = userManager.checkUserNameAndPassword(currentBooking.contactData.username, currentBooking.contactData.password);
-            if(validuser == null) {
-                result.put("username", 1);
-            }
-        } else {
-            if(currentBooking.contactData.city.isEmpty()) {
-                result.put("contact_city", 1);
-            }
-            if(currentBooking.contactData.postalCode.isEmpty()) {
-                result.put("contact_postalCode", 1);
-            }
-            if(currentBooking.contactData.email.isEmpty()) {
-                result.put("contact_email", 1);
-            }
-            if(currentBooking.contactData.address.isEmpty()) {
-                result.put("contact_address", 1);
-            }
-            if(currentBooking.contactData.name.isEmpty()) {
-                result.put("contact_name", 1);
-            }
-
-            if(currentBooking.contactData.type == 1) {
-                if(currentBooking.contactData.birthday.isEmpty()) {
-                    result.put("contact_birthday", 1);
-                }
-            } else {
-                if(currentBooking.contactData.orgid.isEmpty()) {
-                    result.put("contact_orgid", 1);
-                }
-            }
-        }
-        
-        
-        return result;
-    }
 
     private HashMap<String, String> validatePhone(String phone, String countryCode) {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
@@ -322,11 +254,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookingEngine.setConfirmationRequired(true);
         }
         
-        Integer validation = validateBooking(booking);
-        if(validation < 0) {
-            return validation;
-        }
-        
         booking.priceType = prices.defaultPriceType;
         
         Integer result = 0;
@@ -376,7 +303,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.attachBookingItems(bookingsToAdd);
         booking.sessionId = null;
         if(booking.userId == null || booking.userId.isEmpty()) {
-            booking.userId = createUser(booking).id;
+            User newuser = createUser(booking);
+            booking.userId = newuser.id;
+            Company curcompany = createCompany(booking);
+            if(curcompany != null) {
+                curcompany = userManager.saveCompany(curcompany);
+                newuser.company.add(curcompany.id);
+                userManager.saveUserSecure(newuser);
+            }
         } else {
             if(configuration.autoconfirmRegisteredUsers) {
                 booking.confirmed = true;
@@ -387,6 +321,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.confirmed = true;
         }
 
+        booking.sessionId = "";
+        
         saveBooking(booking);
         return 0;
     }
@@ -412,28 +348,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
-    }
-
-    private User createUser(PmsBooking booking) {
-        SecureRandom random = new SecureRandom();
-        
-        User user = new User();
-        user.address = new Address();
-        user.address.address = booking.contactData.address;
-        user.address.city = booking.contactData.city;
-        user.address.postCode = booking.contactData.postalCode;
-        user.emailAddress = booking.contactData.email;
-        user.cellPhone = booking.contactData.phone;
-        user.prefix = booking.contactData.prefix;
-        user.password = new BigInteger(130, random).toString(32);
-        user.fullName = booking.contactData.name;
-        if(booking.contactData.type == 1) {
-            user.birthDay = booking.contactData.birthday;
-        } else {
-            user.birthDay = booking.contactData.orgid;
-        }
-        userManager.createUser(user);
-        return user;
     }
 
     private boolean hasAccessUser(String userId) {
@@ -579,6 +493,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 
                 if(room.bookingItemId != null) {
                     room.item = bookingEngine.getBookingItem(room.bookingItemId);
+                }
+                if(room.bookingItemTypeId != null) {
+                    room.type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 }
                 
             }
@@ -1024,9 +941,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter filter) {
-        if(!configuration.exposeUnsecureBookings) {
-            return new ArrayList();
-        }
         List<PmsBooking> result = getAllBookings(filter);
         
         List<PmsBooking> allBookings = new ArrayList();
@@ -1038,27 +952,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return allBookings;
     }
 
-    private Integer validateBooking(PmsBooking booking) {
-
-        if(booking.userId != null && !booking.userId.isEmpty()) {
-            if(!hasAccessUser(booking.userId)) {
-                return -3;
-            }
-        }
-        
-        if(booking.contactData.type == 3) {
-            User user = userManager.checkUserNameAndPassword(booking.contactData.username, booking.contactData.password);
-            if(user == null) {
-                return -3;
-            }
-            booking.userId = user.id;
-        }
-        
-        if(booking.rooms.isEmpty()) {
-            return -4;
-        }    
-        return 0;
-    }
 
     @Override
     public String getContract(String bookingId) throws Exception {
@@ -1349,5 +1242,68 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return result;
+    }
+
+    @Override
+    public RegistrationRules initBookingRules() {
+        return new RegistrationRules();
+    }
+
+    private User createUser(PmsBooking booking) {
+        LinkedHashMap<String, String> result = booking.registrationData.resultAdded;
+        User user = new User();
+        user.emailAddress = "";
+        /* Fields found in FieldGenerator.php */
+        user.fullName = result.get("fullName");
+        user.cellPhone = result.get("cellPhone");
+        user.emailAddress = result.get("emailAddress");
+        user.prefix = result.get("emailAddress");
+        
+        user.address = new Address();
+        user.address.address = result.get("user_address_address");
+        user.address.postCode = result.get("user_address_postCode");
+        user.address.city = result.get("user_address_city");
+        user.address.countrycode = result.get("user_address_countrycode");
+        user.address.countryname = result.get("user_address_countryname");
+        
+        return userManager.createUser(user);
+    }
+
+    private Company createCompany(PmsBooking booking) {
+        LinkedHashMap<String, String> result = booking.registrationData.resultAdded;
+        if(result.get("choosetyperadio") == null || result.get("choosetyperadio").equals("registration_private")) {
+            return null;
+        }
+        
+        Company company = new Company();
+        company.vatNumber = result.get("company_vatNumber");
+        company.name = result.get("company_name");
+        company.phone = result.get("company_phone");
+        company.website = result.get("company_website");
+        company.email = result.get("company_email");
+        company.contactPerson = result.get("company_contact");
+        company.prefix = result.get("company_prefix");
+        company.phone = result.get("company_postnumber");
+        company.vatRegisterd = true;
+        if(result.get("company_vatRegistered") != null) {
+            company.vatRegisterd = result.get("company_vatRegistered").equals("true");
+        }
+        company.invoiceEmail = result.get("company_emailAddressToInvoice");
+        
+        company.address = new Address();
+        company.address.address = result.get("company_address_address");
+        company.address.postCode = result.get("company_address_postCode");
+        company.address.city = result.get("company_address_city");
+        company.address.countrycode = result.get("company_address_countrycode");
+        company.address.countryname = result.get("company_address_countryname");
+        
+        company.invoiceAddress = new Address();
+        company.invoiceAddress.address = result.get("company_invoiceAddress_address");
+        company.invoiceAddress.postCode = result.get("company_invoiceAddress_postCode");
+        company.invoiceAddress.city = result.get("company_invoiceAddress_city");
+        company.invoiceAddress.countrycode = result.get("company_invoiceAddress_countrycode");
+        company.invoiceAddress.countryname = result.get("company_invoiceAddress_countryname");
+        
+        return company;
     }
 }

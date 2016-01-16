@@ -71,4 +71,6 @@ public class BookingItem extends DataCommon {
      * Who owns the bookingItem. 
      */
     public String bookingOwnerUserId = "";
+    
+    public RegistrationRules rules = null;
 }

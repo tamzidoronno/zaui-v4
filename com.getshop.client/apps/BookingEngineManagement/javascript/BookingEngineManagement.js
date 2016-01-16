@@ -6,6 +6,14 @@ app.BookingEngineManagement = {
         $(document).on('change', '.BookingEngineManagement .itemTypeSelector', app.BookingEngineManagement.setItemType);
         $(document).on('change', '.BookingEngineManagement .selectedProductForGroup', app.BookingEngineManagement.selectedProductForGroup);
         $(document).on('click', '.BookingEngineManagement .editbookingitemtype', app.BookingEngineManagement.editbookingitemtype);
+        $(document).on('click', '.BookingEngineManagement .configureBookingFields', app.BookingEngineManagement.configureBookingFields);
+    },
+    configureBookingFields : function() {
+        var data = {
+            "typeid" : $(this).closest('tr').attr('entryid')
+        }
+        var event = thundashop.Ajax.createEvent('','configureBookingFields', $(this), data);
+        thundashop.common.showInformationBoxNew(event, 'Booking form fields configuration');
     },
     editbookingitemtype : function() {
         var data = {
@@ -31,7 +39,6 @@ app.BookingEngineManagement = {
             "itemTypeId" : itemTypeId
         });
         thundashop.Ajax.post(event);
-        
     },
     editBookingItemButton : function() {
         var data = {

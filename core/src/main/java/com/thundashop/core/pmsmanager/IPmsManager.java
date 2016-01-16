@@ -1,5 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
@@ -18,7 +19,6 @@ public interface IPmsManager {
     public void setBooking(PmsBooking addons) throws Exception;
     public PmsBooking getCurrentBooking();
     public PmsBooking startBooking();
-    public HashMap<String,Integer> validateCurrentBooking();
     public Integer completeCurrentBooking();
     
     @Administrator
@@ -87,4 +87,6 @@ public interface IPmsManager {
     
     @Administrator
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
+    
+    public RegistrationRules initBookingRules();
 }

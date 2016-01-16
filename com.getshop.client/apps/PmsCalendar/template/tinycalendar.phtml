@@ -1,0 +1,65 @@
+<div class='tinycalendar'>
+    <?php
+    /* @var $this \ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
+    $dates = $this->getDates($this->getSelectedYear());
+    $month = $this->getSelectedMonth();
+    $year = $this->getSelectedYear();
+
+    $monthDates = $dates[$this->getSelectedMonth()];
+
+    echo "<div style='text-align:left;' class='caltextheader'>";
+    echo $this->__w(date("M", $this->getSelectedDay())) . " " . $this->getSelectedYear();
+    echo "<span style='float:right;'>";
+    echo "<i class='fa fa-caret-left' style='cursor:pointer;' gstype='clicksubmit' method='changeMonth' gsname='type' gsvalue='prev'></i> ";
+    echo "<i class='fa fa-caret-right' style='cursor:pointer;' gstype='clicksubmit' method='changeMonth' gsname='type' gsvalue='next'></i>";
+    echo "</span>";
+    echo "</div>";
+    
+    echo "<span class='day dayheader weekentry'>" . $this->__w("Week") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Mon") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Tue") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Wed") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Thu") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Fri") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Sat") . "</span>";
+    echo "<span class='day dayheader'>" . $this->__w("Sun") . "</span>";
+    echo "<div style='clear:both;'></div>";
+
+    foreach($monthDates as $week => $days) {
+        $weekRow = "<div class='{weekrow}'>";
+        $selectedWeek = "";
+        $weekRow .= "<span class='day weekentry'>$week</span>";
+        for($i = 1; $i <= 7; $i++) {
+            $css = "";
+            $day="";
+            
+            if(isset($days[$i])) {
+                $css = "dayentry";
+                $day = $days[$i]."-".$month."-".$year;
+            }
+
+            $selected = "";
+            if($this->isSelectedDate(strtotime($day)) && $this->getDayType() == "day") {
+                $selected = "selected";
+            }
+            if($day && $this->isSelectedWeek(strtotime($day)) && $this->getDayType() == "week") {
+                $selectedWeek = "selectedweek";
+            }
+
+             $weekRow .= "<span class='day $css $selected' gstype='clicksubmit' method='setCalendarDay' gsname='day' gsvalue='$day'>";
+            if(isset($days[$i])) {
+                $weekRow .= $days[$i];
+            } else {
+                $weekRow .= "&nbsp;";
+            }
+            $weekRow .= "</span>";
+        }
+        $weekRow .= "</div>";
+        
+        $weekRow = str_replace("{weekrow}", $selectedWeek, $weekRow);
+        
+        echo $weekRow;
+        echo "<div style='clear:both;'></div>";
+    }
+    ?>
+</div>

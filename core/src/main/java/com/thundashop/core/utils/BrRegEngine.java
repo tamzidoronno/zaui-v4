@@ -58,10 +58,7 @@ public class BrRegEngine {
             BrRegCompany brRegCompany = fromJson.entries.get(0);
             Company company = new Company();
             company.name = brRegCompany.navn;
-            company.country = brRegCompany.forradrland;
-            company.city = brRegCompany.forradrpoststed;
-            company.postnumber = brRegCompany.forradrpostnr;
-            company.streetAddress = brRegCompany.forretningsadr;
+            company.address.address = brRegCompany.forretningsadr;
             company.type = brRegCompany.organisasjonsform;
             company.vatNumber = brRegCompany.orgnr.trim();
             return company;

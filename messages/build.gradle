@@ -15,5 +15,5 @@ if (!hasProperty('mainClass')) {
 
 
 dependencies {
-   compile fileTree(dir: '../libs', include: ['morphia.jar', 'gson-2.3.jar'])
+   compile fileTree(dir: '../libs', include: ['morphia.jar', 'gson-2.5.jar'])
 }

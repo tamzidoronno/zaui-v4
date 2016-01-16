@@ -1,0 +1,22 @@
+<?
+/* @var $this \ns_2ccaebd8_12f0_4c00_99be_feb5f4da9d79\SedoxPushover */
+if (isset($_POST['event']) && $_POST['event'] == "saveId") {
+?>
+    <div class="savedid">
+        <i class="fa fa-check"></i> Saved
+    </div>
+
+    <script>
+        setTimeout(function() {
+            $('.SedoxPushover .savedid').fadeOut(300);
+        }, 2000);
+        
+    </script>
+<?
+}
+?>
+<div>
+    <input type="text" class="pushoverid" placeholder="Pushover userid" value="<? echo $this->getPushoverId(); ?>"></input>    
+    <div class="sedox_blue_button savepushoverid">Save</div>
+</div>
+

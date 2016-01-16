@@ -650,6 +650,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public List<SedoxCreditHistory> getFilteredResult(FilterData filterData) {
         SedoxUser userAccount = getSedoxUserAccount();
         
+        if (filterData.slaveId != null && !filterData.slaveId.isEmpty()) {
+            userAccount = getSlave(filterData.slaveId);
+        }
+        
         Stream<SedoxCreditHistory> history = userAccount.creditAccount.history.stream();
         
         if (filterData.filterText != null && !filterData.filterText.isEmpty()) {
@@ -1923,14 +1927,58 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public long getUserFileUploadCount() {
+    public Long getUserFileUploadCount() {
         Stream<SedoxProduct> productStream = getProductsUploadedByCurrentUser();
         return productStream.count();
     }
 
     @Override
-    public long getUserFileDownloadCount() {
-        return getSedoxUserAccount().orders.size();
+    public Long getUserFileDownloadCount() {
+        return new Long(getSedoxUserAccount().orders.size());
+    }
+
+    @Override
+    public List<SedoxFileHistory> getUploadHistory() {
+        Stream<SedoxProduct> productStream = getProductsUploadedByCurrentUser();
+        List<SedoxProduct> products = productStream.collect(Collectors.toList());
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.add(Calendar.MONTH, 1);
+        
+        List<SedoxFileHistory> hists = new ArrayList();
+        for (int i=0;i<12;i++) {
+            Date endDate = cal.getTime();
+            cal.add(Calendar.MONTH, -1);
+            Date startDate = cal.getTime();
+            long count = products.stream().filter(o -> o.rowCreatedDate.after(startDate) && o.rowCreatedDate.before(endDate)).count();
+            
+            SedoxFileHistory fileHistory = new SedoxFileHistory();
+            fileHistory.count = count;
+            fileHistory.month = cal.get(Calendar.MONTH) + 1;
+            fileHistory.year = cal.get(Calendar.YEAR);
+            hists.add(fileHistory);
+            
+        }
+        
+        return hists;
+    }
+
+    private SedoxUser getSlave(String slaveId) {
+        
+        String masterId = getSession().currentUser.id;
+        boolean foundSlave = getSlaves(masterId)
+                .stream()
+                .anyMatch(o -> o.id.equals(slaveId));
+        
+        if (!foundSlave) {
+            throw new ErrorException(26);
+        }
+        
+        return getSedoxUserById(slaveId);
     }
 
 }

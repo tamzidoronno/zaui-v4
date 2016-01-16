@@ -90,8 +90,28 @@ function symLinkIfNeeded($class_name) {
         $namespace = $classArray[0];
         $appName = $classArray[1];
         $namespacedfolder = "../app/$namespace";
-
-        if (!file_exists($namespacedfolder) && file_exists("../apps/".$appName)) {
+        
+        if (!file_exists($namespacedfolder) && !file_exists("../apps/".$appName)) {
+            $factory = IocContainer::getFactorySingelton(false);
+            $appId = substr($namespace, 3);
+            $appId = str_replace("_", "-", $appId);
+            $appSettings = $factory->getApi()->getStoreApplicationPool()->getApplication($appId);
+            
+            if (!$appSettings) {
+                $themeApp = $factory->getApi()->getStoreApplicationPool()->getThemeApplication();
+                if ($themeApp->id == $appId) {
+                    $appSettings = $themeApp;
+                }
+            }
+            
+            if ($appSettings) {
+                $appName = $appSettings->appName;
+            } else {
+                $appName = "";
+            }
+        }
+        
+        if (!file_exists($namespacedfolder) && file_exists("../apps/".$appName) && $appName && $namespacedfolder) {
             @symlink("../apps/$appName", $namespacedfolder);
         }
     }

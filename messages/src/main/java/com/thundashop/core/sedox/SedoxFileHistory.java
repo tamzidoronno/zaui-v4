@@ -6,15 +6,14 @@
 
 package com.thundashop.core.sedox;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ktonder
  */
-public class FilterData {
-    public int pageSize = 10;
-    public String filterText = "";
-    public int pageNumber = 1;
-    public String slaveId = "";
-    public String sortBy = "";
-    public boolean ascending;
+public class SedoxFileHistory implements Serializable {
+    public int month;
+    public long count;
+    int year;
 }

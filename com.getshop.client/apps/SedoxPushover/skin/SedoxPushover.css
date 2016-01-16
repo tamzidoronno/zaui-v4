@@ -1,0 +1,28 @@
+.SedoxPushover input[type="text"] {
+    padding: 14px;
+    border: solid 1px #dcdcdc;
+    transition: box-shadow 0.3s, border 0.3s;
+    width: 350px;
+}
+.SedoxPushover input[type="text"]:focus,
+.SedoxPushover input[type="text"].focus {
+    border: solid 1px #707070;
+    box-shadow: 0 0 5px 1px #969696;
+}
+
+.SedoxPushover .sedox_blue_button {
+    width: 80px;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.SedoxPushover .savedid {
+    background-color: #00ff00;
+    font-size: 25px;
+    text-align: center;
+    padding: 10px;
+    color: #000;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    border-radius: 5px;
+}

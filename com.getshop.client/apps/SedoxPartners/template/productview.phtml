@@ -1,0 +1,70 @@
+<?
+/* @var $this ns_cb8e7f1e_8659_4e08_9e26_145c548d5873\SedoxPartners */
+/* @var $partner core_sedox_SedoxUser */
+
+$partner = $this->getCurrentProduct();
+$user = $this->getApi()->getUserManager()->getUserById($partner->id);
+?>
+<div class="sedox_internal_view">
+    <div class="innerview">
+        <div class='title boldFont'>
+            <i class='fa fa-chain'></i> <? echo $user->fullName; ?>
+        </div>
+        <div class='downloadinfo'>
+            <div class='box_header boldFont'>
+                Your earnings
+            </div>
+            <div class='box_content'>
+                For each 100 credit <? echo $user->fullName; ?> buys you will receive <? echo $partner->slaveIncome; ?> credits
+                <br/>
+            </div>
+        </div>
+
+        <div class='fileinfo'>
+            <div class='box_header boldFont'>
+                Partner details
+            </div>
+
+            <div class='box_content'>
+                <div class='row_type2'>
+                    Email address
+                    <div class='row_subinfo'><? echo $user->emailAddress; ?></div>
+                </div>
+                
+                <div class='row_type2'>
+                    Cellphone
+                    <div class='row_subinfo'><? echo $user->cellPhone; ?></div>
+                </div>
+                
+                <div class='row_type2'>
+                    Credit balance
+                    <div class='row_subinfo'><? echo $partner->creditAccount->balance; ?></div>
+                </div>
+                
+                <div class='row_type2'>
+                    Can use windows file manager?
+                    <div class='row_subinfo'><? echo $partner->canUseExternalProgram ? "Yes" : "No"; ?></div>
+                </div>
+                
+                <div class='row_type2'>
+                    Can log in to databank website?
+                    <div class='row_subinfo'><? echo $partner->isPassiveSlave ? "No" : "Yes"; ?></div>
+                </div>
+                
+                <div class='row_type2'>
+                    <div class='row_subinfo'>
+                        <div class='sedox_blue_button go_to_slave_credit' slaveId="<? echo $partner->id; ?>" style="margin: 10px; margin-right: 0px;">See credit history</div> 
+                    </div>
+                </div>
+            </div>            
+        </div>    
+
+        <div class='creditinformation'>
+            <div class='sedox_blue_button'>Transfer credits to <? echo $user->fullName; ?></div> 
+            You can transfer credits to your slave account.
+             <div class='redinfo'>You will be transfering your credits.</div>   
+         </div>
+        
+    </div>
+    
+</div>

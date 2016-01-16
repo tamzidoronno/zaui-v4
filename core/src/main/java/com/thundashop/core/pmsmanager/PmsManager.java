@@ -941,9 +941,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter filter) {
-        if(!configuration.exposeUnsecureBookings) {
-            return new ArrayList();
-        }
         List<PmsBooking> result = getAllBookings(filter);
         
         List<PmsBooking> allBookings = new ArrayList();

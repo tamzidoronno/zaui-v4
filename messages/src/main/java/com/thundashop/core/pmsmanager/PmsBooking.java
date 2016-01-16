@@ -42,9 +42,10 @@ public class PmsBooking extends DataCommon {
         for(PmsBookingRooms room : currentCopy.rooms) {
             PmsBookingRooms roomCopied = new PmsBookingRooms();
             roomCopied.date = room.date;
-            roomCopied.guests = room.guests;
             roomCopied.bookingItemId = room.bookingItemId;
             roomCopied.bookingItemTypeId = room.bookingItemTypeId;
+            result.confirmed = currentCopy.confirmed;
+            
             result.rooms.add(roomCopied);
         }
         

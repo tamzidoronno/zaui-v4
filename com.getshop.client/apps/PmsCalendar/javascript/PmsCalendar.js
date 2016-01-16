@@ -4,6 +4,7 @@ app.PmsCalendar = {
     init : function() {
         $(document).on('mouseover', '.PmsCalendar .available', app.PmsCalendar.mouseoverfield);
         $(document).on('mousedown', '.PmsCalendar .available', app.PmsCalendar.selectField);
+        $(document).on('mousedown', '.PmsCalendar .continue_button', app.PmsCalendar.continueToForm);
         $(document).on('mouseup', app.PmsCalendar.mouseup);
     },
     selectField : function() {
@@ -18,6 +19,31 @@ app.PmsCalendar = {
             $(this).addClass('selected_periode');
         }
         $(this).addClass('startfield');
+    },
+    continueToForm : function() {
+        var row = $('.selected_row');
+        var start = null;
+        var end = null;
+        row.find('.selected_periode').each(function() {
+            if(!start) {
+                start = $(this).attr('starttime');
+            }
+            end = $(this).attr('endtime');
+        });
+        
+        var room = row.closest('.roomrow').attr('itemid');
+
+        var data = {
+            "start" : start,
+            "end" : end,
+            "room" : room
+        };
+        
+        var event = thundashop.Ajax.createEvent('','continueToForm',$(this),data);
+        var continueTo = $(this).attr('continue');
+        thundashop.Ajax.postWithCallBack(event, function() {
+            window.location.href=continueTo;
+        });
     },
     mouseup : function() {
         app.PmsCalendar.mouseDown = false;

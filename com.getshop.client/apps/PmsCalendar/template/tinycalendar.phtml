@@ -7,7 +7,7 @@
 
     $monthDates = $dates[$this->getSelectedMonth()];
 
-    echo "<div style='text-align:left;'>";
+    echo "<div style='text-align:left;' class='caltextheader'>";
     echo $this->__w(date("M", $this->getSelectedDay())) . " " . $this->getSelectedYear();
     echo "<span style='float:right;'>";
     echo "<i class='fa fa-caret-left' style='cursor:pointer;' gstype='clicksubmit' method='changeMonth' gsname='type' gsvalue='prev'></i> ";

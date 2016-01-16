@@ -52,17 +52,17 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         return $this->indexList($list);
     }
 
-    public function getStartTime() {
-        return strtotime("01.01.1970 07:00:00");
+    public function getStartTime($day) {
+        return strtotime(date("d.m.Y", $day) . " 07:00:00");
     }
     
-    public function getEndTime() {
-        return strtotime("01.01.1970 22:00:00");
+    public function getEndTime($day) {
+        return strtotime(date("d.m.Y", $day) . " 22:00:00");
     }
     
-    public function printBlocks($day, $type) {
+    public function printBlocks($day, $type, $room) {
         $size = "";
-        $start = $this->getStartTime();
+        $start = $this->getStartTime($day);
         $hours = $this->getHoursAtDay();
 
         $startTime = $start;
@@ -74,12 +74,13 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         }
         echo "<span class='timeslots'>";
         for($i = 1; $i <= $numberOfSlots; $i++) {
-        if($type == "day") {
-            $endTime = $start + ((60*30)*$i); 
-        } else {
-            $endTime = $start + (60*60*$i); 
-        }
-            echo "<span class='timeblock $size available' startTime='$startTime' endTime='$endTime' title='".date("H:i", $startTime)." - ".date("H:i", $endTime)."'></span>";
+            if($type == "day") {
+                $endTime = $start + ((60*30)*$i); 
+            } else {
+                $endTime = $start + (60*60*$i); 
+            }
+            $state = $this->getBlockState($room, $day, $startTime, $endTime);
+            echo "<span class='timeblock $size $state' startTime='$startTime' endTime='$endTime' title='".date("H:i", $startTime)." - ".date("H:i", $endTime)."' day='".date("d.m.Y", $day)."'></span>";
             $startTime = $endTime;
         }
         echo '</span>';
@@ -96,6 +97,20 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         return "day";
     }
     
+    function continueToForm() {
+        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
+        
+        $room = new \core_pmsmanager_PmsBookingRooms();
+        $room->date = new \core_pmsmanager_PmsBookingDateRange();
+        $room->date->start = $this->convertToJavaDate($_POST['data']['start']);
+        $room->date->end = $this->convertToJavaDate($_POST['data']['end']);
+        $room->bookingItemId = $_POST['data']['room'];
+        
+        $booking->rooms = array();
+        $booking->rooms[] = $room;
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+    }
     
     function getDates($year) {
         $dates = array();
@@ -135,8 +150,8 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         if($type == "week") {
             echo "<span class='weektimeheader'>";
             echo "<div>" . date('l', $day) . "</div>";
-            echo "<span style='float:left; padding-left: 5px; font-size: 8px;'>".date("H.i", $this->getStartTime()) ."</span>";
-            echo "<span style='float:right;padding-right: 5px; font-size: 8px;'>".date("H.i", $this->getEndTime()) ."</span>";
+            echo "<span style='float:left; padding-left: 5px; font-size: 8px;'>".date("H.i", $this->getStartTime($day)) ."</span>";
+            echo "<span style='float:right;padding-right: 5px; font-size: 8px;'>".date("H.i", $this->getEndTime($day)) ."</span>";
             echo "</span>";
         }
     }
@@ -231,9 +246,57 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
 
     public function getHoursAtDay() {
-        $diff = $this->getEndTime() - $this->getStartTime();
+        $diff = $this->getEndTime($this->getSelectedDay()) - $this->getStartTime($this->getSelectedDay());
         return ($diff / 3600)+1;
     }
+
+    /**
+     * @return \core_pmsmanager_PmsBooking[]
+     */
+    public function getBookingsForDay($day) {
+        if(isset($this->result[$day])) {
+            return $this->result[$day];
+        }
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00:00", $day)));
+        $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59:59", $day)));
+        $filter->filterType = "active";
+        $bookings = $this->getApi()->getPmsManager()->getAllBookingsUnsecure($this->getSelectedName(), $filter);
+        $this->result[$day] = $bookings;
+        
+        return $bookings;
+    }
+    
+    public function getBlockState($roomId, $day, $startTime, $endTime) {
+        $bookings = $this->getBookingsForDay($day);
+        if(!$bookings) {
+            $bookings = array();
+        }
+        foreach($bookings as $booking) {
+            /* @var $booking \core_pmsmanager_PmsBooking */
+            foreach($booking->rooms as $room) {
+                $roomStart = strtotime($room->date->start);
+                $roomEnd = strtotime($room->date->end);
+                if($room->bookingItemId != $roomId) {
+                    continue;
+                }
+                if($roomStart >= $endTime) {
+                    continue;
+                }
+                if($roomEnd <= $startTime) {
+                    continue;
+                }
+                
+                if($booking->confirmed) {
+                    return "occupied";
+                } else {
+                    return "notconfirmed";
+                }
+            }
+        }
+        return "available";
+    }
+
 
 }
 

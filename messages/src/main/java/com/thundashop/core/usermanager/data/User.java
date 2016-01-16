@@ -66,9 +66,7 @@ public class User extends DataCommon implements Comparable<User> {
     public String birthDay;
     public String cellPhone;
     public HashMap<String, Comment> comments = new HashMap();
-    
     public HashMap<String, String> metaData = new HashMap();
-    
     public String key;
     public String group;
     public String userAgent;

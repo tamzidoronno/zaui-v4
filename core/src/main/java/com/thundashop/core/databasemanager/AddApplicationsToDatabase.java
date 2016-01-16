@@ -58,14 +58,6 @@ public class AddApplicationsToDatabase {
         SedoxPartners.moduleId = "sedox";
         SedoxPartners.defaultActivate = false;
         apps.add(SedoxPartners);
-        
-        Application AutotekTheme = createSettings("AutotekTheme",
-        "ca8104cd-92ac-4826-8bf0-09609a48f294",
-        SedoxUploadHistory.isPublic = true;
-        SedoxUploadHistory.isFrontend = true;
-        SedoxUploadHistory.moduleId = "sedox";
-        SedoxUploadHistory.defaultActivate = false;
-        apps.add(SedoxUploadHistory);
 
         Application Company = createSettings("Company",
         "a6d68820-a8e3-4eac-b2b6-b05043c28d78",
@@ -77,7 +69,7 @@ public class AddApplicationsToDatabase {
         Company.defaultActivate = true;
         Company.moduleId = "other";
         apps.add(Company);
-
+        
         
         Application SedoxFiluploadCount = createSettings("SedoxFiluploadCount",
         "ae288b19-9934-4e34-ade7-e8abba43b477",
@@ -100,9 +92,9 @@ public class AddApplicationsToDatabase {
         SedoxCreditHistory.moduleId = "sedox";
         SedoxCreditHistory.defaultActivate = false;
         apps.add(SedoxCreditHistory);
-
-        Application SedoxSearchResult = createSettings("SedoxSearchResult",
-        "366dbe67-0829-47c8-b6ed-47bc3a136338",
+        
+        Application AutotekTheme = createSettings("AutotekTheme",
+        "ca8104cd-92ac-4826-8bf0-09609a48f294",
         allowed2,
         " ",
         Application.Type.Theme, true);
@@ -112,9 +104,6 @@ public class AddApplicationsToDatabase {
         AutotekTheme.defaultActivate = false;
         AutotekTheme.allowedStoreIds.add("ba6ef325-58a4-4bee-ac56-6f1420a150f1");
         apps.add(AutotekTheme);
-
-
-
 
         return apps;
     }

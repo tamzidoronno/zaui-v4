@@ -382,8 +382,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         checkUserAccess(user);
         preventOverwriteOfData(user, savedUser);
-       
-        user.company = getCompany(user);
+
         collection.addUser(user);
     }
 

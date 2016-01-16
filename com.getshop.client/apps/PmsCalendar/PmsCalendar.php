@@ -159,7 +159,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         if($type == "week" || $type == "month") {
             echo "<span class='weekdaycontainer weektimeheader'>";
             echo "<span class='weektimeheaderinner'>";
-            echo "<div>" . date('l', $day) . "</div>";
+            echo "<div>" . $this->__w(date('l', $day)) . "</div>";
             echo "<span style='float:left; padding-left: 5px; font-size: 8px;'>".date("H.i", $this->getStartTime($day)) ."</span>";
             echo "<span style='float:right;padding-right: 5px; font-size: 8px;'>".date("H.i", $this->getEndTime($day)) ."</span>";
             echo "</span>";
@@ -328,6 +328,19 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             }
         }
         return false;
+    }
+
+    public function getImageFromPage($pageId) {
+        $apps = $this->getApi()->getPageManager()->getApplicationsForPage($pageId);
+        $imgId = "";
+        foreach($apps as $app) {
+            $res = $this->getFactory()->getApplicationPool()->createAppInstance($app);
+            if($res instanceOf \ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a\ImageDisplayer) {
+                /* @var $res \ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a\ImageDisplayer */
+                $imgId = $res->getImageId();
+            }
+        }
+        return $imgId;
     }
 
 }

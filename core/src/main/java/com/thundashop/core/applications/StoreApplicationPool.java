@@ -127,7 +127,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         return allApplications.stream()
                 .filter(o -> o.isPublic)
                 .collect(Collectors.toList());
-    }
+    } 
 
     @Override
     public List<Application> getAvailableThemeApplications() {

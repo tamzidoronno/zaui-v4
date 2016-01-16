@@ -1,0 +1,80 @@
+body {
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    color: #222;
+}
+.gs_page_width {
+    width: 1160px;
+    margin: 0 auto;
+}
+
+.gsarea[area="footer"],
+.gsarea[area="header"] {
+    background-color: #006e63;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #FFF;
+}
+
+.gsarea[area="header"] { 
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.4);
+}
+
+
+.gsarea[area="header"] .Menu .entry {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+}
+
+.gsarea[area="header"] .Menu a {
+    color: #FFF;
+    font-size: 15px;
+}
+
+.shop_button:hover {
+    background: rgb(41,154,11); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(41,154,11,1) 0%, rgba(41,154,11,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(41,154,11,1) 0%,rgba(41,154,11,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(41,154,11,1) 0%,rgba(41,154,11,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#299a0b', endColorstr='#299a0b',GradientType=0 ); /* IE6-9 */
+}
+
+.shop_button {
+    background-color: #000;
+    border-radius: 0px;
+    color: #FFF;
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    background: rgb(107,186,112); /* Old browsers */
+    background: -moz-linear-gradient(left,  rgba(107,186,112,1) 0%, rgba(107,186,112,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left,  rgba(107,186,112,1) 0%,rgba(107,186,112,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right,  rgba(107,186,112,1) 0%,rgba(107,186,112,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6bba70', endColorstr='#6bba70',GradientType=1 ); /* IE6-9 */
+
+}
+
+.frontbox .gsuicell.gsinner.gsdepth_2.gscount_0 {
+    background-color: #006e63;
+    color: #FFF;
+    text-align: center;
+    line-height: 40px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.frontbox .gsuicell.gsinner.gsdepth_1 {
+    border: solid 1px #EEE;
+    margin: 20px ;
+    /*border-radius: 0px 0px 10px 10px;*/
+    background-color: #FFF;
+}
+
+.frontbox.gs_first_in_row .gsuicell.gsinner.gsdepth_1 {
+    margin-left: 0px;
+} 
+
+.frontbox.gs_last_in_row .gsuicell.gsinner.gsdepth_1 {
+    margin-right: 0px;
+} 

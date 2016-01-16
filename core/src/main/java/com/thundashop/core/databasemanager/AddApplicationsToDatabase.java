@@ -71,6 +71,17 @@ public class AddApplicationsToDatabase {
         AutotekTheme.allowedStoreIds.add("ba6ef325-58a4-4bee-ac56-6f1420a150f1");
         apps.add(AutotekTheme);
 
+        Application ProMeisterTheme = createSettings("ProMeisterTheme",
+        "8a48c4d7-09e5-40e2-bdb3-72f706729d27",
+        allowed2,
+        " ",
+        Application.Type.Theme, true);
+        ProMeisterTheme.isPublic = false;
+        ProMeisterTheme.isFrontend = false;
+        ProMeisterTheme.moduleId = "other";
+        ProMeisterTheme.defaultActivate = false;
+        ProMeisterTheme.allowedStoreIds.add("6524eb45-fa17-4e8c-95a5-7387d602a69b");
+        apps.add(ProMeisterTheme);
 
 
 

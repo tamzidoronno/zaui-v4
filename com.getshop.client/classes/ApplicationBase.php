@@ -17,6 +17,14 @@ class ApplicationBase extends FactoryBase {
         return false;
     }
     
+    public function indexList($list) {
+        $list2 = array();
+        foreach($list as $l) {
+            $list2[$l->id] = $l;
+        }
+        return $list2;
+    }
+    
     public function autosavetext() {
         $key = 'autosaved_'.$this->getConfiguration()->id . "_" . $_POST['data']['name'];
         $_SESSION[$key] = $_POST['data']['value'];

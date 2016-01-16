@@ -1,132 +1,45 @@
 app.PmsCalendar = {
-    init : function() {
-        $(document).on('click','.PmsCalendar .dayslot.free', app.PmsCalendar.changeTime);
-        $(document).on('click','.PmsCalendar .continue_button', app.PmsCalendar.reserveBooking);
-        $(document).on('click','.PmsCalendar .topheader .fa-arrow-left', app.PmsCalendar.changeCalendarMonth);
-        $(document).on('click','.PmsCalendar .topheader .fa-arrow-right', app.PmsCalendar.changeCalendarMonth);
-        $(document).on('keyup','.PmsCalendar .starttime input', app.PmsCalendar.inputChanged);
-        $(document).on('keyup','.PmsCalendar .endtime input', app.PmsCalendar.inputChanged);
-        $(document).on('change','.PmsCalendar .starttime input', app.PmsCalendar.inputChanged);
-        $(document).on('change','.PmsCalendar .endtime input', app.PmsCalendar.inputChanged);
-        $(document).on('change','.PmsCalendar .roomselectiononday', app.PmsCalendar.changeRoom);
-    },
-    changeRoom : function() {
-        var room = $(this).val();
-        var day = $(this).attr('day');
-        var page = $(this).attr('page');
-        
-        window.location.href = "/?page=" + page + "&day=" + day + "&roomName=" + room;
-    },
+    mouseDown : null,
     
-    inputChanged : function() {
-        var failed = false;
-        $('.PmsCalendar .starttime input').each(function() {
-            if(!$(this).val()) {
-                console.log('failing here 3');
-                failed = true;
-            }
-        });
-        $('.PmsCalendar .endtime input').each(function() {
-            if(!$(this).val()) {
-                console.log('failing here 2');
-                failed = true;
-            }
-        });
-        
-        var startHour = parseInt($('input[gsname="starthour"]').val());
-        var endHour = parseInt($('input[gsname="endhour"]').val());
-        
-        
-        $('.selectedslot').removeClass('selectedslot');
-        
-        $('.dayslot').each(function() {
-            var start = $(this).attr('start');
-            var date = new Date(start*1000);
-            var selectedHour = date.getHours();
+    init : function() {
+        $(document).on('mouseover', '.PmsCalendar .available', app.PmsCalendar.mouseoverfield);
+        $(document).on('mousedown', '.PmsCalendar .available', app.PmsCalendar.selectField);
+        $(document).on('mouseup', app.PmsCalendar.mouseup);
+    },
+    selectField : function() {
+        $('.startfield').removeClass('startfield');
+        $('.selected_periode').removeClass('selected_periode');
+        $(this).closest('.timeslots').addClass('selected_row');
 
-            if(selectedHour < startHour) {
-                return;
-            }
-            if(selectedHour >= endHour) {
-                return;
-            }
-            
-            if($(this).hasClass('taken')) {
-                console.log('failing');
-                failed = true;
-            }
-            
-            $(this).addClass('selectedslot');
-        });
-        
-        if(endHour <= startHour) {
-            console.log('failing here: ' + endHour + " - " + startHour);
-            failed = true;
-        }
-        
-        if(failed) {
-            $('.PmsCalendar').find('.continue_button').addClass('disabled');
-            $('.needtimetext').show();
+        app.PmsCalendar.mouseDown = true;
+        if($(this).hasClass('selected_periode')) {
+            $(this).removeClass('selected_periode');
         } else {
-            $('.PmsCalendar').find('.continue_button').removeClass('disabled');
-            $('.needtimetext').hide();
+            $(this).addClass('selected_periode');
         }
-        
-        console.log('awesome');
+        $(this).addClass('startfield');
     },
-    changeCalendarMonth: function() {
-        var header= $(this).closest('.topheader');
-        var direction = "up";
-        if($(this).hasClass('fa-arrow-left')) {
-            direction = "down";
-        }
-        var event = thundashop.Ajax.createEvent('','changeCalendarMonth',$(this),{
-            "direction" : direction,
-            "page" : header.attr('page'),
-            "roomName" : header.attr('roomName')
-        });
-        thundashop.Ajax.post(event);
+    mouseup : function() {
+        app.PmsCalendar.mouseDown = false;
     },
-    reserveBooking : function() {
-        if($(this).hasClass('disabled')) {
+    mouseoverfield : function() {
+        if(!app.PmsCalendar.mouseDown) {
             return;
         }
-        var continuehref = $(this).attr('continue');
-         PubSub.subscribe('NAVIGATION_COMPLETED', function() {
-             window.location.href=continuehref;
-         });
-    },
-    changeTime : function() {
-        var start = $(this).attr('start');
-        var end = $(this).attr('end');
-        var startdate = new Date();
-        startdate.setTime(start*1000);
-        var hour =startdate.getHours();
-        if(hour < 10) {
-            hour = "0" + hour;
+        var row = $(this).closest('.timeslots');
+        if(!row.hasClass('selected_row')) {
+            return;
         }
-        $('.starttime .hour').val(hour);
-        
-        var min =startdate.getMinutes();
-        if(min < 10) {
-            min = "0" + min;
+        console.log($(this).prev());
+        if(!$(this).prev().hasClass('selected_periode') && !$(this).next().hasClass('selected_periode')) {
+            return;
         }
-        $('.starttime .minute').val(min);
-        
-        var enddate = new Date();
-        enddate.setTime(end*1000);
-        var hour =enddate.getHours();
-        if(hour < 10) {
-            hour = "0" + hour;
+        if(!row.find('.selected_periode').length === 0) {
+            return;
         }
-        $('.endtime .hour').val(hour);
-        
-        var min =enddate.getMinutes();
-        if(min < 10) {
-            min = "0" + min;
+        if(app.PmsCalendar.mouseDown) {
+            $(this).addClass('selected_periode');
         }
-        $('.endtime .minute').val(min);
-        app.PmsCalendar.inputChanged();
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});

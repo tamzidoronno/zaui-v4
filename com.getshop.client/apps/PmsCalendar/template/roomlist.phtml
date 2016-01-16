@@ -1,0 +1,91 @@
+<?php
+/* @var $this \ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
+$rooms = $this->getAllRooms();
+$types = $this->getAllTypes();
+$type = $this->getDayType();
+
+//need to be here to include theese days into the translation
+$this->__w("Monday");
+$this->__w("Tuesday");
+$this->__w("Wednesday");
+$this->__w("Thursday");
+$this->__w("Friday");
+$this->__w("Saturday");
+$this->__w("Sunday");
+
+?>
+<div class='calendartopheader'>
+    <?php $this->includefile("tinycalendar"); ?>
+    <div style='padding-top: 70px;'>
+        <div>
+            <span class='typebutton <?php if($type =="day") echo "selected"; ?>' gstype="clicksubmit" method="setDayType" gsname="type" gsvalue="day">Dag</span><span class='typebutton <?php if($type =="week") echo "selected"; ?>' gstype="clicksubmit" method="setDayType" gsname="type" gsvalue="week">Uke</span>
+        </div>
+        <div style='padding-top: 10px;'>
+            <span style='padding-right: 30px; cursor:pointer;' gstype="clicksubmit" method="setPrevious" gsname="type" gsvalue="day">
+                <i class='fa fa-caret-left'></i> <? echo $this->__w("Previous"); ?>
+            </span>
+            <? 
+            if($type == "day") {
+                echo $this->__w(date("d.m.Y", $this->getSelectedDay())); 
+            } 
+            if($type == "week") {
+                echo $this->__w("Week") . " " . date("W", $this->getSelectedDay());
+            }
+            ?>
+            <span style='padding-left: 30px; cursor:pointer;' gstype="clicksubmit" method="setNext" gsname="type" gsvalue="day">
+                <? echo $this->__w("Next"); ?> <i class='fa fa-caret-right'></i>
+            </span>
+        </div>
+        <span style='position:absolute; right:0px; bottom: 30px; display:inline-block; width: 150px; text-align: left;'>
+            <div class='statedesrow'><span class='statedescbox occupied'></span> Opptatt</div>
+            <div class='statedesrow'><span class='statedescbox notconfirmed'></span> Ikke bekreftet</div>
+            <div class='statedesrow'><span class='statedescbox available'></span> Tilgjengelig</div>
+            <div class='statedesrow'><span class='statedescbox not_available'></span> Ikke tilgjenglig</div>
+            <div class='statedesrow'><span class='statedescbox selected_periode'></span> Valgt</div>
+        </span>
+    </div>
+</div>
+<?
+
+echo "<div class='timeheaderrow'>";
+if($type == "day") {
+    $this->printHeader($this->getSelectedDay(), $type);
+} else if($type == "week") {
+    $start = strtotime('this week', $this->getSelectedDay());
+    for($i = 0; $i < 7; $i++) {
+        $this->printHeader($start, $type);
+        $start += 86400;
+    }
+}
+echo "</div>";
+
+
+foreach($rooms as $room) {
+    if(!$types[$room->bookingItemTypeId]->visibleForBooking) {
+        continue;
+    }
+    ?>
+    <div class='roomrow'>
+    <img src='fsadf'>
+    <span class='roomdesc'>
+        <span class='roomname'><? echo $room->bookingItemName; ?></span><br>
+        <span class='roomcap'>Kap: 8 personer.</span><br>
+        <span class='roomequipment'>Utstyr: Prosjektor, smartboard, lydanlegg.</span>
+    </span>
+        <?php
+        if($type == "day") {
+            $this->printBlocks(time(), $type);
+        } else if($type == "week") {
+            for($i = 0; $i < 7; $i++) {
+                $this->printBlocks(time(), $type);
+            }
+        }
+        ?>
+    </div>
+    <?
+    
+}
+?>
+<div class='calendarfooter'>
+    <span class='continue_button'>Continue</span>
+</div>

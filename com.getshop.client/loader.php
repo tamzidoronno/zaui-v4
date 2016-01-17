@@ -111,7 +111,7 @@ function symLinkIfNeeded($class_name) {
             }
         }
         
-        if (!file_exists($namespacedfolder) && file_exists("../apps/".$appName) && $appName && $namespacedfolder) {
+        if (!is_link($namespacedfolder) && file_exists("../apps/".$appName) && $appName) {
             @symlink("../apps/$appName", $namespacedfolder);
         }
     }

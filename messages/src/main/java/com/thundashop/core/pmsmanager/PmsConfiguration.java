@@ -21,6 +21,7 @@ public class PmsConfiguration extends DataCommon {
     public Integer cleaningInterval = 0;
     public boolean prepayment = true;
     public Integer createOrderAtDayInMonth = 0;
+    public boolean supportMoreDates = true;
     
     public String arxHostname = "";
     public String arxUsername = "";

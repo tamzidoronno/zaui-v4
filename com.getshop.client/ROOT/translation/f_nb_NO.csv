@@ -151,7 +151,6 @@ Click to add application;-;Legg til ny applikasjon
 Click to change subject;-;Trykk får i endre tittel
 Click to delete;-;Trykk for å slette
 Click to remove application;-;Trykk for å fjern applikasjon
-Close;-;Lukk
 Colors;-;Farger
 Colors css;-;Farger css
 Column;-;Kolonne
@@ -676,7 +675,6 @@ Transfer;-;Overfør
 Transfer existing domain;-;Overfør eksisterende domene
 Transfer user from one event to another;-;Overfør brukeren fra en event til en annen
 Translation;-;Oversetting
-Type;-;Type
 UA;-;UA
 Unlink entry;-;Frakoble element
 Unlock complete modules ready for use. A module contains multiple applications and is a larger piece that can be used in you webpage.;-;Ta i bruk noen av våre moduler. En modul innholder flere applikasjoner og utgjør derfor en større del av systemet som kan benyttes på din webside.

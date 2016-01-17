@@ -31,6 +31,7 @@
 .PmsCalendar .readmorelink a { position:absolute; right: 3px; bottom: 3px; color:blue; }
 .PmsCalendar .roomattributes { display:inline-block; width: 100px; left: 80px; padding-left: 3px; padding-top: 3px; }
 .PmsCalendar .roomdesc img { float:left; display:inline-block; width: 40%; height: 100%; }
+.PmsCalendar .continue_button.disabled { color:#bbb !important; cursor:text;  background-color:#e5e5e5; }
 .PmsCalendar .roomrow,
 .PmsCalendar .roomdescouter,
 .PmsCalendar .timecontainer,

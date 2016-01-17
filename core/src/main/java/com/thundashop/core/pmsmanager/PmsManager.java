@@ -927,11 +927,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void removeAddonFromCurrentBooking(String itemtypeId) throws Exception {
+    public void removeFromCurrentBooking(String roomId) throws Exception {
         PmsBooking booking = getCurrentBooking();
         ArrayList toRemove = new ArrayList();
         for(PmsBookingRooms room : booking.rooms) {
-            if(room.bookingItemTypeId.equals(itemtypeId)) {
+            if(room.pmsBookingRoomId.equals(roomId)) {
                 toRemove.add(room);
             }
         }
@@ -1305,5 +1305,100 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         company.invoiceAddress.countryname = result.get("company_invoiceAddress_countryname");
         
         return company;
+    }
+
+    @Override
+    public List<TimeRepeaterDateRange> addRepeatingData(PmsRepeatingData data) {
+        if(data.repeattype.equals("repeat")) {
+            return addRepeatingRooms(data);
+        }
+        return addSingleDate(data);
+    }
+
+    private List<TimeRepeaterDateRange> addSingleDate(PmsRepeatingData data) {
+        List<TimeRepeaterDateRange> toReturn = new ArrayList();
+        Booking booking = new Booking();
+        booking.bookingItemId = data.bookingItemId;
+        booking.startDate = data.data.firstEvent.start;
+        booking.endDate = data.data.firstEvent.end;
+        
+        if(data.bookingTypeId == null || data.bookingTypeId.isEmpty()) {
+            booking.bookingItemTypeId = bookingEngine.getBookingItem(data.bookingItemId).bookingItemTypeId;
+        }
+        
+        List<Booking> toCheck = new ArrayList();
+        toCheck.add(booking);
+        PmsBooking curBooking = getCurrentBooking();
+        if(bookingEngine.canAdd(toCheck)) {
+            PmsBookingRooms room = new PmsBookingRooms();
+            room.date.start = data.data.firstEvent.start;
+            room.date.end = data.data.firstEvent.end;
+            room.bookingItemId = booking.bookingItemId;
+            room.bookingItemTypeId =booking.bookingItemTypeId;
+            curBooking.rooms.add(room);
+        } else {
+            toReturn.add(data.data.firstEvent);
+        }
+        
+        curBooking.lastRepeatingData = data;
+        saveBooking(curBooking);
+        
+        return toReturn;
+    }
+
+    private List<TimeRepeaterDateRange> addRepeatingRooms(PmsRepeatingData data) throws ErrorException {
+        TimeRepeater repeater = new TimeRepeater();
+        LinkedList<TimeRepeaterDateRange> lines = repeater.generateRange(data.data);
+        
+        List<TimeRepeaterDateRange> cantAdd = new ArrayList();
+        List<PmsBookingRooms> allRooms = new ArrayList();
+        
+        for(TimeRepeaterDateRange line : lines) {
+            
+            Booking booking = new Booking();
+            booking.bookingItemId = data.bookingItemId;
+            booking.startDate = line.start;
+            booking.endDate = line.end;
+            
+            if(data.bookingTypeId == null || data.bookingTypeId.isEmpty()) {
+                booking.bookingItemTypeId = bookingEngine.getBookingItem(data.bookingItemId).bookingItemTypeId;
+            }
+            
+            PmsBookingRooms room = new PmsBookingRooms();
+            room.date.start = line.start;
+            room.date.end = line.end;
+            room.bookingItemId = booking.bookingItemId;
+            room.bookingItemTypeId =booking.bookingItemTypeId;
+            room.addedByRepeater = true;
+            
+            allRooms.add(room);
+            
+            
+            List<Booking> toCheck = new ArrayList();
+            toCheck.add(booking);
+            if(!bookingEngine.canAdd(toCheck)) {
+                cantAdd.add(line);
+            }
+        }
+        
+        PmsBooking curBooking = getCurrentBooking();
+        if(cantAdd.isEmpty()) {
+            removeRepeatedRooms(curBooking);
+            curBooking.rooms.addAll(allRooms);
+        }
+        curBooking.lastRepeatingData = data;
+        saveBooking(curBooking);
+        
+        return cantAdd;
+    }
+
+    private void removeRepeatedRooms(PmsBooking curBooking) {
+        List<PmsBookingRooms> toRemove = new ArrayList();
+        for(PmsBookingRooms room : curBooking.rooms) {
+            if(room.addedByRepeater) {
+                toRemove.add(room);
+            }
+        }
+        curBooking.rooms.removeAll(toRemove);
     }
 }

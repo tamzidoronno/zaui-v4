@@ -68,7 +68,7 @@ public interface IPmsManager {
     public PmsStatistics getStatistics(PmsBookingFilter filter);
     
     public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
-    public void removeAddonFromCurrentBooking(String itemtypeId) throws Exception;
+    public void removeFromCurrentBooking(String roomId) throws Exception;
     
     @Administrator
     public String getContract(String bookingId) throws Exception;
@@ -89,4 +89,6 @@ public interface IPmsManager {
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
     
     public RegistrationRules initBookingRules();
+    
+    public List<TimeRepeaterDateRange> addRepeatingData(PmsRepeatingData data);
 }

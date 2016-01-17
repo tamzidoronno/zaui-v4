@@ -6,6 +6,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     var $bookingCompleted = false;
     var $currentBooking = null;
     var $counter = 0;
+    var $lastFieldPrintedType = "";
     
     public function getDescription() {
         return "Asks the user for to enter the nessesary contact data to complete the booking";
@@ -21,7 +22,11 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             return;
         }
         if($this->bookingCompleted) {
-            $this->includefile("completedbooking");
+            ?>
+            <script>
+                document.location.href="/completed_<? echo $this->getSelectedName(); ?>.html";
+            </script>
+            <?
         } else {
             $this->includefile("roomcontactdata");
         }
@@ -70,6 +75,11 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     public function printField($value) {
         $currentlyAdded = $this->getCurrentBooking();
         $curAddedFields = $currentlyAdded->registrationData->resultAdded;
+        
+        if($this->lastFieldPrintedType == "radio" && $value->type != "radio") {
+            echo "<div style='clear:both;'>&nbsp;</div>";
+        } 
+        $this->lastFieldPrintedType = $value->type;
         if ($value->active) {
             $lastone = "";
             if($value->width == 100) {
@@ -123,7 +133,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         $this->validatePostedForm();
         if(!sizeof($this->validation) > 0) {
             $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
-            echo "<script>alert('it is done');</script>";
+            $this->bookingCompleted = true;
         }
     }
 
@@ -171,10 +181,12 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             return;
         }
         
-        $res = $_POST['data'][$requirements->name];
-        
-        if($requirements->required && !$res) {
-            $this->validation[$requirements->name] = "Field is required";
+        if(isset($_POST['data'][$requirements->name])) {
+            $res = $_POST['data'][$requirements->name];
+
+            if($requirements->required && !$res) {
+                $this->validation[$requirements->name] = "Field is required";
+            }
         }
     }
 

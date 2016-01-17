@@ -1,5 +1,6 @@
 <?php
 /* @var $this \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary */
+$configuration = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
 $items = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 $items2 = array();
@@ -20,37 +21,23 @@ if(!$addonsText) {
 }
 echo "<h3 class='bottomborder'>" . $addonsText . "</h3>";
 foreach($booking->rooms as $room) {
-    /* @var $room core_pmsmanager_PmsBookingRooms */
-    $price = $room->price;
-    echo "<div class='itemrow'>";
-    if($items[$room->bookingItemTypeId]->addon > 0) {
-        echo "<i class='fa fa-trash-o removeAddon bookedaction' itemtypeid='".$room->bookingItemTypeId."'></i> ";
-        $addonsAdded[$room->bookingItemTypeId] = true;
-    } else {
-        echo "<span class='bookedaction'></span> ";
+    if($room->addedByRepeater) {
+        continue;
     }
-    echo "<span class='itemname'>";
-    if($room->bookingItemId) {
-        echo $bookingitems[$room->bookingItemId]->bookingItemName;
-    } else {
-        echo $items[$room->bookingItemTypeId]->name;
-    }
-    echo "</span>";
-    if($price > 0) {
-        echo "<span class='price'>" . $price . " kr </span>";
-    }
-    $date =$room->date;
-    
-    if(!$date->end) {
-        echo $this->__w("Starting from") . " ";
-    }
-    echo "<span>" . date("d.m.Y H:i", strtotime($date->start));
-    if($date->end) {
-         echo " - " . date("d.m.Y H:i", strtotime($date->end));
-    }
-    echo "</span>";
-    echo "</div>";
+    printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems);
 }
+
+if($configuration->supportMoreDates) {
+    $this->includefile("addmoredates");
+}
+
+foreach($booking->rooms as $room) {
+    if(!$room->addedByRepeater) {
+        continue;
+    }
+    printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems);
+}
+
 $printAddons = false;
 foreach($booking->addons as $addon) {
     if($addon) {
@@ -109,4 +96,35 @@ foreach($items as $item) {
 if($addonsFound) {
     echo $addons;
 }
+
+
+function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems) {
+/* @var $room core_pmsmanager_PmsBookingRooms */
+    $price = $room->price;
+    echo "<div class='itemrow'>";
+    echo "<i class='fa fa-trash-o removeAddon bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></i> ";
+    $addonsAdded[$room->bookingItemTypeId] = true;
+    echo "<span class='itemname'>";
+    if($room->bookingItemId) {
+        echo $bookingitems[$room->bookingItemId]->bookingItemName;
+    } else {
+        echo $items[$room->bookingItemTypeId]->name;
+    }
+    echo "</span>";
+    if($price > 0) {
+        echo "<span class='price'>" . $price . " kr </span>";
+    }
+    $date =$room->date;
+    
+    if(!$date->end) {
+        echo $this->__w("Starting from") . " ";
+    }
+    echo "<span>" . date("d.m.Y H:i", strtotime($date->start));
+    if($date->end) {
+         echo " - " . date("d.m.Y H:i", strtotime($date->end));
+    }
+    echo "</span>";
+    echo "</div>";    
+}
+
 ?>

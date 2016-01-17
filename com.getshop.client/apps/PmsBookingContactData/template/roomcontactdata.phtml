@@ -45,7 +45,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedN
 echo "<div class='whenTypeIsSelected'>";
 if($config->needToAgreeOnContract) {
     echo "<div>";
-    echo "<span class='col-50'><div style='padding-bottom: 5px;'><input type='checkbox' gsname='agreetoterms'> I agree to the terms and conditions";
+    echo "<span class='col-50'><div style='padding-bottom: 5px;'><input type='checkbox' gsname='agreetoterms'> ". $this->__w("I agree to the terms and conditions");
       echo "<span class='errordesc'>";
         if(isset($this->validation['agreetoterms'])) {
             echo "* " . $this->validation['agreetoterms'];
@@ -56,22 +56,26 @@ if($config->needToAgreeOnContract) {
 
         echo "</label>";
     echo "</div>";
-    echo "&nbsp;&nbsp;&nbsp;<a href=''>Read the terms and conditions</a><br>";
-    echo "&nbsp;&nbsp;&nbsp;<a href=''>Download the terms and conditions</a>";
+    echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?readable=true&engine=".$this->getSelectedName()."');\" >". $this->__w("Read the terms and conditions")."</a><br>";
+    echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?engine=".$this->getSelectedName()."');\">". $this->__w("Download the terms and conditions")."</a>";
     echo "</span>";
-    echo "<span class='col-50'><span class='complete_button' gstype='submit'>Complete</span></span>";
+    echo "<span class='col-50' style='padding-right:0px;'><span class='complete_button' gstype='submit'>Complete</span></span>";
     echo "</div>";
 } else {
     echo "<span class='complete_button' gstype='submit'>Complete</span>";
 }
 echo "</div>";
-
+echo "<div style='clear:both;'></div>";
 echo "</div>";
 
 $curAddedFields = $this->getCurrentBooking()->registrationData->resultAdded;
 if(isset($curAddedFields->{'choosetyperadio'})) {
     echo "<script>";
     echo "$('input[name=\"choosetyperadio\"][value=\"".$curAddedFields->{'choosetyperadio'}."\"]').click();";
+    echo "</script>";
+} else {
+    echo "<script>";
+    echo "$('input[name=\"choosetyperadio\"][value=\"registration_private\"]').click();";
     echo "</script>";
 }
 

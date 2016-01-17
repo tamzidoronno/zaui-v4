@@ -17,11 +17,26 @@ $config = $this->getConfigurationToUse();
 <h2>Form filled out when registering</h2>
 <?
 foreach($booking->registrationData->resultAdded as $key => $value) {
-    if(!isset($booking->registrationData->data->{$key})) {
+    $name = "";
+    foreach($booking->registrationData->data as $val) {
+        if($val->name == $key) {
+            $name = $val->title;
+            if(!$val->title || $val->type == "radio") {
+                $name = $key;
+            }
+        }
+    }
+    if($key == "agreetoterms") {
+        $name = "Agreed to terms and condition";
+    }
+    if($key == "choosetyperadio") {
+        $name = "Registration type";
+    }
+    if(!$name) {
         continue;
     }
 ?>
-    <span class='roomprefix'><? echo $booking->registrationData->data->{$key}->title; ?></span>
+    <span class='roomprefix'><? echo $name; ?></span>
     <span class='roompostfix'><? echo $value; ?></span>
     <div style='clear:both;'></div>
 <?php

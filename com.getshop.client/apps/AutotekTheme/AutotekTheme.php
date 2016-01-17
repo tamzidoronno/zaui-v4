@@ -13,5 +13,9 @@ class AutotekTheme extends \ThemeApplication implements \Application {
     public function render() {
         
     }
+    
+    public function addScripts() {
+        echo "<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>";
+    }
 }
 ?>

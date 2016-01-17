@@ -130,10 +130,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
         }
         
-        System.out.println("productsShared: " + productsShared.size());
-        System.out.println("products: " + products.size());
-        System.out.println("failedEvcOrders: " + failedEvcOrders.size());
-        System.out.println("users: " + users.size());
         try {
             resetEvcOrders();
         } catch (ErrorException ex) {

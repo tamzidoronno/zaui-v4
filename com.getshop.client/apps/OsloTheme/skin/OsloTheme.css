@@ -20,9 +20,8 @@ box-shadow: 0 4px 5px rgba(0,0,0,0.3); ;
 .Menu .entry .entries .entry a { font-size: 12px; line-height: 14px; height: 18px; padding: 5px;border-bottom: solid 1px; text-align: left; }
 .Menu .entry a { width: 150px; height: 75px; display:inline-block; line-height: 75px; text-transform: uppercase; color:#4D4D55;   font-size: 16px; text-align: center; }
 .gsbody_inner.gseditormode { border-right: 0px; }
-.PmsCalendar .continue_button,
 .PmsBookingContactData .complete_button,
 .PmsCalendar .dayslot.free:hover,
 .PmsCalendar .dayentry:hover,
-.PmsCalendar .roomentry:hover { background-color:#e5e5e5; color:#4D4D55;  }
+.PmsCalendar .roomentry:hover { background-color:#585ed4; color:#fff;  }
 .PmsCalendar .continue_button,.PmsBookingContactData .complete_button { text-transform: uppercase; }

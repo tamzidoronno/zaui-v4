@@ -12,6 +12,7 @@ Add another tab;-;Legg inn en til tab
 Add content to slider;-;Innhold på slideren
 Add google maps to your page, pin point locatins and restrict it to a given area, and even connect the locations to a given page.;-;Legg inn kart på websiden din, pin lokasjoner og begrens områdene for hvor du kan se, du kan til og med knytte opp lokasjoner mot andre websider.
 Add menus to your page and administrate them. Menus are the root of all pages, adding a new menu entry is the same as creating a new page.;-;Legg til menyer og administrer dem. Menyer er selve roten til alle sidene, det å legge til et nytt meny entry er det samme som å opprette en ny side.
+Add more dates / repeat event;-;Legg til en ekstra dato / gjenta en hendelse
 Add row below;-;Legg til en rad under
 Add slides for carousel to mobile view;-;Legg til slidere som skal vises i mobil visning
 Add spacing to grid;-;Legg til midlertidig spacing
@@ -63,6 +64,7 @@ Children;-;Barn
 Choose;-;Velg
 City;-;By
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
+Close;-;Lukk
 Color transition;-;Fargetransisjoner
 Comments;-;Kommentarer
 Configure mobile slides;-;Konfigurer mobil slidere
@@ -85,6 +87,7 @@ Create row after;-;Legg til rad under
 Create row below;-;Lag ny rad under
 Css;-;Css
 Customer information;-;Kunde detaljer
+Daily;-;Daglig
 Date;-;Dato
 Day;-;Dag
 December;-;Desember
@@ -103,6 +106,7 @@ Disploma is disabled;-;Diploma er deaktivert
 Do not rotate;-;Ikke roter
 Done editing;-;Ferdig å editere
 Download ebill;-;Last ned ebill
+Download the terms and conditions;-;Last ned bruksvilkårene
 Duraction (ms);-;Tid (ms)
 Ecommerce settings;-;Netthandel instillinger
 Edit input fields;-;Endre input felter
@@ -117,6 +121,7 @@ Embed your own code into the page;-;Embed din egen kode på websiden
 End date;-;Slutt dato
 End opacity;-;Slutt opacity
 Ending at;-;Slutt dato
+Ends;-;Avslutter
 Enter a new password.;-;Skriv inn ditt nye passord
 Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
@@ -126,6 +131,7 @@ Fade in when scrolling;-;Fade når du scroller
 Failed;-;Feilet
 February;-;Februar
 Field has not been configured yet, configure it first.;-;Feltet har ikke blitt konfigurert enda, konfigurer det først.
+First event;-;Første event
 Fixed price;-;Fast pris
 Flip contect to add content underneat this cell;-;Flipp cellen for å legge til innhold under denne cellen
 Fri;-;Fre
@@ -179,6 +185,7 @@ Message;-;Melding
 Message from a customer;-;Melding fra en kunde
 Mon;-;Man
 Monday;-;Mandag
+Monthly;-;Månedlig
 More information;-;Mer informasjon
 Mouse over background;-;Mus over bakgrundsfarge
 Mouse over text color;-;Mus over tekst farge
@@ -203,6 +210,7 @@ Name for booking engine to use;-;Navn på booking engine som skal brukes
 Name of the booking engine;-;Navn på booking enginen
 Navigate on cell;-;Naviger på cellen
 Navigate on mouseover;-;Naviger når musen er over
+New date;-;Ny dato
 New message;-;Ny melding
 New password;-;Nytt passord
 NewsLetter;-;Nyhetsbrev
@@ -272,6 +280,7 @@ Product view for your store.;-;Produkt visningen for din nettbutikk.
 Products;-;Produkter
 Public key is found in braintree account.;-;Den offentlig nøkkelen er noe du finner på kontoen din hos braintree.
 Read more;-;Les mer
+Read the terms and conditions;-;Les bruksvilkårene
 Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
 Register;-;Registrer
@@ -282,10 +291,15 @@ Reminder;-;Påminnelse
 Reminder sent by email;-;En påmindelse har blitt sendt per epost.
 Remove item;-;Fjern vare
 Remove selected tab;-;Fjern valgte tab
+Repeat every;-;Gjenta hver
 Repeat new password;-;Gjenta passord
+Repeat on;-;Gjenta på
 Repeat password;-;Gjenta passord
+Repeating dates;-;Gjenta på datoer
+Repeats;-;Gjentagelse
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
+Room;-;Rom
 Rooms selected;-;Rommene som er valgt
 Row is not displayed on mobile, click for make it reappear;-;Raden vises ikke på mobiltelefon, trykk her for å vise den.
 Row options;-;Rad instillinger
@@ -319,6 +333,7 @@ Short description;-;Kort beskrivelse
 Sign up;-;Registrer deg
 Sign up with facebook;-;Logg inn me facebook
 Sign up with google;-;Logg inn med google
+Single date;-;Enkeltdato
 Slide left;-;Slide til venstre
 Slide left (px) (negative is from right);-;Slide til venstre (px) (negativt vil være for høyre side)
 Slide right;-;Slide til høyre
@@ -377,6 +392,7 @@ Total;-;Total
 Tue;-;Tir
 Tuesday;-;Tirsdag
 Tune your online store by setting currency, does customers need to register to buy from your store, show cookie warning, etc;-;Finjuster nettbutikken din ved å f.eks velge valutta, bestemme om kundene dine må registrere seg for å handle, vis cookie advarsel, osv.
+Type;-;Type
 Unpin area;-;Unpin område
 Update;-;Oppdater
 Upload and manipulate on images or add this to be able to search for professional images trough our image stock.;-;Last og behandle bilder, eventuelt så kan du søke opp profesjonelle bilder gjennom vår bildebank.
@@ -391,6 +407,7 @@ We host events at the following locations, click on the location to filter the c
 Wed;-;Ons
 Wednesday;-;Onsdag
 Week;-;Uke
+Weekly;-;Ukentlig
 Welcome to my page;-;Velkommen til min side
 What email address do you want the ebill to be sent to?;-;Hvilken epost ønsker du at ebill skal sendes til?
 What kind of parallax effect?;-;Hvilken type parallax effekt?
@@ -411,6 +428,9 @@ Your order has now been completed and is waiting to be shipped.;-;Orderen din ha
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
 cellphone;-;Mobilnr
+day of the month;-;dag i måneden
+day of the week;-;dag i uken
+days;-;dager
 description;-;Beskrivelse
 email;-;E-post
 forgot?;-;Glemt?
@@ -419,10 +439,12 @@ if we dont answer, please leave your email here and we will return your message 
 included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn
+months;-;måneder
 read;-;les
 summary;-;oppsummering
 view as calendar;-;Vis som kalender
 view as list;-;Vis som liste
+weeks;-;uker
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
 your@email.com;-;din@epost.no
 

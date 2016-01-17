@@ -65,7 +65,6 @@ Click the create application button and you will automatically get a form which 
 Click to add application;-;Klik om een applicatie toe  te voegen
 Click to change subject;-;Klik om onderwerp te veranderen
 Click to delete;-;Klik om te verwijderen
-Close;-;Sluiter
 Colors;-;Kleuren
 Column;-;Kolom
 Company Name;-;Bedrijfsnaam.
@@ -291,7 +290,6 @@ Tracking number;-;Volgnummer
 Transaction id;-;Transactie ID
 Transfer existing domain;-;Bestaand domein verhuizen.
 Translation;-;Vertaling
-Type;-;Typ
 UA;-;UA
 Unlink entry;-;Unlink tekst
 Updating;-;Bezig aan het updaten

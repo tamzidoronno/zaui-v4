@@ -19,8 +19,12 @@ app.PmsCalendar = {
             $(this).addClass('selected_periode');
         }
         $(this).addClass('startfield');
+        $('.continue_button').removeClass('disabled');
     },
     continueToForm : function() {
+        if($(this).hasClass('disabled')) {
+            return;
+        }
         var row = $('.selected_row');
         var start = null;
         var end = null;

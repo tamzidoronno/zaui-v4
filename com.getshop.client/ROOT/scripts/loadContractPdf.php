@@ -1,7 +1,8 @@
 <?php
-
-header('Content-type: application/pdf');
-header('Content-Disposition: attachment; filename="bestilling.pdf"');
+if(!isset($_GET['readable'])) {
+    header('Content-type: application/pdf');
+    header('Content-Disposition: attachment; filename="bestilling.pdf"');
+}
 
 chdir("../");
 include '../loader.php';
@@ -27,6 +28,10 @@ if(isset($_GET['bookingid']) && $_GET['bookingid']) {
 }
 session_write_close();
 
-$base64 = $factory->getApi()->getUtilManager()->getBase64EncodedPDFWebPage($address);
-echo base64_decode($base64);
+if(!isset($_GET['readable'])) {
+    $base64 = $factory->getApi()->getUtilManager()->getBase64EncodedPDFWebPage($address);
+    echo base64_decode($base64);
+} else {
+    echo $_SESSION['contractLoaded'];
+}
 ?>

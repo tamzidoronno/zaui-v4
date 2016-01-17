@@ -117,6 +117,7 @@ public class PmsBooking extends DataCommon {
     public Integer priceType = 1;
     public boolean confirmed = false;
     public boolean isDeleted = false;
+    public PmsRepeatingData lastRepeatingData = null;
 
     void attachBookingItems(List<Booking> bookingsToAdd) {
         for(PmsBookingRooms room : rooms) {

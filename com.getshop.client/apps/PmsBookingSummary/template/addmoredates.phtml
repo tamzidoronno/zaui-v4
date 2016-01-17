@@ -1,5 +1,7 @@
 <?php
 /* @var $this \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary */
+$bookedRoom = $this->getFirstBookedRoom();
+$endDate = date("d.m.Y", time()+(86400*30));
 ?>
 
 <div class='itemrow' style='position:relative;'>
@@ -10,11 +12,11 @@
         <i class='fa fa-close togglerepeatbox'></i>
         <i class='fa fa-caret-up'></i>
         <input type='hidden' value='repeat' gsname='repeattype'>
-        
+        <?php if($bookedRoom->bookingItemId) { ?>
         <div class='eventrow'>
             <span class='title'>Room:</span>
             <span class='optionbox'>
-                <select gsname='room'>
+                <select gsname='itemid'>
                 <?php
                 $types =$this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
                 $types = $this->indexList($types);
@@ -24,18 +26,51 @@
                     if(!$types[$room->bookingItemTypeId]->visibleForBooking) {
                         continue;
                     }
-                    echo "<option value='".$room->id."'>".$room->bookingItemName."</option>";
+                    $selected = "";
+                    if($bookedRoom->bookingItemId == $room->id) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='".$room->id."' $selected>".$room->bookingItemName."</option>";
                 }
                 ?>
                 </select>
             </span>
         </div>
+        <? } else { ?>
+            <div class='eventrow'>
+                <span class='title'>Type:</span>
+                <span class='optionbox'>
+                    <select gsname='typeid'>
+                    <?php
+                    $types =$this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+                    $types = $this->indexList($types);
+                    foreach($types as $idx => $type) {
+                        if(!$type->visibleForBooking) {
+                            continue;
+                        }
+                        $selected = "";
+                        if($bookedRoom->bookingItemTypeId == $type->id) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='".$type->id."' $selected>".$type->name."</option>";
+                    }
+                    ?>
+                    </select>
+                </span>
+            </div>
+        
+        <? } ?>
         
         <div class='eventrow'>
-            <span class='title'>Time:</span>
-            <span class='optionbox'>
-                <input type='text' style='width: 20%;text-align: center;' value='12:30' gsname='starttime'>
-                <input type='text' style='width: 20%;text-align: center;' value='15:00' gsname='endtime'>
+            <span class='title'>
+                <span class='datetypepanel repeat'>First event:</span>
+                <span class='datetypepanel single'>New date:</span>
+            </span>
+            <span class='optionbox dateselection' style='padding-bottom: 10px;'>
+                <input type='text' gsname='eventStartsAt' style='width:40%;text-align: center;' value='<? echo date("d.m.Y", strtotime($bookedRoom->date->start)); ?>'>
+                <input type='text' style='width: 20%;text-align: center;' value='<? echo date("H:i", strtotime($bookedRoom->date->start)); ?>' gsname='starttime'><br>
+                <input type='text' gsname='eventEndsAt' style='width:40%;text-align: center;' value='<? echo date("d.m.Y", strtotime($bookedRoom->date->end)); ?>'>
+                <input type='text' style='width: 20%;text-align: center;' value='<? echo date("H:i", strtotime($bookedRoom->date->end)); ?>' gsname='endtime'>
             </span>
         </div>
         
@@ -93,18 +128,8 @@
                 </span>
             </div>
             <div class='eventrow'>
-                <span class='title'>Starts on:</span>
-                <span class='optionbox'><input type='text' gsname='startingAt'></span>
-            </div>
-            <div class='eventrow'>
                 <span class='title'>Ends:</span>
-                <span class='optionbox'><input type='text' gsname='endingAt'></span>
-            </div>
-        </div>
-        <div class='datetypepanel single'>
-           <div class='eventrow'>
-                <span class='title'>Date:</span>
-                <span class='optionbox'><input type='text' gsname='singledate'></span>
+                <span class='optionbox'><input type='text' gsname='endingAt' value='<? echo $endDate; ?>' style='width: 35%;text-align: center;'></span>
             </div>
         </div>
         <div class='eventrow'>
@@ -116,3 +141,32 @@
         </div>
     </span>
 </div>
+
+<?php
+$curBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+if($curBooking->lastRepeatingData) {
+    ?>
+    <script>
+    $('[gsname="itemid"]').val('<? echo $curBooking->lastRepeatingData->bookingItemId; ?>');
+    $('[gsname="typeid"]').val('<? echo $curBooking->lastRepeatingData->bookingTypeId; ?>');
+    $('[gsname="repeateachtime"]').val('<? echo $curBooking->lastRepeatingData->data->repeatEachTime; ?>');
+    $('[gsname="repeat_periode"]').val(<? echo $curBooking->lastRepeatingData->data->repeatPeride; ?>);
+    $('[gsname="repeat_periode"]').change();
+    
+    $('[gsname="repeatMonday"]').attr('checked', <? if($curBooking->lastRepeatingData->data->repeatMonday) { echo "true"; } else { echo "false"; } ?>);
+    $('[gsname="repeatTuesday"]').attr('checked', <? if($curBooking->lastRepeatingData->data->repeatTuesday) { echo "true"; } else { echo "false"; } ?>);
+    $('[gsname="repeatWednesday"]').attr('checked', <? if($curBooking->lastRepeatingData->data->repeatWednesday) { echo "true"; } else { echo "false"; } ?>);
+    $('[gsname="repeatThursday"]').attr('checked', <? if($curBooking->lastRepeatingData->data->repeatThursday) { echo "true"; } else { echo "false"; } ?>);
+    $('[gsname="repeatFriday"]').attr('checked', <? if($curBooking->lastRepeatingData->data->repeatFriday) { echo "true"; } else { echo "false"; } ?>);
+    $('[gsname="repeatSaturday"]').attr('checked', <? if($curBooking->lastRepeatingData->data->repeatSaturday) { echo "true"; } else { echo "false"; } ?>);
+    $('[gsname="repeatSunday"]').attr('checked', <? if($curBooking->lastRepeatingData->data->repeatSunday) { echo "true"; } else { echo "false"; } ?>);
+    
+    $('[gsname="endingAt"]').val('<? echo date("d.m.Y", strtotime($curBooking->lastRepeatingData->data->endingAt)); ?>');
+    
+    $('[gsname="eventStartsAt"]').val('<? echo date("d.m.Y", strtotime($curBooking->lastRepeatingData->data->firstEvent->start)); ?>');
+    $('[gsname="eventEndsAt"]').val('<? echo date("d.m.Y", strtotime($curBooking->lastRepeatingData->data->firstEvent->end)); ?>');
+    
+    </script>
+    <?
+}
+?>

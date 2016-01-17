@@ -25,7 +25,21 @@ class SedoxFileUpload extends \MarketingApplication implements \Application {
     }
     
     public function uploadFile() {
-//        echo "TEST";
+        $seperator = ";base64,";
+        $index = strrpos($_POST['data']['fileBase64'], $seperator)+  strlen($seperator);
+        $base64 = substr($_POST['data']['fileBase64'], $index);
+
+        $_SESSION['sedox_file_uploaded'] = $base64;
+        $_SESSION['sedox_file_uploaded_filename'] = $_POST['data']['fileName'];
+    }
+    
+    public function completeUpload() {
+        $this->clear();
+    }
+    
+    private function clear() {
+        unset($_SESSION['sedox_file_uploaded']);
+        unset($_SESSION['sedox_file_uploaded_filename']);
     }
 }
 ?>

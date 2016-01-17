@@ -3,8 +3,59 @@ app.SedoxFileUpload = {
         $(document).on('change', '#sedox_file_upload_selector', app.SedoxFileUpload.fileSelected);
         $(document).on('click', '.SedoxFileUpload .select_new_file', app.SedoxFileUpload.showModal);
         $(document).on('click', '.SedoxFileUpload .closebutton', app.SedoxFileUpload.closeModal);
+        
+        $(document).on('dragover', '.SedoxFileUpload #dragdropfilesareas', app.SedoxFileUpload.handleDragOver);
+        $(document).on('dragleave', '.SedoxFileUpload #dragdropfilesareas', app.SedoxFileUpload.handleDragOut);
+        $(document).on('drop', '.SedoxFileUpload #dragdropfilesareas', app.SedoxFileUpload.handleFileSelect);
+        
+        $(document).on('click', '.SedoxFileUpload .go_to_next_step_upload', app.SedoxFileUpload.goToNextStep);
     },
     
+    goToNextStep: function() {
+        if ($('.SedoxFileUpload .file_selector_area').attr('isselected') !== "true") {
+            alert("Please select a file first");
+            return;
+        }
+        
+        var data = {
+            upload_brand : $('#upload_brand').val(),
+            upload_model : $('#upload_model').val(),
+            upload_enginesize : $('#upload_enginesize').val(),
+            upload_power : $('#upload_power').val(),
+            upload_year : $('#upload_year').val(),
+            upload_tool : $('#upload_tool').val(),
+            upload_comment : $('#upload_comment').val(),
+            upload_reference : $('#upload_reference').val(),
+            upload_automatic : $('#upload_automatic').val(),
+            upload_withdraw : $('#upload_withdraw').val(),
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "completeUpload", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            thundashop.common.goToPage("upload_successful");
+        });
+        
+    },
+    
+    handleDragOut: function(jevt) {
+        $(this).removeClass('sedox_dropovereffect');
+    },
+    
+    handleDragOver: function(jevt) {
+        var evt = jevt.originalEvent;
+        evt.stopPropagation();
+        evt.preventDefault();
+        evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        $(this).addClass('sedox_dropovereffect');
+    },
+    
+    handleFileSelect: function(jevt) {
+        var files = jevt.originalEvent.dataTransfer.files;
+        jevt.preventDefault();
+        jevt.stopPropagation();
+        
+        app.SedoxFileUpload.uploadFile(files[0]);
+    },
     
     setProgress: function(progess) {
         if (progess) {
@@ -16,11 +67,15 @@ app.SedoxFileUpload = {
     },
     
     fileSelected: function() {
+        
+        app.SedoxFileUpload.uploadFile(this.files[0]);
+    },
+    
+    uploadFile: function(file) {
         $('.SedoxFileUpload .uploadfilemodal .progressbararea').show();
         $('.SedoxFileUpload .uploadfilemodal .selectarea').hide();
         
         var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
-        file = this.files[0],
         chunkSize = 2097152,
         chunks = Math.ceil(file.size / chunkSize),
         currentChunk = 0,
@@ -32,7 +87,7 @@ app.SedoxFileUpload = {
             if (currentChunk < chunks) {
                 loadNext();
             } else {
-                app.SedoxFileUpload.checkForFileMatch(spark.end(), this);
+                app.SedoxFileUpload.checkForFileMatch(spark.end(), file);
             }
         },
                 
@@ -68,8 +123,7 @@ app.SedoxFileUpload = {
         alert("Found a match.");
     },
     
-    showUploadProgress: function(files) {
-        var file = files[0];
+    showUploadProgress: function(file) {
         var fileName = file.name;
 
         var reader = new FileReader();
@@ -103,8 +157,7 @@ app.SedoxFileUpload = {
         reader.readAsDataURL(file);
     },
     
-    checkForFileMatch: function(md5, fileReader) {
-        var files = document.getElementById("sedox_file_upload_selector").files;
+    checkForFileMatch: function(md5, file) {
         var data = {
             md5 : md5
         }
@@ -116,7 +169,7 @@ app.SedoxFileUpload = {
             if (res !== "false") {
                 app.SedoxFileUpload.selectBasedOnMd5(md5);
             } else {
-                app.SedoxFileUpload.showUploadProgress(files);
+                app.SedoxFileUpload.showUploadProgress(file);
             }
         });
     }

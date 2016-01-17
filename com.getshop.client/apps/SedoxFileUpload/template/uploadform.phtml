@@ -5,8 +5,16 @@
     Select your original file
 </div>
 
-<div class="file_selector_area">
-    <span>No File chosen. </span> <div class="sedox_blue_button select_new_file"> Choose File </div>
+<div class="file_selector_area" isselected="<? echo isset($_SESSION['sedox_file_uploaded_filename']) ? "true" : "false"; ?>">
+    <span><?
+    
+    if (isset($_SESSION['sedox_file_uploaded_filename'])) {
+        echo $_SESSION['sedox_file_uploaded_filename'];
+    } else {
+        echo "No file selected";
+    }
+    
+    ?></span> <div class="sedox_blue_button select_new_file"> Choose File </div>
 </div>
 
 <div class="fileuploadtitle boldFont">
@@ -14,42 +22,42 @@
 </div>
 
 <div class="upload_row">
-    <div class="upload_row_col"><input type="text" placeholder="Brand (Ex: Audi, BMW)"></input></div>
-    <div class="upload_row_col"><input type="text" placeholder="Model (Ex: A4, 320d)"></input></div>
-    <div class="upload_row_col"><input type="text" placeholder="Brand (Ex: 2.0 TDI)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_brand" placeholder="Brand (Ex: Audi, BMW)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_model" placeholder="Model (Ex: A4, 320d)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_enginesize" placeholder="Engine Size (Ex: 2.0 TDI)"></input></div>
 </div>
 
 <div class="upload_row">
-    <div class="upload_row_col"><input type="text" placeholder="Power (Ex: 140 hp)"></input></div>
-    <div class="upload_row_col"><input type="text" placeholder="Year (Ex: 2016)"></input></div>
-    <div class="upload_row_col"><input type="text" placeholder="Tool (Ex: CMD / Fieling / Powergate / Kess)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_power" placeholder="Power (Ex: 140 hp)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_year" placeholder="Year (Ex: 2016)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_tool" placeholder="Tool (Ex: CMD / Fieling / Powergate / Kess)"></input></div>
 </div>
 
 <div class="upload_row">
     <div class="upload_row_col">Add any additional comments: </div>
-    <div class="upload_row_col_double"><textarea placeholder="Do you have anything else to share with us?"></textarea></input></div>
+    <div class="upload_row_col_double"><textarea id="upload_comment" placeholder="Do you have anything else to share with us?"></textarea></input></div>
 </div>
 
 <div class="upload_row">
     <div class="upload_row_col">License Plate or reference for you: <br/><span style="font-size: 12px;"> ( Optional )</span></div>
-    <div class="upload_row_col upload_row_col_double"><input type="text" placeholder="License Plate"></input></div>
+    <div class="upload_row_col upload_row_col_double"><input id="upload_reference" type="text" placeholder="License Plate"></input></div>
 </div>
 
-<div class="upload_row">
+<!--<div class="upload_row">
     <div class="upload_row_col">Are you Uploading the files for a Partner? </div>
     <div class="upload_row_col upload_row_col_double"></div>
-</div>
+</div>-->
 
 <div class="upload_row">
     <div class="upload_row_col"></div>
     <div class="upload_row_col upload_row_col_double">
-        <input type="checkbox"/> Is this an Automatic Gearbox?
-        <br/><input type="checkbox"/> Withdraw my credit account and send tuningfiles back to the email when ready?</div>
+        <input type="checkbox" id="upload_automatic" /> Is this an Automatic Gearbox?
+        <br/><input type="checkbox" id="upload_withdraw" /> Withdraw my credit account and send tuningfiles back to the email when ready?</div>
 </div>
 
 
 <div class="nextbuttonarea">
-    <div class="sedox_blue_button">NEXT STEP <i class="fa fa-arrow-circle-right"></i></div>
+    <div class="sedox_blue_button go_to_next_step_upload">NEXT STEP <i class="fa fa-arrow-circle-right"></i></div>
 </div>
     
     

@@ -279,3 +279,7 @@
     text-align: center;
     line-height: 30px;
 }
+
+.SedoxFileUpload .sedox_dropovereffect {
+    border: dashed 5px #DDD;
+}

@@ -182,7 +182,7 @@ public interface IStoreManager {
     public void syncData(String environment, String username, String password) throws ErrorException;
     
     @Administrator
-    public void receiveSyncData(String json) throws ErrorException;
+    public void receiveSyncData(byte[] json) throws ErrorException;
     
     public List<String> getAllEnvironments();
 }

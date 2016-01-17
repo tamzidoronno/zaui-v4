@@ -7,6 +7,10 @@ app.SedoxFileUpload = {
     
     
     setProgress: function(progess) {
+        if (progess) {
+            progess = progess.toFixed(2);
+        }
+        
         $('.SedoxFileUpload .meter span').css('width', progess+"%");
         $('.SedoxFileUpload .meter .progresindicator').html(progess+"%");
     },

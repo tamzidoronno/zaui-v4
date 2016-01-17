@@ -21,6 +21,14 @@ body {
 }
 
 
+.gsarea[area="header"] .Menu .entry .entries {
+    background-color: #006e63;
+    width: 200px;
+    border: solid 1px #707c7b;
+    padding-bottom: 15px;
+    box-shadow: 0px 0px 5px #333;
+}
+
 .gsarea[area="header"] .Menu .entry {
     padding-left: 20px;
     padding-right: 20px;

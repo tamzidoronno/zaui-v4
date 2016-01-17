@@ -1,139 +1,281 @@
-/* 
-    Document   : SedoxFileUpload
-    Created on : May 16, 2014, 10:06:21 PM
-    Author     : ktonder
-    Description:
-        Purpose of the stylesheet follows.
-*/
+.SedoxFileUpload {
+    padding: 100px;
+    padding-top: 50px;
+    color: #626b7a;
+}
 
-.SedoxFileUpload .step {
-    min-height: 100px;
-    margin-bottom: 2px;
-    position: relative;
+.SedoxFileUpload .fileuploadtitle {
+    font-size: 24px;
+    
+    font-weight: normal;
+    padding-bottom: 50px;
+}
+
+.SedoxFileUpload .file_selector_area {
     font-size: 16px;
-    padding: 20px;
-    color: #666;
-    background-color: #F1F1F1;
+    font-style: italic;
+    padding-bottom: 50px;
+    border-bottom: solid 1px #EEE;
+    margin-bottom: 50px;
 }
 
-.SedoxFileUpload .sedox_button {
-    left: 10px;
-    margin-top: 10px;
-}
-.SedoxFileUpload .step .line.multi {
-    border-bottom: solid 1px #DDD;
-    width: 420px;
-}
-.SedoxFileUpload .step .line {
-    margin-top: 5px;
-    vertical-align: top;
-}
-.SedoxFileUpload .step .line textarea {
-    width: 632px;
-    height: 100px;
-    border: solid 1px #7c7c7c;
-}
-
-.SedoxFileUpload .step .step_title {
-    color: #cc0000;
-    font-size: 16px;
-}
-
-.SedoxFileUpload .col {
-    width: 300px;
-    padding-right: 20px;
-}
-
-.SedoxFileUpload .col input:not(.upload_checkbox) {
-    width: 300px;
-    border: solid 1px #7c7c7c;
-    line-height: 30px;
-    padding-left: 10px;
-}
-
-
-.SedoxFileUpload .step .subinfo .line .col1, 
-.SedoxFileUpload .step .subinfo .line .col1_1, 
-.SedoxFileUpload .step .subinfo .line .col2, 
-.SedoxFileUpload .step .subinfo .line .col3 { 
-   display: inline-block;
-   vertical-align: top;
-}
-
-
-.SedoxFileUpload .step .subinfo {
-    margin-top: 10px;
-    padding-left: 10px;
-}
-
-.SedoxFileUpload .sedox_match_options {
-    margin: 20px;
-}
-.SedoxFileUpload .sedox_match_options .sedox_match_option {
+.SedoxFileUpload .file_selector_area .sedox_blue_button {
+    width: 100px;
     display: inline-block;
-    border: solid 1px #EEE;
-    text-align: center;
-    padding: 5px;
-    margin: 5px;
-    cursor: pointer;
-    border-radius: 3px;
+    margin-left: 100px;
+    line-height: 40px;
 }
 
-.SedoxFileUpload .sedox_match_options .sedox_match_option i {
-    font-size: 80px;
+.SedoxFileUpload .upload_row {
+    font-size: 0px;
 }
 
-.SedoxFileUpload a {
-    color: #666;
-}
-
-.SedoxFileUpload .sedox_match_options .sedox_match_option:hover {
-    background-color: #DDD;
-}
-
-.SedoxFileUpload .specialform {
-    display: none;
-}
-
-.SedoxFileUpload .specialform .innerform {
-    padding: 40px;
-    position: relative;
-    width: 400px;
-    padding-bottom: 30px;
-}
-
-.SedoxFileUpload .col .checkbox {
-    font-size: 12px;
-    padding-left: 30px;
-    position: relative;
-    padding-top: 20px;
-}
-
-.SedoxFileUpload .col .firstbox input.upload_checkbox {
-    top: 15px;
-}
-
-.SedoxFileUpload .col input.upload_checkbox {
-    position: absolute;
-    left: 0px;
-    top: 20px;
+.SedoxFileUpload .upload_row .upload_row_col_double,
+.SedoxFileUpload .upload_row .upload_row_col {
+    display: inline-block;
+    width: calc(100%/3);
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 16px;
     vertical-align: top;
-    padding-top: 5px;
-    width: 20px;
-    height: 20px;
 }
 
-.SedoxFileUpload #specialformdesc {
-    width: 500px;
+
+.SedoxFileUpload .upload_row .upload_row_col_double {
+    width: calc(100%/1.5);
+}
+
+.SedoxFileUpload .upload_row .upload_row_col_double:first-child,
+.SedoxFileUpload .upload_row .upload_row_col:first-child {
+    padding-left: 0px;
+}
+
+.SedoxFileUpload .upload_row .upload_row_col_double:last-child,
+.SedoxFileUpload .upload_row .upload_row_col:last-child {
+    padding-right: 0px;
+}
+
+
+.SedoxFileUpload .upload_row textarea {
+    padding: 10px;
+    border: solid 2px #EEE;
+    border-radius: 8px;
+    transition: box-shadow 0.3s, border 0.3s;
+    width: 100%;
+    display: inline-block;
+    box-sizing: border-box;
     height: 200px;
 }
 
-.SedoxFileUpload input {
-    height: 30px;
-    width: 310px;
+.SedoxFileUpload .upload_row .upload_row_col input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.SedoxFileUpload input { line-height: 30px; padding-left: 5px; }
-.SedoxFileUpload .placeholder { color: #aaa; }
+.SedoxFileUpload .upload_row .upload_row_col input[type="text"] {
+  padding: 10px;
+  border: solid 2px #EEE;
+  border-radius: 8px;
+  transition: box-shadow 0.3s, border 0.3s;
+}
 
-.SedoxFileUpload .md5sumsearchresult { text-align:  center; color: green; padding-top: 10px;}
+.SedoxFileUpload .upload_row .upload_row_col input[type="text"]:focus,
+.SedoxFileUpload .upload_row .upload_row_col input[type="text"].focus {
+    border-radius: 8px;
+}
+
+.SedoxFileUpload textarea:focus, .SedoxFileUpload input:focus{
+    outline: none;
+}
+
+.SedoxFileUpload .nextbuttonarea {
+   
+    border-top: solid 2px #EEE;
+    margin-top: 40px;
+    padding-top: 40px;
+    text-align: right;
+}
+
+.SedoxFileUpload .nextbuttonarea .sedox_blue_button {
+    width: 150px;
+    display: inline-block;
+}
+.SedoxFileUpload .nextbuttonarea i {
+    margin-left: 5px;
+}
+
+.SedoxFileUpload .uploadfilemodal {
+    position: fixed;
+    background: rgba(0,0,0,0.6);
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    display: none;
+}
+
+.SedoxFileUpload .uploadfilemodal .modal_inner {
+    position: fixed;
+    width: 600px;
+    
+    background-color: #FFF;
+    left: 50%;
+    margin-left: -300px;
+    top: 25%;
+/*    margin-top: -calc(100%/2);*/
+    border-radius: 10px;
+    box-shadow: 0px 0px 50px rgba(0,0,0,0.5);
+    
+}
+
+.SedoxFileUpload .uploadfilemodal .closebutton {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    color: #DADADA;
+}
+
+.SedoxFileUpload .uploadfilemodal .modalcontent {
+    position: relative;
+}
+
+.SedoxFileUpload .uploadfilemodal  {
+    font-size: 15px;
+}
+
+.SedoxFileUpload .uploadfilemodal .selectFileButton {
+    margin-top: 20px;
+    line-height: 30px;
+    width: 80px;
+    display: inline-block;
+}
+
+.SedoxFileUpload .uploadfilemodal .headertitle {
+    line-height: 50px;
+    padding-left: 40px;
+    border-bottom: solid 1px #EEE;
+    font-size: 18px;
+}
+
+.SedoxFileUpload .dragdropfilesareas {
+    margin: 40px;
+    border-radius: 10px;
+    border: dashed 2px #DDD;
+    text-align: center;
+    padding: 30px;
+}
+
+.SedoxFileUpload .dragdropfilesareas i {
+    font-size: 100px;
+    display: block;
+}
+
+.SedoxFileUpload .uploadfile {
+    width: 80px;
+    line-height: 40px;
+    position: absolute;
+    right: 20px;
+    bottom: 0px;
+}
+
+.SedoxFileUpload .fileuploadaction {
+    padding: 20px;
+    padding-left: 40px;   
+}
+
+
+.SedoxFileUpload .fileBrowse {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+
+.SedoxFileUpload .fileBrowse input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.SedoxFileUpload .progressbararea .progressheader {
+    border-bottom: solid 1px #DDD;
+    padding: 15px;
+    font-weight: bold;
+}
+
+.SedoxFileUpload .progressbararea .sedox_upload_filename {
+    font-style: italic;
+    font-weight: normal;
+}
+
+.SedoxFileUpload .progressbararea .meter { 
+    height: 30px;  /* Can be anything */
+    position: relative;
+    background: #555;
+    -moz-border-radius: 25px;
+    -webkit-border-radius: 25px;
+    border-radius: 25px;
+    box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+    margin: 30px;
+}
+
+.SedoxFileUpload .progressbararea .meter > span {
+    display: block;
+    height: 100%;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background-color: rgb(43,194,83);
+    background-image: linear-gradient(
+      center bottom,
+      rgb(43,194,83) 37%,
+      rgb(84,240,84) 69%
+    );
+    box-shadow: 
+      inset 0 2px 9px  rgba(255,255,255,0.3),
+      inset 0 -2px 6px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.SedoxFileUpload .progressbararea .meter > span:after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background-image: linear-gradient(
+      -45deg, 
+      rgba(255, 255, 255, .2) 25%, 
+      transparent 25%, 
+      transparent 50%, 
+      rgba(255, 255, 255, .2) 50%, 
+      rgba(255, 255, 255, .2) 75%, 
+      transparent 75%, 
+      transparent
+    );
+    z-index: 1;
+    background-size: 50px 50px;
+    animation: move 2s linear infinite;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    overflow: hidden;
+}
+
+.SedoxFileUpload .progressbararea .meter .progresindicator {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    color: #FFF;
+    font-size: 20px;
+    text-align: center;
+    line-height: 30px;
+}

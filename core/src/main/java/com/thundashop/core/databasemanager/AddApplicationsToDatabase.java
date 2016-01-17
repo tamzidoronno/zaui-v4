@@ -93,6 +93,18 @@ public class AddApplicationsToDatabase {
         SedoxCreditHistory.defaultActivate = false;
         apps.add(SedoxCreditHistory);
         
+        Application SedoxFileUpload = createSettings("SedoxFileUpload",
+        "92e3b7d6-c3ac-463e-90ba-4f966613f8dd",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxFileUpload.isPublic = true;
+        SedoxFileUpload.isFrontend = true;
+        SedoxFileUpload.moduleId = "sedox";
+        SedoxFileUpload.defaultActivate = false;
+        apps.add(SedoxFileUpload);
+
+        
         Application AutotekTheme = createSettings("AutotekTheme",
         "ca8104cd-92ac-4826-8bf0-09609a48f294",
         allowed2,

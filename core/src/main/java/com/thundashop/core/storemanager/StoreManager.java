@@ -341,7 +341,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                     
                     api.getStoreManager().receiveSyncData(StoreManager.toString((Serializable) datas));
                 } catch (Exception ex) {
-                    Logger.getLogger(StoreManager.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
                 }
             };
 

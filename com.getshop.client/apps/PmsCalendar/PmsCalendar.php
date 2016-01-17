@@ -126,12 +126,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         for ($i = 1; $i <= 366; $i++) {
             $month = date('m', mktime(0, 0, 0, 1, $i, $year));
             $wk = date('W', mktime(0, 0, 0, 1, $i, $year));
-            $wkDay = date('w', mktime(0, 0, 0, 1, $i, $year));
+            $wkDay = date('N', mktime(0, 0, 0, 1, $i, $year));
             $day = date('d', mktime(0, 0, 0, 1, $i, $year));
 
-            if ($wkDay == 0) {
-                $wkDay = 7;
-            }
             $dates[$month][$wk][$wkDay] = $day;
         }
         return $dates;

@@ -1,5 +1,6 @@
 <?php
 /* @var $this \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary */
+$configuration = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
 $items = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 $items2 = array();
@@ -51,6 +52,11 @@ foreach($booking->rooms as $room) {
     echo "</span>";
     echo "</div>";
 }
+
+if($configuration->supportMoreDates) {
+    $this->includefile("addmoredates");
+}
+
 $printAddons = false;
 foreach($booking->addons as $addon) {
     if($addon) {

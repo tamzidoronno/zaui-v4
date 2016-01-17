@@ -1,0 +1,118 @@
+<?php
+/* @var $this \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary */
+?>
+
+<div class='itemrow' style='position:relative;'>
+<span class='bookedaction'></span> 
+<a class='addmoredates togglerepeatbox'>Add more dates / repeat event</a>
+    <span class='addMoredatesPanel' gstype='form' method='addRepeatingDates'>
+        <span class='adddatetype selected' type='repeat'>Repeating dates</span><span class='adddatetype' type='single'>Single date</span>
+        <i class='fa fa-close togglerepeatbox'></i>
+        <i class='fa fa-caret-up'></i>
+        <input type='hidden' value='repeat' gsname='repeattype'>
+        
+        <div class='eventrow'>
+            <span class='title'>Room:</span>
+            <span class='optionbox'>
+                <select gsname='room'>
+                <?php
+                $types =$this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+                $types = $this->indexList($types);
+                $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+                $rooms = $this->indexList($rooms);
+                foreach($rooms as $idx => $room) {
+                    if(!$types[$room->bookingItemTypeId]->visibleForBooking) {
+                        continue;
+                    }
+                    echo "<option value='".$room->id."'>".$room->bookingItemName."</option>";
+                }
+                ?>
+                </select>
+            </span>
+        </div>
+        
+        <div class='eventrow'>
+            <span class='title'>Time:</span>
+            <span class='optionbox'>
+                <input type='text' style='width: 20%;text-align: center;' value='12:30' gsname='starttime'>
+                <input type='text' style='width: 20%;text-align: center;' value='15:00' gsname='endtime'>
+            </span>
+        </div>
+        
+        <div class='datetypepanel repeat'>
+            <div class='eventrow'>
+                <span class='title'>Repeats:</span>
+                <span class='optionbox'>
+                    <select class="repeat_type" gsname='repeat_periode'>
+                        <option value="0" title="Daily">Daily</option>
+                        <option value="1" title="Weekly">Weekly</option>
+                        <option value="2" title="Monthly">Monthly</option>
+                    </select>
+                </span>
+            </div>
+            <div class='eventrow'>
+                <span class='title'>Repeat every:</span>
+                <span class='optionbox'>
+                    <select style='width:20%; margin-right: 3px;' gsname='repeateachtime'>
+                        <?php 
+                        for($i = 1; $i <= 30; $i++) {
+                            echo "<option value='$i'>$i</option>";
+                        }
+                        ?>
+                    </select>
+                    <span class='repeat_0 repeatoption'>days</span>
+                    <span class='repeat_1 repeatoption'>weeks</span>
+                    <span class='repeat_2 repeatoption'>months</span>
+                </span>
+            </div>
+            <div class='eventrow repeatrow'>
+                <span class='title'>Repeat on:</span>
+                <span class='optionbox'>
+                    <span class='repeat_0 repeatoption'>
+
+                    </span>
+                    <span class='repeat_1 repeatoption' style='padding-bottom: 10px;'>
+                        <table>
+                            <tr>
+                                <td><input type='checkbox' gsname='repeatMonday'><? echo $this->__w("Mon"); ?></td>
+                                <td><input type='checkbox' gsname='repeatTuesday'><? echo $this->__w("Tue"); ?></td>
+                                <td><input type='checkbox' gsname='repeatWednesday'><? echo $this->__w("Wed"); ?></td>
+                                <td><input type='checkbox' gsname='repeatThursday'><? echo $this->__w("Thu"); ?></td>
+                            </tr>
+                            <tr>
+                                <td><input type='checkbox' gsname='repeatFriday'><? echo $this->__w("Fri"); ?></td>
+                                <td><input type='checkbox' gsname='repeatSaturday'><? echo $this->__w("Sat"); ?></td>
+                                <td><input type='checkbox' gsname='repeatSunday'><? echo $this->__w("Sun"); ?></td>
+                            </tr>
+                        </table>
+                    </span>
+                    <span class='repeat_2 repeatoption' style='padding-bottom: 10px;'>
+                        <input type='radio' name='repeatmonthtype' gsname='repeatmonthtype' value='dayofmonth'>day of the month<br>
+                        <input type='radio' name='repeatmonthtype' gsname='repeatmonthtype' value='dayofweek'>day of the week
+                    </span>
+                </span>
+            </div>
+            <div class='eventrow'>
+                <span class='title'>Starts on:</span>
+                <span class='optionbox'><input type='text' gsname='startingAt'></span>
+            </div>
+            <div class='eventrow'>
+                <span class='title'>Ends:</span>
+                <span class='optionbox'><input type='text' gsname='endingAt'></span>
+            </div>
+        </div>
+        <div class='datetypepanel single'>
+           <div class='eventrow'>
+                <span class='title'>Date:</span>
+                <span class='optionbox'><input type='text' gsname='singledate'></span>
+            </div>
+        </div>
+        <div class='eventrow'>
+            <span class='title'></span>
+            <span class='optionbox'>
+                <input type='button'value='Add' gstype='submit'>
+                <input type='button'value='Close' class='togglerepeatbox'>
+            </span>
+        </div>
+    </span>
+</div>

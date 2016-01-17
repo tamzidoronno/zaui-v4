@@ -337,6 +337,15 @@ body {
     border-radius: 3px;
     padding-right: 50px;
     padding-left: 50px;
+    cursor: pointer;
+}
+
+.sedox_blue_button:hover {
+    background-color: #24adcf;
+}
+
+.sedox_blue_button:active {
+    background-color: #40c1e1;
 }
 
 .profile_box {

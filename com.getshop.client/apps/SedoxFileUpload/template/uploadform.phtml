@@ -1,70 +1,63 @@
-<form id='uploadfileform' method="post" enctype="multipart/form-data" action="/index.php?page=17d1c401-6ff7-40e8-9224-6035758e4e41">
-    <div class='step step1'>
-        <div class='step_title'>Select your original file</div>
+<?
+/* @var $this ns_92e3b7d6_c3ac_463e_90ba_4f966613f8dd\SedoxFileUpload */
+?>
+<div class="fileuploadtitle boldFont">
+    Select your original file
+</div>
 
-        <div class='subinfo'>
-            <input type='file' name="originalfile" id="originalfile"/>
-        </div>
-	<div class="md5sumsearchresult"></div>
-    </div>
+<div class="file_selector_area" isselected="<? echo isset($_SESSION['sedox_file_uploaded_filename']) ? "true" : "false"; ?>">
+    <span><?
+    
+    if (isset($_SESSION['sedox_file_uploaded_filename'])) {
+        echo $_SESSION['sedox_file_uploaded_filename'];
+    } else {
+        echo "No file selected";
+    }
+    
+    ?></span> <div class="sedox_blue_button select_new_file"> Choose File </div>
+</div>
 
-    <div class='step step2 nomatch'>
-        <div class='step_title'>Enter your car details.</div>
-        <div class='subinfo'>
-            <div class='line'>
-                <div class='col col1'><input name='brand' id="brand" placeholder='Brand (Ex, Audi)' type='textfield'></div>
-                <div class='col col2'><input name='model' id="model" placeholder='Model (ex, A4)' type='textfield'></div>
-                <div class='col col3'><input name='enginesize' id="enginesize" placeholder='EngineSize (Ex, 2.0TDI)' type='textfield'></div>
-            </div>
+<div class="fileuploadtitle boldFont">
+    Enter your car details
+</div>
 
-            <div class='line'>
-                <div class='col col1'><input name='power' id="power" placeholder='Power (Ex, 140hp)' type='textfield'></div>
-                <div class='col col2'><input name='year' id="year" placeholder='Year (Ex, 2014)' type='textfield'></div>
-                <div class='col col3'><input name='tool' id="tool" placeholder='Tool (Ex, CMD / Frieling / Powergate / Kess)' type='textfield'></div>
-            </div>
+<div class="upload_row">
+    <div class="upload_row_col"><input type="text" id="upload_brand" placeholder="Brand (Ex: Audi, BMW)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_model" placeholder="Model (Ex: A4, 320d)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_enginesize" placeholder="Engine Size (Ex: 2.0 TDI)"></input></div>
+</div>
 
-            <div class='line'>
-                <div class='col col1'>
-                    <div class='checkbox firstbox'><input type="checkbox" name="automaticgear" class='upload_checkbox' id="automaticgear" />IS THIS A AUTOMATIC GEARBOX?</div>
-                    <div class='checkbox'><input type="checkbox" name="usecredit" class='upload_checkbox' id="usecredit" checked/> WITHDRAW MY CREDIT ACCOUNT AND SEND TUNINGFILE BACK BY EMAIL WHEN READY?</div>
-                </div>
-                <div class='col col2'>
-                    <textarea name='comments' id="comments" placeholder='Comment! Do you have anything else to share with us?'></textarea>
-                </div>
-            </div>
-            
-            <?
-            $slaves = $this->getSlaves();
-            if (count($slaves)) {
-            ?>
-                <div class='line'>
-                    <div class='col col1'>
-                        Are you uploading the file for a partner?
-                    </div>
-                    <div class='col col2'>
-                        <select id="partnerselect" name="partnerselect">
-                            <option value=''>Myself</option>;
-                        <? 
-                            foreach ($slaves as $slave) {
-                                $user = $this->getApi()->getUserManager()->getUserById($slave->id);
-                                echo "<option value='$user->id'>$user->fullName</option>";
-                             } ?>
-                        </select>
-                    </div>
-                </div>
-            <? } ?>
-            
-            <div class='line'>
-                <div class='col col1'>
-                    <div class='sedox_button saveupload'><i class='fa fa-arrow-circle-right'></i>&nbsp; <span>Next</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
+<div class="upload_row">
+    <div class="upload_row_col"><input type="text" id="upload_power" placeholder="Power (Ex: 140 hp)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_year" placeholder="Year (Ex: 2016)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_tool" placeholder="Tool (Ex: CMD / Fieling / Powergate / Kess)"></input></div>
+</div>
 
-<script>
-    $('.SedoxFileUpload input, .SedoxFileUpload textarea').placeholder();
-    app.SedoxFileUpload.addListeningForFileChangeToCalculateMd5();
+<div class="upload_row">
+    <div class="upload_row_col">Add any additional comments: </div>
+    <div class="upload_row_col_double"><textarea id="upload_comment" placeholder="Do you have anything else to share with us?"></textarea></input></div>
+</div>
 
-</script>
+<div class="upload_row">
+    <div class="upload_row_col">License Plate or reference for you: <br/><span style="font-size: 12px;"> ( Optional )</span></div>
+    <div class="upload_row_col upload_row_col_double"><input id="upload_reference" type="text" placeholder="License Plate"></input></div>
+</div>
+
+<!--<div class="upload_row">
+    <div class="upload_row_col">Are you Uploading the files for a Partner? </div>
+    <div class="upload_row_col upload_row_col_double"></div>
+</div>-->
+
+<div class="upload_row">
+    <div class="upload_row_col"></div>
+    <div class="upload_row_col upload_row_col_double">
+        <input type="checkbox" id="upload_automatic" /> Is this an Automatic Gearbox?
+        <br/><input type="checkbox" id="upload_withdraw" /> Withdraw my credit account and send tuningfiles back to the email when ready?</div>
+</div>
+
+
+<div class="nextbuttonarea">
+    <div class="sedox_blue_button go_to_next_step_upload">NEXT STEP <i class="fa fa-arrow-circle-right"></i></div>
+</div>
+    
+    

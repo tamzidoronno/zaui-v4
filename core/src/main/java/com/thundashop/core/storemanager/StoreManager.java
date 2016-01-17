@@ -19,9 +19,11 @@ import com.thundashop.core.storemanager.data.KeyData;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.usermanager.data.User;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -33,6 +35,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -338,10 +342,14 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                     if (user == null || user.id.isEmpty() || !user.isAdministrator()) {
                         throw new ErrorException(26);
                     }
-                    
-                    api.getStoreManager().receiveSyncData(StoreManager.toString((Serializable) datas));
+                    String dataToTransfer = StoreManager.toString((Serializable) datas);
+                    byte[] bytes = compress(dataToTransfer);
+                    double size = bytes.length;
+                    System.out.println("Data to transfer: " + Math.floor(size/1024) + "kb, " + Math.floor(size/1024/1024) + "mb");
+                    api.getStoreManager().receiveSyncData(bytes);
+                    System.out.println("Data sent, should be availble online now!");
                 } catch (Exception ex) {
-                    Logger.getLogger(StoreManager.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
                 }
             };
 
@@ -369,13 +377,43 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         oos.close();
         return Base64.getEncoder().encodeToString(baos.toByteArray()); 
     }
+    
+     public byte[] compress(String data) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length());
+        GZIPOutputStream gzip = new GZIPOutputStream(bos);
+        gzip.write(data.getBytes());
+        gzip.close();
+        byte[] compressed = bos.toByteArray();
+        bos.close();
+        return compressed;
+    }
+	
+    private String decompress(byte[] compressed) throws IOException {
+        ByteArrayInputStream bis = new ByteArrayInputStream(compressed);
+        GZIPInputStream gis = new GZIPInputStream(bis);
+        BufferedReader br = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        br.close();
+        gis.close();
+        bis.close();
+        return sb.toString();
+    }
      
     @Override
-    public void receiveSyncData(String json) throws ErrorException {
+    public void receiveSyncData(byte[] data) throws ErrorException {
         try {
+            System.out.println("Sync data received");
+            String json = decompress(data);
             List<DataCommon> datas = (List<DataCommon>) StoreManager.fromString(json);
+            System.out.println("Adding data to database: " + datas.size());
             database.refreshDatabase(datas);
+            System.out.println("Clearing store: " + storeId);
             getShopScope.clearStore(storeId);
+            System.out.println("Done");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

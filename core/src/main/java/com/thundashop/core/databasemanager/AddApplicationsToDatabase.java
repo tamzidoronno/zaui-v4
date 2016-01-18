@@ -93,6 +93,18 @@ public class AddApplicationsToDatabase {
         SedoxCreditHistory.defaultActivate = false;
         apps.add(SedoxCreditHistory);
         
+        Application AutoTekAssistSaving = createSettings("AutoTekAssistSaving",
+        "497d3093-47cf-4e38-bd2c-5117476f8409",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        AutoTekAssistSaving.isPublic = false;
+        AutoTekAssistSaving.isFrontend = true;
+        AutoTekAssistSaving.moduleId = "other";
+        AutoTekAssistSaving.defaultActivate = false;
+        AutoTekAssistSaving.allowedStoreIds.add("ba6ef325-58a4-4bee-ac56-6f1420a150f1");
+        apps.add(AutoTekAssistSaving);
+
         Application SedoxFileUpload = createSettings("SedoxFileUpload",
         "92e3b7d6-c3ac-463e-90ba-4f966613f8dd",
         allowed2,

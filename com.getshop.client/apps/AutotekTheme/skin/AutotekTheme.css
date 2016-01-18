@@ -1,9 +1,14 @@
 body {
     font-family: 'Open Sans', sans-serif;
-    font-size: 16px;
+    font-size: 15px;
     color: #222;
 }
 
+.gsportraitimage {
+    background-color: #e8e8e8;
+}
+
+    
 .gs_page_width {
     width: 960px;
     margin: 0 auto;
@@ -27,8 +32,26 @@ body {
     padding-right: 40px;
 }
 
+.Menu .entry.active a {
+    color: #d8631e !important;
+}
+
+.gsarea[area="header"] .entry:first-child a {
+    font-weight: bold;
+}
+
 .gsarea[area="header"] .entry a {
     color: #f5f5f5;
     line-height: 50px;
-    font-size: 16px;
+    font-size: 15px;
+}
+
+.shop_button {
+    background: #d8631e;
+    color: #FFF;
+    border-radius: 0px;
+}
+
+.shop_button:hover {
+    background: #b54e10;
 }

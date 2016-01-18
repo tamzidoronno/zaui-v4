@@ -1,0 +1,56 @@
+body {
+    background-color: #e8e8e8;
+    font-size: 18px;
+    font-family: 'Open Sans', sans-serif;
+    color: #222;
+}
+
+.gs_page_width {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.shop_button {
+    background: #d8631e;
+    color: #FFF;
+    border-radius: 0px;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+.gsmobilemenu .gsmobilemenuentry {
+    display: none;
+}
+
+.gsmobilemenu .gsmobilemenuentry.gsmobilemenubox {
+    display: block;
+    width: 100%;
+    
+    color: #222;
+
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eeeeee+0,cccccc+100;Gren+3D */
+    background: rgb(238,238,238); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+
+}
+
+.app[appid="6483f4f6-d5eb-4c1a-9e8e-5cbdf5b5300b"] span:first-child {
+    font-size: 30px !important;
+}
+
+.gsucell[cellid="e9f6d11d-29a8-4887-a928-303704ea23c0"],
+.gsucell[cellid="1a15a56f-15f1-4dcf-922c-97cafa4536f0"],
+.gsucell[cellid="f834dbad-5666-4634-8651-6013d31d9494"] {
+    padding-top: 0px !important;
+}
+
+.AutoTekAssistSaving .assistrow.lastchild {
+    padding-top: 24px;
+}
+
+.Contact {
+    margin-top: 20px;
+}

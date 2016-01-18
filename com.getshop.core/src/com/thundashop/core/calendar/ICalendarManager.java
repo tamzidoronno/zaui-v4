@@ -218,6 +218,10 @@ public interface ICalendarManager {
     @Writing
     public Location saveLocation(Location location) throws ErrorException;
     
+    @Administrator
+    @Writing
+    public Location addSubLocation(String locationId) throws ErrorException;
+    
     /**
      * Delete a location by id
      * 

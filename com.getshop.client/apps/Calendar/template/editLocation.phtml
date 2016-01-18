@@ -2,7 +2,7 @@
 /* @var $this \ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
 /* @var $location  \core_calendarmanager_data_Location */
     $locationId = $_POST['data']['locationId'];
-    $location = $this->getLocation($locationId);
+    $location = $this->getLocation($locationId, true);
     
     if ($location == null) {
         $location = new \core_calendarmanager_data_Location();
@@ -54,6 +54,24 @@
         $this->moveCommentsToCommentField($location);
         ?>
     </div>
+    
+    <? if (count($location->subLocations)) { ?>
+    <div style="margin-top: 30px;">
+        
+        <div style="text-align: center; border: solid 1px;">
+            <div> Sublocations </div>
+            <?
+            foreach ($location->subLocations as $subLocation) {
+                echo "<div class='gs_button selectlcoation' value='$subLocation->id'>"; 
+                echo $subLocation->location ? $subLocation->location : "No name set";
+                echo "</div>";
+            }
+            ?>
+            </div>
+    </div>
+    <? 
+    }
+    ?>
     <br/>
     <div>
         <? echo $this->__f("Add comment"); ?>
@@ -63,6 +81,7 @@
         
         
         <br><div class="gs_button calendar_location_save"><? echo $this->__f("Save"); ?></div>
+        <br><div class="gs_button add_sub_location"><? echo $this->__f("Add sublocation"); ?></div><br/><br/>
     </div>
 </div>
 

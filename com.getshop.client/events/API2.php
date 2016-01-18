@@ -403,6 +403,22 @@ class APICalendarManager {
 	}
 
 	/**
+	* Adds a new location to the system.
+	*
+	* @param location
+	* @throws ErrorException
+	*/
+
+	public function addSubLocation($locationId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["locationId"] = json_encode($this->transport->object_unset_nulls($locationId));
+	     $data["method"] = "addSubLocation";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->cast(new core_calendarmanager_data_Location(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* return a list of entires that a specified user
 	* has been attending to
 	*/

@@ -224,12 +224,20 @@ class Calendar extends MarketingApplication implements Application {
         }
     }
     
-    public function getLocation($locationId) {
+    public function getLocation($locationId, $realSub=false) {
         $locations = $this->getApi()->getCalendarManager()->getAllLocations();
 
         foreach ($locations as $ilocation) {
-            if ($ilocation->id == $locationId) {
+            if ($ilocation->id == $locationId && (!$realSub || !$ilocation->isSubLocation)) {
                 return $ilocation;
+            }
+            
+            if ($realSub) {
+                foreach ($ilocation->subLocations as $subLocation) {
+                    if ($subLocation->id == $locationId) {
+                        return $subLocation;
+                    }
+                }
             }
         }
         
@@ -237,7 +245,7 @@ class Calendar extends MarketingApplication implements Application {
     }
     
     private function saveLocationData() {
-        $location = $this->getLocation($_POST['data']['locationId']);
+        $location = $this->getLocation($_POST['data']['locationId'], true);
         if (!$location) {
             $location = new \core_calendarmanager_data_Location();
         }
@@ -743,6 +751,8 @@ class Calendar extends MarketingApplication implements Application {
                         }
                     }
                 }
+                
+               
             }
         }
         
@@ -949,6 +959,10 @@ class Calendar extends MarketingApplication implements Application {
     
     public function getStoreId() {
         return $this->getFactory()->getStore()->id;
+    }
+    
+    public function createSubLocation() {
+        $this->getApi()->getCalendarManager()->addSubLocation($_POST['data']['locationId']);
     }
 }
 

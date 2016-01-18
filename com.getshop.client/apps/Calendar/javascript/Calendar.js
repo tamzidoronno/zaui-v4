@@ -87,6 +87,7 @@ Calendar = {
         PubSub.subscribe("setting_switch_toggled", this.onOffChanged, this);
         $(document).on('click', '.selectlcoation', Calendar.showEditLocation);
         $(document).on('click', '.calendar_location_save', app.Calendar.saveLocationConfiguration);
+        $(document).on('click', '.add_sub_location', Calendar.addSubLocation);
         $(document).on('click', '.calendar_location_back', app.Calendar.showLocationsConfiguration);
         $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
         $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
@@ -107,6 +108,12 @@ Calendar = {
         $(document).on('change', '.Calendar .diplomasettings input#diploma_background', Calendar.addBackground);
         $(document).on('change', '.Calendar .diplomasettings input#textColor', Calendar.setTextColorDiploma);
         $(document).on('click', '.Calendar .list_showextrainformation', Calendar.showListExtraInformation);
+    },
+    
+    addSubLocation: function() {
+        var currentLocationId = $(this).closest('.editlocationscalendar').find('#locationId').val()
+        var event = thundashop.Ajax.createEvent(null, "createSubLocation", this,  { locationId : currentLocationId });
+        thundashop.Ajax.post(event);
     },
     
     toggleReadyToInvoice: function() {

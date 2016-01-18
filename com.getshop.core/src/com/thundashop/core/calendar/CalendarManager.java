@@ -817,6 +817,14 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                     found = true;
                     break;
                 }
+                if (loc != null) {
+                    for (Location subLoc : loc.subLocations) {
+                        if (subLoc.id.equals(entry.locationId)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
             }
 
             if (!found) {
@@ -1030,23 +1038,48 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 comment.createdByUserId = getSession().currentUser.id;
             }
         }
-
-        databaseSaver.saveObject(location, credentials);
-        locations.put(location.id, location);
-
-        return location;
+        
+        Location masterLocation = getMasterLocation(location);
+        if (masterLocation != null) {
+            masterLocation.replaceSubLocation(location);
+            databaseSaver.saveObject(masterLocation, credentials);
+            locations.put(masterLocation.id, masterLocation);
+            return location;
+        } else {
+            databaseSaver.saveObject(location, credentials);
+            locations.put(location.id, location);    
+            return location;
+        }
     }
 
     @Override
     public List<Location> getAllLocations() {
-        return new ArrayList(locations.values());
+        ArrayList<Location> newLocations = new ArrayList();
+        for (Location location : locations.values()) {
+            newLocations.add(location);
+            for (Location subLoc : location.subLocations) {
+                
+                Location cloned = subLoc.cloneMe(location);
+                newLocations.add(cloned);
+            }
+        }
+        return newLocations;
     }
 
     private void finalizeEntry(Entry entry) {
-        entry.locationObject = locations.get(entry.locationId);
+        entry.locationObject = getLocation(entry.locationId);
+        
+        Location masterLocation = getMasterLocation(entry.locationObject);
+        
         if (entry.locationObject != null) {
-            entry.location = entry.locationObject.location;
-            entry.locationExtended = entry.locationObject.locationExtra;
+            if (masterLocation != null) {
+                entry.location = masterLocation.location;
+            } else {
+                entry.location = entry.locationObject.location;                
+            }
+
+            entry.locationExtended = entry.locationObject.locationExtra;    
+            
         }
         
         for (String userId : entry.attendees) {
@@ -1746,5 +1779,48 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
         
         return results;
+    }
+
+    @Override
+    public Location addSubLocation(String locationId) throws ErrorException {
+        Location location = locations.get(locationId);
+        if (location != null) {
+            Location subLocation = new Location();
+            subLocation.id = UUID.randomUUID().toString();
+            subLocation.isSubLocation = true;
+            location.subLocations.add(subLocation);
+            saveObject(location);
+            return location;
+        }
+        
+        return null;
+    }
+
+    private Location getMasterLocation(Location location) {
+        for (Location ilocation : locations.values()) {
+            for (Location subLoc : ilocation.subLocations) {
+                if (subLoc.id.equals(location.id)) {
+                    return ilocation;
+                }        
+            }   
+        }
+        
+        return null;
+    }
+
+    private Location getLocation(String locationId) {
+        for (Location location : locations.values()) {
+            if (location.id.equals(locationId)) {
+                return location;
+            }
+            
+            for (Location subLoc : location.subLocations) {
+                if (subLoc.id.equals(locationId)) {
+                    return subLoc;
+                }
+            }
+        }
+        
+        return null;
     }
 }

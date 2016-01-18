@@ -7,6 +7,9 @@ class core_calendarmanager_data_Location extends core_common_DataCommon  {
 	public $comments;
 
 	/** @var String */
+	public $subLocations;
+
+	/** @var String */
 	public $location;
 
 	/** @var String */

@@ -67,6 +67,12 @@ if (!$locations) {
                             $selected = $location->id == $entry->locationObject->id ? "selected" : "";
                             $id = $location->id;
                             echo "<option $selected value='$id'>" . $name . "</option>";
+                            foreach ($location->subLocations as $subLocation) {
+                                $id = $subLocation->id;
+                                $subName = $subLocation->location;
+                                $selected = $subLocation->id == $entry->locationObject->id ? "selected" : "";
+                                echo "<option $selected value='$id'>" . $name ." - ". $subName. "</option>";
+                            }
                         }
                         ?>
                     </select>

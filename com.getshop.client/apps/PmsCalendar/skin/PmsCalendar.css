@@ -17,6 +17,7 @@
 .PmsCalendar .selected_periode,.PmsCalendar .selected_periode2 { background-color: #1392e9 !important; }
 .PmsCalendar .continue_button { border: solid 1px #bbb;  width: 200px; text-align: center; display:inline-block; padding: 10px; }
 .PmsCalendar .calendarfooter { text-align: right; cursor:pointer; padding-right: 5px; padding-top: 20px; }
+.PmsCalendar .timeselectionpanel { display:none; position:fixed; border: solid 1px #bbb; background-color:#fff; border-radius: 2px; padding: 3px; font-size: 16px; }
 
 /* printing the timelines */
 .PmsCalendar .roomrow { box-sizing: border-box; clear:both; margin-bottom: 5px; }

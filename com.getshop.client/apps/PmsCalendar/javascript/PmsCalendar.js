@@ -8,7 +8,6 @@ app.PmsCalendar = {
         $(document).on('mouseup', app.PmsCalendar.mouseup);
     },
     selectField : function() {
-        $('.startfield').removeClass('startfield');
         $('.selected_periode').removeClass('selected_periode');
         $(this).closest('.timecontainer').addClass('selected_row');
 
@@ -20,6 +19,14 @@ app.PmsCalendar = {
         }
         $(this).addClass('startfield');
         $('.continue_button').removeClass('disabled');
+        
+        var panel = $('.PmsCalendar .timeselectionpanel');
+        panel.fadeIn();
+        panel.css('left', $(this).offset().left);
+        panel.css('top', $(this).offset().top+80);
+        $('.timeselectionpanel').find('.startTime').html($(this).attr('starttimehuman'));
+        $('.timeselectionpanel').find('.endTime').html($(this).attr('endtimehuman'));
+
     },
     continueToForm : function() {
         if($(this).hasClass('disabled')) {
@@ -50,7 +57,12 @@ app.PmsCalendar = {
         });
     },
     mouseup : function() {
+        $('.startfield').removeClass('startfield');
+        $('.selected_row.mouseover').removeClass('mouseover');
+        $('.selected_row').removeClass('selected_row');
         app.PmsCalendar.mouseDown = false;
+        var panel = $('.PmsCalendar .timeselectionpanel');
+        panel.fadeOut();
     },
     mouseoverfield : function() {
         if(!app.PmsCalendar.mouseDown) {
@@ -61,16 +73,46 @@ app.PmsCalendar = {
             console.log('norow');
             return;
         }
-
-        if(!$(this).parent().prev().find('.timeblock').hasClass('selected_periode') && !$(this).parent().next().find('.timeblock').hasClass('selected_periode')) {
-            return;
-        }
-        if(!row.find('.selected_periode').length === 0) {
-            return;
-        }
-        if(app.PmsCalendar.mouseDown) {
-            $(this).addClass('selected_periode');
-        }
+        $('.available.mouseover').removeClass('mouseover');
+        $(this).addClass('mouseover');
+        
+        var foundMouseOver = false;
+        var foundFirst = false;
+        $('.selected_periode').removeClass('selected_periode');
+        var startBlock = null;
+        var endBlock = null;
+        
+        
+        row.find('.timeblock').each(function() {
+            if($(this).hasClass('startfield')) {
+                foundFirst = true;
+                if(!startBlock) {
+                    startBlock = $(this);
+                } else {
+                    endBlock = $(this);
+                }
+            }
+            if(!foundFirst && foundMouseOver) {
+                if(!startBlock) {
+                    startBlock = $(this);
+                }
+                $(this).addClass('selected_periode');
+            }
+            if(foundFirst && !foundMouseOver) {
+                $(this).addClass('selected_periode');
+                endBlock = $(this);
+            }
+            if($(this).hasClass('mouseover')) {
+                foundMouseOver = true;
+            }
+        });
+        
+        var panel = $('.PmsCalendar .timeselectionpanel');
+        panel.show();
+        panel.css('left', $(this).offset().left);
+        panel.css('top', $(this).offset().top+80);
+        $('.timeselectionpanel').find('.startTime').html(startBlock.attr('starttimehuman'));
+        $('.timeselectionpanel').find('.endTime').html(endBlock.attr('endtimehuman'));
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});

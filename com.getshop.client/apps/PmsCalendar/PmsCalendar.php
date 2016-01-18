@@ -83,7 +83,10 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             }
             $state = $this->getBlockState($room, $day, $startTime, $endTime);
             echo "<span class='outerblock $size' style='width: $width%'>";
-            echo "<span class='timeblock $state' startTime='$startTime' endTime='$endTime' title='".date("H:i", $startTime)." - ".date("H:i", $endTime)."' day='".date("d.m.Y", $day)."'></span>";
+            echo "<span class='timeblock $state' startTime='$startTime' "
+                    . "endTime='$endTime' "
+                    . "day='".date("d.m.Y", $day)."'"
+                    . " starttimehuman='".date("H:i", $startTime)."' endtimehuman='".date("H:i", $endTime)."'></span>";
             echo "</span>";
             $startTime = $endTime;
         }

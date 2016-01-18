@@ -75,6 +75,7 @@ class Users extends \SystemApplication implements \Application {
         $user->fullName = $_POST['name'];
         $user->cellPhone = $_POST['phone_number'];
         $user->showHiddenFields = $_POST['showHiddenFields'];
+        $user->prefix = $_POST['prefix'];
         $user->type = 10;
         
         if ($_POST['iseditor'] == "true") {

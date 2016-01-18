@@ -114,6 +114,8 @@ public interface IHotelBookingManager {
     
     public BookingReference getReservationByReferenceId(Integer referenceId) throws ErrorException;
     
+    public List<BookingReference> getAllReservationsByReferenceId(Integer referenceId) throws ErrorException;
+    
     public List<ArxLogEntry> getArxLog() throws ErrorException;
     
     public void checkForVismaTransfer() throws ErrorException;

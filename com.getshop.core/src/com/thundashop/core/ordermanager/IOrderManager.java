@@ -60,6 +60,9 @@ public interface IOrderManager {
     @Editor
     public Order getOrderByReference(String referenceId) throws ErrorException;
     
+    @Editor
+    public List<Order> getAllOrderByReference(String referenceId) throws ErrorException;
+    
     /**
      * Fetch all orders for a user.
      * @param userId

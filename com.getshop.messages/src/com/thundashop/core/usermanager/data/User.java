@@ -86,6 +86,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     public boolean isMaster = false;
     
+    public String preferredPaymentType = "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment";
+    
     public Company company = null;
     
     /**

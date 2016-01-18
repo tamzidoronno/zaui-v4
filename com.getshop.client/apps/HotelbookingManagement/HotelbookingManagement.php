@@ -233,6 +233,19 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $this->includefile("moveroom");
     }
     
+    public function changePaymentType() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->payment->paymentType = $_POST['data']['type'];
+        if(stristr($order->payment->paymentType, "invoice")) {
+            $order->status = 4;
+        } else {
+            $order->status = 2;
+        }
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        
+        $this->includefile("moveroom");
+    }
+    
     public function moveRoom() {
         $refid = $_POST['data']['refid'];
         $rooms = $_POST['data']['rooms'];

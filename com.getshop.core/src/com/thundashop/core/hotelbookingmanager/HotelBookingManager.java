@@ -410,6 +410,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         return null;
     }
+    
+    @Override
+    public List<BookingReference> getAllReservationsByReferenceId(Integer referenceId) throws ErrorException {
+        List<BookingReference> result = new ArrayList();
+        List<BookingReference> allReservations = getAllReservations();
+        for (BookingReference reference : allReservations) {
+            if (reference.bookingReference == referenceId) {
+                result.add(reference);
+            }
+        }
+        return result;
+    }
 
     @Override
     public void moveRoomOnReference(Integer reference, String oldRoom, String newRoomId) throws ErrorException {
@@ -1376,17 +1388,22 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         String itemName = type.name;
         String orderLineText = "bod " + room.roomName + ", " + startText + " - " + endText + " (" + itemName + ")";
 
-
-        
         Order order = orderManager.createOrder(user.address);
         order.reference = "" + bookingReference.bookingReference;
         CartItem item = order.cart.getItems().get(0);
         item.getProduct().name = orderLineText;
         item.getProduct().price = bookingReference.bookingFee;
         order.userId = bookingReference.userId;
+        order.payment.paymentType = user.preferredPaymentType;
+        if(user.preferredPaymentType.toLowerCase().contains("invoice")) {
+            order.status = Order.Status.COMPLETED;
+        } else {
+            order.status = Order.Status.WAITING_FOR_PAYMENT;
+        }
+        order.transferedToAccountingSystem = false;
+        
         orderManager.saveOrder(order);
         System.out.println("Order created: " + orderLineText + " , id: " + order.incrementOrderId + " id: " + order.id);
-        
     }
 
     private RoomType getRoomTypeById(String roomTypeId) {
@@ -1438,4 +1455,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         return null;
     }
+
+    
 }

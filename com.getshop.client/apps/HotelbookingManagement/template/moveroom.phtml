@@ -10,6 +10,17 @@ $types = array();
 $types['ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment'] = "Invoice";
 $types['ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs'] = "Dibs";
 
+$status = array();
+$status[1] = "CREATED";
+$status[2] = "WAITING_FOR_PAYMENT";
+$status[3] = "PAYMENT_FAILED";
+$status[4] = "COMPLETED";
+$status[5] = "CANCELED";
+$status[6] = "SENT";
+$status[7] = "NEEDCOLLECTING";
+
+$orders = $this->getApi()->getOrderManager()->getAllOrderByReference($reference->bookingReference);
+
 for($i = 0; $i < sizeof($reference->contact->names);$i++) {
 ?>
         <input type='hidden' value='<? echo $refid; ?>' id='referenceId'>
@@ -31,7 +42,7 @@ for($i = 0; $i < sizeof($reference->contact->names);$i++) {
             </select>
             <b><? echo $this->__f("Select a new room for") . " " . $reference->contact->names[$i]; ?> </b><br>
             <bR>
-<? } ?>
+<?php } ?>
 </div>
 <div>
     <input type="text" class='startdate' style="float:right;" value='<? echo date("d-m-Y", strtotime($reference->startDate)); ?>'>
@@ -72,4 +83,50 @@ for($i = 0; $i < sizeof($reference->contact->names);$i++) {
     <div style="text-align:right;">
         <input type="button" id="doChangeRoom" value="<? echo $this->__f("Update room"); ?>">
     </div>
+</div>
+<div style='padding: 10px;'>
+<?php
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th>Order id</th>";
+echo "<th>Created date</th>";
+echo "<th>Amount</th>";
+echo "<th>Type</th>";
+echo "<th>Status</th>";
+echo "<th align='right'>Transferred</th>";
+echo "</tr>";
+
+foreach($orders as $order) {
+    /* @var $order core_ordermanager_data_Order */
+    echo "<tr>";
+    echo "<td><a href='/?page=orderoverview&action=showorder&orderid=".$order->id."'>" . $order->incrementOrderId . "</a></td>";
+    echo "<td>" . $order->rowCreatedDate . "</td>";
+    echo "<td>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
+    if(!$order->transferedToAccountingSystem) {
+        echo "<td>";
+        echo "<select class='orderpaymenttype' orderid='".$order->id."' refid='".$reference->bookingReference."'>";
+        foreach($types as $idx => $value) {
+            $selected = "";
+            if($order->payment->paymentType == $idx) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='$idx' $selected>$value</option>";
+        }
+        echo "</select>";
+        echo "</td>";
+    } else {
+        echo "<td>" . $types[$order->payment->paymentType] . "</td>";
+    }
+    echo "<td>" . $status[$order->status] . "</td>";
+    echo "<td align='right'>";
+    if(@$order->transferedToAccountingSystem) {
+        echo "Yes";
+    } else {
+        echo "No";
+    }
+    echo "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>
 </div>

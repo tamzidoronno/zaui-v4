@@ -105,6 +105,18 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .stop_reference_action', app.HotelbookingManagement.doStopReference);
         $(document).on('click', '.HotelbookingManagement .go_live', app.HotelbookingManagement.confirmReservation);
         $(document).on('change', '.HotelbookingManagement #selectweekdate', app.HotelbookingManagement.selectWeekdate);
+        $(document).on('change', '.HotelbookingManagement .orderpaymenttype', app.HotelbookingManagement.changePaymentType);
+    },
+    changePaymentType : function() {
+        var type = $(this).val();
+        var orderId = $(this).attr('orderid');
+        var data = {
+            "type" : type,
+            "orderid" : orderId,
+            "refid" : $(this).attr('refid')
+        };
+        var event = thundashop.Ajax.createEvent('','changePaymentType',$(this),data);
+        thundashop.common.showInformationBox(event, "Move room");
     },
     selectWeekdate : function() {
         var dates = $(this).val();

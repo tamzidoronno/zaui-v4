@@ -48,6 +48,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
+                
+                if(order.payment.paymentType.isEmpty()) {
+                    order.payment.paymentType = order.payment.paymentType = "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment";
+                    order.status = Order.Status.COMPLETED;
+                }
+                
                 if (order.cart == null || order.cart.address == null) {
                     try {
                         System.out.println("Removing order: " + order.id + " due to incorrect data on them");
@@ -247,6 +253,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
 
+        if(orderIds != null && !orderIds.isEmpty()) {
+            List<Order> toReturn = new ArrayList();
+            for(Order ord : result) {
+                if(orderIds.contains(ord.id)) {
+                    toReturn.add(ord);
+                }
+            }
+            result = toReturn;
+        }
+        
         Collections.sort(result);
         Collections.reverse(result);
         return result;
@@ -469,6 +485,27 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<Order> getAllOrderByReference(String referenceId) throws ErrorException {
+        List<Order> result = new ArrayList();
+        for (Order order : orders.values()) {
+            if (order.reference.equals(referenceId)) {
+                result.add(order);
+            }
+        }
+        
+        
+        Collections.sort(result, new Comparator<Order>(){
+            public int compare(Order o1, Order o2){
+                if(o1.incrementOrderId == o2.incrementOrderId)
+                    return 0;
+                return o1.incrementOrderId < o2.incrementOrderId ? -1 : 1;
+            }
+       });
+         
+       return result;
     }
 
     @Override

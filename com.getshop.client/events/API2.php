@@ -2121,6 +2121,21 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllReservationsByReferenceId($referenceId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
+	     $data["method"] = "getAllReservationsByReferenceId";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	*
 	* @return List
 	* @throws ErrorException
@@ -3186,6 +3201,21 @@ class APIOrderManager {
 	     $data["method"] = "createOrderByCustomerReference";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Got a reference number for the order, fetch it from here.
+	* @param referenceId
+	* @throws ErrorException
+	*/
+
+	public function getAllOrderByReference($referenceId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
+	     $data["method"] = "getAllOrderByReference";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

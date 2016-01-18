@@ -19,6 +19,8 @@ public class BookingItem extends DataCommon {
     
     public String bookingItemName = "";
     
+    public String bookingItemAlias = "";
+    
     /**
      * How many bookings is allowed to be on this bookingitem.
      */

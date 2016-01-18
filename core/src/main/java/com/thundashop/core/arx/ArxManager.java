@@ -563,9 +563,14 @@ public class ArxManager extends ManagerBase implements IArxManager {
         
         User currentUser = getSession().currentUser;
         String hostName = ":5002/arx/import";
-        String password = userPasswords.get(currentUser.id);
+        String password = arxPassword;
+        String username = arxUsername;
+        if(currentUser != null) {
+            password = userPasswords.get(currentUser.id);
+            username = currentUser.username;
+        }
         
-        httpLoginRequest(hostName, currentUser.username, password, toPost);
+        httpLoginRequest(hostName, username, password, toPost);
         
         return person;
     }

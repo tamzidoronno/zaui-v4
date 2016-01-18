@@ -66,6 +66,7 @@ arxappControllers.controller('LoginCtrl', function($scope, LoginService, LocalSt
     });
 
     result.fail(function(result) {
+        console.log(result);
         var alertPopup = $ionicPopup.alert({
             title: 'Login failed!',
             template: 'Please check your credentials!'
@@ -93,7 +94,7 @@ arxappControllers.controller('UsersCtrl', ['GetshopService', '$scope', function(
 
 }]);
 
-arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$stateParams', function(getshop, $scope, $stateParams) {
+arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$stateParams', '$ionicModal', function(getshop, $scope, $stateParams, $ionicModal) {
 
   // This should be replaced with api call to get only one person details
   $scope.onPersonFetched = function(result) {
@@ -115,6 +116,54 @@ arxappControllers.controller('UserDetailCtrl', ['GetshopService', '$scope', '$st
   
   $scope.isProcessing = true;
   getshop.client.ArxManager.getAllPersons().done($scope.onPersonFetched);
+
+
+  // Inject modal forms for editing cards and access categories
+  $ionicModal.fromTemplateUrl('card-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.cardModal = modal
+  })  
+
+  $ionicModal.fromTemplateUrl('accessCategory-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.acModal = modal
+  })  
+
+  $scope.addAccessCategory = function() {
+    $scope.acModal.show();
+    $scope.ac = { accessId: 'xxx', name: 'new category', description: 'new and shiny access category' }
+  };
+
+  $scope.editAccessCategory = function(accessCategory) {
+    $scope.acModal.show();
+    $scope.ac = accessCategory;
+  };
+
+  $scope.saveAccessCategory = function() {
+    getshop.client.ArxManager.updatePerson($scope.user);
+    $scope.acModal.hide();
+  }
+
+  $scope.addCard = function() {
+    $scope.cardModal.show();
+    $scope.newCard = { cardid: 'xxx', format: 'what is this?', description: 'new and shiny card' }
+    $scope.newCard.personId = $scope.user.id;
+  };
+
+  $scope.deleteCard = function(idx) {
+    $scope.user.cards.splice(idx, 1);
+    getshop.client.ArxManager.updatePerson($scope.user);    
+  }
+
+  $scope.saveCard = function() {
+    $scope.user.cards.push($scope.newCard);
+    getshop.client.ArxManager.addCard($scope.user.id, $scope.newCard);
+    $scope.cardModal.hide();
+  }
 
 }]);
 

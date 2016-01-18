@@ -63,6 +63,8 @@ arxAppServices.factory('GetshopService', ['$window','LocalStorage', function($wi
   }
 }]);
 
+
+
 arxAppServices.factory('LocalStorage', ['$window', function($window) {
   return {
     set: function(key, value) {

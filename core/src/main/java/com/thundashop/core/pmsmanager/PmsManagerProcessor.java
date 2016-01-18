@@ -4,6 +4,7 @@ import com.ibm.icu.util.Calendar;
 import com.thundashop.core.arx.AccessCategory;
 import com.thundashop.core.arx.Card;
 import com.thundashop.core.arx.Person;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,17 +64,32 @@ public class PmsManagerProcessor {
         room.code = generateCode(room.code);
         Person person = new Person();
         person.firstName = room.guests.get(0).name.split(" ")[0];
-        person.lastName = room.guests.get(0).name.split(" ")[1];
+        if(room.guests.get(0).name.split(" ").length > 1) {
+            person.lastName = room.guests.get(0).name.split(" ")[1];
+        }
+        
+        if(manager.configuration.arxCardFormat == null || manager.configuration.arxCardFormat.isEmpty()) {
+            System.out.println("Card format not set yet");
+            return false;
+        }
         
         Card card = new Card();
-        card.format = "kode";
+        card.format = manager.configuration.arxCardFormat;
         card.cardid = room.code;
+        
         person.cards.add(card);
         person.id = room.pmsBookingRoomId;
         person.deleted = deleted;
         
         AccessCategory category = new AccessCategory();
+        String alias = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemAlias;
         category.name = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+        if(alias != null && !alias.isEmpty()) {
+            category.name = alias;
+        }
+        category.startDate = room.date.start;
+        category.endDate = room.date.end;
+        
         person.accessCategories.add(category);
         
         try {
@@ -146,6 +162,13 @@ public class PmsManagerProcessor {
                     continue;
                 }
                 
+                if(room.guests.isEmpty()) {
+                    PmsGuests guest = new PmsGuests();
+                    User user = manager.userManager.getUserById(booking.userId);
+                    guest.name = user.fullName;
+                    room.guests.add(guest);
+                }
+                
                 if(room.isStarted() && !room.addedToArx && !room.isEnded()) {
                     if(pushToArx(room, false)) {
                         room.addedToArx = true;
@@ -174,7 +197,7 @@ public class PmsManagerProcessor {
         }
         
         for(int i = 0; i < 100000; i++) {
-            Integer newcode = new Random().nextInt(9999-1000)+1000;
+            Integer newcode = new Random().nextInt(999999-100000)+100000;
             if(!codeExist(newcode)) {
                 return newcode.toString();
             }
@@ -234,9 +257,11 @@ public class PmsManagerProcessor {
         
         NewOrderFilter filter = new NewOrderFilter();
         filter.numberOfMonths = 1;
-        
+        if(type == 0) {
+            return;
+        }
         if(type != PmsBooking.PriceType.monthly) {
-            System.out.println("Not yet supporting other payment periods than months");
+//            System.out.println("Not yet supporting other payment periods than months");
             return;
         }
         System.out.println("\t" + booking.invoicedTo);
@@ -307,10 +332,10 @@ public class PmsManagerProcessor {
         List<PmsBooking> toRemove = new ArrayList();
         for(PmsBooking booking : res) {
             if(!booking.confirmed) {
-                toRemove.add(booking);
+//                toRemove.add(booking);
             }
             if(booking.isDeleted) {
-                toRemove.add(booking);
+//                toRemove.add(booking);
             }
         }
         res.removeAll(toRemove);

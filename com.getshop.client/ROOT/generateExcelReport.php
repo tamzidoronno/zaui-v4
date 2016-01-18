@@ -33,6 +33,7 @@ class GenerateReport {
         $heading["Dato"] = $entry->day.".".$entry->month.".".$entry->year;
         $heading["Gruppe"] = $stackedGroups[$group]->groupName;
         $heading["Antall dager"] = sizeof($entry->otherDays)+1;
+        
         $rows[] = $heading;
         
         
@@ -43,10 +44,10 @@ class GenerateReport {
         $line["Firmanavn"] = "";
         $line["Org.nr"] = "";
         $line["Kommentar"] = "";
-
+        
         $rows[] = $line;
         
-        $rows[] = ["Name", "Email", "Phone number", "Address", "Vat number", "Comments", "Event name", "Group reference id" ];
+        $rows[] = ["Name", "Email", "Phone number", "Address", "Vat number", "Comments", "Event name", "Group reference id", "Fakturastatus" ];
         foreach ($attendees as $attandee) {
             $user = $this->factory->getApi()->getUserManager()->getUserById($attandee);
             if (is_array($user->groups)) {
@@ -123,6 +124,9 @@ class GenerateReport {
         $line[] = $this->getComments($user, $entry);
         $line[] = $entry->title;
         $line[] = $user->referenceKey;
+        
+        $line[] = $this->getParticipateData($entry->participateData->{$user->id});
+        
         return $line;
     }
 
@@ -147,6 +151,22 @@ class GenerateReport {
         }
         
         return $commentText;
+    }
+    
+    public function getParticipateData($data) {
+        if ($data == "participated") 
+            return "Deltatt";
+        
+        if ($data == "notvalid_cancel") 
+            return "Faktureres 50%";
+        
+        if ($data == "valid_cancel") 
+            return "Skal ikke faktureres";
+        
+        if ($data == "valid_free") 
+            return "Deltatt, ingen fakturering";
+        
+        return $data;
     }
 
 }

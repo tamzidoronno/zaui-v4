@@ -32,7 +32,7 @@ app.PmsCalendar = {
         if($(this).hasClass('disabled')) {
             return;
         }
-        var row = $('.selected_row');
+        var row = $('.selected_periode').closest('.timecontainer');
         var start = null;
         var end = null;
         row.find('.selected_periode').each(function() {
@@ -63,11 +63,14 @@ app.PmsCalendar = {
         app.PmsCalendar.mouseDown = false;
         var panel = $('.PmsCalendar .timeselectionpanel');
         panel.fadeOut();
+        $(document).tooltip('enable');
     },
     mouseoverfield : function() {
         if(!app.PmsCalendar.mouseDown) {
             return;
         }
+        $(document).tooltip('disable');
+
         var row = $(this).closest('.timecontainer');
         if(!row.hasClass('selected_row')) {
             console.log('norow');
@@ -81,7 +84,6 @@ app.PmsCalendar = {
         $('.selected_periode').removeClass('selected_periode');
         var startBlock = null;
         var endBlock = null;
-        
         
         row.find('.timeblock').each(function() {
             if($(this).hasClass('startfield')) {
@@ -110,7 +112,7 @@ app.PmsCalendar = {
         var panel = $('.PmsCalendar .timeselectionpanel');
         panel.show();
         panel.css('left', $(this).offset().left);
-        panel.css('top', $(this).offset().top+80);
+        panel.css('top', $(this).offset().top+80 - $(window).scrollTop());
         $('.timeselectionpanel').find('.startTime').html(startBlock.attr('starttimehuman'));
         $('.timeselectionpanel').find('.endTime').html(endBlock.attr('endtimehuman'));
     },

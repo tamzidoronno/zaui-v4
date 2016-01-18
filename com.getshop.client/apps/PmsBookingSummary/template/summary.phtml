@@ -19,12 +19,14 @@ $addonsText = $this->getConfigurationSetting("heading_summary");
 if(!$addonsText) {
     $addonsText = $this->__w("Rooms selected");
 }
+$startingFromText = $this->__w("Starting from");
+
 echo "<h3 class='bottomborder'>" . $addonsText . "</h3>";
 foreach($booking->rooms as $room) {
     if($room->addedByRepeater) {
         continue;
     }
-    printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems);
+    printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText);
 }
 
 if($configuration->supportMoreDates) {
@@ -35,7 +37,7 @@ foreach($booking->rooms as $room) {
     if(!$room->addedByRepeater) {
         continue;
     }
-    printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems);
+    printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText);
 }
 
 $printAddons = false;
@@ -98,7 +100,7 @@ if($addonsFound) {
 }
 
 
-function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems) {
+function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText) {
 /* @var $room core_pmsmanager_PmsBookingRooms */
     $price = $room->price;
     echo "<div class='itemrow'>";
@@ -117,7 +119,7 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     $date =$room->date;
     
     if(!$date->end) {
-        echo $this->__w("Starting from") . " ";
+        echo $startingFromText . " ";
     }
     echo "<span>" . date("d.m.Y H:i", strtotime($date->start));
     if($date->end) {

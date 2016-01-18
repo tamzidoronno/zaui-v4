@@ -40,3 +40,20 @@ Variables:<bR>
 <textarea class="eventtext"><? echo $text; ?></textarea>
 <span class="gs_button save_event_partition_data"><? echo $this->__f("Save"); ?></span>
 
+<?
+if ($this->getFactory()->getStore()->id == "2fac0e57-de1d-4fdf-b7e4-5f93e3225445") {
+?>
+<div style="border: solid 1px #EEE; margin-top: 30px; padding: 20px;">
+    Download complete user-reports:
+    <?
+    foreach ($this->getApi()->getUserManager()->getAllGroups() as $group) {
+        $pageId = $this->getFactory()->getPage()->id;
+        $groupId = $group->id;
+        echo " <a ignorenavigateWithJavascript='true' href='/generateExcelReportAllNorway.php?pageId=$pageId&group=$groupId&type=calendarbookedusers'>$group->groupName</a> ";
+    }
+    ?>
+</div>
+<?
+}
+?>
+    

@@ -978,6 +978,26 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
         return entries;
     }
+    
+    @Override
+    public List<Entry> getAllEventsConnectedToPageIncludedPast(String pageId) {
+        List<Entry> entries = new ArrayList();
+
+        for (Month month : months.values()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    if (entry.linkToPage != null && entry.linkToPage.equals(pageId)) {
+                        entries.add(entry);
+                    }
+                }
+            }
+        }
+
+        Collections.sort(entries);
+        Collections.reverse(entries);
+
+        return entries;
+    }
 
     @Override
     public void addUserToPageEvent(String userId, String bookingAppId) throws ErrorException {

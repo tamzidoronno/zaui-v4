@@ -204,6 +204,11 @@ public interface ICalendarManager {
     public List<Entry> getAllEventsConnectedToPage(String pageId);
     
     /**
+     * Returns a list of 
+     */
+    public List<Entry> getAllEventsConnectedToPageIncludedPast(String pageId);
+    
+    /**
      * Adds a new location to the system. 
      * 
      * @param location

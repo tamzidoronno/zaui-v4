@@ -613,6 +613,19 @@ class APICalendarManager {
 	}
 
 	/**
+	* Returns a list of
+	*/
+
+	public function getAllEventsConnectedToPageIncludedPast($pageId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data["method"] = "getAllEventsConnectedToPageIncludedPast";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all locations.
 	*
 	* @return List

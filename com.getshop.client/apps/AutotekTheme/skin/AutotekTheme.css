@@ -4,6 +4,11 @@ body {
     color: #222;
 }
 
+.gsportraitimage {
+    background-color: #e8e8e8;
+}
+
+    
 .gs_page_width {
     width: 960px;
     margin: 0 auto;

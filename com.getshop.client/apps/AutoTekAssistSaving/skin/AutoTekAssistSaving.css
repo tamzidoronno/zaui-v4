@@ -11,6 +11,7 @@
     display: inline-block;
     font-size: 18px;
     text-align: center;
+    vertical-align: top;
 }
 
 .AutoTekAssistSaving .assistrow input {
@@ -34,3 +35,4 @@
     margin-top: 30px;
     font-size: 14px;
 }
+

@@ -4,6 +4,8 @@
     $locationId = $_POST['data']['locationId'];
     $location = $this->getLocation($locationId, true);
     
+    $masterLocation = $this->getMasterLocation($locationId);
+    $masterLocationId = $masterLocation ? $masterLocation->id : "";
     if ($location == null) {
         $location = new \core_calendarmanager_data_Location();
         $location->id = "";
@@ -77,8 +79,10 @@
         <? echo $this->__f("Add comment"); ?>
         <br/>
         <textarea id='commentText' style="width: 945px; height: 150px;"><? echo $this->getConfigurationSetting("comment_".$location->id); ?></textarea>
-        <br><div class="gs_button calendar_location_back"><? echo $this->__f("Back"); ?></div>
-        
+        <?
+            $locClass = ($location->isSubLocation) ? "selectlcoation" : "calendar_location_back";
+        ?>
+        <br><div class="gs_button <? echo $locClass; ?>" value="<? echo $masterLocationId; ?>"><? echo $this->__f("Back"); ?></div>
         
         <br><div class="gs_button calendar_location_save"><? echo $this->__f("Save"); ?></div>
         <br><div class="gs_button add_sub_location"><? echo $this->__f("Add sublocation"); ?></div><br/><br/>

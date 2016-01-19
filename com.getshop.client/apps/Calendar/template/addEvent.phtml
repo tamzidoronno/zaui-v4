@@ -63,6 +63,9 @@ if (!$locations) {
                     <select id="location">
                         <?php
                         foreach ($locations as $location) {
+                            if ($location->isSubLocation) {
+                                continue;
+                            }
                             $name = $location->location;
                             $selected = $location->id == $entry->locationObject->id ? "selected" : "";
                             $id = $location->id;

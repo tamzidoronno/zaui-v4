@@ -113,7 +113,11 @@ Calendar = {
     addSubLocation: function() {
         var currentLocationId = $(this).closest('.editlocationscalendar').find('#locationId').val()
         var event = thundashop.Ajax.createEvent(null, "createSubLocation", this,  { locationId : currentLocationId });
-        thundashop.Ajax.post(event);
+        var me = this;
+        thundashop.Ajax.postWithCallBack(event, function() {
+            Calendar.showEditLocationInternal(currentLocationId, me);
+        });
+        
     },
     
     toggleReadyToInvoice: function() {
@@ -311,15 +315,19 @@ Calendar = {
         thundashop.common.showInformationBox(event, __f("Locations"));
     },
     showEditLocation: function() {
+        Calendar.showEditLocationInternal($(this).attr('value'), this);
+    },
+    
+    showEditLocationInternal: function(locationId, from) {
         var data = {};
-
-        if ($(this).attr('value')) {
-            data.locationId = $(this).attr('value')
+        if (locationId) {
+            data.locationId = locationId
         }
 
-        var event = thundashop.Ajax.createEvent(null, "showEditLocation", this, data);
+        var event = thundashop.Ajax.createEvent(null, "showEditLocation", from, data);
         thundashop.common.showInformationBox(event, __f("Locations"));
     },
+    
     expandDays: function() {
         $('.Calendar .calendar table .containsdata').hover(
                 function() {

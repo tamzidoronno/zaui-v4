@@ -964,6 +964,19 @@ class Calendar extends MarketingApplication implements Application {
     public function createSubLocation() {
         $this->getApi()->getCalendarManager()->addSubLocation($_POST['data']['locationId']);
     }
+
+    public function getMasterLocation($locationId) {
+        foreach ($this->getApi()->getCalendarManager()->getAllLocations() as $loc) {
+            foreach ($loc->subLocations as $sub) {
+                if ($sub->id == $locationId) {
+                    return $loc;
+                }
+            }
+        }
+        
+        return null;
+    }
+
 }
 
 class checkListComment {

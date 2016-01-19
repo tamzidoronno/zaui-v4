@@ -66,7 +66,12 @@ foreach($rooms as $room) {
         $progPrice = $prices->progressivePrices->{$room->type->id};
         echo "<span class='price'>";
         echo "Første " . $progPrice[0]->numberOfTimeSlots." dager ". $progPrice[0]->price . "kr";
-        echo "<br>deretter " . $progPrice[1]->price . "kr";
+        if($progPrice[2]->price) {
+            echo "<br>Mellom " . $progPrice[0]->numberOfTimeSlots . " og " . ($progPrice[0]->numberOfTimeSlots+$progPrice[1]->numberOfTimeSlots) . " dager " . $progPrice[1]-> price. "kr";
+            echo "<br>Deretter " . $progPrice[2]->price . "kr";
+        } else {
+            echo "<br>Deretter " . $progPrice[1]->price . "kr";
+        }
         echo "</span>";
         ?>
     <?php } ?>

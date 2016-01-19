@@ -1,7 +1,8 @@
 app.OrderManager = {
     init : function() {
         $(document).on('change', '#gss_order_filter_search_text', app.OrderManager.filterSearch);   
-        $(document).on('click', '.gss_overview_order', app.OrderManager.showOrder);   
+        $(document).on('click', '.gss_overview_order', app.OrderManager.showOrderSmall);   
+        $(document).on('click', '.gss_show_order_action', app.OrderManager.showOrder);   
         $(document).on('click', '.gss_order_back_to_orders', app.OrderManager.showOverview);   
         $(document).on('click', '.gss_changeOrderLine', app.OrderManager.changeOrderLine);   
         $(document).on('click', '.gss_changeOrderCount', app.OrderManager.changeOrderCount);   
@@ -15,6 +16,20 @@ app.OrderManager = {
             $('.gss_orderview_available_payments').slideDown();
         });   
     },
+    
+    showOrderSmall: function() {
+        
+        
+        var smallView = $(this).closest('.gss_overview_order_outer').find('.gss_small_order_listview');
+        if (smallView.is(':visible')) {
+            smallView.slideUp();
+        } else {
+            $('.gss_small_order_listview').slideUp();
+            smallView.slideDown();
+        }
+        
+    },
+    
     payorder : function() {
         var orderid = $(this).attr('orderid');
     $('#backsidesettings').fadeOut(0, function () {

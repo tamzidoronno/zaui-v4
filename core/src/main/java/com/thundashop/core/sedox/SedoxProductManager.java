@@ -1858,8 +1858,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (filterData.pageNumber == 0) 
             filterData.pageNumber = 1;
         
-        int end = (filterData.pageNumber*filterData.pageSize) ;
-        int start = ((filterData.pageNumber-1)*filterData.pageSize);
         
         
         filteredOrders = new ArrayList(filteredOrders);
@@ -1868,6 +1866,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (sorter != null) {
             Collections.sort(filteredOrders, sorter);
         }
+        
+        int end = (filterData.pageNumber*filterData.pageSize) ;
+        int start = ((filterData.pageNumber-1)*filterData.pageSize);
         
         if (filteredOrders.size() >= end) {
             return new ArrayList(filteredOrders.subList(start, end));

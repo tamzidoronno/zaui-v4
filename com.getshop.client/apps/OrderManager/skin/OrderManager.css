@@ -116,3 +116,24 @@
     border: solid 1px #EEE;
     cursor: pointer;
 }
+
+.gss_small_order_listview .order_col .order_col_inner {
+    border: dashed 1px #DDD;
+    padding: 10px;
+    
+}
+
+.gss_small_order_listview .order_col {
+    font-size: 14px;
+    vertical-align: top;
+    width: 33.33%;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.gss_small_order_listview {
+    font-size: 0px;    
+    display: none;
+}
+

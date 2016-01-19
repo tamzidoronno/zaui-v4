@@ -29,6 +29,9 @@ import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1147,5 +1150,72 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public FilteredData getOrdersFiltered(FilterOptions filterOptions) {
+        List<Order> allOrders = orders.values().stream()
+                .filter(filterOrdersByDate(filterOptions))
+                .filter(filterOrdersBySearchWord(filterOptions))
+                .filter(filterOrdersByStatus(filterOptions))
+                .collect(Collectors.toList());
+        
+        return pageIt(allOrders, filterOptions);
+    }
+
+    private Predicate<? super Order> filterOrdersByDate(FilterOptions filterOptions) {
+        if (filterOptions.startDate == null || filterOptions.endDate == null) {
+            return order -> order != null;
+        }
+        
+        return order -> order.intercepts(filterOptions.startDate, filterOptions.endDate);
+    }
+
+    private FilteredData pageIt(List data, FilterOptions filterOptions) {
+        FilteredData retData = new FilteredData();
+        retData.datas = chopit(filterOptions, data);
+        retData.filterOptions = filterOptions;
+        retData.totalPages = (int) Math.ceil((double)data.size()/(double)filterOptions.pageSize);
+        return retData;
+    }
+    
+    private List chopit(FilterOptions filterData, List data) {
+        int end = (filterData.pageNumber*filterData.pageSize) ;
+        int start = ((filterData.pageNumber-1)*filterData.pageSize);
+        
+        List objects = null;
+        
+        if (data.size() >= end) {
+            objects = new ArrayList(data.subList(start, end));
+        } 
+        
+        if (objects == null && data.size() >= start) {
+            objects = new ArrayList(data.subList(start, data.size()));
+        }
+        
+        if (objects == null) {
+            objects = new ArrayList(data);
+        }
+        
+        Collections.sort(objects);
+        Collections.reverse(objects);
+        
+        return objects;
+    }
+
+    private Predicate<? super Order> filterOrdersBySearchWord(FilterOptions filterOptions) {
+        return order -> order.matchOnString(filterOptions.searchWord);
+    }
+
+    private Predicate<? super Order> filterOrdersByStatus(FilterOptions filterOptions) {
+        if (!filterOptions.extra.containsKey("orderstatus")) {
+            return o -> o != null;
+        }
+        
+        if (filterOptions.extra.get("orderstatus").equals("0")) {
+            return o -> o != null;
+        }
+        
+        return order -> new Integer(order.status).equals(Integer.valueOf(filterOptions.extra.get("orderstatus")));
     }
 }

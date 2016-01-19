@@ -4,6 +4,8 @@ import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Internal;
 import com.thundashop.core.ordermanager.data.Order;
@@ -55,6 +57,10 @@ public interface IOrderManager {
      * @throws ErrorException 
      */
     public List<Order> getOrders(ArrayList<String> orderIds, Integer page, Integer pageSize) throws ErrorException;
+    
+    
+    @Editor
+    public FilteredData getOrdersFiltered(FilterOptions filterOptions);
     
     /**
      * Fetch a single order based on its id.

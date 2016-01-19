@@ -11,6 +11,8 @@ if (!count($orders)) { ?>
     return;  
 }
 
+$total = 0;
+
 echo "<div class='gss_overview_order'>";
 echo "<div class='gss_order_col gss_col_1'>" . $this->__f("Order id") . "</div>";
 echo "<div class='gss_order_col gss_col_2'>" . $this->__f("Name") . "</div>";
@@ -18,22 +20,48 @@ echo "<div class='gss_order_col gss_col_3'>" . $this->__f("Price") . "</div>";
 echo "</div>";
 
 foreach ($orders as $order) {
-    
+    $this->setCurrentOrder($order);
     $orderPaid = $order->status == 7 ? "<i style='color: green;' class='fa fa-check' title='Paid'></i>" : "" ;
     $orderPaid = $order->status == 5 ? "<i style='color: blue;' class='fa fa-times' title='Cancled'></i>" : $orderPaid ;
     $orderPaid = $order->status == 3 ? "<i style='color: red;' class='fa fa-frown-o' title='Paiment failed'></i>" : $orderPaid ;
     $orderPaid = $order->status == 2 ? "<i style='color: #c18800;' class='fa fa-circle-o-notch' title='Waiting for payment'></i>" : $orderPaid ;
-    echo "<div class='gss_overview_order' gss_view='gss_orderview' gss_fragment='orderview' gss_method='showOrder' gss_value='$order->id'>";
-    echo "<div class='gss_order_col gss_col_1'>$order->incrementOrderId</div>";
-    echo "<div class='gss_order_col gss_col_2'>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)) . " ". $order->cart->address->fullName . "</div>";
-    echo "<div class='gss_order_col gss_col_3'>" . $this->getApi()->getCartManager()->calculateTotalCost($order->cart) . "</div>";
-    echo "<div class='gss_order_col gss_col_4'>$orderPaid</div>";
+    $price = $this->getApi()->getCartManager()->calculateTotalCost($order->cart);
+    echo "<div class='gss_overview_order_outer'>";
+        echo "<div class='gss_overview_order'>";
+        echo "<div class='gss_order_col gss_col_1'>$order->incrementOrderId</div>";
+        echo "<div class='gss_order_col gss_col_2'>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)) . " ". $order->cart->address->fullName . "</div>";
+        echo "<div class='gss_order_col gss_col_3'>" . $price . "</div>";
+        echo "<div class='gss_order_col gss_col_4'>$orderPaid</div>";
+        echo "</div>";
+        $total += $price;
+        $this->includefile("ordersmallinfo");
     echo "</div>";
 }
+
+echo "<div class='gss_overview_order_outer'>";
+    echo "<div class='gss_overview_order'>";
+    echo "<div class='gss_order_col gss_col_1'></div>";
+    echo "<div class='gss_order_col gss_col_2'>Sum</div>";
+    echo "<div class='gss_order_col gss_col_3'>$total</div>";
+    echo "<div class='gss_order_col gss_col_4'></div>";
+    echo "</div>";
+echo "</div>";
 ?>
 
 <div class="gss_pagenumber_bottom">
     <? echo $this->__f("Page") . ": " . $this->getPageNumber() . "/" . $this->getTotalPageCount(); ?>
+    
+    <div style='margin-top: 10px; text-align: center;'>
+        <? echo $this->__f("Pagesize"); ?>
+        <span gss_method='setPageSize' gss_value='10' style='cursor: pointer;'>10</span>,
+        <span gss_method='setPageSize' gss_value='20' style='cursor: pointer;'>20</span>,
+        <span gss_method='setPageSize' gss_value='30' style='cursor: pointer;'>30</span>,
+        <span gss_method='setPageSize' gss_value='50' style='cursor: pointer;'>50</span>,
+        <span gss_method='setPageSize' gss_value='100' style='cursor: pointer;'>100</span>,
+        <span gss_method='setPageSize' gss_value='200' style='cursor: pointer;'>200</span>,
+        <span gss_method='setPageSize' gss_value='300' style='cursor: pointer;'>300</span>,
+        <span gss_method='setPageSize' gss_value='500' style='cursor: pointer;'>500</span>
+    </div>
 </div>
 <div class="gss_order_nextprevbuttons">
     <? if ($this->hasPrevPage()) { ?>

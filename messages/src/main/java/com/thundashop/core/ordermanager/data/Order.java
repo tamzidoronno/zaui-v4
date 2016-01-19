@@ -223,4 +223,33 @@ public class Order extends DataCommon implements Comparable<Order> {
         log.userId = userId;
         log.description = "CartItem price changed price from " + oldPrice + " to " + price;
     }
+    
+    public boolean intercepts(Date start, Date end) {
+        
+        if (start.equals(rowCreatedDate)) 
+            return true;
+        
+        if (end.equals(rowCreatedDate)) 
+            return true;
+        
+        if (start.before(rowCreatedDate) && end.after(rowCreatedDate))
+            return true;
+        
+        return false;
+    }
+    
+    public boolean matchOnString(String searchWord) {
+        if (searchWord == null || searchWord.isEmpty()) 
+            return true;
+        
+        boolean match = false;
+        
+        if (cart != null && cart.address != null && cart.address.fullName != null) {
+            match = cart.address.fullName.toLowerCase().contains(searchWord.toLowerCase());
+        }
+        
+        // Add more search criterias here ? :D
+        
+        return match;
+    }
 } 

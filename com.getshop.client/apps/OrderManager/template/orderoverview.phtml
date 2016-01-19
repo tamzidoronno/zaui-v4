@@ -22,7 +22,32 @@ $searchtext = isset($_SESSION['gss_orders_filter']) ? $_SESSION['gss_orders_filt
             <div class="gss_settings_header_title"><? echo $this->__f("Search (leave blank to see all)"); ?></div>
             <div class="gss_settings_header_description_inner" style="position: relative; width: 1000px;">
                 <input id='gss_order_filter_search_text' gs_model='orders' gs_model_attr='order_filter' type="textfield" style="left: 0px; top: 0px;" placeholder="<? echo $this->__f("Filter orders"); ?>" value='<? echo $searchtext; ?>'/>
-                <div id='gss_order_filter_search_button' gss_method='filterOrders' gss_view='gss_outer_orderoverview' gss_fragment='ordersearchresult' gss_model='orders' style='position: absolute; right: 644px;height: 11px;line-height: 11px;top: 2px;' class='gss_button'><? echo $this->__f("Search"); ?></div>
+                <input id='gss_order_filter_startdate' gs_model='orders' gs_model_attr='start_date' type="textfield" style="left: 300px; top: 0px; width: 150px;" placeholder="<? echo $this->__f("From"); ?>" value='<? echo $searchtext; ?>'/>
+                <input id='gss_order_filter_enddate' gs_model='orders' gs_model_attr='end_date' type="textfield" style="left: 480px; top: 0px; width: 150px;" placeholder="<? echo $this->__f("To"); ?>" value='<? echo $searchtext; ?>'/>
+                
+                <div class="gss_dropdown" style='top: 1px; right: 50px;'>
+                    <select class="config" gs_model='orders' gs_model_attr='status'>
+                        <? 
+                        $languages = array();
+                        $languages['0'] = "ALL";
+                        $languages['1'] = "CREATED";
+                        $languages['2'] = "WAITING_FOR_PAYMENT";
+                        $languages['3'] = "PAYMENT_FAILED";
+                        $languages['4'] = "COMPLETED";
+                        $languages['5'] = "CANCELED";
+                        $languages['6'] = "SENT";
+                        $languages['7'] = "PAYMENT_COMPLETED";
+                        $languages['8'] = "COLLECTION_FAILED";
+                        $languages['9'] = "NEEDCOLLECTING";
+                
+                        foreach ($languages as $key => $lang) { 
+                            $selected = $this->getFactory()->getMainLanguage() == $key ? "selected='true'" : "";
+                            ?>
+                            <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>
+                        <? } ?>
+                    </select>
+                </div>
+                <div id='gss_order_filter_search_button' gss_method='filterOrders' gss_view='gss_outer_orderoverview' gss_fragment='ordersearchresult' gss_model='orders' style='position: absolute; right: 0px;height: 11px;line-height: 11px;top: 2px;' class='gss_button'><? echo $this->__f("Search"); ?></div>
             </div>
         </div>	
     </div>
@@ -39,3 +64,7 @@ $searchtext = isset($_SESSION['gss_orders_filter']) ? $_SESSION['gss_orders_filt
     </div>
 </div>
 
+<script>
+    $('#gss_order_filter_startdate').datepicker({ dateFormat: "yy-mm-dd", changeMonth: true, changeYear: true });
+    $('#gss_order_filter_enddate').datepicker({ dateFormat: "yy-mm-dd",changeMonth: true, changeYear: true });        
+</script>

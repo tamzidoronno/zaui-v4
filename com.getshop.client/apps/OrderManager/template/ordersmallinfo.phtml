@@ -1,0 +1,52 @@
+<?
+/* @var $this \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager */
+$order = $this->getCurrentOrder();
+$address = $order->cart->address;
+$name = $address->fullName;
+$cart = $order->cart;
+
+?>
+
+<div class='gss_small_order_listview'>
+    <div class='order_col'>
+        <div class='order_col_inner'>
+            <b><? echo $this->__f("Customer"); ?></b>
+            <div class='entry name'><?php echo $name ?></div>   
+            <div class='entry address'><?php echo $address->address; ?></div>
+            <div class='entry postcode'><?php echo $address->postCode; ?></div>
+            <div class='entry city'><?php echo $address->city; ?></div>
+        </div>
+    </div>
+    <div class='order_col'>
+        <div class='order_col_inner'>
+            <table>
+                <th><? echo $this->__f("Product"); ?></th>
+                <th><? echo $this->__f("Price"); ?></th>
+                <?
+                $i = 0;
+                
+                foreach ($cart->items as $item) {
+                    $i++;
+                    $product = $item->product;
+                    $variationstext = \HelperCart::getVartionsText($item);
+                    $addClass = ($i % 2 == 0) ? "odd" : "even";
+                    ?>
+                    
+                    <tr>    
+                    <!--<div class="product <? echo $addClass ; ?>">-->            
+                        <td><? echo $item->count; ?> x <?php echo $product->name ?></td>
+                        <td width='50' style='text-align: right;' valign='top'><?php echo $this->getPriceWithTaxSpecifed($product->price, $product); ?></td>
+                        
+                    </tr>
+            <? } ?>
+            </table>
+        </div>
+    </div>
+    <div class='order_col'>
+        <div class='order_col_inner'>
+            <div class='gss_button gss_show_order_action' gss_view='gss_orderview' gss_fragment='orderview' gss_method='showOrder' gss_value='<? echo $order->id; ?>'><? echo $this->__f("See complete order"); ?></div>
+            <div class='gss_button' gss_view='gss_orderview' gss_fragment='orderview' gss_method='showOrder' gss_value='<? echo $order->id; ?>'><? echo $this->__f("See arxlog?"); ?></div>
+        </div>
+    </div>
+</div>
+    

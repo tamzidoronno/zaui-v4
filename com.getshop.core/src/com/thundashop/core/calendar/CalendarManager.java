@@ -1097,6 +1097,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         if (loc != null) {
             databaseSaver.deleteObject(loc, credentials);
         }
+        deleteSubLocation(locationId);
     }
 
     private Location getLocationByName(String s) {
@@ -1822,5 +1823,13 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
         
         return null;
+    }
+
+    private void deleteSubLocation(String locationId) throws ErrorException {
+        for (Location location : locations.values()) {
+            if (location.deleteSubLocation(locationId)) {
+                saveObject(location);
+            }
+        }
     }
 }

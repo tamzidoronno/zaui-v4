@@ -65,4 +65,21 @@ public class Location extends DataCommon {
         
         return loc;
     }
+
+    public boolean deleteSubLocation(String locationId) {
+        Location toRemove = null;
+        for (Location subLoc : subLocations) {
+            if (subLoc.id.equals(locationId)) {
+                toRemove = subLoc;
+            }
+        }
+        
+        
+        if (toRemove != null) {
+            subLocations.remove(toRemove);
+            return true;
+        }
+        
+        return false;
+    }
 }

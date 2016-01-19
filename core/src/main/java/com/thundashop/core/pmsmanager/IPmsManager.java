@@ -47,7 +47,6 @@ public interface IPmsManager {
     @Administrator
     public void saveBooking(PmsBooking booking);
     
-    @Administrator
     public PmsPricing getPrices(Date start, Date end); 
     
     @Administrator

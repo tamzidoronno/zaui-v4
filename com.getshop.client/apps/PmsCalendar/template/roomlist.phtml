@@ -14,6 +14,9 @@ $f = $this->__w("Saturday");
 $f = $this->__w("Sunday");
 
 ?>
+<span class="timeselectionpanel">
+    Fra <span class="startTime"></span> til <span class="endTime"></span>
+</span>
 <div class='calendartopheader'>
     <h2><?php echo $this->getConfigurationSetting("headingroomoverview"); ?></h2>
     <?php 
@@ -157,7 +160,7 @@ if($type == "month") {
                 }
                 $start = strtotime('this week', $start);
                 for($i = 0; $i < 7; $i++) {
-                    echo "<div class='weekdaycontainer'>";
+                    echo "<div class='weekdaycontainer timecontainer'>";
                     $this->printBlocks(($start+(86400*$i)), $type, $room->id, $withSideBar);
                     echo "</div>";
                 }

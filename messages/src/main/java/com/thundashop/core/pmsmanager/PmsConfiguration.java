@@ -26,4 +26,5 @@ public class PmsConfiguration extends DataCommon {
     public String arxHostname = "";
     public String arxUsername = "";
     public String arxPassword = "";
+    public String arxCardFormat = "";
 }

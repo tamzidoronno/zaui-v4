@@ -15,6 +15,11 @@ foreach($config->data as $key => $value) {
         $this->printField($value);
     }
 }
+
+$completeText = $this->getConfigurationSetting("complete_order_button");
+if(!$completeText) {
+    $completeText = "Complete";
+}
 echo "<div class='chooseregform'>";
 echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_private'> Privatperson";
 echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_company'> Organisasjon";
@@ -59,10 +64,10 @@ if($config->needToAgreeOnContract) {
     echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?readable=true&engine=".$this->getSelectedName()."');\" >". $this->__w("Read the terms and conditions")."</a><br>";
     echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?engine=".$this->getSelectedName()."');\">". $this->__w("Download the terms and conditions")."</a>";
     echo "</span>";
-    echo "<span class='col-50' style='padding-right:0px;'><span class='complete_button' gstype='submit'>Complete</span></span>";
+    echo "<span class='col-50' style='padding-right:0px;'><span class='complete_button' gstype='submit'>$completeText</span></span>";
     echo "</div>";
 } else {
-    echo "<span class='complete_button' gstype='submit'>Complete</span>";
+    echo "<span class='complete_button' gstype='submit'>$completeText</span>";
 }
 echo "</div>";
 echo "<div style='clear:both;'></div>";

@@ -6,7 +6,7 @@ import java.util.Date;
 public class AccessCategory extends DataCommon {
     public String accessId = "";
     public String name = "";
-    Date startDate;
-    Date endDate;
+    public Date startDate;
+    public Date endDate;
     public String description = "";
 }

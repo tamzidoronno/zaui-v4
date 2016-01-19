@@ -53,6 +53,14 @@ if (!$user->address) {
         </div>
     </div>
 
+    <div class="textfield gss_setting"  id="prefix">
+        <span class="title"><?php echo $this->__f("Phone prefix"); ?></span>
+        <input type="textfield" gs_model='usermodel' gs_model_attr='prefix' value="<? echo $user->prefix; ?>">
+        <div class="description">
+            <?php echo $this->__("The cell phone number to the owner of this account."); ?>
+        </div>
+    </div>
+
     <div class="textfield gss_setting"  id="referenceKey">
         <span class="title"><?php echo $this->__f("Ref.nr"); ?></span>
         <input type="textfield" gs_model='usermodel' gs_model_attr='referenceKey' value="<? echo $user->referenceKey; ?>">

@@ -1257,7 +1257,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         user.fullName = result.get("fullName");
         user.cellPhone = result.get("cellPhone");
         user.emailAddress = result.get("emailAddress");
-        user.prefix = result.get("emailAddress");
+        if(result.get("prefix") != null) {
+            user.prefix = result.get("prefix");
+        }
         
         user.address = new Address();
         user.address.address = result.get("user_address_address");

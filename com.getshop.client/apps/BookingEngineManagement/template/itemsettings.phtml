@@ -12,6 +12,10 @@ $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedNa
             <td width="50%"><input type="text" gsname="bookingItemName" style='width:100%;' value="<? echo $item->bookingItemName; ?>"></td>
         </tr>
         <tr>
+            <td width="50%"><? echo $this->__w("Alias"); ?></td>
+            <td width="50%"><input type="text" gsname="bookingItemAlias" style='width:100%;' value="<? echo $item->bookingItemAlias; ?>"></td>
+        </tr>
+        <tr>
             <td width="50%">How many bookings is allowed to be on this bookingitem</td>
             <td width="50%"><input type="text" gsname="bookingSize" style='width:100%;' value="<? echo $item->bookingSize; ?>"></td>
         </tr>

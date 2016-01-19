@@ -91,6 +91,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(isset($_POST['data']['startingFrom'])) {
             $filter->startInvoiceFrom = $this->convertToJavaDate(strtotime($_POST['data']['startingFrom']));
         }
+        if(isset($_POST['data']['endingAt'])) {
+            $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
+        }
         $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
         $this->showBookingInformation();
     }

@@ -667,9 +667,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         PmsBooking booking = getBooking(bookingId);
         Order order = null;
-        if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
-            order = createMonthlyOrder(booking, filter);
-        }
+        order = createOrder(booking, filter);
+        
         if(order == null) {
             return "Could not create order.";
         }
@@ -678,46 +677,40 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return "";
     }
 
-    private Order createMonthlyOrder(PmsBooking booking, NewOrderFilter filter) {
+    private Order createOrder(PmsBooking booking, NewOrderFilter filter) {
         cartManager.clear();
         
         Date startDate = filter.startInvoiceFrom;
-        for(int i = 0; i < filter.numberOfMonths; i++) {
-            Date endDate = addMonthsToDate(startDate, 1);
-            int daysInMonth = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
-            
-            for(PmsBookingRooms room : booking.rooms) {
-                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                BookingItem bookingitem = null;
-                if(room.bookingItemId != null) {
-                    bookingitem = bookingEngine.getBookingItem(room.bookingItemId);
-                }
-                
-                String productId = type.productId;
-                if(productId == null) {
-                    System.out.println("Product no set for this booking item type");
-                }
+        Date endDate = filter.endInvoiceAt;
+        int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
+
+        for(PmsBookingRooms room : booking.rooms) {
+            Double price = null;
+
+            if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
                 int numberOfDays = getNumberOfDays(room, startDate, endDate);
                 if(numberOfDays == 0) {
                     return null;
                 }
-                double price = room.price / daysInMonth;
-                price *= numberOfDays;
-                
-                CartItem item = cartManager.addProductItem(productId, 1);
-                item.startDate = startDate;
-                item.endDate = endDate;
-                item.getProduct().name = type.name;
-                if(bookingitem != null) {
-                    item.getProduct().name += " (" + bookingitem.bookingItemName + ")";
-                }
-                
-                item.getProduct().discountedPrice = price;
-                item.getProduct().price = price;
-                cartManager.saveCartItem(item);
+                price = room.price / daysInPeriode;
             }
+            if(booking.priceType.equals(PmsBooking.PriceType.progressive)) {
+                int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(startDate)).getDays();
+                price = calculateProgressivePrice(room.bookingItemTypeId, startDate, endDate, days, true);
+            }
+            if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
+                price = room.price;
+            }
+            if(booking.priceType.equals(PmsBooking.PriceType.weekly)) {
+                price = (room.price/7);
+            }
+
+            CartItem item = createCartItem(room, startDate, endDate);
+            item.getProduct().discountedPrice = price;
+            item.getProduct().price = price;
+            item.setCount(daysInPeriode);
             
-            startDate = addMonthsToDate(startDate, 1);
+            cartManager.saveCartItem(item);
         }
         
         User user = userManager.getUserById(booking.userId);
@@ -732,13 +725,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.invoicedTo = startDate;
         
         return order;
-    }
-
-    private Date addMonthsToDate(Date startDate, Integer numberOfMonths) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(startDate);
-        cal.add(Calendar.MONTH, numberOfMonths);
-        return cal.getTime();
     }
 
     private int getNumberOfDays(PmsBookingRooms room, Date startDate, Date endDate) {
@@ -1423,12 +1409,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
-        int days = 0;
+        int days = offset;
         Double total = 0.0;
         while(true) {
+            int daysoffset = 0;
             for(ProgressivePriceAttribute attr : priceRange) {
-                if(attr.numberOfTimeSlots > days) {
+                daysoffset += attr.numberOfTimeSlots;
+                if(daysoffset > days) {
                     total += attr.price;
+                    daysoffset = 0;
                     break;
                 }
             }
@@ -1456,4 +1445,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return -2.0;
     }
+
+    private CartItem createCartItem(PmsBookingRooms room, Date startDate, Date endDate) {
+        BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+        BookingItem bookingitem = null;
+        if(room.bookingItemId != null) {
+            bookingitem = bookingEngine.getBookingItem(room.bookingItemId);
+        }
+
+        String productId = type.productId;
+        if(productId == null) {
+            System.out.println("Product not set for this booking item type");
+        }
+        int numberOfDays = getNumberOfDays(room, startDate, endDate);
+        if(numberOfDays == 0) {
+            return null;
+        }
+
+        CartItem item = cartManager.addProductItem(productId, 1);
+        item.startDate = startDate;
+        item.endDate = endDate;
+        item.getProduct().name = type.name;
+        if(bookingitem != null) {
+            item.getProduct().name += " (" + bookingitem.bookingItemName + ")";
+        }
+        return item;
+    }
+
 }

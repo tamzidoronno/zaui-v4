@@ -103,7 +103,7 @@ if($booking->orderIds) {
         echo "<tr>";
         echo "<td><a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a></td>";
         echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate))  . "</td>";
-        echo "<td>" . $total . "</td>";
+        echo "<td>" . round($total) . "</td>";
         echo "<td>" . $paymentTypes[$order->status] . "</td>";
         echo "<td>";
         echo $this->translatePaymenttype($order->payment->paymentType, $instances);
@@ -125,17 +125,20 @@ if($booking->orderIds) {
 }
 
 ?>
+<br><br>
 <div gstype="form" method="createNewOrder">
     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+
     <?php
-    if($booking->priceType == 2) {
-        if(!$booking->invoicedTo) {
-            $booking->invoicedTo = $booking->rooms[0]->date->start;
-        }
-        $startingFrom = date("d.m.Y", strtotime($booking->invoicedTo));
-        echo "<br><br>Number of months, start invoicing from. :<br><input type='text' gsname='numberOfMonths' value='1' style='font-size: 18px; width: 25px;padding: 4px;' />";
-        echo "<input type='text' gsname='startingFrom' value='$startingFrom' style='font-size: 18px; width: 100px;padding: 4px;' />";
+    if(!$booking->invoicedTo) {
+        $booking->invoicedTo = $booking->rooms[0]->date->start;
     }
+    $startingFrom = date("d.m.Y", strtotime($booking->invoicedTo));
+    $endingAt = date("d.m.Y", strtotime("+1 month", strtotime($booking->invoicedTo)));
+    echo "<label style='display:inline-block;'>Invoice from<br>";
+    echo "<input type='text' gsname='startingFrom' value='$startingFrom' style='font-size: 18px; width: 100px;padding: 4px;' /></label>";
+    echo "<label style='display:inline-block;'>Invoice to<br><input type='text' gsname='endingAt' value='$endingAt' style='font-size: 18px; width: 100px;padding: 4px;' /></label>";
     ?>
+    
     <span class='pmsbutton' gstype="submitToInfoBox">Create new order</span>
 </div>

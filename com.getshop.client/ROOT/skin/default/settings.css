@@ -239,6 +239,7 @@ inputs-moz-placeholder {
 #backsidesettings textarea,
 #backsidesettings input[type=text],
 #backsidesettings input[type=password],
+#backsidesettings .gssselectbackground,
 #backsidesettings input[type=textfield] {
     text-shadow: 1px 1px 0 rgba(256, 256, 256, 1.0);
     background: #FFF;
@@ -252,6 +253,7 @@ inputs-moz-placeholder {
 #backsidesettings textarea,
 #backsidesettings .textinput,
 #backsidesettings input[type=text],
+#backsidesettings .gssselectbackground,
 #backsidesettings input[type=password],
 #backsidesettings input[type=textfield] {
     width: 270px;

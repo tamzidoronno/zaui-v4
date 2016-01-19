@@ -68,7 +68,7 @@ foreach($prices as $taxgroup => $price) {
 }
 if($total > 0) {
     $bottom .= "<div class='itemrow ' style='padding-top: 10px;'>";
-    $bottom .= "Totalt <span class='price'>" . $total . " kr </span>";
+    $bottom .= "Totalt <span class='price'>" . round($total) . " kr </span>";
     $bottom .= "</div>";
 }
 if($total > 0) {
@@ -114,7 +114,7 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     }
     echo "</span>";
     if($price > 0) {
-        echo "<span class='price'>" . $price . " kr </span>";
+        echo "<span class='price'>" . round($price) . " kr </span>";
     }
     $date =$room->date;
     

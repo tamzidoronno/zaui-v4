@@ -58,8 +58,17 @@ foreach($rooms as $room) {
             <?php echo $text; ?>
         </span>
     <span class='name'><? echo $room->type->name; ?></span>
-    <?php if($room->price > 0) { ?>
-        <span class='price'><? echo $room->price; ?>,-</span>
+    <?php if($room->price > 0 && $booking->priceType != 7) { ?>
+        <span class='price'><? echo round($room->price); ?>,-</span>
+    <?php } ?>
+    <?php if($booking->priceType == 7) { 
+        $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(),$this->convertToJavaDate(time()),$this->convertToJavaDate(time()));
+        $progPrice = $prices->progressivePrices->{$room->type->id};
+        echo "<span class='price'>";
+        echo "Første " . $progPrice[0]->numberOfTimeSlots." dager ". $progPrice[0]->price . "kr";
+        echo "<br>deretter " . $progPrice[1]->price . "kr";
+        echo "</span>";
+        ?>
     <?php } ?>
     </div>
     <?php

@@ -4,7 +4,7 @@ $itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->get
 $start = $this->getStart();
 $end = $this->getEnd();
 $priceObject = $this->getPrices();
-$prices = $priceObject->specifiedPrices;
+$prices = $priceObject->dailyPrices;
 
 $pricetypes = array();
 $pricetypes[1] = "Daily";
@@ -13,6 +13,7 @@ $pricetypes[3] = "Weekly";
 $pricetypes[4] = "Per minute";
 $pricetypes[5] = "Per hour";
 $pricetypes[6] = "Per seconds";
+$pricetypes[7] = "Progressive";
 
 ?>
 <div gstype='form' method="selectDates">
@@ -58,62 +59,23 @@ foreach($itemTypes as $item) {
 </table>
 <br><br>
 <br><br>
-<div class='pricetableview'>
-        <?php
-        echo "<select class='pricetypeselection'>";
-        foreach($pricetypes as $idx => $type) {
-            $selected = "";
-            if($idx == $priceObject->defaultPriceType) {
-                $selected = "SELECTED";
-            }
-            echo "<option value='$idx' $selected>$type</option>";
+<div gstype='form' method='updateProgressivePrices'>
+    <?php
+    echo "<select class='pricetypeselection' gsname='pricetype'>";
+    foreach($pricetypes as $idx => $type) {
+        $selected = "";
+        if($idx == $priceObject->defaultPriceType) {
+            $selected = "SELECTED";
         }
-        echo "</select>";
-        ?>
-        
-    <table cellspacing='0' cellpadding='0'>
-        <tr>
-            <th align='left'>Item</th>
-            <th>Default</th>
-            <?php
-            for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
-                $weekday = date("w", $i);
-                $weekend = '';
-                if($weekday == 6 || $weekday == 0) {
-                    $weekend = "weeked";
-                }
-                echo "<td class='$weekend'>".date("d.m.y", $i)."</td>";
-            }
-            ?>
-        </tr>
-        <?
-        foreach($itemTypes as $type) {
-            if(isset($prices->{$type->id}->{'default'})) {
-                $price = $prices->{$type->id}->{'default'};
-            }
-            echo "<tr itemtype='".$type->id."'>";
-            echo "<td><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td><td><input date='default' type='text' value='".$price."' class='priceinput'></td>";
-            for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
-                $date = date("d-m-Y", $i);
-                $weekday = date("w", $i);
-                $price = "";
-                if(isset($prices->{$type->id}->{$date})) {
-                    $price = $prices->{$type->id}->{$date};
-                }
-                $weekend = '';
-                if($weekday == 6 || $weekday == 0) {
-                    $weekend = "weeked";
-                }
-                echo "<td class='$weekend'><input type='text' weekday='$weekday' date='$date' value='".$price."' class='priceinput'></td>";
-            }
-            echo "</tr>";
-        }
-        ?>
-    </table>    
-</div>
-<br>
-<div style='text-align: right;'>
-    <span class='pmsbutton setnewprices'>Update prices</span>
+        echo "<option value='$idx' $selected>$type</option>";
+    }
+    echo "</select>";
+    if($priceObject->defaultPriceType == 7) {
+        $this->includefile("progressivepricing");
+    } else {
+        $this->includefile("dailypriceediting");
+    }
+    ?>
 </div>
 <script>
     $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });

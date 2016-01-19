@@ -32,19 +32,16 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.OutputStream;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -89,6 +86,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     StoreManager storeManager;
     
+    @Autowired
+    ProductManager productManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -127,7 +126,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             Room room = new Room();
             room.type = type;
-            room.price = calculatePrice(type.id, start, end);
+            room.price = calculatePrice(type.id, start, end, true);
             result.add(room);
         }
         return result;
@@ -136,6 +135,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
         booking.sessionId = getSession().id;
+        
+        booking.priceType = prices.defaultPriceType;
         for(PmsBookingRooms room : booking.rooms) {
             if(room.bookingItemTypeId == null || room.bookingItemTypeId.isEmpty()) {
                 if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
@@ -145,7 +146,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         saveObject(booking);
         for(PmsBookingRooms room : booking.rooms) {
-            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end);
+            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, false);
+            room.taxes = calculateTaxes(room.bookingItemTypeId);
         }
         bookings.put(booking.id, booking);
     }
@@ -253,8 +255,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
         }
-        
-        booking.priceType = prices.defaultPriceType;
         
         Integer result = 0;
         List<Booking> bookingsToAdd = new ArrayList();
@@ -634,13 +634,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsPricing setPrices(PmsPricing newPrices) {
         prices.defaultPriceType = newPrices.defaultPriceType;
-        for(String typeId : newPrices.specifiedPrices.keySet()) {
-            HashMap<String, Double> priceMap = newPrices.specifiedPrices.get(typeId);
+        prices.progressivePrices = newPrices.progressivePrices;
+        for(String typeId : newPrices.dailyPrices.keySet()) {
+            HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
             for(String date : priceMap.keySet()) {
-                HashMap<String, Double> existingPriceRange = prices.specifiedPrices.get(typeId);
+                HashMap<String, Double> existingPriceRange = prices.dailyPrices.get(typeId);
                 if(existingPriceRange == null) {
                     existingPriceRange = new HashMap();
-                    prices.specifiedPrices.put(typeId, existingPriceRange);
+                    prices.dailyPrices.put(typeId, existingPriceRange);
                 }
                 existingPriceRange.put(date, priceMap.get(date));
             }
@@ -650,44 +651,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return prices;
     }
 
-
-    private Double calculatePrice(String typeId, Date start, Date end) {
-        HashMap<String, Double> priceRange = prices.specifiedPrices.get(typeId);
-        if(priceRange == null) {
-            return 0.0;
+    private Double calculatePrice(String typeId, Date start, Date end, boolean avgPrice) {
+        if(prices.defaultPriceType == 1) {
+            return calculateDailyPricing(typeId,start,end, avgPrice);
+        }
+        if(prices.defaultPriceType == 7) {
+            return calculateProgressivePrice(typeId,start,end,0, avgPrice);
         }
         
-        Double defaultPrice = priceRange.get("default");
-        if(defaultPrice == null) {
-            defaultPrice = 0.0;
-        }
-        
-        if(prices.defaultPriceType != 1) {
-            return defaultPrice;
-        }
-        
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
-        int days = 0;
-        Double total = 0.0;
-        while(true) {
-            days++;
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-            String dateToUse = formatter.format(cal.getTime());
-            if(priceRange.get(dateToUse) != null) {
-                total += priceRange.get(dateToUse);
-            } else {
-                total += defaultPrice;
-            }
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            if(end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
-                break;
-            }
-        }
-        
-        total = total / days;
-        
-        return total;
+        return 0.0;
     }
 
     @Override
@@ -715,7 +687,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             int daysInMonth = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
             
             for(PmsBookingRooms room : booking.rooms) {
-                String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                BookingItem bookingitem = null;
+                if(room.bookingItemId != null) {
+                    bookingitem = bookingEngine.getBookingItem(room.bookingItemId);
+                }
+                
+                String productId = type.productId;
                 if(productId == null) {
                     System.out.println("Product no set for this booking item type");
                 }
@@ -729,6 +707,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 CartItem item = cartManager.addProductItem(productId, 1);
                 item.startDate = startDate;
                 item.endDate = endDate;
+                item.getProduct().name = type.name;
+                if(bookingitem != null) {
+                    item.getProduct().name += " (" + bookingitem.bookingItemName + ")";
+                }
                 
                 item.getProduct().discountedPrice = price;
                 item.getProduct().price = price;
@@ -739,6 +721,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         User user = userManager.getUserById(booking.userId);
+        user.address.fullName = user.fullName;
         
         Order order = orderManager.createOrder(user.address);
         
@@ -1402,5 +1385,75 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         curBooking.rooms.removeAll(toRemove);
+    }
+
+    private Double calculateDailyPricing(String typeId, Date start, Date end, boolean avgPrice) {
+        HashMap<String, Double> priceRange = prices.dailyPrices.get(typeId);
+        
+        Double defaultPrice = priceRange.get("default");
+        if(defaultPrice == null) {
+            defaultPrice = 0.0;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        int days = 0;
+        Double total = 0.0;
+        while(true) {
+            days++;
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            String dateToUse = formatter.format(cal.getTime());
+            if(priceRange.get(dateToUse) != null) {
+                total += priceRange.get(dateToUse);
+            } else {
+                total += defaultPrice;
+            }
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
+                break;
+            }
+        }
+        if(avgPrice) {
+            total = total / days;
+        }
+        return total;
+    }
+
+    private Double calculateProgressivePrice(String typeId, Date start, Date end, int offset, boolean avgPrice) {
+        ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        int days = 0;
+        Double total = 0.0;
+        while(true) {
+            for(ProgressivePriceAttribute attr : priceRange) {
+                if(attr.numberOfTimeSlots > days) {
+                    total += attr.price;
+                    break;
+                }
+            }
+            days++;
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
+                break;
+            }
+        }
+        
+        if(avgPrice) {
+            total = total / days;
+        }
+        return total;
+    }
+
+    private double calculateTaxes(String bookingItemTypeId) {
+        BookingItemType item = bookingEngine.getBookingItemType(bookingItemTypeId);
+        if(item.productId != null && !item.productId.isEmpty()) {
+            Product product = productManager.getProduct(item.productId);
+            if(product.taxGroupObject != null) {
+                return product.taxGroupObject.taxRate;
+            }
+            return -1.0;
+        }
+        return -2.0;
     }
 }

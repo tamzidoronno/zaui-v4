@@ -1800,7 +1800,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private Location getMasterLocation(Location location) {
         for (Location ilocation : locations.values()) {
             for (Location subLoc : ilocation.subLocations) {
-                if (subLoc.id.equals(location.id)) {
+                if (subLoc.id != null && location != null && location.id != null && subLoc.id.equals(location.id)) {
                     return ilocation;
                 }        
             }   

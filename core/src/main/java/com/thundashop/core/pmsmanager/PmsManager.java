@@ -1376,6 +1376,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Double calculateDailyPricing(String typeId, Date start, Date end, boolean avgPrice) {
         HashMap<String, Double> priceRange = prices.dailyPrices.get(typeId);
         
+        if(priceRange == null) {
+            return 0.0;
+        }
+        
         Double defaultPrice = priceRange.get("default");
         if(defaultPrice == null) {
             defaultPrice = 0.0;

@@ -25,7 +25,7 @@
 .PmsCalendar .roomdesc { background-color:#eaeaea; display:inline-block; width: 100%; height: 100%; font-size: 10px; position:relative; }
 .PmsCalendar .timecontainer { display:inline-block; width: 100%; box-sizing: border-box; float:left; }
 .PmsCalendar .timecontainer.withSideBar { width: 80%; }
-.PmsCalendar .weekdaycontainer { box-sizing: border-box;  width: 14.285%; float:left; display:inline-block; padding-right: 10px; }
+.PmsCalendar .weekdaycontainer { box-sizing: border-box;  width: 14.285%; float:left; display:inline-block; padding-right: 5px; }
 .PmsCalendar .outerblock { display:inline-block; box-sizing: border-box; padding-right: 1px;  }
 .PmsCalendar .outerblock.small { padding-right: 1px; }
 .PmsCalendar .timeblock { display:inline-block; height: 100%; width: 100%; box-sizing: border-box; background-color:#efefef; }
@@ -51,7 +51,7 @@
 
 .PmsCalendar .headerouterblock { text-align: center; }
 .PmsCalendar .headerouterblock .timeheader { width: 100%; height: 100%; display:inline-block; line-height: 32px; font-size:12px;  }
-.PmsCalendar .weektimeheader { font-size: 12px;text-align: center; height: 35px; padding-right: 12px; }
+.PmsCalendar .weektimeheader { font-size: 12px;text-align: center; height: 35px; padding-right: 5px; }
 .PmsCalendar .weektimeheader .weektimeheaderinner { display:inline-block; height: 100%; width: 100%; box-sizing: border-box;background-color:#efefef;padding-top: 5px; }
 .PmsCalendar .roomdesc_month { width: 5%; }
 .PmsCalendar .roomdesc_month .roomdesc {font-size: 20px; text-align: center; background-color:#fff; line-height: 60px; }

@@ -29,6 +29,11 @@ app.PmsBookingSummary = {
         if(type !== "0") {
             $('.repeatrow').show();
         } 
+        $('.repeateachdaterow').hide();
+        if(type === "1") {
+            $('.repeateachdaterow').show();
+        }
+        
         $('.repeatoption').hide();
         $('.repeat_' + type).show();
     },

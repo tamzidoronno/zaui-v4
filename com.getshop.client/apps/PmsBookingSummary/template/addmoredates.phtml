@@ -103,7 +103,7 @@ if($repeat) {
                     </select>
                 </span>
             </div>
-            <div class='eventrow repeatrow'>
+            <div class='eventrow repeatrow repeateachdaterow'>
                 <span class='title'><? echo $this->__w("Repeat every"); ?>:</span>
                 <span class='optionbox'>
                     <select style='width:20%; margin-right: 3px;' gsname='repeateachtime'>
@@ -143,7 +143,9 @@ if($repeat) {
                     <span class='repeat_2 repeatoption' style='padding-bottom: 10px;'>
                         <input type='radio' name='repeatmonthtype' gsname='repeatmonthtype' value='dayofmonth'><? echo $this->__w("day of the month"); ?><br>
                         <input type='radio' name='repeatmonthtype' gsname='repeatmonthtype' value='dayofweek'><? echo $this->__w("day of the week"); ?>
+                        <br> <br>
                     </span>
+
                 </span>
             </div>
             <div class='eventrow'>

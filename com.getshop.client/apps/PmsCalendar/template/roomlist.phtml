@@ -122,7 +122,10 @@ if($type == "month") {
      }
 } else {
     foreach($rooms as $room) {
-        if(!$types[$room->bookingItemTypeId]->visibleForBooking) {
+        if(!$types[$room->bookingItemTypeId]->visibleForBooking && !$this->isEditorMode()) {
+            continue;
+        }
+        if($types[$room->bookingItemTypeId]->addon) {
             continue;
         }
         if($this->isItemPage()) {

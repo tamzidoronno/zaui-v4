@@ -51,6 +51,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1499,5 +1500,68 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return item;
     }
 
+    @Override
+    public List<Integer> getAvailabilityForRoom(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes) {
+        LinkedList<TimeRepeaterDateRange> lines = createAvailabilityLines();
+        
+        DateTime timer = new DateTime(startTime);
+        List<Integer> result = new ArrayList();
+        while(true) {
+            if(hasRange(lines, timer)) {
+                result.add(1);
+            } else {
+                result.add(0);
+            }
+            timer = timer.plusMinutes(intervalInMinutes);
+            if(timer.toDate().after(endTime) || timer.toDate().equals(endTime)) {
+                break;
+            }
+        }
+        return result;
+    }
 
+    private Date getMorning(boolean morning) {
+        Calendar date = Calendar.getInstance();
+        date.set(Calendar.HOUR_OF_DAY, 8);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MILLISECOND, 0);
+        date.set(Calendar.MINUTE, 0);
+        date.add(Calendar.DAY_OF_YEAR, -10);
+        if(morning) {
+            return date.getTime();
+        }
+        date.set(Calendar.HOUR_OF_DAY,21);
+        
+        return date.getTime();
+    }
+
+    private LinkedList<TimeRepeaterDateRange> createAvailabilityLines() {
+        TimeRepeaterData repeater = new TimeRepeaterData();
+        repeater.repeatMonday = true;
+        repeater.repeatTuesday = true;
+        repeater.repeatWednesday = true;
+        repeater.repeatThursday = true;
+        repeater.repeatFriday = true;
+        repeater.repeatPeride = TimeRepeaterData.RepeatPeriodeTypes.weekly;
+        repeater.firstEvent = new TimeRepeaterDateRange();
+        repeater.firstEvent.start = getMorning(true);
+        repeater.firstEvent.end = getMorning(false);
+        
+        DateTime end = new DateTime();
+        end = end.plusYears(3);
+        
+        repeater.endingAt = end.toDate();
+        
+        TimeRepeater generator = new TimeRepeater();
+        return generator.generateRange(repeater);
+    }
+
+    private boolean hasRange(LinkedList<TimeRepeaterDateRange> lines, DateTime timer) {
+        for(TimeRepeaterDateRange line : lines) {
+            if(line.isBetweenTime(timer.toDate())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -93,4 +93,6 @@ public interface IPmsManager {
     public RegistrationRules initBookingRules();
     
     public List<TimeRepeaterDateRange> addRepeatingData(PmsRepeatingData data);
+    
+    public List<Integer> getAvailabilityForRoom(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
 }

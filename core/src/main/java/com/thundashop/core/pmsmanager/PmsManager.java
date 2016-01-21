@@ -720,6 +720,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         order.payment = new Payment();
         order.payment.paymentType = user.preferredPaymentType;
+        order.userId = booking.userId;
         orderManager.saveOrder(order);
         
         booking.invoicedTo = startDate;

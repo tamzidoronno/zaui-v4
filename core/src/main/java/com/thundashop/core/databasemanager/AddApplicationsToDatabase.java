@@ -141,6 +141,18 @@ public class AddApplicationsToDatabase {
         ProMeisterTheme.allowedStoreIds.add("6524eb45-fa17-4e8c-95a5-7387d602a69b");
         apps.add(ProMeisterTheme);
 
+        Application XLedger = createSettings("XLedger",
+        "54b33da0-11d2-48cb-afb2-2da4b2bdb7be",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        XLedger.isPublic = true;
+        XLedger.isFrontend = false;
+        XLedger.moduleId = "WebShop";
+        XLedger.defaultActivate = false;
+        apps.add(XLedger);
+
+        
 
         return apps;
     }

@@ -115,7 +115,12 @@ class GenerateReport {
         $line[] = $entry->title;
         $line[] = $user->referenceKey;
         
-        $line[] = @$this->getParticipateData($entry->participateData->{$user->id});
+        if (strtotime($entry->day."-".$entry->month."-".$entry->year) < time()) {
+            $line[] = @$this->getParticipateData($entry->participateData->{$user->id}); 
+        } else {
+            $line[] = "";
+        }
+        
         $line[] = $entry->day."/".$entry->month."-".$entry->year;
         
         return $line;

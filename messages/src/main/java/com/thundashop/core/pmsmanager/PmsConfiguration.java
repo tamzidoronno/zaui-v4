@@ -9,7 +9,7 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, String> smses = new HashMap();
     public HashMap<String, String> adminmessages = new HashMap();
     public HashMap<String, String> defaultMessage = new HashMap();
-    public String emailTemplate = "";
+    public String emailTemplate = "{content}";
     
     public HashMap<String, String> contracts = new HashMap();
     

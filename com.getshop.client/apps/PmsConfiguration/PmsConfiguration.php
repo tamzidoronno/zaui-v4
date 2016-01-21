@@ -48,6 +48,12 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             }
         }
         foreach($_POST['data'] as $key => $value) {
+            if($this->endsWith($key, "_title")) {
+                $key = substr($key, 0, strlen($key)-6);
+                $notifications->emailTitles->{$key} = $value;
+            }
+        }
+        foreach($_POST['data'] as $key => $value) {
             if($this->endsWith($key, "_sms")) {
                 $key = substr($key, 0, strlen($key)-4);
                 $notifications->smses->{$key} = $value;

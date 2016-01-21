@@ -56,7 +56,9 @@ $whenToPay[4] = "After stay";
     {contact_name},
     {contact_prefix},
     {contact_phone},
-    {contact_email}
+    {contact_email},
+    {personalMessage},
+    {roomlist}
 </div>
 
 <div gstype="form" method="saveNotifications">
@@ -64,6 +66,7 @@ $whenToPay[4] = "After stay";
         <?php
         foreach($notifications as $index => $name) {
             echo "<h2>$name</h2>";
+            echo "<input type='txt' gsname='".$index."_title' style='width:100%; box-sizing:border-box;' value='".@$notificationSettings->emailTitles->{$index}."'><br>";
             echo "<textarea gsname='".$index."_email' style='width: 100%; height: 400px; box-sizing:border-box;'>";
             if(isset($notificationSettings->emails->{$index})) {
                 echo $notificationSettings->emails->{$index};

@@ -99,12 +99,24 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     
     public function getDayType() {
         $day = "day";
+        
+        $lastItemPage = false;
+        if(isset($_SESSION['lastItemPage'])) {
+            $lastItemPage = $_SESSION['lastItemPage'];
+        }
+        
         if(isset($_SESSION['calendardaytype'])) {
             $day = $_SESSION['calendardaytype'];
         }
         if($day == "month" && !$this->isItemPage()) {
             $day = "day";
         }
+        
+        if($this->isItemPage() && !$lastItemPage) {
+            $day = "month";
+        }
+        
+        $_SESSION['lastItemPage'] = $this->isItemPage();
         
         return $day;
     }

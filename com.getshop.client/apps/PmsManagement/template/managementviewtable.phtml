@@ -126,7 +126,9 @@ foreach($bookings as $booking) {
         }
 
         echo "<td align='center'>";
-        if($booking->isDeleted) {
+        if($booking->unConfirmed) {
+            echo "Rejected";
+        } else if($booking->isDeleted) {
             echo "Deleted";
         } else if($booking->confirmed) {
             echo "Confirmed";

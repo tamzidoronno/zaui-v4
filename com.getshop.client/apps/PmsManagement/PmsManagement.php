@@ -118,6 +118,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function confirmBooking() {
         $id = $_POST['data']['bookingid'];
         $type = $_POST['data']['clicksubmit'];
+        $message = $_POST['data'][''];
         if($type == "confirm") {
             $this->getManager()->confirmBooking($this->getSelectedName(), $id, $message);
         } else {

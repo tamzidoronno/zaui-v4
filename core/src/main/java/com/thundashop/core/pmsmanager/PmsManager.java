@@ -88,7 +88,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     ProductManager productManager;
-    private String specifiedMessage;
+    
+    private String specifiedMessage = "";
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -837,6 +838,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
         PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+        
+        message = message.replace("{personalMessage}", this.specifiedMessage);
         
         if(room != null) {
             message = formater.formatRoomData(message, room, bookingEngine);

@@ -18,6 +18,7 @@
 .PmsCalendar .continue_button { border: solid 1px #bbb;  width: 200px; text-align: center; display:inline-block; padding: 10px; }
 .PmsCalendar .calendarfooter { text-align: right; cursor:pointer; padding-right: 5px; padding-top: 20px; }
 .PmsCalendar .timeselectionpanel { display: none; position:fixed; border: solid 1px #bbb; background-color:#fff; border-radius: 2px; padding: 3px; font-size: 16px;  }
+.PmsCalendar .dayindicator { position:absolute; left: 0px; top: 0px; border-bottom: solid 1px #efefef; border-right: solid 1px #efefef; padding: 2px; background-color:#bbb; color:#fff; border-bottom-right-radius: 3px; }
 
 /* printing the timelines */
 .PmsCalendar .roomrow { box-sizing: border-box; clear:both; margin-bottom: 15px; }
@@ -25,7 +26,7 @@
 .PmsCalendar .roomdesc { background-color:#eaeaea; display:inline-block; width: 100%; height: 100%; font-size: 10px; position:relative; }
 .PmsCalendar .timecontainer { display:inline-block; width: 100%; box-sizing: border-box; float:left; }
 .PmsCalendar .timecontainer.withSideBar { width: 80%; }
-.PmsCalendar .weekdaycontainer { box-sizing: border-box;  width: 14.285%; float:left; display:inline-block; padding-right: 5px; }
+.PmsCalendar .weekdaycontainer { box-sizing: border-box;  width: 14.285%; float:left; display:inline-block; padding-right: 5px; position:relative; }
 .PmsCalendar .outerblock { display:inline-block; box-sizing: border-box; padding-right: 1px;  }
 .PmsCalendar .outerblock.small { padding-right: 1px; }
 .PmsCalendar .timeblock { display:inline-block; height: 100%; width: 100%; box-sizing: border-box; background-color:#efefef; }

@@ -43,7 +43,10 @@ $f = $this->__w("Sunday");
                 echo $this->__w(date("d.m.Y", $this->getSelectedDay())); 
             } 
             if($type == "week") {
-                echo $this->__w("Week") . " " . date("W", $this->getSelectedDay());
+                $startTime = strtotime("last monday", $this->getSelectedDay());
+                $endTime = strtotime("this sunday", $this->getSelectedDay());
+                echo date("d", $startTime) . ". " . strtolower($this->__w(date("M", $startTime))) . " - ";
+                echo date("d", $endTime) . ". " . strtolower($this->__w(date("M", $endTime)));
             }
             if($type == "month") {
                 echo date("M Y", $this->getSelectedDay());
@@ -113,6 +116,7 @@ if($type == "month") {
 
             echo "<div class='weekdaycontainer'>";
             if($day) {
+                echo "<span class='dayindicator'>".date("d", strtotime($day))."</span>";
                 $this->printBlocks(strtotime($day), $type, $this->getPage()->javapage->id, $withSideBar);
             }
             echo "</div>";

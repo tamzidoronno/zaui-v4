@@ -61,7 +61,10 @@ public interface IPmsManager {
     public void saveConfiguration(PmsConfiguration notifications);
     
     @Administrator
-    public void confirmBooking(String bookingId);
+    public void confirmBooking(String bookingId, String message);
+    
+    @Administrator
+    public void unConfirmBooking(String bookingId, String message);
     
     @Administrator
     public PmsStatistics getStatistics(PmsBookingFilter filter);

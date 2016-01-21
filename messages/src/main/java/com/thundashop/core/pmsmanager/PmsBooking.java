@@ -117,6 +117,7 @@ public class PmsBooking extends DataCommon {
     public Date invoicedTo = null;
     public Integer priceType = 1;
     public boolean confirmed = false;
+    public boolean unConfirmed = false;
     public boolean isDeleted = false;
     public PmsRepeatingData lastRepeatingData = null;
 

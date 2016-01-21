@@ -88,6 +88,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     ProductManager productManager;
+    private String specifiedMessage;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -764,6 +765,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         notify(key, booking, "sms", room);
         notify(key, booking, "email", room);
         notifyAdmin(key, booking);
+        specifiedMessage = "";
     }
 
     private void notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
@@ -846,12 +848,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void confirmBooking(String bookingId) {
+    public void confirmBooking(String bookingId, String message) {
+        this.specifiedMessage = message;
         PmsBooking booking = getBooking(bookingId);
         booking.confirmed = true;
         saveBooking(booking);
         doNotification("booking_confirmed", booking, null);
     }
+    
+    @Override
+    public void unConfirmBooking(String bookingId, String message) {
+        this.specifiedMessage = message;
+        PmsBooking booking = getBooking(bookingId);
+        booking.unConfirmed = true;
+        saveBooking(booking);
+        deleteBooking(bookingId);
+        
+        doNotification("booking_notconfirmed", booking, null);
+    }
+    
 
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
@@ -1113,7 +1128,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             VEvent event = new VEvent();
             String title = "Booking of";
             
-            if(room.booking.bookingItemId != null) {
+            if(room.booking.bookingItemId != null && bookingEngine.getBookingItem(room.booking.bookingItemId) != null) {
                 title += " room " + bookingEngine.getBookingItem(room.booking.bookingItemId).bookingItemName;
             } else {
                 title += " " + bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
@@ -1478,5 +1493,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return item;
     }
+
 
 }

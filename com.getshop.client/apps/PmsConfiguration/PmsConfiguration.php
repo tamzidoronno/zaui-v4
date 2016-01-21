@@ -65,6 +65,8 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 $notifications->{$key} = $value;
             }
         }
+        
+        $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];
 
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $notifications);
     }

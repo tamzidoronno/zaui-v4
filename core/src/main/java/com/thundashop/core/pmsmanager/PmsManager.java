@@ -315,6 +315,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(curcompany != null) {
                 curcompany = userManager.saveCompany(curcompany);
                 newuser.company.add(curcompany.id);
+                newuser.fullName = curcompany.name;
+                newuser.emailAddress = curcompany.email;
+                newuser.cellPhone = curcompany.phone;
+                newuser.prefix = curcompany.prefix;
+                newuser.address = curcompany.address;
+                
                 userManager.saveUserSecure(newuser);
             }
         } else {
@@ -1248,11 +1254,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         User user = new User();
         user.emailAddress = "";
         /* Fields found in FieldGenerator.php */
-        user.fullName = result.get("fullName");
-        user.cellPhone = result.get("cellPhone");
-        user.emailAddress = result.get("emailAddress");
+        user.fullName = result.get("user_fullName");
+        user.cellPhone = result.get("user_cellPhone");
+        user.emailAddress = result.get("user_emailAddress");
         if(result.get("prefix") != null) {
-            user.prefix = result.get("prefix");
+            user.prefix = result.get("user_prefix");
         }
         
         user.address = new Address();
@@ -1279,7 +1285,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         company.email = result.get("company_email");
         company.contactPerson = result.get("company_contact");
         company.prefix = result.get("company_prefix");
-        company.phone = result.get("company_postnumber");
+        company.phone = result.get("company_phone");
         company.vatRegisterd = true;
         if(result.get("company_vatRegistered") != null) {
             company.vatRegisterd = result.get("company_vatRegistered").equals("true");

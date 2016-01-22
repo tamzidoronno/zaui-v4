@@ -12,7 +12,7 @@ public class Company extends DataCommon {
     public String vatNumber = "";
     public String type = "";
     public String name = "";
-    public String prefix = "";
+    public String prefix = "47";
     public String phone = "";
     public boolean vatRegisterd = true;
     public String invoiceEmail = "";

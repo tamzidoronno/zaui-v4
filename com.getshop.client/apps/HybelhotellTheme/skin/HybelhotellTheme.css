@@ -16,3 +16,4 @@ body { background-color:#efefef; margin-top: 20px; margin-bottom: 20px;}
 .PmsBookingContactData .complete_button,
 .PmsBooking .pmsfront .check_available_button { background-color:#73bcd4; }
 .PmsBookingProductList .productentry.selected { border-color: #73bcd4; }
+.PmsBookingProductList .price { font-size: 14px !important; text-align: right; line-height: 23px; font-weight: normal !important; }

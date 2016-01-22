@@ -25,3 +25,4 @@ box-shadow: 0 4px 5px rgba(0,0,0,0.3); ;
 .PmsCalendar .dayentry:hover,
 .PmsCalendar .roomentry:hover { background-color:#585ed4; color:#fff;  }
 .PmsCalendar .continue_button,.PmsBookingContactData .complete_button { text-transform: uppercase; }
+.PmsCalendar .readmorelink a { color:#000; text-decoration: underline; }

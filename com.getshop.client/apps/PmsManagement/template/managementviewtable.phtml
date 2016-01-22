@@ -4,6 +4,12 @@ $filter = $this->getSelectedFilter();
 $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+$prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
+
+$hasPrices = false;
+if($prices->defaultPriceType == 1 && !$prices->dailyPrices) {
+    $hasPrices = true;
+}
 foreach($items as $item) {
     $items[$item->id] = $item;
 }
@@ -44,6 +50,9 @@ echo "<table width='100%' cellspacing='0' cellpadding='0'>";
 echo "<tr>";
 echo "<th></th>";
 foreach($headers as $header => $value) {
+    if($header == "price" && !$hasPrices) {
+        continue;
+    }
     echo "<th gstype='clicksubmit' gsvalue='$header' method='sortTable' gsname='column' style='cursor:pointer;'>";
     if($filter->sorting == $header) {
         echo "<i class='fa fa-arrow-down'></i>";
@@ -110,11 +119,16 @@ foreach($bookings as $booking) {
         echo "<br><span class='secondary_text'>" . $types[$room->bookingItemTypeId]->name . "</span>";
 
         echo "</td>";
-        echo "<td>";
-        echo $room->price;
-        echo "</td>";
+        if($hasPrices) {
+            echo "<td>";
+            echo $room->price;
+            echo "</td>";
+        }
+
         echo "<td align='center'>";
-        if($booking->isDeleted) {
+        if($booking->unConfirmed) {
+            echo "Rejected";
+        } else if($booking->isDeleted) {
             echo "Deleted";
         } else if($booking->confirmed) {
             echo "Confirmed";

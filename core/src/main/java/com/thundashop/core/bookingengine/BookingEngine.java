@@ -10,6 +10,7 @@ import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import java.util.Collections;
 import java.util.Comparator;
@@ -180,11 +181,14 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      */
     @Override
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
-        double result = Math.random()* 100;
-        if(result < 50) {
-            return 20;
+        BookingTimeLineFlatten timeline = getTimelines(itemType, start, end);
+        int higest = 9999;
+        for(BookingTimeLine line : timeline.getTimelines()) {
+            if(line.getAvailableSpots() < higest) {
+                higest = line.getAvailableSpots();
+            }
         }
-        return 10;
+        return higest;
     }
 
     /**

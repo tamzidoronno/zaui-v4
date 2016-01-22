@@ -23,12 +23,14 @@ class PmsPricing extends \WebshopApplication implements \Application {
     }
     
     public function setNewPrices() {
-        $prices = $_POST['data']['prices'];
-        
         $pricingObject = new \core_pmsmanager_PmsPricing();
-        $pricingObject->specifiedPrices = $prices;
+        if(isset($_POST['data']['prices'])) {
+            $prices = $_POST['data']['prices'];
+            $pricingObject->dailyPrices = $prices;
+        }
+
         $pricingObject->defaultPriceType = $_POST['data']['pricetype'];
-        
+
         $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $pricingObject);
     }
 
@@ -64,6 +66,33 @@ class PmsPricing extends \WebshopApplication implements \Application {
         return date("d.m.Y", time()+(86400*90));        
     }
 
+    public function updateProgressivePrices() {
+        $itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        $result = [];
+        foreach($itemTypes as $type) {
+            $typeId = $type->id;
+            for($i = 0; $i < 10; $i++) {
+                $entry = new \core_pmsmanager_ProgressivePriceAttribute();
+                $entry->numberOfTimeSlots = $_POST['data']['date_slot_'.$i."_".$typeId];
+                $entry->price = $_POST['data']['price_slot_'.$i."_".$typeId];
+                if($entry->numberOfTimeSlots) {
+                    if(!isset($result[$typeId])) {
+                        $result[$typeId] = array();
+                    }
+                    $result[$typeId][] = $entry;
+                }
+            }
+        }
+        
+        
+        $pricingObject = new \core_pmsmanager_PmsPricing();
+        $pricingObject->progressivePrices = $result;
+
+        $pricingObject->defaultPriceType = $_POST['data']['pricetype'];
+
+        $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $pricingObject);
+    }
+    
     public function getPrices() {
         return $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), 
             $this->convertToJavaDate(strtotime($this->getStart())),

@@ -47,7 +47,6 @@ public interface IPmsManager {
     @Administrator
     public void saveBooking(PmsBooking booking);
     
-    @Administrator
     public PmsPricing getPrices(Date start, Date end); 
     
     @Administrator
@@ -62,7 +61,10 @@ public interface IPmsManager {
     public void saveConfiguration(PmsConfiguration notifications);
     
     @Administrator
-    public void confirmBooking(String bookingId);
+    public void confirmBooking(String bookingId, String message);
+    
+    @Administrator
+    public void unConfirmBooking(String bookingId, String message);
     
     @Administrator
     public PmsStatistics getStatistics(PmsBookingFilter filter);
@@ -91,4 +93,6 @@ public interface IPmsManager {
     public RegistrationRules initBookingRules();
     
     public List<TimeRepeaterDateRange> addRepeatingData(PmsRepeatingData data);
+    
+    public List<Integer> getAvailabilityForRoom(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
 }

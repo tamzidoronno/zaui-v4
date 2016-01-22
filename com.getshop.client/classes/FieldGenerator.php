@@ -101,10 +101,10 @@ class FieldGenerator {
                 
         $fields = array();
         $fields["title_0"] = "Users information details";
-        $fields["fullName"] = "Name of the user";
-        $fields["cellPhone"] = "Cell phone number";
-        $fields["emailAddress"] = "Email address";
-        $fields["prefix"] = "Phone prefix";
+        $fields["user_fullName"] = "Name of the user";
+        $fields["user_prefix"] = "Phone prefix";
+        $fields["user_cellPhone"] = "Cell phone number";
+        $fields["user_emailAddress"] = "Email address";
         
         $fields["title_2"] = "Users address details";
         $fields["user_birthday"] = "Birth day of user";

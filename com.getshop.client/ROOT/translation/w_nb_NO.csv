@@ -24,6 +24,7 @@ Addon type;-;Tilleggs type
 Addons;-;Tilegg
 Address;-;Adresse
 Adult;-;Voksne
+Alias;-;Alias
 All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
 An email has been sent with a code to use in step 2.;-;En epost har blitt sendt til deg som kan benyttes i steg 2.s
@@ -297,6 +298,10 @@ Repeat on;-;Gjenta på
 Repeat password;-;Gjenta passord
 Repeating dates;-;Gjenta på datoer
 Repeats;-;Gjentagelse
+Repeats daily;-;Repeter daglig
+Repeats every {periode} week;-;Repeter hver {periode} uke
+Repeats montly same date in month;-;Repeteres månedlig på fast dato i måneden
+Repeats montly same day in week;-;Repeters daglig på fast dag i uken
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
 Room;-;Rom
@@ -414,10 +419,12 @@ What kind of parallax effect?;-;Hvilken type parallax effekt?
 What type of date is this;-;Hvilken type dato er dette
 What's on your mind?;-;Hva ønsker du å formidle?
 Wrong delivery method;-;Feil forsendelses metode.
+Xledger is a economy system.;-;Xledger er et økenomisystem.
 Yes;-;Ja
 You are here:;-;Du er her:
 You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.;-;Du er nå i edit modus for denne raden, du kan nå legge til kolonner, rader over og under, og mye mer.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
+You got rooms that are not available in the selected time periode.;-;Det er rom som ikke er tilgjenglig i valgt periode.
 You have been inactive to long and due to security reasons you will now be logged out.;-;Du har vært inaktiv for lenge, og på grunn av sikkerhetsmessige årsaker vil du nå bli logget ut.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your email;-;Din epost
@@ -428,8 +435,8 @@ Your order has now been completed and is waiting to be shipped.;-;Orderen din ha
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
 cellphone;-;Mobilnr
-day of the month;-;dag i måneden
-day of the week;-;dag i uken
+day of the month;-;Fast dato i måneden
+day of the week;-;Fast ukedag
 days;-;dager
 description;-;Beskrivelse
 email;-;E-post
@@ -441,7 +448,9 @@ location;-;Sted
 login;-;logg inn
 months;-;måneder
 read;-;les
+show selected dates;-;Vis valgte datoer
 summary;-;oppsummering
+until;-;frem til
 view as calendar;-;Vis som kalender
 view as list;-;Vis som liste
 weeks;-;uker

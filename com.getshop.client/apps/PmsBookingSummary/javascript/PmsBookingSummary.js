@@ -5,6 +5,14 @@ app.PmsBookingSummary = {
         $(document).on('click','.PmsBookingSummary .togglerepeatbox', app.PmsBookingSummary.closeRepeatBox);
         $(document).on('change','.PmsBookingSummary .repeat_type', app.PmsBookingSummary.changeRepeatType);
         $(document).on('click','.PmsBookingSummary .adddatetype', app.PmsBookingSummary.changeAddDateType);
+        $(document).on('click','.PmsBookingSummary .showRepeatDates', app.PmsBookingSummary.showRepeatDates);
+    },
+    showRepeatDates : function() {
+        if(!$('.repatingroomlist').is(':visible')) {
+            $('.repatingroomlist').slideDown();
+        } else {
+            $('.repatingroomlist').slideUp();
+        }
     },
     changeAddDateType : function() {
         $('.PmsBookingSummary .adddatetype.selected').removeClass('selected');
@@ -21,6 +29,11 @@ app.PmsBookingSummary = {
         if(type !== "0") {
             $('.repeatrow').show();
         } 
+        $('.repeateachdaterow').hide();
+        if(type === "1") {
+            $('.repeateachdaterow').show();
+        }
+        
         $('.repeatoption').hide();
         $('.repeat_' + type).show();
     },

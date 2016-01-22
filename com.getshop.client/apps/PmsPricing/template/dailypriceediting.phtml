@@ -1,0 +1,51 @@
+<?php
+$itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$priceObject = $this->getPrices();
+$prices = $priceObject->dailyPrices;
+?>
+<div class='pricetableview'>
+<table cellspacing='0' cellpadding='0'>
+    <tr>
+        <th align='left'>Item</th>
+        <th>Default</th>
+        <?php
+        for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
+            $weekday = date("w", $i);
+            $weekend = '';
+            if($weekday == 6 || $weekday == 0) {
+                $weekend = "weeked";
+            }
+            echo "<td class='$weekend'>".date("d.m.y", $i)."</td>";
+        }
+        ?>
+    </tr>
+    <?
+    foreach($itemTypes as $type) {
+        if(isset($prices->{$type->id}->{'default'})) {
+            $price = $prices->{$type->id}->{'default'};
+        }
+        echo "<tr itemtype='".$type->id."'>";
+        echo "<td><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td><td><input date='default' type='text' value='".$price."' class='priceinput'></td>";
+        for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
+            $date = date("d-m-Y", $i);
+            $weekday = date("w", $i);
+            $price = "";
+            if(isset($prices->{$type->id}->{$date})) {
+                $price = $prices->{$type->id}->{$date};
+            }
+            $weekend = '';
+            if($weekday == 6 || $weekday == 0) {
+                $weekend = "weeked";
+            }
+            echo "<td class='$weekend'><input type='text' weekday='$weekday' date='$date' value='".$price."' class='priceinput'></td>";
+        }
+        echo "</tr>";
+    }
+    ?>
+</table>    
+</div>
+
+<div style='text-align: right;'>
+<span class='pmsbutton setnewprices'>Update prices</span>
+</div>
+

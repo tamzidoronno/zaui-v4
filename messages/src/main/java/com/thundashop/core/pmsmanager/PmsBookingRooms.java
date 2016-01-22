@@ -39,6 +39,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean ended = false;
     public List<String> notificationsSent = new ArrayList();
     boolean addedToArx = false;
+    boolean canBeAdded = true;
     
     /**
      * Finalized entries

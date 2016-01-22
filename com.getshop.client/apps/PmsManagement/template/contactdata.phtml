@@ -91,9 +91,13 @@ foreach($booking->registrationData->resultAdded as $key => $value) {
                 <span class='roompostfix'>
                 <span class="viewmode">
                         <?
-                        $appSettings = $instances[$user->preferredPaymentType];
-                        $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);
-                        echo $appSettings->appName;
+                        if(!$user->preferredPaymentType || !isset($instances[$user->preferredPaymentType])) {
+                            echo "User does not have a preferred payment type.. configure it in the setting panel, under settings.";
+                        } else {
+                            $appSettings = $instances[$user->preferredPaymentType];
+                            $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);
+                            echo $appSettings->appName;
+                        }
                         ?>
                     </span>
                     <span class="editmode" gstype='form' method="setNewPaymentType">

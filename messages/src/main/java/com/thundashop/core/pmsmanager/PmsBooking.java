@@ -97,6 +97,7 @@ public class PmsBooking extends DataCommon {
         public static Integer minutly = 4;
         public static Integer hourly = 5;
         public static Integer secondly = 6;
+        public static Integer progressive = 7;
     }
        
     public static class BookingStates {
@@ -116,6 +117,7 @@ public class PmsBooking extends DataCommon {
     public Date invoicedTo = null;
     public Integer priceType = 1;
     public boolean confirmed = false;
+    public boolean unConfirmed = false;
     public boolean isDeleted = false;
     public PmsRepeatingData lastRepeatingData = null;
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import org.joda.time.LocalDate;
 
 public class PmsManagerProcessor {
     private final PmsManager manager;
@@ -253,34 +254,27 @@ public class PmsManagerProcessor {
     }
 
     private void createPeriodeInvoices(PmsBooking booking) {
-        int type = booking.priceType;
         
         NewOrderFilter filter = new NewOrderFilter();
-        filter.numberOfMonths = 1;
-        if(type == 0) {
-            return;
-        }
-        if(type != PmsBooking.PriceType.monthly) {
-//            System.out.println("Not yet supporting other payment periods than months");
-            return;
-        }
         System.out.println("\t" + booking.invoicedTo);
         if(booking.invoicedTo.before(new Date())) {
             System.out.println("this one should be");
         }
         
-        if(type == PmsBooking.PriceType.monthly) {
-            filter.startInvoiceFrom = null;
-            if(isAfterOrToday(booking.invoicedTo)) {
-                if(manager.configuration.prepayment) {
-                    filter.startInvoiceFrom = booking.invoicedTo;
-                } else {
-                    filter.startInvoiceFrom = substractOneMonth(booking.invoicedTo);
-                }
-                manager.createOrder(booking.id, filter);
-                booking.invoicedTo = addOneMonth(booking.invoicedTo);
-                manager.saveBooking(booking);
+        filter.startInvoiceFrom = null;
+        if(isAfterOrToday(booking.invoicedTo)) {
+            if(manager.configuration.prepayment) {
+                filter.startInvoiceFrom = booking.invoicedTo;
+                LocalDate date = new LocalDate(booking.invoicedTo);
+                date.plusMonths(1);
+                filter.endInvoiceAt = date.toDate();
+            } else {
+                filter.startInvoiceFrom = substractOneMonth(booking.invoicedTo);
+                filter.endInvoiceAt = booking.invoicedTo;
             }
+            manager.createOrder(booking.id, filter);
+            booking.invoicedTo = addOneMonth(booking.invoicedTo);
+            manager.saveBooking(booking);
         }
     }
 
@@ -320,8 +314,12 @@ public class PmsManagerProcessor {
         }
         
         NewOrderFilter filter = new NewOrderFilter();
-        filter.numberOfMonths = 1;
         filter.startInvoiceFrom = booking.invoicedTo;
+        
+        LocalDate date = new LocalDate();
+        date.plusMonths(1);
+        filter.endInvoiceAt = date.toDate();
+        
         manager.createOrder(booking.id, filter);
         booking.invoicedTo = endDate;
         manager.saveBooking(booking);

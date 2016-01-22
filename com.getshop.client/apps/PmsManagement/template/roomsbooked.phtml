@@ -144,7 +144,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons) {
                             } else {
                                 $notifications = "notifications: " . join(",", $room->notificationsSent);
                                 echo "<span title='$notifications'>" . $items[$room->booking->bookingItemId]->bookingItemName . "</span>";
-                                echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
+//                                echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
                             }
                             ?>
                         </span>

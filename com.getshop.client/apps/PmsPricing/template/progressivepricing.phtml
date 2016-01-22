@@ -1,0 +1,44 @@
+<?php
+/* @var $this \ns_1be25b17_c17e_4308_be55_ae2988fecc7c\PmsPricing */
+$itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+
+$priceObject = $this->getPrices();
+$prices = $priceObject->progressivePrices;
+
+?>
+    <table>
+        <tr>
+            <th></th>
+            <?php
+                 for($i = 1;$i <= 10;$i++) {
+                    echo "<th>";
+                    echo "Slot $i";
+                    echo "</th>";
+                }
+            ?>
+    <?php
+    foreach($itemTypes as $type) {
+        echo "<tr itemtype='".$type->id."'>";
+        echo "<td>" . $type->name . "</td>";
+        for($i = 0;$i < 10;$i++) {
+            $numberOfTimeSlots = "";
+            $price = "";
+            if(isset($prices->{$type->id}[$i])) {
+                $numberOfTimeSlots = $prices->{$type->id}[$i]->numberOfTimeSlots;
+                $price = $prices->{$type->id}[$i]->price;
+            }
+            
+            echo "<td>";
+            echo "<input type='txt' style='width:40px;text-align:center;' gsname='date_slot_".$i."_".$type->id."' value='$numberOfTimeSlots'></input>";
+            echo "<input type='txt' style='width:40px;text-align:center;' gsname='price_slot_".$i."_".$type->id."' value='$price'></input>";
+            echo "</td>";
+        }
+        echo "</tr>";
+    }
+    ?>
+    </table>
+    <br>
+    <div style='text-align: right;'>
+    <span class='pmsbutton' gstype='submit'>Update progressive prices</span>
+    </div>
+</div>

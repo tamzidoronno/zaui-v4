@@ -151,6 +151,11 @@ thundashop.framework = {
     postToInformationBox : function() {
         var form = $(this).closest('[gstype="form"]');
         var data = thundashop.framework.createGsArgs(form);
+        
+        if($(this).attr('gsvalue')) {
+            data["clicksubmit"] = $(this).attr('gsvalue');
+        }
+        
         var method = form.attr('method');
         var event = thundashop.Ajax.createEvent('',method,$(this),data);
         var title = $('#informationboxtitle').text();

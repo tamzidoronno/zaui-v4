@@ -15,6 +15,8 @@ $bookingid = $_POST['data']['bookingid'];
 $pmsManager = $this->getApi()->getPmsManager();
 $config = $pmsManager->getConfiguration($this->getSelectedName());
 
+$lang = $this->getFactory()->getCurrentLanguage();
+$default = $config->defaultMessage->{$lang};
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 foreach ($types as $idx => $type) {
     $types[$type->id] = $type;
@@ -25,11 +27,19 @@ $booking = $pmsManager->getBooking($this->getSelectedName(), $bookingid);
 if(!$booking->confirmed) {
     ?>
     <div class='needconfirmation'>
-        This booking has not been confirmed yet.<br><br>
-        <div gstype="form" method="confirmBooking">
-            <input type='hidden' gsname='bookingid' value='<? echo $booking->id; ?>'>
-            <span gstype="submitToInfoBox" class='pmsbutton'>Confirm booking</span>
-        </div>
+        <?php if($booking->unConfirmed) {
+            echo "This booking has been rejected by administrator.";
+        } else {
+            ?>
+            This booking has not been confirmed yet.<br><br>
+            <div gstype="form" method="confirmBooking">
+                <input type='hidden' gsname='bookingid' value='<? echo $booking->id; ?>'>
+                <div style='text-align:left;'>Message to recipient:</div>
+                <textarea style='width:100%; height: 100px; margin-bottom: 5px;' gsname='message'><? echo $default; ?></textarea>
+                <span gstype="submitToInfoBox" class='pmsbutton' gsvalue='confirm'>Confirm booking</span>
+                <span gstype="submitToInfoBox" class='pmsbutton' gsvalue='unconfirm' style='background-color:red;'>Do not confirm this booking</span>
+            </div>
+        <?php } ?>
     </div>
     <?php
 }

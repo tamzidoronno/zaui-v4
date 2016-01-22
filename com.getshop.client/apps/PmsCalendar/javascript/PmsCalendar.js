@@ -29,9 +29,6 @@ app.PmsCalendar = {
 
     },
     continueToForm : function() {
-        if($(this).hasClass('disabled')) {
-            return;
-        }
         var row = $('.selected_periode').closest('.timecontainer');
         var start = null;
         var end = null;
@@ -42,6 +39,10 @@ app.PmsCalendar = {
             end = $(this).attr('endtime');
         });
         
+        if(!start) {
+            return;
+        }
+        
         var room = row.closest('.roomrow').attr('itemid');
 
         var data = {
@@ -50,8 +51,8 @@ app.PmsCalendar = {
             "room" : room
         };
         
-        var event = thundashop.Ajax.createEvent('','continueToForm',$(this),data);
-        var continueTo = $(this).attr('continue');
+        var event = thundashop.Ajax.createEvent('','continueToForm',$('.PmsCalendar'),data);
+        var continueTo = $(".PmsCalendar .continue").val();
         thundashop.Ajax.postWithCallBack(event, function() {
             window.location.href=continueTo;
         });
@@ -64,6 +65,7 @@ app.PmsCalendar = {
         var panel = $('.PmsCalendar .timeselectionpanel');
         panel.fadeOut();
         $(document).tooltip('enable');
+        app.PmsCalendar.continueToForm();
     },
     mouseoverfield : function() {
         if(!app.PmsCalendar.mouseDown) {

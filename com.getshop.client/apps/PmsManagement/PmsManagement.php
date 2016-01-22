@@ -91,6 +91,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(isset($_POST['data']['startingFrom'])) {
             $filter->startInvoiceFrom = $this->convertToJavaDate(strtotime($_POST['data']['startingFrom']));
         }
+        if(isset($_POST['data']['endingAt'])) {
+            $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
+        }
         $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
         $this->showBookingInformation();
     }
@@ -114,7 +117,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function confirmBooking() {
         $id = $_POST['data']['bookingid'];
-        $this->getManager()->confirmBooking($this->getSelectedName(), $id);
+        $type = $_POST['data']['clicksubmit'];
+        $message = $_POST['data']['message'];
+        if($type == "confirm") {
+            $this->getManager()->confirmBooking($this->getSelectedName(), $id, $message);
+        } else {
+            $this->getManager()->unConfirmBooking($this->getSelectedName(), $id, $message);
+        }
         $this->showBookingInformation();
     }
     

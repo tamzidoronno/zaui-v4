@@ -31,13 +31,32 @@ foreach($booking->rooms as $room) {
 
 if($configuration->supportMoreDates) {
     $this->includefile("addmoredates");
-}
-
-foreach($booking->rooms as $room) {
-    if(!$room->addedByRepeater) {
-        continue;
+    if($this->hasRoomsThatCanNoBeAdded($booking)) {
+        echo "<span class='unavailableroomwarning'>";
+        echo $this->__w("You got rooms that are not available in the selected time periode.");
+        echo "</span>";
+        foreach($booking->rooms as $room) {
+            if(!$room->addedByRepeater) {
+                continue;
+            }
+            if($room->canBeAdded) {
+                continue;
+            }
+            printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText);
+        }
     }
-    printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText);
+    
+    echo "<div class='repatingroomlist'>";
+    foreach($booking->rooms as $room) {
+        if(!$room->addedByRepeater) {
+            continue;
+        }
+        if(!$room->canBeAdded) {
+            continue;
+        }
+        printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText);
+    }
+    echo "</div>";
 }
 
 $printAddons = false;
@@ -68,7 +87,7 @@ foreach($prices as $taxgroup => $price) {
 }
 if($total > 0) {
     $bottom .= "<div class='itemrow ' style='padding-top: 10px;'>";
-    $bottom .= "Totalt <span class='price'>" . $total . " kr </span>";
+    $bottom .= "Totalt <span class='price'>" . round($total) . " kr </span>";
     $bottom .= "</div>";
 }
 if($total > 0) {
@@ -103,7 +122,11 @@ if($addonsFound) {
 function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText) {
 /* @var $room core_pmsmanager_PmsBookingRooms */
     $price = $room->price;
-    echo "<div class='itemrow'>";
+    $canNotBeAded = "";
+    if(!$room->canBeAdded) {
+        $canNotBeAded = "cantbeadded";
+    }
+    echo "<div class='itemrow $canNotBeAded'>";
     echo "<i class='fa fa-trash-o removeAddon bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></i> ";
     $addonsAdded[$room->bookingItemTypeId] = true;
     echo "<span class='itemname'>";
@@ -114,7 +137,7 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     }
     echo "</span>";
     if($price > 0) {
-        echo "<span class='price'>" . $price . " kr </span>";
+        echo "<span class='price'>" . round($price) . " kr </span>";
     }
     $date =$room->date;
     

@@ -27,3 +27,7 @@
 .PmsBookingSummary .adddatetype.selected { background-color:#fff;   border: solid 1px #bbb; }
 .PmsBookingSummary .addMoredatesPanel .datetypepanel { display:none; }
 .PmsBookingSummary .addMoredatesPanel .datetypepanel.repeat { display:inherit;}
+.PmsBookingSummary .cantbeadded { color:red; }
+.PmsBookingSummary .unavailableroomwarning { border: solid 1px; background-color:red; color: white; padding: 10px; display:inline-block; margin-bottom: 20px; }
+.PmsBookingSummary .repatingroomlist { display:none; }
+.PmsBookingSummary .showRepeatDates { color: blue; cursor:pointer; }

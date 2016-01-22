@@ -2,6 +2,12 @@ app.PmsPricing = {
     init: function () {
         $(document).on('click', '.PmsPricing .updatePricingTable', app.PmsPricing.updatePricingTable);
         $(document).on('click', '.PmsPricing .setnewprices', app.PmsPricing.setnewprices);
+        $(document).on('keyup', '.PmsPricing .dateinput', app.PmsPricing.updateDate);
+        $(document).on('change', '.PmsPricing .dateinput', app.PmsPricing.updateDate);
+    },
+    updateDate : function() {
+        var date = $(this).val();
+        $(this).closest('td').find('.priceinput').attr('date',date);
     },
     updatePricingTable : function() {
         $('.pricecheckbox').each(function() {

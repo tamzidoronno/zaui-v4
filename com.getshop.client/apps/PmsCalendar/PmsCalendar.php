@@ -69,19 +69,24 @@ class PmsCalendar extends \WebshopApplication implements \Application {
 
         $startTime = $start;
         if($type == "day") {
+            $minutes = 30;
             $numberOfSlots = $hours * 2;
         } else {
             $size = "small";
+            $minutes = 60;
             $numberOfSlots = $hours;
         }
+        
+        $end = $startTime + ($numberOfSlots * $minutes * 60);
+        
+        $lines = $this->getApi()->getPmsManager()->getAvailabilityForRoom($this->getSelectedName(), $room, $this->convertToJavaDate($start), $this->convertToJavaDate($end), $minutes);
         $width = 100 / $numberOfSlots;
         for($i = 1; $i <= $numberOfSlots; $i++) {
-            if($type == "day") {
-                $endTime = $start + ((60*30)*$i); 
-            } else {
-                $endTime = $start + (60*60*$i); 
-            }
+            $endTime = $start + (60*$minutes*$i);
             $state = $this->getBlockState($room, $day, $startTime, $endTime);
+            if(!$lines[$i-1]) {
+                $state = "not_available";
+            }
             echo "<span class='outerblock $size' style='width: $width%'>";
             echo "<span class='timeblock $state' startTime='$startTime' "
                     . "endTime='$endTime' "
@@ -99,12 +104,24 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     
     public function getDayType() {
         $day = "day";
+        
+        $lastItemPage = false;
+        if(isset($_SESSION['lastItemPage'])) {
+            $lastItemPage = $_SESSION['lastItemPage'];
+        }
+        
         if(isset($_SESSION['calendardaytype'])) {
             $day = $_SESSION['calendardaytype'];
         }
         if($day == "month" && !$this->isItemPage()) {
             $day = "day";
         }
+        
+        if($this->isItemPage() && !$lastItemPage) {
+            $day = "month";
+        }
+        
+        $_SESSION['lastItemPage'] = $this->isItemPage();
         
         return $day;
     }

@@ -92,7 +92,9 @@ public interface IPmsManager {
     
     public RegistrationRules initBookingRules();
     
-    public List<TimeRepeaterDateRange> addRepeatingData(PmsRepeatingData data);
+    public void addRepeatingData(PmsRepeatingData data) throws Exception;
     
     public List<Integer> getAvailabilityForRoom(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
+    
+    public void toggleAddon(String itemId) throws Exception;
 }

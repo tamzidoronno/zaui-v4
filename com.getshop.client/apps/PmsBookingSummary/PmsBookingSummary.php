@@ -28,6 +28,10 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         $this->includefile("summary");
     }
 
+    public function toggleAddon() {
+        $this->getApi()->getPmsManager()->toggleAddon($this->getSelectedName(), $_POST['data']['item']);
+    }
+    
     public function saveSettings() {
         foreach($_POST['data'] as $key => $value) {
             $this->setConfigurationSetting($key, $value);

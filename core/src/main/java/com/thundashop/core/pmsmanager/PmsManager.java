@@ -147,11 +147,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-        saveObject(booking);
         for(PmsBookingRooms room : booking.rooms) {
             room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, false);
             room.taxes = calculateTaxes(room.bookingItemTypeId);
         }
+        saveObject(booking);
         bookings.put(booking.id, booking);
     }
 
@@ -1310,13 +1310,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public List<TimeRepeaterDateRange> addRepeatingData(PmsRepeatingData data) {
+    public void addRepeatingData(PmsRepeatingData data) throws Exception {
         PmsBooking curBooking = getCurrentBooking();
         removeRepeatedRooms(curBooking);
+        
         if(data.repeattype.equals("repeat")) {
-            return addRepeatingRooms(data);
+            addRepeatingRooms(data);
+        } else {
+            addSingleDate(data);
         }
-        return addSingleDate(data);
+        updateBookingAddonList();
+        setBooking(curBooking);
     }
 
     private List<TimeRepeaterDateRange> addSingleDate(PmsRepeatingData data) {
@@ -1528,15 +1532,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private Date getMorning(boolean morning) {
         Calendar date = Calendar.getInstance();
-        date.set(Calendar.HOUR_OF_DAY, 8);
+        date.set(Calendar.HOUR_OF_DAY, 7);
         date.set(Calendar.SECOND, 0);
         date.set(Calendar.MILLISECOND, 0);
-        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.MINUTE, 30);
         date.add(Calendar.DAY_OF_YEAR, -10);
         if(morning) {
             return date.getTime();
         }
-        date.set(Calendar.HOUR_OF_DAY,21);
+        date.set(Calendar.HOUR_OF_DAY,22);
         
         return date.getTime();
     }
@@ -1569,5 +1573,57 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return false;
+    }
+
+    @Override
+    public void toggleAddon(String itemId) throws Exception {
+        PmsBooking booking = getCurrentBooking();
+        if(booking.bookingEngineAddons.contains(itemId)) {
+            booking.bookingEngineAddons.remove(itemId);
+        } else {
+            booking.bookingEngineAddons.add(itemId);
+        }
+        updateBookingAddonList();
+        setBooking(booking);
+    }
+
+    private void updateBookingAddonList() {
+        PmsBooking booking = getCurrentBooking();
+        List<PmsBookingRooms> toRemove = new ArrayList();
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.isAddon) {
+                toRemove.add(room);
+            }
+        }
+        
+        booking.rooms.removeAll(toRemove);
+        
+        List<PmsBookingRooms> allToAdd = new ArrayList();
+        for(String addonId : booking.bookingEngineAddons) {
+            for(PmsBookingRooms room : booking.rooms) {
+                Booking bookingToAdd = new Booking();
+                bookingToAdd.startDate = room.date.start;
+                bookingToAdd.endDate = room.date.end;
+                bookingToAdd.bookingItemTypeId = addonId;
+                
+                PmsBookingRooms toAddRoom = new PmsBookingRooms();
+                toAddRoom.date.start = room.date.start;
+                toAddRoom.date.end = room.date.end;
+                toAddRoom.bookingItemTypeId = addonId;
+                toAddRoom.isAddon = true;
+                
+                List<Booking> checkToAdd = new ArrayList();
+                checkToAdd.add(bookingToAdd);
+                toAddRoom.canBeAdded = true;
+                if(!bookingEngine.canAdd(checkToAdd)) {
+                    toAddRoom.canBeAdded = false;
+                }
+                
+                allToAdd.add(toAddRoom);
+            }
+        }
+        
+        booking.rooms.addAll(allToAdd);
+
     }
 }

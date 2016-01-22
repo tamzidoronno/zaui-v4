@@ -6,7 +6,16 @@ app.PmsBookingSummary = {
         $(document).on('change','.PmsBookingSummary .repeat_type', app.PmsBookingSummary.changeRepeatType);
         $(document).on('click','.PmsBookingSummary .adddatetype', app.PmsBookingSummary.changeAddDateType);
         $(document).on('click','.PmsBookingSummary .showRepeatDates', app.PmsBookingSummary.showRepeatDates);
+        $(document).on('click','.PmsBookingSummary .addonselection', app.PmsBookingSummary.addonSelection);
     },
+    addonSelection : function() {
+        var data = {
+            item : $(this).attr('itemid')
+        };
+        
+        thundashop.Ajax.simplePost($(this), "toggleAddon", data);
+    },
+    
     showRepeatDates : function() {
         if(!$('.repatingroomlist').is(':visible')) {
             $('.repatingroomlist').slideDown();

@@ -1563,11 +1563,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private Date getMorning(boolean morning) {
         Calendar date = Calendar.getInstance();
+        date.set(Calendar.YEAR, 2016);
+        date.set(Calendar.DAY_OF_YEAR, 1);
         date.set(Calendar.HOUR_OF_DAY, 7);
         date.set(Calendar.SECOND, 0);
         date.set(Calendar.MILLISECOND, 0);
         date.set(Calendar.MINUTE, 30);
-        date.add(Calendar.DAY_OF_YEAR, -10);
         if(morning) {
             return date.getTime();
         }
@@ -1583,6 +1584,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         repeater.repeatWednesday = true;
         repeater.repeatThursday = true;
         repeater.repeatFriday = true;
+        repeater.repeatSaturday = true;
+        repeater.repeatSunday = true;
         repeater.repeatPeride = TimeRepeaterData.RepeatPeriodeTypes.weekly;
         repeater.firstEvent = new TimeRepeaterDateRange();
         repeater.firstEvent.start = getMorning(true);

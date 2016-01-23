@@ -206,6 +206,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function emptyfilter() {
         unset($_SESSION['pmfilter'][$this->getSelectedName()]);
+        unset($_SESSION['pmsmanagementgroupbybooking']);        
     }
     
     public function getSelectedName() {
@@ -222,6 +223,24 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
 
+    public function groupByBooking() {
+        if(isset($_SESSION['pmsmanagementgroupbybooking'])) {
+            unset($_SESSION['pmsmanagementgroupbybooking']);
+        } else {
+            $_SESSION['pmsmanagementgroupbybooking'] = true;
+        }
+    }
+    
+    public function isGroupedByBooking() {
+        if(isset($_SESSION['pmsmanagementgroupbybooking'])) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * @return \core_pmsmanager_PmsBookingFilter
+     */
     public function getSelectedFilter() {
         if(!isset($_POST['event'])) {
             unset($_SESSION['pmfilter'][$this->getSelectedName()]);

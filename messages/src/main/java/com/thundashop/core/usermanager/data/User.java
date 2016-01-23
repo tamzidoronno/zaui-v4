@@ -193,4 +193,10 @@ public class User extends DataCommon implements Comparable<User> {
         return copied;
     }    
 
+    public boolean matchByString(String search) {
+        if (search == null || search.isEmpty())
+            return true;
+        
+        return toString().toLowerCase().contains(search);
+    }
 }

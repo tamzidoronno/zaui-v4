@@ -72,4 +72,17 @@ public class DataCommon extends TranslationHandler implements Serializable {
     public boolean isOf(Class check) {
         return this.getClass().isAssignableFrom(check);
     }
+    
+    public boolean createdBetween(Date start, Date end) {
+        if (start.equals(rowCreatedDate)) 
+            return true;
+        
+        if (end.equals(rowCreatedDate)) 
+            return true;
+        
+        if (start.before(rowCreatedDate) && end.after(rowCreatedDate))
+            return true;
+        
+        return false;
+    }
 }

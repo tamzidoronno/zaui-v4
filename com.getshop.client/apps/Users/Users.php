@@ -1,7 +1,7 @@
 <?php
 namespace ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f;
 
-class Users extends \SystemApplication implements \Application {
+class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon implements \Application {
     private $users;
     /* @var $selectedUser \core_usermanager_data_User */
     private $selectedUser;
@@ -208,6 +208,11 @@ class Users extends \SystemApplication implements \Application {
     
     public function checkEmail() {
         
+    }
+    
+    public function loadData() {
+        if (!$this->filteredData)
+            $this->filteredData = $this->getApi()->getUserManager()->getAllUsersFiltered($this->createFilter());
     }
     
     public function searchForUser() {

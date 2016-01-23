@@ -21,28 +21,62 @@ foreach($booking->rooms as $room) {
     }
 }
 
+$prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+
  echo '<h2>Rooms booked</h2>';
- 
-printRooms($toPrint, $types, $items, $booking->id, false);
+$hasArx = false;
+if($config->arxHostname) {
+    $hasArx = true;
+}
+$hasPrices = true;
+
+$arr = (array)$prices->dailyPrices;
+
+if($prices->defaultPriceType == 1 && empty($arr)) {
+     $hasPrices = false;
+}
+
+printRooms($toPrint, $types, $items, $booking->id, false, $hasPrices, $hasArx);
 
 if(sizeof($addons) > 0) {
     echo '<h2>Addons</h2>';
-    printRooms($addons, $types, $items, $booking->id, true);
+    printRooms($addons, $types, $items, $booking->id, true, $hasPrices, $hasArx);
 }
 
-function printRooms($rooms, $types, $items, $bookingId, $addons) {
+function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $hasArx) {
     ?>
-    <div class='bookedrooms'>
-        <div style='padding-left: 10px;'>
-            <?php
-            foreach ($rooms as $room) {
-                /* @var $room core_pmsmanager_PmsBookingRooms */
-                $date = $room->date;
-                ?>
+<table width='100%' cellspacing='0' cellpadding='0'>
+    <tr>
+        <th width='10'></th>
+        <th width='10'>Type</th>
+        <th>Room</th>
+        <th>Date start</th>
+        <th>Date end</th>
+        <th>Guest</th>
+        <?php if(!$addons && $hasPrices) { ?>
+            <th>Price</th>
+        <?php } ?>
+        <?php if($hasArx) { ?>
+            <th>To arx</th>
+        <?php } ?>
+    </tr>
+
+    <?php
+    foreach ($rooms as $room) {
+        /* @var $room core_pmsmanager_PmsBookingRooms */
+        $date = $room->date;
+        ?>
+        <tr>
+            <td>
+                <span gstype='form' method="removeRoom">
+                    <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                    <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                    <i class='fa fa-trash-o' gstype='submitToInfoBox'></i>
+                </span>
+            </td>
+            <td>
                 <span class='roomattribute'>
-                    <span class='roomprefix'>
-                        <i class='fa fa-edit'></i> Room type
-                    </span>
                     <span class='roompostfix'>
                         <span class="viewmode">
                             <? echo $types[$room->bookingItemTypeId]->name; ?>
@@ -63,151 +97,158 @@ function printRooms($rooms, $types, $items, $bookingId, $addons) {
                         </span>
                     </span>
                 </span>
+            </td>
+<td>
+                    <span class='roomattribute'>
+                        <span class='roompostfix'>
+                            <span class="viewmode">
+                                <?
+                                if (!$room->booking->bookingItemId) {
+                                    echo "Not assigned yet";
+                                } else {
+                                    $notifications = "notifications: " . join(",", $room->notificationsSent);
+                                    echo "<span title='$notifications'>" . $items[$room->booking->bookingItemId]->bookingItemName . "</span>";
+    //                                echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
+                                }
+                                ?>
+                            </span>
+                            <span class="editmode" gstype='form' method='setBookingItem' >
+                                <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                                <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                                <select gsname='itemid'>
+                                    <?php 
+                                    foreach($items as $item) {
+                                        $selected = "";
+                                        if($types[$item->bookingItemTypeId]->addon > 0) {
+                                            continue;
+                                        }
+
+                                        if($room->booking->bookingItemId == $item->id) {
+                                            $selected = "SELECTED";
+                                        }
+                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                            </span>
+                        </span>
+                    </span>
+                </td>
+                <td>
                 <span class='roomattribute'>
-                    <div style='clear:both;'></div>
-                    <span class='roomprefix'>
-                        <i class='fa fa-edit'></i> Dates
-                    </span> 
                     <span class='roompostfix'>
                         <span class="viewmode">
                             <?php echo date("d.m.Y H:i", strtotime($date->start)); ?>
-                            <?php if ($date->end) { ?>
-                                -> 
-                            <?php echo date("d.m.Y H:i", strtotime($date->end)); ?>
-                            <? } ?>
                         </span>
-                        <span class='editmode' gstype='form' method="setNewDates">
+                        <span class='editmode' gstype='form' method="setNewStartDate">
                             <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                             <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                             <input type='text' gsname='start' value='<? echo date("d.m.Y H:i", strtotime($room->date->start)); ?>'>
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                        </span>
+                    </span>
+                </span>
+            </td>
+            <td>
+                <span class='roomattribute'>
+                    <span class='roompostfix'>
+                        <span class="viewmode">
+                            <?php 
+                                if(date("d.m.Y", strtotime($date->start)) == date("d.m.Y", strtotime($date->end))) {
+                                    echo date("H:i", strtotime($date->end));
+                                } else {
+                                    echo date("d.m.Y H:i", strtotime($date->end));
+                                }
+                                ?>
+                        </span>
+                        <span class='editmode' gstype='form' method="setNewEndDate">
+                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                             <input type='text' gsname='end' value='<? echo date("d.m.Y H:i", strtotime($room->date->end)); ?>'>
                             <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
                         </span>
                     </span>
                 </span>
-                <div style='clear:both;'></div>
-            <? if(!$addons) { ?>
-                <span class='roomattribute'>
-                    <span class='roomprefix'>
-                        <i class='fa fa-edit editGuestToggle'></i> <?php echo $room->numberOfGuests; ?> guests
-                    </span>
-                    <span class='roompostfix'>
-                        <span class="viewmode">
-                            <?php
-                            foreach ($room->guests as $guest) {
-                                echo $guest->name . " - " . $guest->email . " - +" . $guest->prefix . $guest->phone;
-                            }
-                            ?>
-                        </span>
-                        <span class="editmode" gstype='form' method="setGuests">
-                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
-                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <select gsname='numberofguests'>
-                            <?php
-                            for($i = 1; $i <= 20; $i++) {
-                                $selected = "";
-                                if($i == $room->numberOfGuests) {
-                                    $selected = "SELECTED";
-                                }
-                                echo "<option value='$i' $selected>$i</option>";
-                            }
-                            ?>
-                            </select><br>
-                            <?php for($i = 0; $i < 20; $i++) {
-                                $guest = new core_pmsmanager_PmsGuests();
-                                if(isset($room->guests[$i])) {
-                                    $guest = $room->guests[$i];
-                                }
-                                echo "<span class='guestrow_$i'>";
-                                echo "<input type='text' value='".$guest->name."' gsname='name_$i'>";
-                                echo "<input type='text' value='".$guest->email."' gsname='email_$i'>";
-                                echo "<input type='text' value='+".$guest->prefix."' gsname='prefix_$i' style='width:30px;'>";
-                                echo "<input type='text' value='".$guest->phone."' gsname='phone_$i'>";
-                                echo "</span>";
-                            }
-                            ?><br>
-                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                        </span>
-                    </span>
-                </span>
-            <? } ?>
-                <div style='clear:both;'></div>
-                <span class='roomattribute'>
-                    <span class='roomprefix'>
-                        <i class='fa fa-edit'></i> Assigned room
-                    </span>
-                    <span class='roompostfix'>
-                        <span class="viewmode">
-                            <?
-                            if (!$room->booking->bookingItemId) {
-                                echo "Not assigned yet";
-                            } else {
-                                $notifications = "notifications: " . join(",", $room->notificationsSent);
-                                echo "<span title='$notifications'>" . $items[$room->booking->bookingItemId]->bookingItemName . "</span>";
-//                                echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
-                            }
-                            ?>
-                        </span>
-                        <span class="editmode" gstype='form' method='setBookingItem' >
-                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
-                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <select gsname='itemid'>
-                                <?php 
-                                foreach($items as $item) {
-                                    $selected = "";
-                                    if($types[$item->bookingItemTypeId]->addon > 0) {
-                                        continue;
-                                    }
-
-                                    if($room->booking->bookingItemId == $item->id) {
-                                        $selected = "SELECTED";
-                                    }
-                                    echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . "</option>";
+            </td>
+            <? if(!$addons && $hasPrices) { ?>
+                <td>
+                    <span class='roomattribute'>
+                        <span class='roompostfix'>
+                            <span class="viewmode">
+                                <?php
+                                foreach ($room->guests as $guest) {
+                                    echo $guest->name . " - " . $guest->email . " - +" . $guest->prefix . $guest->phone;
                                 }
                                 ?>
-                            </select>
-                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                            </span>
+                            <span class="editmode" gstype='form' method="setGuests">
+                                <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                                <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                                <select gsname='numberofguests'>
+                                <?php
+                                for($i = 1; $i <= 20; $i++) {
+                                    $selected = "";
+                                    if($i == $room->numberOfGuests) {
+                                        $selected = "SELECTED";
+                                    }
+                                    echo "<option value='$i' $selected>$i</option>";
+                                }
+                                ?>
+                                </select><br>
+                                <?php for($i = 0; $i < 20; $i++) {
+                                    $guest = new core_pmsmanager_PmsGuests();
+                                    if(isset($room->guests[$i])) {
+                                        $guest = $room->guests[$i];
+                                    }
+                                    echo "<span class='guestrow_$i'>";
+                                    echo "<input type='text' value='".$guest->name."' gsname='name_$i'>";
+                                    echo "<input type='text' value='".$guest->email."' gsname='email_$i'>";
+                                    echo "<input type='text' value='+".$guest->prefix."' gsname='prefix_$i' style='width:30px;'>";
+                                    echo "<input type='text' value='".$guest->phone."' gsname='phone_$i'>";
+                                    echo "</span>";
+                                }
+                                ?><br>
+                                <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                            </span>
                         </span>
                     </span>
-                </span>
-                <div style='clear:both;'></div>
-                <span class='roomattribute'>
-                    <span class='roomprefix'>
-                        <i class='fa fa-edit'></i> Price
-                    </span>
-                    <span class='roompostfix'>
-                        <span class='viewmode'>
-                            <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
-                        </span>
-                        <span class='editmode' method='changePrice' gstype='form'>
-                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
-                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <input type='text' gsname='price' value='<? echo $room->price; ?>'>
-                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                        </span>
-                    </span>
-                </span>
-                <div style='clear:both;'></div>
-                <span class='roomattribute'>
-                    <span class='roomprefix'>
-                        Pushed to arx
-                    </span>
-                    <span class='roompostfix'>
-                        <span class='viewmode'>
-                            <? if($room->addedToArx) {
-                                echo "yes";
-                            } else {
-                                echo "no";
-                            }
-                            ?>
+                </td>
+            <? } ?>
+                <td>
+                    <span class='roomattribute'>
+                        <span class='roompostfix'>
+                            <span class='viewmode'>
+                                <? echo $room->price . " (" . $room->taxes . "% tax)"; ?>
+                            </span>
+                            <span class='editmode' method='changePrice' gstype='form'>
+                                <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                                <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                                <input type='text' gsname='price' value='<? echo $room->price; ?>'>
+                                <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                            </span>
                         </span>
                     </span>
-                </span>
-                <div style='clear:both;'></div>
-                <?php } ?>
-            </div>
-        <div style='clear:both;'></div>
-    </div>
+                </td>
+                <?php if($hasArx) { ?>
+                    <td align='center'>
+                        <span class='roomattribute'>
+                            <span class='roompostfix'>
+                                <span class='viewmode'>
+                                    <? if($room->addedToArx) {
+                                        echo "yes";
+                                    } else {
+                                        echo "no";
+                                    }
+                                    ?>
+                                </span>
+                            </span>
+                        </span>
+                    </td>
+                <? } ?>
+        </tr>
+    <?php } ?>
+</table>
 <?php
 }
 

@@ -13,6 +13,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("bookinginformation");
     }
     
+    public function removeRoom() {
+        $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedName(),$_POST['data']['bookingid'], $_POST['data']['roomid']);
+        $this->showBookingInformation();
+    }
+    
     public function addTypeFilter() {
         $filter = $this->getSelectedFilter();
         $id = $_POST['data']['id'];
@@ -135,11 +140,25 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
-    public function setNewDates() {
+    public function setNewStartDate() {
+        $room = $this->getRoomFromPost();
         $error = $this->getManager()->changeDates($this->getSelectedName(),
                 $_POST['data']['roomid'], 
                 $_POST['data']['bookingid'], 
                 $this->convertToJavaDate(strtotime($_POST['data']['start'])),
+                $this->convertToJavaDate(strtotime($room->date->end)));
+        if($error) {
+            $this->errors[] = $error;
+        }
+        $this->showBookingInformation();
+    }
+    
+    public function setNewEndDate() {
+        $room = $this->getRoomFromPost();
+        $error = $this->getManager()->changeDates($this->getSelectedName(),
+                $_POST['data']['roomid'], 
+                $_POST['data']['bookingid'], 
+                $this->convertToJavaDate(strtotime($room->date->start)),
                 $this->convertToJavaDate(strtotime($_POST['data']['end'])));
         if($error) {
             $this->errors[] = $error;
@@ -300,6 +319,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function translateText($type) {
         return substr($type, strpos($type, "\\")+1);
+    }
+
+    /**
+     * @return \core_pmsmanager_PmsBookingRooms
+     */
+    public function getRoomFromPost() {
+        $booking =  $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid'])
+                return $room;
+        }
+        return null;
+
     }
 
 }

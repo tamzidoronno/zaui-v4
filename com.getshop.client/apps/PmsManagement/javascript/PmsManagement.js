@@ -3,7 +3,7 @@ app.PmsManagement = {
         $(document).on('change', '.PmsManagement .attachedProduct', app.PmsManagement.attachProduct);
         $(document).on('click', '.PmsManagement .setFilter', app.PmsManagement.setFilter);
         $(document).on('click', '.PmsManagement .moreinformationaboutbooking', app.PmsManagement.showMoreInformation);
-        $(document).on('click', '.PmsManagement .roomprefix .fa-edit', app.PmsManagement.toggleEditMode);
+        $(document).on('click', '.PmsManagement .roompostfix', app.PmsManagement.toggleEditMode);
         $(document).on('click', '.PmsManagement .editGuestToggle', app.PmsManagement.editGuestToggle);
         $(document).on('change', '.PmsManagement [gsname="numberofguests"]', app.PmsManagement.editGuestToggle);
         $(document).on('click', '.PmsManagement .showorderbutton', app.PmsManagement.showOrder);
@@ -52,20 +52,11 @@ app.PmsManagement = {
         }
     },
     toggleEditMode : function() {
-        console.log('togglign');
         var row = $(this).closest('.roomattribute');
         var view = row.find('.viewmode');
         var edit = row.find('.editmode');
-        console.log(view);
-        if(view.is(':visible')) {
-            console.log('visible');
-            view.hide();
-            edit.show();
-        } else {
-            console.log('not visible');
-            view.show();
-            edit.hide();
-        }
+        view.hide();
+        edit.show();
     },
     showMoreInformation : function() {
         var data = {

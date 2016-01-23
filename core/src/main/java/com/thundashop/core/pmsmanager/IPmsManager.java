@@ -73,6 +73,9 @@ public interface IPmsManager {
     public void removeFromCurrentBooking(String roomId) throws Exception;
     
     @Administrator
+    public void removeFromBooking(String bookingId, String roomId) throws Exception;
+    
+    @Administrator
     public String getContract(String bookingId) throws Exception;
     public String getCurrenctContract() throws Exception;
     

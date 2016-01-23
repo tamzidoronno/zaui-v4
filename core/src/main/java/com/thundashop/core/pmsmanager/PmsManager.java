@@ -932,6 +932,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
+    public void removeFromBooking(String bookingId, String roomId) throws Exception {
+        PmsBooking booking = getBooking(bookingId);
+        List<PmsBookingRooms> toRemove = new ArrayList();
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.pmsBookingRoomId.equals(roomId)) {
+                toRemove.add(room);
+            }
+        }
+        for(PmsBookingRooms remove : toRemove) {
+            bookingEngine.deleteBooking(remove.bookingId);
+            booking.rooms.remove(remove);
+        }
+        saveObject(booking);
+    }
+    
+    @Override
     public void removeFromCurrentBooking(String roomId) throws Exception {
         PmsBooking booking = getCurrentBooking();
         ArrayList toRemove = new ArrayList();

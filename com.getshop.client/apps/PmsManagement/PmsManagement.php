@@ -185,6 +185,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
     }
     
+    public function emptyfilter() {
+        unset($_SESSION['pmfilter'][$this->getSelectedName()]);
+    }
+    
     public function getSelectedName() {
         return $this->getConfigurationSetting("engine_name");
     }

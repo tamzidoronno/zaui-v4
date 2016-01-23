@@ -23,6 +23,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean prepayment = true;
     public Integer createOrderAtDayInMonth = 0;
     public boolean supportMoreDates = true;
+    public boolean isItemBookingInsteadOfTypes = false;
     
     public String arxHostname = "";
     public String arxUsername = "";

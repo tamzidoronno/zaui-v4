@@ -147,6 +147,10 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     }
 
     public function validatePostedForm() {
+        if($this->isEditorMode()) {
+            return;
+        }
+        
         $validation = array();
         //First validate user data.
         

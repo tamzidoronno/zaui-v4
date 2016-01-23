@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.DataCommon;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -90,6 +91,11 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
+    private boolean isSameDay(Date date1, Date date2) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        return fmt.format(date1).equals(fmt.format(date2));
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;
@@ -144,6 +150,9 @@ public class PmsBooking extends DataCommon {
     boolean isActiveInPeriode(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {
             if(room.date.start.before(endDate) && room.date.end.after(startDate)) {
+                return true;
+            }
+            if(isSameDay(room.date.start, startDate)) {
                 return true;
             }
         }

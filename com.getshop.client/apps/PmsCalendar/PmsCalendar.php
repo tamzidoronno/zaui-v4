@@ -7,6 +7,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     private $types = false;
     private $isItemPage = false;
     private $bookingresultforday = array();
+    private $currentTitle = "";
 
     public function getDescription() {
         return "Calendar view for displaying booked entries in a calendar.";
@@ -87,10 +88,16 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             if(!$lines[$i-1]) {
                 $state = "not_available";
             }
+            
+            $title = date("H:i", $startTime)." - ".date("H:i", $endTime);
+            if($this->isEditorMode() && $this->currentTitle) {
+                $title = $this->currentTitle;
+            }
+            
             echo "<span class='outerblock $size' style='width: $width%'>";
             echo "<span class='timeblock $state' startTime='$startTime' "
                     . "endTime='$endTime' "
-                    . "title='".date("H:i", $startTime)." - ".date("H:i", $endTime)."' "
+                    . "title='".$title."' "
                     . "day='".date("d.m.Y", $day)."'"
                     . " starttimehuman='".date("H:i", $startTime)."' endtimehuman='".date("H:i", $endTime)."'></span>";
             echo "</span>";
@@ -265,7 +272,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
     
     public function changeMonth() {
-        if($_POST['data']['type'] == "prev") {
+        if($_POST['data']['type'] == "today") {
+           $_SESSION['calday'] = time();
+        } else if($_POST['data']['type'] == "prev") {
            $_SESSION['calday'] = strtotime("-1 month", $this->getSelectedDay());
         } else {
            $_SESSION['calday'] = strtotime("+1 month", $this->getSelectedDay());
@@ -299,7 +308,11 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00:00", $day)));
         $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59:59", $day)));
         $filter->filterType = "active";
-        $bookings = $this->getApi()->getPmsManager()->getAllBookingsUnsecure($this->getSelectedName(), $filter);
+        if($this->isEditorMode()) {
+            $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+        } else {
+            $bookings = $this->getApi()->getPmsManager()->getAllBookingsUnsecure($this->getSelectedName(), $filter);
+        }
         $this->bookingresultforday[$key] = $bookings;
         return $bookings;
     }
@@ -311,6 +324,17 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         }
         foreach($bookings as $booking) {
             /* @var $booking \core_pmsmanager_PmsBooking */
+            if($this->isEditorMode()) {
+                $this->currentTitle = "<table>";
+                foreach($booking->registrationData->data as $key => $val) {
+//                    print_r($val);
+                    if(!$val->active) {
+                        continue;
+                    }
+                    $this->currentTitle .= "<tr><td>" . $val->name . "</td><td>" . $val->title . "</td></tr>";
+                }
+            }
+            
             foreach($booking->rooms as $room) {
                 $roomStart = strtotime($room->date->start);
                 $roomEnd = strtotime($room->date->end);
@@ -331,6 +355,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                 }
             }
         }
+        
+        $this->currentTitle = "";
+        
         return "available";
     }
 

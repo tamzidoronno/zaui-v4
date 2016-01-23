@@ -10,6 +10,7 @@
     echo "<div style='text-align:left;' class='caltextheader'>";
     echo $this->__w(date("M", $this->getSelectedDay())) . " " . $this->getSelectedYear();
     echo "<span style='float:right;'>";
+    echo "<span method='changeMonth' gsname='type' style='cursor:pointer;'  gsvalue='today' gstype='clicksubmit' >".$this->__w("Today") ."</span> ";
     echo "<i class='fa fa-caret-left' style='cursor:pointer;' gstype='clicksubmit' method='changeMonth' gsname='type' gsvalue='prev'></i> ";
     echo "<i class='fa fa-caret-right' style='cursor:pointer;' gstype='clicksubmit' method='changeMonth' gsname='type' gsvalue='next'></i>";
     echo "</span>";

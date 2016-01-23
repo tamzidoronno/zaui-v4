@@ -332,6 +332,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!configuration.needConfirmation) {
             booking.confirmed = true;
         }
+        
+        User loggedonuser = userManager.getLoggedOnUser();
+        if(loggedonuser != null && loggedonuser.isAdministrator()) {
+            booking.confirmed = true;
+        }
 
         booking.sessionId = "";
         
@@ -1267,6 +1272,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         user.address.city = result.get("user_address_city");
         user.address.countrycode = result.get("user_address_countrycode");
         user.address.countryname = result.get("user_address_countryname");
+        
+        if(user.emailAddress == null) { user.emailAddress = ""; }
+        if(user.fullName == null) { user.fullName = ""; }
+        if(user.cellPhone == null) { user.cellPhone = ""; }
+        if(user.prefix == null) { user.prefix = "47"; }
+        if(user.address.address == null) { user.address.address = ""; }
+        if(user.address.postCode == null) { user.address.postCode = ""; }
+        if(user.address.city == null) { user.address.city = ""; }
+        if(user.address.countrycode == null) { user.address.countrycode = ""; }
+        if(user.address.countryname == null) { user.address.countryname = ""; }
         
         return userManager.createUser(user);
     }

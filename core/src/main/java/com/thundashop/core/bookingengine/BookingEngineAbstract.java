@@ -480,6 +480,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             }
             
             List<Booking> checkBookings = groupedBookings.get(bookingTypeId);
+            removeFromBooking(checkBookings, bookings);
             
             checkBookings.addAll(getBookingsNotAssigned(type.id));
             checkBookings.addAll(getAssignedBookingsAfterFirstBooking(type.id, bookings));
@@ -518,7 +519,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .filter(booking -> booking.bookingItemTypeId.equals(typeId))
                 .filter(booking -> booking.bookingItemId != null && !booking.bookingItemId.isEmpty())
                 .filter(booking -> booking.within(bookings.get(0).startDate, bookings.get(0).endDate))
-                
                 .collect(Collectors.toList()); 
     }
 
@@ -536,6 +536,16 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     void saveRules(RegistrationRules rules) {
         config.rules = rules;
         saveObject(config);
+    }
+
+    private void removeFromBooking(List<Booking> checkBookings, List<Booking> bookings) {
+        for (Booking booking : bookings) {
+            if ( booking.id == null || booking.id.equals("")) {
+                continue;
+            }
+            
+            checkBookings.removeIf(ibooking -> ibooking.id.equals(booking.id));
+        }
     }
    
    

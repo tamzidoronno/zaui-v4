@@ -197,6 +197,6 @@ public class User extends DataCommon implements Comparable<User> {
         if (search == null || search.isEmpty())
             return true;
         
-        return toString().toLowerCase().contains(search);
+        return toString().toLowerCase().contains(search.toLowerCase());
     }
 }

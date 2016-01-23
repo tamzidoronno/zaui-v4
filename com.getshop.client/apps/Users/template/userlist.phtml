@@ -1,7 +1,8 @@
 <?
 /* @var $this \ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f\Users */
 
-$users = $this->getApi()->getUserManager()->getAllUsers();
+
+$searchtext = $this->getSearchText();
 ?>
 
 <div class='gss_settings_header'>
@@ -19,88 +20,43 @@ $users = $this->getApi()->getUserManager()->getAllUsers();
     </div>	
 </div>
 
+<div class="gss_settings_header">
+    <i class="fa fa-search"></i>
 
-<div class='gss_settings_content'>
+    <div class="gss_settings_header_description" >
+        <div class="gss_settings_header_title"><? echo $this->__f("Search (leave blank to see all)"); ?></div>
+        <div class="gss_settings_header_description_inner" style="position: relative; width: 868px;">
+            <input id='gss_order_filter_search_text' gs_model='orders' gs_model_attr='order_filter' type="textfield" style="left: 0px; top: 0px;" placeholder="<? echo $this->__f("Filter users"); ?>" value='<? echo $searchtext; ?>'/>
+            <input id='gss_order_filter_startdate' gs_model='orders' gs_model_attr='start_date' type="textfield" style="left: 300px; top: 0px; width: 100px;" placeholder="<? echo $this->__f("From"); ?>" value=''/>
+            <input id='gss_order_filter_enddate' gs_model='orders' gs_model_attr='end_date' type="textfield" style="left: 420px; top: 0px; width: 100px;" placeholder="<? echo $this->__f("To"); ?>" value=''/>
 
-    <?
-    foreach ($users as $user) {
-        $name = $user->fullName;
-        $email = $user->emailAddress;
-        $phone = $user->cellPhone;
-        $created = $user->rowCreatedDate;
-        $icon = "fa-user on fa-gears";
-        $id = $user->id;
-        $groups = $this->getUserGroups($user);
-        ?>
-        <div class='user_entry_row' gss_fragment="user" gss_view="gs_user_workarea" gss_value="<? echo $id; ?>">
-            <div class="image">
-                <span class="fa-stack fa-lg">
-                    <? if ($user->type == 100) { ?>
-                        <i style="color: #f35858;" class="fa fa-user fa-stack-1x"></i>
-                        <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 85px;" class="fa fa-circle-o fa-stack-2x"></i>
-                        <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 115px;" class="fa fa-circle-o fa-stack-2x"></i>
-                        <i style="color: #FFF; font-size: 25px; line-height: 142px; width: 101px;" class="fa fa-power-off fa-stack-2x"></i>
-                    <? } else if ($user->type == 50) { ?>
-                        <i style="color: #d5bf2b;" class="fa fa-user fa-stack-1x"></i>
-                        <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 85px;" class="fa fa-circle-o fa-stack-2x"></i>
-                        <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 115px;" class="fa fa-circle-o fa-stack-2x"></i>
-                        <i style="color: #FFF; font-size: 25px; line-height: 142px; width: 101px;" class="fa fa-flash fa-stack-2x"></i>
-                    <? } else { ?>
-                        <i style="color: #2ac32a;" class="fa fa-user fa-stack-1x"></i>
-                        <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 85px;" class="fa fa-circle-o fa-stack-2x"></i>
-                        <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 115px;" class="fa fa-circle-o fa-stack-2x"></i>
-                    <? } ?>
-                </span>
-                
-                <div class="user_level">
-                    
+            <div class="gss_dropdown" style='top: 1px; right: 116px; width: 200px;'>
+                <select class="config" gs_model='orders' gs_model_attr='status'>
                     <? 
-                    if ($user->type == 100) { 
-                        echo $this->__f("Admin");
-                    } else if ($user->type === 50) {
-                        echo $this->__f("Editor");
-                    } else {
-                        echo $this->__f("Customer");
-                    }
-                    ?>    
-                </div>
+                    $languages = array();
+                    $languages['0'] = "ALL";
+                    $languages['10'] = "Customers";
+                    $languages['50'] = "Editor";
+                    $languages['100'] = "Admin";
+                    
+                    foreach ($languages as $key => $lang) { 
+                        $selected = $this->getFactory()->getMainLanguage() == $key ? "selected='true'" : "";
+                        ?>
+                        <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>
+                    <? } ?>
+                </select>
             </div>
-
-            <div class="content">
-                <div class="name"><? echo $name; ?></div>
-                <div class="email"> <? echo $email; ?></div>
-                <div class="phone"><? echo $phone; ?></div>
-                <?
-                $instance = $this->getFactory()->getApi()->getStoreApplicationPool()->getApplication("8f5f7f8f-de42-4867-82cc-63eb0cb55fa1");
-                if($instance) {
-                    /* @var $autogiroapp ns_8f5f7f8f_de42_4867_82cc_63eb0cb55fa1\Avtalegiro */
-                    $autogiroapp = $this->getFactory()->getApplicationPool()->createInstace($instance);
-                    $link = $autogiroapp->createLink($id);
-//                    echo "<pre>";
-//                    print_r($instance);
-                    echo "Avtalegiro: ";
-                    echo "<a href='".$autogiroapp->createLink($id)."' target='_new'>Avtalegiro</a>";
-                    echo " - <a href='".$autogiroapp->createLink($id)."' target='_new'>Efaktura</a>";
-                    echo " - <a href='".$autogiroapp->createLink($id)."' target='_new'>Avtalegiro + efaktura</a>";
-                }
-                if (count($groups)) {
-                    $i = 0;
-                    echo "<div class='usergroups' style='font-style: italic;'>".$this->__f("Group(s)").": ";
-                    foreach ($groups as $group) {
-                        $i++;
-                        echo $group->groupName;
-                        if ($i != count($groups)) {
-                            echo ", ";
-                        }
-                    }
-                    echo "</div>";
-                }
-                ?>
-                <div class="created"><? echo $created; ?></div>
-            </div>
+            <div id='gss_order_filter_search_button' gss_method='filterOrders' gss_view='gss_outer_searchresult' gss_fragment='searchresult' gss_model='orders' style='position: absolute; right: 0px;height: 11px;line-height: 11px;top: 2px;' class='gss_button'><? echo $this->__f("Search"); ?></div>
         </div>
-        <?
-    }
-    ?>
-
+    </div>	
 </div>
+
+<div class='gss_outer_searchresult gss_settings_content'>
+    <? $this->includefile("searchresult"); ?>
+</div>    
+
+
+<script>
+    $('#gss_order_filter_startdate').datepicker({ dateFormat: "yy-mm-dd", changeMonth: true, changeYear: true });
+    $('#gss_order_filter_enddate').datepicker({ dateFormat: "yy-mm-dd",changeMonth: true, changeYear: true });        
+</script>

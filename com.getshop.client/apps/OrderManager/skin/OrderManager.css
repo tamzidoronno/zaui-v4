@@ -35,8 +35,7 @@
 }
 
 .gss_order_nextprevbuttons {
-    margin-top: 30px;
-    height: 30px;
+    height: 44px;
     position: relative;
 }
 
@@ -57,7 +56,7 @@
 .gss_order_nextprevbuttons,
 .gss_overview_order,
 .gss_pagenumber_bottom {
-    width: 1120px;
+    width: 100%;
 }
 .gss_pagenumber_bottom {
     text-align: center;

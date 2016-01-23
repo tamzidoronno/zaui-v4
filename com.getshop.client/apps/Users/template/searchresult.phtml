@@ -1,0 +1,107 @@
+<?
+$users = $this->getFilteredData();
+foreach ($users as $user) {
+    $name = $user->fullName;
+    $email = $user->emailAddress;
+    $phone = $user->cellPhone;
+    $created = $user->rowCreatedDate;
+    $icon = "fa-user on fa-gears";
+    $id = $user->id;
+    $groups = $this->getUserGroups($user);
+    ?>
+    <div class='user_entry_row' gss_fragment="user" gss_view="gs_user_workarea" gss_value="<? echo $id; ?>">
+        <div class="image">
+            <span class="fa-stack fa-lg">
+                <? if ($user->type == 100) { ?>
+                    <i style="color: #f35858;" class="fa fa-user fa-stack-1x"></i>
+                    <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 85px;" class="fa fa-circle-o fa-stack-2x"></i>
+                    <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 115px;" class="fa fa-circle-o fa-stack-2x"></i>
+                    <i style="color: #FFF; font-size: 25px; line-height: 142px; width: 101px;" class="fa fa-power-off fa-stack-2x"></i>
+                <? } else if ($user->type == 50) { ?>
+                    <i style="color: #d5bf2b;" class="fa fa-user fa-stack-1x"></i>
+                    <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 85px;" class="fa fa-circle-o fa-stack-2x"></i>
+                    <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 115px;" class="fa fa-circle-o fa-stack-2x"></i>
+                    <i style="color: #FFF; font-size: 25px; line-height: 142px; width: 101px;" class="fa fa-flash fa-stack-2x"></i>
+                <? } else { ?>
+                    <i style="color: #2ac32a;" class="fa fa-user fa-stack-1x"></i>
+                    <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 85px;" class="fa fa-circle-o fa-stack-2x"></i>
+                    <i style="color: #FFF; font-size: 12px; line-height: 50px; width: 115px;" class="fa fa-circle-o fa-stack-2x"></i>
+                <? } ?>
+            </span>
+
+            <div class="user_level">
+
+                <?
+                if ($user->type == 100) {
+                    echo $this->__f("Admin");
+                } else if ($user->type === 50) {
+                    echo $this->__f("Editor");
+                } else {
+                    echo $this->__f("Customer");
+                }
+                ?>    
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="name"><? echo $name; ?></div>
+            <div class="email"> <? echo $email; ?></div>
+            <div class="phone"><? echo $phone; ?></div>
+            <?
+            $instance = $this->getFactory()->getApi()->getStoreApplicationPool()->getApplication("8f5f7f8f-de42-4867-82cc-63eb0cb55fa1");
+            if ($instance) {
+                /* @var $autogiroapp ns_8f5f7f8f_de42_4867_82cc_63eb0cb55fa1\Avtalegiro */
+                $autogiroapp = $this->getFactory()->getApplicationPool()->createInstace($instance);
+                $link = $autogiroapp->createLink($id);
+//                    echo "<pre>";
+//                    print_r($instance);
+                echo "Avtalegiro: ";
+                echo "<a href='" . $autogiroapp->createLink($id) . "' target='_new'>Avtalegiro</a>";
+                echo " - <a href='" . $autogiroapp->createLink($id) . "' target='_new'>Efaktura</a>";
+                echo " - <a href='" . $autogiroapp->createLink($id) . "' target='_new'>Avtalegiro + efaktura</a>";
+            }
+            if (count($groups)) {
+                $i = 0;
+                echo "<div class='usergroups' style='font-style: italic;'>" . $this->__f("Group(s)") . ": ";
+                foreach ($groups as $group) {
+                    $i++;
+                    echo $group->groupName;
+                    if ($i != count($groups)) {
+                        echo ", ";
+                    }
+                }
+                echo "</div>";
+            }
+            ?>
+            <div class="created"><? echo $created; ?></div>
+        </div>
+    </div>
+    <?
+}
+?>
+
+<div class="gss_pagenumber_bottom">
+    <? echo $this->__f("Page") . ": " . $this->getPageNumber() . "/" . $this->getTotalPageCount(); ?>
+    
+    <div style='margin-top: 10px; text-align: center;'>
+        <? echo $this->__f("Pagesize"); ?>
+        <span gss_method='setPageSize' gss_value='3' style='cursor: pointer;'>3</span>,
+        <span gss_method='setPageSize' gss_value='10' style='cursor: pointer;'>10</span>,
+        <span gss_method='setPageSize' gss_value='20' style='cursor: pointer;'>20</span>,
+        <span gss_method='setPageSize' gss_value='30' style='cursor: pointer;'>30</span>,
+        <span gss_method='setPageSize' gss_value='50' style='cursor: pointer;'>50</span>,
+        <span gss_method='setPageSize' gss_value='100' style='cursor: pointer;'>100</span>,
+        <span gss_method='setPageSize' gss_value='200' style='cursor: pointer;'>200</span>,
+        <span gss_method='setPageSize' gss_value='300' style='cursor: pointer;'>300</span>,
+        <span gss_method='setPageSize' gss_value='500' style='cursor: pointer;'>500</span>
+    </div>
+</div>
+<div class="gss_order_nextprevbuttons">
+    <? if ($this->hasPrevPage()) { ?>
+        <div class='gss_button order_gss_prev_buttons' gss_method="prevOrderPage"><i class='fa fa-arrow-left'></i> <? echo $this->__f("Previouse page"); ?></div>
+    <? } ?>
+
+    <? if ($this->hasNextPage()) { ?>
+        <div class='gss_button order_gss_next_buttons' gss_method="nextOrderPage"><i class='fa fa-arrow-right'></i> <? echo $this->__f("Next page"); ?></div>
+    <? } ?>
+</div>

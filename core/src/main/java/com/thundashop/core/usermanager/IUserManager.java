@@ -4,6 +4,8 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
 import com.thundashop.core.usermanager.data.Address;
@@ -95,6 +97,14 @@ public interface IUserManager {
      */
     @Administrator
     public List<User> getAllUsers() throws ErrorException;
+    
+    /**
+     * Fetch all the users registered to this webshop.
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public FilteredData getAllUsersFiltered(FilterOptions filter);
     
     /**
      * Update a given user.<br>

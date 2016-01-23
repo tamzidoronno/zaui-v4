@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1097,5 +1099,40 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
 
+    @Override
+    public FilteredData getAllUsersFiltered(FilterOptions filterOptions) {
+        List<User> allUsers = getAllUsers().stream()
+                .filter(filterUsersByDate(filterOptions))
+                .filter(filterUsersBySearchWord(filterOptions))
+                .filter(filterUsersByStatus(filterOptions))
+                .collect(Collectors.toList());
+        
+        return pageIt(allUsers, filterOptions);
+
+    }
+
+    private Predicate<? super User> filterUsersByDate(FilterOptions filterOptions) {
+        if (filterOptions.startDate == null || filterOptions.endDate == null) {
+            return o -> o != null;
+        }
+        
+        return o -> o.createdBetween(filterOptions.startDate, filterOptions.endDate);
+    }
+
+    private Predicate<? super User> filterUsersBySearchWord(FilterOptions filterOptions) {
+        return o -> o.matchByString(filterOptions.searchWord);
+    }
+
+    private Predicate<? super User> filterUsersByStatus(FilterOptions filterOptions) {
+        if (!filterOptions.extra.containsKey("orderstatus")) {
+            return o -> o != null;
+        }
+        
+        if (filterOptions.extra.get("orderstatus").equals("0")) {
+            return o -> o != null;
+        }
+        
+        return user -> user.type == (int)(Integer.valueOf(filterOptions.extra.get("orderstatus")));   
+    }
 
 }

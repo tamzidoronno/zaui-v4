@@ -1,5 +1,6 @@
 <?
-$searchtext = isset($_SESSION['gss_orders_filter']) ? $_SESSION['gss_orders_filter'] : "";
+
+$searchtext = $this->getSearchText();
 ?>
 <div>
     <div class="gss_settings_header">

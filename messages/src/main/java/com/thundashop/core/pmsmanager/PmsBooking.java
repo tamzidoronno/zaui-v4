@@ -13,6 +13,22 @@ import java.util.List;
 
 public class PmsBooking extends DataCommon {
 
+    public List<PmsBookingRooms> rooms = new ArrayList();
+    public String sessionId;
+    public List<PmsBookingAddonItem> addons = new ArrayList();
+    public List<String> bookingEngineAddons = new ArrayList();
+    public RegistrationRules registrationData = new RegistrationRules();
+    public String language = "nb_NO";
+    public String userId = "";
+    public Integer state = 0;
+    public List<String> orderIds = new ArrayList();
+    public Date invoicedTo = null;
+    public Integer priceType = 1;
+    public boolean confirmed = false;
+    public boolean unConfirmed = false;
+    public boolean isDeleted = false;
+    public PmsRepeatingData lastRepeatingData = null;
+    
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
         for(PmsBookingRooms room : rooms) {
@@ -112,22 +128,6 @@ public class PmsBooking extends DataCommon {
         public static Integer DELETED = 2;
     }
     
-    public List<PmsBookingRooms> rooms = new ArrayList();
-    public String sessionId;
-    public List<PmsBookingAddonItem> addons = new ArrayList();
-    public List<String> bookingEngineAddons = new ArrayList();
-    public RegistrationRules registrationData = new RegistrationRules();
-    public String language = "nb_NO";
-    public String userId = "";
-    public Integer state = 0;
-    public List<String> orderIds = new ArrayList();
-    public Date invoicedTo = null;
-    public Integer priceType = 1;
-    public boolean confirmed = false;
-    public boolean unConfirmed = false;
-    public boolean isDeleted = false;
-    public PmsRepeatingData lastRepeatingData = null;
-
     void attachBookingItems(List<Booking> bookingsToAdd) {
         for(PmsBookingRooms room : rooms) {
             for(Booking booking : bookingsToAdd) {

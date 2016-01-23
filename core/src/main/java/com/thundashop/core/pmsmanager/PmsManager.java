@@ -1145,7 +1145,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             VEvent event = new VEvent();
             String title = "Booking of";
             
-            if(room.booking.bookingItemId != null && bookingEngine.getBookingItem(room.booking.bookingItemId) != null) {
+            if(room.booking != null && room.booking.bookingItemId != null && bookingEngine.getBookingItem(room.booking.bookingItemId) != null) {
                 title += " room " + bookingEngine.getBookingItem(room.booking.bookingItemId).bookingItemName;
             } else {
                 title += " " + bookingEngine.getBookingItemType(room.bookingItemTypeId).name;

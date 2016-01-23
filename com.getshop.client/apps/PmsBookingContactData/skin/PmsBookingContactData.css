@@ -27,3 +27,4 @@
 .PmsBookingContactData .regforminput { display:none; }
 .PmsBookingContactData .whenTypeIsSelected { clear:both; display:none; }
 .PmsBookingContactData .termsandcondtext { color:blue; cursor: pointer; margin-bottom: 5px;display:inline-block; }
+.PmsBookingContactData .pmscontacts input { box-sizing: border-box; width:100%; }

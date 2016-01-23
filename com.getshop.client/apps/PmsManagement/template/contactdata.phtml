@@ -41,6 +41,28 @@ foreach($booking->registrationData->resultAdded as $key => $value) {
     <div style='clear:both;'></div>
 <?php
 }
+if(sizeof($booking->registrationData->contactsList) > 0) {
+    echo '<h2>Kontaktliste</h2>';
+    echo "<table cellspacing='0' cellpadding='0'>";
+    echo "<tr>";
+    echo "<th>Name</th>";
+    echo "<th>Email</th>";
+    echo "<th>Phone</th>";
+    echo "<th>Title</th>";
+    echo "</tr>";
+    foreach($booking->registrationData->contactsList as $contact) {
+        echo "<tr>";
+        echo "<td>" . $contact->name . "</td>";
+        echo "<td>" . $contact->email . "</td>";
+        echo "<td>" . $contact->phone . "</td>";
+        echo "<td>" . $contact->title . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    ?>
+    <?php
+}
+
 ?>
 
 <div class='contactdata'>

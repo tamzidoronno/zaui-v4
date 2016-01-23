@@ -25,7 +25,24 @@ class FieldGenerator {
         echo "<div gstype='form' method='$saveMethod'>";
         echo "<input type='hidden' value='$id' gsname='itemid'>";
         echo "<h1>Guest information</h1>";
-        echo "Print guest information";
+        $checked = "";
+        if($rules->includeGuestData) {
+            $checked = "CHECKED";
+        }
+        echo "<div>";
+        echo "<input type='checkbox' gsname='displayGuestData' $checked style='float:right;'>";
+        echo "Display guest information";
+        echo "</div>";
+echo "<br>";        
+        $checked = "";
+        if($rules->displayContactsList) {
+            $checked = "CHECKED";
+        }
+        echo "<div>";
+        echo "<input type='checkbox' gsname='displayContactsList' $checked style='float:right;'>";
+        echo "Display contacts list";
+        echo "</div>";
+        
         echo "<h1>User / billing data</h1>";
         foreach($userFields as $field => $text) {
 
@@ -189,6 +206,9 @@ class FieldGenerator {
             $formData->width = $data['width'];
             $rules->data->{$field} = $formData;
         }
+        
+        $rules->displayContactsList = $_POST['data']['displayContactsList'] == "true";
+        $rules->includeGuestData = $_POST['data']['includeGuestData'] == "true";
         
         return $rules;
     }

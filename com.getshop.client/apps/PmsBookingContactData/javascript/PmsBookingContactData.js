@@ -3,7 +3,31 @@ app.PmsBookingContactData = {
         $(document).on('click', '.PmsBookingContactData .chooseregform input', app.PmsBookingContactData.choseRegType);
         $(document).on('keyup', '.PmsBookingContactData input[gsname="user_address_postCode"]', app.PmsBookingContactData.updatePostalPlace);
         $(document).on('keyup', '.PmsBookingContactData input[gsname="company_vatNumber"]', app.PmsBookingContactData.updateBrreg);
+        
+        $(document).on('keyup', '.PmsBookingContactData .bookingregistrationform input', app.PmsBookingContactData.saveForm);
+        $(document).on('keyup', '.PmsBookingContactData .bookingregistrationform select', app.PmsBookingContactData.saveForm);
+        $(document).on('keyup', '.PmsBookingContactData .bookingregistrationform textarea', app.PmsBookingContactData.saveForm);
+        $(document).on('blur', '.PmsBookingContactData .bookingregistrationform input', app.PmsBookingContactData.saveForm);
+        $(document).on('blur', '.PmsBookingContactData .bookingregistrationform select', app.PmsBookingContactData.saveForm);
+        $(document).on('blur', '.PmsBookingContactData .bookingregistrationform textarea', app.PmsBookingContactData.saveForm);
+        $(document).on('change', '.PmsBookingContactData .bookingregistrationform input', app.PmsBookingContactData.saveForm);
+        $(document).on('change', '.PmsBookingContactData .bookingregistrationform select', app.PmsBookingContactData.saveForm);
+        $(document).on('change', '.PmsBookingContactData .bookingregistrationform textarea', app.PmsBookingContactData.saveForm);
     },
+    saveForm : function() {
+        var form = $('.bookingregistrationform');
+
+        if(typeof(savePmsBookingFormContactDataTimeout) === "number") {
+            clearTimeout(savePmsBookingFormContactDataTimeout);
+        }
+        
+        savePmsBookingFormContactDataTimeout = setTimeout(function() {
+            var data = thundashop.framework.createGsArgs(form);
+            var event = thundashop.Ajax.createEvent('','savePostedForm',form, data);
+            thundashop.Ajax.postWithCallBack(event, function() {});
+        }, "1000");
+    },
+    
     updatePostalPlace: function () {
         var val = $(this).val();
         if(val.length !== 4) {

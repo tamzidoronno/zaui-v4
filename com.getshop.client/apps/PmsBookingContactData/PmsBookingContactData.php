@@ -68,6 +68,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         
         return $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
     }
+    
 
     /**
      * @param \core_bookingengine_data_RegistrationRulesField $value
@@ -199,11 +200,37 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         foreach($_POST['data'] as $key => $val) {
             $originalForm->resultAdded->{$key} = $val;
         }
+        
+        $i = 0;
+        $newList = array();
+        foreach($this->getCurrentBooking()->registrationData->contactsList as $contact) {
+            $contact->name = $_POST['data']['contact_name_'.$i];
+            $contact->phone = $_POST['data']['contact_phone_'.$i];
+            $contact->email = $_POST['data']['contact_email_'.$i];
+            $contact->title = $_POST['data']['contact_title_'.$i];
+            $newList[] = $contact;
+            $i++;
+        }
+        $originalForm->contactsList = $newList;
+        
         $selected = $this->getCurrentBooking();
         $selected->registrationData = $originalForm;
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $selected);
     }
 
+    public function removeIndex() {
+        $index = $_POST['data']['index'];
+        $booking = $this->getCurrentBooking();
+        unset($booking->registrationData->contactsList[$index]);
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+    }
+    
+    public function addContact() {
+        $booking = $this->getCurrentBooking();
+        $booking->registrationData->contactsList[] = new \core_bookingengine_data_Contacts();
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+    }
+    
     /**
      * @return \core_pmsmanager_PmsBooking 
      */

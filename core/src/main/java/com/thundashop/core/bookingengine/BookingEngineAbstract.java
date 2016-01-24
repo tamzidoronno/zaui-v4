@@ -20,6 +20,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,14 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     private final BookingEngineVerifier verifier = new BookingEngineVerifier();
 
     public List<BookingItemType> getBookingItemTypes() {
-        return new ArrayList(types.values());
+        List<BookingItemType> result = new ArrayList(types.values());
+        Comparator<BookingItemType> comparator = new Comparator<BookingItemType>() {
+            public int compare(BookingItemType c1, BookingItemType c2) {
+                return c1.name.compareTo(c2.name); // use your logic
+            }
+        };
+        Collections.sort(result, comparator);
+        return result;
     }
     
     public BookingItemType createABookingItemType(String name) {
@@ -325,7 +333,14 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
 
     public List<BookingItem> getBookingItems() {
-        return new ArrayList(items.values());
+        List<BookingItem> list = new ArrayList(items.values());
+        Comparator<BookingItem> comparator = new Comparator<BookingItem>() {
+            public int compare(BookingItem c1, BookingItem c2) {
+                return c1.bookingItemName.compareTo(c2.bookingItemName); // use your logic
+            }
+        };
+        Collections.sort(list, comparator);
+        return list;
     }
 
     public BookingEngineConfiguration getConfig() {

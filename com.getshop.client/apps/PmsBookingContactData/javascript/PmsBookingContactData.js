@@ -55,7 +55,7 @@ app.PmsBookingContactData = {
         } 
         if(val.length === 9) {
             $.ajax({
-                "url" : "http://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + val,
+                "url" : "https://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + val,
                 "success" : function(data) {
                     var data = data.entries[0];
                     $('input[gsname="company_vatNumber"]').val(data.orgnr);

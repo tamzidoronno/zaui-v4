@@ -72,6 +72,7 @@ Comments;-;Kommentarer
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
 Connect this to a product;-;Koble denne til et produkt
+Contact information;-;Kontaktinformasjon
 Container operations;-;Operasjoner for kontaineren
 Continue;-;Fortsett
 Cookies are being stored;-;Cookier blir lagret
@@ -133,6 +134,7 @@ Fade in when scrolling;-;Fade når du scroller
 Failed;-;Feilet
 February;-;Februar
 Field has not been configured yet, configure it first.;-;Feltet har ikke blitt konfigurert enda, konfigurer det først.
+Field is required;-;Feltet er påkrevd
 First event;-;Første event
 Fixed price;-;Fast pris
 Flip contect to add content underneat this cell;-;Flipp cellen for å legge til innhold under denne cellen
@@ -142,6 +144,8 @@ Full name;-;Hele navnet
 Gallery;-;Galleri
 Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Group;-;Gruppe
+Guest information;-;Gjesteinformasjon
+Guest information for room;-;Gjesteinformasjon for rom
 Height;-;Høyde
 Height (px);-;Høyde (px)
 Height (px) mobile;-;Høyde (px) mobil
@@ -227,6 +231,7 @@ No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen heade
 No items;-;Ingen elementer
 November;-;November
 Number of fields;-;Antall felt
+Number of guests;-;Antall gjester
 Number of instances added;-;Antall av instanser lagt til
 October;-;Oktober
 Offset;-;Offset
@@ -401,6 +406,7 @@ Tue;-;Tir
 Tuesday;-;Tirsdag
 Tune your online store by setting currency, does customers need to register to buy from your store, show cookie warning, etc;-;Finjuster nettbutikken din ved å f.eks velge valutta, bestemme om kundene dine må registrere seg for å handle, vis cookie advarsel, osv.
 Type;-;Type
+Unknown name;-;Ukjent navn
 Unpin area;-;Unpin område
 Update;-;Oppdater
 Upload and manipulate on images or add this to be able to search for professional images trough our image stock.;-;Last og behandle bilder, eventuelt så kan du søke opp profesjonelle bilder gjennom vår bildebank.

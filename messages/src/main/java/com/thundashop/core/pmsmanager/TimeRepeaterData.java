@@ -1,8 +1,9 @@
 package com.thundashop.core.pmsmanager;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TimeRepeaterData {
+public class TimeRepeaterData implements Serializable {
     /* 0, daily, 1. Weekly, 2. Monthly */
     public static class RepeatPeriodeTypes {
         public static Integer daily = 0;

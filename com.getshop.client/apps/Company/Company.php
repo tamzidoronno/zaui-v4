@@ -19,6 +19,16 @@ class Company extends \SystemApplication implements \Application {
         foreach($_POST as $key => $value) {
             $company->{$key} = $value;
         }
+        
+        $company->address->address = $_POST['address'];
+        $company->address->postCode = $_POST['postcode'];
+        $company->address->city = $_POST['city'];
+        
+        $company->invoiceAddress->address = $_POST['invoice_address'];
+        $company->invoiceAddress->postCode = $_POST['invoice_postcode'];
+        $company->invoiceAddress->city = $_POST['invoice_city'];
+        
+        
         $this->getApi()->getUserManager()->saveCompany($company);
     }
     

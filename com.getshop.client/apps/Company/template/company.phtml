@@ -80,6 +80,53 @@ $company = $this->getApi()->getUserManager()->getCompany($_POST['value']);
             <?php echo $this->__("Default contact person for company"); ?>
         </div>
     </div>
+    <br><br>
+    <br><br>
+    <h2>Address</h2>
+    <div class="textfield gss_setting"  id="address">
+        <span class="title"><?php echo $this->__f("Address"); ?></span>
+        <input type="textfield" gs_model='companymodel' gs_model_attr='address' value="<? echo @$company->address->address; ?>">
+        <div class="description">
+            <?php echo $this->__("Company address"); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="city">
+        <span class="title"><?php echo $this->__f("Postcode"); ?></span>
+        <input type="textfield" gs_model='companymodel' gs_model_attr='city' value="<? echo @$company->address->postCode; ?>">
+        <div class="description">
+            <?php echo $this->__("Company postcode"); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="postcode">
+        <span class="title"><?php echo $this->__f("City"); ?></span>
+        <input type="textfield" gs_model='companymodel' gs_model_attr='postcode' value="<? echo @$company->address->city; ?>">
+        <div class="description">
+            <?php echo $this->__("Company city"); ?>
+        </div>
+    </div>
+    
+    <h2>Invoice address</h2>
+    <div class="textfield gss_setting"  id="invoice_address">
+        <span class="title"><?php echo $this->__f("Address"); ?></span>
+        <input type="textfield" gs_model='companymodel' gs_model_attr='invoice_address' value="<? echo @$company->invoiceAddress->address; ?>">
+        <div class="description">
+            <?php echo $this->__("Company invoice address"); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="city">
+        <span class="title"><?php echo $this->__f("invoice_city"); ?></span>
+        <input type="textfield" gs_model='companymodel' gs_model_attr='invoice_city' value="<? echo @$company->invoiceAddress->postCode; ?>">
+        <div class="description">
+            <?php echo $this->__("Company invoice postcode"); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="invoice_postcode">
+        <span class="title"><?php echo $this->__f("City"); ?></span>
+        <input type="textfield" gs_model='companymodel' gs_model_attr='invoice_postcode' value="<? echo @$company->invoiceAddress->city; ?>">
+        <div class="description">
+            <?php echo $this->__("Company invoice city"); ?>
+        </div>
+    </div>
     
     <div class='gss_button_area'>
         <div class="gss_button" gss_method="deleteCompany" gss_confirmation="Are you sure you want to delete this company?" gss_model="companymodel"><i class="fa fa-remove"></i>Slett firma</div>

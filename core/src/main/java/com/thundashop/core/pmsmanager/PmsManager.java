@@ -623,9 +623,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(result != null) {
                     guest.prefix = result.get("prefix");
                     guest.phone = result.get("phone");
-                } else {
-                    guest.prefix = "47";
-                    guest.phone = "";
                 }
             }
         }

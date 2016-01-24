@@ -46,7 +46,7 @@ if(sizeof($addons) > 0) {
 
 function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $hasArx) {
     ?>
-<table width='100%' cellspacing='0' cellpadding='0'>
+<table width='100%' cellspacing='0' cellpadding='0' class='guestoverviewtable'>
     <tr>
         <th width='10'></th>
         <th width='10'>Type</th>
@@ -174,7 +174,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
             <? if(!$addons && $hasPrices) { ?>
                 <td>
                     <span class='roomattribute'>
-                        <span class='roompostfix'>
+                        <span class='roompostfix editGuestToggle'>
                             <span class="viewmode">
                                 <?php
                                 foreach ($room->guests as $guest) {
@@ -196,19 +196,25 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                                 }
                                 ?>
                                 </select><br>
+                                <table>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                    </tr>
                                 <?php for($i = 0; $i < 20; $i++) {
                                     $guest = new core_pmsmanager_PmsGuests();
                                     if(isset($room->guests[$i])) {
                                         $guest = $room->guests[$i];
                                     }
-                                    echo "<span class='guestrow_$i'>";
-                                    echo "<input type='text' value='".$guest->name."' gsname='name_$i'>";
-                                    echo "<input type='text' value='".$guest->email."' gsname='email_$i'>";
-                                    echo "<input type='text' value='+".$guest->prefix."' gsname='prefix_$i' style='width:30px;'>";
-                                    echo "<input type='text' value='".$guest->phone."' gsname='phone_$i'>";
-                                    echo "</span>";
+                                    echo "<tr class='guestrow_$i guestrow'>";
+                                    echo "<td><input type='text' value='".$guest->name."' gsname='name_$i' style='width:100px;'></td>";
+                                    echo "<td><input type='text' value='".$guest->email."' gsname='email_$i' style='width:100px;'></td>";
+                                    echo "<td><input type='text' value='+".$guest->prefix."' gsname='prefix_$i' style='width:30px;float:left;'><input type='text' value='".$guest->phone."' gsname='phone_$i' style='float:left;width:70px;'></td>";
+                                    echo "</tr>";
                                 }
-                                ?><br>
+                                ?>
+                                </table>
                                 <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
                             </span>
                         </span>

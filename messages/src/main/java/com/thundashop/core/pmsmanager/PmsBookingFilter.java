@@ -1,10 +1,11 @@
 package com.thundashop.core.pmsmanager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PmsBookingFilter {
+public class PmsBookingFilter implements Serializable {
     static class PmsBookingFilterTypes {
         public static String registered = "registered";
         public static String active = "active";

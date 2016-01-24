@@ -19,7 +19,28 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
     }
 
     public function getCurrentBooking() {
-        return $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        if(!$booking->rooms || sizeof($booking->rooms) == 0) {
+            $start = $this->convertToJavaDate(time());
+            $end = $this->convertToJavaDate(time()+86400);
+
+            $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), $start, $end);
+            foreach($rooms as $room) {
+                $availability = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $room->type->id, $start, $end);
+                if($availability > 0) {
+                    $newRoom = new \core_pmsmanager_PmsBookingRooms();
+                    $newRoom->bookingItemTypeId = $room->type->id;
+                    $newRoom->date = new \core_pmsmanager_PmsBookingDateRange();
+                    $newRoom->date->start = $start;
+                    $newRoom->date->end = $end;
+                    $booking->rooms = array();
+                    $booking->rooms[] = $newRoom;
+                    $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+                    break;
+                }
+            }
+        }
+        return $booking;
     }
     
     public function getSelectedName() {

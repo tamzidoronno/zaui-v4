@@ -2,6 +2,7 @@
 <?php
 /* @var $this \ns_d3951fc4_6929_4230_a275_f2a7314f97c1\PmsBookingContactData */
 
+$codes = $this->getCodes();
 $booking = $this->getCurrentBooking();
 $j = 1;
 foreach($booking->rooms as $room) {
@@ -24,7 +25,11 @@ foreach($booking->rooms as $room) {
         <select gsname='visitor_numberofguests_<? echo $j;?>'>
         <?php
         for($i = 1; $i <= 4; $i++) {
-            echo "<option value='$i'>$i</option>";
+            $selected = "";
+            if($room->numberOfGuests == $i) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='$i' $selected>$i</option>";
         }
         ?>
         </select>
@@ -42,8 +47,17 @@ foreach($booking->rooms as $room) {
         ?>
     </label>
     <label class='col-25'>* <?php echo $this->__w("Phone"); ?><br>
-        <input type='text' gsname='visitor_prefix_<? echo $j;?>' style='width:25%;float:left;text-align: center;'  value='+<?php echo $guest->prefix; ?>'>
-        <input type='text' gsname='visitor_phone_<? echo $j;?>' style='width:70%;float:left;'  value='<?php echo $guest->phone; ?>'>
+        <select gsname='visitor_prefix_<? echo $j;?>' style='width:40%;float:left;text-align: center;'  value='+<?php echo $guest->prefix; ?>'>
+            <?php foreach($this->getCodes() as $code) {
+                $selected = "";
+                if($guest->prefix == $code) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$code' $selected>+$code</option>";
+            }
+            ?>
+        </select>
+        <input type='text' gsname='visitor_phone_<? echo $j;?>' style='width:60%;float:left;'  value='<?php echo $guest->phone; ?>'>
         <?php
         echo "<span class='errordesc'>";
         if(isset($this->validation['visitor_phone_'.$j])) {

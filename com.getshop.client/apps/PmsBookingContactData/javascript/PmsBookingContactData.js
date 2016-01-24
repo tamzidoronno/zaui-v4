@@ -13,6 +13,10 @@ app.PmsBookingContactData = {
         $(document).on('change', '.PmsBookingContactData .bookingregistrationform input', app.PmsBookingContactData.saveForm);
         $(document).on('change', '.PmsBookingContactData .bookingregistrationform select', app.PmsBookingContactData.saveForm);
         $(document).on('change', '.PmsBookingContactData .bookingregistrationform textarea', app.PmsBookingContactData.saveForm);
+        
+        $(document).on('keyup', '.PmsBookingContactData [gsname="visitor_name_1"]', function() { $('[gsname="user_fullName"]').val($(this).val());  });
+        $(document).on('keyup', '.PmsBookingContactData [gsname="visitor_phone_1"]', function() { $('[gsname="user_cellPhone"]').val($(this).val());  });
+        $(document).on('keyup', '.PmsBookingContactData [gsname="visitor_email_1"]', function() { $('[gsname="user_emailAddress"]').val($(this).val());  });
     },
     saveForm : function() {
         var form = $('.bookingregistrationform');

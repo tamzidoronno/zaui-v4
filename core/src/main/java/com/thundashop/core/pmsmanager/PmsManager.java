@@ -1483,6 +1483,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private Double calculateProgressivePrice(String typeId, Date start, Date end, int offset, boolean avgPrice) {
         ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
+        if(priceRange == null) {
+            System.out.println("No progressive price found for type");
+            return -0.123;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         int days = offset;

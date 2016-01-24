@@ -22,7 +22,9 @@ app.OrderManager = {
         var orders = [];
         $('.gssordercheckbox').each(function() {
             var id = $(this).attr('orderid');
-            orders.push(id);
+            if($(this).is(':checked')) {
+                orders.push(id);
+            }
         });
         
         var data = {
@@ -31,7 +33,7 @@ app.OrderManager = {
         };
         
         //Post this data, and refresh the filtered orderlist.
-        thundashop.Ajax.simplePost($(this), 'updateOrderState', data);
+        getshop.Settings.post(data, "updateOrderState"); 
         
     },
     checkallorders : function() {
@@ -41,7 +43,11 @@ app.OrderManager = {
             $('.gssordercheckbox').attr('checked',null);
         }
     },
-    showOrderSmall: function() {
+    showOrderSmall: function(event) {
+        if($(event.target).is(':checkbox')) {
+            return;
+        }
+
         var smallView = $(this).closest('.gss_overview_order_outer').find('.gss_small_order_listview');
         if (smallView.is(':visible')) {
             smallView.slideUp();

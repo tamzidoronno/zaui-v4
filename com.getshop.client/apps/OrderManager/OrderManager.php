@@ -24,8 +24,8 @@ class OrderManager extends GSTableCommon implements \Application {
     }
     
     public function updateOrderState() {
-        $state = $_POST['data']['state'];
-        $orders = $_POST['data']['orders'];
+        $state = $_POST['state'];
+        $orders = $_POST['orders'];
         foreach($orders as $orderId) {
             $order = $this->getApi()->getOrderManager()->getOrder($orderId);
             $order->status = $state;

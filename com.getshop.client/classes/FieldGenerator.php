@@ -150,8 +150,8 @@ echo "<br>";
         $fields["company_address_countryname"] = "Name of the country";
         
         $fields["title_5"] = "Company invoice details";
-        $fields["company_invoiceAddress_postCode"] = "Postal code for sending invoice to";
         $fields["company_invoiceAddress_address"] = "Street address for invoice";
+        $fields["company_invoiceAddress_postCode"] = "Postal code for sending invoice to";
         $fields["company_invoiceAddress_city"] = "City for invoice";
         $fields["company_invoiceAddress_countrycode"] = "Country code for invoice";
         $fields["company_invoiceAddress_countryname"] = "Country name for invoice";
@@ -208,7 +208,7 @@ echo "<br>";
         }
         
         $rules->displayContactsList = $_POST['data']['displayContactsList'] == "true";
-        $rules->includeGuestData = $_POST['data']['includeGuestData'] == "true";
+        $rules->includeGuestData = $_POST['data']['displayGuestData'] == "true";
         
         return $rules;
     }

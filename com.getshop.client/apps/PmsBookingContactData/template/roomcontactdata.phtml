@@ -3,6 +3,11 @@
 $config = $this->getConfigurationToUse();
 
 echo "<div gstype='form' method='submitForm' class='bookingregistrationform'>";
+
+if($config->includeGuestData) {
+    $this->includefile("guestdata");
+}
+echo "<h2 class='paymentheaders'>".$this->__w("Contact information") . "</h2>";
 foreach($config->data as $key => $value) {
     /* @var $value core_bookingengine_data_RegistrationRulesField */
     if(stristr($key, "field_")) {

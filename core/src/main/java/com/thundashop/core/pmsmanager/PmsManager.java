@@ -150,6 +150,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingRooms room : booking.rooms) {
             room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, false);
             room.taxes = calculateTaxes(room.bookingItemTypeId);
+            for(PmsGuests guest : room.guests) {
+                if(guest.prefix != null) {
+                    guest.prefix = guest.prefix.replace("+", "");
+                    guest.prefix = guest.prefix.replace("+", "");
+                    guest.prefix = guest.prefix.replace("+", "");
+                }
+            }
         }
         saveObject(booking);
         bookings.put(booking.id, booking);

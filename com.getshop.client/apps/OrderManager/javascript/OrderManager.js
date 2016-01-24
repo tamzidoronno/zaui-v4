@@ -9,17 +9,39 @@ app.OrderManager = {
         $(document).on('click', '.gss_addOrderItem', app.OrderManager.addOrderItem);   
         $(document).on('click', '.gss_order_view_select_payement_method', app.OrderManager.changePaymentType);   
         $(document).on('click', '.gss_mark_order_as_paid', app.OrderManager.markOrderAsPaid);   
+        $(document).on('click', '.gsscheckallorders', app.OrderManager.checkallorders);   
         $(document).on('click', '.creditinvoice', app.OrderManager.creditOrder);   
+        $(document).on('click', '.gss_setneworderstate', app.OrderManager.setNewOrderState);   
         $(document).on('click', '#updateinvoiceinfo', app.OrderManager.updateInvoiceInformation);
         $(document).on('click', '.gsspayorder', app.OrderManager.payorder);
         $(document).on('click', '.gss_changePaymentType', function() {
             $('.gss_orderview_available_payments').slideDown();
         });   
     },
-    
+    setNewOrderState : function() {
+        var orders = [];
+        $('.gssordercheckbox').each(function() {
+            var id = $(this).attr('orderid');
+            orders.push(id);
+        });
+        
+        var data = {
+            "orders" : orders,
+            "state" : $('.gss_neworderstate').val()
+        };
+        
+        //Post this data, and refresh the filtered orderlist.
+        thundashop.Ajax.simplePost($(this), 'updateOrderState', data);
+        
+    },
+    checkallorders : function() {
+        if($(this).is(':checked')) {
+            $('.gssordercheckbox').attr('checked','checked');
+        } else {
+            $('.gssordercheckbox').attr('checked',null);
+        }
+    },
     showOrderSmall: function() {
-        
-        
         var smallView = $(this).closest('.gss_overview_order_outer').find('.gss_small_order_listview');
         if (smallView.is(':visible')) {
             smallView.slideUp();
@@ -126,7 +148,31 @@ app.OrderManager = {
         }
         
         getshop.Settings.post(data, "updateOrderCount");
+    },
+    
+    updateMultipleOrderStates : function() {
+        var cartItem = $(this).closest('.gss_order_line').attr('cartItemId');
+        var newValue = prompt(__f("Please enter the new count for this order line"));
+        var orderId = $(this).closest('.orderoverview').attr('orderid');
         
+        if (!newValue) {
+            return;
+        }
+        
+        if (newValue === "" || isNaN(newValue)) {
+            alert(__f('You did not enter a valid number'));
+            return;
+        }
+        
+        var data = {
+            gss_fragment: 'orderview',
+            gss_view: 'gss_orderview',
+            value: orderId,
+            cartItemId: cartItem,
+            count : newValue
+        }
+        
+        getshop.Settings.post(data, "updateOrderCount");
     },
     
     changeOrderLine: function() {

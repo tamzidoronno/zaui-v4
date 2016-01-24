@@ -23,6 +23,16 @@ class OrderManager extends GSTableCommon implements \Application {
         $this->getApi()->getOrderManager()->saveOrder($order);
     }
     
+    public function updateOrderState() {
+        $state = $_POST['data']['state'];
+        $orders = $_POST['data']['orders'];
+        foreach($orders as $orderId) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $order->status = $state;
+            $this->getApi()->getOrderManager()->saveOrder($order);
+        }
+    }
+    
     public function renderConfig() {
         $this->includefile("orderoverview");
     }

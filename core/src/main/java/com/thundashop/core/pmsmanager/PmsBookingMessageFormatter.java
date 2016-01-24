@@ -39,25 +39,28 @@ class PmsBookingMessageFormatter {
     
     public String formatContactData(String message, User user, PmsGuests guest) {
         if(guest != null) {
-            message = message.replace("{name}", guest.name);
-            message = message.replace("{email}", guest.email);
-            message = message.replace("{prefix}", guest.prefix);
-            message = message.replace("{phone}", guest.phone);
+            if(guest.name != null) { message = message.replace("{name}", guest.name); }
+            if(guest.email != null) { message = message.replace("{email}", guest.email); } 
+            if(guest.prefix != null) { message = message.replace("{prefix}", guest.prefix); }
+            if(guest.phone != null) { message = message.replace("{phone}", guest.phone); }
         } else if(user != null) {
-            message = message.replace("{name}", user.fullName);
-            message = message.replace("{email}", user.emailAddress);
-            message = message.replace("{prefix}", user.prefix);
-            message = message.replace("{phone}", user.cellPhone);
+            if(user.fullName != null) { message = message.replace("{name}", user.fullName); }
+            if(user.emailAddress != null) { message = message.replace("{email}", user.emailAddress); }
+            if(user.prefix != null) { message = message.replace("{prefix}", user.prefix); }
+            if(user.cellPhone != null) { message = message.replace("{phone}", user.cellPhone); }
         }
         
         if(user != null) {
-            message = message.replace("{address}", user.address.address);
-            message = message.replace("{postCode}", user.address.postCode);
-            message = message.replace("{city}", user.address.city);
-            message = message.replace("{contact_name}", user.fullName);
-            message = message.replace("{contact_prefix}", user.prefix);
-            message = message.replace("{contact_phone}", user.cellPhone);
-            message = message.replace("{contact_email}", user.emailAddress);
+            if(user.address != null) {
+                if(user.address.address != null) { message = message.replace("{address}", user.address.address); }
+                if(user.address.postCode != null) { message = message.replace("{postCode}", user.address.postCode); }
+                if(user.address.city != null) { message = message.replace("{city}", user.address.city); }
+            }
+            
+            if(user.fullName != null) { message = message.replace("{contact_name}", user.fullName); }
+            if(user.prefix != null) { message = message.replace("{contact_prefix}", user.prefix); }
+            if(user.cellPhone != null) { message = message.replace("{contact_phone}", user.cellPhone); }
+            if(user.emailAddress != null) { message = message.replace("{contact_email}", user.emailAddress); }
         }
         
         return message;

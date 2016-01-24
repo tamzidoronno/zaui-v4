@@ -298,7 +298,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         if(!$valueSet) {
             $valueSet = "47";
         }
-        echo "<select>";
+        echo "<select gsname='".$value->name."'>";
         foreach($this->getCodes() as $code) {
             $selected = "";
             if($valueSet == $code) {

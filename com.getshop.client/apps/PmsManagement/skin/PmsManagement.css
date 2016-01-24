@@ -7,7 +7,7 @@
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
 .PmsManagement .bookinginfo a { color: blue; }
 .PmsManagement .guestrow input { width: 20%; float:left; }
-.PmsManagement .guestoverviewtable td { font-size: 10px; }
+.PmsManagement .guestoverviewtable  td .roompostfix { font-size: 12px; }
 .PmsManagement .actions:hover {
      -moz-transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;

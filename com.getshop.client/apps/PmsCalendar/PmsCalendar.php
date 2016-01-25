@@ -327,11 +327,12 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             if($this->isEditorMode()) {
                 $this->currentTitle = "<table>";
                 foreach($booking->registrationData->data as $key => $val) {
-//                    print_r($val);
                     if(!$val->active) {
                         continue;
                     }
-                    $this->currentTitle .= "<tr><td>" . $val->name . "</td><td>" . $val->title . "</td></tr>";
+                    if(isset($booking->registrationData->resultAdded->{$val->name})) {
+                        $this->currentTitle .= "<tr><td>" . $val->title . "</td><td>" . $booking->registrationData->resultAdded->{$val->name} . "</td></tr>";
+                    }
                 }
             }
             

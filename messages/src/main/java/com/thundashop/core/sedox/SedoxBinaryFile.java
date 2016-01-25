@@ -31,6 +31,8 @@ public class SedoxBinaryFile implements Serializable {
     public String additionalInformation;
     public String cmdFileType;
 
+    public SedoxBinaryFileOptions options = new SedoxBinaryFileOptions();
+    
     void updateParametersFromFileName(String fileName) {
         String[] productAttributes = fileName.split(";");
         

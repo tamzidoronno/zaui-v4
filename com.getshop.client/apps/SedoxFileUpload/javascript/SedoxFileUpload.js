@@ -11,7 +11,27 @@ app.SedoxFileUpload = {
         $(document).on('click', '.SedoxFileUpload .go_to_next_step_upload', app.SedoxFileUpload.goToNextStep);
     },
     
+    checkRquiredFields: function() {
+        var allOk = true;
+        
+        $('.SedoxFileUpload input[required="true"]').each(function() {
+            if (!$(this).val()) {
+                $(this).addClass('field_mandatory');
+                allOk = false;
+            } else {
+                $(this).removeClass('field_mandatory');
+            }
+        });
+        
+        return allOk;
+    },
+    
     goToNextStep: function() {
+        if (!app.SedoxFileUpload.checkRquiredFields()) {
+            alert("Check fields in red");
+            return;
+        }
+        
         if ($('.SedoxFileUpload .file_selector_area').attr('isselected') !== "true") {
             alert("Please select a file first");
             return;
@@ -26,8 +46,22 @@ app.SedoxFileUpload = {
             upload_tool : $('#upload_tool').val(),
             upload_comment : $('#upload_comment').val(),
             upload_reference : $('#upload_reference').val(),
-            upload_automatic : $('#upload_automatic').val(),
             upload_withdraw : $('#upload_withdraw').val(),
+            upload_automatic : $('input[name="sedox_upload_automatic"]').is(':checked'),
+            upload_widthdraw : $('input[name="sedox_upload_withdraw"]').is(':checked'),
+            
+            // New
+            upload_dpf : $('input[name="sedox_checkbox_dpf"]').is(':checked'),
+            upload_egr : $('input[name="sedox_checkbox_egr"]').is(':checked'),
+            upload_decat : $('input[name="sedox_checkbox_decat"]').is(':checked'),
+            upload_vmax : $('input[name="sedox_checkbox_vmax"]').is(':checked'),
+            upload_adblue : $('input[name="sedox_checkbox_adblue"]').is(':checked'),
+            upload_dtc : $('input[name="sedox_checkbox_dtc"]').is(':checked'),
+            
+        }
+        
+        if ($('#partnerselect').length > 0) {
+            data['selected_parther'] = $('#partnerselect').val()
         }
         
         var event = thundashop.Ajax.createEvent(null, "completeUpload", this, data);
@@ -109,7 +143,9 @@ app.SedoxFileUpload = {
         loadNext();
     },
     
-    closeModal: function() {
+    closeModal: function(response) {
+        var content = $(response.content).find('.file_selector_area');
+        $(document).find('.file_selector_area').replaceWith(content);
         $('.SedoxFileUpload .uploadfilemodal').fadeOut();
     },
     
@@ -143,7 +179,7 @@ app.SedoxFileUpload = {
                     event,
                     app.SedoxFileUpload.closeModal,
                     null,
-                    false,
+                    true,
                     true,
                     {
                         "uploadcallback": app.SedoxFileUpload.setProgress

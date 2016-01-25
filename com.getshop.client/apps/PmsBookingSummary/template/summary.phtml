@@ -13,7 +13,6 @@ $bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getS
 foreach($bookingitems as $item) {
     $bookingitems[$item->id] = $item;
 }
-
 echo "<br>";
 $addonsText = $this->getConfigurationSetting("heading_summary");
 if(!$addonsText) {
@@ -23,7 +22,7 @@ $startingFromText = $this->__w("Starting from");
 
 echo "<h3 class='bottomborder'>" . $addonsText . "</h3>";
 foreach($booking->rooms as $room) {
-    if($room->addedByRepeater) {
+    if($room->addedByRepeater || $room->isAddon) {
         continue;
     }
     printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText);
@@ -36,7 +35,7 @@ if($configuration->supportMoreDates) {
         echo $this->__w("You got rooms that are not available in the selected time periode.");
         echo "</span>";
         foreach($booking->rooms as $room) {
-            if(!$room->addedByRepeater) {
+            if(!$room->addedByRepeater && !$room->isAddon) {
                 continue;
             }
             if($room->canBeAdded) {
@@ -109,7 +108,11 @@ foreach($items as $item) {
     if($item->addon > 0) {
         $addonsFound = true;
         $addons .= "<div class='itemrow ' itemid='".$item->id."' style='padding-top: 10px;'>";
-        $addons .= "<span class='price addaddonsbutton'>" . $this->__w("Add") . "</span>";
+        $checked = "";
+        if(in_array($item->id, $booking->bookingEngineAddons)) {
+            $checked = "CHECKED";
+        }
+        $addons .= "<input type='checkbox' itemid='".$item->id."' class='addonselection' style='float:right;' $checked>";
         $addons .= $item->name;
         $addons .= "</div>";
     }
@@ -121,6 +124,11 @@ if($addonsFound) {
 
 function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText) {
 /* @var $room core_pmsmanager_PmsBookingRooms */
+    
+    if($room->isAddon) {
+//        return;
+    }
+    
     $price = $room->price;
     $canNotBeAded = "";
     if(!$room->canBeAdded) {

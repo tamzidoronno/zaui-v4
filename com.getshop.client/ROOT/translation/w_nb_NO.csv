@@ -6,6 +6,7 @@ A confirmation email has been sent to your email.;-;En bekreftelse er sendt til 
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add;-;Legg til
 Add a button to your page. This button can be a add to cart button, go to page button, etc;-;Legg til en knapp på websiden din. Knapper som legg i handlekurv, gå til en annen side, osv.
+Add another contact;-;Legg til en til kontakt
 Add another slide;-;Legg til en til slider
 Add another slider;-;Legg inn til slider
 Add another tab;-;Legg inn en til tab
@@ -71,6 +72,7 @@ Comments;-;Kommentarer
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
 Connect this to a product;-;Koble denne til et produkt
+Contact information;-;Kontaktinformasjon
 Container operations;-;Operasjoner for kontaineren
 Continue;-;Fortsett
 Cookies are being stored;-;Cookier blir lagret
@@ -132,6 +134,7 @@ Fade in when scrolling;-;Fade når du scroller
 Failed;-;Feilet
 February;-;Februar
 Field has not been configured yet, configure it first.;-;Feltet har ikke blitt konfigurert enda, konfigurer det først.
+Field is required;-;Feltet er påkrevd
 First event;-;Første event
 Fixed price;-;Fast pris
 Flip contect to add content underneat this cell;-;Flipp cellen for å legge til innhold under denne cellen
@@ -141,6 +144,8 @@ Full name;-;Hele navnet
 Gallery;-;Galleri
 Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Group;-;Gruppe
+Guest information;-;Gjesteinformasjon
+Guest information for room;-;Gjesteinformasjon for rom
 Height;-;Høyde
 Height (px);-;Høyde (px)
 Height (px) mobile;-;Høyde (px) mobil
@@ -226,6 +231,7 @@ No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen heade
 No items;-;Ingen elementer
 November;-;November
 Number of fields;-;Antall felt
+Number of guests;-;Antall gjester
 Number of instances added;-;Antall av instanser lagt til
 October;-;Oktober
 Offset;-;Offset
@@ -275,6 +281,7 @@ Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
 Private key is found in braintree account.;-;Den privat nøkkelen er noe du finner på kontoen din hos braintree.
+Private person;-;Privatperson
 Product List;-;Produktliste
 Product Search;-;Produkt søk
 Product view for your store.;-;Produkt visningen for din nettbutikk.
@@ -391,6 +398,7 @@ Thursday;-;Torsdag
 Timeless black and white design.;-;Tidsløst svart og hvitt design
 Timer (ms);-;Timer (ms)
 To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;For at det skal være mulig bruke denne web siden må vi lagre en liten bit av data på din nettleser. Dette er en identifikasjons id som gjør det mulig å identifisere deg som en bruker mens du surfer på denne siden. Denne dataen blir lagret i 20 timer og er 100% anonym.
+Today;-;Idag
 Top spacing;-;Øvre spacing
 Top speed;-;Topp hastighet
 Total;-;Total
@@ -398,6 +406,7 @@ Tue;-;Tir
 Tuesday;-;Tirsdag
 Tune your online store by setting currency, does customers need to register to buy from your store, show cookie warning, etc;-;Finjuster nettbutikken din ved å f.eks velge valutta, bestemme om kundene dine må registrere seg for å handle, vis cookie advarsel, osv.
 Type;-;Type
+Unknown name;-;Ukjent navn
 Unpin area;-;Unpin område
 Update;-;Oppdater
 Upload and manipulate on images or add this to be able to search for professional images trough our image stock.;-;Last og behandle bilder, eventuelt så kan du søke opp profesjonelle bilder gjennom vår bildebank.

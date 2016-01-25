@@ -1,8 +1,9 @@
 package com.thundashop.core.pmsmanager;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class PmsStatistics {
+public class PmsStatistics implements Serializable {
     public LinkedList<StatisticsEntry> entries = new LinkedList();
     public LinkedList<SalesStatisticsEntry> salesEntries = new LinkedList(); 
     

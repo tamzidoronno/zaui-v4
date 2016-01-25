@@ -25,7 +25,24 @@ class FieldGenerator {
         echo "<div gstype='form' method='$saveMethod'>";
         echo "<input type='hidden' value='$id' gsname='itemid'>";
         echo "<h1>Guest information</h1>";
-        echo "Print guest information";
+        $checked = "";
+        if($rules->includeGuestData) {
+            $checked = "CHECKED";
+        }
+        echo "<div>";
+        echo "<input type='checkbox' gsname='displayGuestData' $checked style='float:right;'>";
+        echo "Display guest information";
+        echo "</div>";
+echo "<br>";        
+        $checked = "";
+        if($rules->displayContactsList) {
+            $checked = "CHECKED";
+        }
+        echo "<div>";
+        echo "<input type='checkbox' gsname='displayContactsList' $checked style='float:right;'>";
+        echo "Display contacts list";
+        echo "</div>";
+        
         echo "<h1>User / billing data</h1>";
         foreach($userFields as $field => $text) {
 
@@ -117,11 +134,11 @@ class FieldGenerator {
         $fields["title_3"] = "<hr>Company description details";
         $fields["company_vatNumber"] = "Company organisation number";
         $fields["company_name"] = "Name of the company";
+        $fields["company_contact"] = "Contact person";
+        $fields["company_prefix"] = "Phone prefix";
         $fields["company_phone"] = "Company phone number";
         $fields["company_website"] = "Companys website";
         $fields["company_email"] = "Company email";
-        $fields["company_contact"] = "Contact person";
-        $fields["company_prefix"] = "Phone prefix";
         $fields["company_vatRegistered"] = "Is registered into the mva register";
         $fields["company_emailAddressToInvoice"] = "Email invoice address";
         
@@ -133,8 +150,8 @@ class FieldGenerator {
         $fields["company_address_countryname"] = "Name of the country";
         
         $fields["title_5"] = "Company invoice details";
-        $fields["company_invoiceAddress_postCode"] = "Postal code for sending invoice to";
         $fields["company_invoiceAddress_address"] = "Street address for invoice";
+        $fields["company_invoiceAddress_postCode"] = "Postal code for sending invoice to";
         $fields["company_invoiceAddress_city"] = "City for invoice";
         $fields["company_invoiceAddress_countrycode"] = "Country code for invoice";
         $fields["company_invoiceAddress_countryname"] = "Country name for invoice";
@@ -189,6 +206,9 @@ class FieldGenerator {
             $formData->width = $data['width'];
             $rules->data->{$field} = $formData;
         }
+        
+        $rules->displayContactsList = $_POST['data']['displayContactsList'] == "true";
+        $rules->includeGuestData = $_POST['data']['displayGuestData'] == "true";
         
         return $rules;
     }

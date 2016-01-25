@@ -2,7 +2,12 @@
 /* @var $this \ns_d3951fc4_6929_4230_a275_f2a7314f97c1\PmsBookingContactData */
 $config = $this->getConfigurationToUse();
 
-echo "<div gstype='form' method='submitForm'>";
+echo "<div gstype='form' method='submitForm' class='bookingregistrationform'>";
+
+if($config->includeGuestData) {
+    $this->includefile("guestdata");
+}
+echo "<h2 class='paymentheaders'>".$this->__w("Contact information") . "</h2>";
 foreach($config->data as $key => $value) {
     /* @var $value core_bookingengine_data_RegistrationRulesField */
     if(stristr($key, "field_")) {
@@ -21,8 +26,8 @@ if(!$completeText) {
     $completeText = "Complete";
 }
 echo "<div class='chooseregform'>";
-echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_private'> Privatperson";
-echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_company'> Organisasjon";
+echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_private'> ". $this->__w("Private person");
+echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_company'> ". $this->__w("Organisation");
 echo "</div>";
 
 echo "<div class='registration_private regforminput'>";
@@ -45,10 +50,28 @@ foreach($config->data as $key => $value) {
 }
 echo "</div>";
 
-$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+if($config->displayContactsList) {
+    echo "<div class='pmscontacts'>";
+    $i = 0;
+    foreach($this->getCurrentBooking()->registrationData->contactsList as $contacts) {
+        echo "";
+        echo "<label class='col-25'><i style='float:left;padding-right: 3px; cursor:pointer; ' class='fa fa-trash-o'  gstype='clicksubmit' method='removeIndex' gsname='index' gsvalue='$i'></i> Navn<input type='txt' style='box-sizing:border-box;' gsname='contact_name_$i' value='".@$contacts->name."'></label>";
+        echo "<label class='col-25'>Epost<input type='txt' style='box-sizing:border-box;' gsname='contact_email_$i' value='".@$contacts->email."'></label>";
+        echo "<label class='col-25'>Mobil<input type='txt' style='box-sizing:border-box;' gsname='contact_phone_$i' value='".@$contacts->phone."'></label>";
+        echo "<label class='col-25'>Tittel<input type='txt' style='box-sizing:border-box;' gsname='contact_title_$i' value='".@$contacts->title."'></label>";
+        $i++;
+        echo "<div style='clear:both;'>";
+        echo "</div>";
+        echo "<br>";
+    }
+    echo "<span gstype='clicksubmit' method='addContact' gsname='id' gsvalue='somevalue' style='cursor:pointer;'>".$this->__w("Add another contact") . "</span>";
+    echo "</div>";
+    echo "<br><br>";
+}
 
+$config2 = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 echo "<div class='whenTypeIsSelected'>";
-if($config->needToAgreeOnContract) {
+if($config2->needToAgreeOnContract) {
     echo "<div>";
     echo "<span class='col-50'><div style='padding-bottom: 5px;'><input type='checkbox' gsname='agreetoterms'> ". $this->__w("I agree to the terms and conditions");
       echo "<span class='errordesc'>";

@@ -73,6 +73,9 @@ public interface IPmsManager {
     public void removeFromCurrentBooking(String roomId) throws Exception;
     
     @Administrator
+    public void removeFromBooking(String bookingId, String roomId) throws Exception;
+    
+    @Administrator
     public String getContract(String bookingId) throws Exception;
     public String getCurrenctContract() throws Exception;
     
@@ -92,7 +95,9 @@ public interface IPmsManager {
     
     public RegistrationRules initBookingRules();
     
-    public List<TimeRepeaterDateRange> addRepeatingData(PmsRepeatingData data);
+    public void addRepeatingData(PmsRepeatingData data) throws Exception;
     
     public List<Integer> getAvailabilityForRoom(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
+    
+    public void toggleAddon(String itemId) throws Exception;
 }

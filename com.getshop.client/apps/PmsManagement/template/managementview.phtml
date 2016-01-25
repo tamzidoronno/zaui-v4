@@ -15,7 +15,7 @@ $searchtypes['stats'] = "Statistics";
 
 
 
-<div class='booking_options' gstype='form' method='setFilter'>
+<div class='booking_options' gstype='form' method='setFilter' style='position:relative;'>
     <span style="float:left;">
         <input type='text' gsname='start' class="start pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>">
         <input type='text' gsname='end' class="end pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
@@ -32,8 +32,8 @@ $searchtypes['stats'] = "Statistics";
             ?>
         </select>
         <span gstype="submit" class="pmsbutton setFilter">Show</span>
+        <span gstype="clicksubmit" method='emptyfilter' gsname="id" gsvalue="somevalue" style=' padding-left: 10px; top: 15px;display:inline-block;position:absolute;cursor:pointer;'>Empty filter</span>
     </span>
-    
     <input type="txt" gsname='searchWord' placeholder="Search" gstype="submitenter" class="pmsinput searchword" value="<? echo @$filter->searchWord; ?>">
     <span gstype="submit" class="pmsbutton addGroupOptions">Search</span>
 </div>

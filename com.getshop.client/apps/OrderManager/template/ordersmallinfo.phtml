@@ -2,7 +2,11 @@
 /* @var $this \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager */
 $order = $this->getCurrentOrder();
 $address = $order->cart->address;
-$name = $address->fullName;
+ if(!isset($order->cart->address->fullName)) {
+    $name = $this->__w("Unknown name");
+} else {
+    $name = $order->cart->address->fullName;
+}
 $cart = $order->cart;
 
 ?>
@@ -19,7 +23,7 @@ $cart = $order->cart;
     </div>
     <div class='order_col'>
         <div class='order_col_inner'>
-            <table>
+            <table width='100%'>
                 <th><? echo $this->__f("Product"); ?></th>
                 <th><? echo $this->__f("Price"); ?></th>
                 <?
@@ -30,12 +34,23 @@ $cart = $order->cart;
                     $product = $item->product;
                     $variationstext = \HelperCart::getVartionsText($item);
                     $addClass = ($i % 2 == 0) ? "odd" : "even";
+                    
+                    $dates = "";
+                    if($item->startDate) {
+                        $dates .= date("d.m.Y", strtotime($item->startDate));
+                    }
+                    if($item->endDate) {
+                        $dates .= " - " . date("d.m.Y", strtotime($item->endDate));
+                    }
+                    if($dates) {
+                        $dates = " (" . $dates . ")";
+                    }
                     ?>
                     
                     <tr>    
                     <!--<div class="product <? echo $addClass ; ?>">-->            
-                        <td><? echo $item->count; ?> x <?php echo $product->name ?></td>
-                        <td width='50' style='text-align: right;' valign='top'><?php echo $this->getPriceWithTaxSpecifed($product->price, $product); ?></td>
+                        <td><? echo $item->count; ?> x <?php echo $product->name  . " " . $dates ?></td>
+                        <td width='50' style='text-align: right;' valign='top'><?php echo round($this->getPriceWithTaxSpecifed($product->price, $product),1); ?></td>
                         
                     </tr>
             <? } ?>
@@ -43,9 +58,8 @@ $cart = $order->cart;
         </div>
     </div>
     <div class='order_col'>
-        <div class='order_col_inner'>
+        <div class='order_col_inner' style='text-align:center;'>
             <div class='gss_button gss_show_order_action' gss_view='gss_orderview' gss_fragment='orderview' gss_method='showOrder' gss_value='<? echo $order->id; ?>'><? echo $this->__f("See complete order"); ?></div>
-            <div class='gss_button' gss_view='gss_orderview' gss_fragment='orderview' gss_method='showOrder' gss_value='<? echo $order->id; ?>'><? echo $this->__f("See arxlog?"); ?></div>
         </div>
     </div>
 </div>

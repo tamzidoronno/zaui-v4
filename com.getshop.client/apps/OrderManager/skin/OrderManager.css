@@ -20,17 +20,25 @@
     width: 200px;
 }
 
+.gss_order_col.gss_col_5 {
+    width: 100px;
+    text-align: center;
+}
 .gss_order_col.gss_col_4 {
-    width: 50px;
+    width: 120px;
 }
 .gss_order_col.gss_col_3 {
-    width: 100px;
+    width: 500px;
 }
 .gss_order_col.gss_col_2 {
-    width: 850px;
+    width: 200px;
 }
 .gss_order_col.gss_col_1 {
     width: 100px;
+    padding-left: 10px;
+}
+.gss_order_col.gss_col_0 {
+    width: 60px;
     padding-left: 10px;
 }
 

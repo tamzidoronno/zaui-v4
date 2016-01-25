@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.DataCommon;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +13,22 @@ import java.util.List;
 
 public class PmsBooking extends DataCommon {
 
+    public List<PmsBookingRooms> rooms = new ArrayList();
+    public String sessionId;
+    public List<PmsBookingAddonItem> addons = new ArrayList();
+    public List<String> bookingEngineAddons = new ArrayList();
+    public RegistrationRules registrationData = new RegistrationRules();
+    public String language = "nb_NO";
+    public String userId = "";
+    public Integer state = 0;
+    public List<String> orderIds = new ArrayList();
+    public Date invoicedTo = null;
+    public Integer priceType = 1;
+    public boolean confirmed = false;
+    public boolean unConfirmed = false;
+    public boolean isDeleted = false;
+    public PmsRepeatingData lastRepeatingData = null;
+    
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
         for(PmsBookingRooms room : rooms) {
@@ -90,6 +107,11 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
+    private boolean isSameDay(Date date1, Date date2) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        return fmt.format(date1).equals(fmt.format(date2));
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;
@@ -106,21 +128,6 @@ public class PmsBooking extends DataCommon {
         public static Integer DELETED = 2;
     }
     
-    public List<PmsBookingRooms> rooms = new ArrayList();
-    public String sessionId;
-    public List<PmsBookingAddonItem> addons = new ArrayList();
-    public RegistrationRules registrationData = new RegistrationRules();
-    public String language = "nb_NO";
-    public String userId = "";
-    public Integer state = 0;
-    public List<String> orderIds = new ArrayList();
-    public Date invoicedTo = null;
-    public Integer priceType = 1;
-    public boolean confirmed = false;
-    public boolean unConfirmed = false;
-    public boolean isDeleted = false;
-    public PmsRepeatingData lastRepeatingData = null;
-
     void attachBookingItems(List<Booking> bookingsToAdd) {
         for(PmsBookingRooms room : rooms) {
             for(Booking booking : bookingsToAdd) {
@@ -143,6 +150,9 @@ public class PmsBooking extends DataCommon {
     boolean isActiveInPeriode(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {
             if(room.date.start.before(endDate) && room.date.end.after(startDate)) {
+                return true;
+            }
+            if(isSameDay(room.date.start, startDate)) {
                 return true;
             }
         }

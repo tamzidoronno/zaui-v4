@@ -1,0 +1,89 @@
+<h2 class='paymentheaders'><?php echo $this->__w("Guest information"); ?></h2>
+<?php
+/* @var $this \ns_d3951fc4_6929_4230_a275_f2a7314f97c1\PmsBookingContactData */
+
+$codes = $this->getCodes();
+$booking = $this->getCurrentBooking();
+$j = 1;
+foreach($booking->rooms as $room) {
+    $guest = new core_pmsmanager_PmsGuests();
+    $guest->prefix = "47";
+    if(isset($room->guests[0])) {
+        $guest = $room->guests[0];
+    }
+    if(!isset($guest->email)) { $guest->email=""; }
+    if(!isset($guest->prefix)) { $guest->prefix="47"; }
+    if(!isset($guest->phone)) { $guest->phone=""; }
+    if(!isset($guest->name)) { $guest->name=""; }
+    
+    if(sizeof($booking->rooms) > 1) {
+        echo "<h3 class='paymentheaders'>" . $this->__w("Guest information for room") . " " . $j . "</h3>";
+    }
+    ?>
+<div>
+    <label class='col-25'>* <?php echo $this->__w("Number of guests"); ?><br>
+        <select gsname='visitor_numberofguests_<? echo $j;?>'>
+        <?php
+        for($i = 1; $i <= 4; $i++) {
+            $selected = "";
+            if($room->numberOfGuests == $i) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='$i' $selected>$i</option>";
+        }
+        ?>
+        </select>
+    </label>
+    <label class='col-25'>* <?php echo $this->__w("Name"); ?>
+        <input type='text' gsname='visitor_name_<? echo $j;?>' value='<?php echo $guest->name; ?>'>
+        <?php
+        echo "<span class='errordesc'>";
+        if(isset($this->validation['visitor_name_'.$j])) {
+            echo "* " . $this->validation['visitor_name_'.$j];
+        } else {
+            echo "&nbsp;";
+        }
+        echo "</span>";
+        ?>
+    </label>
+    <label class='col-25'>* <?php echo $this->__w("Phone"); ?><br>
+        <select gsname='visitor_prefix_<? echo $j;?>' style='width:40%;float:left;text-align: center;'  value='+<?php echo $guest->prefix; ?>'>
+            <?php foreach($this->getCodes() as $code) {
+                $selected = "";
+                if($guest->prefix == $code) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$code' $selected>+$code</option>";
+            }
+            ?>
+        </select>
+        <input type='text' gsname='visitor_phone_<? echo $j;?>' style='width:60%;float:left;'  value='<?php echo $guest->phone; ?>'>
+        <?php
+        echo "<span class='errordesc'>";
+        if(isset($this->validation['visitor_phone_'.$j])) {
+            echo "* " . $this->validation['visitor_phone_'.$j];
+        } else {
+            echo "&nbsp;";
+        }
+        echo "</span>";
+        ?>
+    </label>
+    <label class='col-25'>* <?php echo $this->__w("Email"); ?>
+        <input type='text' gsname='visitor_email_<? echo $j;?>'  value='<?php echo $guest->email; ?>'>
+        <?php
+        echo "<span class='errordesc'>";
+        if(isset($this->validation['visitor_email_'.$j])) {
+            echo "* " . $this->validation['visitor_email_'.$j];
+        } else {
+            echo "&nbsp;";
+        }
+        echo "</span>";
+        ?>
+    </label>
+</div>
+<div style='clear:both;margin-bottom:10px;'></div>
+    <?php
+    $j++;
+}
+?>
+<br><br>

@@ -43,6 +43,11 @@ foreach($types as $id => $type) {
     echo "<input type='checkbox' gstype='clicksubmitforce' method='addTypeFilter' gsname='id' gsvalue='$id' $checked>";
     echo $type->name . "</span>";
 }
+$checked = "";
+if($this->isGroupedByBooking()) {
+    $checked = "CHECKED";
+}
+echo "<input type='checkbox' gstype='clicksubmitforce' method='groupByBooking' gsname='id' gsvalue='' $checked> Group by booking";
 echo "<br>";
 echo "<br>";
 
@@ -111,6 +116,12 @@ foreach($bookings as $booking) {
             echo "<span class='secondary_text'>By " . $user->fullName . "</span>";
         }
         echo "</div>";
+        
+        if($this->isGroupedByBooking() && sizeof($booking->rooms) > 1) {
+            echo "+" . (sizeof($booking->rooms)-1) . " additional room(s)";
+        }
+
+        
         echo "</td>";
         echo "<td>";
         if($room->booking->bookingItemId) {
@@ -137,6 +148,10 @@ foreach($bookings as $booking) {
         }
         echo "</td>";
         echo "</tr>";
+        
+        if($this->isGroupedByBooking()) {
+            break;
+        }
     }
 } 
 echo "</table>";

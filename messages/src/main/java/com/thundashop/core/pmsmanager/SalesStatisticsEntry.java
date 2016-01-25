@@ -1,9 +1,10 @@
 package com.thundashop.core.pmsmanager;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
-class SalesStatisticsEntry {
+class SalesStatisticsEntry implements Serializable {
     public Date date;
     public Double totalPrice = 0.0;
     public HashMap<String, Double> paymentTypes = new HashMap();

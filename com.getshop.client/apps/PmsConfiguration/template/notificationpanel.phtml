@@ -204,6 +204,19 @@ $whenToPay[4] = "After stay";
             </span>
             Registered users are autoconfirmed.
         </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->isItemBookingInsteadOfTypes) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='isItemBookingInsteadOfTypes' <? echo $checked; ?>>
+            </span>
+            Is item booking instead of type booking.
+        </div>
         <div class='configrow'>
             <span class='configentry'>
                 <input type='number' style='width: 40px;' gsname='cleaningInterval' value='<? echo $notificationSettings->cleaningInterval; ?>'>

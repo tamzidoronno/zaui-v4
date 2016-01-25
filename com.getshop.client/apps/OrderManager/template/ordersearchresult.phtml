@@ -2,6 +2,17 @@
 /* @var $this ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager */
 $orders = $this->getFilteredData();
 
+$languages = array();
+$languages[1] = "CREATED";
+$languages[2] = "WAITING FOR PAYMENT";
+$languages[3] = "PAYMENT FAILED";
+$languages[4] = "COMPLETED";
+$languages[5] = "CANCELED";
+$languages[6] = "SENT";
+$languages[7] = "PAYMENT COMPLETED";
+$languages[8] = "COLLECTION FAILED";
+$languages[9] = "NEEDCOLLECTING";
+
 if (!count($orders)) { ?>
 <div class='gss_no_orders_found'>
     <i class='fa fa-warning'></i>
@@ -14,9 +25,12 @@ if (!count($orders)) { ?>
 $total = 0;
 
 echo "<div class='gss_overview_order'>";
+echo "<div class='gss_order_col gss_col_0'><input type='checkbox' class='gsscheckallorders'></input></div>";
 echo "<div class='gss_order_col gss_col_1'>" . $this->__f("Order id") . "</div>";
-echo "<div class='gss_order_col gss_col_2'>" . $this->__f("Name") . "</div>";
-echo "<div class='gss_order_col gss_col_3'>" . $this->__f("Price") . "</div>";
+echo "<div class='gss_order_col gss_col_2'>" . $this->__f("Date") . "</div>";
+echo "<div class='gss_order_col gss_col_3'>" . $this->__f("Name") . "</div>";
+echo "<div class='gss_order_col gss_col_4'>" . $this->__f("Price") . "</div>";
+echo "<div class='gss_order_col gss_col_5'>" . $this->__f("State") . "</div>";
 echo "</div>";
 
 foreach ($orders as $order) {
@@ -26,12 +40,19 @@ foreach ($orders as $order) {
     $orderPaid = $order->status == 3 ? "<i style='color: red;' class='fa fa-frown-o' title='Paiment failed'></i>" : $orderPaid ;
     $orderPaid = $order->status == 2 ? "<i style='color: #c18800;' class='fa fa-circle-o-notch' title='Waiting for payment'></i>" : $orderPaid ;
     $price = $this->getApi()->getCartManager()->calculateTotalCost($order->cart);
+    if(!isset($order->cart->address->fullName)) {
+        $name = $this->__w("Unknown name");
+    } else {
+        $name = $order->cart->address->fullName;
+    }
     echo "<div class='gss_overview_order_outer'>";
         echo "<div class='gss_overview_order'>";
+        echo "<div class='gss_order_col gss_col_0'><input type='checkbox' class='gssordercheckbox' orderid='".$order->id."'></input></div>";
         echo "<div class='gss_order_col gss_col_1'>$order->incrementOrderId</div>";
-        echo "<div class='gss_order_col gss_col_2'>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)) . " ". $order->cart->address->fullName . "</div>";
-        echo "<div class='gss_order_col gss_col_3'>" . $price . "</div>";
-        echo "<div class='gss_order_col gss_col_4'>$orderPaid</div>";
+        echo "<div class='gss_order_col gss_col_2'>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)) . "</div>";
+        echo "<div class='gss_order_col gss_col_3'>" . $name . "</div>";
+        echo "<div class='gss_order_col gss_col_4'>" . round($price,1) . "</div>";
+        echo "<div class='gss_order_col gss_col_5'>".$languages[$order->status]."</div>";
         echo "</div>";
         $total += $price;
         $this->includefile("ordersmallinfo");
@@ -40,13 +61,24 @@ foreach ($orders as $order) {
 
 echo "<div class='gss_overview_order_outer'>";
     echo "<div class='gss_overview_order'>";
-    echo "<div class='gss_order_col gss_col_1'></div>";
-    echo "<div class='gss_order_col gss_col_2'>Sum</div>";
-    echo "<div class='gss_order_col gss_col_3'>$total</div>";
-    echo "<div class='gss_order_col gss_col_4'></div>";
+    echo "<div class='gss_order_col gss_col_0'></div>";
+    echo "<div class='gss_order_col gss_col_1'>Sum</div>";
+    echo "<div class='gss_order_col gss_col_2'></div>";
+    echo "<div class='gss_order_col gss_col_3'></div>";
+    echo "<div class='gss_order_col gss_col_4'>".round($total,1)."</div>";
+    echo "<div class='gss_order_col gss_col_5'></div>";
     echo "</div>";
 echo "</div>";
 ?>
+<br>
+<select class='gss_neworderstate'>
+    <?php 
+    foreach($languages as $idx => $value) {
+        echo "<option value='$idx'>$value</option>";
+    }
+    ?>
+</select>
+<input type='button' value='Set new order state' class='gss_setneworderstate'>
 
 <div class="gss_pagenumber_bottom">
     <? echo $this->__f("Page") . ": " . $this->getPageNumber() . "/" . $this->getTotalPageCount(); ?>

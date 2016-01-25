@@ -1,7 +1,8 @@
 .PmsBookingContactData label input[type="text"],
 .PmsBookingContactData label textarea,
+.PmsBookingContactData label select,
 .PmsBookingContactData label .titletext,
-.PmsBookingContactData label input[type="password"] { width: 100%; margin-top: 5px; box-sizing: border-box; display:inline-block;  }
+.PmsBookingContactData label input[type="password"] { width: 100%; margin-top: 5px; box-sizing: border-box; display:inline-block; height: 20px; padding: 2px; line-height:20px; border: solid 1px #bbb; background-color:#fff; }
 .PmsBookingContactData label textarea { height: 100px; }
 .PmsBookingContactData label.type_radio { display:inline; width: inherit;}
 .PmsBookingContactData .col-25 { width: 25%; display:inline-block; box-sizing: border-box; float:left; padding-right: 10px; }
@@ -27,3 +28,4 @@
 .PmsBookingContactData .regforminput { display:none; }
 .PmsBookingContactData .whenTypeIsSelected { clear:both; display:none; }
 .PmsBookingContactData .termsandcondtext { color:blue; cursor: pointer; margin-bottom: 5px;display:inline-block; }
+.PmsBookingContactData .pmscontacts input { box-sizing: border-box; width:100%; }

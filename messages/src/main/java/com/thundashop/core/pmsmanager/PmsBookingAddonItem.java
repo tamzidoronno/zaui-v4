@@ -5,11 +5,13 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import java.io.Serializable;
+
 /**
  *
  * @author boggi
  */
-public class PmsBookingAddonItem {
+public class PmsBookingAddonItem  implements Serializable {
     static class AddonTypes {
         public static Integer BREAKFAST = 1;
         public static Integer PARKING = 2;

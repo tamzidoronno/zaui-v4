@@ -1,0 +1,14 @@
+<?php
+/* @var $this ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
+echo "Event list";
+foreach($this->getEventList() as $entry) {
+    $eventEntry = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $entry->name);
+    echo "<b>" . $eventEntry->title . "</b><br>";
+    echo $eventEntry->shortdesc . "<br>";
+    if($this->isEditorMode()) {
+        echo "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><span class='pmsbutton' style='float:right;'>Edit event</span></a>";
+    }
+    echo "<div style='clear:both;'></div>";
+    echo "<hr>";
+}
+?>

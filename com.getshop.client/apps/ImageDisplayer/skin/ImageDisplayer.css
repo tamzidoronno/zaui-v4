@@ -20,3 +20,5 @@
 .ImageDisplayer .imagecontainer.adjust_left { text-align: left; width: 100%; display:block;}
 .ImageDisplayer .imagecontainer.adjust_center { text-align: center; width: 100%; display:block;}
 .ImageDisplayer .imagecontainer.adjust_right { text-align: right; width: 100%;  display:block;}
+.ImageDisplayer .imagedisplayer_upload_form_menu { text-align: center !important; }
+.ImageDisplayer .imagedisplayer_upload_form_menu i { display: inline-block; width: 100%; }

@@ -1,0 +1,91 @@
+<?php
+/* @var $this ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
+$categories = array();
+$categories[1] = "Kategori 1";
+$categories[2] = "Kategori 2";
+$categories[3] = "Kategori 3";
+$event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_GET['eventid']);
+
+?>
+<div class='eventconfig'>
+    <div gstype='form' method='updateEventFields' class='eventeditform'>
+        <input type='hidden' value='<?echo $_GET['eventid']; ?>' gsname='eventid'>
+        <label>
+            <span class='text'><?echo $this->__w("Title"); ?></span>
+            <input type='text' gsname='title' value='<?php echo $event->title; ?>'>
+        </label>
+        <label>
+            <span class='text'><?echo $this->__w("Short description"); ?></span>
+            <textarea type='text' style='height: 50px;' gsname='shortdesc'><?php echo $event->shortdesc; ?></textarea>
+        </label>
+        <div class='imagecontainer'>
+            <label>
+                <span class='text'>Last opp et bilde</span>
+                <?php
+                    //Upload image here.
+                    $imgDisplayer = $this->getImageDisplayer($_GET['eventid']);
+                    $this->getFactory()->getPage()->renderApplicationSimple($imgDisplayer->configuration->id,$this);
+                ?>
+            </label>
+        </div>
+        <label>
+            <span class='text'><?echo $this->__w("Select a category"); ?></span>
+            <select gsname='category'>
+            <?php
+            foreach($categories as $cat => $val) {
+                $selected = "";
+                if($event->category == $cat) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$cat' $selected>$val</option>";
+            }
+            ?>
+            </select>
+        </label>
+        <hr>
+        <label>
+            <span class='text'>Mer utfylende beskrivelse</span>
+            <textarea type='text' style='height: 200px;' gsname='description'><?php echo $event->description; ?></textarea>
+        </label>
+    </div>
+    <?php
+    if(sizeof($event->lenker) > 0) {
+        echo "Lenker som er lagt til:<br>";
+        $i = 0;
+        foreach($event->lenker as $link) {
+            echo "<span gstype='form' method='removeLink'>";
+            echo "<input type='hidden' value='".$_GET['eventid']."' gsname='eventid'>";
+            echo "<input type='hidden' value='$i' gsname='index'>";
+            echo "<i gstype='submit' method='removeLink' gsname='index' gsvalue='$i' class='fa fa-trash-o'></i></span> <a href='".$link->link."'>".$link->name . " (" . $link->link . ")". "</a>";
+            $i++;
+        }
+        echo "<br>";
+    }
+    ?>
+    
+    <div gstype='form' method='addlink'>
+        <input type='hidden' value='<?echo $_GET['eventid']; ?>' gsname='eventid'>
+        <label style='width:40%;float:left;'>
+            <span class='text'>Lenke</span>
+            <input type='text' gsname='link'>
+        </label>
+        <label style='width:40%;float:left;'>
+            <span class='text'>Navn på lenken</span>
+            <input type='text' gsname='name'>
+        </label>
+        <label style='width:20%;float:left;'>
+            <span class='text'>&nbsp;</span>
+            <input type='button' value='Legg til' gstype='submit'>
+        </label>
+    </div>
+    <div style='clear:both;'></div>
+    <div style='text-align: right;'>
+    </div>
+</div>
+<div style='text-align:right; padding-right: 300px;'>
+    <?php echo "<a href='?page=".$this->getPage()->javapage->id."'>"; ?>
+        <span class='pmsbutton'>Ferdig å editere</span>
+    </a>
+</div>
+
+

@@ -153,6 +153,16 @@ public class AddApplicationsToDatabase {
         apps.add(XLedger);
 
         
+        Application PmsEventCalendar = createSettings("PmsEventCalendar",
+        "27e174dc-b08c-4bf7-8179-9ea8379c91da",
+        allowed2,
+        " ",
+        Application.Type.Webshop, true);
+        PmsEventCalendar.isPublic = true;
+        PmsEventCalendar.isFrontend = true;
+        PmsEventCalendar.moduleId = "booking";
+        PmsEventCalendar.defaultActivate = false;
+        apps.add(PmsEventCalendar);
 
         return apps;
     }

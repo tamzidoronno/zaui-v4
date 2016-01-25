@@ -5,11 +5,13 @@
  */
 package com.thundashop.core.sedox;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ktonder
  */
-public class SedoxBinaryFileOptions {
+public class SedoxBinaryFileOptions implements Serializable {
     public boolean requested_dpf = false;
     public boolean requested_egr = false;
     public boolean requested_decat = false;

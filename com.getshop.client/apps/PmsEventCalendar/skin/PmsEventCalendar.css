@@ -44,3 +44,4 @@
 .PmsEventCalendar .eventconfig { padding-left: 300px; padding-right: 300px; }
 
 .PmsEventCalendar .image { float:left; margin: 10px; }
+.PmsEventCalendar .image img { width: 30%; }

@@ -36,7 +36,6 @@ class PmsBooking extends \WebshopApplication implements \Application {
 
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
         
-        
     }
     
     public function getText($key) {

@@ -2,6 +2,8 @@ package com.thundashop.core.pkk.pmseventmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmseventmanager.PmsBookingEventEntry;
 import com.thundashop.core.pmseventmanager.PmsEventFilter;
 import com.thundashop.core.pmsmanager.IPmsManager;
@@ -20,6 +22,17 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
 
     @Autowired
     PmsManager pmsManager;
+    
+     @Override
+    public void dataFromDatabase(DataRetreived data) {
+        for (DataCommon dataCommon : data.data) {
+            if (dataCommon instanceof PmsBookingEventEntry) {
+                PmsBookingEventEntry entry = (PmsBookingEventEntry) dataCommon;
+                entries.put(entry.id, entry);
+            }
+        }
+    }
+
     
     @Override
     public List<PmsBookingEventEntry> getEventEntries(PmsEventFilter filter) {
@@ -48,6 +61,8 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         PmsBooking result = pmsManager.getBooking(id);
         PmsBookingEventEntry entry = new PmsBookingEventEntry();
         entry.id = result.id;
+        entry.title = result.registrationData.resultAdded.get("title");
+        entry.shortdesc = result.registrationData.resultAdded.get("shortdesc");
         entries.put(entry.id, entry);
         saveEntry(entry);
         return entry;

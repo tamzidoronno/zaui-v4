@@ -1,7 +1,9 @@
 <?
 /* @var $this ns_8dcbf529_72ae_47dd_bd6b_bd2d0c54b30a\PmsBooking */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+
 $date = date("d.m.Y", time());
-$date2 = date("d.m.Y", time()+86400);
+$date2 = date("d.m.Y", time()+(86400*$config->minStay));
 if(!$this->getText("next_page")) {
     echo "<b>Next page not set up yet, please fix.</b>";
 }
@@ -39,8 +41,10 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
             foreach($rooms as $room) {
                 /* @var $room core_bookingengine_data_Booking */
                 echo "<option value='".$room->type->id."'>";
-                if($room->price > 0) {
-                    echo round($room->price) . " NOK ";
+                if($this->getText("display_prices") != "no") {
+                    if($room->price > 0) {
+                        echo round($room->price) . " NOK ";
+                    }
                 }
                 echo $room->type->name . "</option>";
             }
@@ -57,8 +61,8 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
 </div>
 
 <script>
-    $('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", maxDate: "+30d", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
-    $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", maxDate: "+30d", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
     $('.start_cal').on('click', function() { $('.start_date_input').focus(); });
     $('.end_cal').on('click', function() { $('.end_date_input').focus(); });
 </script>

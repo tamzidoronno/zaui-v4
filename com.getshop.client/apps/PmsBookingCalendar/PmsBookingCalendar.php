@@ -71,13 +71,13 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         if(isset($_SESSION[$this->getAppInstanceId()]['selected_month'])) {
             return $_SESSION[$this->getAppInstanceId()]['selected_month'];
         }
-        return date("m", time());
+        return date("m", $this->getSelectedDate());
     }
     public function getSelectedYear() {
         if(isset($_SESSION[$this->getAppInstanceId()]['selected_year'])) {
             return $_SESSION[$this->getAppInstanceId()]['selected_year'];
         }
-        return date("Y", time());
+        return date("Y",$this->getSelectedDate());
     }
     public function changeMonth() {
         $month = $_POST['data']['month'];

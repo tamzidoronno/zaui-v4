@@ -103,7 +103,11 @@ if(isset($curAddedFields->{'choosetyperadio'})) {
     echo "</script>";
 } else {
     echo "<script>";
-    echo "$('input[name=\"choosetyperadio\"][value=\"registration_private\"]').click();";
+    if($this->getConfigurationSetting("default_org") == "yes") {
+        echo "$('input[name=\"choosetyperadio\"][value=\"registration_company\"]').click();";
+    } else {
+        echo "$('input[name=\"choosetyperadio\"][value=\"registration_private\"]').click();";
+    }
     echo "</script>";
 }
 

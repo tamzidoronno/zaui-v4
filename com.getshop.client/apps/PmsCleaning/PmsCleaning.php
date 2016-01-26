@@ -130,6 +130,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
     public function printRoomOverview() {
         $additional = $this->getAdditionalInfo();
         $items = $this->getItems();
+        echo "<span class='notclean' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is not clean</span><br>";
+        echo "<span class='clean' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is clean</span><br>";
+        echo "<span class='inUse' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is in use</span><br><br>";
         foreach($additional as $add) {
             $isClean = "notclean";
             if($add->isClean) {

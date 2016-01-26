@@ -30,16 +30,17 @@ $searchtext = $this->getSearchText();
                     <select class="config" gs_model='orders' gs_model_attr='status'>
                         <? 
                         $languages = array();
-                        $languages['0'] = "ALL";
-                        $languages['1'] = "CREATED";
-                        $languages['2'] = "WAITING FOR PAYMENT";
-                        $languages['3'] = "PAYMENT FAILED";
-                        $languages['4'] = "COMPLETED";
-                        $languages['5'] = "CANCELED";
-                        $languages['6'] = "SENT";
-                        $languages['7'] = "PAYMENT COMPLETED";
-                        $languages['8'] = "COLLECTION FAILED";
-                        $languages['9'] = "NEEDCOLLECTING";
+                        $languages['0'] = "All";
+                        $languages['1'] = "Created";
+                        $languages['2'] = "Waiting for payment";
+                        $languages['3'] = "Payment failed";
+                        $languages['4'] = "Completed";
+                        $languages['5'] = "Canceled";
+                        $languages['6'] = "Sent";
+                        $languages['7'] = "Payment completed";
+                        $languages['8'] = "Collection failed";
+                        $languages['9'] = "Need collecting";
+                        $languages['10'] = "Send to invoice";
                 
                         foreach ($languages as $key => $lang) { 
                             $selected = $this->getFactory()->getMainLanguage() == $key ? "selected='true'" : "";

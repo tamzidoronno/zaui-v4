@@ -14,6 +14,7 @@ $pricetypes[4] = "Per minute";
 $pricetypes[5] = "Per hour";
 $pricetypes[6] = "Per seconds";
 $pricetypes[7] = "Progressive";
+$pricetypes[8] = "Interval pricing";
 
 ?>
 <div gstype='form' method="selectDates">
@@ -70,7 +71,7 @@ foreach($itemTypes as $item) {
         echo "<option value='$idx' $selected>$type</option>";
     }
     echo "</select>";
-    if($priceObject->defaultPriceType == 7) {
+    if($priceObject->defaultPriceType == 7 || $priceObject->defaultPriceType == 8) {
         $this->includefile("progressivepricing");
     } else {
         $this->includefile("dailypriceediting");

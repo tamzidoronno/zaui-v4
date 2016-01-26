@@ -31,7 +31,15 @@ $dateType = $this->getConfigurationSetting("date_type");
         <td width="50%">Complete order button text</td>
         <td width="50%"><input type="text" gsname="complete_order_button" style='width:100%;' value="<? echo $this->getConfigurationSetting("complete_order_button"); ?>"></td>
     </tr>
-
+    <tr>
+        <td width="50%">Set organisation as default</td>
+        <td width="50%">
+            <select gsname="default_org">
+                <option value='no'>No</option>
+                <option value='yes' <? if($this->getConfigurationSetting("default_org") == "yes") { echo "SELECTED"; } ?>>Yes</option>
+            </select>
+        </td>
+    </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

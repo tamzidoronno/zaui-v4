@@ -223,6 +223,12 @@ $whenToPay[4] = "After stay";
             </span>
             Cleaning interval default (0, disabled)
         </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='number' style='width: 40px;' gsname='minStay' value='<? echo $notificationSettings->minStay; ?>'>
+            </span>
+            Minimum stay
+        </div>
         <br><br>
         <h2>
             Payment and order creations
@@ -242,7 +248,7 @@ $whenToPay[4] = "After stay";
 
         <div class='configrow'>
             <span class='configentry'>
-                <input type='number' style='width: 40px;' gsname='cleaningInterval' value='<? echo $notificationSettings->createOrderAtDayInMonth; ?>'>
+                <input type='number' style='width: 40px;' gsname='createOrderAtDayInMonth' value='<? echo $notificationSettings->createOrderAtDayInMonth; ?>'>
             </span>
             Specify a specific date in month to create the orders (0 is turned off).
         </div>

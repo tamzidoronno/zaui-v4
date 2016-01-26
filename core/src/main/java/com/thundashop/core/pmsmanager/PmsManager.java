@@ -315,6 +315,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         bookingEngine.addBookings(bookingsToAdd);
         booking.attachBookingItems(bookingsToAdd);
         booking.sessionId = null;
+        if(booking.registrationData.resultAdded.get("company_invoicenote") != null) {
+            booking.invoiceNote = booking.registrationData.resultAdded.get("company_invoicenote");
+        }
         if(booking.userId == null || booking.userId.isEmpty()) {
             User newuser = createUser(booking);
             booking.userId = newuser.id;
@@ -679,6 +682,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(prices.defaultPriceType == 7) {
             return calculateProgressivePrice(typeId,start,end,0, avgPrice);
         }
+        if(prices.defaultPriceType == 8) {
+            return calculateIntervalPrice(typeId,start,end,avgPrice);
+        }
         
         return 0.0;
     }
@@ -719,6 +725,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(startDate)).getDays();
                 price = calculateProgressivePrice(room.bookingItemTypeId, startDate, endDate, days, true);
             }
+            if(booking.priceType.equals(PmsBooking.PriceType.interval)) {
+                price = calculateIntervalPrice(room.bookingItemTypeId, room.date.start, room.date.end, true);
+            }
             if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
                 price = room.price;
             }
@@ -742,6 +751,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         order.payment = new Payment();
         order.payment.paymentType = user.preferredPaymentType;
         order.userId = booking.userId;
+        order.invoiceNote = booking.invoiceNote;
         orderManager.saveOrder(order);
         
         booking.invoicedTo = startDate;
@@ -1479,6 +1489,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return total;
     }
 
+    private Double calculateIntervalPrice(String typeId, Date start, Date end, boolean avgprice) {
+        int totalDays = Days.daysBetween(new LocalDate(start), new LocalDate(end)).getDays();
+        ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
+        if(priceRange == null) {
+            System.out.println("No progressive price found for type");
+            return -0.124;
+        }
+        int daysoffset=0;
+        for(ProgressivePriceAttribute attr : priceRange) {
+            daysoffset += attr.numberOfTimeSlots;
+            if(daysoffset >= totalDays) {
+                if(avgprice) {
+                    return attr.price;
+                } else {
+                    return attr.price * totalDays;
+                }
+            }
+        }
+        
+        //Could not find price to use.
+        return -0.333;
+    }
+    
     private Double calculateProgressivePrice(String typeId, Date start, Date end, int offset, boolean avgPrice) {
         ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
         if(priceRange == null) {
@@ -1669,4 +1702,5 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.rooms.addAll(allToAdd);
 
     }
+
 }

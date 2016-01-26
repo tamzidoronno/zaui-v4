@@ -41,6 +41,15 @@
             </select>
         </td>
     </tr>
+    <tr>
+        <td width="50%">Display prices</td>
+        <td width="50%">
+            <select gsname="display_prices">
+                <option value='yes'>Yes</option>
+                <option value='no' <? if($this->getText("display_prices") == "no") { echo "SELECTED"; } ?>>No</option>
+            </select>
+        </td>
+    </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

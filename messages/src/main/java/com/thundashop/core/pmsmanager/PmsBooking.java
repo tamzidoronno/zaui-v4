@@ -28,6 +28,7 @@ public class PmsBooking extends DataCommon {
     public boolean unConfirmed = false;
     public boolean isDeleted = false;
     public PmsRepeatingData lastRepeatingData = null;
+    public String invoiceNote = "";
     
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
@@ -120,6 +121,7 @@ public class PmsBooking extends DataCommon {
         public static Integer hourly = 5;
         public static Integer secondly = 6;
         public static Integer progressive = 7;
+        public static Integer interval = 8;
     }
        
     public static class BookingStates {

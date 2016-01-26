@@ -4,6 +4,8 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
 $res = $factory->getApi()->getXLedgerManager()->createOrderFile();
-print_r($res);
+foreach($res as $r) {
+    echo $r . "<br>";
+}
 ?>
 

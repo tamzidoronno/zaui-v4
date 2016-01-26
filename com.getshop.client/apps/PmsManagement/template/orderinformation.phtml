@@ -33,6 +33,7 @@ $pricetypes[4] = "Per minute";
 $pricetypes[5] = "Per hour";
 $pricetypes[6] = "Per seconds";
 $pricetypes[7] = "Progressive";
+$pricetypes[8] = "Interval";
 
 $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 $instances2 = array();
@@ -125,7 +126,14 @@ if($booking->orderIds) {
 }
 
 ?>
-<br><br>
+<br>
+<h2>Invoice information</h2>
+<div gstype="form" method="updateInvoiceNote" style='text-align:right;'>
+    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+    <textarea gsname='invoicenote' style="width:100%;height: 50px;"><?php echo $booking->invoiceNote; ?></textarea><br>
+    <span class='pmsbutton' gstype="submitToInfoBox">Update invoice note</span>
+</div>
+<h2>Create a new order</h2>
 <div gstype="form" method="createNewOrder">
     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
 

@@ -52,6 +52,12 @@ $addons[2] = "Per timeslot";
             </select>
         </td>
     </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Booking size"); ?></td>
+        <td width="50%">
+            <input type="number" style='width: 50px;' gsname="size" value="<? echo $item->size; ?>">
+        </td>
+    </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

@@ -140,7 +140,6 @@ echo "<br>";
         $fields["company_website"] = "Companys website";
         $fields["company_email"] = "Company email";
         $fields["company_vatRegistered"] = "Is registered into the mva register";
-        $fields["company_emailAddressToInvoice"] = "Email invoice address";
         
         $fields["title_4"] = "Company address details";
         $fields["company_address_address"] = "Users street address";
@@ -155,6 +154,8 @@ echo "<br>";
         $fields["company_invoiceAddress_city"] = "City for invoice";
         $fields["company_invoiceAddress_countrycode"] = "Country code for invoice";
         $fields["company_invoiceAddress_countryname"] = "Country name for invoice";
+        $fields["company_emailAddressToInvoice"] = "Email invoice address";
+        $fields["company_invoicenote"] = "Invoice note to booking";
 
         return $fields;
     }

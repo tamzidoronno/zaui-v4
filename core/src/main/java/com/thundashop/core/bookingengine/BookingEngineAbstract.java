@@ -322,6 +322,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             throw new BookingEngineException("Could not update itemType, it does not exists. Use createBookingItemType to make a new one");
         }
         
+        savedItem.size = type.size;
         savedItem.name = type.name;
         savedItem.productId = type.productId;
         savedItem.pageId = type.pageId;

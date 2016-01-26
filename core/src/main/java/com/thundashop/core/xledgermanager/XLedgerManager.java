@@ -39,7 +39,7 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
         List<String> allOrdersToReturn = new ArrayList();
         List<Order> allOrders = orderManager.getOrders(null, null, null);
         for(Order order : allOrders) {
-            if(order.incrementOrderId == 100022) {
+            if(order.incrementOrderId == 100016) {
                 List<String> lines = createOrderLine(order);
                 allOrdersToReturn.addAll(lines);
             }
@@ -50,6 +50,7 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
     private List<String> createOrderLine(Order order) {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyymmdd");
         List<String> allLines = new ArrayList();
+        int linenumber = 0;
         for(CartItem item : order.cart.getItems()) {
             Days periods = Days.daysBetween(new LocalDate(item.startDate), new LocalDate(item.endDate));
             User user = userManager.getUserById(order.userId);
@@ -59,27 +60,22 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
             }
             HashMap<Integer, String> toAdd = new HashMap();
             toAdd.put(3, user.customerId + "");
-            toAdd.put(4, "AP"); //Voucher type?
-            toAdd.put(5, "1111"); //Voucher no?
-            toAdd.put(9, "2400"); //Account?
-            toAdd.put(14, order.invoiceNote);
-            toAdd.put(15, format1.format(item.startDate)); //Periode start (int) hva er dette?
-            toAdd.put(16, periods.getDays() + ""); //Er dette måneder? Dager, uke?
-            toAdd.put(17, "Faktura"); //Hva skal stå på faktura.
-            toAdd.put(23, format1.format(order.rowCreatedDate)); //Voucher date, order date?
-            toAdd.put(24, order.incrementOrderId + "");
+            toAdd.put(4, order.incrementOrderId + ""); //order number
+            toAdd.put(5, linenumber + "");
+            toAdd.put(6, format1.format(item.startDate));
+            toAdd.put(7, user.customerId + "");
+            toAdd.put(9, 1 + "");
+            toAdd.put(16,"NOK");
+            toAdd.put(17,"UKJENT");
+            toAdd.put(19, order.invoiceNote);
+            toAdd.put(23, item.getCount() + "");
+            toAdd.put(24, item.getProduct().price + "");
+            toAdd.put(38, order.paymentTerms + "");
+            toAdd.put(39, 1 + "");
             
-            LocalDate date = new LocalDate(order.rowCreatedDate);
-            date.plusDays(user.invoiceDuePeriode);
-            
-            toAdd.put(25, format1.format(date.toDate()));
-            toAdd.put(29, item.getProduct().name + " " + getStay(item));
-            toAdd.put(31, "NOK");
-            toAdd.put(32, (double)Math.round(item.getProduct().price * 100d) / 100d + "");
-            toAdd.put(37, "1");
-            
-            if(company != null) {
-                toAdd.put(39, company.vatNumber);
+             if(company != null) {
+                toAdd.put(34, company.name);
+                toAdd.put(35, company.vatNumber);
                 toAdd.put(40, company.address.address);
                 toAdd.put(42, company.address.postCode);
                 toAdd.put(43, company.address.city);
@@ -88,16 +84,14 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
                 toAdd.put(48, company.invoiceAddress.postCode);
                 toAdd.put(49, company.invoiceAddress.city);
             } else {
+                toAdd.put(34, user.fullName);
                 if(user.address != null) {
                     toAdd.put(40, user.address.address);
                     toAdd.put(42, user.address.postCode);
                     toAdd.put(43, user.address.city);
                 }
             }
-            
-            toAdd.put(52, user.cellPhone);
-            toAdd.put(53, user.emailAddress);
-            
+             
             String resultLine = "";
             for(int i = 0; i < 60; i++) {
                 String entry = "";
@@ -109,6 +103,7 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
             resultLine += "EOL";
             allLines.add(resultLine);
             System.out.println(resultLine);
+            linenumber++;
         }
         return allLines;
     }

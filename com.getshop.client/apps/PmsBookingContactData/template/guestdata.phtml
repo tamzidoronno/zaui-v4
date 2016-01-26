@@ -4,6 +4,7 @@
 
 $codes = $this->getCodes();
 $booking = $this->getCurrentBooking();
+$items = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName()));
 $j = 1;
 foreach($booking->rooms as $room) {
     $guest = new core_pmsmanager_PmsGuests();
@@ -24,7 +25,7 @@ foreach($booking->rooms as $room) {
     <label class='col-25'>* <?php echo $this->__w("Number of guests"); ?><br>
         <select gsname='visitor_numberofguests_<? echo $j;?>'>
         <?php
-        for($i = 1; $i <= 4; $i++) {
+        for($i = 1; $i <= $items[$room->bookingItemTypeId]->size; $i++) {
             $selected = "";
             if($room->numberOfGuests == $i) {
                 $selected = "SELECTED";

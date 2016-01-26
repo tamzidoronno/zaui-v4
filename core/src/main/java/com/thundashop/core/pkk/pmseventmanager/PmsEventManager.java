@@ -75,5 +75,15 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         }
         return entries.get(entryId);
     }
+
+    @Override
+    public PmsBookingEventEntry getEntryShort(String shortId) {
+        for(PmsBookingEventEntry entry : entries.values()) {
+            if(entry.id.startsWith(shortId)) {
+                return entry;
+            }
+        }
+        return null;
+    }
     
 }

@@ -17,4 +17,5 @@ public interface IPmsEventManager {
     public void saveEntry(PmsBookingEventEntry entry);
     public void deleteEntry(String entryId);
     public PmsBookingEventEntry getEntry(String entryId);
+    public PmsBookingEventEntry getEntryShort(String shortId);
 }

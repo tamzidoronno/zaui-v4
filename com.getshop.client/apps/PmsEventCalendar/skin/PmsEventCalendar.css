@@ -42,3 +42,5 @@
 .PmsEventCalendar .imagedisplayer_upload_form_menu { text-align: left !important; }
 .PmsEventCalendar .imagedisplayer_upload_form_menu i { display:none;  }
 .PmsEventCalendar .eventconfig { padding-left: 300px; padding-right: 300px; }
+
+.PmsEventCalendar .image { float:left; margin: 10px; }

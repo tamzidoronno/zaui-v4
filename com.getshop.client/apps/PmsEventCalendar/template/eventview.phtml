@@ -1,0 +1,25 @@
+<?php
+/* @var $this \ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
+
+$event = $this->getApi()->getPmsEventManager()->getEntryShort($this->getSelectedName(), $_GET['readevent']);
+$edit = "";
+if($this->isEditorMode()) {
+    $edit = "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$event->id."'><i class='fa fa-edit'></i></a> ";
+}
+
+echo "<h1>" .$edit . $event->title . "</h1>";
+echo "<div class='image'>";
+$imgDisplayer = $this->getImageDisplayer($event->id);
+$imgDisplayer->render();
+echo "</div>";
+echo $event->shortdesc . "<br>";
+echo "<div style='clear:both;'></div>";
+echo "<h2>Mer utfyllende beskrivelse</h2>";
+echo $event->description;
+if(sizeof($event->lenker) > 0) {
+    echo "<h2>Lenker</h2>";
+    foreach($event->lenker as $link) {
+        echo "<a style='cursor:pointer;' onclick=\"window.open('".$link->link."')\">" . $link->name . "</a>";
+    }
+}
+?>

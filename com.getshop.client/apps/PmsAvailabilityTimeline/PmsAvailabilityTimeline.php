@@ -55,7 +55,7 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         if(isset($data['end'])) {
             return $data['end'];
         }
-        return time()+86400;
+        return time()+(86400*7);
     }
     
     public function getInterval() {

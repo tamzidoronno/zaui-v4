@@ -114,7 +114,7 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
         if($end) {
             return strtotime($end);
         }
-        return $this->getStartDate()+86400;
+        return $this->getStartDate()+(86400*$this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->minStay);
     }
 
 }

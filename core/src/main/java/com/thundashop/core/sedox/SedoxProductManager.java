@@ -294,7 +294,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public synchronized SedoxProduct createSedoxProduct(SedoxSharedProduct sharedProduct, String base64EncodeString, String originalFileName, String forSlaveId, String origin, String comment, String useCredit) throws ErrorException {
+    public synchronized SedoxProduct createSedoxProduct(SedoxSharedProduct sharedProduct, String base64EncodeString, String originalFileName, String forSlaveId, String origin, String comment, String useCredit, SedoxBinaryFileOptions options) throws ErrorException {
         if (forSlaveId != null && !forSlaveId.equals("")) {
             checkIfMasterOfSlave(forSlaveId);
         }
@@ -317,6 +317,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         SedoxBinaryFile cmdEncryptedFile = saveCmdEncryptedFile(base64EncodeString, originalFileName);
         if (cmdEncryptedFile != null) {
+            cmdEncryptedFile.options = options;
             sharedProduct.saleAble = false;
             sharedProduct.isCmdEncryptedProduct = true;
             sharedProduct.binaryFiles.add(cmdEncryptedFile);
@@ -324,6 +325,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         SedoxBinaryFile originalFile = getOriginalBinaryFile(base64EncodeString, originalFileName);
         if (originalFile != null) {
+            originalFile.options = options;
             sharedProduct.binaryFiles.add(originalFile);
 
             if (cmdEncryptedFile != null) {

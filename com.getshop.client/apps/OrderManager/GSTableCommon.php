@@ -38,10 +38,11 @@ class GSTableCommon extends \WebshopApplication {
     }
     
     public function getPageSize() {
-        if (isset($_SESSION[$this->getSessionName('current_pagesize')]));
-            return $_SESSION[$this->getSessionName('current_pagesize')];
+        $varName = $this->getSessionName('current_pagesize');
+        if (isset($_SESSION[$varName]));
+            return @$_SESSION[$varName];
         
-        return 3;
+        return 30;
     }
 
     public function getTotalPageCount() {

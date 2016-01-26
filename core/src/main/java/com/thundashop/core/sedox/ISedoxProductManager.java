@@ -55,7 +55,7 @@ public interface ISedoxProductManager  {
     public SedoxSharedProduct getSharedProductById(String id) throws ErrorException;
     
     @Customer
-    public SedoxProduct createSedoxProduct(SedoxSharedProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId, String origin, String comment, String useCredit) throws ErrorException;
+    public SedoxProduct createSedoxProduct(SedoxSharedProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId, String origin, String comment, String useCredit, SedoxBinaryFileOptions options) throws ErrorException;
     
     @Customer
     public SedoxSharedProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException;

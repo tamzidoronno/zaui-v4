@@ -1,5 +1,9 @@
 <?
 /* @var $this ns_92e3b7d6_c3ac_463e_90ba_4f966613f8dd\SedoxFileUpload */
+
+$slaves = $this->getSlaves();
+
+    
 ?>
 <div class="fileuploadtitle boldFont">
     Select your original file
@@ -22,15 +26,51 @@
 </div>
 
 <div class="upload_row">
-    <div class="upload_row_col"><input type="text" id="upload_brand" placeholder="Brand (Ex: Audi, BMW)"></input></div>
-    <div class="upload_row_col"><input type="text" id="upload_model" placeholder="Model (Ex: A4, 320d)"></input></div>
-    <div class="upload_row_col"><input type="text" id="upload_enginesize" placeholder="Engine Size (Ex: 2.0 TDI)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_brand" required='true' placeholder="Brand (Ex: Audi, BMW)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_model" required='true' placeholder="Model (Ex: A4, 320d)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_enginesize" required='true' placeholder="Engine Size (Ex: 2.0 TDI)"></input></div>
 </div>
 
 <div class="upload_row">
-    <div class="upload_row_col"><input type="text" id="upload_power" placeholder="Power (Ex: 140 hp)"></input></div>
-    <div class="upload_row_col"><input type="text" id="upload_year" placeholder="Year (Ex: 2016)"></input></div>
-    <div class="upload_row_col"><input type="text" id="upload_tool" placeholder="Tool (Ex: CMD / Fieling / Powergate / Kess)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_power" required='true' placeholder="Power (Ex: 140 hp)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_year" required='true' placeholder="Year (Ex: 2016)"></input></div>
+    <div class="upload_row_col"><input type="text" id="upload_tool" required='true' placeholder="Tool (Ex: CMD / Fieling / Powergate / Kess)"></input></div>
+</div>
+
+<div class="upload_row">
+    <div class="upload_row_col">Special requests: </div>
+    <div class="upload_row_col_double">
+        <div class="squaredFour inline">
+            <input type="checkbox" value="None" id="squaredFour" name="sedox_checkbox_dpf"  />
+            <label for="squaredFour">  </label>
+            <div class='textlabel'>DPF</div>
+        </div>
+        <div class="squaredFour inline">
+            <input type="checkbox" value="None" id="squaredFour1" name="sedox_checkbox_egr"  />
+            <label for="squaredFour1">  </label>
+            <div class='textlabel'>EGR</div>
+        </div>
+        <div class="squaredFour inline">
+            <input type="checkbox" value="None" id="squaredFour2" name="sedox_checkbox_decat"  />
+            <label for="squaredFour2">  </label>
+            <div class='textlabel'>Decat</div>
+        </div>
+        <div class="squaredFour inline">
+            <input type="checkbox" value="None" id="squaredFour3" name="sedox_checkbox_vmax"  />
+            <label for="squaredFour3">  </label>
+            <div class='textlabel'>Vmax</div>
+        </div>
+        <div class="squaredFour inline">
+            <input type="checkbox" value="None" id="squaredFour4" name="sedox_checkbox_adblue"  />
+            <label for="squaredFour4">  </label>
+            <div class='textlabel'>AdBlue</div>
+        </div>
+        <div class="squaredFour inline">
+            <input type="checkbox" value="None" id="squaredFour5" name="sedox_checkbox_dtc"  />
+            <label for="squaredFour5">  </label>
+            <div class='textlabel'>DTC</div>
+        </div>
+    </div>
 </div>
 
 <div class="upload_row">
@@ -43,16 +83,41 @@
     <div class="upload_row_col upload_row_col_double"><input id="upload_reference" type="text" placeholder="License Plate"></input></div>
 </div>
 
-<!--<div class="upload_row">
-    <div class="upload_row_col">Are you Uploading the files for a Partner? </div>
-    <div class="upload_row_col upload_row_col_double"></div>
-</div>-->
+<?
+if (count($slaves)) {
+?>
+<div class="upload_row">
+    <div class="upload_row_col">Are you uploading the file for a partner?</div>
+    <div class="upload_row_col upload_row_col_double select_style">
+        <select id="partnerselect" name="partnerselect">
+            <option value=''>Myself</option>;
+            <?
+            foreach ($slaves as $slave) {
+                $user = $this->getApi()->getUserManager()->getUserById($slave->id);
+                echo "<option value='$user->id'>$user->fullName</option>";
+             } ?>
+        </select>
+    </div>
+</div>    
+<?    
+}
+?>
 
 <div class="upload_row">
     <div class="upload_row_col"></div>
     <div class="upload_row_col upload_row_col_double">
-        <input type="checkbox" id="upload_automatic" /> Is this an Automatic Gearbox?
-        <br/><input type="checkbox" id="upload_withdraw" /> Withdraw my credit account and send tuningfiles back to the email when ready?</div>
+        <div class="squaredFour">
+            <input type="checkbox" value="None" id="squaredFour6" name="sedox_upload_automatic"  />
+            <label for="squaredFour6">  </label>
+            <div class='textlabel'>Is This An Automatic Gearbox?</div>
+        </div>
+        
+        <div class="squaredFour">
+            <input type="checkbox" value="None" id="squaredFour7" name="sedox_upload_withdraw"  />
+            <label for="squaredFour7">  </label>
+            <div class='textlabel'>Withdraw My Credit Account and Send Tuningfile Back to Email when Ready?</div>
+        </div>
+    </div>
 </div>
 
 

@@ -27,6 +27,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -299,13 +300,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         List<User> result = collection.filterUsers(getSession().currentUser, allUsers);
         
-        Collections.sort(result, (User s1, User s2) ->{
+        
+        Comparator<User> comparator = new Comparator<User>() {
+            public int compare(User s1, User s2) {
             if (s1 == null || s1.fullName == null || s2 == null || s2.fullName == null) {
                 return 0;
             }
             return s1.fullName.compareTo(s2.fullName);
-        });
-        
+            }
+        };
+
+        Collections.sort(result, comparator); 
         
         return result;
     }

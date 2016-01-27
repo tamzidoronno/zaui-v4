@@ -22,7 +22,7 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     
     public function getSelectedDate() {
         /* @var $booking \core_pmsmanager_PmsBooking */
-        $booking = $this->booking;
+        $booking = $this->getBooking();
         if(sizeof($booking->rooms) > 0) {
             if($this->isStartDate()) {
                 return strtotime($booking->rooms[0]->date->start);
@@ -120,5 +120,13 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         $this->includefile("calendar");
         echo "</div>";
     }
+
+    public function getBooking() {
+        if(!$this->booking) {
+            $this->booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        }
+        return $this->booking;
+    }
+
 }
 ?>

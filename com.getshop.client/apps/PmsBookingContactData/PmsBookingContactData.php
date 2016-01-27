@@ -70,6 +70,12 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     }
     
 
+    public function changeUserToSubmitOn() {
+        $booking = $this->getCurrentBooking();
+        $booking->userId = $_POST['data']['userid'];
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+    }
+    
     /**
      * @param \core_bookingengine_data_RegistrationRulesField $value
      */

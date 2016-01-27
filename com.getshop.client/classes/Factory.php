@@ -224,6 +224,8 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/getshop.rotate.js");
         $this->addJavascriptFile("js/getshop.PagePicker.js");
         $this->addJavascriptFile("js/getshop.Settings.js");
+        $this->addJavascriptFile("js/chosen/chosen.jquery.min.js");
+        $this->addJavascriptFile("js/chosen/chosen.proto.min.js");
         if($this->isEditorMode()) {
             $this->addJavascriptFile("js/getshop.dndlayout.js");
         }
@@ -522,6 +524,7 @@ class Factory extends FactoryBase {
         $this->addCssFile("skin/default/skeletons.css");
         $this->addCssFile("skin/default/PagePicker.css");
         $this->addCssFile("skin/default/getshop.ImageEditor.css");
+        $this->addCssFile("js/chosen/chosen.min.css");
     
         
         $this->addCssToBody("cssfolder/".$this->getStore()->id."_css_".$this->startupCount.".css");

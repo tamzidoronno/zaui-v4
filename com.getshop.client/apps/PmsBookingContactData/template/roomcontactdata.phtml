@@ -14,6 +14,9 @@ foreach($config->data as $key => $value) {
         $this->printField($value);
     }
 }
+
+$booking = $this->getCurrentBooking();
+
 foreach($config->data as $key => $value) {
     /* @var $value core_bookingengine_data_RegistrationRulesField */
     if(!stristr($key, "company_") && !stristr($key, "user_") && !stristr($key, "field_")) {
@@ -28,7 +31,27 @@ if(!$completeText) {
 echo "<div class='chooseregform'>";
 echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_private'> ". $this->__w("Private person");
 echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_company'> ". $this->__w("Organisation");
+if($this->isEditorMode()) {
+    echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registered_user'> ". $this->__w("Registered customer");
+}
 echo "</div>";
+
+if($this->isEditorMode()) {
+    echo "<div class='registered_user regforminput'>";
+    echo "<br>";
+    echo "<select class='selectregisterduser' style='width:100%;'>";
+    $users = $this->getApi()->getUserManager()->getAllUsers();
+    foreach($users as $user) {
+        $SELECTED = "";
+        if($booking->userId == $user->id) {
+            $SELECTED = "SELECTED";
+        }
+        echo "<option value='".$user->id."' $SELECTED>" . $user->fullName . "</option>";
+    }
+    echo "</select>";
+    echo "<br><br>";
+    echo "</div>";
+}
 
 echo "<div class='registration_private regforminput'>";
 $this->counter = 0;

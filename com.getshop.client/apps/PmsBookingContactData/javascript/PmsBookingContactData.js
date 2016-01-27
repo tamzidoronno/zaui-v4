@@ -13,11 +13,19 @@ app.PmsBookingContactData = {
         $(document).on('change', '.PmsBookingContactData .bookingregistrationform input', app.PmsBookingContactData.saveForm);
         $(document).on('change', '.PmsBookingContactData .bookingregistrationform select', app.PmsBookingContactData.saveForm);
         $(document).on('change', '.PmsBookingContactData .bookingregistrationform textarea', app.PmsBookingContactData.saveForm);
+        $(document).on('change', '.PmsBookingContactData .selectregisterduser', app.PmsBookingContactData.changeUserToRegisterOn);
         
         $(document).on('keyup', '.PmsBookingContactData [gsname="visitor_name_1"]', function() { $('[gsname="user_fullName"]').val($(this).val());  });
         $(document).on('keyup', '.PmsBookingContactData [gsname="visitor_phone_1"]', function() { $('[gsname="user_cellPhone"]').val($(this).val());  });
         $(document).on('keyup', '.PmsBookingContactData [gsname="visitor_email_1"]', function() { $('[gsname="user_emailAddress"]').val($(this).val());  });
     },
+    changeUserToRegisterOn : function() {
+        var data = {
+            userid : $(this).val()
+        }
+        thundashop.Ajax.simplePost($(this), 'changeUserToSubmitOn', data);
+    },
+    
     saveForm : function() {
         var form = $('.bookingregistrationform');
 
@@ -75,6 +83,9 @@ app.PmsBookingContactData = {
         $('.regforminput').hide();
         $('.whenTypeIsSelected').show();
         $('.'+type).fadeIn();
+        if(type === "registered_user") {
+            $('.selectregisterduser').chosen();
+        }
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});

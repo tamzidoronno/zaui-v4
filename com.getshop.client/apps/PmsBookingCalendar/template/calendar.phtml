@@ -9,12 +9,16 @@ $number = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 if(!$this->getConfigurationSetting("date_type")) {
     echo "Warning no date type set yet.. configure it";
 }
+$marginRight = "";
+if($this->isEditorMode()) {
+    $marginRight = "style='margin-right: 20px;'";
+}
 ?>
 
 <div class='calendar_header'>
     <i class='fa fa-arrow-left'></i>
     <? echo $month . "/" . $year; ?>
-    <i class='fa fa-arrow-right'></i>
+    <i class='fa fa-arrow-right' <? echo $marginRight; ?>></i>
 </div>
 <?php
 for($i = 1;$i <= $number; $i++) {

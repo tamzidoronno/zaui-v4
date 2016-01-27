@@ -1,6 +1,6 @@
 app.SedoxFileUpload = {
     init: function() {
-        $(document).on('change', '#sedox_file_upload_selector', app.SedoxFileUpload.fileSelected);
+        $(document).on('change', '.SedoxFileUpload #sedox_file_upload_selector', app.SedoxFileUpload.fileSelected);
         $(document).on('click', '.SedoxFileUpload .select_new_file', app.SedoxFileUpload.showModal);
         $(document).on('click', '.SedoxFileUpload .closebutton', app.SedoxFileUpload.closeModal);
         
@@ -49,6 +49,7 @@ app.SedoxFileUpload = {
             upload_withdraw : $('#upload_withdraw').val(),
             upload_automatic : $('input[name="sedox_upload_automatic"]').is(':checked'),
             upload_widthdraw : $('input[name="sedox_upload_withdraw"]').is(':checked'),
+            upload_remaptype : $('#remaptype').val(),
             
             // New
             upload_dpf : $('input[name="sedox_checkbox_dpf"]').is(':checked'),

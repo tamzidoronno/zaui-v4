@@ -1,194 +1,115 @@
 app.SedoxAdmin = {
+    
     init: function() {
-        $(document).on('click', '.SedoxAdmin .sedox_admin_topmenu .entry', app.SedoxAdmin.topMenuClicked);
-        $(document).on('change', '.SedoxAdmin #searchfield', app.SedoxAdmin.searchUsers);
-        $(document).on('click', '.SedoxAdmin .userentrysearch', app.SedoxAdmin.showUserInformation);
-        $(document).on('click', '.showUserInformationSedox', app.SedoxAdmin.showUserInformation);
-        $(document).on('click', '.SedoxAdmin .savecredit', app.SedoxAdmin.updateUserCredit);
-        $(document).on('click', '.SedoxAdmin .savedevelopers', app.SedoxAdmin.saveDevelopers);
-        $(document).on('click', '.SedoxAdmin .saveusersettings', app.SedoxAdmin.saveUserSettings);
-        $(document).on('change', '.SedoxAdmin #slavesearchtextfield', app.SedoxAdmin.searchForSlavesToAdd);
-        $(document).on('change', '.SedoxAdmin .extraincometext', app.SedoxAdmin.addCreditForSlave);
-        $(document).on('click', '.SedoxAdmin .addusertomaster', app.SedoxAdmin.addUserToMaster);
-        $(document).on('click', '.SedoxAdmin i.removeuser', app.SedoxAdmin.removeUserFromMaster);
-        $(document).on('click', '.SedoxAdmin .showuser', app.SedoxAdmin.changeToUser);
-        $(document).on('change', '.SedoxAdmin #togglepassiveslave', app.SedoxAdmin.togglePassiveChanged);
+        $(document).on('change', '.SedoxAdmin #sedox_file_upload_selector', app.SedoxAdmin.fileSelected);
+        $(document).on('click', '.SedoxAdmin .closebutton', app.SedoxAdmin.closeModal);
+        $(document).on('click', '.SedoxAdmin .sedox_admin_upload_file', app.SedoxAdmin.showModal);
+        $(document).on('click', '.SedoxAdmin .filetype', app.SedoxAdmin.fileTypeSelected);
+        
+        
+        $(document).on('dragover', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleDragOver);
+        $(document).on('dragleave', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleDragOut);
+        $(document).on('drop', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleFileSelect);
     },
-            
-    togglePassiveChanged: function() {
-        var masterId = $(this).closest('.useroverview').attr('userid');
-
+    
+    fileTypeSelected: function() {
         var data = {
-            isPassiveSlave : $(this).is(":checked"),
-            userId : masterId
+            productid : app.SedoxAdmin.currentProductId,
+            type : $(this).attr('type')
         }
         
-        var event = thundashop.Ajax.createEvent("", "toggleSlave", this, data);
-
-        thundashop.Ajax.postWithCallBack(event, function(result) {
-            thundashop.common.Alert("Success", "Saved");
-        });
+        thundashop.Ajax.simplePost(this, "finalizeFileUpload", data);        
     },
-            
-    changeToUser: function() {
-        var userId = $(this).attr('userid');
-        app.SedoxAdmin.updateInfoBox(userId);
+    
+    handleDragOut: function(jevt) {
+        $('.sedox_dropovereffect').removeClass('sedox_dropovereffect');
     },
-            
-    addCreditForSlave: function() {
-        var slaveId = $(this).attr('userid');
-      
-        var data = {
-            amount: $(this).val(),
-            slave: slaveId
-        };
-
-        var event = thundashop.Ajax.createEvent("", "addCreditToSlave", this, data);
-
-        thundashop.Ajax.postWithCallBack(event, function(result) {
-            thundashop.common.Alert("Success", "Saved");
-            app.SedoxAdmin.updateInfoBox(masterId);
-        }, true);
+    
+    handleDragOver: function(jevt) {
+        var evt = jevt.originalEvent;
+        evt.stopPropagation();
+        evt.preventDefault();
+        evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        $(this).addClass('sedox_dropovereffect');
     },
-            
-    removeUserFromMaster: function() {
-        var masterId = $(this).closest('.useroverview').attr('userid');
-        var slaveId = $(this).attr('userid');
-      
-        var data = {
-            master: masterId,
-            slave: slaveId
-        };
-
-        var event = thundashop.Ajax.createEvent("", "removeSlaveToMaster", this, data);
-
-        thundashop.Ajax.postWithCallBack(event, function(result) {
-            app.SedoxAdmin.updateInfoBox(masterId);
-        });
-    },
-            
-    addUserToMaster: function() { 
-        var masterId = $(this).closest('.useroverview').attr('userid');
-        var slaveId = $(this).attr('userid');
+    
+    handleFileSelect: function(jevt) {
+        var files = jevt.originalEvent.dataTransfer.files;
+        jevt.preventDefault();
+        jevt.stopPropagation();
         
-        var data = {
-            master: masterId,
-            slave: slaveId
+        app.SedoxAdmin.showUploadProgress(files[0]);
+    },
+    
+    showModal: function() {
+        app.SedoxAdmin.currentProductId = $(this).attr('productid');
+        $('.SedoxAdmin .uploadfilemodal .progressbararea').hide();
+        $('.SedoxAdmin .uploadfilemodal .selectarea').show();
+        $('.SedoxAdmin .uploadfilemodal').fadeIn();
+    },
+    
+    closeModal: function(response) {
+        var content = $(response.content).find('.file_selector_area');
+        $(document).find('.file_selector_area').replaceWith(content);
+        $('.SedoxAdmin .uploadfilemodal').fadeOut();
+    },
+    
+    fileSelected: function() {    
+        app.SedoxAdmin.showUploadProgress(this.files[0]);
+    },
+    
+    showUploadProgress: function(file) {
+        $('.SedoxAdmin .uploadfilemodal .progressbararea').show();
+        $('.SedoxAdmin .uploadfilemodal .progressbararea .meter').show();
+        $('.SedoxAdmin .uploadfilemodal .progressbararea .selectarea').hide();
+        $('.SedoxAdmin .uploadfilemodal .selectarea').hide();
+        app.SedoxAdmin.handleDragOut();
+        
+        var fileName = file.name;
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+            var dataUri = event.target.result;
+
+            var data = {
+                fileBase64: dataUri,
+                fileName: fileName
+            };
+
+            var event = thundashop.Ajax.createEvent(null, "uploadFile", $('#sedox_file_upload_selector'), data);
+            
+            thundashop.Ajax.post(
+                    event,
+                    app.SedoxAdmin.fileUploaded,
+                    null,
+                    true,
+                    true,
+                    {
+                        "uploadcallback": app.SedoxAdmin.setProgress
+                    });
         };
 
-        var event = thundashop.Ajax.createEvent("", "addSlaveToMaster", this, data);
+        reader.onerror = function(event) {
+            console.error("File could not be read! Code " + event.target.error.code);
+        };
 
-        thundashop.Ajax.postWithCallBack(event, function(result) {
-            app.SedoxAdmin.updateInfoBox(masterId);
-        });
+        reader.readAsDataURL(file);
     },
-            
-    searchForSlavesToAdd: function() {
-        var data = {
-            text : $('.SedoxAdmin #slavesearchtextfield').val()
+    
+    setProgress: function(progess) {
+        if (progess) {
+            progess = progess.toFixed(2);
         }
         
-        var event = thundashop.Ajax.createEvent("", "searchForSlaves", $('.SedoxAdmin'), data);
-        
-        thundashop.Ajax.postWithCallBack(event, function(result) {
-            $('.SedoxAdmin .add_slave_result').html(result);
-        });
+        $('.SedoxAdmin .meter span').css('width', progess+"%");
+        $('.SedoxAdmin .meter .progresindicator').html(progess+"%");
     },
-    saveUserSettings: function() {
-        var userId = $(this).attr('userId');
-        
-        var data = {
-            userId : userId,
-            allowNegativeCredit : $('.SedoxAdmin #allownegativecredit').is(':checked'),
-            allowWindowsApplication : $('.SedoxAdmin #allowwindowsapp').is(':checked'),
-            isNorwegian : $('.SedoxAdmin #norwegiancustomer').is(':checked')
-        };
-        
-        var event = thundashop.Ajax.createEvent("", "saveUserInfo", this, data);
-        
-        thundashop.Ajax.post(event, function() {
-            thundashop.common.Alert("Success", "Saved");
-        });
-    },
-    saveDevelopers: function() {
-        ids = [];
-        $('.sedoxsettings input:checked').each(function() {
-            var id = $(this).attr('id');
-            ids.push(id);
-        });
-        
-        var data = {
-            activeDevelopers : ids
-        };
-        
-        var event = thundashop.Ajax.createEvent("", "toggleDevelopers", this, data);
-        
-        thundashop.Ajax.post(event, function() {
-            thundashop.common.Alert("Success", "Saved");
-        });
-    },
-    updateUserCredit: function() {
-        var userId = $(this).attr('userId');
-        var data = {
-            userId : userId,
-            desc : $('.SedoxAdmin #sedox_credit_description').val(),
-            amount : $('.SedoxAdmin #amount').val()
-        }
-        
-        var event = thundashop.Ajax.createEvent("", "updateCredit", this, data);
-        thundashop.Ajax.postWithCallBack(event, function() {
-            thundashop.common.Alert("Succes", "Credit updated");
-            $('.SedoxAdmin #sedox_credit_description').val("");
-            $('.SedoxAdmin #amount').val("");
-            app.SedoxAdmin.updateInfoBox(userId);
-        })
-    },
-            
-    updateInfoBox: function(userId) {
-        var data = {
-            userId: userId
-        }
-        
-        var event = thundashop.Ajax.createEvent("", "showUserInformation", $('.SedoxAdmin'), data);
-        thundashop.common.showInformationBox(event, "User information");
-    },
-            
-    showUserInformation: function() {
-        app.SedoxAdmin.updateInfoBox($(this).attr('userId'));
-    },
-    searchUsers: function() {
-        var data = {
-            searchString : $(this).val()
-        };
-        
-        var event = thundashop.Ajax.createEvent("", "searchForUsers", this, data);
-        thundashop.Ajax.post(event);
-    },
-    loadSettings: function(element, application) {
-        var config = {
-            draggable: true,
-            app: true,
-            application: application,
-            title: "Settings",
-            items: []
-        }
-
-        var toolbox = new GetShopToolbox(config, application);
-        toolbox.show();
-        toolbox.attachToElement(application, 2);
-    },
-            
-    topMenuClicked: function() {
-        var changeTo = $(this).attr('changeto');
-        var menu = $(this).parent().attr('menu');
-        var data = { 
-            menu : menu,
-            changeTo : changeTo
-        };
-        
-        var event = thundashop.Ajax.createEvent(null, "changeToSubMenu", this, data);
-        thundashop.Ajax.post(event);
+    
+    fileUploaded: function() {
+        $('.SedoxAdmin .uploadfilemodal .progressbararea .meter').hide();
+        $('.SedoxAdmin .uploadfilemodal .progressbararea .selectarea').show();
     }
-};
+}
 
 app.SedoxAdmin.init();
+

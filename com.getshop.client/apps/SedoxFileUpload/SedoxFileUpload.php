@@ -50,7 +50,7 @@ class SedoxFileUpload extends \MarketingApplication implements \Application {
         $sedoxProduct->year = $_POST['data']['upload_year'];
         $sedoxProduct->tool = $_POST['data']['upload_tool'];
         $sedoxProduct->gearType = $geartype;
-
+        
         $options = new \core_sedox_SedoxBinaryFileOptions();
         $options->requested_adblue = $_POST['data']['upload_adblue'] == "true";
         $options->requested_decat = $_POST['data']['upload_decat'] == "true";
@@ -58,6 +58,7 @@ class SedoxFileUpload extends \MarketingApplication implements \Application {
         $options->requested_dtc = $_POST['data']['upload_dtc'] == "true";
         $options->requested_egr = $_POST['data']['upload_egr'] == "true";
         $options->requested_vmax = $_POST['data']['upload_vmax'] == "true";
+        $options->requested_remaptype = $_POST['data']['upload_remaptype'];
         
         $savedProduct = $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave, "webpage", $_POST['data']['upload_comment'], $useCredit, $options);
         if (isset($_POST['data']['upload_reference']) && $_POST['data']['upload_reference'] != "") {

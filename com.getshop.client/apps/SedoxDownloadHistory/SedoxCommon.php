@@ -98,4 +98,21 @@ class SedoxCommon extends \MarketingApplication {
         
         return "";
     }
+    
+    private function sessionNameFileSelected($productId) {
+        return $this->getAppInstanceId()."_fileselected_".$productId;
+    }
+    
+    public function fileSelected() {
+        $productId = $_POST['data']['productId'];
+        $_SESSION[$this->sessionNameFileSelected($productId)] = $_POST['data']['fileId'];
+    }
+    
+    public function isSelected($productId, $fileId) {
+        if (!isset($_SESSION[$this->sessionNameFileSelected($productId)])) {
+            return false;
+        }
+        
+        return $_SESSION[$this->sessionNameFileSelected($productId)] == $fileId;
+    }
 }

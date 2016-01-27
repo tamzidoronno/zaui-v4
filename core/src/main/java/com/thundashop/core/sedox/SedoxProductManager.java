@@ -9,9 +9,11 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.DummySmsFactory;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MailFactoryImpl;
 import com.thundashop.core.messagemanager.SMSFactory;
+import com.thundashop.core.messagemanager.SMSFactoryImpl;
 import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.UserManager;
@@ -87,7 +89,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
 //    @Autowired
 //    @Qualifier("SmsFactoryClickatell")
-    public SMSFactory smsFactory;
+    public SMSFactory smsFactory = new DummySmsFactory();
     
     @Autowired
     public UserManager userManager;
@@ -1038,7 +1040,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, sharedProduct.getName(), content, fileMap, true);
         product.states.put("sendProductByMail", new Date());
 
-        if (getshopUser.cellPhone != null && !getshopUser.cellPhone.equals("")) {
+        if (getshopUser.cellPhone != null && !getshopUser.cellPhone.equals("") && smsFactory != null) {
             smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
             product.addSmsSentToCustomer(getSession().id, getshopUser);
         }
@@ -1681,8 +1683,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public int getFileNotProcessedToDayCount() throws ErrorException {
-        List<SedoxProduct> productsToday = getProductsByDaysBack(0);
+    public int getFileNotProcessedToDayCount(int daysBack) throws ErrorException {
+        List<SedoxProduct> productsToday = getProductsByDaysBack(daysBack);
         int count = 0;
         for (SedoxProduct product : productsToday) {
             if (product.isFinished || product.states.containsKey("sendProductByMail"))

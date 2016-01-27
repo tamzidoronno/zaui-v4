@@ -1,0 +1,105 @@
+<?
+/* @var $this ns_1475891a_3154_49f9_a2b4_ed10bfdda1fc\SedoxAdmin */
+$daysBack = $this->getCurrentPage()-1;
+$inQueue = $this->getApi()->getSedoxProductManager()->getFileNotProcessedToDayCount($daysBack);
+$files = $this->getApi()->getSedoxProductManager()->getProductsByDaysBack($daysBack);
+$totalCount = count($files);
+$finished = $totalCount - $inQueue;
+$developers = $this->getApi()->getSedoxProductManager()->getDevelopers();
+$activeDevelopers = 0;
+
+$date = date("Y-m-d", time() - (86400*$daysBack));
+
+foreach ($developers as $dev) {
+    if ($dev->isActiveDelevoper)
+        $activeDevelopers++;
+}
+?>
+
+<div class='SedoxAdminStatistic'>
+    <div class='statcol'>
+        Date
+        <div><? echo $date; ?></div>
+    </div>
+    <div class='statcol'>
+        Files
+        <div><? echo $totalCount; ?></div>
+    </div>
+    <div class='statcol'>
+        Files in queue 
+        <div><? echo $inQueue; ?></div>
+    </div>
+    <div class='statcol'>
+        Files finished
+        <div><? echo $finished; ?></div>
+    </div>
+    <div class='statcol'>
+        Developers
+        <div><? echo $activeDevelopers; ?></div>
+    </div>
+</div>
+
+<div class="SedoxDownloadHistory">
+    <div class="header">
+        <div class="col_header col1" sortby="sedoxcredithist_sedoxid">Sedox ID <div class="sorter <? echo $this->getSorting() == 'sedoxcredithist_sedoxid' ? "active" : "";?> "></div></div>
+        <div class="col_header col2" sortby="sedoxcredithist_date">Date <div class="sorter <? echo $this->getSorting() == 'sedoxcredithist_date' ? "active" : "";?> "></div></div>
+        <div class="col_header col3" sortby="sedoxcredithist_name">File <div class="sorter <? echo $this->getSorting() == 'sedoxcredithist_name' ? "active" : "";?> "></div></div>
+        <div class="col_header col4">Name</div>
+        <div class="col_header col5">Credits</div>
+    </div>
+
+    <div class="tablecontent">
+        <?
+        foreach ($files as $file) {
+            $time = $this->formatJavaDateToTime($file->rowCreatedDate);
+            $date = date("d M Y", $time);
+            $user = $this->getApi()->getUserManager()->getUserById($file->firstUploadedByUserId);
+            $sedoxUserAccount = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($file->firstUploadedByUserId);
+            $balance = $sedoxUserAccount->creditAccount->balance;
+            $seeUserButton = "<div class='sedoxadmin_see_user_button'><i class='fa fa-search'></i></div>";
+            
+            
+            $status = "";
+            if (!$file->started) {
+                
+                $status = "<div class='current_status_line'><div class='start_button' gsclick='markProductAsStarted' productid='$file->id'>START</div></div>";
+            } else {
+                $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
+                $status = "<div class='current_status_line'><b>Started by</b>: $startedByUser->fullName <div gsclick='markProductAsStarted' productid='$file->id' class='stop_button'><i class='fa fa-stop-circle'></i></div></div>";
+            }
+            
+            if (array_key_exists("notifyForCustomer", $file->states) || $sedoxProduct->isFinished ) {
+                $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
+                $finishedByName = $startedByUser ? $startedByUser->fullName : "N/A";
+                $status = "<div class='current_status_line'><b>Notified by</b>: $finishedByName <div class='finished_marker yellow'><i class='fa fa-comment'></i></div></div>";
+            }
+            
+            if (array_key_exists("sendProductByMail", $file->states) || $sedoxProduct->isFinished ) {
+                $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
+                $finishedByName = $startedByUser ? $startedByUser->fullName : "N/A";
+                $status = "<div class='current_status_line'><b>Finished by</b>: $finishedByName <div class='finished_marker'><i class='fa fa-check'></i></div></div>";
+            }
+            
+            echo "<div class='col_row_content' productid='$file->id'>";
+                echo "<div class='col_row_content_inner'>";
+                    echo "<div class='col_content col1'>$file->id</div>";
+                    echo "<div class='col_content col2'>$date</div>";
+                    echo "<div class='col_content col3'>$file->printableName</div>";
+                    echo "<div class='col_content col4'> $seeUserButton $user->fullName</div>";
+                    echo "<div class='col_content col5'>$balance</div>";
+                    echo "<div class='admin_extrainfo_row'>";
+                    echo "<b>Requested:</b> ".$this->getRequestedString($file);
+                    echo $status;
+                    echo "</div>";
+                echo "</div>";
+                $this->setCurrentProduct($file);
+                $this->includefile("productview");
+            echo "</div>";
+        }
+        ?>
+    </div>
+</div>
+
+<script>
+    getshop.SedoxDatabankTheme.setAll();
+</script>

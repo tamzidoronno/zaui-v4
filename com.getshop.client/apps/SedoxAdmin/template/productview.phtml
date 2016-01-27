@@ -1,0 +1,152 @@
+<?
+/* @var $this ns_1475891a_3154_49f9_a2b4_ed10bfdda1fc\SedoxAdmin */
+/* @var $product core_sedox_SedoxProduct */
+$product = $this->getCurrentProduct();
+$productName = $product->printableName;
+
+if (!function_exists("sedox_notAvailableCheck")) {
+    function sedox_notAvailableCheck($input) {
+        if (!$input) {
+            return "N/A";
+        }
+
+        return $input;
+    }
+}
+$expaned = $this->isExpanded($product->id) ? "expanded" : "";
+
+?>
+<div class="sedox_internal_view <? echo $expaned; ?>" productid='<? echo $product->id; ?>'>
+    <div class="innerview">
+        <div class='title boldFont'>
+            <i class='fa fa-file'></i> <? echo $productName; ?>
+            <div class='product_comment'><b> Comment: </b><? echo !$product->comment ? "N/A" : $product->comment; ?></div>
+        </div>
+        <div class='downloadinfo'>
+            <div class='box_header boldFont'>
+                Download Information
+            </div>
+            <div class='box_content'>
+                <?
+                echo "<select class='fileselector'>";
+                foreach ($product->binaryFiles as $binFile) {
+                    $checksumCorrect = $binFile->checksumCorrected ? "Yes" : "No";
+                    $extraInfo = sedox_notAvailableCheck($binFile->extraInformation);
+                    $selected = $this->isSelected($product->id, $binFile->id) ? "selected='true'" : "";
+                    echo "<option $selected checksumupdated='$checksumCorrect' extrainfo='N/A' admintools='N/A' value='$binFile->id'>" . $binFile->fileType . "</option>";
+                }
+                echo "</select>";
+                ?>
+
+                <div class='row_type1'>
+                    Checksum updated:
+                    <div class='row_subinfo' lookingfor="checksumupdated">-</div>
+                </div>
+
+                <div class='row_type1'>
+                    Extra information:
+                    <div class='row_subinfo' lookingfor="extrainfo">-</div>
+                </div>
+
+                <div class='row_type1'>
+                    Price:
+                    <div class='row_subinfo' lookingfor="admintools"></div>
+                </div>
+
+                
+                <div class='sedox_file_actions'>
+                    <div class='smallbutton'><i class='fa fa-download'></i></div>
+                    <div class='smallbutton'><i class='fa fa-info-circle'></i></div>
+                    <div class='trash_button smallbutton' gsclick="deleteFile" sedox_file_id="" productid="<? echo $product->id; ?>"><i class='fa fa-trash'></i></div>
+                </div>
+                <div class='priceview'>
+                    <div class='sedox_blue_button sedox_admin_upload_file' productid='<? echo $product->id; ?>'>UPLOAD FILE</div>
+                </div>
+            </div>
+        </div>
+
+        <div class='fileinfo'>
+            <div class='box_header boldFont'>
+                Project Details
+                <div class='subinfo'>
+                    Created: <? echo $product->rowCreatedDate; ?>
+                </div>
+            </div>
+
+            <div class='box_content'>
+                <div class='row_type2'>
+                    Orig. Checksum:
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($product->originalChecksum); ?></div>
+                </div>
+
+                <div class='row_type2'>
+                    Reference:
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck(@$product->reference->{ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id}); ?></div>
+                </div>
+
+                <div class='row_type2'>
+                    ECU Brand / Type:
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($product->ecuBrand); ?></div>
+                </div>
+
+                <div class='row_type2'>
+                    ECU Part No.:
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($product->ecuPartNumber); ?></div>
+                </div>
+
+                <div class='row_type2'>
+                    ECU Hardware No.:
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($product->ecuHardwareNumber); ?></div>
+                </div>
+
+                <div class='row_type2'>
+                    ECU Software No.:
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($product->ecuSoftwareNumber); ?></div>
+                </div>
+
+                <div class='row_type2'>
+                    ECU Version:
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($product->ecuSoftwareVersion); ?></div>
+                </div>
+
+                <div class='row_type2'>
+                    File Size:
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($product->softwareSize); ?></div>
+                </div>
+
+                <div class='row_type2'>
+                    Tool:
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($product->tool); ?></div>
+                </div>
+            </div>            
+        </div>    
+        
+        
+        <?
+        $class1 = array_key_exists("purchaseOnlyForCustomer", $product->states) ? "redbutton" : "";
+        $class2 = array_key_exists("notifyForCustomer", $product->states) ? "redbutton" : "";
+        $class3 = array_key_exists("sendProductByMail", $product->states) ? "redbutton" : "";
+
+        ?>
+        <div class='creditinformation'>
+            <div class='product_action_button <? echo $class1; ?>'>
+                <div gsclick='purchaseProductOnly' gsclick="purchaseOrder" sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner'>Purchase Order Only</div>
+            </div>
+            <div class='product_action_button <? echo $class2; ?>' gsclick="notifyByEmail" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Notify by Email / SMS</div></div>
+            <div class='product_action_button <? echo $class3; ?>' gsclick="sendFileByMail" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Send product by email</div></div>
+            
+            <?
+            if ($product->saleAble) {
+            ?>
+                <div class='product_action_button'><div gsclick="toggleProductSalable" productid="<? echo $product->id; ?>" class='action_inner'>Make NOT saleable</div></div>
+            <?
+            } else {
+            ?>
+                <div class='product_action_button redbutton'><div gsclick="toggleProductSalable" productid="<? echo $product->id; ?>" class='action_inner'>Make saleable</div></div>
+            <?
+            }
+            ?>
+         </div>
+    </div>
+    
+</div>

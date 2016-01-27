@@ -116,6 +116,17 @@ public class AddApplicationsToDatabase {
         SedoxFileUpload.defaultActivate = false;
         apps.add(SedoxFileUpload);
 
+        Application SedoxAdmin = createSettings("SedoxAdmin",
+        "1475891a-3154-49f9-a2b4-ed10bfdda1fc",
+        allowed2,
+        " ",
+        Application.Type.Marketing, true);
+        SedoxAdmin.isPublic = true;
+        SedoxAdmin.isFrontend = true;
+        SedoxAdmin.moduleId = "sedox";
+        SedoxAdmin.defaultActivate = false;
+        apps.add(SedoxAdmin);
+
         
         Application AutotekTheme = createSettings("AutotekTheme",
         "ca8104cd-92ac-4826-8bf0-09609a48f294",

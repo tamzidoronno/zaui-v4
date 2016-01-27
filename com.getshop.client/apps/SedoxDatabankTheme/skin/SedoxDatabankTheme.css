@@ -42,6 +42,7 @@ body {
 
 .gsarea[area="footer"] {
     background-color: black;
+    height: 0px;
 }
 
 .boldFont {
@@ -213,11 +214,20 @@ body {
     margin-right: 10px;
 }
 
+.sedox_internal_view .title .product_comment {
+    padding-top: 20px;
+    font-weight: normal;
+}
+
 .sedox_internal_view {
     display: none;
     position: relative;
     border-top: solid 4px #3ead0d;
     border-bottom: solid 4px #3ead0d;
+}
+
+.sedox_internal_view.expanded {
+    display: block;
 }
 
 .sedox_internal_view .fileinfo,

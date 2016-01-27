@@ -1,91 +1,372 @@
-.SedoxAdmin .sedox_admin_topmenu {
-    border-bottom: solid 1px #DDD;
+
+.SedoxAdminStatistic {
+    font-size: 0px;
+    padding: 20px;
+    
 }
 
-.SedoxAdmin .sedox_admin_topmenu .entry {
-    line-height: 25px;
+.SedoxAdminStatistic .statcol {
+    font-size: 19px;
     display: inline-block;
-    padding-right: 9px;
-    padding-left: 9px;
-    border-right: solid 1px #DDD;
-    font-size: 16px;
-    color: #666;
-    background: linear-gradient(to bottom, #EEE, #DDD);
-    cursor: pointer;
+    width: 20%;
 }
 
-.SedoxAdmin .sedox_admin_topmenu .entry:hover {
-    background: linear-gradient(to bottom, #DDD, #CCC);
+.SedoxAdminStatistic .statcol div {
+    font-size: 28px;
 }
 
-.SedoxAdmin .sedox_admin_subarea {
-    margin-top: 10px;
+.SedoxAdminStatistic .statcol:nth-child(1)  {
+    color: #83cee4;
+}
+.SedoxAdminStatistic .statcol:nth-child(2)  {
+    color: #404b60;
+}
+
+.SedoxAdminStatistic .statcol:nth-child(3)  {
+    color: #b7001f;
+}
+
+.SedoxAdminStatistic .statcol:nth-child(4)  {
+    color: #4eb61e;
+}
+
+.SedoxAdminStatistic .statcol:nth-child(5)  {
+    color: #404b60;
+}
+
+.SedoxAdmin .header .col_header.col5,
+.SedoxAdmin .tablecontent .col_content.col5 {
+    width: 100px;
+}
+
+.SedoxAdmin .header .col_header.col3,
+.SedoxAdmin .tablecontent .col_content.col3 {
+    width: calc(100% - 600px) !important;  
+}
+
+.SedoxAdmin .sedoxadmin_see_user_button {
+    width: 30px;
+    height: 30px;
     border: solid 1px #DDD;
-    padding: 20px;
+    
+    display: inline-block;
+    text-align: center;
+    margin-top: 5px;
+    padding-top: 0px;
+    line-height: 30px;
+    margin-right: 10px;
+    border-radius: 3px;
+    color: #666;
 }
 
-.SedoxAdmin .title {
+.SedoxAdmin .admin_extrainfo_row {
     font-size: 16px;
-    margin-bottom: 20px;
+    padding: 12px;
+    background-color: #FAFAFA;
+    border-bottom: solid 2px #DDD;
 }
 
-.SedoxAdmin .invoicelist .col {
+.SedoxAdmin .current_status_line {
     display: inline-block;
+    float: right;
+}
+
+.SedoxAdmin .current_status_line .finished_marker, 
+.SedoxAdmin .current_status_line .stop_button, 
+.SedoxAdmin .current_status_line .start_button {
+    background-color: #4eb61e;
+    color: #FFF;
+    font-size: 13px;
     padding: 5px;
-}
-
-.SedoxAdmin .invoicelist .col1 { width: 100px;}
-.SedoxAdmin .invoicelist .col2 { width: 600px;}
-
-.SedoxAdmin .invoicelist .balancerow.norwegian  {
-    background-color: #00aed7;
-}
-.SedoxAdmin .invoicelist .balancerow  {
-    border-bottom: solid 1px #EEE;
-}
-
-.sedox_admin_topmenu.bottom {
-    margin-top: 20px;
-}
-
-.SedoxAdmin .listview .filelistrow {
-    border-bottom: solid 1px #EEE;
-    line-height: 25px;
-}
-
-.SedoxAdmin .listview .filelistrow:hover {
-    background-color: #EEE;
-} 
-.SedoxAdmin .listview .filelistrow .col {
-    display: inline-block;
-}
-
-.SedoxAdmin .listview .filelistrow .col1 { width: 60px; }
-.SedoxAdmin .listview .filelistrow .col2 { width: 450px; }
-.SedoxAdmin .listview .filelistrow .col3 { width: 200px; }
-.SedoxAdmin .listview .filelistrow .col4 { width: 150px; }
-
-.SedoxAdmin .listview .filelistrow .col5 .Start { color: red; }
-.SedoxAdmin .listview .filelistrow .col5 .Stop { color: green; }
-
-.SedoxAdmin .result {
-    margin-top: 20px;
-}
-.SedoxAdmin .userentrysearch {
-    background-color: #DDD;
-    padding: 3px;
+    font-weight: bold;
+    border-radius: 3px;
+    padding-right: 30px;
+    padding-left: 30px;
+    margin-left: 20px;
     cursor: pointer;
 }
-.SedoxAdmin .userentrysearch:nth-child(2) {
-    background-color: #EEE;
+
+.SedoxAdmin .current_status_line .stop_button {
+    background-color: #b7001f;
+    display: inline-block;
+    font-size: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
-.SedoxAdmin .useroverview {
+
+.SedoxAdmin .current_status_line .finished_marker {
+    background-color: #4eb61e;
+    display: inline-block;
+    font-size: 18px;
+    
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 2px;
+    padding-bottom: 4px;
+}
+
+.SedoxAdmin .current_status_line .finished_marker.yellow {
+    background-color: #e7ea07;
+}
+
+.SedoxAdmin .creditinformation  {
+    font-size: 0px !important;
+}
+.SedoxAdmin .creditinformation .product_action_button {
+    display: inline-block;
+    width: 25%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 10px;
+}
+
+.SedoxAdmin .creditinformation .product_action_button .action_inner {
+    font-size: 14px;
     color: #FFF;
-    font-size: 16px;
-    padding: 20px;
+    background-color: #4eb61e;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.SedoxAdmin .creditinformation .product_action_button.redbutton .action_inner {
+    background-color: #b7001f;
+}
+
+.SedoxAdmin .product_action_button {
+    cursor: pointer;
 }
 
 
-.SedoxAdmin .slaveslist .col1 { width: 800px;}
-.SedoxAdmin .showuser { color: blue; cursor: pointer;}
 
+.SedoxAdmin .uploadfilemodal {
+    position: fixed;
+    background: rgba(0,0,0,0.6);
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    display: none;
+    z-index: 1;
+}
+
+.SedoxAdmin .uploadfilemodal .modal_inner {
+    position: fixed;
+    width: 600px;
+    
+    background-color: #FFF;
+    left: 50%;
+    margin-left: -300px;
+    top: 25%;
+/*    margin-top: -calc(100%/2);*/
+    border-radius: 10px;
+    box-shadow: 0px 0px 50px rgba(0,0,0,0.5);
+    
+}
+
+.SedoxAdmin .uploadfilemodal .closebutton {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    color: #DADADA;
+}
+
+.SedoxAdmin .uploadfilemodal .modalcontent {
+    position: relative;
+}
+
+.SedoxAdmin .uploadfilemodal  {
+    font-size: 15px;
+}
+
+.SedoxAdmin .uploadfilemodal .selectFileButton {
+    margin-top: 20px;
+    line-height: 30px;
+    width: 80px;
+    display: inline-block;
+}
+
+.SedoxAdmin .uploadfilemodal .headertitle {
+    line-height: 50px;
+    padding-left: 40px;
+    border-bottom: solid 1px #EEE;
+    font-size: 18px;
+}
+
+.SedoxAdmin .dragdropfilesareas {
+    margin: 40px;
+    border-radius: 10px;
+    border: dashed 2px #DDD;
+    text-align: center;
+    padding: 30px;
+}
+
+.SedoxAdmin .dragdropfilesareas i {
+    font-size: 100px;
+    display: block;
+}
+
+
+.SedoxAdmin .uploadfile {
+    width: 80px;
+    line-height: 40px;
+    position: absolute;
+    right: 20px;
+    bottom: 0px;
+}
+
+.SedoxAdmin .fileuploadaction {
+    padding: 20px;
+    padding-left: 40px;   
+}
+
+
+.SedoxAdmin .fileBrowse {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+
+.SedoxAdmin .fileBrowse input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.SedoxAdmin .progressbararea .progressheader {
+    border-bottom: solid 1px #DDD;
+    padding: 15px;
+    font-weight: bold;
+}
+
+.SedoxAdmin .progressbararea .sedox_upload_filename {
+    font-style: italic;
+    font-weight: normal;
+}
+
+.SedoxAdmin .progressbararea .meter { 
+    height: 30px;  /* Can be anything */
+    position: relative;
+    background: #555;
+    -moz-border-radius: 25px;
+    -webkit-border-radius: 25px;
+    border-radius: 25px;
+    box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+    margin: 30px;
+}
+
+.SedoxAdmin .progressbararea .meter > span {
+    display: block;
+    height: 100%;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background-color: rgb(43,194,83);
+    background-image: linear-gradient(
+      center bottom,
+      rgb(43,194,83) 37%,
+      rgb(84,240,84) 69%
+    );
+    box-shadow: 
+      inset 0 2px 9px  rgba(255,255,255,0.3),
+      inset 0 -2px 6px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.SedoxAdmin .progressbararea .meter > span:after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background-image: linear-gradient(
+      -45deg, 
+      rgba(255, 255, 255, .2) 25%, 
+      transparent 25%, 
+      transparent 50%, 
+      rgba(255, 255, 255, .2) 50%, 
+      rgba(255, 255, 255, .2) 75%, 
+      transparent 75%, 
+      transparent
+    );
+    z-index: 1;
+    background-size: 50px 50px;
+    animation: move 2s linear infinite;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    overflow: hidden;
+}
+
+.SedoxAdmin .progressbararea .meter .progresindicator {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    color: #FFF;
+    font-size: 20px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.SedoxAdmin .sedox_dropovereffect {
+    border: dashed 5px #DDD;
+}
+
+.SedoxAdmin .progressbararea .selectfiletypearea {
+    text-align: center;
+    padding: 30px;
+}
+
+.SedoxAdmin .progressbararea .selectfiletypearea .filetype {
+    border: solid 1px #DDD;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px; 
+    display: inline-block;
+    cursor: pointer;
+}
+
+.SedoxAdmin .progressbararea .selectfiletypearea .filetype:hover {
+    background-color: #40c1e1;
+    color: #FFF;
+}
+
+.SedoxAdmin .sedox_file_actions {
+    height: 100px;
+    font-size: 15px;
+}
+
+.SedoxAdmin .smallbutton {
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+    
+    padding: 5px;
+    border-radius: 5px;
+    border: solid 1px #DDD;
+    width: 25px;
+    line-height: 25px;
+    text-align: center;
+    margin-top: 20px;
+    cursor: pointer;
+    color: #333;
+    
+    display: inline-block;
+}
+
+.SedoxAdmin .sedox_file_actions .trash_button {
+    
+    float: right;
+}

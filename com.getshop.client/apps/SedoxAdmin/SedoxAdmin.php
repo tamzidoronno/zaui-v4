@@ -1,192 +1,116 @@
 <?php
+namespace ns_1475891a_3154_49f9_a2b4_ed10bfdda1fc;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-namespace ns_e22e25dd_8000_471c_89a3_6927d932165e;
-
-class SedoxAdmin extends \ApplicationBase implements \Application {
-    
+class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon implements \Application {
     public function getDescription() {
-        return "Sedox Admin";
+        
     }
 
     public function getName() {
-        return "Sedox Admin";
+        return "SedoxAdmin";
     }
 
     public function render() {
-        $this->doHandlingOfStartStopAction();
-        $this->includefile("topmenu");        
-        echo "<div class='sedox_admin_subarea'>";
-        if ($this->isDailyView())
-            $this->includefile("daily");
-        
-        if ($this->isInvoiceListView())
-            $this->includefile("invoicelist");
-        
-        if ($this->isSettingsView())
-            $this->includefile("settings");
-        
-        if ($this->isUserSettings())
-            $this->includefile("usersettings");
-        
-        echo "</div>";
+        $this->includefile("uploadmodal");
+        $this->includefile("sedoxadminlist");
     }
+    
+    public function getFilesToProcess() {
+        
+    }
+    
+    public function getTotalPages() {
+        return 10;
+    }
+    
+    public function uploadFile() {
+        $seperator = ";base64,";
+        $index = strrpos($_POST['data']['fileBase64'], $seperator)+  strlen($seperator);
+        $base64 = substr($_POST['data']['fileBase64'], $index);
 
-    public function doHandlingOfStartStopAction() {
-        if (isset($_GET['action'])) {
-            $action = $_GET['action'];
-            $productId = $_GET['file'];
-            $this->getApi()->getSedoxProductManager()->toggleStartStop($productId, $action == "Start");
-        }
-    }
-
-    public function getAccountsWithNegativeCreditValue() {
-        return $this->getApi()->getSedoxProductManager()->getAllUsersWithNegativeCreditLimit();
+        $_SESSION['SEDOX_FILE_ADMIN_UPLOADED'] = $base64;
+        $_SESSION['SEDOX_FILE_ADMIN_UPLOADED_FILENAME'] = $_POST['data']['fileName'];
     }
     
-    public function changeToSubMenu() {
-        if ($_POST['data']['menu'] == "main") {
-            $_SESSION['sedox_admin_subpage'] = $_POST['data']['changeTo'];
-        }
+    public function deleteFile() {
+        $this->getApi()->getSedoxProductManager()->removeBinaryFileFromProduct($_POST['data']['productid'], $_POST['data']['sedox_file_id']);
+        $_POST['data']['productId'] = $_POST['data']['productid'];
+        $_POST['data']['fileId'] = "";
+        $this->fileSelected();
+    }
+    
+    public function purchaseProductOnly() {
         
-        if ($_POST['data']['menu'] == "daylist") {
-            $_SESSION['sedox_days_back'] = $_POST['data']['changeTo'];
-        }
-        
-        if ($_POST['data']['menu'] == "usersettings") {
-            $_SESSION['sedox_admin_subpage'] = $_POST['data']['changeTo'];
+    }
+    
+    public function finalizeFileUpload() {
+        $base64 = $_SESSION['SEDOX_FILE_ADMIN_UPLOADED'];
+        $filename = $_SESSION['SEDOX_FILE_ADMIN_UPLOADED_FILENAME'];
+        $this->getApi()->getSedoxProductManager()->addFileToProduct($base64, $filename, $_POST['data']['type'], $_POST['data']['productid']);
+    }
+    
+    public function markRowAsExpanded() {
+        if (isset($_SESSION['sedox_admin_row_expanded']) && $_SESSION['sedox_admin_row_expanded'] == $_POST['data']['productid']) {
+            unset($_SESSION['sedox_admin_row_expanded']);
+        } else {
+            $_SESSION['sedox_admin_row_expanded'] = $_POST['data']['productid'];
         }
     }
     
-    public function getDayList() {
-        $daysBack = isset($_SESSION['sedox_days_back']) ? $_SESSION['sedox_days_back'] : 0;
-        $sedoxProducts = $this->getApi()->getSedoxProductManager()->getProductsByDaysBack($daysBack);
-        return $sedoxProducts;
-    }
-    
-    public function isDailyView() {
-        if (!isset($_SESSION['sedox_admin_subpage'])) {
+    public function isExpanded($productId) {
+        if (isset($_SESSION['sedox_admin_row_expanded']) && $_SESSION['sedox_admin_row_expanded'] == $productId) {
             return true;
         }
         
-        return $_SESSION['sedox_admin_subpage'] == "daily";
+        return false;
     }
     
-    public function isUserSettings() {
-        return isset($_SESSION['sedox_admin_subpage']) && $_SESSION['sedox_admin_subpage'] == "usersettings";
+    public function toggleProductSalable() {
+        $product = $this->getApi()->getSedoxProductManager()->getProductById($_POST['data']['productid']);
+        $this->getApi()->getSedoxProductManager()->toggleSaleableProduct($product->id, !$product->saleAble);
     }
     
-    public function isSettingsView() {
-        if (!isset($_SESSION['sedox_admin_subpage'])) {
-            return false;
-        }
-        
-        return $_SESSION['sedox_admin_subpage'] == "settings";
+    public function markProductAsStarted() {
+        $product = $this->getApi()->getSedoxProductManager()->getProductById($_POST['data']['productid']);
+        $this->getApi()->getSedoxProductManager()->toggleStartStop($product->id, !$product->started);
     }
     
-    public function searchForUsers() {
-        $_SESSION['sedox_admin_searchString'] = $_POST['data']['searchString'];
+    public function sendFileByMail() {
+        $files = [$_POST['data']['sedox_file_id']];
+        $this->getApi()->getSedoxProductManager()->sendProductByMail($_POST['data']['productid'], "", $files);
     }
     
-    public function getSearchUsers() {
-        if (!isset($_SESSION['sedox_admin_searchString'])) {
-            return array();
-        }
-        
-        return $this->getApi()->getSedoxProductManager()->searchForUsers($_SESSION['sedox_admin_searchString']);
+    public function notifyByEmail() {
+        $files = [$_POST['data']['sedox_file_id']];
+        $this->getApi()->getSedoxProductManager()->notifyForCustomer($_POST['data']['productid'], "");
     }
     
-    public function isInvoiceListView() {
-        if (!isset($_SESSION['sedox_admin_subpage'])) {
-            return false;
-        }
-        
-        return $_SESSION['sedox_admin_subpage'] == "invoicelist";
+    public function purchaseOrder() {
+        $files = [$_POST['data']['sedox_file_id']];
+        $this->getApi()->getSedoxProductManager()->purchaseOnlyForCustomer($_POST['data']['productid'], $files);
     }
-    
-    public function showUserInformation() {
-        $this->includefile("userinfo");
-    }
-    
-    public function saveUserInfo() {
-        $this->getApi()->getSedoxProductManager()->toggleIsNorwegian($_POST['data']['userId'], $_POST['data']['isNorwegian']);
-        $this->getApi()->getSedoxProductManager()->toggleAllowNegativeCredit($_POST['data']['userId'], $_POST['data']['allowNegativeCredit']);
-        $this->getApi()->getSedoxProductManager()->toggleAllowWindowsApp($_POST['data']['userId'], $_POST['data']['allowWindowsApplication']);
-    }
-    
-    public function updateCredit() {
-        $id = $_POST['data']['userId'];
-        $desc = $_POST['data']['desc'];
-        $amount = $_POST['data']['amount'];
-        $this->getApi()->getSedoxProductManager()->addUserCredit($id, $desc, $amount);
-    }
-    
-    public function toggleDevelopers() {
-        $sedoxProductManager = $this->getApi()->getSedoxProductManager();
-        
-        if (isset($_POST['data']['activeDevelopers'])) {
-            $activeDevelopers = $_POST['data']['activeDevelopers'];
-        } else {
-            $activeDevelopers = array();
-        }
-        
-        $developers = $sedoxProductManager->getDevelopers();
-        foreach ($developers as $developer) {
-            $devId = $developer->id;
-            $active = in_array($devId, $activeDevelopers);
-            $sedoxProductManager->changeDeveloperStatus($devId, $active);
-        }
-    }
-    
-    public function addCreditToSlave() {
-        $this->getApi()->getSedoxProductManager()->addCreditToSlave($_POST['data']['slave'], $_POST['data']['amount']);
-    }
-    
-    public function searchForSlaves() {
-        $results = $this->getApi()->getSedoxProductManager()->searchForUsers($_POST['data']['text']);
-        if (!count($results)) {
-            echo "No result found";
-            return;
-        }
-        foreach ($results as $user) {
-            $name = $user->fullName;
-            $email = $user->emailAddress;
-            $id = $user->id;
-            $add = "<div userid='$id' class='gs_button addusertomaster'> Add </div>";
-            echo "<div  style='border-bottom: solid 1px #555; padding-bottom: 5px; margin-bottom: 5px;'>$add $name - $email</div>";
-        }
-    }
-    
-    public function addSlaveToMaster() {
-        $this->getApi()->getSedoxProductManager()->addSlaveToUser($_POST['data']['master'], $_POST['data']['slave']);
-    }
-    
-    public function removeSlaveToMaster() {
-        $this->getApi()->getSedoxProductManager()->addSlaveToUser(null, $_POST['data']['slave']);
-    }
-    
-    public function toggleSlave() {
-        $userId = $_POST['data']['userId'];
-        $toggle = $_POST['data']['isPassiveSlave'];
-        $this->getApi()->getSedoxProductManager()->togglePassiveSlaveMode($userId, $toggle);
-    }
-    
-    public function getFullName($sedoxProduct) {
-        $user = $this->getApi()->getUserManager()->getUserById($sedoxProduct->firstUploadedByUserId);
-        if ($user != null) {
-            return $user->fullName;
-        }
-        return "";
-    }
-    
-    public function getCreditBalance($sedoxProduct) {
-        $account = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($sedoxProduct->firstUploadedByUserId);
-        return $account->creditAccount->balance;
-    }
-}
 
+    /**
+     * 
+     * @param \core_sedox_SedoxProduct $product
+     */
+    public function getRequestedString($product) {
+        if (count($product->binaryFiles) < 1) {
+            return $product->remapType;
+        }
+        
+        $options = $product->binaryFiles[0]->options;
+        
+        $requests = ucwords($options->requested_remaptype)." -";
+        $requests .= $options->requested_adblue == "1" ? " AD Blue" : "";
+        $requests .= $options->requested_decat == "1" ? " Decat" : "";
+        $requests .= $options->requested_dpf == "1" ? " DPF" : "";
+        $requests .= $options->requested_dtc == "1" ? " DTC" : "";
+        $requests .= $options->requested_egr == "1" ? " EGR" : "";
+        $requests .= $options->requested_vmax == "1" ? " Vmax" : "";
+        
+        return $requests;
+    }
+
+}
 ?>

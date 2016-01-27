@@ -27,6 +27,12 @@ attribute gstypes;
         example: <input type='checkbox' gstype="clicksubmitforce" method="renameEntry" gsname="id" gsvalue="somevalue">
         example submits on enter: <input gstype="clicksubmit" method="renameEntry" gsname="id" gsvalue="somevalue">
        
+    gsclick (posts all attributes),
+        example: <div gsclick="appFunctionName" attr1="1" attr2="2" ....>whatever</div>
+        example: <span gsclick="appFunctionName" attr1="1" attr2="2" ....>whatever</span> (works on all tags)
+        
+        special silent, does not update or show loader (silent execute):
+        example: <div gsclick="appFunctionName" attr1="1" attr2="2" .... gssilent="true">whatever</div>
 
 attribute output:
     standard / not set: The default output.

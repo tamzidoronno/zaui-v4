@@ -20,13 +20,13 @@ import java.util.List;
 public interface ISedoxProductManager  {
     public SedoxProductSearchPage search(SedoxSearch search);
     
-    @Administrator
+    @Editor
     public void sync(String option) throws ErrorException;
     
     @Customer
     public SedoxUser getSedoxUserAccount() throws ErrorException;
     
-    @Administrator
+    @Editor
     public SedoxUser getSedoxUserAccountById(String userid) throws ErrorException;
     
     @Customer
@@ -35,7 +35,7 @@ public interface ISedoxProductManager  {
     @Customer
     public int getProductsFirstUploadedByCurrentUserTotalPages(FilterData filterData);
     
-    @Administrator
+    @Editor
     public List<SedoxUser> getAllUsersWithNegativeCreditLimit() throws ErrorException;
     
     /**
@@ -47,7 +47,7 @@ public interface ISedoxProductManager  {
      * @return
      * @throws ErrorException 
      */
-    @Administrator
+    @Editor
     public List<SedoxProduct> getProductsByDaysBack(int day) throws ErrorException;
     
     public SedoxProduct getProductById(String id) throws ErrorException;
@@ -63,37 +63,37 @@ public interface ISedoxProductManager  {
     @Customer
     public void requestSpecialFile(String productId, String comment) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void addFileToProduct(String base64EncodedFile, String fileName, String fileType, String productId) throws ErrorException;
     
     @Customer
     public String purchaseProduct(String productId, List<Integer> files) throws ErrorException;
     
-    @Administrator
+    @Editor
     public SedoxOrder purchaseOnlyForCustomer(String productId, List<Integer> files) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void notifyForCustomer(String productId, String extraText) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void sendProductByMail(String productId, String extraText, List<Integer> files) throws ErrorException;
     
-    @Administrator
+    @Editor
     public List<User> searchForUsers(String searchString) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void addUserCredit(String id, String description, int amount) throws ErrorException;
     
     public User login(String emailAddress, String password) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void setChecksum(String productId, String checksum) throws ErrorException;
     
     /**
      * This will disable/enable the developer. Useful if a developer goes on vacation
      * or needs an hour sleep.
      */
-    @Administrator
+    @Editor
     public void changeDeveloperStatus(String userId, boolean disabled) throws ErrorException;
     
     /**
@@ -104,45 +104,45 @@ public interface ISedoxProductManager  {
      * @return
      * @throws ErrorException 
      */
-    @Administrator
+    @Editor
     public List<SedoxUser> getDevelopers() throws ErrorException;
     
-    @Administrator
+    @Editor
     public void removeBinaryFileFromProduct(String productId, int fileId) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void toggleAllowNegativeCredit(String userId, boolean allow) throws ErrorException;
 
-    @Administrator
+    @Editor
     public void toggleAllowWindowsApp(String userId, boolean allow) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void addSlaveToUser(String masterUserId, String slaveUserId) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void addCreditToSlave(String slaveId, double amount) throws ErrorException;
     
     public List<SedoxUser> getSlaves(String masterUserId);
     
-    @Administrator
+    @Editor
     public void togglePassiveSlaveMode(String userId, boolean toggle) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void toggleStartStop(String productId, boolean toggle) throws ErrorException;
     
-    @Administrator
+    @Editor
     public String getExtraInformationForFile(String productId, int fileId) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void setExtraInformationForFile(String productId, int fileId, String text) throws ErrorException;
  
-    @Administrator
+    @Editor
     public void toggleSaleableProduct(String productId, boolean saleable) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void toggleIsNorwegian(String userId, boolean isNorwegian) throws ErrorException;
 	
-    @Administrator
+    @Editor
     public void toggleBadCustomer(String userId, boolean badCustomer) throws ErrorException;
 	
     public List<SedoxProduct> getLatestProductsList(int count) throws ErrorException;
@@ -153,21 +153,21 @@ public interface ISedoxProductManager  {
     @Customer
     public void transferCreditToSlave(String slaveId, double amount) throws ErrorException;
     
-    @Administrator
+    @Editor
     public List<SedoxProductStatistic> getStatistic();
     
-    @Administrator
+    @Editor
     public void setFixedPrice(String userId, String price) throws ErrorException;
     
     public List<String> getProductIds() throws ErrorException;
     
-    @Administrator
+    @Editor
     public void syncFromMagento(String userId) throws ErrorException;
     
     public Double getPriceForProduct(String productId, List<Integer> files) throws ErrorException;
     
     @Editor
-    public int getFileNotProcessedToDayCount() throws ErrorException;
+    public int getFileNotProcessedToDayCount(int daysBack) throws ErrorException;
     
     @Editor
     public void markAsFinished(String productId, boolean finished) throws ErrorException;

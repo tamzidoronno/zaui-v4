@@ -1,4 +1,6 @@
 getshop.SedoxDatabankTheme = {
+    dontUpdate: false,
+    
     resize : function () {
 //        debugger;
 //        $('.left_bar_1').css("min-height", "1000px");
@@ -17,10 +19,27 @@ getshop.SedoxDatabankTheme = {
                 parent.find('[lookingfor="'+name+'"]').html(value);
             });     
         });
+        
+        getshop.SedoxDatabankTheme.setSedoxFileIdAttrs($(this).find(":selected").val(), $(this).closest('.sedox_internal_view'));
+        if (!getshop.SedoxDatabankTheme.dontUpdate) {
+            var event = thundashop.Ajax.createEvent(null, "fileSelected", this, { 
+                fileId: $(this).find(":selected").val(),
+                productId: $(this).closest('.sedox_internal_view').attr('productid')
+            });
+            thundashop.Ajax.post(event, null, null, true, true);
+        }
+    },
+    
+    setSedoxFileIdAttrs: function(fileId, productcontainer) {
+        $(productcontainer).find('*[sedox_file_id]').each(function() {
+            $(this).attr('sedox_file_id', fileId);
+        })
     },
     
     setAll: function() {
+        getshop.SedoxDatabankTheme.dontUpdate = true;
         $('.fileselector').trigger("change");      
+        getshop.SedoxDatabankTheme.dontUpdate = false;
     }
 }
 

@@ -27,7 +27,32 @@ thundashop.handleAjaxError = function(error, textstatus, status, content) {
 };
 
 thundashop.Ajax = {
+    
+    init: function() {
+        $(document).on('click','*[gsclick]', thundashop.Ajax.postgeneral);
+    },
+    
+    postgeneral: function() {
+        var method = $(this).attr('gsclick');
+        var data = {};
+        
+        $.each(this.attributes, function(i, attrib) {
+            var name = attrib.name;
+            var value = attrib.value;
+            data[name] = value;
+        });
+        
+        var event = thundashop.Ajax.createEvent(null, method, this, data);
+        
+        if ($(this).attr('gssilent') == "true") {
+            thundashop.Ajax.post(event, null, true, true, true);
+        } else {
+            thundashop.Ajax.simplePost(this, method, data);
+        }   
+    },
+    
     ajaxFile: 'handler.php',
+    
     showErrorMessage: function(message) {
         $("#errorbox").show();
         $("#errorbox").html("<div class='errorform'><div class='close'></div>" + message + "</div>");
@@ -270,3 +295,7 @@ thundashop.Ajax = {
         })
     }
 }
+
+
+
+thundashop.Ajax.init();

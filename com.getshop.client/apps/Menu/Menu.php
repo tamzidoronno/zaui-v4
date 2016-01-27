@@ -70,6 +70,7 @@ class Menu extends \SystemApplication implements \Application {
             $entryItem->scrollPageId = $item->scrollPageId;
             $entryItem->items = $this->createItems($item->subentries);
             $entryItem->disabledLangues = $item->disabledLangues;
+            $entryItem->hidden = $item->hidden;
             $retItems[] = $entryItem;
         }
 
@@ -91,9 +92,10 @@ class Menu extends \SystemApplication implements \Application {
         }
         
         $entry->name = $item['name'];
-        $entry->hardLink = $item['link'];
-        $entry->scrollPageId = $item['scrollPageId'];
-        $entry->scrollAnchor = $item['scrollAnchor'];
+        @$entry->hardLink = $item['link'];
+        @$entry->scrollPageId = $item['scrollPageId'];
+        @$entry->scrollAnchor = $item['scrollAnchor'];
+        @$entry->hidden = $item['hidden'] == "true";
         
         if (isset($item['userLevel'])) {
             $entry->userLevel = $item['userLevel'];
@@ -113,7 +115,6 @@ class Menu extends \SystemApplication implements \Application {
         if (!isset($item['disabledLangues'])) {
             $entry->disabledLangues = [];
         } else {
-            echo "SET";
             $entry->disabledLangues = $item['disabledLangues'];
         }
         
@@ -266,6 +267,7 @@ class EntryItem {
     public $userLevel;
     public $items;
     public $disabledLangues;
+    public $hidden = false;
 }
 
 class EntryList {

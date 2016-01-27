@@ -69,7 +69,6 @@ app.PmsBookingContactData = {
     },    
     
     searchPostalCode : function() {
-       alert('test'); 
     },
     choseRegType : function() {
         var type = $(this).val();

@@ -24,7 +24,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         if($this->bookingCompleted) {
             ?>
             <script>
-                document.location.href="/completed_<? echo $this->getSelectedName(); ?>.html";
+                document.location.href="/?page=booking_completed_<? echo $this->getSelectedName(); ?>";
             </script>
             <?
         } else {

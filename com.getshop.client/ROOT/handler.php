@@ -26,6 +26,11 @@ class handler {
     public function route(Factory $factory) {
         $id = $_POST['core']['appid'];
         $application = $factory->getApplicationPool()->getApplicationInstance($id);
+        if(!$application) {
+            $app = $factory->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($id);
+            $application = $factory->getApplicationPool()->createAppInstance($app);
+            return;
+        }
         $application->$_POST['event']();
     }
 

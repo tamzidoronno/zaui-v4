@@ -5,8 +5,19 @@ app.PmsCalendar = {
         $(document).on('mouseover', '.PmsCalendar .available', app.PmsCalendar.mouseoverfield);
         $(document).on('mousedown', '.PmsCalendar .available', app.PmsCalendar.selectField);
         $(document).on('mousedown', '.PmsCalendar .continue_button', app.PmsCalendar.continueToForm);
+        $(document).on('click', '.PmsCalendar .loadbookingonclick', app.PmsCalendar.loadBookingId);
         $(document).on('mouseup', app.PmsCalendar.mouseup);
     },
+    loadBookingId : function() {
+        var data = {
+            "bookingid" : $(this).attr('bookingid')
+        }
+        
+        var event = thundashop.Ajax.createEvent('','showBookingInformation','03e05cd4-7658-49c2-be04-d55e8d4fdbea',data);
+        event.core.appname = "PmsManagement";
+        thundashop.common.showInformationBoxNew(event,'Configuration');
+    },
+    
     selectField : function() {
         $('.selected_periode').removeClass('selected_periode');
         $(this).closest('.timecontainer').addClass('selected_row');

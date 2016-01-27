@@ -83,17 +83,21 @@ foreach($bookings as $booking) {
         echo "<td style='width:70px;'>";
         echo "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."'></i> ";
         echo "</td>";
-        echo "<td>";
-        echo date("d.m.Y", strtotime($booking->rowCreatedDate));
+        echo "<td style='width: 100px;'>";
+        echo date("d.m.Y H:i", strtotime($booking->rowCreatedDate));
         echo "</td>";
 
-        echo "<td style='width:120px;'>";
+        echo "<td style='width:170px;'>";
         echo date("d.m.Y H:i", strtotime($room->date->start));
         if($room->date->end) {
-            echo "<br>";
             //Dont show end date if this is a atleast 75 years booking
             if(((strtotime($room->date->end) - strtotime($room->date->start)) /86400) < 20000) {
-                echo date("d.m.Y H:i", strtotime($room->date->end));
+                if(date("dmy", strtotime($room->date->end)) !=  date("dmy", strtotime($room->date->start))) {
+                    echo "<br>";
+                    echo date("d.m.Y H:i", strtotime($room->date->end));
+                } else {
+                    echo " - " . date("H:i", strtotime($room->date->end));
+                }
             }
         }
         echo "</td>";

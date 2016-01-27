@@ -10,6 +10,7 @@ getshop.MenuEditor = {
         $(document).on('keyup', ".Menu .titleinformation #itemlink", getshop.MenuEditor.itemLinkChanged);
         $(document).on('keyup', ".Menu .titleinformation #scrollAnchor", getshop.MenuEditor.scrollAnchorChanged);
         $(document).on('keyup', ".Menu .titleinformation #scrollPageId", getshop.MenuEditor.scrollPageIdChanged);
+        $(document).on('click', ".Menu .titleinformation #hideElement", getshop.MenuEditor.hideElementChanged);
         $(document).on('mouseenter', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.showSubEntries);
         $(document).on('mouseleave', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.hideSubEntries);
         $(document).on('click', ".Menu .save", getshop.MenuEditor.saveMenuEditor);
@@ -60,6 +61,9 @@ getshop.MenuEditor = {
     
     scrollAnchorChanged: function() {
         getshop.MenuEditor.activeItem.scrollAnchor = $(this).val();
+    },
+    hideElementChanged: function() {
+        getshop.MenuEditor.activeItem.hidden = $(this).is(':checked');
     },
     scrollPageIdChanged: function() {
         getshop.MenuEditor.activeItem.scrollPageId = $(this).val();
@@ -245,7 +249,10 @@ getshop.MenuEditor = {
             $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.pageId);    
             $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.link);    
             $('.titleinformation #scrollPageId').val(getshop.MenuEditor.activeItem.scrollPageId);    
-            $('.titleinformation #scrollAnchor').val(getshop.MenuEditor.activeItem.scrollAnchor);    
+            $('.titleinformation #hideElement').val('checked',false);
+            if(getshop.MenuEditor.activeItem.hidden) {
+                $('.titleinformation #hideElement').val('checked','checked');
+            }
             if (getshop.MenuEditor.activeItem.link) {
                 $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.link);
                 $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.link);

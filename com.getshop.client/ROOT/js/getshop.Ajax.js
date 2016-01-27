@@ -214,9 +214,13 @@ thundashop.Ajax = {
         retevent.scopeid = scopeid;
         retevent.data = data;
         retevent.core = {}
-        retevent.core.apparea = $(fromDomElement).closest('.applicationarea').attr('area');
-        retevent.core.appname = $(fromDomElement).closest('.app').attr('app');
-        retevent.core.appid = $(fromDomElement).closest('.app').attr('appid');
+        if(typeof(fromDomElement) === "string") {
+            retevent.core.appid = fromDomElement;
+        } else {
+            retevent.core.apparea = $(fromDomElement).closest('.applicationarea').attr('area');
+            retevent.core.appname = $(fromDomElement).closest('.app').attr('app');
+            retevent.core.appid = $(fromDomElement).closest('.app').attr('appid');
+        }
         return retevent;
     },
     updateFromResponse: function(response) {

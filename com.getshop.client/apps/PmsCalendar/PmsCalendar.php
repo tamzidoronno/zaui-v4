@@ -8,7 +8,8 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     private $isItemPage = false;
     private $bookingresultforday = array();
     private $currentTitle = "";
-
+    private $currentBooking = "";
+    
     public function getDescription() {
         return "Calendar view for displaying booked entries in a calendar.";
     }
@@ -90,11 +91,15 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             }
             
             $title = date("H:i", $startTime)." - ".date("H:i", $endTime);
+            $bookingId = "";
+            $loadBookingOnClick = "";
             if($this->isEditorMode() && $this->currentTitle) {
+                $loadBookingOnClick = "loadbookingonclick";
                 $title = $this->currentTitle;
+                $bookingId = $this->currentBooking;
             }
             
-            echo "<span class='outerblock $size' style='width: $width%'>";
+            echo "<span class='$loadBookingOnClick outerblock $size' style='width: $width%' bookingid='$bookingId'>";
             echo "<span class='timeblock $state' startTime='$startTime' "
                     . "endTime='$endTime' "
                     . "title='".$title."' "
@@ -350,13 +355,16 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                 }
                 
                 if($booking->confirmed) {
+                    $this->currentBooking = $booking->id;
                     return "occupied";
                 } else {
+                    $this->currentBooking = $booking->id;
                     return "notconfirmed";
                 }
             }
         }
         
+        $this->currentBooking = "";
         $this->currentTitle = "";
         
         return "available";

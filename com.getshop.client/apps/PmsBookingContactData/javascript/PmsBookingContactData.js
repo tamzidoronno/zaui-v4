@@ -84,6 +84,7 @@ app.PmsBookingContactData = {
         $('.whenTypeIsSelected').show();
         $('.'+type).fadeIn();
         if(type === "registered_user") {
+            app.PmsBookingContactData.saveForm();
             $('.selectregisterduser').chosen();
         }
     },

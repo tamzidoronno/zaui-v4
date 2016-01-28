@@ -20,6 +20,24 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         return $res;
     }
     
+    public function renderInBookingManagement($bookingId) {
+        $checked = "";
+        if($this->isAddedToList($bookingId)) {
+            $checked = "CHECKED";
+        }
+        echo "<h2>Event calendar</h2>";
+        echo "<input type='checkbox' $checked class='addToEventList' instanceid='".$this->getAppInstanceId()."' id='".$bookingId."'> Add this to the event calendar (ps: it automatically sends information to the booker about registering more information)";
+    }
+    
+    public function checkEntry() {
+        if($_POST['data']['checked'] == "true") {
+            $this->addEntry();
+            $this->getApi()->getPmsManager()->doNotification($this->getSelectedName(), "booking_eventcalendar", $_POST['data']['id'], null);
+        } else {
+            $this->removeEntry();
+        }
+    }
+    
     public function getName() {
         return "PmsEventCalendar";
     }
@@ -42,6 +60,17 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         $newEntry = new \core_listmanager_data_Entry();
         $newEntry->name = $_POST['data']['id'];
         $this->getApi()->getListManager()->addEntry($this->getListName(), $newEntry, "");
+    }
+    
+    public function isAddedToList($bookingId) {
+        $list = $this->getEventList();
+        
+        foreach($list as $l) {
+            if($l->name == $bookingId) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public function listBookings() {

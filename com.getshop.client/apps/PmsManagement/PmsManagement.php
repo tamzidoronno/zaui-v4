@@ -20,6 +20,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function includeEventCalendar($bookingId) {
+        $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("27e174dc-b08c-4bf7-8179-9ea8379c91da");
+        foreach($instances as $instance) {
+            if($instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
+                $app = $this->getFactory()->getApplicationPool()->createAppInstance($instance);
+                $app->renderInBookingManagement($bookingId);
+            }
+        }
+    }
+    
     public function addRoomToBooking() {
         $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));

@@ -85,6 +85,7 @@ class PmsBookingMessageFormatter {
         }
         
         message = message.replace("{rooms}", bookingData);
+        message = message.replace("{bookingid}", booking.id);
         
         return message;
     }

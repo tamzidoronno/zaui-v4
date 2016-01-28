@@ -5,6 +5,16 @@ $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this
 $factory = $this->getFactory();
 $langauge = $factory->getCurrentLanguage();
 
+$hasEventCalendar = false;
+$instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("27e174dc-b08c-4bf7-8179-9ea8379c91da");
+foreach($instances as $instance) {
+    if($instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
+        $hasEventCalendar = true;
+    }
+}
+
+$hasArx = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->arxHostname;
+
 $notifications = array();
 $notifications['room_starting_0_hours_'.$langauge] = "Booking is started.";
 $notifications['room_starting_4_hours_'.$langauge] = "Booking starting in 4 hours";
@@ -16,8 +26,13 @@ $notifications['booking_notconfirmed_'.$langauge] = "Booking has been rejected";
 $notifications['room_ended_0_hours_'.$langauge] = "Booking has ended.";
 $notifications['room_ended_24_hours_'.$langauge] = "Booking ended 1 day ago";
 $notifications['room_ended_48_hours_'.$langauge] = "Booking ended two days ago";
-$notifications['room_added_to_arx_'.$langauge] = "Room has been added to arx";
-$notifications['room_removed_from_arx_'.$langauge] = "Room has been removed from arx";
+if($hasArx) {
+    $notifications['room_added_to_arx_'.$langauge] = "Room has been added to arx";
+    $notifications['room_removed_from_arx_'.$langauge] = "Room has been removed from arx";
+}
+if($hasEventCalendar) {
+    $notifications['booking_eventcalendar_'.$langauge] = "Message to send to event helder in the event calendar";
+}
 $contractfield = "contract_$langauge";
 $defaultmessage = "defaultmessage_$langauge";
 
@@ -58,7 +73,8 @@ $whenToPay[4] = "After stay";
     {contact_phone},
     {contact_email},
     {personalMessage},
-    {roomlist}
+    {roomlist},
+    {bookingid}
 </div>
 
 <div gstype="form" method="saveNotifications">

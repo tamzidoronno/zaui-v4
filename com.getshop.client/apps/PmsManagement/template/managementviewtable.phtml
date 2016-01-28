@@ -7,7 +7,7 @@ $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelected
 $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
 
 $hasPrices = false;
-if($prices->defaultPriceType == 1 && !$prices->dailyPrices) {
+if(($prices->defaultPriceType == 1 && !$prices->dailyPrices) || $prices->defaultPriceType != 1) {
     $hasPrices = true;
 }
 foreach($items as $item) {

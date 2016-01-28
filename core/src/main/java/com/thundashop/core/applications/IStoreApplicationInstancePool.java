@@ -9,6 +9,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Settings;
+import java.util.List;
 
 /**
  *
@@ -24,4 +25,7 @@ public interface IStoreApplicationInstancePool {
 
     @Administrator
     public ApplicationInstance setApplicationSettings(Settings settings);
+    
+    @Administrator
+    public List<ApplicationInstance> getApplicationInstances(String applicationId);
 }

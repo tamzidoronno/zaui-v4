@@ -5,7 +5,10 @@ $categories[1] = "Kategori 1";
 $categories[2] = "Kategori 2";
 $categories[3] = "Kategori 3";
 $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_GET['eventid']);
-
+$starttime = $event->dateRanges[0]->start;
+if(!$event->starttime) {
+    $event->starttime = date("H:i", strtotime($starttime));
+}
 ?>
 <div class='eventconfig'>
     <div gstype='form' method='updateEventFields' class='eventeditform'>
@@ -17,6 +20,10 @@ $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(
         <label>
             <span class='text'><?echo $this->__w("Short description"); ?></span>
             <textarea type='text' style='height: 50px;' gsname='shortdesc'><?php echo $event->shortdesc; ?></textarea>
+        </label>
+        <label>
+            <span class='text'>Starttidspunkt for arrangementet</span>
+            <input type='text' gsname='starttime' value='<?php echo $event->starttime; ?>'>
         </label>
         <div class='imagecontainer'>
             <label>
@@ -53,10 +60,12 @@ $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(
         echo "Lenker som er lagt til:<br>";
         $i = 0;
         foreach($event->lenker as $link) {
+            echo "<div style='margin-bottom: 5px;'>";
             echo "<span gstype='form' method='removeLink'>";
             echo "<input type='hidden' value='".$_GET['eventid']."' gsname='eventid'>";
             echo "<input type='hidden' value='$i' gsname='index'>";
             echo "<i gstype='submit' method='removeLink' gsname='index' gsvalue='$i' class='fa fa-trash-o'></i></span> <a href='".$link->link."'>".$link->name . " (" . $link->link . ")". "</a>";
+            echo "</div>";
             $i++;
         }
         echo "<br>";

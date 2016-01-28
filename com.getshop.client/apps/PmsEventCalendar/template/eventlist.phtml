@@ -4,13 +4,21 @@ foreach($this->getEventList() as $entry) {
     $eventEntry = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $entry->name);
     $edit = "";
     if($this->isEditorMode()) {
-        $edit = "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><i class='fa fa-edit'></i></a> ";
+        $edit = "<a><i class='fa fa-trash-o'  gstype='clicksubmit' method='removeEntry' gsname='id' gsvalue='".$eventEntry->id."' ></i></a> ";
+        $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><i class='fa fa-edit'></i></a> ";
     }
     echo "<h2>" . $edit . $eventEntry->title  . "</h2>";
     echo $eventEntry->shortdesc . "<br>";
     
     $shortId = explode("-", $eventEntry->id);
-    
+    $ranges = array();
+    foreach($eventEntry->dateRanges as $range) {
+        $ranges[date("d.m.Y", strtotime($range->start))] = "true";
+    }
+    foreach($ranges as $idx => $range) {
+        echo $idx . "<br>";
+    }
+
     echo "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."' style='float:right;'>Les mer</a>";
     echo "<div style='clear:both;border-bottom: solid 1px #bbb;padding-top: 10px;'></div>";
 }

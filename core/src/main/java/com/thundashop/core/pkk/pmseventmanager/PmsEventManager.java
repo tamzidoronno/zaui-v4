@@ -2,12 +2,15 @@ package com.thundashop.core.pkk.pmseventmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmseventmanager.PmsBookingEventEntry;
 import com.thundashop.core.pmseventmanager.PmsEventFilter;
 import com.thundashop.core.pmsmanager.IPmsManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsManager;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +25,9 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
 
     @Autowired
     PmsManager pmsManager;
+
+    @Autowired
+    BookingEngine bookingEngine;
     
      @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -63,6 +69,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         entry.id = result.id;
         entry.title = result.registrationData.resultAdded.get("title");
         entry.shortdesc = result.registrationData.resultAdded.get("shortdesc");
+        setRooms(entry, result);
         entries.put(entry.id, entry);
         saveEntry(entry);
         return entry;
@@ -73,7 +80,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         if(entries.get(entryId) == null) {
             createEvent(entryId);
         }
-        return entries.get(entryId);
+        return finalize(entries.get(entryId));
     }
 
     @Override
@@ -84,6 +91,22 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
             }
         }
         return null;
+    }
+
+    private void setRooms(PmsBookingEventEntry entry, PmsBooking result) {
+        for(PmsBookingRooms room : result.rooms) {
+            if(bookingEngine.getBookingItemType(room.bookingItemTypeId).addon > 0) {
+                continue;
+            }
+            entry.dateRanges.add(room.date);
+            entry.roomNames.add(bookingEngine.getBookingItem(room.bookingItemId).bookingItemName);
+        }
+    }
+
+    private PmsBookingEventEntry finalize(PmsBookingEventEntry get) {
+        PmsBooking booking = pmsManager.getBooking(get.id);
+        setRooms(get, booking);
+        return get;
     }
     
 }

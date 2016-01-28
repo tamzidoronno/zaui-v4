@@ -16,7 +16,7 @@ $pmsManager = $this->getApi()->getPmsManager();
 $config = $pmsManager->getConfiguration($this->getSelectedName());
 
 $lang = $this->getFactory()->getCurrentLanguage();
-$default = $config->defaultMessage->{$lang};
+$default =  $pmsManager->getDefaultMessage($this->getSelectedName(), $bookingid);
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 foreach ($types as $idx => $type) {
     $types[$type->id] = $type;

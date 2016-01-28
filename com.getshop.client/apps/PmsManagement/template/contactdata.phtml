@@ -143,3 +143,6 @@ if(sizeof($booking->registrationData->contactsList) > 0) {
         <? } ?>
     </div>
 </div>
+<?php
+$this->includeEventCalendar($booking->id);
+?>

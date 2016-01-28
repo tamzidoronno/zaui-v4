@@ -105,4 +105,11 @@ public interface IPmsManager {
     
     @Administrator
     public String addBookingItem(String bookingId, String item, Date start, Date end);
+    
+    @Administrator
+    public String getDefaultMessage(String bookingId);
+    
+    @Administrator
+    public void doNotification(String key, String bookingId, String roomId);
+
 }

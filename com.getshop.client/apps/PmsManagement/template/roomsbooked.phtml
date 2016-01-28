@@ -47,12 +47,12 @@ $hasArx = false;
 if($config->arxHostname) {
     $hasArx = true;
 }
-$hasPrices = true;
+$hasPrices = false;
 
 $arr = (array)$prices->dailyPrices;
 
-if($prices->defaultPriceType == 1 && empty($arr)) {
-     $hasPrices = false;
+if(($prices->defaultPriceType == 1 && !empty($arr)) || $prices->defaultPriceType != 1) {
+     $hasPrices = true;
 }
 
 printRooms($toPrint, $types, $items, $booking->id, false, $hasPrices, $hasArx);
@@ -82,7 +82,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
 
     <?php
     foreach ($rooms as $room) {
-        echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
+//        echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
         /* @var $room core_pmsmanager_PmsBookingRooms */
         $date = $room->date;
         ?>

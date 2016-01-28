@@ -23,6 +23,7 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -781,6 +782,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void saveConfiguration(PmsConfiguration notifications) {
         this.configuration = notifications;
         saveObject(notifications);
+    }
+    
+    @Administrator
+    public void doNotification(String key, String bookingId, String roomId) {
+        PmsBooking booking = getBooking(bookingId);
+        doNotification(key, booking, null);
     }
     
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
@@ -1770,6 +1777,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         bookingToAdd.externalReference = room.pmsBookingRoomId;
         bookingToAdd.bookingItemId = room.bookingItemId;
         return bookingToAdd;
+    }
+
+    @Override
+    public String getDefaultMessage(String bookingId) {
+        PmsBooking booking = getBooking(bookingId);
+        String message = getConfiguration().defaultMessage.get(booking.language);
+        return formatMessage(message, booking, null, null);
     }
 
 }

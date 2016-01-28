@@ -7,6 +7,16 @@ app.PmsEventCalendar = {
         $(document).on('change', '.PmsEventCalendar .eventeditform input', app.PmsEventCalendar.updateFields);
         $(document).on('change', '.PmsEventCalendar .eventeditform select', app.PmsEventCalendar.updateFields);
         $(document).on('change', '.PmsEventCalendar .eventeditform textarea', app.PmsEventCalendar.updateFields);
+        $(document).on('change', '.PmsManagement .addToEventList', app.PmsEventCalendar.addToEventList);
+    },
+    addToEventList : function() {
+        var instanceid = $(this).attr('instanceid');
+        var data = {
+            id : $(this).attr('id'),
+            checked : $(this).is(":checked")
+        }
+        var event = thundashop.Ajax.createEvent('','checkEntry',instanceid, data);
+        thundashop.Ajax.postWithCallBack(event, function() {});
     },
     updateFields : function() {
         var form = $('.PmsEventCalendar .eventeditform');

@@ -14,6 +14,7 @@ import com.thundashop.core.common.Settings;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.PageManager;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,5 +152,16 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         }
         
         return secureClone;
+    }
+
+    @Override
+    public List<ApplicationInstance> getApplicationInstances(String applicationId) {
+        List<ApplicationInstance> result = new ArrayList();
+        for(ApplicationInstance app : applicationInstances.values()) {
+            if(app.appSettingsId.equals(applicationId)) {
+                result.add(checkSecurity(app));
+            }
+        }
+        return result;
     }
 }

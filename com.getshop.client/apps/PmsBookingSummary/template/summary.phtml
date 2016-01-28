@@ -70,7 +70,7 @@ foreach($booking->rooms as $room) {
     if(!isset($prices[$room->taxes])) {
         $prices[$room->taxes] = 0;
     }
-    $prices[$room->taxes] += $room->price;
+    $prices[$room->taxes] += ($room->price*$room->count);
 }
 
 $bottom = "<h3 class='bottomborder'> " . $this->__w("Total") . "</h3>";
@@ -129,7 +129,7 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
 //        return;
     }
     
-    $price = $room->price;
+    $price = $room->price * $room->count;
     $canNotBeAded = "";
     if(!$room->canBeAdded) {
         $canNotBeAded = "cantbeadded";

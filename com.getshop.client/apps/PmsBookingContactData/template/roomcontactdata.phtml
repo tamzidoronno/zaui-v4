@@ -120,6 +120,7 @@ echo "<div style='clear:both;'></div>";
 echo "</div>";
 
 $curAddedFields = $this->getCurrentBooking()->registrationData->resultAdded;
+echo $curAddedFields->{'choosetyperadio'};
 if(isset($curAddedFields->{'choosetyperadio'})) {
     echo "<script>";
     echo "$('input[name=\"choosetyperadio\"][value=\"".$curAddedFields->{'choosetyperadio'}."\"]').click();";

@@ -4,6 +4,12 @@ import com.thundashop.core.common.DataCommon;
 import java.util.HashMap;
 
 public class PmsConfiguration extends DataCommon {
+    
+    public static class PmsBookingTimeInterval {
+        public static Integer HOURLY = 1;
+        public static Integer DAILY = 2;
+    }
+    
     public HashMap<String, String> emails = new HashMap();
     public HashMap<String, String> emailTitles = new HashMap();
     public HashMap<String, String> smses = new HashMap();
@@ -25,6 +31,9 @@ public class PmsConfiguration extends DataCommon {
     public Integer minStay = 1;
     public boolean supportMoreDates = true;
     public boolean isItemBookingInsteadOfTypes = false;
+    public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily
+    public String defaultStart = "15:00";
+    public String defaultEnd = "12:00";
     
     public String arxHostname = "";
     public String arxUsername = "";

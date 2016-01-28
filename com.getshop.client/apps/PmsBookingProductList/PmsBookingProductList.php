@@ -20,26 +20,6 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
 
     public function getCurrentBooking() {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
-        if(!$booking->rooms || sizeof($booking->rooms) == 0) {
-            $start = $this->convertToJavaDate(time());
-            $end = $this->convertToJavaDate(time()+86400);
-
-            $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), $start, $end);
-            foreach($rooms as $room) {
-                $availability = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $room->type->id, $start, $end);
-                if($availability > 0) {
-                    $newRoom = new \core_pmsmanager_PmsBookingRooms();
-                    $newRoom->bookingItemTypeId = $room->type->id;
-                    $newRoom->date = new \core_pmsmanager_PmsBookingDateRange();
-                    $newRoom->date->start = $start;
-                    $newRoom->date->end = $end;
-                    $booking->rooms = array();
-                    $booking->rooms[] = $newRoom;
-                    $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
-                    break;
-                }
-            }
-        }
         return $booking;
     }
     
@@ -86,11 +66,17 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
             }
         }
         
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         for($i = 0; $i < $_POST['data']['count']; $i++) {
             $room = new \core_pmsmanager_PmsBookingRooms();
             $room->bookingItemTypeId = $_POST['data']['typeid'];
-            $room->date->start = $this->convertToJavaDate($this->getStartDate());
-            $room->date->end = $this->convertToJavaDate($this->getEndDate());
+            
+            
+            $start = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionStartDate)) . " " . $config->defaultStart);
+            $end = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionEndDate)) . " " . $config->defaultEnd);
+
+            $room->date->start = $this->convertToJavaDate($start);
+            $room->date->end = $this->convertToJavaDate($end);
             $newRooms[] = $room;
         }
         
@@ -106,11 +92,14 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
     }
 
     public function getStartDate() {
-        return strtotime($this->getCurrentBooking()->rooms[0]->date->start);
+        if(!$this->getCurrentBooking()->sessionStartDate) {
+            return $this->getCurrentBooking()->sessionStartDate;
+        }
+        return strtotime($this->getCurrentBooking()->sessionStartDate);
     }
 
     public function getEndDate() {
-        $end = $this->getCurrentBooking()->rooms[0]->date->end;
+        $end = $this->getCurrentBooking()->sessionEndDate;
         if($end) {
             return strtotime($end);
         }

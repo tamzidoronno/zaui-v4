@@ -148,7 +148,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         for(PmsBookingRooms room : booking.rooms) {
-            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, false);
+            int totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
+            room.count = totalDays;
+            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, true);
             room.taxes = calculateTaxes(room.bookingItemTypeId);
             for(PmsGuests guest : room.guests) {
                 if(guest.prefix != null) {
@@ -158,6 +160,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        
+        setDefaultDateRange(booking);
+        
         saveObject(booking);
         bookings.put(booking.id, booking);
     }
@@ -1503,7 +1508,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(avgprice) {
                     return attr.price;
                 } else {
-                    return attr.price * totalDays;
+                    return attr.price;
                 }
             }
         }
@@ -1702,5 +1707,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.rooms.addAll(allToAdd);
 
     }
+
+    private void setDefaultDateRange(PmsBooking booking) {
+        if(booking.sessionStartDate != null) {
+            return;
+        }
+        
+        booking.sessionStartDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(booking.sessionStartDate);
+        if(getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
+            cal.add(Calendar.DAY_OF_YEAR, getConfiguration().minStay);
+        }
+        if(getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.HOURLY)) {
+            cal.add(Calendar.HOUR, getConfiguration().minStay);
+        }
+        booking.sessionEndDate = cal.getTime(); 
+   }
 
 }

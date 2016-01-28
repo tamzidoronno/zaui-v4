@@ -31,6 +31,8 @@ class PmsBooking extends \WebshopApplication implements \Application {
         $room->bookingItemTypeId = $_POST['data']['product'];
         $room->date = $range;
         
+        $booking->sessionStartDate = $range->start;
+        $booking->sessionEndDate = $range->end;
         $booking->rooms = array();
         $booking->rooms[] = $room;
 

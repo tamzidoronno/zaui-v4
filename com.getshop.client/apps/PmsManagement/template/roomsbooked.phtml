@@ -23,8 +23,26 @@ foreach($booking->rooms as $room) {
 
 $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$dates = $this->getApi()->getPmsManager()->getDefaultDateRange($this->getSelectedName());
+?>
+<h2>Rooms booked</h2>
+<span gstype="form" method='addRoomToBooking'>
+    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+    <input type='text' style='float:left; margin-right: 10px;' value='<?php echo date("d.m.Y H:i", strtotime($dates->start)); ?>' gsname='start'>
+    <input type='text' style='float:left; margin-right: 10px;' value='<?php echo date("d.m.Y H:i", strtotime($dates->end)); ?>' gsname='end'>
+    <select style='float:left; margin-right: 10px;' gsname='item'>
+        <?php 
+        foreach($items as $item) {
+            /* @var $item core_bookingengine_data_BookingItem */
+            echo "<option value='".$item->id."'>". $item->bookingItemName . "</option>";
+        }
+        ?>
+    </select>
+    <span class='pmsbutton' gstype='submitToInfoBox'>Add room</span>
+</span>
+<br><br>
 
- echo '<h2>Rooms booked</h2>';
+<?php
 $hasArx = false;
 if($config->arxHostname) {
     $hasArx = true;

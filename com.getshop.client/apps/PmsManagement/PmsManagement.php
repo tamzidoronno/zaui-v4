@@ -20,6 +20,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function addRoomToBooking() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $bookingId = $_POST['data']['bookingid'];
+        $item = $_POST['data']['item'];
+        
+        $errors = $this->getApi()->getPmsManager()->addBookingItem($this->getSelectedName(), $bookingId, $item, $start, $end);
+        if($errors) {
+            $this->errors[] = $errors;
+        }
+        $this->showBookingInformation();
+    }
+    
     public function removeRoom() {
         $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedName(),$_POST['data']['bookingid'], $_POST['data']['roomid']);
         $this->showBookingInformation();

@@ -100,4 +100,9 @@ public interface IPmsManager {
     public List<Integer> getAvailabilityForRoom(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
     
     public void toggleAddon(String itemId) throws Exception;
+    
+    public PmsBookingDateRange getDefaultDateRange();
+    
+    @Administrator
+    public String addBookingItem(String bookingId, String item, Date start, Date end);
 }

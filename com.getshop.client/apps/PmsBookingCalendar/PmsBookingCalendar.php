@@ -43,15 +43,23 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     
     public function selectDay() {
         $this->booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
-        if(sizeof($this->booking->rooms) == 0) {
-            return;
-        }
         
         if($this->isStartDate()) {
             $this->booking->sessionStartDate = $this->convertToJavaDate($_POST['data']['time']);
         } else {
             $this->booking->sessionEndDate = $this->convertToJavaDate($_POST['data']['time']);
         }
+        
+        if(sizeof($this->booking->rooms) > 0) {
+            foreach($this->booking->rooms as $room) {
+                if($this->isStartDate()) {
+                    $room->date->start = $this->convertToJavaDate($_POST['data']['time']);
+                } else {
+                    $room->date->end = $this->convertToJavaDate($_POST['data']['time']);
+                }
+            }
+        }
+        
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $this->booking);
     }
     

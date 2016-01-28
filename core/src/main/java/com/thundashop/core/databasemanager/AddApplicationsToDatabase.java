@@ -70,62 +70,17 @@ public class AddApplicationsToDatabase {
         Company.moduleId = "other";
         apps.add(Company);
         
-        
-        Application SedoxFiluploadCount = createSettings("SedoxFiluploadCount",
-        "ae288b19-9934-4e34-ade7-e8abba43b477",
+        Application SedoxLogin = createSettings("SedoxLogin",
+        "af4ca00c-4007-42c1-a895-254710311191",
         allowed2,
         " ",
         Application.Type.Marketing, true);
-        SedoxFiluploadCount.isPublic = true;
-        SedoxFiluploadCount.isFrontend = true;
-        SedoxFiluploadCount.moduleId = "sedox";
-        SedoxFiluploadCount.defaultActivate = false;
-        apps.add(SedoxFiluploadCount);
+        SedoxLogin.isPublic = true;
+        SedoxLogin.isFrontend = true;
+        SedoxLogin.moduleId = "sedox";
+        SedoxLogin.defaultActivate = false;
+        apps.add(SedoxLogin);
 
-        Application SedoxCreditHistory = createSettings("SedoxCreditHistory",
-        "07c7565c-040d-4425-962d-a326c782bb4e",
-        allowed2,
-        " ",
-        Application.Type.Marketing, true);
-        SedoxCreditHistory.isPublic = true;
-        SedoxCreditHistory.isFrontend = true;
-        SedoxCreditHistory.moduleId = "sedox";
-        SedoxCreditHistory.defaultActivate = false;
-        apps.add(SedoxCreditHistory);
-        
-        Application AutoTekAssistSaving = createSettings("AutoTekAssistSaving",
-        "497d3093-47cf-4e38-bd2c-5117476f8409",
-        allowed2,
-        " ",
-        Application.Type.Marketing, true);
-        AutoTekAssistSaving.isPublic = false;
-        AutoTekAssistSaving.isFrontend = true;
-        AutoTekAssistSaving.moduleId = "other";
-        AutoTekAssistSaving.defaultActivate = false;
-        AutoTekAssistSaving.allowedStoreIds.add("ba6ef325-58a4-4bee-ac56-6f1420a150f1");
-        apps.add(AutoTekAssistSaving);
-
-        Application SedoxFileUpload = createSettings("SedoxFileUpload",
-        "92e3b7d6-c3ac-463e-90ba-4f966613f8dd",
-        allowed2,
-        " ",
-        Application.Type.Marketing, true);
-        SedoxFileUpload.isPublic = true;
-        SedoxFileUpload.isFrontend = true;
-        SedoxFileUpload.moduleId = "sedox";
-        SedoxFileUpload.defaultActivate = false;
-        apps.add(SedoxFileUpload);
-
-        Application SedoxAdmin = createSettings("SedoxAdmin",
-        "1475891a-3154-49f9-a2b4-ed10bfdda1fc",
-        allowed2,
-        " ",
-        Application.Type.Marketing, true);
-        SedoxAdmin.isPublic = true;
-        SedoxAdmin.isFrontend = true;
-        SedoxAdmin.moduleId = "sedox";
-        SedoxAdmin.defaultActivate = false;
-        apps.add(SedoxAdmin);
 
         
         Application AutotekTheme = createSettings("AutotekTheme",

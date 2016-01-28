@@ -148,7 +148,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         for(PmsBookingRooms room : booking.rooms) {
-            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, false);
+            int totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
+            room.count = totalDays;
+            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, true);
             room.taxes = calculateTaxes(room.bookingItemTypeId);
             for(PmsGuests guest : room.guests) {
                 if(guest.prefix != null) {
@@ -158,6 +160,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        
+        if(booking.sessionStartDate == null) {
+            PmsBookingDateRange range = getDefaultDateRange();
+            booking.sessionStartDate = range.start;
+            booking.sessionEndDate = range.end;
+        }
+        
         saveObject(booking);
         bookings.put(booking.id, booking);
     }
@@ -272,20 +281,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(!room.canBeAdded) {
                 continue;
             }
-            Booking bookingToAdd = new Booking();
-            bookingToAdd.startDate = room.date.start;
-            if(room.date.end == null) {
-                room.date.end = createInifinteDate();
-            }
-            if(room.numberOfGuests < room.guests.size()) {
-                room.numberOfGuests = room.guests.size();
-            }
-            
-            bookingToAdd.endDate = room.date.end;
-            bookingToAdd.bookingItemTypeId = room.bookingItemTypeId;
-            bookingToAdd.externalReference = room.pmsBookingRoomId;
-            bookingToAdd.bookingItemId = room.bookingItemId;
-
+            Booking bookingToAdd = createBooking(room);
             bookingsToAdd.add(bookingToAdd);
         }
         try {
@@ -1503,7 +1499,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(avgprice) {
                     return attr.price;
                 } else {
-                    return attr.price * totalDays;
+                    return attr.price;
                 }
             }
         }
@@ -1701,6 +1697,79 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         booking.rooms.addAll(allToAdd);
 
+    }
+    
+    @Override
+    public PmsBookingDateRange getDefaultDateRange() {
+        
+        String[] defaultTimeStart = getConfiguration().defaultStart.split(":");
+        String[] defaultEndStart = getConfiguration().defaultEnd.split(":");
+        
+        Calendar calStart = Calendar.getInstance();
+        calStart.set(Calendar.HOUR_OF_DAY, new Integer(defaultTimeStart[0]));
+        calStart.set(Calendar.MINUTE, new Integer(defaultTimeStart[1]));
+        calStart.set(Calendar.SECOND, 0);
+        
+        
+        PmsBookingDateRange  range = new PmsBookingDateRange();
+        range.start = calStart.getTime();
+        
+        if(getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
+            calStart.add(Calendar.DAY_OF_YEAR, getConfiguration().minStay);
+            calStart.set(Calendar.HOUR_OF_DAY, new Integer(defaultEndStart[0]));
+            calStart.set(Calendar.MINUTE, new Integer(defaultEndStart[1]));
+            calStart.set(Calendar.SECOND, 0);
+        }
+        if(getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.HOURLY)) {
+            calStart.add(Calendar.HOUR, getConfiguration().minStay);
+        }
+        
+        
+        range.end = calStart.getTime(); 
+        return range;
+   }
+
+    @Override
+    public String addBookingItem(String bookingId, String item, Date start, Date end) {
+        PmsBooking booking = getBooking(bookingId);
+        
+        PmsBookingRooms room = new PmsBookingRooms();
+        room.bookingItemId = item;
+        room.bookingItemTypeId = bookingEngine.getBookingItem(item).bookingItemTypeId;
+        room.date = new PmsBookingDateRange();
+        room.date.start = start;
+        room.date.end = end;
+        room.guests.add(new PmsGuests());
+        
+        Booking bookingToAdd = createBooking(room);
+        List<Booking> bookingToAddList = new ArrayList();
+        bookingToAddList.add(bookingToAdd);
+        if(!bookingEngine.canAdd(bookingToAddList)) {
+            return "The room can not be added, its not available.";
+        }
+        
+        bookingEngine.addBookings(bookingToAddList);
+        booking.rooms.add(room);
+        booking.attachBookingItems(bookingToAddList);
+        saveBooking(booking);
+        return "";
+    }
+
+    private Booking createBooking(PmsBookingRooms room) {
+        Booking bookingToAdd = new Booking();
+        bookingToAdd.startDate = room.date.start;
+        if(room.date.end == null) {
+            room.date.end = createInifinteDate();
+        }
+        if(room.numberOfGuests < room.guests.size()) {
+            room.numberOfGuests = room.guests.size();
+        }
+
+        bookingToAdd.endDate = room.date.end;
+        bookingToAdd.bookingItemTypeId = room.bookingItemTypeId;
+        bookingToAdd.externalReference = room.pmsBookingRoomId;
+        bookingToAdd.bookingItemId = room.bookingItemId;
+        return bookingToAdd;
     }
 
 }

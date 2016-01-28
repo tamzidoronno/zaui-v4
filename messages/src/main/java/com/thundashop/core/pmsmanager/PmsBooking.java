@@ -15,6 +15,9 @@ public class PmsBooking extends DataCommon {
 
     public List<PmsBookingRooms> rooms = new ArrayList();
     public String sessionId;
+    public Date sessionStartDate = null;
+    public Date sessionEndDate = null;
+    
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public List<String> bookingEngineAddons = new ArrayList();
     public RegistrationRules registrationData = new RegistrationRules();

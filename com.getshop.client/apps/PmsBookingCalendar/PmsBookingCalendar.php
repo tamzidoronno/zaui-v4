@@ -23,15 +23,11 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     public function getSelectedDate() {
         /* @var $booking \core_pmsmanager_PmsBooking */
         $booking = $this->getBooking();
-        if(sizeof($booking->rooms) > 0) {
-            if($this->isStartDate()) {
-                return strtotime($booking->rooms[0]->date->start);
-            } else {
-                return strtotime($booking->rooms[0]->date->end);
-            }
+        if($this->isStartDate()) {
+            return strtotime($booking->sessionStartDate);
+        } else {
+            return strtotime($booking->sessionEndDate);
         }
-        
-        return time();
     }
     
     public function getText($key) {
@@ -47,15 +43,23 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     
     public function selectDay() {
         $this->booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
-        if(sizeof($this->booking->rooms) == 0) {
-            return;
-        }
         
         if($this->isStartDate()) {
-            $this->booking->rooms[0]->date->start = $this->convertToJavaDate($_POST['data']['time']);
+            $this->booking->sessionStartDate = $this->convertToJavaDate($_POST['data']['time']);
         } else {
-            $this->booking->rooms[0]->date->end = $this->convertToJavaDate($_POST['data']['time']);
+            $this->booking->sessionEndDate = $this->convertToJavaDate($_POST['data']['time']);
         }
+        
+        if(sizeof($this->booking->rooms) > 0) {
+            foreach($this->booking->rooms as $room) {
+                if($this->isStartDate()) {
+                    $room->date->start = $this->convertToJavaDate($_POST['data']['time']);
+                } else {
+                    $room->date->end = $this->convertToJavaDate($_POST['data']['time']);
+                }
+            }
+        }
+        
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $this->booking);
     }
     

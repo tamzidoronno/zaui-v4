@@ -229,6 +229,27 @@ $whenToPay[4] = "After stay";
             </span>
             Minimum stay
         </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <select gsname='bookingTimeInterval'>
+                    <option value="1">Hourly</option>
+                    <option value="2" <?php if($notificationSettings->bookingTimeInterval == 2) { echo "SELECTED"; } ?> >Daily</option>
+                </select>
+            </span>
+            Booking interval type
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input style='width: 40px;' gsname='defaultStart' value='<? echo $notificationSettings->defaultStart; ?>'>
+            </span>
+            Default start
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input style='width: 40px;' gsname='defaultEnd' value='<? echo $notificationSettings->defaultEnd; ?>'>
+            </span>
+            Default end
+        </div>
         <br><br>
         <h2>
             Payment and order creations

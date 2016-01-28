@@ -1,6 +1,7 @@
 package com.thundashop.core.utils;
 
 import com.google.gson.Gson;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,9 +59,21 @@ public class BrRegEngine {
             BrRegCompany brRegCompany = fromJson.entries.get(0);
             Company company = new Company();
             company.name = brRegCompany.navn;
+            company.address = new Address();
             company.address.address = brRegCompany.forretningsadr;
+            company.address.city = brRegCompany.forradrpoststed;
+            company.address.postCode = brRegCompany.forradrpostnr;
+            company.address.countrycode = brRegCompany.forradrland;
+                    
             company.type = brRegCompany.organisasjonsform;
             company.vatNumber = brRegCompany.orgnr.trim();
+            
+            /** Legacy set for customers */
+            company.country = brRegCompany.forradrland;
+            company.city = brRegCompany.forradrpoststed;
+            company.postnumber = brRegCompany.forradrpostnr;
+            company.streetAddress = brRegCompany.forretningsadr;
+            
             return company;
         }
 

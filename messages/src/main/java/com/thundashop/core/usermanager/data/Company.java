@@ -19,4 +19,10 @@ public class Company extends DataCommon {
     public String website = "";
     public String email = "";
     public String contactPerson = "";
+    
+    /* This are legacy attributes, replaced with address field*/
+    public String streetAddress = "";
+    public String postnumber = "";
+    public String country = "";
+    public String city = "";
 }

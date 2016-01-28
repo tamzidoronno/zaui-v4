@@ -1,0 +1,74 @@
+.SedoxLogin {
+    font-size: 0px;
+}
+
+.SedoxLogin .col_50 {
+    font-size: 14px;
+    display: inline-block;
+    width: 50%;
+    vertical-align: top;
+    height: 50px;
+    box-sizing: border-box;
+    padding: 30px;
+}
+
+.SedoxLogin .col_50 .inner {
+   border: solid 1px #DDD;
+}
+
+.SedoxLogin .col_50 .inner .header {
+    background-color: #c30f10;
+    color: #FFF;
+    text-align: center;
+    line-height: 50px;
+    font-size: 18px;
+}
+
+.SedoxLogin .logincontent {
+    padding: 20px;
+}
+
+.SedoxLogin label {
+    color: #707070;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+.SedoxLogin input[type="password"],
+.SedoxLogin input[type="text"] {
+  padding: 10px;
+  border: solid 1px #dcdcdc;
+  width: 100%;
+  box-sizing: border-box;
+  transition: box-shadow 0.3s, border 0.3s;
+  margin-bottom: 20px;
+}
+.SedoxLogin input[type="password"]:focus,
+.SedoxLogin input[type="password"].focus,
+.SedoxLogin input[type="text"]:focus,
+.SedoxLogin input[type="text"].focus {
+  border: solid 1px #707070;
+  box-shadow: 0 0 5px 1px #969696;
+}
+
+.SedoxLogin .login_check_modal {
+    display: none;
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    
+    background: rgba(0,0,0,0.9);
+    text-align: center;
+}
+
+.SedoxLogin .login_check_modal .content {
+    position:absolute;
+    top: 50%;
+    height:100px; 
+    width:100%;
+    margin-top: -50px;
+    text-align:center;
+    color: #FFF;
+    font-size: 30px;
+}

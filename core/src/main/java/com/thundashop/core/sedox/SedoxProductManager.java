@@ -100,7 +100,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @PostConstruct
     public void setupDatabankMailAccount() {
         sedoxDatabankMailAccount = context.getBean(MailFactoryImpl.class);
-//        sedoxDatabankMailAccount.setMailConfiguration(new SedoxDatabankMailConfig());
     }
 
     static String convertStreamToString(java.io.InputStream is) {
@@ -902,7 +901,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public User login(String emailAddress, String password) throws ErrorException {
+    public User login(String emailAddress, String password) {
         try {
             return userManager.logOn(emailAddress, password);
         } catch (ErrorException ex) {
@@ -920,8 +919,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
             return user;
         } else {
-            throw new ErrorException(13);
+//            throw new ErrorException(13);
         }
+        
+        return null;
     }
 
     @Override

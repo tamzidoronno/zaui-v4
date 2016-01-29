@@ -27,9 +27,10 @@ app.AutoTekAssistSaving = {
     },
     
     calc : function() {
-        var hours = $('#assist_hours').val();
-        var days = $('#assist_days').val();
-        var totalHours = (hours+days)*48;
+        var hours = parseInt($('#assist_hours').val());
+        var days = parseInt($('#assist_days').val());
+        var totalHours = (hours*days)*48;
+        
         $('.AutoTekAssistSaving .assist_total_hours').html(totalHours);
         var price = totalHours * $('#assist_hourprice').val();
         $('.AutoTekAssistSaving .price_sum').html(price);

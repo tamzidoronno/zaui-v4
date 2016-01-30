@@ -60,7 +60,7 @@ app.SedoxLogin = {
                 $('.SedoxLogin .login_check_modal').fadeOut(); 
             }, 5000);
         } else {
-            $('.SedoxLogin .login_check_modal .content').html("Account created, you can now login");
+            $('.SedoxLogin .login_check_modal .content').html("Account created, please check your email account and verify your account before you can login");
             $('*[gsname]').val("");
             setTimeout(function() {
                 $('.SedoxLogin .login_check_modal').fadeOut(); 

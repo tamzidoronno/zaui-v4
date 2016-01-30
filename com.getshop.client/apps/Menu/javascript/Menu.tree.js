@@ -14,11 +14,58 @@ getshop.Tree = function(id, config) {
 getshop.Tree.prototype = {
     
     refresh: function() {
+        if (this.config.items.length === 0) {
+            this.config.items = [
+               {
+                    "id": getshop.MenuEditor.uuid,
+                    "name":"New entry",
+                    "link":"",
+                    "linke":null,
+                    "pageId":"",
+                    "fontAwsomeIcon":null,
+                    "scrollPageId":"",
+                    "scrollAnchor":"",
+                    "userLevel":0,
+                    "items":[],
+                    "disabledLangues":[],
+                    "hidden":false
+                }];
+        };
+        
         this.outerContainer.find(".title").html(this.config.menuname);
         this.container.html("");
         this.container.addClass('getshopmenu');
         var menu = this.renderItems(this.config.items, false);
         this.container.append(menu);
+        
+        var me = this;
+        
+        $('.MenuEditor').find('.menuitem[list="'+$(this.outerContainer).attr('id')+'"]').droppable({
+            accept: '.dropaccept',
+            drop: function(event, ui) {
+                var me = window[$(this).attr('list').replace('container','tree')];
+  
+                var fromId = $(ui.draggable).attr('entryId');
+                var fromConfig = getshop.MenuEditor.list.getAndRemoveConfig(fromId, getshop.MenuEditor.list.items);
+                
+                me.config.items.push(fromConfig);
+                me.refresh();
+                getshop.MenuEditor.list.refresh();
+            },
+            over: function( event, ui ) {
+                $(this).addClass('active');
+            },
+            out: function( event, ui ) {
+                $(this).removeClass('active');
+            },
+            tolerance: 'pointer'
+        });
+    },
+    
+    
+    setNewMenuName: function(name) {
+        this.config.menuname = name;
+        this.outerContainer.find(".title").html(this.config.menuname);
     },
             
     renderItems: function(items, lastEntry) {

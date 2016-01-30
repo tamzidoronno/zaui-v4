@@ -1,11 +1,12 @@
 package com.thundashop.core.listmanager;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.listmanager.data.EntryList;
-import com.thundashop.core.listmanager.data.ListType;
+import com.thundashop.core.listmanager.data.Menu;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +42,18 @@ public interface IListManager {
      * @throws ErrorException 
      */
     public void setEntries(String listId, ArrayList<Entry> entries) throws ErrorException;
+    
+    /**
+     * This function flushes all entries in the list and set this as new entries instead.
+     * @param listId The id of the list to be updated
+     * @param entries All entries to be included in the list.
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void saveMenu(String appId, String listId, ArrayList<Entry> entries, String name);
+    
+    @Administrator
+    public void deleteMenu(String appId, String listId);
     
     /**
      * Add a new entry to a given list.<br>
@@ -150,12 +163,14 @@ public interface IListManager {
      */
     public List<EntryList> getAllListsByType(String type);
 	
-	/**
-	 * Create new list for a given id
-	 * 
-	 * @param listName
-	 * @throws ErrorException 
-	 */
-	@Administrator
-	public void createMenuList(String menuApplicationId) throws ErrorException;
+    /**
+     * Create new list for a given id
+     * 
+     * @param listName
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void createMenuList(String menuApplicationId) throws ErrorException;
+    
+    public List<Menu> getMenues(String applicationInstanceId);
 }

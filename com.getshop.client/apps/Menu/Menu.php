@@ -14,13 +14,15 @@
 namespace ns_a11ac190_4f9a_11e3_8f96_0800200c9a66;
 
 class Menu extends \SystemApplication implements \Application {
-
+    private $menues = null;
+    
     public function getDescription() {
         return $this->__w("Add menus to your page and administrate them. Menus are the root of all pages, adding a new menu entry is the same as creating a new page.");
     }
 
     public function updateLists() {
         $result = $_POST['data'];
+        $toSave = [];
         foreach ($result as $id => $list) {
             if (!isset($list['items'])) {
                 continue;
@@ -32,8 +34,20 @@ class Menu extends \SystemApplication implements \Application {
                 $entry = $this->convertToEntry($item);
                 $allentries[] = $entry;
             }
-            $this->getApi()->getListManager()->setEntries($id, $allentries);
+            
+            if (isset($list['deleted']) && $list['deleted'] == "true") {
+                $this->getApi()->getListManager()->deleteMenu($this->getConfiguration()->id, $id);
+            } else {
+                $data = [$id, $allentries, $name];
+                $toSave[] = $data;    
+            }
+            
         }
+        
+        foreach ($toSave as $save) {
+            $this->getApi()->getListManager()->saveMenu($this->getConfiguration()->id, $save[0], $save[1], $save[2]);
+        }
+        
     }
 
     public function getName() {
@@ -49,7 +63,12 @@ class Menu extends \SystemApplication implements \Application {
     }
 
     public function getMenuLists() {
-        return $this->getApi()->getListManager()->getAllListsByType("MENU");
+        $menues = $this->getMenus();
+        $lists = [];
+        foreach ($menues as $menu) {
+            $lists[] = $menu->entryList;
+        }
+        return $lists;
     }
 
     private function createItems($items) {
@@ -86,7 +105,7 @@ class Menu extends \SystemApplication implements \Application {
     }
 
     public function convertToEntry($item) {
-        $entry = $this->getApi()->getListManager()->getListEntry($item['id']);
+        $entry = $this->getApi()->getListManager()->getListEntry(@$item['id']);
         if (!$entry) {
              $entry = new \core_listmanager_data_Entry();
         }
@@ -146,15 +165,6 @@ class Menu extends \SystemApplication implements \Application {
         $core_listmanager_data_Entry->name = $_POST['data']['text'];
         $this->getApi()->getListManager()->addEntry($this->getConfiguration()->id, $core_listmanager_data_Entry, null);
     }
-
-    public function getMenuEntries() {
-        $entries = $this->getApi()->getListManager()->getList($this->getConfiguration()->id);
-        if (!is_array($entries)) {
-            return array();
-        }
-
-        return $entries;
-    }
     
     private function isDisabledDueToLanaguage($entry) {
         $selectedLanguage = $this->getFactory()->getSelectedTranslation(); 
@@ -184,7 +194,7 @@ class Menu extends \SystemApplication implements \Application {
         }        
     }
     
-    public function printEntries($entries, $level) {
+    public function printEntries($entries, $level, $prefix) {
         echo "<div class='entries'>";
         
         foreach ($entries as $entry) {
@@ -197,7 +207,7 @@ class Menu extends \SystemApplication implements \Application {
             }
             
             $name = $entry->name;
-            $linkName = \GetShopHelper::makeSeoUrl($entry->name);
+            $linkName = \GetShopHelper::makeSeoUrl($entry->name, $prefix);
             $pageId = $entry->pageId;
 
             $fontAwesome = "";
@@ -225,13 +235,13 @@ class Menu extends \SystemApplication implements \Application {
             if ($entry->scrollPageId && $entry->scrollAnchor) {
                 echo "<div class='entry $disabledClass'><div scrollPageId='$entry->scrollPageId' scrollAnchor='$entry->scrollAnchor' class='gs_scrollitem'>$fontAwesome $name</div>";
                 if ($entry->subentries) {
-                    $this->printEntries($entry->subentries, $level+1);
+                    $this->printEntries($entry->subentries, $level+1, $prefix);
                 }
                 echo "</div>";
             } else {
                echo "<div class='entry $activate $disabledClass'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
                 if ($entry->subentries) {
-                    $this->printEntries($entry->subentries, $level+1);
+                    $this->printEntries($entry->subentries, $level+1, $prefix);
                 }
                 echo "</div>";
             }
@@ -250,9 +260,17 @@ class Menu extends \SystemApplication implements \Application {
             return true;
         }
         
-        return false;
-        
+        return false;   
     }
+    
+    public function getMenus() {
+        if (!$this->menues) {
+            $this->menues = $this->getApi()->getListManager()->getMenues($this->getConfiguration()->id);
+        }
+        
+        return $this->menues;
+    }
+    
 }
 
 class EntryItem {

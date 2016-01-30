@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
@@ -73,7 +74,7 @@ public class Database {
 
     private void checkId(DataCommon data) throws ErrorException {
         if (data.id == null || data.id == "") {
-            throw new ErrorException(64);
+            data.id = UUID.randomUUID().toString();
         }
     }
 
@@ -205,6 +206,11 @@ public class Database {
         return all;
     }
 
+    public synchronized void delete(Class mangagerClass, DataCommon data) {
+        data.deleted = new Date();
+        save(mangagerClass.getSimpleName(), collectionPrefix+data.storeId, data);
+    }
+    
     public synchronized void delete(DataCommon data, Credentials credentials) throws ErrorException {
         if (sandbox) {
             return;
@@ -336,6 +342,28 @@ public class Database {
             DBObject obj = morphia.toDBObject(data);
             col.save(obj);
        }
+    }
+    
+    public boolean exists(String database, String collection, DataCommon data) {
+        DBCollection col = mongo.getDB(database).getCollection(collection);
+        return col.findOne(data.id) != null;
+    }
+    
+    public void save(Class managerClass, DataCommon data) {
+        checkId(data);
+        
+        if (data.storeId == null || data.storeId.isEmpty()) {
+            throw new RuntimeException("storeid not specified");
+        }
+        
+        save(managerClass.getSimpleName(), collectionPrefix+data.storeId, data);
+    }
+    
+    public void save(String database, String collection, DataCommon data) {
+        checkId(data);
+        DBCollection col = mongo.getDB(database).getCollection(collection);
+        DBObject dbObject = morphia.toDBObject(data);
+        col.save(dbObject);
     }
 }
 

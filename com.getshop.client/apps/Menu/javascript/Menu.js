@@ -5,6 +5,10 @@ if (typeof(getshop) === "undefined") {
 getshop.MenuEditor = {
     init: function() {
         $(document).on('click', ".Menu .menulist .menu .menuitem", getshop.MenuEditor.menuClicked);
+        $(document).on('change', ".Menu .select_menu_selected", getshop.MenuEditor.differentSelected);
+        $(document).on('click', ".Menu .menulist .menu .menuitem i.fa-edit", getshop.MenuEditor.changeMenuName);
+        $(document).on('click', ".Menu .menulist .menu .menuitem i.fa-trash", getshop.MenuEditor.deleteMenu);
+        $(document).on('click', ".Menu .menu.addMultiLevel", getshop.MenuEditor.addMultiLevel);
         $(document).on('keyup', ".Menu .titleinformation #itemname", getshop.MenuEditor.nameKeyUp);
         $(document).on('keyup', ".Menu .titleinformation #icontext", getshop.MenuEditor.iconKeyUp);
         $(document).on('keyup', ".Menu .titleinformation #itemlink", getshop.MenuEditor.itemLinkChanged);
@@ -19,6 +23,83 @@ getshop.MenuEditor = {
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
         $(document).on('change', ".menu_item_language", getshop.MenuEditor.itemLanguageChanged);
         $(document).on('click', ".gs_scrollitem", getshop.MenuEditor.scrollToAnchor);
+    },
+    
+    differentSelected: function() {
+        getshop.MenuEditor.menuChanged();
+        $(this).closest('.Menu').find('.menuentries:visible').find('.entry:first-child a').click();
+    },
+    
+    deleteMenu: function() {
+        var yes = confirm("Are you sure you want to delete this?");
+        
+        if (yes) {
+            $(this).closest('.menuitem').attr('deleted', 'true');
+            $(this).closest('.menuitem').fadeOut();
+        }
+        
+    },
+    
+    selectMenu: function() {
+        var selectedS = localStorage.getItem("gs_menu_selected");
+        
+        if (!selectedS) {
+            getshop.MenuEditor.menuChanged();
+            return;
+        }
+        
+        var selectedOption = $('.Menu .select_menu_selected option[value="'+selectedS+'"]');
+        if (selectedOption.length == 0) {
+            getshop.MenuEditor.menuChanged();
+            return;
+        }
+        
+        selectedOption.attr('selected', 'true');
+        getshop.MenuEditor.menuChanged();
+    },
+    
+    menuChanged: function() {
+        var me = $('.Menu .select_menu_selected');
+        var name = me.val();
+        me.closest('.Menu').find('.menuentries').hide();
+        me.closest('.Menu').find('.menuentries[menuname="'+name+'"]').show();
+        localStorage.setItem("gs_menu_selected", name);
+    },
+    
+    changeMenuName: function() {
+        var name = prompt("Please enter new name");
+        if (name) {
+            $(this).closest('div').find('span').html(name);
+            var list = $(this).closest('.menuitem').attr('list').replace('container', 'tree');
+            var tree = window[list].setNewMenuName(name);
+        }
+    },
+    
+    guid: function(seperator) {
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return s4() + s4() + seperator + s4() + seperator + s4() + seperator +
+          s4() + seperator + s4() + s4() + s4();
+    },
+    
+    addMultiLevel: function() {
+        var uuid = getshop.MenuEditor.guid("_");
+        var name = __f('New list');
+        
+        
+        
+        var appId = $(this).closest('.app').attr('appid');
+        var div = $('<div class="menuitem" list="container_'+uuid+'" appid="'+uuid+'"><i class="fa fa-trash"></i> <i class="fa fa-edit"></i> <span>'+name+'</span></div>');
+        var config  = {"menuname": name , "items":[]};
+        $('.MenuEditor .menueditor').prepend("<div class='menutree' id='container_"+uuid+"'></div>");
+        $('.MenuEditor .menulist .menu').append(div);
+        
+        var tree = new getshop.Tree('container_'+uuid, config);
+        tree.refresh();
+        window['tree_'+uuid] = tree;
     },
     
     scrollToAnchor: function() {
@@ -122,11 +203,12 @@ getshop.MenuEditor = {
             
             data[$(this).attr('appid')] = {
                 "name" : list.config.menuname,
-                "items" : list.config.items
-            }
-            
+                "items" : list.config.items,
+                "deleted" : $(this).attr('deleted')
+            }    
         });
         
+        debugger;
         var event = thundashop.Ajax.createEvent('','updateLists', $('.MenuEditor'),data);
         thundashop.Ajax.post(event);
         thundashop.common.hideInformationBox();

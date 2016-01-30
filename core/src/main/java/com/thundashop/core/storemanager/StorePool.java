@@ -15,6 +15,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.storemanager.data.StoreCounter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -292,5 +293,9 @@ public class StorePool {
         if(AppContext.devMode) {
             store.configuration.configurationFlags.put("devMode","true");
         }
+    }
+    
+    public List<Store> getAllStores() {
+        return new ArrayList(stores.values());
     }
 }

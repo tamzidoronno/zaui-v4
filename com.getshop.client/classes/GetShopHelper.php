@@ -11,7 +11,7 @@
  * @author ktonder
  */
 class GetShopHelper {
-    public static function makeSeoUrl($name) {
+    public static function makeSeoUrl($name, $prefix="") {
         $factory = IocContainer::getFactorySingelton();
         $name = str_replace(" ", "_", $name);
         $name = str_replace("/", "_", $name);
@@ -21,6 +21,7 @@ class GetShopHelper {
 
         
         $name = mb_strtolower($name, 'UTF-8');
+        $name = $prefix.$name;
         return "/$name.html";
     }
 }

@@ -129,7 +129,7 @@ public class ManagerSubBase {
         }
     }
 
-    public String makeSeoUrl(String name) {
+    public String makeSeoUrl(String name, String prefix) {
         if (name == null) {
             return "";
         }
@@ -142,6 +142,8 @@ public class ManagerSubBase {
                 .replace("\"", "_")
                 .replace("'", "_")
                 .toLowerCase();
+        
+        newAddress = prefix + newAddress;
         
         return newAddress;
     }

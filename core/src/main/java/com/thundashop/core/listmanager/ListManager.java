@@ -1,20 +1,16 @@
 package com.thundashop.core.listmanager;
 
-import com.getshop.scope.GetShopDataMap;
 import com.getshop.scope.GetShopDataMapRepository;
 import com.getshop.scope.GetShopSession;
-import com.thundashop.app.contentmanager.data.ContentData;
-import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.listmanager.data.EntryList;
 import com.thundashop.core.listmanager.data.ListType;
+import com.thundashop.core.listmanager.data.Menu;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.ArrayList;
@@ -23,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +30,12 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class ListManager extends ManagerBase implements IListManager {
     private Map<String, EntryList> allEntries;
+    
+    /**
+     * String = ApplicatoinInstanceId
+     * List instide is a list of all menues connected to the app.
+     */
+    private Map<String, List<Menu>> menues = new HashMap();
     
     @Autowired
     public void createGetShopDataMaps(GetShopDataMapRepository<String, EntryList> repository) {
@@ -66,6 +67,11 @@ public class ListManager extends ManagerBase implements IListManager {
                     allEntries.put(listObject.appId, listObject);
                 }
             }
+            
+            if (entry instanceof Menu) {
+                Menu menu = (Menu)entry;
+                addMenu(menu);
+            }
         }
     }
     
@@ -93,26 +99,32 @@ public class ListManager extends ManagerBase implements IListManager {
         }
     }
     
-	private void makeSureListExists(String listId) {
-		if (allEntries.get(listId) == null) {
+    private void makeSureListExists(String listId) {
+        if (allEntries.get(listId) == null) {
             allEntries.put(listId, new EntryList());
             allEntries.get(listId).appId = listId;
             allEntries.get(listId).entries = new ArrayList();
         }
+        
         if(allEntries.get(listId).entries == null) {
             allEntries.get(listId).entries = new ArrayList();
         }
 		
-		saveList(listId);
-	}
+        saveList(listId);
+    }
 	
     private void pushToMemory(Entry entry, String listId) throws ErrorException {
-		makeSureListExists(listId);
-        
-		if (entry == null) {
-			return;
-		}
+        makeSureListExists(listId);
+
+        if (entry == null) {
+            return;
+        }
 		
+        String parentListId = getListIdFromEntry(getEntry(entry.parentId));
+        if (parentListId == null || !parentListId.equals(listId)) {
+            entry.parentId = "";
+        }
+        
         if ((entry.parentId == null || entry.parentId.trim().length() == 0) || getEntry(entry.parentId) == null) {
             entry.parentId = "";
             allEntries.get(listId).entries.add(entry);
@@ -604,13 +616,35 @@ public class ListManager extends ManagerBase implements IListManager {
                 return found;
             }
             
-            String entryName = makeSeoUrl(entry.name);
+            String entryName = makeSeoUrl(entry.name, getPrefix(entry));
             
             if (entryName.equals(name.toLowerCase())) {
                 return entry.pageId;
             }
         }
         
+        return "";
+    }
+    
+    public String getPrefix(Entry entry) {
+        String listId = getListIdFromEntry(entry);
+        
+        if (listId == null) {
+            return "";
+        }
+        
+        for (String appId : menues.keySet()) {
+            List<Menu> all = menues.get(appId);
+            for (Menu menu : all) {
+                if (menu.entryListId.equals(listId)) {
+                    if (all.size() < 2) {
+                        return "";
+                    }
+                    
+                    return menu.name.toLowerCase()+"_";
+                }
+            }
+        }
         return "";
     }
     
@@ -687,5 +721,71 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         
         return accessLevel;
+    }
+
+    @Override
+    public List<Menu> getMenues(String applicationInstanceId ){
+        List<Menu> retMenues = menues.get(applicationInstanceId);
+        
+        for (Menu menu : retMenues) {
+            finalizeMenu(menu);
+        }
+        
+        return retMenues;
+    }
+
+    private void finalizeMenu(Menu menu) {
+        menu.entryList = getEntryListInternal(menu.entryListId);
+        menu.entryList.name = menu.name;
+    }
+
+    private void addMenu(Menu menu) {
+        List<Menu> retMenues = menues.get(menu.appId);
+        if (retMenues == null) {
+            retMenues = new ArrayList();
+        }
+        
+        retMenues.add(menu);
+        menues.put(menu.appId, retMenues);
+    }
+
+    @Override
+    public void saveMenu(String appId, String listId, ArrayList<Entry> entries, String name) {
+        List<Menu> retMenues = menues.get(appId);
+        
+        if (retMenues == null) {
+            retMenues = new ArrayList();
+            menues.put(appId, retMenues);
+        }
+        
+        Menu menu = retMenues.stream().filter(o -> o.entryListId.equals(listId)).findFirst().orElse(null);
+        
+        if (menu == null) {
+            menu = new Menu();
+            menu.appId = appId;
+            menu.entryListId = listId;
+            retMenues.add(menu);
+        }
+        
+        menu.name = name;
+        saveObject(menu);
+        
+        setEntries(listId, entries);
+    }
+
+    @Override
+    public void deleteMenu(String appId, String listId) {
+        List<Menu> retMenues = menues.get(appId);
+        
+        if (retMenues != null) {
+            for (Menu menu : retMenues) {
+                if (menu.entryListId.equals(listId)) {
+                    retMenues.remove(menu);
+                    deleteObject(menu);
+                    return;
+                }
+            }
+        }
+        
     }
 }

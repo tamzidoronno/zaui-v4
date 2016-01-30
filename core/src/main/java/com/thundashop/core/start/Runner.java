@@ -6,6 +6,7 @@ import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StorePool;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.DatabaseUpdater;
 import com.thundashop.core.socket.WebInterface2;    
 import com.thundashop.core.socket.WebSocketServerImpl;
 import java.io.PrintWriter;
@@ -52,6 +53,9 @@ public class Runner {
             context.getBean(Database.class).activateSandBox();
         }
 
+        DatabaseUpdater updater = context.getBean(DatabaseUpdater.class);
+        updater.check();
+        
         new WebInterface2(log, storePool, port); //Version 2.        
         
         context.getBean(WebSocketServerImpl.class).start();

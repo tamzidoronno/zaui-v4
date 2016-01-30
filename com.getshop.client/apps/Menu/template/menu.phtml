@@ -1,38 +1,61 @@
 <?
-$entries = $this->getMenuEntries();
-$hiddenMenu = "hidden_simple_menu";
+/* 
+ * @var $this \ns_a11ac190_4f9a_11e3_8f96_0800200c9a66\Menu 
+ */
+$menus = $this->getMenus();
 
-if (!count($entries)) {
-    echo $this->__f("Almost there! Click on the plus to add your first menu entry for this menu");
-    $hiddenMenu = "";
-}
-?>
-<div class='mobilenavigatemenu'>
-<i class="fa fa-navicon"> Menu </i>
-</div>
-<div class="menuentries horizontal">
-    <?
-    $this->printEntries($entries, 0);
+$singleSetup = count($menus) == 1;
+
+
+foreach ($menus as $menu) {
+    $prefix = $singleSetup ? "" : strtolower($menu->name)."_";
+    $entries = $menu->entryList->entries;
+    $hiddenMenu = "hidden_simple_menu";
+
+    if (!count($entries)) {
+        echo $this->__f("Almost there! Click on the plus to add your first menu entry for this menu");
+        $hiddenMenu = "";
+    }
     ?>
-</div>
 
-<?
-if ($this->isEditorMode() && !$this->getFactory()->isMobile()) {
-?>
-<div class="menu_simple_menu <? echo $hiddenMenu; ?>">
-    <div class="simpleadd">
-        <div class="simepladd_dialog">
-            <? echo $this->__f("Enter the name of the page"); ?>
-            <br/><input type="textfield" class="addtext"/> <span class="saveit" title="Save entry"><i class="fa fa-save"></i></span>
-        </div>
-        
-        <div title="<? echo $this->__f("add entry"); ?>"><i class="fa fa-plus-circle"></i></div>
+    <div class='mobilenavigatemenu'>
+    <i class="fa fa-navicon"> Menu </i>
+    </div>
+    <div class="menuentries horizontal" menuname="<? echo $menu->name; ?>" <? echo $singleSetup ? "" : "style='display: none'";?>>
+        <?
+        $this->printEntries($entries, 0, $prefix);
+        ?>
     </div>
 
-    <? if (sizeof($entries) > 0) { ?>
-        <div class="showedit" title="go to menu editor">
-            <i class="fa fa-gear"></i>
+    <?
+    if ($this->isEditorMode() && !$this->getFactory()->isMobile() && $singleSetup) {
+    ?>
+    <div class="menu_simple_menu <? echo $hiddenMenu; ?>">
+        <div class="simpleadd">
+            <div class="simepladd_dialog">
+                <? echo $this->__f("Enter the name of the page"); ?>
+                <br/><input type="textfield" class="addtext"/> <span class="saveit" title="Save entry"><i class="fa fa-save"></i></span>
+            </div>
+
+            <div title="<? echo $this->__f("add entry"); ?>"><i class="fa fa-plus-circle"></i></div>
         </div>
-    <? } ?>
-</div>
-<? } ?>
+
+        <? if (sizeof($entries) > 0) { ?>
+            <div class="showedit" title="go to menu editor">
+                <i class="fa fa-gear"></i>
+            </div>
+        <? } ?>
+    </div>
+    <? }
+}
+
+if (!$singleSetup) {
+    echo "<select class='select_menu_selected'>";
+    foreach ($menus as $menu) {
+        echo "<option value='$menu->name'>$menu->name</option>";
+    }
+    echo "</select>";
+    
+    echo "<script>getshop.MenuEditor.selectMenu();</script>";
+}
+?>

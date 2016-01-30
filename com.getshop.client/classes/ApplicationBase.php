@@ -95,17 +95,17 @@ class ApplicationBase extends FactoryBase {
         $storeId = $this->getConfiguration()->storeId;
         $appId = $this->getConfiguration()->id;
         $saveString = "$managerName;$function;$storeId;$appId;$username;$password";
-        $this->addToPasswordStore($managerName, $function, $saveString);
+        $this->addToPasswordStore($managerName, $function, $saveString, $storeId, $appId);
     }
     
-    private function addToPasswordStore($managerName, $function, $saveString) {
+    private function addToPasswordStore($managerName, $function, $saveString, $storeId, $appId) {
         $namespace = $this->getFactory()->convertUUIDtoString($this->getApplicationSettings()->id);
         $privateFolder = "../app/$namespace/private";
         
         if (!file_exists($privateFolder)) {
             $success = @mkdir($privateFolder);
             if (!$success) {
-                echo "UnExpected error 2001230919192039212451597 .. Contact support for more information";
+                echo "UnExpected error 2001230919192039212451597 .. Contact support for more information: ".$privateFolder;
                 die();
             }
         }
@@ -127,7 +127,7 @@ class ApplicationBase extends FactoryBase {
             if (count($content2) < 3) {
                 continue;
             }
-            if ($content2[0] == $managerName && $content2[1] == $function) {
+            if ($content2[0] == $managerName && $content2[1] == $function && $appId == $content2[3] && $storeId == $content2[2]) {
                 continue;
             }
             $addContent .= $content."\n";

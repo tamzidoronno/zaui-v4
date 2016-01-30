@@ -73,7 +73,12 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
             return null;
         }
 
+        if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type >= 50) {
+            return checkSecurity(instance);
+        }
+        
         return checkSecurity(instance.secureClone());
+        
     }
 
     @Override
@@ -95,7 +100,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
 
         application.settings = saveSettings;
         saveObject(application);
-        return checkSecurity(application.secureClone());
+        return checkSecurity(application);
     }
 
     /**

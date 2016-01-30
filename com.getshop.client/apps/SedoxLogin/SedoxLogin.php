@@ -2,9 +2,7 @@
 namespace ns_af4ca00c_4007_42c1_a895_254710311191;
 
 class SedoxLogin extends \MarketingApplication implements \Application {
-    private $apiKey = "jajajaajajajablalbalbal";
-    private $address = "http://staging.tuningfiles.com/api/v2_soap/?wsdl";
-    
+
     public function getDescription() {
         
     }

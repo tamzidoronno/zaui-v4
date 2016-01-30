@@ -4,7 +4,6 @@
  */
 package com.thundashop.core.sedox;
 
-import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
@@ -84,7 +83,7 @@ public interface ISedoxProductManager  {
     @Editor
     public void addUserCredit(String id, String description, int amount) throws ErrorException;
     
-    public User login(String emailAddress, String password) throws ErrorException;
+    public User login(String emailAddress, String password) ;
     
     @Editor
     public void setChecksum(String productId, String checksum) throws ErrorException;

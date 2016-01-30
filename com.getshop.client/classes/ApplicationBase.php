@@ -68,7 +68,7 @@ class ApplicationBase extends FactoryBase {
     
     private function getCredentials($managerName, $function) {
         $namespace = $this->getFactory()->convertUUIDtoString($this->getApplicationSettings()->id);
-        $privateFolder = "../app/$namespace/private";
+        $privateFolder = "../../private/$namespace/private";
         $passwordFile = $privateFolder."/password";
         if (file_exists($passwordFile)) {
             $contents = file_get_contents($passwordFile);
@@ -100,10 +100,10 @@ class ApplicationBase extends FactoryBase {
     
     private function addToPasswordStore($managerName, $function, $saveString, $storeId, $appId) {
         $namespace = $this->getFactory()->convertUUIDtoString($this->getApplicationSettings()->id);
-        $privateFolder = "../app/$namespace/private";
+        $privateFolder = "../../private/$namespace/private";
         
         if (!file_exists($privateFolder)) {
-            $success = @mkdir($privateFolder);
+            $success = mkdir($privateFolder, 0777, true);
             if (!$success) {
                 echo "UnExpected error 2001230919192039212451597 .. Contact support for more information: ".$privateFolder;
                 die();
@@ -111,7 +111,7 @@ class ApplicationBase extends FactoryBase {
         }
         
         $passwordFile = $privateFolder."/password";
-        if (!file($passwordFile)) {
+        if (!file_exists($passwordFile)) {
             $success = touch($passwordFile);
             if (!$success) {
                 echo "UnExpected error 2001230919192039212451598 .. Contact support for more information";

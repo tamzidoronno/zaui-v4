@@ -197,7 +197,7 @@ public class Cart extends DataCommon {
                 CartTax cartTax = taxes.get(taxGroup.groupNumber);
                 if (cartTax == null) {
                     cartTax = new CartTax();
-                    cartTax.taxGroup = taxGroup;
+                    cartTax.taxGroup = taxGroup; 
                     taxes.put(taxGroup.groupNumber, cartTax);
                 }
                 
@@ -208,7 +208,7 @@ public class Cart extends DataCommon {
                     remainingCouponCost = 0D;
                 }
                 
-                Double productTax = newProductPrice * (newProductPrice/(taxGroup.getTaxRate()+1));
+                Double productTax = newProductPrice - (newProductPrice/(taxGroup.getTaxRate()+1));
                 cartTax.sum += productTax;
             }
         }
@@ -216,7 +216,7 @@ public class Cart extends DataCommon {
         if (shippingTax != null && shippingCost > 0 && shippingTax.taxRate > 0) {
             CartTax cartTax = new CartTax();
             cartTax.taxGroup = shippingTax;
-            cartTax.sum = shippingCost * shippingTax.getTaxRate();
+            cartTax.sum = shippingCost - (shippingCost/(shippingTax.getTaxRate()+1));
             taxes.put(shippingTax.groupNumber, cartTax);
         }
         

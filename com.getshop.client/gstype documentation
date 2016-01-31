@@ -1,6 +1,7 @@
 attribute gstypes;
     form, need method attribute example: 
         <div gstype="form" method="addEntry">
+            <input type="text" gsname="bookingItemName" value=""/>
             <input gstype="submit" type="button">
         </div>
 

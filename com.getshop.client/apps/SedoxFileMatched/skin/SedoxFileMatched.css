@@ -1,0 +1,32 @@
+.SedoxFileMatched .sedox_internal_view .fileinfo {
+    width: calc(100% - 421px);
+}
+
+.SedoxFileMatched .extra_title_information {
+    padding-left: 35px;
+    font-weight: normal;
+}
+
+.SedoxFileMatched textarea {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 20px;
+    height: 270px;
+    margin-bottom: 20px;
+    border: solid 2px #DDD;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.SedoxFileMatched .fileinfo .box_content {
+    padding: 20px;
+}
+
+.SedoxFileMatched .inner_button_area_request_special {
+    text-align: right;
+}
+
+.SedoxFileMatched .request_special_file {
+    width: 200px;
+    display: inline-block;
+}

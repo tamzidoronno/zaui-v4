@@ -16,12 +16,13 @@ class SedoxFileUpload extends \MarketingApplication implements \Application {
     }
     
     public function doesProductExists() {
-        echo "false";
-    }
-    
-    // TODO : select product based on data['md5']
-    public function selectProductBaseOnMd5() {
-        echo "false";
+        $product = $this->getApi()->getSedoxProductManager()->getSedoxProductByMd5Sum($_POST['data']['md5']);
+        if ($product) {
+            $this->clear();
+            echo $product->id;
+        } else {
+            echo "false";
+        }
     }
     
     public function uploadFile() {

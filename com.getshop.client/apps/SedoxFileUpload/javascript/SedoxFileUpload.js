@@ -102,7 +102,6 @@ app.SedoxFileUpload = {
     },
     
     fileSelected: function() {
-        
         app.SedoxFileUpload.uploadFile(this.files[0]);
     },
     
@@ -156,8 +155,8 @@ app.SedoxFileUpload = {
         $('.SedoxFileUpload .uploadfilemodal').fadeIn();
     },
     
-    selectBasedOnMd5: function() {
-        alert("Found a match.");
+    selectBasedOnMd5: function(productId) {
+        thundashop.common.goToPage("filematch&productId="+productId);
     },
     
     showUploadProgress: function(file) {
@@ -204,7 +203,7 @@ app.SedoxFileUpload = {
         
         thundashop.Ajax.postWithCallBack(event, function(res) {
             if (res !== "false") {
-                app.SedoxFileUpload.selectBasedOnMd5(md5);
+                app.SedoxFileUpload.selectBasedOnMd5(res);
             } else {
                 app.SedoxFileUpload.showUploadProgress(file);
             }

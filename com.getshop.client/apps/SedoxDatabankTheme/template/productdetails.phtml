@@ -1,0 +1,41 @@
+<?
+$product = $this->getCurrentProduct();
+$productName = $product->printableName;
+$creditPrice = $this->getApi()->getSedoxProductManager()->getPriceForProduct($product->id, [$product->binaryFiles[0]->id]);
+
+?>
+<div class='box_header boldFont'>
+    Download Information
+</div>
+<div class='box_content'>
+    <?
+    echo "<select class='fileselector'>";
+    foreach ($product->binaryFiles as $binFile) {
+        $checksumCorrect = $binFile->checksumCorrected ? "Yes" : "No";
+        $extraInfo = sedox_notAvailableCheck($binFile->extraInformation);
+        echo "<option checksumupdated='$checksumCorrect' extrainfo='$binFile->extraInformation' admintools='N/A' value='$binFile->id'>" . $binFile->fileType . "</option>";
+    }
+    echo "</select>";
+    ?>
+
+    <div class='row_type1'>
+        Checksum updated:
+        <div class='row_subinfo' lookingfor="checksumupdated">-</div>
+    </div>
+
+    <div class='row_type1'>
+        Extra information:
+        <div class='row_subinfo' lookingfor="extrainfo">-</div>
+    </div>
+
+    <div class='row_type1'>
+        Admin Tools:
+        <div class='row_subinfo' lookingfor="admintools">-</div>
+    </div>
+
+    <div class='priceview'>
+        <div class='price boldFont'><? echo $creditPrice; ?></div>
+        <div class='pricetext boldFont'>CREDITS</div>
+        <div class='sedox_blue_button action_purchase_product' productId="<? echo $product->id; ?>" sedox_file_id="">Purchase and Download</div>
+    </div>
+</div>

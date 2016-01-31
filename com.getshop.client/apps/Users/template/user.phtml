@@ -127,6 +127,20 @@ if (!$user->address) {
     </div>
 
 </div>
+
+<?
+$apps = $this->getAppsWithPrintingToUser();
+foreach ($apps as $app) {
+    ?>
+        <div class='gss_settings_content gss_settings_user_address'>
+            <div class="gss_settings_title"><? echo $app->getName(); ?></div>
+            <? $app->renderUserSettings($user); ?>
+        </div>
+    <?
+}
+?>
+
+
 <div class='gss_settings_content gss_settings_user_address'>
     <div class="gss_settings_title">Addresses</div>
 

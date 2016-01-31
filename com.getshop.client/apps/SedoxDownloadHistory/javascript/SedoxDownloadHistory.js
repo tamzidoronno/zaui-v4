@@ -6,7 +6,7 @@ app.SedoxDownloadHistory = {
     },
     
     showProduct: function(event) {
-        if ($(event.target).hasClass('start_button') || $(event.target).closest('.stop_button').length > 0) {
+        if ($(event.target).hasClass('start_button') || $(event.target).closest('.stop_button').length > 0 || $(event.target).closest('.sedoxadmin_see_user_button').length > 0) {
             event.preventDefault();
             return -1;
         }

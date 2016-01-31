@@ -2,6 +2,7 @@
 namespace ns_07c7565c_040d_4425_962d_a326c782bb4e;
 
 class SedoxCreditHistory extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon implements \Application {
+    private $currentSedoxUser = null;
     private $creditHistory = null;
     
     public function getDescription() {
@@ -36,6 +37,19 @@ class SedoxCreditHistory extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxC
         return $this->getApi()
                 ->getSedoxProductManager()
                 ->getCurrentUserCreditHistoryCount($this->createFilterData());
+    }
+
+    public function renderUserSettings($user) {
+        $this->currentSedoxUser = $user;
+        $this->includefile("usersettings");
+    }
+
+    public function getCurrentUser() {
+        return $this->currentSedoxUser;
+    }
+    
+    public function updateCredit() {
+        $this->getApi()->getSedoxProductManager()->addUserCredit($_POST['userid'], $_POST['creditDescription'], $_POST['creditAmount']);
     }
 
 }

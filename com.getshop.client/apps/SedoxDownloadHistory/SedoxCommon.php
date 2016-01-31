@@ -61,6 +61,10 @@ class SedoxCommon extends \MarketingApplication {
     public function getCurrentProduct() {
         return $this->currentProduct;
     }
+    
+    public function getPriceForProduct() {
+        echo $this->getApi()->getSedoxProductManager()->getPriceForProduct($_POST['data']['productId'], [$_POST['data']['fileId']]);
+    }
 
     public function getTotalPages() {
         return 1;
@@ -114,5 +118,14 @@ class SedoxCommon extends \MarketingApplication {
         }
         
         return $_SESSION[$this->sessionNameFileSelected($productId)] == $fileId;
+    }
+    
+    public function dummy() {   
+    }
+    
+    public function purchaseAndDownload() {
+        $this->getApi()->getSedoxProductManager()->purchaseProduct($_POST['data']['productId'], [$_POST['data']['file']]);
+        echo "filedownload.php?file=" . $_POST['data']['file']."&productId=".$_POST['data']['productId'];
+        die();
     }
 }

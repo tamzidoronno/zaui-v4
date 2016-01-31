@@ -5,14 +5,15 @@
  */
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
-$product = $factory->getApi()->getSedoxProductManager()->getProductById($_SESSION['sedox_current_productid']);
-$productName = $product->brand." ".$product->model." ".$product->engineSize." ".$product->power." ".$product->year." ".$product->originalChecksum;
+$product = $factory->getApi()->getSedoxProductManager()->getProductById($_GET['productId']);
+$productName = $product->printableName;
 
-$fileArray = explode(":-:", base64_decode(urldecode($_GET['files'])));
-$filename = "$productName.zip";
+$filename = "$productName";
 
-if(count($fileArray) == 1) {
-    $filename = "$productName.tune";
+foreach ($product->binaryFiles as $file) {
+    if ($file->id == $_GET['file']) {
+        $filename = $file->id." - ".$productName." ".$file->fileType.".bin";
+    }
 }
 
 header("Content-Type: application/octet-stream");
@@ -27,7 +28,7 @@ header("Content-Disposition: attachment; filename=\"$filename\"");
 header("Content-Transfer-Encoding: binary");
 
 
-$zipFileBase64 = $factory->getApi()->getSedoxProductManager()->purchaseProduct($_SESSION['sedox_current_productid'], $fileArray);
+$zipFileBase64 = $factory->getApi()->getSedoxProductManager()->purchaseProduct($_GET['productId'], [$_GET['file']]);
 $file = base64_decode($zipFileBase64);
 echo $file;
 ?>

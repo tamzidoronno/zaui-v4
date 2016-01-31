@@ -9,10 +9,13 @@ $developers = $this->getApi()->getSedoxProductManager()->getDevelopers();
 $activeDevelopers = 0;
 
 $date = date("Y-m-d", time() - (86400*$daysBack));
-
+$title = "";
 foreach ($developers as $dev) {
-    if ($dev->isActiveDelevoper)
+    if ($dev->isActiveDelevoper) {
+        $devUser = $this->getApi()->getUserManager()->getUserById($dev->id);
         $activeDevelopers++;
+        $title .= " | ".$devUser->fullName ." | ";
+    }
 }
 ?>
 
@@ -35,7 +38,7 @@ foreach ($developers as $dev) {
     </div>
     <div class='statcol'>
         Developers
-        <div><? echo $activeDevelopers; ?></div>
+        <div title="<? echo $title; ?>"><? echo $activeDevelopers; ?></div>
     </div>
 </div>
 
@@ -56,7 +59,7 @@ foreach ($developers as $dev) {
             $user = $this->getApi()->getUserManager()->getUserById($file->firstUploadedByUserId);
             $sedoxUserAccount = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($file->firstUploadedByUserId);
             $balance = $sedoxUserAccount->creditAccount->balance;
-            $seeUserButton = "<div class='sedoxadmin_see_user_button'><i class='fa fa-search'></i></div>";
+            $seeUserButton = "<div class='sedoxadmin_see_user_button' userid='$user->id'><i class='fa fa-search'></i></div>";
             
             
             $status = "";

@@ -44,7 +44,11 @@ class SettingsFactory extends FactoryBase {
             $appNameWithNamespace = get_class($this->currentApplication);
             $appname = substr(strstr($appNameWithNamespace, "\\"), 1);
             echo "<div class='app' app='$appname'>";
-            $this->currentApplication->renderConfig();
+            
+            if (method_exists($this->currentApplication, "renderConfig")) {
+                $this->currentApplication->renderConfig();
+            }
+            
             echo "</div>";
         }
 

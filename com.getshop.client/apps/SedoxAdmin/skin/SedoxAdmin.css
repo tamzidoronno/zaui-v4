@@ -370,3 +370,11 @@
     
     float: right;
 }
+
+
+.SedoxAdmin .priceview {
+    padding-top: 0px !important;
+}
+.SedoxAdmin .price {
+    font-size: 15px !important;
+}

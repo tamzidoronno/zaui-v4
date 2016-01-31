@@ -1,0 +1,93 @@
+<?
+/* @var $this \ns_1475891a_3154_49f9_a2b4_ed10bfdda1fc\SedoxAdmin */
+$user = $this->getCurrentUser();
+$sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($user->id);
+?>
+<div class="gss_overrideapp" gss_use_app_id="1475891a-3154-49f9-a2b4-ed10bfdda1fc">
+    <input type="hidden" gs_model="sedoxusermodel" gs_model_attr="userid" value="<? echo $user->id; ?>"/>
+    
+    <div class="textfield gss_setting"  id="admin" >
+        <span class="title"><?php echo $this->__f("File developer?"); ?></span>
+        <div class="gss_onoff" gs_model="sedoxusermodel" gs_model_attr="isDeveloper">
+            <?
+            $faclass = $sedoxUser->isActiveDelevoper ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("Is active file developer"); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="isPassiveSlave" >
+        <span class="title">Passive slave?</span>
+        <div class="gss_onoff" gs_model="sedoxusermodel" gs_model_attr="isPassiveSlave">
+            <?
+            $faclass = $sedoxUser->isPassiveSlave ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            Is this a passive slave?
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="admin" >
+        <span class="title">Norwegian?</span>
+        <div class="gss_onoff" gs_model="sedoxusermodel" gs_model_attr="isNorwegian">
+            <?
+            $faclass = $sedoxUser->isNorwegian ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            Is this a norwegian customer?
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  >
+        <span class="title">Bad Customer?</span>
+        <div class="gss_onoff" gs_model="sedoxusermodel" gs_model_attr="badCustomer">
+            <?
+            $faclass = $sedoxUser->badCustomer ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            Is this a bad customer?
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  >
+        <span class="title">Windows app?</span>
+        <div class="gss_onoff" gs_model="sedoxusermodel" gs_model_attr="canUseExternalProgram">
+            <?
+            $faclass = $sedoxUser->canUseExternalProgram ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            Is this customer allowed to use windows app ?
+        </div>
+    </div>
+
+    <div class="textfield gss_setting" >
+        <span class="title"><?php echo $this->__f("Id"); ?></span>
+        <input type="textfield" gs_model='sedoxusermodel' gs_model_attr='pushoverid' value="<? echo $sedoxUser->pushoverId; ?>">
+        <div class="description">
+            <?php echo $this->__("The pushover id"); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting" >
+        <span class="title"><?php echo $this->__f("Fixed rate"); ?></span>
+        <input type="textfield" gs_model='sedoxusermodel' gs_model_attr='fixedrate' value="<? echo $sedoxUser->fixedPrice; ?>">
+        <div class="description">
+            <?php echo $this->__("Set the amount the customer should be able to buy files for. Blank = default values."); ?>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="updateUser" gss_model="sedoxusermodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    </div>
+</div>

@@ -97,7 +97,7 @@ class FactoryBase {
                 include $appTemplateFile;
             } else {
                 if(!$this->getApplications()) {
-                    echo "Is the template file: " . $filename . " missing?";
+                    echo "Is the template file: " . $file . " missing?";
                     return;
                 }
             }

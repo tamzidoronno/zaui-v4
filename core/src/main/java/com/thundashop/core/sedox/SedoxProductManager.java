@@ -13,7 +13,6 @@ import com.thundashop.core.messagemanager.DummySmsFactory;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MailFactoryImpl;
 import com.thundashop.core.messagemanager.SMSFactory;
-import com.thundashop.core.messagemanager.SMSFactoryImpl;
 import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.UserManager;
@@ -70,7 +69,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private Map<String, SedoxUser> users = new HashMap();
 
     @Autowired
-    public SedoxAirgram sedoxAirgram;
+    public SedoxPushOver sedoxPushover;
 
     @Autowired
     public MailFactory mailFactory;
@@ -278,16 +277,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             
             if (sharedProduct != null && sharedProduct.id.equals(id)) {
                 SedoxProduct sedoxProduct = new SedoxProduct();
-                sedoxProduct.id = getNextProductId();
-                sedoxProduct.firstUploadedByUserId = getSession().currentUser.id;
+                sedoxProduct.id = sharedProduct.id;
+                sedoxProduct.firstUploadedByUserId = "";
                 sedoxProduct.storeId = storeId;
                 sedoxProduct.sharedProductId = id;
                 sedoxProduct.rowCreatedDate = new Date();
                 sedoxProduct.isFinished = true;
-                sedoxProduct.duplicate = true;
-                saveObject(sedoxProduct);
-                finalize(sedoxProduct);
-                products.put(sedoxProduct.id, sedoxProduct);
+                sedoxProduct.virtual = true;
+                return sedoxProduct;
             }
         }
 
@@ -758,12 +755,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         for (SedoxUser developer : getDevelopers()) {
             User user = userManager.getUserById(developer.id);
             if (developer.isActiveDelevoper) {
-                sendAirGramMessage(user.emailAddress, sedoxProduct);
+                sendPushoverMessage(user.emailAddress, sedoxProduct);
             }
         }
     }
 
-    private void sendAirGramMessage(String emailAddress, SedoxProduct sedoxProduct) throws ErrorException {
+    private void sendPushoverMessage(String emailAddress, SedoxProduct sedoxProduct) throws ErrorException {
         User user = userManager.getUserById(sedoxProduct.firstUploadedByUserId);
         SedoxSharedProduct sharedProduct = getSharedProductById(sedoxProduct.sharedProductId);
         SedoxUser sedoxUser = getSedoxUserAccountById(user.id);
@@ -771,7 +768,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         String message = "File: " + sharedProduct.getName();
         message += " | User: " + user.fullName;
         message += " | Credit: " + sedoxUser.creditAccount.getBalance();
-        sedoxAirgram.sendMessage(emailAddress, message);
+        sedoxPushover.sendMessage(sedoxUser.pushoverId, message);
     }
 
     private String getNextProductId() {
@@ -1494,7 +1491,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         for (SedoxBinaryFile file : sharedProduct.binaryFiles) {
             if (file.id == fileId) {
-                Path path = Paths.get("/opt/files/" + file.md5sum);
+                String filePathString = "/opt/files/" + file.md5sum;
+                
+                File f = new File(filePathString);
+                if(!f.exists() && !f.isDirectory()) { 
+                    f.createNewFile();
+                }
+                
+                Path path = Paths.get(filePathString);
                 byte[] data = Files.readAllBytes(path);
                 return DatatypeConverter.printBase64Binary(data);
             }
@@ -1665,7 +1669,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         SedoxUser sedoxUser = getSedoxUserById(getSession().currentUser.id);
         SedoxProduct product = getProductById(productId);
-        return getPrice(product, sedoxUser, files);
+        double price = getPrice(product, sedoxUser, files);
+        
+        if (price > 0) {
+            return price;
+        }
+        
+        return 0D;
     }
 
     @Override
@@ -1981,6 +1991,21 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         
         return getSedoxUserById(slaveId);
+    }
+
+    @Override
+    public void setPushoverId(String pushover) {
+        String id = getSession().currentUser.id;
+        SedoxUser user = getSedoxUserAccountById(id);
+        user.pushoverId = pushover;
+        saveObject(user);
+    }
+
+    @Override
+    public void setPushoverIdForUser(String pushover, String userId) {
+        SedoxUser user = getSedoxUserAccountById(userId);
+        user.pushoverId = pushover;
+        saveObject(user);
     }
 
 }

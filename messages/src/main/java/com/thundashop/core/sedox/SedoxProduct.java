@@ -33,6 +33,7 @@ public class SedoxProduct extends SedoxProductCopiedData implements Comparable<S
     public String sharedProductId = "";
     public boolean isBuiltFromSpecialRequest = false;
     public boolean duplicate = false;
+    public boolean virtual = false;
     
     @Override
     public int compareTo(SedoxProduct o) {

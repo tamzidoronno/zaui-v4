@@ -1,0 +1,33 @@
+<?
+/* @var $this ns_07c7565c_040d_4425_962d_a326c782bb4e\SedoxCreditHistory */
+$user = $this->getCurrentUser();
+$sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($user->id);
+?>
+<div class="gss_overrideapp" gss_use_app_id="07c7565c-040d-4425-962d-a326c782bb4e">
+
+    <div style="text-align: center;">
+        Current credit balance: <? echo $sedoxUser->creditAccount->balance; ?>
+    </div>
+        
+    <input type="hidden" gs_model="sedoxcreditmodel" gs_model_attr="userid" value="<? echo $user->id; ?>"/>
+    
+    <div class="textfield gss_setting"  id="creditdescription">
+        <span class="title">Description </span>
+        <input type="textfield" gs_model='sedoxcreditmodel' gs_model_attr='creditDescription' value="">
+        <div class="description">
+            <?php echo $this->__("Description that will be shown to user"); ?>
+        </div>
+    </div>
+    
+     <div class="textfield gss_setting"  id="creditamount">
+        <span class="title">Amount</span>
+        <input type="textfield" gs_model='sedoxcreditmodel' gs_model_attr='creditAmount' value="">
+        <div class="description">
+            <?php echo $this->__("Add / Remove credit"); ?>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="updateCredit" gss_model="sedoxcreditmodel" gss_success_method="refresh" gss_success_message="Updated"><i class='fa fa-save'></i><?php echo $this->__("Add / Remove"); ?></div>
+    </div>
+</div>

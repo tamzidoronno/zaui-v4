@@ -15,9 +15,11 @@ if (!function_exists("sedox_notAvailableCheck")) {
 }
 $expaned = $this->isExpanded($product->id) ? "expanded" : "";
 
+$_POST['data']['productId'] = $product->id;
+$_POST['data']['fileId'] = $product->binaryFiles[0]->id;
 ?>
 <div class="sedox_internal_view <? echo $expaned; ?>" productid='<? echo $product->id; ?>'>
-    <div class="innerview">
+    <div class="innerview" productid='<? echo $product->id; ?>'>
         <div class='title boldFont'>
             <i class='fa fa-file'></i> <? echo $productName; ?>
             <div class='product_comment'><b> Comment: </b><? echo !$product->comment ? "N/A" : $product->comment; ?></div>
@@ -30,10 +32,15 @@ $expaned = $this->isExpanded($product->id) ? "expanded" : "";
                 <?
                 echo "<select class='fileselector'>";
                 foreach ($product->binaryFiles as $binFile) {
+                    
+                    if ($this->isSelected($product->id, $binFile->id)) {
+                        $_POST['data']['fileId'] = $binFile->id;
+                    }
+                    
                     $checksumCorrect = $binFile->checksumCorrected ? "Yes" : "No";
                     $extraInfo = sedox_notAvailableCheck($binFile->extraInformation);
                     $selected = $this->isSelected($product->id, $binFile->id) ? "selected='true'" : "";
-                    echo "<option $selected checksumupdated='$checksumCorrect' extrainfo='N/A' admintools='N/A' value='$binFile->id'>" . $binFile->fileType . "</option>";
+                    echo "<option $selected checksumupdated='$checksumCorrect' extrainfo='$binFile->extraInformation' admintools='N/A' value='$binFile->id'>" . $binFile->fileType . "</option>";
                 }
                 echo "</select>";
                 ?>
@@ -48,15 +55,15 @@ $expaned = $this->isExpanded($product->id) ? "expanded" : "";
                     <div class='row_subinfo' lookingfor="extrainfo">-</div>
                 </div>
 
-                <div class='row_type1'>
+                <div class='row_type1 priceview'>
                     Price:
-                    <div class='row_subinfo' lookingfor="admintools"></div>
+                    <div class='row_subinfo price'><? echo $this->getPriceForProduct(); ?></div>
                 </div>
 
                 
                 <div class='sedox_file_actions'>
-                    <div class='smallbutton'><i class='fa fa-download'></i></div>
-                    <div class='smallbutton'><i class='fa fa-info-circle'></i></div>
+                    <div class='smallbutton'><i class='fa fa-download action_purchase_product' sedox_file_id="" productid="<? echo $product->id; ?>"></i></div>
+                    <div class='smallbutton'><i class='fa fa-info-circle setInformation' sedox_file_id=""></i></div>
                     <div class='trash_button smallbutton' gsclick="deleteFile" sedox_file_id="" productid="<? echo $product->id; ?>"><i class='fa fa-trash'></i></div>
                 </div>
                 <div class='priceview'>

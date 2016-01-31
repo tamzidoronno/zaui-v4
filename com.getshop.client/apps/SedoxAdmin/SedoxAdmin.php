@@ -2,6 +2,8 @@
 namespace ns_1475891a_3154_49f9_a2b4_ed10bfdda1fc;
 
 class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon implements \Application {
+    private $currentSedoxUser = null;
+    
     public function getDescription() {
         
     }
@@ -112,5 +114,29 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         return $requests;
     }
 
+    public function setInformation() {
+        $this->getApi()->getSedoxProductManager()->setExtraInformationForFile($_POST['data']['productId'], $_POST['data']['fileId'], $_POST['data']['info']);
+    }
+    
+    public function renderUserSettings($user) {
+        $this->currentSedoxUser = $user;
+        $this->includefile("usersettings");
+    }
+    
+    public function getCurrentUser() {
+        return $this->currentSedoxUser;
+    }
+    
+    public function updateUser() {
+        $this->getApi()->getSedoxProductManager()->changeDeveloperStatus($_POST['userid'], $_POST['isDeveloper']);
+        $this->getApi()->getSedoxProductManager()->setPushoverIdForUser($_POST['pushoverid'], $_POST['userid']);
+        $this->getApi()->getSedoxProductManager()->toggleIsNorwegian($_POST['userid'], $_POST['isNorwegian']);
+        $this->getApi()->getSedoxProductManager()->togglePassiveSlaveMode($_POST['userid'], $_POST['isPassiveSlave']);
+        $this->getApi()->getSedoxProductManager()->toggleBadCustomer($_POST['userid'], $_POST['badCustomer']);
+        $this->getApi()->getSedoxProductManager()->toggleAllowWindowsApp($_POST['userid'], $_POST['canUseExternalProgram']);
+        $this->getApi()->getSedoxProductManager()->setFixedPrice($_POST['userid'], $_POST['fixedrate']);
+        
+    }
+    
 }
 ?>

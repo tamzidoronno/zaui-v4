@@ -1,7 +1,7 @@
 <?php
 namespace ns_c7b87917_6a26_43cf_9876_7e3ef9eeab3e;
 
-class SedoxFileMatched extends \MarketingApplication implements \Application {
+class SedoxFileMatched extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon implements \Application {
     public function getDescription() {
         
     }
@@ -16,8 +16,9 @@ class SedoxFileMatched extends \MarketingApplication implements \Application {
             echo '<script>thundashop.common.goToPage("upload_successful");</script>';
         } else {
             $this->includefile("productview");
+            echo "<script> getshop.SedoxDatabankTheme.setAll(); </script>";
         }
-        
+
     }
 
     public function getCurrentProduct() {

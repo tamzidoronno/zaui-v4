@@ -6,13 +6,9 @@ package com.thundashop.core.usermanager.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.thundashop.core.cartmanager.data.Cart;
 import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;

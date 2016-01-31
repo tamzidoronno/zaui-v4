@@ -29,6 +29,19 @@ app.Users = {
         }
         
         return true;
+    },
+    
+    refresh: function(field, response) {
+        var userId = $(field).closest('.gss_overrideapp').find('input[gs_model_attr="userid"]').val()
+        
+        var data = {
+            gss_fragment: 'user',
+            gss_view: 'gs_user_workarea',
+            gss_value: userId
+        }
+
+        getshop.Settings.post({}, "gs_show_fragment", data);
+        getshop.Settings.showSuccessMessage("Successfully updated");
     }
 }
 

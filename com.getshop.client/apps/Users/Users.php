@@ -276,5 +276,19 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $this->setConfigurationSetting("orderemail", $_POST['emailconfig']);
         $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
     }
+
+    public function getAppsWithPrintingToUser() {
+        $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
+        $retApps = [];
+        foreach ($apps as $appSetting) {
+            $instance = $this->getFactory()->getApplicationPool()->createInstace($appSetting);
+            if (method_exists($instance, "renderUserSettings")) {
+                $retApps[] = $instance;
+            }
+        }
+        
+        return $retApps;
+    }
+
 }
 ?>

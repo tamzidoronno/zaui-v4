@@ -5,11 +5,29 @@ app.SedoxAdmin = {
         $(document).on('click', '.SedoxAdmin .closebutton', app.SedoxAdmin.closeModal);
         $(document).on('click', '.SedoxAdmin .sedox_admin_upload_file', app.SedoxAdmin.showModal);
         $(document).on('click', '.SedoxAdmin .filetype', app.SedoxAdmin.fileTypeSelected);
+        $(document).on('click', '.SedoxAdmin .setInformation', app.SedoxAdmin.setInformation);
+        $(document).on('click', '.SedoxAdmin .sedoxadmin_see_user_button', app.SedoxAdmin.showUser);
         
         
         $(document).on('dragover', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleDragOver);
         $(document).on('dragleave', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleDragOut);
         $(document).on('drop', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleFileSelect);
+    },
+    
+    showUser: function() {
+        app.Users.gssinterface.showUser($(this).attr('userid'));
+    },
+    
+    setInformation: function() {
+        var information = prompt("Please enter information");
+        if (information) {
+            thundashop.Ajax.simplePost(this, "setInformation", {
+                info: information,
+                productId : $(this).closest('.col_row_content').attr('productid'),
+                fileId : $(this).attr('sedox_file_id')
+            });
+            
+        }
     },
     
     fileTypeSelected: function() {

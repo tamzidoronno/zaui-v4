@@ -208,7 +208,6 @@ getshop.MenuEditor = {
             }    
         });
         
-        debugger;
         var event = thundashop.Ajax.createEvent('','updateLists', $('.MenuEditor'),data);
         thundashop.Ajax.post(event);
         thundashop.common.hideInformationBox();
@@ -333,7 +332,9 @@ getshop.MenuEditor = {
             $('.titleinformation #scrollPageId').val(getshop.MenuEditor.activeItem.scrollPageId);    
             $('.titleinformation #hideElement').val('checked',false);
             if(getshop.MenuEditor.activeItem.hidden) {
-                $('.titleinformation #hideElement').val('checked','checked');
+                $('.titleinformation #hideElement').attr('checked','true');
+            } else {
+                $('.titleinformation #hideElement').removeAttr('checked');
             }
             if (getshop.MenuEditor.activeItem.link) {
                 $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.link);

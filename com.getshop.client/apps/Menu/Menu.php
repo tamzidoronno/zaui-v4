@@ -194,6 +194,12 @@ class Menu extends \SystemApplication implements \Application {
         }        
     }
     
+    /**
+     * 
+     * @param \core_listmanager_data_Entry[] $entries
+     * @param type $level
+     * @param type $prefix
+     */
     public function printEntries($entries, $level, $prefix) {
         echo "<div class='entries'>";
         
@@ -203,6 +209,10 @@ class Menu extends \SystemApplication implements \Application {
             }
             
             if ($this->isDisabledDueToLanaguage($entry)) {
+                continue;
+            }
+            
+            if ($entry->hidden) {
                 continue;
             }
             

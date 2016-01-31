@@ -71,8 +71,8 @@ public class {{CLASSNAME}} extends UpdateScriptBase implements UpdateScript {
         allowed2,
         " ",
         Application.Type.{{JAVATYPE}}, true);
-        {{CLASSNAME}}.isPublic = false;
-        {{CLASSNAME}}.isFrontend = false;
+        {{CLASSNAME}}.isPublic = true;
+        {{CLASSNAME}}.isFrontend = true;
         {{CLASSNAME}}.moduleId = "{{MODULE}}";
         {{CLASSNAME}}.defaultActivate = false;
         {{CLASSNAME}}.storeId = "all";

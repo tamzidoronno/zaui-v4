@@ -86,6 +86,7 @@ if (count($cartItems) == 0) {
     }
 
     $taxes = $this->getApi()->getCartManager()->getTaxes();
+    $taxes = $this->mergeSameTaxes($taxes);
     ?>
 </div>
 
@@ -99,8 +100,8 @@ if (count($cartItems) == 0) {
             <?
             echo $this->__w("Taxes");
 
-            foreach ($taxes as $tax) {
-                echo "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $this->__w("Taxes") . " (" . $tax->taxGroup->taxRate . "%) <span>" .  \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($tax->sum) . "</span>";
+            foreach ($taxes as $tax => $taxSum) {
+                echo "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $this->__w("Taxes") . " (" . $tax . "%) <span>" .  \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($taxSum) . "</span>";
             }
             ?>
             <br> 

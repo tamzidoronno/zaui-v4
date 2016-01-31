@@ -570,6 +570,20 @@ class CartManager extends \SystemApplication implements \Application {
         }
     }
 
+    public function mergeSameTaxes($taxes) {
+        $retTaxes = [];
+        
+        foreach ($taxes as $tax) {
+            if (!isset($retTaxes[$tax->taxGroup->taxRate])) {
+                $retTaxes[$tax->taxGroup->taxRate] = 0;
+            }
+            
+            $retTaxes[$tax->taxGroup->taxRate] += $tax->sum;
+        }
+        
+        return $retTaxes;
+    }
+
 }
     
 ?>

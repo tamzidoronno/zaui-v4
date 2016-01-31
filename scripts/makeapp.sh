@@ -11,8 +11,8 @@ echo "6. ShipmentApplication"
 echo "7. ThemeApplication"
 read appType
 
-UUID=$(cat /proc/sys/kernel/random/uuid)
-UUID2=${UUID//[-]/_}
+UUID2=$(cat /proc/sys/kernel/random/uuid)
+UUID=${UUID2//[-]/_}
 APPTNAME=MarketingApplication
 JAVATYPE=Marketing
 if [ $appType = "2" ]; then 
@@ -70,7 +70,7 @@ mkdir ../com.getshop.client/apps/$name/skin
 touch ../com.getshop.client/apps/$name/skin/$name.css
 mkdir ../com.getshop.client/apps/$name/template
 echo "<?php" > ../com.getshop.client/apps/$name/$name.php
-echo "namespace ns_$UUID2;" >> ../com.getshop.client/apps/$name/$name.php
+echo "namespace ns_$UUID;" >> ../com.getshop.client/apps/$name/$name.php
 echo "" >> ../com.getshop.client/apps/$name/$name.php
 echo "class $name extends \\$APPTNAME implements \Application {" >> ../com.getshop.client/apps/$name/$name.php
 
@@ -89,15 +89,26 @@ echo "    }" >> ../com.getshop.client/apps/$name/$name.php
 echo "}" >> ../com.getshop.client/apps/$name/$name.php
 echo "?>" >> ../com.getshop.client/apps/$name/$name.php
 
-echo "######################## AddApplicationToDatabase ############"
-echo "Application $name = createSettings(\"$name\","
-echo "\"$UUID\","
-echo "allowed2,"
-echo "\" \","
-echo "Application.Type.$JAVATYPE, true);"
-echo "$name.isPublic = true;"
-echo "$name.isFrontend = true;"
-echo "$name.moduleId = \"$module\";"
-echo "$name.defaultActivate = false;"
-echo "apps.add($name);"
-echo "######################## AddApplicationToDatabase ############"
+
+TEMPLATEFILE="addApplication.txt";
+CODE=$(<templates/$TEMPLATEFILE);
+CLASSNAME=$name;
+
+CODE=$(echo "$CODE" | sed "s|{{UUID}}|$UUID|g");
+CODE=$(echo "$CODE" | sed "s|{{MODULE}}|$module|g");
+CODE=$(echo "$CODE" | sed "s|{{JAVATYPE}}|$JAVATYPE|g");
+
+. ./createDbScript.sh
+
+#echo "######################## AddApplicationToDatabase ############"
+#echo "Application $name = createSettings(\"$name\","
+#echo "\"$UUID\","
+#echo "allowed2,"
+#echo "\" \","
+#echo "Application.Type.$JAVATYPE, true);"
+#echo "$name.isPublic = true;"
+#echo "$name.isFrontend = true;"
+#echo "$name.moduleId = \"$module\";"
+#echo "$name.defaultActivate = false;"
+#echo "apps.add($name);"
+#echo "######################## AddApplicationToDatabase ############"

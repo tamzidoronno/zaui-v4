@@ -1,0 +1,39 @@
+/*
+ * When multilevel menues was introduced this was added as a new Menu object was made.
+ * Adding Menu to EntryLists.
+ *
+ * @ktonder
+ */
+package com.thundashop.core.databasemanager.updatescripts;
+
+import com.thundashop.core.databasemanager.UpdateScript;
+import com.thundashop.core.databasemanager.UpdateScriptBase;
+import java.util.Date;
+import org.springframework.stereotype.Component;
+
+/**
+ *
+ * @author ktonder
+ */
+@Component
+public class {{CLASSNAME}} extends UpdateScriptBase implements UpdateScript {
+
+    @Override
+    public Date getAddedDate() {
+        return getDate("{{DATE}}");
+    }
+    
+    @Override
+    public String getId() {
+        return "{{SCRIPT_UUID}}";
+    }
+    
+    public static void main(String[] args) {
+        new {{CLASSNAME}}().runSingle();
+    }
+    
+    @Override
+    public void run() {
+        // Your magic code goes here :D
+    }
+}

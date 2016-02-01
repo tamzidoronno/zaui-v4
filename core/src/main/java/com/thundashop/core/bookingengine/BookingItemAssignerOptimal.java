@@ -148,10 +148,6 @@ public class BookingItemAssignerOptimal {
                 continue;
             }
             
-            if (bookingWithItem.bookingItemId.equals("3f516f4f-6863-4df3-a978-39a433188dcb")) {
-                System.out.println(bookingWithItem.getInformation());
-            }
-            
             if (!removeIfExists(bookingWithItem.bookingItemId, bookingItemsFlatten)) {
                 /*
                 1. Already in use

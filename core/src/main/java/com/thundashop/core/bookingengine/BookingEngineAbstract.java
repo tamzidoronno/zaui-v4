@@ -352,7 +352,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         try {
             preProcessBookings(bookingsToAdd);
         } catch (BookingEngineException exception) {
-            exception.printStackTrace();
             return false;
         }
 
@@ -496,11 +495,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             }
             
             List<Booking> checkBookings = groupedBookings.get(bookingTypeId);
-            removeFromBooking(checkBookings, bookings);
-            
             checkBookings.addAll(getBookingsNotAssigned(type.id));
             checkBookings.addAll(getAssignedBookingsAfterFirstBooking(type.id, bookings));
             
+            removeFromBooking(checkBookings, bookings);
+            checkBookings.addAll(bookings);
+    
             BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, checkBookings, getItemsByType(type.id));
             
             // This throws exception if not possible.

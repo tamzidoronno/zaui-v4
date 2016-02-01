@@ -640,8 +640,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return "Room does not exists";
             }
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
-        }catch(BookingEngineException ex) {
-            ex.printStackTrace();
+        } catch(BookingEngineException ex) {
             return ex.getMessage();
         }
         return "";

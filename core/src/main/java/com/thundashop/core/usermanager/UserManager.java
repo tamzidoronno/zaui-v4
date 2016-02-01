@@ -300,17 +300,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         List<User> result = collection.filterUsers(getSession().currentUser, allUsers);
         
-        
-        Comparator<User> comparator = new Comparator<User>() {
-            public int compare(User s1, User s2) {
-            if (s1 == null || s1.fullName == null || s2 == null || s2.fullName == null) {
-                return 0;
-            }
-            return s1.fullName.compareTo(s2.fullName);
-            }
-        };
-
-        Collections.sort(result, comparator); 
+        Collections.sort(result, (User s1, User s2) -> {
+            return s1.getName().compareTo(s2.getName());
+        }); 
         
         return result;
     }

@@ -223,7 +223,7 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     }
     
     public function deletetype() {
-        $id = $_POST['data']['id'];
+        $id = $_POST['data']['entryid'];
         $this->getApi()->getBookingEngine()->deleteBookingItem($this->getSelectedName(), $id);
     }
     

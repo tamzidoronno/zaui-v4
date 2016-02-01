@@ -66,6 +66,9 @@ class PmsStatisticsBuilder {
             for(PmsBooking booking : bookings) {
                 for(String orderId : booking.orderIds) {
                     Order order = orderManager.getOrderSecure(orderId);
+                    if(cal == null || cal.getTime() == null || order == null) {
+                        continue;
+                    }
                     if(order.createdOnDay(cal.getTime())) {
                         Double total = orderManager.getTotalAmount(order);
                         entry.totalPrice += total;

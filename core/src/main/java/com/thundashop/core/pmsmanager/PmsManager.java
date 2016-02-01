@@ -64,7 +64,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public HashMap<String, PmsBooking> bookings = new HashMap();
     public HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
-    public PmsPricing prices = new PmsPricing();
+    public PmsPricing prices = new PmsPricing(); 
     public PmsConfiguration configuration = new PmsConfiguration();
     
     @Autowired
@@ -1592,7 +1592,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<Integer> getAvailabilityForRoom(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes) {
-        LinkedList<TimeRepeaterDateRange> lines = createAvailabilityLines();
+        LinkedList<TimeRepeaterDateRange> lines = createAvailabilityLines(bookingItemId);
         
         DateTime timer = new DateTime(startTime);
         List<Integer> result = new ArrayList();
@@ -1626,27 +1626,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return date.getTime();
     }
 
-    private LinkedList<TimeRepeaterDateRange> createAvailabilityLines() {
-        TimeRepeaterData repeater = new TimeRepeaterData();
-        repeater.repeatMonday = true;
-        repeater.repeatTuesday = true;
-        repeater.repeatWednesday = true;
-        repeater.repeatThursday = true;
-        repeater.repeatFriday = true;
-        repeater.repeatSaturday = true;
-        repeater.repeatSunday = true;
-        repeater.repeatPeride = TimeRepeaterData.RepeatPeriodeTypes.weekly;
-        repeater.firstEvent = new TimeRepeaterDateRange();
-        repeater.firstEvent.start = getMorning(true);
-        repeater.firstEvent.end = getMorning(false);
-        
-        DateTime end = new DateTime();
-        end = end.plusYears(3);
-        
-        repeater.endingAt = end.toDate();
-        
-        TimeRepeater generator = new TimeRepeater();
-        return generator.generateRange(repeater);
+    private LinkedList<TimeRepeaterDateRange> createAvailabilityLines(String bookingItemId) {
+        if(bookingItemId != null && bookingItemId.isEmpty()) {
+            bookingItemId = null;
+        }
+        TimeRepeaterData repeater = bookingEngine.getOpeningHours(bookingItemId);
+        if(repeater == null) {
+            return new LinkedList();
+        } else {
+            TimeRepeater generator = new TimeRepeater();
+            return generator.generateRange(repeater);
+        }
     }
 
     private boolean hasRange(LinkedList<TimeRepeaterDateRange> lines, DateTime timer) {

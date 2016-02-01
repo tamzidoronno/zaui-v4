@@ -30,3 +30,6 @@
 .BookingEngineManagement .addGroupOptions { text-align: right; margin-bottom: 10px; }
 .BookingEngineManagement .selected { color:green; }
 .BookingEngineManagement .mgrtable td { background-color:#fbfbfb; padding-left: 10px; padding-right: 10px;}
+
+
+.BookingEngineManagement .addMoredatesPanel .repeatrow { display:none; }

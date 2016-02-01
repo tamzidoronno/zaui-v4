@@ -8,6 +8,7 @@ import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import java.util.Date;
 import java.util.List;
 
@@ -68,4 +69,9 @@ public interface IBookingEngine {
     
     @Administrator
     public void saveDefaultRegistrationRules(RegistrationRules rules);
+    
+    @Administrator
+    public void saveOpeningHours(TimeRepeaterData time, String itemId);
+    
+    public TimeRepeaterData getOpeningHours(String itemId);
 }

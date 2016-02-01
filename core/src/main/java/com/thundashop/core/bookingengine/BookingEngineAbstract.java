@@ -17,6 +17,7 @@ import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -563,7 +564,42 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             checkBookings.removeIf(ibooking -> ibooking.id.equals(booking.id));
         }
     }
+
+    public TimeRepeaterData getOpeningHours(String itemId) {
+        TimeRepeaterData result = null;
+        if(itemId == null || itemId.isEmpty()) {
+            result = config.openingHours;
+        } else {
+            BookingItem item = getBookingItem(itemId);
+            result = item.openingHours;
+            if(result == null) {
+                result = config.openingHours;
+            }
+        }
+        return result;
+        
+    }
+    
+    void saveOpeningHours(TimeRepeaterData time, String itemId) {
+        if(itemId == null || itemId.isEmpty()) {
+            config.openingHours = time;
+            saveObject(config);
+        } else {
+            BookingItem item = getBookingItem(itemId);
+            item.openingHours = time;
+            saveBookingItem(item);
+        }
+    }
    
+    
+    public TimeRepeaterData getTime(String itemId) {
+        if(itemId == null || itemId.isEmpty()) {
+            return config.openingHours;
+        }
+        
+        BookingItem item = getBookingItem(itemId);
+        return item.openingHours;
+    }
    
     
 }

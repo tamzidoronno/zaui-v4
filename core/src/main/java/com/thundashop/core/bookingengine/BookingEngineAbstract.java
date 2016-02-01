@@ -499,8 +499,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             checkBookings.addAll(getAssignedBookingsAfterFirstBooking(type.id, bookings));
             
             removeFromBooking(checkBookings, bookings);
-            checkBookings.addAll(bookings);
-    
+            for (Booking iBooking : bookings) {
+                if (iBooking.id != null && !iBooking.id.isEmpty()) {
+                    checkBookings.addAll(bookings);
+                }
+            }
+            
             BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, checkBookings, getItemsByType(type.id));
             
             // This throws exception if not possible.

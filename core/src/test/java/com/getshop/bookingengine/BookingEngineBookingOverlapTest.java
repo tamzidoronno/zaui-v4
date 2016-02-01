@@ -8,6 +8,7 @@ package com.getshop.bookingengine;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingEngineAbstract;
 import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
@@ -44,6 +45,8 @@ public class BookingEngineBookingOverlapTest extends TestCommon {
     
     private BookingItemType type1;
     private BookingItemType type2;
+    private BookingItem item2;
+    private BookingItem item1;
     
     @Before
     public void setup() {
@@ -52,10 +55,10 @@ public class BookingEngineBookingOverlapTest extends TestCommon {
         bookingEngine.setConfirmationRequired(true);
         
         type1 = bookingEngine.createABookingItemType("type1");
-        type2 =  bookingEngine.createABookingItemType("type1");
+        type2 = bookingEngine.createABookingItemType("type2");
         
-        createBookintItem(type1);
-        createBookintItem(type2);
+        item1 = createBookintItem(type1);
+        item2 = createBookintItem(type2);
     }
     
     /**
@@ -316,6 +319,26 @@ public class BookingEngineBookingOverlapTest extends TestCommon {
         bookingEngine.addBookings(bookings);
     }
     
+    
+    /**
+     * Booking with item id 1: |-----|
+     * Booking with item id 2:    |*****|
+     * 
+     * Case: booking 2 changes item to item 1
+     * 
+     */
+    @Test(expected = BookingEngineException.class)
+    public void moveRoomThrowsException() {
+        List<Booking> bookings = new ArrayList();
+        bookings.add(getBooking(helper.getDate("2014-01-02 16:00"), helper.getDate("2014-01-03 16:00"), type1, null));
+        bookings.add(getBooking(helper.getDate("2014-01-02 16:00"), helper.getDate("2014-01-03 16:00"), type2, null));
+        
+        BookingGroup addedBooking = bookingEngine.addBookings(bookings);
+        bookingEngine.changeBookingItemOnBooking(addedBooking.bookingIds.get(0), item1.id);
+        bookingEngine.changeBookingItemOnBooking(addedBooking.bookingIds.get(1), item2.id);
+        
+        bookingEngine.changeBookingItemOnBooking(addedBooking.bookingIds.get(1), item1.id);
+    }
     /*
      * Overlapping ---- = type 1, **** = type2
      * 

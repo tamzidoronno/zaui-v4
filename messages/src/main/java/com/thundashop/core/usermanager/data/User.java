@@ -39,6 +39,13 @@ public class User extends DataCommon implements Comparable<User> {
         
     }
 
+    public String getName() {
+        if (fullName == null)
+            return "";
+        
+        return fullName;
+    }
+
  
     public static class Type {
         public static int GETSHOPADMINISTRATOR = 200;
@@ -74,6 +81,7 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean isMaster = false;
     public String preferredPaymentType = "70ace3f0-3981-11e3-aa6e-0800200c9a66";
     public Integer invoiceDuePeriode = 14;
+    public int sessionTimeOut = 23;
     
     public List<String> company = new ArrayList();
     

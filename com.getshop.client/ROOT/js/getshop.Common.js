@@ -1146,29 +1146,66 @@ GetShopUtil = {
     }
 }
 
-thundashop.common.sessionTimeOut = 1300000;
-
-thundashop.common.timeoutCounter = 0;
 
 thundashop.common.logout = function() {
-/* This is too buggy to be in production yet. */
-//    alert(__w('You have been inactive to long and due to security reasons you will now be logged out.'));
-//    document.location = '/logout.php?goBackToHome=true';
+    document.location = '/logout.php?goBackToHome=true';
 };
 
 thundashop.common.triggerTimeoutCheck = function() {
+    var timeOutUser = $('.gsbody_inner').attr('userTimeout');
+    if (!timeOutUser) {
+        timeOutUser = 0;
+    }
+    
+    var newDateObj = new Date();
+    var currentTime = newDateObj.getTime();
+    var timeOut = currentTime + parseInt(timeOutUser)*60*1000;
+    
     $(document).ready(function() {
         var isLoggedIn = $('input[name="userid"]').val() != "";
         
-        if (thundashop.common.timeoutCounter) {
-            clearTimeout(thundashop.common.timeoutCounter);
-        }
-        
         if (isLoggedIn) {
-            thundashop.common.timeoutCounter = setTimeout(thundashop.common.logout, thundashop.common.sessionTimeOut);
-        } 
+            localStorage.setItem("gs_login_timeout", timeOut);
+        } else {
+            localStorage.setItem("gs_login_timeout", currentTime);
+        }
     });
 };
+
+/**
+ * a loop that checks weather it needs to logout or not.
+ */
+var timeCheckMs = 1000;
+thundashop.common.checkTimeout = function() {
+    
+    if (!localStorage.getItem("gs_login_timeout")) {
+        setTimeout(thundashop.common.checkTimeout, timeCheckMs);
+        return;
+    }
+    
+    var isLoggedIn = $('input[name="userid"]').val() != "";
+    var newDateObj = new Date();
+    var currentTime = newDateObj.getTime();
+    var timeoutTime = parseInt(localStorage.getItem("gs_login_timeout"));
+    var timeLeft = timeoutTime - currentTime;
+    
+    if (timeLeft > 0 && !isLoggedIn) {
+        document.location = '/';
+    }
+    
+    if (timeLeft < 0 && isLoggedIn) {
+        thundashop.common.logout();
+    }
+    
+    if (timeLeft < 0) {
+        localStorage.removeItem("gs_login_timeout");
+    }
+    
+    setTimeout(thundashop.common.checkTimeout, timeCheckMs);
+}
+
+setTimeout(thundashop.common.checkTimeout, timeCheckMs);
+
 
 var resizeLeftBar = function() {
     if ($(".left_side_bar").length) {

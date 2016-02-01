@@ -45,12 +45,18 @@ class Page {
         
         
         $loggedIn = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? "true" : "false";
+
+        $timeout = "";
+        if ($loggedIn == "true") {
+            $timeout = $this->factory->getApi()->getUserManager()->getUserById(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id)->sessionTimeOut;
+        }
         
         if($this->factory->isEditorMode()) {
             $this->includeLayoutHistory();
         }
         
-        echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn'>";
+        
+        echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn' userTimeout='$timeout'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
             $edited = $this->printArea($layout->areas->{'header'}, true);

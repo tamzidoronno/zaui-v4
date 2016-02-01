@@ -74,6 +74,14 @@ public class PmsBookingRooms implements Serializable {
             return price;
         }
         
+        if(type.equals(PriceType.interval)) {
+            return price / days;
+        }
+        
+        if(type.equals(PriceType.progressive)) {
+            return price / days;
+        }
+        
         throw new UnsupportedOperationException("Not implented yet");
     }
 

@@ -397,7 +397,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             for(PmsBooking booking : bookings.values()) {
                 User user = userManager.getUserById(booking.userId);
-                if(user != null && user.fullName.contains(filter.searchWord)) {
+                if(user != null && user.fullName!= null && user.fullName.toLowerCase().contains(filter.searchWord.toLowerCase())) {
                     result.add(booking);
                 } else if(booking.containsSearchWord(filter.searchWord)) {
                     result.add(booking);

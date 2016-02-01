@@ -764,7 +764,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
 
             CartItem item = createCartItem(room, startDate, endDate);
-            
+            if(item == null) {
+                return null;
+            }
             if(prices.pricesExTaxes) {
                 double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
                 price *= tax;
@@ -783,6 +785,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         User user = userManager.getUserById(booking.userId);
+        if(user == null) {
+            return null;
+        }
+        
         user.address.fullName = user.fullName;
         
         Order order = orderManager.createOrder(user.address);

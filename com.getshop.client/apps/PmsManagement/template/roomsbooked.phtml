@@ -74,6 +74,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
         <th>Guest</th>
         <?php if(!$addons && $hasPrices) { ?>
             <th>Price</th>
+            <th>Invoiced until</th>
         <?php } ?>
         <?php if($hasArx) { ?>
             <th>To arx</th>
@@ -253,6 +254,15 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                             </span>
                         </span>
                     </span>
+                </td>
+                <td>
+                    <? 
+                    if($room->invoicedTo) {
+                        echo date("d.m.Y" , strtotime($room->invoicedTo)); 
+                    } else {
+                        echo " - ";
+                    }
+                    ?>
                 </td>
                 <?php if($hasArx) { ?>
                     <td align='center'>

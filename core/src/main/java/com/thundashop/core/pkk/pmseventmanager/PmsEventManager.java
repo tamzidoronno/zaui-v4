@@ -25,7 +25,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
 
     @Autowired
     PmsManager pmsManager;
-
+ 
     @Autowired
     BookingEngine bookingEngine;
     

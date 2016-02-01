@@ -6,7 +6,7 @@ import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-class PmsBookingMessageFormatter {
+class PmsBookingMessageFormatter { 
     public String formatRoomData(String message, PmsBookingRooms room, BookingEngine bookingEngine) {
          String startMinute = new SimpleDateFormat("m").format(room.date.start).toString();
         if (startMinute.length() < 2) {

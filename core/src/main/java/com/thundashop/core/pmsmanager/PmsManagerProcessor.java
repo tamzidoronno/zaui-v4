@@ -255,27 +255,6 @@ public class PmsManagerProcessor {
 
     private void createPeriodeInvoices(PmsBooking booking) {
         
-        NewOrderFilter filter = new NewOrderFilter();
-        System.out.println("\t" + booking.invoicedTo);
-        if(booking.invoicedTo.before(new Date())) {
-            System.out.println("this one should be");
-        }
-        
-        filter.startInvoiceFrom = null;
-        if(isAfterOrToday(booking.invoicedTo)) {
-            if(manager.configuration.prepayment) {
-                filter.startInvoiceFrom = booking.invoicedTo;
-                LocalDate date = new LocalDate(booking.invoicedTo);
-                date.plusMonths(1);
-                filter.endInvoiceAt = date.toDate();
-            } else {
-                filter.startInvoiceFrom = substractOneMonth(booking.invoicedTo);
-                filter.endInvoiceAt = booking.invoicedTo;
-            }
-            manager.createOrder(booking.id, filter);
-            booking.invoicedTo = addOneMonth(booking.invoicedTo);
-            manager.saveBooking(booking);
-        }
     }
 
     private boolean isSameDay(Date date1, Date date2) {
@@ -308,21 +287,6 @@ public class PmsManagerProcessor {
     }
 
     private void createEndingOrder(PmsBooking booking) {
-        Date endDate = booking.getEndDate();
-        if(isSameDay(endDate, booking.invoicedTo)) {
-            return;
-        }
-        
-        NewOrderFilter filter = new NewOrderFilter();
-        filter.startInvoiceFrom = booking.invoicedTo;
-        
-        LocalDate date = new LocalDate();
-        date.plusMonths(1);
-        filter.endInvoiceAt = date.toDate();
-        
-        manager.createOrder(booking.id, filter);
-        booking.invoicedTo = endDate;
-        manager.saveBooking(booking);
     }
 
     private List<PmsBooking> getAllConfirmedNotDeleted() {

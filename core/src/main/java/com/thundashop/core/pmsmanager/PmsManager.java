@@ -707,14 +707,40 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private Order createOrder(PmsBooking booking, NewOrderFilter filter) {
         cartManager.clear();
-        
-        Date startDate = filter.startInvoiceFrom;
-        Date endDate = filter.endInvoiceAt;
-        int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
 
+        boolean foundInvoice = false;
+        
         for(PmsBookingRooms room : booking.rooms) {
             Double price = null;
 
+            Date startDate = filter.startInvoiceFrom;
+            if(startDate.before(room.date.start)) {
+                startDate = room.date.start;
+            }
+            
+            Date endDate = filter.endInvoiceAt;
+            if(endDate.after(room.date.end)) {
+                endDate = room.date.end;
+            }
+            int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
+            
+            if(room.invoicedTo != null && startDate.before(room.invoicedTo)) {
+                startDate = room.invoicedTo;
+            }
+            
+            if(sameDayOrAfter(room.invoicedTo, endDate)) {
+                continue;
+            }
+            
+            if(filter.itemId!= null && !filter.itemId.isEmpty()) {
+                if(room.bookingItemId == null) {
+                    continue;
+                }
+                if(room.bookingItemId.equals(filter.itemId)) {
+                    continue;
+                }
+            }
+            
             if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
                 int numberOfDays = getNumberOfDays(room, startDate, endDate);
                 if(numberOfDays == 0) {
@@ -729,7 +755,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(booking.priceType.equals(PmsBooking.PriceType.interval)) {
                 price = calculateIntervalPrice(room.bookingItemTypeId, room.date.start, room.date.end, true);
             }
-            if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
+            if(booking.priceType.equals(PmsBooking.PriceType.daily) || 
+                booking.priceType.equals(PmsBooking.PriceType.interval) || 
+                booking.priceType.equals(PmsBooking.PriceType.progressive)) {
                 price = room.price;
             }
             if(booking.priceType.equals(PmsBooking.PriceType.weekly)) {
@@ -737,11 +765,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
 
             CartItem item = createCartItem(room, startDate, endDate);
+            
+            if(prices.pricesExTaxes) {
+                double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
+                price *= tax;
+            }
+            
             item.getProduct().discountedPrice = price;
             item.getProduct().price = price;
             item.setCount(daysInPeriode);
-            
+            room.invoicedTo = endDate;
+            foundInvoice = true;
             cartManager.saveCartItem(item);
+        }
+        
+        if(!foundInvoice) {
+            return null;
         }
         
         User user = userManager.getUserById(booking.userId);
@@ -754,8 +793,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         order.userId = booking.userId;
         order.invoiceNote = booking.invoiceNote;
         orderManager.saveOrder(order);
-        
-        booking.invoicedTo = startDate;
         
         return order;
     }
@@ -871,7 +908,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
-        PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+        PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter(); 
         
         if(this.specifiedMessage != null) {
             message = message.replace("{personalMessage}", this.specifiedMessage);
@@ -1778,6 +1815,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(bookingId);
         String message = getConfiguration().defaultMessage.get(booking.language);
         return formatMessage(message, booking, null, null);
+    }
+
+    private boolean sameDayOrAfter(Date invoicedTo, Date endDate) {
+        if(invoicedTo == null) {
+            return false;
+        }
+        
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(invoicedTo);
+        cal2.setTime(endDate);
+        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                          cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+        if(sameDay) {
+            return true;
+        }
+        
+        if(invoicedTo.after(endDate)) {
+            return true;
+        }
+        return false;
     }
 
 }

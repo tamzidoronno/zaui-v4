@@ -122,6 +122,14 @@ if (!$user->address) {
         </div>
     </div>
 
+    <div class="textfield gss_setting"  id="sessionTimeout">
+        <span class="title"><?php echo $this->__f("Minutes session timeout"); ?></span>
+        <input type="textfield" gs_model='usermodel' gs_model_attr='sessionTimeout' value="<? echo $user->sessionTimeOut; ?>">
+        <div class="description">
+            <?php echo $this->__("How many minutes can this user be inactive before logged out?"); ?>
+        </div>
+    </div>
+
     <div class='gss_button_area'>
         <div class="gss_button" gss_method="updateGeneralInformation" gss_model="usermodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
     </div>

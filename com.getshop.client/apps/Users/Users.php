@@ -77,6 +77,7 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $user->showHiddenFields = $_POST['showHiddenFields'];
         $user->prefix = $_POST['prefix'];
         $user->type = 10;
+        $user->sessionTimeOut = $_POST['sessionTimeout'];
         
         if ($_POST['iseditor'] == "true") {
             $user->type = 50;

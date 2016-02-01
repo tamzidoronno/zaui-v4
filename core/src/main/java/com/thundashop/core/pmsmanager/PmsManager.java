@@ -1612,6 +1612,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(room.bookingItemId != null) {
             bookingitem = bookingEngine.getBookingItem(room.bookingItemId);
         }
+        if(type == null) {
+            return null;
+        }
 
         String productId = type.productId;
         if(productId == null) {

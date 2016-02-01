@@ -1188,7 +1188,6 @@ thundashop.common.checkTimeout = function() {
     var currentTime = newDateObj.getTime();
     var timeoutTime = parseInt(localStorage.getItem("gs_login_timeout"));
     var timeLeft = timeoutTime - currentTime;
-    console.log(timeLeft);
     
     if (timeLeft > 0 && !isLoggedIn) {
         document.location = '/';

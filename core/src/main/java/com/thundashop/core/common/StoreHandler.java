@@ -92,6 +92,7 @@ public class StoreHandler {
         } catch (ClassNotFoundException ex) {
             ErrorException gex = new ErrorException(81);
             gex.additionalInformation = ex.getMessage();
+            ex.printStackTrace();
             throw gex;
         }
     }

@@ -7,6 +7,29 @@ app.BookingEngineManagement = {
         $(document).on('change', '.BookingEngineManagement .selectedProductForGroup', app.BookingEngineManagement.selectedProductForGroup);
         $(document).on('click', '.BookingEngineManagement .editbookingitemtype', app.BookingEngineManagement.editbookingitemtype);
         $(document).on('click', '.BookingEngineManagement .configureBookingFields', app.BookingEngineManagement.configureBookingFields);
+        $(document).on('click', '.BookingEngineManagement .configureOpeningHours', app.BookingEngineManagement.configureOpeningHours);
+        $(document).on('change','.BookingEngineManagement .repeat_type', app.BookingEngineManagement.changeRepeatType);
+    },
+     changeRepeatType: function() {
+        var type = $(this).val();
+        $('.repeatrow').hide();
+        if(type !== "0") {
+            $('.repeatrow').show();
+        } 
+        $('.repeateachdaterow').hide();
+        if(type === "1") {
+            $('.repeateachdaterow').show();
+        }
+        
+        $('.repeatoption').hide();
+        $('.repeat_' + type).show();
+    },    
+    configureOpeningHours : function() {
+        var data = {
+            "typeid" : $(this).closest('tr').attr('entryid')
+        }
+        var event = thundashop.Ajax.createEvent('','configureOpeningHours', $(this), data);
+        thundashop.common.showInformationBoxNew(event, 'Opening hours configuration');
     },
     configureBookingFields : function() {
         var data = {

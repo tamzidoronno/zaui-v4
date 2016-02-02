@@ -22,6 +22,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function includeEventCalendar($bookingId) {
         $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("27e174dc-b08c-4bf7-8179-9ea8379c91da");
+        if(!$instances) {
+            $instances = array();
+        }
         foreach($instances as $instance) {
             if($instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
                 $app = $this->getFactory()->getApplicationPool()->createAppInstance($instance);
@@ -129,6 +132,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(isset($_POST['data']['endingAt'])) {
             $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
         }
+        $filter->itemId = $_POST['data']['itemid'];
+        
         $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
         $this->showBookingInformation();
     }

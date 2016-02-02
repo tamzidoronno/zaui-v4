@@ -33,6 +33,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean isClean = true;
     public Integer intervalCleaning = null;
     public boolean addedByRepeater = false;
+    public Date invoicedTo = null;
     
     //Processor stuff.
     public boolean started = false;

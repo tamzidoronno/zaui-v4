@@ -6,6 +6,7 @@
 package com.thundashop.core.bookingengine.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import java.util.ArrayList;
 import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
@@ -75,4 +76,9 @@ public class BookingItem extends DataCommon {
     public String bookingOwnerUserId = "";
     
     public RegistrationRules rules = null;
+    
+    /**
+     * Timelines for when this item is open.
+     */
+    public TimeRepeaterData openingHours;
 }

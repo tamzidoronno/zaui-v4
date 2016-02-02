@@ -43,6 +43,9 @@ if($instances) {
     }
     $instances = $instances2;
 }
+
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+$items = $this->indexList($items);
 ?>
 
 <div class='orderinformation'>
@@ -70,16 +73,6 @@ if($instances) {
         </span>
     </span>
 </span>
-<div style='clear:both;'></div>
-<?php if($booking->invoicedTo) { ?>
-    <span class='roomprefix'>Invoiced until</span>
-    <span class='roompostfix'>
-    <? 
-    echo date("d.m.Y", strtotime($booking->invoicedTo));
-    ?>
-    </span>
-    <div style='clear:both;'></div>
-<? } ?>
 <div style='clear:both;'></div>
 
 
@@ -138,6 +131,12 @@ if($booking->orderIds) {
     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
 
     <?php
+    echo "<select gsname='itemid'>";
+    echo "<option value=''>All rooms</option>";
+    foreach($booking->rooms as $room) {
+        echo "<option value='".$room->bookingItemId."'>" . $items[$room->bookingItemId]->bookingItemName . "</option>";
+    }
+    
     if(!$booking->invoicedTo) {
         $booking->invoicedTo = $booking->rooms[0]->date->start;
     }

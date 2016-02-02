@@ -12,6 +12,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -207,6 +208,16 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     @Override
     public void saveDefaultRegistrationRules(RegistrationRules rules) {
         bookingEngineAbstract.saveRules(rules);
+    }
+
+    @Override
+    public void saveOpeningHours(TimeRepeaterData time, String itemId) {
+        bookingEngineAbstract.saveOpeningHours(time, itemId);
+    }
+
+    @Override
+    public TimeRepeaterData getOpeningHours(String itemId) {
+        return deepClone(bookingEngineAbstract.getOpeningHours(itemId));
     }
     
 }

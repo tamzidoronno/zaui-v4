@@ -25,6 +25,75 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function configureOpeningHours() {
+        $this->includefile("addmoredates");
+    }
+    
+    public function getRepeatingSummary() {
+        return "";
+    }
+    
+    public function addRepeatingDates() {
+        $data = new \core_pmsmanager_PmsRepeatingData();
+        $data->repeattype = $_POST['data']['repeattype'];
+        if(isset($_POST['data']['itemid'])) {
+            $data->bookingItemId = $_POST['data']['itemid'];
+        }
+        if(isset($_POST['data']['typeid'])) {
+            $data->bookingTypeId = $_POST['data']['typeid'];
+        }
+        
+        $data = new \core_pmsmanager_TimeRepeaterData();
+        $data->repeatMonday = $_POST['data']['repeatMonday'] == "true";
+        $data->repeatTuesday = $_POST['data']['repeatTuesday'] == "true";
+        $data->repeatWednesday = $_POST['data']['repeatWednesday'] == "true";
+        $data->repeatThursday = $_POST['data']['repeatThursday'] == "true";
+        $data->repeatFriday = $_POST['data']['repeatFriday'] == "true";
+        $data->repeatSaturday = $_POST['data']['repeatSaturday'] == "true";
+        $data->repeatSunday = $_POST['data']['repeatSunday'] == "true";
+        $data->endingAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
+        $data->repeatEachTime = $_POST['data']['repeateachtime'];
+        if(isset($_POST['data']['repeatmonthtype'])) {
+            $data->data->repeatAtDayOfWeek = $_POST['data']['repeatmonthtype'] == "dayofweek";
+        }
+        $data->repeatPeride = $_POST['data']['repeat_periode'];
+        
+        $data->firstEvent = new \core_pmsmanager_TimeRepeaterDateRange();
+        $data->firstEvent->start = $this->convertToJavaDate(strtotime($_POST['data']['eventStartsAt'] . " " . $_POST['data']['starttime']));
+        if(isset($_POST['data']['eventEndsAt'])) {
+            $data->firstEvent->end = $this->convertToJavaDate(strtotime($_POST['data']['eventEndsAt'] . " " . $_POST['data']['endtime']));
+        } else {
+            $data->firstEvent->end = $this->convertToJavaDate(strtotime($_POST['data']['eventStartsAt'] . " " . $_POST['data']['endtime']));
+        }
+        
+        if($data->repeatPeride == "0") {
+            $data->repeatEachTime = 1;
+        }
+        
+        $itemid = null;
+        if(isset($_POST['data']['itemid'])) {
+            $itemid = $_POST['data']['itemid'];
+        }
+
+        $this->getApi()->getBookingEngine()->saveOpeningHours($this->getSelectedName(), $data, $itemid);
+    }
+    
+    /**
+     * 
+     * @return \core_pmsmanager_TimeRepeaterData
+     */
+    public function getOpeningHours() {
+        $id = null;
+        if(isset($_POST['data']['typeid'])) {
+            $id = $_POST['data']['typeid'];
+        }
+        return $this->getApi()->getBookingEngine()->getOpeningHours($this->getSelectedName(), $id);
+    }
+    
+    public function deleteClosingHours() {
+        $this->getApi()->getBookingEngine()->saveOpeningHours($this->getSelectedName(), null, null);
+    }
+    
     public function editFormFields() {
         $id = $_POST['data']['itemid'];
         $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $id);
@@ -154,7 +223,7 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     }
     
     public function deletetype() {
-        $id = $_POST['data']['id'];
+        $id = $_POST['data']['entryid'];
         $this->getApi()->getBookingEngine()->deleteBookingItem($this->getSelectedName(), $id);
     }
     

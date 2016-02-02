@@ -245,36 +245,18 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            if(booking.isEnded() && !manager.configuration.prepayment) {
-                createEndingOrder(booking);
-            } else {
-                createPeriodeInvoices(booking);
-            }
+            createPeriodeInvoices(booking);
         }
     }
 
     private void createPeriodeInvoices(PmsBooking booking) {
-        
         NewOrderFilter filter = new NewOrderFilter();
-        System.out.println("\t" + booking.invoicedTo);
-        if(booking.invoicedTo.before(new Date())) {
-            System.out.println("this one should be");
-        }
-        
-        filter.startInvoiceFrom = null;
-        if(isAfterOrToday(booking.invoicedTo)) {
-            if(manager.configuration.prepayment) {
-                filter.startInvoiceFrom = booking.invoicedTo;
-                LocalDate date = new LocalDate(booking.invoicedTo);
-                date.plusMonths(1);
-                filter.endInvoiceAt = date.toDate();
-            } else {
-                filter.startInvoiceFrom = substractOneMonth(booking.invoicedTo);
-                filter.endInvoiceAt = booking.invoicedTo;
-            }
+        if(!manager.configuration.prepayment) {
+            filter.startInvoiceFrom = beginningOfMonth(true);
+            filter.endInvoiceAt = beginningOfMonth(false);
             manager.createOrder(booking.id, filter);
-            booking.invoicedTo = addOneMonth(booking.invoicedTo);
-            manager.saveBooking(booking);
+        } else {
+            System.out.println("Only supporting postpayments for the time being");
         }
     }
 
@@ -300,30 +282,6 @@ public class PmsManagerProcessor {
         return (invoicedTo.before(new Date()) || isSameDay(new Date(), invoicedTo));
     }
 
-    private Date substractOneMonth(Date invoicedTo) {
-        Calendar toCheckCal = Calendar.getInstance();
-        toCheckCal.setTime(invoicedTo);
-        toCheckCal.add(Calendar.MONTH, -1);
-        return toCheckCal.getTime();
-    }
-
-    private void createEndingOrder(PmsBooking booking) {
-        Date endDate = booking.getEndDate();
-        if(isSameDay(endDate, booking.invoicedTo)) {
-            return;
-        }
-        
-        NewOrderFilter filter = new NewOrderFilter();
-        filter.startInvoiceFrom = booking.invoicedTo;
-        
-        LocalDate date = new LocalDate();
-        date.plusMonths(1);
-        filter.endInvoiceAt = date.toDate();
-        
-        manager.createOrder(booking.id, filter);
-        booking.invoicedTo = endDate;
-        manager.saveBooking(booking);
-    }
 
     private List<PmsBooking> getAllConfirmedNotDeleted() {
         List<PmsBooking> res = manager.getAllBookings(null);
@@ -338,6 +296,16 @@ public class PmsManagerProcessor {
         }
         res.removeAll(toRemove);
         return res;
+    }
+
+    private Date beginningOfMonth(boolean lastMonth) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().getActualMinimum(Calendar.DAY_OF_MONTH));
+        if(lastMonth) {
+            cal.add(Calendar.MONTH, -1);
+        }
+        
+        return cal.getTime();
     }
     
 }

@@ -12,8 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 public class PmsBooking extends DataCommon {
-
-    public List<PmsBookingRooms> rooms = new ArrayList();
+ 
+    public List<PmsBookingRooms> rooms = new ArrayList(); 
     public String sessionId;
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;
@@ -25,7 +25,6 @@ public class PmsBooking extends DataCommon {
     public String userId = "";
     public Integer state = 0;
     public List<String> orderIds = new ArrayList();
-    public Date invoicedTo = null;
     public Integer priceType = 1;
     public boolean confirmed = false;
     public boolean unConfirmed = false;

@@ -727,6 +727,11 @@ public class ListManager extends ManagerBase implements IListManager {
     public List<Menu> getMenues(String applicationInstanceId ){
         List<Menu> retMenues = menues.get(applicationInstanceId);
         
+        if (retMenues == null) {
+            retMenues = new ArrayList();
+            menues.put(applicationInstanceId, retMenues);
+        }
+        
         for (Menu menu : retMenues) {
             finalizeMenu(menu);
         }

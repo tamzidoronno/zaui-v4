@@ -132,12 +132,12 @@ echo "<br>";
         $fields["user_address_countryname"] = "Name of the country";
         
         $fields["title_3"] = "<hr>Company description details";
-        $fields["company_vatNumber"] = "Company organisation number";
         $fields["company_name"] = "Name of the company";
+        $fields["company_vatNumber"] = "Company organisation number";
+        $fields["company_website"] = "Companys website";
         $fields["company_contact"] = "Contact person";
         $fields["company_prefix"] = "Phone prefix";
         $fields["company_phone"] = "Company phone number";
-        $fields["company_website"] = "Companys website";
         $fields["company_email"] = "Company email";
         $fields["company_vatRegistered"] = "Is registered into the mva register";
         

@@ -5,7 +5,11 @@ class OsloTheme extends \ThemeApplication implements \Application {
     public function getDescription() {
         
     }
-
+    
+    public function addScripts() {
+        echo "\n" . "<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>";
+    }   
+    
     public function getName() {
         return "OsloTheme";
     }

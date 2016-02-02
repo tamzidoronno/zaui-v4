@@ -727,6 +727,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 startDate = room.invoicedTo;
             }
             
+            if(filter.onlyEnded && room.date.end.after(filter.endInvoiceAt)) {
+                continue;
+            }
+            
             if(sameDayOrAfter(room.invoicedTo, endDate)) {
                 continue;
             }

@@ -65,7 +65,6 @@ public class PmsBookingRooms implements Serializable {
     }
     
     public Double getDailyPrice(Integer type, Calendar cal) {
-        System.out.println(price);
         int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         
         if(type.equals(PriceType.monthly)) {

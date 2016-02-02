@@ -14,9 +14,11 @@ import java.util.List;
  */
 class PmsStatisticsBuilder {
     private final List<PmsBooking> bookings;
+    private final boolean pricesExTax;
 
-    PmsStatisticsBuilder(List<PmsBooking> allBookings) {
+    PmsStatisticsBuilder(List<PmsBooking> allBookings, boolean pricesExTax) {
         this.bookings = allBookings;
+        this.pricesExTax = pricesExTax;
     }
 
     PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms) {
@@ -35,7 +37,12 @@ class PmsStatisticsBuilder {
                 }
                 for(PmsBookingRooms room : booking.rooms) {
                     if(room.isActiveOnDay(cal.getTime())) {
-                        entry.totalPrice += room.getDailyPrice(booking.priceType, cal);
+                        Double price = room.getDailyPrice(booking.priceType, cal);
+                        if(pricesExTax) {
+                            price /= 1 - (room.taxes/100);
+                        }
+                                
+                        entry.totalPrice += price;
                         entry.roomsRentedOut++;
                     }
                 }

@@ -524,6 +524,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 if(room.bookingItemTypeId != null) {
                     room.type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                    String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+                    if(productId != null) {
+                        room.taxes = productManager.getProduct(productId).taxGroupObject.taxRate;
+                    }
                 }
                 
             }
@@ -957,7 +961,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
-        PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings);
+        PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings, prices.pricesExTaxes);
         int totalRooms = bookingEngine.getBookingItems().size();
         PmsStatistics result = builder.buildStatistics(filter, totalRooms);
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
@@ -1115,8 +1119,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(BookingItem item : items) {
            BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
             List<BookingTimeLine> timelines = line.getTimelines(filter.interval);
-            HashMap<Long, Integer> itemCountLine = new HashMap();
-            timelines.stream().forEach(o -> itemCountLine.put(o.start.getTime(), o.count));
+            LinkedHashMap<Long, Integer> itemCountLine = new LinkedHashMap();
+            for(BookingTimeLine tl : timelines) {
+                itemCountLine.put(tl.start.getTime(), tl.count);
+            }
             res.itemTimeLines.put(item.id, itemCountLine);
         }
         

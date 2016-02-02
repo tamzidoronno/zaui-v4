@@ -142,13 +142,18 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
             Company company = userManager.getCompany(user.company.get(0));
             toAdd.put(6, company.vatNumber);
             toAdd.put(7, company.name);
-            toAdd.put(9, company.city);
+            if(company.address != null) {
+                toAdd.put(74, company.address.address);
+                toAdd.put(75, company.address.postCode);
+                toAdd.put(76, company.address.city);
+            }
             toAdd.put(10, company.email);
         } else {
             toAdd.put(7, user.fullName);
             if(user.address != null) {
-                toAdd.put(9, user.address.city);
-                toAdd.put(10, user.emailAddress);
+                toAdd.put(74, user.address.address);
+                toAdd.put(75, user.address.postCode);
+                toAdd.put(76, user.address.city);
             }
          }
          toAdd.put(33, "NOK");

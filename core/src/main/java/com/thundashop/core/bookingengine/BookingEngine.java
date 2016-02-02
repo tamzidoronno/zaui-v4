@@ -12,10 +12,14 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -218,6 +222,46 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     @Override
     public TimeRepeaterData getOpeningHours(String itemId) {
         return deepClone(bookingEngineAbstract.getOpeningHours(itemId));
+    }
+
+    @Override
+    public boolean checkIfAvailable(String itemId, String typeId, Date start, Date end) {
+        BookingItem item = bookingEngineAbstract.getBookingItem(itemId);
+        
+        TimeRepeaterData openingHours = getOpeningHours(itemId);
+        if(openingHours == null) {
+            openingHours = getConfig().openingHours;
+        }
+        if(openingHours != null) {
+            if(!checkIfInOpeningHours(openingHours, start, end)) {
+                return false;
+            }
+        }
+        
+        Booking booking = new Booking();
+        booking.bookingItemId = item.id;
+        booking.bookingItemTypeId = item.bookingItemTypeId;
+        booking.startDate = start;
+        booking.endDate = end;
+        
+        List<Booking> toCheck = new ArrayList();
+        toCheck.add(booking);
+        
+        return canAdd(toCheck);
+    }
+
+    private boolean checkIfInOpeningHours(TimeRepeaterData openingHours, Date start, Date end) {
+        TimeRepeater repeater = new TimeRepeater();
+        LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(openingHours);
+
+        for(TimeRepeaterDateRange range : ranges) {
+            if(range.start.before(start) || range.start.equals(start)) {
+                if(range.end.after(end) || range.end.equals(end)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
 }

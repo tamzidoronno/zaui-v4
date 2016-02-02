@@ -955,7 +955,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
-        List<PmsBooking> allBookings = getAllBookings(null);
+        filter.filterType = "active";
+        List<PmsBooking> allBookings = getAllBookings(filter);
         PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings);
         int totalRooms = bookingEngine.getBookingItems().size();
         PmsStatistics result = builder.buildStatistics(filter, totalRooms);

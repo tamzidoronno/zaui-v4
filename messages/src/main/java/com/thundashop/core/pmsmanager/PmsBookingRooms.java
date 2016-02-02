@@ -65,6 +65,7 @@ public class PmsBookingRooms implements Serializable {
     }
     
     public Double getDailyPrice(Integer type, Calendar cal) {
+        System.out.println(price);
         int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         
         if(type.equals(PriceType.monthly)) {
@@ -76,11 +77,11 @@ public class PmsBookingRooms implements Serializable {
         }
         
         if(type.equals(PriceType.interval)) {
-            return price / days;
+            return price;
         }
         
         if(type.equals(PriceType.progressive)) {
-            return price / days;
+            return price;
         }
         
         throw new UnsupportedOperationException("Not implented yet");

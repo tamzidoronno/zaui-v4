@@ -42,7 +42,7 @@ class PmsStatisticsBuilder {
             }
             
             entry.finalize();
-            
+            System.out.println("------------");
             cal.add(Calendar.DAY_OF_YEAR, 1);
             if(cal.getTime().after(filter.endDate)) {
                 break;

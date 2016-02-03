@@ -137,6 +137,9 @@ if($type == "month") {
                 continue;
             }
         }
+        
+        $size = $room->fullWhenCountHit;
+        $desc = $room->description;
         ?>
         <div class='roomrow itemlist' itemid='<? echo $room->id; ?>'>
             <?php
@@ -148,8 +151,10 @@ if($type == "month") {
                         <img src='displayImage.php?id=<? echo $imgId; ?>'>
                         <span class='roomattributes'>
                             <span class='roomname'><? echo $room->bookingItemName; ?></span><br>
-                            <span class='roomcap'>Kap: 8 personer.</span><br>
-                            <span class='roomequipment'>Utstyr: Prosjektor, smartboard, lydanlegg.</span>
+                            <?php if($size > 0) { ?>
+                                <span class='roomcap'>Kap: <? echo $size; ?> personer.</span><br>
+                            <?php } ?>
+                            <span class='roomequipment'><? echo $desc; ?></span>
                             <span class='readmorelink'><a href='?page=<? echo $room->id; ?>'><? echo $this->__w("Read more"); ?></a></span>
                         </span>
                     </span>

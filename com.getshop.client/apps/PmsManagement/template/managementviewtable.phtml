@@ -72,92 +72,128 @@ echo "</tr>";
 if(!$bookings) {
     $bookings = array();
 }
+
+$tableRows = array();
+$i = 0;
+$sortList = array();
 foreach($bookings as $booking) {
     foreach($booking->rooms as $room) {
+        $row = "";
         $rows++;
         if($types[$room->bookingItemTypeId]->addon > 0) {
             continue;
         }
         
-        echo "<tr>";
-        echo "<td style='width:70px;'>";
-        echo "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."'></i> ";
-        echo "</td>";
-        echo "<td style='width: 100px;'>";
-        echo date("d.m.Y H:i", strtotime($booking->rowCreatedDate));
-        echo "</td>";
+        $row .= "<tr>";
+        $row .= "<td style='width:70px;'>";
+        $row .= "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."'></i> ";
+        $row .= "</td>";
+        $row .= "<td style='width: 100px;'>";
+        $row .= date("d.m.Y H:i", strtotime($booking->rowCreatedDate));
+        $row .= "</td>";
 
-        echo "<td style='width:170px;'>";
-        echo date("d.m.Y H:i", strtotime($room->date->start));
+        $row .= "<td style='width:170px;'>";
+        $row .= date("d.m.Y H:i", strtotime($room->date->start));
         if($room->date->end) {
             //Dont show end date if this is a atleast 75 years booking
             if(((strtotime($room->date->end) - strtotime($room->date->start)) /86400) < 20000) {
                 if(date("dmy", strtotime($room->date->end)) !=  date("dmy", strtotime($room->date->start))) {
-                    echo "<br>";
-                    echo date("d.m.Y H:i", strtotime($room->date->end));
+                    $row .= "<br>";
+                    $row .= date("d.m.Y H:i", strtotime($room->date->end));
                 } else {
-                    echo " - " . date("H:i", strtotime($room->date->end));
+                    $row .= " - " . date("H:i", strtotime($room->date->end));
                 }
             }
         }
-        echo "</td>";
-        echo "<td>";
+        $row .= "</td>";
+        $row .= "<td>";
         foreach($booking->rooms as $room2) {
             $addons = array();
             if($types[$room2->bookingItemTypeId]->addon > 0) {
                 $addons[] = $types[$room2->bookingItemTypeId]->name;
             }
             if($addons) {
-                echo "<i class='fa fa-plus-circle' title='".  join(",", $addons)."'></i> ";
+                $row .= "<i class='fa fa-plus-circle' title='".  join(",", $addons)."'></i> ";
             }
         }
         foreach($room->guests as $guest) {
-            echo $guest->name . " - " . $guest->email . " - " . $guest->phone . "<br>";
+            $row .= $guest->name . " - " . $guest->email . " - " . $guest->phone . "<br>";
         }
         $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
-        echo "<div style='padding-top: 5px;'>";
+        $row .= "<div style='padding-top: 5px;'>";
         if($user) {
-            echo "<span class='secondary_text'>By " . $user->fullName . "</span>";
+            $row .= "<span class='secondary_text'>By " . $user->fullName . "</span>";
         }
-        echo "</div>";
+        $row .= "</div>";
         
         if($this->isGroupedByBooking() && sizeof($booking->rooms) > 1) {
-            echo "+" . (sizeof($booking->rooms)-1) . " additional room(s)";
+            $row .= "+" . (sizeof($booking->rooms)-1) . " additional room(s)";
         }
 
         
-        echo "</td>";
-        echo "<td>";
+        $row .= "</td>";
+        $row .= "<td>";
         if($room->booking->bookingItemId) {
-            echo $items[$room->booking->bookingItemId]->bookingItemName;
+            $row .= $items[$room->booking->bookingItemId]->bookingItemName;
         }
-        echo "<br><span class='secondary_text'>" . $types[$room->bookingItemTypeId]->name . "</span>";
+        $row .= "<br><span class='secondary_text'>" . $types[$room->bookingItemTypeId]->name . "</span>";
 
-        echo "</td>";
+        $row .= "</td>";
         if($hasPrices) {
-            echo "<td>";
-            echo $room->price;
-            echo "</td>";
+            $row .= "<td>";
+            $row .= $room->price;
+            $row .= "</td>";
         }
 
-        echo "<td align='center'>";
+        $row .= "<td align='center'>";
         if($booking->unConfirmed) {
-            echo "Rejected";
+            $row .= "Rejected";
         } else if($booking->isDeleted) {
-            echo "Deleted";
+            $row .= "Deleted";
         } else if($booking->confirmed) {
-            echo "Confirmed";
+            $row .= "Confirmed";
         } else if(!$booking->confirmed) {
-            echo "Unconfirmed";
+            $row .= "Unconfirmed";
         }
-        echo "</td>";
-        echo "</tr>";
+        $row .= "</td>";
+        $row .= "</tr>";
+        
+        $index = $i;
+
+        if($filter->sorting == "room" || $filter->sorting == "room_desc") {
+            $sortList[$i] = $items[$room->booking->bookingItemId]->bookingItemName;
+        } else if($filter->sorting == "periode" || $filter->sorting == "periode_desc") {
+            $sortList[$i] = strtotime($room->date->start);
+        } else if($filter->sorting == "visitor" || $filter->sorting == "visitor_desc") {
+            $sortList[$i] = $room->guests[0]->name;
+        } else if($filter->sorting == "date" || $filter->sorting == "date_desc") {
+            $sortList[$i] = strtotime($booking->rowCreatedDate);
+        } else if($filter->sorting == "price" || $filter->sorting == "price_desc") {
+            $sortList[$i] = $room->price;
+        } else {
+            $sortList[$i] = $i;
+        }
+        
+        $tableRows[$index] = $row;
+        $i++;
+        
         
         if($this->isGroupedByBooking()) {
             break;
         }
     }
-} 
+}
+
+if(stristr($filter->sorting, "_desc")) {
+    arsort($sortList);
+} else {
+    asort($sortList);
+}
+
+foreach($sortList as $idx => $value) {
+    echo $tableRows[$idx];
+}
+
 echo "</table>";
 echo "<br>";
 echo "$rows rows in total.";

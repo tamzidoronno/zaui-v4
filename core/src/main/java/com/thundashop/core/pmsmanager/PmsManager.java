@@ -924,7 +924,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter(); 
         
         if(this.specifiedMessage != null && message != null) {
-            message = message.replace("{personalMessage}", this.specifiedMessage);
+            String specifiedmsg = this.specifiedMessage.replace("\n", "<br>\n");
+            message = message.replace("{personalMessage}", specifiedmsg);
         }
         
         if(room != null) {

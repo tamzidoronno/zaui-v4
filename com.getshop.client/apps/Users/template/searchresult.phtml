@@ -4,6 +4,7 @@ $users = $this->getFilteredData();
 $companies = $this->getApi()->getUserManager()->getAllCompanies();
 $companies = $this->indexList($companies);
 foreach ($users as $user) {
+    /* @var $user core_usermanager_data_User */
     $name = $user->fullName;
     $email = $user->emailAddress;
     $phone = $user->cellPhone;
@@ -46,6 +47,20 @@ foreach ($users as $user) {
             </div>
         </div>
 
+        <div class='addresscontent' style='position:absolute; left:500px; display:inline-block; width: 400px; top: 20px;'>
+            <?php
+            if($user->address) {
+                ?>
+                    <?php echo $user->address->address; ?><br>
+                    <?php echo $user->address->postCode; ?><br>
+                    <?php echo $user->address->city; ?><br>
+                <?php
+            } else {
+                echo "No address set for this user";
+            }
+            ?>
+        </div>
+        
         <div class="content">
             <div class="name"><? echo $name; ?></div>
             <div class="email"> <? echo $email; ?></div>

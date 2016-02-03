@@ -58,9 +58,14 @@ class Company extends \SystemApplication implements \Application {
     
     public function updateCompanyInformation() {
         $company = $this->getApi()->getUserManager()->getCompany($_POST['companyid']);
+        $company->vatNumber = $_POST['vatNumber'];
         foreach($_POST as $key => $value) {
+            if($key == "address" || $key == "invoiceAddress") {
+                continue;
+            } 
             $company->{$key} = $value;
         }
+        
         
         $company->address->address = $_POST['address'];
         $company->address->postCode = $_POST['postcode'];

@@ -65,7 +65,25 @@ $selectedInterval = $this->getInterval();
         }
         break;
     }
+    
+    $freecount = 0;
+    $totalRooms = 0;
+    foreach($result->itemTimeLines as $itemId => $days) {
+        $taken = false;
+        foreach($days as $time => $value) {
+            if($value != 0) {
+                $taken = true;
+            }
+        }
+        $totalRooms++;
+        if(!$taken) {
+            $freecount++;
+        }
+    }
+    $taken = ($totalRooms-$freecount);
+    echo "Rooms free: " . $freecount . " of " . $totalRooms . " in total giving " . $taken .  " rooms taken.<bR><bR>";
 
+    
     if($printTypeOverview) {
         echo "<div class='timelineoverviewouter'>";
         echo "<div class='timelineoverview'>";

@@ -26,58 +26,58 @@ $company = $this->getApi()->getUserManager()->getCompany($_POST['value']);
     <div class="gss_settings_title"><? echo $this->__f("General company settings"); ?></div>
     <div class="textfield gss_setting"  id="vatNumber">
         <span class="title"><?php echo $this->__f("Vat number"); ?></span>
-        <input type="textfield" gs_model='companymodel' gs_model_attr='vatNumber' value="<? echo $company->vatNumber; ?>" DISABLED>
+        <input type="textfield" gs_model='companymodel' gs_model_attr='vatNumber' value="<? echo $company->vatNumber; ?>">
         <div class="description">
-            <?php echo $this->__("The vat number"); ?>
+            <?php echo $this->__w("The vat number"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="name">
         <span class="title"><?php echo $this->__f("Name"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='name' value="<? echo $company->name; ?>">
         <div class="description">
-            <?php echo $this->__("The company name"); ?>
+            <?php echo $this->__w("The company name"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="prefix">
         <span class="title"><?php echo $this->__f("Phone prefix"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='prefix' value="<? echo $company->prefix; ?>">
         <div class="description">
-            <?php echo $this->__("Country prefix for mobile phone"); ?>
+            <?php echo $this->__w("Country prefix for mobile phone"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="phone">
         <span class="title"><?php echo $this->__f("Phone"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='phone' value="<? echo $company->phone; ?>">
         <div class="description">
-            <?php echo $this->__("Phone number for company"); ?>
+            <?php echo $this->__w("Phone number for company"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="email">
         <span class="title"><?php echo $this->__f("Email"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='email' value="<? echo $company->email; ?>">
         <div class="description">
-            <?php echo $this->__("Company's main email"); ?>
+            <?php echo $this->__w("Company's main email"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="invoiceEmail">
         <span class="title"><?php echo $this->__f("Invoice email"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='invoiceEmail' value="<? echo $company->invoiceEmail; ?>">
         <div class="description">
-            <?php echo $this->__("Company's main email"); ?>
+            <?php echo $this->__w("Company's invoice email"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="website">
         <span class="title"><?php echo $this->__f("Website"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='website' value="<? echo $company->website; ?>">
         <div class="description">
-            <?php echo $this->__("Company's website"); ?>
+            <?php echo $this->__w("Company's website"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="contactPerson">
         <span class="title"><?php echo $this->__f("Contact"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='contactPerson' value="<? echo $company->contactPerson; ?>">
         <div class="description">
-            <?php echo $this->__("Default contact person for company"); ?>
+            <?php echo $this->__w("Default contact person for company"); ?>
         </div>
     </div>
     <br><br>
@@ -87,21 +87,21 @@ $company = $this->getApi()->getUserManager()->getCompany($_POST['value']);
         <span class="title"><?php echo $this->__f("Address"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='address' value="<? echo @$company->address->address; ?>">
         <div class="description">
-            <?php echo $this->__("Company address"); ?>
+            <?php echo $this->__w("Company address"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="city">
         <span class="title"><?php echo $this->__f("Postcode"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='city' value="<? echo @$company->address->postCode; ?>">
         <div class="description">
-            <?php echo $this->__("Company postcode"); ?>
+            <?php echo $this->__w("Company postcode"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="postcode">
         <span class="title"><?php echo $this->__f("City"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='postcode' value="<? echo @$company->address->city; ?>">
         <div class="description">
-            <?php echo $this->__("Company city"); ?>
+            <?php echo $this->__w("Company city"); ?>
         </div>
     </div>
     
@@ -110,21 +110,21 @@ $company = $this->getApi()->getUserManager()->getCompany($_POST['value']);
         <span class="title"><?php echo $this->__f("Address"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='invoice_address' value="<? echo @$company->invoiceAddress->address; ?>">
         <div class="description">
-            <?php echo $this->__("Company invoice address"); ?>
+            <?php echo $this->__w("Company invoice address"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="city">
         <span class="title"><?php echo $this->__f("invoice_city"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='invoice_city' value="<? echo @$company->invoiceAddress->postCode; ?>">
         <div class="description">
-            <?php echo $this->__("Company invoice postcode"); ?>
+            <?php echo $this->__w("Company invoice postcode"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="invoice_postcode">
         <span class="title"><?php echo $this->__f("City"); ?></span>
         <input type="textfield" gs_model='companymodel' gs_model_attr='invoice_postcode' value="<? echo @$company->invoiceAddress->city; ?>">
         <div class="description">
-            <?php echo $this->__("Company invoice city"); ?>
+            <?php echo $this->__w("Company invoice city"); ?>
         </div>
     </div>
     

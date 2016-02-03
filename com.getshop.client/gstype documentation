@@ -20,7 +20,7 @@ attribute gstypes;
         example: <div gstype="ckeditor" type="txt" gsname='content'>Some content</div>
 
     submitenter, makes it to submit when pressing enter. 
-        example: <input gstype="submitenter" type="txt" name='example' placeholder="Enter a menu name">
+        example: <div gstype="form" method="addEntry"><input gstype="submitenter" type="txt" name='example' placeholder="Enter a menu name"></div>
 
     clicksubmit, submit whenever someone click this element:
         example: <div gstype="clicksubmit" method="renameEntry" gsname="id" gsvalue="somevalue">

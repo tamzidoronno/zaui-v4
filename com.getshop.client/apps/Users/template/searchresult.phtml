@@ -1,5 +1,8 @@
 <?
+/* @var $this \ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f\Users */
 $users = $this->getFilteredData();
+$companies = $this->getApi()->getUserManager()->getAllCompanies();
+$companies = $this->indexList($companies);
 foreach ($users as $user) {
     $name = $user->fullName;
     $email = $user->emailAddress;
@@ -71,6 +74,14 @@ foreach ($users as $user) {
                     }
                 }
                 echo "</div>";
+            }
+            if(sizeof($user->company) > 0) {
+                echo "<b>Company: ";
+                $complist = array();
+                foreach($user->company as $comp) {
+                    $complist[] = $companies[$comp]->name;
+                }
+                echo join(", ", $complist) . "</b>";
             }
             ?>
             <div class="created"><? echo $created; ?></div>

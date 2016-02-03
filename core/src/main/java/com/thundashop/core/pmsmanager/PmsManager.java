@@ -923,7 +923,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
         PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter(); 
         
-        if(this.specifiedMessage != null) {
+        if(this.specifiedMessage != null && message != null) {
             message = message.replace("{personalMessage}", this.specifiedMessage);
         }
         
@@ -1833,6 +1833,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String getDefaultMessage(String bookingId) {
         PmsBooking booking = getBooking(bookingId);
         String message = getConfiguration().defaultMessage.get(booking.language);
+        if(message == null) {
+            return "";
+        }
         return formatMessage(message, booking, null, null);
     }
 

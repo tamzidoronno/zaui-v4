@@ -55,14 +55,14 @@ if(($prices->defaultPriceType == 1 && !empty($arr)) || $prices->defaultPriceType
      $hasPrices = true;
 }
 
-printRooms($toPrint, $types, $items, $booking->id, false, $hasPrices, $hasArx);
+printRooms($toPrint, $types, $items, $booking->id, false, $hasPrices, $hasArx,$config);
 
 if(sizeof($addons) > 0) {
     echo '<h2>Addons</h2>';
-    printRooms($addons, $types, $items, $booking->id, true, $hasPrices, $hasArx);
+    printRooms($addons, $types, $items, $booking->id, true, $hasPrices, $hasArx,$config);
 }
 
-function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $hasArx) {
+function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $hasArx, $config) {
     ?>
 <table width='100%' cellspacing='0' cellpadding='0' class='guestoverviewtable'>
     <tr>
@@ -71,6 +71,9 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
         <th>Room</th>
         <th>Date start</th>
         <th>Date end</th>
+        <?php if($config->bookingTimeInterval == 2) { ?>
+        <th>Nights</th>
+        <?php } ?>
         <th>Guest</th>
         <?php if(!$addons && $hasPrices) { ?>
             <th>Price</th>
@@ -190,6 +193,12 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                     </span>
                 </span>
             </td>
+            <?php 
+            if($config->bookingTimeInterval == 2) { 
+                $diff = ((strtotime($date->end) - strtotime($date->start)) / 86400);
+                echo "<td>".round($diff)."</td>";
+            } 
+            ?>
             <? if(!$addons && $hasPrices) { ?>
                 <td>
                     <span class='roomattribute'>

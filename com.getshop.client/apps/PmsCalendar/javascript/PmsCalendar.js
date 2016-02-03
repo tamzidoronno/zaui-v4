@@ -12,8 +12,8 @@ app.PmsCalendar = {
         var data = {
             "bookingid" : $(this).attr('bookingid')
         }
-        
-        var event = thundashop.Ajax.createEvent('','showBookingInformation','03e05cd4-7658-49c2-be04-d55e8d4fdbea',data);
+        var instanceId = $(this).attr('instanceid');
+        var event = thundashop.Ajax.createEvent('','showBookingInformation',instanceId,data);
         event.core.appname = "PmsManagement";
         thundashop.common.showInformationBoxNew(event,'Configuration');
     },

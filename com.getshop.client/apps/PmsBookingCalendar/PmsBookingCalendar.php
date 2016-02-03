@@ -16,6 +16,20 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         $this->includefile("settings");
     }
     
+    function getDates($year) {
+        $dates = array();
+
+        for ($i = 1; $i <= 366; $i++) {
+            $month = date('m', mktime(0, 0, 0, 1, $i, $year));
+            $wk = date('W', mktime(0, 0, 0, 1, $i, $year));
+            $wkDay = date('N', mktime(0, 0, 0, 1, $i, $year));
+            $day = date('d', mktime(0, 0, 0, 1, $i, $year));
+
+            $dates[$month][$wk][$wkDay] = $day;
+        }
+        return $dates;
+    }
+    
     public function getSelectedName() {
         return $this->getConfigurationSetting("booking_engine_name");
     }
@@ -72,10 +86,18 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     }
     
     public function getSelectedMonth() {
+        $month = "";
         if(isset($_SESSION[$this->getAppInstanceId()]['selected_month'])) {
-            return $_SESSION[$this->getAppInstanceId()]['selected_month'];
+            $month = $_SESSION[$this->getAppInstanceId()]['selected_month'];
+        } else {
+            $month = date("m", $this->getSelectedDate());
         }
-        return date("m", $this->getSelectedDate());
+        
+        if($month < 10) {
+            $month = "0" . (int)$month;
+        }
+
+        return $month;
     }
     public function getSelectedYear() {
         if(isset($_SESSION[$this->getAppInstanceId()]['selected_year'])) {

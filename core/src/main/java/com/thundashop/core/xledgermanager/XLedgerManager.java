@@ -147,7 +147,11 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
                 toAdd.put(75, company.address.postCode);
                 toAdd.put(76, company.address.city);
             }
-            toAdd.put(10, company.email);
+            if(company.invoiceEmail != null && !company.invoiceEmail.trim().isEmpty()) {
+                toAdd.put(10, company.invoiceEmail.trim());
+            } else {
+                toAdd.put(10, company.email);
+            }
         } else {
             toAdd.put(7, user.fullName);
             if(user.address != null) {
@@ -155,6 +159,7 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
                 toAdd.put(75, user.address.postCode);
                 toAdd.put(76, user.address.city);
             }
+            toAdd.put(10, user.emailAddress);
          }
          toAdd.put(33, "NOK");
          

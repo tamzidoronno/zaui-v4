@@ -30,12 +30,8 @@ foreach($companies as $company) {
     }
     echo "</td>";
     echo "<td valign='top' width='25%'>";
-    if($company->invoiceAddress) {
-        echo $company->email . " " . $company->invoiceEmail. "<br>";
-        echo $company->phone . " " . $company->contactPerson . "<br>";
-    } else {
-        echo "No invoice address set";
-    }
+    echo $company->email . " " . $company->invoiceEmail. "<br>";
+    echo $company->phone . " " . $company->contactPerson . "<br>";
     echo "</td>";
     echo "</tr>";
     echo "</table>";

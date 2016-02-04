@@ -99,7 +99,8 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "<table width='100%' cellspacing='0' cellpadding='0'>";
         echo "<tr>";
         for($i = 0; $i < 7; $i++) {
-            echo "<th> Day $i</th>";
+            $res = $time+(86400*$i);
+            echo "<th>".date("d.m.Y", $res). "</th>";
         }
         echo "</tr>";
 
@@ -111,6 +112,10 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             $filter->startDate = $this->convertToJavaDate($time+(86400*$i));
             $filter->endDate = $this->convertToJavaDate($time+(86400*($i+1)));
             $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+            $intervalResult = $this->getApi()->getPmsManager()->getRoomsNeedingIntervalCleaning($this->getSelectedName(), $this->convertToJavaDate($time+(86400*$i)));
+            if(!$intervalResult) {
+                $intervalResult = array();
+            }
             if($bookings) {
                 foreach($bookings as $booking) {
                     foreach($booking->rooms as $room) {
@@ -119,6 +124,13 @@ class PmsCleaning extends \WebshopApplication implements \Application {
                     }
                 }
             }
+            
+            foreach($intervalResult as $room) {
+                $guestName = $room->guests[0]->name;
+                echo $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $guestName. "<br>";
+            }
+            
+            
             echo "</td>";
         }
         

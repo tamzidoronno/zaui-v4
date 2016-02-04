@@ -1185,7 +1185,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private PmsAdditionalItemInformation finalizeAdditionalItem(PmsAdditionalItemInformation additionalInfo) {
         Calendar start = Calendar.getInstance();
         Calendar end = start.getInstance();
-        end.add(Calendar.MINUTE, 1);
+        end.add(Calendar.DAY_OF_YEAR, 1);
         
         additionalInfo.isClean();
         additionalInfo.inUse = bookingEngine.itemInUseBetweenTime(start.getTime(), end.getTime(), additionalInfo.itemId);

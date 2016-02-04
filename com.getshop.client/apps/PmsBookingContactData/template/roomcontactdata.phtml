@@ -87,7 +87,7 @@ if($config->displayContactsList) {
         echo "</div>";
         echo "<br>";
     }
-    echo "<span gstype='clicksubmit' method='addContact' gsname='id' gsvalue='somevalue' style='cursor:pointer;'>".$this->__w("Add another contact") . "</span>";
+    echo "<span gstype='clicksubmit' method='addContact' gsname='id' gsvalue='somevalue' style='cursor:pointer;'>".$this->__w("Click here if you need to add more contacts") . "</span>";
     echo "</div>";
     echo "<br><br>";
 }
@@ -120,7 +120,7 @@ echo "<div style='clear:both;'></div>";
 echo "</div>";
 
 $curAddedFields = $this->getCurrentBooking()->registrationData->resultAdded;
-echo $curAddedFields->{'choosetyperadio'};
+
 if(isset($curAddedFields->{'choosetyperadio'})) {
     echo "<script>";
     echo "$('input[name=\"choosetyperadio\"][value=\"".$curAddedFields->{'choosetyperadio'}."\"]').click();";

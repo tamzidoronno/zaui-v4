@@ -524,6 +524,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 if(room.bookingItemTypeId != null) {
                     room.type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                    String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+                    if(productId != null) {
+                        room.taxes = productManager.getProduct(productId).taxGroupObject.taxRate;
+                    }
                 }
                 
             }
@@ -727,6 +731,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 startDate = room.invoicedTo;
             }
             
+            if(filter.onlyEnded && room.date.end.after(filter.endInvoiceAt)) {
+                continue;
+            }
+            
             if(sameDayOrAfter(room.invoicedTo, endDate)) {
                 continue;
             }
@@ -915,8 +923,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
         PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter(); 
         
-        if(this.specifiedMessage != null) {
-            message = message.replace("{personalMessage}", this.specifiedMessage);
+        if(this.specifiedMessage != null && message != null) {
+            String specifiedmsg = this.specifiedMessage.replace("\n", "<br>\n");
+            message = message.replace("{personalMessage}", specifiedmsg);
         }
         
         if(room != null) {
@@ -951,8 +960,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
-        List<PmsBooking> allBookings = getAllBookings(null);
-        PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings);
+        filter.filterType = "active";
+        List<PmsBooking> allBookings = getAllBookings(filter);
+        PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings, prices.pricesExTaxes);
         int totalRooms = bookingEngine.getBookingItems().size();
         PmsStatistics result = builder.buildStatistics(filter, totalRooms);
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
@@ -1110,8 +1120,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(BookingItem item : items) {
            BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
             List<BookingTimeLine> timelines = line.getTimelines(filter.interval);
-            HashMap<Long, Integer> itemCountLine = new HashMap();
-            timelines.stream().forEach(o -> itemCountLine.put(o.start.getTime(), o.count));
+            LinkedHashMap<Long, Integer> itemCountLine = new LinkedHashMap();
+            for(BookingTimeLine tl : timelines) {
+                itemCountLine.put(tl.start.getTime(), tl.count);
+            }
             res.itemTimeLines.put(item.id, itemCountLine);
         }
         
@@ -1822,6 +1834,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String getDefaultMessage(String bookingId) {
         PmsBooking booking = getBooking(bookingId);
         String message = getConfiguration().defaultMessage.get(booking.language);
+        if(message == null) {
+            return "";
+        }
         return formatMessage(message, booking, null, null);
     }
 

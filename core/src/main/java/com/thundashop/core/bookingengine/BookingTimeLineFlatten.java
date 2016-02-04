@@ -146,6 +146,12 @@ public class BookingTimeLineFlatten implements Serializable {
             }
         }
         
+        Collections.sort(result, new Comparator<BookingTimeLine>(){
+            public int compare(BookingTimeLine o1, BookingTimeLine o2){
+                return o1.start.compareTo(o2.start);
+            }
+       });
+        
         return result;
     }
 

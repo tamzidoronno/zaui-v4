@@ -24,8 +24,12 @@ $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedNa
             <td width="50%"><input type="text" gsname="waitingListSize" style='width:100%;' value="<? echo $item->waitingListSize; ?>"></td>
         </tr>
         <tr>
-            <td width="50%">This bookingitem will be full if this counter is hit</td>
+            <td width="50%">Capasity (full when counter hit this)</td>
             <td width="50%"><input type="text" gsname="fullWhenCountHit" style='width:100%;' value="<? echo $item->fullWhenCountHit; ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%">Description</td>
+            <td width="50%"><input type="text" gsname="description" style='width:100%;' value="<? echo $item->description; ?>"></td>
         </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>

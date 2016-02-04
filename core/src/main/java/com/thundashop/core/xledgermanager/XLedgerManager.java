@@ -35,11 +35,27 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
     CartManager cartManager;
     
     @Override
+    public List<String> createUserFile() {
+        List<User> users = userManager.getAllUsers();
+        List<String> result = new ArrayList();
+        for(User user : users) {
+            if(user.fullName == null || user.fullName.trim().isEmpty()) {
+                continue;
+            }
+            if(user.isCustomer()) {
+                String line = createUserLine(user);
+                result.add(line);
+            }
+        }
+        return result;
+    }
+    
+    @Override
     public List<String> createOrderFile() {
         List<String> allOrdersToReturn = new ArrayList();
         List<Order> allOrders = orderManager.getOrders(null, null, null);
         for(Order order : allOrders) {
-            if(order.incrementOrderId == 100016) {
+            if(order.status == Order.Status.SEND_TO_INVOICE) {
                 List<String> lines = createOrderLine(order);
                 allOrdersToReturn.addAll(lines);
             }
@@ -117,6 +133,46 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
         String startDate = dt.format(item.startDate);
         String endDate = dt.format(item.endDate);
         return " ("+startDate+"-"+endDate+")";
+    }
+
+    private String createUserLine(User user) {
+         HashMap<Integer, String> toAdd = new HashMap();
+         toAdd.put(4, user.customerId + "");
+         if(!user.company.isEmpty()) {
+            Company company = userManager.getCompany(user.company.get(0));
+            toAdd.put(6, company.vatNumber);
+            toAdd.put(7, company.name);
+            if(company.address != null) {
+                toAdd.put(74, company.address.address);
+                toAdd.put(75, company.address.postCode);
+                toAdd.put(76, company.address.city);
+            }
+            if(company.invoiceEmail != null && !company.invoiceEmail.trim().isEmpty()) {
+                toAdd.put(10, company.invoiceEmail.trim());
+            } else {
+                toAdd.put(10, company.email);
+            }
+        } else {
+            toAdd.put(7, user.fullName);
+            if(user.address != null) {
+                toAdd.put(74, user.address.address);
+                toAdd.put(75, user.address.postCode);
+                toAdd.put(76, user.address.city);
+            }
+            toAdd.put(10, user.emailAddress);
+         }
+         toAdd.put(33, "NOK");
+         
+         String result = "";
+         for(int i = 0; i < 90; i++) {
+             if(toAdd.containsKey(i)) {
+                 result += toAdd.get(i) + ";";
+             } else {
+                 result += ";";
+             }
+         }
+         result += "EOL\n\r";
+         return result;
     }
 
 }

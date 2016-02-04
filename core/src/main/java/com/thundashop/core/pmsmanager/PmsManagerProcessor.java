@@ -252,9 +252,15 @@ public class PmsManagerProcessor {
     private void createPeriodeInvoices(PmsBooking booking) {
         NewOrderFilter filter = new NewOrderFilter();
         if(!manager.configuration.prepayment) {
-            filter.startInvoiceFrom = beginningOfMonth(true);
-            filter.endInvoiceAt = beginningOfMonth(false);
+            filter.startInvoiceFrom = beginningOfMonth(-1);
+            filter.endInvoiceAt = beginningOfMonth(0);
             manager.createOrder(booking.id, filter);
+            
+            filter.onlyEnded = true;
+            filter.endInvoiceAt = new Date();
+            manager.createOrder(booking.id, filter);
+
+            
         } else {
             System.out.println("Only supporting postpayments for the time being");
         }
@@ -298,12 +304,10 @@ public class PmsManagerProcessor {
         return res;
     }
 
-    private Date beginningOfMonth(boolean lastMonth) {
+    private Date beginningOfMonth(int monthsToAdd) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().getActualMinimum(Calendar.DAY_OF_MONTH));
-        if(lastMonth) {
-            cal.add(Calendar.MONTH, -1);
-        }
+        cal.add(Calendar.MONTH, monthsToAdd);
         
         return cal.getTime();
     }

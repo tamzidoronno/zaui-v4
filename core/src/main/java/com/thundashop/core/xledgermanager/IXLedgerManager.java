@@ -11,4 +11,6 @@ import java.util.List;
 public interface IXLedgerManager {
     @Administrator
     public List<String> createOrderFile();
+    @Administrator
+    public List<String> createUserFile();
 }

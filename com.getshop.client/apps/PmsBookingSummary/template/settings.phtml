@@ -19,6 +19,15 @@ $dateType = $this->getConfigurationSetting("date_type");
             <td width="50%">Headings addons</td>
             <td width="50%"><input type="text" gsname="heading_addons" style='width:100%;' value="<? echo $this->getConfigurationSetting("heading_addons"); ?>"></td>
         </tr>
+        <tr>
+            <td width="50%">Can update stay</td>
+            <td width="50%">
+                <select gsname='canUpdateText'>
+                    <option value='no'>No</option>
+                    <option value='yes' <?php if($this->getConfigurationSetting("canUpdateText") == "yes") { echo "SELECTED"; } ?>>Yes</option>
+                </select>
+            </td>
+        </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

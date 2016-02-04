@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class TimeRepeaterDateRange implements Serializable {
-    Date start;
-    Date end;
+    public Date start;
+    public Date end;
 
     boolean isBetweenTime(Date dateToCheck) {
         if(start.equals(dateToCheck)) {

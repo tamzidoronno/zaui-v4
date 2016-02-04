@@ -6,7 +6,6 @@ A confirmation email has been sent to your email.;-;En bekreftelse er sendt til 
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add;-;Legg til
 Add a button to your page. This button can be a add to cart button, go to page button, etc;-;Legg til en knapp på websiden din. Knapper som legg i handlekurv, gå til en annen side, osv.
-Add another contact;-;Legg til en til kontakt
 Add another slide;-;Legg til en til slider
 Add another slider;-;Legg inn til slider
 Add another tab;-;Legg inn en til tab
@@ -44,6 +43,7 @@ Birth Date;-;Fødselsdato
 Body title;-;Tittel
 Booking;-;Booking
 Booking engine name;-;Bookingengine navn
+Booking size;-;Booking størrelse
 Bottom spacing;-;Nedre spacing
 BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Very simple to use and gets you started with visa payment immediatly;-;BrainTree er en internasjonal betalingsmetode som eies av PayPal. De tilbyr betaling med Visa, MasterCard, PayPal, osv. Veldig enkel å bruke og gir det mulighet til å ta imot betaling online med gang.
 Building your store;-;Lag din webbutikk
@@ -65,6 +65,7 @@ Checkout;-;Utsjekking
 Children;-;Barn
 Choose;-;Velg
 City;-;By
+Click here if you need to add more contacts;-;Trykk her hvis du vil legge til flere kontaktpersoner
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Close;-;Lukk
 Color transition;-;Fargetransisjoner
@@ -293,6 +294,7 @@ Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
 Register;-;Registrer
 Register email;-;Registrer epost
+Registered customer;-;Registrert kunde
 Registration details;-;Registrerings detaljer.
 Related products;-;Relaterte produkter
 Reminder;-;Påminnelse
@@ -325,12 +327,14 @@ Save the cards instead of extracting the amount?;-;Lagre kortet insteden for å 
 Search for a product;-;Søk etter et produkt
 Searching....;-;Søker....
 Select a background image.;-;Velg et bakgrundsbilde
+Select a category;-;Velg en kategori
 Select a time period to booking for before continue;-;Velg en tidsperiode for bookingen før du fortsetter
 Select your car;-;Velg din bil
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
 September;-;September
+Set default opening hours;-;Still inn standard åpningstider
 Set key;-;Sett nøkkel
 Set new password;-;Sett nytt passord
 Settings;-;Instillinger
@@ -351,6 +355,7 @@ Slide left (px) (negative is from right);-;Slide til venstre (px) (negativt vil 
 Slide right;-;Slide til høyre
 Slide top (px) (negative is from bottom);-;Slide til toppen (px) (negativt vil være fra bunnen)
 Sorry;-;Beklager
+Sorry, but the selected time periode is not available, or incorrect;-;Beklager, men tidsrommet du har valgt er ikke tilgjengelig eller inneholder feil.
 Sorry, this user does not exists, are you sure this is the correct username / email?;-;Beklager, men denne brukereren eksisterer ikke, er du sikker på at det er riktig brukernavn og passord?
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
@@ -397,6 +402,7 @@ Thu;-;Tor
 Thursday;-;Torsdag
 Timeless black and white design.;-;Tidsløst svart og hvitt design
 Timer (ms);-;Timer (ms)
+Title;-;Tittel
 To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;For at det skal være mulig bruke denne web siden må vi lagre en liten bit av data på din nettleser. Dette er en identifikasjons id som gjør det mulig å identifisere deg som en bruker mens du surfer på denne siden. Denne dataen blir lagret i 20 timer og er 100% anonym.
 Today;-;Idag
 Top spacing;-;Øvre spacing
@@ -408,6 +414,7 @@ Tune your online store by setting currency, does customers need to register to b
 Type;-;Type
 Unknown name;-;Ukjent navn
 Unpin area;-;Unpin område
+Unset closing hours;-;Slett stengetider
 Update;-;Oppdater
 Upload and manipulate on images or add this to be able to search for professional images trough our image stock.;-;Last og behandle bilder, eventuelt så kan du søke opp profesjonelle bilder gjennom vår bildebank.
 Use a different email;-;Bruk en annen epost

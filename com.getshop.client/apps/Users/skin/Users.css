@@ -21,6 +21,7 @@
 
 #backsidesettings .user_entry_row {
     border-bottom: solid 1px #EDEDED;
+    position:relative;
 }
 
 #backsidesettings .user_entry_row .content {

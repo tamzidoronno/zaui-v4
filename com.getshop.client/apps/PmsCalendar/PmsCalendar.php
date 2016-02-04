@@ -93,13 +93,15 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             $title = date("H:i", $startTime)." - ".date("H:i", $endTime);
             $bookingId = "";
             $loadBookingOnClick = "";
+            $instanceId = "";
             if($this->isEditorMode() && $this->currentTitle) {
                 $loadBookingOnClick = "loadbookingonclick";
+                $instanceId = $this->getConfigurationSetting("bookingadmininstance");
                 $title = $this->currentTitle;
                 $bookingId = $this->currentBooking;
             }
             
-            echo "<span class='$loadBookingOnClick outerblock $size' style='width: $width%' bookingid='$bookingId'>";
+            echo "<span class='$loadBookingOnClick outerblock $size' style='width: $width%' bookingid='$bookingId' instanceid='$instanceId'>";
             echo "<span class='timeblock $state' startTime='$startTime' "
                     . "endTime='$endTime' "
                     . "title='".$title."' "

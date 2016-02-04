@@ -11,9 +11,30 @@ if(!$companies) {
 foreach($companies as $company) {
     $id = $company->id;
     echo "<div class='companyentry' gss_fragment='company' gss_view='gs_company_workarea' gss_value='$id'>";
+    echo "<table width='100%'>";
+    echo "<tr>";
+    echo "<td width='25%'>";
     echo "<i class='fa fa-building-o' style='font-size:30px; float:left; margin-right: 10px; '></i>";
     echo "<b>" . $company->name . "</b><br>vat number: " . $company->vatNumber;
-    echo "<span style='float:right; color:#bbb; font-size: 10px;'>Registered " . date("m.d.Y H:i", strtotime($company->rowCreatedDate)) . "</span>";
+    echo "</td>";
+    echo "<td valign='top' width='25%'>";
+    echo $company->address->address . "<br>";
+    echo $company->address->postCode . " " . $company->address->city . "<br>";
+    echo "</td>";
+    echo "<td valign='top' width='25%'>";
+    if($company->invoiceAddress && $company->invoiceAddress->address) {
+        echo $company->invoiceAddress->address . "<br>";
+        echo $company->invoiceAddress->postCode . " " . $company->invoiceAddress->city . "<br>";
+    } else {
+        echo "No invoice address set";
+    }
+    echo "</td>";
+    echo "<td valign='top' width='25%'>";
+    echo $company->email . " " . $company->invoiceEmail. "<br>";
+    echo $company->phone . " " . $company->contactPerson . "<br>";
+    echo "</td>";
+    echo "</tr>";
+    echo "</table>";
     echo "</div>";
 }
 ?>

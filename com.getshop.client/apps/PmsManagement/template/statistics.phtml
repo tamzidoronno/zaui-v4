@@ -6,10 +6,10 @@ $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->get
     <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
         <tr>
             <th>Date</th>
-            <th>Total</th>
-            <th>Avg.<br>price</th>
-            <th>Rented<br>out</th>
             <th>Spear<br>rooms</th>
+            <th>Rented<br>out</th>
+            <th>Avg.<br>price</th>
+            <th>Total</th>
             <th>Budget</th>
             <th>Coverage</th>
         </tr>
@@ -21,10 +21,10 @@ $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->get
                 echo date("d.m.Y", strtotime($entry->date));
             }
             echo "</td>";
-            echo "<td>" . $entry->totalPrice . "</td>";
-            echo "<td>" . $entry->avgPrice . "</td>";
-            echo "<td>" . $entry->roomsRentedOut . "</td>";
             echo "<td>" . $entry->spearRooms . "</td>";
+            echo "<td>" . $entry->roomsRentedOut . "</td>";
+            echo "<td>" . $entry->avgPrice . "</td>";
+            echo "<td>" . $entry->totalPrice . "</td>";
             echo "<td>" . $entry->bugdet . "%</td>";
             echo "<td>" . $entry->coverage . "%</td>";
             echo "</tr>";
@@ -37,11 +37,10 @@ $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->get
     <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
         <tr>
             <th>Date</th>
-            <th>Total</th>
-            <th>Types</th>
             <th>Nights</th>
             <th>Orders</th>
-            <th>Avg. order</th>
+            <th>Avg.<br> order</th>
+            <th>Total</th>
         </tr>
         <?
         foreach ($stats->salesEntries as $saleEntry) {
@@ -51,21 +50,10 @@ $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->get
                 echo date("d.m.Y", strtotime($saleEntry->date));
             }
             echo "</td>";
-            echo "<td>" . $saleEntry->totalPrice . "</td>";
-            echo "<td>";
-            $i = 0;
-            foreach($saleEntry->paymentTypes as $type => $price) {
-                $type = $this->translateText($type);
-                echo "<span title='$type'>".round($price)."</span>";
-                if($i < count(get_object_vars($saleEntry->paymentTypes))-1) {
-                    echo "<br>";
-                }
-                $i++;
-            }
-            echo "</td>";
             echo "<td>" . $saleEntry->nights . "</td>";
             echo "<td>" . $saleEntry->numberOfOrders . "</td>";
             echo "<td>" . $saleEntry->avgOrderPrice . "</td>";
+            echo "<td>" . $saleEntry->totalPrice . "</td>";
             echo "</tr>";
         }
         ?>

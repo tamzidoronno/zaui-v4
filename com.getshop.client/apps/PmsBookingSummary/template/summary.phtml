@@ -25,7 +25,8 @@ foreach($booking->rooms as $room) {
     if($room->addedByRepeater || $room->isAddon) {
         continue;
     }
-    printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText);
+    $canUpdate = $this->getConfigurationSetting("canUpdateText") == "yes";
+    printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText, $canUpdate);
 }
 
 if($configuration->supportMoreDates) {
@@ -122,7 +123,7 @@ if($addonsFound) {
 }
 
 
-function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText) {
+function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText, $canUpdate = false) {
 /* @var $room core_pmsmanager_PmsBookingRooms */
     
     if($room->isAddon) {
@@ -152,10 +153,31 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     if(!$date->end) {
         echo $startingFromText . " ";
     }
-    echo "<span>" . date("d.m.Y H:i", strtotime($date->start));
-    if($date->end) {
-         echo " - " . date("d.m.Y H:i", strtotime($date->end));
+    
+    echo "<span>";
+    
+    if($canUpdate) {
+        echo "<span class='roomaddedrow' itemid='".$room->bookingItemId."' typeid='".$room->bookingItemTypeId."' roomid='".$room->pmsBookingRoomId."'>";
+        echo "<input type='txt' value='" . date("d.m.Y", strtotime($date->start)) . "' style='width:70px;text-align:center;' gsname='startdate'> ";
+        echo "<input type='txt' value='" . date("H:i", strtotime($date->start)) . "' style='width:40px;text-align:center;' gsname='starttime'>";
+        if($date->end) {
+            echo " - ";
+            $hide = "";
+            if(date("d.m.Y", strtotime($date->start)) != date("d.m.Y", strtotime($date->end))) {
+                echo "<input type='txt' value='" . date("d.m.Y", strtotime($date->end)) . "' style='width:70px;text-align:center; $hide' gsname='enddate'> ";
+            }
+            echo "<input type='txt' value='" . date("H:i", strtotime($date->end)) . "' style='width:40px;text-align:center;' gsname='endtime'>";
+        }
+        echo " <span class='resultbox'></span>";
+        echo "</span>";
+    } else {
+        echo "<span>" . date("d.m.Y H:i", strtotime($date->start));
+        if($date->end) {
+             echo " - " . date("d.m.Y H:i", strtotime($date->end));
+        }
     }
+    
+    
     echo "</span>";
     echo "</div>";    
 }

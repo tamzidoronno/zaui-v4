@@ -255,6 +255,7 @@ inputs-moz-placeholder {
 #backsidesettings input[type=text],
 #backsidesettings .gssselectbackground,
 #backsidesettings input[type=password],
+#backsidesettings select,
 #backsidesettings input[type=textfield] {
     width: 270px;
     padding: 8px 8px;

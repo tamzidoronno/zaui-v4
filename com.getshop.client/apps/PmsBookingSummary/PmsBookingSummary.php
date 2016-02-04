@@ -20,6 +20,32 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         return $this->getConfigurationSetting("engine_name");
     }
     
+    public function updateDateOnRow() {
+        $itemId = $_POST['data']['itemid'];
+        $typeId = $_POST['data']['typeid'];
+        $roomid = $_POST['data']['roomid'];
+        $start = strtotime($_POST['data']['startdate'] . " " . $_POST['data']['starttime']);
+        if(!isset($_POST['data']['enddate'])) {
+            $end = strtotime($_POST['data']['startdate'] . " " . $_POST['data']['endtime']);
+        } else {
+            $end = strtotime($_POST['data']['enddate'] . " " . $_POST['data']['endtime']);
+        }
+        $canAdd = $this->getApi()->getBookingEngine()->checkIfAvailable($this->getSelectedName(), $itemId, $typeId, $this->convertToJavaDate($start), $this->convertToJavaDate($end));
+        if($canAdd && ($start < $end)) {
+            $booking = $this->getCurrentBooking();
+            foreach($booking->rooms as $room) {
+                if($room->pmsBookingRoomId == $roomid) {
+                    $room->date->start = $this->convertToJavaDate($start);
+                    $room->date->end = $this->convertToJavaDate($end);
+                }
+            }
+            $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+            echo "<i class='fa fa-check'></i>";
+        } else {
+            echo "<i class='fa fa-warning' color='red' title='".$this->__w("Sorry, but the selected time periode is not available, or incorrect")."'></i>";
+        }
+    }
+    
     public function render() {
         if(!$this->getSelectedName()) {
             echo "Please specify a booking engine first";

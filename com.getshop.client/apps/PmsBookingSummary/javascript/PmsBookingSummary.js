@@ -7,6 +7,20 @@ app.PmsBookingSummary = {
         $(document).on('click','.PmsBookingSummary .adddatetype', app.PmsBookingSummary.changeAddDateType);
         $(document).on('click','.PmsBookingSummary .showRepeatDates', app.PmsBookingSummary.showRepeatDates);
         $(document).on('click','.PmsBookingSummary .addonselection', app.PmsBookingSummary.addonSelection);
+        $(document).on('blur','.PmsBookingSummary .roomaddedrow', app.PmsBookingSummary.updateRoomRow);
+        $(document).on('keyup','.PmsBookingSummary .roomaddedrow', app.PmsBookingSummary.updateRoomRow);
+    },
+    updateRoomRow : function() {
+        var args = thundashop.framework.createGsArgs($(this));
+
+        args['itemid'] = $(this).attr('itemid');
+        args['typeid'] = $(this).attr('typeid');
+        args['roomid'] = $(this).attr('roomid');
+        var row = $(this);
+        var event = thundashop.Ajax.createEvent('','updateDateOnRow',$(this), args);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            row.find('.resultbox').html(result);
+        });
     },
     addonSelection : function() {
         var data = {

@@ -6,6 +6,10 @@ $year = $this->getSelectedYear();
 
 $number = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
+$dates = $this->getDates($year);
+$dates = $dates[$month];
+
+
 if(!$this->getConfigurationSetting("date_type")) {
     echo "Warning no date type set yet.. configure it";
 }
@@ -21,12 +25,32 @@ if($this->isEditorMode()) {
     <i class='fa fa-arrow-right' <? echo $marginRight; ?>></i>
 </div>
 <?php
-for($i = 1;$i <= $number; $i++) {
-    $dayToPrint = strtotime($i.".".$month.".".$year);
-    if($this->isSelectedDate($dayToPrint)) {
-        echo "<span class='day selected' time='$dayToPrint'>$i</span>";
-    } else {
-        echo "<span class='day' time='$dayToPrint'>$i</span>";
+
+    echo "<span class='dayouter'><span class='day dayheader'>" . $this->__w("Mo") . "</span></span>";
+    echo "<span class='dayouter'><span class='day dayheader'>" . $this->__w("Tu") . "</span></span>";
+    echo "<span class='dayouter'><span class='day dayheader'>" . $this->__w("We") . "</span></span>";
+    echo "<span class='dayouter'><span class='day dayheader'>" . $this->__w("Th") . "</span></span>";
+    echo "<span class='dayouter'><span class='day dayheader'>" . $this->__w("Fr") . "</span></span>";
+    echo "<span class='dayouter'><span class='day dayheader'>" . $this->__w("Sa") . "</span></span>";
+    echo "<span class='dayouter'><span class='day dayheader'>" . $this->__w("Su") . "</span></span>";
+    echo "<div style='clear:both;'></div>";
+
+
+foreach($dates as $date) {
+    for($i = 1; $i <= 7; $i++) {
+        echo "<span class='dayouter'>";
+        if(isset($date[$i])) {
+            $dayToPrint = strtotime($date[$i] . "." . $month . "." . $year);
+            if($this->isSelectedDate($dayToPrint)) {
+                echo "<span class='day selected' time='$dayToPrint'>".$date[$i]."</span>";
+            } else {
+                echo "<span class='day' time='$dayToPrint'>".$date[$i]."</span>";
+            }
+        } else {
+            echo "<span class='day empty'>&nbsp;</span>";
+        }
+        echo "</span>";
     }
 }
+
 ?>

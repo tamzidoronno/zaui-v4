@@ -524,9 +524,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 if(room.bookingItemTypeId != null) {
                     room.type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                    String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
-                    if(productId != null) {
-                        room.taxes = productManager.getProduct(productId).taxGroupObject.taxRate;
+                    BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                    if(type != null) {
+                        String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;                    
+                        if(productId != null) {
+                            room.taxes = productManager.getProduct(productId).taxGroupObject.taxRate;
+                        }
                     }
                 }
                 

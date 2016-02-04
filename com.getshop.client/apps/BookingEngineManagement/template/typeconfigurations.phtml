@@ -12,6 +12,12 @@ $addons[2] = "Per timeslot";
     <input type='hidden' gsname='typeid' value='<? echo $id;?>'>
     <table width="80%" class="contactConfigTable">
     <tr>
+        <td width="50%"><? echo $this->__w("Name"); ?></td>
+        <td width="50%">
+            <input type='text' value='<? echo $item->name; ?>' gsname='name'>
+        </td>
+    </tr>
+    <tr>
         <td width="50%"><? echo $this->__w("Connect this to a product"); ?></td>
         <td width="50%">
             <select gsname="productId">

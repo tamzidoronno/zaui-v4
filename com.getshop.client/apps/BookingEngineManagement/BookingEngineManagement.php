@@ -173,6 +173,7 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $item->productId = $_POST['data']['productId'];
         $item->visibleForBooking = $_POST['data']['visibleForBooking'];
         $item->size = $_POST['data']['size'];
+        $item->name = $_POST['data']['name'];
         
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $item);
     }

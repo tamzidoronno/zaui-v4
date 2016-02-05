@@ -5,6 +5,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $selectedBooking;
     private $types = null;
     public $errors = array();
+    private $checkedCanAdd = array();
     
     public function getDescription() {
         return "Administrate all your bookings from this application";
@@ -32,6 +33,26 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $app->renderInBookingManagement($bookingId);
             }
         }
+    }
+    
+    public function canBeUsed($item, $start, $end) {
+        $end = strtotime($end);
+        $start = strtotime($start);
+        $key = $item."_".$start."_".$end;
+        
+        if(isset($this->checkedCanAdd[$key])) {
+            return $this->checkedCanAdd[$key];
+        }
+        
+        
+        $res = $this->getApi()->getBookingEngine()->checkIfAvailable($this->getSelectedName(), 
+                $item, 
+                null, 
+                $this->convertToJavaDate($start), 
+                $this->convertToJavaDate($end));
+        
+        $this->checkedCanAdd[$key] = $res;
+        return $this->checkedCanAdd[$key];
     }
     
     public function addRoomToBooking() {

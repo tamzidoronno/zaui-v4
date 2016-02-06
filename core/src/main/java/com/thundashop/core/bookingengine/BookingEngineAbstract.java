@@ -487,7 +487,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
 
     public void deleteBookingItemType(String id) {
-        BookingItemType type = types.remove(id);
+        BookingItemType type = types.get(id);
         if (type != null) {
             
             long count = items.values().stream().filter( o -> o.bookingItemTypeId.equals(id)).count();
@@ -495,7 +495,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             if (count > 0) {
                 throw new BookingEngineException("Can not delete a bookingitemtype that already has booking items, Existing items: " + count);
             }
-            
+            types.remove(id);
             deleteObject(type);
         }
     }

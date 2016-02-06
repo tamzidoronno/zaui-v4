@@ -10,6 +10,8 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .doneediting', app.PmsManagement.doneediting);
         $(document).on('click', '.PmsManagement .deletebooking', app.PmsManagement.deletebooking);
         $(document).on('click', '.PmsManagement .resetnotifications', app.PmsManagement.resetnotifications);
+        $(document).on('keyup','.PmsManagement .newroomstart', app.PmsManagement.updateRoomList);
+        $(document).on('keyup','.PmsManagement .newroomend', app.PmsManagement.updateRoomList);
     },
     resetnotifications : function() {
         var event = thundashop.Ajax.createEvent('','resetnotifications',$(this), {
@@ -18,6 +20,17 @@ app.PmsManagement = {
         });
         
         thundashop.Ajax.post(event);
+    },
+    updateRoomList : function() {
+        var data = {
+            "start" : $('.newroomstart').val(),
+            "end" : $('.newroomend').val()
+        };
+        console.log(data);
+        var event = thundashop.Ajax.createEvent('','updateItemList', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.addroomselectiontype').replaceWith(result);
+        });
     },
     
     deletebooking : function() {

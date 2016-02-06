@@ -3,7 +3,9 @@ namespace ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a;
 
 class PmsManagement extends \WebshopApplication implements \Application {
     private $selectedBooking;
+    private $types = null;
     public $errors = array();
+    private $checkedCanAdd = array();
     
     public function getDescription() {
         return "Administrate all your bookings from this application";
@@ -31,6 +33,26 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $app->renderInBookingManagement($bookingId);
             }
         }
+    }
+    
+    public function canBeUsed($item, $start, $end) {
+        $end = strtotime($end);
+        $start = strtotime($start);
+        $key = $item."_".$start."_".$end;
+        
+        if(isset($this->checkedCanAdd[$key])) {
+            return $this->checkedCanAdd[$key];
+        }
+        
+        
+        $res = $this->getApi()->getBookingEngine()->checkIfAvailable($this->getSelectedName(), 
+                $item, 
+                null, 
+                $this->convertToJavaDate($start), 
+                $this->convertToJavaDate($end));
+        
+        $this->checkedCanAdd[$key] = $res;
+        return $this->checkedCanAdd[$key];
     }
     
     public function addRoomToBooking() {
@@ -147,12 +169,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
      * @return core_bookingengine_data_BookingItemType[]
      */
     public function getTypes() {
-        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
-        $types2 = array();
-        foreach ($types as $idx => $type) {
-            $types2[$type->id] = $type;
+        if($this->types) {
+            return $this->types;
         }
-        return $types2;
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        $this->types = $this->indexList($types);
+        return $this->types;
     }
     
     public function confirmBooking() {
@@ -386,6 +408,31 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         return null;
 
+    }
+    
+    public function updateItemList() {
+        $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $this->includeAddRoomOptions($items, $start, $end);
+    }
+
+    public function includeAddRoomOptions($items, $start, $end) {
+        $types = $this->getTypes();
+        ?>
+            <select style='float:left; margin-right: 10px;' gsname='item' class='addroomselectiontype'>
+                <?php 
+                foreach($items as $item) {
+                    /* @var $item core_bookingengine_data_BookingItem */
+                    $itemId = $item->id;
+                    $canAdd = $this->getApi()->getBookingEngine()->checkIfAvailable($this->getSelectedName(), $itemId, null, $start, $end);
+                    if($canAdd) {
+                        echo "<option value='".$item->id."'>". $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")". "</option>";
+                    }
+                }
+                ?>
+            </select>
+        <?php
     }
 
 }

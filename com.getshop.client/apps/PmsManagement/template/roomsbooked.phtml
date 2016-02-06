@@ -3,12 +3,7 @@
 $booking = $this->getSelectedBooking();
 $types = $this->getTypes();
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
-$items2 = array();
-foreach ($items as $item) {
-    $items2[$item->id] = $item;
-}
-
-$items = $items2;
+$items = $this->indexList($items);
 
 $toPrint = array();
 $addons = array();
@@ -23,21 +18,19 @@ foreach($booking->rooms as $room) {
 
 $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-$dates = $this->getApi()->getPmsManager()->getDefaultDateRange($this->getSelectedName());
 ?>
 <h2>Rooms booked</h2>
+<?php
+$dates = $this->getApi()->getPmsManager()->getDefaultDateRange($this->getSelectedName());
+$start = $this->convertToJavaDate(strtotime($dates->start));
+$end = $this->convertToJavaDate(strtotime($dates->end));
+
+?>
 <span gstype="form" method='addRoomToBooking'>
     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-    <input type='text' style='float:left; margin-right: 10px;' value='<?php echo date("d.m.Y H:i", strtotime($dates->start)); ?>' gsname='start'>
-    <input type='text' style='float:left; margin-right: 10px;' value='<?php echo date("d.m.Y H:i", strtotime($dates->end)); ?>' gsname='end'>
-    <select style='float:left; margin-right: 10px;' gsname='item'>
-        <?php 
-        foreach($items as $item) {
-            /* @var $item core_bookingengine_data_BookingItem */
-            echo "<option value='".$item->id."'>". $item->bookingItemName . "</option>";
-        }
-        ?>
-    </select>
+    <input type='text' class='newroomstart' style='float:left; margin-right: 10px;' value='<?php echo date("d.m.Y H:i", strtotime($start)); ?>' gsname='start'>
+    <input type='text' class='newroomend' style='float:left; margin-right: 10px;' value='<?php echo date("d.m.Y H:i", strtotime($end)); ?>' gsname='end'>
+    <? $this->includeAddRoomOptions($items, $start, $end); ?>
     <span class='pmsbutton' gstype='submitToInfoBox'>Add room</span>
 </span>
 <br><br>
@@ -55,14 +48,14 @@ if(($prices->defaultPriceType == 1 && !empty($arr)) || $prices->defaultPriceType
      $hasPrices = true;
 }
 
-printRooms($toPrint, $types, $items, $booking->id, false, $hasPrices, $hasArx,$config);
+printRooms($toPrint, $types, $items, $booking->id, false, $hasPrices, $hasArx,$config, $this);
 
 if(sizeof($addons) > 0) {
     echo '<h2>Addons</h2>';
-    printRooms($addons, $types, $items, $booking->id, true, $hasPrices, $hasArx,$config);
+    printRooms($addons, $types, $items, $booking->id, true, $hasPrices, $hasArx,$config, $this);
 }
 
-function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $hasArx, $config) {
+function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $hasArx, $config, $object) {
     ?>
 <table width='100%' cellspacing='0' cellpadding='0' class='guestoverviewtable'>
     <tr>
@@ -148,7 +141,9 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                                         if($room->booking->bookingItemId == $item->id) {
                                             $selected = "SELECTED";
                                         }
-                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . "</option>";
+                                        if($object->canBeUsed($item->id, $room->date->start, $room->date->end)) {
+                                            echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")" . "</option>";
+                                        }
                                     }
                                     ?>
                                 </select>

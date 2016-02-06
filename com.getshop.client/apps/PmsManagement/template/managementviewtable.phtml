@@ -109,8 +109,10 @@ foreach($bookings as $booking) {
         $row .= "<td>";
         foreach($booking->rooms as $room2) {
             $addons = array();
-            if($types[$room2->bookingItemTypeId]->addon > 0) {
-                $addons[] = $types[$room2->bookingItemTypeId]->name;
+            if(isset($types[$room2->bookingItemTypeId])) {
+                if($types[$room2->bookingItemTypeId]->addon > 0) {
+                    $addons[] = $types[$room2->bookingItemTypeId]->name;
+                }
             }
             if($addons) {
                 $row .= "<i class='fa fa-plus-circle' title='".  join(",", $addons)."'></i> ";

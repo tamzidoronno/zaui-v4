@@ -53,8 +53,8 @@ if(!$booking->confirmed) { ?>
             <input type='hidden' gsname='bookingid' value='<? echo $booking->id; ?>'>
             <div style='text-align:left;'>Message to recipient:</div>
             <textarea style='width:100%; height: 100px; margin-bottom: 5px;' gsname='message'><? echo $default; ?></textarea>
-            <span gstype="submitToInfoBox" class='pmsbutton' gsvalue='confirm'>Confirm booking</span>
-            <span gstype="submitToInfoBox" class='pmsbutton' gsvalue='unconfirm' style='background-color:red;'>Do not confirm this booking</span>
+            <span gstype="submit" class='pmsbutton' gsvalue='confirm'>Confirm booking</span>
+            <span gstype="submit" class='pmsbutton' gsvalue='unconfirm' style='background-color:red;'>Do not confirm this booking</span>
         </div>
     </div>
 <?php } ?>

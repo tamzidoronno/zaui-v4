@@ -1281,11 +1281,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         if(sorting.equals("visitor") || sorting.equals("visitor_desc")) {
-            Collections.sort(result, new Comparator<PmsBooking>(){
-                public int compare(PmsBooking o1, PmsBooking o2){
-                    return o1.rooms.get(0).guests.get(0).name.compareTo(o2.rooms.get(0).guests.get(0).name);
-                }
-            });
+//            Collections.sort(result, new Comparator<PmsBooking>(){
+//                public int compare(PmsBooking o1, PmsBooking o2){
+//                    return o1.rooms.get(0).guests.get(0).name.compareTo(o2.rooms.get(0).guests.get(0).name);
+//                }
+//            });
         } else if(sorting.equals("periode") || sorting.equals("periode_desc")) {
             Collections.sort(result, new Comparator<PmsBooking>(){
                 public int compare(PmsBooking o1, PmsBooking o2){

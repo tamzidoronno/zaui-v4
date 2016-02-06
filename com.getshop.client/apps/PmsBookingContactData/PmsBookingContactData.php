@@ -116,7 +116,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                $this->printTitle($value->title, $value->required, $value->type);
                echo "<input type='text' gsname='".$value->name."' value='$valueSet'>";
             } else if($value->type == "radio") {
-                echo "<input type='radio' gsname='".$value->name."' name='".$value->name."'>";
+                echo "<input type='radio' gsname='".$value->name."' name='".$value->name."' value='".$value->title."'>";
                 $this->printTitle($value->title, $value->required, $value->type);
             } else if($value->type == "title") {
                 $this->printTitle($value->title, $value->required, $value->type);

@@ -72,8 +72,13 @@ app.PmsBookingSummary = {
         var data = {
             itemtypeid : $(this).attr('itemtypeid')
         };
+        var row = $(this).closest('.itemrow');
         var event = thundashop.Ajax.createEvent('','removeAddon', $(this),data);
-        thundashop.Ajax.post(event);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            row.fadeOut(function() {
+                row.remove();
+            });
+        });
     },
     addAddon : function() {
         var data = {

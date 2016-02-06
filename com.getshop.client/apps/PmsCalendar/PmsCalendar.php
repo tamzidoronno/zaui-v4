@@ -9,6 +9,8 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     private $bookingresultforday = array();
     private $currentTitle = "";
     private $currentBooking = "";
+    private $adminInstanceId = null;
+    private $bookingRules = null;
     
     public function getDescription() {
         return "Calendar view for displaying booked entries in a calendar.";
@@ -96,7 +98,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             $instanceId = "";
             if($this->isEditorMode() && $this->currentTitle) {
                 $loadBookingOnClick = "loadbookingonclick";
-                $instanceId = $this->getConfigurationSetting("bookingadmininstance");
+                $instanceId = $this->getAdminInstance();
                 $title = $this->currentTitle;
                 $bookingId = $this->currentBooking;
             }
@@ -329,18 +331,21 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         if(!$bookings) {
             $bookings = array();
         }
+        $rules = $this->getFormRules();
+
         foreach($bookings as $booking) {
             /* @var $booking \core_pmsmanager_PmsBooking */
             if($this->isEditorMode()) {
                 $this->currentTitle = "<table>";
                 foreach($booking->registrationData->data as $key => $val) {
-                    if(!$val->active) {
+                    if(!$rules->data->{$key}->visible) {
                         continue;
                     }
                     if(isset($booking->registrationData->resultAdded->{$val->name})) {
                         $this->currentTitle .= "<tr><td>" . $val->title . "</td><td>" . $booking->registrationData->resultAdded->{$val->name} . "</td></tr>";
                     }
                 }
+                $this->currentTitle .= "</table>";
             }
             
             foreach($booking->rooms as $room) {
@@ -356,13 +361,16 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                     continue;
                 }
                 
+                $state = "";
                 if($booking->confirmed) {
                     $this->currentBooking = $booking->id;
-                    return "occupied";
+                    $state = "occupied";
                 } else {
                     $this->currentBooking = $booking->id;
-                    return "notconfirmed";
+                    $state = "notconfirmed";
                 }
+                $this->currentTitle .= date("H:i", strtotime($room->date->start)) . " - ". date("H:i",strtotime($room->date->end));
+                return $state;
             }
         }
         
@@ -397,6 +405,31 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             }
         }
         return $imgId;
+    }
+
+    public function getAdminInstance() {
+        if($this->adminInstanceId) {
+            return $this->adminInstanceId;
+        }
+        
+        $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("7e828cd0-8b44-4125-ae4f-f61983b01e0a");
+        if(!$instances) {
+            $instances = array();
+        }
+        foreach($instances as $instance) {
+            if($instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
+                $this->adminInstanceId = $instance->id;
+            }
+        }
+        
+        return $this->adminInstanceId;
+    }
+
+    public function getFormRules() {
+        if(!$this->bookingRules) {
+            $this->bookingRules = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
+        }
+        return $this->bookingRules;
     }
 
 }

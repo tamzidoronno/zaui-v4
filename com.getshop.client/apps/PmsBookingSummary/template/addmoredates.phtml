@@ -1,6 +1,11 @@
 <?php
 /* @var $this \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary */
 $bookedRoom = $this->getFirstBookedRoom();
+if(!$bookedRoom->date) {
+    $bookedRoom->date = new core_pmsmanager_PmsBookingDateRange();
+    $bookedRoom->date->start = $this->convertToJavaDate(time());
+    $bookedRoom->date->end = $this->convertToJavaDate(time());
+}
 $endDate = date("d.m.Y", time()+(86400*30));
 $repeat = $this->getRepeatingSummary();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
@@ -17,7 +22,7 @@ if($repeat) {
 ?>
 </a><?php
 if($repeat) {
-    echo ", <span class='showRepeatDates'>".strtolower($this->__w("show selected dates")) ."</span>";
+    echo "<br><span class='bookedaction'></span> <span class='showRepeatDates'>".strtolower($this->__w("show selected dates")) ."</span>";
 }
 ?>
     <span class='addMoredatesPanel' gstype='form' method='addRepeatingDates'>
@@ -110,13 +115,13 @@ if($repeat) {
                     <select style='width:20%; margin-right: 3px;' gsname='repeateachtime'>
                         <?php 
                         for($i = 1; $i <= 30; $i++) {
-                            echo "<option value='$i'>$i</option>";
+                            echo "<option value='$i'>$i.</option>";
                         }
                         ?>
                     </select>
-                    <span class='repeat_0 repeatoption'><? echo $this->__w("days"); ?></span>
-                    <span class='repeat_1 repeatoption'><? echo $this->__w("weeks"); ?></span>
-                    <span class='repeat_2 repeatoption'><? echo $this->__w("months"); ?></span>
+                    <span class='repeat_0 repeatoption'><? echo $this->__w("day"); ?></span>
+                    <span class='repeat_1 repeatoption'><? echo $this->__w("week"); ?></span>
+                    <span class='repeat_2 repeatoption'><? echo $this->__w("month"); ?></span>
                 </span>
             </div>
             <div class='eventrow repeatrow'>

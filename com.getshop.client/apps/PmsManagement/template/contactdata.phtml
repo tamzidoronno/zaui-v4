@@ -28,7 +28,16 @@ foreach($booking->registrationData->resultAdded as $key => $value) {
     }
     if($key == "agreetoterms") {
         $name = "Agreed to terms and condition";
+        if($value == "false") {
+            $value = $this->__w("No");
+        } else {
+            $value = $this->__w("Yes");
+        }
     }
+    if($key == "openforpublic") {
+        $name = "Open for public";
+    }
+    
     if($key == "choosetyperadio") {
         $name = "Registration type";
     }

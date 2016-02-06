@@ -10,6 +10,8 @@ import com.thundashop.core.databasemanager.DatabaseUpdater;
 import com.thundashop.core.socket.WebInterface2;    
 import com.thundashop.core.socket.WebSocketServerImpl;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -30,11 +32,17 @@ public class Runner {
         java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
         java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
 
+        invokeApiGenerator();
+        
         PrintWriter out = new PrintWriter("../secret.txt") ;
         out.write(OVERALLPASSWORD+"\n");
         out.close();
 
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
+        DatabaseUpdater updater = context.getBean(DatabaseUpdater.class);
+        updater.check();
+        
+        context = new ClassPathXmlApplicationContext("All.xml");
         AppContext.appContext = context;
         Logger log = context.getBean(Logger.class);
         
@@ -53,9 +61,6 @@ public class Runner {
             context.getBean(Database.class).activateSandBox();
         }
 
-        DatabaseUpdater updater = context.getBean(DatabaseUpdater.class);
-        updater.check();
-        
         new WebInterface2(log, storePool, port); //Version 2.        
         
         context.getBean(WebSocketServerImpl.class).start();
@@ -75,5 +80,18 @@ public class Runner {
         server.start();
         server.join();
 
+    }
+
+    private static void invokeApiGenerator() {
+        try {
+            if (java.lang.System.getProperty("gs_apigenerator") != null) {
+                Class cls = Class.forName(java.lang.System.getProperty("gs_apigenerator"));
+                Method method = cls.getMethod("main", String[].class);
+                String[] params = null; // init params accordingly
+                method.invoke(null, (Object) params);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

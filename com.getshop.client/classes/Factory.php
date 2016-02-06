@@ -243,6 +243,7 @@ class Factory extends FactoryBase {
         // JS TREE
         $this->addJavascriptFile("js/jstree/jstree.min.js");
         $this->addJavascriptFile("js/fastclick.js");
+        $this->addJavascriptFile("js/timepicker/jquery-ui-timepicker-addon.js");
         $this->addJavascriptFile("js/batchImageLoad.jquery.js");
         
         if ($this->isProductionMode) {
@@ -525,6 +526,7 @@ class Factory extends FactoryBase {
         $this->addCssFile("skin/default/PagePicker.css");
         $this->addCssFile("skin/default/getshop.ImageEditor.css");
         $this->addCssFile("js/chosen/chosen.min.css");
+        $this->addCssFile("js/timepicker/jquery-ui-timepicker-addon.css");
     
         
         $this->addCssToBody("cssfolder/".$this->getStore()->id."_css_".$this->startupCount.".css");

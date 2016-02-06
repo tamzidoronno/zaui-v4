@@ -1,0 +1,22 @@
+.EventList .event_title {
+    display: inline-block;
+}
+
+.EventList .gs_shop_small_icon {
+    margin-right: 10px;
+}
+
+.EventList .row .rowcontent {
+    padding: 10px;
+}
+
+.EventList .row .titlerow {
+    padding: 10px;
+    border-bottom: solid 1px #DDD;
+}
+
+.EventList .row {
+    border: solid 1px #DDD;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

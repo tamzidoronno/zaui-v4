@@ -1201,6 +1201,11 @@ thundashop.common.checkTimeout = function() {
         localStorage.removeItem("gs_login_timeout");
     }
     
+    if (timeLeft) {
+        var secondsLeft = Math.floor(timeLeft / 1000);
+        $('.gs_logout_counter').html(secondsLeft);
+    }
+    
     setTimeout(thundashop.common.checkTimeout, timeCheckMs);
 }
 

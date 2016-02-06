@@ -1,0 +1,49 @@
+.CreateEvent label {
+    width: 150px;
+    display: inline-block;
+}
+
+.CreateEvent{
+    border: solid 1px #DDD;
+    padding-top: 10px;
+}
+.CreateEvent input,
+.CreateEvent select {
+    width: 300px;
+    box-sizing: border-box;
+}
+
+.CreateEvent .removeMoreDays,
+.CreateEvent .addMoreDays {
+    border: solid 1px #DDD;
+    display: inline-block;
+    padding-top: 7px;
+    vertical-align: bottom;
+    padding-bottom: 7px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 3px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.CreateEvent .listrow {
+    margin-bottom: 10px;
+    padding-bottom : 10px;
+    border-bottom: solid 1px #DDD;
+    padding-left: 20px;
+}
+
+.CreateEvent .listrow.template {
+    display: none;
+}
+
+.CreateEvent .listrow:last-child {
+    border-bottom: solid 0px;
+    margin-bottom: 0px;
+}
+
+.CreateEvent .createbutton {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}

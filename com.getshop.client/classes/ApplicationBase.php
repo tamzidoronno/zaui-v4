@@ -203,7 +203,7 @@ class ApplicationBase extends FactoryBase {
             $className = substr($className, strrpos($className, "\\")+1);
         }
         
-        echo "<div appid='$id' app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
+        echo "<div appid='$id' ".$this->getExtraAttributesToAppArea()." app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
         if($this->isEditorMode() && !$this->getFactory()->isMobile()) {
             echo "<div class='mask'><div class='inner'>".$this->__f("Click to delete")."</div></div>";
             echo "<div class='order_mask'>";
@@ -223,6 +223,10 @@ class ApplicationBase extends FactoryBase {
         $this->render();
         echo "</div>";
         echo "</div>";
+    }
+    
+    public function getExtraAttributesToAppArea() {
+        return "";
     }
     
     public function renderBottomArea() {

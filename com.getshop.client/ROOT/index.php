@@ -182,7 +182,12 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     </script>
     </head>
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
+        <?
+        if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->showLoguotCounter) {
+            echo "<div class='gs_logout_counter'></div>";
+        }
         
+        ?>
         <div class="mask" id="fullscreenmask"></div>
         <div class="upload_information_panel" ></div>
         <div class="informationbox-outer">

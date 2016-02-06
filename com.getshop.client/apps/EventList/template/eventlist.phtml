@@ -1,0 +1,37 @@
+<?
+/* @var $this ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\EventList */
+
+$events = $this->getApi()->getEventBookingManager()->getEvents($this->getBookingEgineName());
+
+if (!count($events)) {
+    echo $this->__f("No events available");
+    return;
+}
+
+foreach ($events as $event) {
+?>
+<div class="row">
+    <div class="titlerow">
+    
+    <?
+        if ($this->hasReadAccess()) {
+        ?>
+            <div class="gs_shop_small_icon" title="<? echo $this->__f("Edit"); ?>" eventId="<? echo $event->id; ?>"><i class="fa fa-edit"></i></div> 
+            <div class="gs_shop_small_icon" gsclick="deleteEvent" eventId="<? echo $event->id; ?>"><i class="fa fa-trash-o"></i></div> 
+        <? 
+        } 
+        ?>
+        <div class="event_title"><? echo $event->bookingItemType->name; ?></div>
+    </div>
+    
+    <div class="rowcontent">
+        <? echo $this->__f("Location") ?>: 
+        <br/> <? echo $this->__w("Day(s)"); ?>: <? echo count($event->days); ?>
+        <? foreach ($event->days as $day) {
+            echo "<div>".$day->startDate." - ".$day->endDate."</div>";
+        }
+        ?>
+    </div>
+</div>
+
+<? } ?>

@@ -50,7 +50,6 @@ public class BookingEngineTest extends TestCommon {
         bookingEngine.setCredentials(new Credentials(BookingEngine.class));
     }
     
-    
     /**
      * We need to make sure that we can create a BookingEngineType and 
      * that its stored to the database.
@@ -65,7 +64,9 @@ public class BookingEngineTest extends TestCommon {
         BookingItemType type2 = bookingEngine.getBookingItemType(type.id);
         
         verify(databaseSaver, times(1)).saveObject(any(BookingItemType.class), any(Credentials.class));
+        verify(pageManager, times(1)).createPageFromTemplatePage(bookingEngine.getName()+"_bookingegine_type_template");
         assertNotNull(type2);
+        Assert.assertEquals(type2.pageId, "new_page_id");
     }
     
     @Test(expected = BookingEngineException.class)
@@ -101,6 +102,7 @@ public class BookingEngineTest extends TestCommon {
         
         BookingItem item2 = bookingEngine.getBookingItem(item.id);
         assertNotNull(item2);
+        
     }
   
     /**

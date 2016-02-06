@@ -40,6 +40,7 @@ public class Page extends DataCommon implements Cloneable {
     public String metaTitle = "";
     public String overridePageTitle = "";
 
+    public String leftSideBarName = "left_side_bar";
     public boolean leftSideBar = false;
     
     public String masterPageId = "";
@@ -68,7 +69,8 @@ public class Page extends DataCommon implements Cloneable {
             layout.clear();
         }
         
-        layout.setNewList(pagedata.leftSideBar, "left_side_bar", true);
+        System.out.println(pagedata.leftSideBars.get(leftSideBarName));
+        layout.setNewList(pagedata.leftSideBars.get(leftSideBarName), leftSideBarName, true);
     }
 
     public PageCell getCell(String pageCellId) {

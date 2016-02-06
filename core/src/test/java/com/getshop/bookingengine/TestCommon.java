@@ -6,23 +6,22 @@
 package com.getshop.bookingengine;
 
 import com.getshop.scope.GetShopSessionScope;
-import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
-import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import static org.mockito.Matchers.any;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -34,10 +33,13 @@ import org.springframework.context.ApplicationContextAware;
  *
  * @author ktonder
  */
-public class TestCommon implements ApplicationContextAware {
+public abstract class TestCommon implements ApplicationContextAware {
     
     @Mock
     DatabaseSaver databaseSaver;
+    
+    @Mock
+    PageManager pageManager;
     
     @Override
     public void setApplicationContext(ApplicationContext ac) throws BeansException {
@@ -60,6 +62,10 @@ public class TestCommon implements ApplicationContextAware {
                 
                 return invocation;
             }}).when(databaseSaver).saveObject(any(DataCommon.class), any(Credentials.class));
+        
+        Page page = new Page();
+        page.id = "new_page_id";
+        when(pageManager.createPageFromTemplatePage(any(String.class))).thenReturn(page);
     }
     
     public void feedDataFromDatabase(ManagerSubBase bookingEngine, DataCommon dataObject) {

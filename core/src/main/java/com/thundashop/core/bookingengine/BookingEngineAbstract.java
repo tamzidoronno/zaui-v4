@@ -18,6 +18,8 @@ import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
@@ -31,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,6 +43,9 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class BookingEngineAbstract extends GetShopSessionBeanNamed {
+    
+    @Autowired
+    public PageManager pageManager;
     
     private final Map<String, Booking> bookings = new HashMap();
     private final Map<String, Availability> availabilities = new HashMap();
@@ -64,6 +70,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     public BookingItemType createABookingItemType(String name) {
         BookingItemType type = new BookingItemType();
         type.name = name;
+        
+        Page page = pageManager.createPageFromTemplatePage(getName()+"_bookingegine_type_template");
+        type.pageId = page.id;
+        
         saveObject(type);
         types.put(type.id, type);
         

@@ -8,6 +8,7 @@ import java.util.List;
 public class RegistrationRulesField implements Serializable {
     public boolean required = false;
     public boolean active = false;
+    public boolean visible = false;
     public String type = "";
     public List<String> additional = new ArrayList();
     public String dependsOnCondition = "";

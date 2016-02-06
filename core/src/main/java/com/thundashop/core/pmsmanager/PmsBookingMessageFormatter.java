@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.bookingengine.data.RegistrationRulesField;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -72,7 +73,7 @@ class PmsBookingMessageFormatter {
             if(room.booking != null && room.booking.bookingItemTypeId != null) {
                 bookingData += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "<br>";
             }
-            bookingData += formatDate(room.date.start) + " - " + formatDate(room.date.end);
+            bookingData += formatDate(room.date.start) + " - " + formatDate(room.date.end) + " ";
             if(room.booking != null && room.booking.bookingItemId != null) {
                 BookingItem item = bookingEngine.getBookingItem(room.booking.bookingItemId);
                 if(item != null) {
@@ -84,21 +85,54 @@ class PmsBookingMessageFormatter {
             }
         }
         
+        String bookinginfo = "<table>";
+        for(String key : booking.registrationData.resultAdded.keySet()) {
+            if("agreetoterms".equals(key)) {
+                continue;
+            }
+            String title = getTitle(key, booking);
+            
+            String text = booking.registrationData.resultAdded.get(key);
+            if(key.equals("choosetyperadio")) {
+                title = "Reg type";
+                if(text.equals("registration_company")) {
+                    text = "Organisasjon";
+                } else {
+                    text ="Privat";
+                }
+            }
+
+            if(text.trim().isEmpty() || title.trim().isEmpty()) {
+                continue;
+            }
+            bookinginfo += "<tr><td valign='top'>" + title + "</td><td>" + text + "</td></tr>";
+        }
+        bookinginfo += "</table>";
+        
         message = message.replace("{rooms}", bookingData);
         message = message.replace("{bookingid}", booking.id);
+        message = message.replace("{bookinginformation}", bookinginfo);
         
         return message;
     }
     
     
     private String formatDate(Date startDate) {
-        String startday = new SimpleDateFormat("d").format(startDate);
-        String startmonth = new SimpleDateFormat("M").format(startDate);
-        String startyear = new SimpleDateFormat("y").format(startDate);
-        if(startday.length() == 1) { startday = "0" + startday; }
-        if(startmonth.length() == 1) { startmonth = "0" + startmonth; }
-        if(startyear.length() == 1) { startyear = "0" + startyear; }
-        return startday + "-" + startmonth + "-" + startyear;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        return sdf.format(startDate);
+    }
+
+    private String getTitle(String key, PmsBooking booking) {
+        if(key.equals("openforpublic")) {
+            return "Åpent for publikum";
+        }
+        for(RegistrationRulesField data : booking.registrationData.data.values()) {
+            if(data.name.equals(key)) {
+                String title = data.title;
+                return title;
+            }
+        }
+        return "";
     }
 
 }

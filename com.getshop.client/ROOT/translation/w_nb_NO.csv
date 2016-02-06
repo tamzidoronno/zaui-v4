@@ -70,6 +70,15 @@ Click next to select shipping options;-;Trykk neste for å velge en betalings me
 Close;-;Lukk
 Color transition;-;Fargetransisjoner
 Comments;-;Kommentarer
+Company address;-;Firma adresse
+Company city;-;Firmaets by
+Company invoice address;-;Firmaets faktura adresse
+Company invoice city;-;By for faktura
+Company invoice postcode;-;Postnummer for faktura
+Company postcode;-;Firmaet postnummer
+Company's invoice email;-;Firmaets epost for faktura
+Company's main email;-;Firmaet hoved epost adresse
+Company's website;-;Firmaets webside
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
 Connect this to a product;-;Koble denne til et produkt
@@ -78,6 +87,7 @@ Container operations;-;Operasjoner for kontaineren
 Continue;-;Fortsett
 Cookies are being stored;-;Cookier blir lagret
 Country;-;Land
+Country prefix for mobile phone;-;Land prefix for mobil telefon
 Coupon;-;Kupong
 Coupon discount;-;Kupong avslag
 Create a booking item;-;Opprett et booking item
@@ -95,6 +105,7 @@ Daily;-;Daglig
 Date;-;Dato
 Day;-;Dag
 December;-;Desember
+Default contact person for company;-;Default kontakt person
 Delete;-;Slett
 Delete area;-;Slett området
 Delete booking;-;Slett booking
@@ -139,6 +150,7 @@ Field is required;-;Feltet er påkrevd
 First event;-;Første event
 Fixed price;-;Fast pris
 Flip contect to add content underneat this cell;-;Flipp cellen for å legge til innhold under denne cellen
+Fr;-;Fr
 Fri;-;Fre
 Friday;-;Fredag
 Full name;-;Hele navnet
@@ -190,6 +202,7 @@ May;-;Mai
 Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på kontoen din hos braintree.
 Message;-;Melding
 Message from a customer;-;Melding fra en kunde
+Mo;-;Ma
 Mon;-;Man
 Monday;-;Mandag
 Monthly;-;Månedlig
@@ -260,6 +273,7 @@ Payment fee;-;Betalingsgebyr
 Payment information;-;Betalings informasjon
 Payment successfully completed;-;Betalingen gjennomført
 Phone;-;Telefon
+Phone number for company;-;Tlf nummer for firmaet
 Pin area;-;Pin til område
 PixelateTheme1;-;PixelateTheme1
 Place order;-;Legg inn ordre
@@ -318,6 +332,7 @@ Rooms selected;-;Rommene som er valgt
 Row is not displayed on mobile, click for make it reappear;-;Raden vises ikke på mobiltelefon, trykk her for å vise den.
 Row options;-;Rad instillinger
 Run account in sandbox?;-;Kjør kontoen i sandbox modus?
+Sa;-;Lø
 Sat;-;Lør
 Saturday;-;Lørdag
 Save;-;Lagre
@@ -370,6 +385,7 @@ Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
 Starting from;-;Starter fra
 Style row;-;Styling på rad
 Styling;-;Design
+Su;-;Sø
 Subject to recipient;-;Tittel på motaker
 Success;-;Success
 Sun;-;Søn
@@ -380,6 +396,7 @@ Taxes;-;Skatter
 Terms and Conditions;-;Bruksvilkår
 Text color;-;Tekst farge
 Text editor;-;Tekst editor
+Th;-;Ti
 Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
 Thank you for your message;-;Takk for din melding
 Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;Takk for din bestilling, en epost har blitt sendt med fakturaen vedlagt. Vi sender bestillingen når vi har mottat betalingen.
@@ -389,11 +406,13 @@ Thank you page;-;Takkeside
 Thank you, you have now registered your email;-;Takk, du har nå registrert din epost.
 Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
 The carousel is not rotating while logged in as administrator.;-;Karusellen roterer ikke når man er logget inn som administrator.
+The company name;-;Firmaet navn
 The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
 The newsletter application allowes you to send emails to all of your customers without. Create a news letter, select your customers and send.;-;Denne nyhetsbrev applikasjonen gjør det mulig for deg å sende epost til alle dine kunder. Opprett et nyhetsbrev og send det til dine registrerte kunder.
 The passwords does not match.;-;Passordet stemmer ikke overens.
+The vat number;-;Orgnummer
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
 This event has the following entries;-;Dette kurset finner du i kalenderen på følgende dager
 This is a {} days event.;-;Dette er et {} dagers event.
@@ -408,6 +427,7 @@ Today;-;Idag
 Top spacing;-;Øvre spacing
 Top speed;-;Topp hastighet
 Total;-;Total
+Tu;-;To
 Tue;-;Tir
 Tuesday;-;Tirsdag
 Tune your online store by setting currency, does customers need to register to buy from your store, show cookie warning, etc;-;Finjuster nettbutikken din ved å f.eks velge valutta, bestemme om kundene dine må registrere seg for å handle, vis cookie advarsel, osv.
@@ -424,6 +444,7 @@ Username / Email;-;Brukernavn / Epost
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 Was not able to process your payment, check your card details and try again.;-;Klarte ikke å gjennomføre betalingen, sjekk betalingsopplysningene dine og prøv igjen.
+We;-;On
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wed;-;Ons
 Wednesday;-;Onsdag
@@ -451,6 +472,7 @@ Your order has now been completed and is waiting to be shipped.;-;Orderen din ha
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
 cellphone;-;Mobilnr
+day;-;dag
 day of the month;-;Fast dato i måneden
 day of the week;-;Fast ukedag
 days;-;dager
@@ -462,6 +484,7 @@ if we dont answer, please leave your email here and we will return your message 
 included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn
+month;-;måned
 months;-;måneder
 read;-;les
 show selected dates;-;Vis valgte datoer
@@ -469,6 +492,7 @@ summary;-;oppsummering
 until;-;frem til
 view as calendar;-;Vis som kalender
 view as list;-;Vis som liste
+week;-;uke
 weeks;-;uker
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
 your@email.com;-;din@epost.no

@@ -1705,6 +1705,9 @@ thundashop.framework = {
         var form = element.closest('*[gstype="form"]');
         var method = form.attr('method');
         var args = thundashop.framework.createGsArgs(form);
+        if(element.attr('gsvalue')) {
+            args['submit'] = element.attr('gsvalue');
+        }
         form.callback = element.callback;
         var event = thundashop.Ajax.createEvent("", method, element, args);
         thundashop.framework.postToChannel(event, form);

@@ -49,6 +49,7 @@ echo "<br>";
             $fieldData = new core_bookingengine_data_RegistrationRulesField();
             $active = "";
             $required = "";
+            $visible = "";
             $title = $text;
             if(isset($rules->data->{$field})) {
                 $fieldData = $rules->data->{$field};
@@ -57,6 +58,8 @@ echo "<br>";
                     $active = "CHECKED";
                 if($fieldData->required)
                     $required = "CHECKED";
+                if($fieldData->visible)
+                    $visible = "CHECKED";
             }
             
             
@@ -76,6 +79,7 @@ echo "<br>";
                 echo "</select>";
                 echo "<input type='checkbox' title='Active' gsname='user;".$field.";active' $active>";
                 echo "<input type='checkbox' title='Required' gsname='user;".$field.";required' $required>";
+                echo "<input type='checkbox' title='Visible' gsname='user;".$field.";visible' $visible>";
                 echo "</span>";
                 echo $field . "<span class='description' style='color:#777; display:block;padding:5px;'>" . $text . "</span>";
             }
@@ -194,6 +198,7 @@ echo "<br>";
             $formData->type = $data['type'];
             $formData->name = $data['fieldname'];
             $formData->width = $data['width'];
+            $formData->visible = $data['visible'] == "true";
             $rules->data->{$field} = $formData;
         }
         
@@ -205,6 +210,7 @@ echo "<br>";
             $formData->type = $data['type'];
             $formData->name = $field;
             $formData->width = $data['width'];
+            $formData->visible = $data['visible'] == "true";
             $rules->data->{$field} = $formData;
         }
         
@@ -238,6 +244,7 @@ echo "<br>";
             $fieldData = new core_bookingengine_data_RegistrationRulesField();
             $active = "";
             $required = "";
+            $visible = "";
             $title = "";
             $name = "";
             $dep = -1;
@@ -250,6 +257,8 @@ echo "<br>";
                     $active = "CHECKED";
                 if($fieldData->required)
                     $required = "CHECKED";
+                if($fieldData->visible)
+                    $visible = "CHECKED";
             }
             
             
@@ -275,6 +284,7 @@ echo "<br>";
               }
             echo "<input type='checkbox' title='Active' gsname='additional;field_$i;active' $active>";
             echo "<input type='checkbox' title='Required' gsname='additional;field_$i;required' $required>";
+            echo "<input type='checkbox' title='Visible' gsname='additional;field_$i;visible' $visible>";
             echo "<select gsname='additional;field_$i;dependency'>";
             echo "<option value='-1'>No dependecy</option>";
             for($j = 0;$j < $numberOfFields; $j++) {

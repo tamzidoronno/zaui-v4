@@ -76,6 +76,9 @@ foreach($booking->rooms as $room) {
 
 $bottom = "<h3 class='bottomborder'> " . $this->__w("Total") . "</h3>";
 $total = 0;
+if(!isset($prices)) {
+    $prices = array();
+}
 foreach($prices as $taxgroup => $price) {
     $taxes = $price - ($price / (($taxgroup + 100) / 100));
     $total += $price;

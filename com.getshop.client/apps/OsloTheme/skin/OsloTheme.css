@@ -71,4 +71,11 @@ box-shadow: 0 4px 5px rgba(0,0,0,0.3); ;
 	position:relative;
 	top:1px;
 }
-.PmsBookingSummary .itemname { width: 150px; }
+.PmsBookingSummary .itemname { width: 200px !important; }
+
+.PmsCalendar .tinycalendar { background-color: #fff; color:#000; border: solid 0px;}
+.PmsCalendar .selectedweek { border: solid 0px; background-color:#efedee; }
+
+.PmsCalendar .dayslot.free:hover, .PmsCalendar .dayentry:hover, .PmsCalendar .roomentry:hover { background-color:inherit !important; color:rgba(0,0,0,0.8) !important; }
+.PmsCalendar .dayentry.selected { font-weight: bold !important; color:#000 !important; }
+.ui-tooltip { min-width: 500px; }

@@ -10,6 +10,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     private $currentTitle = "";
     private $currentBooking = "";
     private $adminInstanceId = null;
+    private $bookingRules = null;
     
     public function getDescription() {
         return "Calendar view for displaying booked entries in a calendar.";
@@ -330,12 +331,14 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         if(!$bookings) {
             $bookings = array();
         }
+        $rules = $this->getFormRules();
+
         foreach($bookings as $booking) {
             /* @var $booking \core_pmsmanager_PmsBooking */
             if($this->isEditorMode()) {
                 $this->currentTitle = "<table>";
                 foreach($booking->registrationData->data as $key => $val) {
-                    if(!$val->active) {
+                    if(!$rules->data->{$key}->visible) {
                         continue;
                     }
                     if(isset($booking->registrationData->resultAdded->{$val->name})) {
@@ -416,6 +419,13 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         }
         
         return $this->adminInstanceId;
+    }
+
+    public function getFormRules() {
+        if(!$this->bookingRules) {
+            $this->bookingRules = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
+        }
+        return $this->bookingRules;
     }
 
 }

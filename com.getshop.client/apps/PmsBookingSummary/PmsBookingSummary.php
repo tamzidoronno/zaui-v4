@@ -170,7 +170,11 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
      */
     public function getFirstBookedRoom() {
         $booking = $this->getCurrentBooking();
-        return $booking->rooms[0];
+        if(isset($booking->rooms[0])) {
+            return $booking->rooms[0];
+        } else {
+            return new \core_pmsmanager_PmsBookingRooms();
+        }
     }
 
     /**

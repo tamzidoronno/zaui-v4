@@ -2,7 +2,7 @@ app.PmsBookingContactData = {
     init : function() {
         $(document).on('click', '.PmsBookingContactData .chooseregform input', app.PmsBookingContactData.choseRegType);
         $(document).on('keyup', '.PmsBookingContactData input[gsname="user_address_postCode"]', app.PmsBookingContactData.updatePostalPlace);
-        $(document).on('keyup', '.PmsBookingContactData input[gsname="company_vatNumber"]', app.PmsBookingContactData.updateBrreg);
+        $(document).on('keyup', '.PmsBookingContactData input[gsname="company_name"]', app.PmsBookingContactData.updateBrreg);
         
         $(document).on('keyup', '.PmsBookingContactData .bookingregistrationform input', app.PmsBookingContactData.saveForm);
         $(document).on('keyup', '.PmsBookingContactData .bookingregistrationform select', app.PmsBookingContactData.saveForm);
@@ -58,22 +58,35 @@ app.PmsBookingContactData = {
     },
     updateBrreg : function() {
         var val = $(this).val();
-        if(val.indexOf(".") >= 0) {
-            return;
-        } 
-        if(val.length === 9) {
-            $.ajax({
-                "url" : "https://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + val,
-                "success" : function(data) {
-                    var data = data.entries[0];
-                    $('input[gsname="company_vatNumber"]').val(data.orgnr);
-                    $('input[gsname="company_address_address"]').val(data.forretningsadr);
-                    $('input[gsname="company_address_postCode"]').val(data.forradrpostnr);
-                    $('input[gsname="company_address_city"]').val(data.forradrpoststed);
-                    $('input[gsname="company_name"]').val(data.navn);
+        
+        $.ajax({
+            "url" : "https://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + val,
+            "success" : function(data) {
+                var availableTags = [];
+                for(var key in data.entries) {
+                    availableTags.push(data.entries[key].navn);
                 }
-            });
-        }
+                
+                $('.PmsBookingContactData input[gsname="company_name"]').autocomplete({
+                    source: availableTags,
+                    select: function( event, ui ) {
+                        console.log(event);
+                        console.log(ui);
+                        console.log(data);
+                        var res = null;
+                        for(var key in data.entries) {
+                            if(data.entries[key].navn == ui.item.value) {
+                                res = data.entries[key];
+                            }
+                        }
+                        $('input[gsname="company_address_address"]').val(res.forretningsadr);
+                        $('input[gsname="company_address_postCode"]').val(res.forradrpostnr);
+                        $('input[gsname="company_address_city"]').val(res.forradrpoststed);
+                        $('input[gsname="company_vatNumber"]').val(res.orgnr);
+                    }
+                  });
+            }
+        });
     },    
     
     searchPostalCode : function() {

@@ -135,31 +135,7 @@ $products=$products2;
         </tr>
     </table>
     
-    <h2>All booking added</h2>
-    <table width='100%'>
-        <tr>
-            <th align='left'>Start date</th>
-            <th align='left'>end date</th>
-            <th align='left'>Item</th>
-            <th align='left'>Group</th>
-        </tr>
-        <?php
-        if($bookings) {
-            foreach($bookings as $booking) {
-                echo "<tr>";
-                echo "<td>" . date("d.m.Y H:i", strtotime($booking->startDate)) . "</td>";
-                echo "<td>" . date("d.m.Y H:i", strtotime($booking->endDate)) . "</td>";
-                echo "<td>";
-                if(isset($bookingitems[$booking->bookingItemId])) {
-                    echo $bookingitems[$booking->bookingItemId]->bookingItemName;
-                }
-                echo "</td>";
-                echo "<td>" . $allbookingtypes[$booking->bookingItemTypeId]->name . "</td>";
-                echo "</tr>";
-            }
-        }
-        ?>
-    </table>
+   
     
 </div>
 

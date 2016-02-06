@@ -345,6 +345,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                         $this->currentTitle .= "<tr><td>" . $val->title . "</td><td>" . $booking->registrationData->resultAdded->{$val->name} . "</td></tr>";
                     }
                 }
+                $this->currentTitle .= "</table>";
             }
             
             foreach($booking->rooms as $room) {
@@ -360,13 +361,16 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                     continue;
                 }
                 
+                $state = "";
                 if($booking->confirmed) {
                     $this->currentBooking = $booking->id;
-                    return "occupied";
+                    $state = "occupied";
                 } else {
                     $this->currentBooking = $booking->id;
-                    return "notconfirmed";
+                    $state = "notconfirmed";
                 }
+                $this->currentTitle .= date("H:i", strtotime($room->date->start)) . " - ". date("H:i",strtotime($room->date->end));
+                return $state;
             }
         }
         

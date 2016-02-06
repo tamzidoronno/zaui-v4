@@ -111,5 +111,8 @@ public interface IPmsManager {
     
     @Administrator
     public void doNotification(String key, String bookingId, String roomId);
+    
+    @Administrator
+    public void addComment(String bookingId, String comment);
 
 }

@@ -3,23 +3,15 @@ package com.thundashop.core.bookingengine;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.data.Availability;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
-import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
-import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,15 +54,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     @Override
     public List<BookingItem> getBookingItems() {
-        List<BookingItem> result = deepClone(bookingEngineAbstract.getBookingItems());
-        Collections.sort(result, new Comparator<BookingItem>(){
-            public int compare(BookingItem o1, BookingItem o2){
-                if(o1.bookingItemName.equals(o2.bookingItemName))
-                    return 0;
-                return o1.bookingItemName.compareTo(o2.bookingItemName);
-            }
-       });
-        return result;
+        return deepClone(bookingEngineAbstract.getBookingItems());
     }
 
     @Override
@@ -186,14 +170,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      */
     @Override
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
-        BookingTimeLineFlatten timeline = getTimelines(itemType, start, end);
-        int higest = 9999;
-        for(BookingTimeLine line : timeline.getTimelines()) {
-            if(line.getAvailableSpots() < higest) {
-                higest = line.getAvailableSpots();
-            }
-        }
-        return higest;
+        return bookingEngineAbstract.getNumberOfAvailable(itemType, start, end);
     }
 
     /**
@@ -226,42 +203,6 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     @Override
     public boolean checkIfAvailable(String itemId, String typeId, Date start, Date end) {
-        BookingItem item = bookingEngineAbstract.getBookingItem(itemId);
-        
-        TimeRepeaterData openingHours = getOpeningHours(itemId);
-        if(openingHours == null) {
-            openingHours = getConfig().openingHours;
-        }
-        if(openingHours != null) {
-            if(!checkIfInOpeningHours(openingHours, start, end)) {
-                return false;
-            }
-        }
-        
-        Booking booking = new Booking();
-        booking.bookingItemId = item.id;
-        booking.bookingItemTypeId = item.bookingItemTypeId;
-        booking.startDate = start;
-        booking.endDate = end;
-        
-        List<Booking> toCheck = new ArrayList();
-        toCheck.add(booking);
-        
-        return canAdd(toCheck);
+        return bookingEngineAbstract.checkIfAvailable(itemId, typeId, start, end);
     }
-
-    private boolean checkIfInOpeningHours(TimeRepeaterData openingHours, Date start, Date end) {
-        TimeRepeater repeater = new TimeRepeater();
-        LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(openingHours);
-
-        for(TimeRepeaterDateRange range : ranges) {
-            if(range.start.before(start) || range.start.equals(start)) {
-                if(range.end.after(end) || range.end.equals(end)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
 }

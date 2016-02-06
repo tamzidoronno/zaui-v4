@@ -13,17 +13,21 @@ import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -341,6 +345,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 return c1.bookingItemName.compareTo(c2.bookingItemName); // use your logic
             }
         };
+        
         Collections.sort(list, comparator);
         return list;
     }
@@ -603,6 +608,56 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         BookingItem item = getBookingItem(itemId);
         return item.openingHours;
+    }
+
+    boolean checkIfAvailable(String itemId, String typeId, Date start, Date end) {
+        BookingItem item = getBookingItem(itemId);
+        
+        TimeRepeaterData openingHours = getOpeningHours(itemId);
+        if(openingHours == null) {
+            openingHours = getConfig().openingHours;
+        }
+        if(openingHours != null) {
+            if(!checkIfInOpeningHours(openingHours, start, end)) {
+                return false;
+            }
+        }
+        
+        Booking booking = new Booking();
+        booking.bookingItemId = item.id;
+        booking.bookingItemTypeId = item.bookingItemTypeId;
+        booking.startDate = start;
+        booking.endDate = end;
+        
+        List<Booking> toCheck = new ArrayList();
+        toCheck.add(booking);
+        
+        return canAdd(toCheck);
+    }
+    
+    private boolean checkIfInOpeningHours(TimeRepeaterData openingHours, Date start, Date end) {
+        TimeRepeater repeater = new TimeRepeater();
+        LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(openingHours);
+
+        for(TimeRepeaterDateRange range : ranges) {
+            if(range.start.before(start) || range.start.equals(start)) {
+                if(range.end.after(end) || range.end.equals(end)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
+        BookingTimeLineFlatten timeline = getTimelines(itemType, start, end);
+        int higest = 9999;
+        for(BookingTimeLine line : timeline.getTimelines()) {
+            if(line.getAvailableSpots() < higest) {
+                higest = line.getAvailableSpots();
+            }
+        }
+        return higest;
     }
    
     

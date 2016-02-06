@@ -358,5 +358,5 @@ public interface IPageManager {
     public void saveCell(String pageId, PageCell cell) throws ErrorException;
 
     @Administrator
-    public void toggleLeftSideBar(String pageId) throws ErrorException;
+    public void toggleLeftSideBar(String pageId, String columnName) throws ErrorException;
 }

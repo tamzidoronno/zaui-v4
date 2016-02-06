@@ -70,11 +70,18 @@ class ApplicationModulePool {
         modules.put(questback.id, questback);
         
         ApplicationModule booking = new ApplicationModule();
-        booking.moduleName = "Booking";
+        booking.moduleName = "PMS Booking";
         booking.id = "booking";
         booking.faIcon = "fa-calendar";
-        booking.description = "Booking for properties and events.";
+        booking.description = "Booking for properties.";
         modules.put(booking.id, booking);
+        
+        ApplicationModule eventBooking = new ApplicationModule();
+        eventBooking.moduleName = "Event Booking";
+        eventBooking.id = "eventbooking";
+        eventBooking.faIcon = "fa-calendar";
+        eventBooking.description = "Booking for events.";
+        modules.put(booking.id, eventBooking);
         
         ApplicationModule sedoxPerformance = new ApplicationModule();
         sedoxPerformance.moduleName = "Sedox Performance";

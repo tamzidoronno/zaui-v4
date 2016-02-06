@@ -199,6 +199,8 @@ getshop.Settings = {
         return false;
     },
     doPost: function(data, field, success) {
+        thundashop.common.triggerTimeoutCheck();
+        
         if (field) {
             var prePostMethod = $(field).attr('gss_pre_post');
             if (prePostMethod) {

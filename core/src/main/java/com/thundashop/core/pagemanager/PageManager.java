@@ -798,10 +798,17 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public void toggleLeftSideBar(String pageId) throws ErrorException {
+    public void toggleLeftSideBar(String pageId, String columnName) throws ErrorException {
         Page page = pages.get(pageId);
         if (page != null) {
             page.leftSideBar = !page.leftSideBar;
+            page.leftSideBarName = columnName;
+            
+            if (commonPageData.leftSideBars.get(columnName) == null) {
+                commonPageData.leftSideBars.put(columnName, new ArrayList());
+                saveObject(page);
+            }
+            
             saveObject(page);
         }
     }

@@ -1,0 +1,23 @@
+<?
+/* @var $this \ns_9683701a_8217_411f_a321_26775f645f06\EventTypeList */
+
+    $eventTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getBookingEgineName());
+    
+    if (!$eventTypes) {
+        $eventTypes = [];
+    }
+    
+    
+    foreach ($eventTypes as $type) {
+        $delete = $this->hasWriteAccess() ? "<i class='fa fa-trash' gsclick='deleteEventType' value='$type->id'></i>" : "";
+        echo "<div class='eventtype'>";
+        echo $delete . "<div class='show_eventinformation'>".$type->name."</div>";
+            echo "<div class='show_eventinformation_inner'>";
+                echo "<a href='/?page=$type->pageId'><div class='shop_button'>".$this->__f("Go to page")."</div></a>";
+            echo "</div>";
+        echo "</div>";
+    }
+?>
+
+
+    

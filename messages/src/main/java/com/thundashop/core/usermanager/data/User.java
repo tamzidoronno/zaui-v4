@@ -94,6 +94,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     public boolean showHiddenFields = false;
     
+    public boolean showLoguotCounter = false;
+    
     //ApplicationId, int = 0 rw, 1=r, 2=w
     public HashMap<String, Integer> applicationAccessList = new HashMap();
 

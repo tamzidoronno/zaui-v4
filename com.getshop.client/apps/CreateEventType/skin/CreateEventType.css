@@ -1,0 +1,10 @@
+.CreateEventType .noEngineNameSpecified {
+    padding: 50px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.CreateEventType .noEngineNameSpecified i {
+    font-size: 60px;
+    color: #DDD;
+}

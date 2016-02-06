@@ -110,6 +110,19 @@ if (!$user->address) {
             <?php echo $this->__("This must be enabled if the user should be able to see the hidden fields."); ?>
         </div>
     </div>
+    
+    <div class="textfield gss_setting"  >
+        <span class="title"><?php echo $this->__f("Show logout counter"); ?></span>
+        <div class="gss_onoff" gs_model="usermodel" gs_model_attr="showLogoutCounter">
+            <?
+            $faclass = $user->showLoguotCounter ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?> "></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("Will display how long time it is until you log out, reload needed (press f5) after activation."); ?>
+        </div>
+    </div>
     <?
     }
     ?>

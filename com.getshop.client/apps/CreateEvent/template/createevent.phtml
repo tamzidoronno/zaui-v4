@@ -1,0 +1,40 @@
+<?
+/* @var $this ns_f4c3fce7_123c_4dcc_b9ce_dfea2ac6b755\CreateEvent */
+?>
+
+<div gstype="form">
+    <div class="listrow">
+        <label> Event type </label>
+        <select class="gsniceselect1 selectedttype">
+            <?
+            $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getBookingEgineName());
+            foreach ($types as $type) {
+                echo "<option value='$type->id'>" . $type->name . "</option>";
+            }
+            ?>
+        </select>
+    </div>
+
+    <div class="listrow dayrow template">
+        <label><? echo $this->__f("Day"). " <span class='daycount'>1</span>"; ?></label>
+        <input class="gsniceinput1 daydate startdate" /> &nbsp;&nbsp; to &nbsp;&nbsp;<input class="gsniceinput1 daydate enddate" /> <div class="addMoreDays"><i class="fa fa-plus"></i></div>  <div class="removeMoreDays"><i class="fa fa-minus"></i></div>  
+    </div>
+
+    <div class="listrow">
+        <label><? echo $this->__f("Available spots"); ?></label>
+        <input class="gsniceinput1 availablespots" />
+    </div>
+
+    <div class="listrow">
+        <label><? echo $this->__f("Location"); ?></label>
+        <input class="gsniceinput1" />
+    </div>
+    
+    <div class="shop_button createbutton">
+        <? echo $this->__f("Create"); ?>
+    </div>
+</div>
+
+<script>
+    app.CreateEvent.addFirstDay();
+</script>

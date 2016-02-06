@@ -8,6 +8,9 @@ body {
     margin: 0 auto;
 }
 
+.gs_main_column .gs_page_width {
+    width: 100%;
+}   
 .gsarea[area="footer"],
 .gsarea[area="header"] {
     background-color: #006e63;
@@ -86,3 +89,42 @@ body {
 .frontbox.gs_last_in_row .gsuicell.gsinner.gsdepth_1 {
     margin-right: 0px;
 } 
+
+
+.left_side_bar .gs_page_width {
+    width: 100%;
+}
+
+.left_side_bar {
+    width: 300px;
+    background: rgb(249,250,252); /* Old browsers */
+    background: -moz-linear-gradient(left,  rgba(249,250,252,1) 0%, rgba(249,250,252,1) 91%, rgba(234,237,242,1) 100%);
+    background: -webkit-linear-gradient(left,  rgba(249,250,252,1) 0%,rgba(249,250,252,1) 91%,rgba(234,237,242,1) 100%);
+    background: linear-gradient(to right,  rgba(249,250,252,1) 0%,rgba(249,250,252,1) 91%,rgba(234,237,242,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9fafc', endColorstr='#eaedf2',GradientType=1 );
+}
+
+.gs_main_column {
+    width: calc(100% - 300px);
+}
+
+.gs_main_column {
+    padding: 50px;
+}
+
+
+.left_side_bar .Menu .entry {
+    line-height: 50px;
+    padding-left: 20px;
+    border-bottom: solid 1px #DDD;
+    display: inline-block !important;
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+.left_side_bar .select_menu_selected {
+    display: block;
+    text-align: center;
+    margin-top: 25px;
+}
+

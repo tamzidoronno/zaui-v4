@@ -69,8 +69,8 @@ class Page {
             echo "<div class='gsarea' area='body'>";
                 $leftBarEnabled = $this->javapage->leftSideBar;
                 if ($leftBarEnabled)  {
-                    echo "<div class='gsarea left_side_bar' area='left_side_bar'><div class='left_side_bar_inner'>";
-                    $edited = $this->printArea($layout->areas->{'left_side_bar'});
+                    echo "<div class='gsarea left_side_bar' area='".$this->javapage->leftSideBarName."'><div class='left_side_bar_inner'>";
+                    $edited = $this->printArea($layout->areas->{$this->javapage->leftSideBarName});
                     echo "</div></div>";
                     
                     echo "<div class='gs_main_column'>";

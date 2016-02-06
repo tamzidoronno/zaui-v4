@@ -46,8 +46,18 @@
             if($day && $this->isSelectedWeek(strtotime($day)) && $this->getDayType() == "week") {
                 $selectedWeek = "selectedweek";
             }
+            
+            $disabled = false;
+            if(strtotime($day) < time()) {
+                $disabled = "disabled";
+            }
 
-             $weekRow .= "<span class='day $css $selected' gstype='clicksubmit' method='setCalendarDay' gsname='day' gsvalue='$day'>";
+            if($day && !$disabled) {
+                 $weekRow .= "<span class='day $css $selected' gstype='clicksubmit' method='setCalendarDay' gsname='day' gsvalue='$day'>";
+            } else {
+                 $weekRow .= "<span class='day $css $selected $disabled'>";
+            }
+            
             if(isset($days[$i])) {
                 $weekRow .= $days[$i];
             } else {

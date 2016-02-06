@@ -63,4 +63,5 @@
 .PmsCalendar .notconfirmed { background-color: #f7931d; }
 .PmsCalendar .available { background-color: #eaeaea; }
 .PmsCalendar .not_available { background-color: #cbcbcb; }
-
+.PmsCalendar .day.disabled { color:#bbb; cursor:inherit !important; }
+.PmsCalendar .day.disabled:hover { cursor:inherit !important;  }

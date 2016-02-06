@@ -9,6 +9,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     private $bookingresultforday = array();
     private $currentTitle = "";
     private $currentBooking = "";
+    private $adminInstanceId = null;
     
     public function getDescription() {
         return "Calendar view for displaying booked entries in a calendar.";
@@ -96,7 +97,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             $instanceId = "";
             if($this->isEditorMode() && $this->currentTitle) {
                 $loadBookingOnClick = "loadbookingonclick";
-                $instanceId = $this->getConfigurationSetting("bookingadmininstance");
+                $instanceId = $this->getAdminInstance();
                 $title = $this->currentTitle;
                 $bookingId = $this->currentBooking;
             }
@@ -397,6 +398,24 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             }
         }
         return $imgId;
+    }
+
+    public function getAdminInstance() {
+        if($this->adminInstanceId) {
+            return $this->adminInstanceId;
+        }
+        
+        $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("7e828cd0-8b44-4125-ae4f-f61983b01e0a");
+        if(!$instances) {
+            $instances = array();
+        }
+        foreach($instances as $instance) {
+            if($instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
+                $this->adminInstanceId = $instance->id;
+            }
+        }
+        
+        return $this->adminInstanceId;
     }
 
 }

@@ -1,8 +1,6 @@
 package com.thundashop.core.calendar;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.applications.StoreApplicationPool;
-import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.calendarmanager.data.AttendeeMetaInfo;
 import com.thundashop.core.calendarmanager.data.CalendarOrder;
 import com.thundashop.core.calendarmanager.data.Day;
@@ -18,7 +16,6 @@ import com.thundashop.core.calendarmanager.data.OrderLine;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.calendarmanager.data.Signature;
 import com.thundashop.core.cartmanager.CartManager;
-import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -27,7 +24,6 @@ import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pagemanager.IPageManager;
-import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;

@@ -5,11 +5,13 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -79,7 +81,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         event.location = getLocationBySubLocationId(event.subLocationId);
+        event.subLocation = getSubLocation(event.subLocationId);
         
+        event.setMainDates(); 
         return event;
     }
     
@@ -133,6 +137,54 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             for (SubLocation subLoc : loc.locations) {
                 if (subLoc.id.equals(subLocationId)) {
                     return loc;
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public List<Event> getBookingsByPageId(String pageId, boolean showOnlyNew) {
+        BookingItemType bookingItemType = bookingEngine.getBookingItemTypes()
+                .stream()
+                .filter(o -> o.pageId.equals(pageId))
+                .findFirst()
+                .orElse(null);
+        
+        if (bookingItemType == null) {
+            return new ArrayList();
+        }
+        
+        List<BookingItem> items = bookingEngine.getBookingItemsByType(bookingItemType.id);
+        
+        List<Event> retEvents = new ArrayList();
+        for (BookingItem item : items) {
+            retEvents.addAll(events.values().stream()
+                .filter(event -> event.bookingItemId.equals(item.id))
+                .filter(event -> showOnlyNew && isInFuture(event))
+                .collect(Collectors.toList()));
+        }
+        
+        return cloneAndFinalize(retEvents);
+    }
+
+    private boolean isInFuture(Event event) {
+        boolean isInfure = false;
+        for (Day day : event.days) {
+            if (day.isInFuture()) {
+                isInfure = true;
+            }
+        }
+        
+        return isInfure
+;    }
+
+    private SubLocation getSubLocation(String subLocationId) {
+        for (Location loc : locations.values()) {
+            for (SubLocation subLoc : loc.locations) {
+                if (subLoc.id.equals(subLocationId)) {
+                    return subLoc;
                 }
             }
         }

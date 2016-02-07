@@ -19,4 +19,9 @@ public class Day implements Serializable {
     public boolean isValid() {
         return endDate.after(startDate);
     }
+
+    boolean isInFuture() {
+        Date date = new Date();
+        return date.before(startDate);
+    }
 }

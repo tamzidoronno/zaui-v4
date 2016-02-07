@@ -39,4 +39,6 @@ public interface IEventBookingManager {
     public List<Event> getEvents();
     
     public Location getLocation(String locationId);
+    
+    public List<Event> getBookingsByPageId(String pageId, boolean showOnlyNew);
 }

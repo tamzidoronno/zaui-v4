@@ -46,6 +46,7 @@ echo "2. E-commerce"
 echo "3. Marketing"
 echo "4. Content Management"
 echo "5. Reports"
+echo "6. EventBooking"
 read moduleNumber
 
 module=other
@@ -60,6 +61,9 @@ if [ $moduleNumber = "4" ]; then
 fi
 if [ $moduleNumber = "5" ]; then 
     module=reporting
+fi
+if [ $moduleNumber = "6" ]; then 
+    module=eventbooking
 fi
 
 echo "Building files and folders."
@@ -95,6 +99,7 @@ CODE=$(<templates/$TEMPLATEFILE);
 CLASSNAME=$name;
 
 CODE=$(echo "$CODE" | sed "s|{{UUID}}|$UUID|g");
+CODE=$(echo "$CODE" | sed "s|{{UUID2}}|$UUID2|g");
 CODE=$(echo "$CODE" | sed "s|{{MODULE}}|$module|g");
 CODE=$(echo "$CODE" | sed "s|{{JAVATYPE}}|$JAVATYPE|g");
 

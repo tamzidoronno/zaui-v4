@@ -67,7 +67,7 @@ public class {{CLASSNAME}} extends UpdateScriptBase implements UpdateScript {
         credentials.storeid = "all";
 
         Application {{CLASSNAME}} = createSettings("{{CLASSNAME}}",
-        "{{UUID}}",
+        "{{UUID2}}",
         allowed2,
         " ",
         Application.Type.{{JAVATYPE}}, true);

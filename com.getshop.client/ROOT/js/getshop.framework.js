@@ -123,6 +123,7 @@ thundashop.framework = {
         $(document).on('click', '.simpleaddrow', this.simpleaddrow);
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('click', '[gstype="submitToInfoBox"]', thundashop.framework.postToInformationBox);
+        $(document).on('keyup', '[gstype="clicksubmitToInfoBox"]', thundashop.framework.postToInformationBox);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
     
@@ -148,7 +149,12 @@ thundashop.framework = {
         }, "500");
     },
     
-    postToInformationBox : function() {
+    postToInformationBox : function(event) {
+        if(event.type == "keyup") {
+            if(event.keyCode !== 13) {
+                return;
+            }
+        }
         var form = $(this).closest('[gstype="form"]');
         var data = thundashop.framework.createGsArgs(form);
         

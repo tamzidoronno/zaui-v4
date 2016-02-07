@@ -77,6 +77,10 @@ $tableRows = array();
 $i = 0;
 $sortList = array();
 foreach($bookings as $booking) {
+    $comments = "";
+    foreach($booking->comments as $time => $val) {
+        $comments .= $val->comment . "<br>";
+    }
     foreach($booking->rooms as $room) {
         $row = "";
         $rows++;
@@ -107,6 +111,10 @@ foreach($bookings as $booking) {
         }
         $row .= "</td>";
         $row .= "<td>";
+        if($comments) {
+            $row .= "<i class='fa fa-comment' title='$comments'></i>";
+        }
+        
         foreach($booking->rooms as $room2) {
             $addons = array();
             if(isset($types[$room2->bookingItemTypeId])) {
@@ -147,22 +155,17 @@ foreach($bookings as $booking) {
             $row .= "</td>";
         }
 
-        $row .= "<td align='center'>";
         $state = "";
         if($booking->unConfirmed) {
             $state = "Rejected";
-            $row .= "Rejected";
         } else if($booking->isDeleted) {
             $state = "Deleted";
-            $row .= "Deleted";
         } else if($booking->confirmed) {
             $state = "Confirmed";
-            $row .= "Confirmed";
         } else if(!$booking->confirmed) {
             $state = "Unconfirmed";
-            $row .= "Unconfirmed";
         }
-        $row .= "</td>";
+        $row .= "<td align='center' class='$state'>$state</td>";
         $row .= "</tr>";
         
         $index = $i;

@@ -14,42 +14,77 @@ if($instances) {
 $avtalegiro = $this->getApi()->getStoreApplicationPool()->getApplication("8f5f7f8f-de42-4867-82cc-63eb0cb55fa1");
 $config = $this->getConfigurationToUse();
 ?>
-<h2>Form filled out when registering</h2>
-<?
-foreach($booking->registrationData->resultAdded as $key => $value) {
-    $name = "";
-    foreach($booking->registrationData->data as $val) {
-        if($val->name == $key) {
-            $name = $val->title;
-            if(!$val->title || $val->type == "radio") {
-                $name = $key;
+<table width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+        <th width="60%">Form filled out when registering</th>
+        <th width="40%">Internal comments</th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <?
+            foreach($booking->registrationData->resultAdded as $key => $value) {
+                $name = "";
+                foreach($booking->registrationData->data as $val) {
+                    if($val->name == $key) {
+                        $name = $val->title;
+                        if(!$val->title || $val->type == "radio") {
+                            $name = $key;
+                        }
+                    }
+                }
+                if($key == "agreetoterms") {
+                    $name = "Agreed to terms and condition";
+                    if($value == "false") {
+                        $value = $this->__w("No");
+                    } else {
+                        $value = $this->__w("Yes");
+                    }
+                }
+                if($key == "openforpublic") {
+                    $name = "Open for public";
+                }
+
+                if($key == "choosetyperadio") {
+                    $name = "Registration type";
+                }
+                if(!$name) {
+                    continue;
+                }
+            ?>
+                <span class='roomprefix'><? echo $name; ?></span>
+                <span class='roompostfix'><? echo $value; ?></span>
+                <div style='clear:both;'></div>
+            <?php
             }
-        }
-    }
-    if($key == "agreetoterms") {
-        $name = "Agreed to terms and condition";
-        if($value == "false") {
-            $value = $this->__w("No");
-        } else {
-            $value = $this->__w("Yes");
-        }
-    }
-    if($key == "openforpublic") {
-        $name = "Open for public";
-    }
-    
-    if($key == "choosetyperadio") {
-        $name = "Registration type";
-    }
-    if(!$name) {
-        continue;
-    }
-?>
-    <span class='roomprefix'><? echo $name; ?></span>
-    <span class='roompostfix'><? echo $value; ?></span>
-    <div style='clear:both;'></div>
+            ?>            
+        </td>
+        <td valign="top">
+            <span gstype='form' method="addComment">
+                <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+                <input type="text" style="width: 260px;" gsname="comment" gstype="clicksubmitToInfoBox">
+                <input type="button" value="Add" gstype="submitToInfoBox">
+            </span>
+            <br>
+            <span class="commentfield">
+                <?php
+                $res = array();
+                foreach($booking->comments as $key => $obj) {
+                    $res[$key] = $obj;
+                }
+                krsort($res);
+                foreach($res as $time => $obj) {
+                    /* @var $obj core_pmsmanager_PmsBookingComment */
+                    echo $obj->comment . "<br>";
+                    echo "<div class='commentbottom'>";
+                    echo "By " . $this->getApi()->getUserManager()->getUserById($obj->userId)->fullName . ", " . date("d.m.Y H:i", $time / 1000);
+                    echo "</div>";
+                }
+                ?>
+            </span>
+        </td>
+    </tr>
+</table>
 <?php
-}
 if(sizeof($booking->registrationData->contactsList) > 0) {
     echo '<h2>Kontaktliste</h2>';
     echo "<table cellspacing='0' cellpadding='0'>";

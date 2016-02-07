@@ -22,6 +22,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function addComment() {
+        $id = $_POST['data']['bookingid'];
+        $comment = $_POST['data']['comment'];
+        $this->getApi()->getPmsManager()->addComment($this->getSelectedName(), $id, $comment);
+        $this->showBookingInformation();
+    }
+    
     public function includeEventCalendar($bookingId) {
         $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("27e174dc-b08c-4bf7-8179-9ea8379c91da");
         if(!$instances) {

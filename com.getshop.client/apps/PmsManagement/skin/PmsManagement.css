@@ -7,6 +7,9 @@
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
 .PmsManagement .bookinginfo a { color: blue; }
 .PmsManagement .guestrow input { width: 20%; float:left; }
+.PmsManagement .Confirmed { color:green; }
+.PmsManagement .Unconfirmed { color:red; }
+
 .PmsManagement .guestoverviewtable  td .roompostfix { font-size: 12px; }
 .PmsManagement .actions:hover {
      -moz-transition: all 0.2s ease-in;
@@ -69,7 +72,7 @@
 .PmsManagement .booking_options { text-align: right; }
 .PmsManagement .datesbooked input { font-size: 16px; }
 .PmsManagement .bookedrooms input { width: 25%; font-size: 16px; }
-.PmsManagement .roomprefix { display: inline-block; width: 20%; float:left; font-size: 16px; margin-bottom: 10px; }
+.PmsManagement .roomprefix { display: inline-block; width: 40%; float:left; font-size: 16px; margin-bottom: 10px; text-align: left; }
 .PmsManagement .roompostfix { display: inline-block;  float:left; font-size: 16px; line-height: 25px; }
 .PmsManagement .guestrow td { padding: 0px; border: 0px; }
 .PmsManagement .fa.fa-edit { border: solid 1px; padding: 3px; border-radius: 3px; background-color:#18ab29; color:#fff; cursor:pointer; }
@@ -85,3 +88,5 @@
 .PmsManagement .bookinginfo .editmode { display: none; }
 .PmsManagement .needconfirmation { margin: 20px; font-size: 20px; padding: 10px;text-align: center; border: solid 1px #BBB; background-color:#efefef; }
 .PmsManagement .typefilter { display:inline-block; min-width: 100px; }
+.PmsManagement .commentbottom { color:#bbb; font-size: 10px; }
+.PmsManagement .commentfield { max-height: 250px; width: 100%; display: inline-block; overflow-y: scroll; margin-top: 20px; }

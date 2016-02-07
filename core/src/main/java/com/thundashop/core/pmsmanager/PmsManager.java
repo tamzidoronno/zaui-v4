@@ -1864,4 +1864,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
+    @Override
+    public void addComment(String bookingId, String comment) {
+        PmsBooking booking = getBooking(bookingId);
+        PmsBookingComment commentToAdd = new PmsBookingComment();
+        commentToAdd.userId = userManager.getLoggedOnUser().id;
+        commentToAdd.comment = comment;
+        booking.comments.put(new Date().getTime(), commentToAdd);
+        saveBooking(booking);
+    }
+
 }

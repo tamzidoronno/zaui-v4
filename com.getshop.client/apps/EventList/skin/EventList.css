@@ -20,3 +20,8 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.EventList .locationInformation {
+    padding-left: 20px;
+    padding-top: 10px;
+}

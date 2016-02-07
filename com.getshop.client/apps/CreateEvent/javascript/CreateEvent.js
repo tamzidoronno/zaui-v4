@@ -48,6 +48,7 @@ app.CreateEvent = {
             eventType : document.find('.selectedttype').val(),
             days : days,
             spots : document.find('.availablespots').val(),
+            subLocationId : document.find('.selectedSubLocation').val()
         }
      
         thundashop.Ajax.simplePost(this, "createEvent", data);

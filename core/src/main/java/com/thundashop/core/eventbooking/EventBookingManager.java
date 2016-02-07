@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class EventBookingManager extends GetShopSessionBeanNamed implements IEventBookingManager {
     public HashMap<String, Event> events = new HashMap();
+    public HashMap<String, Location> locations = new HashMap();
     
     @Autowired
     public BookingEngine bookingEngine;
@@ -37,6 +38,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             if (data instanceof Event) {
                 Event event = (Event)data;
                 events.put(event.id, event);
+            }
+            
+            if (data instanceof Location) {
+                Location loc = (Location)data;
+                locations.put(loc.id, loc);
             }
         }
     }
@@ -53,11 +59,6 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     @Override
     public List<Event> getEvents() {
         return cloneAndFinalize(new ArrayList(events.values()));
-    }
-
-    private BookingItem createBookingItem() {
-        BookingItem item = new BookingItem();
-        return item;
     }
 
     private List<Event> cloneAndFinalize(List<Event> events) {
@@ -77,9 +78,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             event.bookingItemType = bookingEngine.getBookingItemType(event.bookingItem.bookingItemTypeId);
         }
         
+        event.location = getLocationBySubLocationId(event.subLocationId);
+        
         return event;
     }
-
+    
     private void log(String description, Object event) {
         // TODO, add logging.
     }
@@ -98,7 +101,43 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public void saveLocation(Location location) {
+        if (location.id == null || location.id.isEmpty())
+            log("location created", location);
+        else 
+            log("location changed", location);
         
+        saveObject(location);
+        locations.put(location.id, location);
+    }
+
+    @Override
+    public List<Location> getAllLocations() {
+        return new ArrayList(locations.values());
+    }
+
+    @Override
+    public Location getLocation(String locationId) {
+        return locations.get(locationId);
+    }
+
+    @Override
+    public void deleteLocation(String locationId) {
+        // TODO - check if location is in use somewhere.
+        Location location = locations.remove(locationId);
+        if (location != null)
+            deleteObject(location);
+    }
+
+    private Location getLocationBySubLocationId(String subLocationId) {
+        for (Location loc : locations.values()) {
+            for (SubLocation subLoc : loc.locations) {
+                if (subLoc.id.equals(subLocationId)) {
+                    return loc;
+                }
+            }
+        }
+        
+        return null;
     }
     
 }

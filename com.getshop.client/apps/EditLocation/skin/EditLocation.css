@@ -1,0 +1,19 @@
+.EditLocation .addSubLocation {
+    padding: 30px;
+    margin-top: 30px;
+    background-color: #EEE;
+}
+
+.EditLocation label {
+    display: inline-block;
+    width: 200px;
+    box-sizing: border-box;
+}
+
+.EditLocation .sublocation {
+    border: solid 1px #DDD;
+    display: none;
+    padding: 20px;
+    background-color: #EEE;
+    margin-top: 20px;
+}

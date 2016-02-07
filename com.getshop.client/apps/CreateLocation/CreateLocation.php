@@ -17,5 +17,15 @@ class CreateLocation extends \ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\EngineComm
             $this->includefile("createlocation");
         }
     }
+    
+    public function createLocation() {
+        $location = new \core_eventbooking_Location();
+        $location->name = $_POST['data']['locationName'];
+        $this->getApi()->getEventBookingManager()->saveLocation($this->getBookingEgineName(), $location);
+    }
+    
+    public function deleteLocation() {
+        $this->getApi()->getEventBookingManager()->deleteLocation($this->getBookingEgineName(), $_POST['data']['locationid']);
+    }
 }
 ?>

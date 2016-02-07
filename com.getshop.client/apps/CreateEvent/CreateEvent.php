@@ -36,6 +36,7 @@ class CreateEvent extends \MarketingApplication implements \Application {
         $event->bookingItem->bookingSize = $_POST['data']['spots'];
         $event->bookingItem->fullWhenCountHit = $_POST['data']['spots'];
         $event->bookingItem->bookingItemTypeId = $_POST['data']['eventType'];
+        $event->subLocationId = $_POST['data']['subLocationId'];
         
         $event->days = [];
         foreach ($_POST['data']['days'] as $dataDay) {

@@ -1,7 +1,33 @@
-<div gstype="form" method="createLocation">
-    <label>Location</label>
+<?
+/* @var $this \ns_a30bbe8f_15f7_4327_9f80_ece81ebd64e8\CreateLocation */
+$locations = $this->getApi()->getEventBookingManager()->getAllLocations($this->getBookingEgineName());
+
+if (count($locations)) {
+    foreach ($locations as $loc) {
+?>
+    <div class="location">
+        <div class="location_title">
+            <? 
+            if ($this->hasWriteAccess()) {
+                ?>
+            <div class="gs_shop_small_icon" gsclick="deleteLocation" locationId="<? echo $loc->id; ?>"><i class="fa fa-trash"></i></div>
+            <a href="?page=edit_location&locationId=<? echo $loc->id; ?>"><div class="gs_shop_small_icon"><i class="fa fa-edit"></i></div></a>
+                <?
+            }
+            echo $loc->name; 
+            ?> 
+        </div>
+    </div>
+<?
+    }
+}
+?>
+
+<div gstype="form" method="createLocation" class="createform">
+    Create a new location?
+   
     <br/>
-    <br/><input class="gsniceinput1" type="txt" gsname="locationName"/>
+    <br/><input class="gsniceinput1" type="txt" gsname="locationName" placeholder="City"/>
     <br/>
     <br/><div class="shop_button createLocation" gstype="submit">Create</div>
 </div>

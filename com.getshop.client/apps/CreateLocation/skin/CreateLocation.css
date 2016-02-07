@@ -1,0 +1,14 @@
+.CreateLocation .location_title {
+    margin-top: 20px; 
+    margin-bottom: 20px;
+}
+
+.CreateLocation .location_title .gs_shop_small_icon {
+    margin-right: 10px;
+}
+
+.CreateLocation .createform {
+    background-color: #EEE;
+    margin-top: 30px;
+    padding: 30px;
+}

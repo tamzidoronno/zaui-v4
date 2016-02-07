@@ -27,7 +27,18 @@
 
     <div class="listrow">
         <label><? echo $this->__f("Location"); ?></label>
-        <input class="gsniceinput1" />
+        <select class="gsniceselect1 selectedSubLocation">
+            <?
+        $locations = $this->getApi()->getEventBookingManager()->getAllLocations($this->getBookingEgineName());
+        
+        foreach ($locations as $location) {
+            foreach ($location->locations as $sublocation) {
+//                $selected = $location->id == $event->sub ? "selected='true'" : "";
+                echo "<option value='$sublocation->id'>".$location->name." - ".$sublocation->name."</option>";
+            }
+        }
+        ?>
+        </select>
     </div>
     
     <div class="shop_button createbutton">

@@ -1,0 +1,74 @@
+<?
+/* @var $this ns_3cea6008_1b87_4a2e_aeb2_1c7fa2069279\EditLocation */
+$location = $this->getLocation();
+$subLocations = $location->locations;
+?>
+<div gstype="form" method="saveall" style="border: solid 1px #DDD; padding: 20px;">
+    <input type="hidden" gsname="locationId" value="<? echo $location->id; ?>"/>
+    <input type="hidden" gsname="savedLocation" value="true"/>
+    
+    <div>
+        <label>City</label>&nbsp;&nbsp;<input class="gsniceinput1" value="<? echo $location->name; ?>" gsname="name"></input>
+    </div>
+    <br/>
+    <?
+    if (count($subLocations)) {
+    ?>
+    <div class="sublocations">
+        <?
+        echo "<label>Select location</label>&nbsp;&nbsp;<select class='gsniceselect1 selectsublocation'>";
+        foreach ($subLocations as $loc) {
+            echo "<option value='$loc->id'>$loc->name</option>";
+        }
+        echo "</select>";
+        foreach ($subLocations as $loc) {
+        ?>
+        <div class="sublocation" sublocationid="<? echo $loc->id; ?>">
+            <br/><label>Name</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>name" value="<? echo $loc->name;?>"></input>
+            <br/><br/><label>Description</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>description" value="<? echo $loc->description;?>"></input>
+            <br/><br/><label>Contact person</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>contactperson" value="<? echo $loc->contactPerson;?>"></input>
+            <br/><br/><label>Cellphone</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>cellphone" value="<? echo $loc->cellPhone;?>"></input>
+            <br/><br/><label>Lat</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lat" value="<? echo $loc->lat;?>"></input>
+            <br/><br/><label>Lon</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lon" value="<? echo $loc->lon;?>"></input>    
+        </div>
+        <?
+        }
+        ?>
+        <br/>
+        <?
+        if (isset($_POST['data']['savedLocation'])) {
+        ?>
+            <div class="saveinformation">
+                <i class="fa fa-check-circle-o"></i> Saved successfully
+                <br/><br/>
+            </div>
+            
+        <? 
+        }
+        ?>
+        
+        <div class="shop_button" gstype="submit">Save</div>
+    </div>    
+
+    <?
+    }
+    ?>
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        app.EditLocation.startup();
+    });
+</script>
+    
+
+<div gstype="form" method="addSubLocation" class="addSubLocation">
+    Create a new sub location?
+    <input type="hidden" gsname="locationId" value="<? echo $location->id; ?>"/>
+    <br/>
+    <br/>
+    <div><input class="gsniceinput1" gsname="sublocationname" /></div>
+    <br/>
+    <div class="shop_button" gstype="submit">Create</div>
+</div>

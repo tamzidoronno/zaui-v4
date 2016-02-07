@@ -626,7 +626,12 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         PageCell cell = page.getCell(cellId);
         for(Integer count : layout) {
-            String row = page.layout.createCell(cellId, "", PageCell.CellMode.row, "body");
+            String row = cellId;
+            if(layout.size() > 1) {
+                row = page.layout.createCell(cellId, "", PageCell.CellMode.row, "body");
+            } else {
+                count++;
+            }
             if(count > 1) {
                 for(int i = 0; i < count-1; i++) {
                     page.layout.createCell(row, "", PageCell.CellMode.column, "body");

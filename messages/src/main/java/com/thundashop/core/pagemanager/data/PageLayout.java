@@ -645,7 +645,7 @@ public class PageLayout implements Serializable {
     public void checkAndFixDoubles() {
         for(ArrayList<PageCell> allCells : areas.values()) {
             if(allCells != null) {
-                checkAndFixDoublesOnCells(allCells);
+//                checkAndFixDoublesOnCells(allCells);
             }
         }
     }

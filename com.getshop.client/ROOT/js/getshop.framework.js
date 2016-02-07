@@ -1337,14 +1337,16 @@ thundashop.framework = {
         cell.find('.gsactivebox').attr('entered', 'false');
         thundashop.framework.activeBoxTimeout[cellid] = setTimeout(function () {
             if (cell.find('.gsactivebox').attr('entered') === 'false') {
-                thundashop.framework.hideCellBoxHeader();
+                thundashop.framework.hideCellBoxHeader(cell);
             }
         }, timer);
         
         $('.gscellboxinner').hide();
     },
-    hideCellBoxHeader : function() {
-        var cell = $('.gsactivebox').closest('.gsucell');
+    hideCellBoxHeader : function(cell) {
+        if(!cell) {
+            cell = $('.gsactivebox').closest('.gsucell');
+        }
         cell.find('.gsactiveboxheader').first().removeClass('gsactiveboxheader');
         cell.find('.gscellheadermin').first().show();
         cell.find('.gsactivebox').removeClass('gsactivebox');        
@@ -1649,7 +1651,7 @@ thundashop.framework = {
         }
     },
     highlightRow: function (cellid) {
-        var cell = $('div[cellid="' + cellid + '"]');
+        var cell = $('div[cellid="' + cellid + '"] .gsinner');
 
         var top = cell.offset().top;
         $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_top').css('height', top + 'px');

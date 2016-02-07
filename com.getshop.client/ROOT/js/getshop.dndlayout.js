@@ -34,24 +34,38 @@ thundashop.dndlayout = {
         });
     },
     startDragging : function() {
+        var zindex = 100;
         $('.gsinner').each(function() {
-            if($(this).find('.gsinner').length === 0) {
                 thundashop.dndlayout.landedOnCellid = null;
+                var dot = $('<span class="gsdragspot"></span>');
+                var topSpot = $('<span class="gsdot"><i class="fa fa-circle"></i></span>');
+                var bottomSpot = $('<span class="gsdot"><i class="fa fa-circle"></i></span>');
                 
-                var cellid = $(this).closest('.gsucell').attr('cellid');
-                var spot = $('<span class="gsdragspot" cellid="'+cellid+'"><span class="positioner"><span class="droprowindicator_top"></span><span class="droprowindicator_bottom"></span></span></span>');
-                if(thundashop.dndlayout.dragType == "row") {
-                    var topSpot = $('<span class="gsdropspot_top"><i class="fa fa-arrow-up"></i> Drop</span>');
-                    var bottomSpot = $('<span class="gsdropspot_bottom"><i class="fa fa-arrow-down"></i> Drop</span>');
+                dot.addClass(thundashop.dndlayout.dragType);
+                topSpot.addClass(thundashop.dndlayout.dragType);
+                bottomSpot.addClass(thundashop.dndlayout.dragType);
+               
+                dot.attr('cellid', $(this).closest('.gsucell').attr('cellid'));
+                dot.append(bottomSpot);
+//                dot.append(topSpot);
+                var children = $(this).children('.gsucell').length;
+                var top = (children*5) * -1;
+                var bottom = top * -1;
+                console.log(children + " - " + top);
+                if(thundashop.dndlayout.dragType === "row") {
+                    bottomSpot.css('bottom',top+"px");
+                    bottomSpot.css('left',$(this).width()/2);
+                    topSpot.css('left',$(this).width()/2);
+                    topSpot.css('top',top+'px');
                 } else {
-                    var topSpot = $('<span class="gsdropspot_left"><i class="fa fa-arrow-left"></i> Drop</span>');
-                    var bottomSpot = $('<span class="gsdropspot_right"><i class="fa fa-arrow-right"></i> Drop</span>');
+                    bottomSpot.css('top',$(this).height()/2);
+                    bottomSpot.css('left',top+"px");
+                    topSpot.css('left',$(this).width() + (top*-1));
+                    topSpot.css('top',$(this).height()/2);
                 }
-                
-                spot.find('.positioner').prepend(topSpot);
-                spot.find('.positioner').prepend(bottomSpot);
                
                 topSpot.on('mouseenter', function() {
+                    console.log('enter2');
                     var cellid = $(this).closest('.gsdragspot').attr('cellid');
                     thundashop.dndlayout.landedOnCellid = cellid;
                     if(thundashop.dndlayout.dragType == "row") {
@@ -61,6 +75,7 @@ thundashop.dndlayout = {
                     }
                 });
                 bottomSpot.on('mouseenter', function() {
+                    console.log('enter');
                     var cellid = $(this).closest('.gsdragspot').attr('cellid');
                     thundashop.dndlayout.landedOnCellid = cellid;
                     if(thundashop.dndlayout.dragType == "row") {
@@ -77,13 +92,15 @@ thundashop.dndlayout = {
                     thundashop.dndlayout.landedOnCellid = null;
                 });
                 
-                $(this).on('mouseover', function() {
-                    $('.gsdragspot').hide();
-                    spot.show();
-                });
-                spot.hide();
-                $(this).append(spot);
-            }
+                var parents = $(this).parents('.gsucell').length;
+                if(parents === 1) {
+                    $(this).on('mouseover', function() {
+                        $('.gsdragspot').hide();
+                        $(this).find('.gsdragspot').show();
+                    });
+                }
+                dot.hide();
+                $(this).prepend(dot);
         });
 
         $('.gsuicell').on('mouseover', function() {
@@ -101,25 +118,15 @@ thundashop.dndlayout = {
             if(direction == "left" || direction == "right") {
                 type = "addcolumn";
             }
-            
-            var inside;
-            if(type === "addcolumn" && cell.hasClass('gsrow')) {
                 inside = true;
-            } else {
-                inside = confirm("Inside?");
-            }
             
             if(direction === "top" || direction == "left") {
                 before = cellid;
             }
-            if(!inside) {
-                if(cell.hasClass('gscolumn') && type === "addrow") {
-                    before = cell.parent().closest('.gsucell').attr('cellid');
-                    cellid = cell.parent().closest('.gsucell').parent().closest('.gsucell').attr('cellid');
-                } else {
-                    cellid = cell.parent().closest('.gsucell').attr('cellid');
-                }
-            }
+//            if(!inside) {
+//                before = cell.parent().closest('.gsrow').attr('cellid');
+//                cellid = cell.parent().closest('.gsrow').parent().closest('.gsrow').attr('cellid');
+//            }
             if(direction === "bottom" || direction == "right") {
                 before = "";
             }
@@ -132,6 +139,8 @@ thundashop.dndlayout = {
             var event = thundashop.Ajax.createEvent('','operateCell',$(this), data);
             thundashop.Ajax.post(event);
             
+        } else {
+            console.log('not landed');
         }
         $('.gsdragspot').remove();
     },    

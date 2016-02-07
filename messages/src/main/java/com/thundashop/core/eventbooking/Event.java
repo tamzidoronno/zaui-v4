@@ -19,6 +19,8 @@ import org.mongodb.morphia.annotations.Transient;
 public class Event extends DataCommon {
     public String bookingItemId = "";
     
+    public String subLocationId = "";
+    
     public List<Day> days = new ArrayList();
     
     @Transient
@@ -27,5 +29,7 @@ public class Event extends DataCommon {
     @Transient
     public BookingItemType bookingItemType;
     
+    @Transient
+    public Location location;
     
 }

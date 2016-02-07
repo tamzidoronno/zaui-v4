@@ -29,6 +29,14 @@ public interface IEventBookingManager {
     @Editor
     @Writing
     public void saveLocation(Location location);
+
+    @Editor
+    @Writing
+    public void deleteLocation(String locationId);
+    
+    public List<Location> getAllLocations();
     
     public List<Event> getEvents();
+    
+    public Location getLocation(String locationId);
 }

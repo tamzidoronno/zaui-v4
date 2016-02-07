@@ -5,10 +5,22 @@
  */
 package com.thundashop.core.eventbooking;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 /**
  *
  * @author ktonder
  */
-public class SubLocation {
-    
+public class SubLocation implements Serializable {
+    public String id = UUID.randomUUID().toString();
+    public Map<String, GroupLocationInformation> groupLocationInformation = new HashMap();
+    public String name = "";
+    public String description = "";
+    public String contactPerson = "";
+    public String cellPhone = "";
+    public String lat = "";
+    public String lon = "";
 }

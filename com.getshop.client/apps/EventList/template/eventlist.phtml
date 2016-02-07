@@ -9,6 +9,17 @@ if (!count($events)) {
 }
 
 foreach ($events as $event) {
+
+    $sublocation = null;
+
+    if ($event->location && $event->location->locations) {
+        foreach($event->location->locations as $subLoc) {
+            if ($subLoc->id == $event->subLocationId) {
+                $sublocation = $subLoc;
+                break;
+            }
+        }
+    }
 ?>
 <div class="row">
     <div class="titlerow">
@@ -21,11 +32,22 @@ foreach ($events as $event) {
         <? 
         } 
         ?>
-        <div class="event_title"><? echo $event->bookingItemType->name; ?></div>
+        <div class="event_title"><? echo $event->bookingItemType->name; ?> ( <? echo @$event->location->name; ?> )</div>
     </div>
     
     <div class="rowcontent">
-        <? echo $this->__f("Location") ?>: 
+        <? 
+        if ($event->location) {
+        echo $this->__f("Location") ?>: 
+        <div class="locationInformation">
+            <? 
+            echo $event->location->name." - ".$subLoc->name;
+            echo "<br/>".$subLoc->description;
+            ?>
+        </div>
+        <?
+        }
+        ?>
         <br/> <? echo $this->__w("Day(s)"); ?>: <? echo count($event->days); ?>
         <? foreach ($event->days as $day) {
             echo "<div>".$day->startDate." - ".$day->endDate."</div>";

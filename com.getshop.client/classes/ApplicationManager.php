@@ -215,7 +215,10 @@ class ApplicationManager extends FactoryBase {
     
     function operateCell() {
         $type = $_POST['data']['type'];
-        $cellId = $_POST['data']['cellid'];
+        $cellId = "";
+        if(isset($_POST['data']['cellid'])) {
+            $cellId = $_POST['data']['cellid'];
+        }
         $before = null;
         $area = "";
         $mode = "ROW";

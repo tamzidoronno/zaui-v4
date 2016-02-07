@@ -103,9 +103,6 @@ public interface IPageManager {
     public String addLayoutCell(String pageId, String incell, String beforecell, String direction, String area) throws ErrorException;
     
     @Administrator
-    public String addLayoutCellDragAndDrop(String pageId, String cellId, String type, String edge, String area) throws ErrorException;
-    
-    @Administrator
     public Page dropCell(String pageId, String cellId) throws ErrorException;
     
     @Administrator

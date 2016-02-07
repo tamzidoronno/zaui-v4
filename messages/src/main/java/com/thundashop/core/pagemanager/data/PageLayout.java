@@ -161,6 +161,16 @@ public class PageLayout implements Serializable {
             newcell.mode = mode;
             newcell.width = newwidth;
             cellId = newcell.cellId;
+            
+            if(cell.mode.equals(PageCell.CellMode.column) && !cell.cells.isEmpty() && cell.cells.get(0).mode.equals(PageCell.CellMode.column)) {
+                PageCell columnrows = initNewCell(PageCell.CellMode.row);
+                columnrows.extractDataFrom(cell, true);
+                columnrows.mode = PageCell.CellMode.row;
+                cell.clear();
+                cell.mode = PageCell.CellMode.column;
+                cell.cells.add(columnrows);
+                
+            }
         }
 
         finalizeMobileList();
@@ -196,7 +206,10 @@ public class PageLayout implements Serializable {
             } else if (cell.cells.size() > 0) {
                 boolean deleted = deleteCellRecusive(cellId, cell.cells);
                 if (deleted) {
-                    if (cell.cells.size() == 1 && !cell.type.equals(PageCell.CellType.floating) && !cell.isRotating()) {
+                    PageCell parent = getParent(cell.cellId);
+                    if (parent != null && cell.cells.size() == 1 && parent.mode.equals(PageCell.CellMode.column) && cell.mode.equals(PageCell.CellMode.row)) {
+                        parent.extractDataFrom(cell.cells.get(0), true);
+                    } else if (cell.cells.size() == 1 && !cell.type.equals(PageCell.CellType.floating) && !cell.isRotating()) {
                         String currentMode = cell.mode;
                         if(!cell.isRotating() && !cell.isTab()) {
                             cell.extractDataFrom(cell.cells.get(0), true);

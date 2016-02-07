@@ -69,7 +69,6 @@ public class Page extends DataCommon implements Cloneable {
             layout.clear();
         }
         
-        System.out.println(pagedata.leftSideBars.get(leftSideBarName));
         layout.setNewList(pagedata.leftSideBars.get(leftSideBarName), leftSideBarName, true);
     }
 

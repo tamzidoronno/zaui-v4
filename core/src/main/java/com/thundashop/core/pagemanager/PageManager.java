@@ -137,8 +137,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
        
         page = finalizePage(page);
-        
-        page.dumpLayout();
 
         return page;
     }
@@ -630,10 +628,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         PageCell cell = page.getCell(cellId);
         for(Integer count : layout) {
             String row = cellId;
-            if(layout.size() > 1) {
+            if(layout.size() > 1 || page.getParentCell(cellId) != null) {
                 row = page.layout.createCell(cellId, "", PageCell.CellMode.row, "body");
             } else {
-                count++;
+                count++; 
             }
             if(count > 1) {
                 for(int i = 0; i < count-1; i++) {

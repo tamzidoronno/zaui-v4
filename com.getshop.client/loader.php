@@ -95,7 +95,7 @@ function symLinkIfNeeded($class_name) {
             $factory = IocContainer::getFactorySingelton(false);
             $appId = substr($namespace, 3);
             $appId = str_replace("_", "-", $appId);
-            $appSettings = $factory->getApi()->getStoreApplicationPool()->getApplication($appId);
+            $appSettings = $factory->getApi()->getGetShopApplicationPool()->get($appId);
             
             if (!$appSettings) {
                 $themeApp = $factory->getApi()->getStoreApplicationPool()->getThemeApplication();

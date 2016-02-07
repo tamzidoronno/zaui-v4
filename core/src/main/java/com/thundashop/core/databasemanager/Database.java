@@ -53,6 +53,10 @@ public class Database {
         sandbox = true;
     }
 
+    public Mongo getMongo() {
+        return mongo;
+    }
+    
     public Database() throws UnknownHostException {
         try {
             createDataFolder();
@@ -313,7 +317,12 @@ public class Database {
                 if (res.size() == 1) {
                     Morphia morphia = new Morphia();
                     morphia.map(DataCommon.class);
-                    return morphia.fromDBObject(DataCommon.class, res.next());
+                    DataCommon common = morphia.fromDBObject(DataCommon.class, res.next());
+                    if (common.deleted != null) {
+                        return null;
+                    }
+                    
+                    return common;
                 }
             }
         }

@@ -14,7 +14,7 @@ class CreateLocation extends \ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\EngineComm
         if (!$this->getBookingEgineName()) {
             $this->printNotConnectedWarning();
         } else {
-            
+            $this->includefile("createlocation");
         }
     }
 }

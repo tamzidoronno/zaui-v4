@@ -309,6 +309,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
            
+            try {
+                processor();
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
             return result;
         }catch(Exception e) {
             messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id);
@@ -316,7 +321,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return -1;
         }
         
-
     }
 
     private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking) throws ErrorException {

@@ -21,6 +21,9 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.springframework.stereotype.Component;
 
 
@@ -43,7 +46,11 @@ public class GetShopLockManager {
         String loginToken = null;
         String loginUrl = address;
         
-        DefaultHttpClient client = new DefaultHttpClient();
+        HttpParams my_httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(my_httpParams, 3000);
+        HttpConnectionParams.setSoTimeout(my_httpParams, 6000);
+        
+        DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
         client = wrapClient(client);
         HttpResponse httpResponse;
         

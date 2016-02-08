@@ -1,0 +1,13 @@
+<?
+/* @var $this ns_78b5c3b4_f475_40eb_aa87_171e78c24200\DayEventLister */
+$events = $this->getApi()->getEventBookingManager()->getBookingsByPageId($this->getBookingEgineName(), $this->getPage()->getId(), true);
+
+if (!count($events)) {
+    echo $this->__f("No events");
+    return;
+}
+
+foreach ($events as $event) {
+    echo $event->mainStartDate." - ".$event->mainEndDate."<br/>";
+}
+?>

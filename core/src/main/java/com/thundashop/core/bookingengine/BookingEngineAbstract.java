@@ -669,6 +669,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         return higest;
     }
+
+    public List<BookingItem> getBookingItemsByType(String typeId) {
+        return items.values().stream()
+                .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(typeId))
+                .collect(Collectors.toList());
+    }
    
     
 }

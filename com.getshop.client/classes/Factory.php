@@ -22,7 +22,6 @@ class Factory extends FactoryBase {
     private $language;
     
     private $isProductionMode = false;
-    private $isSeoActive = null;
     
     public $productionMode = true;
     
@@ -248,7 +247,7 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/batchImageLoad.jquery.js");
         
         if ($this->isProductionMode) {
-            echo "\n" . '<script '.$this->includeSeo().' src="'.$fileName.'"></script>';
+            echo "\n" . '<script  src="'.$fileName.'"></script>';
         }
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
 
@@ -886,26 +885,13 @@ class Factory extends FactoryBase {
         return true;
     }
 
-    public function isSeoActivated() {
-        if ($this->isSeoActive == null) {
-            $settings = $this->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
-            $instance = $this->getApplicationPool()->createInstace($settings);
-            $singleOnGroup = $instance->getConfigurationSetting("seo");
-
-            if($singleOnGroup && $singleOnGroup == "true") {
-                $this->isSeoActive = true;
-            } else {
-                $this->isSeoActive = false;
-            }
-        }
-        
-//        return $this->isSeoActive;
-        return false;
-    }
-    
     public function includeSeo() {
+        $settings = $this->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        $instance = $this->getApplicationPool()->createInstace($settings);
         
-        if ($this->isSeoActivated()) {
+        $singleOnGroup = $instance->getConfigurationSetting("seo");
+
+        if($singleOnGroup && $singleOnGroup == "true") {
             return "async";
         }
         return "";

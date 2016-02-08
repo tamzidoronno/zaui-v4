@@ -147,13 +147,9 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <meta name="keywords" content="<? echo $javapage->metaKeywords; ?>">
         <meta name="title" content="<? echo $javapage->metaTitle; ?>">
         
-        <script <? echo $factory->includeSeo(); ?> type="text/javascript" src=""></script>
+        <script <? echo $factory->includeSeo(); ?> type="text/javascript" src="https://www.google.com/jsapi"></script>
         <?php
-        if ($factory->isSeoActivated()) {
-            $html = "Loading....";
-        } else {
-            $html = init($factory);
-        }
+        $html = init($factory);
         $pageDescription = $factory->getPage()->javapage->description;
         if (@$factory->getStore()->favicon) {
             echo '<link rel="icon" href="/favicon.ico?r='.rand(0,1000).'" />';

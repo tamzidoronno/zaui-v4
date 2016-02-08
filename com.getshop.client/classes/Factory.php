@@ -899,7 +899,8 @@ class Factory extends FactoryBase {
             }
         }
         
-        return $this->isSeoActive;
+//        return $this->isSeoActive;
+        return false;
     }
     
     public function includeSeo() {

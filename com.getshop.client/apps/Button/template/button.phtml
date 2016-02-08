@@ -1,5 +1,5 @@
 <? /* @var $this \ns_2996287a_c23e_41ad_a801_c77502372789\Button */ 
-    $text = $this->getConfigurationSetting("text") ? $this->getConfigurationSetting("text") : $this->__f("Button");
+    $text = $this->getText();
     $type = $this->getConfigurationSetting("type");
     
     $extraClass = "";
@@ -24,15 +24,20 @@
         $ahref = "<a class='gs_ignorenavigate' href='$link'>";
         $ahrefEnd = "</a>";
     }
-?>
-
-<?
-echo $ahref;
-?>
-<div class="shop_button radius green <? echo $extraClass; ?>" <? echo $extraAttributes; ?>>
-    <div class='button_text_content'><? echo $text; ?></div>
-    <div class="shop_button_saveNewText"><i class='fa fa-save'></i></div>
-</div>
-<?
-echo $ahrefEnd;
+    
+    $template = $this->getButtonTemplate();
+    echo $ahref;
+    if(!$template) {
+        ?>
+        <div class="shop_button radius green <? echo $extraClass; ?>" <? echo $extraAttributes; ?>>
+            <div class='button_text_content'><? echo $text; ?></div>
+            <div class="shop_button_saveNewText"><i class='fa fa-save'></i></div>
+        </div>
+        <?
+    } else {
+        ?>
+        <span class="<? echo $template; ?>"><? echo $text; ?></span>
+        <?
+    }
+    echo $ahrefEnd;
 ?>

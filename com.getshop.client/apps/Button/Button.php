@@ -29,6 +29,14 @@ class Button extends \ApplicationBase implements \Application {
     public function saveText() {
         $this->setConfigurationSetting("text", $_POST['data']['text']);
     }
+    
+    public function saveButtonTemplate() {
+        $this->setConfigurationSetting("btntemplate", $_POST['data']['text']);
+    }
+    
+    public function getButtonTemplate() {
+        return $this->getConfigurationSetting("btntemplate");
+    }
 
     public function showSetup() {
         $this->includefile("setup");
@@ -67,6 +75,11 @@ class Button extends \ApplicationBase implements \Application {
     public function setInternalPage() {
         $this->setConfigurationSetting("type", "link_to_interal_page");
         $this->setConfigurationSetting("page_id", $_POST['data']['page_id']);
+    }
+
+    public function getText() {
+        $text = $this->getConfigurationSetting("text") ? $this->getConfigurationSetting("text") : $this->__f("Button");
+        return $text;
     }
 
 }

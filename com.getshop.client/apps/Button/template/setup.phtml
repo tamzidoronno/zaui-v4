@@ -1,10 +1,39 @@
+<?php
+/* @var $this \ns_2996287a_c23e_41ad_a801_c77502372789\Button */
+$templates = array();
+$templates["template1"] = "template1";
+$templates["template2"] = "template2";
+$templates["template3"] = "template3";
+$templates["template4"] = "template4";
+$templates["template5"] = "template5";
+?>
 <div class="setup_button_box">
+    <div>
+        <? echo $this->__f("Button name"); ?>
+        &nbsp;&nbsp;<input type="text" class='buttontext' value="<? echo $this->getText(); ?>">
+    </div>
+    <br><br>
     <div>
         <? echo $this->__f("What type of button is this?"); ?>
         &nbsp;&nbsp;<select id='setup_button_type_selector'>
             <option show_view='setup_add_to_cart_button' value='add_to_cart'><? echo $this->__f("Add to cart"); ?></option>
             <option show_view='setup_internal_page' value='go_to_page_internal'><? echo $this->__f("Go to a internal page"); ?></option>
             <option show_view='setup_external_page' value='go_to_page_external'><? echo $this->__f("Go to a external page"); ?></option>
+        </select>
+    </div><br>
+    <div>
+        <? echo $this->__f("Layout on button"); ?>
+        &nbsp;&nbsp;<select id='layoutonbutton'>
+            <option value='default'><? echo $this->__f("Default"); ?></option>
+            <?php 
+            foreach($templates as $key => $val) {
+                $selected = "";
+                if($this->getButtonTemplate() == $key) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$key' $selected>$val</option>";
+            }
+            ?>
         </select>
     </div>
     

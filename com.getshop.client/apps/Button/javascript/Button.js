@@ -3,12 +3,25 @@ app.Button = {
         $(document).on('click', '.Button .select_product_add_to_cart_button_setup', app.Button.setProduct);
         $(document).on('click', '.Button .shop_button_saveNewText', app.Button.saveText);
         $(document).on('click', '.Button .save_external_page_setup_button', app.Button.saveExternalPage);
+        $(document).on('keyup', '.Button .buttontext', app.Button.saveButtonText);
+        $(document).on('change', '.Button #layoutonbutton', app.Button.saveButtonTemplate);
         $(document).on('change', '.Button #setup_button_search_field', app.Button.searchForProducts);
         $(document).on('change', '.Button #setup_button_type_selector', app.Button.show);
         $(document).on('keyup', '.Button #filter_pages_list', app.Button.filterPages);
         $(document).on('click', '.Button .select_button_set_link_to_internal_page', app.Button.selectInternalPage);
     },
-    
+    saveButtonTemplate : function() {
+        var text = $(this).val();
+        thundashop.Ajax.simplePost($(this), 'saveButtonTemplate', {
+            "text" : text
+        });
+    },
+    saveButtonText : function() {
+        var text = $(this).val();
+        thundashop.Ajax.simplePost($(this), 'saveText', {
+            "text" : text
+        });
+    },
     saveExternalPage: function() {
         var data = {
             link: $('.Button #button_link_to_external_url').val()
@@ -84,13 +97,6 @@ app.Button = {
                 {
                     icontype: "awesome",
                     icon: "fa-edit",
-                    iconsize : "30",
-                    title: __f("Change text of button"),
-                    click: app.Button.changeText
-                },
-                {
-                    icontype: "awesome",
-                    icon: "fa-gear",
                     iconsize : "30",
                     title: __f("Setup button"),
                     click: app.Button.setupButton

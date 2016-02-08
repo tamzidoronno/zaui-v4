@@ -5,7 +5,9 @@
  */
 package com.thundashop.core.getshoplock;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
 
 /**
  *
@@ -13,6 +15,8 @@ import com.thundashop.core.common.GetShopApi;
  * @author boggi
  */
 @GetShopApi
-public class IGetShopLockManager {
+public interface IGetShopLockManager {
     
+    @Administrator
+    public String pushCode(String id, String door, String code, Date start, Date end) throws Exception;
 }

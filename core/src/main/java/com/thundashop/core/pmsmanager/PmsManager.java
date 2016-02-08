@@ -728,7 +728,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(endDate.after(room.date.end)) {
                 endDate = room.date.end;
             }
-            int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
             
             if(room.invoicedTo != null && startDate.before(room.invoicedTo)) {
                 startDate = room.invoicedTo;
@@ -736,6 +735,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             if(filter.onlyEnded && room.date.end.after(filter.endInvoiceAt)) {
                 continue;
+            }
+            
+            if(!filter.prepayment) {
+                if(room.invoicedTo == null && (new Date().before(endDate))) {
+                    continue;
+                }
             }
             
             if(sameDayOrAfter(room.invoicedTo, endDate)) {
@@ -751,6 +756,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
             
+            int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
             if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
                 int numberOfDays = getNumberOfDays(room, startDate, endDate);
                 if(numberOfDays == 0) {

@@ -32,7 +32,7 @@ class Company extends \SystemApplication implements \Application {
                 <span class="title"><?php echo $this->__f("Selected company"); ?></span>
                 <?
                     $companies = $this->getApi()->getUserManager()->getAllCompanies();
-                    echo "<select class='gsschangeusercompany' gs_model_attr='companyid' gs_model='companymodel'>";
+                    echo "<select class='gsschangeusercompany backsideselect' gs_model_attr='companyid' gs_model='companymodel'>";
                     echo "<option value=''>Set a company</option>";
                     foreach($companies as $company) {
                         $sel = "";

@@ -130,6 +130,8 @@ public class Page extends DataCommon implements Cloneable {
     public void finalizeSlavePage(Page masterPage) {
         if (masterPage != null) {
             layout = masterPage.layout.jsonClone();
+            leftSideBar = masterPage.leftSideBar;
+            leftSideBarName = masterPage.leftSideBarName;
             
             for (String cellId : overrideApps.keySet()) {
                 String instanceId = overrideApps.get(cellId);

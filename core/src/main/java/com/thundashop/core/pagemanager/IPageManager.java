@@ -356,4 +356,7 @@ public interface IPageManager {
 
     @Administrator
     public void toggleLeftSideBar(String pageId, String columnName) throws ErrorException;
+    
+    @Editor
+    public List<String> getLeftSideBarNames();
 }

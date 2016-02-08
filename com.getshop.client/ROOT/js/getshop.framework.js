@@ -62,7 +62,11 @@ thundashop.framework = {
         $(document).on('click', '.gs_closecarouselsettings', this.closeCarouselSettings);
         $(document).on('click', '.gs_start_template_button', this.startTemplateClicked);
         $(document).on('click', '.gs_toggle_advanced_mode', this.toggleAdvancedMode);
-        $(document).on('click', '.gs_toggle_sidebar', this.toggleSideBar);
+        $(document).on('mouseenter', '.gs_toggle_sidebar', this.toggleSideBarShow);
+        $(document).on('mouseleave', '.gs_toggle_sidebar', this.toggleSideBarHide);
+        $(document).on('mouseleave', '.gs_toggle_sidebar .left_sidebars', this.toggleSideBarHide2);
+        $(document).on('click', '.gs_toggle_sidebar .togle_named_sidebar', this.toggleSideBar);
+        $(document).on('change', '.gs_toggle_sidebar input', this.createSideBar);
         $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
         $(document).on('keyup', '.gsautosave', this.autoSaveText);
@@ -127,8 +131,33 @@ thundashop.framework = {
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
     
+    createSideBar: function() {
+        var postEvent = thundashop.Ajax.createEvent(null, "toggleSideBar", this, { name : $(this).val()});
+        thundashop.Ajax.post(postEvent, function() {
+            window.location = window.location;
+        });
+    },
+    
+    toggleSideBarShow: function() {
+        $(this).find('.left_sidebars').show();
+    },
+    
+    toggleSideBarHide2: function(e) {
+        if (($(e.target).hasClass('left_sidebars'))) {
+            $(e.target).hide();
+        }
+    },
+    
+    toggleSideBarHide: function(e) {
+        if($(e.target).closest('.left_sidebars').length) {
+            return;
+        }
+        
+        $(this).find('.left_sidebars').hide();
+    },
+    
     toggleSideBar: function() {
-        var postEvent = thundashop.Ajax.createEvent(null, "toggleSideBar", this, {});
+        var postEvent = thundashop.Ajax.createEvent(null, "toggleSideBar", this, { name : $(this).attr('sidebarname')});
         thundashop.Ajax.post(postEvent);
     },
     

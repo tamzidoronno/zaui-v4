@@ -111,6 +111,19 @@ if (!$user->address) {
         </div>
     </div>
     
+    <div class="textfield gss_setting"  id="showHiddenFields">
+        <span class="title"><?php echo $this->__f("Can change layout on page?"); ?></span>
+        <div class="gss_onoff" gs_model="usermodel" gs_model_attr="canChangeLayout">
+            <?
+            $faclass = $user->canChangeLayout ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?> "></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("Activating this on the admin allows him/her to change the layout on the page, this requires more advance knowledge of the GetShop framework."); ?>
+        </div>
+    </div>
+    
     <div class="textfield gss_setting"  >
         <span class="title"><?php echo $this->__f("Show logout counter"); ?></span>
         <div class="gss_onoff" gs_model="usermodel" gs_model_attr="showLogoutCounter">

@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -746,7 +747,12 @@ public class PageManager extends ManagerBase implements IPageManager {
     public void toggleLeftSideBar(String pageId, String columnName) throws ErrorException {
         Page page = pages.get(pageId);
         if (page != null) {
-            page.leftSideBar = !page.leftSideBar;
+            if (!page.leftSideBarName.equals(columnName)) {
+                page.leftSideBar = true;
+            } else {
+                page.leftSideBar = !page.leftSideBar;
+            }
+            
             page.leftSideBarName = columnName;
             
             if (commonPageData.leftSideBars.get(columnName) == null) {
@@ -802,6 +808,15 @@ public class PageManager extends ManagerBase implements IPageManager {
         savedCommonPageData.backupCurrentLayout(page.id, page.layout);
         savedCommonPageData.saveData(commonPageData);
         saveObject(savedCommonPageData);
+    }
+
+    @Override
+    public List<String> getLeftSideBarNames() {
+        Set<String> names = new TreeSet();
+        pages.values().stream()
+                .forEach( o -> names.add(o.leftSideBarName));
+        
+        return new ArrayList(names);
     }
 
     

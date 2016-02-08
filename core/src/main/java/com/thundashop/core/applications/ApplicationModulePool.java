@@ -81,7 +81,7 @@ class ApplicationModulePool {
         eventBooking.id = "eventbooking";
         eventBooking.faIcon = "fa-calendar";
         eventBooking.description = "Booking for events.";
-        modules.put(booking.id, eventBooking);
+        modules.put(eventBooking.id, eventBooking);
         
         ApplicationModule sedoxPerformance = new ApplicationModule();
         sedoxPerformance.moduleName = "Sedox Performance";

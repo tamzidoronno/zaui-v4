@@ -991,7 +991,7 @@ class ApplicationManager extends FactoryBase {
     
     public function toggleSideBar() {
         $pageId = $this->getFactory()->getPage()->getId();
-        $this->getApi()->getPageManager()->toggleLeftSideBar($pageId, "another");
+        $this->getApi()->getPageManager()->toggleLeftSideBar($pageId, $_POST['data']['name']);
     }
 }
 ?>

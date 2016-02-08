@@ -38,8 +38,13 @@ class Page {
         $gs_page_type = $this->javapage->type;
         
         $editormodeclass = "";
+        $canChangeLayout = "";
         if($this->factory->isEditorMode()) {
             $editormodeclass = "gseditormode";
+        }
+        
+        if(@\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->canChangeLayout) {
+            $canChangeLayout = "gscanchangelayout";
         }
 
         
@@ -56,7 +61,7 @@ class Page {
         }
         
         
-        echo "<div class='gsbody_inner $editormodeclass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn' userTimeout='$timeout'>";
+        echo "<div class='gsbody_inner $editormodeclass $canChangeLayout' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn' userTimeout='$timeout'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
             $edited = $this->printArea($layout->areas->{'header'}, true);
@@ -967,6 +972,7 @@ class Page {
         if ($this->editCarouselForMobile()) {
             $hideBg = "data-hideouterbg='true'";
         }
+        
         ?>
         <span class='gscaraouselmenu'>
             <div class='gscaraouselmenuheader'><? echo $this->factory->__w("Carousel menu"); ?></div>
@@ -1237,7 +1243,7 @@ class Page {
             return false;
         }
 
-        if($depth <= 1) {
+        if($depth <= 1 && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->canChangeLayout) {
             echo "<div style='position:absolute;width:100%; bottom: -1px;' class='gscellbox' cellid='" . $cell->cellId . "'>";
             echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
             echo "<div class='gscellboxheader'>";
@@ -1310,7 +1316,7 @@ class Page {
         if($this->factory->isMobile()) {
             return;
         }
-        if ($depth < 1 && !$edit && $this->factory->isEditorMode()) {
+        if ($depth < 1 && !$edit && $this->factory->isEditorMode() && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->canChangeLayout) {
             $target = "";
             if ($parent && $parent->mode == "TAB") {
                 $target = "target='container'";

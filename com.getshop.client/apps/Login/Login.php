@@ -117,7 +117,7 @@ class Login extends \SystemApplication implements \Application {
     }
     
     /**
-     * @return core_usermanager_data_User
+     * @return \core_usermanager_data_User
      */
     public static function getUserObject() {
         if (!isset($_SESSION['loggedin'])) {

@@ -2472,6 +2472,9 @@ padding: 2px; }
 
 .gsbody_inner.gseditormode {
     margin-left: 61px;
+}
+
+.gsbody_inner.gscanchangelayout {
     margin-right: 30px;
     border-right: solid 1px #DDD;
 }
@@ -2578,3 +2581,21 @@ select.gsniceselect1:active {
 .gsdropspot_right { background-color: #fff; right: 0px; position:absolute; color:#000; }
 .gsselectionbox { border: solid 1px; width: 100%; text-align: center; background-color:#fff; color:#000; z-index: 200; position:absolute; left: 0px; }
 .gspositioner { position:relative;  }
+
+.gs_toggle_sidebar {
+    position: relative;
+}
+.left_sidebars {
+    position: absolute;
+    left: 60px;
+    padding: 10px;
+    border: solid 1px;
+    top: -1px;
+    background-color: #009ec3;    
+    display: none;
+}
+
+.left_sidebars .togle_named_sidebar {
+    line-height: 25px;
+    border-bottom: solid 1px #88Aec3;
+}

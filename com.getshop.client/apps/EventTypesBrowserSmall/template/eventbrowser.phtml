@@ -1,0 +1,8 @@
+<?
+/* @var $this ns_7e6c4a3f_d0d6_4096_84cc_a5829c93581d\EventBrowserSmall */
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getBookingEgineName());
+
+foreach ($types as $type) {
+    echo "<div class='eventtype'><a href='/?page=$type->pageId'>$type->name</a></div>";
+}
+?>

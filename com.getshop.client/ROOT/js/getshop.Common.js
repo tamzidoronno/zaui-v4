@@ -1214,8 +1214,9 @@ setTimeout(thundashop.common.checkTimeout, timeCheckMs);
 
 var resizeLeftBar = function() {
     if ($(".left_side_bar").length) {
-        var windowHeight = $(window).height() - $('.gsarea[area="header"]').outerHeight() - $('.gsarea[area="footer"]').outerHeight();
+        var windowHeight = $(document).height() - $('.gsarea[area="header"]').outerHeight() - $('.gsarea[area="footer"]').outerHeight();
         var gsAreaHeight = $('.gs_main_column').height();
+//        debugger;
         if (windowHeight > gsAreaHeight) {
             $(".left_side_bar").css("min-height", windowHeight+"px");
         } else {

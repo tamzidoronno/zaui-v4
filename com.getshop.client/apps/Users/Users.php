@@ -75,6 +75,7 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $user->fullName = $_POST['name'];
         $user->cellPhone = $_POST['phone_number'];
         $user->showHiddenFields = $_POST['showHiddenFields'];
+        $user->canChangeLayout = $_POST['canChangeLayout'];
         $user->showLoguotCounter = $_POST['showLogoutCounter'];
         $user->prefix = $_POST['prefix'];
         $user->type = 10;

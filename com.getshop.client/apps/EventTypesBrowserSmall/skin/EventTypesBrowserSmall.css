@@ -1,0 +1,5 @@
+.EventTypesBrowserSmall .eventtype {
+    border-bottom: solid 1px #DDD;
+    line-height: 40px;
+    padding-left: 20px;
+}

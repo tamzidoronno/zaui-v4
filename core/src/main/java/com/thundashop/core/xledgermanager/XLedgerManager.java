@@ -58,6 +58,8 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
             if(order.status == Order.Status.SEND_TO_INVOICE) {
                 List<String> lines = createOrderLine(order);
                 allOrdersToReturn.addAll(lines);
+                order.status = Order.Status.PAYMENT_COMPLETED;
+                orderManager.saveOrder(order);
             }
         }
         return allOrdersToReturn;
@@ -95,10 +97,11 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
                 toAdd.put(40, company.address.address);
                 toAdd.put(42, company.address.postCode);
                 toAdd.put(43, company.address.city);
-                
-                toAdd.put(46, company.invoiceAddress.address);
-                toAdd.put(48, company.invoiceAddress.postCode);
-                toAdd.put(49, company.invoiceAddress.city);
+                if(company.invoiceAddress != null) {
+                    toAdd.put(46, company.invoiceAddress.address);
+                    toAdd.put(48, company.invoiceAddress.postCode);
+                    toAdd.put(49, company.invoiceAddress.city);
+                }
             } else {
                 toAdd.put(34, user.fullName);
                 if(user.address != null) {
@@ -116,9 +119,8 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
                 }
                 resultLine += entry + ";";
             }
-            resultLine += "EOL";
+            resultLine += "EOL\r\n";
             allLines.add(resultLine);
-            System.out.println(resultLine);
             linenumber++;
         }
         return allLines;
@@ -171,7 +173,7 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
                  result += ";";
              }
          }
-         result += "EOL\n\r";
+         result += "EOL\r\n";
          return result;
     }
 

@@ -412,14 +412,4 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
     $(function() {
         FastClick.attach(document.body);
     });
-    
-    <?
-    if ($factory->isSeoActivated()) {
-    ?>
-    jQuery(window).load(function() {
-        thundashop.common.goToPage("");
-    });
-    <?
-    }
-    ?>
 </script>

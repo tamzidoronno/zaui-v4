@@ -147,9 +147,13 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <meta name="keywords" content="<? echo $javapage->metaKeywords; ?>">
         <meta name="title" content="<? echo $javapage->metaTitle; ?>">
         
-        <script <? echo $factory->includeSeo(); ?> type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script <? echo $factory->includeSeo(); ?> type="text/javascript" src=""></script>
         <?php
-        $html = init($factory);
+        if ($factory->isSeoActivated()) {
+            $html = "Loading....";
+        } else {
+            $html = init($factory);
+        }
         $pageDescription = $factory->getPage()->javapage->description;
         if (@$factory->getStore()->favicon) {
             echo '<link rel="icon" href="/favicon.ico?r='.rand(0,1000).'" />';
@@ -407,5 +411,9 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
     thundashop.common.triggerTimeoutCheck();
     $(function() {
         FastClick.attach(document.body);
+    });
+    
+    jQuery(window).load(function() {
+        thundashop.common.goToPage("");
     });
 </script>

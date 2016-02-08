@@ -5,6 +5,9 @@ app.PmsBookingProductList = {
         $(document).on('change', '.PmsBookingProductList .roomcountselection', app.PmsBookingProductList.selectRoomCount);
     },
     continueToPage : function() {
+        if($(this).hasClass('disabled')) {
+            return;
+        }
         var attr = $(this).attr('next_page');
         window.location.href=attr;
     },

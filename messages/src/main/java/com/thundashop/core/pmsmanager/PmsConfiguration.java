@@ -35,6 +35,7 @@ public class PmsConfiguration extends DataCommon {
     public String defaultStart = "15:00";
     public String defaultEnd = "12:00";
     
+    public String locktype = "";
     public String arxHostname = "";
     public String arxUsername = "";
     public String arxPassword = "";

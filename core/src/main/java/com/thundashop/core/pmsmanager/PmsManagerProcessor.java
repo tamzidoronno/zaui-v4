@@ -4,6 +4,7 @@ import com.ibm.icu.util.Calendar;
 import com.thundashop.core.arx.AccessCategory;
 import com.thundashop.core.arx.Card;
 import com.thundashop.core.arx.Person;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,50 +62,12 @@ public class PmsManagerProcessor {
         }
     }
 
-    private boolean pushToArx(PmsBookingRooms room, boolean deleted) {        
-        room.code = generateCode(room.code);
-        Person person = new Person();
-        person.firstName = room.guests.get(0).name.split(" ")[0];
-        if(room.guests.get(0).name.split(" ").length > 1) {
-            person.lastName = room.guests.get(0).name.split(" ")[1];
+    private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
+        if(manager.configuration.locktype.isEmpty() || manager.configuration.locktype.equals("arx")) {
+            return pushToArx(room, deleted);
+        } else {
+            return pushToGetShop(room, deleted);
         }
-        
-        if(manager.configuration.arxCardFormat == null || manager.configuration.arxCardFormat.isEmpty()) {
-            System.out.println("Card format not set yet");
-            return false;
-        }
-        
-        Card card = new Card();
-        card.format = manager.configuration.arxCardFormat;
-        card.cardid = room.code;
-        
-        person.cards.add(card);
-        person.id = room.pmsBookingRoomId;
-        person.deleted = deleted;
-        
-        AccessCategory category = new AccessCategory();
-        String alias = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemAlias;
-        category.name = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
-        if(alias != null && !alias.isEmpty()) {
-            category.name = alias;
-        }
-        category.startDate = room.date.start;
-        category.endDate = room.date.end;
-        
-        person.accessCategories.add(category);
-        
-        try {
-            manager.arxManager.overrideCredentials(manager.configuration.arxHostname,
-                    manager.configuration.arxUsername,
-                    manager.configuration.arxPassword);
-                    
-            manager.arxManager.updatePerson(person);
-        }catch(Exception e) {
-            e.printStackTrace();
-            manager.warnArxDown();
-            return false;
-        }
-        return true;
     }
 
     private void processEndings(int hoursAhead, int maxAhead) {
@@ -166,12 +129,14 @@ public class PmsManagerProcessor {
                 if(room.guests.isEmpty()) {
                     PmsGuests guest = new PmsGuests();
                     User user = manager.userManager.getUserById(booking.userId);
-                    guest.name = user.fullName;
-                    room.guests.add(guest);
+                    if(user != null) {
+                        guest.name = user.fullName;
+                        room.guests.add(guest);
+                    }
                 }
                 
                 if(room.isStarted() && !room.addedToArx && !room.isEnded()) {
-                    if(pushToArx(room, false)) {
+                    if(pushToLock(room, false)) {
                         room.addedToArx = true;
                         save = true;
                         manager.doNotification("room_added_to_arx", booking, room);
@@ -179,7 +144,7 @@ public class PmsManagerProcessor {
                 }
                 
                 if(room.isEnded() && room.addedToArx) {
-                    if(pushToArx(room, true)) {
+                    if(pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;
                         manager.doNotification("room_removed_from_arx", booking, room);
@@ -311,6 +276,75 @@ public class PmsManagerProcessor {
         cal.add(Calendar.MONTH, monthsToAdd);
         
         return cal.getTime();
+    }
+
+    private boolean pushToArx(PmsBookingRooms room, boolean deleted) {
+        room.code = generateCode(room.code);
+        Person person = new Person();
+        person.firstName = room.guests.get(0).name.split(" ")[0];
+        if(room.guests.get(0).name.split(" ").length > 1) {
+            person.lastName = room.guests.get(0).name.split(" ")[1];
+        }
+        
+        if(manager.configuration.arxCardFormat == null || manager.configuration.arxCardFormat.isEmpty()) {
+            System.out.println("Card format not set yet");
+            return false;
+        }
+        
+        Card card = new Card();
+        card.format = manager.configuration.arxCardFormat;
+        card.cardid = room.code;
+        
+        person.cards.add(card);
+        person.id = room.pmsBookingRoomId;
+        person.deleted = deleted;
+        
+        AccessCategory category = new AccessCategory();
+        String alias = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemAlias;
+        category.name = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+        if(alias != null && !alias.isEmpty()) {
+            category.name = alias;
+        }
+        category.startDate = room.date.start;
+        category.endDate = room.date.end;
+        
+        person.accessCategories.add(category);
+        
+        try {
+            manager.arxManager.overrideCredentials(manager.configuration.arxHostname,
+                    manager.configuration.arxUsername,
+                    manager.configuration.arxPassword);
+                    
+            manager.arxManager.updatePerson(person);
+        }catch(Exception e) {
+            e.printStackTrace();
+            manager.warnArxDown();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean pushToGetShop(PmsBookingRooms room, boolean deleted) {
+        room.code = generateCode(room.code);
+        BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
+        if(item== null) {
+            return false;
+        }
+        String roomName = item.bookingItemName;
+        if(item.bookingItemAlias != null && !item.bookingItemAlias.isEmpty()) {
+            roomName = item.bookingItemAlias;
+        }
+        String result = "";
+        try {
+            PmsConfiguration config = manager.getConfiguration();
+            manager.getShopLockManager.setCredentials(config.arxUsername, config.arxPassword, config.arxHostname);
+            result = manager.getShopLockManager.pushCode(room.pmsBookingRoomId, roomName, room.code, room.date.start, room.date.end);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return result.equals("OK");
+        
     }
     
 }

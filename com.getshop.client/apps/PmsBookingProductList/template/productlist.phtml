@@ -11,6 +11,7 @@ $booking = $this->getCurrentBooking();
 </div>
 <?php
 
+$numberSelected = 0;
 foreach($rooms as $room) {
     /* @var $room core_pmsmanager_Room */
     $selected = "";
@@ -21,12 +22,14 @@ foreach($rooms as $room) {
             $bookedCount++;
         }
     }
-    
+    if($numberSelected < $bookedCount) {
+        $numberSelected = $bookedCount;
+    }
+
     
     $start = $this->convertToJavaDate($this->getStartDate());
     $end = $this->convertToJavaDate($this->getEndDate());
     $availability = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $room->type->id, $start, $end);
-    
     ?>
     <div class='productentry <? echo $selected; ?>'>
         <?
@@ -80,3 +83,10 @@ foreach($rooms as $room) {
 <div class='continue_button_outer'>
     <div class='continue_button' next_page="<? echo $this->getText("next_page"); ?>"><? echo $this->getText("next_button"); ?></div>
 </div>
+<?php
+if($numberSelected == 0) {
+    echo "<script>";
+    echo "$('.continue_button').addClass('disabled');";
+    echo "</script>";
+}
+?>

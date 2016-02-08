@@ -70,13 +70,17 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
         for($i = 0; $i < $_POST['data']['count']; $i++) {
             $room = new \core_pmsmanager_PmsBookingRooms();
             $room->bookingItemTypeId = $_POST['data']['typeid'];
+            $room->date = new \core_pmsmanager_PmsBookingDateRange();
             
-            
-            $start = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionStartDate)) . " " . $config->defaultStart);
-            $end = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionEndDate)) . " " . $config->defaultEnd);
+            if($this->getCurrentBooking()->sessionStartDate) {
+                $start = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionStartDate)) . " " . $config->defaultStart);
+                $room->date->start = $this->convertToJavaDate($start);
+            }
+            if($this->getCurrentBooking()->sessionEndDate) {
+                $end = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionEndDate)) . " " . $config->defaultEnd);
+                $room->date->end = $this->convertToJavaDate($end);
+            }
 
-            $room->date->start = $this->convertToJavaDate($start);
-            $room->date->end = $this->convertToJavaDate($end);
             $newRooms[] = $room;
         }
         

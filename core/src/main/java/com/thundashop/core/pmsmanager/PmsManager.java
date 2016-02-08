@@ -29,6 +29,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -90,6 +91,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     ProductManager productManager;
+    
+    @Autowired
+    GetShopLockManager getShopLockManager;
     
     private String specifiedMessage = "";
     
@@ -178,9 +182,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             System.out.println("Warning, no session set yet");
         }
         PmsBooking result = findBookingForSession();
+        
         if(result == null) {
-            return startBooking();
+            result = startBooking();
         }
+        
+        if(result.sessionStartDate != null && result.sessionStartDate.after(result.sessionEndDate)) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(result.sessionStartDate);
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            result.sessionEndDate = cal.getTime();
+        }
+        
+
         return result;
     }
 
@@ -528,7 +542,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if(type != null) {
                         String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;                    
                         if(productId != null) {
-                            room.taxes = productManager.getProduct(productId).taxGroupObject.taxRate;
+                            if(productManager.getProduct(productId).taxGroupObject != null) {
+                                room.taxes = productManager.getProduct(productId).taxGroupObject.taxRate;
+                            }
                         }
                     }
                 }

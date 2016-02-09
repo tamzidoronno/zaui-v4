@@ -29,7 +29,7 @@
     foreach($monthDates as $week => $days) {
         $weekRow = "<div class='{weekrow}'>";
         $selectedWeek = "";
-        $weekRow .= "<span class='day weekentry'>$week</span>";
+        $weekRow .= "<span class='day weekentry' gstype='clicksubmit' method='setCalendarWeek' gsname='week' gsvalue='$week'>$week</span>";
         for($i = 1; $i <= 7; $i++) {
             $css = "";
             $day="";

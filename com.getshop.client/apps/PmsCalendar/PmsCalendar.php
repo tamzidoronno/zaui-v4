@@ -193,7 +193,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         if($type == "week" || $type == "month") {
             echo "<span class='weekdaycontainer weektimeheader'>";
             echo "<span class='weektimeheaderinner'>";
-            echo "<div>" . $this->__w(date('l', $day)) . "</div>";
+            echo "<div>" . date('d', $day) . ". " . $this->__w(date('l', $day)) . "</div>";
             echo "<span style='float:left; padding-left: 5px; font-size: 8px;'>".date("H.i", $this->getStartTime($day)) ."</span>";
             echo "<span style='float:right;padding-right: 5px; font-size: 8px;'>".date("H.i", $this->getEndTime($day)) ."</span>";
             echo "</span>";
@@ -201,6 +201,17 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         }
     }
 
+    public function setCalendarWeek() {
+        $week = $_POST['data']['week'];
+        $year = $this->getSelectedYear();
+        $_SESSION['calday'] = $this->getStartOfWeek($week, $year);
+        $_SESSION['calendardaytype'] = "week";
+    }
+    
+    function getStartOfWeek($week, $year) {
+        return strtotime($year."W".$week."1"); // First day of week
+    }
+    
     public function printCalendar() {
         /* @var $this \ns_d925273e_b9fc_480f_96fa_8fb8df6edbbe\PmsBookingCalendar */
        $selectedDate = $this->getSelectedDay();

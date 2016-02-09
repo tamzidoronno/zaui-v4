@@ -1,0 +1,69 @@
+<?php
+/* @var $this \ns_139d9335_2353_48fe_aae5_abc4268fc14e\PmsDayOverview */
+$filter = $this->getSelectedFilter(true);
+$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+$items = $this->indexList($items);
+echo "<h1>Checking in today</h1>";
+echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+echo "<tr>";
+echo "<th>Room</th>";
+echo "<th>Bookers name</th>";
+echo "<th>Guest name</th>";
+echo "<th>Guest phone</th>";
+echo "<th>Guest email</th>";
+echo "</tr>";
+
+foreach($bookings as $booking) {
+    $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+    foreach($booking->rooms as $room) {
+        echo "<tr>";
+        echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td><td>" . $user->fullName . "</td>";
+        echo "<td>" . $room->guests[0]->name . "</td>";
+        echo "<td>" . $room->guests[0]->phone . "</td>";
+        echo "<td>" . $room->guests[0]->email . "</td>";
+        echo "</tr>";
+    }
+}
+echo "</table>";
+
+
+$filter = $this->getSelectedFilter(false);
+$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+$items = $this->indexList($items);
+if(!$bookings) {
+    $bookings = array();
+}
+echo "<h1>Checking out today</h1>";
+echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+echo "<tr>";
+echo "<th>Room</th>";
+echo "<th>Bookers name</th>";
+echo "<th>Guest name</th>";
+echo "<th>Guest phone</th>";
+echo "<th>Guest email</th>";
+echo "</tr>";
+
+foreach($bookings as $booking) {
+    $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+    foreach($booking->rooms as $room) {
+        echo "<tr>";
+        echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td><td>" . $user->fullName . "( " . $user->cellPhone . ")". "</td>";
+        echo "<td>" . $room->guests[0]->name . "</td>";
+        echo "<td>" . $room->guests[0]->phone . "</td>";
+        echo "<td>" . $room->guests[0]->email . "</td>";
+        echo "</tr>";
+    }
+}
+echo "</table>";
+
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+echo "<br><br>";
+echo "Current code is: " . $config->extraField . "<br>";
+?>
+<div gstype="form" method="updatecode">
+    <input type="txt" gsname="code">
+    <input type="button" gstype="submit" value="Set new code">
+</div>
+<br><br>

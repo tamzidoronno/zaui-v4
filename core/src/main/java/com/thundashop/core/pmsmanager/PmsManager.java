@@ -963,6 +963,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         message = formater.formatContactData(message, userManager.getUserById(booking.userId), null);
         message = formater.formatBookingData(message, booking, bookingEngine);
         
+        message = message.replace("{extrafield}", configuration.extraField);
+
+        
         return message;
     }
 

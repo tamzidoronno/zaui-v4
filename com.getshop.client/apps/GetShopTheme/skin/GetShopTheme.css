@@ -148,7 +148,7 @@ body {
 .PmsBookingContactData .complete_button,
 .PmsBookingCalendar .calendar .calendar_header,
 .PmsBooking .pmsfront .fa-calendar
-{ background-color: #3e3ed7 !important; }
+{ background-color: #8f8fab !important; }
 
 .Menu .entries .entries a div { color:#000 !important; }
 .PmsBookingCalendar .calendar .day { border: solid 1px #efefef; }

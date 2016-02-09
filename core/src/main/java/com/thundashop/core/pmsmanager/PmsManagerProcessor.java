@@ -359,7 +359,11 @@ public class PmsManagerProcessor {
         try {
             PmsConfiguration config = manager.getConfiguration();
             manager.getShopLockManager.setCredentials(config.arxUsername, config.arxPassword, config.arxHostname);
-            result = manager.getShopLockManager.pushCode(room.pmsBookingRoomId, roomName, room.code, room.date.start, room.date.end);
+            if(deleted) {
+                result = manager.getShopLockManager.removeCode(room.pmsBookingRoomId);
+            } else {
+                result = manager.getShopLockManager.pushCode(room.pmsBookingRoomId, roomName, room.code, room.date.start, room.date.end);
+            }
         }catch(Exception e) {
             e.printStackTrace();
         }

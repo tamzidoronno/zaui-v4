@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import static com.thundashop.core.arx.ArxManager.wrapClient;
 import com.thundashop.core.usermanager.data.User;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -99,6 +100,13 @@ public class GetShopLockManager {
         id = URLEncoder.encode(id, "UTF-8");
         
         String address = "http://"+hostname+":8080/storecode/"+door+"/"+id+"/"+startString+"/"+endString+"/" + code;
+        System.out.println("Executing: " + address);
+        return this.httpLoginRequest(address, username, password);
+    }
+
+    public String removeCode(String pmsBookingRoomId) throws Exception {
+        String id = URLEncoder.encode(pmsBookingRoomId, "UTF-8");
+        String address = "http://"+hostname+":8080/deletekey/"+id;
         System.out.println("Executing: " + address);
         return this.httpLoginRequest(address, username, password);
     }

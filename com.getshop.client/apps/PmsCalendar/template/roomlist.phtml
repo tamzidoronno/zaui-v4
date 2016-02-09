@@ -12,19 +12,28 @@ $f = $this->__w("Thursday");
 $f = $this->__w("Friday");
 $f = $this->__w("Saturday");
 $f = $this->__w("Sunday");
+
+
+$withSideBar = "";
+if(!$this->isItemPage()) {
+    $withSideBar = "withSideBar";
+}
+
+
 ?>
 <span class="timeselectionpanel">
     Fra <span class="startTime"></span> til <span class="endTime"></span>
 </span>
-<div class='calendartopheader'>
-    <h2><?php echo $this->getConfigurationSetting("headingroomoverview"); ?></h2>
+<div class='calendartopheader <?php echo $withSideBar; ?>'>
+    <h2>&nbsp;<?php echo $this->getConfigurationSetting("headingroomoverview"); ?></h2>
     <?php 
     if($type != "month") {
         $this->includefile("tinycalendar"); 
     }
     ?>
     <div style='padding-top: 70px;'>
-        <div>
+        <div style="position:relative">
+            <span style="position:absolute;left:5px;">Start med å velge ønsket tidspunkt i kalenderen -<br>du kan klikk og dra for å velge et lengre tidsrom.</span>
         <?php
             echo "<span class='typebutton "; if($type =="day") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='day'>Dag</span>";
             echo "<span class='typebutton "; if($type =="week") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='week'>Uke</span>";
@@ -60,7 +69,6 @@ $f = $this->__w("Sunday");
             <div class='statedesrow'><span class='statedescbox notconfirmed'></span> Ikke bekreftet</div>
             <div class='statedesrow'><span class='statedescbox available'></span> Tilgjengelig</div>
             <div class='statedesrow'><span class='statedescbox not_available'></span> Ikke tilgjenglig</div>
-            <div class='statedesrow'><span class='statedescbox selected_periode2'></span> Valgt</div>
         </span>
     </div>
 </div>
@@ -146,16 +154,18 @@ if($type == "month") {
                 $imgId = $this->getImageFromPage($room->id);
             ?>
                 <span class='roomdescouter roomdesc_<? echo $type; ?>'>
-                    <span class='roomdesc'>
-                        <img src='displayImage.php?id=<? echo $imgId; ?>'>
-                        <span class='roomattributes'>
-                            <span class='roomname'><? echo $room->bookingItemName; ?></span><br>
-                            <?php if($size > 0) { ?>
-                                <span class='roomcap'>Kap: <? echo $size; ?> personer.</span><br>
-                            <?php } ?>
-                            <span class='roomequipment'><? echo $desc; ?></span>
-                            <span class='readmorelink'><a href='?page=<? echo $room->id; ?>'><? echo $this->__w("Read more"); ?></a></span>
-                        </span>
+                    <a href='?page=<? echo $room->id; ?>'>
+                        <span class='roomdesc'>
+                            <img src='displayImage.php?id=<? echo $imgId; ?>'>
+                            <span class='roomattributes'>
+                                <span class='roomname'><? echo $room->bookingItemName; ?></span><br>
+                                <?php if($size > 0) { ?>
+                                    <span class='roomcap'>Kap: <? echo $size; ?> personer.</span><br>
+                                <?php } ?>
+                                <span class='roomequipment'><? echo $desc; ?></span>
+                                <span class='readmorelink'><? echo $this->__w("Read more"); ?></span>
+                            </span>
+                        </a>
                     </span>
                 </span>
                 <?php

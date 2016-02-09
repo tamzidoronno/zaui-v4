@@ -1,6 +1,7 @@
 .PmsCalendar .typebutton { border: solid 1px #bbb; font-size: 12px; width: 50px; text-align: center; display:inline-block; padding: 3px; cursor:pointer; background-color:#efefef; }
 .PmsCalendar .typebutton.selected { background-color:#bbb; font-weight: bold; }
 .PmsCalendar .calendartopheader { text-align: center; height: 180px; position:relative; }
+.PmsCalendar .calendartopheader.withSideBar { padding-left: 216px; }
 .PmsCalendar .day { display:inline-block; width: 20px; height: 20px; font-size: 12px;line-height: 20px; cursor:pointer; }
 .PmsCalendar .dayentry:hover { background-color:#36328c !important; border-radius: 3px; color:#fff !important; }
 .PmsCalendar .dayentry.selected { font-weight: bold; color:#87edb0 !important; }
@@ -14,7 +15,7 @@
     transition: background-color 0.2s ease;
 }
 .PmsCalendar .available:hover { background-color:#bae9fd; cursor:pointer; }
-.PmsCalendar .selected_periode,.PmsCalendar .selected_periode2 { background-color: #1392e9 !important; }
+.PmsCalendar .selected_periode,.PmsCalendar .selected_periode2 { background-color: #ed70ec !important; }
 .PmsCalendar .continue_button { border: solid 1px #bbb;  width: 200px; text-align: center; display:inline-block; padding: 10px; }
 .PmsCalendar .calendarfooter { text-align: right; cursor:pointer; padding-right: 5px; padding-top: 20px; }
 .PmsCalendar .timeselectionpanel { display: none; position:fixed; border: solid 1px #bbb; background-color:#fff; border-radius: 2px; padding: 3px; font-size: 16px;  }
@@ -65,3 +66,4 @@
 .PmsCalendar .not_available { background-color: #cbcbcb; }
 .PmsCalendar .day.disabled { color:#bbb; cursor:inherit !important; }
 .PmsCalendar .day.disabled:hover { cursor:inherit !important;  }
+.PmsCalendar .readmorelink { position:absolute; right: 5px; bottom: 5px; }

@@ -203,7 +203,12 @@ public class PmsManagerProcessor {
                 
                 if(room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                     manager.autoAssignItem(room);
+                    save = true;
                 }
+            }
+            if(save) {
+                manager.finalize(booking);
+                manager.saveBooking(booking);
             }
         }
     }
@@ -275,7 +280,7 @@ public class PmsManagerProcessor {
             if(booking.isDeleted) {
                 toRemove.add(booking);
             }
-            if(booking.sessionId != null) {
+            if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 toRemove.add(booking);
             }
             if(!booking.confirmed) {

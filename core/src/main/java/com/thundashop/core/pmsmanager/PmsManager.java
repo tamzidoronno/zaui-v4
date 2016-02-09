@@ -507,7 +507,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return finalize(booking);
     }
 
-    private PmsBooking finalize(PmsBooking booking) {
+    public PmsBooking finalize(PmsBooking booking) {
         if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
             Calendar nowCal = Calendar.getInstance();
             nowCal.add(Calendar.HOUR_OF_DAY, -4);
@@ -1909,8 +1909,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
          });
         
-        room.bookingItemId = items.get(0).id;
-        room.bookingItemTypeId = items.get(0).bookingItemTypeId;
+        BookingItem item = items.get(0);
+        room.bookingItemId = item.id;
+        room.bookingItemTypeId = item.bookingItemTypeId;
+        
+        if(room.bookingId != null) {
+            bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
+        }
     }
 
 }

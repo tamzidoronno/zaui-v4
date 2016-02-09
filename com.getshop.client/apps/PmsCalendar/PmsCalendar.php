@@ -432,6 +432,26 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         return $this->bookingRules;
     }
 
+    public function getAllRoomsSorted() {
+        $rooms = $this->getAllRooms();
+        $sortList = array();
+        $unsorted = array();
+        foreach($rooms as $item) {
+            if($item->order == 0) {
+                $unsorted[] = $item;
+            } else {
+                $sortList[$item->order] = $item;
+            }
+        }
+
+        ksort($sortList);
+
+        foreach($unsorted as $item) {
+            $sortList[] = $item;
+        }
+        return $sortList;
+    }
+
 }
 
 ?>

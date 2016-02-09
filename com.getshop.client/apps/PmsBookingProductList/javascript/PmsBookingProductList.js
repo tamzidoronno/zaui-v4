@@ -9,7 +9,7 @@ app.PmsBookingProductList = {
             return;
         }
         var attr = $(this).attr('next_page');
-        window.location.href=attr;
+        thundashop.common.goToPageLink(attr);
     },
     selectRoom : function() {
         var data = {

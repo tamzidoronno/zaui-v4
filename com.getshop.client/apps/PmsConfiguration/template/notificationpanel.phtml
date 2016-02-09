@@ -322,7 +322,7 @@ $whenToPay[4] = "After stay";
                     ?>
                 </select>
             </span>
-            Lock hostname
+            Lock Type
         </div>
         <div class='configrow'>
             <span class='configentry'>
@@ -347,6 +347,12 @@ $whenToPay[4] = "After stay";
                 <input type='text' gsname='arxCardFormat' value='<? echo $notificationSettings->arxCardFormat; ?>'>
             </span>
             Kort format
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='text' gsname='codeSize' value='<? echo $notificationSettings->codeSize; ?>'>
+            </span>
+            Code size (on the code sent to the user)
         </div>
     </div>
     <br><br>

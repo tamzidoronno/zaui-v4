@@ -168,7 +168,15 @@ public class PmsManagerProcessor {
         }
         
         for(int i = 0; i < 100000; i++) {
-            Integer newcode = new Random().nextInt(999999-100000)+100000;
+            int start = 1;
+            int end = 10;
+            for(int j = 0; j < manager.configuration.codeSize-1; j++) {
+                start *= 10;
+                end *= 10;
+            }
+            end = end - 1;
+            
+            Integer newcode = new Random().nextInt(end-start)+start;
             if(!codeExist(newcode)) {
                 return newcode.toString();
             }

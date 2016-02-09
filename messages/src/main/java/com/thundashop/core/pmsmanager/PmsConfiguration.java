@@ -40,4 +40,5 @@ public class PmsConfiguration extends DataCommon {
     public String arxUsername = "";
     public String arxPassword = "";
     public String arxCardFormat = "";
+    public Integer codeSize = 4;
 }

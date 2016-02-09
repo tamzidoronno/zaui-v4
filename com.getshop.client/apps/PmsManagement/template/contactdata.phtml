@@ -113,7 +113,20 @@ if(sizeof($booking->registrationData->contactsList) > 0) {
     <h2>User data</h2>
     <div style='padding-left: 10px;'>
         <span class='roomprefix'>User id</span>
-        <span class='roompostfix'><a onclick="thundashop.common.hideInformationBox();app.Users.gssinterface.showUser('<? echo $user->id; ?>')"><? echo $user->customerId; ?></a></span>
+        <span class='roompostfix'><a onclick="thundashop.common.hideInformationBox();app.Users.gssinterface.showUser('<? echo $user->id; ?>')"><? echo $user->customerId; ?></a><br>
+            <?php
+            if(!$user->cellPhone) {
+                $user->prefix = "";
+                $user->cellPhone = "no phone set";
+            }
+            if(!$user->emailAddress) {
+                $user->emailAddress = "no email set";
+            }
+            ?>
+            <span style="font-size:12px">
+                Name: <? echo $user->fullName; ?>, <? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>
+            </span>
+        </span>
         <div style='clear:both;'></div>
         
         <div style='clear:both;'></div>
@@ -131,6 +144,20 @@ if(sizeof($booking->registrationData->contactsList) > 0) {
                 echo '<a onclick="thundashop.common.hideInformationBox();app.Company.gssinterface.showCompany(\''.$companyId.'\')">';
                 echo $company->name;
                 echo '</a>';
+                echo "<br><span style='font-size:12px'>";
+                echo "Email: ";
+                if($company->email) {
+                     $company->email;
+                } else {
+                    echo "No email";
+                }
+                echo ", phone: ";
+                if($company->phone) {
+                    echo "+" . $company->prefix . $company->phone;
+                } else {
+                    echo "Missing phone";
+                }
+                echo "</span>";
             }
             ?></span>
             <div style='clear:both;'></div>

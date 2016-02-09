@@ -25,6 +25,20 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function setNewSorting() {
+        $i = 1;
+        foreach($_POST['data']['sortlist'] as $itemid) {
+            $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $itemid);
+            $item->order = $i;
+            $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
+            $i++;
+       }
+    }
+    
+    public function configureItemSorting() {
+        $this->includefile("itemsorting");
+    }
+    
     public function configureOpeningHours() {
         $this->includefile("addmoredates");
     }

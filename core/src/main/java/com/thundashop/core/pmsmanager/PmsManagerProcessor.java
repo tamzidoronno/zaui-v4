@@ -14,12 +14,14 @@ import org.joda.time.LocalDate;
 
 public class PmsManagerProcessor {
     private final PmsManager manager;
+    private Date lastProcessed;
 
     PmsManagerProcessor(PmsManager manager) {
         this.manager = manager;
     }
     
     public void doProcessing() {
+        long start = System.currentTimeMillis();
         processStarting(0, 24*1);
         processStarting(24, 24*2);
         processStarting(48, 24*3);
@@ -31,6 +33,9 @@ public class PmsManagerProcessor {
             processArx();
         }
         processOrdersToCreate();
+        long end = System.currentTimeMillis();
+        long diff = end - start;
+        System.out.println(diff);
     }
 
     private void processStarting(int hoursAhead, int maxAhead) {
@@ -197,13 +202,17 @@ public class PmsManagerProcessor {
                 }
                 
                 if(room.bookingItemId == null || room.bookingItemId.isEmpty()) {
-                    manager.bookingEngine.autoAssignItem(room.bookingId);
+                    manager.autoAssignItem(room);
                 }
             }
         }
     }
 
     private void processOrdersToCreate() {
+        if(manager.lastOrderProcessed != null && isSameDay(manager.lastOrderProcessed, new Date())) {
+            return;
+        }
+        
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for(PmsBooking booking : bookings) {
             if(booking.isEndedOverTwoMonthsAgo()) {
@@ -212,6 +221,7 @@ public class PmsManagerProcessor {
             
             createPeriodeInvoices(booking);
         }
+        manager.lastOrderProcessed = new Date();
     }
 
     private void createPeriodeInvoices(PmsBooking booking) {
@@ -228,7 +238,7 @@ public class PmsManagerProcessor {
 
             
         } else {
-            System.out.println("Only supporting postpayments for the time being");
+//            System.out.println("Only supporting postpayments for the time being");
         }
     }
 
@@ -256,14 +266,20 @@ public class PmsManagerProcessor {
 
 
     private List<PmsBooking> getAllConfirmedNotDeleted() {
-        List<PmsBooking> res = manager.getAllBookings(null);
+        List<PmsBooking> res = new ArrayList(manager.bookings.values());
         List<PmsBooking> toRemove = new ArrayList();
         for(PmsBooking booking : res) {
-            if(!booking.confirmed) {
-//                toRemove.add(booking);
+            if(booking.rooms == null) {
+                toRemove.add(booking);
             }
             if(booking.isDeleted) {
-//                toRemove.add(booking);
+                toRemove.add(booking);
+            }
+            if(booking.sessionId != null) {
+                toRemove.add(booking);
+            }
+            if(!booking.confirmed) {
+                toRemove.add(booking);
             }
         }
         res.removeAll(toRemove);

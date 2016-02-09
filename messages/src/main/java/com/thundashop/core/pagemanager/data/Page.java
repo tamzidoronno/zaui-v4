@@ -159,7 +159,6 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public List<PageCell> getMobileList() {
-         System.out.println("Mobile list for id: " + id);
        return layout.getMobileBody();
     }
 

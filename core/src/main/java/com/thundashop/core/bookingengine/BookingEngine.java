@@ -167,10 +167,6 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         return !canAdd;
     }
 
-    public void autoAssignItem(String bookingId) {
-        System.out.println("This need to give the booking a booking item");
-    }
-
     /**
      * @TODO Add unit tests to this, and make sure it returns number of available items for the given type in the given time periode.
      * @param itemType
@@ -218,5 +214,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     public List<BookingItem> getBookingItemsByType(String typeId) {
         return bookingEngineAbstract.getBookingItemsByType(typeId);
+    }
+
+    public List<BookingItem> getAvailbleItems(String typeId, Date start, Date end) {
+        return bookingEngineAbstract.getAvailbleItems(typeId, start, end);
     }
 }

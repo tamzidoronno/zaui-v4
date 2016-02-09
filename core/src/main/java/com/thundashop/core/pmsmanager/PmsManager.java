@@ -96,6 +96,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     GetShopLockManager getShopLockManager;
     
     private String specifiedMessage = "";
+    Date lastOrderProcessed;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -735,9 +736,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         cartManager.clear();
 
         boolean foundInvoice = false;
-        
         for(PmsBookingRooms room : booking.rooms) {
-            Double price = null;
+            Double price = null; 
 
             Date startDate = filter.startInvoiceFrom;
             if(startDate.before(room.date.start)) {
@@ -1898,6 +1898,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         commentToAdd.comment = comment;
         booking.comments.put(new Date().getTime(), commentToAdd);
         saveBooking(booking);
+    }
+
+
+    void autoAssignItem(PmsBookingRooms room) {
+        List<BookingItem> items = bookingEngine.getAvailbleItems(room.bookingItemTypeId, room.date.start, room.date.end);
+        Collections.sort(items, new Comparator<BookingItem>(){
+            public int compare(BookingItem o1, BookingItem o2){
+               return o1.order.compareTo(o2.order);
+            }
+         });
+        
+        room.bookingItemId = items.get(0).id;
+        room.bookingItemTypeId = items.get(0).bookingItemTypeId;
     }
 
 }

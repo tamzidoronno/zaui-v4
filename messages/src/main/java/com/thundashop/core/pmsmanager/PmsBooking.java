@@ -101,6 +101,16 @@ public class PmsBooking extends DataCommon {
         }
         return endDate;
     }
+    
+    Date getStartDate() {
+        Date startDate = null;
+        for(PmsBookingRooms room : rooms) {
+            if(startDate == null || room.date.start.before(startDate)) {
+                startDate = room.date.start;
+            }
+        }
+        return startDate;
+    }
 
     boolean isEndedOverTwoMonthsAgo() {
         Date ended = getEndDate();
@@ -116,6 +126,7 @@ public class PmsBooking extends DataCommon {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
         return fmt.format(date1).equals(fmt.format(date2));
     }
+
 
     public static class PriceType {
         public static Integer daily = 1;

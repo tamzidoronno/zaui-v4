@@ -114,5 +114,7 @@ public interface IPmsManager {
     
     @Administrator
     public void addComment(String bookingId, String comment);
-
+    
+    @Administrator
+    public String createPrepaymentOrder(String bookingId);
 }

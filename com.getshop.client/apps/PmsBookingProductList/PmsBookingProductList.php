@@ -133,7 +133,10 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
 
     public function getImagesFromPage($pageId) {
         $apps = $this->getApi()->getPageManager()->getApplicationsForPage($pageId);
-        $imgIds = "";
+        $imgIds = [];
+        if(!$apps) {
+            $apps= array();
+        }
         foreach($apps as $app) {
             $res = $this->getFactory()->getApplicationPool()->createAppInstance($app);
             if($res instanceOf \ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a\ImageDisplayer) {

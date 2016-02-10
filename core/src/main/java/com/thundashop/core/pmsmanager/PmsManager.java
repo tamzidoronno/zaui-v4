@@ -302,16 +302,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         try {
             result = completeBooking(bookingsToAdd, booking);
+            
             if(result == 0) {
-                if(!booking.confirmed) {
-                    doNotification("booking_completed", booking, null);
-                } else {
-                    doNotification("booking_confirmed", booking, null);
+                if(!configuration.prepayment) {
+                    if(!booking.confirmed) {
+                        doNotification("booking_completed", booking, null);
+                    } else {
+                        doNotification("booking_confirmed", booking, null);
+                    }
                 }
             }
            
             try {
-                processor();
+                if(!configuration.prepayment) {
+                    processor();
+                }
             }catch(Exception e) {
                 e.printStackTrace();
             }
@@ -321,7 +326,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             e.printStackTrace();
             return -1;
         }
-        
+    }
+    
+    @Override
+    public String createPrepaymentOrder(String bookingId) {
+        PmsBooking booking = getBooking(bookingId);
+        NewOrderFilter filter = new NewOrderFilter();
+        filter.prepayment = true;
+        filter.startInvoiceFrom = booking.getStartDate();
+        filter.endInvoiceAt = booking.getEndDate();
+        Order order = createOrder(booking, filter);
+        return order.id;
     }
 
     private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking) throws ErrorException {
@@ -1911,14 +1926,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                return o1.order.compareTo(o2.order);
             }
          });
-        
-        BookingItem item = items.get(0);
-        room.bookingItemId = item.id;
-        room.bookingItemTypeId = item.bookingItemTypeId;
-        
-        if(room.bookingId != null) {
-            bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
+        if(items.isEmpty()) {
+            System.out.println("No items available?");
+        } else {
+            BookingItem item = items.get(0);
+            room.bookingItemId = item.id;
+            room.bookingItemTypeId = item.bookingItemTypeId;
+
+            if(room.bookingId != null) {
+                bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
+            }
         }
     }
-
 }

@@ -4,6 +4,14 @@ $filter = $this->getSelectedFilter(true);
 $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 $items = $this->indexList($items);
+
+?>
+<span gstype="form" method="changeDate">
+    <input type="date" value="<?php echo date('Y-m-d', $this->getSelectedDate()); ?>" gsname="date">
+    <input type="button" gstype="submit" value="Change date">
+</span>
+<?php
+
 echo "<h1>Checking in today</h1>";
 echo "<table width='100%' cellspacing='0' cellpadding='0'>";
 echo "<tr>";

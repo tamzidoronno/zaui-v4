@@ -269,6 +269,7 @@ thundashop.common.goToPageLink = function(link, callback) {
         }
     }
     thundashop.Ajax.doJavascriptNavigation(link, null, callback);
+    $(window).scrollTop(0);
 }
 
 thundashop.common.selectPredefinedConent = function() {

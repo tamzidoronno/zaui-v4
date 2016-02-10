@@ -78,4 +78,4 @@ box-shadow: 0 4px 5px rgba(0,0,0,0.3); ;
 
 .PmsCalendar .dayslot.free:hover, .PmsCalendar .dayentry:hover, .PmsCalendar .roomentry:hover { background-color:inherit !important; color:rgba(0,0,0,0.8) !important; }
 .PmsCalendar .dayentry.selected { font-weight: bold !important; color:#000 !important; }
-.PmsCalendar .continue_button, .PmsBookingContactData .complete_button { background-color:#ed70ec; }
+.PmsBookingContactData .complete_button { background-color:#ed70ec; }

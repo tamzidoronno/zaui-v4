@@ -1,84 +1,28 @@
 <?php
 /* @var $this ns_ed7efba0_de37_4cd8_915b_cc7be10b8b8b\PmsBookingProductList */
-
-$rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), 
-        $this->convertToJavaDate($this->getStartDate()), 
-        $this->convertToJavaDate($this->getEndDate()));
-$booking = $this->getCurrentBooking();
+$rooms = $this->getRooms();
+$booking = $this->getBookings();
 ?>
 <div class='continue_button_outer'>
     <div class='continue_button' next_page="<? echo $this->getText("next_page"); ?>"><? echo $this->getText("next_button"); ?></div>
 </div>
 <?php
-
 $numberSelected = 0;
 foreach($rooms as $room) {
-    /* @var $room core_pmsmanager_Room */
-    $selected = "";
-    $bookedCount = 0;
+     $bookedCount = 0;
     foreach($booking->rooms as $bookedroom) {
         /* @var $product core_pmsmanager_PmsBookingRooms */
         if($bookedroom->bookingItemTypeId == $room->type->id) {
             $bookedCount++;
         }
     }
+    /* @var $room core_pmsmanager_Room */
     if($numberSelected < $bookedCount) {
         $numberSelected = $bookedCount;
     }
-
-    
-    $start = $this->convertToJavaDate($this->getStartDate());
-    $end = $this->convertToJavaDate($this->getEndDate());
-    $availability = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $room->type->id, $start, $end);
-    ?>
-    <div class='productentry <? echo $selected; ?>'>
-        <?
-        if($availability == 0) {
-            $text = $this->getText("no_rooms_available");
-            if(!$text) {
-                $text = "We are out of this type of room, select a different one.";
-            }
-        } else {
-            $text = $this->getText("selected_room_count_text");
-            if(!$text) {
-                $text = "You have selected {count} of this room type";
-            }
-
-            $dropdown = "<select class='roomcountselection' typeid='".$room->type->id."'>";
-            for($i = 0;$i <= $availability;$i++) {
-               $selected = "";
-               if($i == $bookedCount) {
-                    $selected = "SELECTED";
-               }
-                $dropdown .= "<option value='$i' $selected>$i</option>"; 
-            }
-            $dropdown .= "</select>";
-
-            $text = str_replace("{count}", $dropdown, $text);
-        }
-        ?>
-        <span class='roomtypeselection'>
-            <?php echo $text; ?>
-        </span>
-    <span class='name'><? echo $room->type->name; ?></span>
-    <?php if($room->price > 0 && $booking->priceType != 8) { ?>
-        <span class='price'><? echo round($room->price); ?>,-</span>
-    <?php } ?>
-    <?php if($booking->priceType == 8) { 
-        $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(),$this->convertToJavaDate(time()),$this->convertToJavaDate(time()));
-        $progPrice = $prices->progressivePrices->{$room->type->id};
-        echo "<span class='price'>";
-        echo "Første " . (($progPrice[0]->numberOfTimeSlots)/7)." uker ". $progPrice[0]->price . " kr per dag.";
-        if($progPrice[2]->price) {
-            echo "<br>Mellom " . ($progPrice[0]->numberOfTimeSlots/7) . " og " . (($progPrice[0]->numberOfTimeSlots+$progPrice[1]->numberOfTimeSlots))/7 . " uker " . $progPrice[1]-> price. " kr per dag.";
-            echo "<br>Over " . (($progPrice[0]->numberOfTimeSlots+$progPrice[1]->numberOfTimeSlots))/7 . " uker " . $progPrice[2]->price . " kr per dag.";
-        }
-        echo "</span>";
-        ?>
-    <?php } ?>
-    </div>
-    <?php
 }
+
+$this->includefile("productlist1");
 ?>
 <div class='continue_button_outer'>
     <div class='continue_button' next_page="<? echo $this->getText("next_page"); ?>"><? echo $this->getText("next_button"); ?></div>

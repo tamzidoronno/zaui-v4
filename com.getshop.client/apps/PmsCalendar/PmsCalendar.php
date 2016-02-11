@@ -103,6 +103,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                 $bookingId = $this->currentBooking;
             }
             
+            $title = str_replace("\"", "&QUOT;", $title);
+            $title = str_replace("'", "&apos;", $title);
+            
             echo "<span class='$loadBookingOnClick outerblock $size' style='width: $width%' bookingid='$bookingId' instanceid='$instanceId'>";
             echo "<span class='timeblock $state' startTime='$startTime' "
                     . "endTime='$endTime' "

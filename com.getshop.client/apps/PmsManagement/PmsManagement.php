@@ -4,6 +4,7 @@ namespace ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a;
 class PmsManagement extends \WebshopApplication implements \Application {
     private $selectedBooking;
     private $types = null;
+    private $users = array();
     public $errors = array();
     private $checkedCanAdd = array();
     
@@ -439,6 +440,49 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 ?>
             </select>
         <?php
+    }
+    
+    public function showLog() {
+        $filter = new \core_pmsmanager_PmsLog();
+        $filter->bookingId = $_POST['data']['bookingid'];
+        $log = $this->getApi()->getPmsManager()->getLogEntries($this->getSelectedName(), $filter);
+        $this->printLog($log);
+    }
+
+    /**
+     * @param \core_pmsmanager_PmsLog[] $entries
+     */
+    public function printLog($entries) {
+        echo "<br><br>";
+        echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+        echo "<tr>";
+        echo "<th width='110'>Date</th>";
+        echo "<th width='110'>User</th>";
+        echo "<th>Logtext</th>";
+        echo "</tr>";
+        
+        foreach($entries as $entry) {
+            echo "<tr>";
+            echo "<td valign='top'>" . date("d.m.Y H:i", strtotime($entry->dateEntry)) . "</td>";
+            echo "<td valign='top'>" . $this->getUsersName($entry->userId) . "</td>";
+            echo "<td valign='top'>" . $entry->logText . "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    }
+
+    public function getUsersName($userId) {
+        if(!$userId) {
+            return "";
+        }
+        
+        if(isset($this->users[$userId])) {
+            return $this->users[$userId]->fullName;
+        }
+        
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        $this->users[$userId] = $user;
+        return $user->fullName;
     }
 
 }

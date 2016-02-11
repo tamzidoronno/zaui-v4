@@ -12,6 +12,17 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .resetnotifications', app.PmsManagement.resetnotifications);
         $(document).on('keyup','.PmsManagement .newroomstart', app.PmsManagement.updateRoomList);
         $(document).on('keyup','.PmsManagement .newroomend', app.PmsManagement.updateRoomList);
+        $(document).on('click','.PmsManagement .showlog', app.PmsManagement.showlog);
+    },
+    showlog: function () {
+        var data = {
+            "bookingid" : $(this).attr('bookingid')
+        }
+        
+        var event = thundashop.Ajax.createEvent('','showLog',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('#logarea').html(result);
+        });
     },
     resetnotifications : function() {
         var event = thundashop.Ajax.createEvent('','resetnotifications',$(this), {

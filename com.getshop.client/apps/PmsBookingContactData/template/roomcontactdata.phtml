@@ -97,7 +97,7 @@ echo "<div class='whenTypeIsSelected'>";
 if($config2->needToAgreeOnContract) {
     echo "<div>";
     echo "<span class='col-50'><div style='padding-bottom: 5px;'><input type='checkbox' gsname='agreetoterms'> ". $this->__w("I agree to the terms and conditions");
-      echo "<span class='errordesc'>";
+      echo "<span class='errordesc' style='font-size: 20px;'>";
         if(isset($this->validation['agreetoterms'])) {
             echo "* " . $this->validation['agreetoterms'];
         } else {

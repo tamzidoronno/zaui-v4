@@ -184,6 +184,7 @@ thundashop.framework = {
                 return;
             }
         }
+        var corScroll = $('.informationbox-outer').scrollTop();
         var form = $(this).closest('[gstype="form"]');
         var data = thundashop.framework.createGsArgs(form);
         
@@ -195,6 +196,7 @@ thundashop.framework = {
         var event = thundashop.Ajax.createEvent('',method,$(this),data);
         var title = $('#informationboxtitle').text();
         thundashop.common.showInformationBoxNew(event, title);
+        $('.informationbox-outer').scrollTop(corScroll);
     },
     
     resetMobileLayout : function() {

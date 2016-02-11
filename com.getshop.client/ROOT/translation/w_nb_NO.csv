@@ -79,6 +79,7 @@ Company postcode;-;Firmaet postnummer
 Company's invoice email;-;Firmaets epost for faktura
 Company's main email;-;Firmaet hoved epost adresse
 Company's website;-;Firmaets webside
+Configure item sorting;-;Konfigurer item sortering
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
 Connect this to a product;-;Koble denne til et produkt
@@ -104,6 +105,7 @@ Customer information;-;Kunde detaljer
 Daily;-;Daglig
 Date;-;Dato
 Day;-;Dag
+Day(s);-;Dag(er)
 December;-;Desember
 Default contact person for company;-;Default kontakt person
 Delete;-;Slett
@@ -361,6 +363,7 @@ Shipping;-;Utsendelse
 Shipping cost;-;Fraktkostnader
 Shipping price;-;Forendelse pris
 Short description;-;Kort beskrivelse
+Show log;-;Vi logg
 Sign up;-;Registrer deg
 Sign up with facebook;-;Logg inn me facebook
 Sign up with google;-;Logg inn med google
@@ -463,6 +466,7 @@ You are now in edit mode for this row, from this manipulate your row by adding m
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You got rooms that are not available in the selected time periode.;-;Det er rom som ikke er tilgjenglig i valgt periode.
 You have been inactive to long and due to security reasons you will now be logged out.;-;Du har vært inaktiv for lenge, og på grunn av sikkerhetsmessige årsaker vil du nå bli logget ut.
+You need to agree to the terms and conditions;-;Du må godta bruksvilkårene før du kan fortsette.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your email;-;Din epost
 Your message has been delivered;-;Din melding har blitt sendt.

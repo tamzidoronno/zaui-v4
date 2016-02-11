@@ -183,7 +183,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         }
         
         if(isset($_POST['data']['agreetoterms']) && $_POST['data']['agreetoterms'] != "true") {
-            $this->validation['agreetoterms'] = "You need to agree to the terms and conditions";
+            $this->validation['agreetoterms'] = $this->__w("You need to agree to the terms and conditions");
         }
         
         return true;

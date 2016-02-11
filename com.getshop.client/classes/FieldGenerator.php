@@ -33,7 +33,7 @@ class FieldGenerator {
         echo "<input type='checkbox' gsname='displayGuestData' $checked style='float:right;'>";
         echo "Display guest information";
         echo "</div>";
-echo "<br>";        
+        echo "<br>";
         $checked = "";
         if($rules->displayContactsList) {
             $checked = "CHECKED";
@@ -87,7 +87,20 @@ echo "<br>";
         
         echo "<h1>Additional fields</h1>";
         $this->printAdditionalFields($rules);
-        echo "<input type='button' gstype='submit' value='Save configuration' gsname='saveConfiguration'>";
+        
+        $fields = [];
+        $fields[] = "alna";
+        $fields[] = "furuset";
+        
+        echo "<h2>Who should this form be saved to</h2>";
+        foreach($fields as $field => $name) {
+            $checked = "";
+            if($name == $this->name) {
+                $checked = "CHECKED";
+            }
+            echo "<input type='checkbox' gsname='bookingengine_" . $name . "' $checked> $name<br>";
+        }
+        echo "<input type='button' gstype='submit' value='Save configuration' gsname='saveConfiguration'><br><br>";
         echo "</div>";
     }
     

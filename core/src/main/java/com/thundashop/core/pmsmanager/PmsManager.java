@@ -696,7 +696,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for(PmsGuests guest : room.guests) {
                 HashMap<String, String> result = validatePhone("+" + guest.prefix + "" + guest.phone, "no");
                 if(result != null) {
-                    guest.prefix = result.get("prefix");
+                    guest.prefix = result.get("prefix").replace("+", "");
                     guest.phone = result.get("phone");
                 }
             }

@@ -90,3 +90,5 @@
 .PmsManagement .typefilter { display:inline-block; min-width: 100px; }
 .PmsManagement .commentbottom { color:#bbb; font-size: 10px; }
 .PmsManagement .commentfield { max-height: 250px; width: 100%; display: inline-block; overflow-y: scroll; margin-top: 20px; }
+.PmsManagement .edituserbox { display:none; position:absolute; width: 300px; }
+.PmsManagement .edituserbox input, .PmsManagement .edituserbox select { width: 250px; box-sizing: border-box;}

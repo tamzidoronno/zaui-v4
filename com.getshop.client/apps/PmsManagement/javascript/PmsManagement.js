@@ -13,6 +13,22 @@ app.PmsManagement = {
         $(document).on('keyup','.PmsManagement .newroomstart', app.PmsManagement.updateRoomList);
         $(document).on('keyup','.PmsManagement .newroomend', app.PmsManagement.updateRoomList);
         $(document).on('click','.PmsManagement .showlog', app.PmsManagement.showlog);
+        $(document).on('click','.PmsManagement .closeadduser', app.PmsManagement.closeadduser);
+        $(document).on('change','.PmsManagement .changeuseronbooking', app.PmsManagement.changeuseronbooking);
+    },
+    changeuseronbooking : function() {
+        var data = {
+            "userid" : $(this).val(),
+            "bookingid" : $(this).attr('bookingid')
+        };
+        var corScroll = $('.informationbox-outer').scrollTop();
+        var event = thundashop.Ajax.createEvent('','changeBookingOnEvent', $(this), data);
+        thundashop.common.showInformationBoxNew(event);
+        $('.informationbox-outer').scrollTop(corScroll);
+        
+    },
+    closeadduser : function() {
+        $('.PmsManagement .edituserbox').fadeOut();
     },
     showlog: function () {
         var data = {

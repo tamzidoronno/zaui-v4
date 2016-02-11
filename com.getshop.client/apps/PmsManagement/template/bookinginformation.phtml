@@ -38,7 +38,6 @@ if(!$booking->confirmed) {
 }
 
 echo "<div class='bookinginfo'>";
-echo "Created at " . date("d.m.Y H:i", strtotime($booking->rowCreatedDate)) . "<br><br>";
 $this->includefile("contactdata");
 echo "<div style='clear:both;'></div>";
 $this->includefile("roomsbooked");

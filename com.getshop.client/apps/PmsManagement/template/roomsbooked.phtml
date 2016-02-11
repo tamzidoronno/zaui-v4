@@ -79,7 +79,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
 
     <?php
     foreach ($rooms as $room) {
-        echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
+//        echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
         /* @var $room core_pmsmanager_PmsBookingRooms */
         $date = $room->date;
         ?>
@@ -243,7 +243,6 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                         </span>
                     </span>
                 </td>
-            <? } ?>
                 <td>
                     <span class='roomattribute'>
                         <span class='roompostfix'>
@@ -259,6 +258,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                         </span>
                     </span>
                 </td>
+            <? } ?>
                 <td>
                     <? 
                     if($room->invoicedTo) {

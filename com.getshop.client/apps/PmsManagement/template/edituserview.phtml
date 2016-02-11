@@ -1,0 +1,44 @@
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$booking = $this->getSelectedBooking();
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$allUsers = $this->getApi()->getUserManager()->getAllUsers();
+if(!$user->address) {
+    $user->address = new core_usermanager_data_Address();
+}
+?>
+<div class="edituserbox" gstype='form' method='saveUser'>
+    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+    <table cellspacing='0' cellpadding='0'>
+        <tr><th></th><th></th></tr>
+        <tr>
+            <td>Change user</td>
+            <td>
+                <select class='changeuseronbooking' bookingid='<?php echo $booking->id; ?>'>
+                    <option value="newuser">Create a new user</option>
+                <?php
+                foreach($allUsers as $user2) {
+                    $selected = "";
+                    if($user2->id == $user->id) {
+                        $selected = "SELECTED";
+                    }
+                    $email = "";
+                    if($user2->emailAddress) {
+                        $email = " (" . $user2->emailAddress . ")";
+                    }
+                    echo "<option value='" . $user2->id . "' " . $selected.'>'.$user2->fullName . $email . "</option>";
+                }
+                ?>
+                </select>
+            </td>
+        </tr>
+        <tr><td>Fullname</td><td><input type="txt" gsname="fullName" value="<?php echo $user->fullName; ?>"></td><tr>
+        <tr><td>Prefix</td><td><input type="txt" gsname="prefix" value="<?php echo $user->prefix; ?>"></td><tr>
+        <tr><td>Phone</td><td><input type="txt" gsname="cellPhone" value="<?php echo $user->cellPhone; ?>"></td><tr>
+        <tr><td>Email</td><td><input type="txt" gsname="emailAddress" value="<?php echo $user->emailAddress; ?>"></td><tr>
+        <tr><td>Address</td><td><input type="txt" gsname="address.address" value="<?php echo $user->address->address; ?>"></td><tr>
+        <tr><td>Postcode</td><td><input type="txt" gsname="address.postCode" value="<?php echo $user->address->postCode; ?>"></td><tr>
+        <tr><td>City</td><td><input type="txt" gsname="address.city" value="<?php echo $user->address->city; ?>"></td><tr>
+        <tr><td></td><td><span class='pmsbutton closeadduser' style='background-color:red;'>Close</span> <span class='pmsbutton' gstype='submitToInfoBox'>Save changes</span></td><tr>
+    </table>
+</div>

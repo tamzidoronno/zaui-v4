@@ -30,6 +30,43 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function changeBookingOnEvent() {
+        $booking = $this->getSelectedBooking();
+        if($_POST['data']['userid'] == "newuser") {
+            $user = new \core_usermanager_data_User();
+            $user->fullName = "New user";
+            $newUser = $this->getApi()->getUserManager()->createUser($user);
+            $booking->userId = $newUser->id;
+        } else {
+            $booking->userId = $_POST['data']['userid'];
+        }
+        
+//        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->showBookingInformation();
+
+        echo "<script>";
+        echo "$('.edituserbox').show();";
+        echo "</script>";
+        
+    }
+    
+    public function saveUser() {
+        $selected = $this->getSelectedBooking();
+        $user = $this->getApi()->getUserManager()->getUserById($selected->userId);
+        $user->fullName = $_POST['data']['fullName'];
+        $user->prefix = $_POST['data']['prefix'];
+        $user->emailAddress = $_POST['data']['emailAddress'];
+        $user->cellPhone = $_POST['data']['cellPhone'];
+        if(!$user->address) {
+            $user->address = new \core_usermanager_data_Address();
+        }
+        $user->address->address = $_POST['data']['address.address'];
+        $user->address->postCode = $_POST['data']['address.postCode'];
+        $user->address->city = $_POST['data']['address.city'];
+        $this->getApi()->getUserManager()->saveUser($user);
+        $this->showBookingInformation();
+    }
+    
     public function includeEventCalendar($bookingId) {
         $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("27e174dc-b08c-4bf7-8179-9ea8379c91da");
         if(!$instances) {

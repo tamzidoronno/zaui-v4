@@ -1600,11 +1600,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return toReturn;
     }
 
-    private List<TimeRepeaterDateRange> addRepeatingRooms(PmsRepeatingData data) throws ErrorException {
+    public List<PmsBookingRooms> getRoomsFromRepeaterData(PmsRepeatingData data) {
         TimeRepeater repeater = new TimeRepeater();
         LinkedList<TimeRepeaterDateRange> lines = repeater.generateRange(data.data);
         
-        List<TimeRepeaterDateRange> cantAdd = new ArrayList();
         List<PmsBookingRooms> allRooms = new ArrayList();
         
         for(TimeRepeaterDateRange line : lines) {
@@ -1624,6 +1623,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.bookingItemId = booking.bookingItemId;
             room.bookingItemTypeId =booking.bookingItemTypeId;
             room.addedByRepeater = true;
+            room.booking = booking;
+            booking.externalReference = room.pmsBookingRoomId;
             
             List<Booking> toCheck = new ArrayList();
             toCheck.add(booking);
@@ -1633,12 +1634,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             allRooms.add(room);
         }
-        
+        return allRooms;
+    }
+    
+    private List<TimeRepeaterDateRange> addRepeatingRooms(PmsRepeatingData data) throws ErrorException {
+        List<PmsBookingRooms> allRooms = getRoomsFromRepeaterData(data);
         
         PmsBooking curBooking = getCurrentBooking();
         curBooking.rooms.addAll(allRooms);
         curBooking.lastRepeatingData = data;
         saveBooking(curBooking);
+        List<TimeRepeaterDateRange> cantAdd = new ArrayList();
+        for(PmsBookingRooms room : allRooms) {
+            if(!room.canBeAdded) {
+                TimeRepeaterDateRange cant = new TimeRepeaterDateRange();
+                cant.start = room.date.start;
+                cant.end = room.date.end;
+                cantAdd.add(cant);
+            }
+        }
         
         return cantAdd;
     }
@@ -2082,5 +2096,41 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String convertToStandardTime(Date start) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm");
         return sdf.format(start);
+    }
+
+    @Override
+    public List<PmsBookingRooms> updateRepeatingDataForBooking(PmsRepeatingData data, String bookingId) {
+        PmsBooking booking = getBooking(bookingId);
+        List<PmsBookingRooms> toRemove = new ArrayList();
+        for(PmsBookingRooms room : booking.rooms) {
+            
+            if(room.addedByRepeater) {
+                toRemove.add(room);
+                bookingEngine.deleteBooking(room.bookingId);
+            }
+        }
+        booking.rooms.removeAll(toRemove);
+        
+        List<PmsBookingRooms> rooms = getRoomsFromRepeaterData(data);
+        List<PmsBookingRooms> roomsToReturn = new ArrayList();
+        List<Booking> toAdd = new ArrayList();
+        for(PmsBookingRooms room : rooms) {
+            if(room.canBeAdded) {
+                toAdd.add(room.booking);
+                booking.rooms.add(room);
+            } else {
+                roomsToReturn.add(room);
+            }
+        }
+        
+        bookingEngine.addBookings(toAdd);
+        booking.attachBookingItems(toAdd);
+        
+        booking.lastRepeatingData = data;
+        saveBooking(booking);
+        
+        logEntry("Updated repeating dates", bookingId, null);
+        
+        return roomsToReturn;
     }
 }

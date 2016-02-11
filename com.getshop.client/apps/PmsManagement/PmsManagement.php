@@ -7,6 +7,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $users = array();
     public $errors = array();
     private $checkedCanAdd = array();
+    public $roomTable = "";
     
     public function getDescription() {
         return "Administrate all your bookings from this application";
@@ -568,6 +569,62 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user = $this->getApi()->getUserManager()->getUserById($userId);
         $this->users[$userId] = $user;
         return $user->fullName;
+    }
+
+    
+    /**
+     * @return \core_pmsmanager_PmsBookingRooms
+     */
+    public function getFirstBookedRoom() {
+        $booking = $this->getSelectedBooking();
+        if(isset($booking->rooms[0])) {
+            return $booking->rooms[0];
+        } else {
+            return new \core_pmsmanager_PmsBookingRooms();
+        }
+    }
+
+    public function getRepeatingSummary() {
+        $repeat = new \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary();
+        $repeat->curBooking = $this->getSelectedBooking();
+        return $repeat->getRepeatingSummary();
+    }
+    
+    
+    public function addRepeatingDates() {
+        $repeat = new \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary();
+        $data = $repeat->createRepeatingDateObject();
+        $bookingId = $this->getSelectedBooking()->id;
+        $rooms = $this->getApi()->getPmsManager()->updateRepeatingDataForBooking($this->getSelectedName(), $data, $bookingId);
+        if(!$rooms) {
+            $rooms = array();
+        }
+        $roomTable = "<h1>The following dates could not be added due to fully booked</h1>";
+        $roomTable .= "<table cellspacing='0' cellpadding='0' width='100%'>";
+        $roomTable .= "<tr>";
+        $roomTable .= "<th>Start date</th>";
+        $roomTable .= "<th>End date</th>";
+        $roomTable .= "</tr>";
+        
+        $hasDaysCantBeAdded = false;
+        foreach($rooms as $room) {
+            if(!$room->canBeAdded) {
+                continue;
+            }
+            $hasDaysCantBeAdded = true;
+            $roomTable .= "<tr>";
+            $roomTable .= "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . "</td>";
+            $roomTable .= "<td>" . date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
+            $roomTable .= "</tr>";
+        }
+        $roomTable .= "</table>";
+        
+        if(!$hasDaysCantBeAdded) {
+            $roomTable = "";
+        }
+        $this->roomTable = $roomTable;
+        $this->selectedBooking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
+        $this->showBookingInformation();
     }
 
 }

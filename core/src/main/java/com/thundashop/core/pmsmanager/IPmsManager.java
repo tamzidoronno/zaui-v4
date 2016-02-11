@@ -96,6 +96,9 @@ public interface IPmsManager {
     @Administrator
     public List<PmsLog> getLogEntries(PmsLog filter);
     
+    @Administrator
+    public List<PmsBookingRooms> updateRepeatingDataForBooking(PmsRepeatingData data, String bookingId);
+     
     public PmsConfiguration getConfiguration();
     public void processor();
     public String getCurrenctContract() throws Exception;

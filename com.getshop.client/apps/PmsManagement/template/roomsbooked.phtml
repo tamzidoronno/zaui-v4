@@ -32,6 +32,16 @@ $end = $this->convertToJavaDate(strtotime($dates->end));
     <input type='text' class='newroomend' style='float:left; margin-right: 10px;' value='<?php echo date("d.m.Y H:i", strtotime($end)); ?>' gsname='end'>
     <? $this->includeAddRoomOptions($items, $start, $end); ?>
     <span class='pmsbutton' gstype='submitToInfoBox'>Add room</span>
+    
+    <?php
+    if($config->supportMoreDates) {
+        ?>
+        <span class='repeatdateform'>
+            <?php
+            $this->includefile("addmoredates");
+            ?>
+        </span>
+    <?php } ?>
 </span>
 <br><br>
 
@@ -60,7 +70,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
 <table width='100%' cellspacing='0' cellpadding='0' class='guestoverviewtable'>
     <tr>
         <th width='10'></th>
-        <th width='10'>Type</th>
+        <th>Type</th>
         <th>Room</th>
         <th>Date start</th>
         <th>Date end</th>

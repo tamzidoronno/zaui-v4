@@ -16,7 +16,42 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .closeadduser', app.PmsManagement.closeadduser);
         $(document).on('change','.PmsManagement .changeuseronbooking', app.PmsManagement.changeuseronbooking);
         $(document).on('change','.PmsManagement .changecompanyonuser', app.PmsManagement.changecompanyonuser);
+
+        $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
+        $(document).on('change','.PmsManagement .repeat_type', app.PmsManagement.changeRepeatType);
+        $(document).on('click','.PmsManagement .adddatetype', app.PmsManagement.changeAddDateType);
     },
+    changeRepeatType: function() {
+        var type = $(this).val();
+        $('.repeatrow').hide();
+        if(type !== "0") {
+            $('.repeatrow').show();
+        } 
+        $('.repeateachdaterow').hide();
+        if(type === "1") {
+            $('.repeateachdaterow').show();
+        }
+        
+        $('.repeatoption').hide();
+        $('.repeat_' + type).show();
+    },
+    closeRepeatBox : function() {
+        var box = $('.PmsManagement .addMoredatesPanel');
+        if(box.is(":visible")) {
+            box.slideUp();
+        } else {
+            box.slideDown();
+        }
+    },
+    
+    showRepeatDates : function() {
+        if(!$('.repatingroomlist').is(':visible')) {
+            $('.repatingroomlist').slideDown();
+        } else {
+            $('.repatingroomlist').slideUp();
+        }
+    },
+    
     changeuseronbooking : function() {
         var data = {
             "userid" : $(this).val(),

@@ -15,6 +15,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .showlog', app.PmsManagement.showlog);
         $(document).on('click','.PmsManagement .closeadduser', app.PmsManagement.closeadduser);
         $(document).on('change','.PmsManagement .changeuseronbooking', app.PmsManagement.changeuseronbooking);
+        $(document).on('change','.PmsManagement .changecompanyonuser', app.PmsManagement.changecompanyonuser);
     },
     changeuseronbooking : function() {
         var data = {
@@ -27,8 +28,19 @@ app.PmsManagement = {
         $('.informationbox-outer').scrollTop(corScroll);
         
     },
+    changecompanyonuser : function() {
+        var data = {
+            "companyid" : $(this).val(),
+            "bookingid" : $(this).attr('bookingid')
+        };
+        var corScroll = $('.informationbox-outer').scrollTop();
+        var event = thundashop.Ajax.createEvent('','changeCompanyOnUser', $(this), data);
+        thundashop.common.showInformationBoxNew(event);
+        $('.informationbox-outer').scrollTop(corScroll);
+    },
     closeadduser : function() {
         $('.PmsManagement .edituserbox').fadeOut();
+        $('.PmsManagement .editcompanybox').fadeOut();
     },
     showlog: function () {
         var data = {

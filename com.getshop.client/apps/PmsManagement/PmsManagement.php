@@ -23,11 +23,59 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function saveCompany() {
+        $compid = $_POST['data']['companyid'];
+        $current = $this->getApi()->getUserManager()->getCompany($compid);
+        $current->vatNumber = $_POST['data']['vatNumber'];
+        $current->name = $_POST['data']['name'];
+        $current->email = $_POST['data']['email'];
+        $current->invoiceEmail = $_POST['data']['invoiceEmail'];
+        $current->prefix = $_POST['data']['prefix'];
+        if(!$current->address) {
+            $current->address = new \core_usermanager_data_Address();
+        }
+        $current->address->address = $_POST['data']['address.address'];
+        $current->address->postCode = $_POST['data']['address.postCode'];
+        $current->address->city = $_POST['data']['address.city'];
+        if(!$current->invoiceAddress) {
+            $current->invoiceAddress = new \core_usermanager_data_Address();
+        }
+        $current->invoiceAddress->address = $_POST['data']['invoiceAddress.address'];
+        $current->invoiceAddress->postCode = $_POST['data']['invoiceAddress.postCode'];
+        $current->invoiceAddress->city = $_POST['data']['invoiceAddress.city'];
+        
+        $this->getApi()->getUserManager()->saveCompany($current);
+        $this->showBookingInformation();
+    }
+    
     public function addComment() {
         $id = $_POST['data']['bookingid'];
         $comment = $_POST['data']['comment'];
         $this->getApi()->getPmsManager()->addComment($this->getSelectedName(), $id, $comment);
         $this->showBookingInformation();
+    }
+    
+    public function changeCompanyOnUser() {
+        $booking = $this->getSelectedBooking();
+        $newCompany = null;
+        $compid = $_POST['data']['companyid'];
+        if($compid == "newcompany") {
+            $newCompany = new \core_usermanager_data_Company();
+            $newCompany->name = "New company";
+            $newCompany = $this->getApi()->getUserManager()->saveCompany($newCompany);
+        } else if($compid) {
+            $newCompany = $this->getApi()->getUserManager()->getCompany($_POST['data']['companyid']);
+        }
+        $curuser = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        $curuser->company = array();
+        if($newCompany) {
+            $curuser->company[] = $newCompany->id;
+        }
+        $this->getApi()->getUserManager()->saveUser($curuser);
+        $this->showBookingInformation();
+        echo "<script>";
+        echo '$(".PmsManagement .editcompanybox").fadeIn(function() {$(".editcompanybox select").chosen(); });';
+        echo "</script>";
     }
     
     public function changeBookingOnEvent() {

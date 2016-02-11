@@ -16,7 +16,8 @@
     -webkit-transition: all 0.2s ease-in;
     -o-transition: all 0.2s ease-in;
     transition: all 0.2s ease-in;
-    background-color:#44c767;  }
+    background-color:#44c767;
+}
 .PmsManagement th {
 	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica,
 	sans-serif;
@@ -40,7 +41,6 @@
 }
 .PmsManagement td:nth-child(1) {
     border-left: 1px solid #C1DAD7;
-    text-align: center;
 }
 
 .PmsManagement tr:nth-child(2) {
@@ -92,3 +92,5 @@
 .PmsManagement .commentfield { max-height: 250px; width: 100%; display: inline-block; overflow-y: scroll; margin-top: 20px; }
 .PmsManagement .edituserbox { display:none; position:absolute; width: 300px; }
 .PmsManagement .edituserbox input, .PmsManagement .edituserbox select { width: 250px; box-sizing: border-box;}
+.PmsManagement .editcompanybox { display:none; position:absolute; left: 40%; }
+.PmsManagement .editcompanybox input, .PmsManagement .editcompanybox select { width: 250px; box-sizing: border-box;}

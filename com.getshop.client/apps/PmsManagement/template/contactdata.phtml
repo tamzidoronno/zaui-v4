@@ -131,7 +131,7 @@ if(!$user->fullName) {
             }
             ?>
             <span style="font-size:12px">
-                <a onclick='$(".PmsManagement .edituserbox").fadeIn();'><? echo $user->fullName; ?></a>, <? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>
+                <a onclick='$(".PmsManagement .edituserbox").fadeIn(function() {$(".edituserbox select").chosen(); });'><? echo $user->fullName; ?></a>, <? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>
                 <?php $this->includefile("edituserview"); ?>
             </span>
         </span>
@@ -142,10 +142,10 @@ if(!$user->fullName) {
             <? 
             foreach($user->company as $companyId) {
                 $company = $this->getApi()->getUserManager()->getCompany($companyId);
-                echo '<a onclick="thundashop.common.hideInformationBox();app.Company.gssinterface.showCompany(\''.$companyId.'\')">';
+                echo "<span style='font-size:12px'>";
+                ?><a onclick='$(".PmsManagement .editcompanybox").fadeIn(function() {$(".editcompanybox select").chosen(); });'><?php
                 echo $company->name;
-                echo '</a>';
-                echo "<br><span style='font-size:12px'>";
+                ?></a> <?php
                 echo "Email: ";
                 if($company->email) {
                      $company->email;
@@ -162,7 +162,17 @@ if(!$user->fullName) {
             }
             ?></span>
             <div style='clear:both;'></div>
-        <? } ?>
+        <? } else {
+            ?>
+            <span class='roomprefix'>Company</span>
+            <span class='roompostfix' style="font-size: 12px;">
+                <a onclick='$(".PmsManagement .editcompanybox").fadeIn(function() {$(".editcompanybox select").chosen(); });'>No company connected to this user</a>
+            </span>
+            <div style='clear:both;'></div>
+            <?php
+        } 
+        $this->includefile("companydata");
+        ?>
         <?php if($avtalegiro) { 
             echo "<span class='roomprefix'>Avtalegiro</span>";
             echo "<span class='roompostfix'>";

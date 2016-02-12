@@ -10,7 +10,7 @@ and open the template in the editor.
 
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .gs_page_width {
@@ -139,3 +139,16 @@ body {
     padding-right: 20px;
     padding-left: 20px;
 }
+
+.PmsBooking .pmsfront { background-color:rgba(0,0,0,0.8); color:#fff; border: solid 0px; }
+.PmsBooking .pmsfront .heading { padding-bottom: 10px !important; margin-bottom: 20px; text-transform: uppercase; }
+.PmsBooking .check_available_button,
+.PmsBookingProductList .continue_button,
+.PmsBookingCalendar .calendar .day.selected,
+.PmsBookingContactData .complete_button,
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBooking .pmsfront .fa-calendar
+{ background-color: #8f8fab !important; }
+
+.Menu .entries .entries a div { color:#000 !important; }
+.PmsBookingCalendar .calendar .day { border: solid 1px #efefef; }

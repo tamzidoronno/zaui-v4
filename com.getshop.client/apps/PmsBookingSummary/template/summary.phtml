@@ -186,3 +186,20 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
 }
 
 ?>
+
+<script>
+    $('[gsname="startdate"],[gsname="enddate"]').datepicker({ 
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat: "dd.mm.yy", minDate : 0,
+    onSelect: function(dateText) {
+        var date = moment(dateText, "DD.MM.YYYY");
+        var month = (moment(date).get('month')+1);
+        if(month < 10) {
+            month = "0" + month;
+        }
+        $('#end_date').val((moment(date).get('date')+1) + "." + month + "." + moment(date).get('year'));
+      }
+    });
+</script>

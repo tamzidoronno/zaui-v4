@@ -257,6 +257,20 @@ thundashop.common.goToPage = function(id, callback) {
     }
     thundashop.Ajax.doJavascriptNavigation(link, null, callback);
 }
+thundashop.common.goToPageLink = function(link, callback) {
+    var url = link;
+    link = link.replace(".html", "");
+    link = link.replace("/", "");
+    link = "rewrite="+link;
+
+    if(thundashop.common.lastPushId === null || thundashop.common.lastPushId !== id) {
+        if(window.history.pushState !== undefined) {
+            window.history.pushState({url: url, ajaxLink: link}, "Title", url);
+        }
+    }
+    thundashop.Ajax.doJavascriptNavigation(link, null, callback);
+    $(window).scrollTop(0);
+}
 
 thundashop.common.selectPredefinedConent = function() {
     var data = {

@@ -26,6 +26,7 @@ class GetShopTheme extends \ThemeApplication {
     }
     
     public function addScripts() {
+        echo "<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>";
         echo '<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">';
         echo '<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">';
     }

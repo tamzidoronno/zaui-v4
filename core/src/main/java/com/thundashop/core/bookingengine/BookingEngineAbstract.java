@@ -675,6 +675,18 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(typeId))
                 .collect(Collectors.toList());
     }
+
+    List<BookingItem> getAvailbleItems(String typeId, Date start, Date end) {
+        List<BookingItem> bookingitems = getBookingItems();
+        List<BookingItem> toReturn = new ArrayList();
+        for(BookingItem item : bookingitems) {
+            if(checkIfAvailable(item.id, typeId, start, end)) {
+                toReturn.add(item);
+            }
+        }
+        
+        return toReturn;
+    }
    
     
 }

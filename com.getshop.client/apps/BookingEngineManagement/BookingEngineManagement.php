@@ -25,6 +25,20 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function setNewSorting() {
+        $i = 1;
+        foreach($_POST['data']['sortlist'] as $itemid) {
+            $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $itemid);
+            $item->order = $i;
+            $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
+            $i++;
+       }
+    }
+    
+    public function configureItemSorting() {
+        $this->includefile("itemsorting");
+    }
+    
     public function configureOpeningHours() {
         $this->includefile("addmoredates");
     }
@@ -134,7 +148,14 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     public function saveDefaultBookingFields() {
         $generator = new \FieldGenerator();
         $rules = $generator->createBookingRules();
-        $this->getApi()->getBookingEngine()->saveDefaultRegistrationRules($this->getSelectedName(), $rules);
+        
+        foreach($_POST['data'] as $key => $value) {
+            if(stristr($key, "bookingengine_")) {
+                $name = str_replace("bookingengine_", "", $key);
+                $this->getApi()->getBookingEngine()->saveDefaultRegistrationRules($name, $rules);
+            }
+        }
+        
     }
 
     public function saveBookingRules() {

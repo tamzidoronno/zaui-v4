@@ -34,9 +34,13 @@ public class PmsConfiguration extends DataCommon {
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily
     public String defaultStart = "15:00";
     public String defaultEnd = "12:00";
+    public String extraField = "";
     
+    
+    public String locktype = "";
     public String arxHostname = "";
     public String arxUsername = "";
     public String arxPassword = "";
     public String arxCardFormat = "";
+    public Integer codeSize = 4;
 }

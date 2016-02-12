@@ -15,19 +15,12 @@ import java.util.List;
 @GetShopApi
 @GetShopMultiLayerSession
 public interface IPmsManager {
-    public List<Room> getAllRoomTypes(Date start, Date end);
-    public void setBooking(PmsBooking addons) throws Exception;
-    public PmsBooking getCurrentBooking();
-    public PmsBooking startBooking();
-    public Integer completeCurrentBooking();
     
     @Administrator
     public void markRoomAsCleaned(String itemId);
     
     @Administrator
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
-    
-    public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
     
     @Administrator
     public PmsBooking getBooking(String bookingId);
@@ -55,8 +48,6 @@ public interface IPmsManager {
     @Administrator
     public String createOrder(String bookingId, NewOrderFilter filter);
     
-    public PmsConfiguration getConfiguration();
-    
     @Administrator
     public void saveConfiguration(PmsConfiguration notifications);
     
@@ -69,17 +60,11 @@ public interface IPmsManager {
     @Administrator
     public PmsStatistics getStatistics(PmsBookingFilter filter);
     
-    public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
-    public void removeFromCurrentBooking(String roomId) throws Exception;
-    
     @Administrator
     public void removeFromBooking(String bookingId, String roomId) throws Exception;
     
     @Administrator
     public String getContract(String bookingId) throws Exception;
-    public String getCurrenctContract() throws Exception;
-    
-    public void processor();
     
     @Administrator
     public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter);
@@ -93,16 +78,6 @@ public interface IPmsManager {
     @Administrator
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
     
-    public RegistrationRules initBookingRules();
-    
-    public void addRepeatingData(PmsRepeatingData data) throws Exception;
-    
-    public List<Integer> getAvailabilityForRoom(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
-    
-    public void toggleAddon(String itemId) throws Exception;
-    
-    public PmsBookingDateRange getDefaultDateRange();
-    
     @Administrator
     public String addBookingItem(String bookingId, String item, Date start, Date end);
     
@@ -114,5 +89,30 @@ public interface IPmsManager {
     
     @Administrator
     public void addComment(String bookingId, String comment);
-
+    
+    @Administrator
+    public String createPrepaymentOrder(String bookingId);
+    
+    @Administrator
+    public List<PmsLog> getLogEntries(PmsLog filter);
+    
+    @Administrator
+    public List<PmsBookingRooms> updateRepeatingDataForBooking(PmsRepeatingData data, String bookingId);
+     
+    public PmsConfiguration getConfiguration();
+    public void processor();
+    public String getCurrenctContract() throws Exception;
+    public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
+    public void removeFromCurrentBooking(String roomId) throws Exception;
+    public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
+    public RegistrationRules initBookingRules();
+    public void addRepeatingData(PmsRepeatingData data) throws Exception;
+    public List<Integer> getAvailabilityForRoom(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
+    public void toggleAddon(String itemId) throws Exception;
+    public PmsBookingDateRange getDefaultDateRange();
+    public List<Room> getAllRoomTypes(Date start, Date end);
+    public void setBooking(PmsBooking addons) throws Exception;
+    public PmsBooking getCurrentBooking();
+    public PmsBooking startBooking();
+    public Integer completeCurrentBooking();
 }

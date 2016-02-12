@@ -1,0 +1,53 @@
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$booking = $this->getSelectedBooking();
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$comp = null;
+if($user->company && sizeof($user->company) > 0) {
+    $comp = $user->company[0];
+}
+$allcompanies = $this->getApi()->getUserManager()->getAllCompanies();
+$selectCompany = null;
+?>
+<div class="editcompanybox" gstype='form' method='saveCompany'>
+    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+    <table cellspacing='0' cellpadding='0'>
+        <tr><th colspan="2">Company data</th></tr>
+        <tr>
+            <td>Change company</td>
+            <td>
+                <select class='changecompanyonuser' bookingid='<?php echo $booking->id; ?>' gsname='companyid'>
+                    <option value="">No company set</option>
+                    <option value="newcompany">Create a new company</option>
+                <?php
+                foreach($allcompanies as $cmp) {
+                    $selected = "";
+                    if($cmp->id == $comp) {
+                        $selected = "SELECTED";
+                        $selectCompany = $cmp;
+                    }
+                    echo "<option value='" . $cmp->id . "' " . $selected.'>'.$cmp->name . "</option>";
+                }
+                ?>
+                </select>
+            </td>
+        </tr>
+        <?php if($selectCompany) { ?>
+            <tr><td>Vat number</td><td><input type="txt" gsname="vatNumber" value="<?php echo $selectCompany->vatNumber; ?>"></td><tr>
+            <tr><td>Company name</td><td><input type="txt" gsname="name" value="<?php echo $selectCompany->name; ?>"></td><tr>
+            <tr><td>Email address</td><td><input type="txt" gsname="email" value="<?php echo $selectCompany->email; ?>"></td><tr>
+            <tr><td>Email invoice address</td><td><input type="txt" gsname="invoiceEmail" value="<?php echo $selectCompany->invoiceEmail ?>"></td><tr>
+            <tr><td>Prefix</td><td><input type="txt" gsname="prefix" value="<?php echo $selectCompany->prefix; ?>"></td><tr>
+            <tr><td>Phone</td><td><input type="txt" gsname="phone" value="<?php echo $selectCompany->phone; ?>"></td><tr>
+            <tr><td>Address</td><td><input type="txt" gsname="address.address" value="<?php echo $selectCompany->address->address; ?>"></td><tr>
+            <tr><td>Postcode</td><td><input type="txt" gsname="address.postCode" value="<?php echo $selectCompany->address->postCode; ?>"></td><tr>
+            <tr><td>City</td><td><input type="txt" gsname="address.city" value="<?php echo $selectCompany->address->city; ?>"></td><tr>
+            <tr><td>Invoice Address</td><td><input type="txt" gsname="invoiceAddress.address" value="<?php echo $selectCompany->invoiceAddress->address; ?>"></td><tr>
+            <tr><td>Invoice Postcode</td><td><input type="txt" gsname="invoiceAddress.postCode" value="<?php echo $selectCompany->invoiceAddress->postCode; ?>"></td><tr>
+            <tr><td>Invoice City</td><td><input type="txt" gsname="invoiceAddress.city" value="<?php echo $selectCompany->invoiceAddress->city; ?>"></td><tr>
+            <tr><td></td><td><span class='pmsbutton closeadduser' style='background-color:red;'>Close</span> <span class='pmsbutton' gstype='submitToInfoBox'>Save changes</span></td><tr>
+        <?php } else { ?>
+            <tr><td></td><td><span class='pmsbutton closeadduser' style='background-color:red;'>Close</span></td><tr>
+        <?php } ?>
+    </table>
+</div>

@@ -75,45 +75,9 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
     }
     
     public function addRepeatingDates() {
-        $data = new \core_pmsmanager_PmsRepeatingData();
-        $data->repeattype = $_POST['data']['repeattype'];
-        if(isset($_POST['data']['itemid'])) {
-            $data->bookingItemId = $_POST['data']['itemid'];
-        }
-        if(isset($_POST['data']['typeid'])) {
-            $data->bookingTypeId = $_POST['data']['typeid'];
-        }
-        
-        $data->data = new \core_pmsmanager_TimeRepeaterData();
-        $data->data->repeatMonday = $_POST['data']['repeatMonday'] == "true";
-        $data->data->repeatTuesday = $_POST['data']['repeatTuesday'] == "true";
-        $data->data->repeatWednesday = $_POST['data']['repeatWednesday'] == "true";
-        $data->data->repeatThursday = $_POST['data']['repeatThursday'] == "true";
-        $data->data->repeatFriday = $_POST['data']['repeatFriday'] == "true";
-        $data->data->repeatSaturday = $_POST['data']['repeatSaturday'] == "true";
-        $data->data->repeatSunday = $_POST['data']['repeatSunday'] == "true";
-        $data->data->endingAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
-        $data->data->repeatEachTime = $_POST['data']['repeateachtime'];
-        if(isset($_POST['data']['repeatmonthtype'])) {
-            $data->data->repeatAtDayOfWeek = $_POST['data']['repeatmonthtype'] == "dayofweek";
-        }
-        $data->data->repeatPeride = $_POST['data']['repeat_periode'];
-        
-        $data->data->firstEvent = new \core_pmsmanager_TimeRepeaterDateRange();
-        $data->data->firstEvent->start = $this->convertToJavaDate(strtotime($_POST['data']['eventStartsAt'] . " " . $_POST['data']['starttime']));
-        if(isset($_POST['data']['eventEndsAt'])) {
-            $data->data->firstEvent->end = $this->convertToJavaDate(strtotime($_POST['data']['eventEndsAt'] . " " . $_POST['data']['endtime']));
-        } else {
-            $data->data->firstEvent->end = $this->convertToJavaDate(strtotime($_POST['data']['eventStartsAt'] . " " . $_POST['data']['endtime']));
-        }
-        
-        if($data->data->repeatPeride == "0") {
-            $data->data->repeatEachTime = 1;
-        }
-        
+        $data = $this->createRepeatingDateObject();
         $this->getApi()->getPmsManager()->addRepeatingData($this->getSelectedName(), $data);
     }
-
     
     public function getRepeatingSummary() {
         $booking = $this->getCurrentBooking();
@@ -200,6 +164,45 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         
         return $this->curBooking;
                 
+    }
+
+    public function createRepeatingDateObject() {
+        $data = new \core_pmsmanager_PmsRepeatingData();
+        $data->repeattype = $_POST['data']['repeattype'];
+        if(isset($_POST['data']['itemid'])) {
+            $data->bookingItemId = $_POST['data']['itemid'];
+        }
+        if(isset($_POST['data']['typeid'])) {
+            $data->bookingTypeId = $_POST['data']['typeid'];
+        }
+        
+        $data->data = new \core_pmsmanager_TimeRepeaterData();
+        $data->data->repeatMonday = $_POST['data']['repeatMonday'] == "true";
+        $data->data->repeatTuesday = $_POST['data']['repeatTuesday'] == "true";
+        $data->data->repeatWednesday = $_POST['data']['repeatWednesday'] == "true";
+        $data->data->repeatThursday = $_POST['data']['repeatThursday'] == "true";
+        $data->data->repeatFriday = $_POST['data']['repeatFriday'] == "true";
+        $data->data->repeatSaturday = $_POST['data']['repeatSaturday'] == "true";
+        $data->data->repeatSunday = $_POST['data']['repeatSunday'] == "true";
+        $data->data->endingAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
+        $data->data->repeatEachTime = $_POST['data']['repeateachtime'];
+        if(isset($_POST['data']['repeatmonthtype'])) {
+            $data->data->repeatAtDayOfWeek = $_POST['data']['repeatmonthtype'] == "dayofweek";
+        }
+        $data->data->repeatPeride = $_POST['data']['repeat_periode'];
+        
+        $data->data->firstEvent = new \core_pmsmanager_TimeRepeaterDateRange();
+        $data->data->firstEvent->start = $this->convertToJavaDate(strtotime($_POST['data']['eventStartsAt'] . " " . $_POST['data']['starttime']));
+        if(isset($_POST['data']['eventEndsAt'])) {
+            $data->data->firstEvent->end = $this->convertToJavaDate(strtotime($_POST['data']['eventEndsAt'] . " " . $_POST['data']['endtime']));
+        } else {
+            $data->data->firstEvent->end = $this->convertToJavaDate(strtotime($_POST['data']['eventStartsAt'] . " " . $_POST['data']['endtime']));
+        }
+        
+        if($data->data->repeatPeride == "0") {
+            $data->data->repeatEachTime = 1;
+        }
+        return $data;
     }
 
 }

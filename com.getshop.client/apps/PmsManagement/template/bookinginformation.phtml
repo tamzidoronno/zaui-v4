@@ -60,6 +60,8 @@ if(!$booking->confirmed) { ?>
 <?php } ?>
 <br><br><br>
 <span class='pmsbutton doneediting' style='float:right;'><? echo $this->__w("Done editing"); ?></span> 
-<span class='pmsbutton deletebooking' bookingid='<? echo $booking->id; ?>' style='margin-right: 50px; background-color:red;'><? echo $this->__w("Delete booking"); ?></span>
+<span class='pmsbutton deletebooking' bookingid='<? echo $booking->id; ?>' style=' background-color:red;'><? echo $this->__w("Delete booking"); ?></span>
+<span class='pmsbutton showlog' bookingid='<? echo $booking->id; ?>' style='background-color:yellow; color:#000;'><? echo $this->__w("Show log"); ?></span>
 <div style='clear:both;'></div>
+<div id="logarea"></div>
 </div>

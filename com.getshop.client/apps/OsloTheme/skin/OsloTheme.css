@@ -78,3 +78,5 @@ box-shadow: 0 4px 5px rgba(0,0,0,0.3); ;
 
 .PmsCalendar .dayslot.free:hover, .PmsCalendar .dayentry:hover, .PmsCalendar .roomentry:hover { background-color:inherit !important; color:rgba(0,0,0,0.8) !important; }
 .PmsCalendar .dayentry.selected { font-weight: bold !important; color:#000 !important; }
+.PmsBookingContactData .complete_button { background-color:#ed70ec; }
+.ui-tooltip { z-index: 250; }

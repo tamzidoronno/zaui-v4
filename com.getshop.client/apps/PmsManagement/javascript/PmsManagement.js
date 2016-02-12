@@ -12,6 +12,80 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .resetnotifications', app.PmsManagement.resetnotifications);
         $(document).on('keyup','.PmsManagement .newroomstart', app.PmsManagement.updateRoomList);
         $(document).on('keyup','.PmsManagement .newroomend', app.PmsManagement.updateRoomList);
+        $(document).on('click','.PmsManagement .showlog', app.PmsManagement.showlog);
+        $(document).on('click','.PmsManagement .closeadduser', app.PmsManagement.closeadduser);
+        $(document).on('change','.PmsManagement .changeuseronbooking', app.PmsManagement.changeuseronbooking);
+        $(document).on('change','.PmsManagement .changecompanyonuser', app.PmsManagement.changecompanyonuser);
+
+        $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
+        $(document).on('change','.PmsManagement .repeat_type', app.PmsManagement.changeRepeatType);
+        $(document).on('click','.PmsManagement .adddatetype', app.PmsManagement.changeAddDateType);
+    },
+    changeRepeatType: function() {
+        var type = $(this).val();
+        $('.repeatrow').hide();
+        if(type !== "0") {
+            $('.repeatrow').show();
+        } 
+        $('.repeateachdaterow').hide();
+        if(type === "1") {
+            $('.repeateachdaterow').show();
+        }
+        
+        $('.repeatoption').hide();
+        $('.repeat_' + type).show();
+    },
+    closeRepeatBox : function() {
+        var box = $('.PmsManagement .addMoredatesPanel');
+        if(box.is(":visible")) {
+            box.slideUp();
+        } else {
+            box.slideDown();
+        }
+    },
+    
+    showRepeatDates : function() {
+        if(!$('.repatingroomlist').is(':visible')) {
+            $('.repatingroomlist').slideDown();
+        } else {
+            $('.repatingroomlist').slideUp();
+        }
+    },
+    
+    changeuseronbooking : function() {
+        var data = {
+            "userid" : $(this).val(),
+            "bookingid" : $(this).attr('bookingid')
+        };
+        var corScroll = $('.informationbox-outer').scrollTop();
+        var event = thundashop.Ajax.createEvent('','changeBookingOnEvent', $(this), data);
+        thundashop.common.showInformationBoxNew(event);
+        $('.informationbox-outer').scrollTop(corScroll);
+        
+    },
+    changecompanyonuser : function() {
+        var data = {
+            "companyid" : $(this).val(),
+            "bookingid" : $(this).attr('bookingid')
+        };
+        var corScroll = $('.informationbox-outer').scrollTop();
+        var event = thundashop.Ajax.createEvent('','changeCompanyOnUser', $(this), data);
+        thundashop.common.showInformationBoxNew(event);
+        $('.informationbox-outer').scrollTop(corScroll);
+    },
+    closeadduser : function() {
+        $('.PmsManagement .edituserbox').fadeOut();
+        $('.PmsManagement .editcompanybox').fadeOut();
+    },
+    showlog: function () {
+        var data = {
+            "bookingid" : $(this).attr('bookingid')
+        }
+        
+        var event = thundashop.Ajax.createEvent('','showLog',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('#logarea').html(result);
+        });
     },
     resetnotifications : function() {
         var event = thundashop.Ajax.createEvent('','resetnotifications',$(this), {

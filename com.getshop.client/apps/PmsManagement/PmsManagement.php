@@ -4,8 +4,10 @@ namespace ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a;
 class PmsManagement extends \WebshopApplication implements \Application {
     private $selectedBooking;
     private $types = null;
+    private $users = array();
     public $errors = array();
     private $checkedCanAdd = array();
+    public $roomTable = "";
     
     public function getDescription() {
         return "Administrate all your bookings from this application";
@@ -22,10 +24,95 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function saveCompany() {
+        $compid = $_POST['data']['companyid'];
+        $current = $this->getApi()->getUserManager()->getCompany($compid);
+        $current->vatNumber = $_POST['data']['vatNumber'];
+        $current->name = $_POST['data']['name'];
+        $current->email = $_POST['data']['email'];
+        $current->invoiceEmail = $_POST['data']['invoiceEmail'];
+        $current->prefix = $_POST['data']['prefix'];
+        if(!$current->address) {
+            $current->address = new \core_usermanager_data_Address();
+        }
+        $current->address->address = $_POST['data']['address.address'];
+        $current->address->postCode = $_POST['data']['address.postCode'];
+        $current->address->city = $_POST['data']['address.city'];
+        if(!$current->invoiceAddress) {
+            $current->invoiceAddress = new \core_usermanager_data_Address();
+        }
+        $current->invoiceAddress->address = $_POST['data']['invoiceAddress.address'];
+        $current->invoiceAddress->postCode = $_POST['data']['invoiceAddress.postCode'];
+        $current->invoiceAddress->city = $_POST['data']['invoiceAddress.city'];
+        
+        $this->getApi()->getUserManager()->saveCompany($current);
+        $this->showBookingInformation();
+    }
+    
     public function addComment() {
         $id = $_POST['data']['bookingid'];
         $comment = $_POST['data']['comment'];
         $this->getApi()->getPmsManager()->addComment($this->getSelectedName(), $id, $comment);
+        $this->showBookingInformation();
+    }
+    
+    public function changeCompanyOnUser() {
+        $booking = $this->getSelectedBooking();
+        $newCompany = null;
+        $compid = $_POST['data']['companyid'];
+        if($compid == "newcompany") {
+            $newCompany = new \core_usermanager_data_Company();
+            $newCompany->name = "New company";
+            $newCompany = $this->getApi()->getUserManager()->saveCompany($newCompany);
+        } else if($compid) {
+            $newCompany = $this->getApi()->getUserManager()->getCompany($_POST['data']['companyid']);
+        }
+        $curuser = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        $curuser->company = array();
+        if($newCompany) {
+            $curuser->company[] = $newCompany->id;
+        }
+        $this->getApi()->getUserManager()->saveUser($curuser);
+        $this->showBookingInformation();
+        echo "<script>";
+        echo '$(".PmsManagement .editcompanybox").fadeIn(function() {$(".editcompanybox select").chosen(); });';
+        echo "</script>";
+    }
+    
+    public function changeBookingOnEvent() {
+        $booking = $this->getSelectedBooking();
+        if($_POST['data']['userid'] == "newuser") {
+            $user = new \core_usermanager_data_User();
+            $user->fullName = "New user";
+            $newUser = $this->getApi()->getUserManager()->createUser($user);
+            $booking->userId = $newUser->id;
+        } else {
+            $booking->userId = $_POST['data']['userid'];
+        }
+        
+//        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->showBookingInformation();
+
+        echo "<script>";
+        echo "$('.edituserbox').show();";
+        echo "</script>";
+        
+    }
+    
+    public function saveUser() {
+        $selected = $this->getSelectedBooking();
+        $user = $this->getApi()->getUserManager()->getUserById($selected->userId);
+        $user->fullName = $_POST['data']['fullName'];
+        $user->prefix = $_POST['data']['prefix'];
+        $user->emailAddress = $_POST['data']['emailAddress'];
+        $user->cellPhone = $_POST['data']['cellPhone'];
+        if(!$user->address) {
+            $user->address = new \core_usermanager_data_Address();
+        }
+        $user->address->address = $_POST['data']['address.address'];
+        $user->address->postCode = $_POST['data']['address.postCode'];
+        $user->address->city = $_POST['data']['address.city'];
+        $this->getApi()->getUserManager()->saveUser($user);
         $this->showBookingInformation();
     }
     
@@ -439,6 +526,105 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 ?>
             </select>
         <?php
+    }
+    
+    public function showLog() {
+        $filter = new \core_pmsmanager_PmsLog();
+        $filter->bookingId = $_POST['data']['bookingid'];
+        $log = $this->getApi()->getPmsManager()->getLogEntries($this->getSelectedName(), $filter);
+        $this->printLog($log);
+    }
+
+    /**
+     * @param \core_pmsmanager_PmsLog[] $entries
+     */
+    public function printLog($entries) {
+        echo "<br><br>";
+        echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+        echo "<tr>";
+        echo "<th width='110'>Date</th>";
+        echo "<th width='110'>User</th>";
+        echo "<th>Logtext</th>";
+        echo "</tr>";
+        
+        foreach($entries as $entry) {
+            echo "<tr>";
+            echo "<td valign='top'>" . date("d.m.Y H:i", strtotime($entry->dateEntry)) . "</td>";
+            echo "<td valign='top'>" . $this->getUsersName($entry->userId) . "</td>";
+            echo "<td valign='top'>" . $entry->logText . "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    }
+
+    public function getUsersName($userId) {
+        if(!$userId) {
+            return "";
+        }
+        
+        if(isset($this->users[$userId])) {
+            return $this->users[$userId]->fullName;
+        }
+        
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        $this->users[$userId] = $user;
+        return $user->fullName;
+    }
+
+    
+    /**
+     * @return \core_pmsmanager_PmsBookingRooms
+     */
+    public function getFirstBookedRoom() {
+        $booking = $this->getSelectedBooking();
+        if(isset($booking->rooms[0])) {
+            return $booking->rooms[0];
+        } else {
+            return new \core_pmsmanager_PmsBookingRooms();
+        }
+    }
+
+    public function getRepeatingSummary() {
+        $repeat = new \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary();
+        $repeat->curBooking = $this->getSelectedBooking();
+        return $repeat->getRepeatingSummary();
+    }
+    
+    
+    public function addRepeatingDates() {
+        $repeat = new \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary();
+        $data = $repeat->createRepeatingDateObject();
+        $bookingId = $this->getSelectedBooking()->id;
+        $rooms = $this->getApi()->getPmsManager()->updateRepeatingDataForBooking($this->getSelectedName(), $data, $bookingId);
+        if(!$rooms) {
+            $rooms = array();
+        }
+        $roomTable = "<h1>The following dates could not be added due to fully booked</h1>";
+        $roomTable .= "<table cellspacing='0' cellpadding='0' width='100%'>";
+        $roomTable .= "<tr>";
+        $roomTable .= "<th>Start date</th>";
+        $roomTable .= "<th>End date</th>";
+        $roomTable .= "</tr>";
+        
+        $hasDaysCantBeAdded = false;
+        foreach($rooms as $room) {
+            if(!$room->canBeAdded) {
+                continue;
+            }
+            $hasDaysCantBeAdded = true;
+            $roomTable .= "<tr>";
+            $roomTable .= "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . "</td>";
+            $roomTable .= "<td>" . date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
+            $roomTable .= "</tr>";
+        }
+        $roomTable .= "</table>";
+        
+        if(!$hasDaysCantBeAdded) {
+            $roomTable = "";
+        }
+        $this->roomTable = $roomTable;
+        $this->selectedBooking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
+        $this->showBookingInformation();
     }
 
 }

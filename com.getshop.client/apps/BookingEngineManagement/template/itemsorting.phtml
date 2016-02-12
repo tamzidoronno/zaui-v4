@@ -1,0 +1,39 @@
+<?php
+/* @var $this ns_3b18f464_5494_4f4a_9a49_662819803c4a\BookingEngineManagement */
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+
+$ignoreSorting = false;
+$sortList = array();
+$unsorted = array();
+foreach($items as $item) {
+    if($item->order == 0) {
+        $unsorted[] = $item;
+    } else {
+        $sortList[$item->order] = $item;
+    }
+}
+
+ksort($sortList);
+
+foreach($unsorted as $item) {
+    $sortList[] = $item;
+}
+
+?>
+
+<ul id="sortable">
+<?php foreach($sortList as $item) { ?>
+  <li class="ui-state-default" itemid="<?php echo $item->id; ?>"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><?php echo $item->bookingItemName; ?></li>
+<?php } ?>
+</ul>
+  <style>
+  #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+  #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  #sortable li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  
+  <span class="pmsbutton savesorting">Save sorting</span>
+<script>
+    $( "#sortable" ).sortable();
+    $( "#sortable" ).disableSelection();
+</script>

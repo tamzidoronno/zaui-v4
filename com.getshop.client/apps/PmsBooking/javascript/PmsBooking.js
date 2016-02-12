@@ -11,7 +11,7 @@ app.PmsBooking = {
             product : app.find('.selected_product').val()
         });
         thundashop.Ajax.postWithCallBack(event, function() {
-            window.location.href = next;
+            thundashop.common.goToPageLink(next);
         });
     },
     showSettings : function() {

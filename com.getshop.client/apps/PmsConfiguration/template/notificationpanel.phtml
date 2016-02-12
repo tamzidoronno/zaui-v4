@@ -13,6 +13,10 @@ foreach($instances as $instance) {
     }
 }
 
+$locktype = array();
+$locktype['arx'] = "Arx";
+$locktype['getshop'] = "GetShop";
+
 $hasArx = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->arxHostname;
 
 $notifications = array();
@@ -75,7 +79,8 @@ $whenToPay[4] = "After stay";
     {personalMessage},
     {roomlist},
     {bookingid},
-    {bookinginformation}
+    {bookinginformation},
+    {extrafield}
 </div>
 
 <div gstype="form" method="saveNotifications">
@@ -303,30 +308,52 @@ $whenToPay[4] = "After stay";
             Payments are required (force payment view when booking is completed)
         </div>
         <br><br>
-        <h2>Arx settings</h2>
+        <h2>Lock settings</h2>
+        <div class='configrow'>
+            <span class='configentry'>
+                <select gsname='locktype'>
+                    <?php
+                    foreach($locktype as $idx => $value) {
+                        $selected = "";
+                        if($notificationSettings->locktype == $idx) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='$idx' $selected>$value</option>";
+                    }
+                    ?>
+                </select>
+            </span>
+            Lock Type
+        </div>
         <div class='configrow'>
             <span class='configentry'>
                 <input type='text' gsname='arxHostname' value='<? echo $notificationSettings->arxHostname; ?>'>
             </span>
-            Arx hostname
+            Lock hostname
         </div>
         <div class='configrow'>
             <span class='configentry'>
                 <input type='text' gsname='arxUsername' value='<? echo $notificationSettings->arxUsername; ?>'>
             </span>
-            Arx username
+            Lock username
         </div>
         <div class='configrow'>
             <span class='configentry'>
                 <input type='text' gsname='arxPassword' value='<? echo $notificationSettings->arxPassword; ?>'>
             </span>
-            Arx password
+            Lock password
         </div>
         <div class='configrow'>
             <span class='configentry'>
                 <input type='text' gsname='arxCardFormat' value='<? echo $notificationSettings->arxCardFormat; ?>'>
             </span>
             Kort format
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='text' gsname='codeSize' value='<? echo $notificationSettings->codeSize; ?>'>
+            </span>
+            Code size (on the code sent to the user)
         </div>
     </div>
     <br><br>

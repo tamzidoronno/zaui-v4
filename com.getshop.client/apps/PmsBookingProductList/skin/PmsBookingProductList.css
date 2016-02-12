@@ -1,9 +1,15 @@
-.PmsBookingProductList .productentry { border: solid 1px; height: 80px; margin-bottom:10px; background-color:#f5f5f5; border-color:#efefef; padding: 10px; position:relative; }
+.PmsBookingProductList .productentry { border: solid 1px; height: 80px; margin-bottom:10px; background-color:#f5f5f5; border-color:#efefef; padding: 10px; position:relative; padding-left: 170px; }
 .PmsBookingProductList .productentry .select_button { float:right; cursor:pointer; background-color:#595959; width: 100px; text-align: center; display:inline-block; color:#fff; padding: 10px;}
 .PmsBookingProductList .productentry .name { font-size: 20px; font-weight: bold; }
 .PmsBookingProductList .productentry .price { font-size: 20px; font-weight: bold; position:absolute; right: 10px; }
-.PmsBookingProductList .productentry.selected { border: solid 3px #f09325; }
 .PmsBookingProductList .continue_button_outer { text-align: right; padding-top: 10px; padding-bottom: 10px; }
 .PmsBookingProductList .continue_button { cursor:pointer; border: solid 1px; background-color: #f29400; display:inline-block; color:#fff; padding: 10px; width:120px; text-align: center; }
 .PmsBookingProductList .productentry .roomtypeselection { position:absolute; left: 10px; bottom: 10px;  font-size: 20px; }
 .PmsBookingProductList .productentry .roomtypeselection select { margin-right: 5px; border: solid 1px #bbb; background-color:#fff; }
+.PmsBookingProductList .continue_button.disabled { background-color:#efefef !important; color:#bbb !important; cursor:inherit; }
+.PmsBookingProductList .selectbutton { border: solid 1px; position:absolute; right: 10px; width: 200px; text-align: center; padding: 10px; text-transform: uppercase;  }
+.PmsBookingProductList .productentry.selected { border: solid 1px; }
+.PmsBookingProductList .price.withselectbtn { top:inherit; bottom: 10px; }
+.PmsBookingProductList .roomimg { max-width: 150px; }
+.PmsBookingProductList .imgcontainer { background-color:#000; position: absolute; left: 0px; top: 0px; display:inline-block; height: 100px; }
+.PmsBookingProductList .selectedtext { position:absolute; right: 10px; }

@@ -84,7 +84,9 @@ $config = $this->getConfigurationToUse();
         </td>
     </tr>
 </table>
+
 <?php
+echo "<div style='padding-left: 5px; padding-top: 5px; color:#bbb;'>Created " . date("d.m.Y H:i", strtotime($booking->rowCreatedDate)) . "</div>";
 if(sizeof($booking->registrationData->contactsList) > 0) {
     echo '<h2>Kontaktliste</h2>';
     echo "<table cellspacing='0' cellpadding='0'>";
@@ -107,34 +109,70 @@ if(sizeof($booking->registrationData->contactsList) > 0) {
     <?php
 }
 
+
+if(!$user->fullName) {
+    $user->fullName = "Unknown name";
+}
+
 ?>
 
 <div class='contactdata'>
     <h2>User data</h2>
     <div style='padding-left: 10px;'>
-        <span class='roomprefix'>User id</span>
-        <span class='roompostfix'><a onclick="thundashop.common.hideInformationBox();app.Users.gssinterface.showUser('<? echo $user->id; ?>')"><? echo $user->customerId; ?></a></span>
+        <span class='roomprefix'>User</span>
+        <span class='roompostfix'>
+            <?php
+            if(!$user->cellPhone) {
+                $user->prefix = "";
+                $user->cellPhone = "no phone set";
+            }
+            if(!$user->emailAddress) {
+                $user->emailAddress = "no email set";
+            }
+            ?>
+            <span style="font-size:12px">
+                <a onclick='$(".PmsManagement .edituserbox").fadeIn(function() {$(".edituserbox select").chosen(); });'><? echo $user->fullName; ?></a>, <? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>
+                <?php $this->includefile("edituserview"); ?>
+            </span>
+        </span>
         <div style='clear:both;'></div>
-        
-        <div style='clear:both;'></div>
-        <? if($user->birthDay) { ?>
-            <span class='roomprefix'>Birthday</span>
-            <span class='roompostfix'><? echo $user->birthDay; ?></span>
-            <div style='clear:both;'></div>
-        <? }  ?>
         <? if($user->company && sizeof($user->company) > 0) { ?>
             <span class='roomprefix'>Company</span>
             <span class='roompostfix'>
             <? 
             foreach($user->company as $companyId) {
                 $company = $this->getApi()->getUserManager()->getCompany($companyId);
-                echo '<a onclick="thundashop.common.hideInformationBox();app.Company.gssinterface.showCompany(\''.$companyId.'\')">';
+                echo "<span style='font-size:12px'>";
+                ?><a onclick='$(".PmsManagement .editcompanybox").fadeIn(function() {$(".editcompanybox select").chosen(); });'><?php
                 echo $company->name;
-                echo '</a>';
+                ?></a> <?php
+                echo "Email: ";
+                if($company->email) {
+                     $company->email;
+                } else {
+                    echo "No email";
+                }
+                echo ", phone: ";
+                if($company->phone) {
+                    echo "+" . $company->prefix . $company->phone;
+                } else {
+                    echo "Missing phone";
+                }
+                echo "</span>";
             }
             ?></span>
             <div style='clear:both;'></div>
-        <? } ?>
+        <? } else {
+            ?>
+            <span class='roomprefix'>Company</span>
+            <span class='roompostfix' style="font-size: 12px;">
+                <a onclick='$(".PmsManagement .editcompanybox").fadeIn(function() {$(".editcompanybox select").chosen(); });'>No company connected to this user</a>
+            </span>
+            <div style='clear:both;'></div>
+            <?php
+        } 
+        $this->includefile("companydata");
+        ?>
         <?php if($avtalegiro) { 
             echo "<span class='roomprefix'>Avtalegiro</span>";
             echo "<span class='roompostfix'>";

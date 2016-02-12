@@ -39,19 +39,30 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
         $this->includefile("productlist");
     }
     
+    
+    
     public function selectRoom() {
         $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         /* @var $current \core_pmsmanager_PmsBooking */
         
-        if(sizeof($current->rooms) > 0) {
-            $current->rooms[0]->bookingItemTypeId = $_POST['data']['typeid'];
-        } else {
-            $room = new \core_pmsmanager_PmsBookingRooms();
-            $current->rooms = array();
-            $room->bookingItemTypeId = $_POST['data']['typeid'];
-            $current->rooms[] = $room;
-        }
+        $room = new \core_pmsmanager_PmsBookingRooms();
+        $current->rooms = array();
+        $room->bookingItemTypeId = $_POST['data']['typeid'];
+        $room->date = new \core_pmsmanager_PmsBookingDateRange();
         
+        if($this->getCurrentBooking()->sessionStartDate) {
+           $start = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionStartDate)) . " " . $config->defaultStart);
+           $room->date->start = $this->convertToJavaDate($start);
+        }
+        if($this->getCurrentBooking()->sessionEndDate) {
+           $end = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionEndDate)) . " " . $config->defaultEnd);
+           $room->date->end = $this->convertToJavaDate($end);
+        }
+
+        
+        $current->rooms[] = $room;
+            
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $current);
     }
     
@@ -70,13 +81,17 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
         for($i = 0; $i < $_POST['data']['count']; $i++) {
             $room = new \core_pmsmanager_PmsBookingRooms();
             $room->bookingItemTypeId = $_POST['data']['typeid'];
+            $room->date = new \core_pmsmanager_PmsBookingDateRange();
             
-            
-            $start = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionStartDate)) . " " . $config->defaultStart);
-            $end = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionEndDate)) . " " . $config->defaultEnd);
+            if($this->getCurrentBooking()->sessionStartDate) {
+                $start = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionStartDate)) . " " . $config->defaultStart);
+                $room->date->start = $this->convertToJavaDate($start);
+            }
+            if($this->getCurrentBooking()->sessionEndDate) {
+                $end = strtotime(date("d.m.Y", strtotime($this->getCurrentBooking()->sessionEndDate)) . " " . $config->defaultEnd);
+                $room->date->end = $this->convertToJavaDate($end);
+            }
 
-            $room->date->start = $this->convertToJavaDate($start);
-            $room->date->end = $this->convertToJavaDate($end);
             $newRooms[] = $room;
         }
         
@@ -104,6 +119,40 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
             return strtotime($end);
         }
         return $this->getStartDate()+(86400*$this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->minStay);
+    }
+
+    /**
+     * @return \core_pmsmanager_Room[]
+     */
+    public function getRooms() {
+        $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), 
+        $this->convertToJavaDate($this->getStartDate()), 
+        $this->convertToJavaDate($this->getEndDate()));
+        return $rooms;
+    }
+
+    public function getImagesFromPage($pageId) {
+        $apps = $this->getApi()->getPageManager()->getApplicationsForPage($pageId);
+        $imgIds = [];
+        if(!$apps) {
+            $apps= array();
+        }
+        foreach($apps as $app) {
+            $res = $this->getFactory()->getApplicationPool()->createAppInstance($app);
+            if($res instanceOf \ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a\ImageDisplayer) {
+                /* @var $res \ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a\ImageDisplayer */
+                $imgIds[] = $res->getImageId();
+            }
+        }
+        return $imgIds;
+    }
+    
+    /**
+     * @return \core_pmsmanager_PmsBooking
+     */
+    public function getBookings() {
+        $booking = $this->getCurrentBooking();
+        return $booking;
     }
 
 }

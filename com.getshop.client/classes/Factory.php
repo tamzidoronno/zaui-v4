@@ -892,7 +892,9 @@ class Factory extends FactoryBase {
         $singleOnGroup = $instance->getConfigurationSetting("seo");
 
         if($singleOnGroup && $singleOnGroup == "true") {
-            return "async";
+            if($this->isMobile()) {
+                return "async";
+            }
         }
         return "";
     }

@@ -22,11 +22,22 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             return;
         }
         if($this->bookingCompleted) {
-            ?>
-            <script>
-                document.location.href="/?page=booking_completed_<? echo $this->getSelectedName(); ?>";
-            </script>
-            <?
+            $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+            if($config->prepayment) {
+                $curBooking = $this->getCurrentBooking();
+                $orderId = $this->getApi()->getPmsManager()->createPrepaymentOrder($this->getSelectedName(), $curBooking->id);
+                ?>
+                <script>
+                    document.location.href="/?page=cart&payOrderId=<?php echo $orderId; ?>";
+                </script>
+                <?
+            } else {
+                ?>
+                <script>
+                    document.location.href="/?page=booking_completed_<? echo $this->getSelectedName(); ?>";
+                </script>
+                <?
+            }
         } else {
             $this->includefile("roomcontactdata");
         }
@@ -142,6 +153,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         $this->savePostedForm();
         $this->validatePostedForm();
         if(!sizeof($this->validation) > 0) {
+            $this->getCurrentBooking();
             $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
             $this->bookingCompleted = true;
         }
@@ -171,7 +183,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         }
         
         if(isset($_POST['data']['agreetoterms']) && $_POST['data']['agreetoterms'] != "true") {
-            $this->validation['agreetoterms'] = "You need to agree to the terms and conditions";
+            $this->validation['agreetoterms'] = $this->__w("You need to agree to the terms and conditions");
         }
         
         return true;

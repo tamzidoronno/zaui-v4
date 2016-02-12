@@ -9,7 +9,23 @@ app.BookingEngineManagement = {
         $(document).on('click', '.BookingEngineManagement .configureBookingFields', app.BookingEngineManagement.configureBookingFields);
         $(document).on('click', '.BookingEngineManagement .configureOpeningHours', app.BookingEngineManagement.configureOpeningHours);
         $(document).on('change','.BookingEngineManagement .repeat_type', app.BookingEngineManagement.changeRepeatType);
+        $(document).on('click','.BookingEngineManagement .configureSorting', app.BookingEngineManagement.configureSorting);
+        $(document).on('click','.BookingEngineManagement .savesorting', app.BookingEngineManagement.savesorting);
     },
+    savesorting: function() {
+        var counter = 0;
+        var result = [];
+        $('#sortable li').each(function() {
+            result.push($(this).attr('itemid'));
+            counter++;
+        });
+        var data = {
+            "sortlist" : result
+        }
+        thundashop.Ajax.simplePost($(this), 'setNewSorting', data);
+        thundashop.common.hideInformationBox();
+    },
+    
      changeRepeatType: function() {
         var type = $(this).val();
         $('.repeatrow').hide();
@@ -23,7 +39,12 @@ app.BookingEngineManagement = {
         
         $('.repeatoption').hide();
         $('.repeat_' + type).show();
-    },    
+    },
+    configureSorting: function() {
+        var data = {}
+        var event = thundashop.Ajax.createEvent('','configureItemSorting', $(this), data);
+        thundashop.common.showInformationBoxNew(event, 'Opening hours configuration');
+    },
     configureOpeningHours : function() {
         var data = {
             "typeid" : $(this).closest('tr').attr('entryid')

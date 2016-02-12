@@ -103,6 +103,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                 $bookingId = $this->currentBooking;
             }
             
+            $title = str_replace("\"", "&QUOT;", $title);
+            $title = str_replace("'", "&apos;", $title);
+            
             echo "<span class='$loadBookingOnClick outerblock $size' style='width: $width%' bookingid='$bookingId' instanceid='$instanceId'>";
             echo "<span class='timeblock $state' startTime='$startTime' "
                     . "endTime='$endTime' "
@@ -193,7 +196,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         if($type == "week" || $type == "month") {
             echo "<span class='weekdaycontainer weektimeheader'>";
             echo "<span class='weektimeheaderinner'>";
-            echo "<div>" . $this->__w(date('l', $day)) . "</div>";
+            echo "<div>" . date('d', $day) . ". " . $this->__w(date('l', $day)) . "</div>";
             echo "<span style='float:left; padding-left: 5px; font-size: 8px;'>".date("H.i", $this->getStartTime($day)) ."</span>";
             echo "<span style='float:right;padding-right: 5px; font-size: 8px;'>".date("H.i", $this->getEndTime($day)) ."</span>";
             echo "</span>";
@@ -201,6 +204,17 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         }
     }
 
+    public function setCalendarWeek() {
+        $week = $_POST['data']['week'];
+        $year = $this->getSelectedYear();
+        $_SESSION['calday'] = $this->getStartOfWeek($week, $year);
+        $_SESSION['calendardaytype'] = "week";
+    }
+    
+    function getStartOfWeek($week, $year) {
+        return strtotime($year."W".$week."1"); // First day of week
+    }
+    
     public function printCalendar() {
         /* @var $this \ns_d925273e_b9fc_480f_96fa_8fb8df6edbbe\PmsBookingCalendar */
        $selectedDate = $this->getSelectedDay();
@@ -430,6 +444,26 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             $this->bookingRules = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
         }
         return $this->bookingRules;
+    }
+
+    public function getAllRoomsSorted() {
+        $rooms = $this->getAllRooms();
+        $sortList = array();
+        $unsorted = array();
+        foreach($rooms as $item) {
+            if($item->order == 0) {
+                $unsorted[] = $item;
+            } else {
+                $sortList[$item->order] = $item;
+            }
+        }
+
+        ksort($sortList);
+
+        foreach($unsorted as $item) {
+            $sortList[] = $item;
+        }
+        return $sortList;
     }
 
 }

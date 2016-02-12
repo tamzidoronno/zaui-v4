@@ -17,5 +17,9 @@ class BukkenTheme extends \ThemeApplication implements \Application {
     public function render() {
         
     }
+    
+    public function getThemeClasses() {
+         return ["floatingboxes"];
+    }
 }
 ?>

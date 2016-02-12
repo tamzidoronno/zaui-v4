@@ -609,63 +609,17 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             saveObject(type);
         }
     }
-   
-    
-    public TimeRepeaterData getTime(String typeId) {
-        if(typeId == null || typeId.isEmpty()) {
-            return config.openingHours;
-        }
-        
-        BookingItemType type = getBookingItemType(typeId);
-        return type.openingHours;
-    }
-
-    boolean checkIfAvailable(String itemId, String typeId, Date start, Date end) {
-        BookingItem item = getBookingItem(itemId);
-        
-        TimeRepeaterData openingHours = getOpeningHours(itemId);
-        if(openingHours == null) {
-            openingHours = getConfig().openingHours;
-        }
-        if(openingHours != null) {
-            if(!checkIfInOpeningHours(openingHours, start, end)) {
-                return false;
-            }
-        }
-        
-        Booking booking = new Booking();
-        if(itemId == null || itemId.isEmpty()) {
-            itemId = null;
-        }
-        booking.bookingItemId = itemId;
-        booking.bookingItemTypeId = typeId;
-        booking.startDate = start;
-        booking.endDate = end;
-        
-        List<Booking> toCheck = new ArrayList();
-        toCheck.add(booking);
-        
-        return canAdd(toCheck);
-    }
-    
-    private boolean checkIfInOpeningHours(TimeRepeaterData openingHours, Date start, Date end) {
-        TimeRepeater repeater = new TimeRepeater();
-        LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(openingHours);
-
-        for(TimeRepeaterDateRange range : ranges) {
-            if(range.start.before(start) || range.start.equals(start)) {
-                if(range.end.after(end) || range.end.equals(end)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
+ 
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
         BookingTimeLineFlatten timeline = getTimelines(itemType, start, end);
         int higest = 9999;
-        for(BookingTimeLine line : timeline.getTimelines()) {
+        List<BookingTimeLine> timeLines = timeline.getTimelines();
+        
+        if (timeLines.isEmpty()) {
+            return getTotalSpotsForBookingItemType(itemType);
+        }
+        
+        for(BookingTimeLine line : timeLines) {
             if(line.getAvailableSpots() < higest) {
                 higest = line.getAvailableSpots();
             }
@@ -680,15 +634,24 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
 
     List<BookingItem> getAvailbleItems(String typeId, Date start, Date end) {
-        List<BookingItem> bookingitems = getBookingItems();
-        List<BookingItem> toReturn = new ArrayList();
-        for(BookingItem item : bookingitems) {
-            if(checkIfAvailable(item.id, typeId, start, end)) {
-                toReturn.add(item);
-            }
+        BookingItemType type = types.get(typeId);
+        
+        if (type == null) {
+            throw new BookingEngineException("Can not get available items ");
         }
         
-        return toReturn;
+        List<Booking> bookingsWithinDaterange = bookings.values().stream()
+                .filter(booking -> booking.bookingItemTypeId.equals(typeId))
+                .filter(booking -> booking.interCepts(start, end))
+                .collect(Collectors.toList());
+        
+        List<BookingItem> bookingItems = getBookingItemsByType(typeId);
+        
+        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, bookingsWithinDaterange, bookingItems);
+        
+        return assigner.getAvailableItems().stream()
+                .map(o -> items.get(o))
+                .collect(Collectors.toList());
     }
    
     

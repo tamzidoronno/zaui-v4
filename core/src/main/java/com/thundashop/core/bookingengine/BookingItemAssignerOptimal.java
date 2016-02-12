@@ -108,14 +108,17 @@ public class BookingItemAssignerOptimal {
     }
 
     private void assignBookings(List<List<Booking>> bookingLines) {
+        List<String> availableBookingItems = getAvailableBookingItems(bookingLines);
+        assignLeftovers(bookingLines, availableBookingItems);
+    }
+
+    private List<String> getAvailableBookingItems(List<List<Booking>> bookingLines) throws BookingEngineException {
         List<String> bookingItemsFlatten = getBookingItemsFlatten();
-        
         // First processes all that needs to be processed because they are
         // already assigned
         List<List<Booking>> processed = assignAllLinesThatAlreadyHasElementsWithBookingItemId(bookingLines, bookingItemsFlatten);
         bookingLines.removeAll(processed);
-        
-        assignLeftovers(bookingLines, bookingItemsFlatten);
+        return bookingItemsFlatten;
     }
 
     private void assignLeftovers(List<List<Booking>> bookingLines, List<String> bookingItemsFlatten) throws BookingEngineException {
@@ -234,6 +237,18 @@ public class BookingItemAssignerOptimal {
         }
         
         return false;
+    }
+
+    /**
+     * Will return a set
+     *  of items ids that can be used for assigning items to.
+     * @return 
+     */
+    public List<String> getAvailableItems() {
+        List<List<Booking>> bookingLines = preCheck();
+        dryRun = true;
+        List<String> availableBookingItems = getAvailableBookingItems(bookingLines);
+        return availableBookingItems;
     }
     
     

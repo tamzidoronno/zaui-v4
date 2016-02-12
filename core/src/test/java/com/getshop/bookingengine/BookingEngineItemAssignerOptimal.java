@@ -62,6 +62,73 @@ public class BookingEngineItemAssignerOptimal {
         Assert.assertEquals(2, item1.bookingIds.size()); 
     }
     
+    
+    /**
+     * Testing that this simple case is assigned
+     * 
+     * x already assigned to item1
+     * y already assigned to item1
+     * 
+     * Booking1: |----x-----|
+     * Booking2:            |----y----|
+     * 
+     * Assigned to the first available room.
+     */
+    @Test
+    public void assignBookings_checkAvailableResult() {
+        ArrayList<Booking> bookings = new ArrayList();
+        bookings.add(getBooking("2015-01-05 08:00", "2015-01-05 09:00", item1));
+        bookings.add(getBooking("2015-01-05 09:00", "2015-01-05 10:00", item1));
+        
+        List<String> res = getAvailableResult(bookings);
+        Assert.assertEquals(2, res.size()); 
+        Assert.assertEquals(item2.id, res.get(0)); 
+        Assert.assertEquals(item3.id, res.get(1)); 
+    }
+    
+    /**
+     * Testing that this simple case is assigned
+     * 
+     * Booking1: |----------|
+     * Booking2:            |---------|
+     * 
+     * Assigned to the first available room.
+     */
+    @Test
+    public void assignBookings_checkAvailableResult2() {
+        ArrayList<Booking> bookings = new ArrayList();
+        bookings.add(getBooking("2015-01-05 08:00", "2015-01-05 09:00", null));
+        bookings.add(getBooking("2015-01-05 09:00", "2015-01-05 10:00", null));
+        
+        List<String> res = getAvailableResult(bookings);
+        Assert.assertEquals(3, res.size()); 
+        Assert.assertEquals(item1.id, res.get(0)); 
+        Assert.assertEquals(item2.id, res.get(1)); 
+        Assert.assertEquals(item3.id, res.get(2)); 
+    }
+    
+    /**
+     * Testing that this simple case is assigned
+     * 
+     * x = assigned to item2
+     * 
+     * Booking1: |----------|
+     * Booking2:            |-----x---|
+     * 
+     * Assigned to the first available room.
+     */
+    @Test
+    public void assignBookings_checkAvailableResult3() {
+        ArrayList<Booking> bookings = new ArrayList();
+        bookings.add(getBooking("2015-01-05 08:00", "2015-01-05 09:00", null));
+        bookings.add(getBooking("2015-01-05 09:00", "2015-01-05 10:00", item2));
+        
+        List<String> res = getAvailableResult(bookings);
+        Assert.assertEquals(2, res.size()); 
+        Assert.assertEquals(item1.id, res.get(0)); 
+        Assert.assertEquals(item3.id, res.get(1)); 
+    }
+    
     /**
      * Testing that this simple case is assigned
      * Booking1: |----------|
@@ -316,5 +383,15 @@ public class BookingEngineItemAssignerOptimal {
         
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type1, unassignedBookings, items);
         assigner.assign();
+    }
+    
+    private List<String> getAvailableResult(ArrayList<Booking> unassignedBookings) {
+        List<BookingItem> items = new ArrayList();
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+        
+        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type1, unassignedBookings, items);
+        return assigner.getAvailableItems();
     }
 }

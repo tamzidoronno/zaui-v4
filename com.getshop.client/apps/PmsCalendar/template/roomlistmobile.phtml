@@ -1,0 +1,34 @@
+<?php
+/* @var $this \ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
+$rooms = $this->getAllRooms();
+$types = $this->getAllTypes();
+foreach($rooms as $room) {
+    if(!$types[$room->bookingItemTypeId]->visibleForBooking && !$this->isEditorMode()) {
+        continue;
+    }
+    if($types[$room->bookingItemTypeId]->addon) {
+        continue;
+    }
+    if($this->isItemPage()) {
+        if($room->id != $this->getPage()->javapage->id) {
+            continue;
+        }
+    }
+    ?>
+<a href="?page=<?php echo $room->id; ?>">
+    <div class='roomentry'>
+        <?php 
+        $img = $this->getImageFromPage($room->id);
+        echo "<img src='displayImage.php?id=$img'>";
+        ?>
+        <div class="bottomdesc">
+            <?php echo "<b>" . $room->bookingItemName . "</b><br>"; 
+            echo "<span class='capasity'>Kapasitet: <br>" . $room->fullWhenCountHit . " personer</span>";
+            echo $room->description;
+            ?>
+        </div>
+    </div>
+</a>
+    <?php
+}
+?>

@@ -39,7 +39,15 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             echo "You need to specify a booking engine first.";
             return;
         }
-        $this->includefile("roomlist");
+        if(!$this->getFactory()->isMobile()) {
+            $this->includefile("roomlist");
+        } else {
+            if($this->isItemPage()) {
+                $this->includefile("mobileroom");
+            } else {
+                $this->includefile("roomlistmobile");
+            }
+        }
     }
     
     /**
@@ -83,7 +91,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         
         $end = $startTime + ($numberOfSlots * $minutes * 60);
         
-        $lines = $this->getApi()->getPmsManager()->getAvailabilityForRoom($this->getSelectedName(), $room, $this->convertToJavaDate($start), $this->convertToJavaDate($end), $minutes);
+        $lines = $this->getApi()->getPmsManager()->getAvailabilityForType($this->getSelectedName(), $room, $this->convertToJavaDate($start), $this->convertToJavaDate($end), $minutes);
         $width = 100 / $numberOfSlots;
         for($i = 1; $i <= $numberOfSlots; $i++) {
             $endTime = $start + (60*$minutes*$i);
@@ -152,7 +160,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         $room->date = new \core_pmsmanager_PmsBookingDateRange();
         $room->date->start = $this->convertToJavaDate($_POST['data']['start']);
         $room->date->end = $this->convertToJavaDate($_POST['data']['end']);
-        $room->bookingItemId = $_POST['data']['room'];
+        $room->bookingItemTypeId = $_POST['data']['room'];
         
         $booking->rooms = array();
         $booking->rooms[] = $room;
@@ -340,7 +348,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         return $bookings;
     }
     
-    public function getBlockState($roomId, $day, $startTime, $endTime) {
+    public function getBlockState($typeId, $day, $startTime, $endTime) {
         $bookings = $this->getBookingsForDay($day);
         if(!$bookings) {
             $bookings = array();
@@ -365,7 +373,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             foreach($booking->rooms as $room) {
                 $roomStart = strtotime($room->date->start);
                 $roomEnd = strtotime($room->date->end);
-                if($room->bookingItemId != $roomId) {
+                if($room->bookingItemTypeId != $typeId) {
                     continue;
                 }
                 if($roomStart >= $endTime) {
@@ -402,14 +410,17 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         $page = $this->getPage();
         foreach($rooms as $id => $test) {
             if($page->javapage->id == $id) {
-                return $this->isItemPage = true;
+                $this->isItemPage = true;
             }
         }
-        return false;
+        return $this->isItemPage;
     }
 
     public function getImageFromPage($pageId) {
         $apps = $this->getApi()->getPageManager()->getApplicationsForPage($pageId);
+        if(!$apps) {
+            $apps = array();
+        }
         $imgId = "";
         foreach($apps as $app) {
             $res = $this->getFactory()->getApplicationPool()->createAppInstance($app);

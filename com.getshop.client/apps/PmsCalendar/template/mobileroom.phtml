@@ -1,0 +1,37 @@
+<?php
+ /* @var $this \ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
+$itemId = $this->getPage()->javapage->id;
+$rooms = $this->getAllRooms();
+$room = null;
+foreach($rooms as $r) {
+    if($r->id == $itemId) {
+        $room = $r;
+    }
+}
+?>
+<div class="roomentry" style="border:11px #fff;">
+    <?php
+    $img = $this->getImageFromPage($itemId);
+    echo "<img src='displayImage.php?id=$img'>";
+    ?>
+    <div class="bottomdesc">
+        <?php echo "<b>" . $room->bookingItemName . "</b><br>"; 
+        echo "<span class='capasity'>Kapasitet: <br>" . $room->fullWhenCountHit . " personer</span>";
+        echo $room->description;
+        ?>
+    </div>
+</div>
+<div>
+<?php 
+$curTime = $this->getStartTime($this->getSelectedDay()); 
+$end = $this->getEndTime($this->getSelectedDay()); 
+while(true) {
+    $time = date("H", $curTime);
+    echo "<div class='timerow'><span class='timebox'>$time</span><span class='halfourbox first'></span><span class='halfourbox'></span></div>";
+    if($curTime >= $end) {
+        break;
+    }
+    $curTime += 3600;
+}
+?>
+</div>

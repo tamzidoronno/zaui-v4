@@ -92,7 +92,7 @@ public class BookingItemAssignerOptimal {
                         continue;
                     }
                     
-                    if (!booking.bookingItemId.isEmpty()) {
+                    if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
                         currentBookingItemId = booking.bookingItemId;
                     }
                     
@@ -179,7 +179,7 @@ public class BookingItemAssignerOptimal {
     }
 
     private boolean canBeOnTheSameLine(Booking booking, String currentBookingItemId) {
-        if (currentBookingItemId.isEmpty()) {
+        if (currentBookingItemId == null || currentBookingItemId.isEmpty()) {
             return true;
         }
         

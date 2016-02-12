@@ -229,7 +229,9 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         
         $i = 0;
         $newList = array();
-        foreach($this->getCurrentBooking()->registrationData->contactsList as $contact) {
+        
+        $selected = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        foreach($selected->registrationData->contactsList as $contact) {
             $contact->name = $_POST['data']['contact_name_'.$i];
             $contact->phone = $_POST['data']['contact_phone_'.$i];
             $contact->email = $_POST['data']['contact_email_'.$i];
@@ -239,7 +241,6 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         }
         $originalForm->contactsList = $newList;
         
-        $selected = $this->getCurrentBooking();
         $selected->registrationData = $originalForm;
         
         $config = $this->getConfigurationToUse();
@@ -258,6 +259,11 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             }
         }
         
+        foreach($selected->rooms as $room) {
+            if(!$room->canBeAdded) {
+                $room->canBeAdded = "false";
+            }
+        }
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $selected);
         $this->currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
     }

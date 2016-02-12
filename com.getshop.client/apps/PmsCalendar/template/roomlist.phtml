@@ -132,11 +132,11 @@ if($type == "month") {
         echo "</div>";
      }
 } else {
-    foreach($rooms as $room) {
-        if(!$types[$room->bookingItemTypeId]->visibleForBooking && !$this->isEditorMode()) {
+    foreach($types as $room) {
+        if(!$room->visibleForBooking && !$this->isEditorMode()) {
             continue;
         }
-        if($types[$room->bookingItemTypeId]->addon) {
+        if($room->addon) {
             continue;
         }
         if($this->isItemPage()) {
@@ -145,20 +145,20 @@ if($type == "month") {
             }
         }
         
-        $size = $room->fullWhenCountHit;
+        $size = $room->capacity;
         $desc = $room->description;
         ?>
         <div class='roomrow itemlist' itemid='<? echo $room->id; ?>'>
             <?php
             if(!$this->isItemPage()) {
-                $imgId = $this->getImageFromPage($room->id);
+                $imgId = $this->getImageFromPage($room->pageId);
             ?>
                 <span class='roomdescouter roomdesc_<? echo $type; ?>'>
-                    <a href='?page=<? echo $room->id; ?>'>
+                    <a href='?page=<? echo $room->pageId; ?>'>
                         <span class='roomdesc'>
                             <img src='displayImage.php?id=<? echo $imgId; ?>'>
                             <span class='roomattributes'>
-                                <span class='roomname'><? echo $room->bookingItemName; ?></span><br>
+                                <span class='roomname'><? echo $room->name; ?></span><br>
                                 <?php if($size > 0) { ?>
                                     <span class='roomcap'>Kap: <? echo $size; ?> personer.</span><br>
                                 <?php } ?>

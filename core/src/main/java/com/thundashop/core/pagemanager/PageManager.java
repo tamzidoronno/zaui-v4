@@ -241,6 +241,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public List<ApplicationInstance> getApplicationsForPage(String pageId) throws ErrorException {
         Page page = getPage(pageId);
+        if(page == null) {
+            return null;
+        }
         List<PageCell> cells = page.getCellsFlatList();
 
         return cells.stream()

@@ -30,54 +30,27 @@ if($repeat) {
         <i class='fa fa-close togglerepeatbox'></i>
         <i class='fa fa-caret-up'></i>
         <input type='hidden' value='repeat' gsname='repeattype'>
-        <?php if($config->isItemBookingInsteadOfTypes) { ?>
-        <div class='eventrow'>
-            <span class='title'><? echo $this->__w("Room"); ?>:</span>
+            <div class='eventrow'>
+            <span class='title'><? echo $this->__w("Type"); ?>:</span>
             <span class='optionbox'>
-                <select gsname='itemid'>
+                <select gsname='typeid'>
                 <?php
-                $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+                $types =$this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
                 $types = $this->indexList($types);
-                $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
-                $rooms = $this->indexList($rooms);
-                foreach($rooms as $idx => $room) {
-                    if(!$types[$room->bookingItemTypeId]->visibleForBooking) {
+                foreach($types as $idx => $type) {
+                    if(!$type->visibleForBooking && !$this->isEditorMode()) {
                         continue;
                     }
                     $selected = "";
-                    if($bookedRoom->bookingItemId == $room->id) {
+                    if($bookedRoom->bookingItemTypeId == $type->id) {
                         $selected = "SELECTED";
                     }
-                    echo "<option value='".$room->id."' $selected>".$room->bookingItemName."</option>";
+                    echo "<option value='".$type->id."' $selected>".$type->name."</option>";
                 }
                 ?>
                 </select>
             </span>
         </div>
-        <? } else { ?>
-            <div class='eventrow'>
-                <span class='title'><? echo $this->__w("Type"); ?>:</span>
-                <span class='optionbox'>
-                    <select gsname='typeid'>
-                    <?php
-                    $types =$this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
-                    $types = $this->indexList($types);
-                    foreach($types as $idx => $type) {
-                        if(!$type->visibleForBooking) {
-                            continue;
-                        }
-                        $selected = "";
-                        if($bookedRoom->bookingItemTypeId == $type->id) {
-                            $selected = "SELECTED";
-                        }
-                        echo "<option value='".$type->id."' $selected>".$type->name."</option>";
-                    }
-                    ?>
-                    </select>
-                </span>
-            </div>
-        
-        <? } ?>
         
         <div class='eventrow'>
             <span class='title'>

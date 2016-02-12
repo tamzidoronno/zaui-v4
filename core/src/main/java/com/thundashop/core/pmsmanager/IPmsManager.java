@@ -107,7 +107,7 @@ public interface IPmsManager {
     public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
     public RegistrationRules initBookingRules();
     public void addRepeatingData(PmsRepeatingData data) throws Exception;
-    public List<Integer> getAvailabilityForRoom(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
+    public List<Integer> getAvailabilityForType(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
     public void toggleAddon(String itemId) throws Exception;
     public PmsBookingDateRange getDefaultDateRange();
     public List<Room> getAllRoomTypes(Date start, Date end);

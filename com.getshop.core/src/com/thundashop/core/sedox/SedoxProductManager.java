@@ -1738,6 +1738,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
             
             SedoxUser user = getSedoxUserAccountById(order.customer_id);
+            
+            if (user == null) {
+                updateUserFromMagento(order.customer_id, true);
+                user = getSedoxUserAccountById(order.customer_id);
+            }
+            
             if (user == null) {
                 notifyEvcError("Could not add credit to account, user with id: " + order.customer_id, order);
                 return;

@@ -344,6 +344,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         savedItem.visibleForBooking = type.visibleForBooking;
         savedItem.addon = type.addon;
         savedItem.rules = type.rules;
+        savedItem.order = type.order;
+        savedItem.capacity = type.capacity;
+        savedItem.description = type.description;
         saveObject(savedItem);
         return savedItem;
     }
@@ -590,9 +593,11 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             result = config.openingHours;
         } else {
             BookingItemType item = getBookingItemType(itemId);
-            result = item.openingHours;
-            if(result == null) {
-                result = config.openingHours;
+            if(item != null) {
+                result = item.openingHours;
+                if(result == null) {
+                    result = config.openingHours;
+                }
             }
         }
         return result;

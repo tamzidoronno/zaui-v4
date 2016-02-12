@@ -54,8 +54,25 @@ class PmsCalendar extends \WebshopApplication implements \Application {
      * @return \core_bookingengine_data_BookingItemType[]
      */
     public function getAllTypes() {
-        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
-        return $this->indexList($types);
+        $rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        
+        $sortList = array();
+        $unsorted = array();
+        foreach($rooms as $item) {
+            if($item->order == 0) {
+                $unsorted[] = $item;
+            } else {
+                $sortList[$item->order] = $item;
+            }
+        }
+
+        ksort($sortList);
+
+        foreach($unsorted as $item) {
+            $sortList[] = $item;
+        }
+        
+        return $sortList;
     }
 
     /**

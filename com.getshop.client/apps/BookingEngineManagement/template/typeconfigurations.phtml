@@ -64,6 +64,15 @@ $addons[2] = "Per timeslot";
             <input type="number" style='width: 50px;' gsname="size" value="<? echo $item->size; ?>">
         </td>
     </tr>
+    <tr>
+        <td width="50%">Capasity (full when counter hit this)</td>
+        <td width="50%"><input type="text" gsname="capacity" style='width:100%;' value="<? echo $item->capacity; ?>"></td>
+    </tr>
+    <tr>
+        <td width="50%">Description</td>
+        <td width="50%"><input type="text" gsname="description" style='width:100%;' value="<? echo $item->description; ?>"></td>
+    </tr>
+    
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>
@@ -74,3 +83,13 @@ $addons[2] = "Per timeslot";
     <input type="hidden" gsname="typeid" value="<? echo $id; ?>">
     <input type="button" gstype="submitToInfoBox" type="button" value="Open field configuration">
 </div>
+
+<hr>
+<h1>Opening hours configuration</h1>
+<?php $this->includefile("addmoredates"); ?>
+<br><br>
+<div gstype="form" method="editFormFields">
+    <input type="hidden" gsname="itemid" value="<? echo $id; ?>">
+    <input type="button" gstype="submitToInfoBox" type="button" value="Open field configuration">
+</div>
+

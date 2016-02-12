@@ -34,13 +34,3 @@ $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedNa
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>
-
-<hr>
-<h1>Opening hours configuration</h1>
-<?php $this->includefile("addmoredates"); ?>
-<br><br>
-<div gstype="form" method="editFormFields">
-    <input type="hidden" gsname="itemid" value="<? echo $id; ?>">
-    <input type="button" gstype="submitToInfoBox" type="button" value="Open field configuration">
-</div>
-

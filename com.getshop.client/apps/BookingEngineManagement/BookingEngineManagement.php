@@ -10,6 +10,10 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         return "BookingEngineManagement";
     }
 
+    public function configureTypeSorting() {
+         $this->includefile("typesorting");
+    }
+    
     public function updateName() {
         $name = $_POST['data']['name'];
         $id = $_POST['data']['entryid'];
@@ -31,6 +35,16 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
             $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $itemid);
             $item->order = $i;
             $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
+            $i++;
+       }
+    }
+    
+    public function setNewTypeSorting() {
+        $i = 1;
+        foreach($_POST['data']['sortlist'] as $typeid) {
+            $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $typeid);
+            $type->order = $i;
+            $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $type);
             $i++;
        }
     }
@@ -195,6 +209,8 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $item->visibleForBooking = $_POST['data']['visibleForBooking'];
         $item->size = $_POST['data']['size'];
         $item->name = $_POST['data']['name'];
+        $item->description = $_POST['data']['description'];
+        $item->capacity = $_POST['data']['capacity'];
         
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $item);
     }

@@ -10,7 +10,14 @@ app.BookingEngineManagement = {
         $(document).on('click', '.BookingEngineManagement .configureOpeningHours', app.BookingEngineManagement.configureOpeningHours);
         $(document).on('change','.BookingEngineManagement .repeat_type', app.BookingEngineManagement.changeRepeatType);
         $(document).on('click','.BookingEngineManagement .configureSorting', app.BookingEngineManagement.configureSorting);
+        $(document).on('click','.BookingEngineManagement .configureTypeSorting', app.BookingEngineManagement.configureTypeSorting);
         $(document).on('click','.BookingEngineManagement .savesorting', app.BookingEngineManagement.savesorting);
+        $(document).on('click','.BookingEngineManagement .savetypesorting', app.BookingEngineManagement.savetypesorting);
+    },
+    configureTypeSorting : function() {
+        var data = {}
+        var event = thundashop.Ajax.createEvent('','configureTypeSorting', $(this), data);
+        thundashop.common.showInformationBoxNew(event, 'Opening hours configuration');
     },
     savesorting: function() {
         var counter = 0;
@@ -23,6 +30,19 @@ app.BookingEngineManagement = {
             "sortlist" : result
         }
         thundashop.Ajax.simplePost($(this), 'setNewSorting', data);
+        thundashop.common.hideInformationBox();
+    },
+    savetypesorting: function() {
+        var counter = 0;
+        var result = [];
+        $('#sortable li').each(function() {
+            result.push($(this).attr('typeid'));
+            counter++;
+        });
+        var data = {
+            "sortlist" : result
+        }
+        thundashop.Ajax.simplePost($(this), 'setNewTypeSorting', data);
         thundashop.common.hideInformationBox();
     },
     

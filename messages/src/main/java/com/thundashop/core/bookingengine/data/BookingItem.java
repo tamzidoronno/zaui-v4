@@ -79,13 +79,5 @@ public class BookingItem extends DataCommon {
     
     public RegistrationRules rules = null;
     
-    /**
-     * Timelines for when this item is open.
-     */
-    public TimeRepeaterData openingHours;
-    
-    /**
-     * If item needs to be ordered in a special way.
-     */
     public Integer order = 0;
 }

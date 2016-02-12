@@ -224,7 +224,7 @@ app.ProMeisterLogin = {
         $('.signupform_outer').hide();
     },
     
-    show: function(addressOnSuccess) {
+    show: function(addressOnSuccess, forceToAddress) {
         
         if (addressOnSuccess === true) {
             addressOnSuccess = app.ProMeisterLogin.addressOnSuccess;
@@ -233,6 +233,7 @@ app.ProMeisterLogin = {
         $(window).scrollTop(0);
         app.ProMeisterLogin.showStep0();
         app.ProMeisterLogin.addressOnSuccess = addressOnSuccess;
+        app.ProMeisterLogin.forceToAddress = forceToAddress;
         $('.signupform_outer').show();
     },
     
@@ -252,8 +253,13 @@ app.ProMeisterLogin = {
         
         var event = thundashop.Ajax.createEvent(null, "proLogin", null, login);
         thundashop.Ajax.postWithCallBack(event, function(result) {
+            debugger;
             if (result === "success") {
-                $('#loginform').submit();
+                if (typeof(app.ProMeisterLogin.forceToAddress) != "undefined" && app.ProMeisterLogin.forceToAddress) {
+                    window.location = app.ProMeisterLogin.addressOnSuccess;
+                } else {
+                    $('#loginform').submit();
+                }
             } else {
                 alert(__f("Wrong username or password"));
             }

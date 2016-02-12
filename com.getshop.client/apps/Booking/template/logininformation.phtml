@@ -4,6 +4,6 @@
     echo $this->__f("You need to be logged in to sign up");
     ?>
     <br/>
-    <div class='shop_button' onclick='app.ProMeisterLogin.show("/index.php?page=<? echo $this->getPage()->id; ?>")'><? echo $this->__f("Login"); ?></div>
+    <div class='shop_button' onclick='app.ProMeisterLogin.show("/index.php?page=<? echo $this->getPage()->id; ?>&entry=<? echo $_GET['entry']; ?>", true)'><? echo $this->__f("Login"); ?></div>
 
 </div>

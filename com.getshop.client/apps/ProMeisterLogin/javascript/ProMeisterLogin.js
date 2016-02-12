@@ -253,7 +253,6 @@ app.ProMeisterLogin = {
         
         var event = thundashop.Ajax.createEvent(null, "proLogin", null, login);
         thundashop.Ajax.postWithCallBack(event, function(result) {
-            debugger;
             if (result === "success") {
                 if (typeof(app.ProMeisterLogin.forceToAddress) != "undefined" && app.ProMeisterLogin.forceToAddress) {
                     window.location = app.ProMeisterLogin.addressOnSuccess;

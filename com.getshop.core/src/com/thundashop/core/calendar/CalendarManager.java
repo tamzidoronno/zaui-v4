@@ -102,6 +102,13 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 areas.put(area.id, area);
             }
         }
+
+        try {
+            printList();
+        } catch (ErrorException ex) {
+            ex.printStackTrace();
+        }
+        
     }
 
     private Month getMonth(int year, int month) {
@@ -1830,6 +1837,16 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             if (location.deleteSubLocation(locationId)) {
                 saveObject(location);
             }
+        }
+    }
+
+    private void printList() throws ErrorException {
+        List<Entry> entries = getEntries(2016, 2, 12, new ArrayList());
+        for (Entry ientry : entries) {
+            finalizeEntry(ientry);
+            String date = ientry.day+"/"+ientry.month+"-"+ientry.year;
+            String addr = "http://promeister.academy/?page=02474f5b-1d72-409f-9e2d-c3cf0182baec&entry="+ientry.entryId;
+            System.out.println(ientry.location+";"+ientry.title+";"+date+";"+addr);
         }
     }
 }

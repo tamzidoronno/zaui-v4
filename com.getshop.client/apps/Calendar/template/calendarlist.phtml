@@ -82,7 +82,7 @@ foreach ($entries as $year => $months) {
                             $booking = "<a href='$bookingLink'><div style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div></a>";
                         }
                     } else {
-                        $booking = "<div onclick=\"app.ProMeisterLogin.show('$bookingLink');\" style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div>";
+                        $booking = "<div onclick=\"app.ProMeisterLogin.show('$bookingLink', true);\" style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div>";
                     }
                     
                 }
@@ -96,7 +96,7 @@ foreach ($entries as $year => $months) {
                         }
                         
                     } else {
-                        $booking = "<div onclick=\"app.ProMeisterLogin.show('$bookingLink&waiting=true');\" style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list") . "</div>";
+                        $booking = "<div onclick=\"app.ProMeisterLogin.show('$bookingLink&waiting=true', true);\" style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list") . "</div>";
                     }
                     
                 }

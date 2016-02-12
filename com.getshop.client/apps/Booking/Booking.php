@@ -111,6 +111,14 @@ class Booking extends MarketingApplication implements Application {
             $this->clearSession();
         }
         
+        if (isset($_GET['entry'])) {
+            $entry = $this->getApi()->getCalendarManager()->getEntry($_GET['entry']);
+            if ($entry->isInPast || $entry->lockedForSignup || !$entry->availableForBooking) {
+                echo "<div style='font-size: 20px; text-align: center; padding: 20px;'>".$this->__f("This course is fully booked, please try another one.")."</div>";
+                return;
+            }
+        }
+        
         if ($userObject == null) {
             $this->includefile("logininformation");
         } elseif (isset($_GET['userId'])) {

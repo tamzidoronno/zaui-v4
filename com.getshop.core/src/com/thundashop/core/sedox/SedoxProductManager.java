@@ -1745,7 +1745,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
             
             if (user == null) {
-                notifyEvcError("Could not add credit to account, user with id: " + order.customer_id, order);
+                notifyEvcError("Could not add credit to account because databank dont know about this user, its not transferred to databank, a new user? The id of the user tried to update is: " + order.customer_id, order);
                 return;
             }
             

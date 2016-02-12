@@ -589,7 +589,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if(itemId == null || itemId.isEmpty()) {
             result = config.openingHours;
         } else {
-            BookingItem item = getBookingItem(itemId);
+            BookingItemType item = getBookingItemType(itemId);
             result = item.openingHours;
             if(result == null) {
                 result = config.openingHours;
@@ -599,25 +599,25 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
     }
     
-    void saveOpeningHours(TimeRepeaterData time, String itemId) {
-        if(itemId == null || itemId.isEmpty()) {
+    void saveOpeningHours(TimeRepeaterData time, String typeId) {
+        if(typeId == null || typeId.isEmpty()) {
             config.openingHours = time;
             saveObject(config);
         } else {
-            BookingItem item = getBookingItem(itemId);
-            item.openingHours = time;
-            saveBookingItem(item);
+            BookingItemType type = getBookingItemType(typeId);
+            type.openingHours = time;
+            saveObject(type);
         }
     }
    
     
-    public TimeRepeaterData getTime(String itemId) {
-        if(itemId == null || itemId.isEmpty()) {
+    public TimeRepeaterData getTime(String typeId) {
+        if(typeId == null || typeId.isEmpty()) {
             return config.openingHours;
         }
         
-        BookingItem item = getBookingItem(itemId);
-        return item.openingHours;
+        BookingItemType type = getBookingItemType(typeId);
+        return type.openingHours;
     }
 
     boolean checkIfAvailable(String itemId, String typeId, Date start, Date end) {
@@ -634,8 +634,11 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         Booking booking = new Booking();
-        booking.bookingItemId = item.id;
-        booking.bookingItemTypeId = item.bookingItemTypeId;
+        if(itemId == null || itemId.isEmpty()) {
+            itemId = null;
+        }
+        booking.bookingItemId = itemId;
+        booking.bookingItemTypeId = typeId;
         booking.startDate = start;
         booking.endDate = end;
         

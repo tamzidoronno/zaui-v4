@@ -82,6 +82,9 @@ public interface IPmsManager {
     public String addBookingItem(String bookingId, String item, Date start, Date end);
     
     @Administrator
+    public String addBookingItemType(String bookingId, String item, Date start, Date end);
+    
+    @Administrator
     public String getDefaultMessage(String bookingId);
     
     @Administrator

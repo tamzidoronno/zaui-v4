@@ -73,5 +73,8 @@ public interface IBookingEngine {
     @Administrator
     public void saveOpeningHours(TimeRepeaterData time, String itemId);
     
+    @Administrator
+    public List<BookingItem> getAvailbleItems(String typeId, Date start, Date end);    
+    
     public TimeRepeaterData getOpeningHours(String itemId);
 }

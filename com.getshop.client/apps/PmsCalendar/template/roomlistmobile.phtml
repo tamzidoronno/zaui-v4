@@ -17,7 +17,7 @@ foreach($rooms as $room) {
 <a href="?page=<?php echo $room->pageId; ?>">
     <div class='roomentry'>
         <?php 
-        $img = $this->getImageFromPage($room->id);
+        $img = $this->getImageFromPage($room->pageId);
         echo "<img src='displayImage.php?id=$img'>";
         ?>
         <div class="bottomdesc">

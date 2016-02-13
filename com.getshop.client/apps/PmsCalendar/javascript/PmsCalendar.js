@@ -6,7 +6,46 @@ app.PmsCalendar = {
         $(document).on('mousedown', '.PmsCalendar .available', app.PmsCalendar.selectField);
         $(document).on('mousedown', '.PmsCalendar .continue_button', app.PmsCalendar.continueToForm);
         $(document).on('click', '.PmsCalendar .loadbookingonclick', app.PmsCalendar.loadBookingId);
+        $(document).on('click', '.PmsCalendar .gotopage', app.PmsCalendar.gotopage);
+        $(document).on('change', '.PmsCalendar .changemonthmobile', app.PmsCalendar.changemonthmobile);
         $(document).on('mouseup', app.PmsCalendar.mouseup);
+        $(document).on('scroll', app.PmsCalendar.checkScroll);
+    },
+    gotopage : function() {
+        var pageid = $(this).attr('pageid');
+        var curScroll = $(window).scrollTop();
+        thundashop.common.goToPage(pageid);
+        PubSub.subscribe('NAVIGATION_COMPLETED', function() {
+            $(document).find('img').batchImageLoad({
+                loadingCompleteCallback: function() {
+                    $(document).scrollTop(curScroll);
+                    app.PmsCalendar.checkScroll();
+                }
+            });
+        });
+    },
+    checkScroll : function() {
+        var topView = $('.dayselectioncheck').offset().top;
+        var curScroll = $(document).scrollTop();
+        if(topView < curScroll) {
+            $('.dayselectioncheck').height($('.dayselection').height()+20);
+            $('.dayselectioncheck').addClass('overrider');
+            $('.dayselection .textdescription').hide();
+            $('.dayselection .smalltypeselection').show();
+            $('.dayselection').addClass('transparentbackground');
+        } else {
+            $('.dayselectioncheck').height("0px");
+            $('.dayselectioncheck').removeClass('overrider');
+            $('.dayselection').css('position','inherit');
+            $('.dayselection .smalltypeselection').hide();
+            $('.dayselection .textdescription').show();
+            $('.dayselection').removeClass('transparentbackground');
+        }
+    },
+    changemonthmobile : function() {
+        thundashop.Ajax.simplePost($(this), 'setCalendarDay', {
+            "day" : $(this).val()
+        });
     },
     loadBookingId : function() {
         var data = {

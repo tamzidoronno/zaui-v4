@@ -3,14 +3,28 @@
 $itemId = $this->getPage()->javapage->id;
 $rooms = $this->getAllTypes();
 $room = null;
+$before = null;
+$next = null;
+$bef = null;
 foreach($rooms as $r) {
+    if(!$next && $room) {
+        $next = $r->pageId;
+    }
     if($r->pageId == $itemId) {
+        $before = $bef;
         $room = $r;
     }
+    $bef = $r->pageId;
 }
 ?>
 <div class="roomentry" style="border:11px #fff;">
     <?php
+    if($before) {
+        echo "<a href='?page=$before'><i class='fa fa-angle-left'></i></a>";
+    }
+    if($next) {
+        echo "<a href='?page=$next'><i class='fa fa-angle-right'></i></a>";
+    }
     $img = $this->getImageFromPage($itemId);
     echo "<img src='displayImage.php?id=$img'>";
     ?>
@@ -20,7 +34,41 @@ foreach($rooms as $r) {
         echo $room->description;
         ?>
     </div>
+
 </div>
+<div class="dayselectioncheck"></div>
+    <div style="border: solid 1px; background-color:#fff; text-align: center; padding-top: 10px; padding-bottom: 10px;" class="dayselection">
+        <div class="smalltypeselection">
+            <span class="changedateleft gotopage" style="padding: 10px;" pageid='<?php echo $before; ?>'>
+                <?php
+                if($before) {
+                       echo "<i class='fa fa-caret-left'></i>";
+                }             
+                ?>
+            </span>
+            <? echo $room->name; ?>
+            <span class="changedateright gotopage" style="padding: 10px;"  pageid='<?php echo $next; ?>'>
+                <?php
+                if($next) {
+                    echo "<i class='fa fa-caret-right'></i>";
+                }                
+                ?>
+            </span>
+        </div>
+        <div class="textdescription">
+            Velg ønsket dag og tidspunkt for å starte bookingen
+        </div>
+            
+        <div style="text-align: center;font-size: 40px; position:relative;">
+            <span class="changedateleft" style="padding: 10px;" gstype="clicksubmit" method="setPrevious" gsname="type" gsvalue="day">
+                <i class="fa fa-caret-left" method="setPrevious" gsname="type" gsvalue="day"></i>
+            </span>
+            <input type="date" value="<? echo date('Y-m-d', $this->getSelectedDay()); ?>" class="changemonthmobile">
+            <span class="changedateright" style="padding: 10px;" gstype="clicksubmit" method="setNext" gsname="type" gsvalue="day">
+               <i class="fa fa-caret-right " method="setNext" gsname="type" gsvalue="day"></i>
+            </span>
+        </div>
+    </div>
 <div>
 <?php 
 $curTime = $this->getStartTime($this->getSelectedDay()); 

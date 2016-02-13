@@ -67,7 +67,7 @@
 .PmsCalendar .day.disabled { color:#bbb; cursor:inherit !important; }
 .PmsCalendar .day.disabled:hover { cursor:inherit !important;  }
 .PmsCalendar .readmorelink { position:absolute; right: 5px; bottom: 5px; }
-.PmsCalendar .roomentry { display:inline-block; min-height: 100px; width:100%; position:relative; }
+.PmsCalendar .roomentry { display:inline-block; min-height: 100px; width:100%; position:relative; min-height: 250px; background-color:#fff; }
 .PmsCalendar .bottomdesc {position:absolute; width: 100%; bottom: 0px; height: 30%; background-color:rgba(241,241,241,0.9); padding: 10px; box-sizing: border-box; }
 .PmsCalendar .timerow {  height: 60px; padding-left: 60px; position: relative; background-color:#fff; padding-bottom: 2px; }
 .PmsCalendar .timerow .timebox {background-color:rgba(241,241,241,1); line-height: 61px; width: 58px; display:inline-block; position:absolute; left:0px; text-align: center; }

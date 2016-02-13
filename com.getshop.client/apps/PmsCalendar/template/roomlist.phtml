@@ -33,8 +33,10 @@ if(!$this->isItemPage()) {
     ?>
     <div style='padding-top: 70px;'>
         <div style="position:relative">
-            <span style="position:absolute;left:5px;">Start med å velge ønsket tidspunkt i kalenderen -<br>du kan klikk og dra for å velge et lengre tidsrom.</span>
+            <?php  if(!$this->isItemPage()) { ?>
+                <span style="position:absolute;left:5px;">Start med å velge ønsket tidspunkt i kalenderen -<br>du kan klikk og dra for å velge et lengre tidsrom.</span>
         <?php
+            }
             echo "<span class='typebutton "; if($type =="day") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='day'>Dag</span>";
             echo "<span class='typebutton "; if($type =="week") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='week'>Uke</span>";
             if($this->isItemPage()) {
@@ -140,7 +142,7 @@ if($type == "month") {
             continue;
         }
         if($this->isItemPage()) {
-            if($room->id != $this->getPage()->javapage->id) {
+            if($room->pageId != $this->getPage()->javapage->id) {
                 continue;
             }
         }

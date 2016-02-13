@@ -218,10 +218,15 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             }
         }
         
+        $dayDate = "";
+        if($type != "month") {
+            $dayDate = date('d', $day);
+        }
+        
         if($type == "week" || $type == "month") {
             echo "<span class='weekdaycontainer weektimeheader'>";
             echo "<span class='weektimeheaderinner'>";
-            echo "<div>" . date('d', $day) . ". " . $this->__w(date('l', $day)) . "</div>";
+            echo "<div>" . $dayDate . ". " . $this->__w(date('l', $day)) . "</div>";
             echo "<span style='float:left; padding-left: 5px; font-size: 8px;'>".date("H.i", $this->getStartTime($day)) ."</span>";
             echo "<span style='float:right;padding-right: 5px; font-size: 8px;'>".date("H.i", $this->getEndTime($day)) ."</span>";
             echo "</span>";
@@ -423,10 +428,10 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         if($this->isItemPage) {
             return true;
         }
-        $rooms = $this->getAllRooms();
+        $rooms = $this->getAllTypes();
         $page = $this->getPage();
         foreach($rooms as $id => $test) {
-            if($page->javapage->id == $id) {
+            if($page->javapage->id == $test->pageId) {
                 $this->isItemPage = true;
             }
         }

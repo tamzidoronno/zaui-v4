@@ -139,9 +139,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         
-        $res = $this->getApi()->getBookingEngine()->checkIfAvailable($this->getSelectedName(), 
+        $res = $this->getApi()->getBookingEngine()->isItemAvailable($this->getSelectedName(), 
                 $item, 
-                null, 
                 $this->convertToJavaDate($start), 
                 $this->convertToJavaDate($end));
         
@@ -153,9 +152,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
         $bookingId = $_POST['data']['bookingid'];
-        $item = $_POST['data']['item'];
+        $type = $_POST['data']['item'];
         
-        $errors = $this->getApi()->getPmsManager()->addBookingItem($this->getSelectedName(), $bookingId, $item, $start, $end);
+        $errors = $this->getApi()->getPmsManager()->addBookingItemType($this->getSelectedName(), $bookingId, $type, $start, $end);
         if($errors) {
             $this->errors[] = $errors;
         }
@@ -515,13 +514,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         ?>
             <select style='float:left; margin-right: 10px;' gsname='item' class='addroomselectiontype'>
                 <?php 
-                foreach($items as $item) {
+                foreach($types as $type) {
                     /* @var $item core_bookingengine_data_BookingItem */
-                    $itemId = $item->id;
-                    $canAdd = $this->getApi()->getBookingEngine()->checkIfAvailable($this->getSelectedName(), $itemId, null, $start, $end);
-                    if($canAdd) {
-                        echo "<option value='".$item->id."'>". $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")". "</option>";
-                    }
+                    $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $type->id, $start, $end);
+                    if($number > 0) 
+                        echo "<option value='".$type->id."'>". $type->name . "</option>";
                 }
                 ?>
             </select>

@@ -65,6 +65,18 @@ if(sizeof($addons) > 0) {
     printRooms($addons, $types, $items, $booking->id, true, $hasPrices, $hasArx,$config, $this);
 }
 
+/**
+ * 
+ * @param type $rooms
+ * @param type $types
+ * @param type $items
+ * @param type $bookingId
+ * @param type $addons
+ * @param type $hasPrices
+ * @param type $hasArx
+ * @param type $config
+ * @param \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement $object
+ */
 function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $hasArx, $config, $object) {
     ?>
 <table width='100%' cellspacing='0' cellpadding='0' class='guestoverviewtable'>
@@ -104,23 +116,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
             <td>
                 <span class='roomattribute'>
                     <span class='roompostfix'>
-                        <span class="viewmode">
-                            <? echo $types[$room->bookingItemTypeId]->name; ?>
-                        </span>
-                        <span class="editmode" gstype='form' method="setItemType">
-                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
-                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <select gsname='itemtype'>
-                                <?php foreach ($types as $type) { ?>
-                                    <?php $selected = "";
-                                    if ($type->id == $room->bookingItemTypeId) {
-                                        $selected = "SELECTED";
-                                    }  ?>
-                                    <option value='<? echo $type->id; ?>' <? echo $selected; ?>><? echo $type->name; ?></option>
-                                <? }  ?>
-                            </select>
-                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                        </span>
+                        <? echo $types[$room->bookingItemTypeId]->name; ?>
                     </span>
                 </span>
             </td>
@@ -142,7 +138,8 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                                 <select gsname='itemid'>
                                     <?php 
-                                    foreach($items as $item) {
+                                    $availableItems = $object->getApi()->getBookingEngine()->getAvailbleItems($object->getSelectedName(), null, $room->date->start, $room->date->end);
+                                    foreach($availableItems as $item) {
                                         $selected = "";
                                         if($types[$item->bookingItemTypeId]->addon > 0) {
                                             continue;
@@ -151,9 +148,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                                         if($room->booking->bookingItemId == $item->id) {
                                             $selected = "SELECTED";
                                         }
-                                        if($object->canBeUsed($item->id, $room->date->start, $room->date->end)) {
-                                            echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")" . "</option>";
-                                        }
+                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")" . "</option>";
                                     }
                                     ?>
                                 </select>
@@ -299,5 +294,4 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
 </table>
 <?php
 }
-
 ?>

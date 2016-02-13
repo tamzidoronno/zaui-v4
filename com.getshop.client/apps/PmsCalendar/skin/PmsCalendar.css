@@ -60,12 +60,13 @@
 .PmsCalendar .timecontainer_month { width: 95% !important; }
 
 /* states colors */
-.PmsCalendar .occupied { background-color: #ee3e35; }
-.PmsCalendar .notconfirmed { background-color: #f7931d; }
-.PmsCalendar .available { background-color: #eaeaea; }
-.PmsCalendar .not_available { background-color: #cbcbcb; }
+.PmsCalendar .occupied { background-color: #ee3e35 !important; }
+.PmsCalendar .notconfirmed { background-color: #f7931d !important; }
+.PmsCalendar .available { background-color: #eaeaea !important; }
+.PmsCalendar .not_available { background-color: #cbcbcb !important; }
 .PmsCalendar .day.disabled { color:#bbb; cursor:inherit !important; }
 .PmsCalendar .day.disabled:hover { cursor:inherit !important;  }
+
 .PmsCalendar .readmorelink { position:absolute; right: 5px; bottom: 5px; }
 .PmsCalendar .roomentry { display:inline-block; min-height: 100px; width:100%; position:relative; min-height: 250px; background-color:#fff;  }
 .PmsCalendar .roomentry img { width: 100%; }

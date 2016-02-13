@@ -75,7 +75,15 @@ $curTime = $this->getStartTime($this->getSelectedDay());
 $end = $this->getEndTime($this->getSelectedDay()); 
 while(true) {
     $time = date("H", $curTime);
-    echo "<div class='timerow'><span class='timebox'>$time</span><span class='halfourbox first'></span><span class='halfourbox'></span></div>";
+    $startTime = $curTime;
+    $endTime = $startTime + 1800;
+    $state = $this->getBlockState($room->id, $curTime, $startTime, $endTime);
+    
+    $startTime = $endTime;
+    $endTime = $endTime + 1800;
+    $state2 = $this->getBlockState($room->id, $curTime, $startTime, $endTime);
+    
+    echo "<div class='timerow'><span class='timebox'>$time</span><span class='halfourbox first $state'></span><span class='halfourbox $state2'></span></div>";
     if($curTime >= $end) {
         break;
     }

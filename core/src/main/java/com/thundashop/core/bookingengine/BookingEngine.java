@@ -207,11 +207,6 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         return deepClone(bookingEngineAbstract.getOpeningHours(itemId));
     }
 
-    @Override
-    public boolean checkIfAvailable(String itemId, String typeId, Date start, Date end) {
-        return bookingEngineAbstract.checkIfAvailable(itemId, typeId, start, end);
-    }
-
     public List<BookingItem> getBookingItemsByType(String typeId) {
         return bookingEngineAbstract.getBookingItemsByType(typeId);
     }

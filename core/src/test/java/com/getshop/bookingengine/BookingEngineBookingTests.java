@@ -16,6 +16,8 @@ import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.Credentials;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import org.junit.After;
@@ -548,5 +550,40 @@ public class BookingEngineBookingTests extends TestCommon {
         BookingItem savedItem = bookingEngine.saveBookingItem(item);
         
         bookingEngine.deleteBookingItemType(type.id);
+    }
+    
+    @Test
+    public void testGetAvailableItemsReturnsAsnwer() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        bookingEngine.saveBookingItem(item);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        Date now = cal.getTime();
+        
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        Date toMorrow = cal.getTime();
+        
+        List<BookingItem> items = bookingEngine.getAvailbleItems(type.id, now, toMorrow);
+        Assert.assertEquals(1, items.size());
+    }
+    
+    @Test
+    public void testGetAvailableSpotsWhenNoBookingsAdded() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        bookingEngine.saveBookingItem(item);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        Date now = cal.getTime();
+        
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        Date toMorrow = cal.getTime();
+        
+        int avil = bookingEngine.getNumberOfAvailable(type.id, now, toMorrow);
+        Assert.assertEquals(1, avil);
+        
     }
 }

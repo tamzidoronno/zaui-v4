@@ -74,6 +74,4 @@ public interface IBookingEngine {
     public void saveOpeningHours(TimeRepeaterData time, String itemId);
     
     public TimeRepeaterData getOpeningHours(String itemId);
-    
-    public boolean checkIfAvailable(String itemId, String typeId, Date start, Date end);
 }

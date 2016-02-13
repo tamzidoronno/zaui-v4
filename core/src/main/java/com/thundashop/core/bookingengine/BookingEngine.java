@@ -215,4 +215,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public List<BookingItem> getAvailbleItems(String typeId, Date start, Date end) {
         return bookingEngineAbstract.getAvailbleItems(typeId, start, end);
     }
+
+    @Override
+    public List<BookingItem> getAllAvailbleItems(Date start, Date end) {
+        return bookingEngineAbstract.getAvailbleItems(start, end);
+    }
 }

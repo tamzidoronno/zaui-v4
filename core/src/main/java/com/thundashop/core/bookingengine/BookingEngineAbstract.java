@@ -638,47 +638,44 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .collect(Collectors.toList());
     }
 
-    List<BookingItem> getAvailbleItems(String typeIdInput, Date start, Date end) {
+    List<BookingItem> getAvailbleItems(Date start, Date end) {
         List<String> typeIds = new ArrayList();
-        if(typeIdInput != null && !typeIdInput.isEmpty()) {
-            typeIds.add(typeIdInput);
-        } else {
-            for(BookingItemType type : getBookingItemTypes()) {
-                typeIds.add(type.id);
-            }
+        for(BookingItemType type : getBookingItemTypes()) {
+            typeIds.add(type.id);
         }
-        
+
         List<BookingItem> res = new ArrayList();
         for(String typeId : typeIds) {
-
-            BookingItemType type = types.get(typeId);
-            if (type == null) {
-                throw new BookingEngineException("Can not get available items ");
-            }
-
-            List<Booking> bookingsWithinDaterange = bookings.values().stream()
-                    .filter(booking -> booking.bookingItemTypeId.equals(typeId))
-                    .filter(booking -> booking.interCepts(start, end))
-                    .collect(Collectors.toList());
-
-            List<BookingItem> bookingItems = getBookingItemsByType(typeId);
-
-            BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, bookingsWithinDaterange, bookingItems);
-
-            List<BookingItem> foundItems = assigner.getAvailableItems().stream()
-                    .map(o -> items.get(o))
-                    .collect(Collectors.toList());
-            res.addAll(foundItems);
+            res.addAll(getAvailbleItems(typeId, start, end));
         }
-        
+
         Collections.sort(res, new Comparator<BookingItem>(){
             public int compare(BookingItem o1, BookingItem o2){
                 return o1.bookingItemName.compareTo(o2.bookingItemName);
             }
        });
-        
+
         return res;
     }
-   
     
+    
+    List<BookingItem> getAvailbleItems(String typeId, Date start, Date end) {
+        BookingItemType type = types.get(typeId);
+        if (type == null) {
+            throw new BookingEngineException("Can not get available items ");
+        }
+
+        List<Booking> bookingsWithinDaterange = bookings.values().stream()
+                .filter(booking -> booking.bookingItemTypeId.equals(typeId))
+                .filter(booking -> booking.interCepts(start, end))
+                .collect(Collectors.toList());
+
+        List<BookingItem> bookingItems = getBookingItemsByType(typeId);
+
+        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, bookingsWithinDaterange, bookingItems);
+
+        return assigner.getAvailableItems().stream()
+                .map(o -> items.get(o))
+                .collect(Collectors.toList());
+    }
 }

@@ -138,7 +138,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                                 <select gsname='itemid'>
                                     <?php 
-                                    $availableItems = $object->getApi()->getBookingEngine()->getAvailbleItems($object->getSelectedName(), null, $room->date->start, $room->date->end);
+                                    $availableItems = $object->getApi()->getBookingEngine()->getAllAvailbleItems($object->getSelectedName(), $room->date->start, $room->date->end);
                                     foreach($availableItems as $item) {
                                         $selected = "";
                                         if($types[$item->bookingItemTypeId]->addon > 0) {

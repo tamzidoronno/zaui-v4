@@ -56,22 +56,22 @@ app.PmsCalendar = {
         });
     },
     checkScroll : function() {
-        var topView = $('.dayselectioncheck').offset().top;
-        var curScroll = $(document).scrollTop();
-        if(topView < curScroll) {
-            $('.dayselectioncheck').height($('.dayselection').height()+20);
-            $('.dayselectioncheck').addClass('overrider');
-            $('.dayselection .textdescription').hide();
-            $('.dayselection .smalltypeselection').show();
-            $('.dayselection').addClass('transparentbackground');
-        } else {
-            $('.dayselectioncheck').height("0px");
-            $('.dayselectioncheck').removeClass('overrider');
-            $('.dayselection').css('position','inherit');
-            $('.dayselection .smalltypeselection').hide();
-            $('.dayselection .textdescription').show();
-            $('.dayselection').removeClass('transparentbackground');
-        }
+//        var topView = $('.dayselectioncheck').offset().top;
+//        var curScroll = $(document).scrollTop();
+//        if(topView < curScroll) {
+//            $('.dayselectioncheck').height($('.dayselection').height()+20);
+//            $('.dayselectioncheck').addClass('overrider');
+//            $('.dayselection .textdescription').hide();
+//            $('.dayselection .smalltypeselection').show();
+//            $('.dayselection').addClass('transparentbackground');
+//        } else {
+//            $('.dayselectioncheck').height("0px");
+//            $('.dayselectioncheck').removeClass('overrider');
+//            $('.dayselection').css('position','inherit');
+//            $('.dayselection .smalltypeselection').hide();
+//            $('.dayselection .textdescription').show();
+//            $('.dayselection').removeClass('transparentbackground');
+//        }
     },
     changemonthmobile : function() {
         thundashop.Ajax.simplePost($(this), 'setCalendarDay', {

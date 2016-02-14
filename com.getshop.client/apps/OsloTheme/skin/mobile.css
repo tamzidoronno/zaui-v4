@@ -10,3 +10,4 @@ body {
 .PmsCalendar .continuebuttonmobile { background-color:#ed70ec; color:#fff; }
 .PmsCalendar .continue_button,.PmsBookingContactData .complete_button { text-transform: uppercase; background-color:#ed70ec; }
 .gsbody_inner.gseditormode { margin: 0px !important; }
+.PmsBookingSummary, .PmsBookingContactData { margin-left: 10px; margin-right: 10px; }

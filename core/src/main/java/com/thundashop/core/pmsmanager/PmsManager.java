@@ -1023,7 +1023,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     } else {
                         phone = userManager.getUserById(booking.userId).cellPhone;
                     }
-                    messageManager.sendSms(guest.phone, message, guest.prefix);
+                    messageManager.sendSms(phone, message, guest.prefix);
                     repicientList.add(guest.phone);
                 }
             }

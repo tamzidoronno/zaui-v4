@@ -16,7 +16,46 @@ foreach($rooms as $r) {
     }
     $bef = $r->pageId;
 }
+
+$nextPage = $this->__w("summary") . "_" . $this->getSelectedName();
+echo "<input type='hidden' class='continue' value='$nextPage'>";
 ?>
+<div class='addbookingpopup' typeid="<? echo $room->id; ?>">
+    <div style="position:relative;padding-bottom: 5px;">
+        Bekreft tidspunkt og fortsett
+        <i class="fa fa-close" onclick="$('.addbookingpopup').fadeOut();" style="position:absolute;right: 0px; top: 0px;"></i>
+        &nbsp;
+    </div>
+    <table width="100%" cellspacing='2' cellpadding='0'>
+        <tr>
+            <td>Start dato</td>
+            <td>
+                <input type='date' class='selecteddate' value='<?php echo date("Y-m-d", $this->getSelectedDay()); ?>'>
+            </td>
+        </tr>
+        <tr>
+            <td>Start tid</td>
+            <td>
+                <input type="number" value="" min="0" max="23" gsname="starthour" class="starthour addmobilesmall">
+                <input type="number" value="" min="0" max="59" gsname="startminute" class="startminute addmobilesmall">
+            </td>
+        </tr>
+        <tr>
+            <td>Slutt tid</td>
+            <td>
+                <input type="number" value=""  min="0" max="23" gsname="endhour" class="endhour addmobilesmall">
+                <input type="number" value="" min="0" max="59" gsname="endminute" class="endminute addmobilesmall">
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <span class="continuebuttonmobile" gstype='submit'>Fortsett</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
 <div class="roomentry" style="border:11px #fff;">
     <?php
     if($before) {
@@ -79,11 +118,13 @@ while(true) {
     $endTime = $startTime + 1800;
     $state = $this->getBlockState($room->id, $curTime, $startTime, $endTime);
     
-    $startTime = $endTime;
-    $endTime = $endTime + 1800;
-    $state2 = $this->getBlockState($room->id, $curTime, $startTime, $endTime);
+    $startTime2 = $endTime;
+    $endTime2 = $startTime2 + 1800;
+    $state2 = $this->getBlockState($room->id, $curTime, $startTime2, $endTime2);
     
-    echo "<div class='timerow'><span class='timebox'>$time</span><span class='halfourbox first $state'></span><span class='halfourbox $state2'></span></div>";
+    echo "<div class='timerow'><span class='timebox'>$time</span>";
+    echo "<span class='halfourbox first $state mobileentry' startTime='".date("H", $startTime)."' startMinute='".date("i", $startTime)."' endTime='".date("H", $endTime)."' endMinute='".date("i", $endTime)."'></span>";
+    echo "<span class='halfourbox $state2 mobileentry' startTime='".date("H", $startTime2)."' startMinute='".date("i", $startTime2)."' endTime='".date("H", $endTime2)."' endMinute='".date("i", $endTime2)."'></span></div>";
     if($curTime >= $end) {
         break;
     }

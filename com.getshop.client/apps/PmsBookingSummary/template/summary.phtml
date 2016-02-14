@@ -176,7 +176,11 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     } else {
         echo "<span>" . date("d.m.Y H:i", strtotime($date->start));
         if($date->end) {
-             echo " - " . date("d.m.Y H:i", strtotime($date->end));
+            if(date("d.m.Y", strtotime($date->start)) == date("d.m.Y", strtotime($date->end))) {
+                echo " - " . date("H:i", strtotime($date->end));
+            } else {
+                echo " - " . date("d.m.Y H:i", strtotime($date->end));
+            }
         }
     }
     

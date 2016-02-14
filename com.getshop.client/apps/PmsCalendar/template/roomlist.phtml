@@ -107,8 +107,18 @@ if($type == "month") {
     $year = $this->getSelectedYear();
     $monthDates = $dates[$month];
     
+    $typeToUse = null;
+    foreach($types as $room) {
+        if($this->isItemPage()) {
+            if($room->pageId == $this->getPage()->javapage->id) {
+                $typeToUse = $room;
+            }
+        }
+    }
+    
+    
     foreach($monthDates as $week => $days) {
-        echo "<div class='roomrow itemlist' itemid='".$this->getPage()->javapage->id."'>";
+        echo "<div class='roomrow itemlist' itemid='".$typeToUse->id."'>";
         ?>
         <span class='roomdescouter roomdesc_<? echo $type; ?>'>
             <span class='roomdesc'>
@@ -126,7 +136,7 @@ if($type == "month") {
             echo "<div class='weekdaycontainer'>";
             if($day) {
                 echo "<span class='dayindicator'>".date("d", strtotime($day))."</span>";
-                $this->printBlocks(strtotime($day), $type, $this->getPage()->javapage->id, $withSideBar);
+                $this->printBlocks(strtotime($day), $type, $typeToUse->id, $withSideBar);
             }
             echo "</div>";
         }
@@ -192,13 +202,11 @@ if($type == "month") {
             ?>
         </div>
         <?
-    }    
+    }
 }
 
-$nextPage = $this->getConfigurationSetting("continue");
-if(!$nextPage) {
-    $nextPage = "/" . $this->__w("summary") . "_" . $this->getSelectedName() . ".html";
-}
+$nextPage = $this->__w("summary") . "_" . $this->getSelectedName();
+echo "<input type='hidden' class='continue' value='$nextPage'>";
 
 ?>
 <input type='hidden' class='continue_button disabled continue' value="<?php echo $nextPage; ?>">

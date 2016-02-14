@@ -4,13 +4,44 @@ app.PmsCalendar = {
     init : function() {
         $(document).on('mouseover', '.PmsCalendar .available', app.PmsCalendar.mouseoverfield);
         $(document).on('mousedown', '.PmsCalendar .available', app.PmsCalendar.selectField);
+        $(document).on('click', '.PmsCalendar .available.mobileentry', app.PmsCalendar.markMobileEntry);
         $(document).on('mousedown', '.PmsCalendar .continue_button', app.PmsCalendar.continueToForm);
         $(document).on('click', '.PmsCalendar .loadbookingonclick', app.PmsCalendar.loadBookingId);
         $(document).on('click', '.PmsCalendar .gotopage', app.PmsCalendar.gotopage);
+        $(document).on('click', '.PmsCalendar .continuebuttonmobile', app.PmsCalendar.continueButtonMobile);
         $(document).on('change', '.PmsCalendar .changemonthmobile', app.PmsCalendar.changemonthmobile);
         $(document).on('mouseup', app.PmsCalendar.mouseup);
         $(document).on('scroll', app.PmsCalendar.checkScroll);
     },
+    continueButtonMobile : function() {
+        var start = $('.selecteddate').val() + " " + $('.starthour').val() + ":" + $('.startminute').val();
+        var end = $('.selecteddate').val() + " " + $('.endhour').val() + ":" + $('.endminute').val();
+        var typeId = $('.addbookingpopup').attr('typeid');
+        
+        var data = {
+            "start" : start,
+            "end" : end,
+            "room" : typeId
+        };
+        
+        var event = thundashop.Ajax.createEvent('','continueToForm',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            var continueTo = $(".PmsCalendar .continue").val();
+            thundashop.common.goToPage(continueTo);
+        });
+        
+    },
+    markMobileEntry : function() {
+        $('.selected_periode').removeClass('selected_periode');
+        $(this).addClass('selected_periode');
+        var box = $('.addbookingpopup');
+        box.find('.starthour').val($(this).attr('starttime'));
+        box.find('.startminute').val($(this).attr('startminute'));
+        box.find('.endhour').val($(this).attr('endtime'));
+        box.find('.endminute').val($(this).attr('endminute'));
+        box.fadeIn();
+    },
+    
     gotopage : function() {
         var pageid = $(this).attr('pageid');
         var curScroll = $(window).scrollTop();
@@ -104,7 +135,7 @@ app.PmsCalendar = {
         var event = thundashop.Ajax.createEvent('','continueToForm',$('.PmsCalendar'),data);
         var continueTo = $(".PmsCalendar .continue").val();
         thundashop.Ajax.postWithCallBack(event, function() {
-            window.location.href=continueTo;
+            thundashop.common.goToPage(continueTo);
         });
     },
     mouseup : function() {

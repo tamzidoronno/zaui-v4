@@ -15,16 +15,18 @@ foreach($rooms as $room) {
     }
     ?>
 <a href="?page=<?php echo $room->pageId; ?>">
-    <div class='roomentry'>
-        <?php 
-        $img = $this->getImageFromPage($room->pageId);
-        echo "<img src='displayImage.php?id=$img'>";
-        ?>
-        <div class="bottomdesc">
-            <?php echo "<b>" . $room->name . "</b><br>"; 
-            echo "<span class='capasity'>Kapasitet: <br>" . $room->capacity . " personer</span>";
-            echo $room->description;
+    <div class='roomentry roomlistmobileouter'>
+        <div class='roomentry roomlistmobile'>
+            <?php 
+            $img = $this->getImageFromPage($room->pageId);
+            echo "<img src='displayImage.php?id=$img'>";
             ?>
+            <div class="bottomdesc">
+                <?php echo "<b>" . $room->name . "</b><br>"; 
+                echo "<span class='capasity'>Kapasitet: <br>" . $room->capacity . " personer</span>";
+                echo $room->description;
+                ?>
+            </div>
         </div>
     </div>
 </a>

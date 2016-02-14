@@ -175,8 +175,14 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         
         $room = new \core_pmsmanager_PmsBookingRooms();
         $room->date = new \core_pmsmanager_PmsBookingDateRange();
-        $room->date->start = $this->convertToJavaDate($_POST['data']['start']);
-        $room->date->end = $this->convertToJavaDate($_POST['data']['end']);
+        $start = $_POST['data']['start'];
+        $end = $_POST['data']['end'];
+        
+        if(!is_numeric($start)) { $start = strtotime($start); }
+        if(!is_numeric($end)) { $end = strtotime($end); }
+        
+        $room->date->start = $this->convertToJavaDate($start);
+        $room->date->end = $this->convertToJavaDate($end);
         $room->bookingItemTypeId = $_POST['data']['room'];
         
         $booking->rooms = array();

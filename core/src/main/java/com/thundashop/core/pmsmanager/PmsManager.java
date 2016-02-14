@@ -1014,9 +1014,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     messageManager.sendMailWithDefaults(guest.name, guest.email, title, message);
                     repicientList.add(guest.email);
                 } else {
-                    if(guest.phone == null || guest.phone.isEmpty()) {
-                        logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
-                        continue;
+                    String phone = guest.phone;
+                    if(bookingEngine.getConfig().rules.includeGuestData) {
+                        if(phone == null || phone.isEmpty()) {
+                            logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
+                            continue;
+                        }
+                    } else {
+                        phone = userManager.getUserById(booking.userId).cellPhone;
                     }
                     messageManager.sendSms(guest.phone, message, guest.prefix);
                     repicientList.add(guest.phone);

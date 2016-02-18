@@ -168,8 +168,8 @@ class CartManager extends \SystemApplication implements \Application {
         
     public function render() {
         if(isset($_GET['payorder'])) {
-            echo "Pay order";
             $this->payOrderDirect();
+            return;
         }
         
         $this->init();
@@ -535,7 +535,9 @@ class CartManager extends \SystemApplication implements \Application {
             echo "<center><br/><br/><br/>";
             echo "<h1>Fant ikke denne bestillingen, ta kontakt med oss.</h1>";
             echo "<br/><br/><br/><br/></center>";
-        } else if ($order->payment && ($order->payment->paymentType != "ns_def1e922_972f_4557_a315_a751a9b9eff1\Netaxept" && $order->payment->paymentType != "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
+        } else if ($order->payment && ($order->payment->paymentType != "ns_def1e922_972f_4557_a315_a751a9b9eff1\Netaxept" && 
+            $order->payment->paymentType != "ns_542e6a1e_9927_495c_9b6d_bb52af4ea9be\BrainTree" && 
+            $order->payment->paymentType != "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
             echo "<center><br/><br/><br/>";
             echo "<h1>Dette er en bestilling som ikke kan betales med kort.</h1>";
             echo "<br/><br/><br/><br/></center>";
@@ -544,10 +546,6 @@ class CartManager extends \SystemApplication implements \Application {
             echo "<h1>Betalingen er allerede gjennomført for denne bestillingen.</h1>";
             echo "<br/><br/><br/><br/></center>";
         } else {
-            echo "<center><br/><br/><br/>";
-            echo "<h1>Vennligst vent, du blir nå overført til betalingsvinduet.</h1>";
-            echo "<br/><br/><br/><br/></center>";
-
             $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
             $payment = null;
 
@@ -562,7 +560,7 @@ class CartManager extends \SystemApplication implements \Application {
                 $payment->order = $order;
                 if ($payment->order) {
                     $payment->initPaymentMethod();
-                    $payment->preProcess();
+                    $payment->simplePayment();
                 } else {
                     echo "En feil oppstod, ordren kunne ikke bli funnet. (" . $_GET['orderId'] . ")";
                 }

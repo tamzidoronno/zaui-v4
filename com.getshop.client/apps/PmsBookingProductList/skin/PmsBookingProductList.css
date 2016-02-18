@@ -13,3 +13,4 @@
 .PmsBookingProductList .roomimg { max-width: 150px; }
 .PmsBookingProductList .imgcontainer { background-color:#000; position: absolute; left: 0px; top: 0px; display:inline-block; height: 100px; }
 .PmsBookingProductList .selectedtext { position:absolute; right: 10px; }
+.PmsBookingProductList .outofstocktext {position:absolute; right: 10px; top: 10px; }

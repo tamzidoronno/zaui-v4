@@ -21,6 +21,10 @@ class Dibs extends \PaymentApplication implements \Application {
         
     }
     
+    public function simplePayment() {
+        $this->preProcess();
+    }
+    
     public function paymentCallback() {
         $orderId = $_GET['orderId'];
         $nextPage = $_GET['nextpage'];

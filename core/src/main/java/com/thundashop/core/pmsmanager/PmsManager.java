@@ -343,6 +343,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.startInvoiceFrom = booking.getStartDate();
         filter.endInvoiceAt = booking.getEndDate();
         Order order = createOrder(booking, filter);
+        
+        booking.orderIds.add(order.id);
+        saveBooking(booking);
+        
         return order.id;
     }
 

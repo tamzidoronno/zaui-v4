@@ -67,12 +67,20 @@ foreach($rooms as $room) {
                 <?php echo $text; ?>
             </span>
         <?php } else {
-            if(!$selectedRow) {
-                ?>
-                <span class="selectbutton" gstype="clicksubmit" method="selectRoom" gsvalue="<?echo $room->type->id; ?>" gsname="typeid"><?php echo $this->getText("select_button"); ?></span>
-                <?php
+            if($availability) {
+                if(!$selectedRow) {
+                    ?>
+                    <span class="selectbutton" gstype="clicksubmit" method="selectRoom" gsvalue="<?echo $room->type->id; ?>" gsname="typeid"><?php echo $this->getText("select_button"); ?></span>
+                    <?php
+                } else {
+                    echo "<span class='selectedtext'>Selected</span>";
+                }
             } else {
-                echo "<span class='selectedtext'>Selected</span>";
+                ?>
+                <span class='outofstocktext'>
+                    <?php echo $text; ?>
+                </span>
+                <?php
             }
         } ?>
     <span class='name'>

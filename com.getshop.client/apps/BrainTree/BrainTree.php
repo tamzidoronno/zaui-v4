@@ -18,6 +18,10 @@ class BrainTree extends \PaymentApplication implements \Application {
         return "BrainTree";
     }
     
+    public function simplePayment() {
+        $this->includefile("paymentformdirect");
+    }
+    
     public function render() {
         if (isset($_GET['gsPaymentOrderId'])) {
             $_SESSION['gsPaymentOrderId'] = $_GET['gsPaymentOrderId'];
@@ -79,7 +83,6 @@ class BrainTree extends \PaymentApplication implements \Application {
     public function hasSubProducts() {
         return true;
     }
-    
     
     public function preProcess() {
     }

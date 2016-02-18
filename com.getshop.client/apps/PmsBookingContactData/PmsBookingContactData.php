@@ -28,7 +28,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 $orderId = $this->getApi()->getPmsManager()->createPrepaymentOrder($this->getSelectedName(), $curBooking->id);
                 ?>
                 <script>
-                    document.location.href="/?page=cart&payOrderId=<?php echo $orderId; ?>";
+                    document.location.href="/?page=cart&payorder=<?php echo $orderId; ?>";
                 </script>
                 <?
             } else {

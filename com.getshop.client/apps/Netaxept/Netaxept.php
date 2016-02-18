@@ -31,6 +31,10 @@ class Netaxept extends \PaymentApplication implements \Application {
         
     }
     
+    public function simplePayment() {
+        $this->preProcess();
+    }
+    
     public function getWsdl() {
         $wsdl = "https://epayment.nets.eu/Netaxept.svc?wsdl";
         if ($this->getConfigurationSetting("debugmode") != "false" || !$this->getFactory()->productionMode) {

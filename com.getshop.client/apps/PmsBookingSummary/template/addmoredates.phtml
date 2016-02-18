@@ -60,13 +60,13 @@ if($repeat) {
             <span class='optionbox dateselection'>
                 <?php if(date("d.m.Y", strtotime($bookedRoom->date->start)) !=  date("d.m.Y", strtotime($bookedRoom->date->end))) { ?>
                     <input type='text' gsname='eventStartsAt' style='width:40%;text-align: center;' value='<? echo date("d.m.Y", strtotime($bookedRoom->date->start)); ?>'>
-                    <input type='text' style='width: 20%;text-align: center;' value='<? echo date("H:i", strtotime($bookedRoom->date->start)); ?>' gsname='starttime'><br>
+                    <input type='text' style='width: 23%;text-align: center;' value='<? echo date("H:i", strtotime($bookedRoom->date->start)); ?>' gsname='starttime'><br>
                     <input type='text' gsname='eventEndsAt' style='width:40%;text-align: center;' value='<? echo date("d.m.Y", strtotime($bookedRoom->date->end)); ?>'>
-                    <input type='text' style='width: 20%;text-align: center;' value='<? echo date("H:i", strtotime($bookedRoom->date->end)); ?>' gsname='endtime'>
+                    <input type='text' style='width: 23%;text-align: center;' value='<? echo date("H:i", strtotime($bookedRoom->date->end)); ?>' gsname='endtime'>
                 <?php } else { ?>
                     <input type='text' gsname='eventStartsAt' style='width:40%;text-align: center; float:left; margin-right: 5px;' value='<? echo date("d.m.Y", strtotime($bookedRoom->date->start)); ?>'>
-                    <input type='text' style='width: 20%;text-align: center; float:left; margin-right: 5px;' value='<? echo date("H:i", strtotime($bookedRoom->date->start)); ?>' gsname='starttime'>
-                    <input type='text' style='width: 20%;text-align: center; float:left;' value='<? echo date("H:i", strtotime($bookedRoom->date->end)); ?>' gsname='endtime'>
+                    <input type='text' style='width: 23%;text-align: center; float:left; margin-right: 5px;' value='<? echo date("H:i", strtotime($bookedRoom->date->start)); ?>' gsname='starttime'>
+                    <input type='text' style='width: 23%;text-align: center; float:left;' value='<? echo date("H:i", strtotime($bookedRoom->date->end)); ?>' gsname='endtime'>
                 <?php } ?>
             </span>
         </div>
@@ -105,16 +105,21 @@ if($repeat) {
                     </span>
                     <span class='repeat_1 repeatoption'>
                         <table>
+                            <?php $increasedSize = "";
+                            if($this->getFactory()->isMobile()) {
+                                $increasedSize = 'style="min-height:35px;min-width:35px;"';
+                            }
+                            ?>
                             <tr>
-                                <td><input type='checkbox' gsname='repeatMonday'><? echo $this->__w("Mon"); ?></td>
-                                <td><input type='checkbox' gsname='repeatTuesday'><? echo $this->__w("Tue"); ?></td>
-                                <td><input type='checkbox' gsname='repeatWednesday'><? echo $this->__w("Wed"); ?></td>
-                                <td><input type='checkbox' gsname='repeatThursday'><? echo $this->__w("Thu"); ?></td>
+                                <td><input type='checkbox' gsname='repeatMonday' <?php echo $increasedSize; ?>><? echo $this->__w("Mon"); ?></td>
+                                <td><input type='checkbox' gsname='repeatTuesday' <?php echo $increasedSize; ?>><? echo $this->__w("Tue"); ?></td>
+                                <td><input type='checkbox' gsname='repeatWednesday' <?php echo $increasedSize; ?>><? echo $this->__w("Wed"); ?></td>
+                                <td><input type='checkbox' gsname='repeatThursday' <?php echo $increasedSize; ?>><? echo $this->__w("Thu"); ?></td>
                             </tr>
                             <tr>
-                                <td><input type='checkbox' gsname='repeatFriday'><? echo $this->__w("Fri"); ?></td>
-                                <td><input type='checkbox' gsname='repeatSaturday'><? echo $this->__w("Sat"); ?></td>
-                                <td><input type='checkbox' gsname='repeatSunday'><? echo $this->__w("Sun"); ?></td>
+                                <td><input type='checkbox' gsname='repeatFriday' <?php echo $increasedSize; ?>><? echo $this->__w("Fri"); ?></td>
+                                <td><input type='checkbox' gsname='repeatSaturday' <?php echo $increasedSize; ?>><? echo $this->__w("Sat"); ?></td>
+                                <td><input type='checkbox' gsname='repeatSunday' <?php echo $increasedSize; ?>><? echo $this->__w("Sun"); ?></td>
                             </tr>
                         </table>
                         <br>
@@ -129,7 +134,7 @@ if($repeat) {
             </div>
             <div class='eventrow'>
                 <span class='title'><? echo $this->__w("Ends"); ?>:</span>
-                <span class='optionbox'><input type='text' gsname='endingAt' value='<? echo $endDate; ?>' style='width: 35%;text-align: center;'></span>
+                <span class='optionbox'><input type='text' gsname='endingAt' value='<? echo $endDate; ?>' style='width: 200px;text-align: center;'></span>
             </div>
         </div>
         <div class='eventrow'>

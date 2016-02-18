@@ -1,4 +1,5 @@
 <?php
+$this->includefile("mobilemenu");
  /* @var $this \ns_2059b00f_8bcb_466d_89df_3de79acdf3a1\PmsCalendar */
 $itemId = $this->getPage()->javapage->id;
 $rooms = $this->getAllTypes();
@@ -23,7 +24,7 @@ echo "<input type='hidden' class='continue' value='$nextPage'>";
 <div class='addbookingpopup' typeid="<? echo $room->id; ?>">
     <div style="position:relative;padding-bottom: 5px;">
         Bekreft tidspunkt og fortsett
-        <i class="fa fa-close" onclick="$('.addbookingpopup').fadeOut();" style="position:absolute;right: 0px; top: 0px;"></i>
+        <i class="fa fa-close" onclick="$('.addbookingpopup').fadeOut();" style="position:absolute;right: -10px; top: -10px; font-size: 20px; padding: 20px;"></i>
         &nbsp;
     </div>
     <table width="100%" cellspacing='2' cellpadding='0'>
@@ -56,59 +57,44 @@ echo "<input type='hidden' class='continue' value='$nextPage'>";
     </table>
 </div>
 
-<div class="roomentry" style="border:11px #fff;">
+<div class="singleroomentry" style="border:11px #fff;">
     <?php
-    if($before) {
-        echo "<a href='?page=$before'><i class='fa fa-angle-left'></i></a>";
-    }
-    if($next) {
-        echo "<a href='?page=$next'><i class='fa fa-angle-right'></i></a>";
-    }
-    $img = $this->getImageFromPage($itemId);
-    echo "<img src='displayImage.php?id=$img'>";
+        $img = $this->getImageFromPage($itemId);
     ?>
-    <div class="bottomdesc">
-        <?php echo "<b>" . $room->name . "</b><br>"; 
-        echo "<span class='capasity'>Kapasitet: <br>" . $room->capacity . " personer</span>";
-        echo $room->description;
+    <div style="position:relative;  height: 180px;display:inline-block;border: solid 1px;background-image: url('<?php echo "displayImage.php?id=$img"; ?>');width:100%;left:-1px;">
+        <?php
+        if($before) {
+            echo "<a href='?page=$before'><i class='fa fa-angle-left'></i></a>";
+        }
+        if($next) {
+            echo "<a href='?page=$next'><i class='fa fa-angle-right'></i></a>";
+        }
         ?>
-    </div>
+        <div class="bottomdesc">
+            <?php echo "<b>" . $room->name . "</b><br>"; 
+            echo "<span class='capasity'>Kapasitet: <br>" . $room->capacity . " personer</span>";
+            echo $room->description;
+            ?>
+        </div>
+        <div style="border: solid 1px; background-color:#fff; text-align: center; padding-top: 2px; padding-bottom: 2px; position:absolute; bottom: -80px; width:100%;" class="dayselection">
+            <div class="textdescription">
+                Velg ønsket dag og tidspunkt for å starte bookingen
+            </div>
 
-</div>
-<div class="dayselectioncheck"></div>
-    <div style="border: solid 1px; background-color:#fff; text-align: center; padding-top: 10px; padding-bottom: 10px;" class="dayselection">
-        <div class="smalltypeselection">
-            <span class="changedateleft gotopage" style="padding: 10px;" pageid='<?php echo $before; ?>'>
-                <?php
-                if($before) {
-                       echo "<i class='fa fa-caret-left'></i>";
-                }             
-                ?>
-            </span>
-            <? echo $room->name; ?>
-            <span class="changedateright gotopage" style="padding: 10px;"  pageid='<?php echo $next; ?>'>
-                <?php
-                if($next) {
-                    echo "<i class='fa fa-caret-right'></i>";
-                }
-                ?>
-            </span>
-        </div>
-        <div class="textdescription">
-            Velg ønsket dag og tidspunkt for å starte bookingen
-        </div>
-            
-        <div style="text-align: center;font-size: 40px; position:relative;">
-            <span class="changedateleft" style="padding: 10px;" gstype="clicksubmit" method="setPrevious" gsname="type" gsvalue="day">
-                <i class="fa fa-caret-left" method="setPrevious" gsname="type" gsvalue="day"></i>
-            </span>
-            <input type="date" value="<? echo date('Y-m-d', $this->getSelectedDay()); ?>" class="changemonthmobile">
-            <span class="changedateright" style="padding: 10px;" gstype="clicksubmit" method="setNext" gsname="type" gsvalue="day">
-               <i class="fa fa-caret-right " method="setNext" gsname="type" gsvalue="day"></i>
-            </span>
+            <div style="text-align: center;font-size: 40px; position:relative;">
+                <span class="changedateleft" style="display:inline-block; width: 60px; height: 60px; position:absolute; left:0px;" gstype="clicksubmit" method="setPrevious" gsname="type" gsvalue="day">
+                    <i class="fa fa-caret-left" method="setPrevious" gsname="type" gsvalue="day" style='position:absolute; left: 10px;'></i>
+                </span>
+                <input type="date" value="<? echo date('Y-m-d', $this->getSelectedDay()); ?>" class="changemonthmobile">
+                <span class="changedateright" style="display:inline-block; width: 60px; height: 60px; position:absolute; right:0px;"  gstype="clicksubmit" method="setNext" gsname="type" gsvalue="day">
+                   <i class="fa fa-caret-right " method="setNext" gsname="type" gsvalue="day" style='position:absolute; right: 10px;'></i>
+                </span>
+            </div>
         </div>
     </div>
-<div>
+</div>
+
+<div class="singleroomoverview">
 <?php 
 $curTime = $this->getStartTime($this->getSelectedDay()); 
 $end = $this->getEndTime($this->getSelectedDay()); 
@@ -132,3 +118,8 @@ while(true) {
 }
 ?>
 </div>
+<script>
+    $(function() {
+        $('.singleroomoverview').css('padding-top', "250px");
+    });
+</script>

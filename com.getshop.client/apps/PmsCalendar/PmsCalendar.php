@@ -34,6 +34,14 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         }
     }
 
+    public function getMobileMenu() {
+        $name = $this->getSelectedName();
+        if($name == "alna") {
+            return "/lindeberg_kalender.html";
+        }
+        return "/".$name."_kalender.html";
+    }
+    
     public function render() {
         if (!$this->getSelectedName()) {
             echo "You need to specify a booking engine first.";

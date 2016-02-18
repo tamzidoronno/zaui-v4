@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.RegistrationRulesField;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
@@ -26,7 +27,12 @@ class PmsBookingMessageFormatter {
         message = message.replace("{roomType}", new SimpleDateFormat("H:").format(room.date.end) + endMinute);
         
         if(room.booking != null && room.booking.bookingItemTypeId != null) {
-            message = message.replace("{roomType}", bookingEngine.getBookingItemType(room.booking.bookingItemTypeId).name);
+             BookingItemType type = bookingEngine.getBookingItemType(room.booking.bookingItemTypeId);
+             if(type != null) {
+                message = message.replace("{roomType}", bookingEngine.getBookingItemType(room.booking.bookingItemTypeId).name);
+             } else {
+                message = message.replace("", bookingEngine.getBookingItemType(room.booking.bookingItemTypeId).name);
+             }
         }
         
         if(room.booking != null && room.booking.bookingItemId != null && !room.booking.bookingItemId.trim().isEmpty()) {

@@ -125,8 +125,8 @@ Calendar Filter;-;Kalender filter
 CalendarEventViewer;-;CalendarEventViewer
 Cancel;-;Avbryt
 Car tuning;-;Bil tuning
-Card holder name;-;Eier av kortets navn
-Card number;-;Kort nummer
+Card holder name;-;Kortholders navn
+Card number;-;Kortnummer
 Carousel;-;Karusell
 Carousel mode is great if you wish to add sliding content, this means that you can add multiple slider and let your customers make a choice on what they want to view. Great for banners and advertisment.;-;Karusell modus er en toppers hvis du ønsker å slide innhold, dette betyr at du kan vise flere slidere og la kundene dine ta et valg om hva de ønsker å se.
 Category list;-;Kategori liste
@@ -259,9 +259,9 @@ Event;-;Kurs
 Event calendar;-;Event kalender
 Existing comments;-;Eksisterende kommentarer
 Existing product;-;Eksisterende produkt
-Exp date;-;Utløps dato
-Expiration date;-;Utløps dato
-Expiry date xx/xx;-;Utløps dato xx/xx
+Exp date;-;Utløpsdato
+Expiration date;-;Utløpsdato
+Expiry date xx/xx;-;Utløpsdato xx/xx
 Extended description;-;Utvidet beskrivelse
 Extended location;-;Utvidet sted.
 Fee for using this payment method;-;Avgifter brukt av denne betalings metoden

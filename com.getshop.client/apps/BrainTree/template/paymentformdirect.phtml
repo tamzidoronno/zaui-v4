@@ -3,6 +3,8 @@
 $name = "";
 if($this->getOrder()) {
     $order = $this->getOrder();
+    $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+    $name = $user->fullName;
 }
 ?>
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
@@ -10,7 +12,7 @@ if($this->getOrder()) {
 <div class="braintreepaymentform">
     <form id="braintreecheckoutform" action="" method="post">
         <table width="100%">
-            <tr><td style="width: 150px;"><? echo $this->__f("Card holder name"); ?></td><td><input data-braintree-name="cardholder_name" value="" placeholder="<? echo $this->__f("Name of the cardholder"); ?>"></td></tr>
+            <tr><td style="width: 150px;"><? echo $this->__f("Card holder name"); ?></td><td><input data-braintree-name="cardholder_name" value="<?php echo $name; ?>" placeholder="<? echo $this->__f("Name of the cardholder"); ?>"></td></tr>
             <tr><td style="width: 150px;"><? echo $this->__f("Card number"); ?></td><td><input data-braintree-name="number" value="" placeholder="<? echo $this->__f("xxxx-xxxx-xxxx-xxxx"); ?>"></td></tr>
             <tr><td style="width: 150px;"><? echo $this->__f("Exp date"); ?></td><td><input data-braintree-name="expiration_date" placeholder="<? echo $this->__f("Expiry date xx/xx"); ?>"></td></tr>
             <tr><td style="width: 150px;"><? echo $this->__f("CVV"); ?></td><td><input data-braintree-name="cvv" placeholder="<? echo $this->__f("Found on backside, last 3 digits."); ?>"></td></tr>

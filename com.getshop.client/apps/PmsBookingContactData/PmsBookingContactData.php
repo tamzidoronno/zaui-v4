@@ -25,7 +25,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
             if($config->prepayment) {
                 $curBooking = $this->getCurrentBooking();
-                $orderId = $this->getApi()->getPmsManager()->createPrepaymentOrder($this->getSelectedName(), $curBooking->id);
+                $orderId = $curBooking->orderIds[0];
                 ?>
                 <script>
                     document.location.href="/?page=cart&payorder=<?php echo $orderId; ?>";
@@ -154,7 +154,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         $this->validatePostedForm();
         if(!sizeof($this->validation) > 0) {
             $this->getCurrentBooking();
-            $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
+            $this->currentBooking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
             $this->bookingCompleted = true;
         }
     }

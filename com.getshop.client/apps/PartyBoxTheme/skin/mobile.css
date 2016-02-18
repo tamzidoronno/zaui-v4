@@ -80,6 +80,7 @@ h1 { letter-spacing: 2px; }
 .PmsBookingProductList .selectbutton,
 .PmsBookingContactData .complete_button,
 .PmsBookingCalendar .calendar .day.selected,
+#braintreecheckoutform .shop_button,
 .PmsBookingCalendar .calendar .calendar_header {
     background-color: #77b55a;
     color:#e9e9e9;
@@ -103,3 +104,6 @@ h1 { letter-spacing: 2px; }
 
 .PmsBookingSummary,.PmsBookingContactData { padding-left: 20px; padding-right: 20px; }
 .PmsBookingContactData .col-33 { width: 100%; padding-right: 0px; }
+.gsmobileheader { display:none; }
+#braintreecheckoutform { padding-left: 10px; padding-right: 10px; }
+#braintreecheckoutform .shop_button { width: 100%; margin-top: 10px; border-radius: 0px; font-size: 20px; }

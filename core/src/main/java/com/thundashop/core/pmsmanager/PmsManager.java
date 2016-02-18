@@ -281,15 +281,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
-    /**
-     * @return Error codes returned to the ui in case of failure.
-     * -3 Access denied
-     * -2 Not enough available
-     * -4 No rooms are selected
-     * -1 Unknown error.
-     */
     @Override
-    public Integer completeCurrentBooking() {
+    public PmsBooking completeCurrentBooking() {
         PmsBooking booking = getCurrentBooking();
         if(!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
@@ -323,15 +316,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             try {
                 if(!configuration.prepayment) {
                     processor();
+                } else {
+                    createPrepaymentOrder(booking.id);
                 }
             }catch(Exception e) {
                 e.printStackTrace();
             }
-            return result;
+            return booking;
         }catch(Exception e) {
             messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id);
             e.printStackTrace();
-            return -1;
+            return null;
         }
     }
     

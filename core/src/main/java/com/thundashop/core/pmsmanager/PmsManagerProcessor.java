@@ -127,7 +127,8 @@ public class PmsManagerProcessor {
                     continue;
                 }
                 
-                if(room.guests.isEmpty()) {
+                if(room.guests.isEmpty() || room.guests.get(0).name == null) {
+                    room.guests.clear();
                     PmsGuests guest = new PmsGuests();
                     User user = manager.userManager.getUserById(booking.userId);
                     if(user != null) {
@@ -312,8 +313,8 @@ public class PmsManagerProcessor {
                 person.lastName = room.guests.get(0).name.split(" ")[1];
             }
         } else {
-            person.firstName = "Unknown";
             person.lastName = "Name";
+            person.firstName = "Unknown";
         }
         
         if(manager.configuration.arxCardFormat == null || manager.configuration.arxCardFormat.isEmpty()) {

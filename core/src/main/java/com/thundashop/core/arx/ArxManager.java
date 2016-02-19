@@ -30,6 +30,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
@@ -516,8 +519,8 @@ public class ArxManager extends ManagerBase implements IArxManager {
         }
         
         String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
-        String firstName = new String(person.firstName.getBytes("UTF-8"), "ISO-8859-1");
-        String lastName = new String(person.lastName.getBytes("UTF-8"), "ISO-8859-1");
+        String firstName = convertToIso(person.firstName);
+        String lastName = convertToIso(person.lastName);
         
         toPost += "<arxdata timestamp=\"" + new SimpleDateFormat("yyyy-MM-dd+HH:mm:ss").format(new Date()) + "\">\n";
         toPost += "<persons>\n";
@@ -785,6 +788,23 @@ public class ArxManager extends ManagerBase implements IArxManager {
         this.arxHostname = arxHostname;
         this.arxUsername = arxUsername;
         this.arxPassword = arxPassword;
+    }
+
+    private String convertToIso(String firstName) throws UnsupportedEncodingException {
+        
+        byte[] utf8bytes = firstName.getBytes();
+        Charset utf8charset = Charset.forName("UTF-8");
+        Charset iso88591charset = Charset.forName("ISO-8859-1");
+
+        String string = new String ( utf8bytes, utf8charset );
+        
+        // "When I do a getbytes(encoding) and "
+        byte[] iso88591bytes = string.getBytes(iso88591charset);
+
+        // "then create a new string with the bytes in ISO-8859-1 encoding"
+        String string2 = new String ( iso88591bytes, iso88591charset );
+
+        return string2;
     }
 
 }

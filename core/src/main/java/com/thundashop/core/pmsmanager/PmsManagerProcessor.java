@@ -329,8 +329,13 @@ public class PmsManagerProcessor {
         person.deleted = deleted;
         
         AccessCategory category = new AccessCategory();
-        String alias = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemAlias;
-        category.name = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+        BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
+        if(item == null) {
+            System.out.println("Not able to push to arx, item does not exists");
+            return false;
+        }
+        String alias = item.bookingItemAlias;
+        category.name = item.bookingItemName;
         if(alias != null && !alias.isEmpty()) {
             category.name = alias;
         }

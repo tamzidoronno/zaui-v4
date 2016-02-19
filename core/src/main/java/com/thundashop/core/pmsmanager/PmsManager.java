@@ -975,7 +975,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         message = formatMessage(message, booking, room, null);
         if(room != null) {
-            notifyGuest(booking, message, type, key);
+            notifyGuest(booking, message, type, key, room);
         } else {
             notifyBooker(booking, message, type, key);
         }
@@ -1000,8 +1000,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
-    private String notifyGuest(PmsBooking booking, String message, String type, String key) {
+    private String notifyGuest(PmsBooking booking, String message, String type, String key, PmsBookingRooms roomToNotify) {
         for(PmsBookingRooms room : booking.rooms) {
+            if(roomToNotify != null) {
+                if(!room.pmsBookingRoomId.equals(roomToNotify.pmsBookingRoomId)) {
+                    continue;
+                }
+            }
             for(PmsGuests guest : room.guests) {
                 if(type.equals("email")) {
                     if(guest.email == null || guest.email.isEmpty()) {
@@ -1023,7 +1028,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         phone = userManager.getUserById(booking.userId).cellPhone;
                     }
                     messageManager.sendSms(phone, message, guest.prefix);
-                    repicientList.add(guest.phone);
+                    repicientList.add(phone);
                 }
             }
         }

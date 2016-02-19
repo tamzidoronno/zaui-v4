@@ -50,6 +50,7 @@ public class BookingItemAssignerOptimal {
         long maximumNumberOfLines = items.stream().mapToInt(o -> o.bookingSize).sum();
         
         if (bookingLines.size() > maximumNumberOfLines) {
+            printBookingLines(bookingLines);
             throw new BookingEngineException("The setup of bookings can not be fitted into the booking, you have more bookings than you have items of this type");
         }
         
@@ -186,6 +187,10 @@ public class BookingItemAssignerOptimal {
             return true;
         }
         
+        if (booking.bookingItemId == null || booking.bookingItemId.isEmpty()) {
+            return true;
+        }
+        
         if (booking.bookingItemId.equals(currentBookingItemId)) {
             return true;
         }
@@ -250,6 +255,16 @@ public class BookingItemAssignerOptimal {
         List<String> availableBookingItems = getAvailableBookingItems(bookingLines);
         return availableBookingItems;
     }
-    
+
+    private void printBookingLines(List<List<Booking>> bookingLines) {
+        int i = 1;
+        for (List<Booking> bookings : bookingLines) {
+            System.out.println("Line " + i);
+            for (Booking booking : bookings) {
+                System.out.println("Booking id: " + booking.id + " - Times: " + booking.getHumanReadableDates() + " type: " + booking.bookingItemTypeId);
+            }
+            i++;
+        }
+    }
     
 }

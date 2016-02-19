@@ -29,9 +29,11 @@ class PmsBookingMessageFormatter {
         if(room.booking != null && room.booking.bookingItemTypeId != null) {
              BookingItemType type = bookingEngine.getBookingItemType(room.booking.bookingItemTypeId);
              if(type != null) {
-                message = message.replace("{roomType}", bookingEngine.getBookingItemType(room.booking.bookingItemTypeId).name);
+                message = message.replace("{roomType}", type.name);
+             } else if(type != null) {
+                message = message.replace("{roomType}", "");
              } else {
-                message = message.replace("", bookingEngine.getBookingItemType(room.booking.bookingItemTypeId).name);
+                 
              }
         }
         

@@ -21,7 +21,6 @@ public class PmsManagerProcessor {
     }
     
     public void doProcessing() {
-        long start = System.currentTimeMillis();
         processStarting(0, 24*1);
         processStarting(24, 24*2);
         processStarting(48, 24*3);
@@ -33,9 +32,6 @@ public class PmsManagerProcessor {
             processArx();
         }
         processOrdersToCreate();
-        long end = System.currentTimeMillis();
-        long diff = end - start;
-        System.out.println(diff);
     }
 
     private void processStarting(int hoursAhead, int maxAhead) {
@@ -202,7 +198,7 @@ public class PmsManagerProcessor {
         for(PmsBooking booking : bookings) {
             boolean save = false;
             for(PmsBookingRooms room : booking.rooms) {
-                if(!room.isStarted()) {
+                if(!room.isStartingToday()) {
                     continue;
                 }
                 if(room.isEnded()) {
@@ -310,9 +306,14 @@ public class PmsManagerProcessor {
     private boolean pushToArx(PmsBookingRooms room, boolean deleted) {
         room.code = generateCode(room.code);
         Person person = new Person();
-        person.firstName = room.guests.get(0).name.split(" ")[0];
-        if(room.guests.get(0).name.split(" ").length > 1) {
-            person.lastName = room.guests.get(0).name.split(" ")[1];
+        if(!room.guests.isEmpty() && room.guests.get(0).name != null && room.guests.get(0).name.contains(" ")) {
+            person.firstName = room.guests.get(0).name.split(" ")[0];
+            if(room.guests.get(0).name.split(" ").length > 1) {
+                person.lastName = room.guests.get(0).name.split(" ")[1];
+            }
+        } else {
+            person.firstName = "Unknown";
+            person.lastName = "Name";
         }
         
         if(manager.configuration.arxCardFormat == null || manager.configuration.arxCardFormat.isEmpty()) {

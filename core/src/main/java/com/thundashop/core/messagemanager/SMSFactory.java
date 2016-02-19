@@ -17,4 +17,6 @@ public interface SMSFactory {
     public void setPrefix(String prefix);
 
     public String getMessageState(String msgId);
+    
+    public void setFrom(String from);
 }

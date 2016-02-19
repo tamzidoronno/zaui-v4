@@ -42,5 +42,10 @@ public class DummySmsFactory implements SMSFactory {
         System.out.println("running on dummy sms factory");
         return "";
     }
+
+    @Override
+    public void setFrom(String from) {
+        System.out.println("running on dummy sms factory");
+    }
     
 }

@@ -215,7 +215,11 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         } else {
             impl.prefix = smsSettingsApp.getSetting("numberprefix");
         }
-        impl.from = smsSettingsApp.getSetting("from");
+        if(from != null && !from.isEmpty()) {
+            impl.from = from;
+        } else {
+            impl.from = smsSettingsApp.getSetting("from");
+        }
         impl.messageManager = messageManager;
         
         
@@ -309,5 +313,10 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         Gson gson = new Gson();
         PlivoMessageState state = gson.fromJson(result, PlivoMessageState.class);
         return state.message_state;
+    }
+
+    @Override
+    public void setFrom(String from) {
+        this.from = from;
     }
 }

@@ -170,6 +170,12 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         smsFactory.send("", to, message);
     }
 
+    public void sendSms(String to, String message, String prefix, String from) {
+        smsFactory.setMessageManager(this);
+        smsFactory.setPrefix(prefix);
+        smsFactory.send(from, to, message);
+    }
+
     @Override
     public void collectEmail(String email) {
         collectedEmails.emails.add(email);

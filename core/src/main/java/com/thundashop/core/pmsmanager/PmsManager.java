@@ -985,7 +985,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void notifyBooker(PmsBooking booking, String message, String type, String key) throws ErrorException {
         User user = userManager.getUserById(booking.userId);
         if(type.equals("sms")) {
-            messageManager.sendSms(user.cellPhone, message, user.prefix);
+            messageManager.sendSms(user.cellPhone, message, user.prefix, configuration.smsName);
             repicientList.add(user.cellPhone);
         } else {
             String title = configuration.emailTitles.get(key);
@@ -1027,7 +1027,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     } else {
                         phone = userManager.getUserById(booking.userId).cellPhone;
                     }
-                    messageManager.sendSms(phone, message, guest.prefix);
+                    messageManager.sendSms(phone, message, guest.prefix, configuration.smsName);
                     repicientList.add(phone);
                 }
             }

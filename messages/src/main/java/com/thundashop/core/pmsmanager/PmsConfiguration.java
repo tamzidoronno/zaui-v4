@@ -35,6 +35,7 @@ public class PmsConfiguration extends DataCommon {
     public String defaultStart = "15:00";
     public String defaultEnd = "12:00";
     public String extraField = "";
+    public String smsName = "GetShop";
     
     
     public String locktype = "";

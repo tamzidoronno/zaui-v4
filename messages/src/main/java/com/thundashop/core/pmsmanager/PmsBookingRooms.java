@@ -95,4 +95,27 @@ public class PmsBookingRooms implements Serializable {
     boolean isStarted() {
         return date.start.before(new Date());
     }
+
+    boolean isStartingToday() {
+        if(date.start == null) {
+            return false;
+        }
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        if(cal.get(Calendar.HOUR_OF_DAY) < 6) {
+            return false;
+        }
+        
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(date.start);
+        String startString = startCal.get(Calendar.DAY_OF_YEAR) + "-" + startCal.get(Calendar.YEAR);
+        String nowString = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
+        
+        if(startString.equals(nowString)) {
+            return true;
+        }
+        
+        return false;
+    }
 }

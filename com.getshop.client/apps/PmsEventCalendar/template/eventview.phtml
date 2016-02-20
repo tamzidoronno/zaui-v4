@@ -27,7 +27,7 @@ ob_start();
 $imgDisplayer->displayAdditionalFiles();
 $data = ob_get_contents();
 ob_end_clean();
-if($data) {
+if(stristr($data, "<a")) {
     echo "<div class='filelist'>";
     echo "<h2>Flere filer og tillegg</h2>";
     echo $data;

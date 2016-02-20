@@ -124,7 +124,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         }
         
         for(PmsBookingEventEntry remove : toremove) {
-            entries.remove(remove);
+            entries.remove(remove.id);
             deleteObject(remove);
         }
     }

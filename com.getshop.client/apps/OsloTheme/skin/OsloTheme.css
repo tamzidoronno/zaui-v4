@@ -18,7 +18,7 @@ box-shadow: 0 4px 5px rgba(0,0,0,0.3); ;
 .Menu { float:right; }
 .Menu .entry .entries { background-color:#e5e5e5; }
 .Menu .entry .entries .entry a { font-size: 12px; line-height: 14px; height: 18px; padding: 5px;border-bottom: solid 1px; text-align: left; }
-.Menu .entry a { width: 150px; height: 75px; display:inline-block; line-height: 75px; text-transform: uppercase; color:#4D4D55;   font-size: 16px; text-align: center; }
+.Menu .entry a { width: 100px; height: 75px; display:inline-block; line-height: 75px; text-transform: uppercase; color:#4D4D55;   font-size: 16px; text-align: center; }
 .gsbody_inner.gseditormode { border-right: 0px; }
 .PmsBookingContactData .complete_button,
 .PmsCalendar .dayslot.free:hover,

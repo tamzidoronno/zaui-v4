@@ -52,7 +52,8 @@ app.SimpleFileUpload = {
                     progressBar.fadeIn();
                     if(myXhr.upload){ // if upload property exists
                         myXhr.upload.addEventListener('progress', function(event) {
-                            var percentage = (event.total / event.totalSize)*100;
+                            var percentage = (event.position / event.totalSize)*100;
+                            percentage = Math.round(percentage * 100) / 100;
                             progressBar.find('.meter').css('width',percentage + "%");
                             progressBar.find('.percentage').html(percentage+"%");
                             if(percentage === 100) {
@@ -60,6 +61,7 @@ app.SimpleFileUpload = {
                             }
                         }, false); // progressbar
                     }
+
                     return myXhr;
                 },
             });

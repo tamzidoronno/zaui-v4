@@ -88,7 +88,7 @@ public interface IPmsManager {
     public String getDefaultMessage(String bookingId);
     
     @Administrator
-    public void doNotification(String key, String bookingId, String roomId);
+    public void doNotification(String key, String bookingId);
     
     @Administrator
     public void addComment(String bookingId, String comment);

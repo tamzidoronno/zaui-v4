@@ -8,7 +8,6 @@ app.PmsEventCalendar = {
         $(document).on('change', '.PmsEventCalendar .eventeditform select', app.PmsEventCalendar.updateFields);
         $(document).on('change', '.PmsEventCalendar .eventeditform textarea', app.PmsEventCalendar.updateFields);
         $(document).on('change', '.PmsManagement .addToEventList', app.PmsEventCalendar.addToEventList);
-        $(document).on('change', '.PmsManagement .addToEventList', app.PmsEventCalendar.addToEventList);
     },
     addToEventList : function() {
         var instanceid = $(this).attr('instanceid');

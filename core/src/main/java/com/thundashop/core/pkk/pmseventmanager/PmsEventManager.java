@@ -43,6 +43,9 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     @Override
     public List<PmsBookingEventEntry> getEventEntries(PmsEventFilter filter) {
         List<PmsBookingEventEntry> result = new ArrayList();
+        if(filter == null) {
+            return new ArrayList(entries.values());
+        }
         for(String id : filter.bookingIds) {
             result.add(getEntry(id));
         }
@@ -63,7 +66,8 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         deleteObject(entry);
     }
 
-    private PmsBookingEventEntry createEvent(String id) {
+    @Override
+    public PmsBookingEventEntry createEvent(String id) {
         PmsBooking result = pmsManager.getBooking(id);
         PmsBookingEventEntry entry = new PmsBookingEventEntry();
         entry.id = result.id;

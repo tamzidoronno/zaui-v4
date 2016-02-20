@@ -26,7 +26,7 @@ if(!$event->starttime) {
             <input type='text' gsname='starttime' value='<?php echo $event->starttime; ?>'>
         </label>
         <div class='imagecontainer'>
-            <span class='text'>Last opp et bilde</span>
+            <span class='text'>Last opp et bilde eller et vedlegg</span>
             <div style="margin-top: 10px">
                 <?php
                     //Upload image here.
@@ -51,7 +51,7 @@ if(!$event->starttime) {
         </label>
         <hr>
         <label>
-            <span class='text'>Mer utfylende beskrivelse</span>
+            <span class='text'>Mer utfyllende beskrivelse</span>
             <textarea type='text' style='height: 200px;' gsname='description'><?php echo $event->description; ?></textarea>
         </label>
     </div>
@@ -93,7 +93,13 @@ if(!$event->starttime) {
 </div>
 <div style='text-align:right; padding-right: 300px;'>
     <?php echo "<a href='?page=".$this->getPage()->javapage->id."'>"; ?>
-        <span class='pmsbutton'>Ferdig å editere</span>
+        <span class='pmsbutton'>Ferdig å editere, gå til listen</span>
+    </a>
+    <?php 
+    $shortId = explode("-", $event->id);
+    
+    echo "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."'>"; ?>
+        <span class='pmsbutton'>Ferdig å editere, gå til eventet</span>
     </a>
 </div>
 

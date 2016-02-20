@@ -2,6 +2,8 @@
 namespace ns_994d7fed_d0cf_4a78_a5ff_4aad16b9bcab;
 
 class SimpleFileUpload extends \MarketingApplication implements \Application {
+    var $imagePrinted = null;
+    
     public function getDescription() {
         
     }
@@ -21,23 +23,42 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         $this->includefile("uploadedFiles");
     }
     
+    public function displayImage() {
+        $uploadedImg = false;
+        foreach($this->getAllFiles() as $file) {
+            if($this->isImage($file)) {
+                echo "<img src='loadFile.php?fileid=".$file->id."'>";
+                $uploadedImg = true;
+                $this->imagePrinted = $file->id;
+                break;
+            }
+        }
+        if(!$uploadedImg) {
+            echo "<span class='noimgtxt'>" . $this->__w("No image added") . "</span>";
+        }
+    }
+    
     function deleteFile() {
         $this->getApi()->getFileManager()->deleteFileEntry($_POST['data']['fileid']);
     }
     
-    public function isImage($fileName, $type) {
+    /**
+     * @param \core_filemanager_FileEntry $file
+     * @return boolean
+     */
+    public function isImage($file) {
         $files['image'] = "image";
         $files['jpeg'] = "image";
         $files['png'] = "image";
         $files['gif'] = "image";
         
         foreach($files as $key => $val) {
-            if(stristr($fileName, $key)) {
+            if(stristr($file->name, $key)) {
                 return true;
             }
         }
         foreach($files as $key => $val) {
-            if(stristr($type, $key)) {
+            if(stristr($file->type, $key)) {
                 return true;
             }
         }
@@ -79,5 +100,21 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         
         return "question"; 
     }
+
+    /**
+     * @return \core_filemanager_FileEntry[]
+     */
+    public function getAllFiles() {
+        $files = $this->getApi()->getFileManager()->getFiles($this->getAppInstanceId(), null);
+        if(!$files) {
+            $files = array();
+        }
+        return $files;
+    }
+
+    public function displayAdditionalFiles() {
+        $this->includefile("uploadedFiles");
+    }
+    
 }
 ?>

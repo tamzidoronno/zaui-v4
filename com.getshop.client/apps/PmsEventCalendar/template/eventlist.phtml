@@ -1,8 +1,8 @@
 <?php
 /* @var $this ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
 //print_r($this->getEventList());
-foreach($this->getEventList() as $entry) {
-    $eventEntry = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $entry->name);
+foreach($this->getEventList() as $eventEntry) {
+    
     $shortId = explode("-", $eventEntry->id);
     $edit = "";
     if($this->isEditorMode()) {

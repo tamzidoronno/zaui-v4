@@ -49,6 +49,15 @@ public class PmsBooking extends DataCommon {
                 }
             }
         }
+        
+        for(String value : registrationData.resultAdded.values()) {
+            if(value != null) {
+                if(value.toLowerCase().contains(searchWord)) {
+                    return true;
+                }
+            }
+        }
+        
         return false;
     }
 

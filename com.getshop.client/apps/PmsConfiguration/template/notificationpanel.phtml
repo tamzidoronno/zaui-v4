@@ -8,7 +8,7 @@ $langauge = $factory->getCurrentLanguage();
 $hasEventCalendar = false;
 $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("27e174dc-b08c-4bf7-8179-9ea8379c91da");
 foreach($instances as $instance) {
-    if($instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
+    if(@$instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
         $hasEventCalendar = true;
     }
 }

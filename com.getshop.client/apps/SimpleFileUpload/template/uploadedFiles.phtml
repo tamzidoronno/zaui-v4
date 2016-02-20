@@ -1,0 +1,15 @@
+<?php
+/* @var $this ns_994d7fed_d0cf_4a78_a5ff_4aad16b9bcab\SimpleFileUpload */
+$entries = $this->getApi()->getFileManager()->getFiles($this->getAppInstanceId(), null);
+
+echo "<table width='100%'>";
+foreach($entries as $entry) {
+    echo "<tr fileid='".$entry->id."'>";
+    echo "<td width='50'><i class='fa fa-trash-o'></i> <i class='fa fa-" . $this->translateFile($entry->name, $entry->type) . "'></i></td>";
+    echo "<td width='80'>" . date("d.m.Y", strtotime($entry->rowCreatedDate)) . "</td>";
+    echo "<td><a onclick=\"window.open('loadFile.php?fileid=".$entry->id."')\">" . $entry->name . "</a></td>";
+    echo "<td width='100' align='right'>" . $this->humanFileSize($entry->size) . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>

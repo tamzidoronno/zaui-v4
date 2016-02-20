@@ -1,0 +1,15 @@
+.SimpleFileUpload .uploadbutton { border: solid 1px #bbb; border-radius: 3px; padding: 3px; cursor:pointer; }
+.SimpleFileUpload .fa-trash-o { cursor: pointer; }
+.SimpleFileUpload .progressbars { margin-bottom: 10px; }
+.SimpleFileUpload .progressbar { margin-top: 1px; border: solid 1px #bbb; width:100%; display:inline-block; box-sizing: border-box; padding: 3px; position: relative; }
+.SimpleFileUpload .progressbar .filename { margin-left: 10px; }
+.SimpleFileUpload .filelist a { color: blue; cursor: pointer; }
+.SimpleFileUpload .progressbar .meter {
+    background-color: green;
+    display: inline-block;
+    width: 0%;
+    height: 3px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}

@@ -12,7 +12,7 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     public function getImageDisplayer($id) {
         $imgInstance = $this->getConfigurationSetting("imgapp_".$id);
         if(!$imgInstance) {
-            $newInstance = $this->getFactory()->getApplicationPool()->createNewInstance("831647b5-6a63-4c46-a3a3-1b4a7c36710a");
+            $newInstance = $this->getFactory()->getApplicationPool()->createNewInstance("994d7fed-d0cf-4a78-a5ff-4aad16b9bcab");
             $this->setConfigurationSetting("imgapp_".$id, $newInstance->id);
             $imgInstance = $newInstance->id;
         }
@@ -118,9 +118,6 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         } else if(isset($_GET['readevent'])) {
             $this->includefile("eventview");
         } else {
-            if($this->isEditorMode()) {
-                $this->includefile("eventmanagement");
-            }
             $this->includefile("eventlist");
         }
     }

@@ -26,14 +26,14 @@ if(!$event->starttime) {
             <input type='text' gsname='starttime' value='<?php echo $event->starttime; ?>'>
         </label>
         <div class='imagecontainer'>
-            <label>
-                <span class='text'>Last opp et bilde</span>
+            <span class='text'>Last opp et bilde</span>
+            <div style="margin-top: 10px">
                 <?php
                     //Upload image here.
                     $imgDisplayer = $this->getImageDisplayer($_GET['eventid']);
                     $this->getFactory()->getPage()->renderApplicationSimple($imgDisplayer->configuration->id,$this);
                 ?>
-            </label>
+            </div>
         </div>
         <label>
             <span class='text'><?echo $this->__w("Select a category"); ?></span>

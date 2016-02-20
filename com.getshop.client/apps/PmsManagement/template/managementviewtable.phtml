@@ -111,8 +111,15 @@ foreach($bookings as $booking) {
         }
         $row .= "</td>";
         $row .= "<td>";
-        if($comments) {
-            $row .= "<i class='fa fa-comment' title='$comments'></i>";
+        
+        foreach($booking->registrationData->resultAdded as $key => $val) {
+            if($key == "title") {
+                $row .= "<div>$val</div>";
+            }
+        }
+        
+        if(trim($comments)) {
+            $row .= "<i class='fa fa-comment' title='$comments'></i> ";
         }
         
         foreach($booking->rooms as $room2) {
@@ -135,12 +142,12 @@ foreach($bookings as $booking) {
             $row .= "<span class='secondary_text'>By " . $user->fullName . "</span>";
         }
         $row .= "</div>";
-        
+
         if($this->isGroupedByBooking() && sizeof($booking->rooms) > 1) {
             $row .= "+" . (sizeof($booking->rooms)-1) . " additional room(s)";
         }
 
-        
+
         $row .= "</td>";
         $row .= "<td>";
         if($room->booking && $room->booking->bookingItemId) {

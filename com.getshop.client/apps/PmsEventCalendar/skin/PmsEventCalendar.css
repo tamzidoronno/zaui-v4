@@ -43,5 +43,5 @@
 .PmsEventCalendar .imagedisplayer_upload_form_menu i { display:none;  }
 .PmsEventCalendar .eventconfig { padding-left: 300px; padding-right: 300px; }
 
-.PmsEventCalendar .image { float:left; margin: 10px; width:30%; }
+.PmsEventCalendar .image { float:left; padding: 30px;  margin-right: 10px;  margin-bottom: 10px; width:30%; border: solid 1px #bbb; }
 .PmsEventCalendar .image img { width: 100%; }

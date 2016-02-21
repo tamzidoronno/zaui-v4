@@ -56,3 +56,4 @@ body {
 	position:relative;
 	top:1px;
 }
+.PmsEventCalendar, .PmsEventCalendar .eventconfig { padding-left: 10px; padding-right: 10px; }

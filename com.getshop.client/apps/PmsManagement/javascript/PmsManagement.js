@@ -19,7 +19,6 @@ app.PmsManagement = {
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('change','.PmsManagement .repeat_type', app.PmsManagement.changeRepeatType);
-        $(document).on('click','.PmsManagement .adddatetype', app.PmsManagement.changeAddDateType);
     },
     changeRepeatType: function() {
         var type = $(this).val();

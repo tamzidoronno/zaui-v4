@@ -12,7 +12,7 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     public function getImageDisplayer($id) {
         $imgInstance = $this->getConfigurationSetting("imgapp_".$id);
         if(!$imgInstance) {
-            $newInstance = $this->getFactory()->getApplicationPool()->createNewInstance("831647b5-6a63-4c46-a3a3-1b4a7c36710a");
+            $newInstance = $this->getFactory()->getApplicationPool()->createNewInstance("994d7fed-d0cf-4a78-a5ff-4aad16b9bcab");
             $this->setConfigurationSetting("imgapp_".$id, $newInstance->id);
             $imgInstance = $newInstance->id;
         }
@@ -32,7 +32,7 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     public function checkEntry() {
         if($_POST['data']['checked'] == "true") {
             $this->addEntry();
-            $this->getApi()->getPmsManager()->doNotification($this->getSelectedName(), "booking_eventcalendar", $_POST['data']['id'], null);
+            $this->getApi()->getPmsManager()->doNotification($this->getSelectedName(), "booking_eventcalendar", $_POST['data']['id']);
         } else {
             $this->removeEntry();
         }
@@ -57,16 +57,14 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     }
 
     public function addEntry() {
-        $newEntry = new \core_listmanager_data_Entry();
-        $newEntry->name = $_POST['data']['id'];
-        $this->getApi()->getListManager()->addEntry($this->getListName(), $newEntry, "");
+        $this->getApi()->getPmsEventManager()->createEvent($this->getSelectedName(), $_POST['data']['id']);
     }
     
     public function isAddedToList($bookingId) {
         $list = $this->getEventList();
         
         foreach($list as $l) {
-            if($l->name == $bookingId) {
+            if($l->id == $bookingId) {
                 return true;
             }
         }
@@ -102,9 +100,13 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     
     public function savePostedForm() {
         $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_POST['data']['eventid']);
-        foreach($_POST['data'] as $key => $value) {
-            $event->{$key} = $value;
-        }
+        $event->{"title"} = $_POST['data']['title'];
+        $event->{"shortdesc"} = $_POST['data']['shortdesc'];
+        $event->{"starttime"} = $_POST['data']['starttime'];
+        $event->{"category"} = $_POST['data']['category'];
+        $event->{"description"} = $_POST['data']['description'];
+        
+        
         $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event);
     }
     
@@ -118,9 +120,6 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         } else if(isset($_GET['readevent'])) {
             $this->includefile("eventview");
         } else {
-            if($this->isEditorMode()) {
-                $this->includefile("eventmanagement");
-            }
             $this->includefile("eventlist");
         }
     }
@@ -154,8 +153,11 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         $_GET['eventid'] = $_POST['data']['eventid'];
     }
 
+    /**
+     * @return \core_pmseventmanager_PmsBookingEventEntry[]
+     */
     public function getEventList() {
-        $list = $this->getApi()->getListManager()->getList($this->getListName());
+        $list = $this->getApi()->getPmsEventManager()->getEventEntries($this->getSelectedName(), null);
         if(!$list) {
             return array();
         }

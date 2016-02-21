@@ -1,5 +1,6 @@
 package com.thundashop.core.pkk.pmseventmanager;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.pmseventmanager.PmsBookingEventEntry;
@@ -15,7 +16,11 @@ import java.util.List;
 public interface IPmsEventManager {
     public List<PmsBookingEventEntry> getEventEntries(PmsEventFilter filter);
     public void saveEntry(PmsBookingEventEntry entry);
+    @Administrator
     public void deleteEntry(String entryId);
+    @Administrator
+    public PmsBookingEventEntry createEvent(String id);
+            
     public PmsBookingEventEntry getEntry(String entryId);
     public PmsBookingEventEntry getEntryShort(String shortId);
 }

@@ -926,7 +926,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     @Administrator
-    public void doNotification(String key, String bookingId, String roomId) {
+    public void doNotification(String key, String bookingId) {
         PmsBooking booking = getBooking(bookingId);
         doNotification(key, booking, null);
     }

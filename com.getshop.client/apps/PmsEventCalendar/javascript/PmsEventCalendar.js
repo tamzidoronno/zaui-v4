@@ -47,7 +47,7 @@ app.PmsEventCalendar = {
                     icon: "fa-edit",
                     iconsize : "30",
                     title: __f("Add / Remove products to this list"),
-                    click: app.PmsPricing.showSettings
+                    click: app.PmsEventCalendar.showSettings
                 }
             ]
         };

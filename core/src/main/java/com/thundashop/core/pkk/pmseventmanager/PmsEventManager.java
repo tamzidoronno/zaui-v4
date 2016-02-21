@@ -4,6 +4,7 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmseventmanager.PmsBookingEventEntry;
@@ -42,7 +43,11 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     
     @Override
     public List<PmsBookingEventEntry> getEventEntries(PmsEventFilter filter) {
+        removeDeadEvents();
         List<PmsBookingEventEntry> result = new ArrayList();
+        if(filter == null) {
+            return new ArrayList(entries.values());
+        }
         for(String id : filter.bookingIds) {
             result.add(getEntry(id));
         }
@@ -63,7 +68,8 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         deleteObject(entry);
     }
 
-    private PmsBookingEventEntry createEvent(String id) {
+    @Override
+    public PmsBookingEventEntry createEvent(String id) {
         PmsBooking result = pmsManager.getBooking(id);
         PmsBookingEventEntry entry = new PmsBookingEventEntry();
         entry.id = result.id;
@@ -99,7 +105,10 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
                 continue;
             }
             entry.dateRanges.add(room.date);
-            entry.roomNames.add(bookingEngine.getBookingItem(room.bookingItemId).bookingItemName);
+            BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+            if(item != null) {
+                entry.roomNames.add(item.bookingItemName);
+            }
         }
     }
 
@@ -107,6 +116,21 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         PmsBooking booking = pmsManager.getBooking(get.id);
         setRooms(get, booking);
         return get;
+    }
+
+    private void removeDeadEvents() {
+        List<PmsBookingEventEntry> toremove = new ArrayList();
+        for(PmsBookingEventEntry event : entries.values()) {
+            PmsBooking booking = pmsManager.getBooking(event.id);
+            if(booking == null || booking.isDeleted) {
+                toremove.add(event);
+            }
+        }
+        
+        for(PmsBookingEventEntry remove : toremove) {
+            entries.remove(remove.id);
+            deleteObject(remove);
+        }
     }
     
 }

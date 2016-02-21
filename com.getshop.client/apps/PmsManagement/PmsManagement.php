@@ -122,9 +122,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $instances = array();
         }
         foreach($instances as $instance) {
-            if($instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
-                $app = $this->getFactory()->getApplicationPool()->createAppInstance($instance);
-                $app->renderInBookingManagement($bookingId);
+            if(isset($instance->settings->{"engine_name"})) {
+                if($instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
+                    $app = $this->getFactory()->getApplicationPool()->createAppInstance($instance);
+                    $app->renderInBookingManagement($bookingId);
+                    break;
+                }
             }
         }
     }

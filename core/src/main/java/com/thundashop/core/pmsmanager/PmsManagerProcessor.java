@@ -27,6 +27,7 @@ public class PmsManagerProcessor {
         processEndings(0, 24*1);
         processEndings(24, 24*2);
         processEndings(48, 24*3);
+        processAutoExtend();
         processAutoAssigning();
         if(manager.configuration.arxHostname != null && !manager.configuration.arxHostname.isEmpty()) {
             processArx();
@@ -385,6 +386,43 @@ public class PmsManagerProcessor {
         
         return result.equals("OK");
         
+    }
+
+    private void processAutoExtend() {
+        if(manager.configuration.autoExtend) {
+            List<PmsBooking> bookings = getAllConfirmedNotDeleted();
+            for(PmsBooking booking : bookings) {
+                boolean needSaving = false;
+                for(PmsBookingRooms room : booking.rooms) {
+                    if(room.isEnded() && room.isEndingToday() && !room.keyIsReturned) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(room.date.end);
+                        cal.add(Calendar.DAY_OF_YEAR, 1);
+                        room.date.end = cal.getTime();
+                        BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
+                        if(item != null) {
+                            String text = "Autoextending room " + item.bookingItemName;
+                            System.out.println(text);
+                            try {
+                                manager.bookingEngine.changeDatesOnBooking(room.bookingId, room.date.start, room.date.end);
+                                manager.logEntry(text, booking.id, room.bookingItemId);
+                            }catch(Exception e) {
+                                manager.logEntry("Not able to extend stay for room: " + item.bookingItemName, booking.id, room.bookingItemId);
+                                manager.warnAboutUnableToAutoExtend(item.bookingItemName, e.getMessage());
+                            }
+                        }
+                        needSaving = true;
+                    }
+                }
+                if(needSaving) {
+                    try {
+                        manager.saveBooking(booking);
+                    }catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
     
 }

@@ -34,9 +34,9 @@ public class PmsBookingRooms implements Serializable {
     public Integer intervalCleaning = null;
     public boolean addedByRepeater = false;
     public Date invoicedTo = null;
+    public boolean keyIsReturned = false;
     
     //Processor stuff.
-    public boolean started = false;
     public boolean ended = false;
     public List<String> notificationsSent = new ArrayList();
     boolean addedToArx = false;
@@ -109,6 +109,26 @@ public class PmsBookingRooms implements Serializable {
         
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(date.start);
+        String startString = startCal.get(Calendar.DAY_OF_YEAR) + "-" + startCal.get(Calendar.YEAR);
+        String nowString = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
+        
+        if(startString.equals(nowString)) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    boolean isEndingToday() {
+        if(date.end == null) {
+            return false;
+        }
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(date.end);
         String startString = startCal.get(Calendar.DAY_OF_YEAR) + "-" + startCal.get(Calendar.YEAR);
         String nowString = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
         

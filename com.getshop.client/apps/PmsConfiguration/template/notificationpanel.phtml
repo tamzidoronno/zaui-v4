@@ -231,6 +231,19 @@ $whenToPay[4] = "After stay";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->autoExtend) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoExtend' <? echo $checked; ?>>
+            </span>
+            Automatically extend stay if key is not returned
+        </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->isItemBookingInsteadOfTypes) {
                     $checked = "CHECKED";
                 }

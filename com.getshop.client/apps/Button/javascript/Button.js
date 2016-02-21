@@ -3,13 +3,32 @@ app.Button = {
         $(document).on('click', '.Button .select_product_add_to_cart_button_setup', app.Button.setProduct);
         $(document).on('click', '.Button .shop_button_saveNewText', app.Button.saveText);
         $(document).on('click', '.Button .save_external_page_setup_button', app.Button.saveExternalPage);
+        $(document).on('click', '.Button .save_external_modal', app.Button.saveModal);
         $(document).on('keyup', '.Button .buttontext', app.Button.saveButtonText);
         $(document).on('change', '.Button #layoutonbutton', app.Button.saveButtonTemplate);
         $(document).on('change', '.Button #setup_button_search_field', app.Button.searchForProducts);
         $(document).on('change', '.Button #setup_button_type_selector', app.Button.show);
         $(document).on('keyup', '.Button #filter_pages_list', app.Button.filterPages);
         $(document).on('click', '.Button .select_button_set_link_to_internal_page', app.Button.selectInternalPage);
+        
     },
+    
+    setToLogout: function() {
+        thundashop.Ajax.simplePost($('.Button'), 'setToLogout', {});
+        alert("SUCCESS");
+    },
+    
+    saveModal: function() {
+        var data = {
+            link: $('.Button #button_link_to_modal').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "setModal", this, data);
+        thundashop.Ajax.post(event, function() {
+            alert(__f('Success, will now show the modal'));
+        });
+    },
+    
     saveButtonTemplate : function() {
         var text = $(this).val();
         thundashop.Ajax.simplePost($(this), 'saveButtonTemplate', {
@@ -110,7 +129,13 @@ app.Button = {
     },
     
     show: function() {
-        var name =  $(this).find(':selected').attr('show_view')
+        var name =  $(this).find(':selected').attr('show_view');
+        
+        if ($(this).val() === "setToLogout") {
+            app.Button.setToLogout();
+            return;
+        }
+        
         $('.Button .select_option_setup_button').hide();
         $('.Button .'+name).show();
     },

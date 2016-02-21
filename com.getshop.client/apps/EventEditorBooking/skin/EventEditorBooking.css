@@ -1,0 +1,38 @@
+.EventEditorBooking {
+    /*border: solid 1px #DDD;*/
+    /*padding: 20px;*/
+}
+
+.EventEditorBooking .title {
+    background-color : #f9f9f9;
+    padding: 5px;
+    text-align: center;
+    line-height: 50px;
+}
+
+.EventEditorBooking .content {
+    padding: 20px;
+}
+
+.EventEditorBooking .usersearchresults {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.EventEditorBooking .usersearchrow {
+    padding: 5px;
+}
+.EventEditorBooking .usersearchrow:nth-child(odd) {
+    background-color: #F9f9f9;
+}
+
+.EventEditorBooking .usersearchrow div {
+    display: inline-block;
+}
+
+.EventEditorBooking .usersearchrow div:nth-child(1) { width: 240px; }
+.EventEditorBooking .usersearchrow div:nth-child(2) { width: 340px; }
+.EventEditorBooking .usersearchrow div:nth-child(3) { width: 240px; }
+.EventEditorBooking .usersearchrow div:nth-child(4) { width: 200px; }
+.EventEditorBooking .usersearchrow div:nth-child(5) { width: 10px; }
+.EventEditorBooking .usersearchrow div:nth-child(6) { width: 10px; margin-left: 10px;}

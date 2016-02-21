@@ -334,6 +334,10 @@ public class PageManager extends ManagerBase implements IPageManager {
     public String addLayoutCell(String pageId, String incell, String beforecell, String mode, String area) throws ErrorException {
         Page page = getPage(pageId);
         
+        if (page.isASlavePage()) {
+            throw new NullPointerException("Tried to modifify layout for a slave page, not possible, modify the template page: " + page.masterPageId);
+        }
+        
         boolean onlyMobile = false;
         if(mode != null && mode.equals("rowmobile")) {
             mode = PageCell.CellMode.row;
@@ -822,5 +826,18 @@ public class PageManager extends ManagerBase implements IPageManager {
         return new ArrayList(names);
     }
 
-    
+    @Override
+    public void createModal(String modalName) {
+        if (commonPageData.modals.containsKey(modalName)) {
+            return;
+        }
+        
+        commonPageData.modals.put(modalName, new ArrayList());
+        saveObject(commonPageData);
+    }   
+
+    @Override
+    public List<String> getModalNames() {
+        return new ArrayList<String>(commonPageData.modals.keySet());
+    }
 }

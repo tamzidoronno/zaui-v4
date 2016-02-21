@@ -30,6 +30,11 @@ thundashop.Ajax = {
     
     init: function() {
         $(document).on('click','*[gsclick]', thundashop.Ajax.postgeneral);
+        $(document).on('click','*[gs_show_modal]', thundashop.Ajax.showModal);
+    },
+    
+    showModal: function() {
+        thundashop.common.showModal($(this).attr('gs_show_modal'));
     },
     
     postgeneral: function() {
@@ -236,6 +241,7 @@ thundashop.Ajax = {
             thundashop.Ajax.showErrorMessage(response.errors)
         } else {
             $('#gsbody').html(response.content);
+            $('#dynamicmodal').html(response.modal);
             PubSub.publish('NAVIGATION_COMPLETED', {response: response});
         }
         $(window).scrollTop(scrolltop);

@@ -463,8 +463,18 @@ class Factory extends FactoryBase {
             $this->page->loadSkeleton();
             $content = ob_get_contents();
             ob_end_clean();
+            
+            $modal = "";
+            if (isset($_SESSION['gs_currently_showing_modal'])) {
+                ob_start();
+                $this->page->renderModal($_SESSION['gs_currently_showing_modal']);
+                $modal = ob_get_contents();
+                ob_end_clean();
+            }
+            
             $data = array();
             $data['content'] = $content;
+            $data['modal'] = $modal;
             echo json_encode($data);
         } else {
             $this->page->loadSkeleton();

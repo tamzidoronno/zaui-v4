@@ -75,4 +75,7 @@ public interface IEventBookingManager {
 
     @Administrator
     public void markAsReady(String eventId);
+    
+    @Editor
+    public void addUserToEvent(String eventId, String userId);
 }

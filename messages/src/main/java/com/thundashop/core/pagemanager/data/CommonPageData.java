@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class CommonPageData extends DataCommon {
     public Map<String, ArrayList<PageCell>> leftSideBars = new HashMap();
+    public Map<String, ArrayList<PageCell>> modals = new HashMap();
     
     /**
      * Legacy, this can be deleted after the script "MoveLeftSideBarToMap" has been runned, 

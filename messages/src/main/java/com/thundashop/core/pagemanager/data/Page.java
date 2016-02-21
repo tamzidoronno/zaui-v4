@@ -70,6 +70,19 @@ public class Page extends DataCommon implements Cloneable {
         }
         
         layout.setNewList(pagedata.leftSideBars.get(leftSideBarName), leftSideBarName, true);
+        
+        for (String key : pagedata.modals.keySet()) {
+            if (key.equals("header") || key.equals("footer") || key.equals("body")) {
+                continue;
+            }
+            
+            if (pagedata.modals.get(key) == null) {
+                pagedata.modals.put(key, new ArrayList());
+            }
+            
+            layout.setNewList(pagedata.modals.get(key), key, true);
+        }
+        
     }
 
     public PageCell getCell(String pageCellId) {

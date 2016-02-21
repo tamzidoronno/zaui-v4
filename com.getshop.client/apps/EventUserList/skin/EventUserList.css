@@ -1,6 +1,9 @@
 .EventUserList .userline {
     padding: 5px;
-    position: relative
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+    
 }
 
 .EventUserList .userline:nth-child(odd) {
@@ -39,4 +42,12 @@
     border: solid 1px #DDD;
     background-color: #FFF;
     min-height: 300px;
+}
+
+.EventUserList .userlistinner {
+    padding: 20px;
+}
+.EventUserList .reports {
+    padding: 20px; 
+    background-color: #F9f9f9;
 }

@@ -359,4 +359,8 @@ public interface IPageManager {
     
     @Editor
     public List<String> getLeftSideBarNames();
+    
+    public void createModal(String modalName);
+    
+    public List<String> getModalNames();
 }

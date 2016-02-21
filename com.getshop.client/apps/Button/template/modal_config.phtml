@@ -1,0 +1,14 @@
+<?
+    echo $this->__f("Please enter the address you wish this button should direct you to");
+    $link = $this->getConfigurationSetting("url");
+?>
+
+<br/>
+<br/>
+<input type='textfield' id='button_link_to_modal' style='width: 600px;' value="<? echo $link; ?>"/>
+<br/>
+<br/>
+<?
+    $buttonText = $this->__f("Save");
+    echo "<div class='gs_button small save_external_modal' >$buttonText</div>";
+?>

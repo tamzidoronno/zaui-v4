@@ -458,4 +458,17 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         saveObject(event);
         log("MARK_AS_READY", event, null);
     }
+
+    @Override
+    public void addUserToEvent(String eventId, String userId) {
+        Event event = getEvent(eventId);
+        if (event == null) {
+            throw new ErrorException(1035);
+        }
+        
+        User user = userManager.getUserById(userId);
+        if (user != null) {
+            AddUserToEvent(event, user);
+        }
+    }
 }

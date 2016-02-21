@@ -266,6 +266,14 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
             </div>
         <? } ?>
         
+        <div id="dynamicmodal">
+            <?
+            if (isset($_SESSION['gs_currently_showing_modal'])) {
+                $factory->getPage()->renderModal($_SESSION['gs_currently_showing_modal']);
+            }
+            ?>
+        </div>
+        
 
         <div id="mainmenutoolbox"></div>
         <div id="messagebox" class="ok">

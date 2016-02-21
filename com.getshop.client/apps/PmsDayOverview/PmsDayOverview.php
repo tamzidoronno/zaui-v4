@@ -33,9 +33,9 @@ class PmsDayOverview extends \WebshopApplication implements \Application {
     public function getSelectedFilter($checkin) {
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->state = 0;
-        $start = strtotime(date("d.m.Y 07:00", $this->getSelectedDate()));
+        $start = strtotime(date("d.m.Y 04:00", $this->getSelectedDate()));
         $filter->startDate = $this->formatTimeToJavaDate($start);
-        $filter->endDate = $this->formatTimeToJavaDate($start+(86400*1));
+        $filter->endDate = $this->formatTimeToJavaDate($start+(39600*1));
         if($checkin) {
             $filter->filterType = "checkin";
         } else {

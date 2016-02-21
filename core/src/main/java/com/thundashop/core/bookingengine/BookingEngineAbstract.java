@@ -20,16 +20,12 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
-import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -118,6 +114,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     
 
     public BookingItem saveBookingItem(BookingItem item) {
+        ensureNotOverwritingParameters(item);
         validate(item);
         saveObject(item);
         items.put(item.id, item);
@@ -187,9 +184,16 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         item.availabilities = new ArrayList();
         
+        if (item.pageId.isEmpty()) {
+            item.pageId = pageManager.createPageFromTemplatePage(getName()+"_bookingegine_item_template").id;
+            saveObject(item);
+        }
+        
         for (String availabilityId : item.availabilitieIds) {
             item.availabilities.add(availabilities.get(availabilityId));
         }
+        
+        item.freeSpots = item.bookingSize - getAllBookingsByBookingItem(item.id).size();
         
         return item;
     }
@@ -386,6 +390,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         Booking booking = getBooking(id);
         bookings.remove(id);
         deleteObject(booking);
+        
+        for (BookingItem item : items.values()) {
+            boolean removed = item.bookingIds.removeIf(o -> o.equals(booking.id));
+            if (removed)
+                saveObject(item);
+        }
     }
 
     public void deleteBookingItem(String id) {
@@ -551,9 +561,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if (sortedBookings.isEmpty()) {
             return new ArrayList();
         }
-        
-        long firstDate = bookings.get(0).startDate.getTime();
-        
+
         return this.bookings.values().stream()
                 .filter(booking -> booking.bookingItemTypeId.equals(typeId))
                 .filter(booking -> booking.bookingItemId != null && !booking.bookingItemId.isEmpty())
@@ -677,5 +685,20 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return assigner.getAvailableItems().stream()
                 .map(o -> items.get(o))
                 .collect(Collectors.toList());
+    }
+    
+    List<Booking> getAllBookingsByBookingItem(String bookingItemId) {
+        return bookings.values().stream()
+                .filter(booking -> booking.bookingItemId != null && booking.bookingItemId.equals(bookingItemId))
+                .collect(Collectors.toList());
+            
+    }
+
+    private void ensureNotOverwritingParameters(BookingItem item) {
+        BookingItem inMemory = items.get(item.id);
+        if (inMemory != null) {
+            item.bookingIds = inMemory.bookingIds;
+            item.waitingListBookingIds = inMemory.waitingListBookingIds;
+        }
     }
 }

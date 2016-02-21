@@ -1,0 +1,30 @@
+<?
+/* @var $this ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event */
+$event = $this->getEvent();
+?>
+
+<div class="eventtitle">
+    <? echo $event->bookingItemType->name; ?>
+</div>
+<div class="availability">
+    <? 
+    echo  $this->__w("Available spots").": ".$event->bookingItem->freeSpots
+    ?>
+</div>
+<div class="dateinformation">
+    <?
+    echo $this->__w("Days").": ".count($event->days)."<br/>";
+    echo "<div>";
+    foreach ($event->days as $day) {
+        echo date("d/m-Y H:i", strtotime($day->startDate)) . " - " . date("d/m-Y H:i", strtotime($day->endDate)) . "<br/>";
+    }
+    echo "</div>";
+    ?>
+</div>
+
+<div class="locationinformation">
+    <?
+    echo "<b>".$this->__w("Location").":</b><br/> ".$event->location->name." - ".$event->subLocation->name."<br/>";
+    echo $event->subLocation->description;
+    ?>
+</div>

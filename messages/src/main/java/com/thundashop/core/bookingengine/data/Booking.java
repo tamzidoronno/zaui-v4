@@ -20,13 +20,11 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     public Date endDate;
 
     public boolean needConfirmation = false;
-
     public String externalReference;
-
+    public String userId;
+    
     public String getInformation() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");
-//        return "From:  to: " + dateFormat.format(end) + " count: " + count;
-        
         return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",startDate="+dateFormat.format(startDate)+",endDate="+dateFormat.format(endDate)+"]";
     }
     
@@ -37,6 +35,10 @@ public class Booking extends DataCommon implements Comparable<Booking> {
 
     // Got this solution from: http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
     public boolean interCepts(Date startDate, Date endDate) {
+        if (startDate == null || endDate == null || this.startDate == null || this.endDate == null) {
+            return false;
+        }
+        
         long StartDate1 = startDate.getTime();
         long StartDate2 = this.startDate.getTime()+1;
         long EndDate1 = endDate.getTime();
@@ -45,6 +47,10 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     }
     
     public boolean within(Date startDate, Date endDate) { 
+        if (startDate == null || endDate == null || this.startDate == null || this.endDate == null) {
+            return false;
+        }
+        
         long StartDate1 = startDate.getTime();
         long StartDate2 = this.startDate.getTime();
         long EndDate1 = endDate.getTime(); 
@@ -53,6 +59,10 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     }
 
     public boolean completlyWithin(Date start, Date end) {
+        if (start == null || end == null || this.startDate == null || this.endDate == null) {
+            return false;
+        }
+        
         if (startDate.equals(start) && endDate.equals(end))
             return true;
         

@@ -1,0 +1,29 @@
+<?
+/* @var $this \ns_c2730dd0_cffc_4e9d_bcd7_338623dc24ad\EventLog */
+
+$eventLogs = $this->getApi()->getEventBookingManager()->getEventLog($this->getBookingEngineName(), $this->getEvent()->id);
+
+echo "<div class='eventlogentry'>";
+    echo "<div class='action' style='font-weight: bold'>".$this->__f("Action")."</div>"; 
+    echo "<div class='blame' style='font-weight: bold'>".$this->__f("Who to blame")."</div>"; 
+    echo "<div class='comment' style='font-weight: bold'>".$this->__f("Comment")."</div>"; 
+    echo "<div class='date'  style='font-weight: bold'>".$this->__f("Date")."</div>"; 
+echo "</div>";
+
+foreach ($eventLogs as $eventLog) {
+    $doneBy = $this->getApi()->getUserManager()->getUserById($eventLog->doneBy);
+    
+    if (!$doneBy) {
+        $doneBy = "";
+    } else {
+        $doneBy = $doneBy->fullName;
+    }
+    
+    echo "<div class='eventlogentry'>";
+        echo "<div class='action'>".$eventLog->action."</div>"; 
+        echo "<div class='blame'>".$doneBy."</div>"; 
+        echo "<div class='comment'>".nl2br($eventLog->comment)."</div>"; 
+        echo "<div class='date'>".$eventLog->rowCreatedDate."</div>"; 
+    echo "</div>";
+}
+?>

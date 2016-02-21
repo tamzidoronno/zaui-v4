@@ -60,6 +60,9 @@ public class UserStoreCollection {
             user.groups = groups;
         }
         
+        if (user.company != null && user.company.size() > 0) {
+            user.companyObject = userManager.getCompany(user.company.get(0));
+        }
         
         return user;
     }

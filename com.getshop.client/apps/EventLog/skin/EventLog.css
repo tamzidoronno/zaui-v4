@@ -1,0 +1,15 @@
+.EventLog .eventlogentry:nth-child(odd) {
+    background-color: #F9f9f9;
+}
+
+.EventLog .eventlogentry div {
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.EventLog .eventlogentry .action { width: 150px; }
+.EventLog .eventlogentry .blame { width: 200px; }
+.EventLog .eventlogentry .comment { width: calc(100% - 554px); }
+.EventLog .eventlogentry .date { width: 200px; }

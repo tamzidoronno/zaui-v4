@@ -1,0 +1,42 @@
+.EventUserList .userline {
+    padding: 5px;
+    position: relative
+}
+
+.EventUserList .userline:nth-child(odd) {
+    background-color: #F0F0F0;
+}
+
+.EventUserList .userline .options {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+.EventUserList .usercomments_infobox {
+    padding: 20px;
+}
+
+.EventUserList .usercomments_infobox textarea {
+    width: 100%;
+    box-sizing: border-box;
+    height: 200px;
+}
+
+.EventUserList .innercomments {
+    margin-top: 20px;
+    background-color: #FFF;
+    padding: 20px;
+}
+
+.informationboxbackground.EventUserList {
+    padding: 20px;
+}
+
+.EventUserList .usersettings {
+    padding: 20px;
+    
+    border: solid 1px #DDD;
+    background-color: #FFF;
+    min-height: 300px;
+}

@@ -1,0 +1,12 @@
+<?
+/* @var $this ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event  */
+$event = $this->getEvent();
+if (!$event->canBook) {
+    return;
+}
+?>
+<br/>
+
+<div class="shop_button" gsclick="bookNow" eventId="<? echo $event->id; ?>">
+    <? echo $this->__w("Book now"); ?>
+</div>

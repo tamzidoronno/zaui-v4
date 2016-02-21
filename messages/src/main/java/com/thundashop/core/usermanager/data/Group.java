@@ -15,6 +15,8 @@ import java.util.List;
 public class Group extends DataCommon {
     public String groupName = "";
     public String imageId = "";
+
+    public boolean usersRequireGroupReference = false;
     
     public List<Address> extraAddresses = new ArrayList();
     public Address defaultDeliveryAddress = new Address();

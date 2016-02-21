@@ -1,0 +1,32 @@
+<?
+/* @var $this ns_bd751f7e_5062_4d0d_a212_b1fc6ead654f\EventUserList */
+$event = $this->getApi()->getEventBookingManager()->getEvent("booking", $_POST['data']['eventId']);
+?>
+<div class="usercomments_infobox">
+    <div gstype="form" method="addComment"> 
+        <input type="hidden" value="<? echo $_POST['data']['eventId']; ?>" gsname="eventId"/>
+        <input type="hidden" value="<? echo $_POST['data']['userId']; ?>" gsname="userId"/>
+        <textarea gsname="comment"></textarea>
+        <div class="shop_button" gstype="submit">Add comment</div>
+    </div>    
+
+    <div class="innercomments">
+        <?
+        foreach ($event->comments as $userId => $comments) {
+            if ($userId != $_POST['data']['userId']) {
+                continue;
+            }
+
+            foreach ($comments as $i => $comment) {
+                echo "<div>";
+                echo $comment->commentCreatedDate."<br/>";
+                echo nl2br($comment->comment);
+                $addedBy = $this->getApi()->getUserManager()->getUserById($comment->addedByUserId);
+                if ($addedBy)
+                    echo "<br/> Added by: ".$addedBy->fullName;
+                echo "</div><br/>";
+            }
+        }
+        ?>
+    </div>
+</div>

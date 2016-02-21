@@ -1,0 +1,71 @@
+<?
+/* @var $this \ns_f06d0c6a_882e_4592_917c_b74273edfd11\EventLister */
+$groupedEvents = $this->getEvents();
+$locations = $this->getLocations($groupedEvents);
+
+if (!count($groupedEvents)) {
+    echo "please come back later, no events available";
+    return;
+}
+
+echo "<div class='locationlist'>";
+    foreach ($locations as $loc) {
+        $extra = $loc->isFiltered ? "<i class='fa fa-check'/>" : "";
+        echo "<div gsclick='applyFilter' locationId='$loc->id'>$extra $loc->name</div>";
+    }
+echo "</div>";
+
+
+echo "<div class='eventlist'>";
+    foreach ($groupedEvents as $key => $events) {
+        ?>
+            <div class='monthheader'>
+                <div class="monthname">
+                    <? 
+                        $splitted = explode("_", $key);
+                        echo $this->__f($splitted[0])." - ".$splitted[1];
+                    ?>
+                </div>
+            
+                <div class="col col1 location"><? echo $this->__w("Location"); ?></div>
+                <div class="col col2 eventname"><? echo $this->__w("Event name"); ?></div>
+                <div class='col col3 daysinformation'><? echo $this->__w("Dates"); ?></div>
+                <div class="col col4 availablespots"><? echo $this->__w("Available spots"); ?></div>
+            </div>
+        <?
+        foreach ($events as $event) {
+            $pageId = $event->eventPage;
+            ?>
+            <div class='eventline' style='display: inline-block;'>
+            <?
+                                    
+            if ($this->hasWriteAccess()) {
+                ?>
+                <div class='gs_shop_small_icon' gsclick='deleteEvent' gs_confirm='Are you sure you want to delete event?' eventid='<? echo $event->id; ?>'><i class='fa fa-trash'></i></div>
+                <?  
+            }
+            
+            echo "<a href='/$pageId'>";
+            ?>
+            
+                <div class="col col1 location"><? echo $event->location->name. " - " .$event->subLocation->name; ?></div>
+                <div class="col col2 eventname"><? echo $event->bookingItemType->name; ?></div>
+
+                <div class='col col3 daysinformation'>
+                    <?
+                    foreach ($event->days as $day) {
+                        echo date("d/m-Y h:m", strtotime($day->startDate))." ".date("d/m-Y h:m", strtotime($day->endDate))."<br/>";
+                    }
+                    ?>
+                </div>
+
+                <div class="col col4 availablespots"><? echo $event->bookingItem->freeSpots; ?></div>
+            <?
+            echo "</a>";
+            ?>
+            </div>
+        <?
+        }
+    }
+echo "</div>";
+?>

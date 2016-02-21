@@ -3,6 +3,7 @@ package com.thundashop.core.storemanager;
 
 import com.getshop.javaapi.GetShopApi;
 import com.getshop.scope.GetShopSession;
+import com.getshop.scope.GetShopSessionBeanNamed;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.annotation.PostConstruct;
@@ -415,5 +418,16 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public List<String> getAllEnvironments() {
         return new ArrayList(environments.getEnvironments().keySet());
+    }
+
+    @Override
+    public List<String> getMultiLevelNames() throws ErrorException {
+        Set<String> names = new TreeSet();
+        
+        for (GetShopSessionBeanNamed named : getShopScope.getSessionNamedObjects()) {
+            names.add(named.getName());
+        }
+        
+        return new ArrayList(names);
     }
 }

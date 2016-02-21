@@ -6,7 +6,6 @@
 package com.getshop.scope;
 
 import com.thundashop.core.common.ManagerSubBase;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *

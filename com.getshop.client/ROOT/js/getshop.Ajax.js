@@ -36,6 +36,13 @@ thundashop.Ajax = {
         var method = $(this).attr('gsclick');
         var data = {};
         
+        if ($(this).attr("gs_confirm")) {
+            var conf = confirm($(this).attr("gs_confirm"));
+            if (!conf) {
+                return;
+            }
+        }
+        
         $.each(this.attributes, function(i, attrib) {
             var name = attrib.name;
             var value = attrib.value;

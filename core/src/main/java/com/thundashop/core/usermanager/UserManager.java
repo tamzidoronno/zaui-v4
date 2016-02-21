@@ -1132,4 +1132,35 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return user -> user.type == (int)(Integer.valueOf(filterOptions.extra.get("orderstatus")));   
     }
 
+    @Override
+    public void assignCompanyToUser(Company company, String userId) {
+        User user = getUserStoreCollection(storeId).getUser(userId);
+        if (user == null) {
+            return;
+        }
+        
+        if (!user.company.isEmpty()) {
+            checkUserAccess(user);
+        }
+        
+        Company companyToUse = companies.values().stream()
+                .filter(o -> o.vatNumber.equals(company.vatNumber))
+                .findAny()
+                .orElse(null);
+        
+        if (companyToUse == null) {
+            saveCompany(company);
+            companyToUse = company;
+        }
+        
+        user.company.add(companyToUse.id);
+        saveUserSecure(user);
+   }
+
+    @Override
+    public List<User> getUsersByType(int type) {
+        return getAllUsers().stream()
+                .filter(user -> user != null && user.type == type)
+                .collect(Collectors.toList());
+    }
 }

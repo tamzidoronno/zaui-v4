@@ -19,4 +19,5 @@ public class Event extends DataCommon {
     public String iconImageId;
     public String description = "";
     public int capacity = 0;
+    public String eventHelderUserId = "";
 }

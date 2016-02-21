@@ -374,6 +374,36 @@ public class Database {
         DBObject dbObject = morphia.toDBObject(data);
         col.save(dbObject);
     }
+
+    public List<String> getMultilevelNames(String simpleName, String storeId) {
+        List<String> dbsToCheck = mongo.getDatabaseNames().stream()
+                .filter(name -> name.startsWith(simpleName))
+                .collect(Collectors.toList());
+        
+        List<String> retValues = new ArrayList();
+        for (String dbName : dbsToCheck) {
+            DB db = mongo.getDB(dbName);
+            if (db.collectionExists(collectionPrefix+storeId)) {
+                retValues.add(dbName.split("_")[1]);
+            }
+        }
+        
+        return retValues;
+    }
+    
+    public List<DataCommon> query(String manager, String storeId, DBObject query) {
+        DB db = mongo.getDB(manager);
+        DBCollection col = db.getCollection("col_" + storeId);
+        DBCursor res = col.find(query);
+        List<DataCommon> retObjecs = new ArrayList();
+        while(res.hasNext()) {
+            DBObject nx = res.next();
+            DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+            retObjecs.add(data);
+        }
+        
+        return retObjecs;
+    }
 }
 
 class DataCommonSorter implements Comparator<DataCommon> {

@@ -1,0 +1,15 @@
+<?
+/* @var $this ns_6daa9962_9ba6_40ae_b1a7_5be23cb89128\ProMeisterLogin */
+$companies = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($_POST['data']['text']);
+?>
+<div>
+    <?
+    if (!count($companies)) {
+        echo "Not found";
+    } else {
+        foreach ($companies as $vat => $companyName) {
+            echo "<div class=''><input value='$vat' type='radio' name='selectedCompany'/>".$companyName."</div>";
+        }
+    }
+    ?>
+</div>

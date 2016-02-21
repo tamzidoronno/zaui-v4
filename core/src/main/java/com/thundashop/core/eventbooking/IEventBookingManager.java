@@ -5,10 +5,13 @@
  */
 package com.thundashop.core.eventbooking;
 
+import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.common.Writing;
+import com.thundashop.core.usermanager.data.User;
 import java.util.List;
 
 /**
@@ -41,4 +44,35 @@ public interface IEventBookingManager {
     public Location getLocation(String locationId);
     
     public List<Event> getBookingsByPageId(String pageId, boolean showOnlyNew);
+    
+    public Event getEvent(String eventId);
+    
+    @Administrator
+    public void saveEvent(Event event);
+    
+    @Customer
+    public void bookCurrentUserToEvent(String eventId);
+    
+    @Editor
+    public List<User> getUsersForEvent(String eventId);
+    
+    @Editor
+    public List<User> getUsersForEventWaitinglist(String eventId);
+    
+    @Editor
+    public void removeUserFromEvent(String eventId, String userId);
+    
+    @Editor
+    public void addUserComment(String userId, String eventId, String comment);
+
+    @Editor
+    public void setParticipationStatus(String eventId, String userId, String status);
+    
+    public void addLocationFilter(String locationId);
+   
+    @Administrator
+    public List<EventLog> getEventLog(String eventId);
+
+    @Administrator
+    public void markAsReady(String eventId);
 }

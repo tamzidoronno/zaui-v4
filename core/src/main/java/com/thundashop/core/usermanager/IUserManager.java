@@ -98,6 +98,9 @@ public interface IUserManager {
     @Administrator
     public List<User> getAllUsers() throws ErrorException;
     
+
+    @Administrator
+    public List<User> getUsersByType(int type);
     /**
      * Fetch all the users registered to this webshop.
      * @return
@@ -366,4 +369,6 @@ public interface IUserManager {
     
     @Administrator
     public void deleteCompany(String companyId);
+    
+    public void assignCompanyToUser(Company company, String userId);
 }

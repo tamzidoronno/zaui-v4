@@ -43,7 +43,7 @@ public class SavedCommonPageData extends DataCommon {
         int i = 0;
         List<Long> toRemove = new ArrayList();
         for(Long date : backups.keySet()) {
-            if(i > 200) {
+            if(i > 20) {
                 toRemove.add(date);
             }
             i++;
@@ -54,7 +54,6 @@ public class SavedCommonPageData extends DataCommon {
         }
         
         PageLayout layoutCopy = copyLayout(layout);
-        
         LinkedHashMap<Long, PageLayout> newMap = new LinkedHashMap();
         long time = new Date().getTime();
         newMap.put(time, layoutCopy);

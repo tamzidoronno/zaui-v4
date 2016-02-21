@@ -22,6 +22,8 @@ public class BookingItem extends DataCommon {
     
     public String bookingItemAlias = "";
     
+    public String pageId = "";
+    
     public String description = "";
     
     /**
@@ -67,7 +69,7 @@ public class BookingItem extends DataCommon {
      * This value is calculated based on bookings and availability count.
      */
     @Transient
-    int freeSpots = 0;
+    public int freeSpots = 0;
     
     @Transient
     public List<Availability> availabilities = new ArrayList();

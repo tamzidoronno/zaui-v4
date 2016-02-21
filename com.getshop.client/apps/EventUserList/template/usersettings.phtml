@@ -1,0 +1,19 @@
+<?
+/* @var $this ns_bd751f7e_5062_4d0d_a212_b1fc6ead654f\EventUserList */
+$event = $this->getApi()->getEventBookingManager()->getEvent($this->getBookingEngineName(), $_POST['data']['eventId']);
+$participatedStatus = @$event->participationStatus->{$_POST['data']['userId']};
+
+?>
+
+<div class="usersettings">
+    Please select status: &nbsp;&nbsp;
+    
+    <select class="gsniceselect1 participationstatus" userid="<? echo $_POST['data']['userId']; ?>" eventId='<? echo $_POST['data']['eventId']; ?>'>
+        <option value="participated" <? echo $participatedStatus == "participated" ? "selected='true'" : ""; ?>><? echo $this->__w("Participated"); ?></option>
+        <option value="participated_free" <? echo $participatedStatus == "participated_free" ? "selected='true'" : ""; ?>><? echo $this->__w("Participated free"); ?></option>
+        <option value="participated_50" <? echo $participatedStatus == "participated_50" ? "selected='true'" : ""; ?>><? echo $this->__w("Not participated illegal reason"); ?></option>
+        <option value="not_participated" <? echo $participatedStatus == "not_participated" ? "selected='true'" : ""; ?>><? echo $this->__w("Not participated legal reason"); ?></option>
+    </select>
+    
+    ( Automatically saved )
+</div>

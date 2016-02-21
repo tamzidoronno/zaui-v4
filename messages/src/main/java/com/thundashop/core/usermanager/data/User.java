@@ -26,6 +26,9 @@ public class User extends DataCommon implements Comparable<User> {
     public List<UserCard> savedCards = new ArrayList();
     public String lastRegisteredToken;
     public boolean triedToFetch = false;
+    
+    @Transient
+    public Company companyObject;
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);

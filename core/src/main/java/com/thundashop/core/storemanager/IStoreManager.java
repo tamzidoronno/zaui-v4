@@ -185,4 +185,6 @@ public interface IStoreManager {
     public void receiveSyncData(byte[] json) throws ErrorException;
     
     public List<String> getAllEnvironments();
+    
+    public List<String> getMultiLevelNames() throws ErrorException;
 }

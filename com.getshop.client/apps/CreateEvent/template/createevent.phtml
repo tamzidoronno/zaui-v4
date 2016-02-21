@@ -1,8 +1,30 @@
 <?
 /* @var $this ns_f4c3fce7_123c_4dcc_b9ce_dfea2ac6b755\CreateEvent */
+$eventToUse = $this->getEvent();
+
+$availableSpots = "";
+$days = json_encode([]);
+$entryId = "";
+$sublocationId = "";
+$eventUserHelderId = "";
+$finishedClass = "";
+
+if ($eventToUse) {
+    $days = [];
+    $availableSpots = $eventToUse->bookingItem->bookingSize;
+    foreach ($eventToUse->days as $day) {
+       $day = [date("d.m.Y H:i",strtotime($day->startDate)), date("d.m.Y H:i",strtotime($day->endDate))];
+       $days[] = $day;
+    }
+    $days = json_encode($days);
+    $entryId = $eventToUse->id;
+    $sublocationId = $eventToUse->subLocationId;
+    $eventUserHelderId = $eventToUse->eventHelderUserId;
+    $finishedClass = $eventToUse->markedAsReady ? "finished" : "";
+}
 ?>
 
-<div gstype="form">
+<div gstype="form" class='<? echo $finishedClass; ?>'>
     <div class="listrow">
         <label> Event type </label>
         <select class="gsniceselect1 selectedttype">
@@ -17,35 +39,58 @@
 
     <div class="listrow dayrow template">
         <label><? echo $this->__f("Day"). " <span class='daycount'>1</span>"; ?></label>
-        <input class="gsniceinput1 daydate startdate" /> &nbsp;&nbsp; to &nbsp;&nbsp;<input class="gsniceinput1 daydate enddate" /> <div class="addMoreDays"><i class="fa fa-plus"></i></div>  <div class="removeMoreDays"><i class="fa fa-minus"></i></div>  
+        <br/>
+        <div style="display: inline-block; width: 155px;">From:</div><input class="gsniceinput1 daydate startdate" /> <br/> <div style="display: inline-block; width: 155px;">End:</div><input class="gsniceinput1 daydate enddate" /> <div class="addMoreDays"><i class="fa fa-plus"></i></div>  <div class="removeMoreDays"><i class="fa fa-minus"></i></div>  
     </div>
 
     <div class="listrow">
         <label><? echo $this->__f("Available spots"); ?></label>
-        <input class="gsniceinput1 availablespots" />
+        <input class="gsniceinput1 availablespots" value="<? echo $availableSpots; ?>"/>
     </div>
 
     <div class="listrow">
         <label><? echo $this->__f("Location"); ?></label>
         <select class="gsniceselect1 selectedSubLocation">
-            <?
-        $locations = $this->getApi()->getEventBookingManager()->getAllLocations($this->getBookingEgineName());
-        
-        foreach ($locations as $location) {
-            foreach ($location->locations as $sublocation) {
-//                $selected = $location->id == $event->sub ? "selected='true'" : "";
-                echo "<option value='$sublocation->id'>".$location->name." - ".$sublocation->name."</option>";
+        <?
+            $locations = $this->getApi()->getEventBookingManager()->getAllLocations($this->getBookingEgineName());
+
+            foreach ($locations as $location) {
+                foreach ($location->locations as $sublocation) {
+                    $selected = $sublocation->id == $sublocationId ? "selected='true'" : "";
+                    echo "<option $selected value='$sublocation->id'>".$location->name." - ".$sublocation->name."</option>";
+                }
             }
-        }
         ?>
         </select>
     </div>
     
-    <div class="shop_button createbutton">
-        <? echo $this->__f("Create"); ?>
+    <div class="listrow">
+        <label><? echo $this->__f("Event helder"); ?></label>
+        <select class="gsniceselect1 selectedEventHelder">
+        <?
+            $filter = new core_common_FilterOptions();
+            
+            $admins = $this->getApi()->getUserManager()->getUsersByType(100);
+
+            foreach ($admins as $admin) {
+                $selected = $admin->id == $eventUserHelderId ? "selected='true'" : "";
+                echo "<option $selected value='$admin->id'>".$admin->fullName." - $admin->emailAddress</option>";
+            }
+        ?>
+        </select>
     </div>
+    
+    <div class="shop_button createbutton" entryId="<? echo $entryId; ?>">
+        <? echo $eventToUse ? $this->__f("Save") : $this->__f("Create"); ?>
+    </div>
+    
+    <?
+    if ($eventToUse && !$eventToUse->markedAsReady) {
+        echo "<div class='shop_button' gsclick='markAsReady' eventid='$eventToUse->id' gs_confirm='Are you sure you want to mark this as ready ?'>Mark as ready</div>";
+    }
+    ?>
 </div>
 
 <script>
-    app.CreateEvent.addFirstDay();
+    app.CreateEvent.addFirstDay(<? echo $days; ?>);
 </script>

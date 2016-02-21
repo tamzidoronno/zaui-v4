@@ -4,11 +4,13 @@
  */
 package com.thundashop.core.common;
 
+import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -21,6 +23,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 /**
  *
@@ -28,6 +33,7 @@ import org.springframework.beans.BeansException;
  */
 public class StoreHandler {
 
+    private List<String> inittedNamedBeans = new ArrayList();
     private List<ManagerBase> messageHandler;
     private String storeId;
     private HashMap<String, Session> sessions = new HashMap();
@@ -44,6 +50,8 @@ public class StoreHandler {
     }
         
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
+        initMultiLevels(storeId, getSession(inObject.sessionId));
+        
         scope.setStoreId(storeId, inObject.multiLevelName, getSession(inObject.sessionId));
         Class getShopInterfaceClass = loadClass(inObject.realInterfaceName);
         setSessionObject(inObject.sessionId, getShopInterfaceClass, inObject);
@@ -52,10 +60,11 @@ public class StoreHandler {
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues);
 
         try {
+            User user = findUser(getShopInterfaceClass, inObject);
             Annotation userLevel = authenticateUserLevel(executeMethod, aClass, getShopInterfaceClass, inObject);
             Object result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
             clearSessionObject();
-            result = cloneResult(result);
+            result = cloneResult(result, user);
             return result;
         } catch (ErrorException ex) {
             if (ex.code == 26) {
@@ -384,15 +393,59 @@ public class StoreHandler {
      * @param result
      * @return 
      */
-    private <V> V cloneResult(V result) {
+    private <V> V cloneResult(V result, User user) {
         if (result == null) {
             return result;
         }
-        
-        Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
+       
+        Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .disableInnerClassSerialization()
+                .addSerializationExclusionStrategy(new SerializationExcludeStragety(user))
+                .create();
+                
         String json = gson.toJson((Object) result);
         V retObject = (V)gson.fromJson(json, result.getClass());
         
         return retObject;
+    }
+
+    private void initMultiLevels(String storeId, Session session) {
+        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
+        scanner.addIncludeFilter(new AnnotationTypeFilter(GetShopSession.class));
+        
+        Database database = AppContext.appContext.getBean(Database.class);
+        
+        if (inittedNamedBeans.contains(storeId)) {
+            return;
+        }
+        
+        for (BeanDefinition bd : scanner.findCandidateComponents("com.thundashop")) {
+            checkIfIsNamedSessionBean(bd, database, session);
+        }
+        
+        for (BeanDefinition bd : scanner.findCandidateComponents("com.getshop")) {
+            checkIfIsNamedSessionBean(bd, database, session);
+        }
+        
+        inittedNamedBeans.add(storeId);
+    }
+
+    private void checkIfIsNamedSessionBean(BeanDefinition bd, Database database, Session session) {
+        try {
+            Class c = Class.forName(bd.getBeanClassName());
+            
+            if (GetShopSessionBeanNamed.class.isAssignableFrom(c)) {
+                List<String> namesToInit = database.getMultilevelNames(c.getSimpleName(), storeId);  
+                for (String name : namesToInit) {
+                    scope.setStoreId(storeId, name, session);
+                    GetShopSessionBeanNamed bean = (GetShopSessionBeanNamed)AppContext.appContext.getBean(c);
+                    bean.getName();
+                }
+            }
+        } catch (Exception ex) {
+            // Should be impossible
+            ex.printStackTrace();
+        }
     }
 }

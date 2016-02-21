@@ -33,7 +33,28 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
             <?php echo $this->__("Name of the group."); ?>
         </div>
     </div>
+    
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("imageId"); ?></span>
+        <input type="textfield" gs_model='groupmodel' gs_model_attr='imageId' value="<? echo $group->imageId; ?>" placeholder="Group imageid">
+        <div class="description">
+            <?php echo $this->__("The id for the image that is used for the group"); ?>
+        </div>
+    </div>
 
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Requires group reference"); ?></span>
+        <div class="gss_onoff" gs_model="groupmodel" gs_model_attr="usersRequireGroupReference">
+            <?
+            $faclass = $group->usersRequireGroupReference ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("Activate this to make sure new users that register adds group references."); ?>
+        </div>
+    </div>
+    
     <!-- Invoice information START -->
     <div class='gss_settings_content gss_col_width_inner_2'>
         <center><h3><?php echo $this->__f("Invoice information"); ?></h3></center>

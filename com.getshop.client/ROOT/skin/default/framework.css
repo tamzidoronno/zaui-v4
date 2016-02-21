@@ -1773,10 +1773,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
     background-color:#3a99d7;
     box-shadow: 0px 0px 2px #bbb;
 }
-.application_settings:hover {
-    background-image: url('skin/default/images/application_box_background_empty_area_hover.png');
-}
-
 
 #loadingProgressG{
     width:256px;

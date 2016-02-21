@@ -1,0 +1,20 @@
+.Event .eventtitle {
+    border: solid 1px #DDD;
+    background-color: #F0F0F0;
+    padding: 10px;
+}
+
+.Event .locationinformation,
+.Event .dateinformation {
+    padding: 10px;
+}
+
+.Event .dateinformation div {
+    padding-left: 20px;
+    padding-top: 10px;
+}
+
+.Event .availability {
+    padding: 10px;
+    font-weight: bold;
+}

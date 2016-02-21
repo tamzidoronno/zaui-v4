@@ -8,6 +8,7 @@ package com.thundashop.core.eventbooking;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.List;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -16,4 +17,7 @@ import java.util.List;
 public class Location extends DataCommon {
     public List<SubLocation> locations = new ArrayList();
     public String name = "";
+    
+    @Transient
+    public boolean isFiltered = false;
 }

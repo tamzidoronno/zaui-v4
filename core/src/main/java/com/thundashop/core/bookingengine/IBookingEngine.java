@@ -80,4 +80,7 @@ public interface IBookingEngine {
     public List<BookingItem> getAvailbleItems(String typeId, Date start, Date end);    
     
     public TimeRepeaterData getOpeningHours(String itemId);
+    
+    @Administrator
+    public List<Booking> getAllBookingsByBookingItem(String bookingItemId);
 }

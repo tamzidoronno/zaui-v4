@@ -8,10 +8,12 @@ package com.thundashop.core.eventbooking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.Editor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -23,8 +25,18 @@ public class Event extends DataCommon {
     public String bookingItemId = "";
     
     public String subLocationId = "";
+
+    public String eventHelderUserId = "";
     
     public List<Day> days = new ArrayList();
+    
+    public boolean markedAsReady = false;
+    
+    @Editor
+    public HashMap<String, List<UserComment>> comments = new HashMap();
+    
+    @Editor
+    public HashMap<String, String> participationStatus = new HashMap();
     
     @Transient
     public BookingItem bookingItem;
@@ -43,6 +55,15 @@ public class Event extends DataCommon {
     
     @Transient
     public Date mainEndDate;
+    
+    @Transient
+    public String eventPage = "";
+    
+    @Transient
+    public int availableSpots;
+    
+    @Transient
+    public boolean canBook = false;
 
     void setMainDates() {
         if (days.size() > 0) {
@@ -52,5 +73,41 @@ public class Event extends DataCommon {
             mainEndDate = days.get(0).endDate;
         }
     }
+
+    public String getBookingItemId() {
+        if (bookingItemId == null) {
+            return "";
+        }
+        
+        return bookingItemId;
+    }
+
+    public String getEventHelderUserId() {
+        return eventHelderUserId != null ? eventHelderUserId : "";
+    }
     
+    public String getSubLocationId() {
+        return subLocationId != null ? subLocationId : "";
+    }
+
+    boolean sameDates(Event event2) {
+        if (days.size() != event2.days.size()) {
+            return false;
+        }
+        
+        int i = 0;
+        for (Day day : days) {
+            Day day2 = event2.days.get(i);
+            if (day.startDate != null && day2.startDate != null && !day2.startDate.equals(day.startDate)) {
+                return false;
+            }
+            
+            if (day.endDate != null && day2.endDate != null && !day2.endDate.equals(day.endDate)) {
+                return false;
+            }
+            i++;
+        }
+        
+        return true;
+    }
 }

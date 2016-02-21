@@ -33,9 +33,9 @@ class PmsDayOverview extends \WebshopApplication implements \Application {
     public function getSelectedFilter($checkin) {
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->state = 0;
-        $start = strtotime(date("d.m.Y 07:00", $this->getSelectedDate()));
+        $start = strtotime(date("d.m.Y 04:00", $this->getSelectedDate()));
         $filter->startDate = $this->formatTimeToJavaDate($start);
-        $filter->endDate = $this->formatTimeToJavaDate($start+(86400*1));
+        $filter->endDate = $this->formatTimeToJavaDate($start+(39600*1));
         if($checkin) {
             $filter->filterType = "checkin";
         } else {
@@ -44,10 +44,22 @@ class PmsDayOverview extends \WebshopApplication implements \Application {
         return $filter;
     }
     
+    public function keyIsReturned() {
+        $_SESSION['returnedkey_'.$_POST['data']['roomid'] . "_" . date("d.m.Y")] = true;
+        $this->getApi()->getPmsManager()->returnedKey($this->getSelectedName(), $_POST['data']['roomid']);
+    }
+    
     public function updatecode() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         $config->extraField = $_POST['data']['code'];
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+
+    public function markedAsReturned($roomid) {
+        if(isset($_SESSION['returnedkey_'.$roomid . "_" . date("d.m.Y")])) {
+            return true;
+        }
+        return false;
     }
 
 }

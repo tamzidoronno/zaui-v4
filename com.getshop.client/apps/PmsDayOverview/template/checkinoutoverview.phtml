@@ -57,7 +57,8 @@ foreach($bookings as $booking) {
     $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
     foreach($booking->rooms as $room) {
         echo "<tr>";
-        echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td><td>" . $user->fullName . "( " . $user->cellPhone . ")". "</td>";
+        echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td>";
+        echo "<td>" . $user->fullName . "( " . $user->cellPhone . ")". "</td>";
         echo "<td>" . $room->guests[0]->name . "</td>";
         echo "<td>" . $room->guests[0]->phone . "</td>";
         echo "<td>" . $room->guests[0]->email . "</td>";
@@ -75,3 +76,15 @@ echo "Current code is: " . $config->extraField . "<br>";
     <input type="button" gstype="submit" value="Set new code">
 </div>
 <br><br>
+<h1>Keydrop</h1>
+Click on the room where the key has been returned.<br>
+<?php
+$rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+foreach($rooms as $room) {
+    $marked = "";
+    if($this->markedAsReturned($room->id)) {
+        $marked = "style='background-color:green;color:#fff;'";
+    }
+    echo "<span class='keyreturnedroom' roomid='".$room->id."' $marked>" . $room->bookingItemName . "</span>";
+}
+?>

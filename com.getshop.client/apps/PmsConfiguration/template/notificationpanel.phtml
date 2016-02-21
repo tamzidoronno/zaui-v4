@@ -45,6 +45,15 @@ $whenToPay[1] = "When booking";
 $whenToPay[2] = "On confirmation";
 $whenToPay[3] = "At check in date";
 $whenToPay[4] = "After stay";
+
+$days = array();
+$days[1] = "Monday";
+$days[2] = "Tuesday";
+$days[3] = "Wednesday";
+$days[4] = "Thursday";
+$days[5] = "Friday";
+$days[6] = "Saturday";
+$days[7] = "Sunday";
 ?>
 
 <h1>Booking notification system</h1>
@@ -231,6 +240,19 @@ $whenToPay[4] = "After stay";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->autoExtend) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoExtend' <? echo $checked; ?>>
+            </span>
+            Automatically extend stay if key is not returned
+        </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->isItemBookingInsteadOfTypes) {
                     $checked = "CHECKED";
                 }
@@ -238,12 +260,6 @@ $whenToPay[4] = "After stay";
                 <input type='checkbox' gsname='isItemBookingInsteadOfTypes' <? echo $checked; ?>>
             </span>
             Is item booking instead of type booking.
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='number' style='width: 40px;' gsname='cleaningInterval' value='<? echo $notificationSettings->cleaningInterval; ?>'>
-            </span>
-            Cleaning interval default (0, disabled)
         </div>
         <div class='configrow'>
             <span class='configentry'>
@@ -278,6 +294,43 @@ $whenToPay[4] = "After stay";
             </span>
             Sms name
         </div>
+        <br><br>
+        <h2>
+            Cleaning configuration
+        </h2>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='number' style='width: 40px;' gsname='cleaningInterval' value='<? echo $notificationSettings->cleaningInterval; ?>'>
+            </span>
+            Cleaning interval default (0, disabled)
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='number' style='width: 40px;' gsname='numberOfCheckoutCleanings' value='<? echo $notificationSettings->numberOfCheckoutCleanings; ?>'>
+            </span>
+            Max number of checkout cleaning possible to do for a day (0, disabled)
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='number' style='width: 40px;' gsname='numberOfIntervalCleaning' value='<? echo $notificationSettings->numberOfIntervalCleaning; ?>'>
+            </span>
+            Max number of interval cleaning possible to do for a day (0, disabled)
+        </div>
+        <?php for($i=1;$i<=7;$i++) { ?>
+            <div class='configrow'>
+                <span class='configentry'>
+                <?
+                    $checked = "";
+                    if(isset($notificationSettings->cleaningDays->{$i}) && $notificationSettings->cleaningDays->{$i}) {
+                        $checked = "CHECKED";
+                    }
+                ?>
+                <input type='checkbox' gsname='cleaningDays_<?php echo $i; ?>' <? echo $checked; ?>>
+                </span>
+                Cleaning on <?php echo $days[$i]; ?>
+            </div>
+        <?php } ?>
+
         <br><br>
         <h2>
             Payment and order creations

@@ -71,6 +71,9 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 $notifications->{$key} = $value;
             }
         }
+        for($i = 1; $i<=7;$i++) {
+            $notifications->cleaningDays->{$i} = $_POST['data']['cleaningDays_'.$i];
+        }
         
         $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];
 

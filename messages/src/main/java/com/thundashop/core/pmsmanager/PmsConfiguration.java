@@ -25,12 +25,12 @@ public class PmsConfiguration extends DataCommon {
     public boolean needToAgreeOnContract = true;
     public boolean exposeUnsecureBookings = false;
     public boolean autoconfirmRegisteredUsers = false;
-    public Integer cleaningInterval = 0;
     public boolean prepayment = true;
     public Integer createOrderAtDayInMonth = 0;
     public Integer minStay = 1;
     public boolean supportMoreDates = true;
     public boolean isItemBookingInsteadOfTypes = false;
+    public boolean autoExtend = false;
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily
     public String defaultStart = "15:00";
     public String defaultEnd = "12:00";
@@ -44,4 +44,12 @@ public class PmsConfiguration extends DataCommon {
     public String arxPassword = "";
     public String arxCardFormat = "";
     public Integer codeSize = 4;
+    
+    //Cleaning options
+    public Integer cleaningInterval = 0;
+    public HashMap<Integer, Boolean> cleaningDays = new HashMap();
+    public Integer numberOfCheckoutCleanings = 0;
+    public Integer numberOfIntervalCleaning = 0;
+
+    
 }

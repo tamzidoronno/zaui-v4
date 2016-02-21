@@ -1042,8 +1042,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         message = formatMessage(message, booking, null, null);
-        String email = getStoreSettingsApplicationKey("emailaddress");
-        String phone = getStoreSettingsApplicationKey("phoneNumber");
+        String email = storeManager.getMyStore().configuration.emailAdress;
+        String phone = storeManager.getMyStore().configuration.phoneNumber;
         messageManager.sendMailWithDefaults("Administrator", email, "Notification", message);
         messageManager.sendSms(phone, message);
     }
@@ -2095,7 +2095,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
-    private void logEntry(String logText, String bookingId, String itemId) {
+    public void logEntry(String logText, String bookingId, String itemId) {
         logEntry(logText, bookingId, itemId, null);
         
     }
@@ -2188,6 +2188,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public void returnedKey(String roomId) {
+        for(PmsBooking booking : getAllBookings(null)) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if((room.isStarted() && !room.isEnded()) || room.isEndingToday()) {
+                    if(room.bookingItemId != null && room.bookingItemId.equals(roomId)) {
+                        room.keyIsReturned = true;
+                        saveBooking(booking);
+                        if(!room.isEndingToday()) {
+                            String roomName = bookingEngine.getBookingItem(roomId).bookingItemName;
+                            String msg = "Key delivered for someone not checking out today, at room: " + roomName;
+                            String email = storeManager.getMyStore().configuration.emailAdress;
+                            messageManager.sendMail(email, email, msg, msg, email, email);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+        
+    }
+
+    void warnAboutUnableToAutoExtend(String bookingItemName, String reason) {
+        String copyadress = storeManager.getMyStore().configuration.emailAdress;
+        messageManager.sendMail(copyadress, copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
     }
 
 }

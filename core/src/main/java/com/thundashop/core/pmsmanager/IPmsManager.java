@@ -118,4 +118,5 @@ public interface IPmsManager {
     public PmsBooking getCurrentBooking();
     public PmsBooking startBooking();
     public PmsBooking completeCurrentBooking();
+    public void returnedKey(String roomId);
 }

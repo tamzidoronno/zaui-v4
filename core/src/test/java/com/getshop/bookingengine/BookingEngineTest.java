@@ -98,7 +98,7 @@ public class BookingEngineTest extends TestCommon {
         BookingItemType type = bookingEngine.createABookingItemType("Booking Item Test");
         BookingItem item = helper.createAValidBookingItem(type.id);
         BookingItem savedItem = bookingEngine.saveBookingItem(item);
-        verify(databaseSaver, times(2)).saveObject(any(BookingItem.class), any(Credentials.class));
+        verify(databaseSaver, times(3)).saveObject(any(BookingItem.class), any(Credentials.class));
         
         BookingItem item2 = bookingEngine.getBookingItem(item.id);
         assertNotNull(item2);

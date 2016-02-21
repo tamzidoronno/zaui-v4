@@ -46,7 +46,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             $filter->filterType = "checkout";
         }
         $filter->startDate = $this->convertToJavaDate($time);
-        $filter->endDate = $this->convertToJavaDate($time+86400);
+        $filter->endDate = $this->convertToJavaDate($time+39600);
 
         $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
         if(!$bookings) {
@@ -72,9 +72,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
     
     public function getCleaningDate() {
         if(isset($_SESSION['cleaningdateselected'])) {
-            return date("d.m.Y", $_SESSION['cleaningdateselected']);
+            return date("d.m.Y 04:00", $_SESSION['cleaningdateselected']);
         }
-        return date("d.m.Y", time());
+        return date("d.m.Y 04:00", time());
     }
 
     public function changeDate() {
@@ -108,7 +108,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         for($i = 0; $i < 7; $i++) {
             echo "<td valign='top'>";
             $filter = new \core_pmsmanager_PmsBookingFilter();
-            $filter->filterType = "checkin";
+            $filter->filterType = "checkout";
             $filter->startDate = $this->convertToJavaDate($time+(86400*$i));
             $filter->endDate = $this->convertToJavaDate($time+(86400*($i+1)));
             $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
@@ -119,7 +119,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             if($bookings) {
                 foreach($bookings as $booking) {
                     foreach($booking->rooms as $room) {
-                        echo $room->guests[0]->name . "<br>";
+                        echo "<i class='fa fa-sign-out'></i>" . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $room->guests[0]->name . "<br>";
                         $total++;
                     }
                 }
@@ -127,7 +127,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             
             foreach($intervalResult as $room) {
                 $guestName = $room->guests[0]->name;
-                echo $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $guestName. "<br>";
+                echo "<i class='fa fa-refresh'></i>" . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $guestName. "<br>";
             }
             
             

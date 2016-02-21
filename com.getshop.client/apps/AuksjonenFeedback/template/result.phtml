@@ -1,0 +1,23 @@
+<?php
+
+/* @var $this ns_fab79388_f1d7_4fcc_8ca9_d32208e85491\AuksjonenFeedback */
+$saved = $this->getConfigurationSetting("savedform");
+$saved = json_decode($saved, true);
+echo "<b>Question:</b><br>";
+$total = 0;
+foreach($saved as $key => $s) {
+    if($key == "comments") {
+        continue;
+    }
+    echo $key . " : " . $s . "<br>";
+    $total += $s;
+}
+echo "Total answers: " . $total . "<br>";
+
+echo "<br><br>";
+echo "<b>Other comments:<br></b>";
+foreach($saved['comments'] as $time => $comment) {
+    echo nl2br($comment) . "<br>";
+    echo date("d.m.Y H:i", $time) . "<br>";
+}
+?>

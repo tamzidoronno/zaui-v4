@@ -126,6 +126,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 if($instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
                     $app = $this->getFactory()->getApplicationPool()->createAppInstance($instance);
                     $app->renderInBookingManagement($bookingId);
+                    break;
                 }
             }
         }

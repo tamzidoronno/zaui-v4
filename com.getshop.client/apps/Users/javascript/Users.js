@@ -98,6 +98,7 @@ $('.Users .saveCompanyInformation').live('click', function(e) {
         companyNameToSave : $('.Users #companyNameToSave').val(),
         streetaddress : $('.Users #streetaddress').val(),
         postnumber : $('.Users #postnumber').val(),
+        vatNumberToSave : $('.Users #vatNumberToSave').val(),
         city : $('.Users #city').val(),
         country : $('.Users #country').val()
     }

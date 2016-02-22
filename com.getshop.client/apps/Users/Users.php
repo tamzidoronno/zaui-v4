@@ -260,6 +260,7 @@ class Users extends \SystemApplication implements \Application {
         $user->company->postnumber = $_POST['data']['postnumber'];
         $user->company->city = $_POST['data']['city'];
         $user->company->country = $_POST['data']['country'];
+        $user->company->vatNumber = $_POST['data']['vatNumberToSave'];
         
         $this->getApi()->getUserManager()->saveUser($user);
     }

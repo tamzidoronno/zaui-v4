@@ -43,6 +43,10 @@ class Factory extends FactoryBase {
         return $this->eventHandler;
     }
 
+    public function isProductionMode() {
+        return $this->isProductionMode;
+    }
+    
     public function getCurrentLanguage() {
         if(isset($_SESSION['language_selected'])) {
             return $_SESSION['language_selected'];

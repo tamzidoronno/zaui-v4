@@ -108,20 +108,18 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         for($i = 0; $i < 7; $i++) {
             echo "<td valign='top'>";
             $filter = new \core_pmsmanager_PmsBookingFilter();
-            $filter->filterType = "checkout";
+            $filter->filterType = "checkoutcleaning";
             $filter->startDate = $this->convertToJavaDate($time+(86400*$i));
             $filter->endDate = $this->convertToJavaDate($time+(86400*($i+1)));
-            $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+            $checkoutCleaningRooms = $this->getApi()->getPmsManager()->getRoomsNeedingCheckoutCleaning($this->getSelectedName(), $this->convertToJavaDate($time+(86400*$i)));
             $intervalResult = $this->getApi()->getPmsManager()->getRoomsNeedingIntervalCleaning($this->getSelectedName(), $this->convertToJavaDate($time+(86400*$i)));
             if(!$intervalResult) {
                 $intervalResult = array();
             }
-            if($bookings) {
-                foreach($bookings as $booking) {
-                    foreach($booking->rooms as $room) {
-                        echo "<i class='fa fa-sign-out'></i>" . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $room->guests[0]->name . "<br>";
-                        $total++;
-                    }
+            if($checkoutCleaningRooms) {
+                foreach($checkoutCleaningRooms as $room) {
+                    echo "<i class='fa fa-sign-out'></i>" . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $room->guests[0]->name . "<br>";
+                    $total++;
                 }
             }
             

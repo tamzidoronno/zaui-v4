@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
 public class PmsManagerProcessor {
@@ -29,6 +31,8 @@ public class PmsManagerProcessor {
         processEndings(48, 24*3);
         processAutoExtend();
         processAutoAssigning();
+        processIntervalCleaning(false);
+        processIntervalCleaning(true);
         if(manager.configuration.arxHostname != null && !manager.configuration.arxHostname.isEmpty()) {
             processArx();
         }
@@ -422,6 +426,75 @@ public class PmsManagerProcessor {
                     }
                 }
             }
+        }
+    }
+
+    private void processIntervalCleaning(boolean isCheckoutCleaning) {
+        int maxNum = manager.configuration.numberOfIntervalCleaning;
+        if(isCheckoutCleaning) {
+            maxNum = manager.configuration.numberOfCheckoutCleanings;
+        }
+        if(maxNum == 0) {
+            return;
+        }
+        
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
+        
+        DateTime time = new DateTime();
+        for(Integer i = 0; i < 10; i++) {
+            int maxNumAtDay = 0;
+            int numberOfInterval = 0;
+            int weekOfDay = time.getDayOfWeek();
+            if(manager.configuration.cleaningDays.containsKey(weekOfDay)) {
+                boolean check = manager.configuration.cleaningDays.get(weekOfDay);
+                if(check) {
+                    maxNumAtDay = maxNum;
+                }
+            }
+            for(PmsBooking booking : bookings) {
+                boolean needSaving = false;
+                for(PmsBookingRooms room : booking.rooms) {
+                    
+                    boolean needUpdate = false;
+                    if(isCheckoutCleaning) {
+                        needUpdate = manager.needCheckOutCleaning(room, time.toDate());
+                    } else {
+                        needUpdate = manager.needIntervalCleaning(room, time.toDate());
+                    }
+                        
+                    if(needUpdate) {
+                        numberOfInterval++;
+                        if(numberOfInterval > maxNumAtDay) {
+                            moveToDifferentInterval(room, isCheckoutCleaning);
+                            needSaving = true;
+                        }
+                    }
+                }
+                if(needSaving) {
+                    manager.saveBooking(booking);
+                }
+            }
+            System.out.println(time.toDate() + " : " + " - " + numberOfInterval + " - " + maxNumAtDay);
+            time = time.plusDays(1);
+        }
+    }
+
+    private void processCheckoutCleaning() {
+        if(manager.configuration.numberOfCheckoutCleanings == 0) {
+            return;
+        }
+    }
+
+    private void moveToDifferentInterval(PmsBookingRooms room, boolean checkoutCleaning) {
+        Calendar dateToMove = Calendar.getInstance();
+        if(checkoutCleaning) {
+            dateToMove.setTime(room.date.exitCleaningDate);
+            dateToMove.add(Calendar.DAY_OF_YEAR, 1);
+            room.date.exitCleaningDate = dateToMove.getTime();
+        } else {
+            dateToMove.setTime(room.date.cleaningDate);
+            dateToMove.add(Calendar.DAY_OF_YEAR, -1);
+            room.date.cleaningDate = dateToMove.getTime();
         }
     }
     

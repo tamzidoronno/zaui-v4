@@ -79,6 +79,9 @@ public interface IPmsManager {
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
     
     @Administrator
+    public List<PmsBookingRooms> getRoomsNeedingCheckoutCleaning(Date day);
+    
+    @Administrator
     public String addBookingItem(String bookingId, String item, Date start, Date end);
     
     @Administrator

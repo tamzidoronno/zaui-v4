@@ -2,6 +2,13 @@
 
 include_once '../loader.php';
 
+if(!file_exists("javascripts")) {
+    mkdir("javascripts");
+}
+if(!file_exists("cssfolder")) {
+    mkdir("cssfolder");
+}
+
 function endsWith($haystack, $needle) {
     $length = strlen($needle);
     if ($length == 0) {

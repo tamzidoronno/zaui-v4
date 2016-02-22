@@ -68,7 +68,7 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
     private List<String> createOrderLine(Order order) {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyymmdd");
         List<String> allLines = new ArrayList();
-        int linenumber = 0;
+        int linenumber = 1;
         for(CartItem item : order.cart.getItems()) {
             Days periods = Days.daysBetween(new LocalDate(item.startDate), new LocalDate(item.endDate));
             User user = userManager.getUserById(order.userId);

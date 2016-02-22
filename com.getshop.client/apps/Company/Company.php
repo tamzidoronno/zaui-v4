@@ -68,11 +68,11 @@ class Company extends \SystemApplication implements \Application {
         
         
         $company->address->address = $_POST['address'];
-        $company->address->postCode = $_POST['postcode'];
+        $company->address->postCode = $_POST['postCode'];
         $company->address->city = $_POST['city'];
         
         $company->invoiceAddress->address = $_POST['invoice_address'];
-        $company->invoiceAddress->postCode = $_POST['invoice_postcode'];
+        $company->invoiceAddress->postCode = $_POST['invoice_postCode'];
         $company->invoiceAddress->city = $_POST['invoice_city'];
         
         

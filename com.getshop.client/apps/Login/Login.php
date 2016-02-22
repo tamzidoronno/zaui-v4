@@ -60,6 +60,7 @@ class Login extends \SystemApplication implements \Application {
         
         if ($userLoggedIn != null && isset($userLoggedIn)) {
             unset($_SESSION['tempaddress']);
+            unset($_SESSION['gs_currently_showing_modal']);
             $_SESSION['loggedin'] = serialize($userLoggedIn);
             // Need to refresh the page in order to make sure that all data is loaded.
             // This login is after data has been initialized to factory.

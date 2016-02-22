@@ -993,5 +993,15 @@ class ApplicationManager extends FactoryBase {
         $pageId = $this->getFactory()->getPage()->getId();
         $this->getApi()->getPageManager()->toggleLeftSideBar($pageId, $_POST['data']['name']);
     }
+    
+    public function closemodal() {
+        unset($_SESSION['gs_currently_showing_modal']);
+    }
+    
+    public function showModal() {
+        $areaname = $_POST['data']['modalName'];
+        $_SESSION['gs_currently_showing_modal'] = $areaname;
+        $this->getPage()->renderModal($areaname);
+    }
 }
 ?>

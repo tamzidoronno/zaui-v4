@@ -184,6 +184,19 @@ thundashop.common.removeNotificationProgress = function(id) {
     });
 };
 
+thundashop.common.showModal = function(modalName) {
+    var event = thundashop.Ajax.createEvent(null, "showModal", null, { modalName : modalName });
+    event['synchron'] = true;
+    thundashop.Ajax.post(event, function(res) {
+        $('#dynamicmodal').html(res);
+        $(window).scrollTop(0);
+    });
+}
+
+thundashop.common.closeModal = function() {
+    $('#dynamicmodal').html("");
+}
+
 thundashop.common.updateColorsFromPicker = function() {
     var bgcolor = $('.GetShopColorPicker #bgcolor').val();
     var basecolor = $('.GetShopColorPicker #basecolor').val();

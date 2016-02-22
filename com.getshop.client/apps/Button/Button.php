@@ -76,10 +76,19 @@ class Button extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("type", "link_to_interal_page");
         $this->setConfigurationSetting("page_id", $_POST['data']['page_id']);
     }
+    
+    public function setModal() {
+        $this->setConfigurationSetting("type", "link_to_modal");
+        $this->setConfigurationSetting("page_id", $_POST['data']['link']);
+    }
 
     public function getText() {
         $text = $this->getConfigurationSetting("text") ? $this->getConfigurationSetting("text") : $this->__f("Button");
         return $text;
+    }
+    
+    public function setToLogout() {
+        $this->setConfigurationSetting("type", "logout");
     }
 
 }

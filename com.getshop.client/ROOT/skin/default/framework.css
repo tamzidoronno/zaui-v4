@@ -2591,7 +2591,56 @@ select.gsniceselect1:active {
     display: none;
 }
 
+.gs_modalouter {
+    position:absolute;
+    width: 100%;
+    border: solid 1px;
+    left: 0px;
+    top: 0px;
+    min-height: 100%;
+    background: rgba(0,0,0,0.7);   
+    padding-top: 30px;
+    z-index: 2;
+    box-sizing: border-box;
+}
+
+.gs_modalouter .gs_modalinner .gs_close_modal {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    border-radius: 20px;
+    padding: 5px;
+    width: 20px;
+    text-align: center;
+    
+    cursor: pointer;
+    color: #FFF;
+    
+    background: rgb(255,168,76); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(255,168,76,1) 0%, rgba(255,123,13,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(255,168,76,1) 0%,rgba(255,123,13,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(255,168,76,1) 0%,rgba(255,123,13,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); /* IE6-9 */
+}
+
+.gs_modalouter .gs_modalinner .gs_close_modal:hover {
+    background: rgb(250,198,149); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(250,198,149,1) 0%, rgba(245,171,102,1) 47%, rgba(239,141,49,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(250,198,149,1) 0%,rgba(245,171,102,1) 47%,rgba(239,141,49,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(250,198,149,1) 0%,rgba(245,171,102,1) 47%,rgba(239,141,49,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fac695', endColorstr='#ef8d31',GradientType=0 ); /* IE6-9 */
+}
+
+.gs_modalouter .gs_modalinner {
+    position: relative;
+    background-color: #FFF;
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
 .left_sidebars .togle_named_sidebar {
     line-height: 25px;
     border-bottom: solid 1px #88Aec3;
 }
+

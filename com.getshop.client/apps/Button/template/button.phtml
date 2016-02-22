@@ -2,21 +2,31 @@
     $text = $this->getText();
     $type = $this->getConfigurationSetting("type");
     
+    $showModal = "";
     $extraClass = "";
     $extraAttributes = "";
     $ahref = "";
     $ahrefEnd = "";
-    
+    $onClick = "";
     
     if ($type && $type=="add_to_cart") {
         $extraClass = "addProductToCart";
         $extraAttributes = " productId='".$this->getConfigurationSetting("product_id")."'";
     }
     
+    if ($type && $type == "logout") {
+        $onClick = "thundashop.common.logout()";
+    }
+    
     if ($type && $type == "link_to_interal_page") {
         $pageid = $this->getConfigurationSetting("page_id");
         $ahref = "<a href='/index.php?page=$pageid'>";
         $ahrefEnd = "</a>";
+    }
+    
+    if ($type && $type == "link_to_modal") {
+        $modalName = $this->getConfigurationSetting("page_id");
+        $showModal = "gs_show_modal='$modalName'";
     }
     
     if ($type && $type == "link_to_external_page") {
@@ -29,7 +39,7 @@
     echo $ahref;
     if(!$template) {
         ?>
-        <div class="shop_button radius green <? echo $extraClass; ?>" <? echo $extraAttributes; ?>>
+        <div onclick="<? echo $onClick; ?>" accesskey=""<? echo $showModal; ?> class="shop_button radius green <? echo $extraClass; ?>" <? echo $extraAttributes; ?>>
             <div class='button_text_content'><? echo $text; ?></div>
             <div class="shop_button_saveNewText"><i class='fa fa-save'></i></div>
         </div>

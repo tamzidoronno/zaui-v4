@@ -40,6 +40,8 @@ public class SavedCommonPageData extends DataCommon {
             backups = new LinkedHashMap();
         }
         
+        layoutBackups.clear();
+        
         int i = 0;
         List<Long> toRemove = new ArrayList();
         for(Long date : backups.keySet()) {

@@ -1780,4 +1780,20 @@ class Page {
         
     }
 
+    public function renderModal($areaname) {
+        $this->factory->getApi()->getPageManager()->createModal($areaname);
+        
+        $notChachedJavPage = $this->factory->getApi()->getPageManager()->getPage($this->getId());
+        $page = new Page($notChachedJavPage, $this->factory);
+        $layout = $page->javapage->layout;
+        
+        echo "<div class='gsarea gs_modalouter' area='$areaname'>";
+            echo "<div class='".$areaname."_inner gs_modalinner gs_page_width'>";
+            echo "<div class='gs_close_modal' gsclick='closemodal'><i class='fa fa-close'></i></div>";
+            $page->printArea($layout->areas->{$areaname}, true);
+            echo "</div>";
+        echo "</div>";
+
+    }
 }
+

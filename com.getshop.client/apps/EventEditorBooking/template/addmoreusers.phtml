@@ -1,0 +1,17 @@
+<?
+/* @var $this ns_93b0a895_0713_4c59_acf3_c4714ad1f200\EventEditorBooking */
+?>
+
+<div class='title'>
+    <? echo $this->__f("Add more users"); ?>
+</div>
+<div class='content'>
+    Search for users &nbsp; <input class='gsniceinput1 searchforuserinput' />
+    <div class='searchresult'>
+        <?
+        $this->includefile("searchresult");
+        ?>
+    </div>
+    
+    <div class="shop_button" gs_show_modal="create_user_modal">Create new user</div> 
+</div>

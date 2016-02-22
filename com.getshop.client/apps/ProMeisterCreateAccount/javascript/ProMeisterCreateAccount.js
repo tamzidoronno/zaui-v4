@@ -22,7 +22,7 @@ app.ProMeisterCreateAccount = {
     },
     
     loginResult: function(res) {
-        alert("OK");
+        thundashop.common.closeModal();
     },
     
     validatePassword: function() {

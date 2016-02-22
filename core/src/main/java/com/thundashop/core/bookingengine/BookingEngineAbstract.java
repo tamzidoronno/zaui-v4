@@ -185,11 +185,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         item.availabilities = new ArrayList();
         
         if (item.pageId.isEmpty()) {
-            Page templatePage = pageManager.createPageFromTemplatePage(getName()+"_bookingegine_item_template");
-            if(templatePage != null) {
-                item.pageId = templatePage.id;
-                saveObject(item);
-            }
+            item.pageId = pageManager.createPageFromTemplatePage(getName()+"_bookingegine_item_template").id;
+            saveObject(item);
         }
         
         for (String availabilityId : item.availabilitieIds) {

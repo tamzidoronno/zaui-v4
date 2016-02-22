@@ -19,7 +19,7 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
             $this->setConfigurationSetting("imgapp_".$id, $newInstance->id);
             $imgInstance = $newInstance->id;
         }
-        $res = $this->getFactory()->getApplicationPool()->getApplicationInstance($imgInstance);
+        $res = $this->getFactory()->getApplicationPool()->getApplicationInstance($imgInstance); 
         return $res;
     }
     

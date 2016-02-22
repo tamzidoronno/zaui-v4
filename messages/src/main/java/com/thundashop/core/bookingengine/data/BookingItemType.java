@@ -8,6 +8,9 @@ package com.thundashop.core.bookingengine.data;
 
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -28,6 +31,7 @@ public class BookingItemType extends DataCommon {
     public Integer size = 0;
     public RegistrationRules rules = null;
     public TimeRepeaterData openingHours;
+    public HashMap<String, TimeRepeaterData> openingHoursData = new HashMap();
     public Integer order = 0;
     public String description = "";
     public Integer capacity = 0;

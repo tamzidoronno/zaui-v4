@@ -74,12 +74,15 @@ public interface IBookingEngine {
     public void saveOpeningHours(TimeRepeaterData time, String itemId);
     
     @Administrator
+    public void deleteOpeningHours(String repeaterId);
+    
+    @Administrator
     List<BookingItem> getAllAvailbleItems(Date start, Date end);
     
     @Administrator
     public List<BookingItem> getAvailbleItems(String typeId, Date start, Date end);    
     
-    public TimeRepeaterData getOpeningHours(String itemId);
+    public List<TimeRepeaterData> getOpeningHours(String itemId);
     
     @Administrator
     public List<Booking> getAllBookingsByBookingItem(String bookingItemId);

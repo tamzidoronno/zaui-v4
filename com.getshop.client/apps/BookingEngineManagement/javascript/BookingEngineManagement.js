@@ -47,18 +47,19 @@ app.BookingEngineManagement = {
     },
     
      changeRepeatType: function() {
+         var toChange = $(this).closest('.itemrow');
         var type = $(this).val();
-        $('.repeatrow').hide();
+        toChange.find('.repeatrow').hide();
         if(type !== "0") {
-            $('.repeatrow').show();
+            toChange.find('.repeatrow').show();
         } 
-        $('.repeateachdaterow').hide();
+        toChange.find('.repeateachdaterow').hide();
         if(type === "1") {
-            $('.repeateachdaterow').show();
+            toChange.find('.repeateachdaterow').show();
         }
         
-        $('.repeatoption').hide();
-        $('.repeat_' + type).show();
+        toChange.find('.repeatoption').hide();
+        toChange.find('.repeat_' + type).show();
     },
     configureSorting: function() {
         var data = {}

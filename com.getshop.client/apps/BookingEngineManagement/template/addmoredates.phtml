@@ -2,155 +2,170 @@
 /* @var $this ns_3b18f464_5494_4f4a_9a49_662819803c4a\BookingEngineManagement */
 $endDate = date("d.m.Y", time()+(86400*30));
 $repeat = $this->getRepeatingSummary();
-$data = $this->getOpeningHours();
+$openingdata = $this->getOpeningHours();
 $start = time();
 $end = time();
 
-if($data) {
-    $start = strtotime($data->firstEvent->start);
-    $end = strtotime($data->firstEvent->end);
+if(!$openingdata) {
+    $openingdata = array();
 }
-?>
 
-<div class='itemrow' style='position:relative;'>
-<span class='bookedaction'></span> 
-<a class='addmoredates togglerepeatbox'><? 
-if($repeat) {
-    echo $repeat;
-}?>
-</a><?php
-if($repeat) {
-    echo "<br><span class='bookedaction'></span><span class='showRepeatDates'>".strtolower($this->__w("show selected dates")) ."</span>";
-}
-?>
-    <span class='addMoredatesPanel' gstype='form' method='addRepeatingDates'>
-        <?php
-        $itemid = "";
-        if(isset($_POST['data']['typeid'])) {
-            $itemid = $_POST['data']['typeid'];
-        }
-        echo "<input type='hidden' gsname='itemid' value='".$itemid."'>";
-        ?>
-        
-        <input type='hidden' value='repeat' gsname='repeattype'>
-       
-        
-        <div class='eventrow'>
-            <span class='title'>
-                <span class='datetypepanel repeat'><? echo $this->__w("First event"); ?>:</span><br>
-            </span>
-            <span class='optionbox dateselection'>
-                <input type='text' gsname='eventStartsAt' style='width:150px;text-align: center;' value='<? echo date("d.m.Y", $start); ?>'>
-                <input type='text' style='width: 50px;text-align: center;' value='<? echo date("H:i", $start); ?>' gsname='starttime'><br>
-                <input type='text' gsname='eventEndsAt' style='width:150px;text-align: center;' value='<? echo date("d.m.Y", $end); ?>'>
-                <input type='text' style='width: 50px;text-align: center;' value='<? echo date("H:i", $end); ?>' gsname='endtime'>
-            </span>
-        </div>
-        <br>        
-        <div class='datetypepanel repeat'>
+foreach($openingdata as $data) {
+    if(!$data->firstEvent) {
+        $data->firstEvent = new core_pmsmanager_TimeRepeaterDateRange();
+        $data->firstEvent->start = date("d.m.Y H:i", time());
+        $data->firstEvent->end = date("d.m.Y H:i", time());
+        $data->endingAt = $this->convertToJavaDate(time());
+    }
+    
+    if($data) {
+        $start = strtotime($data->firstEvent->start);
+        $end = strtotime($data->firstEvent->end);
+    }
+    ?>
+
+    <div class='itemrow' style='position:relative; display:inline-block; border: solid 1px #bbb; margin:10px; padding: 10px; float:left;' repeaterId="<?php echo $data->repeaterId; ?>">
+    <span class='bookedaction'></span> 
+    <a class='addmoredates togglerepeatbox'><? 
+    if($repeat) {
+        echo $repeat;
+    }?>
+    </a><?php
+    if($repeat) {
+        echo "<br><span class='bookedaction'></span><span class='showRepeatDates'>".strtolower($this->__w("show selected dates")) ."</span>";
+    }
+    ?>
+        <span class='addMoredatesPanel' gstype='form' method='addRepeatingDates'>
+            <input type="hidden" gsname="repeaterId" value="<?php echo $data->repeaterId; ?>">
+            <?php
+            $itemid = "";
+            if(isset($_POST['data']['typeid'])) {
+                $itemid = $_POST['data']['typeid'];
+            }
+            echo "<input type='hidden' gsname='typeid' value='".$itemid."'>";
+            ?>
+
+            <input type='hidden' value='repeat' gsname='repeattype'>
+
+
             <div class='eventrow'>
-                <span class='title'><? echo $this->__w("Repeats"); ?>:</span>
-                <span class='optionbox'>
-                    <select class="repeat_type" gsname='repeat_periode'>
-                        <option value="0" title="Daily"><? echo $this->__w("Daily"); ?></option>
-                        <option value="1" title="Weekly"><? echo $this->__w("Weekly"); ?></option>
-                        <option value="2" title="Monthly"><? echo $this->__w("Monthly"); ?></option>
-                    </select>
+                <span class='title'>
+                    <span class='datetypepanel repeat'><? echo $this->__w("First event"); ?>:</span><br>
+                </span>
+                <span class='optionbox dateselection'>
+                    <input type='text' gsname='eventStartsAt' style='width:150px;text-align: center;' value='<? echo date("d.m.Y", $start); ?>'>
+                    <input type='text' style='width: 50px;text-align: center;' value='<? echo date("H:i", $start); ?>' gsname='starttime'><br>
+                    <input type='text' gsname='eventEndsAt' style='width:150px;text-align: center;' value='<? echo date("d.m.Y", $end); ?>'>
+                    <input type='text' style='width: 50px;text-align: center;' value='<? echo date("H:i", $end); ?>' gsname='endtime'>
                 </span>
             </div>
-        <br>        
-            <div class='eventrow repeatrow repeateachdaterow'>
-                <span class='title'><? echo $this->__w("Repeat every"); ?>:</span>
+            <br>        
+            <div class='datetypepanel repeat'>
+                <div class='eventrow'>
+                    <span class='title'><? echo $this->__w("Repeats"); ?>:</span>
+                    <span class='optionbox'>
+                        <select class="repeat_type" gsname='repeat_periode'>
+                            <option value="0" title="Daily"><? echo $this->__w("Daily"); ?></option>
+                            <option value="1" title="Weekly"><? echo $this->__w("Weekly"); ?></option>
+                            <option value="2" title="Monthly"><? echo $this->__w("Monthly"); ?></option>
+                        </select>
+                    </span>
+                </div>
+            <br>        
+                <div class='eventrow repeatrow repeateachdaterow'>
+                    <span class='title'><? echo $this->__w("Repeat every"); ?>:</span>
+                    <span class='optionbox'>
+                        <select style='width:50px; margin-right: 3px;' gsname='repeateachtime'>
+                            <?php 
+                            for($i = 1; $i <= 30; $i++) {
+                                echo "<option value='$i'>$i</option>";
+                            }
+                            ?>
+                        </select>
+                        <span class='repeat_0 repeatoption'><? echo $this->__w("days"); ?></span>
+                        <span class='repeat_1 repeatoption'><? echo $this->__w("weeks"); ?></span>
+                        <span class='repeat_2 repeatoption'><? echo $this->__w("months"); ?></span>
+                    </span>
+                </div>
+                <div class='eventrow repeatrow'>
+                    <span class='title'><? echo $this->__w("Repeat on"); ?>:</span>
+                    <span class='optionbox'>
+                        <span class='repeat_0 repeatoption'>
+
+                        </span>
+                        <span class='repeat_1 repeatoption'>
+                            <table>
+                                <tr>
+                                    <td><input type='checkbox' gsname='repeatMonday'><? echo $this->__w("Mon"); ?></td>
+                                    <td><input type='checkbox' gsname='repeatTuesday'><? echo $this->__w("Tue"); ?></td>
+                                    <td><input type='checkbox' gsname='repeatWednesday'><? echo $this->__w("Wed"); ?></td>
+                                    <td><input type='checkbox' gsname='repeatThursday'><? echo $this->__w("Thu"); ?></td>
+                                </tr>
+                                <tr>
+                                    <td><input type='checkbox' gsname='repeatFriday'><? echo $this->__w("Fri"); ?></td>
+                                    <td><input type='checkbox' gsname='repeatSaturday'><? echo $this->__w("Sat"); ?></td>
+                                    <td><input type='checkbox' gsname='repeatSunday'><? echo $this->__w("Sun"); ?></td>
+                                </tr>
+                            </table>
+                            <br>
+                        </span>
+                        <span class='repeat_2 repeatoption' style='padding-bottom: 10px;'>
+                            <input type='radio' name='repeatmonthtype' gsname='repeatmonthtype' value='dayofmonth'><? echo $this->__w("day of the month"); ?><br>
+                            <input type='radio' name='repeatmonthtype' gsname='repeatmonthtype' value='dayofweek'><? echo $this->__w("day of the week"); ?>
+                            <br> <br>
+                        </span>
+
+                    </span>
+                </div>
+                <div class='eventrow'>
+                    <span class='title'><? echo $this->__w("Ends"); ?>:</span>
+                    <span class='optionbox'><input type='text' gsname='endingAt' value='<? echo $endDate; ?>' style='width: 150px;text-align: center;'></span>
+                </div>
+            </div><br>
+           <div class='eventrow'>
+                <span class='title'></span>
                 <span class='optionbox'>
-                    <select style='width:50px; margin-right: 3px;' gsname='repeateachtime'>
-                        <?php 
-                        for($i = 1; $i <= 30; $i++) {
-                            echo "<option value='$i'>$i</option>";
-                        }
-                        ?>
-                    </select>
-                    <span class='repeat_0 repeatoption'><? echo $this->__w("days"); ?></span>
-                    <span class='repeat_1 repeatoption'><? echo $this->__w("weeks"); ?></span>
-                    <span class='repeat_2 repeatoption'><? echo $this->__w("months"); ?></span>
+                    <input type='button'value='<? echo $this->__w("Save"); ?>' gstype='submitToInfoBox'>
+                    <?php if($data) { ?>
+                        <input type='button' gstype="clicksubmitforce" value='<? echo $this->__w("Delete opening hours"); ?>'  method="deleteClosingHours" gsname="id" gsvalue="<?php echo $data->repeaterId; ?>">
+                    <? } ?>
                 </span>
             </div>
-            <div class='eventrow repeatrow'>
-                <span class='title'><? echo $this->__w("Repeat on"); ?>:</span>
-                <span class='optionbox'>
-                    <span class='repeat_0 repeatoption'>
+        </span>
+    </div>
 
-                    </span>
-                    <span class='repeat_1 repeatoption'>
-                        <table>
-                            <tr>
-                                <td><input type='checkbox' gsname='repeatMonday'><? echo $this->__w("Mon"); ?></td>
-                                <td><input type='checkbox' gsname='repeatTuesday'><? echo $this->__w("Tue"); ?></td>
-                                <td><input type='checkbox' gsname='repeatWednesday'><? echo $this->__w("Wed"); ?></td>
-                                <td><input type='checkbox' gsname='repeatThursday'><? echo $this->__w("Thu"); ?></td>
-                            </tr>
-                            <tr>
-                                <td><input type='checkbox' gsname='repeatFriday'><? echo $this->__w("Fri"); ?></td>
-                                <td><input type='checkbox' gsname='repeatSaturday'><? echo $this->__w("Sat"); ?></td>
-                                <td><input type='checkbox' gsname='repeatSunday'><? echo $this->__w("Sun"); ?></td>
-                            </tr>
-                        </table>
-                        <br>
-                    </span>
-                    <span class='repeat_2 repeatoption' style='padding-bottom: 10px;'>
-                        <input type='radio' name='repeatmonthtype' gsname='repeatmonthtype' value='dayofmonth'><? echo $this->__w("day of the month"); ?><br>
-                        <input type='radio' name='repeatmonthtype' gsname='repeatmonthtype' value='dayofweek'><? echo $this->__w("day of the week"); ?>
-                        <br> <br>
-                    </span>
+    <?php if($data) { ?>
+        <script>
+            var box = $('.itemrow[repeaterId="<?php echo $data->repeaterId; ?>"]');
+        box.find('[gsname="repeateachtime"]').val('<? echo $data->repeatEachTime; ?>');
+        box.find('[gsname="repeat_periode"]').val(<? echo $data->repeatPeride; ?>);
+        box.find('[gsname="repeat_periode"]').change();
 
-                </span>
-            </div>
-            <div class='eventrow'>
-                <span class='title'><? echo $this->__w("Ends"); ?>:</span>
-                <span class='optionbox'><input type='text' gsname='endingAt' value='<? echo $endDate; ?>' style='width: 150px;text-align: center;'></span>
-            </div>
-        </div><br>
-       <div class='eventrow'>
-            <span class='title'></span>
-            <span class='optionbox'>
-                <input type='button'value='<? echo $this->__w("Add"); ?>' gstype='submit'>
-                <?php if($data) { ?>
-                    <input type='button' gstype="clicksubmitforce" value='<? echo $this->__w("Unset closing hours"); ?>'  method="deleteClosingHours" gsname="id" gsvalue="somevalue">
-                <? } ?>
-            </span>
-        </div>
-    </span>
-</div>
+        box.find('[gsname="repeatMonday"]').attr('checked', <? if($data->repeatMonday) { echo "true"; } else { echo "false"; } ?>);
+        box.find('[gsname="repeatTuesday"]').attr('checked', <? if($data->repeatTuesday) { echo "true"; } else { echo "false"; } ?>);
+        box.find('[gsname="repeatWednesday"]').attr('checked', <? if($data->repeatWednesday) { echo "true"; } else { echo "false"; } ?>);
+        box.find('[gsname="repeatThursday"]').attr('checked', <? if($data->repeatThursday) { echo "true"; } else { echo "false"; } ?>);
+        box.find('[gsname="repeatFriday"]').attr('checked', <? if($data->repeatFriday) { echo "true"; } else { echo "false"; } ?>);
+        box.find('[gsname="repeatSaturday"]').attr('checked', <? if($data->repeatSaturday) { echo "true"; } else { echo "false"; } ?>);
+        box.find('[gsname="repeatSunday"]').attr('checked', <? if($data->repeatSunday) { echo "true"; } else { echo "false"; } ?>);
 
-<?php if($data) { ?>
-    <script>
-    $('[gsname="repeateachtime"]').val('<? echo $data->repeatEachTime; ?>');
-    $('[gsname="repeat_periode"]').val(<? echo $data->repeatPeride; ?>);
-    $('[gsname="repeat_periode"]').change();
-    
-    $('[gsname="repeatMonday"]').attr('checked', <? if($data->repeatMonday) { echo "true"; } else { echo "false"; } ?>);
-    $('[gsname="repeatTuesday"]').attr('checked', <? if($data->repeatTuesday) { echo "true"; } else { echo "false"; } ?>);
-    $('[gsname="repeatWednesday"]').attr('checked', <? if($data->repeatWednesday) { echo "true"; } else { echo "false"; } ?>);
-    $('[gsname="repeatThursday"]').attr('checked', <? if($data->repeatThursday) { echo "true"; } else { echo "false"; } ?>);
-    $('[gsname="repeatFriday"]').attr('checked', <? if($data->repeatFriday) { echo "true"; } else { echo "false"; } ?>);
-    $('[gsname="repeatSaturday"]').attr('checked', <? if($data->repeatSaturday) { echo "true"; } else { echo "false"; } ?>);
-    $('[gsname="repeatSunday"]').attr('checked', <? if($data->repeatSunday) { echo "true"; } else { echo "false"; } ?>);
-    
-    $('[gsname="endingAt"]').val('<? echo date("d.m.Y", strtotime($data->endingAt)); ?>');
-    
-    $('[gsname="eventStartsAt"]').val('<? echo date("d.m.Y", strtotime($data->firstEvent->start)); ?>');
-    $('[gsname="eventEndsAt"]').val('<? echo date("d.m.Y", strtotime($data->firstEvent->end)); ?>');
-    
-    </script>
-    <?
-}
-?>
+        box.find('[gsname="endingAt"]').val('<? echo date("d.m.Y", strtotime($data->endingAt)); ?>');
+
+        box.find('[gsname="eventStartsAt"]').val('<? echo date("d.m.Y", strtotime($data->firstEvent->start)); ?>');
+        box.find('[gsname="eventEndsAt"]').val('<? echo date("d.m.Y", strtotime($data->firstEvent->end)); ?>');
+
+        </script>
+        <?
+    }
+    ?>
+<? } ?>
 
 <script>
     $('[gsname="eventStartsAt"],[gsname="eventEndsAt"],[gsname="endingAt"]').datepicker({ 
         changeMonth: true,
         changeYear: true,
         showButtonPanel: true,
-        dateFormat: "dd.mm.yy", minDate : 0,
+        dateFormat: "dd.mm.yy",
     onSelect: function(dateText) {
         var date = moment(dateText, "DD.MM.YYYY");
         var month = (moment(date).get('month')+1);
@@ -161,3 +176,14 @@ if($repeat) {
       }
     });
 </script>
+<div style="clear:both;"></div>
+<div gstype="form" method="addGeneralOpeningHour">
+    <?php
+    $itemid = "";
+    if(isset($_POST['data']['typeid'])) {
+        $itemid = $_POST['data']['typeid'];
+    }
+    echo "<input type='hidden' gsname='typeid' value='".$itemid."'>";
+    ?>
+    <span class="pmsbutton" gstype="submitToInfoBox"><?php echo $this->__w("Add an opening hour"); ?></span>
+</div>

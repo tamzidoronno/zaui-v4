@@ -185,8 +185,11 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         item.availabilities = new ArrayList();
         
         if (item.pageId.isEmpty()) {
-            item.pageId = pageManager.createPageFromTemplatePage(getName()+"_bookingegine_item_template").id;
-            saveObject(item);
+            Page templatePage = pageManager.createPageFromTemplatePage(getName()+"_bookingegine_item_template");
+            if(templatePage != null) {
+                item.pageId = templatePage.id;
+                saveObject(item);
+            }
         }
         
         for (String availabilityId : item.availabilitieIds) {
@@ -595,30 +598,31 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
 
-    public TimeRepeaterData getOpeningHours(String itemId) {
-        TimeRepeaterData result = null;
-        if(itemId == null || itemId.isEmpty()) {
-            result = config.openingHours;
+    public List<TimeRepeaterData> getOpeningHours(String typeId) {
+        List<TimeRepeaterData> result = new ArrayList();
+        if(typeId == null || typeId.isEmpty()) {
+            result = new ArrayList(config.openingHoursData.values());
         } else {
-            BookingItemType item = getBookingItemType(itemId);
-            if(item != null) {
-                result = item.openingHours;
-                if(result == null) {
-                    result = config.openingHours;
-                }
+            BookingItemType bookingtype = getBookingItemType(typeId);
+            if(bookingtype != null) {
+               result = new ArrayList(bookingtype.openingHoursData.values());
             }
         }
+        
         return result;
         
     }
     
     void saveOpeningHours(TimeRepeaterData time, String typeId) {
+        if(time == null) {
+            time = new TimeRepeaterData();
+        }
         if(typeId == null || typeId.isEmpty()) {
-            config.openingHours = time;
+            config.openingHoursData.put(time.repeaterId, time);
             saveObject(config);
         } else {
             BookingItemType type = getBookingItemType(typeId);
-            type.openingHours = time;
+            type.openingHoursData.put(time.repeaterId, time);
             saveObject(type);
         }
     }
@@ -700,5 +704,18 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             item.bookingIds = inMemory.bookingIds;
             item.waitingListBookingIds = inMemory.waitingListBookingIds;
         }
+    }
+
+    void deleteOpeningHours(String repeaterId) {
+        List<BookingItemType> allTypes = getBookingItemTypes();
+        for(BookingItemType type :allTypes) {
+            if(type.openingHoursData.containsKey(repeaterId)) {
+                type.openingHoursData.remove(repeaterId);
+                updateBookingItemType(type);
+            }
+        }
+        
+        config.openingHoursData.remove(repeaterId);
+        saveObject(config);
     }
 }

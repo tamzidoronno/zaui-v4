@@ -115,10 +115,10 @@ public class TimeRepeaterTest {
         
         TimeRepeater instance = new TimeRepeater();
         List<TimeRepeaterDateRange> result = instance.generateRange(data);
-        assertTrue(result.size() == (10/repeatEachDay));
+        assertTrue(result.size() == (10/repeatEachDay)+1);
         
         //Check if dates are returned correctly
-        int iteration = 1;
+        int iteration = 0;
         DateTime start = new DateTime(data.firstEvent.start);
         DateTime end = new DateTime(data.firstEvent.end);
         for(TimeRepeaterDateRange returnDateRange : result) {
@@ -170,7 +170,8 @@ public class TimeRepeaterTest {
         if(sun) { numberOfRepeats++; };
         
         int resultNumber = (4 / interval) * numberOfRepeats;
-
+        resultNumber++;
+        
         if(resultNumber != result.size()) {
             System.out.println("Failed to generate correct result: " + result.size() + " ");
         }
@@ -205,7 +206,7 @@ public class TimeRepeaterTest {
         TimeRepeater instance = new TimeRepeater();
         List<TimeRepeaterDateRange> result = instance.generateRange(data);
         
-        int resultNumber = (12 / interval);
+        int resultNumber = (12 / interval) +1;
 
         if(resultNumber != result.size()) {
             System.out.println("Failed to generate correct result: " + result.size() + " ");

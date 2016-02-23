@@ -1343,6 +1343,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsBookingRooms> getRoomsNeedingCheckoutCleaning(Date day) {
         List<PmsBookingRooms> result = new ArrayList();
         for(PmsBooking booking : getAllBookings(null)) {
+            if(booking.isDeleted) {
+                continue;
+            }
+            if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
+                continue;
+            }
+            
             for(PmsBookingRooms room : booking.rooms) {
                 if(needCheckOutCleaning(room, day)) {
                     result.add(room);

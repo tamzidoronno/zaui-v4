@@ -1339,9 +1339,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsAdditionalItemInformation additional = getAdditionalInfo(bookingItemId);
         additional.markDirty();
         saveAdditionalInfo(additional);
-        
-        String logText = "Marked room: " + bookingEngine.getBookingItem(additional.itemId).bookingItemName + " as dirty, item in use";
-        logEntry(logText, null, additional.itemId);
+
+        BookingItem item = bookingEngine.getBookingItem(additional.itemId);
+        if(item != null) {
+            String logText = "Marked room: " + bookingEngine.getBookingItem(additional.itemId).bookingItemName + " as dirty, item in use";
+            logEntry(logText, null, additional.itemId);
+        }
     }
     
 

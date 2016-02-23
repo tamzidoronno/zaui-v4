@@ -34,7 +34,15 @@ thundashop.Ajax = {
     },
     
     showModal: function() {
-        thundashop.common.showModal($(this).attr('gs_show_modal'));
+        var data = {};
+        
+        $.each(this.attributes, function(i, attrib) {
+            var name = attrib.name;
+            var value = attrib.value;
+            data[name] = value;
+        });
+        
+        thundashop.common.showModal($(this).attr('gs_show_modal'), data);
     },
     
     postgeneral: function() {

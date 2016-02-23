@@ -19,6 +19,9 @@ class EventCommon extends \MarketingApplication {
         if (isset($_GET['eventId'])) {
             $_SESSION[$this->getAppInstanceId()."_currentEvent"] = $_GET['eventId'];
         }
+        if (isset($_POST['data']['eventid'])) {
+            $_SESSION[$this->getAppInstanceId()."_currentEvent"] = $_POST['data']['eventid'];
+        }
     }
     
     public function getEvent() {

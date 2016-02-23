@@ -32,6 +32,8 @@ public class Event extends DataCommon {
     
     public boolean markedAsReady = false;
     
+    public List<Reminder> reminders = new ArrayList();
+    
     @Editor
     public HashMap<String, List<UserComment>> comments = new HashMap();
     

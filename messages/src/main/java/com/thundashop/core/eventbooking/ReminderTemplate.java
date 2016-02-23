@@ -5,16 +5,13 @@
  */
 package com.thundashop.core.eventbooking;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.thundashop.core.common.DataCommon;
 
 /**
  *
  * @author ktonder
  */
-public class UserComment implements Serializable {
-    public Date commentCreatedDate = new Date();
-    public String comment = "";
-    public String userId;
-    public String addedByUserId = "";
+public class ReminderTemplate extends DataCommon {
+    public String content = "";
+    public String name = "";
 }

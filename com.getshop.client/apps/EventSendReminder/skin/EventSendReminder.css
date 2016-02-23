@@ -1,0 +1,49 @@
+.EventSendReminder textarea {
+    display: inline-block;
+    width: 100%;
+    height: 200px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: solid 1px #DDD;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.EventSendReminder .reminderlist .userrow {
+    height: 30px;
+}
+.EventSendReminder .reminderlist {
+    padding: 20px
+}
+
+.EventSendReminder .reminder_hist_row {
+    border: solid 1px #DDD;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.EventSendReminder .reminder_user_row_2 .indicators {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+}
+.EventSendReminder .reminder_user_row_2 {
+    padding: 10px;
+    position: relative;
+}
+
+.EventSendReminder .reminder_user_row_2:nth-child(odd) {
+    background-color: #F9f9f9;
+}
+
+.EventSendReminder .reminder_user_row_2 .indicators .fa-meh-o {
+    color: yellowgreen;
+}
+
+.EventSendReminder .reminder_user_row_2 .indicators .fa-frown-o {
+    color: red;
+}
+
+.EventSendReminder .reminder_user_row_2 .indicators .fa-smile-o {
+    color: green;
+}

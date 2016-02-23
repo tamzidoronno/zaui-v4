@@ -21,7 +21,7 @@ public interface IMessageManager  {
      * @param from The email sent from.
      * @param fromName The name of the sender.
      */
-    public void sendMail(String to, String toName, String subject, String content, String from, String fromName);
+    public String sendMail(String to, String toName, String subject, String content, String from, String fromName);
     
     /**
      * Sending a mail with attachments, 
@@ -36,7 +36,7 @@ public interface IMessageManager  {
      * @param fromName
      * @param attachments 
      */
-    public void sendMailWithAttachments(String to, String toName, String subject, String content, String from, String fromName, HashMap<String,String> attachments);
+    public String sendMailWithAttachments(String to, String toName, String subject, String content, String from, String fromName, HashMap<String,String> attachments);
     
     @Administrator
     public List<SmsLogEntry> getSmsLog();
@@ -54,5 +54,7 @@ public interface IMessageManager  {
     public void collectEmail(String email);
     
     public List<String> getCollectedEmails();
+    
+    public MailMessage getMailMessage(String mailMessageId);
     
 }

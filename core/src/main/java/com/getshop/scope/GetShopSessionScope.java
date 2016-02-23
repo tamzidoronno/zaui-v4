@@ -6,6 +6,7 @@ package com.getshop.scope;
 
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Session;
+import com.thundashop.core.common.StoreComponent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -68,6 +69,10 @@ public class GetShopSessionScope implements Scope {
                     ManagerBase managerBase = (ManagerBase) object;
                     managerBase.setStoreId(storeId);
                     managerBase.initialize();
+                }
+                
+                if (object instanceof StoreComponent) {
+                    ((StoreComponent)object).setStoreId(storeId);
                 }
                 
                 if (object instanceof GetShopSessionObject) {

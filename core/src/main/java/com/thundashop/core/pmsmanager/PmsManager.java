@@ -1001,7 +1001,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void notifyBooker(PmsBooking booking, String message, String type, String key) throws ErrorException {
         User user = userManager.getUserById(booking.userId);
         if(type.equals("sms")) {
-            messageManager.sendSms("plivo", user.cellPhone, message, user.prefix, configuration.smsName);
+            messageManager.sendSms("sveve", user.cellPhone, message, user.prefix, configuration.smsName);
             repicientList.add(user.cellPhone);
         } else {
             String title = configuration.emailTitles.get(key);

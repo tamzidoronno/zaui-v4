@@ -414,6 +414,19 @@ $days[7] = "Sunday";
             </span>
             Code size (on the code sent to the user)
         </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->keepDoorOpenWhenCodeIsPressed) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='keepDoorOpenWhenCodeIsPressed' <? echo $checked; ?>>
+            </span>
+            Keep door open when keycode is entered.
+        </div>        
     </div>
     <br><br>
     <div style='text-align: right;'>

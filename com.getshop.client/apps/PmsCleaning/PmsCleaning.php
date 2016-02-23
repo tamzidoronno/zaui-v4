@@ -43,7 +43,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             $filter = new \core_pmsmanager_PmsBookingFilter();
             $filter->filterType = "checkin";
             $filter->startDate = $this->convertToJavaDate($time);
-            $filter->endDate = $this->convertToJavaDate($time+39600);
+            $filter->endDate = $this->convertToJavaDate($time+86499);
 
             $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
             if(!$bookings) {
@@ -54,6 +54,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
 
             foreach($bookings as $booking) {
                 foreach($booking->rooms as $room) {
+                    if(!$this->isSameDay(strtotime($room->date->start), $time)) {
+                        
+                    }
                     $this->printRoomRow($room);
                 }
             }
@@ -79,9 +82,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
     
     public function getCleaningDate() {
         if(isset($_SESSION['cleaningdateselected'])) {
-            return date("d.m.Y 04:00", $_SESSION['cleaningdateselected']);
+            return date("d.m.Y 00:00", $_SESSION['cleaningdateselected']);
         }
-        return date("d.m.Y 04:00", time());
+        return date("d.m.Y 00:00", time());
     }
 
     public function changeDate() {
@@ -151,14 +154,14 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "<span class='clean' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is clean</span><br>";
         echo "<span class='inUse' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is in use</span><br><br>";
         foreach($additional as $add) {
-            $isClean = "notclean";
+            $isClean = "notclean roomNotReady";
             if($add->isClean) {
                 $isClean = "clean";
             }
             if($add->inUse) {
                 $isClean = "inUse";
             }
-            echo "<span class='roombox cleaningbox $isClean'>" . $items[$add->itemId]->bookingItemName . "</span>";
+            echo "<span class='roombox cleaningbox $isClean' itemid='".$add->itemId."'>" . $items[$add->itemId]->bookingItemName . "</span>";
         }
     }
 
@@ -209,7 +212,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             if($this->getApi()->getPmsManager()->isClean($this->getSelectedName(), $room->bookingItemId)) {
                 echo "<span class='roomIsReady'>Room is marked as ready</span>";
             } else {
-                echo "<span gstype=\"clicksubmit\" class='roomNotReady' method=\"markCleaned\" gsname=\"id\" gsvalue=\"".$room->bookingItemId."\">Mark room as ready</span>";
+                echo "<span class='roomNotReady' method=\"markCleaned\" itemid=\"".$room->bookingItemId."\">Mark room as ready</span>";
             }
         }
         echo "</td>";
@@ -239,6 +242,10 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "<th align='left'>Last cleaned</th>";
         echo "<th align='right'>Duration</th>";
         echo "</tr>";
+    }
+
+    public function isSameDay($time1, $time2) {
+        return date("d.m.Y", $time1) == date("d.m.Y", $time2);
     }
 
 }

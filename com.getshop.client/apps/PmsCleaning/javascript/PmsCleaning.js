@@ -1,6 +1,17 @@
 app.PmsCleaning = {
     init : function() {
+        $(document).on('click', '.PmsCleaning .roomNotReady', app.PmsCleaning.confirmCleaning);
    },
+   confirmCleaning: function() {
+       var confirmed = confirm("Confirm that room " + $(this).text() + " has been cleaned");
+       if(confirmed) {
+           var data = {
+                "id" : $(this).attr('itemid')
+            }
+            thundashop.Ajax.simplePost($(this), 'markCleaned', data);
+        }
+   },
+   
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
         thundashop.common.showInformationBoxNew(event, 'Settings');

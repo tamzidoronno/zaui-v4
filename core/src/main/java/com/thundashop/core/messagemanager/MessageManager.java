@@ -2,20 +2,16 @@ package com.thundashop.core.messagemanager;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.chatmanager.SubscribedToAirgram;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
-import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.getshop.GetShop;
-import com.thundashop.core.getshop.data.SmsResponse;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
@@ -26,10 +22,6 @@ import com.thundashop.core.usermanager.data.User;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +29,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
-import org.apache.http.client.protocol.HttpClientContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -94,8 +85,8 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     }
 
     @Override
-    public void sendMail(String to, String toName, String subject, String content, String from, String fromName) {
-        mailFactory.send(from, to, subject, content);
+    public String sendMail(String to, String toName, String subject, String content, String from, String fromName) {
+        return mailFactory.send(from, to, subject, content);
     }
 
     @Override
@@ -115,47 +106,6 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             if(dataCommon instanceof SmsLogEntry) {
                 smsLogEntries.add((SmsLogEntry)dataCommon);
             }
-        }
-    }
-
-    private void checkIfSubscribed(String account) throws ErrorException {
-        if (!airgramSubscriptions.accounts.contains(account)) {
-            String url = "http://api.airgramapp.com/1/subscribe";
-            String data = "email=" + account;
-            sendToAirgramHttp(data, url);
-            airgramSubscriptions.accounts.add(account);
-            airgramSubscriptions.storeId = storeId;
-            databaseSaver.saveObject(airgramSubscriptions, credentials);
-        }
-    }
-  
-
-    private void sendToAirgramHttp(String data, String sendurl) throws ErrorException {
-        try {
-            String key = "UqxIL7fjTy";
-            String secret = "FOnheTh5Lq1vC9hKqOKC";
-
-            URL obj = new URL(sendurl);
-            HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
-
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("Content-Length", String.valueOf(data.length()));
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-
-            String userpass = key + ":" + secret;
-            String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes("UTF-8"));
-            conn.setRequestProperty("Authorization", basicAuth);
-
-            OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-            out.write(data);
-            out.close();
-
-            InputStreamReader inputStreamReader = new InputStreamReader(conn.getInputStream());
-            inputStreamReader.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -183,7 +133,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     }
 
     @Override
-    public void sendMailWithAttachments(String to, String toName, String subject, String content, String from, String fromName, HashMap<String,String> attachments) {
+    public String sendMailWithAttachments(String to, String toName, String subject, String content, String from, String fromName, HashMap<String,String> attachments) {
         try {
             Map<String, String> files = new HashMap();
             
@@ -198,12 +148,14 @@ public class MessageManager extends ManagerBase implements IMessageManager {
                 files.put(tmpFile, fileName);
             }
             
-            mailFactory.sendWithAttachments(from, to, subject, content, files, true);
+            return mailFactory.sendWithAttachments(from, to, subject, content, files, true);
         } catch (FileNotFoundException ex) {
             java.util.logging.Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        return "";
     }
 
     void saveToLog(SmsLogEntry entry) {
@@ -276,5 +228,19 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         String fromName = "GetShop";
         String from = "post@getshop.com";
         sendMail(email, name, title, message, from, fromName);
+    }
+
+    @Override
+    public MailMessage getMailMessage(String mailMessageId) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", MailMessage.class.getCanonicalName());
+        query.put("_id", mailMessageId);
+        
+        List<DataCommon> datas = database.query(MessageManager.class.getSimpleName(), storeId+"_log", query);
+        if (datas != null && datas.size() > 0) {
+            return (MailMessage) datas.get(0);
+        }
+        
+        return null;
     }
 }

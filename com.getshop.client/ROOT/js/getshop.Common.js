@@ -184,8 +184,13 @@ thundashop.common.removeNotificationProgress = function(id) {
     });
 };
 
-thundashop.common.showModal = function(modalName) {
-    var event = thundashop.Ajax.createEvent(null, "showModal", null, { modalName : modalName });
+thundashop.common.showModal = function(modalName, data) {
+    if (typeof(data) == "undefined") {
+        data = {};
+    }
+    
+    data.modalName = modalName;
+    var event = thundashop.Ajax.createEvent(null, "showModal", null, data);
     event['synchron'] = true;
     thundashop.Ajax.post(event, function(res) {
         $('#dynamicmodal').html(res);

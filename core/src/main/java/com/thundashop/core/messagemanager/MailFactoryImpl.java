@@ -11,6 +11,7 @@ import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.StoreComponent;
+import com.thundashop.core.databasemanager.Database;
 import java.io.File;
 import java.util.Map;
 import java.util.Properties;
@@ -49,9 +50,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     private StoreApplicationPool storeApplicationPool;
     
     @Autowired
+    private Database database; 
+    
+    @Autowired
     public Logger logger;
     private Map<String, String> files;
     private boolean delete;
+    private MailMessage logMessage;
     
     private MailSettings getMailSettings() {
         Application mailApplication = storeApplicationPool.getApplicationWithSecuredSettings("8ad8243c-b9c1-48d4-96d5-7382fa2e24cd");
@@ -108,18 +113,25 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     }
 
     @Override
-    public void send(String from, String to, String title, String content) {
+    public String send(String from, String to, String title, String content) {
+        MailMessage message = createMailMessage(to, from, title, content);
         if (to != null && !to.isEmpty()) {
             if (to.contains(";")) {
                 for (String email : to.split(";")) {
-                    MailFactoryImpl mfi = createMailFactory(from, email, title, content);
+                    MailFactoryImpl mfi = createMailFactory(from, email, title, content, message);
                     new Thread(mfi).start();    
                 }
             } else {
-                MailFactoryImpl mfi = createMailFactory(from, to, title, content);
+                MailFactoryImpl mfi = createMailFactory(from, to, title, content, message);
                 new Thread(mfi).start();
             }
         }
+        
+        if (message == null) {
+            return "";
+        }
+        
+        return message.id;
     }
 
     @Override
@@ -137,28 +149,34 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
      * @param delete 
      */
     @Override
-    public void sendWithAttachments(String from, String to, String title, String content, Map<String, String> files, boolean delete) {
-         if (to != null && !to.isEmpty()) {
+    public String sendWithAttachments(String from, String to, String title, String content, Map<String, String> files, boolean delete) {
+        MailMessage mailMessage = createMailMessage(to, from, title, content);
+        mailMessage.hasAttachments = true;
+        
+        if (to != null && !to.isEmpty()) {
             if (to.contains(";")) {
                 for (String email : to.split(";")) {
-                    MailFactoryImpl mfi = createMailFactory(from, email, title, content);
+                    MailFactoryImpl mfi = createMailFactory(from, email, title, content, mailMessage);
                     mfi.files = files;
                     mfi.delete = delete;
                     new Thread(mfi).start();
                 }
             } else {
-                MailFactoryImpl mfi = createMailFactory(from, to, title, content);
+                MailFactoryImpl mfi = createMailFactory(from, to, title, content, mailMessage);
                 mfi.files = files;
                 mfi.delete = delete;
                 new Thread(mfi).start();
             }
         }
         
+        if (mailMessage == null) {
+            return "";
+        }
         
-        
+        return mailMessage.id;
     }
 
-    private MailFactoryImpl createMailFactory(String from, String to, String title, String content) {
+    private MailFactoryImpl createMailFactory(String from, String to, String title, String content, MailMessage message) {
         MailFactoryImpl mfi = new MailFactoryImpl();
         mfi.from = from;
         mfi.to = to;
@@ -168,7 +186,33 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         mfi.logger = logger;
         mfi.storeId = storeId;
         mfi.frameworkConfig = frameworkConfig;
+        mfi.logMessage = message;
+        mfi.database = database;
         return mfi;
+    }
+
+    private MailMessage createMailMessage(String to, String from, String title, String content) {
+        if (storeId == null || storeId.isEmpty()) {
+            return null;
+        }
+        
+        MailMessage mailMessage = new MailMessage();
+        mailMessage.to = to;
+        mailMessage.subject = title;
+        mailMessage.content = content;
+        mailMessage.storeId = storeId;
+        
+        database.save(MessageManager.class.getSimpleName(), getColName(), mailMessage);
+        return mailMessage;
+    }
+    
+    private void updateMailStatus(String status) {
+        logMessage.status = status;
+        database.save(MessageManager.class.getSimpleName(), getColName(), logMessage);
+    }
+
+    private String getColName() {
+        return "col_"+storeId+"_log";
     }
 
     private class Authenticator extends javax.mail.Authenticator {
@@ -225,9 +269,11 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 } else {
                     System.out.println("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content);
                 }
+                updateMailStatus("delivered");
                 delivered = true;
                 break;
             } catch (Exception ex) {
+                updateMailStatus("failed");
                 logger.error(this, "Was not able to send email on try: " + i + "( message: " + from + " - " + to + " " + subject + content + "");
                 ex.printStackTrace();
             }

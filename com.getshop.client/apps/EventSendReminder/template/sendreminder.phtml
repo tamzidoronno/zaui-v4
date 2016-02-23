@@ -1,0 +1,76 @@
+<?
+/* @var $this ns_f61a60d1_d9e4_491e_a487_5dae01495771\EventSendReminder */
+$event = $this->getEvent();
+$users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getBookingEngineName(), $event->id);
+?>
+
+<div>
+    Select template: 
+    <select class="gsniceselect1 templateselector">
+        <?
+        $templates = $this->getApi()->getEventBookingManager()->getReminderTemplates($this->getBookingEngineName());
+        foreach ($templates as $template) {
+            $id = $template->id;
+            $name = $template->name;
+            $content = base64_encode($template->content);
+            
+            echo "<option value='$id' content='$content'>$name</option>";
+        }
+        ?>
+        <option value="">New template</option>
+    </select>
+    <br/><textarea></textarea>
+    <br/><div class="shop_button savetemplatepage">Save template</div>
+    
+    <div class="reminderlist">
+        <?
+        foreach ($users as $user) {
+            echo "<div class='userrow'><input type='checkbox' class='userid' checked='true' value='$user->id'>$user->fullName, $user->emailAddress, $user->cellPhone </div>";
+        }
+        ?>
+    </div>
+    
+    <div>
+        <div class="shop_button ">Send SMS</div>
+        <div class="shop_button sendmail">Send Email</div>
+    </div>
+    
+    <?
+    $reminders = $this->getApi()->getEventBookingManager()->getReminders($this->getBookingEngineName(), $event->id);
+    foreach ($reminders as $reminder) {
+        @$_POST['data']['reminderId'] = $reminder->id;
+        echo "<div class='reminder_hist_row'>";
+            echo "Date: ".$reminder->rowCreatedDate;
+            echo "<br/>Subject: ".$reminder->subject;
+            echo "<br/> Type: $reminder->type<br/>";
+            echo "<br/> Content:<br/>";
+            echo nl2br($reminder->content);
+            echo "<br/>";
+            echo "<br/>";
+            echo "<div>";
+                echo "Users:";
+                foreach ($reminder->userIds as $id) {
+                    @$_POST['data']['userid'] = $id;
+                    $user = $this->getApi()->getUserManager()->getUserById($id);
+                    echo "<div class='reminder_user_row_2'>";
+                        echo $user->fullName;
+                            
+                        if ($reminder->type == "mail") {
+                            echo "<div class='indicators' userid='$user->id' reminderid='$reminder->id'>";
+                                $this->includefile("indicator");
+                            echo "</div>";
+                        }
+                    echo "</div>";
+                }
+            echo "</div>";
+        echo "</div>";
+    }
+    ?>
+</div>
+    
+<script>
+    $(document).ready(function() {
+        $('.EventSendReminder .templateselector').trigger('change');
+        app.EventSendReminder.checkForReminderUpdates();
+    })
+</script>

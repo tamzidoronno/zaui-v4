@@ -78,4 +78,25 @@ public interface IEventBookingManager {
     
     @Editor
     public void addUserToEvent(String eventId, String userId);
+    
+    @Editor
+    public List<ReminderTemplate> getReminderTemplates(); 
+    
+    @Editor
+    public ReminderTemplate getReminderTemplate(String id); 
+    
+    @Editor
+    public void saveReminderTemplate(ReminderTemplate template); 
+    
+    @Editor
+    public void deleteReminderTemplate(String templateId);
+    
+    @Editor
+    public void sendReminder(Reminder reminder);
+    
+    @Editor
+    public List<Reminder>  getReminders(String eventId);
+    
+    @Editor
+    public Reminder getReminder(String reminderId);
 }

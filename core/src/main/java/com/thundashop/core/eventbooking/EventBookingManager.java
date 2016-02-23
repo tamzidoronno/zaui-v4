@@ -12,6 +12,8 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ import org.springframework.stereotype.Component;
 public class EventBookingManager extends GetShopSessionBeanNamed implements IEventBookingManager {
     public HashMap<String, Event> events = new HashMap();
     public HashMap<String, Location> locations = new HashMap();
+    public HashMap<String, ReminderTemplate> reminderTemplates = new HashMap();
+    public HashMap<String, Reminder> reminders = new HashMap();
     
     @Autowired
     public EventLoggerHandler eventLoggerHandler;
@@ -47,6 +51,12 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     @Autowired
     public UserManager userManager;
     
+    @Autowired
+    public MessageManager messageManager;
+    
+    @Autowired
+    public StorePool storePool;
+            
     @Autowired
     public Database database;
 
@@ -61,6 +71,16 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             if (data instanceof Location) {
                 Location loc = (Location)data;
                 locations.put(loc.id, loc);
+            }
+            
+            if (data instanceof Reminder) {
+                Reminder reminder = (Reminder)data;
+                reminders.put(reminder.id, reminder);
+            }
+            
+            if (data instanceof ReminderTemplate) {
+                ReminderTemplate reminder = (ReminderTemplate)data;
+                reminderTemplates.put(reminder.id, reminder);
             }
         }
     }
@@ -144,6 +164,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         if (action.equals("USER_ADDED")) {
             logEntry.comment = eventLoggerHandler.compare(event, (User)additional, true);
+            saveObject(logEntry);
+        }
+        
+        if (action.equals("REMINDER_SENT")) {
+            logEntry.comment = "Reminder sent, type: " + additional;
             saveObject(logEntry);
         }
         
@@ -470,5 +495,79 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         if (user != null) {
             AddUserToEvent(event, user);
         }
+    }
+
+    @Override
+    public List<ReminderTemplate> getReminderTemplates() {
+        return new ArrayList(reminderTemplates.values());
+    }
+
+    @Override
+    public void saveReminderTemplate(ReminderTemplate template) {
+        saveObject(template);
+        reminderTemplates.put(template.id, template);
+    }
+    
+    @Override
+    public void deleteReminderTemplate(String templateId) {
+        ReminderTemplate template = reminderTemplates.remove(templateId);
+        
+        if (template != null) {
+            deleteObject(template);
+        }
+    }
+
+    @Override
+    public ReminderTemplate getReminderTemplate(String id) {
+        return reminderTemplates.get(id);
+    }
+
+    @Override
+    public void sendReminder(Reminder reminder) {
+        Event event = getEvent(reminder.eventId);
+        if (event == null) {
+            throw new ErrorException(1035);
+        }
+        
+        for (String userId : reminder.userIds) {
+            User user = userManager.getUserById(userId);
+            if (user != null) {
+                sendReminder(reminder, user);
+            }
+        }
+        
+        saveObject(reminder);
+        reminders.put(reminder.id, reminder);
+        log("REMINDER_SENT", event, reminder.type);
+    }
+
+    private void sendReminder(Reminder reminder, User user) {
+        String email = storePool.getStore(storeId).configuration.emailAdress;
+        String content = writeVariables(reminder.content);
+        if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
+            String messageId = messageManager.sendMail(user.emailAddress, user.fullName, reminder.subject, content, email, "");
+            reminder.userIdMessageId.put(user.id, messageId);
+        }
+        
+        if (user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty()) {
+            String messageId = messageManager.sendMail(user.companyObject.invoiceEmail, user.fullName, reminder.subject, content, email, "");
+            reminder.userIdInvoiceMessageId.put(user.id, messageId);
+        }
+    }
+
+    private String writeVariables(String content) {
+        return content;
+    }
+
+    @Override
+    public List<Reminder> getReminders(String eventId) {
+        return reminders.values().stream()
+                .filter(o -> o.eventId.equals(eventId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Reminder getReminder(String reminderId) {
+        return reminders.get(reminderId);
     }
 }

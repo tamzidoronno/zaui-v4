@@ -88,7 +88,11 @@ public class PmsBookingRooms implements Serializable {
 
     boolean isEnded() {
         Date now = new Date();
-        boolean result = now.after(date.end);
+        return isEnded(now);
+    }
+
+    boolean isEnded(Date day) {
+        boolean result = day.after(date.end);
         return result;
     }
 
@@ -123,9 +127,12 @@ public class PmsBookingRooms implements Serializable {
         if(date.end == null) {
             return false;
         }
-        Date now = new Date();
+        return isEndingToday(new Date());
+    }
+
+    boolean isEndingToday(Date toDate) {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(now);
+        cal.setTime(toDate);
         
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(date.end);

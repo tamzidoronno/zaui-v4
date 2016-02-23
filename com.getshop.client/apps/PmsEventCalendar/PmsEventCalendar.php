@@ -12,12 +12,20 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     public function getImageDisplayer($id) {
         $imgInstance = $this->getConfigurationSetting("imgapp_".$id);
         if(!$imgInstance) {
+            $this->startAdminImpersonation("ApplicationPool", "createNewInstance");
+            $this->startAdminImpersonation("StoreApplicationPool", "setSetting");
             $newInstance = $this->getFactory()->getApplicationPool()->createNewInstance("994d7fed-d0cf-4a78-a5ff-4aad16b9bcab");
+            $this->stopImpersionation();
             $this->setConfigurationSetting("imgapp_".$id, $newInstance->id);
             $imgInstance = $newInstance->id;
         }
-        $res = $this->getFactory()->getApplicationPool()->getApplicationInstance($imgInstance);
+        $res = $this->getFactory()->getApplicationPool()->getApplicationInstance($imgInstance); 
         return $res;
+    }
+    
+    public function requestAdminRights() {
+        $this->requestAdminRight("StoreApplicationPool", "setSetting", $this->__o("Need to update configurationskeys."));
+        $this->requestAdminRight("ApplicationPool", "createNewInstance", "automatically add fileupload app");
     }
     
     public function renderInBookingManagement($bookingId) {

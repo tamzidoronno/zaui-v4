@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 public class TimeRepeaterData implements Serializable {
     /* 0, daily, 1. Weekly, 2. Monthly */
@@ -14,6 +15,8 @@ public class TimeRepeaterData implements Serializable {
     Integer repeatPeride = TimeRepeaterData.RepeatPeriodeTypes.daily;
     
     TimeRepeaterDateRange firstEvent;
+    
+    public String repeaterId = UUID.randomUUID().toString();
     
     Date endingAt = null;
     

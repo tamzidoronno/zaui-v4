@@ -92,14 +92,14 @@ $company = $this->getApi()->getUserManager()->getCompany($_POST['value']);
     </div>
     <div class="textfield gss_setting"  id="city">
         <span class="title"><?php echo $this->__f("Postcode"); ?></span>
-        <input type="textfield" gs_model='companymodel' gs_model_attr='city' value="<? echo @$company->address->postCode; ?>">
+        <input type="textfield" gs_model='companymodel' gs_model_attr='postCode' value="<? echo @$company->address->postCode; ?>">
         <div class="description">
             <?php echo $this->__w("Company postcode"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="postcode">
         <span class="title"><?php echo $this->__f("City"); ?></span>
-        <input type="textfield" gs_model='companymodel' gs_model_attr='postcode' value="<? echo @$company->address->city; ?>">
+        <input type="textfield" gs_model='companymodel' gs_model_attr='city' value="<? echo @$company->address->city; ?>">
         <div class="description">
             <?php echo $this->__w("Company city"); ?>
         </div>
@@ -115,14 +115,14 @@ $company = $this->getApi()->getUserManager()->getCompany($_POST['value']);
     </div>
     <div class="textfield gss_setting"  id="city">
         <span class="title"><?php echo $this->__f("invoice_city"); ?></span>
-        <input type="textfield" gs_model='companymodel' gs_model_attr='invoice_city' value="<? echo @$company->invoiceAddress->postCode; ?>">
+        <input type="textfield" gs_model='companymodel' gs_model_attr='invoice_postCode' value="<? echo @$company->invoiceAddress->postCode; ?>">
         <div class="description">
             <?php echo $this->__w("Company invoice postcode"); ?>
         </div>
     </div>
     <div class="textfield gss_setting"  id="invoice_postcode">
         <span class="title"><?php echo $this->__f("City"); ?></span>
-        <input type="textfield" gs_model='companymodel' gs_model_attr='invoice_postcode' value="<? echo @$company->invoiceAddress->city; ?>">
+        <input type="textfield" gs_model='companymodel' gs_model_attr='invoice_city' value="<? echo @$company->invoiceAddress->city; ?>">
         <div class="description">
             <?php echo $this->__w("Company invoice city"); ?>
         </div>

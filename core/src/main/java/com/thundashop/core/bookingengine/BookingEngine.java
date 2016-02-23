@@ -208,7 +208,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
 
     @Override
-    public TimeRepeaterData getOpeningHours(String itemId) {
+    public List<TimeRepeaterData> getOpeningHours(String itemId) {
         return deepClone(bookingEngineAbstract.getOpeningHours(itemId));
     }
 
@@ -224,5 +224,10 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     @Override
     public List<BookingItem> getAllAvailbleItems(Date start, Date end) {
         return bookingEngineAbstract.getAvailbleItems(start, end);
+    }
+
+    @Override
+    public void deleteOpeningHours(String repeaterId) {
+        bookingEngineAbstract.deleteOpeningHours(repeaterId);
     }
 }

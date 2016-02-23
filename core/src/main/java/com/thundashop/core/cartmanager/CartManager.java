@@ -74,7 +74,8 @@ public class CartManager extends ManagerBase implements ICartManager {
     private Product getProduct(String productId, List<String> variations) throws ErrorException {
         ArrayList<String> productIds = new ArrayList<String>();
         productIds.add(productId);
-        Product product = productManager.getProduct(productId).clone();
+        Product prod = productManager.getProduct(productId);
+        Product product = prod.clone();
         product.price = productManager.getPrice(product.id, variations);
         return product;
     }

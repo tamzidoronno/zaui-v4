@@ -62,16 +62,8 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     }
     
     public function addRepeatingDates() {
-        $data = new \core_pmsmanager_PmsRepeatingData();
-        $data->repeattype = $_POST['data']['repeattype'];
-        if(isset($_POST['data']['itemid'])) {
-            $data->bookingItemId = $_POST['data']['itemid'];
-        }
-        if(isset($_POST['data']['typeid'])) {
-            $data->bookingTypeId = $_POST['data']['typeid'];
-        }
-        
         $data = new \core_pmsmanager_TimeRepeaterData();
+        $data->repeaterId = $_POST['data']['repeaterId'];
         $data->repeatMonday = $_POST['data']['repeatMonday'] == "true";
         $data->repeatTuesday = $_POST['data']['repeatTuesday'] == "true";
         $data->repeatWednesday = $_POST['data']['repeatWednesday'] == "true";
@@ -98,12 +90,18 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
             $data->repeatEachTime = 1;
         }
         
-        $itemid = null;
-        if(isset($_POST['data']['itemid'])) {
-            $itemid = $_POST['data']['itemid'];
+        $typeid = null;
+        if(isset($_POST['data']['typeid'])) {
+            $typeid = $_POST['data']['typeid'];
         }
 
-        $this->getApi()->getBookingEngine()->saveOpeningHours($this->getSelectedName(), $data, $itemid);
+        $this->getApi()->getBookingEngine()->saveOpeningHours($this->getSelectedName(), $data, $typeid);
+        
+        if($typeid) {
+            $this->loadTypeSettings();
+        } else {
+            $this->configureOpeningHours();
+        }
     }
     
     /**
@@ -119,7 +117,7 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     }
     
     public function deleteClosingHours() {
-        $this->getApi()->getBookingEngine()->saveOpeningHours($this->getSelectedName(), null, null);
+    $this->getApi()->getBookingEngine()->deleteOpeningHours($this->getSelectedName(), $_POST['data']['id']);
     }
     
     public function editFormFields() {
@@ -280,6 +278,16 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $id);
         $type->productId = $_POST['data']['productid'];
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $type);
+    }
+    
+    public function addGeneralOpeningHour() {
+        $id = $_POST['data']['typeid'];
+        $this->getApi()->getBookingEngine()->saveOpeningHours($this->getSelectedName(), null, $id);
+        if($id) {
+            $this->loadTypeSettings();
+        } else {
+            $this->configureOpeningHours();
+        }
     }
     
 }

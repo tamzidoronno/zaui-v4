@@ -18,6 +18,7 @@ import com.thundashop.core.arx.ArxManager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
@@ -1339,6 +1340,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
+    public List<PmsBookingRooms> getRoomsNeedingCheckoutCleaning(Date day) {
+        List<PmsBookingRooms> result = new ArrayList();
+        for(PmsBooking booking : getAllBookings(null)) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if(needCheckOutCleaning(room, day)) {
+                    result.add(room);
+                }
+            }
+        }
+        return result;
+    }
+    
+    @Override
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day) {
         Calendar endcal = Calendar.getInstance();
         endcal.setTime(day);
@@ -1362,8 +1376,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return rooms;
     }
 
-    private boolean needIntervalCleaning(PmsBookingRooms room, Date day) {
-        int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(day)).getDays();
+    public boolean needIntervalCleaning(PmsBookingRooms room, Date day) {
+        if(room.date.cleaningDate == null) {
+            room.date.cleaningDate = room.date.start;
+        }
+        if(room.isEndingToday(day)) {
+            return false;
+        }
+        if(!room.isActiveOnDay(day)) {
+            return false;
+        }
+        int days = Days.daysBetween(new LocalDate(room.date.cleaningDate), new LocalDate(day)).getDays();
         if(days == 0) {
             return false;
         }
@@ -1798,6 +1821,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String productId = type.productId;
         if(productId == null) {
             System.out.println("Product not set for this booking item type");
+            return null;
         }
         int numberOfDays = getNumberOfDays(room, startDate, endDate);
         if(numberOfDays == 0) {
@@ -1815,8 +1839,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public List<Integer> getAvailabilityForType(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes) {
-        LinkedList<TimeRepeaterDateRange> lines = createAvailabilityLines(bookingItemId);
+    public List<Integer> getAvailabilityForType(String bookingTypeId, Date startTime, Date endTime, Integer intervalInMinutes) {
+        LinkedList<TimeRepeaterDateRange> lines = createAvailabilityLines(bookingTypeId);
         
         DateTime timer = new DateTime(startTime);
         List<Integer> result = new ArrayList();
@@ -1854,13 +1878,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(bookingItemId != null && bookingItemId.isEmpty()) {
             bookingItemId = null;
         }
-        TimeRepeaterData repeater = bookingEngine.getOpeningHours(bookingItemId);
-        if(repeater == null) {
-            return new LinkedList();
-        } else {
-            TimeRepeater generator = new TimeRepeater();
-            return generator.generateRange(repeater);
+        LinkedList<TimeRepeaterDateRange> result = new LinkedList<TimeRepeaterDateRange>();
+        List<TimeRepeaterData> repeaters = bookingEngine.getOpeningHours(bookingItemId);
+        if(repeaters.isEmpty()) {
+            repeaters = bookingEngine.getOpeningHours(null);
         }
+        for(TimeRepeaterData repeater : repeaters) {
+            TimeRepeater generator = new TimeRepeater();
+            result.addAll(generator.generateRange(repeater));
+        }
+        
+        return result;
     }
 
     private boolean hasRange(LinkedList<TimeRepeaterDateRange> lines, DateTime timer) {
@@ -2215,6 +2243,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     void warnAboutUnableToAutoExtend(String bookingItemName, String reason) {
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
         messageManager.sendMail(copyadress, copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
+    }
+
+    public boolean isSameDay(Date date1, Date date2) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        return fmt.format(date1).equals(fmt.format(date2));
+    }
+
+    boolean needCheckOutCleaning(PmsBookingRooms room, Date toDate) {
+        if(room.date.exitCleaningDate == null) {
+            room.date.exitCleaningDate = room.date.end;
+        }
+        
+        return isSameDay(room.date.exitCleaningDate, toDate);
     }
 
 }

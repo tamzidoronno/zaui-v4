@@ -81,7 +81,7 @@ class StyleSheet {
 
     function render($includeHeader = true) {
 
-        if($this->factory->productionMode) {
+        if($this->factory->isProductionMode()) {
             $this->factory->addCssToBody("loadappcss.css");
         } else {
             $this->includeApplications();
@@ -130,7 +130,7 @@ class StyleSheet {
         $appId = $this->factory->convertUUIDtoString($app->id);
         $cssFileName = $app->appName . ".css";
         $folder = "../app/" . $appId . "/skin/";
-        
+
         if (!file_exists("cssfolder")) {
             mkdir("cssfolder");
         }

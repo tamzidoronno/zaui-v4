@@ -108,6 +108,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
         smsMessage.prefix = prefix;
         smsMessage.message = message;
         smsMessage.status = "not_delivered";
+        smsMessage.smsHander = getName();
         
         database.save(MessageManager.class.getSimpleName(), getColName(), smsMessage);
         this.smsMessage = smsMessage;

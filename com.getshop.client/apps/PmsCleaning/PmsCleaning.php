@@ -39,29 +39,36 @@ class PmsCleaning extends \WebshopApplication implements \Application {
     
     function print_guests_table($time, $arriving) {
         
-        $filter = new \core_pmsmanager_PmsBookingFilter();
         if($arriving) {
+            $filter = new \core_pmsmanager_PmsBookingFilter();
             $filter->filterType = "checkin";
-        } else {
-            $filter->filterType = "checkout";
-        }
-        $filter->startDate = $this->convertToJavaDate($time);
-        $filter->endDate = $this->convertToJavaDate($time+39600);
+            $filter->startDate = $this->convertToJavaDate($time);
+            $filter->endDate = $this->convertToJavaDate($time+39600);
 
-        $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
-        if(!$bookings) {
-            $bookings = array();
-        }
-        echo "<table width='100%' cellspacing='0' cellpadding='0'>";
-        $this->printRowHeader();
-        
-        foreach($bookings as $booking) {
-            foreach($booking->rooms as $room) {
+            $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+            if(!$bookings) {
+                $bookings = array();
+            }
+            echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+            $this->printRowHeader();
+
+            foreach($bookings as $booking) {
+                foreach($booking->rooms as $room) {
+                    $this->printRoomRow($room);
+                }
+            }
+            echo "</table>";
+            echo $this->counter . " rows found";
+        } else {
+            $checkoutCleaningRooms = $this->getApi()->getPmsManager()->getRoomsNeedingCheckoutCleaning($this->getSelectedName(), $this->convertToJavaDate($time));
+            echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+            $this->printRowHeader();
+            foreach($checkoutCleaningRooms as $room) {
                 $this->printRoomRow($room);
             }
+            echo "</table>";
+            echo $this->counter . " rows found";
         }
-        echo "</table>";
-        echo $this->counter . " rows found";
     }
 
     public function markCleaned() {

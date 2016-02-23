@@ -78,6 +78,10 @@ public class BookingTimeLineFlatten implements Serializable {
         Collections.sort(bookings, new Comparator<Booking>(){
             @Override
             public int compare(Booking o1, Booking o2) {
+                if(o1 == null || o2 == null || o1.startDate == null || o2.startDate == null) {
+                    System.out.println("null date");
+                    return 1;
+                }
                 return o1.startDate.compareTo(o2.startDate);
             }
        });

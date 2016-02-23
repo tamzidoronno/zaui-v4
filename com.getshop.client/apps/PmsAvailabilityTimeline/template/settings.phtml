@@ -11,6 +11,10 @@ $dateType = $this->getConfigurationSetting("date_type");
             <td width="50%">Name of the booking engine</td>
             <td width="50%"><input type="text" gsname="engine_name" style='width:100%;' value="<? echo $this->getConfigurationSetting("engine_name"); ?>"></td>
         </tr>
+        <tr>
+            <td width="50%">Instance id for pms manager</td>
+            <td width="50%"><input type="text" gsname="pmsmanagerinstanceid" style='width:100%;' value="<? echo $this->getConfigurationSetting("pmsmanagerinstanceid"); ?>"></td>
+        </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

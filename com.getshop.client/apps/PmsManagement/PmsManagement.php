@@ -17,6 +17,30 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("bookinginformation");
     }
     
+    public function showInfoBoxForBookingAtTime() {
+        $time = $_POST['data']['time'] / 1000;
+        $itemId = $_POST['data']['itemid'];
+        
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->startDate = $this->convertToJavaDate($time-100);
+        $filter->endDate = $this->convertToJavaDate($time+100);
+        $filter->filterType = "active";
+        
+        $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+        foreach($bookings as $booking) {
+            foreach($booking->rooms as $room) {
+                if($room->bookingItemId == $itemId) {
+                    $_POST['data']['bookingid'] = $booking->id;
+                }
+            }
+        }
+        if(isset($_POST['data']['bookingid'])) {
+            $this->showBookingInformation();
+        } else {
+            echo "Booking not found";
+        }
+    }
+    
     public function updateInvoiceNote() {
         $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
         $booking->invoiceNote = $_POST['data']['invoicenote'];

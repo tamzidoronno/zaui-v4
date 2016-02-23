@@ -41,7 +41,7 @@ $selectedInterval = $this->getInterval();
     </select>
     <input gstype="submit" type="button" value="<? echo $this->__w("Load"); ?>">
 </div>
-
+<input type='txt' value='<?php echo $this->getConfigurationSetting("pmsmanagerinstanceid"); ?>' id='bookinginstanceid'>
 <div class='timelineresult'>
     <?php
     $filter = new core_pmsmanager_PmsIntervalFilter();
@@ -133,7 +133,7 @@ $selectedInterval = $this->getInterval();
             if($value == 0) {
                 $free = "available";
             }
-            echo "<span class='valueentry $free'>&nbsp;</span>";
+            echo "<span class='valueentry $free' time='$time' itemid='".$itemId."'>&nbsp;</span>";
         }
         echo "<div style='clear:both;'></div>";
     }
@@ -143,8 +143,8 @@ $selectedInterval = $this->getInterval();
 </div>
 
 <script>
-    $('.PmsAvailabilityTimeline .timelineoverview').width('<? echo ($numberOfDays*14)+200; ?>px');
-    $('.PmsAvailabilityTimeline .dateheadingrow').width('<? echo ($numberOfDays*14)+200; ?>px');
+    $('.PmsAvailabilityTimeline .timelineoverview').width('<? echo ($numberOfDays*80)+200; ?>px');
+    $('.PmsAvailabilityTimeline .dateheadingrow').width('<? echo ($numberOfDays*80)+200; ?>px');
     $('.PmsAvailabilityTimeline .dateheadingrow').css('position','absolute');
     $('.PmsAvailabilityTimeline .dateheadingrow').css('top','0px');
     $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });

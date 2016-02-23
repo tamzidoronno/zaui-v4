@@ -103,7 +103,7 @@ public class MecaManager extends ManagerBase implements IMecaApi {
         
         // Send temporary password to the given phone number
         // For now everything goes to Emil's phone number
-        messageManager.sendSms("46505705", "Meca here. Your temporary password is: " + generatedNumber);
+//        messageManager.sendSms("46505705", "Meca here. Your temporary password is: " + generatedNumber);
         
         return new RPCResult();
     }

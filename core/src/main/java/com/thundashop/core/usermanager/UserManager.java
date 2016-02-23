@@ -915,7 +915,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             System.out.println("New code: " + randomCode);
             user.pinCode = ""+randomCode;
             collection.addUser(user);
-            messageManager.sendSms(user.cellPhone, "Pincode: " + user.pinCode, "+47");
+            messageManager.sendSms("plivo", user.cellPhone, "Pincode: " + user.pinCode, "+47");
             return true;
         }
         

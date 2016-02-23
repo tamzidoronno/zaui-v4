@@ -31,12 +31,16 @@ $users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getB
     </div>
     
     <div>
-        <div class="shop_button ">Send SMS</div>
+        <div class="shop_button sendsms">Send SMS</div>
         <div class="shop_button sendmail">Send Email</div>
     </div>
     
     <?
     $reminders = $this->getApi()->getEventBookingManager()->getReminders($this->getBookingEngineName(), $event->id);
+    if (!is_array($reminders)) {
+        $reminders = [];
+    }
+    
     foreach ($reminders as $reminder) {
         @$_POST['data']['reminderId'] = $reminder->id;
         echo "<div class='reminder_hist_row'>";
@@ -55,11 +59,10 @@ $users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getB
                     echo "<div class='reminder_user_row_2'>";
                         echo $user->fullName;
                             
-                        if ($reminder->type == "mail") {
-                            echo "<div class='indicators' userid='$user->id' reminderid='$reminder->id'>";
-                                $this->includefile("indicator");
-                            echo "</div>";
-                        }
+                        echo "<div class='indicators' userid='$user->id' reminderid='$reminder->id'>";
+                            $this->includefile("indicator");
+                        echo "</div>";
+                        
                     echo "</div>";
                 }
             echo "</div>";

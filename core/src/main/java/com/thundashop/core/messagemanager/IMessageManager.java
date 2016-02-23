@@ -37,10 +37,7 @@ public interface IMessageManager  {
      * @param attachments 
      */
     public String sendMailWithAttachments(String to, String toName, String subject, String content, String from, String fromName, HashMap<String,String> attachments);
-    
-    @Administrator
-    public List<SmsLogEntry> getSmsLog();
-    
+
     /**
      * Get how many messages a user has sent.
      * 
@@ -56,5 +53,7 @@ public interface IMessageManager  {
     public List<String> getCollectedEmails();
     
     public MailMessage getMailMessage(String mailMessageId);
+    
+    public SmsMessage getSmsMessage(String smsMessageId);
     
 }

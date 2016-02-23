@@ -3,12 +3,9 @@ package com.thundashop.core.messagemanager;
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.mongodb.BasicDBObject;
-import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.chatmanager.SubscribedToAirgram;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -16,7 +13,6 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.storemanager.StoreManager;
-import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.FileNotFoundException;
@@ -28,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,14 +37,10 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     @Autowired
     public MailFactory mailFactory;
     
-    private SubscribedToAirgram airgramSubscriptions = new SubscribedToAirgram();
     private CollectedEmails collectedEmails = new CollectedEmails();
     private List<SmsLogEntry> smsLogEntries = new ArrayList();
 
     private SMSFactory smsFactory;
-    
-    @Autowired
-    private Logger logger;
     
     @Autowired
     private Database database;
@@ -58,16 +49,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     private FrameworkConfig frameworkConfig;
     
     @Autowired
-    private DatabaseSaver databaseSaver;
-    
-    @Autowired
     private StoreManager storeManager;
-    
-    @Autowired
-    private StorePool storePool;
-    
-    @Autowired
-    private StoreApplicationPool storeApplicationPool;
     
     @Autowired
     private OrderManager orderManager;
@@ -78,12 +60,6 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     @Autowired
     private InvoiceManager invoiceManager;
     
-    @PostConstruct
-    public void createSmsFactory() {
-        smsFactory = new SMSFactoryImpl(logger, database, frameworkConfig, databaseSaver, storePool, storeApplicationPool, this);
-        smsFactory.setStoreId(storeId);
-    }
-
     @Override
     public String sendMail(String to, String toName, String subject, String content, String from, String fromName) {
         return mailFactory.send(from, to, subject, content);
@@ -91,15 +67,12 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
     @Override
     public int getSmsCount(int year, int month) {
-        return smsFactory.messageCount(year, month);
+        return 0;
     }
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
-            if (dataCommon instanceof SubscribedToAirgram) {
-                airgramSubscriptions = (SubscribedToAirgram) dataCommon;
-            }
             if (dataCommon instanceof CollectedEmails) {
                 collectedEmails = (CollectedEmails) dataCommon;
             }
@@ -109,21 +82,12 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         }
     }
 
-    public void sendSms(String to, String message) {
-        smsFactory.setMessageManager(this);
-        smsFactory.send("", to, message);
+    public String sendSms(String provider, String to, String message, String prefix) {
+        return sendSmsInternal(provider, to, message, prefix, "");
     }
 
-    public void sendSms(String to, String message, String prefix) {
-        smsFactory.setMessageManager(this);
-        smsFactory.setPrefix(prefix);
-        smsFactory.send("", to, message);
-    }
-
-    public void sendSms(String to, String message, String prefix, String from) {
-        smsFactory.setMessageManager(this);
-        smsFactory.setPrefix(prefix);
-        smsFactory.send(from, to, message);
+    public String sendSms(String provider, String to, String message, String prefix, String from) {
+        return sendSmsInternal(provider, to, message, prefix, from);
     }
 
     @Override
@@ -156,36 +120,6 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         }
         
         return "";
-    }
-
-    void saveToLog(SmsLogEntry entry) {
-        entry.storeId = storeId;
-        databaseSaver.saveObject(entry, credentials);
-        smsLogEntries.add(entry);
-    }
-
-    @Override
-    public List<SmsLogEntry> getSmsLog() {
-        for(SmsLogEntry entry : smsLogEntries) {
-            
-            if(entry.errorCode == null || entry.errorCode.isEmpty()) {
-                if(!entry.tryPoll || entry.msgId == null) {
-                    continue;
-                }
-                if(!entry.delivered() && !entry.undelivered()) {
-                    if(entry.isOutDated()) {
-                        entry.tryPoll = false;
-                    }
-                    entry.errorCode = getMessageState(entry.msgId);
-                }
-                saveObject(entry);
-            }
-        }
-        return smsLogEntries;
-    }
-
-    private String getMessageState(String msgId) {
-        return smsFactory.getMessageState(msgId);
     }
 
     @Override
@@ -231,10 +165,10 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     }
 
     @Override
-    public MailMessage getMailMessage(String mailMessageId) {
+    public MailMessage getMailMessage(String smsMessageId) {
         BasicDBObject query = new BasicDBObject();
         query.put("className", MailMessage.class.getCanonicalName());
-        query.put("_id", mailMessageId);
+        query.put("_id", smsMessageId);
         
         List<DataCommon> datas = database.query(MessageManager.class.getSimpleName(), storeId+"_log", query);
         if (datas != null && datas.size() > 0) {
@@ -242,5 +176,46 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         }
         
         return null;
+    }
+    
+    @Override
+    public SmsMessage getSmsMessage(String mailMessageId) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", SmsMessage.class.getCanonicalName());
+        query.put("_id", mailMessageId);
+        
+        List<DataCommon> datas = database.query(MessageManager.class.getSimpleName(), storeId+"_log", query);
+        if (datas != null && datas.size() > 0) {
+            return (SmsMessage) datas.get(0);
+        }
+        
+        return null;
+    }
+
+    private String sendSmsInternal(String provider, String to, String message, String prefix, String from) {
+        SmsHandler handler = null;
+        
+        if (provider.equals("plivo")) {
+            handler = new PlivoSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
+        }
+        
+        if (provider.equals("clickatell")) {
+            handler = new ClickatellSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
+        }
+        
+        if (provider.equals("sveve")) {
+            handler = new SveveSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
+        }
+        
+        if (provider.equals("nexmo")) {
+            handler = new NexmoSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
+        }
+        
+        if (handler != null) {
+            handler.sendMessage();
+            return handler.getMessageId();
+        }
+        
+        return "";
     }
 }

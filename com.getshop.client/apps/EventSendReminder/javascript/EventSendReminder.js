@@ -3,6 +3,7 @@ app.EventSendReminder = {
         $(document).on('click', '.EventSendReminder .savetemplatepage', app.EventSendReminder.saveTemplate);
         $(document).on('change', '.EventSendReminder .templateselector', app.EventSendReminder.changedTemplate);
         $(document).on('click', '.EventSendReminder .sendmail', app.EventSendReminder.sendMail);
+        $(document).on('click', '.EventSendReminder .sendsms', app.EventSendReminder.sendSms);
    },
     changedTemplate: function () {
         var content = $(this).find(':selected').attr('content');
@@ -39,6 +40,20 @@ app.EventSendReminder = {
         thundashop.Ajax.simplePost(this, "sendReminder", {
             userids: userids,
             type: "mail",
+            content: $('.EventSendReminder textarea').val()
+        });
+    },
+    
+    sendSms: function() {
+        var userids = $('.EventSendReminder input:checkbox:checked.userid').map(function () {
+            return this.value;
+        }).get();
+        
+        userids = JSON.stringify(userids);
+
+        thundashop.Ajax.simplePost(this, "sendReminder", {
+            userids: userids,
+            type: "sms",
             content: $('.EventSendReminder textarea').val()
         });
     },

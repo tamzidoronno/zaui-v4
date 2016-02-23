@@ -28,4 +28,5 @@ public class Reminder extends DataCommon {
      */
     public HashMap<String, String> userIdMessageId = new HashMap();
     public HashMap<String, String> userIdInvoiceMessageId = new HashMap();
+    public HashMap<String, String> smsMessageId = new HashMap();
 }

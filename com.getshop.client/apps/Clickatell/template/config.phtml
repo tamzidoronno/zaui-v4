@@ -65,7 +65,7 @@
     <?
     /* @var $this \ns_12fecb30_4e5c_49d8_aa3b_73f37f0712ee\Clickatell */
     $api = $this->getApi();
-    $log = $api->getMessageManager()->getSmsLog();
+    $log = null;
     if(!$log) {
         echo "No sms'es sent yet";
     } else {

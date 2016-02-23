@@ -68,7 +68,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     @Override
     public ApplicationInstance getApplicationInstance(String applicationInstanceId) {
         ApplicationInstance instance = applicationInstances.get(applicationInstanceId);
-
+        
         if (instance == null) {
             return null;
         }
@@ -133,8 +133,10 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     }
 
     private ApplicationInstance checkSecurity(ApplicationInstance secureClone) {
+        Long time = System.currentTimeMillis();
         List<String> pages = pageManger.getPagesForApplicationOnlyBody(secureClone.id);
-
+        System.out.println("Used: " + (System.currentTimeMillis()-time) + " | " + pages.size());
+        
         int lowestAccessLevelForAppOnPages = Integer.MAX_VALUE;
         
         if (pages.size() == 0) {

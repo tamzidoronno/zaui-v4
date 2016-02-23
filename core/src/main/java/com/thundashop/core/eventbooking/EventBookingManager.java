@@ -532,7 +532,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         for (String userId : reminder.userIds) {
             User user = userManager.getUserById(userId);
             if (user != null) {
-                sendReminder(reminder, user);
+                if (reminder.type.equals("sms")) {
+                    sendReminderSms(reminder, user);
+                } else {
+                    sendReminderMail(reminder, user);
+                }
             }
         }
         
@@ -541,7 +545,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         log("REMINDER_SENT", event, reminder.type);
     }
 
-    private void sendReminder(Reminder reminder, User user) {
+    private void sendReminderMail(Reminder reminder, User user) {
         String email = storePool.getStore(storeId).configuration.emailAdress;
         String content = writeVariables(reminder.content);
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
@@ -569,5 +573,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     @Override
     public Reminder getReminder(String reminderId) {
         return reminders.get(reminderId);
+    }
+
+    private void sendReminderSms(Reminder reminder, User user) {
+        String content = writeVariables(reminder.content);
+        if (user.cellPhone != null && !user.cellPhone.isEmpty()) {
+            String smsId = messageManager.sendSms("clickatell", user.cellPhone, content, user.prefix);
+            reminder.smsMessageId.put(user.id, smsId);
+        }
     }
 }

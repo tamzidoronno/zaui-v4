@@ -5,24 +5,41 @@ $event = $this->getEvent();
 $reminder = $this->getApi()->getEventBookingManager()->getReminder($this->getBookingEngineName(), $_POST['data']['reminderId']);
 $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
 
-$mailId = @$reminder->userIdMessageId->{$user->id};
-$invoiceMailId = @$reminder->userIdInvoiceMessageId->{$user->id};
+if ($reminder->type == "mail") {
+    $mailId = @$reminder->userIdMessageId->{$user->id};
+    $invoiceMailId = @$reminder->userIdInvoiceMessageId->{$user->id};
 
-$mail = $this->getApi()->getMessageManager()->getMailMessage($mailId);
-$inv = $this->getApi()->getMessageManager()->getMailMessage($invoiceMailId);
+    $mail = $this->getApi()->getMessageManager()->getMailMessage($mailId);
+    $inv = $this->getApi()->getMessageManager()->getMailMessage($invoiceMailId);
 
-$classMail = "fa-meh-o";
-$classMail = $mail != null && $mail->status == "not_delivered" ? "fa-spin fa-spinner" : $classMail;
-$classMail = $mail != null && $mail->status == "delivered" ? "fa-smile-o" : $classMail;
-$classMail = $mail != null && $mail->status == "failed" ? "fa-frown-o" : $classMail;
+    $classMail = "fa-meh-o";
+    $classMail = $mail != null && $mail->status == "not_delivered" ? "fa-spin fa-spinner" : $classMail;
+    $classMail = $mail != null && $mail->status == "delivered" ? "fa-smile-o" : $classMail;
+    $classMail = $mail != null && $mail->status == "failed" ? "fa-frown-o" : $classMail;
 
-$classInvMail = "fa-meh-o";
-$classInvMail = $inv != null && $inv->status == "not_delivered" ? "fa-spin fa-spinner" : $classInvMail;
-$classInvMail = $inv != null && $inv->status == "delivered" ? "fa-smile-o" : $classInvMail;
-$classInvMail = $inv != null && $inv->status == "failed" ? "fa-frown-o" : $classInvMail;
+    $classInvMail = "fa-meh-o";
+    $classInvMail = $inv != null && $inv->status == "not_delivered" ? "fa-spin fa-spinner" : $classInvMail;
+    $classInvMail = $inv != null && $inv->status == "delivered" ? "fa-smile-o" : $classInvMail;
+    $classInvMail = $inv != null && $inv->status == "failed" ? "fa-frown-o" : $classInvMail;
 
-$mailStatus = $mail != null ? $mail->status : "Not tried to send, invalid mail address";
-$invMailStatus = $inv != null ? $inv->status : "Not tried to send, invalid mail address";
-echo "<div class='gs_shop_small_icon mailindicator' userid='$mailId' title='Mail delivery status | $mailStatus' ><i class='fa $classMail'></i></div>";
-echo "<div class='gs_shop_small_icon mailindicator' mailid='$invoiceMailId' title='Invoice mail delivery status | $invMailStatus' ><i class='fa $classInvMail'></i></div>";
+    $mailStatus = $mail != null ? $mail->status : "Not tried to send, invalid mail address";
+    $invMailStatus = $inv != null ? $inv->status : "Not tried to send, invalid mail address";
+    echo "<div class='gs_shop_small_icon mailindicator' userid='$mailId' title='Mail delivery status | $mailStatus' ><i class='fa $classMail'></i></div>";
+    echo "<div class='gs_shop_small_icon mailindicator' mailid='$invoiceMailId' title='Invoice mail delivery status | $invMailStatus' ><i class='fa $classInvMail'></i></div>";
+}
+
+if ($reminder->type == "sms") {
+    $smsId = @$reminder->smsMessageId->{$user->id};
+    
+    $inv = $this->getApi()->getMessageManager()->getSmsMessage($smsId);
+    
+    $classInvMail = "fa-meh-o";
+    $classInvMail = $inv != null && $inv->status == "not_delivered" ? "fa-spin fa-spinner" : $classInvMail;
+    $classInvMail = $inv != null && $inv->status == "delivered" ? "fa-smile-o" : $classInvMail;
+    $classInvMail = $inv != null && $inv->status == "failed" ? "fa-frown-o" : $classInvMail;
+    
+    $smsStatus = $inv != null ? $inv->status :  "Not tried to send, invalid sms number";
+    
+    echo "<div class='gs_shop_small_icon mailindicator' title='SMS delivery status | $smsStatus' ><i class='fa $classInvMail'></i></div>";
+}
 ?>

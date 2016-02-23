@@ -30,6 +30,8 @@ public class PmsBookingRooms implements Serializable {
     public double taxes = 8;
     public String bookingId;
     String code = "";
+    boolean forcedOpen = false;
+    boolean forcedOpenCompleted = false;
     public boolean isClean = true;
     public Integer intervalCleaning = null;
     public boolean addedByRepeater = false;
@@ -143,6 +145,16 @@ public class PmsBookingRooms implements Serializable {
             return true;
         }
         
+        return false;
+    }
+
+    boolean isSame(PmsBookingRooms alreadyAdded) {
+        if(!alreadyAdded.bookingItemTypeId.equals(bookingItemTypeId)) {
+            return false;
+        }
+        if(alreadyAdded.date.start.equals(date.start) && alreadyAdded.date.end.equals(date.end)) {
+            return true;
+        }
         return false;
     }
 }

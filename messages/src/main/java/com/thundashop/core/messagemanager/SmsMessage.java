@@ -18,4 +18,5 @@ public class SmsMessage extends DataCommon {
     public String prefix = "";
     public String status = "not_delivered";
     public String response = "";
+    public String smsHander = "";
 }

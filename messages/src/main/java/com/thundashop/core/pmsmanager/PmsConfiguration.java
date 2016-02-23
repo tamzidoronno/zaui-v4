@@ -4,7 +4,7 @@ import com.thundashop.core.common.DataCommon;
 import java.util.HashMap;
 
 public class PmsConfiguration extends DataCommon {
-    
+
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;
@@ -44,12 +44,15 @@ public class PmsConfiguration extends DataCommon {
     public String arxPassword = "";
     public String arxCardFormat = "";
     public Integer codeSize = 4;
+    public boolean keepDoorOpenWhenCodeIsPressed = false;
+
     
     //Cleaning options
     public Integer cleaningInterval = 0;
     public HashMap<Integer, Boolean> cleaningDays = new HashMap();
     public Integer numberOfCheckoutCleanings = 0;
     public Integer numberOfIntervalCleaning = 0;
+    public boolean cleaningNextDay = false;
 
     
 }

@@ -1318,6 +1318,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         logEntry(logText, null, additional.itemId);
     }
+    
+    
+    void markRoomAsDirty(String bookingItemId) {
+        PmsAdditionalItemInformation additional = getAdditionalInfo(bookingItemId);
+        additional.markDirty();
+        saveAdditionalInfo(additional);
+        
+        String logText = "Marked room: " + bookingEngine.getBookingItem(additional.itemId).bookingItemName + " as dirty, item in use";
+        logEntry(logText, null, additional.itemId);
+    }
+    
 
     @Override
     public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms() {
@@ -2260,9 +2271,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     boolean needCheckOutCleaning(PmsBookingRooms room, Date toDate) {
         if(room.date.exitCleaningDate == null) {
             room.date.exitCleaningDate = room.date.end;
+            
+            if(configuration.cleaningNextDay) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(room.date.exitCleaningDate);
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                room.date.exitCleaningDate = cal.getTime();
+            }
+            
         }
         
         return isSameDay(room.date.exitCleaningDate, toDate);
     }
+
 
 }

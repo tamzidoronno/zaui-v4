@@ -28,6 +28,7 @@ public class PmsManagerProcessor {
     }
 
     public void doProcessing() {
+        processAutoAssigning();
         processStarting(0, 24 * 1);
         processStarting(24, 24 * 2);
         processStarting(48, 24 * 3);
@@ -35,7 +36,6 @@ public class PmsManagerProcessor {
         processEndings(24, 24 * 2);
         processEndings(48, 24 * 3);
         processAutoExtend();
-        processAutoAssigning();
         processIntervalCleaning(false);
         processIntervalCleaning(true);
         try {
@@ -48,7 +48,9 @@ public class PmsManagerProcessor {
         if (manager.configuration.arxHostname != null && !manager.configuration.arxHostname.isEmpty()) {
             processArx();
         }
-        processOrdersToCreate();
+        if(manager.configuration.autoCreateInvoices) {
+            processOrdersToCreate();
+        }
     }
 
     private void processStarting(int hoursAhead, int maxAhead) {

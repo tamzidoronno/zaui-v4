@@ -31,6 +31,8 @@ public class PmsConfiguration extends DataCommon {
     public boolean supportMoreDates = true;
     public boolean isItemBookingInsteadOfTypes = false;
     public boolean autoExtend = false;
+    public boolean autoCreateInvoices = false;
+
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily
     public String defaultStart = "15:00";
     public String defaultEnd = "12:00";

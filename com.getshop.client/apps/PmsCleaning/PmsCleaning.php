@@ -55,7 +55,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             foreach($bookings as $booking) {
                 foreach($booking->rooms as $room) {
                     if(!$this->isSameDay(strtotime($room->date->start), $time)) {
-                        
+                        continue;
                     }
                     $this->printRoomRow($room);
                 }
@@ -193,12 +193,16 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo $this->counter . " rows found";
     }
 
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     */
     public function printRoomRow($room) {
         $this->counter++;
         $items = $this->getItems();
         $additional = $this->getAdditionalInfo();
         
-        echo "<tr>";
+        echo "<tr roomid='".$room->pmsBookingRoomId."'>";
         echo "<td>" . $room->numberOfGuests . "</td>";
         echo "<td>";
         if($room->bookingItemId) {

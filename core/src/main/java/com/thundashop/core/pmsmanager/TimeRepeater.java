@@ -1,6 +1,7 @@
 
 package com.thundashop.core.pmsmanager;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import org.joda.time.DateTime;
@@ -8,27 +9,34 @@ import org.joda.time.DateTimeConstants;
 
 public class TimeRepeater {
     public LinkedList<TimeRepeaterDateRange> generateRange(TimeRepeaterData data) {
+        LinkedList<TimeRepeaterDateRange> result = new LinkedList();
+        
+        
         if(data.repeatPeride == 0) {
-            return generateDailyRepeats(data);
+            result = generateDailyRepeats(data);
         }
         if(data.repeatPeride == 1) {
-            return generateWeeklyRepeats(data);
+            result = generateWeeklyRepeats(data);
         }
         if(data.repeatPeride == 2) {
-            return generateMonthlyRepeats(data);
+            result = generateMonthlyRepeats(data);
         }
-        return new LinkedList();
+        
+        return result;
     }
 
     private LinkedList<TimeRepeaterDateRange> generateDailyRepeats(TimeRepeaterData data) {
         LinkedList list = new LinkedList();
+        list.add(data.firstEvent);
+
         Date start = data.firstEvent.start;
         DateTime startTime = new DateTime(start);
         DateTime endTime = new DateTime(data.firstEvent.end);
+        DateTime maxEnding = new DateTime(data.endingAt);
         while(true) {
             startTime = startTime.plusDays(data.repeatEachTime);
             endTime = endTime.plusDays(data.repeatEachTime);
-            if(endTime.toDate().after(data.endingAt)) {
+            if(endTime.toDate().after(data.endingAt) && !isSameDay(endTime.toDate(), data.endingAt)) {
                 break;
             }
             
@@ -42,6 +50,7 @@ public class TimeRepeater {
 
     private LinkedList<TimeRepeaterDateRange> generateWeeklyRepeats(TimeRepeaterData data) {
         LinkedList list = new LinkedList();
+        list.add(data.firstEvent);
         Date start = data.firstEvent.start;
         DateTime startTime = new DateTime(start);
         DateTime endTime = new DateTime(data.firstEvent.end);
@@ -51,7 +60,7 @@ public class TimeRepeater {
             startTime = startTime.plusWeeks(data.repeatEachTime);
             endTime = endTime.plusWeeks(data.repeatEachTime);
             startIterator = startIterator.plusWeeks(data.repeatEachTime);
-            if(startIterator.toDate().after(data.endingAt)) {
+            if(startIterator.toDate().after(data.endingAt) && !isSameDay(endTime.toDate(), data.endingAt)) {
                 break;
             }
             TimeRepeaterDateRange range = null;
@@ -124,13 +133,14 @@ public class TimeRepeater {
 
     private LinkedList<TimeRepeaterDateRange> generateMonthlyRepeats(TimeRepeaterData data) {
         LinkedList list = new LinkedList();
+        list.add(data.firstEvent);
         DateTime startTime = new DateTime(data.firstEvent.start);
         int dayOfWeek = startTime.getDayOfWeek();
         DateTime endTime = new DateTime(data.firstEvent.end);
         while(true) {
             startTime = startTime.plusMonths(data.repeatEachTime);
             endTime = endTime.plusMonths(data.repeatEachTime);
-            if(endTime.toDate().after(data.endingAt)) {
+            if(endTime.toDate().after(data.endingAt) && !isSameDay(endTime.toDate(), data.endingAt)) {
                 break;
             }
             
@@ -149,5 +159,10 @@ public class TimeRepeater {
             
         }
         return list;
+    }
+
+    private boolean isSameDay(Date date1, Date date2) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        return fmt.format(date1).equals(fmt.format(date2));
     }
 }

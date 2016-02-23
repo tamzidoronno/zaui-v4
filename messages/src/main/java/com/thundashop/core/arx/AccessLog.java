@@ -9,4 +9,8 @@ public class AccessLog implements Serializable {
     public long timestamp;
     public String type;
     public String dac_properties = "";
+    
+    public String toString() {
+        return personName + "door, " + door + ",card: " + card + " : timestamp: " + timestamp + " ,type: " + type + ", dac_properties: " + dac_properties;
+    }
 }

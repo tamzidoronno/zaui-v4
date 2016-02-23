@@ -45,6 +45,7 @@ import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -1697,6 +1698,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBookingRooms> allRooms = getRoomsFromRepeaterData(data);
         
         PmsBooking curBooking = getCurrentBooking();
+        allRooms = excludeAlreadyAdded(allRooms, curBooking);
+        
         curBooking.rooms.addAll(allRooms);
         curBooking.lastRepeatingData = data;
         saveBooking(curBooking);
@@ -2283,6 +2286,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return isSameDay(room.date.exitCleaningDate, toDate);
+    }
+
+    private List<PmsBookingRooms> excludeAlreadyAdded(List<PmsBookingRooms> allRooms, PmsBooking curBooking) {
+        List<PmsBookingRooms> toremove = new ArrayList();
+        for(PmsBookingRooms room : allRooms) {
+            for(PmsBookingRooms alreadyAdded : curBooking.rooms) {
+                if(room.isSame(alreadyAdded)) {
+                    toremove.add(room);
+                }
+            }
+        }
+        allRooms.removeAll(toremove);
+        return allRooms;
     }
 
 

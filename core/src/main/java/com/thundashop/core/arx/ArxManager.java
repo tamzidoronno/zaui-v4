@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
@@ -46,7 +47,9 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509ExtendedTrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -147,17 +150,19 @@ public class ArxManager extends ManagerBase implements IArxManager {
             address = "https://" + arxHostname + address;
             username = arxUsername;
             password = arxPassword;
-            
-            arxHostname = null;
-            arxPassword = null;
-            arxUsername = null;
+        } else {
+            username = "";
+            if(currentUser != null) {
+                username = currentUser.username;
+            }
+            password = userPasswords.get(currentUser.id);
         }
         
         if(!address.startsWith("http")) {
             String arxHost = "https://" + currentUser.fullName;
             address = arxHost + address;
         }
-
+        
         String loginToken = null;
         String loginUrl = address;
         
@@ -221,7 +226,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
     public static DefaultHttpClient wrapClient(DefaultHttpClient base) {
         try {
             SSLContext ctx = SSLContext.getInstance("TLS");
-            X509TrustManager tm = new X509TrustManager() {
+            X509ExtendedTrustManager tm = new X509ExtendedTrustManager() {
 
                 public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
                 }
@@ -232,7 +237,24 @@ public class ArxManager extends ManagerBase implements IArxManager {
                 public X509Certificate[] getAcceptedIssuers() {
                     return null;
                 }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] xcs, String string, Socket socket) throws CertificateException {
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] xcs, String string, Socket socket) throws CertificateException {
+                }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] xcs, String string, SSLEngine ssle) throws CertificateException {
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] xcs, String string, SSLEngine ssle) throws CertificateException {
+                }
             };
+            
             ctx.init(null, new TrustManager[]{tm}, null);
             SSLSocketFactory ssf = new SSLSocketFactory(ctx);
             ssf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -248,22 +270,15 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
     @Override
     public List<Door> getAllDoors() throws Exception {
-        if(!isLoggedOn()) {
-            return new ArrayList();
-        }
         List<Door> cachedDoors = getCachedDoors();
         if(!cachedDoors.isEmpty()) {
             return cachedDoors;
         }
         
-        User currentUser = getSession().currentUser;
-        String arxHost = "https://" + currentUser.fullName;
 
-        String hostName = arxHost + ":5002/arx/export_accessarea";
-        String password = userPasswords.get(currentUser.id);
-        System.out.println("Looking at : " + hostName);
+        String hostName = ":5002/arx/export_accessarea";
         
-        String result = httpLoginRequest(hostName, currentUser.username, password, "");
+        String result = httpLoginRequest(hostName, "", "", "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
         
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -398,6 +413,16 @@ public class ArxManager extends ManagerBase implements IArxManager {
         return door;
     }
 
+    public void doorAction(String externalId, String state, boolean setOn) throws Exception {
+        String hostName = ":5002/arx/door_actions?externalid="+externalId+"&type="+state;
+        if(setOn) {
+            hostName += "&value=on";
+        } else {
+            hostName += "&value=off";
+        }
+        httpLoginRequest(hostName, "", "", "");
+    }
+    
     @Override
     public void doorAction(String externalId, String state) throws Exception {
         User currentUser = getSession().currentUser;
@@ -719,22 +744,13 @@ public class ArxManager extends ManagerBase implements IArxManager {
     }
 
     private String getDoorLog(long start, long end) {
-         User currentUser = getSession().currentUser;
-        String arxHost = "https://" + currentUser.fullName;
-        String hostName = arxHost + ":5002/arx/eventexport?start_date="+start+"&end_date="+end+"&filter=" + URLEncoder.encode("<filter><name>"
-                + "<mask>controller.door.forcedUnlock</mask>"
-                + "<mask>controller.door.requestToExit</mask>"
-                + "<mask>controller.door.mode.unlocked</mask>"
-                + "<mask>controller.door.mode.locked</mask>"
-                + "<mask>acs.dac.update</mask>"
-                + "<mask>controller.door.pulseOpenRequest</mask>"
-                + "</name>"
-                + "</filter>");
-        String password = userPasswords.get(currentUser.id);
+        String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end;
         String result = "";
         try {
-            result = httpLoginRequest(hostName, currentUser.username, password, "");
-        }catch(Exception e) {}
+            result = httpLoginRequest(hostName, "", "", "");
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
         
         return result;
     }
@@ -805,6 +821,12 @@ public class ArxManager extends ManagerBase implements IArxManager {
         String string2 = new String ( iso88591bytes, iso88591charset );
 
         return string2;
+    }
+
+    public void clearOverRideCredentials() {
+        arxHostname = null;
+        arxPassword = null;
+        arxUsername = null;
     }
 
 }

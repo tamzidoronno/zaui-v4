@@ -869,8 +869,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 price *= tax;
             }
             
+            String guestName = "";
+            if(room.guests.size() > 0) {
+                guestName = room.guests.get(0).name;
+            }
+            
             item.getProduct().discountedPrice = price;
             item.getProduct().price = price;
+            item.getProduct().metaData = guestName;
             item.setCount(daysInPeriode);
             room.invoicedTo = endDate;
             foundInvoice = true;
@@ -894,6 +900,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         order.payment.paymentType = user.preferredPaymentType;
         order.userId = booking.userId;
         order.invoiceNote = booking.invoiceNote;
+        
+        if(!configuration.prepayment) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(order.rowCreatedDate);
+            cal.add(Calendar.DAY_OF_YEAR, -1);
+        }
+        
         orderManager.saveOrder(order);
         
         return order;

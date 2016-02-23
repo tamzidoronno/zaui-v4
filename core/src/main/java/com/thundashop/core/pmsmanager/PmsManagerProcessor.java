@@ -48,7 +48,9 @@ public class PmsManagerProcessor {
         if (manager.configuration.arxHostname != null && !manager.configuration.arxHostname.isEmpty()) {
             processArx();
         }
-        processOrdersToCreate();
+        if(manager.configuration.autoCreateInvoices) {
+            processOrdersToCreate();
+        }
     }
 
     private void processStarting(int hoursAhead, int maxAhead) {

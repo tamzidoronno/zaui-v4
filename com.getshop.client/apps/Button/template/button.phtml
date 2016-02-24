@@ -36,18 +36,16 @@
     }
     
     $template = $this->getButtonTemplate();
+    $shopButtonClass = $template ? "shop_button_".$template : "shop_button";
+    
     echo $ahref;
-    if(!$template) {
-        ?>
-        <div onclick="<? echo $onClick; ?>" accesskey=""<? echo $showModal; ?> class="shop_button radius green <? echo $extraClass; ?>" <? echo $extraAttributes; ?>>
-            <div class='button_text_content'><? echo $text; ?></div>
-            <div class="shop_button_saveNewText"><i class='fa fa-save'></i></div>
-        </div>
-        <?
-    } else {
-        ?>
-        <span class="<? echo $template; ?>"><? echo $text; ?></span>
-        <?
-    }
+    
+    ?>
+    <div onclick="<? echo $onClick; ?>" accesskey="" <? echo $showModal; ?> class="<? echo $shopButtonClass; ?> radius green <? echo $extraClass; ?>" <? echo $extraAttributes; ?>>
+        <div class='button_text_content'><? echo $text; ?></div>
+        <div class="shop_button_saveNewText"><i class='fa fa-save'></i></div>
+    </div>
+    <?
+
     echo $ahrefEnd;
 ?>

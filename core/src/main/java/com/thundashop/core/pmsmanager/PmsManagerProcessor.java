@@ -419,7 +419,6 @@ public class PmsManagerProcessor {
                         BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
                         if (item != null) {
                             String text = "Autoextending room " + item.bookingItemName;
-                            System.out.println(text);
                             try {
                                 manager.bookingEngine.changeDatesOnBooking(room.bookingId, room.date.start, room.date.end);
                                 manager.logEntry(text, booking.id, room.bookingItemId);

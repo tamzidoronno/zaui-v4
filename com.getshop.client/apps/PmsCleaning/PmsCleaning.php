@@ -262,7 +262,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         foreach($all as $a) {
             $newArray[$items[$a->bookingItemId]->bookingItemName] = $a;
         }
-        sort($newArray);
+        ksort($newArray);
         
         return $newArray;
     }

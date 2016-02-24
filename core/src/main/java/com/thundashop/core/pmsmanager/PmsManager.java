@@ -2273,6 +2273,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             String email = storeManager.getMyStore().configuration.emailAdress;
                             messageManager.sendMail(email, email, msg, msg, email, email);
                         }
+                        
+                        logEntry("Key delivered for room: " + bookingEngine.getBookingItem(roomId).bookingItemName, booking.id, roomId);
                         return;
                     }
                 }

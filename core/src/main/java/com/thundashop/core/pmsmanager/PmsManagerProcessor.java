@@ -487,7 +487,6 @@ public class PmsManagerProcessor {
                     manager.saveBooking(booking);
                 }
             }
-            System.out.println(time.toDate() + " : " + " - " + numberOfInterval + " - " + maxNumAtDay);
             time = time.plusDays(1);
         }
     }

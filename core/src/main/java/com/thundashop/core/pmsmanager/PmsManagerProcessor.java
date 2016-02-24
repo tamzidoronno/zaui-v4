@@ -28,17 +28,18 @@ public class PmsManagerProcessor {
     }
 
     public void doProcessing() {
-        processAutoAssigning();
-        processStarting(0, 24 * 1);
-        processStarting(24, 24 * 2);
-        processStarting(48, 24 * 3);
-        processEndings(0, 24 * 1);
-        processEndings(24, 24 * 2);
-        processEndings(48, 24 * 3);
-        processAutoExtend();
-        processIntervalCleaning(false);
-        processIntervalCleaning(true);
+        try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
+        try { processEndings(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
+        try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
+        try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
+        try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
+        try { processIntervalCleaning(false); }catch(Exception e) { e.printStackTrace(); }
+        try { processIntervalCleaning(true); }catch(Exception e) { e.printStackTrace(); }
         try {
+            closeForTheDay();
             processKeepDoorOpen();
             processKeepDoorOpenClosed();
         } catch (Exception e) {
@@ -581,7 +582,6 @@ public class PmsManagerProcessor {
             return;
         }
 
-        closeForTheDay();
         
         List<String> avoidClosing = new ArrayList();
         List<String> mightNeedClosing = new ArrayList();

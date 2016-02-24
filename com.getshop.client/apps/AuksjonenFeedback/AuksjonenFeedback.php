@@ -51,7 +51,7 @@ class AuksjonenFeedback extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        if(isset($_POST['event']) && $_POST['event'] == "saveform") {
+        if(isset($_POST['event']) && $_POST['event'] == "saveform" || isset($_SESSION['auksjonenfeedbackanswered'])) {
             echo "<h1>Takk for din tilbakemelding</h1>";
         } else {
             $this->includefile("questions");

@@ -11,6 +11,10 @@ class AuksjonenFeedback extends \MarketingApplication implements \Application {
     }
     
     public function saveform() {
+        if(isset($_SESSION['auksjonenfeedbackanswered'])) {
+            return;
+        }
+        
         $saved = $this->getConfigurationSetting("savedform");
         if(!$saved) {
             $saved = array();
@@ -43,6 +47,7 @@ class AuksjonenFeedback extends \MarketingApplication implements \Application {
         $this->startAdminImpersonation("StoreApplicationPool", "setSetting");
         $this->setConfigurationSetting("savedform", json_encode($saved));
         $this->stopImpersionation();
+        $_SESSION['auksjonenfeedbackanswered'] = true;
     }
 
     public function render() {

@@ -643,9 +643,10 @@ public class PmsManagerProcessor {
         Calendar cal = Calendar.getInstance();
         if(cal.get(Calendar.HOUR_OF_DAY) > hour) {
             manager.arxManager.closeAllForTheDay();
-        }
-        if(cal.get(Calendar.HOUR_OF_DAY) == hour && cal.get(Calendar.MINUTE) >= minute) {
+        } else if(cal.get(Calendar.HOUR_OF_DAY) == hour && cal.get(Calendar.MINUTE) >= minute) {
             manager.arxManager.closeAllForTheDay();
+        } else {
+            manager.arxManager.clearCloseForToday();
         }
     }
 

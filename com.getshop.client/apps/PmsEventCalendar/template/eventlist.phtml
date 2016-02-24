@@ -23,6 +23,12 @@ foreach($this->getEventList() as $eventEntry) {
     }
 
     echo "<div style='font-size:12px;color:#828282; margin-top: 20px;'>";
+    if(sizeof($dates) > 1) {
+        echo "Eventet gjentas på følgende datoer:<br>";
+    } else {
+        echo "Dato for eventet:<br>";
+    }
+
     echo join(", ", $dates);
     echo "</div>";
     echo "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."' style='float:right;'>Les mer</a>";

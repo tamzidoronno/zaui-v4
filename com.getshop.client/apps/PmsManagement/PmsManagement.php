@@ -660,6 +660,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($this->sameDay($room->date->start, $filter->startDate)) {
             return true;
         }
+        
         //Same end date
         if($this->sameDay($room->date->end, $filter->endDate)) {
             return true;
@@ -682,10 +683,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         //Expands the whole periode.
-        if($roomStart < $filterStart && $roomEnd > $filterEnd) {
-            return true;
+        if($filter->filterType == "active") {
+            if($roomStart < $filterStart && $roomEnd > $filterEnd) {
+                return true;
+            }
         }
-        
+
         return false;
     }
 

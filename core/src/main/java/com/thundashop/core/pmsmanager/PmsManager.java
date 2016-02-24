@@ -136,6 +136,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<Room> getAllRoomTypes(Date start, Date end) {
         List<Room> result = new ArrayList();
         List<BookingItemType> allGroups = bookingEngine.getBookingItemTypes();
+        
+        Collections.sort(allGroups, new Comparator<BookingItemType>(){
+        public int compare(BookingItemType o1, BookingItemType o2){
+                return o1.order.compareTo(o2.order);
+            }
+       });
+        
+        
         for(BookingItemType type : allGroups) {
             if(!type.visibleForBooking) {
                 continue;
@@ -145,6 +153,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.price = calculatePrice(type.id, start, end, true);
             result.add(room);
         }
+        
+        
+        
         return result;
     }
 

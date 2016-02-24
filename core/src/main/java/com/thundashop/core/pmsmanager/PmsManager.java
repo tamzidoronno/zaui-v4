@@ -1381,6 +1381,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             for(PmsBookingRooms room : booking.rooms) {
                 if(needCheckOutCleaning(room, day)) {
+                    finalize(booking);
                     result.add(room);
                 }
             }
@@ -1404,6 +1405,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             for(PmsBookingRooms room : booking.rooms) {
                 if(needIntervalCleaning(room, day)) {
+                    finalize(booking);
                     rooms.add(room);
                 }
             }
@@ -2320,10 +2322,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void sortRooms(List<PmsBookingRooms> result) {
         Collections.sort(result, new Comparator<PmsBookingRooms>(){
-     public int compare(PmsBookingRooms o1, PmsBookingRooms o2){
-         return o1.item.bookingItemName.compareTo(o2.item.bookingItemName);
-     }
-});
+        public int compare(PmsBookingRooms o1, PmsBookingRooms o2){
+            if(o1.item == null || o2.item == null) {
+                System.out.println("This is null");
+            }
+            return o1.item.bookingItemName.compareTo(o2.item.bookingItemName);
+        }
+        });
     }
 
 

@@ -574,7 +574,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         BookingTimeLineFlatten line = new BookingTimeLineFlatten(item.bookingSize, item.bookingItemTypeId);
         line.start = start;
         line.end = end;
-        bookings.values().parallelStream().
+        bookings.values().stream().
                 filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(itemId))).
                 forEach(o -> line.add(o));
         return line;

@@ -1,10 +1,23 @@
 app.PmsAvailabilityTimeline = {
     init : function() {
+        $(document).on('click', '.PmsAvailabilityTimeline .valueentry.full', app.PmsAvailabilityTimeline.loadBooking);
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
         thundashop.common.showInformationBoxNew(event, 'Settings');
     },
+    
+    loadBooking : function() {
+        var data = {
+            "time" : $(this).attr('time'),
+            "itemid" : $(this).attr('itemid')
+        }
+        var instanceId = $('#bookinginstanceid').val();
+        var event = thundashop.Ajax.createEvent('','showInfoBoxForBookingAtTime',instanceId,data);
+        event.core.appname = "PmsManagement";
+        thundashop.common.showInformationBoxNew(event,'Configuration');
+    },
+    
     loadSettings: function (element, application) {
         var config = {
             draggable: true,

@@ -44,6 +44,8 @@ public class PmsBookingRooms implements Serializable {
     boolean addedToArx = false;
     boolean canBeAdded = true;
     boolean isAddon = false;
+    Date forcedOpenDate;
+    boolean forcedOpenNeedClosing = false;
     
     /**
      * Finalized entries

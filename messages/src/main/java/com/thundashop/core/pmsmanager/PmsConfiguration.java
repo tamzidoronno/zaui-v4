@@ -47,6 +47,7 @@ public class PmsConfiguration extends DataCommon {
     public String arxCardFormat = "";
     public Integer codeSize = 4;
     public boolean keepDoorOpenWhenCodeIsPressed = false;
+    public String closeAllDoorsAfterTime = "22:00";
 
     
     //Cleaning options

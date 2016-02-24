@@ -163,6 +163,8 @@ public class ArxManager extends ManagerBase implements IArxManager {
             address = arxHost + address;
         }
         
+        System.out.println(address);
+        
         String loginToken = null;
         String loginUrl = address;
         
@@ -827,6 +829,13 @@ public class ArxManager extends ManagerBase implements IArxManager {
         arxHostname = null;
         arxPassword = null;
         arxUsername = null;
+    }
+
+    public void closeAllForTheDay() throws Exception {
+        List<Door> doors = getAllDoors();
+        for(Door door : doors) {
+            doorAction(door.externalId, "forceOpen", false);
+        }
     }
 
 }

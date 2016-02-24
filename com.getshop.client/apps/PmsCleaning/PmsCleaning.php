@@ -50,14 +50,22 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "<table width='100%' cellspacing='0' cellpadding='0'>";
         $this->printRowHeader();
 
+        $rooms = array();
         foreach($bookings as $booking) {
             foreach($booking->rooms as $room) {
                 if(!$this->isSameDay(strtotime($room->date->start), $time)) {
                     continue;
                 }
-                $this->printRoomRow($room);
+                $items = $this->getItems();
+                $rooms[$items[$room->bookingItemId]->bookingItemName] = $room;
             }
         }
+        
+        ksort($rooms);
+        foreach($rooms as $room) {
+            $this->printRoomRow($room);
+        }
+        
         echo "</table>";
         echo $this->counter . " rows found";
     }
@@ -119,7 +127,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
                 if($room->isCheckout) {
                     $icon = "<i class='fa fa-sign-out'></i>";
                 }
-                
+                $total++;
                 echo $icon . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $guestName. "<br>";
             }
             

@@ -23,6 +23,13 @@ body {
     box-shadow: 0px 0px 15px rgba(0,0,0,0.4);
 }
 
+.login_header_type_1 {
+    display: none !important;
+}
+
+.loginform {
+    text-align: center;
+}
 
 .gsarea[area="header"] .Menu .entry .entries {
     background-color: #006e63;

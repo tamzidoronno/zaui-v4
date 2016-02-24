@@ -21,5 +21,9 @@ class BukkenTheme extends \ThemeApplication implements \Application {
     public function getThemeClasses() {
          return ["floatingboxes"];
     }
+    
+    public function printArrowsOutSideOnCarousel() {
+        return false;
+    }
 }
 ?>

@@ -187,7 +187,9 @@ public class PmsBooking extends DataCommon {
 
     boolean checkingInBetween(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {
-            if(room.date.start.after(startDate) && room.date.start.before(endDate)) {
+            if((room.date.start.after(startDate) && room.date.start.before(endDate)) || 
+                    isSameDay(room.date.start, endDate) ||
+                    isSameDay(room.date.start, startDate)) {
                 return true;
             }
         }
@@ -196,7 +198,9 @@ public class PmsBooking extends DataCommon {
 
     boolean checkingOutBetween(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {
-            if(room.date.end.after(startDate) && room.date.end.before(endDate)) {
+            if((room.date.end.after(startDate) && room.date.end.before(endDate)) || 
+                    isSameDay(room.date.start, endDate) ||
+                    isSameDay(room.date.start, startDate)) {
                 return true;
             }
         }

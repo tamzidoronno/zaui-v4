@@ -6,6 +6,7 @@ class Page {
     /*  @var $factory Factory */
     var $factory;
     var $flatCellList = array();
+    var $themeApp = null;
 
     /**
      * 
@@ -15,6 +16,10 @@ class Page {
     function __construct($javapage, $factory) {
         $this->javapage = $javapage;
         $this->factory = $factory;
+        $themeApp = $factory->getApi()->getStoreApplicationPool()->getThemeApplication();
+        if ($themeApp) {
+            $this->themeApp = $this->factory->getApplicationPool()->createInstace($themeApp);
+        }
     }
 
     function getId() {
@@ -531,6 +536,7 @@ class Page {
       
         $anchor = $cell->anchor;
         
+        
         $themeClass = $cell->selectedThemeClass;
         
         if ($depth === 0) {
@@ -552,13 +558,8 @@ class Page {
             $this->printMobileAdminMenu($depth, $cell);
         }
 
-        if ($parent != null && $parent->mode === "ROTATING") {
-            if ($count > 0) {
-                echo "<i class='fa fa-arrow-circle-left gsrotateleft gsrotatearrow'></i>";
-            }
-            if ($count + 1 < $totalcells) {
-                echo "<i class='fa fa-arrow-circle-right gsrotateright gsrotatearrow'></i>";
-            }
+        if ($this->themeApp == null || $this->themeApp->printArrowsOutSideOnCarousel()) {
+            $this->printArrows($parent, $count, $totalcells);
         }
 
         $themeClassInner = $cell->selectedThemeClass ? $cell->selectedThemeClass."_inner" : "";
@@ -569,6 +570,11 @@ class Page {
         if ($header && $depth == 0 && $count == 0) {
             $this->printLanguageSelection();
         }
+        
+        if ($this->themeApp != null && !$this->themeApp->printArrowsOutSideOnCarousel()) {
+            $this->printArrows($parent, $count, $totalcells);
+        }
+
         
         if($this->factory->isEditorMode()) {
             $this->printCellBox($edit, $cell, $parent, $depth);
@@ -595,6 +601,16 @@ class Page {
         
         $this->printEffectTriggerLoaded($cell, $depth);
         return true;
+    }
+    
+    private function printArrows($parent, $count, $totalcells) {
+        if ($parent != null && $parent->mode === "ROTATING") {
+            
+            $firsRow = $count > 0 ? "" : "gs_first_in_carousel";
+            $last = $count + 1 < $totalcells ? "" : "gs_last_in_carousel";
+            echo "<div class='gsrotateleft gsrotatearrow $firsRow'><i class='fa fa-arrow-circle-left'></i></div>";
+            echo "<div class='gsrotateright gsrotatearrow $last'><i class='fa fa-arrow-circle-right'></i></div>";
+        }
     }
 
     private function addCellConfigPanel() {

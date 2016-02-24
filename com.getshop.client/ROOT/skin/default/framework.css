@@ -2644,3 +2644,10 @@ select.gsniceselect1:active {
     border-bottom: solid 1px #88Aec3;
 }
 
+.gs_last_in_carousel {
+    display: none !important;
+}
+
+.gs_first_in_carousel {
+    display: none !important;
+}

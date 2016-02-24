@@ -143,6 +143,10 @@ class ThemeApplication extends PredefinedPagesConfig {
     public function getThemeClasses() {
         return [];
     }
+    
+    public function printArrowsOutSideOnCarousel() {
+        return true;
+    }
 }
 
 ?>

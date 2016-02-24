@@ -7,6 +7,11 @@ body {
     width: 1366px;
 }
 
+.gsrotateright.gsrotatearrow {
+    border-color: #FFF;
+    color: #000;
+}
+
 .gsarea[area="header"] {
     margin-bottom: 100px;
 }
@@ -89,6 +94,7 @@ body {
     display: none;
 }
 
+.shop_button_template1 .button_text_content ,
 .shop_button .button_text_content {
     background-color: #62cab8;
     border-radius: 20px;
@@ -99,11 +105,15 @@ body {
     color: #FFF;
     padding-left: 20px;
     padding-right: 20px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .app.Button {
     text-align: center;
 }
+
+.shop_button_template1,
 .shop_button {
     border-radius: 20px;
     border: dashed 1px #62cab8;
@@ -111,6 +121,11 @@ body {
     line-height: 40px;
     padding: 0px;
     margin-top: 20px;
+    display: inline-block;
+}
+
+.shop_button_template1 .button_text_content {
+    background-color: #CCC;
 }
 
 .floatingboxes .app {
@@ -138,3 +153,17 @@ body {
     font-size: 20px;
     padding-bottom: 20px;
 }
+
+.gsrotatearrow i {
+    display: none;
+}
+.gsrotatearrow {
+    height: 50px;
+    width: 30px;
+    background-size: cover;
+    margin-top: -25px;
+}
+
+.gsrotateleft { background-image: url('{IMAGEFOLDER}/left.png'); left: 50px;}
+.gsrotateright { background-image: url('{IMAGEFOLDER}/right.png'); right: 50px; }
+.gscarouseldots { display: none; }

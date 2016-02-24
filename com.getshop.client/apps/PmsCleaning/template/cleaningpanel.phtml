@@ -11,11 +11,7 @@ $time = strtotime($this->getCleaningDate());
 <?php
 $this->print_guests_table($time, true);
 ?>
-<h1>Check out cleaning today</h1>
-<?php
-$this->print_guests_table($time, false);
-?>
-<h1>Guests need interval cleaning</h1>
+<h1>Cleaning today</h1>
 <?php
 $this->print_interval_cleaning($time);
 ?>

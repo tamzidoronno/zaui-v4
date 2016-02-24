@@ -38,40 +38,28 @@ class PmsCleaning extends \WebshopApplication implements \Application {
     }
     
     function print_guests_table($time, $arriving) {
-        
-        if($arriving) {
-            $filter = new \core_pmsmanager_PmsBookingFilter();
-            $filter->filterType = "checkin";
-            $filter->startDate = $this->convertToJavaDate($time);
-            $filter->endDate = $this->convertToJavaDate($time+86499);
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->filterType = "checkin";
+        $filter->startDate = $this->convertToJavaDate($time);
+        $filter->endDate = $this->convertToJavaDate($time+86499);
 
-            $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
-            if(!$bookings) {
-                $bookings = array();
-            }
-            echo "<table width='100%' cellspacing='0' cellpadding='0'>";
-            $this->printRowHeader();
+        $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+        if(!$bookings) {
+            $bookings = array();
+        }
+        echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+        $this->printRowHeader();
 
-            foreach($bookings as $booking) {
-                foreach($booking->rooms as $room) {
-                    if(!$this->isSameDay(strtotime($room->date->start), $time)) {
-                        continue;
-                    }
-                    $this->printRoomRow($room);
+        foreach($bookings as $booking) {
+            foreach($booking->rooms as $room) {
+                if(!$this->isSameDay(strtotime($room->date->start), $time)) {
+                    continue;
                 }
-            }
-            echo "</table>";
-            echo $this->counter . " rows found";
-        } else {
-            $checkoutCleaningRooms = $this->getApi()->getPmsManager()->getRoomsNeedingCheckoutCleaning($this->getSelectedName(), $this->convertToJavaDate($time));
-            echo "<table width='100%' cellspacing='0' cellpadding='0'>";
-            $this->printRowHeader();
-            foreach($checkoutCleaningRooms as $room) {
                 $this->printRoomRow($room);
             }
-            echo "</table>";
-            echo $this->counter . " rows found";
         }
+        echo "</table>";
+        echo $this->counter . " rows found";
     }
 
     public function markCleaned() {
@@ -123,19 +111,16 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             $filter->endDate = $this->convertToJavaDate($time+(86400*($i+1)));
             $checkoutCleaningRooms = $this->getApi()->getPmsManager()->getRoomsNeedingCheckoutCleaning($this->getSelectedName(), $this->convertToJavaDate($time+(86400*$i)));
             $intervalResult = $this->getApi()->getPmsManager()->getRoomsNeedingIntervalCleaning($this->getSelectedName(), $this->convertToJavaDate($time+(86400*$i)));
-            if(!$intervalResult) {
-                $intervalResult = array();
-            }
-            if($checkoutCleaningRooms) {
-                foreach($checkoutCleaningRooms as $room) {
-                    echo "<i class='fa fa-sign-out'></i>" . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $room->guests[0]->name . "<br>";
-                    $total++;
-                }
-            }
+            $all = $this->mergeIntervalAndCheckout($checkoutCleaningRooms, $intervalResult);
             
-            foreach($intervalResult as $room) {
+            foreach($all as $room) {
                 $guestName = $room->guests[0]->name;
-                echo "<i class='fa fa-refresh'></i>" . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $guestName. "<br>";
+                $icon = "<i class='fa fa-refresh'></i>";
+                if($room->isCheckout) {
+                    $icon = "<i class='fa fa-sign-out'></i>";
+                }
+                
+                echo $icon . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $guestName. "<br>";
             }
             
             
@@ -180,13 +165,13 @@ class PmsCleaning extends \WebshopApplication implements \Application {
 
     public function print_interval_cleaning($time) {
         $items = $this->getItems();
-        $result = $this->getApi()->getPmsManager()->getRoomsNeedingIntervalCleaning($this->getSelectedName(), $this->convertToJavaDate($time));
-        if(!$result) {
-            $result = array();
-        }
+        $interval = $this->getApi()->getPmsManager()->getRoomsNeedingIntervalCleaning($this->getSelectedName(), $this->convertToJavaDate($time));
+        $checkout = $this->getApi()->getPmsManager()->getRoomsNeedingCheckoutCleaning($this->getSelectedName(), $this->convertToJavaDate($time));
+        $all = $this->mergeIntervalAndCheckout($checkout, $interval);
+        
         echo "<table width='100%' cellspacing='0' cellpadding='0'>";
         $this->printRowHeader();
-        foreach($result as $res) {
+        foreach($all as $res) {
             $this->printRoomRow($res);
         }
         echo "</table>";
@@ -203,8 +188,16 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         $additional = $this->getAdditionalInfo();
         
         echo "<tr roomid='".$room->pmsBookingRoomId."'>";
-        echo "<td>" . $room->numberOfGuests . "</td>";
         echo "<td>";
+        echo $room->numberOfGuests . "</td>";
+        echo "<td>";
+        
+        $icon = "<i class='fa fa-refresh'></i>";
+        if($room->isCheckout) {
+            $icon = "<i class='fa fa-sign-out'></i>";
+        }
+        echo $icon . " ";
+        
         if($room->bookingItemId) {
             echo $items[$room->bookingItemId]->bookingItemName;
         } else {
@@ -250,6 +243,28 @@ class PmsCleaning extends \WebshopApplication implements \Application {
 
     public function isSameDay($time1, $time2) {
         return date("d.m.Y", $time1) == date("d.m.Y", $time2);
+    }
+
+    public function mergeIntervalAndCheckout($checkoutCleaningRooms, $intervalResult) {
+        $items = $this->getItems();
+        if(!$intervalResult) {
+            $intervalResult = array();
+        }
+        if(!$checkoutCleaningRooms) {
+            $checkoutCleaningRooms = array();
+        }
+        foreach($checkoutCleaningRooms as $check) { $check->isCheckout = true; }
+        foreach($intervalResult as $check) { $check->isCheckout = false; }
+
+        $all = array_merge($checkoutCleaningRooms, $intervalResult);
+        
+        $newArray = array();
+        foreach($all as $a) {
+            $newArray[$items[$a->bookingItemId]->bookingItemName] = $a;
+        }
+        ksort($newArray);
+        
+        return $newArray;
     }
 
 }

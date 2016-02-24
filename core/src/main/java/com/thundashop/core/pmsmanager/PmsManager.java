@@ -1371,7 +1371,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsBookingRooms> getRoomsNeedingCheckoutCleaning(Date day) {
         List<PmsBookingRooms> result = new ArrayList();
-        for(PmsBooking booking : getAllBookings(null)) {
+        for(PmsBooking booking : bookings.values()) {
             if(booking.isDeleted) {
                 continue;
             }
@@ -1381,33 +1381,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             for(PmsBookingRooms room : booking.rooms) {
                 if(needCheckOutCleaning(room, day)) {
+                    finalize(booking);
                     result.add(room);
                 }
             }
         }
+        
+        sortRooms(result);
+        
         return result;
     }
     
     @Override
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day) {
-        Calendar endcal = Calendar.getInstance();
-        endcal.setTime(day);
-        endcal.add(Calendar.DAY_OF_YEAR, 1);
-        
-        PmsBookingFilter filter = new PmsBookingFilter();
-        filter.filterType = PmsBookingFilter.PmsBookingFilterTypes.active;
-        filter.startDate = day;
-        filter.endDate = endcal.getTime();
-        
+
         List<PmsBookingRooms> rooms = new ArrayList<PmsBookingRooms>();
-        List<PmsBooking> allBookings = getAllBookings(filter);
-        for(PmsBooking booking :allBookings) {
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.isDeleted) {
+                continue;
+            }
+            if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
+                continue;
+            }
             for(PmsBookingRooms room : booking.rooms) {
                 if(needIntervalCleaning(room, day)) {
+                    finalize(booking);
                     rooms.add(room);
                 }
             }
         }
+        sortRooms(rooms);
         
         return rooms;
     }
@@ -2270,6 +2273,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             String email = storeManager.getMyStore().configuration.emailAdress;
                             messageManager.sendMail(email, email, msg, msg, email, email);
                         }
+                        
+                        logEntry("Key delivered for room: " + bookingEngine.getBookingItem(roomId).bookingItemName, booking.id, roomId);
                         return;
                     }
                 }
@@ -2315,6 +2320,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         allRooms.removeAll(toremove);
         return allRooms;
+    }
+
+    private void sortRooms(List<PmsBookingRooms> result) {
+        Collections.sort(result, new Comparator<PmsBookingRooms>(){
+        public int compare(PmsBookingRooms o1, PmsBookingRooms o2){
+            if(o1.item == null || o2.item == null) {
+                System.out.println("This is null");
+            }
+            return o1.item.bookingItemName.compareTo(o2.item.bookingItemName);
+        }
+        });
     }
 
 

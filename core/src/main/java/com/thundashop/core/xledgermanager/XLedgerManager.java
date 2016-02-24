@@ -68,7 +68,7 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
 
     private List<String> createOrderLine(Order order) {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyymmdd");
-        SimpleDateFormat format2 = new SimpleDateFormat("dd.MM.yy");
+
         List<String> allLines = new ArrayList();
         int linenumber = 1;
         for(CartItem item : order.cart.getItems()) {
@@ -80,13 +80,13 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
             String startDate = "";
             if(item.startDate != null) {
                 DateTime start = new DateTime(item.startDate);
-                startDate = start.toString("dd.mm.yy");
+                startDate = start.toString("dd.MM.yy");
             }
             
             String endDate = "";
             if(item.endDate != null) {
                 DateTime end = new DateTime(item.endDate);
-                endDate = end.toString("dd.mm.yy");
+                endDate = end.toString("dd.MM.yy");
             }
             
             lineText = item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";

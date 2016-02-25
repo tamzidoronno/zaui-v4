@@ -136,6 +136,13 @@ public class PmsBooking extends DataCommon {
         return fmt.format(date1).equals(fmt.format(date2));
     }
 
+    boolean isCompletedBooking() {
+        if(sessionId == null || sessionId.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
 
     public static class PriceType {
         public static Integer daily = 1;

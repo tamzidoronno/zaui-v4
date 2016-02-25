@@ -275,6 +275,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
         }
         $filter->itemId = $_POST['data']['itemid'];
+        $filter->prepayment = true;
         
         $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
         $this->showBookingInformation();
@@ -657,12 +658,22 @@ class PmsManagement extends \WebshopApplication implements \Application {
      */
     public function isActive($room, $filter) {
         
-        if($filter->filterType == "registered" || $filter->filterType == "deleted" || $filter->filterType == "stats" || $filter->filterType == "unconfirmed") {
+        if(!isset($filter->filterType) || $filter->filterType == "registered" || $filter->filterType == "deleted" || $filter->filterType == "stats" || $filter->filterType == "unconfirmed") {
             return true;
         }
         
         //Same start date
         if($this->sameDay($room->date->start, $filter->startDate)) {
+            return true;
+        }
+        
+        //Same end date
+        if($this->sameDay($room->date->start, $filter->endDate)) {
+            return true;
+        }
+        
+        //Same start date
+        if($this->sameDay($room->date->end, $filter->startDate)) {
             return true;
         }
         

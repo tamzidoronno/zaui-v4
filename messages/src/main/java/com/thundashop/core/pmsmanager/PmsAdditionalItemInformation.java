@@ -20,20 +20,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     boolean inUse;
 
     Boolean isClean() {
-        isClean = false;
-        if(lastCleaned == null) {
-            return false;
-        }
-        
-        if(lastUsed == null) {
-            isClean = true;
-        } else if(isCleanedToday()) {
-            isClean = true;
-        } else {
-            isClean = lastCleaned.after(lastUsed);
-        }
-        
-        return isClean;
+        return isClean(true);
     }
     
     public void markCleaned() {
@@ -65,6 +52,23 @@ public class PmsAdditionalItemInformation extends DataCommon {
 
     void addCleaningDate() {
         cleaningDates.add(new Date());
+    }
+
+    public Boolean isClean(boolean checkToday) {
+        isClean = false;
+        if(lastCleaned == null) {
+            return false;
+        }
+        
+        if(lastUsed == null) {
+            isClean = true;
+        } else if(isCleanedToday() && checkToday) {
+            isClean = true;
+        } else {
+            isClean = lastCleaned.after(lastUsed);
+        }
+        
+        return isClean;
     }
 
 }

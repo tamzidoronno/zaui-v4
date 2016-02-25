@@ -744,6 +744,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return "Room does not exists";
             }
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
+            if(room.isStarted() && !room.isEnded()) {
+                room.addedToArx = false;
+                PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
+                add.markDirty();
+                saveObject(add);
+                doNotification("room_changed", booking, room);
+            }
             
             String from = "none";
             if(room.bookingItemId != null) {
@@ -2357,6 +2364,52 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return o1.item.bookingItemName.compareTo(o2.item.bookingItemName);
         }
         });
+    }
+
+    void makeSureCleaningsAreOkay() {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = PmsBookingFilter.PmsBookingFilterTypes.active;
+        filter.startDate = new Date();
+        filter.endDate = new Date();
+        List<PmsBooking> allBookings = getAllBookings(filter);
+        for(PmsBooking booking : allBookings) {
+            boolean needSaving = false;
+            for(PmsBookingRooms room : booking.rooms) {
+                if(!room.isStarted()) {
+                    continue;
+                }
+                if(room.isEnded()) {
+                    continue;
+                }
+                if(room.isStartingToday()) {
+                    continue;
+                }
+                
+                String ownerMail = storeManager.getMyStore().configuration.emailAdress;
+                if(room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+                    //Notify that a booking has started without a booking item... wtf.
+                    messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item", "Owner: "+ ownerMail, "pal@getshop.com", "pal@getshop.com");
+                    continue;
+                }
+                
+                BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                if(item == null) {
+                    messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item (nullitem)", "Owner: "+ ownerMail, "pal@getshop.com", "pal@getshop.com");
+                } else {
+                    PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
+                    if(additional.isClean(false)) {
+                        additional.markDirty();
+                        needSaving = true;
+                        messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Room is active, but marked as clean, room: " + item.bookingItemName, "Owner: "+ ownerMail, "pal@getshop.com", "pal@getshop.com");
+                        logEntry("Marking item " + item.bookingItemName + " as dirty (failure in marking)", booking.id, item.id);
+                        saveObject(additional);
+                    }
+                }
+            }
+            if(needSaving) {
+                saveBooking(booking);
+            }
+        }
     }
 
 

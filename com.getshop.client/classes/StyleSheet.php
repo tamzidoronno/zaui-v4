@@ -123,13 +123,6 @@ class StyleSheet {
         }
 
         $this->doApp($themeApp, true);
-        
-        if(isset($_GET['includeextracss'])) {
-            $appinstance = $this->factory->getApplicationPool()->createInstace($themeApp);
-            if(method_exists($appinstance, "includeExtraCss")) {
-                $appinstance->includeExtraCss();
-            }
-        }
     }
 
     private function doApp($app, $isTheme) {

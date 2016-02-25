@@ -46,12 +46,9 @@ public class PmsManagerProcessor {
             e.printStackTrace();
         }
 
-        if (manager.configuration.arxHostname != null && !manager.configuration.arxHostname.isEmpty()) {
-            processArx();
-        }
-        if(manager.configuration.autoCreateInvoices) {
-            processOrdersToCreate();
-        }
+        try { processArx(); }catch(Exception e) { e.printStackTrace(); }
+        try { processOrdersToCreate(); }catch(Exception e) { e.printStackTrace(); }
+        try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
     }
 
     private void processStarting(int hoursAhead, int maxAhead) {
@@ -139,6 +136,10 @@ public class PmsManagerProcessor {
     }
 
     private void processArx() {
+        if (manager.configuration.arxHostname == null || manager.configuration.arxHostname.isEmpty()) { 
+            return;
+        }
+        
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
             boolean save = false;
@@ -239,6 +240,11 @@ public class PmsManagerProcessor {
     }
 
     private void processOrdersToCreate() {
+        
+        if(!manager.configuration.autoCreateInvoices) { 
+            return;
+        }
+        
         if (manager.lastOrderProcessed != null && isSameDay(manager.lastOrderProcessed, new Date())) {
             return;
         }
@@ -517,7 +523,7 @@ public class PmsManagerProcessor {
         manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
         int minute = 60 * 1000;
 
-        HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 60)), System.currentTimeMillis());
+        HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 3)), System.currentTimeMillis());
         for (String doorId : log.keySet()) {
             List<AccessLog> accessLogs = log.get(doorId);
             for (AccessLog logEntry : accessLogs) {
@@ -532,11 +538,13 @@ public class PmsManagerProcessor {
                                 room.forcedOpenDate = new Date();
                                 room.forcedOpenDate.setTime(logEntry.timestamp);
                                 if(!room.forcedOpen) {
+                                    manager.logEntry("Forced open door: " + logEntry.door, book.id, room.bookingItemId);
                                     manager.arxManager.doorAction(doorId, "forceOpen", true);
                                     room.forcedOpen = true;
                                     room.forcedOpenCompleted = false;
                                     manager.saveBooking(book);
                                 } else {
+                                    manager.logEntry("Door need closing: " + logEntry.door, book.id, room.bookingItemId);
                                     room.forcedOpenNeedClosing = true;
                                 }
                             }
@@ -601,8 +609,14 @@ public class PmsManagerProcessor {
                 boolean needSaving = true;
                 for (PmsBookingRooms room : booking.rooms) {
                     if (room.bookingItemId.equals(itemToClose)) {
+                        BookingItem item = manager.bookingEngine.getBookingItem(itemToClose);
                         if ((room.isEnded() && room.forcedOpen && !room.forcedOpen) || room.forcedOpenNeedClosing) {
-                            closeRoom(itemToClose);
+                            String itemName = "";
+                            if(item != null) {
+                                itemName = item.bookingItemName + "(" + item.bookingItemAlias + ")";
+                            }
+                            manager.logEntry("Door need closing: " + itemName, booking.id, room.bookingItemId);
+                            closeRoom(itemToClose, booking.id);
                             room.forcedOpenCompleted = true;
                             room.forcedOpenNeedClosing = false;
                             needSaving = true;
@@ -618,12 +632,13 @@ public class PmsManagerProcessor {
         
     }
 
-    private void closeRoom(String itemToClose) throws Exception {
+    private void closeRoom(String itemToClose, String bookingId) throws Exception {
         BookingItem item = manager.bookingEngine.getBookingItem(itemToClose);
         List<Door> doors = manager.arxManager.getAllDoors();
         for (Door door : doors) {
             if (door.name.equals(item.bookingItemName) || door.name.equals(item.bookingItemAlias)) {
                 manager.arxManager.doorAction(door.externalId, "forceOpen", false);
+                manager.logEntry("Ran close on : " + door.externalId, bookingId, itemToClose);
             }
         }
     }
@@ -642,6 +657,10 @@ public class PmsManagerProcessor {
         } else {
             manager.arxManager.clearCloseForToday();
         }
+    }
+
+    private void makeSureCleaningsAreOkey() {
+        manager.makeSureCleaningsAreOkay();
     }
 
 }

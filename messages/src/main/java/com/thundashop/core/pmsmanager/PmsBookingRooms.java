@@ -32,7 +32,6 @@ public class PmsBookingRooms implements Serializable {
     String code = "";
     boolean forcedOpen = false;
     boolean forcedOpenCompleted = false;
-    public boolean isClean = true;
     public Integer intervalCleaning = null;
     public boolean addedByRepeater = false;
     public Date invoicedTo = null;

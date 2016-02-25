@@ -46,12 +46,9 @@ public class PmsManagerProcessor {
             e.printStackTrace();
         }
 
-        if (manager.configuration.arxHostname != null && !manager.configuration.arxHostname.isEmpty()) {
-            processArx();
-        }
-        if(manager.configuration.autoCreateInvoices) {
-            processOrdersToCreate();
-        }
+        try { if (manager.configuration.arxHostname != null && !manager.configuration.arxHostname.isEmpty()) { processArx(); } }catch(Exception e) { e.printStackTrace(); }
+        try { if(manager.configuration.autoCreateInvoices) { processOrdersToCreate(); } }catch(Exception e) { e.printStackTrace(); }
+        try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
     }
 
     private void processStarting(int hoursAhead, int maxAhead) {
@@ -642,6 +639,10 @@ public class PmsManagerProcessor {
         } else {
             manager.arxManager.clearCloseForToday();
         }
+    }
+
+    private void makeSureCleaningsAreOkey() {
+        manager.makeSureCleaningsAreOkay();
     }
 
 }

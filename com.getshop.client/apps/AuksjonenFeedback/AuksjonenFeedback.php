@@ -11,6 +11,10 @@ class AuksjonenFeedback extends \MarketingApplication implements \Application {
     }
     
     public function saveform() {
+        if(isset($_SESSION['auksjonenfeedbackanswered'])) {
+            return;
+        }
+        
         $saved = $this->getConfigurationSetting("savedform");
         if(!$saved) {
             $saved = array();
@@ -43,10 +47,11 @@ class AuksjonenFeedback extends \MarketingApplication implements \Application {
         $this->startAdminImpersonation("StoreApplicationPool", "setSetting");
         $this->setConfigurationSetting("savedform", json_encode($saved));
         $this->stopImpersionation();
+        $_SESSION['auksjonenfeedbackanswered'] = true;
     }
 
     public function render() {
-        if(isset($_POST['event']) && $_POST['event'] == "saveform") {
+        if(isset($_POST['event']) && $_POST['event'] == "saveform" || isset($_SESSION['auksjonenfeedbackanswered'])) {
             echo "<h1>Takk for din tilbakemelding</h1>";
         } else {
             $this->includefile("questions");

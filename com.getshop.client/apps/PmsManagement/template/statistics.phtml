@@ -19,12 +19,14 @@ $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->get
             echo "<td>";
             if ($entry->date) {
                 echo date("d.m.Y", strtotime($entry->date));
+            } else {
+                echo "Sum";
             }
             echo "</td>";
-            echo "<td>" . $entry->spearRooms . "</td>";
-            echo "<td>" . $entry->roomsRentedOut . "</td>";
-            echo "<td>" . $entry->avgPrice . "</td>";
-            echo "<td>" . $entry->totalPrice . "</td>";
+            echo "<td>"; if($entry->spearRooms >= 0) { echo $entry->spearRooms; } echo "</td>";
+            echo "<td>"; if($entry->roomsRentedOut >= 0) { echo $entry->roomsRentedOut; } echo "</td>";
+            echo "<td>"; if($entry->avgPrice >= 0) { echo $entry->avgPrice; } echo "</td>";
+            echo "<td>"; if($entry->totalPrice >= 0) { echo $entry->totalPrice; } echo "</td>";
             echo "<td>" . $entry->bugdet . "%</td>";
             echo "<td>" . $entry->coverage . "%</td>";
             echo "</tr>";

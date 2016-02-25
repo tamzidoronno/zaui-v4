@@ -14,7 +14,6 @@ $imgDisplayer->displayImage();
 echo "</div>";
 echo nl2br($event->shortdesc) . "<br>";
 echo "<div style='clear:both;'></div>";
-echo "<h2>Mer utfyllende beskrivelse</h2>";
 echo $event->description;
 if(sizeof($event->lenker) > 0) {
     echo "<h2>Lenker</h2>";
@@ -22,6 +21,25 @@ if(sizeof($event->lenker) > 0) {
         echo "<a style='cursor:pointer;' onclick=\"window.open('".$link->link."')\">" . $link->name . "</a>";
     }
 }
+
+$ranges = array();
+foreach($event->dateRanges as $range) {
+    $ranges[date("d.m.Y", strtotime($range->start))] = "true";
+}
+
+$dates = array();
+foreach($ranges as $idx => $range) {
+    $dates[] = $idx;
+}
+
+echo "<div style='font-size:12px;color:#828282; margin-top: 20px;'>";
+if(sizeof($dates) > 1) {
+    echo "Eventet gjentas på følgende datoer:<br>";
+} else {
+    echo "Dato for eventet:<br>";
+}
+echo join(", ", $dates);
+echo "</div>";
 
 ob_start();
 $imgDisplayer->displayAdditionalFiles();

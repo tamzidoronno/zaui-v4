@@ -87,7 +87,7 @@ foreach($rooms as $room) {
         <? echo $room->type->name; ?>
         <?php 
             if($this->isEditorMode()) {
-                echo "  (<a href='?page=".$room->type->pageId."'>Configure</a>)";
+                echo "  <span style='position:absolute; top: 35px;left:170px;font-size: 12px;'><a href='?page=".$room->type->pageId."'>Configure</a></span>";
             }
         ?>
     </span>

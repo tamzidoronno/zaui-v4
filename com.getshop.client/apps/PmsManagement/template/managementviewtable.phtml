@@ -30,6 +30,16 @@ $headers['state'] = "State";
 if(!isset($filter->sorting)) {
     $filter->sorting = "regdate";
 }
+$prices = array();
+$prices[1] = "daily";
+$prices[2] = "monthly";
+$prices[3] = "weekly";
+$prices[4] = "minutly";
+$prices[5] = "hourly";
+$prices[6] = "secondly";
+$prices[7] = "daily";
+$prices[8] = "daily";
+
 
 if(!isset($filter->typeFilter)) {
     $filter->typeFilter = array();
@@ -82,6 +92,9 @@ foreach($bookings as $booking) {
         $comments .= $val->comment . "<br>";
     }
     foreach($booking->rooms as $room) {
+        if(!$this->isActive($room, $filter)) {
+            continue;
+        }
         $row = "";
         $rows++;
         if($types[$room->bookingItemTypeId]->addon > 0) {
@@ -158,7 +171,7 @@ foreach($bookings as $booking) {
         $row .= "</td>";
         if($hasPrices) {
             $row .= "<td>";
-            $row .= $room->price;
+            $row .= $room->price . " " .  "<br><span class='secondary_text'>".$prices[$booking->priceType]."</span>";
             $row .= "</td>";
         }
 

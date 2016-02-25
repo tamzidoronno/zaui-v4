@@ -136,6 +136,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<Room> getAllRoomTypes(Date start, Date end) {
         List<Room> result = new ArrayList();
         List<BookingItemType> allGroups = bookingEngine.getBookingItemTypes();
+        
+        Collections.sort(allGroups, new Comparator<BookingItemType>(){
+        public int compare(BookingItemType o1, BookingItemType o2){
+                return o1.order.compareTo(o2.order);
+            }
+       });
+        
+        
         for(BookingItemType type : allGroups) {
             if(!type.visibleForBooking) {
                 continue;
@@ -145,6 +153,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.price = calculatePrice(type.id, start, end, true);
             result.add(room);
         }
+        
+        
+        
         return result;
     }
 
@@ -733,6 +744,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         } catch(BookingEngineException ex) {
             return ex.getMessage();
         }
+        saveBooking(booking);
         return "";
     }
 
@@ -1161,9 +1173,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingRooms room : booking.rooms) {
             if(room.pmsBookingRoomId.equals(roomId)) {
                 if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
-                    roomName = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                    roomName = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName + " (" + convertToStandardTime(room.date.start) + " - " + convertToStandardTime(room.date.end) + ")";
                 } else {
-                    roomName = bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+                    roomName = bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " (" + convertToStandardTime(room.date.start) + " - " + convertToStandardTime(room.date.end) + ")";
                 }
                 toRemove.add(room);
             }

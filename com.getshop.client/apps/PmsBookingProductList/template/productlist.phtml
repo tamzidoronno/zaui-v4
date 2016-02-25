@@ -2,11 +2,13 @@
 /* @var $this ns_ed7efba0_de37_4cd8_915b_cc7be10b8b8b\PmsBookingProductList */
 $rooms = $this->getRooms();
 $booking = $this->getBookings();
-?>
-<div class='continue_button_outer'>
-    <div class='continue_button' next_page="<? echo $this->getText("next_page"); ?>"><? echo $this->getText("next_button"); ?></div>
-</div>
-<?php
+if($this->getText("displaytopcontinue") == "true") {
+    ?>
+    <div class='continue_button_outer'>
+        <div class='continue_button' next_page="<? echo $this->getText("next_page"); ?>"><? echo $this->getText("next_button"); ?></div>
+    </div>
+    <?php
+}
 $numberSelected = 0;
 foreach($rooms as $room) {
      $bookedCount = 0;

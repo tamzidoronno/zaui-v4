@@ -699,7 +699,6 @@ thundashop.common.closeInfoboxEvent = function(event) {
     }
 }
 
-$(document).on('click', ".informationbox-outer", thundashop.common.closeInfoboxEvent);
 
 
 $(document).on('click', '.display_menu_application_button', function() {

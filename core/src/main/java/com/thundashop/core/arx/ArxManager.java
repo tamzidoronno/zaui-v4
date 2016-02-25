@@ -102,6 +102,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
     private String arxHostname = null;
     private String arxUsername = null;
     private String arxPassword = null;
+    private boolean doneClosedForToday = false;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -162,6 +163,8 @@ public class ArxManager extends ManagerBase implements IArxManager {
             String arxHost = "https://" + currentUser.fullName;
             address = arxHost + address;
         }
+        
+        System.out.println(address);
         
         String loginToken = null;
         String loginUrl = address;
@@ -827,6 +830,21 @@ public class ArxManager extends ManagerBase implements IArxManager {
         arxHostname = null;
         arxPassword = null;
         arxUsername = null;
+    }
+
+    public void closeAllForTheDay() throws Exception {
+        if(doneClosedForToday) {
+            return;
+        }
+        List<Door> doors = getAllDoors();
+        for(Door door : doors) {
+            doorAction(door.externalId, "forceOpen", false);
+        }
+        doneClosedForToday = true;
+    }
+
+    public void clearCloseForToday() {
+        doneClosedForToday = false;
     }
 
 }

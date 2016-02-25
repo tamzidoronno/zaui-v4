@@ -21,6 +21,12 @@ if(!$type) {
     }
     
     switch($type) {
+        case "checkbox_textleft":
+            echo "<div class='checkbox_textleft'>$title</div> <input type='checkbox' formtype='$type' class='formiteminput' name='$title'> ";
+            break;
+        case "checkbox_textright":
+            echo "<div class='checkbox_textright'>$title</div> <input type='checkbox' formtype='$type' class='formiteminput' name='$title'> ";
+            break;
         case "h1":
             echo "<h1 formtype='$type' class='formiteminput'>" . $title . "</h3>";
             break;

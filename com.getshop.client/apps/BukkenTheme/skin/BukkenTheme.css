@@ -167,3 +167,29 @@ body {
 .gsrotateleft { background-image: url('{IMAGEFOLDER}/left.png'); left: 50px;}
 .gsrotateright { background-image: url('{IMAGEFOLDER}/right.png'); right: 50px; }
 .gscarouseldots { display: none; }
+
+.checkbox_textleft {
+    padding-left: 20px;
+    line-height: 30px;
+    font-size: 18px;
+}
+
+.gsarea[area="prisoverslag"] {
+    font-size: 18px;
+}
+
+.gsarea[area="prisoverslag"] .inputfield.formiteminput {
+    padding: 10px;
+    border: solid 1px #dcdcdc;
+    transition: box-shadow 0.3s, border 0.3s;
+}
+
+.gsarea[area="prisoverslag"] .FormItem .title {
+    display: none;
+}
+
+.gsarea[area="prisoverslag"] .inputfield.formiteminput :focus,
+.gsarea[area="prisoverslag"] .inputfield.formiteminput .focus {
+  border: solid 1px #707070;
+  box-shadow: 0 0 5px 1px #969696;
+}

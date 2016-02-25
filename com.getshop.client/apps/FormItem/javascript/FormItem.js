@@ -30,6 +30,7 @@ app.FormItem = {
         var data = {};
         var result = [];
         var valid = true;
+
         $('.formiteminput').each(function() {
             var field = $(this);
             var value = field.val();
@@ -43,7 +44,16 @@ app.FormItem = {
             if(field.is(':radio') && !field.is(':checked')) {
                 return;
             }
-            if(required && !value) {
+            
+            if(field.is(':checkbox') && !field.is(':checked')) {
+                return;
+            } 
+            
+            if(field.is(':checkbox') && field.is(':checked')) {
+                value = "yes";
+            }
+            
+            if(required && !value && required !== "false") {
                 valid = false;
             }
             

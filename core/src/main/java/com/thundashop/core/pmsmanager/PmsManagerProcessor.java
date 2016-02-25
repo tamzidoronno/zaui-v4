@@ -594,7 +594,7 @@ public class PmsManagerProcessor {
                 if (!room.isEnded() && room.isStarted() && room.forcedOpen && !room.forcedOpenNeedClosing) {
                     avoidClosing.add(room.bookingItemId);
                 }
-                if ((room.isEnded() && room.forcedOpen && !room.forcedOpen) || room.forcedOpenNeedClosing) {
+                if ((room.isEnded() && room.forcedOpen && !room.forcedOpenCompleted) || room.forcedOpenNeedClosing) {
                     mightNeedClosing.add(room.bookingItemId);
                 }
             }

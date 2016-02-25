@@ -713,7 +713,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return true;
         }
         
-        return strpos($row, $filter->searchWord) !== false;
+        return stristr($row, $filter->searchWord) !== false;
     }
 
 }

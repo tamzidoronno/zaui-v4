@@ -76,6 +76,11 @@ class FormItem extends \MarketingApplication implements \Application {
                 $result .= "<tr>";
                 $result .= "<td colspan='2' valign='top'><b>" . $name . "</b><br>" . $res['val'] . "<br><br>";
                 $result .= "</tr>";
+            } elseif($type == "checkbox_textleft" || $type == "checkbox_textright") {
+                $result .= "<tr>";
+                $result .= "<td width='50%' valign='top'><b>" . $name . "</b></td>";
+                $result .= "<td width='50%' valign='top'>" . $res['val'] . "<br><br></td>";
+                $result .= "</tr>";
             } elseif($type == "infofield") {
                 $result .= "<tr>";
                 $result .= "<td colspan='2' valign='top'><br><br>" . $res['val'] . "<br><br>";

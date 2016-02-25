@@ -744,6 +744,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         } catch(BookingEngineException ex) {
             return ex.getMessage();
         }
+        saveBooking(booking);
         return "";
     }
 

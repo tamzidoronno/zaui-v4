@@ -22,6 +22,7 @@ echo "<th>Guest phone</th>";
 echo "<th>Guest email</th>";
 echo "</tr>";
 
+$roomList = array();
 foreach($bookings as $booking) {
     $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
     foreach($booking->rooms as $room) {
@@ -29,14 +30,21 @@ foreach($bookings as $booking) {
         if(!$pmsManager->isActive($room, $filter)) {
             continue;
         }
-        echo "<tr>";
-        echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td><td>" . $user->fullName . "</td>";
-        echo "<td>" . $room->guests[0]->name . "</td>";
-        echo "<td>" . $room->guests[0]->phone . "</td>";
-        echo "<td>" . $room->guests[0]->email . "</td>";
-        echo "</tr>";
+        $roomList[$items[$room->bookingItemId]->bookingItemName] = $room;
     }
 }
+
+ksort($roomList);
+
+foreach($roomList as $room) {
+    echo "<tr>";
+    echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td><td>" . $user->fullName . "</td>";
+    echo "<td>" . $room->guests[0]->name . "</td>";
+    echo "<td>" . $room->guests[0]->phone . "</td>";
+    echo "<td>" . $room->guests[0]->email . "</td>";
+    echo "</tr>";
+}
+
 echo "</table>";
 
 
@@ -57,6 +65,7 @@ echo "<th>Guest phone</th>";
 echo "<th>Guest email</th>";
 echo "</tr>";
 
+$roomList = array();
 foreach($bookings as $booking) {
     $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
     foreach($booking->rooms as $room) {
@@ -64,15 +73,22 @@ foreach($bookings as $booking) {
         if(!$pmsManager->isActive($room, $filter)) {
             continue;
         }
-        echo "<tr>";
-        echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td>";
-        echo "<td>" . $user->fullName . "( " . $user->cellPhone . ")". "</td>";
-        echo "<td>" . $room->guests[0]->name . "</td>";
-        echo "<td>" . $room->guests[0]->phone . "</td>";
-        echo "<td>" . $room->guests[0]->email . "</td>";
-        echo "</tr>";
+        $roomList[$items[$room->bookingItemId]->bookingItemName] = $room;
     }
 }
+
+ksort($roomList);
+
+foreach($roomList as $room) {
+    echo "<tr>";
+    echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td>";
+    echo "<td>" . $user->fullName . "( " . $user->cellPhone . ")". "</td>";
+    echo "<td>" . $room->guests[0]->name . "</td>";
+    echo "<td>" . $room->guests[0]->phone . "</td>";
+    echo "<td>" . $room->guests[0]->email . "</td>";
+    echo "</tr>";    
+}
+
 echo "</table>";
 
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());

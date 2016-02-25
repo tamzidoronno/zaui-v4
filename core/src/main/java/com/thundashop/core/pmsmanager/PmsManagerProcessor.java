@@ -66,7 +66,7 @@ public class PmsManagerProcessor {
                 if (room.isEnded()) {
                     continue;
                 }
-
+                booking = manager.finalize(booking);
                 String key = "room_starting_" + hoursAhead + "_hours";
                 if (room.notificationsSent.contains(key)) {
                     continue;
@@ -102,7 +102,7 @@ public class PmsManagerProcessor {
                 if (!room.isEnded()) {
                     continue;
                 }
-
+                booking = manager.finalize(booking);
                 String key = "room_ended_" + hoursAhead + "_hours";
                 if (room.notificationsSent.contains(key)) {
                     continue;
@@ -225,7 +225,7 @@ public class PmsManagerProcessor {
                 if (room.isEnded()) {
                     continue;
                 }
-
+                booking = manager.finalize(booking);
                 if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                     manager.autoAssignItem(room);
                     save = true;

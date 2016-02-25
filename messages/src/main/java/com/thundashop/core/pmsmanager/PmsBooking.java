@@ -199,8 +199,8 @@ public class PmsBooking extends DataCommon {
     boolean checkingOutBetween(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {
             if((room.date.end.after(startDate) && room.date.end.before(endDate)) || 
-                    isSameDay(room.date.start, endDate) ||
-                    isSameDay(room.date.start, startDate)) {
+                    isSameDay(room.date.end, endDate) ||
+                    isSameDay(room.date.end, startDate)) {
                 return true;
             }
         }

@@ -102,6 +102,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 bookings.put(booking.id, booking);
             }
         }
+        
+        updateBookingTypesIfTypeChanged();
     }
     
     public Availability getAvailbility(String id) {
@@ -116,6 +118,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     public BookingItem saveBookingItem(BookingItem item) {
         ensureNotOverwritingParameters(item);
         validate(item);
+        updateBookingTypesIfTypeChanged();
         saveObject(item);
         items.put(item.id, item);
         return finalize(item);
@@ -680,7 +683,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .collect(Collectors.toList());
 
         List<BookingItem> bookingItems = getBookingItemsByType(typeId);
-
+        
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, bookingsWithinDaterange, bookingItems);
 
         return assigner.getAvailableItems().stream()
@@ -714,5 +717,18 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         config.openingHoursData.remove(repeaterId);
         saveObject(config);
+    }
+
+    private void updateBookingTypesIfTypeChanged() {
+        for (Booking booking : bookings.values()) {
+            if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+                BookingItem item = items.get(booking.bookingItemId);
+                if (!item.bookingItemTypeId.equals(booking.bookingItemTypeId)) {
+                    System.out.println("Updating: " + item.bookingItemName);
+                    booking.bookingItemTypeId = item.bookingItemTypeId;
+                    saveObject(booking);
+                }
+            }
+        }
     }
 }

@@ -570,6 +570,27 @@ public class BookingEngineBookingTests extends TestCommon {
     }
     
     @Test
+    public void testChangeBookingItemTypeOnBookingItem() {
+        BookingItemType type = bookingEngine.createABookingItemType("Type");
+        BookingItemType type2 = bookingEngine.createABookingItemType("Type2");
+        
+        BookingItem item = helper.createAValidBookingItem(type.id);
+        bookingEngine.saveBookingItem(item);
+        
+        List<Booking> bookings = new ArrayList();
+        bookings.add(helper.getValidBooking(1, bookingEngine, item));
+        
+        BookingGroup savedBookings = bookingEngine.addBookings(bookings);
+        
+        item.bookingItemTypeId = type2.id;
+        bookingEngine.saveBookingItem(item);
+        
+        Booking savedBooking = bookingEngine.getBooking(savedBookings.bookingIds.get(0));
+        
+        Assert.assertEquals(type2.id, savedBooking.bookingItemTypeId);
+    }
+    
+    @Test
     public void testGetAvailableSpotsWhenNoBookingsAdded() {
         BookingItemType type = bookingEngine.createABookingItemType("Type");
         BookingItem item = helper.createAValidBookingItem(type.id);

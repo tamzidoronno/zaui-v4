@@ -191,27 +191,27 @@ foreach($bookings as $booking) {
         
         $index = $i;
 
-        if($filter->sorting == "room" || $filter->sorting == "room_desc") {
-            $sortList[$i] = $items[$room->booking->bookingItemId]->bookingItemName;
-        } else if($filter->sorting == "periode" || $filter->sorting == "periode_desc") {
-            $sortList[$i] = strtotime($room->date->start);
-        } else if($filter->sorting == "visitor" || $filter->sorting == "visitor_desc") {
-            if(sizeof($room->guests) == 0 && $user) {
-                $sortList[$i] = $user->fullName;
-            } else {
-                $sortList[$i] = $room->guests[0]->name;
-            }
-        } else if($filter->sorting == "date" || $filter->sorting == "date_desc") {
-            $sortList[$i] = strtotime($booking->rowCreatedDate);
-        } else if($filter->sorting == "price" || $filter->sorting == "price_desc") {
-            $sortList[$i] = $room->price;
-        } else if($filter->sorting == "state" || $filter->sorting == "state_desc") {
-            $sortList[$i] = $state;
-        } else {
-            $sortList[$i] = $i;
-        }
-        
         if($this->containsSearchWord($row,$filter)) {
+            if($filter->sorting == "room" || $filter->sorting == "room_desc") {
+                $sortList[$i] = $items[$room->booking->bookingItemId]->bookingItemName;
+            } else if($filter->sorting == "periode" || $filter->sorting == "periode_desc") {
+                $sortList[$i] = strtotime($room->date->start);
+            } else if($filter->sorting == "visitor" || $filter->sorting == "visitor_desc") {
+                if(sizeof($room->guests) == 0 && $user) {
+                    $sortList[$i] = $user->fullName;
+                } else {
+                    $sortList[$i] = $room->guests[0]->name;
+                }
+            } else if($filter->sorting == "date" || $filter->sorting == "date_desc") {
+                $sortList[$i] = strtotime($booking->rowCreatedDate);
+            } else if($filter->sorting == "price" || $filter->sorting == "price_desc") {
+                $sortList[$i] = $room->price;
+            } else if($filter->sorting == "state" || $filter->sorting == "state_desc") {
+                $sortList[$i] = $state;
+            } else {
+                $sortList[$i] = $i;
+            }
+        
             $tableRows[$index] = $row;
             $i++;
         }

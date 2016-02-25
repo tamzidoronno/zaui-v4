@@ -25,6 +25,7 @@ $dates = $this->getApi()->getPmsManager()->getDefaultDateRange($this->getSelecte
 $start = $this->convertToJavaDate(strtotime($dates->start));
 $end = $this->convertToJavaDate(strtotime($dates->end));
 
+$cleaningInterval = $config->cleaningInterval;
 ?>
 <span gstype="form" method='addRoomToBooking'>
     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
@@ -74,7 +75,7 @@ if(sizeof($addons) > 0) {
  * @param type $addons
  * @param type $hasPrices
  * @param type $hasArx
- * @param type $config
+ * @param core_pmsmanager_PmsConfiguration $config
  * @param \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement $object
  */
 function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $hasArx, $config, $object) {
@@ -104,6 +105,10 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
 //        echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
         /* @var $room core_pmsmanager_PmsBookingRooms */
         $date = $room->date;
+        $roomCleaningInterval = $config->cleaningInterval;
+        if($room->intervalCleaning) {
+            $roomCleaningInterval = $room->intervalCleaning;
+        }
         ?>
         <tr>
             <td>
@@ -114,11 +119,10 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                 </span>
             </td>
             <td>
-                <span class='roomattribute'>
-                    <span class='roompostfix'>
-                        <? echo $types[$room->bookingItemTypeId]->name; ?>
-                    </span>
-                </span>
+                <? echo $types[$room->bookingItemTypeId]->name; ?>
+                <?php if($config->cleaningInterval) { ?>
+                <?php echo "<div title='Cleaning interval' class='change_cleaning_interval' roomid='".$room->pmsBookingRoomId."'>CI: <span class='intervalset'>" . $roomCleaningInterval . "</span></div>"; ?>
+                <?php } ?>
             </td>
             <td>
                     <span class='roomattribute'>

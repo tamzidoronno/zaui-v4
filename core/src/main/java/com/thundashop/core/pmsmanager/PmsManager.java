@@ -743,14 +743,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room == null) {
                 return "Room does not exists";
             }
+            
+            checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
-            if(room.isStarted() && !room.isEnded()) {
-                room.addedToArx = false;
-                PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
-                add.markDirty();
-                saveObject(add);
-                doNotification("room_changed", booking, room);
-            }
+            resetBookingItem(room, itemId, booking);
             
             String from = "none";
             if(room.bookingItemId != null) {
@@ -2409,6 +2405,45 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(needSaving) {
                 saveBooking(booking);
             }
+        }
+    }
+
+    @Override
+    public void setNewCleaningIntervalOnRoom(String roomId, Integer interval) {
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.pmsBookingRoomId.equals(roomId)) {
+                    room.intervalCleaning = interval;
+                    saveBooking(booking);
+                }
+            }
+        }
+    }
+
+    private void checkIfRoomShouldBeUnmarkedDirty(PmsBookingRooms room, String bookingId) {
+        if(!configuration.unsetCleaningIfJustSetWhenChangingRooms) {
+            return;
+        }
+
+        if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+            PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
+            if(additional != null) {
+                if(additional.unsetMarkedDirtyPastThirtyMinutes()) {
+                    logEntry("Unsetting cleaning for this room.", bookingId, room.bookingItemId);
+                    saveObject(additional);
+                }
+            }
+        }
+
+    }
+
+    private void resetBookingItem(PmsBookingRooms room, String itemId, PmsBooking booking) {
+        if(room.isStarted() && !room.isEnded()) {
+            room.addedToArx = false;
+            PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
+            add.markDirty();
+            saveObject(add);
+            doNotification("room_changed", booking, room);
         }
     }
 

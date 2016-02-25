@@ -18,8 +18,22 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .changecompanyonuser', app.PmsManagement.changecompanyonuser);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
+        $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
         $(document).on('change','.PmsManagement .repeat_type', app.PmsManagement.changeRepeatType);
     },
+    changeCleaingInterval : function() {
+        var intBox = $(this).find('.intervalset');
+        var newInterval = prompt("New cleaning interval", intBox.text());
+        $(this).find('.intervalset').text(newInterval);
+        var event = thundashop.Ajax.createEvent('','setNewInterval',$(this), {
+            "interval" : newInterval,
+            "roomid" : $(this).attr('roomid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            intBox.text(newInterval);
+        });
+    },
+    
     changeRepeatType: function() {
         var type = $(this).val();
         $('.repeatrow').hide();

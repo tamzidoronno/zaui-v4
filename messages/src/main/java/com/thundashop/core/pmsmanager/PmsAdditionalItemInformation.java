@@ -71,4 +71,21 @@ public class PmsAdditionalItemInformation extends DataCommon {
         return isClean;
     }
 
+    boolean unsetMarkedDirtyPastThirtyMinutes() {
+        Date toRemove = null;
+        for(Date cleaniDate : cleaningDates) {
+            long when = cleaniDate.getTime();
+            long now = System.currentTimeMillis();
+            long diff = now - when;
+            if(diff > (1000*60*60)) {
+                toRemove = cleaniDate;
+            }
+        }
+        if(toRemove != null) {
+            cleaningDates.remove(toRemove);
+            return true;
+        }
+        return false;
+    }
+
 }

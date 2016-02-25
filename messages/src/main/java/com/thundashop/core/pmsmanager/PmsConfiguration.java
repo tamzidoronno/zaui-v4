@@ -56,6 +56,7 @@ public class PmsConfiguration extends DataCommon {
     public Integer numberOfCheckoutCleanings = 0;
     public Integer numberOfIntervalCleaning = 0;
     public boolean cleaningNextDay = false;
+    boolean unsetCleaningIfJustSetWhenChangingRooms = false;
 
     
 }

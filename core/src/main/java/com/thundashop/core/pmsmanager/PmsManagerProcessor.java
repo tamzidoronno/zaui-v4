@@ -433,6 +433,7 @@ public class PmsManagerProcessor {
                 }
                 if (needSaving) {
                     try {
+                        booking = manager.finalize(booking);
                         manager.saveBooking(booking);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -488,12 +489,6 @@ public class PmsManagerProcessor {
                 }
             }
             time = time.plusDays(1);
-        }
-    }
-
-    private void processCheckoutCleaning() {
-        if (manager.configuration.numberOfCheckoutCleanings == 0) {
-            return;
         }
     }
 

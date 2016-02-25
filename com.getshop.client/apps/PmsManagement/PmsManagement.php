@@ -275,6 +275,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
         }
         $filter->itemId = $_POST['data']['itemid'];
+        $filter->prepayment = true;
         
         $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
         $this->showBookingInformation();

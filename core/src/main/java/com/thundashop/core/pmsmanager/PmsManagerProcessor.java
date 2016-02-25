@@ -46,8 +46,8 @@ public class PmsManagerProcessor {
             e.printStackTrace();
         }
 
-        try { if (manager.configuration.arxHostname != null && !manager.configuration.arxHostname.isEmpty()) { processArx(); } }catch(Exception e) { e.printStackTrace(); }
-        try { if(manager.configuration.autoCreateInvoices) { processOrdersToCreate(); } }catch(Exception e) { e.printStackTrace(); }
+        try { processArx(); }catch(Exception e) { e.printStackTrace(); }
+        try { processOrdersToCreate(); }catch(Exception e) { e.printStackTrace(); }
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
     }
 
@@ -136,6 +136,10 @@ public class PmsManagerProcessor {
     }
 
     private void processArx() {
+        if (manager.configuration.arxHostname == null || manager.configuration.arxHostname.isEmpty()) { 
+            return;
+        }
+        
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
             boolean save = false;
@@ -236,6 +240,11 @@ public class PmsManagerProcessor {
     }
 
     private void processOrdersToCreate() {
+        
+        if(!manager.configuration.autoCreateInvoices) { 
+            return;
+        }
+        
         if (manager.lastOrderProcessed != null && isSameDay(manager.lastOrderProcessed, new Date())) {
             return;
         }

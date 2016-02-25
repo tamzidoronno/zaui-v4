@@ -378,6 +378,18 @@ $days[7] = "Sunday";
             </span>
             Payments are required (force payment view when booking is completed)
         </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->autoCreateInvoices) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoCreateInvoices' <? echo $checked; ?>>
+            </span>
+            Autocreate invoices.
+        </div>
         <br><br>
         <h2>Lock settings</h2>
         <div class='configrow'>

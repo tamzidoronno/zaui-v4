@@ -104,14 +104,14 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         $items = $this->getItems();
         echo "<table width='100%' cellspacing='0' cellpadding='0'>";
         echo "<tr>";
-        for($i = 0; $i < 7; $i++) {
+        for($i = 0; $i < 8; $i++) {
             $res = $time+(86400*$i);
             echo "<th>".date("d.m.Y", $res). "</th>";
         }
         echo "</tr>";
 
         $total = 0;
-        for($i = 0; $i < 7; $i++) {
+        for($i = 0; $i < 8; $i++) {
             echo "<td valign='top'>";
             $filter = new \core_pmsmanager_PmsBookingFilter();
             $filter->filterType = "checkoutcleaning";

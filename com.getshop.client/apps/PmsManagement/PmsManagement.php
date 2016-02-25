@@ -656,6 +656,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
      * @param \core_pmsmanager_PmsBookingFilter $filter
      */
     public function isActive($room, $filter) {
+        
+        if($filter->filterType == "registered" || $filter->filterType == "deleted" || $filter->filterType == "stats" || $filter->filterType == "unconfirmed") {
+            return true;
+        }
+        
         //Same start date
         if($this->sameDay($room->date->start, $filter->startDate)) {
             return true;
@@ -694,6 +699,21 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function sameDay($time1, $time2) {
         return date("dmy", strtotime($time1)) == date("dmy", strtotime($time2));
+    }
+
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBooking $booking
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     * @param \core_pmsmanager_PmsBookingFilter $filter
+     * @return boolean
+     */
+    public function containsSearchWord($row, $filter) {
+        if(!isset($filter->searchWord) || !$filter->searchWord) {
+            return true;
+        }
+        
+        return stristr($row, $filter->searchWord) !== false;
     }
 
 }

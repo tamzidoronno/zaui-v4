@@ -14,6 +14,18 @@ class OsloTheme extends \ThemeApplication implements \Application {
         return "OsloTheme";
     }
 
+    public function includeExtraCss() {
+        ?>
+        <style>
+            .gsarea[area="header"],.gsarea[area="footer"] { display: none; }
+            .gsarea[area="body"] .gs_page_width { box-shadow: none; }
+            body { 
+                background-color: #fff;
+            }
+        </style>
+        <?php
+    }
+    
     public function render() {
         
     }

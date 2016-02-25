@@ -523,7 +523,7 @@ public class PmsManagerProcessor {
         manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
         int minute = 60 * 1000;
 
-        HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 60)), System.currentTimeMillis());
+        HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 3)), System.currentTimeMillis());
         for (String doorId : log.keySet()) {
             List<AccessLog> accessLogs = log.get(doorId);
             for (AccessLog logEntry : accessLogs) {
@@ -538,11 +538,13 @@ public class PmsManagerProcessor {
                                 room.forcedOpenDate = new Date();
                                 room.forcedOpenDate.setTime(logEntry.timestamp);
                                 if(!room.forcedOpen) {
+                                    manager.logEntry("Forced open door: " + logEntry.door, book.id, room.bookingItemId);
                                     manager.arxManager.doorAction(doorId, "forceOpen", true);
                                     room.forcedOpen = true;
                                     room.forcedOpenCompleted = false;
                                     manager.saveBooking(book);
                                 } else {
+                                    manager.logEntry("Door need closing: " + logEntry.door, book.id, room.bookingItemId);
                                     room.forcedOpenNeedClosing = true;
                                 }
                             }
@@ -607,7 +609,13 @@ public class PmsManagerProcessor {
                 boolean needSaving = true;
                 for (PmsBookingRooms room : booking.rooms) {
                     if (room.bookingItemId.equals(itemToClose)) {
+                        BookingItem item = manager.bookingEngine.getBookingItem(itemToClose);
                         if ((room.isEnded() && room.forcedOpen && !room.forcedOpen) || room.forcedOpenNeedClosing) {
+                            String itemName = "";
+                            if(item != null) {
+                                itemName = item.bookingItemName + "(" + item.bookingItemAlias + ")";
+                            }
+                            manager.logEntry("Door need closing: " + itemName, booking.id, room.bookingItemId);
                             closeRoom(itemToClose);
                             room.forcedOpenCompleted = true;
                             room.forcedOpenNeedClosing = false;

@@ -1,0 +1,90 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    
+}
+.gsarea[area="body"] {
+    font-size: 16px;
+}
+.gs_page_width {
+    max-width: 1366px;
+    margin: 0 auto;
+}
+
+.gsarea[area="header"] {
+    height: 168px;
+    box-sizing: border-box;
+    padding-top: 50px;
+}
+
+.gsarea[area="footer"] .Menu .menuentries {
+    width: 100%;
+}
+.gsarea[area="footer"] .Menu .entry {
+    display: block;
+    border-bottom: solid 1px #505152;
+    line-height: 44px;
+    width: 100%;
+}
+
+.gsarea[area="footer"] .Menu .entry a {
+    color: #758589;
+    font-weight: bold;
+}
+
+.gsarea[area="header"] .Menu {
+    text-align: right;
+}
+.gsarea[area="header"] .Menu a {
+    color: #005596;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 50px;
+}
+
+.gsarea[area="header"] .Menu .active.entry div {
+    border-bottom: solid 1px #005596;
+}
+
+.gsarea[area="header"] .Menu .entry {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.shop_button_template1 {
+    color: #FFF;
+    background-color: #209328;
+    display: inline-block;
+    font-size: 25px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 75px;
+    padding-right: 75px;
+    
+}
+
+.gsarea[area="footer"] .gsucell[cellid="7151f8f4-5b40-4764-ac9f-bc2343a1f566"].gsdepth_0.gscount_0 {
+    background-color: #363839;
+    height: 438px;
+    box-sizing: border-box;
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+.gsarea[area="footer"] .gsucell[cellid="d08f14e8-eeee-4cde-bb45-696c112c5349"].gsdepth_0.gscount_1 {
+    background-color: #2f2f2f;
+    line-height: 50px;
+    color: #e3e3e3;
+    padding-top: 25px;
+}
+
+.gsrotatearrow i {
+    display: none;
+}
+.gsrotatearrow {
+    height: 50px;
+    width: 30px;
+    background-size: cover;
+    margin-top: -25px;
+}
+
+.gsrotateleft { background-image: url('{IMAGEFOLDER}/left.png'); left: 50px;}
+.gsrotateright { background-image: url('{IMAGEFOLDER}/right.png'); right: 50px; }

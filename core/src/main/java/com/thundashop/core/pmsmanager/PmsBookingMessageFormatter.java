@@ -79,18 +79,20 @@ class PmsBookingMessageFormatter {
         String bookingData = "";
         for(PmsBookingRooms room : booking.rooms) {
             if(room.booking != null && room.booking.bookingItemTypeId != null) {
-                bookingData += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "<br>";
+                bookingData += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " ";
             }
             bookingData += formatDate(room.date.start) + " - " + formatDate(room.date.end) + " ";
             if(room.booking != null && room.booking.bookingItemId != null) {
                 BookingItem item = bookingEngine.getBookingItem(room.booking.bookingItemId);
                 if(item != null) {
-                    bookingData += item.bookingItemName + "<br>";
+                    bookingData += "(" + item.bookingItemName + ")";
                 }
             }
             for(PmsGuests guest : room.guests) {
+                bookingData += "<br>";
                 bookingData += guest.name + " " + guest.prefix + guest.phone + " " + guest.email + "<br>";
             }
+            bookingData += "<br>";
         }
         
         String bookinginfo = "<table>";
@@ -118,6 +120,7 @@ class PmsBookingMessageFormatter {
         bookinginfo += "</table>";
         
         message = message.replace("{rooms}", bookingData);
+        message = message.replace("{roomlist}", bookingData);
         message = message.replace("{bookingid}", booking.id);
         message = message.replace("{bookinginformation}", bookinginfo);
         

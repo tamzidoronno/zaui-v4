@@ -1054,24 +1054,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             for(PmsGuests guest : room.guests) {
                 if(type.equals("email")) {
-                    if(guest.email == null || guest.email.isEmpty()) {
-                        logEntry("Email not sent due to no phone number set for guest " + guest.name, booking.id, null);
+                    String email = guest.email;
+                    if(bookingEngine.getConfig().rules.includeGuestData) {
+                        email = userManager.getUserById(booking.userId).emailAddress;
+                    }
+                    if(email == null || email.isEmpty()) {
+                        logEntry("Email not sent due to no email set for guest " + guest.name, booking.id, null);
                         continue;
                     }
                     String title = configuration.emailTitles.get(key);
                     title = formatMessage(message, booking, room, guest);
                     messageManager.sendMailWithDefaults(guest.name, guest.email, title, message);
-                    repicientList.add(guest.email);
+                    repicientList.add(email);
                 } else {
                     String phone = guest.phone;
-                    if(bookingEngine.getConfig().rules.includeGuestData) {
-                        if(phone == null || phone.isEmpty()) {
-                            logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
-                            continue;
-                        }
-                    } else {
+                    if(!bookingEngine.getConfig().rules.includeGuestData) {
                         phone = userManager.getUserById(booking.userId).cellPhone;
                     }
+                    
+                    if(phone == null || phone.isEmpty()) {
+                        logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
+                        continue;
+                    }
+ 
                     messageManager.sendSms("plivo", phone, message, guest.prefix, configuration.smsName);
                     repicientList.add(phone);
                 }

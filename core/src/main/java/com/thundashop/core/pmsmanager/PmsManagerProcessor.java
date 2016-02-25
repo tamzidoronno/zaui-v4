@@ -616,7 +616,7 @@ public class PmsManagerProcessor {
                                 itemName = item.bookingItemName + "(" + item.bookingItemAlias + ")";
                             }
                             manager.logEntry("Door need closing: " + itemName, booking.id, room.bookingItemId);
-                            closeRoom(itemToClose);
+                            closeRoom(itemToClose, booking.id);
                             room.forcedOpenCompleted = true;
                             room.forcedOpenNeedClosing = false;
                             needSaving = true;
@@ -632,12 +632,13 @@ public class PmsManagerProcessor {
         
     }
 
-    private void closeRoom(String itemToClose) throws Exception {
+    private void closeRoom(String itemToClose, String bookingId) throws Exception {
         BookingItem item = manager.bookingEngine.getBookingItem(itemToClose);
         List<Door> doors = manager.arxManager.getAllDoors();
         for (Door door : doors) {
             if (door.name.equals(item.bookingItemName) || door.name.equals(item.bookingItemAlias)) {
                 manager.arxManager.doorAction(door.externalId, "forceOpen", false);
+                manager.logEntry("Ran close on : " + door.externalId, bookingId, itemToClose);
             }
         }
     }

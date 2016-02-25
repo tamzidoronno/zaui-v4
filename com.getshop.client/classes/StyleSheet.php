@@ -12,7 +12,6 @@
  */
 class StyleSheet {
     /* @var $factory Factory */
-
     var $factory = null;
     var $leftMenu = null;
     public $LOGO_WIDTH = 80;
@@ -124,6 +123,13 @@ class StyleSheet {
         }
 
         $this->doApp($themeApp, true);
+        
+        if(isset($_GET['includeextracss'])) {
+            $appinstance = $this->factory->getApplicationPool()->createInstace($themeApp);
+            if(method_exists($appinstance, "includeExtraCss")) {
+                $appinstance->includeExtraCss();
+            }
+        }
     }
 
     private function doApp($app, $isTheme) {

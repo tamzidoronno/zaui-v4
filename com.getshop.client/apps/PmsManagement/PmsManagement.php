@@ -696,5 +696,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return date("dmy", strtotime($time1)) == date("dmy", strtotime($time2));
     }
 
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBooking $booking
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     * @param \core_pmsmanager_PmsBookingFilter $filter
+     * @return boolean
+     */
+    public function containsSearchWord($row, $filter) {
+        if(!isset($filter->searchWord) || !$filter->searchWord) {
+            return true;
+        }
+        
+        return stristr($row, $filter->searchWord);
+    }
+
 }
 ?>

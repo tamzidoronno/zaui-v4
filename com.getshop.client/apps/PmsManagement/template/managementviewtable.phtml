@@ -95,6 +95,7 @@ foreach($bookings as $booking) {
         if(!$this->isActive($room, $filter)) {
             continue;
         }
+         
         $row = "";
         $rows++;
         if($types[$room->bookingItemTypeId]->addon > 0) {
@@ -210,8 +211,11 @@ foreach($bookings as $booking) {
             $sortList[$i] = $i;
         }
         
-        $tableRows[$index] = $row;
-        $i++;
+        if($this->containsSearchWord($row,$filter)) {
+            $tableRows[$index] = $row;
+            $i++;
+        }
+        
         
         
         if($this->isGroupedByBooking()) {

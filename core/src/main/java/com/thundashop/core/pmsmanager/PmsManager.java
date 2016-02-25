@@ -101,6 +101,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String specifiedMessage = "";
     Date lastOrderProcessed;
     private List<PmsLog> logentries = new ArrayList();
+    private boolean initFinalized = false;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -437,6 +438,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        if(!initFinalized) {
+            finalizeList(new ArrayList(bookings.values()));
+            initFinalized = true;
+        }
         if(filter == null) {
             return finalizeList(new ArrayList(bookings.values()));
         }
@@ -454,6 +459,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     result.add(booking);
                 } else if(booking.containsSearchWord(filter.searchWord)) {
                     result.add(booking);
+                }
+                
+                for(PmsBookingRooms room : booking.rooms) {
+                    if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                        BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                        if(item.bookingItemName.contains(filter.searchWord)) {
+                            result.add(booking);
+                        }
+                    }
                 }
             }
         } else {

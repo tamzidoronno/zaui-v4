@@ -14,6 +14,12 @@ ob_start();
 include '../loader.php';
 session_cache_limiter('none');
 
+$factory = IocContainer::getFactorySingelton();
+if(!$factory->getApi()->getUUIDSecurityManager()->hasAccess($_GET['id'], true, false)) {
+    echo "Access denied";
+    return;
+}
+
 ob_start();
 if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])){
   // if the browser has a cached version of this image, send 304

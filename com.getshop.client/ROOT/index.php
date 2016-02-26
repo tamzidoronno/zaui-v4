@@ -152,8 +152,11 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         $html = init($factory);
         $pageDescription = $factory->getPage()->javapage->description;
         if (@$factory->getStore()->favicon) {
-            echo '<link rel="icon" href="/favicon.ico?r='.rand(0,1000).'" />';
-            echo '<link href="data:image/x-icon;base64,'.  base64_encode(file_get_contents("../uploadedfiles/".$factory->getStore()->favicon)).'" rel="icon" type="image/x-icon" />';
+            $uuid = $factory->getStore()->favicon;
+            if($factory->getApi()->getUUIDSecurityManager()->hasAccess($uuid, true, false)) {
+                echo '<link rel="icon" href="/favicon.ico?r='.rand(0,1000).'" />';
+                echo '<link href="data:image/x-icon;base64,'.  base64_encode(file_get_contents("../uploadedfiles/".$factory->getStore()->favicon)).'" rel="icon" type="image/x-icon" />';
+            }
         }
 
         $factory->loadJavascriptFiles();

@@ -10,5 +10,7 @@ header("content-type:" . $entry->type);
 header("Content-disposition: filename=".$entry->name);
 
 $filename = "../uploadedfiles/" . $fileId;
-echo file_get_contents($filename);
+if($factory->getApi()->getUUIDSecurityManager()->hasAccess($fileId, true, false)) {
+    echo file_get_contents($filename);
+}
 ?>

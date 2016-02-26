@@ -39,7 +39,9 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
     
     function deleteFile() {
         $this->getApi()->getFileManager()->deleteFileEntry($_POST['data']['fileid']);
-        $this->notifyParent("fileDeleted", [$_POST['data']['fileid']]);
+        $arrayres = array();
+        $arrayres[] = $_POST['data']['fileid'];
+        $this->notifyParent("fileDeleted", $arrayres);
     }
     
     /**
@@ -103,7 +105,10 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
 
     
     public function fileUplaoded($fileId) {
-        $this->notifyParent("fileUplaoded", [$fileId]);
+        $arrayres = array();
+        $arrayres[] = $fileId;
+        $this->notifyParent("fileUplaoded", $arrayres);
+        $this->getApi()->getUUIDSecurityManager()->grantAccess($this->getUser()->id, $fileId, true, true);
     }
     
     /**

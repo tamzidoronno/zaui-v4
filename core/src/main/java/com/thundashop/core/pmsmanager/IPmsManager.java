@@ -105,6 +105,9 @@ public interface IPmsManager {
     @Administrator
     public List<PmsBookingRooms> updateRepeatingDataForBooking(PmsRepeatingData data, String bookingId);
      
+    @Administrator
+    public void setNewCleaningIntervalOnRoom(String roomId, Integer interval);
+    
     public PmsConfiguration getConfiguration();
     public void processor();
     public String getCurrenctContract() throws Exception;

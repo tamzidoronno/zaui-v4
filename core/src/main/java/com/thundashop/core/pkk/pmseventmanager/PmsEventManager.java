@@ -5,6 +5,7 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmseventmanager.PmsBookingEventEntry;
@@ -13,6 +14,7 @@ import com.thundashop.core.pmsmanager.IPmsManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,9 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
  
     @Autowired
     BookingEngine bookingEngine;
+ 
+    @Autowired
+    UserManager userManager;
     
      @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -108,9 +113,11 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         entry.dateRanges.clear();
         entry.roomNames.clear();
         for(PmsBookingRooms room : result.rooms) {
-            if(bookingEngine.getBookingItemType(room.bookingItemTypeId).addon > 0) {
+            BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(type != null && type.addon > 0) {
                 continue;
             }
+            entry.location = type.name;
             entry.dateRanges.add(room.date);
             BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
             if(item != null) {
@@ -122,6 +129,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     private PmsBookingEventEntry finalize(PmsBookingEventEntry get) {
         PmsBooking booking = pmsManager.getBooking(get.id);
         setRooms(get, booking);
+        get.arrangedBy = userManager.getUserById(booking.userId).fullName;
         return get;
     }
 

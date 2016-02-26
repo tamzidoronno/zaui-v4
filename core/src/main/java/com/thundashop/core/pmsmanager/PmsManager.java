@@ -743,14 +743,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room == null) {
                 return "Room does not exists";
             }
+            
+            checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
-            if(room.isStarted() && !room.isEnded()) {
-                room.addedToArx = false;
-                PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
-                add.markDirty();
-                saveObject(add);
-                doNotification("room_changed", booking, room);
-            }
+            resetBookingItem(room, itemId, booking);
             
             String from = "none";
             if(room.bookingItemId != null) {
@@ -1058,24 +1054,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             for(PmsGuests guest : room.guests) {
                 if(type.equals("email")) {
-                    if(guest.email == null || guest.email.isEmpty()) {
-                        logEntry("Email not sent due to no phone number set for guest " + guest.name, booking.id, null);
+                    String email = guest.email;
+                    if(bookingEngine.getConfig().rules.includeGuestData) {
+                        email = userManager.getUserById(booking.userId).emailAddress;
+                    }
+                    if(email == null || email.isEmpty()) {
+                        logEntry("Email not sent due to no email set for guest " + guest.name, booking.id, null);
                         continue;
                     }
                     String title = configuration.emailTitles.get(key);
                     title = formatMessage(message, booking, room, guest);
                     messageManager.sendMailWithDefaults(guest.name, guest.email, title, message);
-                    repicientList.add(guest.email);
+                    repicientList.add(email);
                 } else {
                     String phone = guest.phone;
-                    if(bookingEngine.getConfig().rules.includeGuestData) {
-                        if(phone == null || phone.isEmpty()) {
-                            logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
-                            continue;
-                        }
-                    } else {
+                    if(!bookingEngine.getConfig().rules.includeGuestData) {
                         phone = userManager.getUserById(booking.userId).cellPhone;
                     }
+                    
+                    if(phone == null || phone.isEmpty()) {
+                        logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
+                        continue;
+                    }
+ 
                     messageManager.sendSms("plivo", phone, message, guest.prefix, configuration.smsName);
                     repicientList.add(phone);
                 }
@@ -2409,6 +2410,45 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(needSaving) {
                 saveBooking(booking);
             }
+        }
+    }
+
+    @Override
+    public void setNewCleaningIntervalOnRoom(String roomId, Integer interval) {
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.pmsBookingRoomId.equals(roomId)) {
+                    room.intervalCleaning = interval;
+                    saveBooking(booking);
+                }
+            }
+        }
+    }
+
+    private void checkIfRoomShouldBeUnmarkedDirty(PmsBookingRooms room, String bookingId) {
+        if(!configuration.unsetCleaningIfJustSetWhenChangingRooms) {
+            return;
+        }
+
+        if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+            PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
+            if(additional != null) {
+                if(additional.unsetMarkedDirtyPastThirtyMinutes()) {
+                    logEntry("Unsetting cleaning for this room.", bookingId, room.bookingItemId);
+                    saveObject(additional);
+                }
+            }
+        }
+
+    }
+
+    private void resetBookingItem(PmsBookingRooms room, String itemId, PmsBooking booking) {
+        if(room.isStarted() && !room.isEnded()) {
+            room.addedToArx = false;
+            PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
+            add.markDirty();
+            saveObject(add);
+            doNotification("room_changed", booking, room);
         }
     }
 

@@ -594,33 +594,31 @@ public class PmsManagerProcessor {
                 if (!room.isEnded() && room.isStarted() && room.forcedOpen && !room.forcedOpenNeedClosing) {
                     avoidClosing.add(room.bookingItemId);
                 }
-                if ((room.isEnded() && room.forcedOpen && !room.forcedOpen) || room.forcedOpenNeedClosing) {
-                    mightNeedClosing.add(room.bookingItemId);
+                if ((room.isEnded() && room.forcedOpen && !room.forcedOpenCompleted) || room.forcedOpenNeedClosing) {
+                    mightNeedClosing.add(room.pmsBookingRoomId);
                 }
             }
         }
-
+        
         for (String itemToClose : mightNeedClosing) {
-            if (avoidClosing.contains(itemToClose)) {
-                continue;
-            }
-
             for (PmsBooking booking : bookings) {
                 boolean needSaving = true;
                 for (PmsBookingRooms room : booking.rooms) {
-                    if (room.bookingItemId.equals(itemToClose)) {
-                        BookingItem item = manager.bookingEngine.getBookingItem(itemToClose);
-                        if ((room.isEnded() && room.forcedOpen && !room.forcedOpen) || room.forcedOpenNeedClosing) {
-                            String itemName = "";
-                            if(item != null) {
-                                itemName = item.bookingItemName + "(" + item.bookingItemAlias + ")";
-                            }
-                            manager.logEntry("Door need closing: " + itemName, booking.id, room.bookingItemId);
-                            closeRoom(itemToClose, booking.id);
-                            room.forcedOpenCompleted = true;
-                            room.forcedOpenNeedClosing = false;
-                            needSaving = true;
+                    if (avoidClosing.contains(room.bookingItemId)) {
+                        continue;
+                    }
+                    
+                    if (room.pmsBookingRoomId.equals(itemToClose)) {
+                        BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
+                        String itemName = "";
+                        if(item != null) {
+                            itemName = item.bookingItemName + "(" + item.bookingItemAlias + ")";
                         }
+                        manager.logEntry("Closing door: " + itemName, booking.id, room.bookingItemId);
+                        closeRoom(room.bookingItemId, booking.id);
+                        room.forcedOpenCompleted = true;
+                        room.forcedOpenNeedClosing = false;
+                        needSaving = true;
                     }
                 }
                 if (needSaving) {

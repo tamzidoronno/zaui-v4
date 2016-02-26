@@ -10,6 +10,8 @@ public class PmsBookingEventEntry extends DataCommon {
     public String shortdesc = "";
     public String imageId = "";
     public String category = "";
+    public String arrangedBy = "";
+    public String location = "";
     
     public String starttime = "";
     public String description = "";

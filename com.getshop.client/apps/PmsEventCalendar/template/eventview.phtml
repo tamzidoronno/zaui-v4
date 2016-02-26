@@ -7,11 +7,39 @@ if($this->isEditorMode()) {
     $edit = "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$event->id."'><i class='fa fa-edit'></i></a> ";
 }
 
+$ranges = array();
+foreach($event->dateRanges as $range) {
+    $ranges[date("d.m.Y", strtotime($range->start))] = "true";
+}
+$dates = array();
+$date = null;
+foreach($ranges as $idx => $range) {
+    $dates[] = $idx;
+    if($idx > time()) {
+        $date = $idx;
+        break;
+    }
+}
+
+
+if(!$event->starttime) {
+    $event->starttime = date("H:i", strtotime($event->dateRanges[0]->start));
+}
+
 echo "<h1>" .$edit . $event->title . "</h1>";
-echo "<div class='image'>";
+echo "<div style='font-size:12px;'>";
+$time = strtotime($idx);
+echo $this->__w(date("l", $time)) . " " . (int)date("d", $time) . ". " . strtolower($this->__w(date("F", $time))) . " klokken " . $event->starttime;
+echo "</div>";
+echo "<div >" . $event->arrangedBy;
+if($event->arrangedBy) {
+    echo ", ";
+}
+echo $event->location . "</div><br>";
+
+
 $imgDisplayer = $this->getImageDisplayer($event->id);
 $imgDisplayer->displayImage();
-echo "</div>";
 echo nl2br($event->shortdesc) . "<br>";
 echo "<div style='clear:both;'></div>";
 echo $event->description;
@@ -21,25 +49,6 @@ if(sizeof($event->lenker) > 0) {
         echo "<a style='cursor:pointer;' onclick=\"window.open('".$link->link."')\">" . $link->name . "</a>";
     }
 }
-
-$ranges = array();
-foreach($event->dateRanges as $range) {
-    $ranges[date("d.m.Y", strtotime($range->start))] = "true";
-}
-
-$dates = array();
-foreach($ranges as $idx => $range) {
-    $dates[] = $idx;
-}
-
-echo "<div style='font-size:12px;color:#828282; margin-top: 20px;'>";
-if(sizeof($dates) > 1) {
-    echo "Eventet gjentas på følgende datoer:<br>";
-} else {
-    echo "Dato for eventet:<br>";
-}
-echo join(", ", $dates);
-echo "</div>";
 
 ob_start();
 $imgDisplayer->displayAdditionalFiles();

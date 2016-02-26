@@ -73,6 +73,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function setNewInterval() {
+        $this->getApi()->getPmsManager()->setNewCleaningIntervalOnRoom($this->getSelectedName(), 
+                $_POST['data']['roomid'], 
+                (int)$_POST['data']['interval']);
+    }
+    
     public function addComment() {
         $id = $_POST['data']['bookingid'];
         $comment = $_POST['data']['comment'];
@@ -723,8 +729,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(!isset($filter->searchWord) || !$filter->searchWord) {
             return true;
         }
-        
-        return stristr($row, $filter->searchWord) !== false;
+        $tocheck = strtolower($row);
+        return mb_stristr($tocheck, strtolower($filter->searchWord), false, "UTF-8");
     }
 
 }

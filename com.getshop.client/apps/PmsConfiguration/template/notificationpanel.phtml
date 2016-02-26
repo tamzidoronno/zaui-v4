@@ -343,6 +343,18 @@ $days[7] = "Sunday";
             </span>
             Cleaning is done the day after the stay
         </div>
+        <div class='configrow'>
+            <span class='configentry'>
+            <?
+                $checked = "";
+                if(isset($notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) && $notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) {
+                    $checked = "CHECKED";
+                }
+            ?>
+            <input type='checkbox' gsname='unsetCleaningIfJustSetWhenChangingRooms' <? echo $checked; ?>>
+            </span>
+            Unset rooms marked as dirty when a room is changed within one our (recommended to be switched off)
+        </div>
         
         <br><br>
         <h2>

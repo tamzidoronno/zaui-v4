@@ -12,7 +12,7 @@ if(!$event->starttime) {
         <input type='hidden' value='<?echo $_GET['eventid']; ?>' gsname='eventid'>
         <label>
             <span class='text'><?echo $this->__w("Title"); ?></span>
-            <input type='text' gsname='title' value='<?php echo $event->title; ?>' maxlength="60">
+            <input type='text' gsname='title' value='<?php echo $event->title; ?>' maxlength="30">
         </label>
         <label>
             <span class='text'><?echo $this->__w("Short description"); ?></span>

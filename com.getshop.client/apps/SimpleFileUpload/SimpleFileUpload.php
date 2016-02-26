@@ -27,14 +27,13 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         $uploadedImg = false;
         foreach($this->getAllFiles() as $file) {
             if($this->isImage($file)) {
+                echo "<div class='image'>";
                 echo "<img src='displayImage.php?id=".$file->id."&maxWidth=500'>";
                 $uploadedImg = true;
                 $this->imagePrinted = $file->id;
+                echo "</div>";
                 break;
             }
-        }
-        if(!$uploadedImg) {
-            echo "<span class='noimgtxt'>" . $this->__w("No image added") . "</span>";
         }
     }
     

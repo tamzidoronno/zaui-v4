@@ -5,6 +5,7 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmseventmanager.PmsBookingEventEntry;
@@ -112,9 +113,11 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         entry.dateRanges.clear();
         entry.roomNames.clear();
         for(PmsBookingRooms room : result.rooms) {
-            if(bookingEngine.getBookingItemType(room.bookingItemTypeId).addon > 0) {
+            BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(type != null && type.addon > 0) {
                 continue;
             }
+            entry.location = type.name;
             entry.dateRanges.add(room.date);
             BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
             if(item != null) {

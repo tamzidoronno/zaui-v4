@@ -8,11 +8,9 @@ if($this->isEditorMode()) {
 }
 
 echo "<h1>" .$edit . $event->title . "</h1>";
-echo "<div class='arrangedby'>" . $event->arrangedBy . "</div>";
-echo "<div class='image'>";
+echo "<div class='arrangedby'>" . $event->arrangedBy . ", " . $event->location . "</div>";
 $imgDisplayer = $this->getImageDisplayer($event->id);
 $imgDisplayer->displayImage();
-echo "</div>";
 echo nl2br($event->shortdesc) . "<br>";
 echo "<div style='clear:both;'></div>";
 echo $event->description;
@@ -46,7 +44,7 @@ echo "<div style='font-size:12px;color:#828282;'>";
 if(sizeof($dates) > 1) {
     echo "Eventet gjentas på følgende datoer:<br>";
 } else {
-    echo "Dato for eventet:<br>";
+    echo "Dato for eventet: ";
 }
 echo join(", ", $dates);
 echo "</div>";

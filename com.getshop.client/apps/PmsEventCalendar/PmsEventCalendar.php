@@ -7,7 +7,7 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     }
     
     /**
-     * @return \ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a\ImageDisplayer
+     * @return \ns_994d7fed_d0cf_4a78_a5ff_4aad16b9bcab\SimpleFileUpload
      */
     public function getImageDisplayer($id) {
         $imgInstance = $this->getConfigurationSetting("imgapp_".$id);
@@ -178,9 +178,12 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
 
     public function getCategories() {
         $categories = array();
-        $categories[1] = "Kategori 1";
-        $categories[2] = "Kategori 2";
-        $categories[3] = "Kategori 3";
+        $categories[1] = "Åpent møte";
+        $categories[2] = "Medlemsmøte";
+        $categories[3] = "Forestilling";
+        $categories[4] = "Konsert";
+        $categories[5] = "Kurs";
+        $categories[6] = "Annet";
         return $categories;
     }
 

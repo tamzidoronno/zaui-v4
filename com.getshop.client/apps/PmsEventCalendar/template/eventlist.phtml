@@ -21,8 +21,11 @@ foreach($sortList as $idx => $date) {
         continue;
     }
     $eventEntry = $datelist[$idx];
+    if(!$eventEntry->starttime) {
+        $eventEntry->starttime = date("H:i", strtotime($eventEntry->dateRanges[0]->start));
+    }
     echo "<tr>";
-    echo "<td valign='top' class='datecol'><div>".date("d.", $date)."</div><div>".date("M", $date)."</div></td>";
+    echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $date). " " . date("M", $date) ."</div><div>".$eventEntry->starttime."</div></td>";
     echo "<td valign='top' class='listtext'>";
     $shortId = explode("-", $eventEntry->id);
     $edit = "";
@@ -30,19 +33,13 @@ foreach($sortList as $idx => $date) {
         $edit = "<a><i class='fa fa-trash-o'  gstype='clicksubmit' method='removeEntry' gsname='id' gsvalue='".$eventEntry->id."' ></i></a> ";
         $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><i class='fa fa-edit'></i></a> ";
     }
-    echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."'>" . $eventEntry->title  . "</a></h2>";
+    echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."'>" . $eventEntry->title  . ", les mer</a></h2>";
 
     echo "<div class='arrangedby'>" . $eventEntry->arrangedBy . "</div>";
     if(isset($cats[$eventEntry->category])) {
         echo "<div><span class='cat'>" . $cats[$eventEntry->category] . "</span></div>";
     }
-    echo nl2br(trim($eventEntry->shortdesc)) . "<br>";
-    if(!$eventEntry->starttime) {
-        $eventEntry->starttime = date("H:i", strtotime($eventEntry->dateRanges[0]->start));
-    }
-    
-    echo "<br>" . $eventEntry->starttime;
-    echo "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."' style='float:right;'>Les mer</a><br><br>";
+    echo nl2br(trim($eventEntry->shortdesc)) . "<br><br>";
     echo "</td>";
     echo "<tr>";
     $i++;

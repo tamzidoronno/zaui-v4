@@ -499,5 +499,36 @@ class ApplicationBase extends FactoryBase {
     public function formatJavaDateToTime($time) {
         return strtotime($time);
     }
+    
+    public function wrapApp($applicationId, $referenceName) {
+        $key = $this->getConfigurationSetting($referenceName);
+        if ($key == null) {
+            $app = $this->getApi()->getStoreApplicationInstancePool()->createNewInstance($applicationId);
+            $this->setConfigurationSetting($referenceName, $app->id);
+        }
+        
+        $appInstance = $this->getWrappedApp($referenceName);
+        
+        if (!$appInstance) {
+            return;
+        }
+        $appInstance->renderApplication();
+    }
+    
+    /**
+     * 
+     * @param type $referenceName
+     * @return ApplicationBase
+     */
+    public function getWrappedApp($referenceName) {
+        $instanceId = $this->getConfigurationSetting($referenceName);
+        if (!$instanceId) {
+            return null;
+        }
+        
+        
+        $app = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($instanceId);
+        return $this->getFactory()->getApplicationPool()->createAppInstance($app);
+    }
 }
 ?>

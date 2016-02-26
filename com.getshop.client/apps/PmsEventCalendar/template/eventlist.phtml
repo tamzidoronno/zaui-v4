@@ -33,7 +33,7 @@ foreach($sortList as $idx => $date) {
         $edit = "<a><i class='fa fa-trash-o'  gstype='clicksubmit' method='removeEntry' gsname='id' gsvalue='".$eventEntry->id."' ></i></a> ";
         $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><i class='fa fa-edit'></i></a> ";
     }
-    echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."'>" . $eventEntry->title  . ", les mer</a></h2>";
+    echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."'>" . $eventEntry->title  . " <span style='font-size: 12px;'>les mer</span></a></h2>";
 
     echo "<div class='arrangedby'>" . $eventEntry->arrangedBy . "</div>";
     if(isset($cats[$eventEntry->category])) {

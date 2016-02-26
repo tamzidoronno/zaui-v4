@@ -108,7 +108,6 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         $arrayres = array();
         $arrayres[] = $fileId;
         $this->notifyParent("fileUplaoded", $arrayres);
-        $this->getApi()->getUUIDSecurityManager()->grantAccess($this->getUser()->id, $fileId, true, true);
     }
     
     /**

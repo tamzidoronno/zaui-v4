@@ -66,6 +66,9 @@ public class Event extends DataCommon {
     
     @Transient
     public boolean canBook = false;
+    
+    @Transient
+    public Double price = -1D;
 
     void setMainDates() {
         if (days.size() > 0) {

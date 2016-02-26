@@ -6,6 +6,8 @@ class ApplicationBase extends FactoryBase {
     private $skinVariables;
     private $cell;
     private $depth;
+    private $wrappedAppes;
+    private $parentWrappedApp;
     
     /** @var core_common_AppConfiguration */
     public $configuration;
@@ -501,34 +503,91 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function wrapApp($applicationId, $referenceName) {
+        $appInstance = $this->getWrappedApp($applicationId, $referenceName);
+        
+        if (!$appInstance) {
+            return;
+        }
+
+        $appInstance->renderApplication();
+    }
+    
+    public function setParentWrappedApp($app) {
+        $_SESSION["parent_wrapped_app".$this->getAppInstanceId()] = $app->getAppInstanceId();
+    }
+    /**
+     * 
+     * @param type $referenceName
+     * @return ApplicationBase
+     */
+    public function getWrappedApp($applicationId, $referenceName) {
+        
         $key = $this->getConfigurationSetting($referenceName);
         if ($key == null) {
             $app = $this->getApi()->getStoreApplicationInstancePool()->createNewInstance($applicationId);
             $this->setConfigurationSetting($referenceName, $app->id);
         }
         
-        $appInstance = $this->getWrappedApp($referenceName);
-        
-        if (!$appInstance) {
-            return;
-        }
-        $appInstance->renderApplication();
-    }
-    
-    /**
-     * 
-     * @param type $referenceName
-     * @return ApplicationBase
-     */
-    public function getWrappedApp($referenceName) {
         $instanceId = $this->getConfigurationSetting($referenceName);
         if (!$instanceId) {
             return null;
         }
         
+        if (!$this->wrappedAppes) {
+            $this->wrappedAppes = new stdClass();
+        }
+        
+        if (isset($this->wrappedAppes->{$instanceId})) {
+            return $this->wrappedAppes->{$instanceId};
+        }
         
         $app = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($instanceId);
-        return $this->getFactory()->getApplicationPool()->createAppInstance($app);
+        $appInstance = $this->getFactory()->getApplicationPool()->createAppInstance($app);
+        
+        $appInstance->setParentWrappedApp($this);
+                
+        $this->wrappedAppes->{$instanceId} = $appInstance;
+        return $appInstance;
+    }
+    
+    /**
+     * This is not an ideal solution. 
+     * The reason is that if a wrapped app is printed 
+     * and the user does not leave the and then tru to use the 
+     * wrapped app, it might be shown as a difference instance :(
+     * 
+     * The id should be stored more permanantly in app configuration or something
+     */
+    public function getParentWrappedApplication() {
+        if (isset($_SESSION["parent_wrapped_app".$this->getAppInstanceId()]) && !$this->parentWrappedApp) {
+            $app = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($_SESSION["parent_wrapped_app".$this->getAppInstanceId()]);
+            $this->parentWrappedApp = $this->getFactory()->getApplicationPool()->createAppInstance($app);
+        }
+        
+        return $this->parentWrappedApp;
+    }
+    
+    public function getModalVariable($variableName) {
+        if (!isset($_SESSION['gs_currently_showing_modal'])) {
+            return null;
+        }
+        
+        return @$_SESSION['modal_variable_'.$_SESSION['gs_currently_showing_modal']][$variableName];
+    }
+    
+    /**
+     * 
+     * Notify parent if exists and method exists
+     * 
+     * @param String $functionName
+     * @param [] $args
+     */
+    public function notifyParent($method_name, $args) {
+        $app = $this->getParentWrappedApplication();
+        
+        if ($app && method_exists($app, $method_name)) {
+            call_user_func_array(array($app, $method_name), $args);
+        }
     }
 }
 ?>

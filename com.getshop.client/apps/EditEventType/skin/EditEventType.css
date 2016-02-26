@@ -1,0 +1,23 @@
+.EditEventType label {
+    display: block;
+    margin-bottom: 10px;
+}
+.EditEventType input[type='txt'] {
+    width: 400px;
+}
+
+.EditEventType .groupinformation .title {
+    line-height: 40px;
+    padding-left: 20px;
+    background-color: #F9f9f9;
+}
+
+.EditEventType .groupinformation .inner {
+    padding: 20px;
+}
+.EditEventType .groupinformation {
+    border: solid 1px #DDD;
+    
+    padding-top: 0px;
+    margin-bottom: 20px;
+}

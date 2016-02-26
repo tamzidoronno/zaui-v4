@@ -30,6 +30,7 @@ public class DataCommon extends TranslationHandler implements Serializable {
     public Date lastModified = null;
     public String gs_manager;
     public String colection;
+    public String gsDeletedBy;
     
     private void checkAnnotations(Field field, boolean Administrator) throws IllegalArgumentException, IllegalAccessException {
         Object emptyObject = new Product();

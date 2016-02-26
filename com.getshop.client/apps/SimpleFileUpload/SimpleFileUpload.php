@@ -11,7 +11,7 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
     public function getName() {
         return "SimpleFileUpload";
     }
-
+    
     public function render() {
         $this->includefile("uploadbutton");
         echo "<div class='filelist'>";
@@ -39,6 +39,7 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
     
     function deleteFile() {
         $this->getApi()->getFileManager()->deleteFileEntry($_POST['data']['fileid']);
+        $this->notifyParent("fileDeleted", [$_POST['data']['fileid']]);
     }
     
     /**
@@ -100,11 +101,16 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         return "question"; 
     }
 
+    
+    public function fileUplaoded($fileId) {
+        $this->notifyParent("fileUplaoded", [$fileId]);
+    }
+    
     /**
      * @return \core_filemanager_FileEntry[]
      */
     public function getAllFiles() {
-        $files = $this->getApi()->getFileManager()->getFiles($this->getAppInstanceId(), null);
+        $files = $this->getApi()->getFileManager()->getFiles($this->getFileListId());
         if(!$files) {
             $files = array();
         }
@@ -114,6 +120,14 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
     public function displayAdditionalFiles() {
         $this->includefile("uploadedFiles");
     }
-    
+
+    public function getFileListId() {
+        if ($this->getParentWrappedApplication() !== null && method_exists($this->getParentWrappedApplication(), "getFileuploadListId")) {
+            return $this->getParentWrappedApplication()->getFileuploadListId();
+        }
+        
+        return $this->getAppInstanceId();
+    }
+
 }
 ?>

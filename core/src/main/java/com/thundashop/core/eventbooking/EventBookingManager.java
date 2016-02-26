@@ -15,12 +15,14 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +43,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public HashMap<String, Location> locations = new HashMap();
     public HashMap<String, ReminderTemplate> reminderTemplates = new HashMap();
     public HashMap<String, Reminder> reminders = new HashMap();
+    public HashMap<String, Certificate> certificates = new HashMap();
+    public HashMap<String, BookingItemTypeMetadata> bookingTypeMetaDatas = new HashMap();
     
     @Autowired
     public EventLoggerHandler eventLoggerHandler;
@@ -82,6 +86,16 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 ReminderTemplate reminder = (ReminderTemplate)data;
                 reminderTemplates.put(reminder.id, reminder);
             }
+            
+            if (data instanceof Certificate) {
+                Certificate certificate = (Certificate)data;
+                certificates.put(certificate.id, certificate);
+            }
+            
+            if (data instanceof BookingItemTypeMetadata) {
+                BookingItemTypeMetadata metaData = (BookingItemTypeMetadata)data;
+                bookingTypeMetaDatas.put(metaData.id, metaData);
+            }
         }
     }
     
@@ -97,6 +111,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     @Override
     public List<Event> getEvents() {
         List<Event> retEvents = new ArrayList(events.values());
+        
+        retEvents = retEvents.stream()
+                .filter(o -> isVisibleForGroup(o))
+                .collect(Collectors.toList());
+        
         Collections.sort(retEvents, (Event o1, Event o2) -> o1.days.get(0).startDate.compareTo(o2.days.get(0).startDate));
         return cloneAndFinalize(retEvents);
     }
@@ -136,6 +155,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         } else {
             event.canBook = true;
         }
+        
+        event.price = getPrice(event);
         
         return event;
     }
@@ -581,5 +602,149 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             String smsId = messageManager.sendSms("clickatell", user.cellPhone, content, user.prefix);
             reminder.smsMessageId.put(user.id, smsId);
         }
+    }
+
+    @Override
+    public void saveCertificate(Certificate certificate) {
+        saveObject(certificate);
+        certificates.put(certificate.id, certificate);
+    }
+
+    @Override
+    public void deleteCertificate(String certificateId) {
+        Certificate certificate = certificates.remove(certificateId);
+        if (certificate != null) {
+            deleteObject(certificate);
+        }
+    }
+
+    @Override
+    public List<Certificate> getCertificates() {
+        return new ArrayList(certificates.values());
+    }
+
+    @Override
+    public Certificate getCertificate(String certificateId) {
+        return certificates.get(certificateId);
+    }
+
+    @Override
+    public BookingItemTypeMetadata getBookingTypeMetaData(String id) {
+        BookingItemTypeMetadata res = bookingTypeMetaDatas.values().stream()
+                .filter(o -> o.bookingItemTypeId.equals(id))
+                .findFirst()
+                .orElse(null);
+        return finalizeMetaData(res, id);
+    }
+
+    @Override
+    public void saveBookingTypeMetaData(BookingItemTypeMetadata bookingItemTypeMetadata) {
+        saveObject(bookingItemTypeMetadata);
+        bookingTypeMetaDatas.put(bookingItemTypeMetadata.id, bookingItemTypeMetadata);
+    }
+
+    private BookingItemTypeMetadata finalizeMetaData(BookingItemTypeMetadata data, String id) {
+        if (id == null || id.isEmpty()) {
+            return null;
+        }
+        
+        if (data == null) {
+            data = new BookingItemTypeMetadata();
+            data.bookingItemTypeId = id;
+            saveBookingTypeMetaData(data);
+        }
+        
+        List<Group> groups = userManager.getAllGroups();
+        for (Group group : groups) {
+            if (data.certificateIds.get(group.id) == null) {
+                data.certificateIds.put(group.id, new ArrayList());
+            }
+            if (data.groupPrices.get(group.id) == null) {
+                data.groupPrices.put(group.id, -1D);
+            }
+            if (data.visibleForGroup.get(group.id) == null) {
+                data.visibleForGroup.put(group.id, true);
+            }
+        }
+        
+        return data;
+    }
+
+    private boolean isVisibleForGroup(Event o) {
+        BookingItemTypeMetadata metaData = getBookingTypeMetaData(o);
+        
+        if (getSession() != null || getSession() == null) {
+            return metaData.publicVisible;
+        }
+        
+        if (getSession().currentUser.groups.get(0) == null) {
+            return true;
+        }
+        
+        return metaData.visibleForGroup.get(getSession().currentUser.groups.get(0));
+    }
+
+    private BookingItemTypeMetadata getBookingTypeMetaData(Event event) throws NullPointerException {
+        BookingItem item = bookingEngine.getBookingItem(event.bookingItemId);
+        if (item == null) {
+            throw new NullPointerException("There is an event that is connected to a null-bookingitem. That should not be possible.");
+        }
+        BookingItemTypeMetadata metaData = getBookingTypeMetaData(item.bookingItemTypeId);
+        return metaData;
+    }
+
+    @Override
+    public List<BookingItemType> getBookingItemTypes() {
+        return bookingEngine.getBookingItemTypes()
+                .stream()
+                .filter(o -> isTypeAvailble(o))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isTypeAvailble(BookingItemType o) {
+        BookingItemTypeMetadata metaData = getBookingTypeMetaData(o.id);
+        
+        if (getSession() != null && getSession() == null) {
+            return metaData.publicVisible;
+        }
+        
+        if (getSession().currentUser.groups.get(0) == null) {
+            return true;
+        }
+        
+        return metaData.visibleForGroup.get(getSession().currentUser.groups.get(0));
+        
+    }
+
+    private Double getPrice(Event event) {
+        BookingItemTypeMetadata metaData = getBookingTypeMetaData(event);
+        
+        if (getSession() == null || getSession().currentUser == null) {
+            return metaData.publicPrice;
+        }
+        
+        if (getSession().currentUser.groups.isEmpty()) {
+            return metaData.publicPrice;
+        }
+        
+        return metaData.groupPrices.get(getSession().currentUser.groups.get(0));
+    }
+
+    @Override
+    public List<Event> getMyEvents() {
+        List<Event> rets = bookingEngine.getAllBookings().stream()
+                .filter(booking -> booking.userId != null && booking.userId.equals(getSession().currentUser.id))
+                .map( booking -> getEventByBooking(booking))
+                .collect(Collectors.toList());
+        
+        return cloneAndFinalize(rets);
+    }
+
+    private Event getEventByBooking(Booking booking) {
+        String itemId = booking.bookingItemId;
+        return events.values().stream()
+                .filter(event -> event.bookingItemId.equals(itemId))
+                .findFirst()
+                .orElse(null);
     }
 }

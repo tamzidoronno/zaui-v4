@@ -160,6 +160,9 @@ public class ManagerSubBase {
     }
  
     public void deleteObject(DataCommon data) throws ErrorException {
+        if (getSession() != null && getSession().currentUser != null) {
+            data.gsDeletedBy = getSession().currentUser.id;
+        }
         databaseSaver.deleteObject(data, credentials);
     }
 

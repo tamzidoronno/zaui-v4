@@ -1,0 +1,12 @@
+.UserEventList .downloadrow {
+    border: solid 1px #DDD;
+    position: relative;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.UserEventList .downloadrow .gs_shop_small_icon {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}

@@ -1,0 +1,11 @@
+.EventExternalCertificate  tr:nth-child(odd) {
+    background-color: #F9f9f9;
+}
+
+.EventExternalCertificate  td {
+    padding: 10px;
+}
+
+.EventExternalCertificate  td i {
+    margin-left: 10px;
+}

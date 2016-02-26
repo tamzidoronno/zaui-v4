@@ -53,7 +53,7 @@ public class FileManager extends ManagerBase implements IFileManager {
     }
 
     @Override
-    public void addFileEntry(String listId, FileEntry entry) {
+    public String addFileEntry(String listId, FileEntry entry) {
         entry.listId = listId;
         entry.storeId = storeId;
         saveObject(entry);
@@ -63,6 +63,7 @@ public class FileManager extends ManagerBase implements IFileManager {
             entry.uploadedByUserId = loggedOnUser.id;
         }
         entries.put(entry.id, entry);
+        return entry.id;
     }
 
     @Override

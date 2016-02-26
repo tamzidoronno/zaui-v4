@@ -1,0 +1,47 @@
+<?
+/* @var $this \ns_a66b64a0_dc80_47c3_8791_55edf4be82d9\EventCertificatesAdmin */
+$certicates = $this->getApi()->getEventBookingManager()->getCertificates($this->getBookingEngineName());
+
+$id = isset($_POST['data']['certificateId']) ? $_POST['data']['certificateId'] : "";
+$certificate = $this->getApi()->getEventBookingManager()->getCertificate($this->getBookingEngineName(), $id);
+
+if (!$certificate) {
+    $certificate = new core_eventbooking_Certificate();
+}
+?>
+<div>
+    Please select &nbsp;&nbsp;<select class="gsniceselect1 selectCertificate">
+        <option value="">New certificate</option>
+        <?
+        foreach ($certicates as $cert) {
+            $selected = $cert->id == $id ? "selected='true'" : "";
+            echo "<option $selected value='$cert->id'>$cert->name</option>";
+        }
+        ?>
+    </select>
+</div>
+<br/>
+<br/>
+<div class="saveCertificate" gstype="form" method="createCertificate">
+    <input type='hidden' gsname='certificateId' value="<? echo $certificate->id; ?>"/>
+    <label>Name</label><input class='gsniceinput1' type="txt" gsname="name" value="<? echo $certificate->name; ?>"/>
+    <br/><label>Valid from</label><input class='gsniceinput1 daydate' type="txt" gsname="from" value="<? echo date("d.m.Y H:i",strtotime($certificate->validFrom)); ?>"/>
+    <br/><label>Valid to</label><input class='gsniceinput1 daydate' type="txt" gsname="to" value="<? echo date("d.m.Y H:i",strtotime($certificate->validTo)); ?>"/>
+    <br/><label>ImageId</label><input class='gsniceinput1' type="txt" gsname="imageid"  value="<? echo $certificate->backgroundImage; ?>"/>
+    <br/><label>Text1</label><textarea class='gsniceinput1' gsname="text1"><? echo @$certificate->data->{'text1'}; ?></textarea>
+    <br/><label>Text2</label><textarea class='gsniceinput1' gsname="text2"><? echo @$certificate->data->{'text2'}; ?></textarea>
+    <br/><label>Text3</label><textarea class='gsniceinput1' gsname="text3"><? echo @$certificate->data->{'text3'}; ?></textarea>
+    <br/><label>Text4</label><textarea class='gsniceinput1' gsname="text4"><? echo @$certificate->data->{'text4'}; ?></textarea>
+    <br/><label>Text5</label><textarea class='gsniceinput1' gsname="text5"><? echo @$certificate->data->{'text5'}; ?></textarea>
+    <br/><div class='shop_button' gstype='submit'>Save</div>
+    <?
+    if ($id) {
+        echo "<div class='shop_button' gsclick='deleteCertificate' gs_confirm='Are you sure you want to delete this certificate?' id='$id'>Delete</div>";
+    }
+    ?>
+</div>
+
+<script>
+    $('.EventCertificatesAdmin .saveCertificate').find('.daydate').datepicker({ dateFormat: "dd.mm.yy"});
+</script>
+    

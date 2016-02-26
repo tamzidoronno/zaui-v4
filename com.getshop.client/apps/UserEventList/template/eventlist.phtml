@@ -1,0 +1,21 @@
+<?
+/* @var $this ns_138a1b9a_d8e3_4fec_8f3f_1cae11bca54f\UserEventList */
+
+$events = array_reverse($this->getApi()->getEventBookingManager()->getMyEvents($this->getBookingEngineName()));
+
+if (!count($events)) {
+    echo $this->__w("No events available");
+}
+//print_r($events);
+foreach ($events as $event) {
+    echo "<div class='downloadrow'>";
+        echo "<div>".$event->bookingItemType->name."</div>";
+        echo "<div>Date: ".$event->mainStartDate."</div>";
+        if ($event->markedAsReady) {
+            echo "<div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>";
+        }
+    echo "</div>";
+}
+
+?>
+<div class=""></div>

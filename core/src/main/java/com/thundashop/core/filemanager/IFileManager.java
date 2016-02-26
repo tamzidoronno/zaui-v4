@@ -10,7 +10,7 @@ import java.util.List;
 @GetShopApi
 public interface IFileManager {
     public List<FileEntry> getFiles(String listId);
-    public void addFileEntry(String listId, FileEntry entry);
+    public String addFileEntry(String listId, FileEntry entry);
     public void deleteFileEntry(String fileId);
     public FileEntry getFile(String fileId);
 }

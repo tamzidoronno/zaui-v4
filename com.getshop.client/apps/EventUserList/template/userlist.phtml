@@ -58,6 +58,7 @@ foreach ($users as $user) {
             }
         ?>
         <div class="options">
+            <div class="gs_shop_small_icon" gs_show_modal="uploadExternalCertificate" userid="<? echo $user->id; ?>" eventid="<? echo $event->id; ?>"><i class="fa fa-upload"></i></div>
             <div class="gs_shop_small_icon addcomment" userId="<? echo $user->id; ?>" eventId="<? echo $event->id; ?>"><i class="fa fa-comments" <? echo $commentColor; ?>></i></div>
             <div class="gs_shop_small_icon showsettings" userId="<? echo $user->id; ?>" eventId="<? echo $event->id; ?>"><i class="fa fa-gears"></i></div>
             <i class='fa fa-graduation-cap' style='color: <? echo $gradCapColor; ?>'></i>

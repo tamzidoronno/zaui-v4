@@ -1,0 +1,15 @@
+.EventCertificatesAdmin .saveCertificate label {
+    display: block;
+    margin-top: 10px;
+}
+
+.EventCertificatesAdmin .saveCertificate input[type='txt'],
+.EventCertificatesAdmin .saveCertificate textarea {
+    width: 350px;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+}
+
+.EventCertificatesAdmin .saveCertificate textarea {
+    height: 80px;
+}

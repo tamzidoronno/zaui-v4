@@ -1,9 +1,67 @@
 <?
 /* @var $this \ns_afec873d_d876_46c8_856c_2c599bada065\EditEventType */
 $eventType = $this->getEventType();
+$certificates = $this->getApi()->getEventBookingManager()->getCertificates($this->getBookingEngineName());
+$groups = $this->getApi()->getUserManager()->getAllGroups();
+$metaData = $this->getApi()->getEventBookingManager()->getBookingTypeMetaData($this->getBookingEngineName(), $eventType->id);
+
 ?>
 <div gstype="form" method="saveEvent">
     <input type="hidden" value="<? echo $eventType->id; ?>" gsname="bookingItemTypeId"/>
-    <label>Name</label>&nbsp;&nbsp;<input class="gsniceinput1" gsname="name" value="<? echo $eventType->name; ?>">
+    <label>Name</label><input type="txt" class="gsniceinput1" gsname="name" value="<? echo $eventType->name; ?>">
+    <br/>
+    <br/>
+    <br/>
+    
+    <div class="groupinformation">
+        <div class="title">Not logged in (public)</div>
+        <div class="inner">
+            <label>Visible</label>
+            
+            <?
+            $pucvchecked = $metaData->publicVisible ? "checked='true'" : "";
+            ?>
+            
+            <input type="checkbox" gsname="public_visible" <? echo $pucvchecked; ?>> Yes
+            <br/>
+            <br/>
+            <label>Price</label>
+            <input type="txt" class="gsniceinput1" gsname="publicPrice" value="<? echo $metaData->publicPrice; ?>"> ( -1 = disabled / price not shown )
+        </div>
+    </div>
+    <?
+    
+    foreach ($groups as $group) {
+        echo "<div class='groupinformation'>";
+        echo "<div class='title'>$group->groupName</div>";
+        
+            echo "<div class='inner'>";
+                $price = $metaData->groupPrices->{$group->id};
+                echo "<label> Price </label>";
+                echo "<input gsname='price_$group->id' class='gsniceinput1' value='$price'/> ( -1 = disabled / price not shown )";
+
+                echo "<br/>";
+                echo "<br/>";
+                echo "<div>Certificates </div>";
+                $certificateIds = $metaData->certificateIds->{$group->id};
+                
+                foreach ($certificates as $certificate) {
+                    $certId = $certificate->id;
+                    $checked = in_array($certId, $certificateIds) ? "checked='true'" : "";
+                    echo "&nbsp;&nbsp;<input type='checkbox' $checked gsname='certificate_".$group->id."_$certId'/>".$certificate->name."<br/>";
+                }
+
+                echo "<br/>";
+                echo "<label> Visible? </label>";
+                $checked = $metaData->visibleForGroup->{$group->id} ? "checked='true'" : "";
+                echo "&nbsp;&nbsp;<input type='checkbox' $checked gsname='visible_$group->id'/> Yes";
+            echo "</div>";
+        echo "</div>";
+    }
+    
+    
+    
+    ?>
+    
     <br/><br/><div class="shop_button" gstype="submit">Save</div>
 </div>

@@ -8,9 +8,7 @@ package com.thundashop.core.bookingengine.data;
 
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *

@@ -22,9 +22,29 @@ $event = $this->getEvent();
     ?>
 </div>
 
-<div class="locationinformation">
+<div class="dateinformation">
     <?
-    echo "<b>".$this->__w("Location").":</b><br/> ".$event->location->name." - ".$event->subLocation->name."<br/>";
-    echo $event->subLocation->description;
+    echo "<b>".$this->__w("Location").":</b>";
+    echo "<div>";
+        echo $event->location->name." - ".$event->subLocation->name."<br/>";
+        echo $event->subLocation->description;
+    echo "</div>";
     ?>
 </div>
+
+<?
+$price = $event->price;
+if ($price > -1) {
+?>
+
+
+<div class="dateinformation">
+    <? echo "<b>".$this->__w("Price")."</b>"; ?>:
+    <div>
+        Kr <? echo $event->price; ?>,-
+    </div>
+</div>
+
+<?
+}
+?>

@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.eventbooking;
 
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
@@ -99,4 +100,27 @@ public interface IEventBookingManager {
     
     @Editor
     public Reminder getReminder(String reminderId);
+    
+    @Administrator
+    public void saveCertificate(Certificate certificate);
+    
+    @Administrator
+    public void deleteCertificate(String certificateId);
+    
+    @Administrator
+    public List<Certificate> getCertificates();
+    
+    @Administrator
+    public Certificate getCertificate(String certificateId);
+    
+    @Administrator
+    public BookingItemTypeMetadata getBookingTypeMetaData(String id);
+    
+    @Administrator
+    public void saveBookingTypeMetaData(BookingItemTypeMetadata bookingItemTypeMetadata);
+    
+    public List<BookingItemType> getBookingItemTypes();
+    
+    @Customer
+    public List<Event> getMyEvents();
 }

@@ -25,7 +25,9 @@ app.SimpleFileUpload = {
     },
     doUpload: function() {
         var apptoload = $(this);
-         var id = $(this).closest('.app').attr('appid');
+        var appId = $(this).closest('.app').attr('appid');
+        var id = $(this).closest('.uploadform').attr('listid');
+        
         for(var key in $(this)[0].files) {
             if(key != parseInt(key)) {
                continue; 
@@ -33,7 +35,7 @@ app.SimpleFileUpload = {
             var formData = new FormData();
             formData.append('file', $(this)[0].files[key]);
             $.ajax({
-                   url : 'upload.php?listid='+id,
+                   url : 'upload.php?listid='+id+'&appid='+appId,
                    type : 'POST',
                    data : formData,
                    processData: false,  // tell jQuery not to process the data

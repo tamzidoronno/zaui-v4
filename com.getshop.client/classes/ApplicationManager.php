@@ -995,12 +995,20 @@ class ApplicationManager extends FactoryBase {
     }
     
     public function closemodal() {
-        unset($_SESSION['gs_currently_showing_modal']);
+        if (isset($_SESSION['gs_currently_showing_modal'])) {
+            $name = $_SESSION['gs_currently_showing_modal'];
+            unset($_SESSION['gs_currently_showing_modal']);
+            if (isset($_SESSION['modal_variable_'.$name])) {
+                unset($_SESSION['modal_variable_'.$name]);
+            }
+        }
     }
     
     public function showModal() {
         $areaname = $_POST['data']['modalName'];
         $_SESSION['gs_currently_showing_modal'] = $areaname;
+        $_SESSION['modal_variable_'.$areaname] = $_POST['data'];
+        
         $this->getPage()->renderModal($areaname);
     }
 }

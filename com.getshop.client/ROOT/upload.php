@@ -20,6 +20,9 @@ $entry->name = $file['name'];
 $entry->type = $file['type'];
 $entry->size = $file['size'];
 
-$factory->getApi()->getFileManager()->addFileEntry($listId, $entry);
+$fileId2 = $factory->getApi()->getFileManager()->addFileEntry($listId, $entry);
 
+$appRaw = $factory->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($_GET['appid']);
+$instance = $factory->getApplicationPool()->createAppInstance($appRaw);
+$instance->fileUplaoded($fileId2);
 ?>

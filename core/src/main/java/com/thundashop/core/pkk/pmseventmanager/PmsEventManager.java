@@ -13,6 +13,7 @@ import com.thundashop.core.pmsmanager.IPmsManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,9 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
  
     @Autowired
     BookingEngine bookingEngine;
+ 
+    @Autowired
+    UserManager userManager;
     
      @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -122,6 +126,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     private PmsBookingEventEntry finalize(PmsBookingEventEntry get) {
         PmsBooking booking = pmsManager.getBooking(get.id);
         setRooms(get, booking);
+        get.arrangedBy = userManager.getUserById(booking.userId).fullName;
         return get;
     }
 

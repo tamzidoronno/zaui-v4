@@ -8,6 +8,7 @@ if($this->isEditorMode()) {
 }
 
 echo "<h1>" .$edit . $event->title . "</h1>";
+echo "<div class='arrangedby'>" . $event->arrangedBy . "</div>";
 echo "<div class='image'>";
 $imgDisplayer = $this->getImageDisplayer($event->id);
 $imgDisplayer->displayImage();
@@ -32,7 +33,16 @@ foreach($ranges as $idx => $range) {
     $dates[] = $idx;
 }
 
+
+if(!$event->starttime) {
+    $event->starttime = date("H:i", strtotime($event->dateRanges[0]->start));
+}
+
 echo "<div style='font-size:12px;color:#828282; margin-top: 20px;'>";
+echo "Eventet starter klokken: " . $event->starttime;
+echo "</div>";
+
+echo "<div style='font-size:12px;color:#828282;'>";
 if(sizeof($dates) > 1) {
     echo "Eventet gjentas på følgende datoer:<br>";
 } else {

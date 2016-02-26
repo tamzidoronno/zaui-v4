@@ -1,9 +1,6 @@
 <?php
 /* @var $this ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
-$categories = array();
-$categories[1] = "Kategori 1";
-$categories[2] = "Kategori 2";
-$categories[3] = "Kategori 3";
+$cagetories = $this->getCategories();
 $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_GET['eventid']);
 $starttime = $event->dateRanges[0]->start;
 if(!$event->starttime) {

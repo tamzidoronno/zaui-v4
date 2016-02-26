@@ -176,5 +176,13 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         return $this->getSelectedName() . "_eventcalendar";
     }
 
+    public function getCategories() {
+        $categories = array();
+        $categories[1] = "Kategori 1";
+        $categories[2] = "Kategori 2";
+        $categories[3] = "Kategori 3";
+        return $categories;
+    }
+
 }
 ?>

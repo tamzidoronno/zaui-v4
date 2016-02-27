@@ -205,7 +205,7 @@ public class UserStoreCollection {
     }
     
     public List<Group> getGroups() {
-        return new ArrayList(groups.values());
+        return new ArrayList(finalizeGroups(groups.values()));
     }
     
     public void addGroup(Group group) {
@@ -281,7 +281,13 @@ public class UserStoreCollection {
     }
 
     Group getGroups(String id) {
-        return groups.get(id);
+        Group group =  groups.get(id);
+        
+        if (!hasAccessToGroup(group)) {
+            return null;
+        }
+        
+        return group;
     }
 
     public List<User> getUsersBasedOnGroupId(String groupId) {
@@ -356,6 +362,33 @@ public class UserStoreCollection {
         
         List<Address> oldAddresses = group.extraAddresses.stream().filter(o -> o.id.equals(addressId)).collect(Collectors.toList());
         group.extraAddresses.removeAll(oldAddresses);
+    }
+
+    private List<Group> finalizeGroups(Collection<Group> groups) {
+        List<Group> retGroups = new ArrayList();
+        
+        for (Group group : groups) {
+            if (!hasAccessToGroup(group)) {
+                continue;
+            }
+            
+            retGroups.add(group);
+        }
+        
+        return retGroups;
+    }
+
+    private boolean hasAccessToGroup(Group group) {
+        
+        if (!group.isPublic && userManager.getSession().currentUser == null) {
+            return false;
+        }
+        
+        if (!group.isPublic && userManager.getSession().currentUser != null && userManager.getSession().currentUser.type < 100) {
+            return false;
+        }
+        
+        return true;
     }
 
 }

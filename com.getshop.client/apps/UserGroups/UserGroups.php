@@ -63,6 +63,7 @@ class UserGroups extends \ApplicationBase implements \Application {
         $group->invoiceAddress->reference = $_POST['invoiceReference'];
         $group->invoiceAddress->phone = $_POST['invoiceCellPhone'];
         
+        $group->isPublic = $_POST['isPublic'];
         $group->imageId = $_POST['imageId'];
         $group->usersRequireGroupReference = $_POST['usersRequireGroupReference'];
         

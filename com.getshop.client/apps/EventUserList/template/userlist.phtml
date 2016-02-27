@@ -27,12 +27,23 @@ foreach ($users as $user) {
     $gradCapColor = $participatedStatus == "participated_50" ? "#d71e27" : $gradCapColor;
     $gradCapColor = $participatedStatus == "not_participated" ? "#d71e27" : $gradCapColor;
     
+    $specialInfo = $this->getUserAdditionalInformation($user);
+    
     ?>
     <div class="userline">
         <div class="gs_shop_small_icon" gsclick="removeUserFromEvent" gs_confirm="<? echo $this->__f("Are you sure you want to remove user from this event?"); ?>" eventid="<? echo $event->id; ?>"  userid="<? echo $user->id; ?>"><i class="fa fa-trash"></i></div>
         <? 
             $company = null;
             $group = null;
+            
+            if ($specialInfo) {
+                ?>
+                <div class="gs_shop_small_icon showspecialinfo">
+                    <i class='fa fa-warning'></i>
+                    <div class='user_special_comments'><? echo $specialInfo; ?></div>
+                </div>
+                <?
+            }
             
             if ($user->groups) {
                 $group = $this->getApi()->getUserManager()->getGroup($user->groups[0]);

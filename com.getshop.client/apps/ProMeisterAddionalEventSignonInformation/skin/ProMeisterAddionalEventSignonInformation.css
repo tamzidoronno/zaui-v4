@@ -1,0 +1,24 @@
+.ProMeisterAddionalEventSignonInformation table {
+    width: 100%;
+}
+
+.ProMeisterAddionalEventSignonInformation .col1 {
+    width: 300px;
+    vertical-align: top;
+}
+
+.ProMeisterAddionalEventSignonInformation .col2 {
+    width: calc(100% - 300px);
+    
+}
+
+.ProMeisterAddionalEventSignonInformation .col2 input {
+    width: 100%;
+    box-sizing: border-box;
+} 
+
+.ProMeisterAddionalEventSignonInformation .col2 textarea {
+    width: 100%;
+    box-sizing: border-box;
+    height: 200px;
+}

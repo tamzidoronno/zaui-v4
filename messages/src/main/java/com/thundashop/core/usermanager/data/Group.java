@@ -22,4 +22,6 @@ public class Group extends DataCommon {
     public Address defaultDeliveryAddress = new Address();
     public Address invoiceAddress = new Address();
     
+    public boolean isPublic = true;
+    
 }

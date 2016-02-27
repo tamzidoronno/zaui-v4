@@ -33,5 +33,23 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
     public function setParticiationStatus() {
         $this->getApi()->getEventBookingManager()->setParticipationStatus($this->getBookingEngineName(), $_POST['data']['eventId'], $_POST['data']['userId'], $_POST['data']['status']);
     }
+
+    /**
+     * 
+     * @param \core_usermanager_data_User $user
+     */
+    public function getUserAdditionalInformation($user) {
+        $text1 = @$user->metaData->{"event_signon_alergic"};
+        $text2 = @$user->metaData->{"event_signon_specialfoodrequest"};
+        $text3 = @$user->metaData->{"event_signon_additionalinfo"};
+        
+        $retText = "";
+        $retText .= $text1 ? "<br/> Alergic: ".nl2br($text1) : "";
+        $retText .= $text2 ? "<br/> Food request: ".nl2br($text2) : "";
+        $retText .= $text3 ? "<br/><br/> Comment: <br/>".nl2br($text3) : "";
+        
+        return $retText;
+    }
+
 }
 ?>

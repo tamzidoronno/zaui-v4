@@ -45,6 +45,9 @@ public class FileManager extends ManagerBase implements IFileManager {
     public List<FileEntry> getFiles(String listId) {
         List<FileEntry> res = new ArrayList();
         for(FileEntry entry : entries.values()) {
+            if(!entry.listId.equals(listId)) {
+                continue;
+            }
             if(uUIDSecurityManager.hasAccess(entry.id, true, false)) {
                 res.add(entry);
             }

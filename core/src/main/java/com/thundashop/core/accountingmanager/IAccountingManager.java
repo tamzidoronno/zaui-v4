@@ -13,7 +13,7 @@ public interface IAccountingManager {
     @Administrator
     public List<String> createOrderFile() throws Exception;
     @Administrator
-    public List<String> createUserFile() throws Exception;
+    public List<String> createUserFile(boolean newOnly) throws Exception;
     @Administrator
     public HashMap<String, String> getAllFiles();
     @Administrator

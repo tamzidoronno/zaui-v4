@@ -46,12 +46,30 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     }
     
     @Override
-    public List<String> createUserFile() throws Exception {
+    public List<String> createUserFile(boolean newOnly) throws Exception {
         getInterfaceForStore();
         
         for(AccountingInterface iface : interfaces) {
             List<User> users = userManager.getAllUsers();
-            List<String> result = iface.createUserFile(users);
+            List<User> toFetch = new ArrayList();
+            if(newOnly) {
+                for(User user : users) {
+                    if(user.isTransferredToAccountSystem) {
+                        continue;
+                    }
+                    toFetch.add(user);
+                }
+            } else {
+                toFetch.addAll(users);
+            }
+            
+            List<String> result = iface.createUserFile(toFetch);
+            
+            for(User usr : toFetch) {
+                usr.isTransferredToAccountSystem = true;
+                userManager.saveUser(usr);
+            }
+            
             return result;
         }
         return new ArrayList();

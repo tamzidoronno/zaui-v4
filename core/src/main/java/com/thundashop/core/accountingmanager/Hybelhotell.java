@@ -57,21 +57,7 @@ public class Hybelhotell implements AccountingInterface {
             User user = userManager.getUserById(order.userId);
             HashMap<Integer, String> toAdd = new HashMap();
             
-            String lineText = "";
-            
-            String startDate = "";
-            if(item.startDate != null) {
-                DateTime start = new DateTime(item.startDate);
-                startDate = start.toString("dd.MM.yy");
-            }
-            
-            String endDate = "";
-            if(item.endDate != null) {
-                DateTime end = new DateTime(item.endDate);
-                endDate = end.toString("dd.MM.yy");
-            }
-            
-            lineText = item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
+            String lineText = createLineText(item);
             
             toAdd.put(3, order.incrementOrderId + "");
             toAdd.put(4, order.incrementOrderId + "");
@@ -145,6 +131,24 @@ public class Hybelhotell implements AccountingInterface {
     @Override
     public void setUserManager(UserManager manager) {
         this.userManager = manager;
+    }
+
+    private String createLineText(CartItem item) {
+        String lineText = "";
+        String startDate = "";
+        if(item.startDate != null) {
+            DateTime start = new DateTime(item.startDate);
+            startDate = start.toString("dd.MM.yy");
+        }
+
+        String endDate = "";
+        if(item.endDate != null) {
+            DateTime end = new DateTime(item.endDate);
+            endDate = end.toString("dd.MM.yy");
+        }
+
+        lineText = item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
+        return lineText;
     }
 
 }

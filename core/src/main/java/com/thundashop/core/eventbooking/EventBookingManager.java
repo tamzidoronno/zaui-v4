@@ -45,6 +45,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public HashMap<String, Reminder> reminders = new HashMap();
     public HashMap<String, Certificate> certificates = new HashMap();
     public HashMap<String, BookingItemTypeMetadata> bookingTypeMetaDatas = new HashMap();
+    public HashMap<String, ExternalCertificate> externalCertificates = new HashMap();
     
     @Autowired
     public EventLoggerHandler eventLoggerHandler;
@@ -96,6 +97,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 BookingItemTypeMetadata metaData = (BookingItemTypeMetadata)data;
                 bookingTypeMetaDatas.put(metaData.id, metaData);
             }
+            
+            if (data instanceof ExternalCertificate) {
+                ExternalCertificate externalCertificate = (ExternalCertificate)data;
+                externalCertificates.put(externalCertificate.id, externalCertificate);
+            }
         }
     }
     
@@ -116,8 +122,12 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .filter(o -> isVisibleForGroup(o))
                 .collect(Collectors.toList());
         
-        Collections.sort(retEvents, (Event o1, Event o2) -> o1.days.get(0).startDate.compareTo(o2.days.get(0).startDate));
+        sortEventsByDate(retEvents);
         return cloneAndFinalize(retEvents);
+    }
+
+    private void sortEventsByDate(List<Event> retEvents) {
+        Collections.sort(retEvents, (Event o1, Event o2) -> o1.days.get(0).startDate.compareTo(o2.days.get(0).startDate));
     }
 
     private List<Event> cloneAndFinalize(List<Event> events) {
@@ -737,6 +747,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .map( booking -> getEventByBooking(booking))
                 .collect(Collectors.toList());
         
+        
+        sortEventsByDate(rets);
         return cloneAndFinalize(rets);
     }
 
@@ -746,5 +758,57 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .filter(event -> event.bookingItemId.equals(itemId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public void addExternalCertificate(String userId, String fileId, String eventId) {
+        ExternalCertificate certificate = new ExternalCertificate();
+        certificate.userId = userId;
+        certificate.fileId = fileId;
+        certificate.eventId = eventId;
+        saveObject(certificate);
+        externalCertificates.put(certificate.id, certificate);
+    }
+
+    @Override
+    public List<ExternalCertificate> getExternalCertificates(String userId, String eventId) {
+        List<ExternalCertificate> ret = externalCertificates.values()
+                .stream()
+                .filter(o -> o.userId.equals(userId))
+                .filter(o -> o.eventId.equals(eventId))
+                .collect(Collectors.toList());
+        
+        return ret;
+    }
+
+    @Override
+    public void deleteExternalCertificates(String userId, String fileId, String eventId) {
+        ExternalCertificate cert = getExternalCertificates(userId, eventId).stream()
+                .filter(o -> o.fileId.equals(fileId))
+                .findFirst()
+                .orElse(null);
+        
+        if (cert  != null) {
+            externalCertificates.remove(cert.id);
+            deleteObject(cert);
+            
+        }
+    }
+
+    @Override
+    public boolean canDownloadCertificate(String eventId) {
+        Event event = getEvent(eventId);
+        if (event == null)
+            return false;
+        
+        String status = event.participationStatus.get(getSession().currentUser.id);
+        
+        if (status == null)
+            return false;
+        
+        if (status.equals("participated") || status.equals("participated_free"))
+            return true;
+        
+        return false;
     }
 }

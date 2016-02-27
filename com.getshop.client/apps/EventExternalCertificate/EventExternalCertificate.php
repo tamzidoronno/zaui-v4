@@ -16,11 +16,15 @@ class EventExternalCertificate extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\
     }
     
     public function fileDeleted($fileId) {
-        
+        $userId = $this->getModalVariable("userid");
+        $eventId = $this->getModalVariable("eventid");
+        $this->getApi()->getEventBookingManager()->deleteExternalCertificates($this->getBookingEngineName(), $userId, $fileId, $eventId);
     }
     
     public function fileUplaoded($fileId) {
-        
+        $userId = $this->getModalVariable("userid");
+        $eventId = $this->getModalVariable("eventid");
+        $this->getApi()->getEventBookingManager()->addExternalCertificate($this->getBookingEngineName(), $userId, $fileId, $eventId);
     }
     
     /**

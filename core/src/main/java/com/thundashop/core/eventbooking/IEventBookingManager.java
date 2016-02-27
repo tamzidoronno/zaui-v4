@@ -123,4 +123,16 @@ public interface IEventBookingManager {
     
     @Customer
     public List<Event> getMyEvents();
+    
+    @Editor
+    public void addExternalCertificate(String userId, String fileId, String eventId);
+    
+    @Editor
+    public List<ExternalCertificate> getExternalCertificates(String userId, String eventId);
+    
+    @Editor
+    public void deleteExternalCertificates(String userId, String fileId, String eventId);
+    
+    @Customer
+    public boolean canDownloadCertificate(String eventId);
 }

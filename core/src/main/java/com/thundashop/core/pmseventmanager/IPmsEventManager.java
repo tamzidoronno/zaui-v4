@@ -1,4 +1,4 @@
-package com.thundashop.core.pkk.pmseventmanager;
+package com.thundashop.core.pmseventmanager;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;

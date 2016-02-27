@@ -397,7 +397,7 @@ public class PmsManagerProcessor {
         }
         String result = "";
         try {
-            PmsConfiguration config = manager.getConfiguration();
+            PmsConfiguration config = manager.configuration;
             manager.getShopLockManager.setCredentials(config.arxUsername, config.arxPassword, config.arxHostname);
             if (deleted) {
                 result = manager.getShopLockManager.removeCode(room.pmsBookingRoomId);

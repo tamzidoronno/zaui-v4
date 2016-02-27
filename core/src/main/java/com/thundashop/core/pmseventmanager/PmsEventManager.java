@@ -1,4 +1,4 @@
-package com.thundashop.core.pkk.pmseventmanager;
+package com.thundashop.core.pmseventmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;

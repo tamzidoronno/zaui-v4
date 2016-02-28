@@ -1,0 +1,28 @@
+.ProMeisterScoreSettings .groupsetting {
+    border: solid 1px #DDD;
+    margin-bottom: 20px;
+    
+}
+
+.ProMeisterScoreSettings .groupsetting label {
+    display: block;
+}
+
+.ProMeisterScoreSettings .groupsetting input {
+    margin-bottom: 10px;
+}
+
+.ProMeisterScoreSettings .groupsetting .inner {
+
+}
+
+.ProMeisterScoreSettings .groupsetting .title {
+    padding: 10px;
+    background-color: #F9F9F9;
+    text-align: center;
+}
+
+.ProMeisterScoreSettings .groupsetting .catrow {
+    border-bottom: solid 1px #DDD;
+    padding: 20px;
+}

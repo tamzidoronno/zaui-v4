@@ -21,18 +21,41 @@
 
 .EventEditorBooking .usersearchrow {
     padding: 5px;
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: solid 1px #DDD;
 }
 .EventEditorBooking .usersearchrow:nth-child(odd) {
     background-color: #F9f9f9;
+}
+
+.EventEditorBooking .usersearchrow:last-child {
+    border-bottom: solid 1px #DDD;
 }
 
 .EventEditorBooking .usersearchrow div {
     display: inline-block;
 }
 
-.EventEditorBooking .usersearchrow div:nth-child(1) { width: 240px; }
+.EventEditorBooking .usersearchrow div:nth-child(1) { width: calc(100% - 615px); }
 .EventEditorBooking .usersearchrow div:nth-child(2) { width: 340px; }
 .EventEditorBooking .usersearchrow div:nth-child(3) { width: 240px; }
-.EventEditorBooking .usersearchrow div:nth-child(4) { width: 200px; }
-.EventEditorBooking .usersearchrow div:nth-child(5) { width: 10px; }
-.EventEditorBooking .usersearchrow div:nth-child(6) { width: 10px; margin-left: 10px;}
+.EventEditorBooking .usersearchrow div:nth-child(4) { width: 10px; }
+.EventEditorBooking .usersearchrow div:nth-child(5) { width: 10px; margin-left: 10px;}
+
+.EventEditorBooking .companytitle {
+    border-left: solid 1px #DDD;
+    padding: 10px;
+    background-color: #DDD;
+}
+.EventEditorBooking .companyrow .addCompanyAccount{
+    position: absolute; 
+    right: 7px;
+    top: 2px;
+}
+.EventEditorBooking .companyrow {
+    position: relative;
+    border-top: solid 1px #DDD;
+    border-right: solid 1px #DDD;
+    margin-bottom: 20px;
+}

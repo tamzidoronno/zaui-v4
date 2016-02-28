@@ -371,4 +371,13 @@ public interface IUserManager {
     public void deleteCompany(String companyId);
     
     public void assignCompanyToUser(Company company, String userId);
+    
+    @Administrator
+    public List<User> getUnconfirmedCompanyOwners();
+    
+    @Administrator
+    public void confirmCompanyOwner(String userId);
+    
+    @Customer
+    public List<User> getUsersByCompanyId(String companyId);
 }

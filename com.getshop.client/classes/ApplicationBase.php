@@ -589,5 +589,15 @@ class ApplicationBase extends FactoryBase {
             call_user_func_array(array($app, $method_name), $args);
         }
     }
+    
+    public function wrapContentManager($referenceName, $defaultText) {
+        if (!$this->getConfigurationSetting($referenceName)) {
+            $app = $this->getWrappedApp("320ada5b-a53a-46d2-99b2-9b0b26a7105a", $referenceName);
+            $_POST['data']['content'] = $defaultText;
+            $app->saveContent();
+        }
+        
+        $this->wrapApp("320ada5b-a53a-46d2-99b2-9b0b26a7105a", $referenceName);
+    }
 }
 ?>

@@ -197,6 +197,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         item.freeSpots = item.bookingSize - getAllBookingsByBookingItem(item.id).size();
+        item.isFull = item.freeSpots < 1;
         
         return item;
     }

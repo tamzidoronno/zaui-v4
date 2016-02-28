@@ -1,12 +1,85 @@
 <?
 /* @var $this ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event  */
 $event = $this->getEvent();
+
+if (!$event->isInFuture) {
+    echo "<div class='event_warning'>";
+    echo "<i class='fa fa-warning'></i> ".$this->__w("This event has already been passed");
+    echo "</div>";
+} else if ($event->markedAsReady) {
+    echo "<div class='event_warning'>";
+    echo "<i class='fa fa-warning'></i> ".$this->__w("Your to late, the signup process has been closed");
+    echo "</div>";
+} else if (!$event->bookingItem->freeSpots) {
+    echo "<div class='event_warning'>";
+    echo "<i class='fa fa-warning'></i> ".$this->__w("No available spots left for this event");
+    echo "</div>";
+} else if ($event->isCanceled) {
+    echo "<div class='event_warning'>";
+    echo "<i class='fa fa-warning'></i> ".$this->__w("This event has been canceled");
+    echo "</div>";
+} else if ($event->bookingItem->isFull) {
+    echo "<div class='event_warning'>";
+    echo "<i class='fa fa-warning'></i> ".$this->__w("No available spots left for this event");
+    echo "</div>";
+}
+
 if (!$event->canBook) {
     return;
 }
-?>
-<br/>
 
-<div class='shop_button' gs_show_modal="event_signon" eventId="<? echo $event->id; ?>">
-    <? echo $this->__w("Book now"); ?>
-</div>
+$user = $this->getApi()->getUserManager()->getUserById($this->getUser()->id);
+
+$companyOwner = $user->isCompanyOwner;
+if (!$companyOwner) {
+?>
+    <br/>
+
+    <div class="userrow">
+        <? 
+        $isSignedUp = $this->getApi()->getEventBookingManager()->isUserSignedUpForEvent($this->getBookingEngineName(), $event->id, $user->id);
+        echo $user->fullName; 
+        if (!$isSignedUp) {
+        ?>
+            <div class='shop_button' gs_show_modal="event_signon" eventId="<? echo $event->id; ?>" userid="<? echo $user->id; ?>">
+                <? echo $this->__w("Singup"); ?>
+            </div>
+        <?
+        } else {
+            echo "<div class='signedup'>".$this->__w("Already signed up")."</div>";
+        } 
+        ?>
+    </div>
+    
+
+<?
+} else { 
+    echo "<div class='company_title'>".$this->__w("Users in your company")."</div>";
+    $companyUsers = $this->getApi()->getUserManager()->getUsersByCompanyId($user->companyObject->id);
+    
+    foreach ($companyUsers as $user) {
+        $isSignedUp = $this->getApi()->getEventBookingManager()->isUserSignedUpForEvent($this->getBookingEngineName(), $event->id, $user->id);
+        
+        ?>
+            <div class="userrow">
+                <? echo $user->fullName; 
+                if (!$isSignedUp) {
+                ?>
+                    <div class='shop_button' gs_show_modal="event_signon" eventId="<? echo $event->id; ?>" userid="<? echo $user->id; ?>">
+                        <? echo $this->__w("Singup"); ?>
+                    </div>
+                <?
+                } else {
+                    echo "<div class='signedup'>".$this->__w("Already signed up")."</div>";
+                } 
+                ?>
+            </div>
+        <?
+    }
+?>
+
+<div class="shop_button" gs_show_modal="add_company_account" eventid="<? echo $event->id; ?>" companyid="<? echo $user->companyObject->id; ?>"><? echo $this->__w("Craete a new account"); ?></div>
+    
+<?
+}
+?>

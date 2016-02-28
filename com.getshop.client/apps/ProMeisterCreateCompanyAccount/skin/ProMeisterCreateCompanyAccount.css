@@ -1,0 +1,10 @@
+.ProMeisterCreateCompanyAccount .content {
+    min-height: 0px !important;
+}
+
+.ProMeisterCreateCompanyAccount input {
+    margin-bottom: 20px;
+    margin-top: 5px;
+    width: 100%; 
+    box-sizing: border-box;
+}

@@ -34,6 +34,8 @@ public class Event extends DataCommon {
     
     public List<Reminder> reminders = new ArrayList();
     
+    public boolean isCanceled = false;
+    
     @Editor
     public HashMap<String, List<UserComment>> comments = new HashMap();
     
@@ -62,13 +64,13 @@ public class Event extends DataCommon {
     public String eventPage = "";
     
     @Transient
-    public int availableSpots;
-    
-    @Transient
     public boolean canBook = false;
     
     @Transient
     public Double price = -1D;
+    
+    @Transient
+    boolean isInFuture;
 
     void setMainDates() {
         if (days.size() > 0) {

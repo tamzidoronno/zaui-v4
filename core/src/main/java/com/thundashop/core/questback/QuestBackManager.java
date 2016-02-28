@@ -23,6 +23,7 @@ import com.thundashop.core.questback.data.QuestBackOption;
 import com.thundashop.core.questback.data.QuestBackQuestion;
 import com.thundashop.core.questback.data.QuestTest;
 import com.thundashop.core.questback.data.QuestionTreeItem;
+import com.thundashop.core.questback.data.ResultRequirement;
 import com.thundashop.core.questback.data.UserQuestionAnswer;
 import com.thundashop.core.questback.data.UserTestResult;
 import com.thundashop.core.usermanager.UserManager;
@@ -61,6 +62,8 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
     private Map<String, QuestBackQuestion> questions = new HashMap();
     
     private Map<String, QuestTest> tests = new HashMap();
+    
+    private ResultRequirement resultRequirement = null;
 
     private List<UserTestResult> results = new ArrayList();
     
@@ -107,6 +110,10 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         if (o instanceof UserTestResult) {
             UserTestResult result = (UserTestResult)o;
             results.add(result);
+        }
+        
+        if (o instanceof ResultRequirement) {
+            this.resultRequirement = (ResultRequirement)o;
         }
     }
 
@@ -284,7 +291,6 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
 
     @Override
     public String answerQuestions(String testId, String applicationId, String pageId, List<String> answers) {
-        
         if (answers == null) {
             answers = new ArrayList();
         }
@@ -410,5 +416,73 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             answer.question = questions.get(answer.questionId);
             answer.parent = questions.get(answer.question.parentId);
         }
+    }
+    
+    @Override
+    public List<QuestBackQuestion> getCategories() {
+        return questions.values().stream()
+                .filter(o -> o.parentId == null || o.parentId.isEmpty())
+                .collect(Collectors.toList());
+       
+    }
+
+    @Override
+    public void saveQuestBackResultRequirement(ResultRequirement requirement) {
+        saveObject(requirement);
+        this.resultRequirement = requirement;
+    }
+
+    @Override
+    public ResultRequirement getResultRequirement() {
+        return this.resultRequirement;
+    }
+    
+    @Override
+    public QuestBackQuestion getQuestion(String id) {
+        return questions.get(id);
+    }
+
+    @Override
+    public UserTestResult getTestResultForUser(String testId, String userId) {
+        User user = userManager.getUserById(userId);
+        
+        if (user == null) {
+            return null;
+        }
+        
+        userManager.checkUserAccess(user);
+        return getResultTest(testId, userId);
+    }
+
+    @Override
+    public UserTestResult getBestCategoryResultForCompany(String testId, String catId) {
+        User loggedOnUser = userManager.getLoggedOnUser();
+        if (loggedOnUser.companyObject == null) {
+            return null;
+        }
+        
+        List<User> users = userManager.getUsersByCompanyId(loggedOnUser.companyObject.id);
+        int topResult = 0;
+        UserTestResult retRes = null;
+        
+        for (User user : users) {
+            UserTestResult result = getResultTest(testId, user.id);
+            
+            if (result == null) {
+                continue;
+            }
+            
+            int res = result.answers
+                    .stream()
+                    .filter(o -> o.parent.id.equals(catId))
+                    .mapToInt(o -> o.percentageOfCorrect).sum();
+            
+            if (res >= topResult) {
+                topResult = res;
+                retRes = result;
+            }
+        }
+        
+        return retRes;
     }
 }

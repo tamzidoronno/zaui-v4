@@ -24,6 +24,8 @@ class ProMeisterCreateAccount extends \MarketingApplication implements \Applicat
         $user->emailAddress = $_POST['data']['email'];
         $user->cellPhone = $_POST['data']['cellphone'];
         $user->password = $_POST['data']['password'];
+        $user->wantToBecomeCompanyOwner = isset($_POST['data']['isgarageleader']) && ($_POST['data']['isgarageleader'] == "1" || $_POST['data']['isgarageleader'] == 1);
+        
         if (isset($_POST['data']['groupreference'])) {
             $user->metaData['groupreference'] = $_POST['data']['groupreference'];
         }

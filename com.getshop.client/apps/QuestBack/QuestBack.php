@@ -10,7 +10,7 @@ namespace ns_07422211_7818_445e_9f16_ad792320cb10;
 
 class QuestBack extends \ApplicationBase implements \Application {
     public function getDescription() {
-        return $this->__f("This application allows Editors and Adminsitrators to setup and manage questbacks");
+        return $this->__f("Used for answering questbacks");
     }
 
     public function getName() {

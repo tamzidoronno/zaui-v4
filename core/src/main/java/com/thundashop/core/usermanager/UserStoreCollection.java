@@ -11,6 +11,7 @@ import com.thundashop.core.start.Runner;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.Company;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,20 @@ public class UserStoreCollection {
                 } 
             }
             user.groups = groups;
+        }
+        
+        
+        
+        if (user.company != null && user.company.size() > 0) {
+            List<String> toRemove = new ArrayList();
+            for (String companyId : user.company) {
+                Company comp = userManager.getCompany(companyId);
+                if (comp == null) {
+                    toRemove.add(companyId);
+                }
+            }
+            
+            user.company.removeAll(toRemove);
         }
         
         if (user.company != null && user.company.size() > 0) {
@@ -113,6 +128,9 @@ public class UserStoreCollection {
                 retusers.put(user.id, user);
             }
             if (user.birthDay != null && user.birthDay.equals(searchCriteria)) {
+                retusers.put(user.id, user);
+            }
+            if (matchOnCompany(user, searchCriteria)) {
                 retusers.put(user.id, user);
             }
         }
@@ -379,6 +397,10 @@ public class UserStoreCollection {
     }
 
     private boolean hasAccessToGroup(Group group) {
+        if (group == null) {
+            return false;
+        }
+        
         
         if (!group.isPublic && userManager.getSession().currentUser == null) {
             return false;
@@ -389,6 +411,21 @@ public class UserStoreCollection {
         }
         
         return true;
+    }
+
+    private boolean matchOnCompany(User user, String searchCriteria) {
+        if (user.company == null || user.company.isEmpty()) {
+            return false;
+        }
+        
+        for (String companyId : user.company) {
+            Company comp = userManager.getCompany(companyId);
+            if (comp != null && comp.name.toLowerCase().contains(searchCriteria.toLowerCase())) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
 }

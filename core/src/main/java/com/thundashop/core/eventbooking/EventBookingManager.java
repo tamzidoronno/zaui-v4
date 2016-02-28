@@ -160,7 +160,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             event.eventPage = "?page="+event.bookingItem.pageId+"&eventId="+event.id;
         }
         
-        if (event.markedAsReady || !isInFuture(event) || event.bookingItem == null || event.bookingItem.isFull || event.bookingItem.freeSpots < 1) {
+        event.isInFuture = isInFuture(event);
+        
+        if (event.markedAsReady || !isInFuture(event) || event.bookingItem == null || event.bookingItem.isFull || event.bookingItem.freeSpots < 1 || event.isCanceled) {
             event.canBook = false;
         } else {
             event.canBook = true;
@@ -195,6 +197,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         if (action.equals("USER_ADDED")) {
             logEntry.comment = eventLoggerHandler.compare(event, (User)additional, true);
+            saveObject(logEntry);
+        }
+        
+        if (action.equals("EVENT_CANCELED")) {
+            logEntry.comment = "Event marked as canceled";
             saveObject(logEntry);
         }
         
@@ -523,6 +530,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         User user = userManager.getUserById(userId);
+        userManager.checkUserAccess(user);
+        
         if (user != null) {
             AddUserToEvent(event, user);
         }
@@ -729,7 +738,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     private Double getPrice(Event event) {
         BookingItemTypeMetadata metaData = getBookingTypeMetaData(event);
         
-        if (getSession() == null || getSession().currentUser == null) {
+        if (getSession() == null || getSession().currentUser == null || getSession().currentUser.groups == null) {
             return metaData.publicPrice;
         }
         
@@ -810,5 +819,42 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             return true;
         
         return false;
+    }
+
+    @Override
+    public boolean isUserSignedUpForEvent(String eventId, String userId) {
+        User user = userManager.getUserById(userId);
+        
+        if (user == null) {
+            return false;
+        }
+        
+        userManager.checkUserAccess(user);
+        
+        Event event = getEvent(eventId);
+        if (event == null) {
+            return false;
+        }
+        
+        Booking res = bookingEngine.getAllBookingsByBookingItem(event.bookingItemId)
+                .stream()
+                .filter(o -> o.userId.equals(userId))
+                .findAny()
+                .orElse(null);
+        
+        return res != null;
+    }
+
+    @Override
+    public void cancelEvent(String eventId) {
+        Event event = getEvent(eventId);
+        
+        if (event == null) {
+            throw new ErrorException(1035);
+        }
+        
+        log("EVENT_CANCELED", event, null);
+        event.isCanceled = true;
+        saveObject(event);
     }
 }

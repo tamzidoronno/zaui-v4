@@ -77,7 +77,6 @@ public interface IEventBookingManager {
     @Administrator
     public void markAsReady(String eventId);
     
-    @Editor
     public void addUserToEvent(String eventId, String userId);
     
     @Editor
@@ -133,6 +132,12 @@ public interface IEventBookingManager {
     @Editor
     public void deleteExternalCertificates(String userId, String fileId, String eventId);
     
+    @Administrator
+    public void cancelEvent(String eventId);
+    
     @Customer
     public boolean canDownloadCertificate(String eventId);
+    
+    @Customer
+    public boolean isUserSignedUpForEvent(String eventId, String userId);
 }

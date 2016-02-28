@@ -39,6 +39,7 @@ if(!$booking->confirmed) {
 
 echo "<div class='bookinginfo'>";
 $this->includefile("contactdata");
+$this->includeLegacyStuffForSemlagerhotell($booking);
 echo "<div style='clear:both;'></div>";
 $this->includefile("roomsbooked");
 $this->includefile("addons");

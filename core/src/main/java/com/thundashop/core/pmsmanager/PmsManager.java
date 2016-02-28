@@ -208,7 +208,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result = startBooking();
         }
         
-        if(result.sessionStartDate != null && result.sessionStartDate.after(result.sessionEndDate)) {
+        if(result.sessionEndDate != null && result.sessionStartDate != null && result.sessionStartDate.after(result.sessionEndDate)) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(result.sessionStartDate);
             cal.add(Calendar.DAY_OF_YEAR, 1);

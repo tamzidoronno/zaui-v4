@@ -116,7 +116,9 @@ public class Semlagerhotell implements AccountingInterface {
             ordreHode.put(4, order.incrementOrderId + "");
             ordreHode.put(5, userManager.getUserById(order.userId).customerId + "");
             ordreHode.put(6, format1.format(order.rowCreatedDate));
-            ordreHode.put(7, format1.format(order.startDate));
+            if(order.startDate != null) {
+                ordreHode.put(7, format1.format(order.startDate));
+            }
             ordreHode.put(8, "0"); //Betalingsbetingelse 14 dager?
             ordreHode.put(9, "10"); //Betalingsmåte, usikker her
             ordreHode.put(10, ""); //Avgiftskode, usikker her.

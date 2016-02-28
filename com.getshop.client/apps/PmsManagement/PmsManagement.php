@@ -733,5 +733,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return mb_stristr($tocheck, strtolower($filter->searchWord), false, "UTF-8");
     }
 
+    public function includeLegacyStuffForSemlagerhotell($booking) {
+        if($this->getFactory()->getStore()->id != "c444ff66-8df2-4cbb-8bbe-dc1587ea00b7") {
+            return;
+        }
+        $engine = $this->getSelectedName();
+        $bookingId = $booking->id;
+        $userId = $booking->userId;
+        echo "<span style='font-size: 20px;'>";
+        echo "<h1>Contracts</h1>";
+        echo "<span style='color:blue; cursor:pointer;' onClick=\"window.open('/scripts/generateContract.php?userid=$userId&bookingId=$bookingId&engine=$engine');\"><i class='fa fa-file-pdf-o'></i> Last ned kontrakt</span><br>";
+        echo "<span style='color:blue; cursor:pointer;' onClick=\"window.open('/scripts/generateContract.php?userid=$userId&bookingId=$bookingId&type=bilag&engine=$engine');\"><i class='fa fa-plus-circle'></i> Last ned bilag</span>";
+        echo "</span>";
+    }
+
 }
 ?>

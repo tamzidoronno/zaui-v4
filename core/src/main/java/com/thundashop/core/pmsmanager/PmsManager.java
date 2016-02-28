@@ -2311,20 +2311,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void returnedKey(String roomId) {
         for(PmsBooking booking : getAllBookings(null)) {
             for(PmsBookingRooms room : booking.rooms) {
-                if((room.isStarted() && !room.isEnded()) || room.isEndingToday()) {
-                    if(room.bookingItemId != null && room.bookingItemId.equals(roomId)) {
+                if(room.bookingItemId == null || !room.bookingItemId.equals(roomId)) {
+                    continue;
+                }
+                if((room.isStarted() && (!room.isEnded()) || room.isEndingToday())) {
+                    if(room.keyIsReturned) {
+                        room.keyIsReturned = false;
+                    } else {
                         room.keyIsReturned = true;
-                        saveBooking(booking);
-                        if(!room.isEndingToday()) {
-                            String roomName = bookingEngine.getBookingItem(roomId).bookingItemName;
-                            String msg = "Key delivered for someone not checking out today, at room: " + roomName;
-                            String email = storeManager.getMyStore().configuration.emailAdress;
-                            messageManager.sendMail(email, email, msg, msg, email, email);
-                        }
-                        
-                        logEntry("Key delivered for room: " + bookingEngine.getBookingItem(roomId).bookingItemName, booking.id, roomId);
-                        return;
                     }
+                    saveBooking(booking);
+                    if(!room.isEndingToday()) {
+                        String roomName = bookingEngine.getBookingItem(roomId).bookingItemName;
+                        String msg = "Key delivered for someone not checking out today, at room: " + roomName;
+                        String email = storeManager.getMyStore().configuration.emailAdress;
+                        messageManager.sendMail(email, email, msg, msg, email, email);
+                    }
+
+                    logEntry("Key delivered for room: " + bookingEngine.getBookingItem(roomId).bookingItemName, booking.id, roomId);
+                    return;
                 }
             }
         }
@@ -2464,6 +2469,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveObject(add);
             doNotification("room_changed", booking, room);
         }
+    }
+
+    @Override
+    public PmsBookingRooms getRoomForItem(String itemId, Date atTime) {
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.isEnded(atTime)) {
+                    continue;
+                }
+                if(!room.isStarted(atTime)) {
+                    continue;
+                }
+                if(room.bookingItemId.equals(itemId)) {
+                    return room;
+                }
+            }
+        }
+        return null;
     }
 
 

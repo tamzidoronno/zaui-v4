@@ -96,7 +96,11 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean isStarted() {
-        return date.start.before(new Date());
+        return isStarted(new Date());
+    }
+    
+    boolean isStarted(Date when) {
+        return date.start.before(when);
     }
 
     boolean isStartingToday() {

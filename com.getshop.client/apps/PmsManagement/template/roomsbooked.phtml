@@ -102,7 +102,9 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
 
     <?php
     foreach ($rooms as $room) {
-        echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
+        if(!$object->getFactory()->productionMode) {
+            echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
+        }
         /* @var $room core_pmsmanager_PmsBookingRooms */
         $date = $room->date;
         $roomCleaningInterval = $config->cleaningInterval;

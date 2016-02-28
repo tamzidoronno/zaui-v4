@@ -24,28 +24,44 @@ foreach($sortList as $idx => $date) {
     if(!$eventEntry->starttime) {
         $eventEntry->starttime = date("H:i", strtotime($eventEntry->dateRanges[0]->start));
     }
-    echo "<tr>";
-    echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $date). " " . date("M", $date) ."</div><div>".$eventEntry->starttime."</div></td>";
-    echo "<td valign='top' class='listtext'>";
-    $shortId = explode("-", $eventEntry->id);
-    $edit = "";
-    if($this->isEditorMode()) {
-        $edit = "<a><i class='fa fa-trash-o'  gstype='clicksubmit' method='removeEntry' gsname='id' gsvalue='".$eventEntry->id."' ></i></a> ";
-        $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><i class='fa fa-edit'></i></a> ";
-    }
-    echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."'>" . $eventEntry->title  . " <span style='font-size: 12px;'>les mer</span></a></h2>";
+    if(isset($_GET['list']) && $_GET['list'] == "tiny") {
+        echo "<tr>";
+        echo "<td valign='top' width='50'><div>".date("d.", $date). "<br>" . date("M", $date) ."</div></td>";
+        echo "<td valign='top' class='listtext'>";
+        echo $eventEntry->title . "<br>";
+        echo $eventEntry->starttime;
+        echo "</td>";
+        echo "</tr>";
+    } else {
+        echo "<tr>";
+        echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $date). " " . date("M", $date) ."</div><div>".$eventEntry->starttime."</div></td>";
+        echo "<td valign='top' class='listtext'>";
+        $shortId = explode("-", $eventEntry->id);
+        $edit = "";
+        if($this->isEditorMode()) {
+            $edit = "<a><i class='fa fa-trash-o'  gstype='clicksubmit' method='removeEntry' gsname='id' gsvalue='".$eventEntry->id."' ></i></a> ";
+            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><i class='fa fa-edit'></i></a> ";
+        }
+        echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."'>" . $eventEntry->title  . " <span style='font-size: 12px;'>les mer</span></a></h2>";
 
-    echo "<div class='arrangedby'>" . $eventEntry->arrangedBy . "</div>";
-    if(isset($cats[$eventEntry->category])) {
-        echo "<div><span class='cat'>" . $cats[$eventEntry->category] . "</span></div>";
+        echo "<div class='arrangedby'>" . $eventEntry->arrangedBy . "</div>";
+        if(isset($cats[$eventEntry->category])) {
+            echo "<div><span class='cat'>" . $cats[$eventEntry->category] . "</span></div>";
+        }
+        echo nl2br(trim($eventEntry->shortdesc)) . "<br><br>";
+        echo "</td>";
+        echo "<tr>";
     }
-    echo nl2br(trim($eventEntry->shortdesc)) . "<br><br>";
-    echo "</td>";
-    echo "<tr>";
     $i++;
     if($i > 50) {
         break;
     }
+    if(isset($_GET['list']) && $_GET['list'] == "tiny" && $i == 3) {
+        break;
+    }
 }
 echo "</table>";
+if(isset($_GET['list']) && $_GET['list'] == "tiny") {
+    echo "<style>body { backgorund-color: #e2e0df !important }</style>";
+}
 ?>

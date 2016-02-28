@@ -19,6 +19,7 @@ class OsloTheme extends \ThemeApplication implements \Application {
         <style>
             .gsarea[area="header"],.gsarea[area="footer"] { display: none; }
             .gsarea[area="body"] .gs_page_width { box-shadow: none; }
+            .gs_page_width { max-width: 1024px; width: inherit; }
             body { 
                 background-color: #fff;
             }

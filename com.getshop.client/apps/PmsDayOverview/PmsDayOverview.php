@@ -56,10 +56,12 @@ class PmsDayOverview extends \WebshopApplication implements \Application {
     }
 
     public function markedAsReturned($roomid) {
-        if(isset($_SESSION['returnedkey_'.$roomid . "_" . date("d.m.Y")])) {
-            return true;
+        $time = strtotime(date("d.m.Y 08:00", time()));
+        $room = $this->getApi()->getPmsManager()->getRoomForItem($this->getSelectedName(),  $roomid, $this->convertToJavaDate($time));
+        if($room != null) {
+            return $room->keyIsReturned;
         }
-        return false;
+        return "notinuse";
     }
 
 }

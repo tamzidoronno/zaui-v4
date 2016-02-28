@@ -29,13 +29,13 @@ public class PmsManagerProcessor {
 
     public void doProcessing() {
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
+        try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
-        try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
         try { processIntervalCleaning(false); }catch(Exception e) { e.printStackTrace(); }
         try { processIntervalCleaning(true); }catch(Exception e) { e.printStackTrace(); }
         try {
@@ -602,7 +602,7 @@ public class PmsManagerProcessor {
         
         for (String itemToClose : mightNeedClosing) {
             for (PmsBooking booking : bookings) {
-                boolean needSaving = true;
+                boolean needSaving = false;
                 for (PmsBookingRooms room : booking.rooms) {
                     if (avoidClosing.contains(room.bookingItemId)) {
                         continue;

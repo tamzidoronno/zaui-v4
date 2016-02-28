@@ -1,0 +1,25 @@
+<?
+/* @var $this ns_a532618a_f189_4273_9145_c75b6a8289c5\ProMeisterAddionalEventSignonInformation */
+$user = $this->getApi()->getUserManager()->getLoggedOnUser();
+?>
+
+<div gstype='form' method="confirmBooking">
+    <table>
+        <tr>
+            <td class='col1'><? $this->wrapApp("320ada5b-a53a-46d2-99b2-9b0b26a7105a", "textfield1"); ?></td>
+            <td class='col2'><input class='gsniceinput1' type='textfield' gsname='alergic' value='<? echo @$user->metaData->{'event_signon_alergic'}; ?>'/>
+        </tr>
+        <tr>
+            <td class='col1'><? $this->wrapApp("320ada5b-a53a-46d2-99b2-9b0b26a7105a", "textfield2"); ?></td>
+            <td class='col2'><input class='gsniceinput1' type='textfield' gsname='specialfoodrequest' value='<? echo @$user->metaData->{'event_signon_specialfoodrequest'}; ?>'/>
+        </tr>
+        <tr>
+            <td class='col1'><? $this->wrapApp("320ada5b-a53a-46d2-99b2-9b0b26a7105a", "textfield3"); ?></td>
+            <td class='col2'><textarea gsname='additionalinfo'><? echo @$user->metaData->{'event_signon_additionalinfo'}; ?></textarea>
+        </tr>
+    </table>
+    <br/>
+    <input type='hidden' value='true' gsname='doConfirmBooking'/>
+    <div class="shop_button" gstype="submit"><? echo $this->__f("Confirm"); ?></div>
+</div>
+    

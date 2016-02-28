@@ -3,6 +3,16 @@ app.EventUserList = {
         $(document).on('click', '.EventUserList .addcomment', app.EventUserList.showUserComments);
         $(document).on('click', '.EventUserList .showsettings', app.EventUserList.showSettings);
         $(document).on('change', '.EventUserList .participationstatus', app.EventUserList.participationStatusChanged);
+        $(document).on('mouseenter', '.EventUserList .showspecialinfo', app.EventUserList.showspecialinfo);
+        $(document).on('mouseleave', '.EventUserList .showspecialinfo', app.EventUserList.hidespecialinfo);
+    },
+    
+    showspecialinfo: function() {
+        $(this).find('.user_special_comments').show()
+    },
+    
+    hidespecialinfo: function() {
+        $('.EventUserList .user_special_comments').hide();
     },
     
     participationStatusChanged: function() {

@@ -55,6 +55,19 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
         </div>
     </div>
     
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Is public?"); ?></span>
+        <div class="gss_onoff" gs_model="groupmodel" gs_model_attr="isPublic">
+            <?
+            $faclass = $group->isPublic ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("If this is set to false, users will not be able to register to it. Only admins can assign users to this group."); ?>
+        </div>
+    </div>
+    
     <!-- Invoice information START -->
     <div class='gss_settings_content gss_col_width_inner_2'>
         <center><h3><?php echo $this->__f("Invoice information"); ?></h3></center>

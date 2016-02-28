@@ -7,6 +7,6 @@ if (!$event->canBook) {
 ?>
 <br/>
 
-<div class="shop_button" gsclick="bookNow" eventId="<? echo $event->id; ?>">
+<div class='shop_button' gs_show_modal="event_signon" eventId="<? echo $event->id; ?>">
     <? echo $this->__w("Book now"); ?>
 </div>

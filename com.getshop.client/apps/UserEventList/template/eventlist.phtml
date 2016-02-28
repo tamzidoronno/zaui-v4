@@ -2,7 +2,7 @@
 /* @var $this ns_138a1b9a_d8e3_4fec_8f3f_1cae11bca54f\UserEventList */
 
 $events = array_reverse($this->getApi()->getEventBookingManager()->getMyEvents($this->getBookingEngineName()));
-
+$userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
 if (!count($events)) {
     echo $this->__w("No events available");
 }
@@ -11,9 +11,23 @@ foreach ($events as $event) {
     echo "<div class='downloadrow'>";
         echo "<div>".$event->bookingItemType->name."</div>";
         echo "<div>Date: ".$event->mainStartDate."</div>";
-        if ($event->markedAsReady) {
-            echo "<div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>";
+        echo "<div class='downloadcertificates'>";
+        if ($event->markedAsReady && $this->getApi()->getEventBookingManager()->canDownloadCertificate($this->getBookingEngineName(), $event->id)) {
+            echo "<div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;";
         }
+        
+        $externalCertificates = $this->getApi()->getEventBookingManager()->getExternalCertificates($this->getBookingEngineName(), $userId, $event->id);
+        if ($externalCertificates) {
+            foreach ($externalCertificates as $external) {
+                $entry = $this->getApi()->getFileManager()->getFile($external->fileId);
+                if ($entry) {
+                    echo "<a onclick=\"window.open('loadFile.php?fileid=".$entry->id."')\">" ;
+                    echo "<div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;";
+                    echo "</a>";   
+                }
+            }
+        }
+        echo "</div>";
     echo "</div>";
 }
 

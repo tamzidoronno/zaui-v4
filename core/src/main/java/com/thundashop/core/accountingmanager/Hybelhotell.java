@@ -1,13 +1,12 @@
 /*
- * Transfer orders to xledger.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
-package com.thundashop.core.xledgermanager;
+package com.thundashop.core.accountingmanager;
 
-import com.getshop.scope.GetShopSession;
-import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
-import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.common.ForStore;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
@@ -17,27 +16,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
-@GetShopSession
-public class XLedgerManager extends ManagerBase implements IXLedgerManager {
-
-    @Autowired
-    OrderManager orderManager;
-
-    @Autowired
+@ForStore(storeId="7b21932d-26ad-40a5-b3b6-c182f5ee4b2f")
+public class Hybelhotell implements AccountingInterface {
+    
     UserManager userManager;
-
-    @Autowired
-    CartManager cartManager;
     
     @Override
-    public List<String> createUserFile() {
-        List<User> users = userManager.getAllUsers();
+    public List<String> createUserFile(List<User> users) {
         List<String> result = new ArrayList();
         for(User user : users) {
             if(user.fullName == null || user.fullName.trim().isEmpty()) {
@@ -52,20 +38,16 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
     }
     
     @Override
-    public List<String> createOrderFile() {
+    public List<String> createOrderFile(List<Order> allOrders) {
         List<String> allOrdersToReturn = new ArrayList();
-        List<Order> allOrders = orderManager.getOrders(null, null, null);
         for(Order order : allOrders) {
-            if(order.status == Order.Status.SEND_TO_INVOICE) {
-                List<String> lines = createOrderLine(order);
-                allOrdersToReturn.addAll(lines);
-                order.status = Order.Status.PAYMENT_COMPLETED;
-                orderManager.saveOrder(order);
-            }
+            List<String> lines = createOrderLine(order);
+            allOrdersToReturn.addAll(lines);
         }
         return allOrdersToReturn;
     }
 
+    
     private List<String> createOrderLine(Order order) {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyymmdd");
 
@@ -75,21 +57,7 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
             User user = userManager.getUserById(order.userId);
             HashMap<Integer, String> toAdd = new HashMap();
             
-            String lineText = "";
-            
-            String startDate = "";
-            if(item.startDate != null) {
-                DateTime start = new DateTime(item.startDate);
-                startDate = start.toString("dd.MM.yy");
-            }
-            
-            String endDate = "";
-            if(item.endDate != null) {
-                DateTime end = new DateTime(item.endDate);
-                endDate = end.toString("dd.MM.yy");
-            }
-            
-            lineText = item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
+            String lineText = createLineText(item);
             
             toAdd.put(3, order.incrementOrderId + "");
             toAdd.put(4, order.incrementOrderId + "");
@@ -97,7 +65,7 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
             toAdd.put(6, format1.format(order.rowCreatedDate));
             toAdd.put(7, user.customerId + "");
             toAdd.put(16, "NOK");
-            toAdd.put(17, "100");
+            toAdd.put(17, "100"); //Product code.
             toAdd.put(19, lineText);
             toAdd.put(22, "døgn");
             toAdd.put(23, item.getCount() + "");
@@ -120,17 +88,6 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
         return allLines;
     }
     
-    private String getStay(CartItem item) {
-        if (item.startDate == null || item.endDate == null) {
-            return "";
-        }
-        
-        SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yy");
-        String startDate = dt.format(item.startDate);
-        String endDate = dt.format(item.endDate);
-        return " ("+startDate+"-"+endDate+")";
-    }
-
     private String createUserLine(User user) {
          HashMap<Integer, String> toAdd = new HashMap();
          toAdd.put(4, user.customerId + "");
@@ -169,6 +126,29 @@ public class XLedgerManager extends ManagerBase implements IXLedgerManager {
          }
          result += "EOL\r\n";
          return result;
+    }
+
+    @Override
+    public void setUserManager(UserManager manager) {
+        this.userManager = manager;
+    }
+
+    private String createLineText(CartItem item) {
+        String lineText = "";
+        String startDate = "";
+        if(item.startDate != null) {
+            DateTime start = new DateTime(item.startDate);
+            startDate = start.toString("dd.MM.yy");
+        }
+
+        String endDate = "";
+        if(item.endDate != null) {
+            DateTime end = new DateTime(item.endDate);
+            endDate = end.toString("dd.MM.yy");
+        }
+
+        lineText = item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
+        return lineText;
     }
 
 }

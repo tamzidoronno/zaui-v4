@@ -16,6 +16,10 @@ $dateType = $this->getConfigurationSetting("date_type");
         <td width="50%"><input type="text" gsname="next_button" style='width:100%;' value="<? echo $this->getText("next_button"); ?>"></td>
     </tr>
     <tr>
+        <td width="50%">Selected button text</td>
+        <td width="50%"><input type="text" gsname="selectedText" style='width:100%;' value="<? echo $this->getText("selectedText"); ?>"></td>
+    </tr>
+    <tr>
         <td width="50%">Name of the booking engine</td>
         <td width="50%"><input type="text" gsname="engine_name" style='width:100%;' value="<? echo $this->getText("engine_name"); ?>"></td>
     </tr>
@@ -35,6 +39,12 @@ $dateType = $this->getConfigurationSetting("date_type");
         <td width="50%">Multiple selections not allowed?</td>
         <td width="50%">
             <input type="checkbox" gsname="onlyoneselectionallowed" <?php if($this->getText("onlyoneselectionallowed") == "true") { echo "CHECKED"; } ?> >
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">Hide images?</td>
+        <td width="50%">
+            <input type="checkbox" gsname="hideimages" <?php if($this->getText("hideimages") == "true") { echo "CHECKED"; } ?> >
         </td>
     </tr>
     <tr>

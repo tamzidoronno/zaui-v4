@@ -20,10 +20,16 @@ header("Pragma: no-cache");
 header("Expires: 0");
 
 
-if($_GET['type'] == "user") {
-    $res = $factory->getApi()->getXLedgerManager()->createUserFile();
+if(isset($_GET['id'])) {
+    $res = $factory->getApi()->getAccountingManager()->getFile($_GET['id']);
+} else if($_GET['type'] == "user") {
+    if(isset($_GET['onlynew'])) {
+        $res = $factory->getApi()->getAccountingManager()->createUserFile(true);
+    } else {
+        $res = $factory->getApi()->getAccountingManager()->createUserFile(false);
+    }
 } else {
-    $res = $factory->getApi()->getXLedgerManager()->createOrderFile();
+    $res = $factory->getApi()->getAccountingManager()->createOrderFile();
 }
 if(!$res) {
     $res = array();

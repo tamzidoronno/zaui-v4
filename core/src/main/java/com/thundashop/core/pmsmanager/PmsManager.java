@@ -10,6 +10,7 @@ import biweekly.util.Recurrence;
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.gson.Gson;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
@@ -207,7 +208,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result = startBooking();
         }
         
-        if(result.sessionStartDate != null && result.sessionStartDate.after(result.sessionEndDate)) {
+        if(result.sessionEndDate != null && result.sessionStartDate != null && result.sessionStartDate.after(result.sessionEndDate)) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(result.sessionStartDate);
             cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -960,7 +961,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsConfiguration getConfiguration() {
-        return configuration;
+        Gson gson = new Gson();
+        String copy = gson.toJson(configuration);
+        
+        User loggedOn = getSession().currentUser;
+        if(loggedOn != null && loggedOn.isAdministrator()) {
+            return configuration;
+        }
+        
+        PmsConfiguration toReturn = gson.fromJson(copy, PmsConfiguration.class);
+        toReturn.arxUsername = "";
+        toReturn.arxPassword = "";
+        toReturn.arxHostname = "";
+        
+        return toReturn;
     }
 
     @Override

@@ -157,8 +157,10 @@ public class BookingItemAssignerOptimal {
                 1. Already in use
                 2. Does not exits
                 3. Not enouygh available rooms
-                */
-                throw new BookingEngineException("Could not complete the assignment, already in use. : " + bookingWithItem.getHumanReadableDates() + " item: " + bookingWithItem.bookingItemId);
+                 */
+                BookingItem item = getBookingItem(bookingWithItem.bookingItemId);
+                
+                throw new BookingEngineException("Could not complete the assignment, already in use. : " + bookingWithItem.getHumanReadableDates() + " item: " + item.bookingItemName);
             }
             
             BookingItem item = getBookingItem(bookingWithItem.bookingItemId);

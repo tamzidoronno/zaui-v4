@@ -164,6 +164,9 @@ foreach($bookings as $booking) {
 
         $row .= "</td>";
         $row .= "<td>";
+        if($room->keyIsReturned) {
+            $row .= "<i class='fa fa-key' style='color:green;'></i> ";
+        }
         if($room->booking && $room->booking->bookingItemId) {
             $row .= $items[$room->booking->bookingItemId]->bookingItemName;
         }

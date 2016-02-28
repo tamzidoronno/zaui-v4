@@ -5,6 +5,7 @@ $rooms = $this->getRooms();
 $numberSelected = 0;
 
 $singleSelection = ($this->getText("onlyoneselectionallowed") == "true");
+$selectedText = $this->getText("selectedText");
 
 foreach($rooms as $room) {
     /* @var $room core_pmsmanager_Room */
@@ -28,14 +29,20 @@ foreach($rooms as $room) {
     $start = $this->convertToJavaDate($this->getStartDate());
     $end = $this->convertToJavaDate($this->getEndDate());
     $availability = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $room->type->id, $start, $end);
+    $imgDisplayed = "";
+    if($this->getText("hideimages") != "true") {
+        $imgDisplayed = "imgdisplayed";
+    }
     ?>
-    <div class='productentry <? echo $selected; ?>'>
+    <div class='productentry <? echo $selected . " " . $imgDisplayed; ?>'>
         <?php
-        $imgs = $this->getImagesFromPage($room->type->id);
-        foreach($imgs as $img) {
-            echo "<span class='imgcontainer'>";
-            echo "<img class='roomimg' src='displayImage.php?id=" . $img."'>";
-            echo "</span>";
+        if($this->getText("hideimages") != "true") {
+            $imgs = $this->getImagesFromPage($room->type->id);
+            foreach($imgs as $img) {
+                echo "<span class='imgcontainer'>";
+                echo "<img class='roomimg' src='displayImage.php?id=" . $img."'>";
+                echo "</span>";
+            }
         }
         
         if($availability == 0) {
@@ -73,7 +80,7 @@ foreach($rooms as $room) {
                     <span class="selectbutton" gstype="clicksubmit" method="selectRoom" gsvalue="<?echo $room->type->id; ?>" gsname="typeid"><?php echo $this->getText("select_button"); ?></span>
                     <?php
                 } else {
-                    echo "<span class='selectedtext'>Selected</span>";
+                    echo "<span class='selectedtext'>".$selectedText."</span>";
                 }
             } else {
                 ?>

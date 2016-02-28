@@ -201,8 +201,11 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "<td>";
         
         $icon = "<i class='fa fa-refresh'></i>";
-        if($room->isCheckout) {
+        if($this->isCheckout($room, true)) {
             $icon = "<i class='fa fa-sign-out'></i>";
+        }
+        if($this->isCheckout($room,false)) {
+            $icon = "";
         }
         echo $icon . " ";
         
@@ -273,6 +276,13 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         ksort($newArray);
         
         return $newArray;
+    }
+
+    public function isCheckout($room, $checkout) {
+        if($checkout) {
+            return date("dmy", time() == date("dmy", strtotime($room->date->end)));
+        }
+        return date("dmy", time() == date("dmy", strtotime($room->date->start)));
     }
 
 }

@@ -688,7 +688,12 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     public Page createPageFromTemplatePage(String pageId) {
-        Page page = createPage(pageId);
+        Page page = getPage(pageId);
+        
+        if (page == null) {
+            page = createPage(pageId);
+        }
+        
         if (page != null) {
             Page newPage = page.jsonClone();
             newPage.masterPageId = page.id;

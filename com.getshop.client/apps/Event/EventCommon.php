@@ -34,6 +34,7 @@ class EventCommon extends \MarketingApplication {
     
     public function getBookingEngineName() {
         $names = $this->getApi()->getStoreManager()->getMultiLevelNames();
-        return $names[0];
+        
+        return "booking";
     }
 }

@@ -602,7 +602,7 @@ public class PmsManagerProcessor {
         
         for (String itemToClose : mightNeedClosing) {
             for (PmsBooking booking : bookings) {
-                boolean needSaving = true;
+                boolean needSaving = false;
                 for (PmsBookingRooms room : booking.rooms) {
                     if (avoidClosing.contains(room.bookingItemId)) {
                         continue;

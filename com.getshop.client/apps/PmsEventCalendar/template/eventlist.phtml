@@ -61,4 +61,7 @@ foreach($sortList as $idx => $date) {
     }
 }
 echo "</table>";
+if(isset($_GET['list']) && $_GET['list'] == "tiny") {
+    echo "<style>body { backgorund-color: #e2e0df !important }</style>";
+}
 ?>

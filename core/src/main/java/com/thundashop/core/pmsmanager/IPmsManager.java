@@ -107,6 +107,8 @@ public interface IPmsManager {
      
     @Administrator
     public void setNewCleaningIntervalOnRoom(String roomId, Integer interval);
+    @Administrator
+    public PmsBookingRooms getRoomForItem(String itemId, Date atTime);
     
     public PmsConfiguration getConfiguration();
     public void processor();

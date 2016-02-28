@@ -83,8 +83,14 @@ ksort($roomList);
 foreach($roomList as $room) {
     $user = $this->getApi()->getUserManager()->getUserById($room->userId);
     echo "<tr>";
-    echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td>";
-    echo "<td>" . $user->fullName . "( " . $user->cellPhone . ")". "</td>";
+    echo "<td>";
+    echo $items[$room->bookingItemId]->bookingItemName . "</td>";
+    echo "<td>";
+    if($room->keyIsReturned) {
+        echo "<i class='fa fa-key' style='color:green;'></i> ";
+    }
+
+    echo $user->fullName . "(" . $user->cellPhone . ") ". "</td>";
     echo "<td>" . $room->guests[0]->name . "</td>";
     echo "<td>" . $room->guests[0]->phone . "</td>";
     echo "<td>" . $room->guests[0]->email . "</td>";
@@ -108,7 +114,10 @@ Click on the room where the key has been returned.<br>
 $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 foreach($rooms as $room) {
     $marked = "";
-    if($this->markedAsReturned($room->id)) {
+    $found = $this->markedAsReturned($room->id);
+    if($found === "notinuse") {
+        $marked = "style='background-color:gray;'";
+    } elseif($found == true) {
         $marked = "style='background-color:green;color:#fff;'";
     }
     echo "<span class='keyreturnedroom' roomid='".$room->id."' $marked>" . $room->bookingItemName . "</span>";

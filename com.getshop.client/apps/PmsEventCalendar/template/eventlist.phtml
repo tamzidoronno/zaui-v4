@@ -62,6 +62,11 @@ foreach($sortList as $idx => $date) {
 }
 echo "</table>";
 if(isset($_GET['list']) && $_GET['list'] == "tiny") {
-    echo "<style>body { backgorund-color: #e2e0df !important }</style>";
+    ?>
+    <style>
+        body { background-color: #e2e0df !important; }
+        .gsarea[area="body"] .gs_page_width { background-color: #e2e0df !important; } 
+    </style>
+    <?php
 }
 ?>

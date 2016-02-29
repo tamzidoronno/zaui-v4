@@ -431,7 +431,7 @@ public class PmsManagerProcessor {
                                 manager.logEntry(text, booking.id, room.bookingItemId);
                             } catch (Exception e) {
                                 manager.logEntry("Not able to extend stay for room: " + item.bookingItemName, booking.id, room.bookingItemId);
-                                manager.warnAboutUnableToAutoExtend(item.bookingItemName, e.getMessage());
+//                                manager.warnAboutUnableToAutoExtend(item.bookingItemName, e.getMessage());
                             }
                         }
                         needSaving = true;

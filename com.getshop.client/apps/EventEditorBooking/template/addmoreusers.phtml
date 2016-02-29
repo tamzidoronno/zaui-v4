@@ -6,7 +6,10 @@
     <? echo $this->__f("Add more users"); ?>
 </div>
 <div class='content'>
-    Search for users &nbsp; <input class='gsniceinput1 searchforuserinput' />
+    <?
+    $searchResult = isset($_SESSION['EventEditorBooking_current_searchfor']) ? $_SESSION['EventEditorBooking_current_searchfor'] : "";
+    ?>
+    Search for users &nbsp; <input class='gsniceinput1 searchforuserinput' value='<? echo $searchResult; ?>'/>
     <div class='searchresult'>
         <?
         $this->includefile("searchresult");

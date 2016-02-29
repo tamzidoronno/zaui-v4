@@ -17,9 +17,28 @@ class EventEditorBooking extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventC
     public function searchForUsers() {
         $this->includefile("searchresult");
     }
-    
+        
     public function addUserToEvent() {
         $this->getApi()->getEventBookingManager()->addUserToEvent($this->getBookingEngineName(), $_POST['data']['eventid'], $_POST['data']['userid']);
     }
+
+    /**
+     * 
+     * @param \core_usermanager_data_User[] $users
+     */
+    public function groupUsersByCompany($users) {
+        if (!$users) {
+            return [];
+        }
+        
+        $rets = [];
+        foreach ($users as $user) {
+            $companyId = $user->companyObject ? $user->companyObject->id : "no_company";
+            $rets[$companyId][] = $user;
+        }
+        
+        return $rets;
+    }
+
 }
 ?>

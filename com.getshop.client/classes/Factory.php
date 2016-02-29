@@ -244,6 +244,13 @@ class Factory extends FactoryBase {
             $this->addJavascriptFile("js/jquery.flip.min.js");
         }
         
+        if ($this->isAmchartsEnabled()) {
+            $this->addJavascriptFile("js/amcharts/amcharts.js");
+            $this->addJavascriptFile("js/amcharts/radar.js");
+            $this->addJavascriptFile("js/amcharts/light.js");
+        }
+        
+        
         // JS TREE
         $this->addJavascriptFile("js/jstree/jstree.min.js");
         $this->addJavascriptFile("js/fastclick.js");
@@ -950,6 +957,12 @@ class Factory extends FactoryBase {
             return true;
         }
         return false;
+    }
+
+    public function isAmchartsEnabled() {
+        // Hack, this should be done proberly. Its currently only used by ProMeister and 
+        // with appliction ProMeisterSpiderDiagram application
+        return $this->getStore()->id == "6524eb45-fa17-4e8c-95a5-7387d602a69b";
     }
 
 }

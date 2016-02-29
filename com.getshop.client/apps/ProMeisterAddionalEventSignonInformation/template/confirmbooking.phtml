@@ -1,6 +1,9 @@
 <?
 /* @var $this ns_a532618a_f189_4273_9145_c75b6a8289c5\ProMeisterAddionalEventSignonInformation */
 $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+if ($this->getModalVariable("userid")) {
+    $user = $this->getApi()->getUserManager()->getUserById($this->getModalVariable("userid"));
+}
 ?>
 
 <div gstype='form' method="confirmBooking">

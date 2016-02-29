@@ -33,13 +33,22 @@ class QuestBackResultPrinter extends \MarketingApplication implements \Applicati
     }
 
     public static function getResult($result, $cat) {
+        if (!$result) {
+            return 0;
+        }
+        
         $total = "";
         $questionsInCategory = 0;
-        foreach($result->answers as $answer) {
-            if ($answer->parent == $cat) {
+        $answers = $result->answers;
+        foreach($answers as $answer) {
+            if (($answer->parent == $cat) || ($answer->parent->id == $cat)) {
                 $questionsInCategory++;
                 $total += $answer->percentageOfCorrect;
             }
+        }
+        
+        if (!$total) {
+            return 0;
         }
         
         $number = $total/$questionsInCategory;

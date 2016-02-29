@@ -3,41 +3,55 @@
 $event = $this->getEvent();    
 $result = null;
 
-if (isset($_POST['data']['searchstring']) && $_POST['data']['searchstring'] != "") {
-    $result = $this->getApi()->getUserManager()->findUsers($_POST['data']['searchstring']);
+if (isset($_POST['data']['searchstring'])) {
+    $_SESSION['EventEditorBooking_current_searchfor'] = $_POST['data']['searchstring'];
+}
+
+$companies = null;
+
+if (isset($_SESSION['EventEditorBooking_current_searchfor']) && $_SESSION['EventEditorBooking_current_searchfor']) {
+    $result = $this->getApi()->getUserManager()->findUsers($_SESSION['EventEditorBooking_current_searchfor']);
+    $companies = $this->groupUsersByCompany($result);
 }
 
 ?>
 
 <div class='usersearchresults'>
     <?
-    if ($result == null) {
+    if ($companies == null) {
         echo $this->__f("Please search for users.");
-    } else if (!count($result)) {
+    } else if (!count($companies)) {
         echo $this->__f("Did not find any users by the criteria");
     } else {
-        
-        echo "<div class='usersearchrow'>";
-            echo "<div>Name</div>";
-            echo "<div>Email</div>";
-            echo "<div>Cellphone</div>";
-            echo "<div>Company</div>";
-        echo "</div>";
+        $subAccountTitle = $this->__w("Create account for this company");
+        $addAccountTitle = $this->__w("Add this account to the event");
+                
+        foreach ($companies as $companyId => $result) {
+            /* @var $company core_usermanager_data_Company */
+            echo "<div class='companyrow'>";
+            $company = $this->getApi()->getUserManager()->getCompany($companyId);
+            echo "<div class='companytitle'>";
+            echo $company ? $company->name : "Not assigned to any companies";
+            echo "</div>";
             
-        foreach ($result as $user) {
-            if (!$user) {
-                continue;
+            if ($company) {
+                echo "<div class='gs_shop_small_icon addCompanyAccount' gs_show_modal='add_company_account' title='$subAccountTitle' eventid='$event->id' companyid='$company->id'><i class='fa fa-external-link'></i></div>";
             }
-            $companyName = $user && $user->companyObject != null ? $user->companyObject->name : "N/A";
-            $subAccountTitle = $this->__w("Create a new sub account");
-            $addAccountTitle = $this->__w("Add this account to the event");
-            echo "<div class='usersearchrow'>";
-                echo "<div>$user->fullName</div>";
-                echo "<div>$user->emailAddress</div>";
-                echo "<div>$user->cellPhone</div>";
-                echo "<div>$companyName</div>";
-                echo "<div class='gs_shop_small_icon' title='$addAccountTitle' gsclick='addUserToEvent' eventid='$event->id' userid='$user->id'><i class='fa fa-plus'></i></div>";
-                echo "<div class='gs_shop_small_icon' title='$subAccountTitle'><i class='fa fa-external-link'></i></div>";
+            foreach ($result as $user) {
+                if (!$user) {
+                    continue;
+                }
+
+                $companyName = $user && $user->companyObject != null ? $user->companyObject->name : "N/A";
+                
+                echo "<div class='usersearchrow'>";
+                    echo "<div>$user->fullName</div>";
+                    echo "<div>$user->emailAddress</div>";
+                    echo "<div>$user->cellPhone</div>";
+                    
+                    echo "<div class='gs_shop_small_icon' title='$addAccountTitle' gsclick='addUserToEvent' eventid='$event->id' userid='$user->id'><i class='fa fa-plus'></i></div>";
+                echo "</div>";
+            }
             echo "</div>";
         }
     }

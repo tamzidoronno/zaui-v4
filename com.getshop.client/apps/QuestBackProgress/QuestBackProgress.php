@@ -14,7 +14,7 @@ class QuestBackProgress extends \ApplicationBase implements \Application {
     }
 
     public function getName() {
-        return "QuestBack";
+        return "QuestBackProgress";
     }
 
     public function render() {

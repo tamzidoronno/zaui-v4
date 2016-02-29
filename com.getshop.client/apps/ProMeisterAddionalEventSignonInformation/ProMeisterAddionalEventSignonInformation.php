@@ -20,6 +20,11 @@ class ProMeisterAddionalEventSignonInformation extends \ns_d5444395_4535_4854_9d
     
     public function confirmBooking() {
         $userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+        
+        if ($this->getModalVariable("userid")) {
+            $userId = $this->getModalVariable("userid");
+        }
+        
         $this->getApi()->getUserManager()->addMetaData($userId, "event_signon_alergic", $_POST['data']['alergic']);
         $this->getApi()->getUserManager()->addMetaData($userId, "event_signon_specialfoodrequest", $_POST['data']['specialfoodrequest']);
         $this->getApi()->getUserManager()->addMetaData($userId, "event_signon_additionalinfo", $_POST['data']['additionalinfo']);

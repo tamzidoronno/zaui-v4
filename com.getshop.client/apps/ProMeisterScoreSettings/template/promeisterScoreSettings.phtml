@@ -1,0 +1,63 @@
+<?
+/* @var $this ns_d6e01372_c0d8_442e_ae4f_6aa0eafd2a22\ProMeisterScoreSettings */
+
+$groups = $this->getApi()->getUserManager()->getAllGroups();
+$categories = $this->getApi()->getQuestBackManager()->getCategories();
+
+$tests = $this->getApi()->getQuestBackManager()->getAllTests();
+
+$score = $this->getApi()->getQuestBackManager()->getResultRequirement();
+if (!$score) {
+    $score = new \core_questback_data_ResultRequirement();
+}
+
+?>
+
+<div gstype='form' method='saveresult'>
+<?
+    echo "What test should the score base its diagram om &nbsp;&nbsp;";
+    echo "<select gsname='testname' class='gsniceselect1'>";
+        foreach ($tests as $test) {
+            $selected = $test->id == $score->testId ? "selected='true'" : "";
+            echo "<option $selected value='$test->id'>$test->name</option>";
+        }
+    echo "</select>";
+
+    echo "<div style='border: solid 1px #DDD; margin-top: 20px; padding: 20px;'>";
+    echo "Should be used in diagram? <br/>";
+    foreach ($categories as $cat) {
+        $checked = in_array($cat->id, $score->catsThatShouldBeUsed) ? "checked='true'" : "";
+        echo "<input $checked type='checkbox' gsname='use_$cat->id' value='$cat->id'/> $cat->name <br/>";
+    }
+    echo "</div>";
+    echo "<br/><br/>";
+    foreach ($groups as $group) {
+        $groupid = $group->id;
+
+        echo "<div class='groupsetting'>";
+            echo "<div class='title'>$group->groupName</div>";
+            echo "<div class='inner'>";
+                foreach ($categories as $cat) {
+                    echo "<div class='catrow'>";
+                        $catid = $cat->id;
+                        echo "<label>".$cat->name."</label>";
+                        $valueReq = @$score->groupRequiments->{$groupid}->requirements->{$catid}->required;
+                        echo "Required <input class='gsniceinput1' type='txt' gsname='required_".$groupid."_".$catid."' value='$valueReq'/>";
+                        $valueMan = @$score->groupRequiments->{$groupid}->requirements->{$catid}->mandatory;
+                        echo "&nbsp;&nbsp;&nbsp;&nbsp; Mandatory: <input class='gsniceinput1' type='txt' gsname='mandatory_".$groupid."_".$catid."' value='$valueMan'/>";
+                    echo "</div>";
+                }
+            echo "</div>";
+        echo "</div>";
+    }
+    ?>
+    
+    <?
+    if (isset($_POST['data']['testname'])) {
+        ?> 
+    <i class="fa fa-check-circle"></i> Saved<br/><br/>
+    <?
+    }
+    ?>
+    <div class='shop_button' gstype='submit'>Save</div>
+</div>

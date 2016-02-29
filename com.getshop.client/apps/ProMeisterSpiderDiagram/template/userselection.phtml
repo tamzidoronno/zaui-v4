@@ -1,0 +1,14 @@
+<?
+/* @var $this ns_1de1b272_2de3_482f_90cd_6bb8ceb77aca\ProMeisterSpiderDiagram */
+$users = $this->getApi()->getUserManager()->getUsersByCompanyId($this->getLoggedOnUser()->companyObject->id);
+$currentUser = $this->getCurrentUser();
+$isCompanyOverview = $this->isCompanySelected();
+
+echo "<select style='box-sizing: border-box; width: 100%;' class='gsniceselect1 changeviewofchart'> ";
+echo "<option value='company'>".$this->getLoggedOnUser()->companyObject->name."</option>";
+foreach ($users as $user) {
+    $checked = $user->id == $currentUser->id && !$isCompanyOverview ? "selected='true'" : "";
+    echo "<option $checked value='$user->id'>".$user->fullName."</option>";
+}
+echo "</select>";
+?>

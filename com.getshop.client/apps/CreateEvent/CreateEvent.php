@@ -60,5 +60,9 @@ class CreateEvent extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
     public function markAsReady() {
         $this->getApi()->getEventBookingManager()->markAsReady($this->getBookingEgineName(), $_POST['data']['eventid']);
     }
+    
+    public function cancelEvent() {
+        $this->getApi()->getEventBookingManager()->cancelEvent($this->getBookingEgineName(), $_POST['data']['eventid']);
+    }
 }
 ?>

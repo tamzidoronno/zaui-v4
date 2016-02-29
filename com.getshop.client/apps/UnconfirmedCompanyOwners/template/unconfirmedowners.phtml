@@ -1,0 +1,20 @@
+<?
+/* @var $this \ns_267a9796_0fb2_4634_b1a5_d935ad4b43bc\UnconfirmedCompanyOwners */
+$unconfirmed = $this->getApi()->getUserManager()->getUnconfirmedCompanyOwners();
+
+if (!count($unconfirmed)) {
+    echo $this->__f("No accounts needs to be confirmed");
+    return;
+}
+
+foreach ($unconfirmed as $user) {
+    ?>
+    <div style='border: solid 1px #dDD; margin-bottom: 30px; padding: 20px;'>
+        <div><? echo $user->fullName; ?></div>
+        <div><? echo $this->__f("Company").": ".$user->companyObject->name; ?></div>
+        <div class='shop_button' gsclick='confirm' userid='<? echo $user->id; ?>'><? echo $this->__f("Confirm"); ?></div>
+        <div class='shop_button' gsclick='reject' userid='<? echo $user->id; ?>'><? echo $this->__f("Reject"); ?></div>
+    </div>
+    <?
+}
+?>

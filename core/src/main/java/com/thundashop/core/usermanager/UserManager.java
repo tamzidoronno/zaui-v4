@@ -312,7 +312,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         collection.addUser(user);
     }
 
-    private void checkUserAccess(User user) {
+    public void checkUserAccess(User user) {
         // Avoid degradation of the same user.
         if (getSession().currentUser != null && getSession().currentUser.id.equals(user.id)) {
             if ((user.type < getSession().currentUser.type) && getSession().currentUser.type < User.Type.GETSHOPADMINISTRATOR) {
@@ -325,7 +325,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
         
-        if (session.currentUser.type < user.type) {
+        
+        boolean okDueToCompanyAccess = securityCheckCompanyLevel(user);
+        
+        if (session.currentUser.type < user.type && !okDueToCompanyAccess) {
             throw new ErrorException(26);
         }
 
@@ -334,22 +337,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
         
-        if (getSession().currentUser.type < User.Type.ADMINISTRATOR && session.currentUser.id != user.id) {
-            if(!getSession().currentUser.id.equals(user.id)) {
+        if (getSession().currentUser.type < User.Type.ADMINISTRATOR && !getSession().currentUser.id.equals(user.id)) {
+            
+            if(!okDueToCompanyAccess) {
                 throw new ErrorException(26);
             }
         }
         
-         // Check group access.
-        if (user != null && user.groups != null) {
-            for (String group : user.groups) {
-                if (getSession().currentUser.groups != null 
-                        && getSession().currentUser.groups.size() > 0 
-                        && !getSession().currentUser.groups.contains(group)) {
-                    throw new ErrorException(97);
-                }
-            }
-        }
     }
     
     private void preventOverwriteOfData(User user, User savedUser) {
@@ -362,6 +356,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             
             // Keep metadata from savedUser, we have seperated api calls to set this data.
             user.metaData = savedUser.metaData;
+            
+            // There is a seperate function for this, security issue.
+            if (getSession().currentUser == null || getSession().currentUser.type < 50) {
+                user.isCompanyOwner = savedUser.isCompanyOwner;
+            }
         }
     }
     
@@ -1162,5 +1161,81 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return getAllUsers().stream()
                 .filter(user -> user != null && user.type == type)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<User> getUnconfirmedCompanyOwners() {
+        List<User> res = getAllUsers().stream()
+                .filter(o -> !o.isCompanyOwner && o.wantToBecomeCompanyOwner)
+                .collect(Collectors.toList());
+        
+        return res;
+    }
+
+    @Override
+    public void confirmCompanyOwner(String userId) {
+        User user = getUserById(userId);
+        if (user != null) {
+            user.isCompanyOwner = true;
+            saveUserSecure(user);
+        }
+    }
+
+    @Override
+    public List<User> getUsersByCompanyId(String companyId) {
+        Company company = getCompany(companyId);
+        if (company == null) {
+            return new ArrayList();
+        }
+        
+        if (getSession().currentUser.type > 10) {
+            return getUsersThatHasCompany(companyId);
+        }
+        
+        if (!getSession().currentUser.isCompanyOwner) {
+            return new ArrayList();
+        }
+        
+        if (getSession().currentUser.company == null || getSession().currentUser.company.isEmpty()) {
+            return new ArrayList();
+        }
+        
+        Company userCompany = getSession().currentUser.company
+                .stream()
+                .map(o -> getCompany(o))
+                .filter(comp -> comp.id.equals(companyId))
+                .findAny()
+                .orElse(null);
+        
+        if (userCompany == null) {
+            return new ArrayList();
+        }
+        
+        return getUsersThatHasCompany(companyId);
+    }
+
+    private List<User> getUsersThatHasCompany(String companyId) {
+        return getAllUsers().stream()
+                .filter(o -> o.company != null && o.company.contains(companyId))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Checks if the user logged inn has access to modify stuff for the user in argument
+     * @param user 
+     */
+    private boolean securityCheckCompanyLevel(User user) { 
+        User storedUser = getUserById(getSession().currentUser.id);
+                
+        if (getSession().currentUser.isCompanyOwner) {
+            for (String companyId : storedUser.company) {
+                List<String> companyUsersIds = getUsersByCompanyId(companyId).stream().map(o -> o.id).collect(Collectors.toList());
+                if (companyUsersIds.contains(user.id)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 }

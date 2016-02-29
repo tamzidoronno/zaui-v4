@@ -1,0 +1,250 @@
+<?
+/* @var $this ns_bd751f7e_5062_4d0d_a212_b1fc6ead654f\EventUserList */
+?>
+<h1><? echo $this->__f("Event statuses"); ?></h1>    
+
+<center><h2><? echo $this->__f("Mails?"); ?></h2>    </center>
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Should send email when user signs up?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="signupemail">
+        <?
+        $class = ($this->getConfigurationSetting("signupemail") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Should send email when user is removed?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="removedemail">
+        <?
+        $class = ($this->getConfigurationSetting("signupemail") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Send email when event is canceled?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="canceleventmail">
+        <?
+        $class = ($this->getConfigurationSetting("canceleventmail") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Automatically send reminder on email?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="reminder_on_email_activated">
+        <?
+        $class = ($this->getConfigurationSetting("reminder_on_email_activated") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<center><h2><? echo $this->__f("Sms?"); ?></h2> </center>
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Should send sms when user signs up?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="signupsms">
+        <?
+        $class = ($this->getConfigurationSetting("signupsms") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Should send sms when user is removed?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="removedsms">
+        <?
+        $class = ($this->getConfigurationSetting("removedsms") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Send sms when event is canceled?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="canceleventsms">
+        <?
+        $class = ($this->getConfigurationSetting("canceleventsms") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Automatically send reminder on sms?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="reminder_on_sms_activated">
+        <?
+        $class = ($this->getConfigurationSetting("reminder_on_sms_activated") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+
+<center><h2><? echo $this->__f("Contents variables that can be used"); ?></h2></center>
+<div>
+    <br/>
+    <? echo $this->__f("Variables that can be used in email and subject"); ?>:
+    <br/> {User.Passsword} = <? echo $this->__f("Name of the customer"); ?>
+    <br/> {User.Name} = <? echo $this->__f("Name of the customer"); ?>
+    <br/> {User.Email} = <? echo $this->__f("Email of the customer"); ?>
+    <br/> {User.Address} = <? echo $this->__f("Street address of the customer"); ?>
+    <br/> {User.City} = <? echo $this->__f("City of the customer"); ?>
+    <br/> {User.Postcode} = <? echo $this->__f("Customers postcode"); ?>
+    <br/> {User.Phone} = <? echo $this->__f("Phonenumber to the customer"); ?>
+</div>
+
+<center><h2><? echo $this->__f("Signup emails / sms"); ?></h2></center>
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Registration subject"); ?></span>
+        <input type='textfield' gs_model='eventmodel' gs_model_attr='ordersubject' value="<? echo $this->getConfigurationSetting("ordersubject"); ?>"/>
+        <div class="description">
+            <?php echo $this->__("What should the subject be?"); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="shouldSendEmail">
+        <span class="title"><?php echo $this->__f("Mailcontent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="shouldSendEmail">
+        <span class="title"><?php echo $this->__f("SmsContent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+<center><h2><? echo $this->__f("User removed emails / sms"); ?></h2></center>
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Registration subject"); ?></span>
+        <input type='textfield' gs_model='eventmodel' gs_model_attr='ordersubject' value="<? echo $this->getConfigurationSetting("ordersubject"); ?>"/>
+        <div class="description">
+            <?php echo $this->__("What should the subject be?"); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="shouldSendEmail">
+        <span class="title"><?php echo $this->__f("Mailcontent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="shouldSendEmail">
+        <span class="title"><?php echo $this->__f("SmsContent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+<center><h2><? echo $this->__f("Event canceled emails / sms"); ?></h2></center>
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Registration subject"); ?></span>
+        <input type='textfield' gs_model='eventmodel' gs_model_attr='ordersubject' value="<? echo $this->getConfigurationSetting("ordersubject"); ?>"/>
+        <div class="description">
+            <?php echo $this->__("What should the subject be?"); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="shouldSendEmail">
+        <span class="title"><?php echo $this->__f("Mailcontent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="shouldSendEmail">
+        <span class="title"><?php echo $this->__f("SmsContent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+<center><h2><? echo $this->__f("Automatic event reminder emails / sms"); ?></h2></center>
+
+    <div class="gss_setting">
+        <div class="text inline title"><?php echo $this->__f("Template used when sending automatic reminders by email"); ?></div>
+
+        <?
+        $templates = $this->getApi()->getEventBookingManager()->getReminderTemplates("booking");
+        ?>
+        <div class="gss_dropdown">
+            <select class="config" gs_model='emailmodel' gs_model_attr='automatic_reminder_template_email'>
+                <?
+                foreach ($templates as $template) {
+                    $selected = $this->getConfigurationSetting("automatic_reminder_template_email") == $template->id ? "selected='true'" : "";
+                    ?>
+                    <option <? echo $selected; ?> value="<? echo $template->id; ?>"><? echo $template->name; ?></option>
+                <? } ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="gss_setting">
+        <div class="text inline title"><?php echo $this->__f("Template used when sending automatic reminders by sms"); ?></div>
+
+        <?
+        $templates = $this->getApi()->getEventBookingManager()->getReminderTemplates("booking");
+        ?>
+        <div class="gss_dropdown">
+            <select class="config" gs_model='emailmodel' gs_model_attr='automatic_reminder_template_sms'>
+                <?
+                foreach ($templates as $template) {
+                    $selected = $this->getConfigurationSetting("automatic_reminder_template_sms") == $template->id ? "selected='true'" : "";
+                    ?>
+                    <option <? echo $selected; ?> value="<? echo $template->id; ?>"><? echo $template->name; ?></option>
+                <? } ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="gss_setting">
+        <div class="text inline title"><?php echo $this->__f("Template used when sending automatic reminders by sms"); ?></div>
+
+        <?
+        $templates = $this->getApi()->getEventBookingManager()->getReminderTemplates("booking");
+        $frequences = [1,2,5,7,12,24,48];
+        ?>
+        <div class="gss_dropdown">
+            <select class="config" gs_model='emailmodel' gs_model_attr='automatic_reminder_template_frequence'>
+                <?
+                foreach ($frequences as $fres) {
+                    $selected = $this->getConfigurationSetting("automatic_reminder_template_frequence") == $fres ? "selected='true'" : "";
+                    ?>
+                    <option <? echo $selected; ?> value="<? echo $fres; ?>"><? echo $fres; ?></option>
+                <? } ?>
+            </select>
+        </div>
+    </div>

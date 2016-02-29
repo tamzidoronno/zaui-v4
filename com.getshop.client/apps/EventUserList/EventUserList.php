@@ -51,5 +51,15 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         return $retText;
     }
 
+    public function gsEmailSetup($model) {
+        if (!$model) {
+            $this->includefile("emailsettings");
+            return;
+        } 
+        
+        $this->setConfigurationSetting("ordersubject", $_POST['ordersubject']);
+        $this->setConfigurationSetting("orderemail", $_POST['emailconfig']);
+        $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
+    }
 }
 ?>

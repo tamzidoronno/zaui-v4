@@ -136,9 +136,23 @@ if (!$user->address) {
             <?php echo $this->__("Will display how long time it is until you log out, reload needed (press f5) after activation."); ?>
         </div>
     </div>
+    
     <?
     }
     ?>
+    
+    <div class="textfield gss_setting"  >
+        <span class="title"><?php echo $this->__f("Is company owner?"); ?></span>
+        <div class="gss_onoff" gs_model="usermodel" gs_model_attr="isCompanyOwner">
+            <?
+            $faclass = $user->isCompanyOwner ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?> "></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("If activated the user will get insight in other users within the same company."); ?>
+        </div>
+    </div>
     
     <div class="textfield gss_setting"  id="password1">
         <span class="title"><?php echo $this->__f("Dicount"); ?></span>

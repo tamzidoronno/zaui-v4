@@ -1,0 +1,46 @@
+<?
+/* @var $this ns_1de1b272_2de3_482f_90cd_6bb8ceb77aca\ProMeisterSpiderDiagram */
+$user = $this->getCurrentUser();
+$dataProvider = $this->getDataProvider($user);      
+?>
+
+<div class='chartdivview' id="chartdiv_<? echo $user->id; ?>" style="width: 500px; height: 400px; "></div>
+
+<script>
+        chart = AmCharts.makeChart( "chartdiv_<? echo $user->id; ?>", {
+             "type": "radar",
+             "theme": "light",
+             "startEffect" : "elastic",
+             "startDuration" : 0,
+             "color" : "#000",
+             "dataProvider": [ <? echo $dataProvider; ?> ],
+             "valueAxes": [ {
+               "axisTitleOffset": 20,
+               "minimum": 0,
+               "axisAlpha": 0.15
+             } ],
+             "graphs": [ {
+               "balloonText": "Nuläge",
+               "bullet": "round",
+               "fillAlphas": 0.5,
+               "lineColor" : "#001cac",
+               "valueField": "nuläge"
+             }, {
+               "balloonText": "Krav",
+               "bullet": "round",
+               "fillAlphas": 0,
+               "lineColor" : "#b00019",
+               "valueField": "krav"
+             }, {
+               "balloonText": "Behov",
+               "bullet": "round",
+               "fillAlphas": 0,
+               "lineColor" : "#26af53",
+               "valueField": "behov"
+             }],
+             "categoryField": "country",
+             "export": {
+               "enabled": true
+             }
+        });    
+</script>

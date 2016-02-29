@@ -8,7 +8,9 @@ package com.thundashop.core.questback;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.questback.data.QuestBackQuestion;
 import com.thundashop.core.questback.data.QuestTest;
+import com.thundashop.core.questback.data.ResultRequirement;
 import com.thundashop.core.questback.data.UserTestResult;
 import java.util.List;
 
@@ -75,5 +77,24 @@ public interface IQuestBackManager {
     public UserTestResult getTestResults(String userId, String testId);
     
     @Customer
+    public UserTestResult getTestResultForUser(String testId, String userId);
+    
+    @Customer
     public UserTestResult getTestResult(String testId);
+    
+    @Customer
+    public List<QuestBackQuestion> getCategories();
+    
+    @Administrator
+    public void saveQuestBackResultRequirement(ResultRequirement requirement);
+    
+    @Customer
+    public ResultRequirement getResultRequirement();
+    
+    @Customer
+    public QuestBackQuestion getQuestion(String id);
+    
+    @Customer
+    public UserTestResult getBestCategoryResultForCompany(String userId, String catId);
+    
 }

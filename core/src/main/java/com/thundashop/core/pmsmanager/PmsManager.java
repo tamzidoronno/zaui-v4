@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.joda.time.DateTime;
@@ -71,6 +72,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsPricing prices = new PmsPricing(); 
     public PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
+    private List<String> warnedAbout = new ArrayList();
 
     @Autowired
     BookingEngine bookingEngine;
@@ -2337,8 +2339,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void warnAboutUnableToAutoExtend(String bookingItemName, String reason) {
+        Calendar cal = Calendar.getInstance();
+        Integer day = cal.get(Calendar.DAY_OF_YEAR);
+        String warningString = bookingItemName + "-" + day;
+        if(warnedAbout.contains(warningString)) {
+            return;
+        }
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
         messageManager.sendMail(copyadress, copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
+        messageManager.sendMail("pal@getshop.com", copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
+        warnedAbout.add(warningString);
     }
 
     public boolean isSameDay(Date date1, Date date2) {

@@ -9,6 +9,7 @@ thundashop.common.currentScroll = 0;
 getshopmaintoolboxhidden = false;
 isAdministrator = false;
 isFirstLoading = true;
+avoidjavascriptnavigation = false;
 
 
 $(document).mousemove(function(e) {
@@ -50,13 +51,17 @@ var doNavigation = function(useLink, url, ajaxLink, callback) {
     if (typeof(callback) === "undefined") {
         callback = true;
     }
+    if(avoidjavascriptnavigation) {
+        window.location.href=url;
+        return;
+    }
     window.history.pushState({url: url, ajaxLink: ajaxLink}, "Title", url);
     thundashop.Ajax.doJavascriptNavigation(useLink, null, callback);
 }
 
 var navigate = function(url, ajaxLink) {
     var useLink = ajaxLink ? ajaxLink : url;
-    if (history.pushState) {
+    if (history.pushState && !avoidjavascriptnavigation) {
         doNavigation(useLink, url, ajaxLink);
     } else {
         window.location.hash = useLink;
@@ -79,14 +84,14 @@ if (!history.pushState) {
 }
 
 $(document).ready(function() {    
-    if (history.pushState) {
+    if (history.pushState && !avoidjavascriptnavigation) {
         var pageId = $('.gsbody_inner').attr('pageId');
         window.history.pushState({ajaxLink: "?page="+pageId}, "Title", "");
     }    
 });
 
 
-if (history.pushState) {
+if (history.pushState && !avoidjavascriptnavigation) {
     window.onpopstate = function(event) {
         if (event && event.state) {
             var url = event.state.ajaxLink ? event.state.ajaxLink : event.state.url;
@@ -140,6 +145,11 @@ $(function() {
         var link = $(this).attr('href');
 
         var url = getUrl(link);
+        
+        if(avoidjavascriptnavigation) {
+            window.location.href=url;
+            return;
+        }
 
         if (link.indexOf(".html") > -1 || link.indexOf(".htm") > -1) {
             link = "?rewrite=" + encodeURIComponent(link.substring(link.lastIndexOf("/") + 1, link.lastIndexOf(".")));
@@ -268,6 +278,12 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
 thundashop.common.lastPushId = null;
 thundashop.common.goToPage = function(id, callback) {
     var link = "/?page="+id;
+    
+    if(avoidjavascriptnavigation) {
+        window.location.href=link;
+        return;
+    }
+    
     if(thundashop.common.lastPushId === null || thundashop.common.lastPushId !== id) {
         if(window.history.pushState !== undefined) {
             window.history.pushState({url: link, ajaxLink: link}, "Title", link);
@@ -279,6 +295,13 @@ thundashop.common.goToPageLink = function(link, callback) {
     var url = link;
     link = link.replace(".html", "");
     link = link.replace("/", "");
+    
+    
+    if(avoidjavascriptnavigation) {
+        window.location.href=link;
+        return;
+    }
+    
     link = "rewrite="+link;
 
     if(thundashop.common.lastPushId === null || thundashop.common.lastPushId !== id) {

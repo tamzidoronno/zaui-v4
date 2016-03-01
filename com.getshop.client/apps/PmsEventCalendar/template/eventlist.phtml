@@ -46,7 +46,7 @@ foreach($sortList as $idx => $date) {
 
         echo "<div class='arrangedby'>" . $eventEntry->arrangedBy . "</div>";
         if(isset($cats[$eventEntry->category])) {
-            echo "<div><span class='cat'>" . $cats[$eventEntry->category] . "</span></div>";
+//            echo "<div><span class='cat'>" . $cats[$eventEntry->category] . "</span></div>";
         }
         echo nl2br(trim($eventEntry->shortdesc)) . "<br><br>";
         echo "</td>";
@@ -62,6 +62,12 @@ foreach($sortList as $idx => $date) {
 }
 echo "</table>";
 if(isset($_GET['list']) && $_GET['list'] == "tiny") {
-    echo "<style>body { backgorund-color: #e2e0df !important }</style>";
+    ?>
+    <style>
+        body { background-color: #e2e0df !important; }
+.gsarea[area="body"] .gs_page_width.gsinner { background-color: #e2e0df !important; }
+    </style>
+    <?php
 }
+
 ?>

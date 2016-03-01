@@ -37,12 +37,12 @@ if($event->arrangedBy) {
 }
 echo $event->location . "</div><br>";
 
+echo nl2br($event->shortdesc) . "<br><br>";
 
 $imgDisplayer = $this->getImageDisplayer($event->id);
 $imgDisplayer->displayImage();
-echo nl2br($event->shortdesc) . "<br>";
-echo "<div style='clear:both;'></div>";
 echo $event->description;
+echo "<div style='clear:both;'></div>";
 if(sizeof($event->lenker) > 0) {
     echo "<h2>Lenker</h2>";
     foreach($event->lenker as $link) {

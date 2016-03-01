@@ -419,6 +419,15 @@ if (isset($_GET['showlogin']) || $factory->isEditorMode()) {
     echo "<script>$('.Login .notloggedon').show();</script>";
 }
 
+if(isset($_GET['avoidjavascriptnavigation']) || isset($_SESSION['avoidjavascriptnavigation'])) {
+    $_SESSION['avoidjavascriptnavigation'] = true;
+    echo "<script>avoidjavascriptnavigation = true;</script>";
+}
+if(isset($_GET['dojavascriptnavigation'])) {
+    unset($_SESSION['dojavascriptnavigation']);
+    echo "<script>avoidjavascriptnavigation = false;";
+}
+
 
 if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
     echo "<script>getshop.Settings.showSettings(false);</script>";

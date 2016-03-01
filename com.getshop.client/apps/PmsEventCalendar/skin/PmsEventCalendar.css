@@ -52,5 +52,5 @@
 .PmsEventCalendar .datecol { font-size: 20px;  padding-left: 10px; padding-right: 20px; padding-top:15px;}
 .PmsEventCalendar .listtext { font-size: 16px; }
 .PmsEventCalendar .listtext h2,.PmsEventCalendar h1 { margin: 0px; padding-top:10px; }
-.PmsEventCalendar .cat { background-color:#bbb; padding: 3px; display:inline-block; color:#efefef; margin-top: 5px; margin-bottom: 5px; padding-left: 10px; padding-right: 10px; }
+.PmsEventCalendar .cat { background-color:#bbb; padding: 1px; display:inline-block; color:#efefef; margin-top: 5px; margin-bottom: 5px; padding-left: 10px; padding-right: 10px; font-size: 12px; }
 .PmsEventCalendar .arrangedby { font-size: 12px; color:#bbb; font-weight: bold; margin-top: 5px; margin-bottom: 5px; }

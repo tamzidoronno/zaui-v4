@@ -32,7 +32,7 @@ public interface IPmsManager {
     public String setBookingItem(String roomId, String bookingId, String itemId);
     
     @Administrator
-    public String changeDates(String roomId, String bookingId, Date start, Date end);
+    public PmsBookingRooms changeDates(String roomId, String bookingId, Date start, Date end);
     
     @Administrator
     public void deleteBooking(String bookingId);

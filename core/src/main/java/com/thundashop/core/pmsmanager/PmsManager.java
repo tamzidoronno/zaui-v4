@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.joda.time.DateTime;
@@ -71,6 +72,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsPricing prices = new PmsPricing(); 
     public PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
+    private List<String> warnedAbout = new ArrayList();
 
     @Autowired
     BookingEngine bookingEngine;
@@ -687,8 +689,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public String changeDates(String roomId, String bookingId, Date start, Date end) {
-         PmsBooking booking = getBooking(bookingId);
+    public PmsBookingRooms changeDates(String roomId, String bookingId, Date start, Date end) {
+        PmsBooking booking = getBooking(bookingId);
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
             bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
@@ -698,15 +700,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.start = start;
             room.date.end = end;
             room.date.exitCleaningDate = null;
+            room.date.cleaningDate = null;
             saveBooking(booking);
             
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
             logEntry(logText, bookingId, null, roomId);
             
         }catch(BookingEngineException ex) {
-            return ex.getMessage();
+            ex.printStackTrace();
+            return null;
         }
-        return "";
+        return null;
     }
 
 
@@ -873,20 +877,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     return null;
                 }
                 price = room.price / daysInPeriode;
-            }
-            if(booking.priceType.equals(PmsBooking.PriceType.progressive)) {
+            } else if(booking.priceType.equals(PmsBooking.PriceType.progressive)) {
                 int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(startDate)).getDays();
                 price = calculateProgressivePrice(room.bookingItemTypeId, startDate, endDate, days, true);
-            }
-            if(booking.priceType.equals(PmsBooking.PriceType.interval)) {
-                price = calculateIntervalPrice(room.bookingItemTypeId, room.date.start, room.date.end, true);
-            }
-            if(booking.priceType.equals(PmsBooking.PriceType.daily) || 
+            } else if(booking.priceType.equals(PmsBooking.PriceType.daily) || 
                 booking.priceType.equals(PmsBooking.PriceType.interval) || 
                 booking.priceType.equals(PmsBooking.PriceType.progressive)) {
                 price = room.price;
-            }
-            if(booking.priceType.equals(PmsBooking.PriceType.weekly)) {
+            } else if(booking.priceType.equals(PmsBooking.PriceType.weekly)) {
                 price = (room.price/7);
             }
 
@@ -896,6 +894,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if(prices.pricesExTaxes) {
                 double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
+                //Order price needs to be inc taxes..
                 price *= tax;
             }
             
@@ -931,10 +930,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         order.userId = booking.userId;
         order.invoiceNote = booking.invoiceNote;
         
-        if(!configuration.prepayment) {
+        if(configuration.substractOneDayOnOrder) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(order.rowCreatedDate);
             cal.add(Calendar.DAY_OF_YEAR, -1);
+            order.rowCreatedDate = cal.getTime();
+        }
+        
+        if(order.cart.address == null || order.cart.address.address == null || order.cart.address.address.isEmpty()) {
+            if(!user.company.isEmpty()) {
+                Company company = userManager.getCompany(user.company.get(0));
+                order.cart.address = company.address; 
+                order.cart.address.fullName = company.name;
+            }
         }
         
         orderManager.saveOrder(order);
@@ -2337,8 +2345,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void warnAboutUnableToAutoExtend(String bookingItemName, String reason) {
+        Calendar cal = Calendar.getInstance();
+        Integer day = cal.get(Calendar.DAY_OF_YEAR);
+        String warningString = bookingItemName + "-" + day;
+        if(warnedAbout.contains(warningString)) {
+            return;
+        }
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
         messageManager.sendMail(copyadress, copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
+        messageManager.sendMail("pal@getshop.com", copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
+        warnedAbout.add(warningString);
     }
 
     public boolean isSameDay(Date date1, Date date2) {

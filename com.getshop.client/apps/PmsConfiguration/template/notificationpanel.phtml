@@ -395,6 +395,18 @@ $days[7] = "Sunday";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->substractOneDayOnOrder) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='substractOneDayOnOrder' <? echo $checked; ?>>
+            </span>
+            Automatically substract one day on order date.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->autoCreateInvoices) {
                     $checked = "CHECKED";
                 }

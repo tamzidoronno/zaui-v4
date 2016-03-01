@@ -426,12 +426,12 @@ public class PmsManagerProcessor {
                         BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
                         if (item != null) {
                             String text = "Autoextending room " + item.bookingItemName;
-                            try {
-                                manager.bookingEngine.changeDatesOnBooking(room.bookingId, room.date.start, room.date.end);
+                            PmsBookingRooms res = manager.changeDates(room.pmsBookingRoomId, booking.id, room.date.start, room.date.end);
+                            if(res != null) {
                                 manager.logEntry(text, booking.id, room.bookingItemId);
-                            } catch (Exception e) {
+                            } else {
                                 manager.logEntry("Not able to extend stay for room: " + item.bookingItemName, booking.id, room.bookingItemId);
-                                manager.warnAboutUnableToAutoExtend(item.bookingItemName, e.getMessage());
+                                manager.warnAboutUnableToAutoExtend(item.bookingItemName,"Not able to extend");
                             }
                         }
                         needSaving = true;

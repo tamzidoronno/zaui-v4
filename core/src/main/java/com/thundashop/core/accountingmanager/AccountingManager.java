@@ -82,6 +82,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         for(AccountingInterface iface : interfaces) {
             List<Order> orders = new ArrayList();
             for(Order order : orderManager.getOrders(null, null, null)) {
+                if(order.status != Order.Status.SEND_TO_INVOICE) {
+                    continue;
+                }
                 if(!order.transferredToAccountingSystem) {
                     orders.add(order);
                 }

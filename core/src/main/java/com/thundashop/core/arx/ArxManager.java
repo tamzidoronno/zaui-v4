@@ -306,7 +306,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export_accesscategory";
         String password = userPasswords.get(currentUser.id);
-        System.out.println("Looking at : " + hostName);
+//        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName, currentUser.username, password, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
@@ -340,7 +340,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?include_accesscategory_id=true&exclude_deleted=true";
         String password = userPasswords.get(currentUser.id);
-        System.out.println("Looking at : " + hostName);
+//        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName, currentUser.username, password, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
@@ -459,7 +459,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         }
         
         String password = userPasswords.get(currentUser.id);
-        System.out.println(hostName);
+//        System.out.println(hostName);
         httpLoginRequest(hostName, currentUser.username, password, "");
     }
 
@@ -535,7 +535,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
                 }
                 if(element.getAttribute("type").equals("dac_properties")) {
                     log.dac_properties = element.getTextContent();
-                    System.out.println(log.dac_properties);
+//                    System.out.println(log.dac_properties);
                 }
             }
             
@@ -619,7 +619,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?external_id=" + id + "&exclude_deleted=1";
         String password = userPasswords.get(currentUser.id);
-        System.out.println("Looking at : " + hostName);
+//        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName, currentUser.username, password, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );

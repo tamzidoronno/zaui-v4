@@ -22,11 +22,16 @@ public class BookingItemAssignerOptimal {
     private List<Booking> bookings;
     private List<BookingItem> items;
     private boolean dryRun = false;
+    private boolean throwException = true;
 
-    public BookingItemAssignerOptimal(BookingItemType type, List<Booking> bookings, List<BookingItem> items) {
+    public BookingItemAssignerOptimal(BookingItemType type, List<Booking> bookings, List<BookingItem> items, Boolean throwException) {
         this.type = type;
         this.bookings = bookings;
         this.items = items;
+        
+        if (throwException != null) {
+            this.throwException = throwException;
+        }
     }
 
     /**
@@ -51,7 +56,9 @@ public class BookingItemAssignerOptimal {
         
         if (bookingLines.size() > maximumNumberOfLines) {
             printBookingLines(bookingLines);
-            throw new BookingEngineException("The setup of bookings can not be fitted into the booking, you have more bookings than you have items of this type");
+            if (throwException) {
+                throw new BookingEngineException("The setup of bookings can not be fitted into the booking, you have more bookings than you have items of this type");
+            }
         }
         
         return bookingLines;
@@ -130,7 +137,9 @@ public class BookingItemAssignerOptimal {
         // Do the rest of the timelines
         for (List<Booking> bookingLine : bookingLines) {
             if (bookingItemsFlatten.isEmpty()) {
-                throw new BookingEngineException("Not enough bookingitems to make all timelines, no more space left.");
+                if (throwException) {
+                    throw new BookingEngineException("Not enough bookingitems to make all timelines, no more space left.");
+                }
             }
             
             String bookingItem = bookingItemsFlatten.remove(0);
@@ -164,7 +173,9 @@ public class BookingItemAssignerOptimal {
                  */
                 BookingItem item = getBookingItem(bookingWithItem.bookingItemId);
                 
-                throw new BookingEngineException("Could not complete the assignment, already in use. : " + bookingWithItem.getHumanReadableDates() + " item: " + item.bookingItemName);
+                if (throwException) {
+                    throw new BookingEngineException("Could not complete the assignment, already in use. : " + bookingWithItem.getHumanReadableDates() + " item: " + item.bookingItemName);
+                }
             }
             
             BookingItem item = getBookingItem(bookingWithItem.bookingItemId);

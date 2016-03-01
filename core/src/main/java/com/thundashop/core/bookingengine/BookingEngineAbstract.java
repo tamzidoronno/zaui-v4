@@ -542,7 +542,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 }
             }
             
-            BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, checkBookings, getItemsByType(type.id));
+            BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, checkBookings, getItemsByType(type.id), shouldThrowException());
             
             // This throws exception if not possible.
             assigner.canAssign();
@@ -689,7 +689,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
 
         List<BookingItem> bookingItems = getBookingItemsByType(typeId);
         
-        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, bookingsWithinDaterange, bookingItems);
+        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, bookingsWithinDaterange, bookingItems, shouldThrowException());
 
         return assigner.getAvailableItems().stream()
                 .map(o -> items.get(o))
@@ -746,10 +746,18 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                         .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(type.id))
                         .collect(Collectors.toList());
                 
-                new BookingItemAssignerOptimal(type, toCheck, bookingItems).canAssign();
+                new BookingItemAssignerOptimal(type, toCheck, bookingItems, shouldThrowException()).canAssign();
             }
         } catch (Exception x) {
             messageManager.sendErrorNotification(x.getMessage());
         }
+    }
+
+    private Boolean shouldThrowException() {
+        if (getSession() != null && getSession().get("ignoreBookingErrors") != null && getSession().get("ignoreBookingErrors").equals("true")) {
+            return false;
+        }
+        
+        return null;
     }
 }

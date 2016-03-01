@@ -31,5 +31,11 @@ thundashop.Administration = {
             "password" : password
         });
         thundashop.Ajax.post(event);
+    },
+    toggleShowBookingErrors: function(password) {
+        var event = thundashop.Ajax.createEvent('','toggleShowBookingErrors',$(this),{
+            "password" : password
+        });
+        thundashop.Ajax.post(event);
     }
 }

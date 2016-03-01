@@ -187,4 +187,7 @@ public interface IStoreManager {
     public List<String> getAllEnvironments();
     
     public List<String> getMultiLevelNames() throws ErrorException;
+    
+    @Administrator
+    public void toggleIgnoreBookingErrors(String password);
 }

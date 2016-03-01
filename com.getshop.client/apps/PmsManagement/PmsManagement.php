@@ -729,7 +729,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(!isset($filter->searchWord) || !$filter->searchWord) {
             return true;
         }
-        $tocheck = strtolower($row);
+        $tocheck = strtolower(strip_tags($row));
         return mb_stristr($tocheck, strtolower($filter->searchWord), false, "UTF-8");
     }
 

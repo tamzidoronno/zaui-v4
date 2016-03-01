@@ -700,6 +700,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.start = start;
             room.date.end = end;
             room.date.exitCleaningDate = null;
+            room.date.cleaningDate = null;
             saveBooking(booking);
             
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);

@@ -649,10 +649,10 @@ public class PmsManagerProcessor {
             System.out.println("Could not find item when closing door, id: "  + itemToClose);
             return;
         }
+        manager.arxManager.overrideCredentials(manager.configuration.arxHostname, manager.configuration.arxUsername, manager.configuration.arxPassword);
         List<Door> doors = manager.arxManager.getAllDoors();
         for (Door door : doors) {
             if (door.name.equals(item.bookingItemName) || door.name.equals(item.bookingItemAlias) || door.name.equals(item.doorId)) {
-                manager.arxManager.overrideCredentials(manager.configuration.arxHostname, manager.configuration.arxUsername, manager.configuration.arxPassword);
                 manager.arxManager.doorAction(door.externalId, "forceOpen", false);
                 manager.logEntry("Ran close on : " + door.externalId, bookingId, itemToClose);
                 manager.arxManager.clearOverRideCredentials();

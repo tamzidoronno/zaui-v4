@@ -103,6 +103,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
     private String arxUsername = null;
     private String arxPassword = null;
     private boolean doneClosedForToday = false;
+    private ArxLogFetcherThread arxLogFetcher;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -145,7 +146,10 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
     
     public String httpLoginRequest(String address, String username, String password, String content) throws Exception {
-        User currentUser = getSession().currentUser;
+        User currentUser = null;
+        if(getSession() != null) {
+            currentUser = getSession().currentUser;
+        }
         
         if(arxHostname != null) {
             address = "https://" + arxHostname + address;
@@ -462,6 +466,9 @@ public class ArxManager extends ManagerBase implements IArxManager {
     @Override
     public HashMap<String, List<AccessLog>> getLogForAllDoor(long start, long end) throws Exception {
         String result = getDoorLog(start, end);
+        if(result.isEmpty()) {
+            return new HashMap();
+        }
         List<Door> allDoors = getAllDoors();
         HashMap<String, List<AccessLog>> returnResult = new HashMap();
         
@@ -745,17 +752,24 @@ public class ArxManager extends ManagerBase implements IArxManager {
         }
         return result;
     }
-
-    private String getDoorLog(long start, long end) {
-        String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end;
-        String result = "";
-        try {
-            result = httpLoginRequest(hostName, "", "", "");
-        }catch(Exception e) {
-            e.printStackTrace();
+    
+    public void startFetcherThread() {
+        if(arxLogFetcher != null) {
+            return;
         }
+        arxLogFetcher = new ArxLogFetcherThread(this);
+        arxLogFetcher.username = arxUsername;
+        arxLogFetcher.password = arxPassword;
+        arxLogFetcher.hostname = arxHostname;
+        arxLogFetcher.start();
+    }
+
+    public String getDoorLog(long start, long end) {
         
-        return result;
+        if(arxLogFetcher != null) {
+            return arxLogFetcher.result;
+        }
+        return getDoorLogForced(start, end);
     }
 
     private List<AccessLog> generateDoorAccessLogFromResult(String result, String externalId) throws Exception {
@@ -845,6 +859,18 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
     public void clearCloseForToday() {
         doneClosedForToday = false;
+    }
+
+    public String getDoorLogForced(long start, long end) {
+        String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end;
+        String result = "";
+        try {
+            result = httpLoginRequest(hostName, "", "", "");
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return result;
     }
 
 }

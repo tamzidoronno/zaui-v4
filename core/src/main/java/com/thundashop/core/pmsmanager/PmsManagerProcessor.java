@@ -521,6 +521,9 @@ public class PmsManagerProcessor {
         String arxPassword = manager.configuration.arxPassword;
 
         manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
+       
+        manager.arxManager.startFetcherThread();
+        
         int minute = 60 * 1000;
 
         HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 2)), System.currentTimeMillis());

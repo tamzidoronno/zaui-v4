@@ -168,7 +168,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
             address = arxHost + address;
         }
         
-        System.out.println(address);
+//        System.out.println(address);
         
         String loginToken = null;
         String loginUrl = address;
@@ -200,7 +200,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
         request.setEntity(reqEntity);
 
-        System.out.println("Now sending to arx");
+//        System.out.println("Now sending to arx");
         httpResponse = client.execute(request);
 
         Integer statusCode = httpResponse.getStatusLine().getStatusCode();
@@ -213,7 +213,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
 
 
-        System.out.println("Done sending to arx");
+//        System.out.println("Done sending to arx");
 
         if (entity != null) {
             InputStream instream = entity.getContent();

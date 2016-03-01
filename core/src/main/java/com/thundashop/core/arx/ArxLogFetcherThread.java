@@ -20,7 +20,7 @@ public class ArxLogFetcherThread extends Thread {
         while(true) {
             arxManager.overrideCredentials(hostname, username, password);
             long start = System.currentTimeMillis() - (60 * 1000);
-            System.out.println("Timediff:" +  start + " - " + System.currentTimeMillis());
+//            System.out.println("Timediff:" +  start + " - " + System.currentTimeMillis());
             result = arxManager.getDoorLogForced(start, System.currentTimeMillis());
             try {
                 Thread.sleep(10000);

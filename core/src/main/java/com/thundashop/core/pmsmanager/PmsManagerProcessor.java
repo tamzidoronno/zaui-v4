@@ -523,7 +523,7 @@ public class PmsManagerProcessor {
         manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
         int minute = 60 * 1000;
 
-        HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 3)), System.currentTimeMillis());
+        HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 2)), System.currentTimeMillis());
         for (String doorId : log.keySet()) {
             List<AccessLog> accessLogs = log.get(doorId);
             for (AccessLog logEntry : accessLogs) {
@@ -546,6 +546,7 @@ public class PmsManagerProcessor {
                                 } else {
                                     manager.logEntry("Door need closing: " + logEntry.door, book.id, room.bookingItemId);
                                     room.forcedOpenNeedClosing = true;
+                                    manager.saveBooking(book);
                                 }
                             }
                         }
@@ -591,11 +592,23 @@ public class PmsManagerProcessor {
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
             for (PmsBookingRooms room : booking.rooms) {
-                if (!room.isEnded() && room.isStarted() && room.forcedOpen && !room.forcedOpenNeedClosing) {
+                if (!room.isEnded() && room.isStarted() && room.forcedOpen) {
+                    if(!room.forcedOpenNeedClosing) {
+                        continue;
+                    }
                     avoidClosing.add(room.bookingItemId);
                 }
-                if ((room.isEnded() && room.forcedOpen && !room.forcedOpenCompleted) || room.forcedOpenNeedClosing) {
-                    mightNeedClosing.add(room.pmsBookingRoomId);
+            }
+        }
+        for (PmsBooking booking : bookings) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if(room.isEnded() || room.forcedOpenNeedClosing) {
+                    if(room.forcedOpenCompleted) {
+                        continue;
+                    }
+                    if(!room.forcedOpenCompleted) {
+                        mightNeedClosing.add(room.pmsBookingRoomId);
+                    }
                 }
             }
         }
@@ -632,11 +645,17 @@ public class PmsManagerProcessor {
 
     private void closeRoom(String itemToClose, String bookingId) throws Exception {
         BookingItem item = manager.bookingEngine.getBookingItem(itemToClose);
+        if(item == null) {
+            System.out.println("Could not find item when closing door, id: "  + itemToClose);
+            return;
+        }
         List<Door> doors = manager.arxManager.getAllDoors();
         for (Door door : doors) {
-            if (door.name.equals(item.bookingItemName) || door.name.equals(item.bookingItemAlias)) {
+            if (door.name.equals(item.bookingItemName) || door.name.equals(item.bookingItemAlias) || door.name.equals(item.doorId)) {
+                manager.arxManager.overrideCredentials(manager.configuration.arxHostname, manager.configuration.arxUsername, manager.configuration.arxPassword);
                 manager.arxManager.doorAction(door.externalId, "forceOpen", false);
                 manager.logEntry("Ran close on : " + door.externalId, bookingId, itemToClose);
+                manager.arxManager.clearOverRideCredentials();
             }
         }
     }

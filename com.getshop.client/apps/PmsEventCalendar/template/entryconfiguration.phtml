@@ -16,7 +16,7 @@ if(!$event->starttime) {
         </label>
         <label>
             <span class='text'><?echo $this->__w("Short description"); ?></span>
-            <textarea type='text' style='height: 50px;' gsname='shortdesc'><?php echo $event->shortdesc; ?></textarea>
+            <textarea type='text' style='height: 50px;' gsname='shortdesc' maxlength="100"><?php echo $event->shortdesc; ?></textarea>
         </label>
         <label>
             <span class='text'>Starttidspunkt for arrangementet</span>

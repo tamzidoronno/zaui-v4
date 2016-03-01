@@ -18,6 +18,7 @@ import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
@@ -42,6 +43,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     
     @Autowired
     public PageManager pageManager;
+    
+    @Autowired
+    public MessageManager messageManager;
     
     private final Map<String, Booking> bookings = new HashMap();
     private final Map<String, Availability> availabilities = new HashMap();
@@ -281,8 +285,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         List<Booking> checkedBookings = new ArrayList(); 
         
         for (Booking booking : bookings) {
-            String bookingItemTypeId = booking.bookingItemTypeId;
-            
+            String bookingItemTypeId = booking.bookingItemTypeId; 
+           
             List<Booking> bookingsToConsider = this.bookings.values().stream()
                     .filter(o -> o.bookingItemTypeId.equals(bookingItemTypeId))
                     .filter(o -> o.interCepts(booking.startDate, booking.endDate))
@@ -730,6 +734,22 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                     saveObject(booking);
                 }
             }
+        }
+    }
+    
+    public void checkConsistency() {
+        try {
+            for (BookingItemType type : types.values()) {
+                List<BookingItem> bookingItems = getBookingItemsByType(type.id);
+                List<Booking> toCheck = bookings.values()
+                        .stream()
+                        .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(type.id))
+                        .collect(Collectors.toList());
+                
+                new BookingItemAssignerOptimal(type, toCheck, bookingItems).canAssign();
+            }
+        } catch (Exception x) {
+            messageManager.sendErrorNotification(x.getMessage());
         }
     }
 }

@@ -345,6 +345,33 @@ public class BookingEngineItemAssignerOptimal {
         Assert.assertEquals(item1.id, bookings.get(3).bookingItemId); 
     }
     
+    /**
+     * Testing that this simple case is assigned
+     * 
+     * x = already assigned to item1
+     * y = already assigned to item2
+     * 
+     * Booking1: |----x-----|
+     * Booking2:            |----x----|
+     * Booking3:                      |----x----|
+     * Booking4:                           |----x----|
+     * 
+     * Expected:
+     *           |------------------------------|
+     *                                     |---------|
+     * Assigned to the first available room.
+     */
+    @Test(expected = BookingEngineException.class)
+    public void assignBookings_200() {
+        ArrayList<Booking> bookings = new ArrayList();
+        bookings.add(getBooking("2015-01-05 08:00", "2015-01-05 09:00", item1));
+        bookings.add(getBooking("2015-01-05 09:00", "2015-01-05 10:00", item1));
+        bookings.add(getBooking("2015-01-05 10:00", "2015-01-05 11:00", item1));
+        bookings.add(getBooking("2015-01-05 10:30", "2015-01-05 12:30", item1));
+        
+        runTest(bookings);
+    }
+    
     public Booking getBooking(String start, String end, BookingItem item) {
         Booking booking = new Booking();
         booking.startDate = getDate(start);

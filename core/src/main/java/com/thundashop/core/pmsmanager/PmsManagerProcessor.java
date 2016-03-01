@@ -664,6 +664,11 @@ public class PmsManagerProcessor {
     }
 
     private void closeForTheDay() throws Exception {
+        
+        if (!manager.configuration.keepDoorOpenWhenCodeIsPressed) {
+            return;
+        }
+        
         String closeAtEnd = manager.configuration.closeAllDoorsAfterTime;
         String[] time = closeAtEnd.split(":");
         int hour = new Integer(time[0]);

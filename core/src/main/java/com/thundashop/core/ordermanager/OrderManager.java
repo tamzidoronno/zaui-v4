@@ -276,22 +276,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     public void finalizeCart(Cart cart) throws ErrorException {
-        User user = getSession() != null && getSession().currentUser != null ? getSession().currentUser : null;
-        
         for (CartItem item : cart.getItems()) {
             Product product = item.getProduct();
-            double price = productManager.getPrice(item.getProduct().id, item.getVariations());
-            if(getSession() == null || getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
-                product.price = price;
-            }
-            
-            if (user != null && user.discount > 0) {
-                product.price = getPriceBasedOnUserDiscount(item, user);
-            } else if (product.prices != null && product.prices.size() > 0) {
-                product.original_price = productManager.getPriceWithoutDiscount(product.id, item.getVariations());
-            }
-            
-            
             if(new Double(product.price).isNaN()) {
                 product.price = 0;
             }

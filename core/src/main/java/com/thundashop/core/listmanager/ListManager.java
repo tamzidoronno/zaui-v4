@@ -618,7 +618,7 @@ public class ListManager extends ManagerBase implements IListManager {
             
             String entryName = makeSeoUrl(entry.name, getPrefix(entry));
             
-            if (entryName != null && entryName.equals(name.toLowerCase())) {
+            if (entryName != null && name != null && entryName.equals(name.toLowerCase())) {
                 return entry.pageId;
             }
         }

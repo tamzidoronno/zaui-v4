@@ -230,4 +230,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public void deleteOpeningHours(String repeaterId) {
         bookingEngineAbstract.deleteOpeningHours(repeaterId);
     }
+
+    @Override
+    public void checkConsistency() {
+        bookingEngineAbstract.checkConsistency();
+    }
 }

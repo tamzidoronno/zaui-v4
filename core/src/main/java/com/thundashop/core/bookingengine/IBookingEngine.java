@@ -86,4 +86,6 @@ public interface IBookingEngine {
     
     @Administrator
     public List<Booking> getAllBookingsByBookingItem(String bookingItemId);
+    
+    public void checkConsistency();
 }

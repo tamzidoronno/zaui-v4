@@ -93,6 +93,10 @@ public class BookingItemAssignerOptimal {
                         continue;
                     }
                     
+                    if (overlappingBooking(booking, bookingLine)) {
+                        continue;
+                    }
+                    
                     if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
                         currentBookingItemId = booking.bookingItemId;
                     }
@@ -267,6 +271,18 @@ public class BookingItemAssignerOptimal {
             }
             i++;
         }
+    }
+
+    private boolean overlappingBooking(Booking booking, List<Booking> bookingLine) {
+        for (Booking ibooking : bookingLine) {
+            if (ibooking.bookingItemId != null && ibooking.bookingItemId.equals(booking.bookingItemId)) {
+                if (ibooking.interCepts(booking.startDate, booking.endDate)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 
 }

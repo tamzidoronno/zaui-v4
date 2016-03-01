@@ -669,13 +669,18 @@ public class PmsManagerProcessor {
         int hour = new Integer(time[0]);
         int minute = new Integer(time[1]);
         
+        String arxHostname = manager.configuration.arxHostname;
+        String arxUsername = manager.configuration.arxUsername;
+        String arxPassword = manager.configuration.arxPassword;
+        
+        
         Calendar cal = Calendar.getInstance();
         if(cal.get(Calendar.HOUR_OF_DAY) > hour) {
-            manager.arxManager.overrideCredentials(manager.configuration.arxHostname, manager.configuration.arxUsername, manager.configuration.arxPassword);
+            manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
             manager.arxManager.closeAllForTheDay();
             manager.arxManager.clearOverRideCredentials();
         } else if(cal.get(Calendar.HOUR_OF_DAY) == hour && cal.get(Calendar.MINUTE) >= minute) {
-            manager.arxManager.overrideCredentials(manager.configuration.arxHostname, manager.configuration.arxUsername, manager.configuration.arxPassword);
+            manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
             manager.arxManager.closeAllForTheDay();
             manager.arxManager.clearOverRideCredentials();
         } else {

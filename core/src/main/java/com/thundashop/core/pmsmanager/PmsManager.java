@@ -689,8 +689,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public String changeDates(String roomId, String bookingId, Date start, Date end) {
-         PmsBooking booking = getBooking(bookingId);
+    public PmsBookingRooms changeDates(String roomId, String bookingId, Date start, Date end) {
+        PmsBooking booking = getBooking(bookingId);
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
             bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
@@ -706,9 +706,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logEntry(logText, bookingId, null, roomId);
             
         }catch(BookingEngineException ex) {
-            return ex.getMessage();
+            ex.printStackTrace();
+            return null;
         }
-        return "";
+        return null;
     }
 
 

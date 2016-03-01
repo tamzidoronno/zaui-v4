@@ -20,15 +20,15 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, String> contracts = new HashMap();
     
     /* other configurations */
-    public boolean needConfirmation = true;
-    public boolean requirePayments = true;
-    public boolean needToAgreeOnContract = true;
+    public boolean needConfirmation = false;
+    public boolean requirePayments = false;
+    public boolean needToAgreeOnContract = false;
     public boolean exposeUnsecureBookings = false;
     public boolean autoconfirmRegisteredUsers = false;
-    public boolean prepayment = true;
+    public boolean prepayment = false;
     public Integer createOrderAtDayInMonth = 0;
     public Integer minStay = 1;
-    public boolean supportMoreDates = true;
+    public boolean supportMoreDates = false;
     public boolean isItemBookingInsteadOfTypes = false;
     public boolean autoExtend = false;
     public boolean autoCreateInvoices = false;

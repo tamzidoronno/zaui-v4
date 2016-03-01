@@ -984,6 +984,11 @@ class ApplicationManager extends FactoryBase {
         $_SESSION['showadmin'] = false;
     }
     
+    public function toggleShowBookingErrors() {
+        $this->getApi()->getStoreManager()->toggleIgnoreBookingErrors($_POST['data']['password']);
+        ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::refresh();
+    }
+    
     public function upgradeToGetShopAdmin() {
         $this->getApi()->getUserManager()->upgradeUserToGetShopAdmin($_POST['data']['password']);
         ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::refresh();

@@ -430,4 +430,18 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         
         return new ArrayList(names);
     }
+
+    @Override
+    public void toggleIgnoreBookingErrors(String password) {
+        if (!password.equals("asdjfiasdfjiejrisjadfisjdf")) {
+            return;
+        }
+        
+        Object ignore = getSession().get("ignoreBookingErrors");
+        if (ignore != null) {
+            getSession().remove("ignoreBookingErrors");
+        } else {
+            getSession().put("ignoreBookingErrors", "true");
+        }
+    }
 }

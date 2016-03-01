@@ -408,7 +408,7 @@ public class BookingEngineItemAssignerOptimal {
         items.add(item2);
         items.add(item3);
         
-        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type1, unassignedBookings, items);
+        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type1, unassignedBookings, items, null);
         assigner.assign();
     }
     
@@ -418,7 +418,7 @@ public class BookingEngineItemAssignerOptimal {
         items.add(item2);
         items.add(item3);
         
-        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type1, unassignedBookings, items);
+        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type1, unassignedBookings, items, null);
         return assigner.getAvailableItems();
     }
 }

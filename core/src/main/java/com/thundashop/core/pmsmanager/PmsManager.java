@@ -877,20 +877,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     return null;
                 }
                 price = room.price / daysInPeriode;
-            }
-            if(booking.priceType.equals(PmsBooking.PriceType.progressive)) {
+            } else if(booking.priceType.equals(PmsBooking.PriceType.progressive)) {
                 int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(startDate)).getDays();
                 price = calculateProgressivePrice(room.bookingItemTypeId, startDate, endDate, days, true);
-            }
-            if(booking.priceType.equals(PmsBooking.PriceType.interval)) {
-                price = calculateIntervalPrice(room.bookingItemTypeId, room.date.start, room.date.end, true);
-            }
-            if(booking.priceType.equals(PmsBooking.PriceType.daily) || 
+            } else if(booking.priceType.equals(PmsBooking.PriceType.daily) || 
                 booking.priceType.equals(PmsBooking.PriceType.interval) || 
                 booking.priceType.equals(PmsBooking.PriceType.progressive)) {
                 price = room.price;
-            }
-            if(booking.priceType.equals(PmsBooking.PriceType.weekly)) {
+            } else if(booking.priceType.equals(PmsBooking.PriceType.weekly)) {
                 price = (room.price/7);
             }
 
@@ -900,6 +894,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if(prices.pricesExTaxes) {
                 double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
+                //Order price needs to be inc taxes..
                 price *= tax;
             }
             
@@ -935,10 +930,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         order.userId = booking.userId;
         order.invoiceNote = booking.invoiceNote;
         
-        if(!configuration.prepayment) {
+        if(configuration.substractOneDayOnOrder) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(order.rowCreatedDate);
             cal.add(Calendar.DAY_OF_YEAR, -1);
+            order.rowCreatedDate = cal.getTime();
+        }
+        
+        if(order.cart.address == null || order.cart.address.address == null || order.cart.address.address.isEmpty()) {
+            if(!user.company.isEmpty()) {
+                Company company = userManager.getCompany(user.company.get(0));
+                order.cart.address = company.address; 
+                order.cart.address.fullName = company.name;
+            }
         }
         
         orderManager.saveOrder(order);

@@ -46,9 +46,9 @@ foreach($sortList as $idx => $date) {
 
         echo "<div class='arrangedby'>" . $eventEntry->arrangedBy . "</div>";
         if(isset($cats[$eventEntry->category])) {
-            echo "<div><span class='cat'>" . $cats[$eventEntry->category] . "</span></div>";
+//            echo "<div><span class='cat'>" . $cats[$eventEntry->category] . "</span></div>";
         }
-//        echo nl2br(trim($eventEntry->shortdesc)) . "<br><br>";
+        echo nl2br(trim($eventEntry->shortdesc)) . "<br><br>";
         echo "</td>";
         echo "<tr>";
     }

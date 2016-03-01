@@ -34,7 +34,11 @@ if(!$this->isItemPage()) {
     <div style='padding-top: 70px;'>
         <div style="position:relative">
             <?php  if(!$this->isItemPage()) { ?>
-            <span style="position:absolute;left:5px; top: -50px; text-align: left; width: 330px;">Start med å velge tid og rom i kalendere under. Klikk på et tidspunkt og dra musepekeren videre for å velge et lengre tidsrom. Du kan også justere både tidspunkt og valgt rom etter at du har fått opp skjemaet.</span>
+            <span style="position:absolute;left:-10px; top: -30px; text-align: left; width: 400px;">
+                * Velg tid og rom i kalenderen<br>
+                * Klikk på et tidspunkt og dra for å velge et lengre tidsrom<br>
+                * Du kan endre tidspunkt og valgt rom senere i bestillingen<br>
+            </span>
         <?php
             }
             echo "<span class='typebutton "; if($type =="day") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='day'>Dag</span>";
@@ -53,8 +57,11 @@ if(!$this->isItemPage()) {
                 echo $this->__w(date("d.m.Y", $this->getSelectedDay())); 
             } 
             if($type == "week") {
-                $startTime = strtotime("last monday", $this->getSelectedDay());
+                $startTime = strtotime("this monday", $this->getSelectedDay());
                 $endTime = strtotime("this sunday", $this->getSelectedDay());
+                if($startTime >= $endTime) {
+                    $startTime = strtotime("last monday", $this->getSelectedDay());
+                }
                 echo date("d", $startTime) . ". " . strtolower($this->__w(date("M", $startTime))) . " - ";
                 echo date("d", $endTime) . ". " . strtolower($this->__w(date("M", $endTime)));
             }

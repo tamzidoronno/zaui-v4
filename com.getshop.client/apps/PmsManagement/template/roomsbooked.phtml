@@ -144,18 +144,18 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                                 <select gsname='itemid'>
                                     <?php 
-//                                    $availableItems = $object->getApi()->getBookingEngine()->getAllAvailbleItems($object->getSelectedName(), $room->date->start, $room->date->end);
-//                                    foreach($availableItems as $item) {
-//                                        $selected = "";
-//                                        if($types[$item->bookingItemTypeId]->addon > 0) {
-//                                            continue;
-//                                        }
-//
-//                                        if($room->booking->bookingItemId == $item->id) {
-//                                            $selected = "SELECTED";
-//                                        }
-//                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")" . "</option>";
-//                                    }
+                                    $availableItems = $object->getApi()->getBookingEngine()->getAllAvailbleItems($object->getSelectedName(), $room->date->start, $room->date->end);
+                                    foreach($availableItems as $item) {
+                                        $selected = "";
+                                        if($types[$item->bookingItemTypeId]->addon > 0) {
+                                            continue;
+                                        }
+
+                                        if($room->booking->bookingItemId == $item->id) {
+                                            $selected = "SELECTED";
+                                        }
+                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")" . "</option>";
+                                    }
                                     ?>
                                 </select>
                                 <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>

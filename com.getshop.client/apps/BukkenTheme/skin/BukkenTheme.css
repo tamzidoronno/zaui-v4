@@ -96,8 +96,8 @@ body {
 
 .shop_button_template1 .button_text_content ,
 .shop_button .button_text_content {
-    background-color: #62cab8;
-    border-radius: 20px;
+    background-color: #5dbebc;
+    border-radius: 10px;
     height: 20px;
     line-height: 20px;
     padding: 5px;
@@ -109,14 +109,19 @@ body {
     cursor: pointer;
 }
 
+.Contact .shop_button {
+    padding-right: 0px; 
+    padding-left: 0px; 
+}
+
 .app.Button {
     text-align: center;
 }
 
 .shop_button_template1,
 .shop_button {
-    border-radius: 20px;
-    border: dashed 1px #62cab8;
+    border-radius: 10px;
+    border: dashed 1px #3c3c3b;
     height: 40px;
     line-height: 40px;
     padding: 0px;
@@ -125,7 +130,7 @@ body {
 }
 
 .shop_button_template1 .button_text_content {
-    background-color: #CCC;
+    background-color: #3c3c3b;
 }
 
 .floatingboxes .app {
@@ -164,8 +169,8 @@ body {
     margin-top: -25px;
 }
 
-.gsrotateleft { background-image: url('{IMAGEFOLDER}/left.png'); left: 50px;}
-.gsrotateright { background-image: url('{IMAGEFOLDER}/right.png'); right: 50px; }
+.gsrotateleft { background-image: url('{IMAGEFOLDER}/left.png'); left: -50px;}
+.gsrotateright { background-image: url('{IMAGEFOLDER}/right.png'); right: -50px; }
 .gscarouseldots { display: none; }
 
 .checkbox_textleft {

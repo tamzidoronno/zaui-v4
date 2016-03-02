@@ -1,0 +1,127 @@
+body {
+    background-color: #4d4d4f;
+}
+
+.gslayoutbox:not(.gsrotatingrow) {
+    padding: 15px;
+    background-color: #FFF;
+    margin: 10px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 4px;
+}
+
+.gsrotatingrow {
+    margin-left: 0px;
+    margin-right: 0px;
+    border-radius: 0px;
+    background-color: #e0e0e0;
+}
+
+.gsmobilemenu .gsmobilemenuentry {
+    display: none;
+}
+
+.gsmobilemenu .gsmobilemenuentry.gsmobilemenubox {
+    display: block;
+    width: 100%;
+    background: #3c3c3b;
+    background-color: #3c3c3b;
+}
+
+.shop_button {
+    background-color: #FFF;
+    color: #333;
+    border-radius: 0px;
+    border: solid 2px #333;
+    line-height: 30px;
+    height: 30px;
+}
+
+
+.gsmobilebody {
+    background-color: #FFF;
+}
+
+.gsarea[area="prisoverslag"] div[appid="4b541cf4-e87c-4234-9d20-435283e08710"] {
+    font-family: 'Indie Flower', cursive;
+}
+
+.gsarea[area="prisoverslag"] div[appid="620f2a25-7d4e-4c54-abaa-11c90e3704e9"] {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.gsarea[area="prisoverslag"] div[appid="620f2a25-7d4e-4c54-abaa-11c90e3704e9"] input  {
+    width: 100%;
+}
+.gsarea[area="prisoverslag"] input {
+    padding: 10px;
+  border: solid 1px #dcdcdc;
+  transition: box-shadow 0.3s, border 0.3s;
+}
+.gsarea[area="prisoverslag"] .content {
+    min-height: 0px !important;
+    margin-top: 15px;
+}
+.gsarea[area="prisoverslag"] .FormItem .title {
+    display: none;
+}
+
+
+.shop_button_template1 .button_text_content ,
+.shop_button .button_text_content {
+    background-color: #5dbebc;
+    border-radius: 10px;
+    height: 20px;
+    line-height: 20px;
+    padding: 5px;
+    margin: 5px;
+    color: #FFF;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.Contact .send_email.shop_button {
+    background-color: #5dbebc;
+    border: solid 0px;
+    width: 100%;
+}
+
+.Contact .shop_button {
+    padding-right: 0px; 
+    padding-left: 0px; 
+}
+
+.app.Button {
+    text-align: center;
+}
+
+.shop_button_template1,
+.shop_button {
+    border-radius: 10px;
+    border: dashed 1px #3c3c3b;
+    height: 40px;
+    line-height: 40px;
+    padding: 0px;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.shop_button_template1 .button_text_content {
+    background-color: #3c3c3b;
+}
+
+
+body .gsbody_inner {
+    padding-bottom: 46px;
+    background-color: #FFF;
+    font-size: 18px;
+}
+
+body {
+    padding-bottom: 46px;
+}

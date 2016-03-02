@@ -17,6 +17,7 @@ $height = $this->getTranslatedConfigurationSettings("image_height");
 $texts = $this->getTexts();
 $rotation = $this->getTranslatedConfigurationSettings("rotation") != null ? $this->getTranslatedConfigurationSettings("rotation") : 0;
 $crop = "";
+$crop2 = "";
 $appId = $this->getConfiguration()->id;
 
 if($this->getTranslatedConfigurationSettings("new_type") == "1") {
@@ -25,6 +26,9 @@ if($this->getTranslatedConfigurationSettings("new_type") == "1") {
     $cordSplitted = explode(":", $cords);
     if($compress) {
         $crop = "&crop=true&x=".$cordSplitted[0]/$compress."&x2=".$cordSplitted[1]/$compress."&y=".$cordSplitted[2]/$compress."&y2=".$cordSplitted[3]/$compress."&rotation=".$rotation;
+    }
+    if($compress) {
+        $crop2 = "&crop=true&x=".$cordSplitted[0]."&x2=".$cordSplitted[1]."&y=".$cordSplitted[2]."&y2=".$cordSplitted[3]."&rotation=".$rotation;
     }
 }
 
@@ -46,12 +50,16 @@ if($originalSize == "true") {
 $imageCompressionEnabled = $this->isCompressionActivated();
 $containerId = uniqid()."_".  uniqid();
 $imageSrc = "";
+if ($id) {
+    $imageSrcWidthoutCrop = "/displayImage.php?id=".$id.$crop2; 
+}
 
 ?>
-<div class='displayimagecontainer' containerId="<? echo $containerId ?>">
+<div class='displayimagecontainer' containerId="<? echo $containerId ?>" zoomsrc='<? echo $imageSrcWidthoutCrop; ?>'>
     <span class='imagecontainer <? echo $origSize .  " " . $adjustment; ?>'  >
         <? if ($id) { 
             $imageSrc = "/displayImage.php?id=".$id.$crop; 
+            
             
             if ($imageCompressionEnabled) {
                 $zoomable=  $this->isZoomAble() ? "true" : "false";

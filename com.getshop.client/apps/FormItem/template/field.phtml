@@ -58,7 +58,8 @@ if(!$type) {
         case "dateinput":
             echo "<label>";
             echo "<span class='title'>$title</span>";
-            echo "<input type='$type' name='$title' formtype='$type' class='inputfield formiteminput $dinput' placeholder='$placeholder' $requiredField>";
+            $submitOnEnter = $this->getField("submitonenter");
+            echo "<input submitonenter='$submitOnEnter' type='$type' name='$title' formtype='$type' class='inputfield formiteminput $dinput' placeholder='$placeholder' $requiredField>";
             echo "</label>";
             break;
         case "radio":
@@ -89,7 +90,13 @@ if(!$type) {
         case "submit":
             if(isset($_POST['event']) && $_POST['event'] == "submitForm" && $_POST['data']['valid'] == "true") {
                 $data = "data:text/html;base64," . base64_encode($this->getSubmittedForm());
-                echo "<b><div style='padding: 10px;'><i class='fa fa-thumbs-o-up'></i> The form has been submitted, you can download it <a href='$data' target='_new'>here</a>, thank you for your interest.</div></b>";
+                $thankYouModal = $this->getField('thankyoumodal');
+                if ($thankYouModal) {
+                    echo "<script>thundashop.common.showModal('".$thankYouModal."');</script>";
+                    echo "<input type='$type' name='$name' formtype='$type' class='submitForm' value='$title'>";
+                } else {
+                    echo "<b><div style='padding: 10px;'><i class='fa fa-thumbs-o-up'></i> The form has been submitted, you can download it <a href='$data' target='_new'>here</a>, thank you for your interest.</div></b>";
+                }
             } else {
                 echo "<input type='$type' name='$name' formtype='$type' class='submitForm' value='$title'>";
             }

@@ -1,4 +1,6 @@
-
+<?
+/* @var $this \ns_4a5ee780_32f8_11e5_a2cb_0800200c9a66\FormItem */
+?>
 <div class="gss_settings_header">
     <i class="fa fa-dollar"></i>
 
@@ -24,7 +26,7 @@
         <input type="textfield" gs_model="taxmodel" gs_model_attr="sitekey"  value="<? echo $this->getCaptchaKey(); ?>">
         <div class="description"><?php echo $this->__("Please provide the google recapcha site key if you want to us google recaptcha."); ?></div>
     </div>
-    
+   
     <div class='gss_button_area'>
         <div class="gss_button" gss_method="saveConfig" gss_model="taxmodel" gss_success_message="<? echo $this->__f("Saves successfully"); ?>"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
     </div>

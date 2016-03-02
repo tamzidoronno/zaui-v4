@@ -596,7 +596,7 @@ public class PmsManagerProcessor {
         for (PmsBooking booking : bookings) {
             for (PmsBookingRooms room : booking.rooms) {
                 if (!room.isEnded() && room.isStarted() && room.forcedOpen) {
-                    if(!room.forcedOpenNeedClosing) {
+                    if(room.forcedOpenNeedClosing) {
                         continue;
                     }
                     avoidClosing.add(room.bookingItemId);

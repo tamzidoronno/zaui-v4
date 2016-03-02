@@ -549,6 +549,7 @@ public class PmsManagerProcessor {
                                 } else {
                                     manager.logEntry("Door need closing: " + logEntry.door, book.id, room.bookingItemId);
                                     room.forcedOpenNeedClosing = true;
+                                    room.forcedOpen = false;
                                     manager.saveBooking(book);
                                 }
                             }

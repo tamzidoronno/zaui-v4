@@ -158,14 +158,14 @@ body {
     display: none;
 }
 .gsrotatearrow {
-    height: 50px;
+    height: 50px;!
     width: 30px;
     background-size: cover;
     margin-top: -25px;
 }
 
-.gsrotateleft { background-image: url('{IMAGEFOLDER}/left.png'); left: 50px;}
-.gsrotateright { background-image: url('{IMAGEFOLDER}/right.png'); right: 50px; }
+.gsrotateleft { background-image: url('{IMAGEFOLDER}/left.png'); left: -50px;}
+.gsrotateright { background-image: url('{IMAGEFOLDER}/right.png'); right: -50px; }
 .gscarouseldots { display: none; }
 
 .checkbox_textleft {

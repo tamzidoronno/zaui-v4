@@ -65,6 +65,7 @@ public class PageCell implements Serializable {
         selectedThemeClass = cell.selectedThemeClass;
         keepOriginalLayoutOnMobile = cell.keepOriginalLayoutOnMobile;
         hideOnMobile = cell.hideOnMobile;
+        hideOnDesktop = cell.hideOnDesktop;
     }
 
     

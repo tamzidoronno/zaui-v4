@@ -17,6 +17,14 @@
     </label>
 </div>
 <div style='clear:both;'></div>
+<div>
+    <label><? echo $this->factory->__w("Hide this cell on desktop"); ?>
+        <span class='gscssinput'>
+            <input type='checkbox' gsname='hideOnDesktop'> 
+        </span>
+    </label>
+</div>
+<div style='clear:both;'></div>
 <br>
 <div>
     <label> <? echo $this->factory->__w("Keep original layout in mobile view."); ?>

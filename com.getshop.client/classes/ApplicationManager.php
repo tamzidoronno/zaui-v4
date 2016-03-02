@@ -136,6 +136,7 @@ class ApplicationManager extends FactoryBase {
         $config->keepAspect = $_POST['data']['keepAspect'];
         $config->windowWidth = $_POST['data']['windowWidth'];
         $config->innerWidth = $_POST['data']['innerWidth'];
+        $config->hideDots = $_POST['data']['hideDots'];
         
         if($_POST['data']['carouselnumber'] == "true") {
             $config->displayNumbersOnDots = true;
@@ -168,6 +169,7 @@ class ApplicationManager extends FactoryBase {
         $cell->anchor = $_POST['data']['anchor'];
         $cell->link = $_POST['data']['settings']['link'];
         $cell->hideOnMobile = ($_POST['data']['settings']['hideOnMobile'] == "true");
+        $cell->hideOnDesktop = ($_POST['data']['settings']['hideOnDesktop'] == "true");
         $cell->selectedThemeClass = isset($_POST['data']['selectedThemeClass']) ? $_POST['data']['selectedThemeClass'] : "";
 
         $this->getApi()->getPageManager()->saveCell($pageid, $cell);

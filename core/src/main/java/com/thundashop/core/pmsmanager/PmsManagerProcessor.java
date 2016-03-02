@@ -529,6 +529,7 @@ public class PmsManagerProcessor {
         HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 2)), System.currentTimeMillis());
         for (String doorId : log.keySet()) {
             List<AccessLog> accessLogs = log.get(doorId);
+            accessLogs = makeLatestAccessLog(accessLogs);
             for (AccessLog logEntry : accessLogs) {
                 if (logEntry.card != null) {
                     PmsBooking book = getActiveRoomWithCard(logEntry.card);
@@ -549,6 +550,7 @@ public class PmsManagerProcessor {
                                 } else {
                                     manager.logEntry("Door need closing: " + logEntry.door, book.id, room.bookingItemId);
                                     room.forcedOpenNeedClosing = true;
+                                    room.forcedOpen = false;
                                     manager.saveBooking(book);
                                 }
                             }
@@ -596,7 +598,7 @@ public class PmsManagerProcessor {
         for (PmsBooking booking : bookings) {
             for (PmsBookingRooms room : booking.rooms) {
                 if (!room.isEnded() && room.isStarted() && room.forcedOpen) {
-                    if(!room.forcedOpenNeedClosing) {
+                    if(room.forcedOpenNeedClosing) {
                         continue;
                     }
                     avoidClosing.add(room.bookingItemId);
@@ -609,11 +611,13 @@ public class PmsManagerProcessor {
                     if(room.forcedOpenCompleted) {
                         continue;
                     }
-                    if(!room.forcedOpenCompleted) {
-                        mightNeedClosing.add(room.pmsBookingRoomId);
-                    }
+                    mightNeedClosing.add(room.pmsBookingRoomId);
                 }
             }
+        }
+        
+        if(!avoidClosing.isEmpty()) {
+            return;
         }
         
         for (String itemToClose : mightNeedClosing) {
@@ -695,6 +699,26 @@ public class PmsManagerProcessor {
 
     private void makeSureCleaningsAreOkey() {
         manager.makeSureCleaningsAreOkay();
+    }
+
+    private List<AccessLog> makeLatestAccessLog(List<AccessLog> accessLogs) {
+        HashMap<String, AccessLog> result = new HashMap();
+        
+        for(AccessLog log : accessLogs) {
+            if(log.card != null && log.card.isEmpty()) {
+                AccessLog current = result.get(log.card);
+                if(current == null) {
+                    current = log;
+                    result.put(log.card, current);
+                }
+                
+                if(log.timestamp > current.timestamp) {
+                    result.put(log.card, log);
+                }
+            }
+        }
+        
+        return new ArrayList(result.values());
     }
 
 }

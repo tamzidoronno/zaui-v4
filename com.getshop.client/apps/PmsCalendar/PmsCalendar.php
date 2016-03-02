@@ -122,7 +122,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             $endTime = $start + (60*$minutes*$i);
             $state = $this->getBlockState($room, $day, $startTime, $endTime);
             if(!$lines[$i-1]) {
-                $state = "not_available";
+                if(!$this->isEditorMode()) {
+                    $state = "not_available";
+                }
             }
             
             $title = date("H:i", $startTime)." - ".date("H:i", $endTime);

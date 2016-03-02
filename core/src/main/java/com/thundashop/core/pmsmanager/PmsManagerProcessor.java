@@ -614,6 +614,10 @@ public class PmsManagerProcessor {
             }
         }
         
+        if(!avoidClosing.isEmpty()) {
+            return;
+        }
+        
         for (String itemToClose : mightNeedClosing) {
             for (PmsBooking booking : bookings) {
                 boolean needSaving = false;

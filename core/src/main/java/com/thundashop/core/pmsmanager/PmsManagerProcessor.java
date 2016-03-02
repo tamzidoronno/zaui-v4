@@ -529,6 +529,7 @@ public class PmsManagerProcessor {
         HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 2)), System.currentTimeMillis());
         for (String doorId : log.keySet()) {
             List<AccessLog> accessLogs = log.get(doorId);
+            accessLogs = makeLatestAccessLog(accessLogs);
             for (AccessLog logEntry : accessLogs) {
                 if (logEntry.card != null) {
                     PmsBooking book = getActiveRoomWithCard(logEntry.card);
@@ -698,6 +699,26 @@ public class PmsManagerProcessor {
 
     private void makeSureCleaningsAreOkey() {
         manager.makeSureCleaningsAreOkay();
+    }
+
+    private List<AccessLog> makeLatestAccessLog(List<AccessLog> accessLogs) {
+        HashMap<String, AccessLog> result = new HashMap();
+        
+        for(AccessLog log : accessLogs) {
+            if(log.card != null && log.card.isEmpty()) {
+                AccessLog current = result.get(log.card);
+                if(current == null) {
+                    current = log;
+                    result.put(log.card, current);
+                }
+                
+                if(log.timestamp > current.timestamp) {
+                    result.put(log.card, log);
+                }
+            }
+        }
+        
+        return new ArrayList(result.values());
     }
 
 }

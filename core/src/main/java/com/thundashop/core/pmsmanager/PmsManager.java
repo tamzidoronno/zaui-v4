@@ -2210,7 +2210,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.bookingId != null) {
                 bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
             }
-            PmsBooking booking = getBookingFromRoom(room);
+            PmsBooking booking = getBookingFromRoom(room.pmsBookingRoomId);
             String bookingId = "";
             if(booking != null) {
                 bookingId = booking.id;
@@ -2305,10 +2305,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return roomsToReturn;
     }
 
-    private PmsBooking getBookingFromRoom(PmsBookingRooms room) {
+    @Override
+    public PmsBooking getBookingFromRoom(String pmsBookingRoomId) {
         for(PmsBooking booking : bookings.values()) {
-            if(booking.rooms.contains(room)) {
-                return booking;
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                    return booking;
+                }
             }
         }
         return null;

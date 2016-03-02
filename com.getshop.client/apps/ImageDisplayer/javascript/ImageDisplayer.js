@@ -58,7 +58,8 @@ app.ImageDisplayer = {
             return;
         }
         thundashop.common.showInformationBoxNew();
-        var src = $(this).attr('src');
+
+        var src = $(this).closest('.displayimagecontainer').attr('zoomSrc');
         $('#informationbox').html('<div style="background-color:#FFF;padding-top:10px;"><center><img src="'+src+'" style="max-width:90%"></div>');
     },
             

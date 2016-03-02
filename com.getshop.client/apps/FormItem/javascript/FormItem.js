@@ -88,8 +88,18 @@ app.FormItem = {
         console.log(data);
     },
     
+    keyUpOnField: function(e) {
+        var key = e.keyCode || e.which;
+        var submitkey = $(this).attr('submitonenter');
+        
+        if (key === 13 && submitkey) {
+            $('input[type="submit"][name="'+submitkey+'"]').click();
+        }
+    },
+    
     initEvents : function() {
         $(document).on('click','.FormItem .submitForm', app.FormItem.submitForm);
+        $(document).on('keyup','.FormItem .inputfield', app.FormItem.keyUpOnField);
     }
     
 };

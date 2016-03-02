@@ -121,6 +121,8 @@ class FormItem extends \MarketingApplication implements \Application {
         $this->setConfigurationSetting("placeholder", $_POST['data']['placeholder']);
         $this->setConfigurationSetting("required", $_POST['data']['required']);
         $this->setConfigurationSetting("thankyoupage", $_POST['data']['thankyoupage']);
+        $this->setConfigurationSetting("thankyoumodal", $_POST['data']['thankyoumodal']);
+        $this->setConfigurationSetting("submitonenter", $_POST['data']['submitonenter']);
         
         for($i = 0; $i < 10; $i++) {
             $this->setConfigurationSetting("dropdown_$i", $_POST['data']['dropdown_'.$i]);

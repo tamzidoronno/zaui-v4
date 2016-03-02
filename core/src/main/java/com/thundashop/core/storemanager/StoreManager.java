@@ -272,7 +272,12 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public String getKey(String key) {
         KeyData res = keyDataStore.get(key);
-        if(res.secure) {
+        
+        if (res == null) {
+            return "";
+        }
+        
+        if(res != null && res.secure) {
             if(!getSession().currentUser.isAdministrator()) {
                 return "";
             }
@@ -290,8 +295,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public String getKeySecure(String key, String password) {
-        if(password.equals("fdsafasfneo445gfsbsdfasfasf")) {
-            return keyDataStore.get(key).value;
+        if(password != null && password.equals("fdsafasfneo445gfsbsdfasfasf")) {
+            return keyDataStore.get(key) != null ? keyDataStore.get(key).value : "";
         }
         return "";
     }

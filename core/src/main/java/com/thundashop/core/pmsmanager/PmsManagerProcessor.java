@@ -521,9 +521,12 @@ public class PmsManagerProcessor {
         String arxPassword = manager.configuration.arxPassword;
 
         manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
+       
+        manager.arxManager.startFetcherThread();
+        
         int minute = 60 * 1000;
 
-        HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 3)), System.currentTimeMillis());
+        HashMap<String, List<AccessLog>> log = manager.arxManager.getLogForAllDoor((System.currentTimeMillis() - (minute * 2)), System.currentTimeMillis());
         for (String doorId : log.keySet()) {
             List<AccessLog> accessLogs = log.get(doorId);
             for (AccessLog logEntry : accessLogs) {
@@ -546,6 +549,7 @@ public class PmsManagerProcessor {
                                 } else {
                                     manager.logEntry("Door need closing: " + logEntry.door, book.id, room.bookingItemId);
                                     room.forcedOpenNeedClosing = true;
+                                    manager.saveBooking(book);
                                 }
                             }
                         }
@@ -591,11 +595,23 @@ public class PmsManagerProcessor {
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
             for (PmsBookingRooms room : booking.rooms) {
-                if (!room.isEnded() && room.isStarted() && room.forcedOpen && !room.forcedOpenNeedClosing) {
+                if (!room.isEnded() && room.isStarted() && room.forcedOpen) {
+                    if(!room.forcedOpenNeedClosing) {
+                        continue;
+                    }
                     avoidClosing.add(room.bookingItemId);
                 }
-                if ((room.isEnded() && room.forcedOpen && !room.forcedOpenCompleted) || room.forcedOpenNeedClosing) {
-                    mightNeedClosing.add(room.pmsBookingRoomId);
+            }
+        }
+        for (PmsBooking booking : bookings) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if(room.isEnded() || room.forcedOpenNeedClosing) {
+                    if(room.forcedOpenCompleted) {
+                        continue;
+                    }
+                    if(!room.forcedOpenCompleted) {
+                        mightNeedClosing.add(room.pmsBookingRoomId);
+                    }
                 }
             }
         }
@@ -632,26 +648,46 @@ public class PmsManagerProcessor {
 
     private void closeRoom(String itemToClose, String bookingId) throws Exception {
         BookingItem item = manager.bookingEngine.getBookingItem(itemToClose);
+        if(item == null) {
+            System.out.println("Could not find item when closing door, id: "  + itemToClose);
+            return;
+        }
+        manager.arxManager.overrideCredentials(manager.configuration.arxHostname, manager.configuration.arxUsername, manager.configuration.arxPassword);
         List<Door> doors = manager.arxManager.getAllDoors();
         for (Door door : doors) {
-            if (door.name.equals(item.bookingItemName) || door.name.equals(item.bookingItemAlias)) {
+            if (door.name.equals(item.bookingItemName) || door.name.equals(item.bookingItemAlias) || door.name.equals(item.doorId)) {
                 manager.arxManager.doorAction(door.externalId, "forceOpen", false);
                 manager.logEntry("Ran close on : " + door.externalId, bookingId, itemToClose);
+                manager.arxManager.clearOverRideCredentials();
             }
         }
     }
 
     private void closeForTheDay() throws Exception {
+        
+        if (!manager.configuration.keepDoorOpenWhenCodeIsPressed) {
+            return;
+        }
+        
         String closeAtEnd = manager.configuration.closeAllDoorsAfterTime;
         String[] time = closeAtEnd.split(":");
         int hour = new Integer(time[0]);
         int minute = new Integer(time[1]);
         
+        String arxHostname = manager.configuration.arxHostname;
+        String arxUsername = manager.configuration.arxUsername;
+        String arxPassword = manager.configuration.arxPassword;
+        
+        
         Calendar cal = Calendar.getInstance();
         if(cal.get(Calendar.HOUR_OF_DAY) > hour) {
+            manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
             manager.arxManager.closeAllForTheDay();
+            manager.arxManager.clearOverRideCredentials();
         } else if(cal.get(Calendar.HOUR_OF_DAY) == hour && cal.get(Calendar.MINUTE) >= minute) {
+            manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
             manager.arxManager.closeAllForTheDay();
+            manager.arxManager.clearOverRideCredentials();
         } else {
             manager.arxManager.clearCloseForToday();
         }

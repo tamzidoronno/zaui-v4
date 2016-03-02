@@ -103,6 +103,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
     private String arxUsername = null;
     private String arxPassword = null;
     private boolean doneClosedForToday = false;
+    private ArxLogFetcherThread arxLogFetcher;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -145,7 +146,10 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
     
     public String httpLoginRequest(String address, String username, String password, String content) throws Exception {
-        User currentUser = getSession().currentUser;
+        User currentUser = null;
+        if(getSession() != null) {
+            currentUser = getSession().currentUser;
+        }
         
         if(arxHostname != null) {
             address = "https://" + arxHostname + address;
@@ -164,7 +168,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
             address = arxHost + address;
         }
         
-        System.out.println(address);
+//        System.out.println(address);
         
         String loginToken = null;
         String loginUrl = address;
@@ -196,7 +200,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
         request.setEntity(reqEntity);
 
-        System.out.println("Now sending to arx");
+//        System.out.println("Now sending to arx");
         httpResponse = client.execute(request);
 
         Integer statusCode = httpResponse.getStatusLine().getStatusCode();
@@ -209,7 +213,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
 
 
-        System.out.println("Done sending to arx");
+//        System.out.println("Done sending to arx");
 
         if (entity != null) {
             InputStream instream = entity.getContent();
@@ -302,7 +306,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export_accesscategory";
         String password = userPasswords.get(currentUser.id);
-        System.out.println("Looking at : " + hostName);
+//        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName, currentUser.username, password, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
@@ -336,7 +340,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?include_accesscategory_id=true&exclude_deleted=true";
         String password = userPasswords.get(currentUser.id);
-        System.out.println("Looking at : " + hostName);
+//        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName, currentUser.username, password, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
@@ -455,13 +459,16 @@ public class ArxManager extends ManagerBase implements IArxManager {
         }
         
         String password = userPasswords.get(currentUser.id);
-        System.out.println(hostName);
+//        System.out.println(hostName);
         httpLoginRequest(hostName, currentUser.username, password, "");
     }
 
     @Override
     public HashMap<String, List<AccessLog>> getLogForAllDoor(long start, long end) throws Exception {
         String result = getDoorLog(start, end);
+        if(result.isEmpty()) {
+            return new HashMap();
+        }
         List<Door> allDoors = getAllDoors();
         HashMap<String, List<AccessLog>> returnResult = new HashMap();
         
@@ -528,7 +535,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
                 }
                 if(element.getAttribute("type").equals("dac_properties")) {
                     log.dac_properties = element.getTextContent();
-                    System.out.println(log.dac_properties);
+//                    System.out.println(log.dac_properties);
                 }
             }
             
@@ -612,7 +619,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?external_id=" + id + "&exclude_deleted=1";
         String password = userPasswords.get(currentUser.id);
-        System.out.println("Looking at : " + hostName);
+//        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName, currentUser.username, password, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
@@ -745,17 +752,24 @@ public class ArxManager extends ManagerBase implements IArxManager {
         }
         return result;
     }
-
-    private String getDoorLog(long start, long end) {
-        String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end;
-        String result = "";
-        try {
-            result = httpLoginRequest(hostName, "", "", "");
-        }catch(Exception e) {
-            e.printStackTrace();
+    
+    public void startFetcherThread() {
+        if(arxLogFetcher != null) {
+            return;
         }
+        arxLogFetcher = new ArxLogFetcherThread(this);
+        arxLogFetcher.username = arxUsername;
+        arxLogFetcher.password = arxPassword;
+        arxLogFetcher.hostname = arxHostname;
+        arxLogFetcher.start();
+    }
+
+    public String getDoorLog(long start, long end) {
         
-        return result;
+        if(arxLogFetcher != null) {
+            return arxLogFetcher.result;
+        }
+        return getDoorLogForced(start, end);
     }
 
     private List<AccessLog> generateDoorAccessLogFromResult(String result, String externalId) throws Exception {
@@ -845,6 +859,18 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
     public void clearCloseForToday() {
         doneClosedForToday = false;
+    }
+
+    public String getDoorLogForced(long start, long end) {
+        String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end;
+        String result = "";
+        try {
+            result = httpLoginRequest(hostName, "", "", "");
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return result;
     }
 
 }

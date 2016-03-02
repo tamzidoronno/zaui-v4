@@ -22,6 +22,8 @@ public class BookingItem extends DataCommon {
     
     public String bookingItemAlias = "";
     
+    public String doorId = "";
+    
     public String pageId = "";
     
     public String description = "";

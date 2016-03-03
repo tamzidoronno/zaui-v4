@@ -10,11 +10,12 @@ $addons = array();
 
 foreach($booking->rooms as $room) {
     if($types[$room->bookingItemTypeId]->addon == 0) {
-        $toPrint[] = $room;
+        $toPrint[strtotime($room->date->start)] = $room;
     } else {
         $addons[] = $room;
     }
 }
+ksort($toPrint);
 
 $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());

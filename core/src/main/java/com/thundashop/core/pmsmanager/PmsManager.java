@@ -2280,8 +2280,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingRooms room : booking.rooms) {
             
             if(room.addedByRepeater) {
-                toRemove.add(room);
-                bookingEngine.deleteBooking(room.bookingId);
+                boolean inStart = (room.date.start.after(data.data.firstEvent.start) || room.date.start.equals(data.data.firstEvent.start));
+                boolean inEnd = (room.date.end.before(data.data.endingAt) || room.date.end.equals(data.data.endingAt));
+                if(inStart && inEnd) {
+                    toRemove.add(room);
+                    bookingEngine.deleteBooking(room.bookingId);
+                }
             }
         }
         booking.rooms.removeAll(toRemove);

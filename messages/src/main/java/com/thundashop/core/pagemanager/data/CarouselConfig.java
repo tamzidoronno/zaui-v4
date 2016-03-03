@@ -7,6 +7,7 @@ public class CarouselConfig implements Serializable {
     public Integer heightMobile = 200;
     public Integer time = 5000;
     public String type = "fade";
+    public Boolean hideDots = false;
     public Boolean displayNumbersOnDots = false;
     public Boolean avoidRotate = false;
     public Boolean navigateOnMouseOver = false;

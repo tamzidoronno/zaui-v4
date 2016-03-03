@@ -390,6 +390,16 @@ class Page {
                     ?>
                     <td align="right"><input type="checkbox" class="gskeepaspect" <? echo $keepAspect; ?>></td>
                 </tr>
+                <tr>
+                    <td><? echo $this->factory->__w("Hide navdots"); ?></td>
+                    <?
+                    $keepAspect= "";
+                    if($cell->carouselConfig->hideDots) {
+                        $keepAspect = "CHECKED";
+                    }
+                    ?>
+                    <td align="right"><input type="checkbox" class="gshidedots" <? echo $keepAspect; ?>></td>
+                </tr>
             </table>
             <br>
             <input style="width: 100%;" class="savecarouselconfig" type="button" value="<? echo $this->factory->__w("Save settings"); ?>">
@@ -428,10 +438,18 @@ class Page {
             return;
         }
         
+        $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        $showDesktopHiddenFields = false;
+        if($user) {
+            $showDesktopHiddenFields = $user->showHiddenFields;
+        }
+
         if ($this->factory->isMobile()) {
             if ($cell->hideOnMobile && !$this->factory->isEditorMode()) {
                 return false;
             }
+        } else if($cell->hideOnDesktop && !$showDesktopHiddenFields) {
+            return false;
         }
 
         if ($cell->isHidden == true) {
@@ -537,6 +555,7 @@ class Page {
         $permobject = $cell->settings;
         $permobject->{'link'} = $cell->link;
         $permobject->{'hideOnMobile'} = $cell->hideOnMobile;
+        $permobject->{'hideOnDesktop'} = $cell->hideOnDesktop;
         $permissions = "data-settings='".json_encode($cell->settings) . "'";
       
         $anchor = $cell->anchor;
@@ -1249,7 +1268,9 @@ class Page {
         if ($parent != null && $parent->mode === "ROTATING") {
             $displayNumbers = $parent->carouselConfig->displayNumbersOnDots;
             $this->printCarourselMenu();
-            $this->printCarouselDots($totalcells, $count, $cell->cellId, $parent->carouselConfig);
+            if(!$parent->carouselConfig->hideDots) {
+                $this->printCarouselDots($totalcells, $count, $cell->cellId, $parent->carouselConfig);
+            }
         }
     }
 

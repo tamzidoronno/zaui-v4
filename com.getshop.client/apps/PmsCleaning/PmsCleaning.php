@@ -57,6 +57,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
                     continue;
                 }
                 $items = $this->getItems();
+                $room->booking = $booking;
                 $rooms[$items[$room->bookingItemId]->bookingItemName] = $room;
             }
         }
@@ -194,7 +195,8 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         $this->counter++;
         $items = $this->getItems();
         $additional = $this->getAdditionalInfo();
-        
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $room->pmsBookingRoomId);
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
         echo "<tr roomid='".$room->pmsBookingRoomId."'>";
         echo "<td>";
         echo $room->numberOfGuests . "</td>";
@@ -228,6 +230,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         foreach($room->guests as $guest) {
             echo $guest->name . " - " . $guest->phone . " - " . $guest->email . "<br>";
         }
+        echo $user->fullName;
         echo "</td>";
         echo "<td>";
         if($room->bookingItemId) {

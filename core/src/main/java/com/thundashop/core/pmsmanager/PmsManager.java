@@ -869,6 +869,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
             
+            if(startDate.after(endDate)) {
+                continue;
+            }
+            
             int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
             if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
                 int numberOfDays = getNumberOfDays(room, startDate, endDate);
@@ -2210,7 +2214,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.bookingId != null) {
                 bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
             }
-            PmsBooking booking = getBookingFromRoom(room);
+            PmsBooking booking = getBookingFromRoom(room.pmsBookingRoomId);
             String bookingId = "";
             if(booking != null) {
                 bookingId = booking.id;
@@ -2276,8 +2280,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingRooms room : booking.rooms) {
             
             if(room.addedByRepeater) {
-                toRemove.add(room);
-                bookingEngine.deleteBooking(room.bookingId);
+                boolean inStart = (room.date.start.after(data.data.firstEvent.start) || room.date.start.equals(data.data.firstEvent.start));
+                boolean inEnd = (room.date.end.before(data.data.endingAt) || room.date.end.equals(data.data.endingAt));
+                if(inStart && inEnd) {
+                    toRemove.add(room);
+                    bookingEngine.deleteBooking(room.bookingId);
+                }
             }
         }
         booking.rooms.removeAll(toRemove);
@@ -2305,10 +2313,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return roomsToReturn;
     }
 
-    private PmsBooking getBookingFromRoom(PmsBookingRooms room) {
+    @Override
+    public PmsBooking getBookingFromRoom(String pmsBookingRoomId) {
         for(PmsBooking booking : bookings.values()) {
-            if(booking.rooms.contains(room)) {
-                return booking;
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                    return booking;
+                }
             }
         }
         return null;

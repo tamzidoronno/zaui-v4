@@ -26,6 +26,9 @@ public interface IPmsManager {
     public PmsBooking getBooking(String bookingId);
     
     @Administrator
+    public PmsBooking getBookingFromRoom(String pmsBookingRoomId);
+    
+    @Administrator
     public String setNewRoomType(String roomId, String bookingId, String newType);
     
     @Administrator

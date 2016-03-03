@@ -755,6 +755,7 @@ thundashop.framework = {
             avoidrotate: $(this).closest('.carouselsettingspanel').find('.gsavoidrotate').is(':checked'),
             gsnavonmouseover: $(this).closest('.carouselsettingspanel').find('.gsnavonmouseover').is(':checked'),
             keepAspect: $(this).closest('.carouselsettingspanel').find('.gskeepaspect').is(':checked'),
+            hideDots: $(this).closest('.carouselsettingspanel').find('.gshidedots').is(':checked'),
             windowWidth: $(window).width(),
             innerWidth: $('.gs_page_width').width(),
         }

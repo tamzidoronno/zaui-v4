@@ -869,6 +869,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
             
+            if(startDate.after(endDate)) {
+                continue;
+            }
+            
             int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
             if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
                 int numberOfDays = getNumberOfDays(room, startDate, endDate);

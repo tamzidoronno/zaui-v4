@@ -1,0 +1,31 @@
+.ProductPictures .images img {
+    width: 100%;
+}
+.ProductPictures .images .mainimage {
+    border: solid 1px #DDD;
+    width: 100%;
+}
+
+.ProductPictures .images {
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+}
+
+.ProductPictures .images .subimages {
+    width: 100%;
+}
+
+.ProductPictures .images .subimages .subimage {
+    width: 25%;
+    height: 25%;
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 10px;
+    border: solid 1px #DDD;
+    vertical-align: top;
+}
+
+.ProductPictures .images .subimages .subimage.last_in_row {
+    margin-right: 0px;
+}

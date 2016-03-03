@@ -5,9 +5,15 @@
  */
 package com.thundashop.core.databasemanager;
 
+import com.getshop.scope.GetShopSessionScope;
+import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Session;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,18 +21,35 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
  * @author ktonder
  */
-public abstract class UpdateScriptBase {
+public abstract class UpdateScriptBase implements ApplicationContextAware {
 
+    private static String sessionId = "";
+
+    public UpdateScriptBase() {
+        
+        if (UpdateScriptBase.sessionId.equals("")) {
+            System.out.println("asdfasdf");
+            sessionId = UUID.randomUUID().toString();
+
+        }
+    }
+    
+    
+    private ApplicationContext appContext;
+    
     abstract public Date getAddedDate();
     
     @Autowired
@@ -77,4 +100,40 @@ public abstract class UpdateScriptBase {
         
         return retData;
     }
+    
+    
+    public <V> V getManager(Class managerClass, Store store, String multilevelName) {
+        Session session = getSession(store);
+        GetShopSessionScope scope = appContext.getBean(GetShopSessionScope.class);
+        scope.setStoreId(store.id, multilevelName, session);
+        ManagerBase base = (ManagerBase)appContext.getBean(managerClass);
+        base.setSession(session);
+        return (V)base;
+    }
+
+    private Session getSession(Store store) {
+        Session session = new Session();
+        session.storeId = store.id;
+        session.id = sessionId;
+        return session;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext ac) throws BeansException {
+        this.appContext = ac;
+    }
+    
+    private User getAdminUser() {
+        User user = new User();
+        user.type = 100;
+        user.referenceKey = "TempUser";
+        return user;
+    }
+
+    public void logOnStore(Store store) {
+        UserManager userManger = getManager(UserManager.class, store, "");
+        userManger.addTempUserForcedLogon(getAdminUser());
+    }
+    
+        
 }

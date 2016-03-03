@@ -259,6 +259,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return user;
     }
     
+    public void addTempUserForcedLogon(User user) {
+        getUserStoreCollection(storeId).addUserDirect(user);
+        sessionFactory.addToSession(getSession().id, "user", user.id);
+    }
+    
     @Override
     public void logout() throws ErrorException {
         sessionFactory.removeFromSession(getSession().id);

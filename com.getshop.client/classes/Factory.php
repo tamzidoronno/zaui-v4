@@ -59,6 +59,12 @@ class Factory extends FactoryBase {
     }
 
     public function isMobile() {
+        
+        if ($this->getStoreConfiguration()->disableMobileMode) {
+            return false;
+        }
+        
+        
         if(stristr($_SERVER['HTTP_HOST'], "gsmobile")) {
             return true;
         }

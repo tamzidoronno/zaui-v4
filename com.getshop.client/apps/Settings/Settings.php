@@ -68,6 +68,13 @@ class Settings extends \SystemApplication implements \Application {
         return "";
     }
     
+    public function isDisableMobileMode() {
+        if (isset($this->getFactory()->getStoreConfiguration()->disableMobileMode)) {
+            return $this->getFactory()->getStoreConfiguration()->disableMobileMode;
+        }
+        return "";
+    }
+    
     public function getMainEmailAddress() {
         if (isset($this->getFactory()->getStoreConfiguration()->emailAdress)) {
             return $this->getFactory()->getStoreConfiguration()->emailAdress;
@@ -100,6 +107,7 @@ class Settings extends \SystemApplication implements \Application {
         $storeSettings->emailAdress = $_POST['emailaddress'];
         $storeSettings->phoneNumber = $_POST['phoneNumber'];
         $storeSettings->paymentMethod = $_POST['paymentMethod'];
+        $storeSettings->disableMobileMode = $_POST['disableMobileMode'];
         
         $this->getApi()->getStoreManager()->saveStore($storeSettings);
         

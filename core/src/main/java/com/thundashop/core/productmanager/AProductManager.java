@@ -62,12 +62,12 @@ public abstract class AProductManager extends ManagerBase {
     }
 
     protected Product finalize(Product product) throws ErrorException {
+        if (product == null) {
+            return null;
+        }
+        
         if (product != null && product.pageId != null && product.page == null) {
             product.page = pageManager.getPage(product.pageId);
-        }
-
-        if (product.pageId == null) {
-            product.pageId = pageManager.createPage().id;
         }
         
         product.attributesAdded = new HashMap();

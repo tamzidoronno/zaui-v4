@@ -144,7 +144,6 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     private Page finalizePage(Page page) {
         page.finalizePage(commonPageData);
-        addProductAppIfNeeded(page);
         addProductDetailsIfNeeded(page);
         
         Entry entry = listManager.findEntryByPageId(page.id);
@@ -459,32 +458,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = pages.get(pageId);
         if (page == null) {
             createPage(pageId);
-        }
-    }
-
-    private void addProductAppIfNeeded(Page page) {
-        Product product = productManager.findProductByPage(page.id);
-
-        if (product != null) {
-            String productApplicationId = "06f9d235-9dd3-4971-9b91-88231ae0436b";
-            page.type = "product";
-            
-            long productAppsCount = page.getCellsFlatList().stream()
-                    .filter(cell -> cell.appId != null)
-                    .map(cell -> storeApplicationPool.getApplicationInstance(cell.appId))
-                    .filter(app -> app != null && app.appSettingsId.equals(productApplicationId))
-                    .count();
-
-            if (productAppsCount == 0) {
-                page.layout.createCell("", "", PageCell.CellMode.row, "body");
-                ApplicationInstance instance = storeApplicationPool.createNewInstance(productApplicationId);
-                if(instance == null) {
-                    System.out.println("Instance missing?");
-                } else {
-                    page.layout.addApplicationToFirstFreeBodyCell(instance.id);
-                }
-                savePage(page);
-            }
         }
     }
 

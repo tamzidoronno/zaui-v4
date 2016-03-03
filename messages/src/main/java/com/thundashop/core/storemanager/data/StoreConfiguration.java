@@ -40,6 +40,8 @@ public class StoreConfiguration extends DataCommon {
     public String mobileImagePortrait = "";
     public String mobileImageLandscape = "";
     
+    public boolean disableMobileMode = false;
+    
     public Colors colors = new Colors();
     
     public boolean hasSMSPriviliges = false;

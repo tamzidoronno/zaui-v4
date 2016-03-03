@@ -33,9 +33,17 @@ class ApplicationModulePool {
         other.description = "We have not found a module that this applications fits into. If you have a suggestion where this applications belongs, please let us know by emailing post@getshop.com.";
         modules.put(other.id, other);
         
+        ApplicationModule ecommercetemplatestuff = new ApplicationModule();
+        ecommercetemplatestuff.moduleName = "WebShop TemplateStuff";
+        ecommercetemplatestuff.needToShowInMenu = false;
+        ecommercetemplatestuff.id = "ecommercetemplate";
+        ecommercetemplatestuff.faIcon = "fa-shopping-cart";
+        ecommercetemplatestuff.description = "This is a group of applications that is used for setting up an ecommerce platform, highly adaptable productpages and stuff.!";
+        modules.put(ecommercetemplatestuff.id, ecommercetemplatestuff);
+        
         ApplicationModule module = new ApplicationModule();
-        module.moduleName = "E-Commerce";
-		module.needToShowInMenu = true;
+        module.moduleName = "E-Commerce ";
+        module.needToShowInMenu = true;
         module.id = "WebShop";
         module.faIcon = "fa-shopping-cart";
         module.description = "Upgrade your website to become a fully customizable e-commerce solution. We offer a variouse of payment methods!";

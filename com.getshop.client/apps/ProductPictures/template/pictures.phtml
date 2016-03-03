@@ -1,0 +1,73 @@
+<?
+/* @var $this ns_3be5feb0_6ce8_4341_bf52_02a945ed550e\ProductPictures */
+$product = $this->getProduct();
+
+$mainImage = false;
+
+if ($product->mainImage && in_array($product->mainImage, $product->imagesAdded)) {
+    $mainImage = $product->mainImage;
+}
+
+if (!$mainImage && count($product->imagesAdded)) {
+    $mainImage = $product->imagesAdded[0];
+}
+
+?>
+
+
+<div class="images gsgalleryroot">
+    <section id="gallery">
+        <div class="mainimage">
+            <?
+            if (isset($mainImage)) {
+                list($width, $height) = getimagesize("../uploadedfiles/" . $mainImage);
+                echo "<span class='gs_ignorenavigate gsgallery' img='/displayImage.php?id=$mainImage' width='$width' height='$height' index='0'><img src='/displayImage.php?id=$mainImage'/></span>";
+            } else {
+                echo '<i class="fa fa-image"></i>';
+            }
+            ?>
+        </div>
+
+        <div class="subimages ">
+            <?
+            $i = 0;
+            $subImagesExists = false;
+            foreach ($product->imagesAdded as $image) {
+                if ($image == $mainImage) {
+                    continue;
+                }
+                
+                $subImagesExists = true;
+                if ($i == 0) {
+                    echo "<div>";
+                }
+
+                $i++;
+
+                $class = "";
+                if ($i == 1) {
+                    $class = "first_in_row";
+                }
+                if ($i == 3) {
+                    $class = "last_in_row";
+                }
+
+                list($width, $height) = getimagesize("../uploadedfiles/" . $mainImage);
+                
+                echo "<div class='subimage $class'><a class='gs_ignorenavigate gsgallery' width='$width' height='$height' img='/displayImage.php?id=$image' index='$i'><img src='/displayImage.php?id=$image'/></a></div>";
+
+
+                if ($i == 3) {
+                    $i = 0;
+                    echo "</div>";
+                }
+            }
+
+            if ($i != 0 && $subImagesExists) {
+                $i = 0;
+                echo "</div>";
+            }
+            ?>
+        </div>
+    </section>
+</div>

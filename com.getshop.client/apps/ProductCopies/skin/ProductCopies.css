@@ -1,0 +1,18 @@
+.ProductCopies div {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.ProductCopies input {
+    text-align: center;
+    width: 50px;
+}
+
+.ProductCopies .plus,
+.ProductCopies .minus {
+    border: solid 1px #DDD;
+    height: 35px;
+    width: 50px;
+    line-height: 35px;
+    text-align: center;
+}

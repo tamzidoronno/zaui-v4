@@ -163,6 +163,17 @@ $languages['fi_FI'] = "Finish";
         </div>
     </div>
     
+    <div class="textfield gss_setting" id="">
+        <span class="title"><?php echo $this->__f("Disable mobile view"); ?></span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="disableMobileMode">
+            <? $faclass = $this->isDisableMobileMode() == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("If this is enable it will use responsive css instaed of mobile view."); ?>
+        </div>
+    </div>
+    
     <div class="textfield gss_setting" id="singlegrouptouser">
         <span class="title"><?php echo $this->__f("Your favicon"); ?>
         </span>

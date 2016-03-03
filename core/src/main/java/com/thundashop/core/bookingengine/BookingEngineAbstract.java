@@ -477,6 +477,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         newBooking.startDate = start;
         newBooking.endDate = end;
         
+        
         validateChange(newBooking);
         
         booking.startDate = start;

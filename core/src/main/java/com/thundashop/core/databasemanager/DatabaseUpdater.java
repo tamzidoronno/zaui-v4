@@ -10,6 +10,7 @@ import com.thundashop.core.common.FrameworkConfig;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,7 +34,7 @@ public class DatabaseUpdater {
         Collections.sort(scripts, (UpdateScript u1, UpdateScript u2) -> u1.getAddedDate().compareTo(u2.getAddedDate()));
     }
     
-    public void check() {
+    public void check(ApplicationContext context) {
         System.out.println(" ============ Checing db scripts ==============");
         for (UpdateScript script : scripts) {
             

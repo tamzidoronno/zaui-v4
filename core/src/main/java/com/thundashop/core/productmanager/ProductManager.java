@@ -4,7 +4,6 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pagemanager.PageManager;
-import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -54,7 +53,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         saveObject(product);
         products.put(product.id, product);
 
-        return product;
+        return finalize(product);
     }
 
     @Override
@@ -89,11 +88,10 @@ public class ProductManager extends AProductManager implements IProductManager {
         product.storeId = storeId;
         product.id = UUID.randomUUID().toString();
         
-        Page page = pageManager.createPage();
-        product.pageId = page.id;
+        product.pageId = pageManager.createPageFromTemplatePage("ecommerce_product_template_1").id;
         saveProduct(product);
         
-        return product;
+        return finalize(product);
     }
 
     @Override
@@ -261,13 +259,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public Product getProductByPage(String id) throws ErrorException {
         Product product = findProductByPage(id);
-        if (product == null) {
-            product = createProduct();
-            product.pageId = id;
-            saveProduct(product);
-        }
-        product = finalize(product);
-        return product;
+        return finalize(product);
     }
 
     @Override

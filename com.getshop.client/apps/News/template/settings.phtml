@@ -1,0 +1,25 @@
+<?php
+/* @var $this \ns_dabb8a85_f593_43ec_bf0d_240467118a40\News */
+?>
+
+<div gstype="form" method="saveAppInstanceSettings">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%">Template</td>
+        <td width="50%">
+            <select gsname="setting_template">
+                <?php 
+                for($i = 1; $i < 10; $i++) {
+                    $checked = "";
+                    if($i == $this->getConfigurationSetting("template")) {
+                        $checked = "SELECTED";
+                    }
+                    echo "<option value='$i' $checked>Template $i</option>";
+                }
+                ?>
+            </select>
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

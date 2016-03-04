@@ -223,3 +223,8 @@ body {
     padding: 30px;
     background-color: #e3e3e3;
 }
+
+.News .newsboxtemplate_2 .news_container { border: solid 1px #e8e8e9; }
+.News .newsboxtemplate_2 .newscontent { border-left: solid 1px #e8e8e9; }
+.News .newsboxtemplate_2 .date { border: solid 0px; }
+.News .newsboxtemplate_2 .date { background-color: #515151; color:#fff; }

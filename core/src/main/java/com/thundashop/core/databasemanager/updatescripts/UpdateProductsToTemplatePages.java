@@ -31,7 +31,7 @@ public class UpdateProductsToTemplatePages extends UpdateScriptBase implements U
     public Date getAddedDate() {
         return getDate("03/03-2016");
     }
-    
+     
     @Override
     public String getId() {
         return "822e0dfe-f269-4631-8756-1c8ccf326226";

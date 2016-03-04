@@ -1,15 +1,23 @@
 GetShopToolbox = function(config, app) {
     this.config = config;
-
-    if (this.config.application !== undefined) {
+    
+    if(this.config.showSettings) {
         this.config.items.push({
             icontype: "awesome",
-            icon: "fa-trash-o",
+            icon: "fa-edit",
             iconsize: "30",
-            title: __f("Remove application"),
-            click: thundashop.Skeleton.settingsRemoveApplication
+            title: __f("Display settings"),
+            click: thundashop.Skeleton.loadSettings
         });
     }
+    this.config.items.push({
+        icontype: "awesome",
+        icon: "fa-trash-o",
+        iconsize: "30",
+        title: __f("Remove application"),
+        click: thundashop.Skeleton.settingsRemoveApplication
+    });
+    
 
     this.application = app;
     this.init();

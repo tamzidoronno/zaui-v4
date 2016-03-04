@@ -32,47 +32,7 @@ if ($this->hasWriteAccess()) {
 </div>
     <?php
 } 
-
-$entries = (array)$this->getAllEntries();
-$i = 0;
+echo "<div class='newsboxtemplate_" . $this->getTemplateNumber() . "'>";
+$this->includefile("newstemplate".$this->getTemplateNumber());
+echo "</div>";
 ?>
-<div class='newscontainerbox_loading'>
-    <i class='fa fa-spinner fa-spin'></i>
-</div>
-<div class='newscontainerbox'  data-packery-options='{ "columnWidth": ".grid-sizer", "itemSelector": ".news_container", "percentPosition": true, "gutter": 10 }'>
-<?php
-foreach($entries as $entry) {
-    /* @var $entry app_newsmanager_data_NewsEntry */
-    $last = (sizeof($entries)-1) == $i ? "last" : "";
-    $id = $entry->id;
-    echo "<div class='news_container item news_container_$i $last' id='".$id."'>";
-    if($entry->image) {
-        echo "<img src='displayImage.php?id=".$entry->image."'>";
-    }
-    if ($this->hasWriteAccess()) {
-        echo "<div class='gs_button small delete'>".$this->__f("Delete")."</div>";
-    }
-    echo "<div class='news_entry_header'><h2>" . $entry->subject . "</h2></div>";
-    echo "<div class='content'>";
-    echo $entry->content;
-    echo "</div>";
-    echo "<div class='news_entry_footer'>" . $entry->date ."</div>";
-    echo "</div>";
-
-    $i++;
-}
-?>
-</div>
-    <script>
-        $(function() {
-            $(document).find('img').batchImageLoad({
-                    loadingCompleteCallback: function() {
-                        $('.newscontainerbox_loading').hide();
-                        $('.newscontainerbox').show();
-                        <?php if(!$this->getFactory()->isMobile()) { ?>
-                            $('.newscontainerbox').packery({ gutter: 10 });
-                        <?php } ?>
-    }
-            });
-        });
-    </script>

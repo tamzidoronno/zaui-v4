@@ -17,4 +17,6 @@ public class NewsEntry extends DataCommon {
     public String subject = "";
     public String image = "";
     public boolean isPublished = false;
+    public String userId = "";
+    public String pageId = "";
 }

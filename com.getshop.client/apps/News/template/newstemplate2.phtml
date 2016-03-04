@@ -4,7 +4,7 @@ $entries = $this->getAllEntries();
 $i = 0;
 
 foreach($entries as $entry) {
-    echo "<div class='news_container'>";
+    echo "<div class='news_container' id='".$entry->id."'>";
     echo "<span class='date'><span class='dateday'>" . date("d", strtotime($entry->rowCreatedDate)) . "</span><div></div><span class='datemonth'>". $this->__w(date("M", strtotime($entry->rowCreatedDate))) . "</span></span>";
     if($entry->userId) {
         echo "AV";
@@ -14,6 +14,10 @@ foreach($entries as $entry) {
     } else {
         echo "<span style='background-image:url(\"displayImage.php?id=noimg)' class='newsimage'></span>";
     }
+    if ($this->hasWriteAccess()) {
+        echo "<div class='gs_button small delete'>".$this->__f("Delete")."</div>";
+    }
+
     echo "<span class='newscontent'>";
     echo "<div class='by'>AV: Admin</div>"; 
     echo "<div class='subject'>" . $entry->subject . "</div>";

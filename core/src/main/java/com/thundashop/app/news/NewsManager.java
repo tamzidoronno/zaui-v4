@@ -162,4 +162,14 @@ public class NewsManager extends ManagerBase implements INewsManager {
             saveObject(entry);
         }
     }
+
+    @Override
+    public NewsEntry getNewsForPage(String id) throws ErrorException {
+        for(NewsEntry entry : entries.values()) {
+            if(entry.pageId.equals(id)) {
+                return entry;
+            }
+        }
+        return null;
+    }
 }

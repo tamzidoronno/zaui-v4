@@ -41,6 +41,7 @@ app.SimpleFileUpload = {
                    processData: false,  // tell jQuery not to process the data
                    contentType: false,  // tell jQuery not to set contentType
                    success : function(data) {
+                       PubSub.publish('SIMPELFILEUPLOAD_COMPLETED', data);
                        var event = thundashop.Ajax.createEvent('','reloadFileList',apptoload, {});
                        thundashop.Ajax.postWithCallBack(event, function(result) {
                            $('.filelist').html(result);

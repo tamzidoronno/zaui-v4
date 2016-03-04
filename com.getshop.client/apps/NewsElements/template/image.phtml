@@ -1,0 +1,11 @@
+<?php
+/* @var $this ns_f65ee7f2_134f_413f_82d2_2606ab8440dd\NewsElements */
+$entry = $this->getApi()->getNewsManager()->getNewsForPage($this->getPage()->javapage->id);
+
+echo "<img id='imgtodisplay' src='/displayImage.php?id=" . $entry->image . "'>";
+if($this->isEditorMode()) {
+    $app = $this->getWrappedApp("994d7fed-d0cf-4a78-a5ff-4aad16b9bcab", "file");
+    $this->wrapApp("994d7fed-d0cf-4a78-a5ff-4aad16b9bcab", "file");
+    echo "<style>.SimpleFileUpload .filelist { display:none; }</style>";
+}
+?>

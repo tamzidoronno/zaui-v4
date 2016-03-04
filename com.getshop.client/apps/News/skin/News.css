@@ -21,6 +21,7 @@
 .News .gs_button.delete {display:none;}
 .News .gs_button.publish {right: 180px;}
 .News .addnewsrow { border: solid 1px; background-color:#efefef; }
+.News .news_container:hover .delete {display:inline-block;}
 
 .News .newsboxtemplate_1 { font-size: 14px; }
 .News .newsboxtemplate_1 .news_container .news_entry_footer { text-align: center;font-size: 10px;padding-top: 10px;}
@@ -28,7 +29,6 @@
 .News .newsboxtemplate_1 .news_container { margin-top: 5px;padding: 10px;position: relative;}
 .News .newsboxtemplate_1 .news_entry_footer { clear:both; }
 .News .newsboxtemplate_1 .news_container img { max-width: 200px; margin: 10px; }
-.News .newsboxtemplate_1 .news_container:hover .delete {display:inline-block;}
 .News .newsboxtemplate_1 .news_entry_header {font-weight: bold;}
 .News .newsboxtemplate_1 .news_container {border-bottom: solid 1px;border-color: #222;}
 .News .newsboxtemplate_1 .news_container.last {border-bottom: solid 0px;}

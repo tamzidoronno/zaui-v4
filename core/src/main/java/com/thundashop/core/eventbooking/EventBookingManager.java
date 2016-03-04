@@ -19,10 +19,10 @@ import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -123,7 +123,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .collect(Collectors.toList());
         
         sortEventsByDate(retEvents);
-        return cloneAndFinalize(retEvents);
+        retEvents = cloneAndFinalize(retEvents);
+        
+        return filterByTimeFilter(retEvents);
     }
 
     private void sortEventsByDate(List<Event> retEvents) {
@@ -856,5 +858,41 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         log("EVENT_CANCELED", event, null);
         event.isCanceled = true;
         saveObject(event);
+    }
+
+    @Override
+    public void setTimeFilter(Date from, Date to) {
+        getSession().put("from", from);
+        getSession().put("to", to);
+    }
+
+    private List<Event> filterByTimeFilter(List<Event> retEvents) {
+        Date from = (Date)getSession().get("from");
+        Date to = (Date)getSession().get("to");
+        Date today = new Date();
+        
+        if (from == null || to == null) {
+            return retEvents.stream()
+                    .filter(o -> o.mainEndDate != null && o.mainEndDate.after(today))
+                    .collect(Collectors.toList());
+        }
+        
+        if (from != null && to != null) {
+            return retEvents.stream()
+                    .filter(o -> o.mainStartDate != null && o.mainStartDate.after(from) && o.mainStartDate.before(to))
+                    .collect(Collectors.toList());
+        }
+        
+        return retEvents;
+    }
+
+    @Override
+    public Date getFromDateTimeFilter() {
+        return (Date)getSession().get("from");
+    }
+
+    @Override
+    public Date getToDateTimeFilter() {
+        return (Date)getSession().get("to");
     }
 }

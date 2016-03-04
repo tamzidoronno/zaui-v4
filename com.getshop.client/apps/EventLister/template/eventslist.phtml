@@ -10,7 +10,7 @@ if (!count($groupedEvents)) {
 
 echo "<div class='locationlist'>";
     foreach ($locations as $loc) {
-        $extra = $loc->isFiltered ? "<i class='fa fa-check'/>" : "";
+        $extra = $loc->isFiltered ? "<i class='fa fa-check'></i>" : "";
         echo "<div gsclick='applyFilter' locationId='$loc->id'>$extra $loc->name</div>";
     }
 echo "</div>";

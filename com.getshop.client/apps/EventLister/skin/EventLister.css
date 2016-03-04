@@ -69,3 +69,10 @@
 .EventLister .daysinformation {
     
 }
+
+.EventLister .datefilter {
+    border: solid 1px #DDD;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+}

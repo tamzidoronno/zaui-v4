@@ -129,10 +129,12 @@ public class GenerateTranslation {
                 System.out.println(" isdir.");
                 parsePath(f.getAbsolutePath());
             } else if (filePath.endsWith(".php") || filePath.endsWith(".phtml") || filePath.endsWith(".js")) {
-                System.out.print(" parsing...");
-                parseFile(fileOriginal);
-                System.out.println(" - done.");
-                fileCount++;
+                if(!fileOriginal.contains("amcharts/plugins/dataloader/dataloader.min.js")) {
+                    System.out.print(" parsing...");
+                    parseFile(fileOriginal);
+                    System.out.println(" - done.");
+                    fileCount++;
+                }
             }
         }
     }

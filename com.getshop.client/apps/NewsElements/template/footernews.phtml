@@ -1,7 +1,4 @@
-<div class="latestnewsheading">
-    Siste nytt
-</div>
-<div class='newscontainer'>
+<div class='footernewscontainer'>
     <?php
     /* @var $this ns_f65ee7f2_134f_413f_82d2_2606ab8440dd\NewsElements */
     $entry = $this->getApi()->getNewsManager()->getNewsForPage($this->getPage()->javapage->id);
@@ -9,9 +6,7 @@
     $news = $this->getApi()->getNewsManager()->getAllNews();
     $i = 0;
     foreach($news as $new) {
-        echo "<span class='latestnewsline'>" . $new->content . "</span>";
-        $time = strtotime($entry->rowCreatedDate);
-        echo "<span class='date'>" .  date("d.", $time) . " " . $this->__w(date("F", $time)) . " " . date("Y", $time) . "</span>";
+        echo "<a href='?page=".$new->pageId."'><div>" . $new->subject . "</div></a>";
         $i++;
         if($i == 5) {
             break;

@@ -1,10 +1,25 @@
 app.Product = {
     init: function () {
-        $(document).on('click', '.addProductToCart', app.Product.addProductToCart)
+        $(document).on('click', '.addProductToCart', app.Product.addProductToCart);
+        $(document).on('click', '.gshideproductaddedbox', app.Product.hideProductAddedBox);
+        $(document).on('click', '.gsgotocart', app.Product.gsgotocart);
+    },
+    gsgotocart : function() {
+        $('.gsaddedtocartbox').fadeOut();
+        thundashop.common.goToPage('cart');
+        $(window).scrollTop(0);
+    },
+    hideProductAddedBox : function() {
+        $('.gsaddedtocartbox').fadeOut();
     },
     addProductToCart: function () {
         var data = {
             productId: $(this).attr('productId')
+        }
+        
+        var copies = $('.ProductCopies');
+        if(copies.length > 0) {
+            data['count'] = copies.find('.gscopiescount').val();
         }
 
         var button = $(this).parent();
@@ -12,6 +27,7 @@ app.Product = {
             button.effect("transfer", {to: $('.gsmobilemenucart')}, 1000, function () {
                 var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
                 thundashop.Ajax.postWithCallBack(event, function() {
+                    PubSub.publish("PRODUCT_ADDED_TO_CART");
                     if(typeof(autonavigatetocart) !== "undefined" && autonavigatetocart) {
                         window.location.href="/?page=cart";
                     } else {
@@ -20,23 +36,33 @@ app.Product = {
                 });
             });
         } else {
-            $('.gsarea[area="header"] .checkout_area').each(function () {
-                var width = $(this).parent().width();
-                $(this).parent().width(width);
-                $(this).parent().css('position', 'fixed');
-                var dom = this;
-                button.effect("transfer", {to: $(this)}, 1000, function () {
-                    $(dom).parent().css('position', 'relative');
-                    var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
-                    thundashop.Ajax.postWithCallBack(event, function() {
-                        if(typeof(autonavigatetocart) !== "undefined" && autonavigatetocart) {
-                            window.location.href="/?page=cart";
-                        } else {
-                            thundashop.framework.reprintPage();
-                        }
+            if($('.gsarea[area="header"] .checkout_area').length > 0) {
+                $('.gsarea[area="header"] .checkout_area').each(function () {
+                    var width = $(this).parent().width();
+                    $(this).parent().width(width);
+                    $(this).parent().css('position', 'fixed');
+                    var dom = this;
+                    button.effect("transfer", {to: $(this)}, 1000, function () {
+                        $(dom).parent().css('position', 'relative');
+                        var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
+                        thundashop.Ajax.postWithCallBack(event, function() {
+                            if(typeof(autonavigatetocart) !== "undefined" && autonavigatetocart) {
+                                window.location.href="/?page=cart";
+                            } else {
+                                thundashop.framework.reprintPage();
+                            }
+                        });
                     });
                 });
-            });
+            } else {
+                 var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
+                thundashop.Ajax.postWithCallBack(event, function() {
+                    PubSub.publish("PRODUCT_ADDED_TO_CART");
+                    $('.gsaddedtocartbox').css('left', button.offset().left);
+                    $('.gsaddedtocartbox').css('top', button.offset().top-$(this).scrollTop());
+                    $('.gsaddedtocartbox').fadeIn();
+                });
+            }
         }
     },
     loadSettings: function (element, application) {

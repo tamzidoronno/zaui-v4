@@ -243,6 +243,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(80);
         }
     
+        if (user.suspended) {
+            throw new ErrorException(26);
+        }
         addUserToSession(user);
         
         loginHistory.markLogin(user, getSession().id);

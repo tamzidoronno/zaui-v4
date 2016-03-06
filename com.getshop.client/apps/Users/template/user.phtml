@@ -95,6 +95,19 @@ if (!$user->address) {
         </div>
     </div>
     
+    <div class="textfield gss_setting"  id="editor">
+        <span class="title"><?php echo $this->__f("Account suspended"); ?></span>
+        <div class="gss_onoff" gs_model="usermodel" gs_model_attr="suspended">
+            <?
+            $faclass = $user->suspended ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?> "></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("If this is activated the account will be locked and the user can not log in."); ?>
+        </div>
+    </div>
+    
     <?
     if ($user->type == 100) {
     ?>

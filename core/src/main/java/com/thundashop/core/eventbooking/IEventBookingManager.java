@@ -43,6 +43,8 @@ public interface IEventBookingManager {
     
     public List<Location> getFilteredLocations();
     
+    public List<Event> getEventsWhereEndDateBetween(Date from, Date to);
+    
     public List<Event> getEvents();
     
     public Location getLocation(String locationId);
@@ -156,4 +158,7 @@ public interface IEventBookingManager {
     
     @Administrator
     public void startScheduler(String scheduler);
+    
+    @Administrator
+    public void markQuestBackSent(String eventId);
 }

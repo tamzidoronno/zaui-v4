@@ -40,6 +40,7 @@ public class Event extends DataCommon {
     
     public boolean mailReminderSent;
     
+    public boolean questBackSent = false;
     
     @Editor
     public HashMap<String, List<UserComment>> comments = new HashMap();

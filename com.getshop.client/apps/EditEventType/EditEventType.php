@@ -23,6 +23,7 @@ class EditEventType extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
     public function saveEvent() {
         $type = $this->getEventType();
         $type->name = $_POST['data']['name'];
+        
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getBookingEngineName(), $type);
         
         $metaData = $this->getApi()->getEventBookingManager()->getBookingTypeMetaData($this->getBookingEngineName(), $type->id);
@@ -49,6 +50,10 @@ class EditEventType extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
             $metaData->publicPrice = $_POST['data']['publicPrice'];
             $metaData->publicVisible = $_POST['data']['public_visible'];
             $metaData->visibleForGroup->{$groupId} = $_POST['data']['visible_'.$groupId];
+        }
+        
+        if (isset($_POST['data']['questBackId'])) {
+            $metaData->questBackId = $_POST['data']['questBackId'];
         }
         
         $this->getApi()->getEventBookingManager()->saveBookingTypeMetaData($this->getBookingEngineName(), $metaData);

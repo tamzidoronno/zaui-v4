@@ -60,6 +60,21 @@ $metaData = $this->getApi()->getEventBookingManager()->getBookingTypeMetaData($t
     }
     
     
+    $activated = $this->getApi()->getStoreApplicationPool()->isActivated("07422211-7818-445e-9f16-ad792320cb10");
+    $tests = $this->getApi()->getQuestBackManager()->getAllTests();
+    
+    if ($activated && count($tests)) {
+        echo "<div class='questback'>";
+            echo "Do you want to send questbacks after events of this type has been completed to all users?<br/>";
+            echo "<select gsname='questBackId' class='gsniceselect1'>";
+                echo "<option value=''>Not selected</option>";
+                foreach ($tests as $test) {
+                    $selected = $metaData->questBackId == $test->id ? "selected='true'" : "";
+                    echo "<option $selected value='$test->id'>$test->name</option>";
+                }
+            echo "</select>";
+        echo "</div>";
+    }
     
     ?>
     

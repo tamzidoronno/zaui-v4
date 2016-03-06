@@ -245,7 +245,6 @@ public class ManagerSubBase {
         this.storeId = storeId;
     }
   
-    
     protected <V> V deepClone(V object) {
         try {
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -260,16 +259,6 @@ public class ManagerSubBase {
           return null;
         }
     }
-//        if (result == null) {
-//            return result;
-//        }
-//        
-//        Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
-//        String json = gson.toJson((Object) result);
-//        V retObject = (V)gson.fromJson(json, result.getClass());
-//        
-//        return retObject;
-//    }
     
     public void stopScheduler(String reference) {
         GetShopScheduler ref = schedulers.remove(reference);

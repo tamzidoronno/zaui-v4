@@ -6,6 +6,7 @@ package com.thundashop.app.newsmanager.data;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.Date;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -19,4 +20,7 @@ public class NewsEntry extends DataCommon {
     public boolean isPublished = false;
     public String userId = "";
     public String pageId = "";
+    
+    @Transient
+    public String usersName = "";
 }

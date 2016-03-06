@@ -1,0 +1,8 @@
+<?php
+/* @var $this ns_f65ee7f2_134f_413f_82d2_2606ab8440dd\NewsElements */
+$entry = $this->getApi()->getNewsManager()->getNewsForPage($this->getPage()->javapage->id);
+if($entry->usersName) {
+    echo "Av: " . $entry->usersName . " / ";
+}
+echo "Dato: " . date("d.", strtotime($entry->rowCreatedDate)) . " " . strtolower($this->__w(date("F", strtotime($entry->rowCreatedDate))));
+?>

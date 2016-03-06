@@ -1,1 +1,6 @@
-#imgtodisplay { width: 100%; padding: 10px; box-sizing: border-box; }
+#imgtodisplay { width: 100%; padding: 10px; box-sizing: border-box; height: 400px; background-size: cover; }
+.latestnewsline {  white-space: nowrap;
+                   display:block;
+                   width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis; }

@@ -12,6 +12,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.mobilemanager.MobileManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.usermanager.UserManager;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,9 @@ public class NewsManager extends ManagerBase implements INewsManager {
 
     @Autowired
     private PageManager pageManager;
+    
+    @Autowired
+    private UserManager userManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -159,6 +163,9 @@ public class NewsManager extends ManagerBase implements INewsManager {
         if(entry.pageId == null || entry.pageId.isEmpty()) {
             Page templatePage = pageManager.createPageFromTemplatePage("news_template_1");
             entry.pageId = templatePage.id;
+            if(entry.userId != null && !entry.userId.isEmpty()) {
+                entry.usersName = userManager.getUserById(entry.userId).fullName;
+            }
             saveObject(entry);
         }
     }

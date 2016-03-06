@@ -16,7 +16,12 @@ class NewsElements extends \MarketingApplication implements \Application {
             echo "Not spefied a type yet, please specify one";
             return;
         }
-        $this->includefile($type);
+        
+        if($this->getFactory()->getPage()->javapage->id == "news_template_1") {
+            echo $type;
+        } else {
+            $this->includefile($type);
+        }
     }
     
     public function saveNewsContent() {

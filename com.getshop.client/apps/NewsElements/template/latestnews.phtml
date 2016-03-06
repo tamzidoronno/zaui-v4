@@ -1,0 +1,16 @@
+<div class="latestnewsheading">
+    Siste nytt
+</div>
+<div class='newscontainer'>
+    <?php
+    /* @var $this ns_f65ee7f2_134f_413f_82d2_2606ab8440dd\NewsElements */
+    $entry = $this->getApi()->getNewsManager()->getNewsForPage($this->getPage()->javapage->id);
+
+    $news = $this->getApi()->getNewsManager()->getAllNews();
+    foreach($news as $new) {
+        echo "<span class='latestnewsline'>" . $new->content . "</span>";
+        $time = strtotime($entry->rowCreatedDate);
+        echo "<span class='date'>" .  date("d.", $time) . " " . $this->__w(date("F", $time)) . " " . date("Y", $time) . "</span>";
+    }
+    ?>
+</div>

@@ -232,4 +232,5 @@ body {
 .NewsElements .newscontainer { padding: 20px; border: solid 1px #ebebeb; }
 .NewsElements .newscontainer .date { color: #4992bf; margin-top: 20px; margin-bottom: 20px; display:block; border-bottom: solid 1px #ebebeb; padding-bottom: 20px; }
 .NewsElements .newstitlefooter { border: solid 1px; display:inline-block; width: 120px; margin-bottom: 20px; }
-.NewsElements h1 { margin: 0px; margin-top: 20px; text-transform: uppercase; font-weight: normal;  }
+.NewsElements h1 { margin: 0px; text-transform: uppercase; font-weight: normal;  }
+.NewsElements .bysub { color: #959595; margin-top: 20px; margin-bottom: 20px; display:block; }

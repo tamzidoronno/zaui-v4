@@ -49,6 +49,18 @@ public class User extends DataCommon implements Comparable<User> {
         return fullName;
     }
 
+    public String getCellPhone() {
+        String numb = "";
+        if (prefix != null && !prefix.isEmpty()) {
+            numb += prefix;
+        }
+        
+        if (cellPhone != null && !cellPhone.isEmpty()) {
+            numb += cellPhone;
+        }
+        
+        return numb;
+    }
  
     public static class Type {
         public static int GETSHOPADMINISTRATOR = 200;

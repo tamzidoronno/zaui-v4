@@ -57,9 +57,30 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
             return;
         } 
         
-        $this->setConfigurationSetting("ordersubject", $_POST['ordersubject']);
-        $this->setConfigurationSetting("orderemail", $_POST['emailconfig']);
-        $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
+        $this->setConfigurationSetting("crontab", $_POST['crontab']);
+        $this->setConfigurationSetting("signupemail", $_POST['signupemail']);
+        $this->setConfigurationSetting("removedemail", $_POST['removedemail']);
+        $this->setConfigurationSetting("canceleventmail", $_POST['canceleventmail']);
+        $this->setConfigurationSetting("signup_mailcontent", $_POST['signup_mailcontent']);
+        $this->setConfigurationSetting("reminder_on_email_activated", $_POST['reminder_on_email_activated']);
+        $this->setConfigurationSetting("signupsms", $_POST['signupsms']);
+        $this->setConfigurationSetting("removedsms", $_POST['removedsms']);
+        $this->setConfigurationSetting("canceleventsms", $_POST['canceleventsms']);
+        $this->setConfigurationSetting("reminder_on_sms_activated", $_POST['reminder_on_sms_activated']);
+        $this->setConfigurationSetting("signup_subject", $_POST['signup_subject']);
+        $this->setConfigurationSetting("signup_sms_content", $_POST['signup_sms_content']);
+        $this->setConfigurationSetting("removed_mail_subject", $_POST['removed_mail_subject']);
+        $this->setConfigurationSetting("removed_mailcontent", $_POST['removed_mailcontent']);
+        $this->setConfigurationSetting("removed_sms_content", $_POST['removed_sms_content']);
+        $this->setConfigurationSetting("event_canceled_mail_content", $_POST['event_canceled_mail_content']);
+        $this->setConfigurationSetting("event_canceled_sms_conent", $_POST['event_canceled_sms_conent']);
+        $this->setConfigurationSetting("automatic_reminder_template_email", $_POST['automatic_reminder_template_email']);
+        $this->setConfigurationSetting("automatic_reminder_template_sms", $_POST['automatic_reminder_template_sms']);
+        $this->setConfigurationSetting("event_canceled_mail_subject", $_POST['event_canceled_mail_subject']);
+        $this->setConfigurationSetting("automatic_reminder_template_frequence", $_POST['automatic_reminder_template_frequence']);
+        
+        $this->getApi()->getEventBookingManager()->startScheduler("booking", $_POST['crontab']);
+//        $this->setConfigurationSetting("", $_POST['']);
     }
 }
 ?>

@@ -21,12 +21,14 @@ public abstract class GetShopSchedulerBase implements Runnable {
     private Scheduler scheduler;
     private final String password;
     private final String username;
+    private final String multiLevelName;
     private final String webAddress;
     
-    public GetShopSchedulerBase(String webAddress, String username, String password, String scheduler) throws Exception {
+    public GetShopSchedulerBase(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
         this.username = username;
         this.password = password;
         this.webAddress = webAddress;
+        this.multiLevelName = multiLevelName;
         
         createScheduler(scheduler);
     }
@@ -61,11 +63,13 @@ public abstract class GetShopSchedulerBase implements Runnable {
 
     public void stop() {
         try {
-            System.out.println("Stopping");
             this.scheduler.stop();
         } catch (IllegalStateException ex) {
             // Already stopped
         }
-        
+    }
+    
+    public String getMultiLevelName() {
+        return multiLevelName;
     }
 }

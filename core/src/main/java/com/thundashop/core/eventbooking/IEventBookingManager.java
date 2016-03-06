@@ -150,4 +150,10 @@ public interface IEventBookingManager {
     public Date getToDateTimeFilter();
     
     public void clearFilters();
+    
+    @Administrator
+    public void checkToSendReminders();
+    
+    @Administrator
+    public void startScheduler(String scheduler);
 }

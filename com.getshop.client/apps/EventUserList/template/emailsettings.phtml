@@ -21,7 +21,7 @@
     <span class="title"><?php echo $this->__f("Should send email when user is removed?"); ?></span>
     <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="removedemail">
         <?
-        $class = ($this->getConfigurationSetting("signupemail") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        $class = ($this->getConfigurationSetting("removedemail") == "true") ? "fa-toggle-on" : "fa-toggle-off";
         ?>
         <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
     </div>
@@ -114,34 +114,31 @@
 <div>
     <br/>
     <? echo $this->__f("Variables that can be used in email and subject"); ?>:
-    <br/> {User.Passsword} = <? echo $this->__f("Name of the customer"); ?>
     <br/> {User.Name} = <? echo $this->__f("Name of the customer"); ?>
     <br/> {User.Email} = <? echo $this->__f("Email of the customer"); ?>
-    <br/> {User.Address} = <? echo $this->__f("Street address of the customer"); ?>
-    <br/> {User.City} = <? echo $this->__f("City of the customer"); ?>
-    <br/> {User.Postcode} = <? echo $this->__f("Customers postcode"); ?>
-    <br/> {User.Phone} = <? echo $this->__f("Phonenumber to the customer"); ?>
+    <br/> {Event.Name} = <? echo $this->__f("Name of the event"); ?>
+    
 </div>
 
 <center><h2><? echo $this->__f("Signup emails / sms"); ?></h2></center>
     <div class="textfield gss_setting"  id="">
         <span class="title"><?php echo $this->__f("Registration subject"); ?></span>
-        <input type='textfield' gs_model='eventmodel' gs_model_attr='ordersubject' value="<? echo $this->getConfigurationSetting("ordersubject"); ?>"/>
+        <input type='textfield' gs_model='emailmodel' gs_model_attr='signup_subject' value="<? echo $this->getConfigurationSetting("signup_subject"); ?>"/>
         <div class="description">
             <?php echo $this->__("What should the subject be?"); ?>
         </div>
     </div>
 
-    <div class="textfield gss_setting"  id="shouldSendEmail">
+    <div class="textfield gss_setting"  id="">
         <span class="title"><?php echo $this->__f("Mailcontent"); ?></span>
-        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <textarea gs_model='emailmodel' gs_model_attr='signup_mailcontent' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("signup_mailcontent"); ?></textarea>
         <div class="description">
         </div>
     </div>
 
-    <div class="textfield gss_setting"  id="shouldSendEmail">
+    <div class="textfield gss_setting"  id="">
         <span class="title"><?php echo $this->__f("SmsContent"); ?></span>
-        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <textarea gs_model='emailmodel' gs_model_attr='signup_sms_content' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("signup_sms_content"); ?></textarea>
         <div class="description">
         </div>
     </div>
@@ -149,50 +146,58 @@
 <center><h2><? echo $this->__f("User removed emails / sms"); ?></h2></center>
     <div class="textfield gss_setting"  id="">
         <span class="title"><?php echo $this->__f("Registration subject"); ?></span>
-        <input type='textfield' gs_model='eventmodel' gs_model_attr='ordersubject' value="<? echo $this->getConfigurationSetting("ordersubject"); ?>"/>
+        <input type='textfield' gs_model='emailmodel' gs_model_attr='removed_mail_subject' value="<? echo $this->getConfigurationSetting("removed_mail_subject"); ?>"/>
         <div class="description">
             <?php echo $this->__("What should the subject be?"); ?>
         </div>
     </div>
 
-    <div class="textfield gss_setting"  id="shouldSendEmail">
+    <div class="textfield gss_setting"  id="">
         <span class="title"><?php echo $this->__f("Mailcontent"); ?></span>
-        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <textarea gs_model='emailmodel' gs_model_attr='removed_mailcontent' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("removed_mailcontent"); ?></textarea>
         <div class="description">
         </div>
     </div>
 
-    <div class="textfield gss_setting"  id="shouldSendEmail">
+    <div class="textfield gss_setting"  id="">
         <span class="title"><?php echo $this->__f("SmsContent"); ?></span>
-        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <textarea gs_model='emailmodel' gs_model_attr='removed_sms_content' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("removed_sms_content"); ?></textarea>
         <div class="description">
         </div>
     </div>
 
 <center><h2><? echo $this->__f("Event canceled emails / sms"); ?></h2></center>
     <div class="textfield gss_setting"  id="">
-        <span class="title"><?php echo $this->__f("Registration subject"); ?></span>
-        <input type='textfield' gs_model='eventmodel' gs_model_attr='ordersubject' value="<? echo $this->getConfigurationSetting("ordersubject"); ?>"/>
+        <span class="title"><?php echo $this->__f("Event canceled subject"); ?></span>
+        <input type='textfield' gs_model='emailmodel' gs_model_attr='event_canceled_mail_subject' value="<? echo $this->getConfigurationSetting("event_canceled_mail_subject"); ?>"/>
         <div class="description">
             <?php echo $this->__("What should the subject be?"); ?>
         </div>
     </div>
 
-    <div class="textfield gss_setting"  id="shouldSendEmail">
+    <div class="textfield gss_setting"  >
         <span class="title"><?php echo $this->__f("Mailcontent"); ?></span>
-        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <textarea gs_model='emailmodel' gs_model_attr='event_canceled_mail_content' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("event_canceled_mail_content"); ?></textarea>
         <div class="description">
         </div>
     </div>
 
-    <div class="textfield gss_setting"  id="shouldSendEmail">
+    <div class="textfield gss_setting"  id="">
         <span class="title"><?php echo $this->__f("SmsContent"); ?></span>
-        <textarea gs_model='emailmodel' gs_model_attr='emailconfig' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("orderemail"); ?></textarea>
+        <textarea gs_model='emailmodel' gs_model_attr='event_canceled_sms_conent' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("event_canceled_sms_conent"); ?></textarea>
         <div class="description">
         </div>
     </div>
 
 <center><h2><? echo $this->__f("Automatic event reminder emails / sms"); ?></h2></center>
+
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Trigger schedule crontab"); ?></span>
+        <input type='textfield' gs_model='emailmodel' gs_model_attr='crontab' value="<? echo $this->getConfigurationSetting("crontab"); ?>" placeholder="0 15 * * *"/>
+        <div class="description">
+            <?php echo $this->__("Specify when the trigger should run?"); ?>
+        </div>
+    </div>
 
     <div class="gss_setting">
         <div class="text inline title"><?php echo $this->__f("Template used when sending automatic reminders by email"); ?></div>
@@ -231,11 +236,11 @@
     </div>
 
     <div class="gss_setting">
-        <div class="text inline title"><?php echo $this->__f("Template used when sending automatic reminders by sms"); ?></div>
+        <div class="text inline title"><?php echo $this->__f("Send days before"); ?></div>
 
         <?
         $templates = $this->getApi()->getEventBookingManager()->getReminderTemplates("booking");
-        $frequences = [1,2,5,7,12,24,48];
+        $frequences = [1,2,3,4,5,6,7];
         ?>
         <div class="gss_dropdown">
             <select class="config" gs_model='emailmodel' gs_model_attr='automatic_reminder_template_frequence'>

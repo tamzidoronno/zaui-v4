@@ -13,14 +13,12 @@ import com.getshop.scope.GetShopSchedulerBase;
  */
 public class EventBookingScheduler extends GetShopSchedulerBase {
 
-    public EventBookingScheduler(String webAddress, String username, String password, String scheduler) throws Exception {
-        super(webAddress, username, password, scheduler);
+    public EventBookingScheduler(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
+        super(webAddress, username, password, scheduler, multiLevelName);
     }
 
     @Override
     public void execute() throws Exception {
-        System.out.println("OK: " + getApi().getUserManager().getLoggedOnUser());
-    }
-
-    
+        getApi().getEventBookingManager().checkToSendReminders(getMultiLevelName());
+    }   
 }

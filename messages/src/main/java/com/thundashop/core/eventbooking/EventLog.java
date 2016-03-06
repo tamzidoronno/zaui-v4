@@ -16,4 +16,5 @@ public class EventLog extends DataCommon {
     public String comment = "";
     public String doneBy = "";
     public String action = "";
+    public String additional = "";
 }

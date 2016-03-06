@@ -176,7 +176,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         for(PmsBookingRooms room : booking.rooms) {
-            int totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
+            int totalDays = 1;
+            if(room.date.end != null && room.date.start != null) {
+                totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
+            }
             room.count = totalDays;
             room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, true);
             room.taxes = calculateTaxes(room.bookingItemTypeId);
@@ -799,6 +802,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Double calculatePrice(String typeId, Date start, Date end, boolean avgPrice) {
         if(prices.defaultPriceType == 1) {
             return calculateDailyPricing(typeId,start,end, avgPrice);
+        }
+        if(prices.defaultPriceType == 2) {
+            return calculateMonthlyPricing(typeId);
         }
         if(prices.defaultPriceType == 7) {
             return calculateProgressivePrice(typeId,start,end,0, avgPrice);
@@ -2513,6 +2519,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    private Double calculateMonthlyPricing(String typeId) {
+        HashMap<String, Double> priceRange = prices.dailyPrices.get(typeId);
+        if(priceRange == null) {
+            return 0.0;
+        }
+        Double defaultPrice = priceRange.get("default");
+        if(defaultPrice == null) {
+            defaultPrice = 0.0;
+        }
+        
+        return defaultPrice;
     }
 
 

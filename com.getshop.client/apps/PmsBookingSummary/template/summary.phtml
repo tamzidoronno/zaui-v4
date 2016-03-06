@@ -134,6 +134,7 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     }
     
     $price = $room->price * $room->count;
+    
     $canNotBeAded = "";
     if(!$room->canBeAdded) {
         $canNotBeAded = "cantbeadded";

@@ -132,6 +132,7 @@ class StyleSheet {
 
         if (!file_exists("cssfolder")) {
             mkdir("cssfolder");
+            chmod("cssfolder", 777);
         }
         if (!file_exists("cssfolder/$appId")) {
             mkdir("cssfolder/$appId");    

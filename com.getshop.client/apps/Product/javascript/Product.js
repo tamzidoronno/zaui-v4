@@ -2,6 +2,12 @@ app.Product = {
     init: function () {
         $(document).on('click', '.addProductToCart', app.Product.addProductToCart);
         $(document).on('click', '.gshideproductaddedbox', app.Product.hideProductAddedBox);
+        $(document).on('click', '.gsgotocart', app.Product.gsgotocart);
+    },
+    gsgotocart : function() {
+        $('.gsaddedtocartbox').fadeOut();
+        thundashop.common.goToPage('cart');
+        $(window).scrollTop(0);
     },
     hideProductAddedBox : function() {
         $('.gsaddedtocartbox').fadeOut();

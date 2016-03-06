@@ -17,10 +17,10 @@ class Product extends \ApplicationBase implements \Application {
     }
 
     public function renderOnStartup() {
-        echo "<div class='gsaddedtocartbox'>";
+        echo "<div class='gsaddedtocartbox' style='display:none;'>";
         echo "<div class='gsproductaddedtext'>" . $this->__w("Your product has been added to the cart.") . "</div>";
         echo "<span class='shop_button gshideproductaddedbox'>".$this->__w("Continue shopping")."</span>";
-        echo "<a href='/?page=cart'><span class='shop_button'>".$this->__w("Continue to cart")."</span></a>";
+        echo "<span class='shop_button gsgotocart'>".$this->__w("Continue to cart")."</span>";
         echo "</div>";
     }
     

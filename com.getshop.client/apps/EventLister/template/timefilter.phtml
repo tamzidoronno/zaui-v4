@@ -1,0 +1,26 @@
+<?
+/* @var $this ns_f06d0c6a_882e_4592_917c_b74273edfd11\EventLister */
+$from = $this->getApi()->getEventBookingManager()->getFromDateTimeFilter($this->getBookingEngineName());
+$to = $this->getApi()->getEventBookingManager()->getToDateTimeFilter($this->getBookingEngineName());
+
+if ($to) {
+    $to = date("d.m.Y", strtotime($to));
+}
+
+if ($from) {
+    $from = date("d.m.Y", strtotime($from));
+}
+
+
+?>
+<div class='datefilter'>
+    Datefilter (blank = only new ones)
+    <br/>
+    <br/><input type='txt' class='gsniceinput1 from' value='<? echo $from; ?>'/> - <input type='txt' class='gsniceinput1 to'  value='<? echo $to; ?>'/> 
+</div>
+
+<script>
+    $('.EventLister .from').datepicker({ dateFormat: "dd.mm.yy"});
+    $('.EventLister .to').datepicker({ dateFormat: "dd.mm.yy"});
+</script>
+    

@@ -27,11 +27,11 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -77,9 +77,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Autowired
     public StoreManager storeManager;
+
     
     @Autowired
     public GSAdmins gsAdmins;
+    private User internalApiUser;
+    private String internalApiUserPassword;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -114,6 +117,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.storeId = storeId;
 //            getUserStoreCollection(storeId).addUserDirect(user);
         }
+         
     }
 
     public void addUserDeletedEventListener(UserDeletedEventListener listener) {
@@ -239,6 +243,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(80);
         }
     
+        if (user.suspended) {
+            throw new ErrorException(26);
+        }
         addUserToSession(user);
         
         loginHistory.markLogin(user, getSession().id);
@@ -342,7 +349,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
         
-        if (getSession().currentUser.type < User.Type.ADMINISTRATOR && !getSession().currentUser.id.equals(user.id)) {
+        if (getSession().currentUser.type < User.Type.EDITOR && !getSession().currentUser.id.equals(user.id)) {
             
             if(!okDueToCompanyAccess) {
                 throw new ErrorException(26);
@@ -1243,4 +1250,25 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return false;
     }
+
+    public User getInternalApiUser() {
+        if (internalApiUser == null) {
+            this.internalApiUserPassword = UUID.randomUUID().toString();
+            
+            internalApiUser = new User();
+            internalApiUser.id = "gs_system_scheduler_user";
+            internalApiUser.type = 100;
+            internalApiUser.fullName = "System Scheduled";
+            internalApiUser.storeId = storeId;
+            internalApiUser.password = encryptPassword(internalApiUserPassword);
+            internalApiUser.username = UUID.randomUUID().toString();
+            internalApiUser.metaData.put("password", this.internalApiUserPassword);
+            internalApiUser.emailAddress = "post@getshop.com";
+            
+            getUserStoreCollection(storeId).addUserDirect(internalApiUser);
+        }
+        
+        return internalApiUser;
+    }
+
 }

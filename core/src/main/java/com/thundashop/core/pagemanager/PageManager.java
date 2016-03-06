@@ -288,6 +288,10 @@ public class PageManager extends ManagerBase implements IPageManager {
     public List<String> getPagesForApplicationOnlyBody(String appId) {
         List<String> retPages = new ArrayList();
         for (Page page : pages.values()) {
+            // We do not care about the slave pages as they follow the same rights as as the masterpage.
+            if (page.isASlavePage()) {
+                continue;
+            }
             for (PageCell cell : page.layout.getCellsInBodyFlatList()) {
                 if (cell.appId != null && cell.appId.equals(appId)) {
                     retPages.add(page.id);

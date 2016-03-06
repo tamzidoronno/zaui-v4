@@ -11,7 +11,15 @@ class EventLister extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
     }
 
     public function render() {
+        $loggedInUser = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        if ($loggedInUser && $loggedInUser->type > 10) {
+            $this->includefile("timefilter");
+        }
         $this->includefile("eventslist");
+    }
+    
+    public function clearFilters() {
+        $this->getApi()->getEventBookingManager()->clearFilters($this->getBookingEngineName());
     }
     
     public function getEvents() {
@@ -38,7 +46,7 @@ class EventLister extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
     public function getLocations($groupedEvents) {
         
         
-        return $this->getApi()->getEventBookingManager()->getAllLocations($this->getBookingEngineName());
+        return $this->getApi()->getEventBookingManager()->getFilteredLocations($this->getBookingEngineName());
     }
     
     public function applyFilter() {
@@ -47,6 +55,22 @@ class EventLister extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
    
     public function deleteEvent() {
         $this->getApi()->getEventBookingManager()->deleteEvent($this->getBookingEngineName(), $_POST['data']['eventid']);
+    }
+    
+    public function setTimeFilter() {
+        if ($_POST['data']['from'] && !$_POST['data']['to']) {
+            $from = $this->convertToJavaDate(strtotime($_POST['data']['from']));
+            $this->getApi()->getEventBookingManager()->setTimeFilter($this->getBookingEngineName(), $from, null);
+        } else if (!$_POST['data']['from'] && !$_POST['data']['to']) {
+            $this->getApi()->getEventBookingManager()->setTimeFilter($this->getBookingEngineName(), null, null  );
+        } else if (!$_POST['data']['from'] && $_POST['data']['to']) {
+            $to = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+            $this->getApi()->getEventBookingManager()->setTimeFilter($this->getBookingEngineName(), null, $to);
+        } else {
+            $from = $this->convertToJavaDate(strtotime($_POST['data']['from']));
+            $to = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+            $this->getApi()->getEventBookingManager()->setTimeFilter($this->getBookingEngineName(), $from, $to);
+        }
     }
 }
 ?>

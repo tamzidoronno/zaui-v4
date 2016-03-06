@@ -7,6 +7,7 @@ package com.thundashop.core.questback;
 
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -300,20 +301,40 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         QuestBackQuestion question = getQuestionBasedOnPageId(pageId);
         ApplicationInstance application = instancePool.getApplicationInstance(applicationId);
         
-        String jsonEncodedAnswers = application.getSetting("options");
+        boolean allCorrect = true;
+        String text = "";
         
-        Gson gson = new Gson();
-        List<QuestBackOption> options = gson.fromJson(jsonEncodedAnswers, new TypeToken<ArrayList<QuestBackOption>>(){}.getType());
+        if (application.getSetting("type").equals("4")) {
+            allCorrect = checkPicutureAnswer(application, answers);
+        } else if (application.getSetting("type").equals("3")) {
+            text = answers.get(0);
+            allCorrect = true;
+        } else {
+            allCorrect = checkAnswer(application, answers);
+        }
         
+        testResult.answer(question.id, allCorrect, text);
+        saveObject(testResult);
+
+        if (!allCorrect && test.forceCorrectAnswer) {
+            return "wrong";
+        }
+        
+        return getNextQuestionPage(test.id);
+    }
+
+    private boolean checkAnswer(ApplicationInstance application, List<String> answers) throws JsonSyntaxException {
         boolean allCorrect = true;
         
+        String jsonEncodedAnswers = application.getSetting("options");
+        Gson gson = new Gson();
+        List<QuestBackOption> options = gson.fromJson(jsonEncodedAnswers, new TypeToken<ArrayList<QuestBackOption>>(){}.getType());
         // Checks if a correct answer has not been selected
         for (QuestBackOption option : options) {
             if (option.correctAnswer && !answers.contains(option.id)) {
                 allCorrect = false;
             }
         }
-        
         // Checks if a wrong answer has been selected
         for (QuestBackOption option : options) {
             for (String optionId : answers) {
@@ -322,15 +343,28 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
                 }
             }
         }
+        return allCorrect;
+    }
+
+    private boolean checkPicutureAnswer(ApplicationInstance application, List<String> answers) {
+        boolean allCorrect = true;
         
-        testResult.answer(question.id, allCorrect);
-        saveObject(testResult);
-        
-        if (!allCorrect && test.forceCorrectAnswer) {
-            return "wrong";
+        try {
+            int x = Integer.parseInt(application.getSetting("x"));
+            int y = Integer.parseInt(application.getSetting("y"));
+            int x2 = Integer.parseInt(application.getSetting("x2"));
+            int y2 = Integer.parseInt(application.getSetting("y2"));
+            int ux = Integer.parseInt(answers.get(0));
+            int uy = Integer.parseInt(answers.get(1));
+            
+            if (!(x <= ux && ux <= x2 && y <= uy && uy <= y2)) {
+                allCorrect = false;
+            }
+        } catch (NumberFormatException x) {
+            allCorrect = false;
         }
-                
-        return getNextQuestionPage(test.id);
+        
+        return allCorrect;
     }
 
     @Override

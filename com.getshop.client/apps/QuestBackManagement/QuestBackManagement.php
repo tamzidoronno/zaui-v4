@@ -114,7 +114,7 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
     public function saveTestSettings() {
         $test = $this->getApi()->getQuestBackManager()->getTest($_POST['data']['testid']);
         $test->questions = $_POST['data']['nodeIds'];
-        $test->forceCorrectAnswer = $_POST['data']['forceCorrectAnswer'];
+        $test->forceCorrectAnswer = $_POST['data']['forceCorrectAnswer'] == "true";
         $test->name = $_POST['data']['name'];
         
         $test->redFrom = $_POST['data']['redFrom'];

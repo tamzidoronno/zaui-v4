@@ -2,18 +2,25 @@
 /* @var $this \ns_f06d0c6a_882e_4592_917c_b74273edfd11\EventLister */
 $groupedEvents = $this->getEvents();
 $locations = $this->getLocations($groupedEvents);
+$loggedOnUser = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
 
 if (!count($groupedEvents)) {
-    echo "please come back later, no events available";
+    $this->wrapContentManager("no_events", "Please come back later, no events available");
+    
+    if ($loggedOnUser != null && $loggedOnUser->type > 10) {
+        echo "<br/><center><div class='shop_button' gsclick='clearFilters'> Clear filter </div></center>";
+    }
+    
     return;
 }
 
 echo "<div class='locationlist'>";
     foreach ($locations as $loc) {
-        $extra = $loc->isFiltered ? "<i class='fa fa-check'/>" : "";
+        $extra = $loc->isFiltered ? "<i class='fa fa-check'></i>" : "";
         echo "<div gsclick='applyFilter' locationId='$loc->id'>$extra $loc->name</div>";
     }
 echo "</div>";
+
 
 
 echo "<div class='eventlist'>";

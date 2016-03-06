@@ -28,8 +28,8 @@ and open the template in the editor.
 
 .QuestBack .quest_back_type_selected {
     border: solid 1px #DDD;
-    width: 80px; 
-    height: 60px;
+    width: 90px; 
+    height: 80px;
     margin: 10px;
     vertical-align: top;
     display: inline-block;
@@ -67,4 +67,25 @@ and open the template in the editor.
 
 .QuestBack .admin_option_text {
     width: 370px;
+}
+
+.QuestBack .QuestBackImage {
+    position: relative;
+}
+
+.QuestBack .QuestBackImage i {
+    text-shadow: 0px 0px 5px #FFF;
+    color: #000;
+    
+    background-color: #FFF;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.QuestBack .textquestion {
+    border: solid 1px #DDD;
+    width: 100%;
+    box-sizing: border-box;
+    height: 200px;
+    padding: 20px;
 }

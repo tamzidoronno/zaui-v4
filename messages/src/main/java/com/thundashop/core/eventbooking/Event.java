@@ -36,6 +36,12 @@ public class Event extends DataCommon {
     
     public boolean isCanceled = false;
     
+    public boolean smsReminderSent;
+    
+    public boolean mailReminderSent;
+    
+    public boolean questBackSent = false;
+    
     @Editor
     public HashMap<String, List<UserComment>> comments = new HashMap();
     

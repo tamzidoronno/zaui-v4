@@ -92,6 +92,8 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         
         $user->discount = $_POST['discount'];
         
+        $user->suspended = $_POST['suspended'];
+        
         $user = $this->getApi()->getUserManager()->saveUser($user);
         
         \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::refresh();

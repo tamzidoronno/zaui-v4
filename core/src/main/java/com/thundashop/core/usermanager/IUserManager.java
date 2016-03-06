@@ -44,7 +44,7 @@ public interface IUserManager {
      * @return
      * @throws ErrorException 
      */
-    @Administrator
+    @Editor
     public List<User> findUsers(String searchCriteria) throws ErrorException;
     
     /**
@@ -106,7 +106,7 @@ public interface IUserManager {
      * @return
      * @throws ErrorException 
      */
-    @Administrator
+    @Editor
     public FilteredData getAllUsersFiltered(FilterOptions filter);
     
     /**

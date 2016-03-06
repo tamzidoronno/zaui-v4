@@ -18,6 +18,7 @@ public class UserQuestionAnswer implements Serializable {
     public boolean hasAnswered = false;
     public String questionId = "";
     public int tries = 0;
+    public String text = "";
     
     @Transient
     public QuestBackQuestion question;

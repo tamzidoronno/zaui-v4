@@ -38,4 +38,6 @@ public class BookingItemTypeMetadata extends DataCommon {
     public Double publicPrice = -1D;
     
     public String bookingItemTypeId = "";
+    
+    public String questBackId = "";
 }

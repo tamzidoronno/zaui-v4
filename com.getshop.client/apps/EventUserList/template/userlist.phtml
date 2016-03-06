@@ -3,22 +3,26 @@
 $event = $this->getEvent();
 $users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getBookingEngineName(), $event->id);
 $groups = $this->getApi()->getUserManager()->getAllGroups();
+$isAdministrator = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
 
 if (!count($users)) {
     echo "<div style='padding: 20px;'>".$this->__w("No users added yet")."</div>";
     return;
 }
-?>
 
-<div class='reports'>
-    <center>Reports</center>
-    <?
-    foreach ($groups as $group) {
-        echo "<div class='shop_button'> $group->groupName</div>&nbsp;";
-    }
-    ?>
-</div>
+if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+?>
+    <div class='reports'>
+        <center>Reports</center>
+        <?
+        foreach ($groups as $group) {
+            echo "<div class='shop_button'> $group->groupName</div>&nbsp;";
+        }
+        ?>
+    </div>
 <?
+}
+
 foreach ($users as $user) {
     $gradCapColor = "#006e63";
     $participatedStatus = @$event->participationStatus->{$user->id};
@@ -31,12 +35,16 @@ foreach ($users as $user) {
     
     ?>
     <div class="userline">
-        <div class="gs_shop_small_icon" gsclick="removeUserFromEvent" gs_confirm="<? echo $this->__f("Are you sure you want to remove user from this event?"); ?>" eventid="<? echo $event->id; ?>"  userid="<? echo $user->id; ?>"><i class="fa fa-trash"></i></div>
+        <?
+        if ($isAdministrator) {
+        ?>
+            <div class="gs_shop_small_icon" gsclick="removeUserFromEvent" gs_confirm="<? echo $this->__f("Are you sure you want to remove user from this event?"); ?>" eventid="<? echo $event->id; ?>"  userid="<? echo $user->id; ?>"><i class="fa fa-trash"></i></div>
         <? 
+        }
             $company = null;
             $group = null;
             
-            if ($specialInfo) {
+            if ($specialInfo && $isAdministrator) {
                 ?>
                 <div class="gs_shop_small_icon showspecialinfo">
                     <i class='fa fa-warning'></i>
@@ -67,6 +75,8 @@ foreach ($users as $user) {
             } else {
                 echo " - N/A";
             }
+            
+            if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
         ?>
         <div class="options">
             <div class="gs_shop_small_icon" gs_show_modal="uploadExternalCertificate" userid="<? echo $user->id; ?>" eventid="<? echo $event->id; ?>"><i class="fa fa-upload"></i></div>
@@ -74,6 +84,9 @@ foreach ($users as $user) {
             <div class="gs_shop_small_icon showsettings" userId="<? echo $user->id; ?>" eventId="<? echo $event->id; ?>"><i class="fa fa-gears"></i></div>
             <i class='fa fa-graduation-cap' style='color: <? echo $gradCapColor; ?>'></i>
         </div>
+        <?
+        }
+        ?>
     </div>
     <?
 }

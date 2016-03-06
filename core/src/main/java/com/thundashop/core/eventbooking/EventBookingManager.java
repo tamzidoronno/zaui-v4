@@ -4,7 +4,10 @@ package com.thundashop.core.eventbooking;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.mongodb.BasicDBObject;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.CheckSendQuestBackScheduler;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -18,9 +21,13 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +59,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     
     @Autowired
     public BookingEngine bookingEngine;
+    
+    @Autowired
+    public StoreApplicationPool applicationPool;
     
     @Autowired
     public UserManager userManager;
@@ -103,6 +113,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 externalCertificates.put(externalCertificate.id, externalCertificate);
             }
         }
+        
+        createScheduler("event_questback_checked", "0 * * * *", CheckSendQuestBackScheduler.class);
     }
     
     @Override
@@ -123,7 +135,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .collect(Collectors.toList());
         
         sortEventsByDate(retEvents);
-        return cloneAndFinalize(retEvents);
+        retEvents = cloneAndFinalize(retEvents);
+        
+        return filterByTimeFilter(retEvents);
     }
 
     private void sortEventsByDate(List<Event> retEvents) {
@@ -218,7 +232,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         if (action.equals("EVENT_CREATED")) {
             logEntry.comment = "Event created";
             saveObject(logEntry);
-        }   
+        }
     }
 
     @Override
@@ -376,6 +390,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         List<Booking> bookings = new ArrayList();
         bookings.add(booking);
         bookingEngine.addBookings(bookings);
+        sendUserAddedToEventNotifications(user, event);
         log("USER_ADDED", event, user);
     }   
 
@@ -417,10 +432,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             .findAny()
             .orElse(null);
         
+        User user = userManager.getUserById(userId);
         if (booking != null) {
             bookingEngine.deleteBooking(booking.id);
-            log("USER_REMOVED", event, userManager.getUserById(userId));
+            log("USER_REMOVED", event, user);
         }
+        
+        sendRemovedUserFromEventNotification(user, event);
     }
 
     @Override
@@ -573,9 +591,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             User user = userManager.getUserById(userId);
             if (user != null) {
                 if (reminder.type.equals("sms")) {
-                    sendReminderSms(reminder, user);
+                    sendReminderSms(reminder.content, user, event, reminder.smsMessageId);
                 } else {
-                    sendReminderMail(reminder, user);
+                    sendReminderMail(reminder.content, reminder.subject, user, event, reminder.userIdMessageId, reminder.userIdInvoiceMessageId);
                 }
             }
         }
@@ -585,23 +603,26 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         log("REMINDER_SENT", event, reminder.type);
     }
 
-    private void sendReminderMail(Reminder reminder, User user) {
+    private void sendReminderMail(String conent, String subject, User user, Event event, HashMap<String, String> userIdMessageId, HashMap<String, String> userIdInvoiceMessageId) {
         String email = storePool.getStore(storeId).configuration.emailAdress;
-        String content = writeVariables(reminder.content);
+        String content = formatText(conent, user, event);
+        subject = formatText(subject, user, event);
+        
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
-            String messageId = messageManager.sendMail(user.emailAddress, user.fullName, reminder.subject, content, email, "");
-            reminder.userIdMessageId.put(user.id, messageId);
+            String messageId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, email, "");
+            if (userIdInvoiceMessageId != null) {
+                userIdMessageId.put(user.id, messageId);
+            }
         }
         
         if (user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty()) {
-            String messageId = messageManager.sendMail(user.companyObject.invoiceEmail, user.fullName, reminder.subject, content, email, "");
-            reminder.userIdInvoiceMessageId.put(user.id, messageId);
+            String messageId = messageManager.sendMail(user.companyObject.invoiceEmail, user.fullName, subject, content, email, "");
+            if (userIdInvoiceMessageId != null) {
+                userIdInvoiceMessageId.put(user.id, messageId);
+            }
         }
     }
 
-    private String writeVariables(String content) {
-        return content;
-    }
 
     @Override
     public List<Reminder> getReminders(String eventId) {
@@ -615,12 +636,17 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return reminders.get(reminderId);
     }
 
-    private void sendReminderSms(Reminder reminder, User user) {
-        String content = writeVariables(reminder.content);
+    private String sendReminderSms(String content, User user, Event event, HashMap<String, String> smsMessageId) {
+        content = formatText(content, user, event);
         if (user.cellPhone != null && !user.cellPhone.isEmpty()) {
             String smsId = messageManager.sendSms("clickatell", user.cellPhone, content, user.prefix);
-            reminder.smsMessageId.put(user.id, smsId);
+            if (smsMessageId != null) {
+                smsMessageId.put(user.id, smsId);
+            }
+            return smsId;
         }
+        
+        return "";
     }
 
     @Override
@@ -853,8 +879,350 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             throw new ErrorException(1035);
         }
         
+        List<Booking> bookings = bookingEngine.getAllBookingsByBookingItem(event.bookingItemId);
+        
+        for (Booking booking : bookings) {
+            User user = userManager.getUserById(booking.userId);
+            sendCanceledNotification(user, event);
+        }
+        
         log("EVENT_CANCELED", event, null);
         event.isCanceled = true;
         saveObject(event);
     }
+
+    @Override
+    public void setTimeFilter(Date from, Date to) {
+        getSession().put("from", from);
+        getSession().put("to", to);
+    }
+
+    private List<Event> filterByTimeFilter(List<Event> retEvents) {
+        Date from = (Date)getSession().get("from");
+        Date to = (Date)getSession().get("to");
+        Date today = new Date();
+        
+        if (from == null || to == null) {
+            return retEvents.stream()
+                    .filter(o -> o.mainEndDate != null && o.mainEndDate.after(today))
+                    .collect(Collectors.toList());
+        }
+        
+        if (from != null && to != null) {
+            return retEvents.stream()
+                    .filter(o -> o.mainStartDate != null && o.mainStartDate.after(from) && o.mainStartDate.before(to))
+                    .collect(Collectors.toList());
+        }
+        
+        return retEvents;
+    }
+
+    @Override
+    public Date getFromDateTimeFilter() {
+        return (Date)getSession().get("from");
+    }
+
+    @Override
+    public Date getToDateTimeFilter() {
+        return (Date)getSession().get("to");
+    }
+
+    @Override
+    public void clearFilters() {    
+        getSession().put("sessionfilters", new ArrayList());
+        getSession().put("from", null);
+        getSession().put("to", null);
+    }
+
+    @Override
+    public List<Location> getFilteredLocations() {
+        Set<Location> retLocs = new HashSet();
+        List<Event> events = getEvents();
+        for (Event event : events) {
+            finalize(event.location);
+            retLocs.add(event.location);
+        }
+        
+        return new ArrayList(retLocs);
+    }
+
+    private void sendUserAddedToEventNotifications(User user, Event event) {
+        Application settingsApp = getSettingsApplication();
+        
+        if (settingsApp.getSetting("signupemail").equals("true")) {
+            sendSignupEmail(settingsApp, user, event);
+        }
+        
+        if (settingsApp.getSetting("signupsms").equals("true")) {
+            sendSms(settingsApp, user, event);
+        }
+    }
+
+    private Application getSettingsApplication() {
+        return applicationPool.getApplication("bd751f7e-5062-4d0d-a212-b1fc6ead654f");
+    }
+
+    private void sendSignupEmail(Application settingsApp, User user, Event event) {
+        String subject = formatText(settingsApp.getSetting("signup_subject"), user, event);
+        String content = formatText(settingsApp.getSetting("signup_mailcontent"), user, event);
+        
+        if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
+            String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            logEventEntry(event, "SIGNUP_MAIL_SENT", "Signupmail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
+        } else {
+            logEventEntry(event, "SIGNUP_MAIL_SENT_FAILED", "Couldnot send mail to user " + user.fullName + ", no email registered.", "");
+        }
+    }
+
+    private String formatText(String text, User user, Event event) {
+        text = text.replace("{User.Name}", checkNull(user.fullName));
+        text = text.replace("{User.Email}", checkNull(user.emailAddress));
+        text = text.replace("{Event.Name}", checkNull(event.bookingItemType.name));
+        return text;
+    }
+
+    private String checkNull(String text) {
+        if (text == null) {
+            return "";
+        }
+        
+        return text;
+    }
+
+    private void sendSms(Application settingsApp, User user, Event event) {
+        String content = formatText(settingsApp.getSetting("signup_sms_content"), user, event);
+        String prefix = user.prefix;
+        String phoneNumber = user.cellPhone;
+        String storeName = getStoreName();
+        
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            String res = messageManager.sendSms("clickatell", phoneNumber, content, prefix, storeName);
+            logEventEntry(event, "SMS_SIGNUP_SENT", "Signup sms sent to " + user.fullName, res);
+        } else {
+            logEventEntry(event, "SMS_SIGNUP_SENT_FAILED", "Failed to send signup sms to use " + user.fullName, "");
+        }
+    }
+
+    private void sendRemovedUserFromEventNotification(User user, Event event) {
+        Application settingsApp = getSettingsApplication();
+        
+        if (settingsApp.getSetting("removedemail").equals("true")) {
+            sendRemovedEmail(settingsApp, user, event);
+        }
+        
+        if (settingsApp.getSetting("removedsms").equals("true")) {
+            sendRemovedSms(settingsApp, user, event);
+        }
+    }
+
+    private void sendRemovedEmail(Application settingsApp, User user, Event event) {
+        String subject = formatText(settingsApp.getSetting("removed_mail_subject"), user, event);
+        String content = formatText(settingsApp.getSetting("removed_mailcontent"), user, event);
+        
+        if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
+            String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            logEventEntry(event, "REMOVED_MAIL_SENT", "Removed mail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
+        } else {
+            logEventEntry(event, "SIGNUP_MAIL_SENT_FAILED", "Couldnot send remove mail to user " + user.fullName + ", no email registered.", "");
+        }
+    }
+
+    private void sendRemovedSms(Application settingsApp, User user, Event event) {
+        String content = formatText(settingsApp.getSetting("removed_sms_content"), user, event);
+        String prefix = user.prefix;
+        String phoneNumber = user.cellPhone;
+        String storeName = getStoreName();
+        
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            String res = messageManager.sendSms("clickatell", phoneNumber, content, prefix, storeName);
+            logEventEntry(event, "SMS_REMOVED_SENT", "Sms removed notification sent to user " + user.fullName + " cellphone, " + phoneNumber + ", prefix: " + prefix, res);
+        } else {
+            logEventEntry(event, "SMS_REMOVED_SENT_FAILED", "Failed to send removed sms to user " + user.fullName, "");
+        }
+    }
+
+    private void sendCanceledNotification(User user, Event event) {
+        Application settingsApp = getSettingsApplication();
+        
+        if (settingsApp.getSetting("canceleventmail").equals("true")) {
+            sendCanceledEmail(settingsApp, user, event);
+        }
+        
+        if (settingsApp.getSetting("canceleventsms").equals("true")) {
+            sendCanceledSms(settingsApp, user, event);
+        }
+    }
+
+    private void sendCanceledSms(Application settingsApp, User user, Event event) {
+        String subject = formatText(settingsApp.getSetting("event_canceled_mail_subject"), user, event);
+        String content = formatText(settingsApp.getSetting("event_canceled_mail_content"), user, event);
+        
+        if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
+            String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            logEventEntry(event, "CANCELED_MAIL_SENT", "Canceled mail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
+        } else {
+            logEventEntry(event, "CANCELED_MAIL_SENT_FAILED", "Couldnot send canceled mail to user " + user.fullName + ", no email registered.", "");
+        }
+    }
+
+    private void sendCanceledEmail(Application settingsApp, User user, Event event) {
+        String content = formatText(settingsApp.getSetting("event_canceled_sms_conent"), user, event);
+        String prefix = user.prefix;
+        String phoneNumber = user.cellPhone;
+        String storeName = getStoreName();
+        
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            String res = messageManager.sendSms("clickatell", phoneNumber, content, prefix, storeName);
+            logEventEntry(event, "SMS_CANCELED_SENT", "Sms canceled notification sent to user " + user.fullName + " cellphone, " + phoneNumber + ", prefix: " + prefix, res);
+        } else {
+            logEventEntry(event, "SMS_CANCELED_SENT_FAILED", "Failed to send canceled sms to user " + user.fullName + ", phonenumber: " + phoneNumber + ", prefix: " + prefix, "");
+        }
+    }
+
+    @Override
+    public void startScheduler(String scheduler) {
+        stopScheduler("event_booking_scheduler");
+        createScheduler("event_booking_scheduler", scheduler, EventBookingScheduler.class);
+    }
+
+    @Override
+    public void checkToSendReminders() {
+        events.values().stream()
+                .forEach(o -> finalize(o));
+        
+        events.values().stream()
+                .filter(o -> o.mainStartDate != null)
+                .filter(o -> nowIsBetween(o.mainStartDate))
+                .forEach(o -> sendReminder(o));
+    }
+
+    private boolean nowIsBetween(Date mainStartDate) {
+        Application settings = getSettingsApplication();
+        String inAdvance = settings.getSetting("automatic_reminder_template_frequence");
+        
+        if (inAdvance == null || inAdvance.isEmpty()) {
+            return false;
+        }
+        
+        int days = Integer.parseInt(inAdvance);
+        
+        Date now = new Date();
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(mainStartDate);
+        cal.add(Calendar.DAY_OF_YEAR, -days);
+        Date afterThisDate = cal.getTime();
+        
+        return now.getTime() >= afterThisDate.getTime() && now.getTime() <= mainStartDate.getTime();
+    }
+
+    private void sendReminder(Event o) {
+        if (o.isCanceled) {
+            return;
+        }
+        
+        if (o.smsReminderSent && o.mailReminderSent) {
+            return;
+        }
+        
+        Application settings = getSettingsApplication();
+        
+        if (!o.smsReminderSent && settings.getSetting("reminder_on_sms_activated").equals("true")) {
+            sendAutomaticSmsReminder(o, settings);
+            o.smsReminderSent = true;
+        }
+        
+        if (!o.mailReminderSent && settings.getSetting("reminder_on_email_activated").equals("true")) {
+            sendAutomaticMailReminder(o, settings);
+            o.mailReminderSent = true;
+        }
+        
+        saveObject(o);
+    }
+
+    private void sendAutomaticSmsReminder(Event event, Application settings) {
+        String templateId = settings.getSetting("automatic_reminder_template_sms");
+        ReminderTemplate template = getReminderTemplate(templateId);
+        if (template == null) {
+            logEventEntry(event, "AUOTMATIC_REMINDER_SMS_FAILED", "Could not send automatic sms reminder, the template does not exists", "");
+            return;
+        }
+        
+        List<Booking> bookings = bookingEngine.getAllBookingsByBookingItem(event.bookingItemId);
+        for (Booking booking : bookings) {
+            User user = userManager.getUserById(booking.userId);
+            String smsId = sendReminderSms(template.content, user, event, null);
+            logEventEntry(event, "AUTOMATIC_REMIDER_SMS_SENT", "Sent reminder to user " + user.fullName, smsId);
+        }
+    }
+    
+    private void sendAutomaticMailReminder(Event event, Application settings) {
+        String templateId = settings.getSetting("automatic_reminder_template_email");
+        ReminderTemplate template = getReminderTemplate(templateId);
+        if (template == null) {
+            logEventEntry(event, "AUOTMATIC_REMINDER_MAIL_FAILED", "Could not send automatic mail reminder, the template does not exists", "");
+            return;
+        }
+        
+        List<Booking> bookings = bookingEngine.getAllBookingsByBookingItem(event.bookingItemId);
+        for (Booking booking : bookings) {
+            User user = userManager.getUserById(booking.userId);
+            sendMailReminder(user, event, template, null);
+            
+            if (user.companyObject != null && user.companyObject.invoiceAddress != null && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
+                sendMailReminder(user, event, template, user.companyObject.invoiceEmail);
+            }
+        }
+    }
+
+    private void sendMailReminder(User user, Event event, ReminderTemplate template, String emailAddress) throws ErrorException {
+        String subject = event.bookingItemType.name;
+        String content = formatText(template.content, user, event);
+        
+        String emailToUser = user.emailAddress;
+        if (emailAddress != null) {
+            emailToUser = emailAddress;
+        }
+        
+        if (emailToUser != null && !user.emailAddress.isEmpty()) {
+            String mailId = messageManager.sendMail(emailToUser, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            String logMsg = "Reminder has been sent to " + user.fullName + ", email: " + emailToUser;
+            logEventEntry(event, "AUOTMATIC_REMINDER_MAIL_SENT", logMsg, mailId);
+        } else {
+            logEventEntry(event, "AUOTMATIC_REMINDER_MAIL_FAILED", "Could not send reminder to " + user.fullName + ", missing emailaddress", "");
+        }
+    }
+
+    private void logEventEntry(Event event, String action, String comment, String additional) throws ErrorException {
+        EventLog log = new EventLog();
+        log.action = action;
+        log.doneBy = getSession().currentUser.id;
+        log.eventId = event.id;
+        log.comment = comment;
+        log.additional = additional;
+        saveObject(log);
+    }
+
+    @Override
+    public List<Event> getEventsWhereEndDateBetween(Date from, Date to) {
+        events.values().stream().forEach(o -> o.setMainDates());
+        
+        List<Event> ret = events.values().stream()
+                .filter(o -> o.mainEndDate != null && o.mainEndDate.after(from) && o.mainEndDate.before(to))
+                .collect(Collectors.toList());
+        
+        ret.stream().forEach(o -> finalize(o));
+        return ret;
+    }
+
+    @Override
+    public void markQuestBackSent(String eventId) {
+        Event event = events.get(eventId);
+        if (event != null) {
+            event.questBackSent = true;
+            saveObject(event);
+            logEventEntry(event, "EVENT_QUESTBACK_SENT", "QuestBack has been sent for event", "");
+        }
+    }
+
 }

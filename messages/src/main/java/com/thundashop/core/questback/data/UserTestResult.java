@@ -40,7 +40,7 @@ public class UserTestResult extends DataCommon {
         return answerForQuestion.tries > 0;
     }
 
-    public void answer(String id, boolean allCorrect) {
+    public void answer(String id, boolean allCorrect, String text) {
         UserQuestionAnswer answerForQuestion = answers.stream()
                 .filter(o -> o.questionId.equals(id))
                 .findFirst()
@@ -54,6 +54,7 @@ public class UserTestResult extends DataCommon {
         
         answerForQuestion.tries++;
         answerForQuestion.hasAnsweredCorrectly = allCorrect;
+        answerForQuestion.text = text;
         
         if (answerForQuestion.tries == 1 && allCorrect) {
             answerForQuestion.percentageOfCorrect = 100;

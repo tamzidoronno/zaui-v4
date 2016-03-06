@@ -13,6 +13,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.common.Writing;
 import com.thundashop.core.usermanager.data.User;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,6 +40,10 @@ public interface IEventBookingManager {
     public void deleteLocation(String locationId);
     
     public List<Location> getAllLocations();
+    
+    public List<Location> getFilteredLocations();
+    
+    public List<Event> getEventsWhereEndDateBetween(Date from, Date to);
     
     public List<Event> getEvents();
     
@@ -140,4 +145,20 @@ public interface IEventBookingManager {
     
     @Customer
     public boolean isUserSignedUpForEvent(String eventId, String userId);
+    
+    public void setTimeFilter(Date from, Date to);
+    
+    public Date getFromDateTimeFilter();
+    public Date getToDateTimeFilter();
+    
+    public void clearFilters();
+    
+    @Administrator
+    public void checkToSendReminders();
+    
+    @Administrator
+    public void startScheduler(String scheduler);
+    
+    @Administrator
+    public void markQuestBackSent(String eventId);
 }

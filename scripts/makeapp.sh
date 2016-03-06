@@ -47,6 +47,7 @@ echo "3. Marketing"
 echo "4. Content Management"
 echo "5. Reports"
 echo "6. EventBooking"
+echo "7. E-commerce template pool"
 read moduleNumber
 
 module=other
@@ -64,6 +65,9 @@ if [ $moduleNumber = "5" ]; then
 fi
 if [ $moduleNumber = "6" ]; then 
     module=eventbooking
+fi
+if [ $moduleNumber = "7" ]; then 
+    module=ecommercetemplate
 fi
 
 echo "Building files and folders."

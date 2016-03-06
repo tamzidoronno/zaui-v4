@@ -6,6 +6,7 @@ A confirmation email has been sent to your email.;-;En bekreftelse er sendt til 
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add;-;Legg til
 Add a button to your page. This button can be a add to cart button, go to page button, etc;-;Legg til en knapp på websiden din. Knapper som legg i handlekurv, gå til en annen side, osv.
+Add an opening hour;-;Legg til en åpningstid
 Add another slide;-;Legg til en til slider
 Add another slider;-;Legg inn til slider
 Add another tab;-;Legg inn en til tab
@@ -86,6 +87,8 @@ Connect this to a product;-;Koble denne til et produkt
 Contact information;-;Kontaktinformasjon
 Container operations;-;Operasjoner for kontaineren
 Continue;-;Fortsett
+Continue shopping;-;Fortsett å handle
+Continue to cart;-;Gå til handlekurven
 Cookies are being stored;-;Cookier blir lagret
 Country;-;Land
 Country prefix for mobile phone;-;Land prefix for mobil telefon
@@ -104,8 +107,10 @@ Css;-;Css
 Customer information;-;Kunde detaljer
 Daily;-;Daglig
 Date;-;Dato
+Dates;-;Datoer
 Day;-;Dag
 Day(s);-;Dag(er)
+Days;-;Dager
 December;-;Desember
 Default contact person for company;-;Default kontakt person
 Delete;-;Slett
@@ -113,6 +118,7 @@ Delete area;-;Slett området
 Delete booking;-;Slett booking
 Delete column;-;Slett kolonnen
 Delete image;-;Slett bilde
+Delete opening hours;-;Slett åpningstider
 Delete row;-;Slett raden
 Delete selected slide;-;Slett valgte slide
 Display numbers on dots;-;Vis tall på dottene
@@ -122,6 +128,7 @@ Display this cell when logged out;-;Vis denne cellen når du er logget ut
 Disploma is disabled;-;Diploma er deaktivert
 Do not rotate;-;Ikke roter
 Done editing;-;Ferdig å editere
+Door id (used for closing doors);-;Dørid (brukt for å lukke døren)
 Download ebill;-;Last ned ebill
 Download the terms and conditions;-;Last ned bruksvilkårene
 Duraction (ms);-;Tid (ms)
@@ -437,7 +444,6 @@ Tune your online store by setting currency, does customers need to register to b
 Type;-;Type
 Unknown name;-;Ukjent navn
 Unpin area;-;Unpin område
-Unset closing hours;-;Slett stengetider
 Update;-;Oppdater
 Upload and manipulate on images or add this to be able to search for professional images trough our image stock.;-;Last og behandle bilder, eventuelt så kan du søke opp profesjonelle bilder gjennom vår bildebank.
 Use a different email;-;Bruk en annen epost
@@ -465,7 +471,6 @@ You are here:;-;Du er her:
 You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.;-;Du er nå i edit modus for denne raden, du kan nå legge til kolonner, rader over og under, og mye mer.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You got rooms that are not available in the selected time periode.;-;Det er rom som ikke er tilgjenglig i valgt periode.
-You have been inactive to long and due to security reasons you will now be logged out.;-;Du har vært inaktiv for lenge, og på grunn av sikkerhetsmessige årsaker vil du nå bli logget ut.
 You need to agree to the terms and conditions;-;Du må godta bruksvilkårene før du kan fortsette.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your email;-;Din epost
@@ -475,6 +480,7 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
+Your product has been added to the cart.;-;Produktet er nå lagt i handlekurven
 cellphone;-;Mobilnr
 day;-;dag
 day of the month;-;Fast dato i måneden

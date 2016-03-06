@@ -16,12 +16,21 @@ class Product extends \ApplicationBase implements \Application {
         return $this->__f("Product");
     }
 
+    public function renderOnStartup() {
+        echo "<div class='gsaddedtocartbox'>";
+        echo "<div class='gsproductaddedtext'>" . $this->__w("Your product has been added to the cart.") . "</div>";
+        echo "<span class='shop_button gshideproductaddedbox'>".$this->__w("Continue shopping")."</span>";
+        echo "<a href='/?page=cart'><span class='shop_button'>".$this->__w("Continue to cart")."</span></a>";
+        echo "</div>";
+    }
+    
     public function render() {
         $this->includefile("product");
     }
 
     public function addProductToCart() {
         $productId = $_POST['data']['productId'];
-        $this->getApi()->getCartManager()->addProduct($productId, 1, []);
+        $arr = array();
+        $this->getApi()->getCartManager()->addProduct($productId, 1, $arr);
     }
 }

@@ -3,6 +3,8 @@
     padding-top: 20px;
     padding-bottom: 20px;
 }
+.gsaddedtocartbox { position: fixed; border: solid 1px; width: 400px; z-index: 10; background-color:#fff; padding: 10px; border-radius: 5px; text-align: center; display:none; }
+.gsproductaddedtext { font-size: 20px; margin-bottom: 10px; }
 
 .Product .images img {
     width: 100%;

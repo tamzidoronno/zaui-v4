@@ -1,6 +1,10 @@
 app.Product = {
     init: function () {
-        $(document).on('click', '.addProductToCart', app.Product.addProductToCart)
+        $(document).on('click', '.addProductToCart', app.Product.addProductToCart);
+        $(document).on('click', '.gshideproductaddedbox', app.Product.hideProductAddedBox);
+    },
+    hideProductAddedBox : function() {
+        $('.gsaddedtocartbox').fadeOut();
     },
     addProductToCart: function () {
         var data = {
@@ -48,6 +52,9 @@ app.Product = {
                  var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
                 thundashop.Ajax.postWithCallBack(event, function() {
                     PubSub.publish("PRODUCT_ADDED_TO_CART");
+                    $('.gsaddedtocartbox').css('left', button.offset().left);
+                    $('.gsaddedtocartbox').css('top', button.offset().top-$(this).scrollTop());
+                    $('.gsaddedtocartbox').fadeIn();
                 });
             }
         }

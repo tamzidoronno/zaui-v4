@@ -519,6 +519,9 @@ class CartManager extends \SystemApplication implements \Application {
     }
         
     public function showRedirectInformation() {
+        if($this->paymentApplication instanceof \ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment) {
+            return;
+        }
         \HelperCart::clearSession();
         $this->getApi()->getCartManager()->clear();
         echo $this->__w("Please wait while you are being transferred to dibs payment service.");

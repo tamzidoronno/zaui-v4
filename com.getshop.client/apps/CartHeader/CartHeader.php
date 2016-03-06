@@ -13,5 +13,14 @@ class CartHeader extends \MarketingApplication implements \Application {
     public function render() {
         $this->includefile("cartheader");
     }
+    
+    public function getCartCount() {
+        $cart = $this->getApi()->getCartManager()->getCart();
+        $count = 0;
+        foreach($cart->items as $item) {
+            $count += $item->count;
+        }
+        echo $count;
+    }
 }
 ?>

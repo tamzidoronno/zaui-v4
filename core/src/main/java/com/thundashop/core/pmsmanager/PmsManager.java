@@ -325,10 +325,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             if(result == 0) {
                 if(!configuration.prepayment) {
-                    if(!booking.confirmed) {
-                        doNotification("booking_completed", booking, null);
-                    } else {
-                        doNotification("booking_confirmed", booking, null);
+                    if(bookingIsOK(booking)) {
+                        if(!booking.confirmed) {
+                            doNotification("booking_completed", booking, null);
+                        } else {
+                            doNotification("booking_confirmed", booking, null);
+                        }
                     }
                 }
             }
@@ -575,9 +577,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return booking;
         }
         if(booking.rooms == null) {
-            System.out.println("Removing booking due to no rooms");
-            deleteBooking(booking, false);
-            return null;
+            booking.rooms = new ArrayList();
         }
         
         for(PmsBookingRooms room : booking.rooms) {
@@ -609,24 +609,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 
             }
-        }
-        
-        //make sure the booking is sane.
-        List<PmsBookingRooms> toRemove = new ArrayList();
-        for(PmsBookingRooms room : booking.rooms) {
-            if(room.booking == null) {
-                toRemove.add(room);
-            }
-        }
-        
-        if(!toRemove.isEmpty()) {
-            booking.rooms.removeAll(toRemove);
-            saveObject(booking);
-        }
-        if(booking.rooms.isEmpty()) {
-            System.out.println("Removing booking after finalizing");
-            deleteBooking(booking, false);
-            return null;
         }
         
         return booking;
@@ -2532,6 +2514,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return defaultPrice;
+    }
+
+    private boolean bookingIsOK(PmsBooking booking) {
+        finalize(booking);
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.booking == null) {
+                messageManager.sendErrorNotification("Booking failure for booking: " + booking.id + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress);
+                return false;
+            }
+        }
+        return true;
     }
 
 

@@ -164,10 +164,6 @@ class QuestBack extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("width", $_POST['data']['w']);
         $this->setConfigurationSetting("height", $_POST['data']['h']);
     }
-
-    public function answerPicture() {
-        echo "TEEST";
-    }
 }
 
 class QuestBackOption {

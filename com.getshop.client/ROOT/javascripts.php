@@ -4,9 +4,11 @@ include_once '../loader.php';
 
 if(!file_exists("javascripts")) {
     mkdir("javascripts");
+    chmod("javascripts", 777);
 }
 if(!file_exists("cssfolder")) {
     mkdir("cssfolder");
+    chmod("cssfolder", 777);
 }
 
 function endsWith($haystack, $needle) {

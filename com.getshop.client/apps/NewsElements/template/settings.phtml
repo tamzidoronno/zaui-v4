@@ -1,0 +1,54 @@
+<?php
+/* @var $this ns_f65ee7f2_134f_413f_82d2_2606ab8440dd\NewsElements */
+$types = array();
+$types[''] = $this->__w("Not specified");
+$types['title'] = $this->__w("Title");
+$types['image'] = $this->__w("Image");
+$types['shorttext'] = $this->__w("Short description");
+$types['editview'] = $this->__w("Edit tekst");
+$types['bysubheading'] = $this->__w("By who subheading");
+$types['latestnews'] = $this->__w("Latest news");
+$types['othernews'] = $this->__w("Other news");
+$pageid = $this->getPage()->javapage->id;
+if(stristr($pageid,"news_template_")) {
+    ?>
+    <div gstype="form" method="saveAppInstanceSettings">
+        <table width="80%" class="contactConfigTable">
+        <tr>
+            <td width="50%">News element type</td>
+            <td width="50%">
+                <select gsname="setting_type">
+                    <?php 
+                    foreach($types as $key => $val) {
+                        $checked = "";
+                        if($key == $this->getConfigurationSetting("type")) {
+                            $checked = "SELECTED";
+                        }
+                        echo "<option value='$key' $checked>$val</option>";
+                    }
+                    ?>
+                </select>
+            </td>
+        </tr>
+        </table>
+        <input gstype="submit" type="button" value='Save'>
+    </div>
+<?php
+} else {
+    $entry = $this->getApi()->getNewsManager()->getNewsForPage($this->getPage()->javapage->id);
+?>
+<div gstype="form" method="saveNewsContent">
+    <table class="contactConfigTable" width="100%">
+       <tr>
+           <td width="50%">Title</td>
+           <td width="50%">
+               <input type="text" gsname="subject" value="<?php echo $entry->subject; ?>" style="width:100%; font-size: 16px; padding: 10px; box-sizing: border-box;">
+           </td>
+       </tr>
+   </table>
+   <br>
+   <textarea gsname="content" style="width:100%; font-size: 16px; padding: 10px; height: 150px; box-sizing: border-box;"><?php echo $entry->content; ?></textarea>
+
+   <input type="button" gstype="submit" value="Save">
+</div>
+<?php } ?>

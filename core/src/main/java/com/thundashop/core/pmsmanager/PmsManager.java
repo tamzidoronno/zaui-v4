@@ -176,7 +176,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         for(PmsBookingRooms room : booking.rooms) {
-            int totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
+            int totalDays = 1;
+            if(room.date.end != null && room.date.start != null) {
+                totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
+            }
             room.count = totalDays;
             room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, true);
             room.taxes = calculateTaxes(room.bookingItemTypeId);
@@ -322,10 +325,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             if(result == 0) {
                 if(!configuration.prepayment) {
-                    if(!booking.confirmed) {
-                        doNotification("booking_completed", booking, null);
-                    } else {
-                        doNotification("booking_confirmed", booking, null);
+                    if(bookingIsOK(booking)) {
+                        if(!booking.confirmed) {
+                            doNotification("booking_completed", booking, null);
+                        } else {
+                            doNotification("booking_confirmed", booking, null);
+                        }
                     }
                 }
             }
@@ -572,9 +577,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return booking;
         }
         if(booking.rooms == null) {
-            System.out.println("Removing booking due to no rooms");
-            deleteBooking(booking, false);
-            return null;
+            booking.rooms = new ArrayList();
         }
         
         for(PmsBookingRooms room : booking.rooms) {
@@ -606,24 +609,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 
             }
-        }
-        
-        //make sure the booking is sane.
-        List<PmsBookingRooms> toRemove = new ArrayList();
-        for(PmsBookingRooms room : booking.rooms) {
-            if(room.booking == null) {
-                toRemove.add(room);
-            }
-        }
-        
-        if(!toRemove.isEmpty()) {
-            booking.rooms.removeAll(toRemove);
-            saveObject(booking);
-        }
-        if(booking.rooms.isEmpty()) {
-            System.out.println("Removing booking after finalizing");
-            deleteBooking(booking, false);
-            return null;
         }
         
         return booking;
@@ -799,6 +784,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Double calculatePrice(String typeId, Date start, Date end, boolean avgPrice) {
         if(prices.defaultPriceType == 1) {
             return calculateDailyPricing(typeId,start,end, avgPrice);
+        }
+        if(prices.defaultPriceType == 2) {
+            return calculateMonthlyPricing(typeId);
         }
         if(prices.defaultPriceType == 7) {
             return calculateProgressivePrice(typeId,start,end,0, avgPrice);
@@ -2513,6 +2501,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    private Double calculateMonthlyPricing(String typeId) {
+        HashMap<String, Double> priceRange = prices.dailyPrices.get(typeId);
+        if(priceRange == null) {
+            return 0.0;
+        }
+        Double defaultPrice = priceRange.get("default");
+        if(defaultPrice == null) {
+            defaultPrice = 0.0;
+        }
+        
+        return defaultPrice;
+    }
+
+    private boolean bookingIsOK(PmsBooking booking) {
+        finalize(booking);
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.booking == null) {
+                messageManager.sendErrorNotification("Booking failure for booking: " + booking.id + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress);
+                return false;
+            }
+        }
+        return true;
     }
 
 

@@ -32,6 +32,7 @@ public interface INewsManager {
     @Writing
     public String addNews(NewsEntry newsEntry) throws ErrorException;
     
+    
     /**
      * Delete a given news id.
      * @param id The id for the news to delete.
@@ -63,6 +64,8 @@ public interface INewsManager {
      * @throws ErrorException 
      */
     public List<MailSubscription> getAllSubscribers() throws ErrorException;
+    
+    public NewsEntry getNewsForPage(String id) throws ErrorException;
     
     /**
      * Publishing news.

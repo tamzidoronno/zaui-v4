@@ -39,28 +39,9 @@ app.News = {
         var event = thundashop.Ajax.createEvent('', 'addEntry', $('.News'), data);
         thundashop.Ajax.post(event);
     },
-            
-    removeApplication: function(data, app) {
-        var appid = app.attr('appid');
-        thundashop.Skeleton.removeApplication(appid, 'middle');
-    },
-            
+         
     loadSettings: function(element, application) {
-        var config = {
-            draggable: true,
-            title: "Settings",
-            items: [
-                {
-                    icontype: "awesome",
-                    icon: "fa-trash-o",
-                    iconsize : "30",
-                    title: "Remove application",
-                    click: app.News.removeApplication,
-                    extraArgs: {}
-                }
-            ]
-        }
-
+        var config = { showSettings : true, draggable: true, title: "Settings", items: [] }
         var toolbox = new GetShopToolbox(config, application);
         toolbox.show();
         toolbox.attachToElement(application, 2);

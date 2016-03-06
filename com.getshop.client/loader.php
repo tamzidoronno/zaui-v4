@@ -83,6 +83,7 @@ include_once("minifier.php");
 function symLinkIfNeeded($class_name) {
     if(!file_exists("../app")) {
         mkdir("../app");
+        chmod("../app", 777);
     }
     if (!is_writeable("../app")) { 
         die("Please make sure that the app folder is writeable for the web server user");

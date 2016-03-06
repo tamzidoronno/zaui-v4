@@ -98,7 +98,7 @@ if($type == "day") {
     $this->printHeader($this->getSelectedDay(), $type);
 }
 if($type == "week" || $type == "month") {
-    $start = strtotime('this week', $this->getSelectedDay());
+    $start = $this->getStartOfSelectedWeek();
     for($i = 0; $i < 7; $i++) {
         $this->printHeader($start, $type);
         $start += 86400;
@@ -194,11 +194,10 @@ if($type == "month") {
                 $this->printBlocks($this->getSelectedDay(), $type, $room->id, $withSideBar);
             }
             if($type == "week") {
-                $start = $this->getSelectedDay();
+                $start = $this->getStartOfSelectedWeek();
                 if(date("N", $start) == 7) {
                     $start -= 86400;
                 }
-                $start = strtotime('this week', $start);
                 for($i = 0; $i < 7; $i++) {
                     echo "<div class='weekdaycontainer timecontainer'>";
                     $this->printBlocks(($start+(86400*$i)), $type, $room->id, $withSideBar);

@@ -7,15 +7,21 @@ $items = $this->indexList($items);
 
 $toPrint = array();
 $addons = array();
-
+$sorting = array();
 foreach($booking->rooms as $room) {
     if($types[$room->bookingItemTypeId]->addon == 0) {
-        $toPrint[strtotime($room->date->start)] = $room;
+        $toPrint[] = $room;
+        $sorting[] = strtotime($room->date->start);
     } else {
         $addons[] = $room;
     }
 }
-ksort($toPrint);
+asort($sorting);
+$sorted = array();
+foreach($sorting as $key => $val) {
+    $sorted[] = $toPrint[$key];
+}
+$toPrint = $sorted;
 
 $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());

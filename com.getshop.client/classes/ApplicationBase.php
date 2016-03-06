@@ -171,6 +171,20 @@ class ApplicationBase extends FactoryBase {
         $this->skinVariables[$variableName] = $defaultValue;
     }
     
+    public function showSettings() {
+        return $this->includefile("settings");
+    }
+    
+    public function saveAppInstanceSettings() {
+        foreach($_POST['data'] as $key => $val) {
+            if(!stristr($key, "setting_")) {
+                continue;
+            }
+            $key = str_replace("setting_", "", $key);
+            $this->setConfigurationSetting($key, $val);
+        }
+    }
+    
     public function getSkinVariable($variableName) {
         return $this->skinVariables[$variableName];
     }

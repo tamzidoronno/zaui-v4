@@ -25,4 +25,5 @@ $fileId2 = $factory->getApi()->getFileManager()->addFileEntry($listId, $entry);
 $appRaw = $factory->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($_GET['appid']);
 $instance = $factory->getApplicationPool()->createAppInstance($appRaw);
 $instance->fileUplaoded($fileId2);
+echo $fileId2;
 ?>

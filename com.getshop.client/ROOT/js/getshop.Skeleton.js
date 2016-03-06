@@ -30,6 +30,11 @@ thundashop.Skeleton = {
         });
         thundashop.Ajax.post(event);
     },
+    loadSettings : function() {
+        var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
+        thundashop.common.showInformationBoxNew(event,'Settings');        
+    },
+    
     settingsRemoveApplication : function(whoot, app) {
         var id = app.attr('appid');
         var area = app.closest('.applicationarea').attr('area');

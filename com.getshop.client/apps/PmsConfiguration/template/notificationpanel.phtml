@@ -252,18 +252,6 @@ $days[7] = "Sunday";
         
         <div class='configrow'>
             <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->isItemBookingInsteadOfTypes) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='isItemBookingInsteadOfTypes' <? echo $checked; ?>>
-            </span>
-            Is item booking instead of type booking.
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
                 <input type='number' style='width: 40px;' gsname='minStay' value='<? echo $notificationSettings->minStay; ?>'>
             </span>
             Minimum stay

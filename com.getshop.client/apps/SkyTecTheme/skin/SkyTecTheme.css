@@ -223,3 +223,14 @@ body {
     padding: 30px;
     background-color: #e3e3e3;
 }
+
+.News .newsboxtemplate_2 .news_container { border: solid 1px #e8e8e9; }
+.News .newsboxtemplate_2 .newscontent { border-left: solid 1px #e8e8e9; }
+.News .newsboxtemplate_2 .date { border: solid 0px; }
+.News .newsboxtemplate_2 .date { background-color: #515151; color:#fff; }
+.NewsElements .latestnewsheading { padding: 20px; text-transform: uppercase; background-color:#515151; font-size: 20px; color:#fff; }
+.NewsElements .newscontainer { padding: 20px; border: solid 1px #ebebeb; }
+.NewsElements .newscontainer .date { color: #4992bf; margin-top: 20px; margin-bottom: 20px; display:block; border-bottom: solid 1px #ebebeb; padding-bottom: 20px; }
+.NewsElements .newstitlefooter { border: solid 1px; display:inline-block; width: 120px; margin-bottom: 20px; }
+.NewsElements h1 { margin: 0px; text-transform: uppercase; font-weight: normal;  }
+.NewsElements .bysub { color: #959595; margin-top: 20px; margin-bottom: 20px; display:block; }

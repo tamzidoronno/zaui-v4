@@ -28,6 +28,9 @@ class News extends \MarketingApplication implements \Application {
         $this->includefile("NewsTemplate");
     }
     
+    /**
+     * @return \app_newsmanager_data_NewsEntry[]
+     */
     public function getAllEntries() {
         return $this->getApi()->getNewsManager()->getAllNews();
     }
@@ -70,6 +73,13 @@ class News extends \MarketingApplication implements \Application {
         return $res;
     }
 
+    public function getTemplateNumber() {
+        $number = $this->getConfigurationSetting("template");
+        if(!$number) {
+            $number = 1;
+        }
+        return $number;
+    }
 
 }
 

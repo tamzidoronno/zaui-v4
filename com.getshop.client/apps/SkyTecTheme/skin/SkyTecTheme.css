@@ -1,10 +1,16 @@
 body {
     /*font-family: 'Open Sans', sans-serif;*/
     font-family: 'Roboto', sans-serif;
+    color:#464646;
 }
+
+.ProductLists .products.grid_view .productbox .product_price { color:#464646; }
+.ProductLists .products.grid_view .productbox .product_title { background-color :#464646; color:#fff; }
+
 .gsarea[area="body"] {
     font-size: 16px;
 }
+h1,h2,h3 { margin: 0px; }
 .gs_page_width {
     max-width: 1366px;
     margin: 0 auto;
@@ -127,6 +133,7 @@ body {
     padding-left: 30px;
     padding-right: 30px;
         border-radius: 0px;
+        color:#fff;
 }
 
 .ProductLists .products.grid_view .productbox {
@@ -234,3 +241,5 @@ body {
 .NewsElements .newstitlefooter { border: solid 1px; display:inline-block; width: 120px; margin-bottom: 20px; }
 .NewsElements h1 { margin: 0px; text-transform: uppercase; font-weight: normal;  }
 .NewsElements .bysub { color: #959595; margin-top: 20px; margin-bottom: 20px; display:block; }
+.NewsElements .footernewscontainer div { border-bottom: solid 1px #414244; margin-bottom: 20px; padding-bottom: 20px;  }
+.NewsElements .footernewscontainer a { color: #758589; font-size: 14px;  }

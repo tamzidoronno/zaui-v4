@@ -73,7 +73,11 @@ if ($id) {
         <? } ?>
     </span>
 </div>
-<? echo "</a>"; ?>
+<? 
+if($link) {
+    echo "</a>";
+}
+?>
 
 <script>
     <? if ($imageCompressionEnabled) { ?>

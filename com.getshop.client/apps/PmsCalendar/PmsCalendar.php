@@ -515,6 +515,15 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         return $sortList;
     }
 
+    public function getStartOfSelectedWeek() {
+        $start = strtotime("this monday", $this->getSelectedDay());
+        $endTime = strtotime("this sunday", $this->getSelectedDay());
+        if($start >= $endTime) {
+            $start = strtotime("last monday", $this->getSelectedDay());
+        }
+        return $start;
+    }
+
 }
 
 ?>

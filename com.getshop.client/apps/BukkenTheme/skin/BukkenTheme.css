@@ -61,7 +61,8 @@ body {
     border-radius: 0px 10px 10px 0px ;
     background-color: #CCC;
     color: #FFF;
-    line-height: 20px;
+    line-height: 17px;
+    height: 26px;
 }
 
 .gsucell[cellid="f162af06-a5de-4cc4-bb4f-b15df27d7990"] {
@@ -197,4 +198,9 @@ body {
 .gsarea[area="prisoverslag"] .inputfield.formiteminput .focus {
   border: solid 1px #707070;
   box-shadow: 0 0 5px 1px #969696;
+}
+
+#informationbox-holder.gsnewinfobox,
+#informationbox-holder.gsnewinfobox #informationboxtitle {
+    background-color: #5dbebc;
 }

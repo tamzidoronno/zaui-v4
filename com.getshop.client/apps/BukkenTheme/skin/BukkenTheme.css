@@ -54,6 +54,12 @@ body {
 .gsucell[cellid="7d7fb359-16b5-40aa-ab32-9c84a500b142"] {
     width: 50px !important;
     vertical-align: top;
+    margin: 0px;
+}
+
+.gsucell[cellid="afbd79b1-3b27-4268-81cc-dd917a364396"] input,
+.gsucell[cellid="7d7fb359-16b5-40aa-ab32-9c84a500b142"] input {
+    margin: 0px;
 }
 
 .gsucell[cellid="7d7fb359-16b5-40aa-ab32-9c84a500b142"] input {

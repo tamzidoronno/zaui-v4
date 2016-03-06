@@ -98,6 +98,15 @@ class Contact extends \WebshopApplication implements \Application {
     
     public function saveContactConfig() {
         $config = $_POST['data'];
+        
+        if (isset($_POST['data']['nameTitle'])) {
+            $this->setConfigurationSetting("contactNameField", $_POST['data']['nameTitle']);
+        }
+        
+        if (isset($_POST['data']['emailTitle'])) {
+            $this->setConfigurationSetting("emailTitle", $_POST['data']['emailTitle']);
+        }
+        
         $this->setConfigurationSetting("emailConfig", json_encode($config));
     }
 
@@ -132,9 +141,9 @@ class Contact extends \WebshopApplication implements \Application {
     
     public function getFields() {
         $fields = [];
-        $fields['name'] = $this->__w("My name is:");
+        $fields['name'] = $this->getNameTitle();
         $fields['phone'] = $this->__w("Phone");
-        $fields['email'] = $this->__w('Email');
+        $fields['email'] = $this->getEmailTitle();
         
         $config = $this->getContactConfig();
         if(isset($config)) {
@@ -188,6 +197,26 @@ class Contact extends \WebshopApplication implements \Application {
 
     public function loadConfiguration() {
         $this->includefile("editform");
+    }
+    
+    public function getNameTitle() {
+        $name = $this->getConfigurationSetting("contactNameField");
+        
+        if (!$name) {
+            return $this->__w("My name is:");
+        }
+        
+        return $name;
+    }
+    
+    public function getEmailTitle() {
+        $name = $this->getConfigurationSetting("emailTitle");
+        
+        if (!$name) {
+            return $this->__w('Email');
+        }
+        
+        return $name;
     }
     
     public function isCompanyFieldActivated() {

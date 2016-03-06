@@ -50,6 +50,14 @@ $numberOfTypes = 2;
         </td>
     </tr>
     <tr>
+        <td><? echo $this->__w("My name is"); ?></td>
+        <td><input type="text" style='width:100%;' name="nameTitle" value='<? echo $this->getNameTitle(); ?>'></td>
+    </tr>
+    <tr>
+        <td><? echo $this->__w("Email"); ?></td>
+        <td><input type="text" style='width:100%;' name="emailTitle" value='<? echo $this->getEmailTitle(); ?>'></td>
+    </tr>
+    <tr>
         <td><? echo $this->__w("Body title"); ?></td>
         <td><input type="text" style='width:100%;' name="bodyTitle" value='<? echo $this->getBodyTitle(); ?>'></td>
     </tr>

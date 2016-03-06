@@ -114,7 +114,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             }
         }
         
-        createScheduler("event_questback_checked", "* * * * *", CheckSendQuestBackScheduler.class);
+        createScheduler("event_questback_checked", "0 * * * *", CheckSendQuestBackScheduler.class);
     }
     
     @Override

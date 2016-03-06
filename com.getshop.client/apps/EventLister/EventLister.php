@@ -18,6 +18,10 @@ class EventLister extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
         $this->includefile("eventslist");
     }
     
+    public function clearFilters() {
+        $this->getApi()->getEventBookingManager()->clearFilters($this->getBookingEngineName());
+    }
+    
     public function getEvents() {
         $events = $this->getApi()->getEventBookingManager()->getEvents($this->getBookingEngineName());
         if (!count($events)) {
@@ -42,7 +46,7 @@ class EventLister extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
     public function getLocations($groupedEvents) {
         
         
-        return $this->getApi()->getEventBookingManager()->getAllLocations($this->getBookingEngineName());
+        return $this->getApi()->getEventBookingManager()->getFilteredLocations($this->getBookingEngineName());
     }
     
     public function applyFilter() {

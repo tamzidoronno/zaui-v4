@@ -41,6 +41,8 @@ public interface IEventBookingManager {
     
     public List<Location> getAllLocations();
     
+    public List<Location> getFilteredLocations();
+    
     public List<Event> getEvents();
     
     public Location getLocation(String locationId);
@@ -146,4 +148,6 @@ public interface IEventBookingManager {
     
     public Date getFromDateTimeFilter();
     public Date getToDateTimeFilter();
+    
+    public void clearFilters();
 }

@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.springframework.beans.BeansException;
 
 /**
  *
@@ -34,9 +31,8 @@ public class StorePool {
 
     public StorePool() {
         if (AppContext.appContext != null) {
-			this.storePool = AppContext.appContext.getBean(com.thundashop.core.storemanager.StorePool.class);
+            this.storePool = AppContext.appContext.getBean(com.thundashop.core.storemanager.StorePool.class);
         }
-        
         
         try {
              policy = Policy.getInstance(getClass().getResource("/antisamy-myspace-1.4.4.xml"));
@@ -47,6 +43,7 @@ public class StorePool {
         }
         
         antiySamy = new AntiSamy();
+        
     }
 
     private Type[] getArgumentsTypes(JsonObject2 object) throws ErrorException {

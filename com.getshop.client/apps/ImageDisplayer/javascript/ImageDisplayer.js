@@ -133,6 +133,8 @@ app.ImageDisplayer = {
             var zoomAble = container.find('.loadshower').attr('zoomable');
             image.attr('zoomable', zoomAble);
             container.html(image);
+          
+            PubSub.publish('GS_IMAGE_LOADED', container);
         }
     }
 };

@@ -5,6 +5,8 @@
  */
 
 app.QuestBack = {
+    ignoreJCropEvent : false,
+    
     init: function() {
         $(document).on('click', '.QuestBack .quest_back_type_selected', app.QuestBack.selectType)
         $(document).on('click', '.QuestBack .edit_heading_button', app.QuestBack.showEditHeading)
@@ -15,7 +17,60 @@ app.QuestBack = {
         $(document).on('click', '.QuestBack .go_to_next_question', app.QuestBack.goToNextQuestion)
         $(document).on('click', '.QuestBack .questback_option_row', app.QuestBack.toggleBoxIfPossible)
         $(document).on('change', '.QuestBack .admin_option_text', app.QuestBack.optionTextChanged)
-        $(document).on('focusout', '.QuestBack .headingtext', app.QuestBack.saveHeading)
+        $(document).on('focusout', '.QuestBack .headingtext', app.QuestBack.saveHeading);
+        $(document).on('click', '.QuestBack .QuestBackImage', app.QuestBack.clickOnImage);
+        PubSub.subscribe("GS_IMAGE_LOADED", app.QuestBack.imageLoaded);
+    },
+    
+    clickOnImage: function(event) {
+        var useCrop = $(this).closest('.QuestBackImage').attr('useCrop');
+        if (useCrop)
+            return;
+        
+        var faicon = 'fa-dot-circle-o';
+        $(this).find('.'+faicon).remove();
+        
+        var i = $('<i class="fa  '+faicon+'"></i>');
+        i.css('z-index', '2');
+        i.css('position', 'absolute');
+        i.css('top', event.offsetY-13);
+        i.css('left', event.offsetX-13);
+        $(this).append(i);
+    },
+    
+    imageLoaded: function(topicName, data)  {
+        if ($(data).closest('.QuestBackImage').length) {
+            var questbackimage = $(data).closest('.QuestBackImage');
+            
+            var x = $(questbackimage).attr('x');
+            var y = $(questbackimage).attr('y');
+            var w = $(questbackimage).attr('x2');
+            var h = $(questbackimage).attr('y2');
+            
+            var conf = {
+                onSelect: app.QuestBack.saveCordinates
+            }
+            
+            if (x && y && w && h) {
+                app.QuestBack.ignoreJCropEvent = true;
+                conf.setSelect = [ x, y, w, h];
+            }
+            
+            
+            if (questbackimage.attr('useCrop')) {
+                $(data).find('img').Jcrop(conf); 
+            }
+        }
+    },
+    
+    saveCordinates: function (c) {
+        if (app.QuestBack.ignoreJCropEvent) {
+            app.QuestBack.ignoreJCropEvent = false;
+            return;
+        }
+        
+        thundashop.Ajax.simplePost($('.QuestBack'), "saveCordinates", c);
+        
     },
     
     toggleBoxIfPossible: function(e, b) {
@@ -41,7 +96,7 @@ app.QuestBack = {
         });
     },
     
-    answerQuestion: function() {
+    answerQuestion: function(theEvent) {
         if (app.QuestBack.inProgress) {
             return;
         }
@@ -56,6 +111,19 @@ app.QuestBack = {
                 return $(this).val();
             }
         });
+        
+        if ($('.QuestBack .QuestBackImage').length) {
+            var i = $('.QuestBack .QuestBackImage').find('i.fa-dot-circle-o');
+            if (i.length > 0) {
+                x = i.position().left + 13;
+                y = i.position().top + 13;
+                selectedAnswers = [x, y];
+            }
+        }
+        
+        if ($('.QuestBack .textquestion').length) {
+            selectedAnswers = [$('.QuestBack .textquestion').val()];
+        }
         
         var data = {
             answers : $.makeArray( selectedAnswers )
@@ -135,18 +203,14 @@ app.QuestBack = {
         }
         
         var event = thundashop.Ajax.createEvent(null, "saveHeaderText", $('.QuestBack .headingtext'), data);
-        thundashop.Ajax.post(event);        
+        thundashop.Ajax.post(event);   
     },
     
     selectType: function() {
         var data = {
             type: $(this).attr('type')
         }
-
-        if (data.type == 3 ) {
-            alert('Not yet implemented');
-            return;
-        }
+        
         var event = thundashop.Ajax.createEvent(null, "setType", this, data);
         thundashop.Ajax.post(event);
     }

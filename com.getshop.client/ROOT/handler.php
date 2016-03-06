@@ -31,7 +31,8 @@ class handler {
             $application = $factory->getApplicationPool()->createAppInstance($app);
             return;
         }
-        $application->$_POST['event']();
+        
+        $application->{$_POST['event']}();
     }
 
     public function applicationManager($event) {

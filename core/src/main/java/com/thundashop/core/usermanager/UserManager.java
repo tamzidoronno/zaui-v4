@@ -6,6 +6,7 @@ import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.eventbooking.EventBookingScheduler;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -32,8 +33,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -77,9 +80,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Autowired
     public StoreManager storeManager;
+
     
     @Autowired
     public GSAdmins gsAdmins;
+    private User internalApiUser;
+    private String internalApiUserPassword;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -114,6 +120,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.storeId = storeId;
 //            getUserStoreCollection(storeId).addUserDirect(user);
         }
+         
     }
 
     public void addUserDeletedEventListener(UserDeletedEventListener listener) {
@@ -342,7 +349,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
         
-        if (getSession().currentUser.type < User.Type.ADMINISTRATOR && !getSession().currentUser.id.equals(user.id)) {
+        if (getSession().currentUser.type < User.Type.EDITOR && !getSession().currentUser.id.equals(user.id)) {
             
             if(!okDueToCompanyAccess) {
                 throw new ErrorException(26);
@@ -1243,4 +1250,25 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return false;
     }
+
+    public User getInternalApiUser() {
+        if (internalApiUser == null) {
+            this.internalApiUserPassword = UUID.randomUUID().toString();
+            
+            internalApiUser = new User();
+            internalApiUser.id = "gs_system_scheduler_user";
+            internalApiUser.type = 100;
+            internalApiUser.fullName = "System Scheduled";
+            internalApiUser.storeId = storeId;
+            internalApiUser.password = encryptPassword(internalApiUserPassword);
+            internalApiUser.username = UUID.randomUUID().toString();
+            internalApiUser.metaData.put("password", this.internalApiUserPassword);
+            internalApiUser.emailAddress = "post@getshop.com";
+            
+            getUserStoreCollection(storeId).addUserDirect(internalApiUser);
+        }
+        
+        return internalApiUser;
+    }
+
 }

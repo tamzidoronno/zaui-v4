@@ -155,7 +155,19 @@ class QuestBack extends \ApplicationBase implements \Application {
             echo '<div class="gs_button answer_question">'.$this->__f("Next").'</div>';
    
     }
+    
+    public function saveCordinates() {
+        $this->setConfigurationSetting("x", $_POST['data']['x']);
+        $this->setConfigurationSetting("y", $_POST['data']['y']);
+        $this->setConfigurationSetting("x2", $_POST['data']['x2']);
+        $this->setConfigurationSetting("y2", $_POST['data']['y2']);
+        $this->setConfigurationSetting("width", $_POST['data']['w']);
+        $this->setConfigurationSetting("height", $_POST['data']['h']);
+    }
 
+    public function answerPicture() {
+        echo "TEEST";
+    }
 }
 
 class QuestBackOption {

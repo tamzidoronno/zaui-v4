@@ -5,17 +5,22 @@
  */
 package com.thundashop.core.common;
 
+import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.eventbooking.EventBookingScheduler;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +45,9 @@ public class ManagerSubBase {
     @Autowired
     public StoreApplicationPool applicationPool;
     
+    @Autowired
+    public com.thundashop.core.storemanager.StorePool storePool;
+    
     protected boolean isSingleton = false;
     protected boolean ready = false;
     private Session session;
@@ -47,6 +55,8 @@ public class ManagerSubBase {
     private ManagerSetting managerSettings = new ManagerSetting();
     
     private Database database;
+    private HashMap<String, GetShopScheduler> schedulers = new HashMap();
+    private HashMap<String, GetShopSchedulerBase> schedulersBases = new HashMap();
 
     @Autowired
     public void setDatabase(Database database) {
@@ -71,6 +81,16 @@ public class ManagerSubBase {
     public ManagerSubBase() {
     }
 
+    public void createScheduler(String schedulerReference, String scheduler) {
+        GetShopScheduler gsscheduler = new GetShopScheduler();
+        gsscheduler.storeId = storeId;
+        gsscheduler.id = schedulerReference;
+        gsscheduler.scheduler = scheduler;
+
+        startScheduler(gsscheduler);
+        saveObject(gsscheduler);
+    }
+    
     public void initialize() {
         Credentials credentials = new Credentials(this.getClass());
         credentials.manangerName = this.getClass().getSimpleName();
@@ -99,8 +119,15 @@ public class ManagerSubBase {
                     this.managerSettings = (ManagerSetting)common;
                 }
             }
-
+            
             dataFromDatabase(dataRetreived);
+            
+            for (DataCommon common : dataRetreived.data) {
+                if (common instanceof GetShopScheduler) {
+                    GetShopScheduler sched = (GetShopScheduler)common;
+                    startScheduler(sched);
+                }
+            }
         }
 
         this.ready = true;
@@ -226,7 +253,7 @@ public class ManagerSubBase {
           e.printStackTrace();
           return null;
         }
-      }
+    }
 //        if (result == null) {
 //            return result;
 //        }
@@ -237,4 +264,45 @@ public class ManagerSubBase {
 //        
 //        return retObject;
 //    }
+    
+    public void stopScheduler(String reference) {
+        GetShopScheduler ref = schedulers.remove(reference);
+        GetShopSchedulerBase ref2 = schedulersBases.remove(reference);
+
+        if (ref != null) {
+            deleteObject(ref);
+        }
+        
+        if (ref2 != null) {
+            ref2.stop();
+            
+        }
+        
+    }
+
+    private void startScheduler(GetShopScheduler gsscheduler) {
+        if (schedulers.containsKey(gsscheduler.id)) {
+            return;
+        }
+        
+        System.out.println("Adding checd: " + gsscheduler.id);
+        try {
+            UserManager userManager = null;
+
+            if (this instanceof UserManager) {
+                userManager = (UserManager)this;
+            } else {
+                userManager = AppContext.appContext.getBean(UserManager.class);
+            }
+
+            User user = userManager.getInternalApiUser();
+            String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
+            EventBookingScheduler ret = new EventBookingScheduler(webAddress, user.username, user.metaData.get("password"), gsscheduler.scheduler);
+            schedulersBases.put(gsscheduler.id, ret);
+            schedulers.put(gsscheduler.id, gsscheduler);
+        } catch (Exception ex) {
+            System.out.println("Could not start scheduler");
+            ex.printStackTrace();
+        }
+    }
 }

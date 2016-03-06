@@ -40,4 +40,20 @@ public class Store extends DataCommon {
         
         return configuration.emailAdress;
     }
+
+    public String getDefaultWebAddress() {
+        if (webAddress != null && !webAddress.isEmpty()) {
+            return webAddress;
+        }
+        
+        if (webAddressPrimary != null && !webAddressPrimary.isEmpty()) {
+            return webAddressPrimary;
+        }
+        
+        if (additionalDomainNames != null && !additionalDomainNames.isEmpty()) {
+            return additionalDomainNames.get(0);
+        }
+        
+        return null;
+    }
 }

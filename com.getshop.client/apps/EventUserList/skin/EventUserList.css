@@ -6,8 +6,9 @@
     
 }
 
-.EventUserList .userline:nth-child(odd) {
+.EventUserList .userline:nth-child(event) {
     background-color: #F0F0F0;
+    
 }
 
 .EventUserList .userline .options {

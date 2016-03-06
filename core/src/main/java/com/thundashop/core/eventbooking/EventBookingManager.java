@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -894,5 +896,24 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     @Override
     public Date getToDateTimeFilter() {
         return (Date)getSession().get("to");
+    }
+
+    @Override
+    public void clearFilters() {    
+        getSession().put("sessionfilters", new ArrayList());
+        getSession().put("from", null);
+        getSession().put("to", null);
+    }
+
+    @Override
+    public List<Location> getFilteredLocations() {
+        Set<Location> retLocs = new HashSet();
+        List<Event> events = getEvents();
+        for (Event event : events) {
+            finalize(event.location);
+            retLocs.add(event.location);
+        }
+        
+        return new ArrayList(retLocs);
     }
 }

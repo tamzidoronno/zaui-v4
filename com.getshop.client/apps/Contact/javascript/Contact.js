@@ -70,6 +70,9 @@ app.Contact = {
 }
 
 app.Contact.initEvents();
+$(document).on('click', '.Contact .send_email', function() {
+    thundashop.app.contact.sendMessage($(this));
+});
 
 thundashop.app.contact.sendMessage = function(target) {
     var data = target.closest('.contact_form');
@@ -91,6 +94,8 @@ thundashop.app.contact.sendMessage = function(target) {
             thundashop.common.Alert(__w('Sorry'), __w('All fields are required.'), true);
         } else if (data === "email") {
             thundashop.common.Alert(__w('Sorry'), __w('The email address is invalid.'), true);
+        } else if(data) {
+            window.location.href=data;
         } else {
             thundashop.common.Alert(__w('Success'), __w('Your message has been delivered'), false);
 
@@ -104,12 +109,6 @@ thundashop.app.contact.sendMessage = function(target) {
     thundashop.Ajax.postWithCallBack(event, callback);
 }
 
-$('.Contact').live('click', function(e) {
-    var target = $(e.target);
-    if (target.hasClass('send_email')) {
-        thundashop.app.contact.sendMessage(target);
-    }
-})
 thundashop.app.contact.editContent = function(target) {
     var event = thundashop.Ajax.createEvent('Contact', 'editContact', target, {
     });

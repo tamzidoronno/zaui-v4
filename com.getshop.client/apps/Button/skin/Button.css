@@ -31,6 +31,7 @@
 }
 
 .Button .setup_external_page,
+.Button .setup_modal_page,
 .Button .setup_internal_page {
     display: none;
 }

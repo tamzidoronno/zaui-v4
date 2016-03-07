@@ -91,6 +91,20 @@ foreach($bookings as $booking) {
     foreach($booking->comments as $time => $val) {
         $comments .= $val->comment . "<br>";
     }
+    
+    if(!$booking->rooms || sizeof($booking->rooms) == 0) {
+        $booking->rooms = array();
+        $room = new core_pmsmanager_Room();
+        $room->pmsBookingRoomId = "";
+        $room->bookingItemTypeId = "";
+        $booking->rooms[] = $room;
+        $room->keyIsReturned = false;
+        $room->guests = array();
+        $guest = new core_pmsmanager_PmsGuests();
+        $guest->name = "Empty booking";
+        $room->guests[] = $guest;
+    }
+    
     foreach($booking->rooms as $room) {
         if(!$this->isActive($room, $filter)) {
             continue;
@@ -98,7 +112,7 @@ foreach($bookings as $booking) {
          
         $row = "";
         $rows++;
-        if($types[$room->bookingItemTypeId]->addon > 0) {
+        if(isset($types[$room->bookingItemTypeId]) && $types[$room->bookingItemTypeId]->addon > 0) {
             continue;
         }
         
@@ -111,8 +125,10 @@ foreach($bookings as $booking) {
         $row .= "</td>";
 
         $row .= "<td style='width:170px;'>";
-        $row .= date("d.m.Y H:i", strtotime($room->date->start));
-        if($room->date->end) {
+        if(isset($room->date) && $room->date->start) {
+            $row .= date("d.m.Y H:i", strtotime($room->date->start));
+        }
+        if(isset($room->date) && $room->date->end) {
             //Dont show end date if this is a atleast 75 years booking
             if(((strtotime($room->date->end) - strtotime($room->date->start)) /86400) < 20000) {
                 if(date("dmy", strtotime($room->date->end)) !=  date("dmy", strtotime($room->date->start))) {
@@ -167,10 +183,12 @@ foreach($bookings as $booking) {
         if($room->keyIsReturned) {
             $row .= "<i class='fa fa-key' title='Key has been returned' style='color:green;'></i> ";
         }
-        if($room->booking && $room->booking->bookingItemId) {
+        if(isset($room->booking) && $room->booking && $room->booking->bookingItemId) {
             $row .= $items[$room->booking->bookingItemId]->bookingItemName;
         }
-        $row .= "<br><span class='secondary_text'>" . $types[$room->bookingItemTypeId]->name . "</span>";
+        if(isset($types[$room->bookingItemTypeId])) {
+            $row .= "<br><span class='secondary_text'>" . $types[$room->bookingItemTypeId]->name . "</span>";
+        }
 
         $row .= "</td>";
         if($hasPrices) {
@@ -239,5 +257,5 @@ foreach($sortList as $idx => $value) {
 
 echo "</table>";
 echo "<br>";
-echo "$rows rows in total.";
+echo sizeof($sortList) . " rows in total.";
 ?>

@@ -148,6 +148,9 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     } else {
         echo $items[$room->bookingItemTypeId]->name;
     }
+    if(!$room->canBeAdded) {
+        echo " (opptatt)";
+    }
     echo "</span>";
     if($price > 0) {
         echo "<span class='price'>" . round($price) . " kr </span>";

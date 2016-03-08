@@ -1,0 +1,35 @@
+<?php
+/* @var $this ns_eefde94c_9a3a_4233_8df5_86765c28b0fc\UsersOrderItems */
+$order = $this->getApi()->getOrderManager()->getOrder($_GET['orderid']);
+$taxes = $this->getApi()->getOrderManager()->getTaxes($order);
+?>
+
+<table cellpadding='0' cellspacing='0' width='100%'>
+    <tr>
+        <th colspan="3"><?php echo $this->__w("Items ordered"); ?></th>
+    </tr>
+<?php
+foreach($order->cart->items as $item) {
+    
+    echo "<tr>";
+    echo "<td>" . $item->count . "</td>";
+    echo "<td>" . $item->product->name . "</td>";
+    echo "<td>" . $item->product->price . "</td>";
+    echo "</tr>";
+}
+if($taxes) {
+    foreach($taxes as $tax) {
+        echo "<tr>";
+        echo "<td colspan='2'>" . $tax->taxGroup->taxRate . "% " . $this->__w("tax") . "</td>";
+        echo "<td>" . $tax->sum . "</td>";
+        echo "</tr>";
+    }
+}
+
+echo "<tr>";
+echo "<td>Total</td>";
+echo "<td></td>";
+echo "<td>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
+echo "</tr>";
+?>
+</table>

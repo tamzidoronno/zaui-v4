@@ -1,0 +1,38 @@
+<?php
+/* @var $this ns_56991737_d371_4ed3_8232_19bb9eff39b7\UsersOrderDetails */
+$order = $this->getApi()->getOrderManager()->getOrder($_GET['orderid']);
+?>
+<table cellspacing='0' cellpadding='0' width='100%'>
+    <tr>
+        <th colspan='2'>User details</th>
+    </tr>
+    <tr>    
+        <td width='40%'>Created date</td>
+        <td><?php echo date("d.m.Y H:i", strtotime($order->rowCreatedDate)); ?></td>
+    </tr>
+    <tr>
+        <td width='40%'>Shipment address</td>
+        <td>
+            <?php echo $order->cart->address->fullName; ?><br>
+            <?php echo $order->cart->address->address; ?><br>
+            <?php echo $order->cart->address->postCode; ?> 
+            <?php echo $order->cart->address->city; ?><br>
+        </td>
+    </tr>
+    <tr>
+        <td>Payment type</td>
+        <td>
+            <?php
+            $type = $order->payment->paymentType;
+            $type = substr($type, strpos($type, "\\")+1);
+            echo $this->__w($type); 
+            ?>
+        </td>
+    </tr>
+    <tr>
+        <td>Comments</td>
+        <td>
+            <?php echo $order->invoiceNote; ?>
+        </td>
+    </tr>
+</table>

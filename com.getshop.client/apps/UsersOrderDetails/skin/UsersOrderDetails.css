@@ -1,0 +1,14 @@
+.UsersOrderDetails table td, .UsersOrders table th { font-size: 16px; }
+.UsersOrderDetails th {
+    background-color: #4CAF50;
+    color: white;
+}
+.UsersOrderDetails  th, .UsersOrderDetails td {
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+    text-align: left;
+}
+.UsersOrderDetails td {
+    vertical-align: top;
+}
+.UsersOrderDetails tr:nth-child(even) {background-color: #f2f2f2}

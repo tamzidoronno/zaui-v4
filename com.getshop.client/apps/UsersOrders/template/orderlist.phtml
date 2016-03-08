@@ -1,0 +1,43 @@
+<?php
+$states = array();
+$states['0'] = $this->__w("All");
+$states['1'] = $this->__w("Created");
+$states['2'] = $this->__w("Waiting for payment");
+$states['3'] = $this->__w("Payment failed");
+$states['4'] = $this->__w("Completed");
+$states['5'] = $this->__w("Canceled");
+$states['6'] = $this->__w("Sent");
+$states['7'] = $this->__w("Payment completed");
+$states['8'] = $this->__w("Collection failed");
+$states['9'] = $this->__w("Need collecting");
+$states['10'] = $this->__w("Send to invoice");
+
+/* @var $this ns_d124feed_8e5e_4977_b6d2_70d3524c269e\UsersOrders */
+$orders = $this->getApi()->getOrderManager()->getAllOrdersForUser(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);
+//print_r($orders);
+echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+echo "<tr>";
+echo "<th align='left' width='100'>" . $this->__w("Order id") . "</th>";
+echo "<th align='left'>" . $this->__w("Created date") . "</th>";
+echo "<th align='left'>" . $this->__w("Count") . "</th>";
+echo "<th align='left'>" . $this->__w("Price") . "</th>";
+echo "<th align='left'>" . $this->__w("Status") . "</th>";
+echo "<th align='left'>" . $this->__w("Open") . "</th>";
+echo "</tr>";
+
+foreach($orders as $order) {
+    echo "<tr>";
+    echo "<td>" . $order->incrementOrderId . "</td>";
+    echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
+    $count = 0;
+    foreach($order->cart->items as $item) {
+        $count += $item->count;
+    }
+    echo "<td>" . $count . "</td>";
+    echo "<td>".$this->getApi()->getOrderManager()->getTotalAmount($order)."</td>";
+    echo "<td>" . $states[$order->status] . "</td>";
+    echo "<td><a href='?page=orderdetails&orderid=".$order->id."'>" . $this->__w("Show") . "</a></td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>

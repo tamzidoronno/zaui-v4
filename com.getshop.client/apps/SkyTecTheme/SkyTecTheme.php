@@ -15,7 +15,8 @@ class SkyTecTheme extends \ThemeApplication implements \Application {
     }
     
     public function addScripts() {
-        return "\n"."<link href='https://fonts.googleapis.com/css?family=Open+Sans|Roboto' rel='stylesheet' type='text/css'>";
+        return "\n"."<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>";
+        return "\n"."<link href='https://fonts.googleapis.com/css?family=Lato:700' rel='stylesheet' type='text/css'>";
     }
     
     public function isAllowingSideBar() {

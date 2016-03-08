@@ -1,6 +1,6 @@
 body {
     /*font-family: 'Open Sans', sans-serif;*/
-    font-family: 'Roboto', sans-serif;
+    font-family: 'PT Sans', sans-serif;
     color:#464646;
 }
 
@@ -11,6 +11,8 @@ body {
     font-size: 16px;
 }
 h1,h2,h3 { margin: 0px; }
+h1 { font-family: 'Lato', sans-serif; font-weight: 700; }
+h2 { font-weight: 700; }
 .gs_page_width {
     max-width: 1366px;
     margin: 0 auto;

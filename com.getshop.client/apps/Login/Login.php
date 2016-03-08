@@ -70,6 +70,16 @@ class Login extends \SystemApplication implements \Application {
         }         
     }
     
+    public function commonLogin($username, $password) {
+        $userLoggedIn = $this->getApi()->getUserManager()->logOn($username, $password);
+        if ($userLoggedIn != null && isset($userLoggedIn)) {
+            unset($_SESSION['tempaddress']);
+            unset($_SESSION['gs_currently_showing_modal']);
+            $_SESSION['loggedin'] = serialize($userLoggedIn);
+        }         
+    }
+    
+    
     public function render() {
         $this->setUp();
         $this->includefile('login');

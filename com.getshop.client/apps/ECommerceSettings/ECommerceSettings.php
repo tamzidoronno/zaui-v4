@@ -81,7 +81,7 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
     public function save() {
         $this->getStoreSettingsApp()->setConfigurationSetting("currencycode", $_POST['currency']);
         $this->getStoreSettingsApp()->setConfigurationSetting("defaultpaymentwhencartcustomeridisset", $_POST['defaultpaymentwhencartcustomeridisset']);
-        
+        $this->getStoreSettingsApp()->setConfigurationSetting("registrationRequired", $_POST['registrationRequired']);
     }
     
     public function isCurrency($currency) {

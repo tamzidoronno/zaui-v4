@@ -212,7 +212,8 @@
     <div class="textfield gss_setting">
         <span class="title"><?php echo $this->__f("Registration"); ?></span>
         <div class="gss_onoff" gs_model="ecommercesettings" gs_model_attr="registrationRequired">
-            <? echo $this->__f("Off"); ?><i class="fa fa-toggle-off"></i><? echo $this->__f("On"); ?>
+            <? $faclass = $this->getStoreSettingsApp()->getConfigurationSetting("registrationRequired") == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <?php echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
         </div>
         <div class="description">
             <?php echo $this->__("Are customers required to register to order?"); ?>

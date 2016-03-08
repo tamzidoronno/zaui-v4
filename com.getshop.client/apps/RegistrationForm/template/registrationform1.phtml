@@ -1,0 +1,18 @@
+<?php
+/* @var $this \ns_c6fe1e9b_a5f6_400b_aaa1_a422d2400222\RegistrationForm */
+$rules = $this->getRules();
+$data = $rules->data;
+foreach($data as $key => $field) {
+    if(!$field->active) {
+        continue;
+    }
+    $val = "";
+    if(isset($_POST['data'][$key])) {
+        $val = $_POST['data'][$key];
+    }
+    echo "<label>";
+    echo "<input type='txt' class='gsniceinput1' placeholder='".$field->title."' gsname='$key' value='$val'>";
+    echo $this->validateField($key);
+    echo "</label>";
+}
+?>

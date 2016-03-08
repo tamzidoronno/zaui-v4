@@ -3,30 +3,43 @@ class FieldGenerator {
     /* @var $factory Factory */
     var $factory;
     var $name; 
+    var $id;
+    var $saveMethod;
+    var $rules;
+    var $validation;
+    
+    public function FieldGenerator() {
+        
+    }
+    
+    public function setData($rules, $factory, $name, $id, $saveMethod) {
+        $this->factory = $factory;
+        $this->name = $name;
+        $this->rules = $rules;
+        $this->id = $id;
+        $this->saveMethod = $saveMethod;
+    }
     
     /**
      * @param core_pmsmanager_PmsRegistrationRules $rules
      */
-    public function load($rules, $factory, $name, $id, $saveMethod) {
-        $this->factory = $factory;
-        $this->name = $name;
-        
+    public function load() {
         $width = array();
         $width[] = 100;
         $width[] = 50;
         $width[] = 33;
         $width[] = 25;
         
-        if(!$rules) {
-            $rules = $factory->getApi()->getPmsManager()->initBookingRules($name);
+        if(!$this->rules) {
+            $this->rules = $this->factory->getApi()->getPmsManager()->initBookingRules($this->name);
         }
         
         $userFields = $this->getUserFields();
-        echo "<div gstype='form' method='$saveMethod'>";
-        echo "<input type='hidden' value='$id' gsname='itemid'>";
-        echo "<h1>Guest information</h1>";
+        echo "<div gstype='form' method='$this->saveMethod'>";
+        echo "<input type='hidden' value='$this->id' gsname='itemid'>";
+        echo "<br><h1>Guest information</h1>";
         $checked = "";
-        if($rules->includeGuestData) {
+        if($this->rules->includeGuestData) {
             $checked = "CHECKED";
         }
         echo "<div>";
@@ -35,7 +48,7 @@ class FieldGenerator {
         echo "</div>";
         echo "<br>";
         $checked = "";
-        if($rules->displayContactsList) {
+        if($this->rules->displayContactsList) {
             $checked = "CHECKED";
         }
         echo "<div>";
@@ -43,56 +56,15 @@ class FieldGenerator {
         echo "Display contacts list";
         echo "</div>";
         
-        echo "<h1>User / billing data</h1>";
-        foreach($userFields as $field => $text) {
-
-            $fieldData = new core_bookingengine_data_RegistrationRulesField();
-            $active = "";
-            $required = "";
-            $visible = "";
-            $title = $text;
-            if(isset($rules->data->{$field})) {
-                $fieldData = $rules->data->{$field};
-                $title = $fieldData->title;
-                if($fieldData->active)
-                    $active = "CHECKED";
-                if($fieldData->required)
-                    $required = "CHECKED";
-                if($fieldData->visible)
-                    $visible = "CHECKED";
-            }
-            
-            
-            if(stristr($field, "title_")) {
-                echo "<h2>" . $text . "</h2>";
-            } else {
-                echo "<span class='whatever' style='float:right;'>";
-                echo "<input type='text' title='Field name' gsname='user;".$field.";name' value='$title' style='margin-right:10px; width: 400px;'>";
-                echo "<select gsname='user;".$field.";width'>";
-                foreach($width as $w) {
-                    $s = "";
-                    if($w == $fieldData->width) {
-                        $s = "selected";
-                    }
-                    echo "<option value='$w' $s>$w%</option>";
-                }
-                echo "</select>";
-                echo "<input type='checkbox' title='Active' gsname='user;".$field.";active' $active>";
-                echo "<input type='checkbox' title='Required' gsname='user;".$field.";required' $required>";
-                echo "<input type='checkbox' title='Visible' gsname='user;".$field.";visible' $visible>";
-                echo "</span>";
-                echo $field . "<span class='description' style='color:#777; display:block;padding:5px;'>" . $text . "</span>";
-            }
-        }
+        echo "<br><h1>User / billing data</h1><br>";
+        $this->printUsersFieldsSetup($userFields, $this->rules, $width);
         
-        echo "<h1>Additional fields</h1>";
-        $this->printAdditionalFields($rules);
+        echo "<br><h1>Additional fields</h1>";
+        $this->printAdditionalFields($this->rules);
         
-        $fields = [];
-        $fields[] = "alna";
-        $fields[] = "furuset";
+        $fields = array();
         
-        echo "<h2>Who should this form be saved to</h2>";
+        echo "<br><h2>Who should this form be saved to</h2>";
         foreach($fields as $field => $name) {
             $checked = "";
             if($name == $this->name) {
@@ -135,6 +107,9 @@ class FieldGenerator {
                 
         $fields = array();
         $fields["title_0"] = "Users information details";
+        $fields["user_username"] = "Username";
+        $fields["user_password"] = "Password";
+        $fields["user_repeatpassword"] = "Repeat password";
         $fields["user_fullName"] = "Name of the user";
         $fields["user_prefix"] = "Phone prefix";
         $fields["user_cellPhone"] = "Cell phone number";
@@ -148,7 +123,7 @@ class FieldGenerator {
         $fields["user_address_countrycode"] = "Users country code";
         $fields["user_address_countryname"] = "Name of the country";
         
-        $fields["title_3"] = "<hr>Company description details";
+        $fields["title_3"] = "<br>Company description details";
         $fields["company_name"] = "Name of the company";
         $fields["company_vatNumber"] = "Company organisation number";
         $fields["company_website"] = "Companys website";
@@ -184,7 +159,7 @@ class FieldGenerator {
         foreach($_POST['data'] as $key => $value) {
             $field = explode(";", $key);
             if(sizeof($field) != 3) {
-                echo $key;
+                continue;
             }
             @$result[$field[0]][$field[1]][$field[2]] = $_POST['data'][$key];
         }
@@ -312,6 +287,128 @@ class FieldGenerator {
             echo "<input type='txt' value='$name' placeholder='Field name' gsname='additional;field_$i;fieldname'>";
             echo "</div>";
         }
+    }
+
+    public function printUsersFieldsSetup($userFields, $rules, $width) {
+        foreach($userFields as $field => $text) {
+
+            $fieldData = new core_bookingengine_data_RegistrationRulesField();
+            $active = "";
+            $required = "";
+            $visible = "";
+            $title = $text;
+            if(isset($rules->data->{$field})) {
+                $fieldData = $rules->data->{$field};
+                $title = $fieldData->title;
+                if($fieldData->active)
+                    $active = "CHECKED";
+                if($fieldData->required)
+                    $required = "CHECKED";
+                if($fieldData->visible)
+                    $visible = "CHECKED";
+            }
+            
+            
+            if(stristr($field, "title_")) {
+                echo "<br><h2>" . $text . "</h2>";
+            } else {
+                echo "<span class='whatever' style='float:right;'>";
+                echo "<input type='text' title='Field name' gsname='user;".$field.";name' value='$title' style='margin-right:10px; width: 400px;'>";
+                echo "<select gsname='user;".$field.";width'>";
+                foreach($width as $w) {
+                    $s = "";
+                    if($w == $fieldData->width) {
+                        $s = "selected";
+                    }
+                    echo "<option value='$w' $s>$w%</option>";
+                }
+                echo "</select>";
+                echo "<input type='checkbox' title='Active' gsname='user;".$field.";active' $active>";
+                echo "<input type='checkbox' title='Required' gsname='user;".$field.";required' $required>";
+                echo "<input type='checkbox' title='Visible' gsname='user;".$field.";visible' $visible>";
+                echo "</span>";
+                echo $field . "<span class='description' style='color:#777; display:block;padding:5px;'>" . $text . "</span>";
+            }
+        }
+    }
+
+    
+    public function validatePostedForm() {
+        if($this->factory->isEditorMode()) {
+            return;
+        }
+
+        $this->validation = array();
+        //First validate user data.
+        
+        foreach($this->rules->data as $key => $requirements) {
+            $this->validateField($key, $requirements);
+        }
+        
+        if(isset($_POST['data']['agreetoterms']) && $_POST['data']['agreetoterms'] != "true") {
+            $this->validation['agreetoterms'] = $this->factory->factory->__w("You need to agree to the terms and conditions");
+        }
+        
+        
+        if(isset($_POST['data']['user_password']) && isset($_POST['data']['user_repeatpassword'])) {
+            if($_POST['data']['user_password'] != $_POST['data']['user_repeatpassword']) {
+                $this->validation['user_password'] = $this->factory->__w("Password does not match confirmed password.");
+            }
+        }
+        
+        return $this->validation;
+    }
+
+    /**
+     * @param type $key
+     * @param \core_bookingengine_data_RegistrationRulesField $requirements
+     */
+    public function validateField($key, $requirements) {
+        if(!$requirements->active) {
+            return;
+        }
+        
+        if(isset($_POST['data']['choosetyperadio'])) {
+            if($_POST['data']['choosetyperadio'] == "registration_private" && stristr($key, "company_")) {
+                return;
+            }
+            if($_POST['data']['choosetyperadio'] == "registration_company" && stristr($key, "user_")) {
+                return;
+            }
+        }
+        
+        if(isset($_POST['data'][$requirements->name])) {
+            $res = $_POST['data'][$requirements->name];
+
+            if($requirements->required && !$res) {
+                $this->validation[$requirements->name] = $this->factory->__w("Field is required");
+            }
+        }
+        
+        $config = $this->rules;
+        if($config->includeGuestData) {
+            $this->validateGuestData();
+        }
+    }
+
+    public function createUserObject() {
+        $user = new core_usermanager_data_User();
+        $user->address = new core_usermanager_data_Address();
+        foreach($_POST['data'] as $key => $val) {
+            if(substr($key,0, 5) != "user_") {
+                continue;
+            }
+            $key = substr($key, 5);
+            if(substr($key,0, 8) == "address_") {
+                $addrkey = substr($key, 8);
+                $user->address->{$addrkey} = $val;
+            } else {
+                if(property_exists($user, $key) === TRUE) {
+                    $user->{$key} = $val;
+                }
+            }
+        }
+        return $user;
     }
 
 }

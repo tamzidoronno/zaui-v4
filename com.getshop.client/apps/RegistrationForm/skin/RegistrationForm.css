@@ -1,0 +1,4 @@
+.RegistrationForm .registrationform1 input { width: 100%; box-sizing: border-box; }
+.RegistrationForm .registrationform1 label { margin-bottom: 10px; display:block; }
+.RegistrationForm .registrationform1 .shop_button { width: 100%; display:inline-block; box-sizing: border-box; }
+.RegistrationForm .errortext { padding-top: 10px; color: red; display: block; }

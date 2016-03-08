@@ -246,3 +246,4 @@ h1,h2,h3 { margin: 0px; }
 .checkout table td input { width: 100%; box-sizing: border-box; height: 30px; }
 .CartManager .shoppingcartheader { padding: 10px; text-transform: uppercase; font-size: 16px; background-color: #515151; color:#fff;}
 .CartManager #confirmorder { margin-top: 10px; display:inline-block; }
+.RegistrationForm .registrationform1 .shop_button { text-transform: uppercase; }

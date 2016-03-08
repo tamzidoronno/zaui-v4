@@ -1,0 +1,27 @@
+<div gstype="form" method="saveAppInstanceSettings">
+        <table width="80%" class="contactConfigTable">
+        <tr>
+            <td width="50%">News element type</td>
+            <td width="50%">
+                <select gsname="setting_number">
+                    <?php 
+                    for($i = 1; $i <= 10; $i++) {
+                        $checked = "";
+                        if($key == $this->getConfigurationSetting("number")) {
+                            $checked = "SELECTED";
+                        }
+                        echo "<option value='$i' $checked>$i</option>";
+                    }
+                    ?>
+                </select>
+            </td>
+        </tr>
+        </table>
+        <input gstype="submit" type="button" value='Save'>
+    </div>
+
+<br><br>
+<?php
+$fieldgen = $this->getFieldGenerator();
+$fieldgen->load();
+?>

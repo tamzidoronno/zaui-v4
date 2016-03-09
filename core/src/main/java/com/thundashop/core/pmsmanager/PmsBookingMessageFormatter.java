@@ -81,7 +81,13 @@ class PmsBookingMessageFormatter {
             if(room.booking != null && room.booking.bookingItemTypeId != null) {
                 bookingData += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " ";
             }
-            bookingData += formatDate(room.date.start) + " - " + formatDate(room.date.end) + " ";
+            
+            long diff = (room.date.end.getTime() - room.date.start.getTime()) / 1000;
+            if(diff > (365*60*60)) {
+                bookingData += formatDate(room.date.start);
+            } else {
+                bookingData += formatDate(room.date.start) + " - " + formatDate(room.date.end) + " ";
+            }
             if(room.booking != null && room.booking.bookingItemId != null) {
                 BookingItem item = bookingEngine.getBookingItem(room.booking.bookingItemId);
                 if(item != null) {

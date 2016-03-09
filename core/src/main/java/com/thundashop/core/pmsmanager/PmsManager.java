@@ -332,7 +332,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result = completeBooking(bookingsToAdd, booking);
             
             if(result == 0) {
-                if(!configuration.prepayment) {
+                if(!configuration.payAfterBookingCompleted) {
                     if(bookingIsOK(booking)) {
                         if(!booking.confirmed) {
                             doNotification("booking_completed", booking, null);
@@ -344,7 +344,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
            
             try {
-                if(!configuration.prepayment) {
+                if(!configuration.payAfterBookingCompleted) {
                     processor();
                 } else {
                     createPrepaymentOrder(booking.id);
@@ -1064,6 +1064,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             } else {
                 messageManager.sendMailWithDefaults(user.fullName, user.emailAddress, title, message);
             }
+            
+            if(configuration.copyEmailsToOwnerOfStore) {
+                String copyadress = storeManager.getMyStore().configuration.emailAdress;
+                messageManager.sendMailWithDefaults(user.fullName, copyadress, title, message);
+            }
+            
             repicientList.add(user.emailAddress);
         }
     }

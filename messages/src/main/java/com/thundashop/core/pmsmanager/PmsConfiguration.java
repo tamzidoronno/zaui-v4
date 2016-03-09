@@ -26,12 +26,14 @@ public class PmsConfiguration extends DataCommon {
     public boolean exposeUnsecureBookings = false;
     public boolean autoconfirmRegisteredUsers = false;
     public boolean prepayment = false;
+    public boolean payAfterBookingCompleted = false;
     public Integer createOrderAtDayInMonth = 0;
     public Integer minStay = 1;
     public boolean supportMoreDates = false;
     public boolean isItemBookingInsteadOfTypes = false;
     public boolean autoExtend = false;
     public boolean autoCreateInvoices = false;
+    public boolean copyEmailsToOwnerOfStore = false;
     boolean substractOneDayOnOrder = false;
 
 

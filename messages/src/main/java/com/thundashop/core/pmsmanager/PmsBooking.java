@@ -182,7 +182,7 @@ public class PmsBooking extends DataCommon {
 
     boolean isActiveInPeriode(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {
-            if(room.date.start.before(endDate) && room.date.end.after(startDate)) {
+            if(room.date.end != null && room.date.start != null && room.date.start.before(endDate) && room.date.end.after(startDate)) {
                 return true;
             }
             if(isSameDay(room.date.start, startDate)) {

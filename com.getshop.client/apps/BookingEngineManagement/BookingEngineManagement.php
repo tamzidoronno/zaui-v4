@@ -132,7 +132,7 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     public function configureBookingFields() {
         $rules = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
         $generator = new \FieldGenerator();
-        $generator->setData($rules, $this->getFactory(), $this->getSelectedName(), $id, "saveBookingRules");
+        $generator->setData($rules, $this->getFactory(), $this->getSelectedName(), "", "saveDefaultBookingFields");
         $generator->load();
     }
     

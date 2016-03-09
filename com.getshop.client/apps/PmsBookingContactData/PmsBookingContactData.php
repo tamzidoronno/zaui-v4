@@ -7,6 +7,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     var $currentBooking = null;
     var $counter = 0;
     var $lastFieldPrintedType = "";
+    var $selectPrint = "";
     
     public function getDescription() {
         return "Asks the user for to enter the nessesary contact data to complete the booking";
@@ -23,7 +24,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         }
         if($this->bookingCompleted) {
             $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-            if($config->prepayment) {
+            if($config->payAfterBookingCompleted) {
                 $curBooking = $this->getCurrentBooking();
                 $orderId = $curBooking->orderIds[0];
                 ?>
@@ -94,6 +95,28 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         $currentlyAdded = $this->getCurrentBooking();
         $curAddedFields = $currentlyAdded->registrationData->resultAdded;
         
+        $valueSet = "";
+        if(isset($curAddedFields->{$value->name})) {
+            $valueSet = $curAddedFields->{$value->name};
+        }
+        
+        if($value->type == "select") {
+            echo "<label class='col-".$value->width. " type_".$value->type."'>";
+            if($this->selectPrint != $value->name) {
+                echo "<select gsname='" . $value->name . "'>";
+            }
+            $this->selectPrint = $value->name;
+            if($valueSet == $value->title) { $selected = "SELECTED"; } else { $selected = ""; }
+            echo "<option value='".$value->title."' $selected>" . $value->title . "</option>";
+            return;
+        }
+        
+        
+        if($this->selectPrint) {
+            echo "</select>";
+            $this->selectPrint = false;
+        }
+        
         if($this->lastFieldPrintedType == "radio" && $value->type != "radio") {
             echo "<div style='clear:both;'>&nbsp;</div>";
         } 
@@ -112,17 +135,15 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             } else {
                 $this->counter++;
             }
-            
-            $valueSet = "";
-            if(isset($curAddedFields->{$value->name})) {
-                $valueSet = $curAddedFields->{$value->name};
-            }
-            
+                
             echo "<label class='col-".$value->width. " " . $lastone . " type_".$value->type."'>";
             
             if (stristr($value->name, "prefix")) {
                 $this->printTitle($value->title, $value->required, $value->type);
                 $this->printPhoneCodes($value, $valueSet);
+            } else if (stristr($value->name, "company_vatRegistered")) {
+                $this->printTitle($value->title, $value->required, $value->type);
+                echo "<div class='formspacer'><input type='checkbox' gsname='".$value->name."'></div>";
             } else if ($value->type == "text" || $value->type == "mobile" || $value->type == "email") {
                $this->printTitle($value->title, $value->required, $value->type);
                echo "<input type='text' gsname='".$value->name."' value='$valueSet'>";

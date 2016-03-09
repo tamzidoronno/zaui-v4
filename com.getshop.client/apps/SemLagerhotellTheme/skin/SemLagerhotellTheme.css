@@ -13,3 +13,4 @@ h2,h1 { font-weight: 500; }
 }
 .PmsBookingProductList .selectedtext { border: solid 1px #bbb; background-color: #f29400 !important; color:#fff; padding: 10px; width: 100px; text-align: center; }
 .PmsBookingProductList .selectbutton { border: solid 1px #bbb; background-color: #595959 !important; color:#fff; padding: 10px; width: 100px; text-align: center; cursor:pointer; }
+.PmsBookingContactData .chooseregform { margin-top: 20px; }

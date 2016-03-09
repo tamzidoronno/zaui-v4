@@ -1,4 +1,5 @@
-.gs_page_width { max-width:  400px; margin: auto; }
+.gs_page_width { max-width:  600px; margin: auto; }
 .gsarea[area="header"] {display:none; }
 .gsarea[area="body"] .gsinner { padding: 20px; background-color: #fff; }
-body { background-color:#efefef; padding-top: 10px; }
+body { background-color:#efefef; padding-top: 10px; font-size: 16px; }
+input[type="radio"] { display:inline-block; width: 16px; height: 16px; }

@@ -250,3 +250,6 @@ h2 { font-weight: 700; }
 .CartManager #confirmorder { margin-top: 10px; display:inline-block; }
 .RegistrationForm .registrationform1 .shop_button { text-transform: uppercase; }
 .UsersOrders th, .UsersOrderItems th, .UsersOrderDetails th {background-color: #515151;} 
+.ProductCategories { border: solid 1px #efefef; }
+.ProductCategories .categoryheading { background-color: #515151; color:#fff; padding: 20px; height: 20px; font-size: 16px; font-weight: bold; }
+.ProductCategories .category { cursor: pointer; margin: 20px; border-bottom: solid 1px #eee; padding-bottom: 10px; }

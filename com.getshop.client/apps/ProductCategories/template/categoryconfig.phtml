@@ -1,0 +1,40 @@
+<?php
+/* @var $this ns_1ee40ca9_27ac_4b97_944a_0eb02506d5e9\ProductCategories */
+?>
+<div>
+    <div class="gss_settings_header">
+        <i class="fa fa-credit-card"></i>
+
+        <div class="gss_settings_header_description">
+            <div class="gss_settings_header_title"><? echo $this->__f("Categories"); ?></div>
+            <div class="gss_settings_header_description_inner">
+                <?
+                echo $this->__f("Set up and configure your categories.");
+                ?>
+            </div>
+        </div>	
+    </div>
+
+    <div class='gss_settings_content'>
+        <input type='text' class='gsniceinput1 gsnomagicposition' gs_model='wtf' gs_model_attr='categoryname' >
+        <div class='gss_button' gss_model='wtf' gss_fragment='categoryconfig' gss_method='addCategory'><? echo $this->__f("Create a new category"); ?></div>
+    </div>
+    
+    <div class='gss_settings_content'>
+        <h1>Categories added</h1>
+        <?php
+        $cats = $this->getApi()->getProductManager()->getAllCategories();
+        
+        foreach($cats as $cat) {
+            echo "<i class='fa fa-trash-o' gss_value='". $cat->id."' gss_method='deleteCategory' gss_model='catmodal' gss_fragment='categoryconfig' ></i> " . $cat->name . "<br>";
+        }
+        
+        ?>
+    </div>
+    
+</div>
+
+<script>
+    $('#gss_order_filter_startdate').datepicker({ dateFormat: "yy-mm-dd", changeMonth: true, changeYear: true });
+    $('#gss_order_filter_enddate').datepicker({ dateFormat: "yy-mm-dd",changeMonth: true, changeYear: true });        
+</script>

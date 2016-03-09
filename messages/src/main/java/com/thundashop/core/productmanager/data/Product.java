@@ -60,6 +60,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public long campaing_end_date = 0;
     
     public String accountingSystemId;
+    public String category = "";
     
     //AttributegroupId, AttributeSelected
     public List<String> attributes = new ArrayList();

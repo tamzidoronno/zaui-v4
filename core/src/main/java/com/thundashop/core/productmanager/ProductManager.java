@@ -6,6 +6,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductDynamicPrice;
 import com.thundashop.core.productmanager.data.ProductList;
@@ -342,6 +343,37 @@ public class ProductManager extends AProductManager implements IProductManager {
             }
         } 
    }
+
+    @Override
+    public void saveCategory(ProductCategory categories) {
+        saveObject(categories);
+        this.categories.put(categories.id, categories);
+    }
+
+    @Override
+    public void deleteCategory(String categoryId) {
+        ProductCategory cat = getCategory(categoryId);
+        this.categories.remove(categoryId);
+        deleteObject(cat);
+    }
+
+    @Override
+    public ProductCategory getCategory(String categoryId) {
+        return this.categories.get(categoryId);
+    }
+
+    @Override
+    public List<ProductCategory> getAllCategories() {
+        List<ProductCategory> result = new ArrayList(this.categories.values());
+        
+        Collections.sort(result, new Comparator<ProductCategory>(){
+            public int compare(ProductCategory o1, ProductCategory o2){
+                return o1.name.compareTo(o2.name);
+            }
+       });
+        
+        return result;
+    }
 
  
 }

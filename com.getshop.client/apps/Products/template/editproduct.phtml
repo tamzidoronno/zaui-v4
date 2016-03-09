@@ -101,7 +101,7 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
             </div>
             
             <div class="gss_setting" id="taxgroup">
-                <div class="text inline title"><?php echo $this->__f("Please select your language"); ?></div>
+                <div class="text inline title"><?php echo $this->__f("Please select a tax group"); ?></div>
 
                 <div class="gss_dropdown">
                     <select class="config" gs_model='productmodel' gs_model_attr='taxgroup'>
@@ -117,6 +117,26 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
                     </select>
                 </div>
             </div>
+            
+            <?
+            $cats = $this->getApi()->getProductManager()->getAllCategories();
+            if(isset($cats)) {
+                ?>
+                <div class="gss_setting" id='category'>
+                    <div class="text inline title"><?php echo $this->__f("Please select a category"); ?></div>
+                    <div class="gss_dropdown">
+                        <select class="config" gs_model='productmodel' gs_model_attr='category'>
+                            <?php
+                            echo "<option value=''>No category</option>";
+                            foreach($cats as $cat) {
+                                $selected = $product->category == $cat->id ? "selected='true'"  : "";
+                                echo "<option value='". $cat->id . "' $selected>" . $cat->name . "</option>";
+                            }
+                            ?>                            
+                        </select>
+                    </div>
+                </div>
+            <? } ?>
 
 
             <div class="textarea gss_setting"  id="listviewdescription">

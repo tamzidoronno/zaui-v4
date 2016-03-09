@@ -19,6 +19,9 @@
     color: #FFF;
 }
 
+#backsidesettings .gsnomagicposition {
+    position: inherit !important;
+}
 
 #backsidesettings .gss_slogan {
     font-family: Raleway, sans-serif;

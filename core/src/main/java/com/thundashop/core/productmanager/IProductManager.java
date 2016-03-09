@@ -7,6 +7,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.SearchResult;
@@ -242,4 +243,11 @@ public interface IProductManager {
     
     @Administrator
     public void setProductDynamicPrice(String productId, int count);
+    
+    @Administrator
+    public void saveCategory(ProductCategory categories);
+    @Administrator
+    public void deleteCategory(String categoryId);
+    public List<ProductCategory> getAllCategories();
+    public ProductCategory getCategory(String categoryId);
 }

@@ -81,6 +81,7 @@ class Products extends \WebshopApplication implements \Application {
         $product->dynamicPriceInPercent = $_POST['dynamicPriceInPercent'];
         $product->accountingSystemId = $_POST['accountingSystemId'];
         $product->discountedPrice = $_POST['discountedPrice'];
+        $product->category = $_POST['category'];
         
         
         foreach ($this->getApi()->getProductManager()->getProductLists() as $list) {

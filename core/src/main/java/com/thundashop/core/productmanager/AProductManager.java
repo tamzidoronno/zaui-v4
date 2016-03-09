@@ -15,6 +15,7 @@ import com.thundashop.core.productmanager.data.AttributeData;
 import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductImage;
@@ -40,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AProductManager extends ManagerBase {
 
     HashMap<String, ProductList> productList = new HashMap();
+    public HashMap<String, ProductCategory> categories = new HashMap();
+    
 
     public Map<String, Product> products;
     AttributeData pool = new AttributeData();
@@ -146,6 +149,10 @@ public abstract class AProductManager extends ManagerBase {
             if (object instanceof ProductList) {
                 ProductList list = (ProductList) object;
                 productList.put(list.id, list);
+            }
+            if (object instanceof ProductCategory) {
+                ProductCategory cat = (ProductCategory) object;
+                categories.put(cat.id, cat);
             }
             if (object instanceof TaxGroup) {
                 TaxGroup group = (TaxGroup) object;

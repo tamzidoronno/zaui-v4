@@ -84,6 +84,10 @@ class ProductLists extends \ApplicationBase implements \Application {
             $products = $this->getApi()->getProductManager()->getProducts($criteria);
         }
         
+        
+        $catFilter = new \ns_1ee40ca9_27ac_4b97_944a_0eb02506d5e9\ProductCategories();
+        $products = $catFilter->filterProducts($products);
+        
         return $products;
     }
 

@@ -1100,7 +1100,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         continue;
                     }
  
-                    messageManager.sendSms("plivo", phone, message, guest.prefix, configuration.smsName);
+                    messageManager.sendSms("sveve", phone, message, guest.prefix, configuration.smsName);
                     repicientList.add(phone);
                 }
             }

@@ -92,8 +92,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
         <th width='10'></th>
         <th>Type</th>
         <th>Room</th>
-        <th>Date start</th>
-        <th>Date end</th>
+        <th>Time periode</th>
         <?php if($config->bookingTimeInterval == 2) { ?>
         <th>Nights</th>
         <?php } ?>
@@ -175,32 +174,20 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                     <span class='roompostfix'>
                         <span class="viewmode">
                             <?php echo date("d.m.Y H:i", strtotime($date->start)); ?>
-                        </span>
-                        <span class='editmode' gstype='form' method="setNewStartDate">
-                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
-                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <input type='text' gsname='start' value='<? echo date("d.m.Y H:i", strtotime($room->date->start)); ?>'>
-                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                        </span>
-                    </span>
-                </span>
-            </td>
-            <td>
-                <span class='roomattribute'>
-                    <span class='roompostfix'>
-                        <span class="viewmode">
+                             - 
                             <?php 
                                 if(date("d.m.Y", strtotime($date->start)) == date("d.m.Y", strtotime($date->end))) {
                                     echo date("H:i", strtotime($date->end));
                                 } else {
                                     echo date("d.m.Y H:i", strtotime($date->end));
                                 }
-                                ?>
+                            ?>
                         </span>
-                        <span class='editmode' gstype='form' method="setNewEndDate">
+                        <span class='editmode' gstype='form' method="setNewStartDate">
                             <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                             <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <input type='text' gsname='end' value='<? echo date("d.m.Y H:i", strtotime($room->date->end)); ?>'>
+                            <span style='display:inline-block; width: 80px;'>Start</span> <input type='text' gsname='start' value='<? echo date("d.m.Y H:i", strtotime($room->date->start)); ?>'><br>
+                            <span style='display:inline-block; width: 80px;'>End</span> <input type='text' gsname='end' value='<? echo date("d.m.Y H:i", strtotime($room->date->end)); ?>'><br>
                             <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
                         </span>
                     </span>

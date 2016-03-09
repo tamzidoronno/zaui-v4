@@ -329,7 +329,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $_POST['data']['roomid'], 
                 $_POST['data']['bookingid'], 
                 $this->convertToJavaDate(strtotime($_POST['data']['start'])),
-                $this->convertToJavaDate(strtotime($room->date->end)));
+                $this->convertToJavaDate(strtotime($_POST['data']['end'])));
         if(!$error) {
             $this->errors[] = "Could not update start date, due to room not available at the time being.";
         }

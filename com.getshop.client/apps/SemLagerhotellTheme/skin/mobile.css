@@ -1,0 +1,20 @@
+body {font-family: 'Open Sans', sans-serif;}
+h2,h1 { font-weight: 500; }
+.Menu { position:absolute; right: 0px; text-align: right; }
+.Menu .entry { padding: 20px; }
+.Menu .entries .entries { border: solid 1px #efefef; margin-top: 10px; border-top: solid 0px #efefef; }
+.Menu .entries .entries .entry {
+    font-family: 'Alegreya Sans SC', sans-serif;
+    padding: 5px; text-align: left; border-top: solid 1px #efefef; background-color:rgba(0,0,0,0.8); 
+}
+.PmsBookingProductList .selectedtext { border: solid 1px #bbb; background-color: #f29400 !important; color:#fff; padding: 10px; width: 100px; text-align: center; }
+.PmsBookingProductList .selectbutton { border: solid 1px #bbb; background-color: #595959 !important; color:#fff; padding: 10px; width: 100px; text-align: center; cursor:pointer; }
+.PmsBookingContactData .chooseregform { margin-top: 20px; }
+.gs_page_width { padding-left: 10px; padding-right: 10px; }
+.ImageDisplayer .imagecontainer.originalSize img { width: 100%; }
+
+.shop_button { border: solid 1px #bbb; border-radius: 0px; width: 100%; background-color: #f29400; color:#fff; }
+.gsmobilemenucart,.gsmobilesearch,.gsslideright { display:none; }
+.gsmobilemenu { background-color: #f29400; color:#fff; text-align: center; }
+
+.gsmobiletopmenu { background: #f29400; color:#fff; border: 0px; }

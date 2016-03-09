@@ -1,0 +1,22 @@
+<?php
+/* @var $this \ns_dabb8a85_f593_43ec_bf0d_240467118a40\News */
+$entries = $this->getAllEntries();
+$i = 0;
+
+foreach($entries as $entry) {
+    echo "<div class='news_container' id='".$entry->id."'>";
+    if ($this->hasWriteAccess()) {
+        echo "<div class='gs_button small delete'>".$this->__f("Delete")."</div>";
+    }
+
+    echo "<span class='newscontent'>";
+    echo "<div class='subject'><h2>" . $entry->subject . "</h2></div>";
+    echo "<span class='subjecttextseperator'></span>";
+    echo "<div class='newstext'>" . $entry->content . "</div>";
+    echo "<div class='readmore'>";
+    echo "<a href='?page=".$entry->pageId."'>". $this->__w("Read more") . "</a>";
+    echo "</div>";
+    echo "</span>";
+    echo "</div>";
+}
+?>

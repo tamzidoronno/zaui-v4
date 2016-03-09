@@ -203,6 +203,7 @@ class Menu extends \SystemApplication implements \Application {
     public function printEntries($entries, $level, $prefix) {
         echo "<div class='entries'>";
         
+        $i =1;
         foreach ($entries as $entry) {
             if ($this->isDisabledDueToAccessLevel($entry) && !$this->isDisabledEnabled()) {
                 continue;
@@ -249,12 +250,17 @@ class Menu extends \SystemApplication implements \Application {
                 }
                 echo "</div>";
             } else {
-               echo "<div class='entry $activate $disabledClass'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
+                $lastEntry = "";
+                if($i == sizeof($entries)) {
+                    $lastEntry = "lastentry";
+                }
+               echo "<div class='entry $activate $disabledClass $lastEntry'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
                 if ($entry->subentries) {
                     $this->printEntries($entry->subentries, $level+1, $prefix);
                 }
                 echo "</div>";
             }
+            $i++;
         }
         echo "</div>";
     }

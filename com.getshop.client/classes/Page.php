@@ -448,7 +448,8 @@ class Page {
             if ($cell->hideOnMobile && !$this->factory->isEditorMode()) {
                 return false;
             }
-        } else if($cell->hideOnDesktop && !$showDesktopHiddenFields) {
+        } else if($cell->hideOnDesktop && !$showDesktopHiddenFields && !$this->editCarouselForMobile()) {
+            
             return false;
         }
 
@@ -925,7 +926,6 @@ class Page {
     }
 
     public function printArea($rowsToPrint, $header=false) {
-        
         if($this->factory->isEditorMode() && !$rowsToPrint) {
             echo "<div class='gscell'>";
             echo "<div class='gsemptyarea gsinner'>";
@@ -1265,10 +1265,15 @@ class Page {
         if ($cell->mode == "ROTATING") {
             $this->addCarouselSettingsPanel($cell);
         }
+
         if ($parent != null && $parent->mode === "ROTATING") {
             $displayNumbers = $parent->carouselConfig->displayNumbersOnDots;
             $this->printCarourselMenu();
-            if(!$parent->carouselConfig->hideDots) {
+            $hideDots = false;
+            if(!$this->factory->isEditorMode()) {
+                $hideDots = $parent->carouselConfig->hideDots;
+            }
+            if(!$hideDots) {
                 $this->printCarouselDots($totalcells, $count, $cell->cellId, $parent->carouselConfig);
             }
         }

@@ -26,6 +26,7 @@ Addons;-;Tilegg
 Address;-;Adresse
 Adult;-;Voksne
 Alias;-;Alias
+All;-;Alle
 All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
 An email has been sent with a code to use in step 2.;-;En epost har blitt sendt til deg som kan benyttes i steg 2.s
@@ -51,6 +52,7 @@ Building your store;-;Lag din webbutikk
 Button;-;Knapp
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
 Cancel order;-;Kanselert ordre
+Canceled;-;Kanselert
 Carousel menu;-;Karusell meny
 Carousel settings;-;Instillinger for karusellen
 Cart overview;-;Handlekurv oversikt
@@ -69,6 +71,7 @@ City;-;By
 Click here if you need to add more contacts;-;Trykk her hvis du vil legge til flere kontaktpersoner
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Close;-;Lukk
+Collection failed;-;Innkreving feilet
 Color transition;-;Fargetransisjoner
 Comments;-;Kommentarer
 Company address;-;Firma adresse
@@ -80,6 +83,7 @@ Company postcode;-;Firmaet postnummer
 Company's invoice email;-;Firmaets epost for faktura
 Company's main email;-;Firmaet hoved epost adresse
 Company's website;-;Firmaets webside
+Completed;-;Gjennomført
 Configure item sorting;-;Konfigurer item sortering
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
@@ -90,6 +94,7 @@ Continue;-;Fortsett
 Continue shopping;-;Fortsett å handle
 Continue to cart;-;Gå til handlekurven
 Cookies are being stored;-;Cookier blir lagret
+Count;-;Antall
 Country;-;Land
 Country prefix for mobile phone;-;Land prefix for mobil telefon
 Coupon;-;Kupong
@@ -98,11 +103,14 @@ Create a booking item;-;Opprett et booking item
 Create a booking item type;-;Opprett en booking item type
 Create a new company;-;Opprett et nytt firma
 Create a new slide;-;Opprett en ny slide
+Create an account;-;Opprett en konto
 Create left column;-;Lag en ny venstrekolonne
 Create right column;-;Lag en ny høyrekolonne
 Create row above;-;Lag ny rad over
 Create row after;-;Legg til rad under
 Create row below;-;Lag ny rad under
+Created;-;Opprettet
+Created date;-;Opprettet dato
 Css;-;Css
 Customer information;-;Kunde detaljer
 Daily;-;Daglig
@@ -193,6 +201,7 @@ Is private person;-;Er privat person
 Is visible for booking;-;Er synlig for booking
 It's all about selling products online, GetShop is where you start!;-;Det handler å selge produkter online, GetShop er hvor du starter!
 Items;-;Varer
+Items ordered;-;Enheter bestilt
 January;-;Januar
 July;-;Juli
 June;-;Juni
@@ -233,6 +242,7 @@ Move up on mobile;-;Flytt opp på mobilen
 Mva registered;-;Registrert i mva registeret
 My account;-;Min konto
 My images speeks for itself;-;Mine bilder snakker for seg selv
+My name is;-;Mitt navn er
 My name is:;-;Mitt navn er
 Name;-;Navn
 Name for booking engine to use;-;Navn på booking engine som skal brukes
@@ -259,9 +269,11 @@ Number of instances added;-;Antall av instanser lagt til
 October;-;Oktober
 Offset;-;Offset
 Old password;-;Gammelt passord
+Open;-;Åpen
 Open styling;-;Åpne styling
 Order;-;Ordre
 Order cleaning;-;Bestill vask
+Order id;-;Ordreid
 Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
 Original (hp);-;Orginal hp
@@ -272,11 +284,13 @@ Our local time is:;-;Vår lokale tid er
 Outer background;-;Ytre bakgrunn
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
+Password does not match confirmed password.;-;Passordet stemmer ikke overens med bekreftet passord.
 Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
 Password missmatch;-;Passordene stemmer ikke oversens
 Pay;-;Betal
 Pay on pickup;-;Betal ved levering
 Payment;-;Betaling
+Payment completed;-;Betaling gjennomført
 Payment failed;-;Betaling feilet
 Payment fee;-;Betalingsgebyr
 Payment information;-;Betalings informasjon
@@ -356,7 +370,9 @@ Select a time period to booking for before continue;-;Velg en tidsperiode for bo
 Select your car;-;Velg din bil
 Send me a code;-;Send meg koden
 Send message;-;Send melding
+Send to invoice;-;Sent til faktura
 Send us mail;-;Send oss en epost
+Sent;-;Sendt
 September;-;September
 Set default opening hours;-;Still inn standard åpningstider
 Set key;-;Sett nøkkel
@@ -370,6 +386,8 @@ Shipping;-;Utsendelse
 Shipping cost;-;Fraktkostnader
 Shipping price;-;Forendelse pris
 Short description;-;Kort beskrivelse
+Show;-;Vis
+Show all products;-;Vis alle produter
 Show log;-;Vis logg
 Sign up;-;Registrer deg
 Sign up with facebook;-;Logg inn me facebook
@@ -393,6 +411,7 @@ Start date;-;Start dato
 Start opacity;-;Start opacity
 Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
 Starting from;-;Starter fra
+Status;-;Status
 Style row;-;Styling på rad
 Styling;-;Design
 Su;-;Sø
@@ -450,6 +469,7 @@ Use a different email;-;Bruk en annen epost
 Use a predefined layout for cell;-;Bruk en predifinert layout for denne cellen
 User level for cell;-;Brukernivå for cellen
 Username / Email;-;Brukernavn / Epost
+Waiting for payment;-;Venter på betaling
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 Was not able to process your payment, check your card details and try again.;-;Klarte ikke å gjennomføre betalingen, sjekk betalingsopplysningene dine og prøv igjen.
@@ -499,6 +519,7 @@ months;-;måneder
 read;-;les
 show selected dates;-;Vis valgte datoer
 summary;-;oppsummering
+tax;-;moms
 until;-;frem til
 view as calendar;-;Vis som kalender
 view as list;-;Vis som liste

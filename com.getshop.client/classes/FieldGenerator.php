@@ -62,7 +62,7 @@ class FieldGenerator {
         echo "<br><h1>Additional fields</h1>";
         $this->printAdditionalFields($this->rules);
         
-        $fields = array();
+        $fields = $this->factory->getApi()->getStoreManager()->getMultiLevelNames();
         
         echo "<br><h2>Who should this form be saved to</h2>";
         foreach($fields as $field => $name) {

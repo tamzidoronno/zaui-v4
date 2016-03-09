@@ -34,6 +34,11 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         }
     }
 
+    public function setEngine() {
+        $engine = $_POST['data']['engine'];
+        $this->setConfigurationSetting("engine_name", $engine);
+    }
+    
     public function getMobileMenu() {
         $name = $this->getSelectedName();
         if($name == "alna") {
@@ -44,7 +49,11 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     
     public function render() {
         if (!$this->getSelectedName()) {
-            echo "You need to specify a booking engine first.";
+            echo "You need to specify a booking engine first<br>";
+            $engines = $this->getApi()->getStoreManager()->getMultiLevelNames();
+            foreach($engines as $engine) {
+                echo "<span gstype='clicksubmit' style='font-size: 20px; cursor:pointer; display:inline-block; margin-bottom: 20px;' method='setEngine' gsname='engine' gsvalue='$engine'>$engine</span><br>"; 
+            }
             return;
         }
         if(!$this->getFactory()->isMobile()) {

@@ -1,0 +1,18 @@
+.gs_page_width { max-width: 1200px; margin: auto; background-color:#fff;box-shadow: 0 4px 5px rgba(0,0,0,0.3); padding-left: 70px; padding-right: 70px; }
+.Menu a { font-size: 16px; font-weight: bold; color:#18bbb1; padding-right: 30px; display:inline-block; }
+.Menu .lastentry a { padding-right: 0px; }
+body { background-color: #525659; padding-top: 10px; }
+.gsarea[area="header"] .gs_page_width { height: 200px; }
+.gsarea[area="footer"] .gs_page_width { background-color:#000;
+                                        padding-top: 20px;
+                                        padding-bottom: 20px;
+    background: #f58348; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#f58348, #fbbea0); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#f58348, #fbbea0); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#f58348, #fbbea0); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#f58348, #fbbea0); /* Standard syntax */
+    color:#fff;
+}
+.News .news_container { border-bottom: solid 2px; padding-bottom: 10px; margin-bottom: 10px; box-sizing: border-box; }
+.News .newstext { font-style: italic; }
+h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }

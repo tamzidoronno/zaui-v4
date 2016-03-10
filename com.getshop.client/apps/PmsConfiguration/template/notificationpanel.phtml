@@ -215,6 +215,18 @@ $days[7] = "Sunday";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->copyEmailsToOwnerOfStore) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='copyEmailsToOwnerOfStore' <? echo $checked; ?>>
+            </span>
+            Send emails as copy to store owner
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->supportMoreDates) {
                     $checked = "CHECKED";
                 }

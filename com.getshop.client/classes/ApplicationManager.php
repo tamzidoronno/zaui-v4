@@ -118,6 +118,7 @@ class ApplicationManager extends FactoryBase {
         if($_SESSION['gsrotatingmodemobile']) {
             unset($_SESSION['gsrotatingmodemobile']);
         }
+        unset($_SESSION['gscontainerposition']);
     }
     
     function updateCarouselConfig() {

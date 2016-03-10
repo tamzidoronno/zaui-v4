@@ -156,7 +156,6 @@ body {
 
 .gsrotateleft { background-image: url('{IMAGEFOLDER}/left.png'); left: -50px;}
 .gsrotateright { background-image: url('{IMAGEFOLDER}/right.png'); right: -50px; }
-.gscarouseldots { display: none; }
 
 .checkbox_textleft {
     padding-left: 20px;

@@ -29,6 +29,11 @@ if(!$event->starttime) {
 echo "<h1>" .$edit . $event->title . "</h1>";
 echo "<div style='font-size:12px;'>";
 $time = strtotime($idx);
+
+if(isset($_GET['time'])) {
+    $time = $_GET['time'];
+}
+
 echo $this->__w(date("l", $time)) . " " . (int)date("d", $time) . ". " . strtolower($this->__w(date("F", $time))) . " klokken " . $event->starttime;
 echo "</div>";
 echo "<div >" . $event->arrangedBy;

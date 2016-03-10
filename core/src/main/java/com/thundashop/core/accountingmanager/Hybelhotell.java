@@ -147,7 +147,8 @@ public class Hybelhotell implements AccountingInterface {
             endDate = end.toString("dd.MM.yy");
         }
 
-        lineText = item.getProduct().name + " (" + startDate + " - " + endDate + ")";
+        lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
+        
         return lineText;
     }
 

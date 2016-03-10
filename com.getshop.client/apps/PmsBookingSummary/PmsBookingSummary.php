@@ -30,7 +30,7 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         } else {
             $end = strtotime($_POST['data']['enddate'] . " " . $_POST['data']['endtime']);
         }
-        $canAdd = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $typeId, $this->convertToJavaDate($start), $this->convertToJavaDate($end));
+        $canAdd = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedName(), $typeId, $this->convertToJavaDate($start), $this->convertToJavaDate($end));
         if($canAdd && ($start < $end)) {
             $booking = $this->getCurrentBooking();
             foreach($booking->rooms as $room) {

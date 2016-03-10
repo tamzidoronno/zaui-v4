@@ -130,4 +130,5 @@ public interface IPmsManager {
     public PmsBooking startBooking();
     public PmsBooking completeCurrentBooking();
     public void returnedKey(String roomId);
+    public Integer getNumberOfAvailable(String itemType, Date start, Date end);
 }

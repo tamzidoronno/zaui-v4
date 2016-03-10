@@ -69,43 +69,43 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public HashMap<String, PmsBooking> bookings = new HashMap();
     public HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
-    public PmsPricing prices = new PmsPricing(); 
+    public PmsPricing prices = new PmsPricing();
     public PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
     private List<String> warnedAbout = new ArrayList();
 
     @Autowired
     BookingEngine bookingEngine;
-    
+
     @Autowired
     MessageManager messageManager;
 
     @Autowired
     UserManager userManager;
-    
+
     @Autowired
     OrderManager orderManager;
-    
+
     @Autowired
     CartManager cartManager;
-    
-    @Autowired 
+
+    @Autowired
     ArxManager arxManager;
-    
+
     @Autowired
     StoreManager storeManager;
-    
+
     @Autowired
     ProductManager productManager;
-    
+
     @Autowired
     GetShopLockManager getShopLockManager;
-    
+
     private String specifiedMessage = "";
     Date lastOrderProcessed;
     private List<PmsLog> logentries = new ArrayList();
     private boolean initFinalized = false;
-    
+
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -133,23 +133,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void setSession(Session session) {
         super.setSession(session); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
-    
+
     @Override
     public List<Room> getAllRoomTypes(Date start, Date end) {
         List<Room> result = new ArrayList();
         List<BookingItemType> allGroups = bookingEngine.getBookingItemTypes();
-        
-        Collections.sort(allGroups, new Comparator<BookingItemType>(){
-        public int compare(BookingItemType o1, BookingItemType o2){
+
+        Collections.sort(allGroups, new Comparator<BookingItemType>() {
+            public int compare(BookingItemType o1, BookingItemType o2) {
                 return o1.order.compareTo(o2.order);
             }
-       });
-        
-        
-        for(BookingItemType type : allGroups) {
-            if(!type.visibleForBooking) {
+        });
+
+        for (BookingItemType type : allGroups) {
+            if (!type.visibleForBooking) {
                 continue;
             }
             Room room = new Room();
@@ -157,82 +154,80 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.price = calculatePrice(type.id, start, end, true);
             result.add(room);
         }
-        
-        
-        
+
         return result;
     }
 
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
         booking.sessionId = getSession().id;
-        
+
         booking.priceType = prices.defaultPriceType;
-        for(PmsBookingRooms room : booking.rooms) {
-            if(room.bookingItemTypeId == null || room.bookingItemTypeId.isEmpty()) {
-                if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.bookingItemTypeId == null || room.bookingItemTypeId.isEmpty()) {
+                if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                     room.bookingItemTypeId = bookingEngine.getBookingItem(room.bookingItemId).bookingItemTypeId;
                 }
             }
         }
-        for(PmsBookingRooms room : booking.rooms) {
+        for (PmsBookingRooms room : booking.rooms) {
             int totalDays = 1;
-            if(room.date.end != null && room.date.start != null) {
+            if (room.date.end != null && room.date.start != null) {
                 totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
             }
             room.count = totalDays;
             room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, true);
             room.taxes = calculateTaxes(room.bookingItemTypeId);
-            for(PmsGuests guest : room.guests) {
-                if(guest.prefix != null) {
+            for (PmsGuests guest : room.guests) {
+                if (guest.prefix != null) {
                     guest.prefix = guest.prefix.replace("+", "");
                     guest.prefix = guest.prefix.replace("+", "");
                     guest.prefix = guest.prefix.replace("+", "");
                 }
             }
         }
-        
-        if(booking.sessionStartDate == null) {
+
+        if (booking.sessionStartDate == null) {
             PmsBookingDateRange range = getDefaultDateRange();
             booking.sessionStartDate = range.start;
             booking.sessionEndDate = range.end;
         }
-        
+
         saveObject(booking);
         bookings.put(booking.id, booking);
     }
 
     @Override
     public PmsBooking getCurrentBooking() {
-        if(getSession() == null) {
+        if (getSession() == null) {
             System.out.println("Warning, no session set yet");
         }
         PmsBooking result = findBookingForSession();
-        
-        if(result == null) {
+
+        if (result == null) {
             result = startBooking();
         }
-        
-        if(result.sessionEndDate != null && result.sessionStartDate != null && result.sessionStartDate.after(result.sessionEndDate)) {
+
+        if (result.sessionEndDate != null && result.sessionStartDate != null && result.sessionStartDate.after(result.sessionEndDate)) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(result.sessionStartDate);
             cal.add(Calendar.DAY_OF_YEAR, 1);
             result.sessionEndDate = cal.getTime();
         }
-        
+
         return result;
     }
 
     @Override
     public PmsBooking startBooking() {
         PmsBooking currentBooking = findBookingForSession();
-        
-        if(currentBooking != null) {
+
+        if (currentBooking != null) {
             deleteBooking(currentBooking, true);
         }
-        
+
         PmsBooking booking = new PmsBooking();
-        
+
         try {
             setBooking(booking);
         } catch (Exception ex) {
@@ -240,7 +235,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return booking;
     }
-
 
     private HashMap<String, String> validatePhone(String phone, String countryCode) {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
@@ -270,7 +264,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     phonecheck = phoneUtil.parse(phone2, countryCode);
 
                     if (!phoneUtil.isValidNumber(phonecheck)) {
-                        if(phone.length() == 10 && phone.startsWith("07")) {
+                        if (phone.length() == 10 && phone.startsWith("07")) {
                             phone = phone.substring(1);
                             prefix = "46";
                         } else if (phone.length() == 9 && phone.startsWith("7")) {
@@ -294,8 +288,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return null;
         }
 
-        
-        HashMap<String,String> result = new HashMap();
+        HashMap<String, String> result = new HashMap();
         result.put("prefix", prefix);
         result.put("phone", phone);
         return result;
@@ -304,19 +297,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking completeCurrentBooking() {
         PmsBooking booking = getCurrentBooking();
-        if(!bookingEngine.isConfirmationRequired()) {
+        if (!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
         }
-        
+
         Integer result = 0;
         List<Booking> bookingsToAdd = new ArrayList();
         List<PmsBookingRooms> removeRooms = new ArrayList();
-        for(PmsBookingRooms room : booking.rooms) {
-            if(!room.canBeAdded) {
+        for (PmsBookingRooms room : booking.rooms) {
+            if (!room.canBeAdded) {
                 removeRooms.add(room);
                 BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 String name = "";
-                if(item != null) {
+                if (item != null) {
                     name = item.name;
                 }
                 String text = "Removed room: " + name + " since it can't be added: " + room.date.start + " - " + room.date.end;
@@ -330,11 +323,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.rooms.removeAll(removeRooms);
         try {
             result = completeBooking(bookingsToAdd, booking);
-            
-            if(result == 0) {
-                if(!configuration.payAfterBookingCompleted) {
-                    if(bookingIsOK(booking)) {
-                        if(!booking.confirmed) {
+
+            if (result == 0) {
+                if (!configuration.payAfterBookingCompleted) {
+                    if (bookingIsOK(booking)) {
+                        if (!booking.confirmed) {
                             doNotification("booking_completed", booking, null);
                         } else {
                             doNotification("booking_confirmed", booking, null);
@@ -342,24 +335,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
             }
-           
+
             try {
-                if(!configuration.payAfterBookingCompleted) {
+                if (!configuration.payAfterBookingCompleted) {
                     processor();
                 } else {
                     createPrepaymentOrder(booking.id);
                 }
-            }catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return booking;
-        }catch(Exception e) {
+        } catch (Exception e) {
             messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id);
             e.printStackTrace();
             return null;
         }
     }
-    
+
     @Override
     public String createPrepaymentOrder(String bookingId) {
         PmsBooking booking = getBooking(bookingId);
@@ -368,28 +361,28 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.startInvoiceFrom = booking.getStartDate();
         filter.endInvoiceAt = booking.getEndDate();
         Order order = createOrder(booking, filter);
-        
+
         booking.orderIds.add(order.id);
         saveBooking(booking);
-        
+
         return order.id;
     }
 
     private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking) throws ErrorException {
-        if(!bookingEngine.canAdd(bookingsToAdd)) {
+        if (!canAdd(bookingsToAdd)) {
             return -2;
         }
         bookingEngine.addBookings(bookingsToAdd);
         booking.attachBookingItems(bookingsToAdd);
         booking.sessionId = null;
-        if(booking.registrationData.resultAdded.get("company_invoicenote") != null) {
+        if (booking.registrationData.resultAdded.get("company_invoicenote") != null) {
             booking.invoiceNote = booking.registrationData.resultAdded.get("company_invoicenote");
         }
-        if(booking.userId == null || booking.userId.isEmpty()) {
+        if (booking.userId == null || booking.userId.isEmpty()) {
             User newuser = createUser(booking);
             booking.userId = newuser.id;
             Company curcompany = createCompany(booking);
-            if(curcompany != null) {
+            if (curcompany != null) {
                 curcompany = userManager.saveCompany(curcompany);
                 newuser.company.add(curcompany.id);
                 newuser.fullName = curcompany.name;
@@ -397,26 +390,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 newuser.cellPhone = curcompany.phone;
                 newuser.prefix = curcompany.prefix;
                 newuser.address = curcompany.address;
-                
+
                 userManager.saveUserSecure(newuser);
             }
-        } else {
-            if(configuration.autoconfirmRegisteredUsers) {
-                booking.confirmed = true;
-            }
-        }
-
-        if(!configuration.needConfirmation) {
+        } else if (configuration.autoconfirmRegisteredUsers) {
             booking.confirmed = true;
         }
-        
+
+        if (!configuration.needConfirmation) {
+            booking.confirmed = true;
+        }
+
         User loggedonuser = userManager.getLoggedOnUser();
-        if(loggedonuser != null && loggedonuser.isAdministrator()) {
+        if (loggedonuser != null && loggedonuser.isAdministrator()) {
             booking.confirmed = true;
         }
 
         booking.sessionId = "";
-        
+
         saveBooking(booking);
         System.out.println("Booking has been completed: " + booking.id);
         return 0;
@@ -429,16 +420,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private PmsBooking findBookingForSession() {
-        if(getSession() == null) {
+        if (getSession() == null) {
             return null;
         }
         String sessionId = getSession().id;
-        if(sessionId == null) {
+        if (sessionId == null) {
             return null;
         }
-        
-        for(PmsBooking booking : bookings.values()) {
-            if(booking.sessionId != null && booking.sessionId.equals(sessionId)) {
+
+        for (PmsBooking booking : bookings.values()) {
+            if (booking.sessionId != null && booking.sessionId.equals(sessionId)) {
                 return booking;
             }
         }
@@ -447,7 +438,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean hasAccessUser(String userId) {
         User loggedOn = userManager.getLoggedOnUser();
-        if(loggedOn.isAdministrator() || loggedOn.id.equals(userId)) {
+        if (loggedOn.isAdministrator() || loggedOn.id.equals(userId)) {
             return true;
         }
         return false;
@@ -455,96 +446,94 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
-        if(!initFinalized) {
+        if (!initFinalized) {
             finalizeList(new ArrayList(bookings.values()));
             initFinalized = true;
         }
-        if(filter == null) {
+        if (filter == null) {
             return finalizeList(new ArrayList(bookings.values()));
         }
-        if(filter.state == null) {
+        if (filter.state == null) {
             filter.state = 0;
         }
-        
+
         List<PmsBooking> result = new ArrayList();
-        
-        if(filter.searchWord != null && !filter.searchWord.isEmpty()) {
-            
-            for(PmsBooking booking : bookings.values()) {
+
+        if (filter.searchWord != null && !filter.searchWord.isEmpty()) {
+
+            for (PmsBooking booking : bookings.values()) {
                 User user = userManager.getUserById(booking.userId);
-                if(user != null && user.fullName!= null && user.fullName.toLowerCase().contains(filter.searchWord.toLowerCase())) {
+                if (user != null && user.fullName != null && user.fullName.toLowerCase().contains(filter.searchWord.toLowerCase())) {
                     result.add(booking);
-                } else if(booking.containsSearchWord(filter.searchWord)) {
+                } else if (booking.containsSearchWord(filter.searchWord)) {
                     result.add(booking);
                 }
-                
-                for(PmsBookingRooms room : booking.rooms) {
-                    if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+
+                for (PmsBookingRooms room : booking.rooms) {
+                    if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                         BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
-                        if(item.bookingItemName.contains(filter.searchWord)) {
+                        if (item.bookingItemName.contains(filter.searchWord)) {
                             result.add(booking);
                         }
                     }
                 }
             }
-        } else {
-            if(filter.filterType== null || filter.filterType.equals("registered")) {
-                for(PmsBooking booking : bookings.values()) {
-                    if(booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate)) {
-                        result.add(booking);
-                    }
+        } else if (filter.filterType == null || filter.filterType.equals("registered")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate)) {
+                    result.add(booking);
                 }
-            } else if(filter.filterType.equals("active")) {
-                for(PmsBooking booking : bookings.values()) {
-                    if(booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
-                        result.add(booking);
-                    }
+            }
+        } else if (filter.filterType.equals("active")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
+                    result.add(booking);
                 }
-            } else if(filter.filterType.equals("uncofirmed")) {
-                for(PmsBooking booking : bookings.values()) {
-                    if(!booking.confirmed) {
-                        result.add(booking);
-                    }
+            }
+        } else if (filter.filterType.equals("uncofirmed")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (!booking.confirmed) {
+                    result.add(booking);
                 }
-            } else if(filter.filterType.equals("checkin")) {
-                for(PmsBooking booking : bookings.values()) {
-                    if(booking.checkingInBetween(filter.startDate, filter.endDate)) {
-                        result.add(booking);
-                    }
+            }
+        } else if (filter.filterType.equals("checkin")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.checkingInBetween(filter.startDate, filter.endDate)) {
+                    result.add(booking);
                 }
-            } else if(filter.filterType.equals("checkout")) {
-                for(PmsBooking booking : bookings.values()) {
-                    if(booking.checkingOutBetween(filter.startDate, filter.endDate)) {
-                        result.add(booking);
-                    }
+            }
+        } else if (filter.filterType.equals("checkout")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.checkingOutBetween(filter.startDate, filter.endDate)) {
+                    result.add(booking);
                 }
-            } else if(filter.filterType.equals("deleted")) {
-                for(PmsBooking booking : bookings.values()) {
-                    if(booking.isDeleted) {
-                        result.add(booking);
-                    }
+            }
+        } else if (filter.filterType.equals("deleted")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.isDeleted) {
+                    result.add(booking);
                 }
             }
         }
-        
+
         removeNotConfirmed(filter, result);
         removeDeleted(filter, result);
         removeBeingProcessed(result);
-        
+
         List<PmsBooking> finalized = finalizeList(result);
-        
+
         finalized = sortList(finalized, filter.sorting);
-        
+
         finalized = filterTypes(finalized, filter.typeFilter);
-        
+
         return finalized;
     }
 
     private void removeNotConfirmed(PmsBookingFilter filter, List<PmsBooking> result) {
         List<PmsBooking> toRemove = new ArrayList();
-        if(filter.needToBeConfirmed) {
-            for(PmsBooking booking : result) {
-                if(!booking.confirmed) {
+        if (filter.needToBeConfirmed) {
+            for (PmsBooking booking : result) {
+                if (!booking.confirmed) {
                     toRemove.add(booking);
                 }
             }
@@ -554,46 +543,46 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private List<PmsBooking> finalizeList(List<PmsBooking> result) {
         List<PmsBooking> finalized = new ArrayList();
-        for(PmsBooking toReturn : result) {
+        for (PmsBooking toReturn : result) {
             toReturn = finalize(toReturn);
-            if(toReturn != null) {
+            if (toReturn != null) {
                 finalized.add(toReturn);
             }
         }
-       checkForIncosistentBookings();
+        checkForIncosistentBookings();
         return finalized;
     }
 
     @Override
     public PmsBooking getBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
-        if(booking == null) {
+        if (booking == null) {
             return null;
         }
         return finalize(booking);
     }
 
     public PmsBooking finalize(PmsBooking booking) {
-        if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
+        if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
             Calendar nowCal = Calendar.getInstance();
             nowCal.add(Calendar.HOUR_OF_DAY, -4);
-            if(!booking.rowCreatedDate.after(nowCal.getTime())) {
+            if (!booking.rowCreatedDate.after(nowCal.getTime())) {
                 deleteBooking(booking.id);
                 return null;
             }
         }
-        if(booking.isDeleted) {
+        if (booking.isDeleted) {
             booking.state = 2;
             return booking;
         }
-        if(booking.rooms == null) {
+        if (booking.rooms == null) {
             booking.rooms = new ArrayList();
         }
-        
-        for(PmsBookingRooms room : booking.rooms) {
-            if(room.bookingId != null) {
+
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
-                if(room.booking != null) {
+                if (room.booking != null) {
                     room.date.start = room.booking.startDate;
                     room.date.end = room.booking.endDate;
                     room.bookingItemTypeId = room.booking.bookingItemTypeId;
@@ -601,56 +590,56 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 } else {
                     room.bookingItemId = null;
                 }
-                
-                if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+
+                if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                     room.item = bookingEngine.getBookingItem(room.bookingItemId);
                     room.bookingItemTypeId = room.item.bookingItemTypeId;
                 }
 
                 room.type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                if(type != null) {
-                    String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;                    
-                    if(productId != null) {
-                        if(productManager.getProduct(productId).taxGroupObject != null) {
+                if (type != null) {
+                    String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+                    if (productId != null) {
+                        if (productManager.getProduct(productId).taxGroupObject != null) {
                             room.taxes = productManager.getProduct(productId).taxGroupObject.taxRate;
                         }
                     }
                 }
-                
+
             }
         }
-        
+
         return booking;
     }
 
     private void deleteBooking(PmsBooking booking, boolean onInit) {
-        if(!onInit) {
+        if (!onInit) {
             System.out.println("Booking are being deleted");
         }
-        
+
         String bookingId = booking.id;
         bookings.remove(booking.id);
         deleteObject(booking);
-        
+
         logEntry("Booking deleted", bookingId, null);
     }
 
     private void checkForIncosistentBookings() {
         List<String> added = new ArrayList();
-        for(PmsBooking booking : bookings.values()) {
-            if(booking.rooms != null) {
-                for(PmsBookingRooms room : booking.rooms) {
-                    if(room.bookingId != null) {
+        for (PmsBooking booking : bookings.values()) {
+            if (booking.rooms != null) {
+                for (PmsBookingRooms room : booking.rooms) {
+                    if (room.bookingId != null) {
                         added.add(room.bookingId);
                     }
                 }
             }
         }
-        
+
         List<Booking> allBookings = bookingEngine.getAllBookings();
-        for(Booking booking : allBookings) {
-            if(!added.contains(booking.id)) {
+        for (Booking booking : allBookings) {
+            if (!added.contains(booking.id)) {
                 bookingEngine.deleteBooking(booking.id);
             }
         }
@@ -664,19 +653,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookingEngine.changeTypeOnBooking(room.bookingId, newType);
             room.bookingItemTypeId = newType;
             saveBooking(booking);
-            
+
             String from = "none";
-            if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
+            if (room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
                 BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                if(type != null) {
+                if (type != null) {
                     from = type.name;
                 }
             }
             String to = bookingEngine.getBookingItemType(newType).name;
-            
+
             String logText = "Changed item type from : " + from + " to " + to;
             logEntry(logText, bookingId, null, roomId);
-        }catch(BookingEngineException ex) {
+        } catch (BookingEngineException ex) {
             return ex.getMessage();
         }
         return "";
@@ -691,26 +680,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
             Date oldStart = room.date.start;
             Date oldEnd = room.date.end;
-            
+
             room.date.start = start;
             room.date.end = end;
             room.date.exitCleaningDate = null;
             room.date.cleaningDate = null;
             saveBooking(booking);
-            
+
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
             logEntry(logText, bookingId, null, roomId);
             return room;
-        }catch(BookingEngineException ex) {
+        } catch (BookingEngineException ex) {
             ex.printStackTrace();
             return null;
         }
     }
 
-
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
-        if(booking.id == null || booking.id.isEmpty() || bookings.get(booking.id) == null) {
+        if (booking.id == null || booking.id.isEmpty() || bookings.get(booking.id) == null) {
             throw new ErrorException(1000015);
         }
         validatePhoneNumbers(booking);
@@ -720,10 +708,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void validatePhoneNumbers(PmsBooking booking) {
-        for(PmsBookingRooms room : booking.rooms) {
-            for(PmsGuests guest : room.guests) {
+        for (PmsBookingRooms room : booking.rooms) {
+            for (PmsGuests guest : room.guests) {
                 HashMap<String, String> result = validatePhone("+" + guest.prefix + "" + guest.phone, "no");
-                if(result != null) {
+                if (result != null) {
                     guest.prefix = result.get("prefix").replace("+", "");
                     guest.phone = result.get("phone");
                 }
@@ -734,30 +722,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public String setBookingItem(String roomId, String bookingId, String itemId) {
         PmsBooking booking = getBooking(bookingId);
-        if(booking == null) {
+        if (booking == null) {
             return "Booking does not exists";
         }
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
-            if(room == null) {
+            if (room == null) {
                 return "Room does not exists";
             }
-            
+
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
             resetBookingItem(room, itemId, booking);
-            
+
             String from = "none";
-            if(room.bookingItemId != null) {
+            if (room.bookingItemId != null) {
                 BookingItem oldItem = bookingEngine.getBookingItem(room.bookingItemId);
-                if(oldItem != null) {
+                if (oldItem != null) {
                     from = oldItem.bookingItemName;
                 }
             }
-            
+
             String logText = "Changed room to " + bookingEngine.getBookingItem(itemId).bookingItemName + " from " + from;
             logEntry(logText, bookingId, null, roomId);
-        } catch(BookingEngineException ex) {
+        } catch (BookingEngineException ex) {
             return ex.getMessage();
         }
         saveBooking(booking);
@@ -773,11 +761,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsPricing setPrices(PmsPricing newPrices) {
         prices.defaultPriceType = newPrices.defaultPriceType;
         prices.progressivePrices = newPrices.progressivePrices;
-        for(String typeId : newPrices.dailyPrices.keySet()) {
+        for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
-            for(String date : priceMap.keySet()) {
+            for (String date : priceMap.keySet()) {
                 HashMap<String, Double> existingPriceRange = prices.dailyPrices.get(typeId);
-                if(existingPriceRange == null) {
+                if (existingPriceRange == null) {
                     existingPriceRange = new HashMap();
                     prices.dailyPrices.put(typeId, existingPriceRange);
                 }
@@ -785,37 +773,37 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         saveObject(prices);
-        
+
         logEntry("Prices updated", null, null);
-        
+
         return prices;
     }
 
     private Double calculatePrice(String typeId, Date start, Date end, boolean avgPrice) {
-        if(prices.defaultPriceType == 1) {
-            return calculateDailyPricing(typeId,start,end, avgPrice);
+        if (prices.defaultPriceType == 1) {
+            return calculateDailyPricing(typeId, start, end, avgPrice);
         }
-        if(prices.defaultPriceType == 2) {
+        if (prices.defaultPriceType == 2) {
             return calculateMonthlyPricing(typeId);
         }
-        if(prices.defaultPriceType == 7) {
-            return calculateProgressivePrice(typeId,start,end,0, avgPrice);
+        if (prices.defaultPriceType == 7) {
+            return calculateProgressivePrice(typeId, start, end, 0, avgPrice);
         }
-        if(prices.defaultPriceType == 8) {
-            return calculateIntervalPrice(typeId,start,end,avgPrice);
+        if (prices.defaultPriceType == 8) {
+            return calculateIntervalPrice(typeId, start, end, avgPrice);
         }
-        
+
         return 0.0;
     }
 
     @Override
     public String createOrder(String bookingId, NewOrderFilter filter) {
-        
+
         PmsBooking booking = getBooking(bookingId);
         Order order = null;
         order = createOrder(booking, filter);
-        
-        if(order == null) {
+
+        if (order == null) {
             return "Could not create order.";
         }
         booking.orderIds.add(order.id);
@@ -827,83 +815,83 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         cartManager.clear();
 
         boolean foundInvoice = false;
-        for(PmsBookingRooms room : booking.rooms) {
-            Double price = null; 
+        for (PmsBookingRooms room : booking.rooms) {
+            Double price = null;
 
             Date startDate = filter.startInvoiceFrom;
-            if(startDate.before(room.date.start)) {
+            if (startDate.before(room.date.start)) {
                 startDate = room.date.start;
             }
-            
+
             Date endDate = filter.endInvoiceAt;
-            if(endDate.after(room.date.end)) {
+            if (endDate.after(room.date.end)) {
                 endDate = room.date.end;
             }
-            
-            if(room.invoicedTo != null && startDate.before(room.invoicedTo)) {
+
+            if (room.invoicedTo != null && startDate.before(room.invoicedTo)) {
                 startDate = room.invoicedTo;
             }
-            
-            if(filter.onlyEnded && room.date.end.after(filter.endInvoiceAt)) {
+
+            if (filter.onlyEnded && room.date.end.after(filter.endInvoiceAt)) {
                 continue;
             }
-            
-            if(!filter.prepayment) {
-                if(room.invoicedTo == null && (new Date().before(endDate))) {
+
+            if (!filter.prepayment) {
+                if (room.invoicedTo == null && (new Date().before(endDate))) {
                     continue;
                 }
             }
-            
-            if(sameDayOrAfter(room.invoicedTo, endDate)) {
+
+            if (sameDayOrAfter(room.invoicedTo, endDate)) {
                 continue;
             }
-            
-            if(filter.itemId!= null && !filter.itemId.isEmpty()) {
-                if(room.bookingItemId == null) {
+
+            if (filter.itemId != null && !filter.itemId.isEmpty()) {
+                if (room.bookingItemId == null) {
                     continue;
                 }
-                if(room.bookingItemId.equals(filter.itemId)) {
+                if (room.bookingItemId.equals(filter.itemId)) {
                     continue;
                 }
             }
-            
-            if(startDate.after(endDate)) {
+
+            if (startDate.after(endDate)) {
                 continue;
             }
-            
+
             int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
-            if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
+            if (booking.priceType.equals(PmsBooking.PriceType.monthly)) {
                 int numberOfDays = getNumberOfDays(room, startDate, endDate);
-                if(numberOfDays == 0) {
+                if (numberOfDays == 0) {
                     return null;
                 }
                 price = room.price / daysInPeriode;
-            } else if(booking.priceType.equals(PmsBooking.PriceType.progressive)) {
+            } else if (booking.priceType.equals(PmsBooking.PriceType.progressive)) {
                 int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(startDate)).getDays();
                 price = calculateProgressivePrice(room.bookingItemTypeId, startDate, endDate, days, true);
-            } else if(booking.priceType.equals(PmsBooking.PriceType.daily) || 
-                booking.priceType.equals(PmsBooking.PriceType.interval) || 
-                booking.priceType.equals(PmsBooking.PriceType.progressive)) {
+            } else if (booking.priceType.equals(PmsBooking.PriceType.daily)
+                    || booking.priceType.equals(PmsBooking.PriceType.interval)
+                    || booking.priceType.equals(PmsBooking.PriceType.progressive)) {
                 price = room.price;
-            } else if(booking.priceType.equals(PmsBooking.PriceType.weekly)) {
-                price = (room.price/7);
+            } else if (booking.priceType.equals(PmsBooking.PriceType.weekly)) {
+                price = (room.price / 7);
             }
 
             CartItem item = createCartItem(room, startDate, endDate);
-            if(item == null) {
+            if (item == null) {
                 return null;
             }
-            if(prices.pricesExTaxes) {
+            if (prices.pricesExTaxes) {
                 double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
                 //Order price needs to be inc taxes..
                 price *= tax;
             }
-            
+
             String guestName = "";
-            if(room.guests.size() > 0) {
+            if (room.guests.size() > 0) {
                 guestName = room.guests.get(0).name;
             }
-            
+
             item.getProduct().discountedPrice = price;
             item.getProduct().price = price;
             item.getProduct().metaData = guestName;
@@ -912,42 +900,42 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             foundInvoice = true;
             cartManager.saveCartItem(item);
         }
-        
-        if(!foundInvoice) {
+
+        if (!foundInvoice) {
             return null;
         }
-        
+
         User user = userManager.getUserById(booking.userId);
-        if(user == null) {
+        if (user == null) {
             return null;
         }
-        
+
         user.address.fullName = user.fullName;
-        
+
         Order order = orderManager.createOrder(user.address);
-        
+
         order.payment = new Payment();
         order.payment.paymentType = user.preferredPaymentType;
         order.userId = booking.userId;
         order.invoiceNote = booking.invoiceNote;
-        
-        if(configuration.substractOneDayOnOrder) {
+
+        if (configuration.substractOneDayOnOrder) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(order.rowCreatedDate);
             cal.add(Calendar.DAY_OF_YEAR, -1);
             order.rowCreatedDate = cal.getTime();
         }
-        
-        if(order.cart.address == null || order.cart.address.address == null || order.cart.address.address.isEmpty()) {
-            if(!user.company.isEmpty()) {
+
+        if (order.cart.address == null || order.cart.address.address == null || order.cart.address.address.isEmpty()) {
+            if (!user.company.isEmpty()) {
                 Company company = userManager.getCompany(user.company.get(0));
-                order.cart.address = company.address; 
+                order.cart.address = company.address;
                 order.cart.address.fullName = company.name;
             }
         }
-        
+
         orderManager.saveOrder(order);
-        
+
         return order;
     }
 
@@ -955,13 +943,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Calendar cal = Calendar.getInstance();
         cal.setTime(room.date.start);
         int days = 0;
-        while(true) {
-            if(cal.getTime().after(startDate) && (cal.getTime().before(endDate) || cal.getTime().equals(endDate))) {
+        while (true) {
+            if (cal.getTime().after(startDate) && (cal.getTime().before(endDate) || cal.getTime().equals(endDate))) {
                 days++;
             }
-            
+
             cal.add(Calendar.DAY_OF_YEAR, 1);
-            if(cal.getTime().after(room.date.end)) {
+            if (cal.getTime().after(room.date.end)) {
                 break;
             }
         }
@@ -972,17 +960,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsConfiguration getConfiguration() {
         Gson gson = new Gson();
         String copy = gson.toJson(configuration);
-        
+
         User loggedOn = getSession().currentUser;
-        if(loggedOn != null && loggedOn.isAdministrator()) {
+        if (loggedOn != null && loggedOn.isAdministrator()) {
             return configuration;
         }
-        
+
         PmsConfiguration toReturn = gson.fromJson(copy, PmsConfiguration.class);
         toReturn.arxUsername = "";
         toReturn.arxPassword = "";
         toReturn.arxHostname = "";
-        
+
         return toReturn;
     }
 
@@ -992,57 +980,57 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveObject(notifications);
         logEntry("Configuration updated", null, null);
     }
-    
+
     @Administrator
     public void doNotification(String key, String bookingId) {
         PmsBooking booking = getBooking(bookingId);
         doNotification(key, booking, null);
     }
-    
+
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
         repicientList.clear();
         key = key + "_" + booking.language;
         String message = notify(key, booking, "sms", room);
         List<String> smsRecp = repicientList;
         String repssms = "";
-        for(String rep : smsRecp) {
+        for (String rep : smsRecp) {
             repssms += rep + ", ";
         }
         repicientList.clear();
-        
+
         String message2 = notify(key, booking, "email", room);
         notifyAdmin(key, booking);
         specifiedMessage = "";
         List<String> emailRecp = repicientList;
-        
+
         String repemail = "";
-        for(String rep : emailRecp) {
+        for (String rep : emailRecp) {
             repemail += rep + ", ";
         }
-        
-        if(message != null && !message.isEmpty()) {
+
+        if (message != null && !message.isEmpty()) {
             logEntry("Sms notification: " + key + " Message: " + message + " recipients: " + repssms, booking.id, null);
         }
-        if(message2 != null && !message2.isEmpty()) {
+        if (message2 != null && !message2.isEmpty()) {
             logEntry("Email notification: " + key + " Message: " + message2 + " recipients: " + repemail, booking.id, null);
         }
     }
 
     private String notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
         String message = configuration.smses.get(key);
-        if(type.equals("email")) {
+        if (type.equals("email")) {
             message = configuration.emails.get(key);
-            if(message != null) {
+            if (message != null) {
                 message = configuration.emailTemplate.replace("{content}", message);
                 message = message.replace("\n", "<br>\n");
             }
         }
-        if(message == null || message.isEmpty()) {
+        if (message == null || message.isEmpty()) {
             return "";
         }
-        
+
         message = formatMessage(message, booking, room, null);
-        if(room != null) {
+        if (room != null) {
             notifyGuest(booking, message, type, key, room);
         } else {
             notifyBooker(booking, message, type, key);
@@ -1052,42 +1040,42 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void notifyBooker(PmsBooking booking, String message, String type, String key) throws ErrorException {
         User user = userManager.getUserById(booking.userId);
-        if(type.equals("sms")) {
+        if (type.equals("sms")) {
             messageManager.sendSms("sveve", user.cellPhone, message, user.prefix, configuration.smsName);
             repicientList.add(user.cellPhone);
         } else {
             String title = configuration.emailTitles.get(key);
-            if(key.startsWith("booking_confirmed")) {
+            if (key.startsWith("booking_confirmed")) {
                 HashMap<String, String> attachments = createICalEntry(booking);
                 String copyadress = storeManager.getMyStore().configuration.emailAdress;
                 messageManager.sendMailWithAttachments(user.emailAddress, user.fullName, title, message, copyadress, copyadress, attachments);
             } else {
                 messageManager.sendMailWithDefaults(user.fullName, user.emailAddress, title, message);
             }
-            
-            if(configuration.copyEmailsToOwnerOfStore) {
+
+            if (configuration.copyEmailsToOwnerOfStore) {
                 String copyadress = storeManager.getMyStore().configuration.emailAdress;
                 messageManager.sendMailWithDefaults(user.fullName, copyadress, title, message);
             }
-            
+
             repicientList.add(user.emailAddress);
         }
     }
 
     private String notifyGuest(PmsBooking booking, String message, String type, String key, PmsBookingRooms roomToNotify) {
-        for(PmsBookingRooms room : booking.rooms) {
-            if(roomToNotify != null) {
-                if(!room.pmsBookingRoomId.equals(roomToNotify.pmsBookingRoomId)) {
+        for (PmsBookingRooms room : booking.rooms) {
+            if (roomToNotify != null) {
+                if (!room.pmsBookingRoomId.equals(roomToNotify.pmsBookingRoomId)) {
                     continue;
                 }
             }
-            for(PmsGuests guest : room.guests) {
-                if(type.equals("email")) {
+            for (PmsGuests guest : room.guests) {
+                if (type.equals("email")) {
                     String email = guest.email;
-                    if(bookingEngine.getConfig().rules.includeGuestData) {
+                    if (bookingEngine.getConfig().rules.includeGuestData) {
                         email = userManager.getUserById(booking.userId).emailAddress;
                     }
-                    if(email == null || email.isEmpty()) {
+                    if (email == null || email.isEmpty()) {
                         logEntry("Email not sent due to no email set for guest " + guest.name, booking.id, null);
                         continue;
                     }
@@ -1097,15 +1085,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     repicientList.add(email);
                 } else {
                     String phone = guest.phone;
-                    if(!bookingEngine.getConfig().rules.includeGuestData) {
+                    if (!bookingEngine.getConfig().rules.includeGuestData) {
                         phone = userManager.getUserById(booking.userId).cellPhone;
                     }
-                    
-                    if(phone == null || phone.isEmpty()) {
+
+                    if (phone == null || phone.isEmpty()) {
                         logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
                         continue;
                     }
- 
+
                     messageManager.sendSms("sveve", phone, message, guest.prefix, configuration.smsName);
                     repicientList.add(phone);
                 }
@@ -1116,10 +1104,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void notifyAdmin(String key, PmsBooking booking) {
         String message = configuration.adminmessages.get(key);
-        if(message == null) {
+        if (message == null) {
             return;
         }
-        
+
         message = formatMessage(message, booking, null, null);
         String email = storeManager.getMyStore().configuration.emailAdress;
         String phone = storeManager.getMyStore().configuration.phoneNumber;
@@ -1128,22 +1116,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
-        PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter(); 
-        
-        if(this.specifiedMessage != null && message != null) {
+        PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+
+        if (this.specifiedMessage != null && message != null) {
             String specifiedmsg = this.specifiedMessage.replace("\n", "<br>\n");
             message = message.replace("{personalMessage}", specifiedmsg);
         }
-        
-        if(room != null) {
+
+        if (room != null) {
             message = formater.formatRoomData(message, room, bookingEngine);
         }
         message = formater.formatContactData(message, userManager.getUserById(booking.userId), null);
         message = formater.formatBookingData(message, booking, bookingEngine);
-        
+
         message = message.replace("{extrafield}", configuration.extraField);
 
-        
         return message;
     }
 
@@ -1156,7 +1143,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         doNotification("booking_confirmed", booking, null);
         logEntry("Confirmed booking", bookingId, null);
     }
-    
+
     @Override
     public void unConfirmBooking(String bookingId, String message) {
         this.specifiedMessage = message;
@@ -1164,11 +1151,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.unConfirmed = true;
         saveBooking(booking);
         deleteBooking(bookingId);
-        
+
         doNotification("booking_notconfirmed", booking, null);
         logEntry("Booking rejected", bookingId, null);
     }
-    
 
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
@@ -1187,23 +1173,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getCurrentBooking();
         Date start = null;
         Date end = null;
-        for(PmsBookingRooms room : booking.rooms) {
-            if(room.date.start != null) {
-                if(start == null) {
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.date.start != null) {
+                if (start == null) {
                     start = room.date.start;
-                } else {
-                    if(start.after(room.date.start)) {
-                        start = room.date.start;
-                    }
+                } else if (start.after(room.date.start)) {
+                    start = room.date.start;
                 }
             }
-            if(room.date.end != null) {
-                if(end == null) {
+            if (room.date.end != null) {
+                if (end == null) {
                     end = room.date.end;
-                } else {
-                    if(end.before(room.date.end)) {
-                        end = room.date.end;
-                    }
+                } else if (end.before(room.date.end)) {
+                    end = room.date.end;
                 }
             }
         }
@@ -1221,9 +1203,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(bookingId);
         List<PmsBookingRooms> toRemove = new ArrayList();
         String roomName = "";
-        for(PmsBookingRooms room : booking.rooms) {
-            if(room.pmsBookingRoomId.equals(roomId)) {
-                if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.pmsBookingRoomId.equals(roomId)) {
+                if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                     roomName = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName + " (" + convertToStandardTime(room.date.start) + " - " + convertToStandardTime(room.date.end) + ")";
                 } else {
                     roomName = bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " (" + convertToStandardTime(room.date.start) + " - " + convertToStandardTime(room.date.end) + ")";
@@ -1231,21 +1213,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 toRemove.add(room);
             }
         }
-        for(PmsBookingRooms remove : toRemove) {
+        for (PmsBookingRooms remove : toRemove) {
             bookingEngine.deleteBooking(remove.bookingId);
             booking.rooms.remove(remove);
         }
         saveObject(booking);
-        
+
         logEntry(roomName + " removed from booking ", bookingId, null);
     }
-    
+
     @Override
     public void removeFromCurrentBooking(String roomId) throws Exception {
         PmsBooking booking = getCurrentBooking();
         ArrayList toRemove = new ArrayList();
-        for(PmsBookingRooms room : booking.rooms) {
-            if(room.pmsBookingRoomId.equals(roomId)) {
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.pmsBookingRoomId.equals(roomId)) {
                 toRemove.add(room);
             }
         }
@@ -1256,28 +1238,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter filter) {
         List<PmsBooking> result = getAllBookings(filter);
-        
+
         List<PmsBooking> allBookings = new ArrayList();
-        
-        for(PmsBooking res : result) {
+
+        for (PmsBooking res : result) {
             allBookings.add(res.copyUnsecure());
         }
-        
+
         return allBookings;
     }
-
 
     @Override
     public String getContract(String bookingId) throws Exception {
         PmsBooking booking = getCurrentBooking();
-        if(booking == null || !booking.id.equals(bookingId)) {
+        if (booking == null || !booking.id.equals(bookingId)) {
             booking = getBooking(bookingId);
         }
-        if(booking == null) {
+        if (booking == null) {
             return "Booking could not be found";
         }
         String contract = configuration.contracts.get(booking.language);
-        if(contract == null) {
+        if (contract == null) {
             return "";
         }
         return formatMessage(contract, booking, null, null);
@@ -1292,8 +1273,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void deleteBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
-        for(PmsBookingRooms room : booking.rooms) {
-            if(room.bookingId != null && !room.bookingId.isEmpty()) {
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.bookingId != null && !room.bookingId.isEmpty()) {
                 bookingEngine.deleteBooking(room.bookingId);
             }
         }
@@ -1302,13 +1283,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void removeDeleted(PmsBookingFilter filter, List<PmsBooking> result) {
-        if(filter != null && filter.filterType != null && filter.filterType.equalsIgnoreCase("deleted")) {
+        if (filter != null && filter.filterType != null && filter.filterType.equalsIgnoreCase("deleted")) {
             return;
         }
         List<PmsBooking> toRemove = new ArrayList();
-        if(!filter.includeDeleted) {
-            for(PmsBooking booking : result) {
-                if(booking.isDeleted) {
+        if (!filter.includeDeleted) {
+            for (PmsBooking booking : result) {
+                if (booking.isDeleted) {
                     toRemove.add(booking);
                 }
             }
@@ -1329,23 +1310,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter) {
         PmsIntervalResult res = new PmsIntervalResult();
-        for(BookingItemType type : bookingEngine.getBookingItemTypes()) {
+        for (BookingItemType type : bookingEngine.getBookingItemTypes()) {
             BookingTimeLineFlatten line = bookingEngine.getTimelines(type.id, filter.start, filter.end);
             res.typeTimeLines.put(type.id, line.getTimelines(filter.interval));
         }
-        
+
         List<BookingItem> items = bookingEngine.getBookingItems();
-        
-        for(BookingItem item : items) {
-           BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
+
+        for (BookingItem item : items) {
+            BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
             List<BookingTimeLine> timelines = line.getTimelines(filter.interval);
             LinkedHashMap<Long, Integer> itemCountLine = new LinkedHashMap();
-            for(BookingTimeLine tl : timelines) {
+            for (BookingTimeLine tl : timelines) {
                 itemCountLine.put(tl.start.getTime(), tl.count);
             }
             res.itemTimeLines.put(item.id, itemCountLine);
         }
-        
+
         return res;
     }
 
@@ -1357,16 +1338,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private PmsAdditionalItemInformation getAdditionalInfo(String itemId) {
         PmsAdditionalItemInformation result = addiotionalItemInfo.get(itemId);
-        if(result == null) {
+        if (result == null) {
             result = new PmsAdditionalItemInformation();
             result.itemId = itemId;
             addiotionalItemInfo.put(itemId, result);
             saveAdditionalInfo(result);
         }
-        
+
         return result;
     }
-    
+
     private void saveAdditionalInfo(PmsAdditionalItemInformation data) {
         saveObject(data);
     }
@@ -1379,43 +1360,41 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         end.setTime(start);
         boolean bookingStartingToday = bookingEngine.hasBookingsStartingBetweenTime(start, end.getTime(), itemId);
         boolean itemInUse = bookingEngine.itemInUseBetweenTime(start, end.getTime(), itemId);
-        
-        if(bookingStartingToday || !itemInUse) {
+
+        if (bookingStartingToday || !itemInUse) {
             //Only mark room cleaned if a new booking is 
             additional.markCleaned();
         } else {
             additional.addCleaningDate();
         }
         saveAdditionalInfo(additional);
-        
+
         String logText = "Marked room: " + bookingEngine.getBookingItem(additional.itemId).bookingItemName + " as cleaned, item in use: ";
-        if(itemInUse) {
+        if (itemInUse) {
             logText += " in use";
         } else {
             logText += " not in use";
         }
         logEntry(logText, null, additional.itemId);
     }
-    
-    
+
     void markRoomAsDirty(String bookingItemId) {
         PmsAdditionalItemInformation additional = getAdditionalInfo(bookingItemId);
         additional.markDirty();
         saveAdditionalInfo(additional);
 
         BookingItem item = bookingEngine.getBookingItem(additional.itemId);
-        if(item != null) {
+        if (item != null) {
             String logText = "Marked room: " + bookingEngine.getBookingItem(additional.itemId).bookingItemName + " as dirty, item in use";
             logEntry(logText, null, additional.itemId);
         }
     }
-    
 
     @Override
     public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms() {
         List<PmsAdditionalItemInformation> result = new ArrayList();
         List<BookingItem> items = bookingEngine.getBookingItems();
-        for(BookingItem item : items) {
+        for (BookingItem item : items) {
             result.add(finalizeAdditionalItem(getAdditionalInfo(item.id)));
         }
         return result;
@@ -1425,7 +1404,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Calendar start = Calendar.getInstance();
         Calendar end = start.getInstance();
         end.add(Calendar.DAY_OF_YEAR, 1);
-        
+
         additionalInfo.isClean();
         additionalInfo.inUse = bookingEngine.itemInUseBetweenTime(start.getTime(), end.getTime(), additionalInfo.itemId);
         return additionalInfo;
@@ -1434,72 +1413,72 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsBookingRooms> getRoomsNeedingCheckoutCleaning(Date day) {
         List<PmsBookingRooms> result = new ArrayList();
-        for(PmsBooking booking : bookings.values()) {
-            if(booking.isDeleted) {
+        for (PmsBooking booking : bookings.values()) {
+            if (booking.isDeleted) {
                 continue;
             }
-            if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
+            if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }
-            
-            for(PmsBookingRooms room : booking.rooms) {
-                if(needCheckOutCleaning(room, day)) {
+
+            for (PmsBookingRooms room : booking.rooms) {
+                if (needCheckOutCleaning(room, day)) {
                     finalize(booking);
                     result.add(room);
                 }
             }
         }
-        
+
         sortRooms(result);
-        
+
         return result;
     }
-    
+
     @Override
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day) {
 
         List<PmsBookingRooms> rooms = new ArrayList<PmsBookingRooms>();
-        for(PmsBooking booking : bookings.values()) {
-            if(booking.isDeleted) {
+        for (PmsBooking booking : bookings.values()) {
+            if (booking.isDeleted) {
                 continue;
             }
-            if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
+            if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }
-            for(PmsBookingRooms room : booking.rooms) {
-                if(needIntervalCleaning(room, day)) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if (needIntervalCleaning(room, day)) {
                     finalize(booking);
                     rooms.add(room);
                 }
             }
         }
         sortRooms(rooms);
-        
+
         return rooms;
     }
 
     public boolean needIntervalCleaning(PmsBookingRooms room, Date day) {
-        if(room.date.cleaningDate == null) {
+        if (room.date.cleaningDate == null) {
             room.date.cleaningDate = room.date.start;
         }
-        if(room.isEndingToday(day)) {
+        if (room.isEndingToday(day)) {
             return false;
         }
-        if(!room.isActiveOnDay(day)) {
+        if (!room.isActiveOnDay(day)) {
             return false;
         }
         int days = Days.daysBetween(new LocalDate(room.date.cleaningDate), new LocalDate(day)).getDays();
-        if(days == 0) {
+        if (days == 0) {
             return false;
         }
         int interval = configuration.cleaningInterval;
-        if(room.intervalCleaning != null) {
+        if (room.intervalCleaning != null) {
             interval = room.intervalCleaning;
         }
-        if(interval == 0) {
+        if (interval == 0) {
             return false;
         }
-        if(days % interval == 0) {
+        if (days % interval == 0) {
             return true;
         }
         return false;
@@ -1507,22 +1486,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private HashMap<String, String> createICalEntry(PmsBooking booking) {
         ICalendar ical = new ICalendar();
-        for(PmsBookingRooms room : booking.rooms) {
+        for (PmsBookingRooms room : booking.rooms) {
             VEvent event = new VEvent();
             String title = "Booking of";
-            
-            if(room.booking != null && room.booking.bookingItemId != null && bookingEngine.getBookingItem(room.booking.bookingItemId) != null) {
+
+            if (room.booking != null && room.booking.bookingItemId != null && bookingEngine.getBookingItem(room.booking.bookingItemId) != null) {
                 title += " room " + bookingEngine.getBookingItem(room.booking.bookingItemId).bookingItemName;
             } else {
                 title += " " + bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
             }
-            
+
             Summary summary = event.setSummary(title);
             summary.setLanguage("en-us");
 
             event.setDateStart(room.date.start);
-            
-            int minutes = (int)((room.date.end.getTime()/60000) - (room.date.start.getTime()/60000));
+
+            int minutes = (int) ((room.date.end.getTime() / 60000) - (room.date.start.getTime() / 60000));
 
             Duration duration = new Duration.Builder().minutes(minutes).build();
             event.setDuration(duration);
@@ -1539,76 +1518,77 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             String encodedString = new String(encoded);
 
             attachments.put("calendar.ics", encodedString);
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-            
+
         return attachments;
     }
 
     private List<PmsBooking> sortList(List<PmsBooking> result, String sorting) {
-        if(sorting == null) {
+        if (sorting == null) {
             sorting = "";
         }
-        
-        if(sorting.equals("visitor") || sorting.equals("visitor_desc")) {
+
+        if (sorting.equals("visitor") || sorting.equals("visitor_desc")) {
 //            Collections.sort(result, new Comparator<PmsBooking>(){
 //                public int compare(PmsBooking o1, PmsBooking o2){
 //                    return o1.rooms.get(0).guests.get(0).name.compareTo(o2.rooms.get(0).guests.get(0).name);
 //                }
 //            });
-        } else if(sorting.equals("periode") || sorting.equals("periode_desc")) {
-            Collections.sort(result, new Comparator<PmsBooking>(){
-                public int compare(PmsBooking o1, PmsBooking o2){
+        } else if (sorting.equals("periode") || sorting.equals("periode_desc")) {
+            Collections.sort(result, new Comparator<PmsBooking>() {
+                public int compare(PmsBooking o1, PmsBooking o2) {
                     return o1.rooms.get(0).date.start.compareTo(o2.rooms.get(0).date.start);
                 }
             });
-        } else if(sorting.equals("room") || sorting.equals("room_desc")) {
-            Collections.sort(result, new Comparator<PmsBooking>(){
-                public int compare(PmsBooking o1, PmsBooking o2){
-                    if(o1.rooms == null || o1.rooms.isEmpty() || o1.rooms.get(0).item == null) {
+        } else if (sorting.equals("room") || sorting.equals("room_desc")) {
+            Collections.sort(result, new Comparator<PmsBooking>() {
+                public int compare(PmsBooking o1, PmsBooking o2) {
+                    if (o1.rooms == null || o1.rooms.isEmpty() || o1.rooms.get(0).item == null) {
                         return -1;
                     }
-                    if(o2.rooms == null || o2.rooms.isEmpty() || o2.rooms.get(0).item == null) {
+                    if (o2.rooms == null || o2.rooms.isEmpty() || o2.rooms.get(0).item == null) {
                         return -1;
                     }
                     return o1.rooms.get(0).item.bookingItemName.compareTo(o2.rooms.get(0).item.bookingItemName);
                 }
             });
-        } else if(sorting.equals("price") || sorting.equals("price_desc")) {
-            Collections.sort(result, new Comparator<PmsBooking>(){
-                public int compare(PmsBooking o1, PmsBooking o2){
+        } else if (sorting.equals("price") || sorting.equals("price_desc")) {
+            Collections.sort(result, new Comparator<PmsBooking>() {
+                public int compare(PmsBooking o1, PmsBooking o2) {
                     return o1.rooms.get(0).price.compareTo(o2.rooms.get(0).price);
                 }
             });
         } else {
-            Collections.sort(result, new Comparator<PmsBooking>(){
-                public int compare(PmsBooking o1, PmsBooking o2){
-                   return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+            Collections.sort(result, new Comparator<PmsBooking>() {
+                public int compare(PmsBooking o1, PmsBooking o2) {
+                    return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
                 }
-             });
+            });
         }
-        
-        if(sorting.contains("_desc")) {
+
+        if (sorting.contains("_desc")) {
             Collections.reverse(result);
         }
-        
+
         return result;
     }
 
     private List<PmsBooking> filterTypes(List<PmsBooking> finalized, List<String> typeFilter) {
-        if(typeFilter == null || typeFilter.isEmpty()) {
+        if (typeFilter == null || typeFilter.isEmpty()) {
             return finalized;
         }
-        
+
         List<PmsBooking> result = new LinkedList();
-        for(PmsBooking booking : finalized) {
+        for (PmsBooking booking : finalized) {
             boolean add = false;
-            for(PmsBookingRooms room : booking.rooms) {
-                if(room.bookingItemTypeId != null && typeFilter.contains(room.bookingItemTypeId))
+            for (PmsBookingRooms room : booking.rooms) {
+                if (room.bookingItemTypeId != null && typeFilter.contains(room.bookingItemTypeId)) {
                     add = true;
+                }
             }
-            if(add) {
+            if (add) {
                 result.add(booking);
             }
         }
@@ -1628,36 +1608,54 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         user.fullName = result.get("user_fullName");
         user.cellPhone = result.get("user_cellPhone");
         user.emailAddress = result.get("user_emailAddress");
-        if(result.get("prefix") != null) {
+        if (result.get("prefix") != null) {
             user.prefix = result.get("user_prefix");
         }
-        
+
         user.address = new Address();
         user.address.address = result.get("user_address_address");
         user.address.postCode = result.get("user_address_postCode");
         user.address.city = result.get("user_address_city");
         user.address.countrycode = result.get("user_address_countrycode");
         user.address.countryname = result.get("user_address_countryname");
-        
-        if(user.emailAddress == null) { user.emailAddress = ""; }
-        if(user.fullName == null) { user.fullName = ""; }
-        if(user.cellPhone == null) { user.cellPhone = ""; }
-        if(user.prefix == null) { user.prefix = "47"; }
-        if(user.address.address == null) { user.address.address = ""; }
-        if(user.address.postCode == null) { user.address.postCode = ""; }
-        if(user.address.city == null) { user.address.city = ""; }
-        if(user.address.countrycode == null) { user.address.countrycode = ""; }
-        if(user.address.countryname == null) { user.address.countryname = ""; }
-        
+
+        if (user.emailAddress == null) {
+            user.emailAddress = "";
+        }
+        if (user.fullName == null) {
+            user.fullName = "";
+        }
+        if (user.cellPhone == null) {
+            user.cellPhone = "";
+        }
+        if (user.prefix == null) {
+            user.prefix = "47";
+        }
+        if (user.address.address == null) {
+            user.address.address = "";
+        }
+        if (user.address.postCode == null) {
+            user.address.postCode = "";
+        }
+        if (user.address.city == null) {
+            user.address.city = "";
+        }
+        if (user.address.countrycode == null) {
+            user.address.countrycode = "";
+        }
+        if (user.address.countryname == null) {
+            user.address.countryname = "";
+        }
+
         return userManager.createUser(user);
     }
 
     private Company createCompany(PmsBooking booking) {
         LinkedHashMap<String, String> result = booking.registrationData.resultAdded;
-        if(result.get("choosetyperadio") == null || result.get("choosetyperadio").equals("registration_private")) {
+        if (result.get("choosetyperadio") == null || result.get("choosetyperadio").equals("registration_private")) {
             return null;
         }
-        
+
         Company company = new Company();
         company.vatNumber = result.get("company_vatNumber");
         company.name = result.get("company_name");
@@ -1668,25 +1666,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         company.prefix = result.get("company_prefix");
         company.phone = result.get("company_phone");
         company.vatRegisterd = true;
-        if(result.get("company_vatRegistered") != null) {
+        if (result.get("company_vatRegistered") != null) {
             company.vatRegisterd = result.get("company_vatRegistered").equals("true");
         }
         company.invoiceEmail = result.get("company_emailAddressToInvoice");
-        
+
         company.address = new Address();
         company.address.address = result.get("company_address_address");
         company.address.postCode = result.get("company_address_postCode");
         company.address.city = result.get("company_address_city");
         company.address.countrycode = result.get("company_address_countrycode");
         company.address.countryname = result.get("company_address_countryname");
-        
+
         company.invoiceAddress = new Address();
         company.invoiceAddress.address = result.get("company_invoiceAddress_address");
         company.invoiceAddress.postCode = result.get("company_invoiceAddress_postCode");
         company.invoiceAddress.city = result.get("company_invoiceAddress_city");
         company.invoiceAddress.countrycode = result.get("company_invoiceAddress_countrycode");
         company.invoiceAddress.countryname = result.get("company_invoiceAddress_countryname");
-        
+
         return company;
     }
 
@@ -1694,8 +1692,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void addRepeatingData(PmsRepeatingData data) throws Exception {
         PmsBooking curBooking = getCurrentBooking();
         removeRepeatedRooms(curBooking);
-        
-        if(data.repeattype.equals("repeat")) {
+
+        if (data.repeattype.equals("repeat")) {
             addRepeatingRooms(data);
         } else {
             addSingleDate(data);
@@ -1711,95 +1709,95 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.bookingItemTypeId = data.bookingTypeId;
         booking.startDate = data.data.firstEvent.start;
         booking.endDate = data.data.firstEvent.end;
-        
-        if(data.bookingTypeId == null || data.bookingTypeId.isEmpty()) {
+
+        if (data.bookingTypeId == null || data.bookingTypeId.isEmpty()) {
             booking.bookingItemTypeId = bookingEngine.getBookingItem(data.bookingItemId).bookingItemTypeId;
         }
-        
+
         List<Booking> toCheck = new ArrayList();
         toCheck.add(booking);
         PmsBooking curBooking = getCurrentBooking();
-        
+
         PmsBookingRooms room = new PmsBookingRooms();
         room.date.start = data.data.firstEvent.start;
         room.date.end = data.data.firstEvent.end;
         room.bookingItemId = booking.bookingItemId;
-        room.bookingItemTypeId =booking.bookingItemTypeId;
-        room.canBeAdded = bookingEngine.canAdd(toCheck);
+        room.bookingItemTypeId = booking.bookingItemTypeId;
+        room.canBeAdded = canAdd(toCheck);
         curBooking.rooms.add(room);
-        
+
         curBooking.lastRepeatingData = data;
         saveBooking(curBooking);
-        
+
         return toReturn;
     }
 
     public List<PmsBookingRooms> getRoomsFromRepeaterData(PmsRepeatingData data) {
         TimeRepeater repeater = new TimeRepeater();
         LinkedList<TimeRepeaterDateRange> lines = repeater.generateRange(data.data);
-        
+
         List<PmsBookingRooms> allRooms = new ArrayList();
-        
-        for(TimeRepeaterDateRange line : lines) {
-            
+
+        for (TimeRepeaterDateRange line : lines) {
+
             Booking booking = new Booking();
             booking.bookingItemId = data.bookingItemId;
             booking.bookingItemTypeId = data.bookingTypeId;
             booking.startDate = line.start;
             booking.endDate = line.end;
-            
-            if(data.bookingTypeId == null || data.bookingTypeId.isEmpty()) {
+
+            if (data.bookingTypeId == null || data.bookingTypeId.isEmpty()) {
                 booking.bookingItemTypeId = bookingEngine.getBookingItem(data.bookingItemId).bookingItemTypeId;
             }
             PmsBookingRooms room = new PmsBookingRooms();
             room.date.start = line.start;
             room.date.end = line.end;
             room.bookingItemId = booking.bookingItemId;
-            room.bookingItemTypeId =booking.bookingItemTypeId;
+            room.bookingItemTypeId = booking.bookingItemTypeId;
             room.addedByRepeater = true;
             room.booking = booking;
             booking.externalReference = room.pmsBookingRoomId;
-            if(booking.bookingItemId == null) {
+            if (booking.bookingItemId == null) {
                 booking.bookingItemId = "";
             }
-            
+
             List<Booking> toCheck = new ArrayList();
             toCheck.add(booking);
-            if(!bookingEngine.canAdd(toCheck)) {
+            if (!canAdd(toCheck)) {
                 room.canBeAdded = false;
             }
-            
+
             allRooms.add(room);
         }
         return allRooms;
     }
-    
+
     private List<TimeRepeaterDateRange> addRepeatingRooms(PmsRepeatingData data) throws ErrorException {
         List<PmsBookingRooms> allRooms = getRoomsFromRepeaterData(data);
-        
+
         PmsBooking curBooking = getCurrentBooking();
         allRooms = excludeAlreadyAdded(allRooms, curBooking);
-        
+
         curBooking.rooms.addAll(allRooms);
         curBooking.lastRepeatingData = data;
         saveBooking(curBooking);
         List<TimeRepeaterDateRange> cantAdd = new ArrayList();
-        for(PmsBookingRooms room : allRooms) {
-            if(!room.canBeAdded) {
+        for (PmsBookingRooms room : allRooms) {
+            if (!room.canBeAdded) {
                 TimeRepeaterDateRange cant = new TimeRepeaterDateRange();
                 cant.start = room.date.start;
                 cant.end = room.date.end;
                 cantAdd.add(cant);
             }
         }
-        
+
         return cantAdd;
     }
 
     private void removeRepeatedRooms(PmsBooking curBooking) {
         List<PmsBookingRooms> toRemove = new ArrayList();
-        for(PmsBookingRooms room : curBooking.rooms) {
-            if(room.addedByRepeater) {
+        for (PmsBookingRooms room : curBooking.rooms) {
+            if (room.addedByRepeater) {
                 toRemove.add(room);
             }
         }
@@ -1808,35 +1806,35 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private Double calculateDailyPricing(String typeId, Date start, Date end, boolean avgPrice) {
         HashMap<String, Double> priceRange = prices.dailyPrices.get(typeId);
-        
-        if(priceRange == null) {
+
+        if (priceRange == null) {
             return 0.0;
         }
-        
+
         Double defaultPrice = priceRange.get("default");
-        if(defaultPrice == null) {
+        if (defaultPrice == null) {
             defaultPrice = 0.0;
         }
-        
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         int days = 0;
         Double total = 0.0;
-        while(true) {
+        while (true) {
             days++;
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             String dateToUse = formatter.format(cal.getTime());
-            if(priceRange.get(dateToUse) != null) {
+            if (priceRange.get(dateToUse) != null) {
                 total += priceRange.get(dateToUse);
             } else {
                 total += defaultPrice;
             }
             cal.add(Calendar.DAY_OF_YEAR, 1);
-            if(end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
+            if (end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
                 break;
             }
         }
-        if(avgPrice) {
+        if (avgPrice) {
             total = total / days;
         }
         return total;
@@ -1845,29 +1843,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Double calculateIntervalPrice(String typeId, Date start, Date end, boolean avgprice) {
         int totalDays = Days.daysBetween(new LocalDate(start), new LocalDate(end)).getDays();
         ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
-        if(priceRange == null) {
+        if (priceRange == null) {
             System.out.println("No progressive price found for type");
             return -0.124;
         }
-        int daysoffset=0;
-        for(ProgressivePriceAttribute attr : priceRange) {
+        int daysoffset = 0;
+        for (ProgressivePriceAttribute attr : priceRange) {
             daysoffset += attr.numberOfTimeSlots;
-            if(daysoffset >= totalDays) {
-                if(avgprice) {
+            if (daysoffset >= totalDays) {
+                if (avgprice) {
                     return attr.price;
                 } else {
                     return attr.price;
                 }
             }
         }
-        
+
         //Could not find price to use.
         return -0.333;
     }
-    
+
     private Double calculateProgressivePrice(String typeId, Date start, Date end, int offset, boolean avgPrice) {
         ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
-        if(priceRange == null) {
+        if (priceRange == null) {
             System.out.println("No progressive price found for type");
             return -0.123;
         }
@@ -1875,11 +1873,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         cal.setTime(start);
         int days = offset;
         Double total = 0.0;
-        while(true) {
+        while (true) {
             int daysoffset = 0;
-            for(ProgressivePriceAttribute attr : priceRange) {
+            for (ProgressivePriceAttribute attr : priceRange) {
                 daysoffset += attr.numberOfTimeSlots;
-                if(daysoffset > days) {
+                if (daysoffset > days) {
                     total += attr.price;
                     daysoffset = 0;
                     break;
@@ -1887,12 +1885,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             days++;
             cal.add(Calendar.DAY_OF_YEAR, 1);
-            if(end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
+            if (end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
                 break;
             }
         }
-        
-        if(avgPrice) {
+
+        if (avgPrice) {
             total = total / days;
         }
         return total;
@@ -1900,9 +1898,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private double calculateTaxes(String bookingItemTypeId) {
         BookingItemType item = bookingEngine.getBookingItemType(bookingItemTypeId);
-        if(item.productId != null && !item.productId.isEmpty()) {
+        if (item.productId != null && !item.productId.isEmpty()) {
             Product product = productManager.getProduct(item.productId);
-            if(product.taxGroupObject != null) {
+            if (product.taxGroupObject != null) {
                 return product.taxGroupObject.taxRate;
             }
             return -1.0;
@@ -1913,20 +1911,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private CartItem createCartItem(PmsBookingRooms room, Date startDate, Date endDate) {
         BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
         BookingItem bookingitem = null;
-        if(room.bookingItemId != null) {
+        if (room.bookingItemId != null) {
             bookingitem = bookingEngine.getBookingItem(room.bookingItemId);
         }
-        if(type == null) {
+        if (type == null) {
             return null;
         }
 
         String productId = type.productId;
-        if(productId == null) {
+        if (productId == null) {
             System.out.println("Product not set for this booking item type");
             return null;
         }
         int numberOfDays = getNumberOfDays(room, startDate, endDate);
-        if(numberOfDays == 0) {
+        if (numberOfDays == 0) {
             return null;
         }
 
@@ -1934,7 +1932,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         item.startDate = startDate;
         item.endDate = endDate;
         item.getProduct().name = type.name;
-        if(bookingitem != null) {
+        if (bookingitem != null) {
             item.getProduct().name += " (" + bookingitem.bookingItemName + ")";
         }
         return item;
@@ -1943,17 +1941,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<Integer> getAvailabilityForType(String bookingTypeId, Date startTime, Date endTime, Integer intervalInMinutes) {
         LinkedList<TimeRepeaterDateRange> lines = createAvailabilityLines(bookingTypeId);
-        
+
         DateTime timer = new DateTime(startTime);
         List<Integer> result = new ArrayList();
-        while(true) {
-            if(hasRange(lines, timer)) {
+        while (true) {
+            if (hasRange(lines, timer)) {
                 result.add(1);
             } else {
                 result.add(0);
             }
             timer = timer.plusMinutes(intervalInMinutes);
-            if(timer.toDate().after(endTime) || timer.toDate().equals(endTime)) {
+            if (timer.toDate().after(endTime) || timer.toDate().equals(endTime)) {
                 break;
             }
         }
@@ -1968,34 +1966,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         date.set(Calendar.SECOND, 0);
         date.set(Calendar.MILLISECOND, 0);
         date.set(Calendar.MINUTE, 30);
-        if(morning) {
+        if (morning) {
             return date.getTime();
         }
-        date.set(Calendar.HOUR_OF_DAY,22);
-        
+        date.set(Calendar.HOUR_OF_DAY, 22);
+
         return date.getTime();
     }
 
     private LinkedList<TimeRepeaterDateRange> createAvailabilityLines(String bookingItemId) {
-        if(bookingItemId != null && bookingItemId.isEmpty()) {
+        if (bookingItemId != null && bookingItemId.isEmpty()) {
             bookingItemId = null;
         }
         LinkedList<TimeRepeaterDateRange> result = new LinkedList<TimeRepeaterDateRange>();
         List<TimeRepeaterData> repeaters = bookingEngine.getOpeningHours(bookingItemId);
-        if(repeaters.isEmpty()) {
+        if (repeaters.isEmpty()) {
             repeaters = bookingEngine.getOpeningHours(null);
         }
-        for(TimeRepeaterData repeater : repeaters) {
+        for (TimeRepeaterData repeater : repeaters) {
             TimeRepeater generator = new TimeRepeater();
             result.addAll(generator.generateRange(repeater));
         }
-        
+
         return result;
     }
 
     private boolean hasRange(LinkedList<TimeRepeaterDateRange> lines, DateTime timer) {
-        for(TimeRepeaterDateRange line : lines) {
-            if(line.isBetweenTime(timer.toDate())) {
+        for (TimeRepeaterDateRange line : lines) {
+            if (line.isBetweenTime(timer.toDate())) {
                 return true;
             }
         }
@@ -2005,7 +2003,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void toggleAddon(String itemId) throws Exception {
         PmsBooking booking = getCurrentBooking();
-        if(booking.bookingEngineAddons.contains(itemId)) {
+        if (booking.bookingEngineAddons.contains(itemId)) {
             booking.bookingEngineAddons.remove(itemId);
         } else {
             booking.bookingEngineAddons.add(itemId);
@@ -2017,17 +2015,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void updateBookingAddonList() {
         PmsBooking booking = getCurrentBooking();
         List<PmsBookingRooms> toRemove = new ArrayList();
-        for(PmsBookingRooms room : booking.rooms) {
-            if(room.isAddon) {
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.isAddon) {
                 toRemove.add(room);
             }
         }
-        
+
         booking.rooms.removeAll(toRemove);
-        
+
         List<PmsBookingRooms> allToAdd = new ArrayList();
-        for(String addonId : booking.bookingEngineAddons) {
-            for(PmsBookingRooms room : booking.rooms) {
+        for (String addonId : booking.bookingEngineAddons) {
+            for (PmsBookingRooms room : booking.rooms) {
                 Booking bookingToAdd = new Booking();
                 bookingToAdd.startDate = room.date.start;
                 bookingToAdd.endDate = room.date.end;
@@ -2037,50 +2035,48 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 toAddRoom.date.end = room.date.end;
                 toAddRoom.bookingItemTypeId = addonId;
                 toAddRoom.isAddon = true;
-                
+
                 List<Booking> checkToAdd = new ArrayList();
                 checkToAdd.add(bookingToAdd);
-                if(!bookingEngine.canAdd(checkToAdd)) {
+                if (!canAdd(checkToAdd)) {
                     toAddRoom.canBeAdded = false;
                 }
-                
+
                 allToAdd.add(toAddRoom);
             }
         }
-        
+
         booking.rooms.addAll(allToAdd);
 
     }
-    
+
     @Override
     public PmsBookingDateRange getDefaultDateRange() {
-        
+
         String[] defaultTimeStart = getConfiguration().defaultStart.split(":");
         String[] defaultEndStart = getConfiguration().defaultEnd.split(":");
-        
+
         Calendar calStart = Calendar.getInstance();
         calStart.set(Calendar.HOUR_OF_DAY, new Integer(defaultTimeStart[0]));
         calStart.set(Calendar.MINUTE, new Integer(defaultTimeStart[1]));
         calStart.set(Calendar.SECOND, 0);
-        
-        
-        PmsBookingDateRange  range = new PmsBookingDateRange();
+
+        PmsBookingDateRange range = new PmsBookingDateRange();
         range.start = calStart.getTime();
-        
-        if(getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
+
+        if (getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
             calStart.add(Calendar.DAY_OF_YEAR, getConfiguration().minStay);
             calStart.set(Calendar.HOUR_OF_DAY, new Integer(defaultEndStart[0]));
             calStart.set(Calendar.MINUTE, new Integer(defaultEndStart[1]));
             calStart.set(Calendar.SECOND, 0);
         }
-        if(getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.HOURLY)) {
+        if (getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.HOURLY)) {
             calStart.add(Calendar.HOUR, getConfiguration().minStay);
         }
-        
-        
-        range.end = calStart.getTime(); 
+
+        range.end = calStart.getTime();
         return range;
-   }
+    }
 
     @Override
     public String addBookingItem(String bookingId, String item, Date start, Date end) {
@@ -2093,24 +2089,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.start = start;
         room.date.end = end;
         room.guests.add(new PmsGuests());
-        
+
         Booking bookingToAdd = createBooking(room);
         List<Booking> bookingToAddList = new ArrayList();
         bookingToAddList.add(bookingToAdd);
-        if(!bookingEngine.canAdd(bookingToAddList)) {
+        if (!canAdd(bookingToAddList)) {
             return "The room can not be added, its not available.";
         }
-        
+
         bookingEngine.addBookings(bookingToAddList);
         booking.rooms.add(room);
         booking.attachBookingItems(bookingToAddList);
         saveBooking(booking);
-        
+
         logEntry(itemToAdd.bookingItemName + " added to booking " + " time: " + convertToStandardTime(start) + " " + convertToStandardTime(end), bookingId, item);
         return "";
     }
-    
-    
+
     @Override
     public String addBookingItemType(String bookingId, String type, Date start, Date end) {
         PmsBooking booking = getBooking(bookingId);
@@ -2121,32 +2116,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.start = start;
         room.date.end = end;
         room.guests.add(new PmsGuests());
-        
+
         Booking bookingToAdd = createBooking(room);
         List<Booking> bookingToAddList = new ArrayList();
         bookingToAddList.add(bookingToAdd);
-        if(!bookingEngine.canAdd(bookingToAddList)) {
+        if (!canAdd(bookingToAddList)) {
             return "The room can not be added, its not available.";
         }
-        
+
         bookingEngine.addBookings(bookingToAddList);
         booking.rooms.add(room);
         booking.attachBookingItems(bookingToAddList);
         saveBooking(booking);
-        
+
         logEntry(typeToAdd.name + " added to booking " + " time: " + convertToStandardTime(start) + " " + convertToStandardTime(end), bookingId, null);
         processor();
         return "";
     }
 
-
     private Booking createBooking(PmsBookingRooms room) {
         Booking bookingToAdd = new Booking();
         bookingToAdd.startDate = room.date.start;
-        if(room.date.end == null) {
+        if (room.date.end == null) {
             room.date.end = createInifinteDate();
         }
-        if(room.numberOfGuests < room.guests.size()) {
+        if (room.numberOfGuests < room.guests.size()) {
             room.numberOfGuests = room.guests.size();
         }
 
@@ -2161,28 +2155,28 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String getDefaultMessage(String bookingId) {
         PmsBooking booking = getBooking(bookingId);
         String message = getConfiguration().defaultMessage.get(booking.language);
-        if(message == null) {
+        if (message == null) {
             return "";
         }
         return formatMessage(message, booking, null, null);
     }
 
     private boolean sameDayOrAfter(Date invoicedTo, Date endDate) {
-        if(invoicedTo == null) {
+        if (invoicedTo == null) {
             return false;
         }
-        
+
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(invoicedTo);
         cal2.setTime(endDate);
-        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                          cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
-        if(sameDay) {
+        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+        if (sameDay) {
             return true;
         }
-        
-        if(invoicedTo.after(endDate)) {
+
+        if (invoicedTo.after(endDate)) {
             return true;
         }
         return false;
@@ -2198,27 +2192,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
-
     void autoAssignItem(PmsBookingRooms room) {
         List<BookingItem> items = bookingEngine.getAvailbleItems(room.bookingItemTypeId, room.date.start, room.date.end);
-        Collections.sort(items, new Comparator<BookingItem>(){
-            public int compare(BookingItem o1, BookingItem o2){
-               return o1.order.compareTo(o2.order);
+        Collections.sort(items, new Comparator<BookingItem>() {
+            public int compare(BookingItem o1, BookingItem o2) {
+                return o1.order.compareTo(o2.order);
             }
-         });
-        if(items.isEmpty()) {
+        });
+        if (items.isEmpty()) {
             System.out.println("No items available?");
         } else {
             BookingItem item = items.get(0);
             room.bookingItemId = item.id;
             room.bookingItemTypeId = item.bookingItemTypeId;
 
-            if(room.bookingId != null) {
+            if (room.bookingId != null) {
                 bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
             }
             PmsBooking booking = getBookingFromRoom(room.pmsBookingRoomId);
             String bookingId = "";
-            if(booking != null) {
+            if (booking != null) {
                 bookingId = booking.id;
             }
             logEntry("Autoasigned item " + item.bookingItemName, bookingId, null);
@@ -2227,22 +2220,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public void logEntry(String logText, String bookingId, String itemId) {
         logEntry(logText, bookingId, itemId, null);
-        
+
     }
 
     private void logEntry(String logText, String bookingId, String itemId, String roomId) {
         String userId = "";
-        if(getSession() != null && getSession().currentUser != null) {
+        if (getSession() != null && getSession().currentUser != null) {
             userId = getSession().currentUser.id;
         }
-        
+
         PmsLog log = new PmsLog();
         log.bookingId = bookingId;
         log.bookingItemId = itemId;
         log.userId = userId;
         log.roomId = roomId;
         BookingItem item = bookingEngine.getBookingItem(itemId);
-        if(item != null) {
+        if (item != null) {
             log.bookingItemType = item.bookingItemTypeId;
         }
         log.logText = logText;
@@ -2253,20 +2246,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsLog> getLogEntries(PmsLog filter) {
         List<PmsLog> res = new ArrayList();
-        
-        for(PmsLog log : logentries) {
-            if(filter.bookingId.equals(log.bookingId)) {
+
+        for (PmsLog log : logentries) {
+            if (filter.bookingId.equals(log.bookingId)) {
                 res.add(log);
             }
         }
-        
-        Collections.sort(res, new Comparator<PmsLog>(){
-            public int compare(PmsLog o1, PmsLog o2){
+
+        Collections.sort(res, new Comparator<PmsLog>() {
+            public int compare(PmsLog o1, PmsLog o2) {
                 return o2.dateEntry.compareTo(o1.dateEntry);
             }
-       });
+        });
 
-        
         return res;
     }
 
@@ -2279,47 +2271,47 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsBookingRooms> updateRepeatingDataForBooking(PmsRepeatingData data, String bookingId) {
         PmsBooking booking = getBooking(bookingId);
         List<PmsBookingRooms> toRemove = new ArrayList();
-        for(PmsBookingRooms room : booking.rooms) {
-            
-            if(room.addedByRepeater) {
+        for (PmsBookingRooms room : booking.rooms) {
+
+            if (room.addedByRepeater) {
                 boolean inStart = (room.date.start.after(data.data.firstEvent.start) || room.date.start.equals(data.data.firstEvent.start));
                 boolean inEnd = (room.date.end.before(data.data.endingAt) || room.date.end.equals(data.data.endingAt));
-                if(inStart && inEnd) {
+                if (inStart && inEnd) {
                     toRemove.add(room);
                     bookingEngine.deleteBooking(room.bookingId);
                 }
             }
         }
         booking.rooms.removeAll(toRemove);
-        
+
         List<PmsBookingRooms> rooms = getRoomsFromRepeaterData(data);
         List<PmsBookingRooms> roomsToReturn = new ArrayList();
         List<Booking> toAdd = new ArrayList();
-        for(PmsBookingRooms room : rooms) {
-            if(room.canBeAdded) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.canBeAdded) {
                 toAdd.add(room.booking);
                 booking.rooms.add(room);
             } else {
                 roomsToReturn.add(room);
             }
         }
-        
+
         bookingEngine.addBookings(toAdd);
         booking.attachBookingItems(toAdd);
-        
+
         booking.lastRepeatingData = data;
         saveBooking(booking);
-        
+
         logEntry("Updated repeating dates", bookingId, null);
-        
+
         return roomsToReturn;
     }
 
     @Override
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId) {
-        for(PmsBooking booking : bookings.values()) {
-            for(PmsBookingRooms room : booking.rooms) {
-                if(room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+        for (PmsBooking booking : bookings.values()) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
                     return booking;
                 }
             }
@@ -2329,19 +2321,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void returnedKey(String roomId) {
-        for(PmsBooking booking : getAllBookings(null)) {
-            for(PmsBookingRooms room : booking.rooms) {
-                if(room.bookingItemId == null || !room.bookingItemId.equals(roomId)) {
+        for (PmsBooking booking : getAllBookings(null)) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if (room.bookingItemId == null || !room.bookingItemId.equals(roomId)) {
                     continue;
                 }
-                if((room.isStarted() && (!room.isEnded()) || room.isEndingToday())) {
-                    if(room.keyIsReturned) {
+                if ((room.isStarted() && (!room.isEnded()) || room.isEndingToday())) {
+                    if (room.keyIsReturned) {
                         room.keyIsReturned = false;
                     } else {
                         room.keyIsReturned = true;
                     }
                     saveBooking(booking);
-                    if(!room.isEndingToday()) {
+                    if (!room.isEndingToday()) {
                         String roomName = bookingEngine.getBookingItem(roomId).bookingItemName;
                         String msg = "Key delivered for someone not checking out today, at room: " + roomName;
                         String email = storeManager.getMyStore().configuration.emailAdress;
@@ -2353,14 +2345,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-        
+
     }
 
     void warnAboutUnableToAutoExtend(String bookingItemName, String reason) {
         Calendar cal = Calendar.getInstance();
         Integer day = cal.get(Calendar.DAY_OF_YEAR);
         String warningString = bookingItemName + "-" + day;
-        if(warnedAbout.contains(warningString)) {
+        if (warnedAbout.contains(warningString)) {
             return;
         }
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
@@ -2375,26 +2367,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     boolean needCheckOutCleaning(PmsBookingRooms room, Date toDate) {
-        if(room.date.exitCleaningDate == null) {
+        if (room.date.exitCleaningDate == null) {
             room.date.exitCleaningDate = room.date.end;
-            
-            if(configuration.cleaningNextDay) {
+
+            if (configuration.cleaningNextDay) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(room.date.exitCleaningDate);
                 cal.add(Calendar.DAY_OF_YEAR, 1);
                 room.date.exitCleaningDate = cal.getTime();
             }
-            
+
         }
-        
+
         return isSameDay(room.date.exitCleaningDate, toDate);
     }
 
     private List<PmsBookingRooms> excludeAlreadyAdded(List<PmsBookingRooms> allRooms, PmsBooking curBooking) {
         List<PmsBookingRooms> toremove = new ArrayList();
-        for(PmsBookingRooms room : allRooms) {
-            for(PmsBookingRooms alreadyAdded : curBooking.rooms) {
-                if(room.isSame(alreadyAdded)) {
+        for (PmsBookingRooms room : allRooms) {
+            for (PmsBookingRooms alreadyAdded : curBooking.rooms) {
+                if (room.isSame(alreadyAdded)) {
                     toremove.add(room);
                 }
             }
@@ -2404,13 +2396,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void sortRooms(List<PmsBookingRooms> result) {
-        Collections.sort(result, new Comparator<PmsBookingRooms>(){
-        public int compare(PmsBookingRooms o1, PmsBookingRooms o2){
-            if(o1.item == null || o2.item == null) {
-                System.out.println("This is null");
+        Collections.sort(result, new Comparator<PmsBookingRooms>() {
+            public int compare(PmsBookingRooms o1, PmsBookingRooms o2) {
+                if (o1.item == null || o2.item == null) {
+                    System.out.println("This is null");
+                }
+                return o1.item.bookingItemName.compareTo(o2.item.bookingItemName);
             }
-            return o1.item.bookingItemName.compareTo(o2.item.bookingItemName);
-        }
         });
     }
 
@@ -2420,41 +2412,41 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.startDate = new Date();
         filter.endDate = new Date();
         List<PmsBooking> allBookings = getAllBookings(filter);
-        for(PmsBooking booking : allBookings) {
+        for (PmsBooking booking : allBookings) {
             boolean needSaving = false;
-            for(PmsBookingRooms room : booking.rooms) {
-                if(!room.isStarted()) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if (!room.isStarted()) {
                     continue;
                 }
-                if(room.isEnded()) {
+                if (room.isEnded()) {
                     continue;
                 }
-                if(room.isStartingToday()) {
+                if (room.isStartingToday()) {
                     continue;
                 }
-                
+
                 String ownerMail = storeManager.getMyStore().configuration.emailAdress;
-                if(room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+                if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                     //Notify that a booking has started without a booking item... wtf.
-                    messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item", "Owner: "+ ownerMail, "pal@getshop.com", "pal@getshop.com");
+                    messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item", "Owner: " + ownerMail, "pal@getshop.com", "pal@getshop.com");
                     continue;
                 }
-                
+
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
-                if(item == null) {
-                    messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item (nullitem)", "Owner: "+ ownerMail, "pal@getshop.com", "pal@getshop.com");
+                if (item == null) {
+                    messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item (nullitem)", "Owner: " + ownerMail, "pal@getshop.com", "pal@getshop.com");
                 } else {
                     PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
-                    if(additional.isClean(false)) {
+                    if (additional.isClean(false)) {
                         additional.markDirty();
                         needSaving = true;
-                        messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Room is active, but marked as clean, room: " + item.bookingItemName, "Owner: "+ ownerMail, "pal@getshop.com", "pal@getshop.com");
+                        messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Room is active, but marked as clean, room: " + item.bookingItemName, "Owner: " + ownerMail, "pal@getshop.com", "pal@getshop.com");
                         logEntry("Marking item " + item.bookingItemName + " as dirty (failure in marking)", booking.id, item.id);
                         saveObject(additional);
                     }
                 }
             }
-            if(needSaving) {
+            if (needSaving) {
                 saveBooking(booking);
             }
         }
@@ -2462,9 +2454,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setNewCleaningIntervalOnRoom(String roomId, Integer interval) {
-        for(PmsBooking booking : bookings.values()) {
-            for(PmsBookingRooms room : booking.rooms) {
-                if(room.pmsBookingRoomId.equals(roomId)) {
+        for (PmsBooking booking : bookings.values()) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if (room.pmsBookingRoomId.equals(roomId)) {
                     room.intervalCleaning = interval;
                     saveBooking(booking);
                 }
@@ -2473,14 +2465,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void checkIfRoomShouldBeUnmarkedDirty(PmsBookingRooms room, String bookingId) {
-        if(!configuration.unsetCleaningIfJustSetWhenChangingRooms) {
+        if (!configuration.unsetCleaningIfJustSetWhenChangingRooms) {
             return;
         }
 
-        if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+        if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
             PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
-            if(additional != null) {
-                if(additional.unsetMarkedDirtyPastThirtyMinutes()) {
+            if (additional != null) {
+                if (additional.unsetMarkedDirtyPastThirtyMinutes()) {
                     logEntry("Unsetting cleaning for this room.", bookingId, room.bookingItemId);
                     saveObject(additional);
                 }
@@ -2490,7 +2482,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void resetBookingItem(PmsBookingRooms room, String itemId, PmsBooking booking) {
-        if(room.isStarted() && !room.isEnded()) {
+        if (room.isStarted() && !room.isEnded()) {
             room.addedToArx = false;
             PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
             add.markDirty();
@@ -2501,15 +2493,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBookingRooms getRoomForItem(String itemId, Date atTime) {
-        for(PmsBooking booking : bookings.values()) {
-            for(PmsBookingRooms room : booking.rooms) {
-                if(room.isEnded(atTime)) {
+        for (PmsBooking booking : bookings.values()) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if (room.isEnded(atTime)) {
                     continue;
                 }
-                if(!room.isStarted(atTime)) {
+                if (!room.isStarted(atTime)) {
                     continue;
                 }
-                if(room.bookingItemId.equals(itemId)) {
+                if (room.bookingItemId.equals(itemId)) {
                     return room;
                 }
             }
@@ -2519,27 +2511,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private Double calculateMonthlyPricing(String typeId) {
         HashMap<String, Double> priceRange = prices.dailyPrices.get(typeId);
-        if(priceRange == null) {
+        if (priceRange == null) {
             return 0.0;
         }
         Double defaultPrice = priceRange.get("default");
-        if(defaultPrice == null) {
+        if (defaultPrice == null) {
             defaultPrice = 0.0;
         }
-        
+
         return defaultPrice;
     }
 
     private boolean bookingIsOK(PmsBooking booking) {
         finalize(booking);
-        for(PmsBookingRooms room : booking.rooms) {
-            if(room.booking == null) {
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.booking == null) {
                 messageManager.sendErrorNotification("Booking failure for booking: " + booking.id + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress);
                 return false;
             }
         }
-        
-        if(booking.rooms == null || booking.rooms.isEmpty()) {
+
+        if (booking.rooms == null || booking.rooms.isEmpty()) {
             return false;
         }
         return true;
@@ -2547,13 +2539,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void removeBeingProcessed(List<PmsBooking> result) {
         List<PmsBooking> toRemove = new ArrayList();
-        for(PmsBooking booking : result) {
-            if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
+        for (PmsBooking booking : result) {
+            if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 toRemove.add(booking);
             }
         }
         result.removeAll(toRemove);
     }
 
+    @Override
+    public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
+        if (!isOpen(itemType, start, end)) {
+            return 0;
+        }
+        return bookingEngine.getNumberOfAvailable(itemType, start, end);
+    }
+
+    private boolean isOpen(String itemType, Date start, Date end) {
+        return true;
+    }
+
+    private boolean canAdd(List<Booking> toCheck) {
+        for(Booking book : toCheck) {
+            if(!isOpen(book.bookingItemTypeId, book.startDate, book.endDate)) {
+                return false;
+            }
+        }
+        
+        return bookingEngine.canAdd(toCheck);
+    }
 
 }

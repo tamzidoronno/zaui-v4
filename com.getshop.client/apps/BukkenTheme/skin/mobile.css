@@ -43,6 +43,20 @@ body {
     padding-right: 20px;
 }
 
+.submitForm {
+    background-color: #5dbebc !important;
+    border: solid 0px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%);
+    color:#fff;
+    padding: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width:100%;
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .gsrotatearrow {
     top: -5px;
     color: #3c3c3b;
@@ -70,6 +84,7 @@ body {
     margin-top: 30px;
 }
 
+.gsarea[area="signupcourse"] .gslayoutbox { padding: 0px; }
 .gsarea[area="prisoverslag"] div[appid="620f2a25-7d4e-4c54-abaa-11c90e3704e9"] input,
 .gsarea[area="signupcourse"] div[appid="4b541cf4-e87c-4234-9d20-435283e08710"] input  {
     width: 100%;

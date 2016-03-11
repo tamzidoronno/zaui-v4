@@ -1051,12 +1051,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 HashMap<String, String> attachments = createICalEntry(booking);
                 messageManager.sendMailWithAttachments(user.emailAddress, user.fullName, title, message, fromEmail, fromName, attachments);
             } else {
-                messageManager.sendMail(user.fullName, user.emailAddress, title, message, fromName, fromEmail);
+                messageManager.sendMail(user.emailAddress, user.fullName, title, message, fromName, fromEmail);
             }
 
             if (configuration.copyEmailsToOwnerOfStore) {
                 String copyadress = storeManager.getMyStore().configuration.emailAdress;
-                messageManager.sendMail(user.fullName, copyadress, title, message, fromName, fromEmail);
+                messageManager.sendMail(copyadress, user.fullName, title, message, fromName, fromEmail);
             }
 
             repicientList.add(user.emailAddress);
@@ -1082,7 +1082,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     String title = configuration.emailTitles.get(key);
                     title = formatMessage(message, booking, room, guest);
-                    messageManager.sendMail(guest.name, guest.email, title, message, getFromName(), getFromEmail());
+                    messageManager.sendMail(guest.email, guest.name, title, message, getFromName(), getFromEmail());
                     repicientList.add(email);
                 } else {
                     String phone = guest.phone;
@@ -1117,7 +1117,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             email = configuration.sendAdminTo;
         }
         
-        messageManager.sendMail("Administrator", email, "Notification", message, getFromName(), getFromEmail());
+        messageManager.sendMail(email, "Administrator", "Notification", message, getFromName(), getFromEmail());
         messageManager.sendSms("plivo", phone, message, "47");
     }
 

@@ -89,6 +89,7 @@ thundashop.framework = {
         $(document).on('click', '.gsresizingpanel .gssavechanges', this.saveCellChanges);
         $(document).on('change', '.gsresizingpanel .gsbgimageselection', this.loadImage);
         $(document).on('change', '.gsmobileupload', this.loadImage);
+        $(document).on('click', '.gssavemobilelink', this.saveMobileLink);
         $(document).on('click', '.gsresizingpanel .gsremovebgimage', this.loadImage);
         $(document).on('change', '.gsdisplaygridcheckbox', this.toggleVisualization);
         $(document).on('click', '.gsresizingpanel .tabbtn[target="css"]', this.loadCssEditor);
@@ -135,6 +136,16 @@ thundashop.framework = {
         var postEvent = thundashop.Ajax.createEvent(null, "toggleSideBar", this, { name : $(this).val()});
         thundashop.Ajax.post(postEvent, function() {
             window.location = window.location;
+        });
+    },
+    
+    saveMobileLink : function() {
+        var data = {
+            link : $('.gsmobilelinkfield').val()
+        }
+        var event = thundashop.Ajax.createEvent('','saveMobileLink', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            alert('saved');
         });
     },
     

@@ -363,4 +363,9 @@ public interface IPageManager {
     public void createModal(String modalName);
     
     public List<String> getModalNames();
+    
+    @Administrator
+    public void saveMobileLink(String link);
+    
+    public String getMobileLink();
 }

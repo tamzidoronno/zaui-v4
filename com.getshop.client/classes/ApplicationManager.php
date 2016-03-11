@@ -24,6 +24,10 @@ class ApplicationManager extends FactoryBase {
         $this->getApi()->getPageManager()->addLayoutCellDragAndDrop($pageId, $cellid, $type, $egde, $area);
     }
     
+    function saveMobileLink() {
+        $this->getApi()->getPageManager()->saveMobileLink($_POST['data']['link']);
+    }
+    
     function switchArea() {
         $pageId = $this->getPage()->id;
         $fromArea = $_POST['data']['area'];

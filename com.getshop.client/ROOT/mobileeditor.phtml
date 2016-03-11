@@ -1,3 +1,6 @@
+<?php
+$factory = IocContainer::getFactorySingelton();
+?>
 <div class='gsmobileeditor'>
     <div style='margin:auto;'>
         <div style='width: 1000px;position: relative;margin: auto;'>
@@ -20,6 +23,10 @@
                     </span><br><br>
                <input type='button' value='Reset mobile layout' class='gsresetmobilelayout'>
                <input type='button' value='flatten mobile structure' class='gsflattenmobile'>
+               <div>
+                   <br><br>
+                   <input type='text' class='gsmobilelinkfield' value='<?php echo $factory->getApi()->getPageManager()->getMobileLink(); ?>'><input type='button' class='gssavemobilelink' value='Add link to header'>
+               </div>
                 </span>
                
                

@@ -822,4 +822,15 @@ public class PageManager extends ManagerBase implements IPageManager {
     public List<String> getModalNames() {
         return new ArrayList<String>(commonPageData.modals.keySet());
     }
+
+    @Override
+    public void saveMobileLink(String link) {
+        commonPageData.mobileLink = link;
+        saveObject(commonPageData);
+    }
+
+    @Override
+    public String getMobileLink() {
+        return commonPageData.mobileLink;
+    }
 }

@@ -28,7 +28,7 @@
     background-image: url("/skin/default/IPhone_5_landscape.png");
 }
 
-.gsmobileconfiguration { position: absolute; left: 400px; border: solid 1px; background-color:#fff; padding: 10px; border-radius: 15px; height: 176px; top: 16px; width: 560px; }
+.gsmobileconfiguration { position: absolute; left: 400px; border: solid 1px; background-color:#fff; padding: 10px; border-radius: 15px; height: 256px; top: 16px; width: 560px; }
 
 
 #gscontentframelandscape {

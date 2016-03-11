@@ -164,7 +164,7 @@ class Page {
     }
 
     private function printMobileHeader($headerCells) {
-        echo "<a href='/'>";
+        echo "<a href='".$this->factory->getApi()->getPageManager()->getMobileLink()."'>";
         echo "<div class='gsmobileheader'>";
         $config = $this->factory->getStore()->configuration;
 

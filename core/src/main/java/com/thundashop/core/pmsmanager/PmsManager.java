@@ -2562,7 +2562,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private boolean isOpen(String itemType, Date start, Date end) {
-        return true;
+        
+        Session sess = getSession();
+        if(sess != null && sess.currentUser != null) {
+            if(sess.currentUser.isAdministrator()) {
+                return true;
+            }
+        }
+        
+        List<TimeRepeaterData> openingshours = bookingEngine.getOpeningHours(itemType);
+        if(openingshours.isEmpty()) {
+            openingshours = bookingEngine.getOpeningHours(null);
+        }
+        
+        if(openingshours.isEmpty()) {
+            return true;
+        }
+        
+        TimeRepeater repeater = new TimeRepeater();
+        for(TimeRepeaterData res : openingshours) {
+            LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
+            for(TimeRepeaterDateRange range : ranges) {
+                if(range.containsRange(start, end)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 
     private boolean canAdd(List<Booking> toCheck) {

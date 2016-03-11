@@ -34,5 +34,5 @@ public class TimeRepeaterData implements Serializable {
     
     /* When repeatPeride = 2 */
     boolean repeatAtDayOfWeek = false;
-    
+
 }

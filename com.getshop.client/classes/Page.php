@@ -393,6 +393,16 @@ class Page {
                     <td align="right"><input type="checkbox" class="gskeepaspect" <? echo $keepAspect; ?>></td>
                 </tr>
                 <tr>
+                    <td><? echo $this->factory->__w("Height is maximum height"); ?></td>
+                    <?
+                    $maxHeight= "";
+                    if($cell->carouselConfig->heightIsMaximumHeight) {
+                        $maxHeight = "CHECKED";
+                    }
+                    ?>
+                    <td align="right"><input type="checkbox" class="gsmaxheight" <? echo $maxHeight; ?>></td>
+                </tr>
+                <tr>
                     <td><? echo $this->factory->__w("Hide navdots"); ?></td>
                     <?
                     $keepAspect= "";
@@ -835,6 +845,7 @@ class Page {
     }
 
     public function printContainerSettings($doCarousel, $cell, $depth) {
+        /* @var $config core_pagemanager_data_CarouselConfig */
         $config = $cell->carouselConfig;
         $height = $config->height;
         if ($this->factory->isMobile() || $this->editCarouselForMobile()) {
@@ -851,6 +862,13 @@ class Page {
 
                     var aspectRatio =  origHeight / origWindowWidth;
                     var newHeight = $(window).width() * aspectRatio;
+                    
+                    <?php  if($config->heightIsMaximumHeight) { ?>
+                            if(newHeight > <?php echo $config->height; ?>) {
+                                newHeight = <?php echo $config->height; ?>;
+                            }
+                        <?php } ?>
+                    
                     var heightDiff = newHeight / origHeight;
                     var innerWidthChange = $('.gs_page_width').width() / innerWidth;
 

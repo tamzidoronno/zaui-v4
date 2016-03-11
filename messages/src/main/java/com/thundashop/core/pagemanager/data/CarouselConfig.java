@@ -12,6 +12,7 @@ public class CarouselConfig implements Serializable {
     public Boolean avoidRotate = false;
     public Boolean navigateOnMouseOver = false;
     public Boolean keepAspect = false;
+    public Boolean heightIsMaximumHeight = false;
     public Integer windowWidth = -1;
     public Integer innerWidth = -1;
 }

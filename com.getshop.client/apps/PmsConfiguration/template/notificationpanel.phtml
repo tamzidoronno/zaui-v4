@@ -494,9 +494,29 @@ $days[7] = "Sunday";
                 <input type='txt' gsname='closeAllDoorsAfterTime' value="<?php echo $notificationSettings->closeAllDoorsAfterTime; ?>">
             </span>
             Keep door open when keycode is entered.
-        </div>        
+        </div>   
     </div>
     <br><br>
+    <h2>Lock settings</h2>
+    <br><br>
+    <div class='configrow'>
+        <span class='configentry'>
+            <input type='text' gsname='senderName' value='<? echo $notificationSettings->senderName; ?>'>
+        </span>
+        Senders name
+    </div>
+    <div class='configrow'>
+        <span class='configentry'>
+            <input type='text' gsname='senderEmail' value='<? echo $notificationSettings->senderEmail; ?>'>
+        </span>
+        Senders email
+    </div>
+    <div class='configrow'>
+        <span class='configentry'>
+            <input type='text' gsname='sendAdminTo' value='<? echo $notificationSettings->sendAdminTo; ?>'>
+        </span>
+        Email to notify to
+    </div>
     <div style='text-align: right;'>
         <span class='pmsbutton' gstype='submit'>Save changes</span>
     </div>

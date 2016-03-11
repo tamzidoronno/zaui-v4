@@ -1045,17 +1045,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             repicientList.add(user.cellPhone);
         } else {
             String title = configuration.emailTitles.get(key);
+            String fromName = getFromName();
+            String fromEmail = getFromEmail();
             if (key.startsWith("booking_confirmed")) {
                 HashMap<String, String> attachments = createICalEntry(booking);
-                String copyadress = storeManager.getMyStore().configuration.emailAdress;
-                messageManager.sendMailWithAttachments(user.emailAddress, user.fullName, title, message, copyadress, copyadress, attachments);
+                messageManager.sendMailWithAttachments(user.emailAddress, user.fullName, title, message, fromEmail, fromName, attachments);
             } else {
-                messageManager.sendMailWithDefaults(user.fullName, user.emailAddress, title, message);
+                messageManager.sendMail(user.fullName, user.emailAddress, title, message, fromName, fromEmail);
             }
 
             if (configuration.copyEmailsToOwnerOfStore) {
                 String copyadress = storeManager.getMyStore().configuration.emailAdress;
-                messageManager.sendMailWithDefaults(user.fullName, copyadress, title, message);
+                messageManager.sendMail(user.fullName, copyadress, title, message, fromName, fromEmail);
             }
 
             repicientList.add(user.emailAddress);
@@ -1081,7 +1082,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     String title = configuration.emailTitles.get(key);
                     title = formatMessage(message, booking, room, guest);
-                    messageManager.sendMailWithDefaults(guest.name, guest.email, title, message);
+                    messageManager.sendMail(guest.name, guest.email, title, message, getFromName(), getFromEmail());
                     repicientList.add(email);
                 } else {
                     String phone = guest.phone;
@@ -1111,7 +1112,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         message = formatMessage(message, booking, null, null);
         String email = storeManager.getMyStore().configuration.emailAdress;
         String phone = storeManager.getMyStore().configuration.phoneNumber;
-        messageManager.sendMailWithDefaults("Administrator", email, "Notification", message);
+        
+        if(!configuration.sendAdminTo.isEmpty()) {
+            email = configuration.sendAdminTo;
+        }
+        
+        messageManager.sendMail("Administrator", email, "Notification", message, getFromName(), getFromEmail());
         messageManager.sendSms("plivo", phone, message, "47");
     }
 
@@ -2567,6 +2573,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return bookingEngine.canAdd(toCheck);
+    }
+
+    private String getFromEmail() {
+        String fromEmail = storeManager.getMyStore().configuration.emailAdress;
+        if(!configuration.senderEmail.isEmpty()) {
+            fromEmail = configuration.senderEmail;
+        }
+        return fromEmail;
+    }
+
+    private String getFromName() {
+        String fromName = getFromEmail();
+        if(!configuration.senderName.isEmpty()) {
+            fromName = configuration.senderName;
+        }
+        return fromName;
     }
 
 }

@@ -1051,12 +1051,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 HashMap<String, String> attachments = createICalEntry(booking);
                 messageManager.sendMailWithAttachments(user.emailAddress, user.fullName, title, message, fromEmail, fromName, attachments);
             } else {
-                messageManager.sendMail(user.emailAddress, user.fullName, title, message, fromName, fromEmail);
+                messageManager.sendMail(user.emailAddress, user.fullName, title, message, fromEmail, fromName);
             }
 
             if (configuration.copyEmailsToOwnerOfStore) {
                 String copyadress = storeManager.getMyStore().configuration.emailAdress;
-                messageManager.sendMail(copyadress, user.fullName, title, message, fromName, fromEmail);
+                messageManager.sendMail(copyadress, user.fullName, title, message, fromEmail, fromName);
             }
 
             repicientList.add(user.emailAddress);
@@ -1082,7 +1082,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     String title = configuration.emailTitles.get(key);
                     title = formatMessage(message, booking, room, guest);
-                    messageManager.sendMail(guest.email, guest.name, title, message, getFromName(), getFromEmail());
+                    messageManager.sendMail(guest.email, guest.name, title, message, getFromEmail(), getFromName());
                     repicientList.add(email);
                 } else {
                     String phone = guest.phone;
@@ -1117,8 +1117,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             email = configuration.sendAdminTo;
         }
         
-        messageManager.sendMail(email, "Administrator", "Notification", message, getFromName(), getFromEmail());
-        messageManager.sendSms("plivo", phone, message, "47");
+        messageManager.sendMail(email, "Administrator", "Notification", message, getFromEmail(), getFromName());
+        messageManager.sendSms("sveve", phone, message, "47");
     }
 
     private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {

@@ -4,7 +4,7 @@ body {
 
 .gs_page_width {
     margin: 0 auto;
-    width: 1366px;
+    max-width: 1366px;
 }
 
 .gsrotateright.gsrotatearrow {

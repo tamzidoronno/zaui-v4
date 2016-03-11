@@ -163,11 +163,15 @@ body {
     font-size: 18px;
 }
 
-.gsarea[area="prisoverslag"] {
+.gsarea[area="prisoverslag"],
+.gsarea[area="signupcourse"] 
+{
     font-size: 18px;
 }
 
-.gsarea[area="prisoverslag"] .inputfield.formiteminput {
+.gsarea[area="prisoverslag"] .inputfield.formiteminput,
+.gsarea[area="signupcourse"] .inputfield.formiteminput 
+{
     padding: 10px;
     border: solid 1px #dcdcdc;
     transition: box-shadow 0.3s, border 0.3s;
@@ -178,7 +182,10 @@ body {
 }
 
 .gsarea[area="prisoverslag"] .inputfield.formiteminput :focus,
-.gsarea[area="prisoverslag"] .inputfield.formiteminput .focus {
+.gsarea[area="prisoverslag"] .inputfield.formiteminput .focus,
+.gsarea[area="signupcourse"] .inputfield.formiteminput :focus,
+.gsarea[area="signupcourse"] .inputfield.formiteminput .focus
+{
   border: solid 1px #707070;
   box-shadow: 0 0 5px 1px #969696;
 }
@@ -186,4 +193,19 @@ body {
 #informationbox-holder.gsnewinfobox,
 #informationbox-holder.gsnewinfobox #informationboxtitle {
     background-color: #5dbebc;
+}
+
+.gsarea[area="prisoverslag"] .submitForm,
+.gsarea[area="signupcourse"] .submitForm {
+    background-color: #5dbebc !important;
+    border: solid 0px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%);
+    color:#fff;
+    padding: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width:100%;
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }

@@ -164,6 +164,7 @@ class Page {
     }
 
     private function printMobileHeader($headerCells) {
+        echo "<a href='/'>";
         echo "<div class='gsmobileheader'>";
         $config = $this->factory->getStore()->configuration;
 
@@ -185,6 +186,7 @@ class Page {
 
         $this->printLanguageSelection();
         echo "</div>";
+        echo "</a>";
     }
 
     private function printMobileMenu($headerCells) {

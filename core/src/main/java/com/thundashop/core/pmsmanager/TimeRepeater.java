@@ -2,6 +2,7 @@
 package com.thundashop.core.pmsmanager;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import org.joda.time.DateTime;
@@ -26,6 +27,9 @@ public class TimeRepeater {
     }
 
     private LinkedList<TimeRepeaterDateRange> generateDailyRepeats(TimeRepeaterData data) {
+        if(data.firstEvent == null) {
+            return new LinkedList();
+        }
         LinkedList list = new LinkedList();
         list.add(data.firstEvent);
 

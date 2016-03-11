@@ -1,5 +1,6 @@
 body {
     background-color: #4d4d4f;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .gslayoutbox:not(.gsrotatingrow) {
@@ -31,14 +32,27 @@ body {
 }
 
 .shop_button {
-    background-color: #FFF;
-    color: #333;
-    border-radius: 0px;
-    border: solid 2px #333;
+    background-color: #5dbebc !important;
+    border: solid 0px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%);
+    color:#fff;
+    padding: 3px;
     line-height: 30px;
     height: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
+.gsrotatearrow {
+    top: -5px;
+    color: #3c3c3b;
+}
+.gsrotateright {
+    right: 5px;
+}
+.gsrotateleft {
+    left: 5px;
+}
 
 .gsmobilebody {
     background-color: #FFF;
@@ -69,52 +83,9 @@ body {
     display: none;
 }
 
-
-.shop_button_template1 .button_text_content ,
-.shop_button .button_text_content {
-    background-color: #5dbebc;
-    border-radius: 10px;
-    height: 20px;
-    line-height: 20px;
-    padding: 5px;
-    margin: 5px;
-    color: #FFF;
-    padding-left: 20px;
-    padding-right: 20px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.Contact .send_email.shop_button {
-    background-color: #5dbebc;
-    border: solid 0px;
-    width: 100%;
-}
-
-.Contact .shop_button {
-    padding-right: 0px; 
-    padding-left: 0px; 
-}
-
 .app.Button {
     text-align: center;
 }
-
-.shop_button_template1,
-.shop_button {
-    border-radius: 10px;
-    border: dashed 1px #3c3c3b;
-    height: 40px;
-    line-height: 40px;
-    padding: 0px;
-    margin-top: 20px;
-    display: inline-block;
-}
-
-.shop_button_template1 .button_text_content {
-    background-color: #3c3c3b;
-}
-
 
 body .gsbody_inner {
     padding-bottom: 46px;

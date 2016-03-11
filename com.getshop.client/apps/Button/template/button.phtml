@@ -31,7 +31,12 @@
     
     if ($type && $type == "link_to_external_page") {
         $link = $this->getConfigurationSetting("url");
-        $ahref = "<a class='gs_ignorenavigate' href='$link'>";
+        $popup = $this->getConfigurationSetting("popup");
+        if($popup == "true") {
+            $ahref = "<a class='gs_ignorenavigate' href='$link' target='_new'>";
+        } else {
+            $ahref = "<a class='gs_ignorenavigate' href='$link'>";
+        }
         $ahrefEnd = "</a>";
     }
     

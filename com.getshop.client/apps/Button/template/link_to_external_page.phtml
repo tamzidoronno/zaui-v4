@@ -1,10 +1,16 @@
 <?
     echo $this->__f("Please enter the address you wish this button should direct you to");
     $link = $this->getConfigurationSetting("url");
+    $popup = $this->getConfigurationSetting("popup");
+    $checked = "";
+    if($popup == "true") {
+        $checked = "CHECKED";
+    }
 ?>
 
 <br/>
 <br/>
+<input style='width: 40px;' type='checkbox' id='popup' style='width: 600px;' <?php echo $checked; ?>/> Open in new window?<br>
 <input type='textfield' id='button_link_to_external_url' style='width: 600px;' value="<? echo $link; ?>"/>
 <br/>
 <br/>

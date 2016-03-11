@@ -43,6 +43,7 @@ app.Button = {
     },
     saveExternalPage: function() {
         var data = {
+            popup: $('.Button #popup').is(':checked'),
             link: $('.Button #button_link_to_external_url').val()
         };
         

@@ -70,6 +70,7 @@ class Button extends \ApplicationBase implements \Application {
     public function setExternalPage() {
         $this->setConfigurationSetting("type", "link_to_external_page");
         $this->setConfigurationSetting("url", $_POST['data']['link']);
+        $this->setConfigurationSetting("popup", $_POST['data']['popup']);
     }
     
     public function setInternalPage() {

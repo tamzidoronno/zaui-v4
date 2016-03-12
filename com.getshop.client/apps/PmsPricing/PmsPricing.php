@@ -31,6 +31,7 @@ class PmsPricing extends \WebshopApplication implements \Application {
 
         $pricingObject->defaultPriceType = $_POST['data']['pricetype'];
         $pricingObject->pricesExTaxes = $_POST['data']['prices_ex_taxes'] == "true";
+        $pricingObject->privatePeopleDoNotPayTaxes = $_POST['data']['privatePeopleDoNotPayTaxes'] == "true";
 
         $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $pricingObject);
     }

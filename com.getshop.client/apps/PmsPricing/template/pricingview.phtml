@@ -67,6 +67,11 @@ foreach($itemTypes as $item) {
         $checked = "CHECKED";
     }
     echo "<input type='checkbox' class='pricesextaxes' $checked> Prices ex taxes<br>";
+    $checked = "";
+    if($priceObject->privatePeopleDoNotPayTaxes) {
+        $checked = "CHECKED";
+    }
+    echo "<input type='checkbox' class='privatePeopleDoNotPayTaxes' $checked> Private people and no tax registerd companies does not need to pay taxes<br>";
     echo "<select class='pricetypeselection' gsname='pricetype'>";
     foreach($pricetypes as $idx => $type) {
         $selected = "";

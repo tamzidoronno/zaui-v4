@@ -53,6 +53,10 @@ public class PmsBookingRooms implements Serializable {
     public BookingItemType type;
 
     boolean isActiveOnDay(Date time) {
+        if(date.end == null || date.start == null) {
+            return false;
+        }
+        
         Calendar cal = Calendar.getInstance();
         cal.setTime(time);
         cal.set(Calendar.HOUR_OF_DAY, 17);

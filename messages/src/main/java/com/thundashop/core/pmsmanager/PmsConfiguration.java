@@ -29,7 +29,6 @@ public class PmsConfiguration extends DataCommon {
     public boolean isItemBookingInsteadOfTypes = false;
     public boolean autoExtend = false;
     public boolean copyEmailsToOwnerOfStore = false;
-    boolean substractOneDayOnOrder = false;
 
     /* Invoice creation options */
     public boolean autoCreateInvoices = false;
@@ -39,6 +38,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean requirePayments = false;
     public Integer prepaymentDaysAhead = -1;
     public Integer increaseUnits = -1;
+    boolean substractOneDayOnOrder = false;
     
 
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily

@@ -763,6 +763,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.defaultPriceType = newPrices.defaultPriceType;
         prices.progressivePrices = newPrices.progressivePrices;
         prices.pricesExTaxes = newPrices.pricesExTaxes;
+        prices.privatePeopleDoNotPayTaxes = newPrices.privatePeopleDoNotPayTaxes;
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
             for (String date : priceMap.keySet()) {
@@ -835,7 +836,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (item == null) {
                 return false;
             }
-            if (prices.pricesExTaxes) {
+            
+            boolean includeTaxes = true;
+            if(prices.privatePeopleDoNotPayTaxes) {
+                User user = userManager.getUserById(booking.userId);
+                if(user.company.isEmpty()) {
+                    includeTaxes = false;
+                } else {
+                    Company company = userManager.getCompany(user.company.get(0));
+                    includeTaxes = company.vatRegisterd;
+                }
+            }
+            
+            if (prices.pricesExTaxes && includeTaxes) {
                 double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
                 //Order price needs to be inc taxes..
                 price *= tax;
@@ -1855,6 +1868,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         CartItem item = cartManager.addProductItem(productId, 1);
         item.startDate = startDate;
         item.endDate = endDate;
+        
+        if (configuration.substractOneDayOnOrder) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(item.endDate);
+            cal.add(Calendar.DAY_OF_YEAR, -1);
+            item.endDate = cal.getTime();
+        }
+        
         item.getProduct().name = type.name;
         if (bookingitem != null) {
             item.getProduct().name += " (" + bookingitem.bookingItemName + ")";

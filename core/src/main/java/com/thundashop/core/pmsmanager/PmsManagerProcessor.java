@@ -273,7 +273,10 @@ public class PmsManagerProcessor {
             manager.createOrder(booking.id, filter);
 
         } else {
-//            System.out.println("Only supporting postpayments for the time being");
+            filter.prepayment = true;
+            filter.startInvoiceFrom = beginningOfMonth(0);
+            filter.endInvoiceAt = beginningOfMonth(1);
+            manager.createOrder(booking.id, filter);
         }
     }
 

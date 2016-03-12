@@ -4,13 +4,13 @@ $countrycodes = $this->getFactory()->getTerritoriesList();
 $factory = $this->getFactory();
 $paymentMethods = $factory->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 
-$languages = array();
-$languages['nb_NO'] = "Norwegian";
-$languages['se'] = "Swedish";
-$languages['dk'] = "Danish";
-$languages['en_en'] = "English";
-$languages['nl_NL'] = "Dutch";
-$languages['fi_FI'] = "Finish";
+$states = array();
+$states['nb_NO'] = "Norwegian";
+$states['se'] = "Swedish";
+$states['dk'] = "Danish";
+$states['en_en'] = "English";
+$states['nl_NL'] = "Dutch";
+$states['fi_FI'] = "Finish";
 ?>
 <div class='gss_settings_header'>
     <i class='fa fa-info'></i>
@@ -32,7 +32,7 @@ $languages['fi_FI'] = "Finish";
 
         <div class="gss_dropdown">
             <select class="config" gs_model='storesettings' gs_model_attr='language'>
-                <? foreach ($languages as $key => $lang) { 
+                <? foreach ($states as $key => $lang) { 
                     $selected = $this->getFactory()->getMainLanguage() == $key ? "selected='true'" : "";
                     ?>
                     <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>

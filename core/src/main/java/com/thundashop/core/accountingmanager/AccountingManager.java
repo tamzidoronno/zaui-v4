@@ -35,10 +35,14 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     UserManager userManager;
     
     private List<AccountingInterface> interfaces = new ArrayList();
+    private AccountingManagerConfig config = new AccountingManagerConfig();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for(DataCommon obj : data.data) {
+            if(obj instanceof AccountingManagerConfig) {
+                this.config = (AccountingManagerConfig) obj;
+            }
             if(obj instanceof SavedOrderFile) {
                 files.put(((SavedOrderFile) obj).id, (SavedOrderFile) obj);
             }
@@ -82,7 +86,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         for(AccountingInterface iface : interfaces) {
             List<Order> orders = new ArrayList();
             for(Order order : orderManager.getOrders(null, null, null)) {
-                if(order.status != Order.Status.SEND_TO_INVOICE) {
+                if(!config.statesToInclude.contains(order.status)) {
                     continue;
                 }
                 if(!order.transferredToAccountingSystem) {
@@ -138,6 +142,17 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     @Override
     public List<String> getFile(String id) {
         return files.get(id).result;
+    }
+
+    @Override
+    public void setAccountingManagerConfig(AccountingManagerConfig config) {
+        saveObject(config);
+        this.config = config;
+    }
+
+    @Override
+    public AccountingManagerConfig getAccountingManagerConfig() {
+        return this.config;
     }
 
 }

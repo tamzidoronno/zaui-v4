@@ -29,20 +29,20 @@ $searchtext = $this->getSearchText();
                 <div class="gss_dropdown" style='top: 1px; right: 50px;'>
                     <select class="config" gs_model='orders' gs_model_attr='status'>
                         <? 
-                        $languages = array();
-                        $languages['0'] = "All";
-                        $languages['1'] = "Created";
-                        $languages['2'] = "Waiting for payment";
-                        $languages['3'] = "Payment failed";
-                        $languages['4'] = "Completed";
-                        $languages['5'] = "Canceled";
-                        $languages['6'] = "Sent";
-                        $languages['7'] = "Payment completed";
-                        $languages['8'] = "Collection failed";
-                        $languages['9'] = "Need collecting";
-                        $languages['10'] = "Send to invoice";
+                        $states = array();
+                        $states['0'] = "All";
+                        $states['1'] = "Created";
+                        $states['2'] = "Waiting for payment";
+                        $states['3'] = "Payment failed";
+                        $states['4'] = "Completed";
+                        $states['5'] = "Canceled";
+                        $states['6'] = "Sent";
+                        $states['7'] = "Payment completed";
+                        $states['8'] = "Collection failed";
+                        $states['9'] = "Need collecting";
+                        $states['10'] = "Send to invoice";
                 
-                        foreach ($languages as $key => $lang) { 
+                        foreach ($states as $key => $lang) { 
                             $selected = $this->getFactory()->getMainLanguage() == $key ? "selected='true'" : "";
                             ?>
                             <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>

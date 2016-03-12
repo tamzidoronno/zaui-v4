@@ -18,4 +18,9 @@ public interface IAccountingManager {
     public HashMap<String, String> getAllFiles();
     @Administrator
     public List<String> getFile(String id);
+    
+    @Administrator
+    public void setAccountingManagerConfig(AccountingManagerConfig config);
+    
+    public AccountingManagerConfig getAccountingManagerConfig();
 }

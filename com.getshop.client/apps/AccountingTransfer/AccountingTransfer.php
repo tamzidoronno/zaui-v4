@@ -17,5 +17,18 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
     public function renderConfig() {
         $this->includefile("accountingconfig");
     }
+    
+    public function saveAccountingConfig() {
+        $states = array();
+        for($i = 1; $i < 10; $i++) {
+            if($_POST['state_'.$i] == "true") {
+                $states[] = $i;
+            }
+        }
+        
+        $config = $this->getApi()->getAccountingManager()->getAccountingManagerConfig();
+        $config->statesToInclude = $states;
+        $this->getApi()->getAccountingManager()->setAccountingManagerConfig($config);
+    }
 }
 ?>

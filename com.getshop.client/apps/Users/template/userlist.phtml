@@ -33,13 +33,13 @@ $searchtext = $this->getSearchText();
             <div class="gss_dropdown" style='top: 1px; right: 116px; width: 200px;'>
                 <select class="config" gs_model='orders' gs_model_attr='status'>
                     <? 
-                    $languages = array();
-                    $languages['0'] = "ALL";
-                    $languages['10'] = "Customers";
-                    $languages['50'] = "Editor";
-                    $languages['100'] = "Admin";
+                    $states = array();
+                    $states['0'] = "ALL";
+                    $states['10'] = "Customers";
+                    $states['50'] = "Editor";
+                    $states['100'] = "Admin";
                     
-                    foreach ($languages as $key => $lang) { 
+                    foreach ($states as $key => $lang) { 
                         $selected = $this->getFactory()->getMainLanguage() == $key ? "selected='true'" : "";
                         ?>
                         <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>

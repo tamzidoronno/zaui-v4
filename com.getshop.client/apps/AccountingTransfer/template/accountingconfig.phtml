@@ -1,22 +1,19 @@
 <?php
-
 namespace ns_932810f4_5bd1_4b56_a259_d5bd2e071be1;
-
-$taxes = $this->getApi()->getProductManager()->getTaxes();
-if (!is_array($taxes)) {
-    $taxes = [];
-}
-
-$shipment = isset($taxes[0]) ? $taxes[0]->taxRate : "";
-$group1 = isset($taxes[1]) ? $taxes[1]->taxRate : "";
-$group2 = isset($taxes[2]) ? $taxes[2]->taxRate : "";
-$group3 = isset($taxes[3]) ? $taxes[3]->taxRate : "";
-$group4 = isset($taxes[4]) ? $taxes[4]->taxRate : "";
-$group5 = isset($taxes[5]) ? $taxes[5]->taxRate : "";
+/* @var $this \ns_932810f4_5bd1_4b56_a259_d5bd2e071be1\AccountingTransfer */
+$states[1] = "Created";
+$states[2] = "Waiting for payment";
+$states[3] = "Payment failed";
+$states[4] = "Completed";
+$states[5] = "Canceled";
+$states[6] = "Sent";
+$states[7] = "Payment completed";
+$states[8] = "Collection failed";
+$states[9] = "Need collecting";
+$states[10] = "Send to invoice";
 
 $files = $this->getApi()->getAccountingManager()->getAllFiles();
-
-/* @var $this \ns_deab499e_b133_4cb6_a1b2_532018c31d46\Taxes */
+$config = $this->getApi()->getAccountingManager()->getAccountingManagerConfig();
 ?>
 
 <div class="gss_settings_header">
@@ -45,4 +42,22 @@ foreach($files as $fileId => $date) {
 }
 ?>
     <div style='clear:both;'></div>
+    <?php
+    foreach($states as $state => $val) {
+    ?>    
+        <div class="textfield gss_setting" id="admin">
+            <span class="title"><?php echo $val; ?></span>
+            <div class="gss_onoff" gs_model="adminconfig" gs_model_attr="state_<?php echo $state; ?>">
+                <?
+                $faclass = in_array($state, $config->statesToInclude) ? "fa-toggle-on" : "fa-toggle-off";
+                ?>
+                Off<i class="fa <? echo $faclass; ?>"></i>On
+            </div>
+        </div>
+    <?php } ?>
+    
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveAccountingConfig" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    </div>
+
 </div>

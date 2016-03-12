@@ -20,7 +20,7 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
     
     public function saveAccountingConfig() {
         $states = array();
-        for($i = 1; $i < 10; $i++) {
+        for($i = 1; $i <= 10; $i++) {
             if($_POST['state_'.$i] == "true") {
                 $states[] = $i;
             }

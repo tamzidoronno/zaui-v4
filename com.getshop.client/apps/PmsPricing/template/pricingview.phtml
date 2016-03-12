@@ -62,6 +62,11 @@ foreach($itemTypes as $item) {
 <br><br>
 <div gstype='form' method='updateProgressivePrices'>
     <?php
+    $checked = "";
+    if($priceObject->pricesExTaxes) {
+        $checked = "CHECKED";
+    }
+    echo "<input type='checkbox' class='pricesextaxes' $checked> Prices ex taxes<br>";
     echo "<select class='pricetypeselection' gsname='pricetype'>";
     foreach($pricetypes as $idx => $type) {
         $selected = "";

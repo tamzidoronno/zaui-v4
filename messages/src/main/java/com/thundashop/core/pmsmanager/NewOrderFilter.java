@@ -10,4 +10,7 @@ public class NewOrderFilter implements Serializable {
     public String itemId = "";
     boolean onlyEnded = false;
     boolean prepayment = false;
+    boolean forceInvoicing = false;
+    public Integer increaseUnits = -1;
+    public Integer prepaymentDaysAhead = -1;
 }

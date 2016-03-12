@@ -427,6 +427,18 @@ $days[7] = "Sunday";
             </span>
             Autocreate invoices.
         </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='number' style='width: 40px;' gsname='prepaymentDaysAhead' value='<? echo $notificationSettings->prepaymentDaysAhead; ?>'>
+            </span>
+            Specify the number of days you would like to create the order in advance.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='number' style='width: 40px;' gsname='increaseUnits' value='<? echo $notificationSettings->increaseUnits; ?>'>
+            </span>
+            How many time units would you like to increase with (example: if the its a montly booking, 1 will increase the booking with one month).
+        </div>
         <br><br>
         <h2>Lock settings</h2>
         <div class='configrow'>

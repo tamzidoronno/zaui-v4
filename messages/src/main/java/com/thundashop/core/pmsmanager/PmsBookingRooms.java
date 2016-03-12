@@ -158,4 +158,83 @@ public class PmsBookingRooms implements Serializable {
         }
         return false;
     }
+
+    boolean needInvoicing(NewOrderFilter filter) {
+        
+        if(filter.forceInvoicing) {
+            return true;
+        }
+        
+        if(filter.onlyEnded && date.end.after(filter.endInvoiceAt)) {
+            return false;
+        }
+        
+        if(filter.prepayment && invoicedTo != null) {
+            //If invoiced into the future. 
+            Date toInvoiceFrom = invoicedTo;
+            if(filter.prepaymentDaysAhead >= 0) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(invoicedTo);
+                cal.add(Calendar.DAY_OF_YEAR, filter.prepaymentDaysAhead*-1);
+                toInvoiceFrom = cal.getTime();
+            }
+            if(toInvoiceFrom.after(new Date())) {
+                return false;
+            }
+        }
+        
+        if(invoicedTo == null) {
+            return true;
+        }
+        
+        if(invoicedTo.before(filter.endInvoiceAt)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+
+    Date getInvoiceStartDate(NewOrderFilter filter) {
+        if(date.start.after(filter.startInvoiceFrom)) {
+            return date.start;
+        }
+        
+        if(invoicedTo != null) {
+            return invoicedTo;
+        }
+        
+        return filter.startInvoiceFrom;
+    }
+
+    Date getInvoiceEndDate(NewOrderFilter filter, PmsBooking booking) {
+        if(filter.increaseUnits > 0) {
+            filter.endInvoiceAt = addTimeUnits(filter.increaseUnits, booking, filter.startInvoiceFrom);
+        }
+        
+        if(date.end.before(filter.endInvoiceAt)) {
+            return date.end;
+        }
+        
+        return filter.endInvoiceAt;
+    }
+
+    private Date addTimeUnits(Integer increaseUnits, PmsBooking booking, Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
+            cal.add(Calendar.MONTH, increaseUnits);
+        }
+        if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
+            cal.add(Calendar.DAY_OF_YEAR, increaseUnits);
+        }
+        if(booking.priceType.equals(PmsBooking.PriceType.weekly)) {
+            cal.add(Calendar.WEEK_OF_YEAR, increaseUnits);
+        }
+        if(booking.priceType.equals(PmsBooking.PriceType.hourly)) {
+            cal.add(Calendar.HOUR_OF_DAY, increaseUnits);
+        }
+        return cal.getTime();
+            
+    }
 }

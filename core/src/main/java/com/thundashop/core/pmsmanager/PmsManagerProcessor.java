@@ -262,6 +262,9 @@ public class PmsManagerProcessor {
 
     private void createPeriodeInvoices(PmsBooking booking) {
         NewOrderFilter filter = new NewOrderFilter();
+        filter.prepaymentDaysAhead = manager.configuration.prepaymentDaysAhead;
+        filter.increaseUnits = manager.configuration.increaseUnits;
+        
         if (!manager.configuration.prepayment) {
             filter.prepayment = false;
             filter.startInvoiceFrom = beginningOfMonth(-1);

@@ -21,21 +21,25 @@ public class PmsConfiguration extends DataCommon {
     
     /* other configurations */
     public boolean needConfirmation = false;
-    public boolean requirePayments = false;
     public boolean needToAgreeOnContract = false;
     public boolean exposeUnsecureBookings = false;
     public boolean autoconfirmRegisteredUsers = false;
-    public boolean prepayment = false;
-    public boolean payAfterBookingCompleted = false;
-    public Integer createOrderAtDayInMonth = 0;
     public Integer minStay = 1;
     public boolean supportMoreDates = false;
     public boolean isItemBookingInsteadOfTypes = false;
     public boolean autoExtend = false;
-    public boolean autoCreateInvoices = false;
     public boolean copyEmailsToOwnerOfStore = false;
     boolean substractOneDayOnOrder = false;
 
+    /* Invoice creation options */
+    public boolean autoCreateInvoices = false;
+    public Integer createOrderAtDayInMonth = 0;
+    public boolean prepayment = false;
+    public boolean payAfterBookingCompleted = false;
+    public boolean requirePayments = false;
+    public Integer prepaymentDaysAhead = -1;
+    public Integer increaseUnits = -1;
+    
 
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily
     public String defaultStart = "15:00";

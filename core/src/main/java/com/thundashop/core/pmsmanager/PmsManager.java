@@ -360,12 +360,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.prepayment = true;
         filter.startInvoiceFrom = booking.getStartDate();
         filter.endInvoiceAt = booking.getEndDate();
-        Order order = createOrder(booking, filter);
-
-        booking.orderIds.add(order.id);
-        saveBooking(booking);
-
-        return order.id;
+        if(addBookingToCart(booking, filter)) {
+            Order order = createOrderFromCart(booking);
+            booking.orderIds.add(order.id);
+            saveBooking(booking);
+            return order.id;
+        }
+        return "";
     }
 
     private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking) throws ErrorException {
@@ -761,6 +762,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsPricing setPrices(PmsPricing newPrices) {
         prices.defaultPriceType = newPrices.defaultPriceType;
         prices.progressivePrices = newPrices.progressivePrices;
+        prices.pricesExTaxes = newPrices.pricesExTaxes;
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
             for (String date : priceMap.keySet()) {
@@ -798,88 +800,40 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String createOrder(String bookingId, NewOrderFilter filter) {
-
         PmsBooking booking = getBooking(bookingId);
-        Order order = null;
-        order = createOrder(booking, filter);
-
-        if (order == null) {
-            return "Could not create order.";
+        
+        if(addBookingToCart(booking, filter)) {
+            Order order = createOrderFromCart(booking);
+            if (order == null) {
+                return "Could not create order.";
+            }
+            booking.orderIds.add(order.id);
+            saveBooking(booking);
         }
-        booking.orderIds.add(order.id);
-        saveBooking(booking);
         return "";
     }
 
-    private Order createOrder(PmsBooking booking, NewOrderFilter filter) {
+    private boolean addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
         cartManager.clear();
 
         boolean foundInvoice = false;
         for (PmsBookingRooms room : booking.rooms) {
-            Double price = null;
-
-            Date startDate = filter.startInvoiceFrom;
-            if (startDate.before(room.date.start)) {
-                startDate = room.date.start;
-            }
-
-            Date endDate = filter.endInvoiceAt;
-            if (endDate.after(room.date.end)) {
-                endDate = room.date.end;
-            }
-
-            if (room.invoicedTo != null && startDate.before(room.invoicedTo)) {
-                startDate = room.invoicedTo;
-            }
-
-            if (filter.onlyEnded && room.date.end.after(filter.endInvoiceAt)) {
+            if(!room.needInvoicing(filter)) {
                 continue;
             }
-
-            if (!filter.prepayment) {
-                if (room.invoicedTo == null && (new Date().before(endDate))) {
-                    continue;
-                }
-            }
-
-            if (sameDayOrAfter(room.invoicedTo, endDate)) {
-                continue;
-            }
-
-            if (filter.itemId != null && !filter.itemId.isEmpty()) {
-                if (room.bookingItemId == null) {
-                    continue;
-                }
-                if (room.bookingItemId.equals(filter.itemId)) {
-                    continue;
-                }
-            }
-
-            if (startDate.after(endDate)) {
-                continue;
-            }
+            
+            Date startDate = room.getInvoiceStartDate(filter);
+            filter.startInvoiceFrom = startDate;
+            Date endDate = room.getInvoiceEndDate(filter, booking);
 
             int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
-            if (booking.priceType.equals(PmsBooking.PriceType.monthly)) {
-                int numberOfDays = getNumberOfDays(room, startDate, endDate);
-                if (numberOfDays == 0) {
-                    return null;
-                }
-                price = room.price / daysInPeriode;
-            } else if (booking.priceType.equals(PmsBooking.PriceType.progressive)) {
-                int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(startDate)).getDays();
-                price = calculateProgressivePrice(room.bookingItemTypeId, startDate, endDate, days, true);
-            } else if (booking.priceType.equals(PmsBooking.PriceType.daily)
-                    || booking.priceType.equals(PmsBooking.PriceType.interval)
-                    || booking.priceType.equals(PmsBooking.PriceType.progressive)) {
-                price = room.price;
-            } else if (booking.priceType.equals(PmsBooking.PriceType.weekly)) {
-                price = (room.price / 7);
+            if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
+                daysInPeriode = getNumberOfMonthsBetweenDates(startDate, endDate);
             }
-
+            Double price = getPriceInPeriode(booking, room, startDate, endDate);
             CartItem item = createCartItem(room, startDate, endDate);
             if (item == null) {
-                return null;
+                return false;
             }
             if (prices.pricesExTaxes) {
                 double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
@@ -900,43 +854,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             foundInvoice = true;
             cartManager.saveCartItem(item);
         }
-
-        if (!foundInvoice) {
-            return null;
-        }
-
-        User user = userManager.getUserById(booking.userId);
-        if (user == null) {
-            return null;
-        }
-
-        user.address.fullName = user.fullName;
-
-        Order order = orderManager.createOrder(user.address);
-
-        order.payment = new Payment();
-        order.payment.paymentType = user.preferredPaymentType;
-        order.userId = booking.userId;
-        order.invoiceNote = booking.invoiceNote;
-
-        if (configuration.substractOneDayOnOrder) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(order.rowCreatedDate);
-            cal.add(Calendar.DAY_OF_YEAR, -1);
-            order.rowCreatedDate = cal.getTime();
-        }
-
-        if (order.cart.address == null || order.cart.address.address == null || order.cart.address.address.isEmpty()) {
-            if (!user.company.isEmpty()) {
-                Company company = userManager.getCompany(user.company.get(0));
-                order.cart.address = company.address;
-                order.cart.address.fullName = company.name;
-            }
-        }
-
-        orderManager.saveOrder(order);
-
-        return order;
+        return foundInvoice;
     }
 
     private int getNumberOfDays(PmsBookingRooms room, Date startDate, Date endDate) {
@@ -2167,26 +2085,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return formatMessage(message, booking, null, null);
     }
 
-    private boolean sameDayOrAfter(Date invoicedTo, Date endDate) {
-        if (invoicedTo == null) {
-            return false;
-        }
-
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        cal1.setTime(invoicedTo);
-        cal2.setTime(endDate);
-        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
-                && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
-        if (sameDay) {
-            return true;
-        }
-
-        if (invoicedTo.after(endDate)) {
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public void addComment(String bookingId, String comment) {
@@ -2616,6 +2514,75 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             fromName = configuration.senderName;
         }
         return fromName;
+    }
+
+    private Double getPriceInPeriode(PmsBooking booking, PmsBookingRooms room, Date startDate, Date endDate) {
+        Double price = null;
+        if (booking.priceType.equals(PmsBooking.PriceType.monthly)) {
+            price = room.price;
+        } else if (booking.priceType.equals(PmsBooking.PriceType.progressive)) {
+            int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(startDate)).getDays();
+            price = calculateProgressivePrice(room.bookingItemTypeId, startDate, endDate, days, true);
+        } else if (booking.priceType.equals(PmsBooking.PriceType.daily)
+                || booking.priceType.equals(PmsBooking.PriceType.interval)
+                || booking.priceType.equals(PmsBooking.PriceType.progressive)) {
+            price = room.price;
+        } else if (booking.priceType.equals(PmsBooking.PriceType.weekly)) {
+            price = (room.price / 7);
+        }
+        return price;
+    }
+
+    private Order createOrderFromCart(PmsBooking booking) {
+
+        User user = userManager.getUserById(booking.userId);
+        if (user == null) {
+            return null;
+        }
+
+        user.address.fullName = user.fullName;
+
+        Order order = orderManager.createOrder(user.address);
+
+        order.payment = new Payment();
+        order.payment.paymentType = user.preferredPaymentType;
+        order.userId = booking.userId;
+        order.invoiceNote = booking.invoiceNote;
+
+        if (configuration.substractOneDayOnOrder) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(order.rowCreatedDate);
+            cal.add(Calendar.DAY_OF_YEAR, -1);
+            order.rowCreatedDate = cal.getTime();
+        }
+
+        if (order.cart.address == null || order.cart.address.address == null || order.cart.address.address.isEmpty()) {
+            if (!user.company.isEmpty()) {
+                Company company = userManager.getCompany(user.company.get(0));
+                order.cart.address = company.address;
+                order.cart.address.fullName = company.name;
+            }
+        }
+
+        orderManager.saveOrder(order);
+        return order;
+    }
+
+    private int getNumberOfMonthsBetweenDates(Date startDate, Date endDate) {
+        int months = 1;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        while(true) {
+            cal.add(Calendar.MONTH, 1);
+            if(cal.getTime().after(endDate)) {
+                break;
+            }
+            if(cal.getTime().equals(endDate)) {
+                break;
+            }
+            months++;
+        }
+        return months;
     }
 
 }

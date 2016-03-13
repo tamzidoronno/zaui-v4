@@ -58,6 +58,12 @@ h2 { font-weight: 700; }
     padding-left: 20px;
     padding-right: 20px;
 }
+.gsarea[area="header"] .Menu .entries .entries .entry {
+    min-width: 80px;
+    border-bottom: 0px !important;
+}
+
+
 
 .gsarea[area="header"] .Menu .menuentries .entries .entries {
     background-color: #DDD;

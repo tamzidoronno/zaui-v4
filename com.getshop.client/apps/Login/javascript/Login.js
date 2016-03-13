@@ -74,8 +74,8 @@ app.Login = {
         $(document).on('click','.Login #resetpasswordbutton',app.Login.resetPassword);
         $(document).on('click','.Login .loginform .tstextfield[name="password"]',app.Login.checkEnter);
         $(document).on('click','.Login .loginbutton',app.Login.doLogin);
-        $(document).on('click','.Login input[name="username"]',app.Login.doLogin);
-        $(document).on('click','.Login input[name="password"]',app.Login.doLogin);
+        $(document).on('keyup','.Login input[name="username"]',app.Login.doLogin);
+        $(document).on('keyup','.Login input[name="password"]',app.Login.doLogin);
         $(document).on('click','.Login .recoverpassword',app.Login.showRecoverPassword);
     }
 

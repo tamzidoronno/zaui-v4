@@ -1,0 +1,54 @@
+<?php
+/* @var $this \ns_f245b8ae_f3ba_454e_beb4_ecff5ec328d6\ProductLists */
+$product = $this->getCurrentProduct();
+$linkName = \GetShopHelper::makeSeoUrl($product->uniqueName);
+$image = $this->getDefaultImage($product);
+
+if (!$image) {
+    $image = '<div class="image"><i class="fa fa-image"></i></div>';
+} else {
+    $image = '<div class="image"><img src="/displayImage.php?id='.$image.'&width=400"/></div>';
+}
+
+?>
+
+<div class='productbox_outer'>
+    <div class='productbox'>
+    <?
+    if ($this->showRemoveButton()) {
+        echo "<div class='remove_product_from_list' product_id='$product->id'><i class='fa fa-trash' title='".$this->__f("Remove from list")."'></i></div>";
+    }
+    ?>
+
+    <a ajaxlink='/?page=<? echo $pageId; ?>' href='<? echo $linkName;?>'>
+        <div class="product_row">
+            <?
+            if ($this->isRowView()) {
+                echo $image;
+            }
+            ?>
+            <div class="content">
+                <div class="product_title"><? echo $product->name; ?></div>
+                <?
+                    if ($this->isGridView()) {
+                        echo $image;
+                    }
+                ?>
+                <div class="short_description"><? echo nl2br($product->shortDescription); ?></div>
+            </div>
+        </div>
+    </a>
+        <div class="product_price" ><? 
+        if($this->getDisplayDecimals()) {
+            $price = ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price, 2);
+        } else {
+            $price = ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price, 0);
+        }
+        echo $price;
+        ?></div>
+
+    <div class="webshop_button_area">
+        <div class="shop_button addProductToCart" productId='<? echo $product->id; ?>'><? echo $this->__f("Add to cart"); ?></div>
+    </div>
+    </div>
+</div>

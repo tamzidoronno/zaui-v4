@@ -1,0 +1,26 @@
+<?php
+
+?>
+
+<div gstype="form" method="saveAppInstanceSettings">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%">Product list template</td>
+        <td width="50%">
+            <select gsname="setting_productlisttemplate">
+                <?php 
+                echo "<option value=''>Default template</option>";
+                for($i = 1; $i <= 10; $i++) {
+                    $checked = "";
+                    if($i == $this->getConfigurationSetting("productlisttemplate")) {
+                        $checked = "SELECTED";
+                    }
+                    echo "<option value='$i' $checked>$i</option>";
+                }
+                ?>
+            </select>
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

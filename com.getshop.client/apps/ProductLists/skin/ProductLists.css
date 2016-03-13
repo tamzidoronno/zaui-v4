@@ -401,6 +401,21 @@
     vertical-align: top;
 }
 
+.ProductLists .templatebox_1 .productbox { padding: 0px !important; height: 500px; }
+.ProductLists .templatebox_1 .productbox .product_row { width: 100%; height: 100%; background-size: 100%; background-repeat: no-repeat; }
+.ProductLists .templatebox_1 .webshop_button_area { height: 145px !important; }
+.ProductLists .templatebox_1 { margin-top: 20px; margin-bottom: 20px; }
+.ProductLists .templatebox_1 .seperator { border-top: solid 1px; display: inline-block; width: 100px; height: 15px; }
+.ProductLists .templatebox_1 .product_price { bottom: 50px; }
+.ProductLists .templatebox_1 .shop_button {
+    position: absolute !important;
+    left: 0px !important;
+    bottom: 0px !important;
+    width: 100% !important;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
 @media only all and (max-width: 800px) { 
     .productbox { width: 100% !important; margin-bottom: 20px; }
     .productbox_outer { width: 100% !important; }

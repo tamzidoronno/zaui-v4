@@ -3,6 +3,8 @@
 namespace ns_f245b8ae_f3ba_454e_beb4_ecff5ec328d6;
 
 class ProductLists extends \ApplicationBase implements \Application {
+    var $currentProduct;
+    
     public function getDescription() {
         return $this->__w("Display product lists in your webshop");
     }
@@ -217,6 +219,38 @@ class ProductLists extends \ApplicationBase implements \Application {
         }
         
         return $this->getConfigurationSetting("hidedecimals") != "true";
+    }
+
+    public function setCurrentProduct($product) {
+        $this->currentProduct = $product;
+    }
+    
+    /**
+     * @return \core_productmanager_data_Product
+     */
+    public function getCurrentProduct() {
+        return $this->currentProduct;
+    }
+
+    public function getProductTemplate() {
+        $template = "defaultproductbox";
+        $key = $this->getConfigurationSetting("productlisttemplate");
+        if($key) {
+            $template = "productemplate_" . $key;
+        }
+        return $template;
+    }
+    
+    public function getDefaultImage($product) {
+        $mainImage = false;
+        if ($product->mainImage && in_array($product->mainImage, $product->imagesAdded)) {
+            $mainImage = $product->mainImage;
+        }
+
+        if (!$mainImage && count($product->imagesAdded)) {
+            $mainImage = $product->imagesAdded[0];
+        }
+        return $mainImage;
     }
 
 }

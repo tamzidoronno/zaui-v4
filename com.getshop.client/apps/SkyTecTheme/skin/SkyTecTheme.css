@@ -79,6 +79,11 @@ h2 { font-weight: 700; }
     padding-right: 75px;
 }
 
+.ProductLists .shop_button {
+    background-color: #fff !important;
+    color: #515151 !important;
+}
+
 .gsarea[area="footer"] .gsucell[cellid="7151f8f4-5b40-4764-ac9f-bc2343a1f566"].gsdepth_0.gscount_0 {
     background-color: #363839;
     height: 438px;

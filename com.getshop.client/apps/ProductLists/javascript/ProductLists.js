@@ -13,6 +13,7 @@ app.ProductLists = {
             app : true,
             application: application,
             title: "Settings",
+            showSettings: true,
             items: [
                 {
                     icontype: "awesome",

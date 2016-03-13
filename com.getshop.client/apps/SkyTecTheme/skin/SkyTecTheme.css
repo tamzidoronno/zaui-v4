@@ -263,6 +263,7 @@ h2 { font-weight: 700; }
 .ProductCategories .category { cursor: pointer; margin: 20px; border-bottom: solid 1px #eee; padding-bottom: 10px; }
 
 .gsrotating .ContentManager h1 { font-size: 72px !important; }
+.Login .login_content { text-align: center; }
 
 
 

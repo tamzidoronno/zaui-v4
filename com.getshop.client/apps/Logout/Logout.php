@@ -1,29 +1,21 @@
 <?php
-namespace ns_681e581f_3abb_448d_b935_fb8af9327821;
+namespace ns_29e56415_334d_460e_8011_c40f2fdaf9da;
 
 class Logout extends \SystemApplication implements \Application {
-
     public function getDescription() {
         
     }
 
     public function getName() {
-        return "logout app";
+        return "Logout";
     }
 
     public function render() {
-        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
-        
-        if($user) {
-            if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
-                echo "You are not automatically being logged out of this page since your an administrator, use the logout button in the menu to the left.";
-                return;
-            }
-            $this->getApi()->getUserManager()->logout();
+        if(!$this->isEditorMode()) {
             session_destroy();
-            ?>
-            <script>location.reload(); </script>
-            <?
+        } else {
+            echo "<h1>Administrators is logging out using the menu to the left.</h1>";
         }
     }
 }
+?>

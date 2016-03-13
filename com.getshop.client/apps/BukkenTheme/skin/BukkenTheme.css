@@ -223,7 +223,23 @@ body {
     }
     .gscell[cellid="a505af39-65a6-4548-9a1f-41817c7a3a18"] { width: 50%; }
     .gscell[cellid="39f57e5c-341a-4977-b851-633bc67cdbf3"] { width: 50%; }
+
+    
 }
+
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+  .gsucell[cellid="7d7fb359-16b5-40aa-ab32-9c84a500b142"] input {
+        -webkit-appearance: none;
+        height: 30px;
+    }
+}
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+  .gsucell[cellid="7d7fb359-16b5-40aa-ab32-9c84a500b142"] input {
+        -webkit-appearance: none;
+        height: 30px;
+    }
+}
+
 @media screen and (max-width: 1300px) {
     .gsrotating .ContentManager {
         display:none;

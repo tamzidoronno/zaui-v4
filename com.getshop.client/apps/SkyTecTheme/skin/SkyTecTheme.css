@@ -133,7 +133,10 @@ h2 { font-weight: 700; }
     padding-bottom: 30px;
 }
 
-.shop_button {
+.gs_button:hover {
+    background:#515151;
+}
+.shop_button, .gs_button {
     border: solid 1px #DDD;
     background: none;
     background-color: #515151;
@@ -260,6 +263,8 @@ h2 { font-weight: 700; }
 .ProductCategories .category { cursor: pointer; margin: 20px; border-bottom: solid 1px #eee; padding-bottom: 10px; }
 
 .gsrotating .ContentManager h1 { font-size: 72px !important; }
+
+
 
 @media only all and (max-width: 1100px) { 
     .gsrotating .ContentManager h1 { font-size: 30px !important; }

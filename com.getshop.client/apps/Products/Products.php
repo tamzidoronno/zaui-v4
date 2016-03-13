@@ -116,7 +116,8 @@ class Products extends \WebshopApplication implements \Application {
     public function createProduct() {
         $product = $this->getApi()->getProductManager()->createProduct();
         $product->name = $_POST['title'];
-        $product->price = $_POST['price'];
+        $price = str_replace(",", ".", $_POST['price']);
+        $product->price = $price;
         $product->sku = $_POST['sku'];
         $createdProduct = $this->getApi()->getProductManager()->saveProduct($product);
         echo json_encode($createdProduct->id);

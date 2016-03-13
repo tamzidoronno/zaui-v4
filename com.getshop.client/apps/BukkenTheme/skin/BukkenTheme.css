@@ -218,6 +218,9 @@ body {
         padding-left: 5px; padding-right: 5px;
         font-size: 14px;
     }
+    .gsfloatingframe {
+        width: 100% !important;
+    }
     .gscell[cellid="a505af39-65a6-4548-9a1f-41817c7a3a18"] { width: 50%; }
     .gscell[cellid="39f57e5c-341a-4977-b851-633bc67cdbf3"] { width: 50%; }
 }

@@ -173,6 +173,10 @@ public class PmsBookingRooms implements Serializable {
             return false;
         }
         
+        if(filter.onlyEnded && sameDay(new Date(), date.end)) {
+            return false;
+        }
+        
         if(filter.prepayment && invoicedTo != null) {
             //If invoiced into the future. 
             Date toInvoiceFrom = invoicedTo;

@@ -1,0 +1,17 @@
+<?php
+/* @var $this \ns_e9d04f19_6eaa_4a17_9b7b_aa387dbaed92\CategoryLister */
+?>
+<span class='gss_button'>Add attribute to product</span>
+<br>
+<br>
+<div id="attributelist">
+<?
+$list = $this->getApi()->getListManager()->getJsTree("attributes");
+$generator = new JsTreeGenerator();
+$generator->printTree($list);
+?>
+</div>
+
+<script>
+  getshop.jstree.initJsTree("attributelist", "attributes");
+</script>

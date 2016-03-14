@@ -1,6 +1,6 @@
 getshop.jstree = {
     buildList : function(id) {
-        var v = $('#categorylist').jstree(true).get_json('#');
+        var v = $('#' + id).jstree(true).get_json('#');
         var list = getshop.jstree.buildNodeList(v);
         return list;
     },
@@ -13,7 +13,7 @@ getshop.jstree = {
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
           s4() + '-' + s4() + s4() + s4();
     },    
-    initJsTree : function(id) {
+    initJsTree : function(id, name) {
         var tree = $('#' + id);
         tree.jstree({
             "core" : {
@@ -22,9 +22,22 @@ getshop.jstree = {
             },
             "plugins" : [ "dnd","contextmenu"]
         });
-        tree.bind("create_node.jstree", function (node, obj, position) {
-            tree.jstree(true).set_id(obj.node,getshop.jstree.guid());
-        });
+//        tree.bind("create_node.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
+        tree.bind("rename_node.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
+        tree.bind("delete_node.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
+        tree.bind("move_node.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
+        tree.bind("copy_node.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
+        tree.bind("cut.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
+        tree.bind("copy.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
+        tree.bind("paste.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
+    },
+    saveTree : function(id, name) {
+        var entries = getshop.jstree.buildList(id);
+        var data = {};
+        data.entries = entries;
+        data.listName = name;
+        
+        thundashop.Ajax.simplePost($(this), 'saveJsTree', data);
     },
     buildNodeList : function(list) {
         var entries = [];

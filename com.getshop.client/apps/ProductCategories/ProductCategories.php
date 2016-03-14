@@ -44,16 +44,6 @@ class ProductCategories extends \WebshopApplication implements \Application {
         
     }
     
-    public function saveJsTree() {
-        $jsTreeGenerator = new \JsTreeGenerator();
-        $list = $jsTreeGenerator->generateTreeFromPostedData();
-
-        $current = $this->getApi()->getListManager()->getJsTree("categories");
-        $current->nodes = $list;
-        $this->getApi()->getListManager()->saveJsTree("categories", $current);
-    }
-    
-    
     public function deleteCategory() {
         $this->getApi()->getProductManager()->deleteCategory($_POST['value']);
     }

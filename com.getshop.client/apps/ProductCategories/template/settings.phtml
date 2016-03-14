@@ -1,16 +1,3 @@
  <?php
  /* @var $this \ns_1ee40ca9_27ac_4b97_944a_0eb02506d5e9\ProductCategories */
  ?>
-        <div id="categorylist">
-        <?
-        $list = $this->getApi()->getListManager()->getJsTree("categories");
-        $generator = new JsTreeGenerator();
-        $generator->printTree($list);
-        ?>
-        </div>
-
-      <script>
-          getshop.jstree.initJsTree("categorylist");
-      </script>
-      <br><br>
-      <span class='shop_button savecategoryconfig'>Save configuration</span>

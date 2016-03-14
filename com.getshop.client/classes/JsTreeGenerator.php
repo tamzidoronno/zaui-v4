@@ -30,7 +30,11 @@ class JsTreeGenerator {
      */
     public function printTree($list) {
         $nodes = $list->nodes;
-        $this->printNodes($nodes);
+        if(!$nodes) {
+            echo "<ul><li>Tree</li></ul>";
+        } else {
+            $this->printNodes($nodes);
+        }
     }
 
     /**

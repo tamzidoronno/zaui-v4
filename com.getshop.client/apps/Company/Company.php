@@ -27,6 +27,7 @@ class Company extends \SystemApplication implements \Application {
     public function renderUserSettings($user) {
         ?>
         <div class="gss_overrideapp" gss_use_app_id="a6d68820-a8e3-4eac-b2b6-b05043c28d78">
+            
             <input type='hidden' gs_model='companymodel' gs_model_attr='userid' value='<?php echo $user->id; ?>'>
             <div class="textfield gss_setting">
                 <span class="title"><?php echo $this->__f("Selected company"); ?></span>
@@ -42,12 +43,14 @@ class Company extends \SystemApplication implements \Application {
                         echo "<option value='".$company->id."' $sel>" . $company->name . "</option>";
                     }
                     echo "</select>";
+                    
                 ?>
                 <div class="description">
                     <?php echo $this->__("Is this user connected to a company?"); ?>
                 </div>
             </div>
             <div class='gss_button_area'>
+                  <div class="gss_button gss_show_company"><?php echo $this->__("Open company"); ?> <i class='fa fa-arrow-right'></i></div>
                   <div class="gss_button" gss_method="updateUser" gss_model="companymodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
             </div>
         </div>
@@ -70,6 +73,7 @@ class Company extends \SystemApplication implements \Application {
         $company->address->address = $_POST['address'];
         $company->address->postCode = $_POST['postCode'];
         $company->address->city = $_POST['city'];
+        $company->group = $_POST['groupId'];
         
         $company->invoiceAddress->address = $_POST['invoice_address'];
         $company->invoiceAddress->postCode = $_POST['invoice_postCode'];

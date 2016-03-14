@@ -1,6 +1,7 @@
 app.Users = {
     init: function() {
         $(document).on('click','#autogeneratepassword', app.Users.autoGenPassword);
+        $(document).on('keyup', '#gss_order_filter_search_text', app.Users.keyUp);
     },
     autoGenPassword: function() {
         var randomstring = Math.random().toString(36).slice(-8);
@@ -11,7 +12,15 @@ app.Users = {
         
         $('#gss_new_user_password1').attr('type', 'textfield');
         $('#gss_new_user_password2').attr('type', 'textfield');
+        
     },
+    
+    keyUp: function(e) {
+        if (e.keyCode == 13) {
+            $('#gss_order_filter_search_button').click();
+        }
+    },
+    
     userCreated: function(res) {
         alert(res);
         return true;

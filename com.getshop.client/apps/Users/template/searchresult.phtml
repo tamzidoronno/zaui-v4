@@ -94,13 +94,20 @@ foreach ($users as $user) {
                 echo "<b>Company: ";
                 $complist = array();
                 foreach($user->company as $comp) {
-                    $complist[] = $companies[$comp]->name;
+                    $company = $this->getApi()->getUserManager()->getCompany($comp);
+                    $complist[] = $companies[$comp]->name.$this->getCompanyGroupInfo($company);
                 }
                 echo join(", ", $complist) . "</b>";
             }
             ?>
             <div class="created"><? echo $created; ?></div>
         </div>
+        
+        <?
+        if ($user->isCompanyOwner) {
+            echo "<i class='fa fa-building-o'></i>";
+        }
+        ?>
     </div>
     <?
 }

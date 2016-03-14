@@ -329,6 +329,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         collection.addUser(user);
     }
 
+    
+    /**
+     * Checks if the user logged in has access to modify the
+     * user in parameter 1.
+     * 
+     * @param user 
+     */
     public void checkUserAccess(User user) {
         // Avoid degradation of the same user.
         if (getSession().currentUser != null && getSession().currentUser.id.equals(user.id)) {
@@ -763,6 +770,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public void impersonateUser(String userId) throws ErrorException {
+        User user = getUserById(userId);
+        if (user == null) {
+            throw new ErrorException(26);
+        }
+        
+        checkUserAccess(user);
         sessionFactory.addToSession(getSession().id, "impersonatedUser", userId);
     }
 
@@ -1274,6 +1287,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         return internalApiUser;
+    }
+
+    @Override
+    public void assignCompanyToGroup(Company company, String groupId) {
+        company = companies.get(company.id);
+        if (company != null && (company.groupId == null || company.groupId.isEmpty())) {
+            company.groupId = groupId;
+            saveCompany(company);
+        }
     }
 
 }

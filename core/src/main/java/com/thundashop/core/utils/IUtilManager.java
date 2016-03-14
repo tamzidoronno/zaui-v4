@@ -9,6 +9,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.usermanager.data.Company;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -18,7 +19,9 @@ import java.util.HashMap;
 public interface IUtilManager {
     public Company getCompanyFromBrReg(String companyVatNumber) throws ErrorException;
     
-    public HashMap<String, String> getCompaniesFromBrReg(String search) throws ErrorException;
+    public Company getCompanyFree(String companyVatNumber);
+    
+    public List<Company> getCompaniesFromBrReg(String search) throws ErrorException;
     
     public String saveFile(FileObject file) throws ErrorException;
     

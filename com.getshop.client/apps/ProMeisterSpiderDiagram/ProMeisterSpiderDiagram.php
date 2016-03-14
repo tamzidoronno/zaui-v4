@@ -46,7 +46,7 @@ class ProMeisterSpiderDiagram extends \MarketingApplication implements \Applicat
     public function getDataProvider($user) {
         $requirement = $this->getRequirements();
 
-        $group = @$this->getCurrentUser()->groups[0];
+        $group = @$this->getCurrentUser()->companyObject->groupId;
 
         if (!$group) {
             $this->includefile("unsufficentdata");

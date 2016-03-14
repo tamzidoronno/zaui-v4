@@ -135,3 +135,6 @@ body {
     margin-top: 25px;
 }
 
+.gss_new_user_button {
+    display: none;
+}

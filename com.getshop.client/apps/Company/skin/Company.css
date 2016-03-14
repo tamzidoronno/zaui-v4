@@ -6,3 +6,19 @@
 
 }
 .normalinformationbox a { cursor:pointer; }
+
+
+#backsidesettings .gss_company_userrow {
+    border-bottom: solid 1px #DDD;
+    padding: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#backsidesettings .gss_company_userrow:last-child {
+    border-bottom: solid 0px;
+}
+
+#backsidesettings .gss_company_userrow:hover {
+    background-color: #EEE;
+}

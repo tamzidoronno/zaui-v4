@@ -113,11 +113,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
-        for (User user : gsAdmins.getAllAdmins()) {
-            user.storeId = storeId;
-//            getUserStoreCollection(storeId).addUserDirect(user);
+        addGetShopAdmins(); 
+    }
+
+    private void addGetShopAdmins() throws ErrorException {
+        if (getUserStoreCollection(storeId).getAllUsers().size() > 0) {
+            for (User user : gsAdmins.getAllAdmins()) {
+                user.storeId = storeId;
+                getUserStoreCollection(storeId).addUserDirect(user);
+            }
         }
-         
     }
 
     public void addUserDeletedEventListener(UserDeletedEventListener listener) {

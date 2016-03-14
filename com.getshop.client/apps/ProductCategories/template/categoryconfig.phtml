@@ -21,15 +21,7 @@
     </div>
     
     <div class='gss_settings_content'>
-        <h1>Categories added</h1>
-        <?php
-        $cats = $this->getApi()->getProductManager()->getAllCategories();
-        
-        foreach($cats as $cat) {
-            echo "<i class='fa fa-trash-o' gss_value='". $cat->id."' gss_method='deleteCategory' gss_model='catmodal' gss_fragment='categoryconfig' ></i> " . $cat->name . "<br>";
-        }
-        
-        ?>
+        <h1>Categories are configured from instance configuration, add a category list as an application and configure it.</h1>
     </div>
     
 </div>

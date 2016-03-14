@@ -9,6 +9,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.listmanager.data.EntryList;
+import com.thundashop.core.listmanager.data.JsTreeList;
 import com.thundashop.core.listmanager.data.ListType;
 import com.thundashop.core.listmanager.data.Menu;
 import com.thundashop.core.pagemanager.PageManager;
@@ -30,6 +31,8 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class ListManager extends ManagerBase implements IListManager {
     private Map<String, EntryList> allEntries;
+    
+    private Map<String, JsTreeList> jsTreeLists = new HashMap();
     
     /**
      * String = ApplicatoinInstanceId
@@ -66,6 +69,11 @@ public class ListManager extends ManagerBase implements IListManager {
                 } else {
                     allEntries.put(listObject.appId, listObject);
                 }
+            }
+            
+            if (entry instanceof JsTreeList) {
+               JsTreeList l = (JsTreeList) entry;
+                jsTreeLists.put(l.treeName, l);
             }
             
             if (entry instanceof Menu) {
@@ -792,5 +800,21 @@ public class ListManager extends ManagerBase implements IListManager {
             }
         }
         
+    }
+
+    @Override
+    public void saveJsTree(String name, JsTreeList list) {
+        list.treeName = name;
+        saveObject(list);
+        jsTreeLists.put(name, list);
+    }
+
+    @Override
+    public JsTreeList getJsTree(String name) {
+        JsTreeList res = jsTreeLists.get(name);
+        if(res == null) {
+            res = new JsTreeList();
+        }
+        return res;
     }
 }

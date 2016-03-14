@@ -14,10 +14,6 @@ class ProductCategories extends \WebshopApplication implements \Application {
         $this->includefile("categorylist");
     }
         
-    public function renderConfig() {
-        $this->includefile("categoryconfig");
-    }
-    
     public function addCategory() {
         $category = new \core_productmanager_data_ProductCategory();
         $category->name = $_POST['categoryname'];
@@ -46,6 +42,15 @@ class ProductCategories extends \WebshopApplication implements \Application {
         }
         return false;
         
+    }
+    
+    public function saveJsTree() {
+        $jsTreeGenerator = new \JsTreeGenerator();
+        $list = $jsTreeGenerator->generateTreeFromPostedData();
+
+        $current = $this->getApi()->getListManager()->getJsTree("categories");
+        $current->nodes = $list;
+        $this->getApi()->getListManager()->saveJsTree("categories", $current);
     }
     
     

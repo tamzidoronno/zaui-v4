@@ -238,6 +238,7 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/chosen/chosen.proto.min.js");
         if($this->isEditorMode()) {
             $this->addJavascriptFile("js/getshop.dndlayout.js");
+            $this->addJavascriptFile("js/getshop.jstree.js");
         }
         
         if ($this->isEffectsEnabled()) {

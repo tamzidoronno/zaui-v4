@@ -1,1 +1,2 @@
 .ProductCategories .selected { font-weight: bold; }
+.jstree-default-contextmenu { z-index: 1000 !important;  }

@@ -1,6 +1,6 @@
 GetShopToolbox = function(config, app) {
     this.config = config;
-    
+    console.log(config);
     if(this.config.showSettings) {
         this.config.items.push({
             icontype: "awesome",

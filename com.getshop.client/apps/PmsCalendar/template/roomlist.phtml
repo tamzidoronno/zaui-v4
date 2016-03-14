@@ -35,9 +35,9 @@ if(!$this->isItemPage()) {
         <div style="position:relative">
             <?php  if(!$this->isItemPage()) { ?>
             <span style="position:absolute;left:-10px; top: -30px; text-align: left; width: 400px;">
-                * Velg tid og rom i kalenderen<br>
+                <?php $this->wrapContentManager("bookdesc_" . $this->getSelectedName(), "* Velg tid og rom i kalenderen<br>
                 * Klikk på et tidspunkt og dra for å velge et lengre tidsrom<br>
-                * Du kan endre tidspunkt og valgt rom senere i bestillingen<br>
+                * Du kan endre tidspunkt og valgt rom senere i bestillingen<br>"); ?>
             </span>
         <?php
             }

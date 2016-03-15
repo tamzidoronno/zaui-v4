@@ -153,7 +153,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
     public void sendErrorNotification(String text) {
         text += "<br>";
-        text += "Store id: " + storeId + "<bR>";
+        text += "Store id: " + storeId + "(" + storeManager.getMyStore().configuration.emailAdress + ")" + "<bR>";
         
         sendMail("post@getshop.com", "post@getshop.com", "error notification", text, "post@getshop.com", "post@getshop.com");
     }

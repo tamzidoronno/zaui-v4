@@ -269,7 +269,10 @@ inputs-moz-placeholder {
     position: absolute;
     right: 12px;
     top: 10px;
-    
+}
+
+#backsidesettings .dontfuckwithposition {
+    position: inherit !important;
 }
 
 #backsidesettings textarea.gss_mediumsize {

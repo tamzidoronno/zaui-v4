@@ -16,6 +16,11 @@ class Product extends \ApplicationBase implements \Application {
         return $this->__f("Product");
     }
 
+    public function loadCategory() {
+        $id = $_POST['data']['id'];
+        $this->printAttribute($id);
+    }
+    
     public function renderOnStartup() {
         echo "<div class='gsaddedtocartbox' style='display:none;'>";
         echo "<div class='gsproductaddedtext'>" . $this->__w("Your product has been added to the cart.") . "</div>";
@@ -33,4 +38,33 @@ class Product extends \ApplicationBase implements \Application {
         $arr = array();
         $this->getApi()->getCartManager()->addProduct($productId, 1, $arr);
     }
+
+    /**
+     * @param \core_listmanager_data_TreeNode[] $nodes
+     */
+    public function buildCrumb($nodes, $nodeId, $level) {
+        $text = "";
+        foreach($nodes as $node) {
+            if(sizeof($node->children) > 0) {
+                $text = $this->buildCrumb($node->children, $nodeId, $level+1);
+                if($text && $level>0) {
+                    $text = $node->text . "/" . $text;
+                }
+            }else if($node->id == $nodeId) {
+                return $node->text;
+            }
+        }
+        return $text;
+    }
+
+    public function printAttribute($id) {
+        $allAttributes = $this->getApi()->getListManager()->getJsTree("attributes");
+        $crumb = $this->buildCrumb($allAttributes->nodes, $id, 0);
+        echo "<div class='addedattrrow' attrid='$id'><i class='fa fa-trash-o removeattr'></i> ".  $crumb;
+        if(!stristr($crumb, "/")) {
+            echo "<input type='text' class='dontfuckwithposition' style='width:100px; padding: 3px; margin-left: 10px; display:inline-block;'></input>";
+        }
+        echo "</div>";
+    }
+
 }

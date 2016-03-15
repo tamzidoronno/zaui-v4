@@ -12,18 +12,32 @@ app.Products = {
         $(document).on('click', '#gss_gotoproduct', app.Products.goToProduct);
         $(document).on('click', '.gss_product_saveuploadimage', app.Products.uploadBoxClick);
         $(document).on('click', '.gss_add_attribute', app.Products.addAttributeToProduct);
+        $(document).on('click', '.removeattr', app.Products.removeAttr);
         $(document).on('click', '.setupDynamicPricing', app.Products.setupDynamicPricing);
         $(document).on('change', '#gss_filterproducts', app.Products.filterProducts);
+    },
+    removeAttr : function() {
+        var id = $(this).closest('.addedattrrow').attr('attrid');
+        delete getshop.Model.productmodel.attributes[id];
+        $(this).closest('.addedattrrow').remove();
     },
     addAttributeToProduct : function() {
         var node = $("#attributelist").jstree("get_selected");
         var id = node[0];
+        if($('[attrid="'+id+'"]').length > 0) {
+            return;
+        }
 
-        var event = thundashop.Ajax.createEvent('','loadCategory','Product', {
+        var event = thundashop.Ajax.createEvent('','loadCategory','ns_06f9d235_9dd3_4971_9b91_88231ae0436b\\Product', {
             "id" : id
         });
         thundashop.Ajax.postWithCallBack(event, function(data) {
-            $('.addedattributes').prepend(data);
+            if(!getshop.Model.productmodel.attributes) {
+                getshop.Model.productmodel.attributes = {};
+            }
+            getshop.Model.productmodel.attributes[id] = "";
+            
+            $('.addedattributeslist').prepend(data);
         });
         
     },

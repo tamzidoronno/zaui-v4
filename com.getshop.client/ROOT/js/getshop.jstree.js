@@ -30,6 +30,7 @@ getshop.jstree = {
         tree.bind("cut.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
         tree.bind("copy.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
         tree.bind("paste.jstree", function (node, obj, position) { tree.jstree(true).set_id(obj.node,getshop.jstree.guid()); getshop.jstree.saveTree(id, name); });
+        tree.jstree('open_all');
     },
     saveTree : function(id, name) {
         var entries = getshop.jstree.buildList(id);

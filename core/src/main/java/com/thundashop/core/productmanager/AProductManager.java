@@ -11,9 +11,6 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.productmanager.data.AttributeData;
-import com.thundashop.core.productmanager.data.AttributeSummary;
-import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
@@ -45,8 +42,6 @@ public abstract class AProductManager extends ManagerBase {
     
 
     public Map<String, Product> products;
-    AttributeData pool = new AttributeData();
-    AttributeSummary cachedResult;
     public ProductConfiguration productConfiguration = new ProductConfiguration();
     public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
 
@@ -73,13 +68,6 @@ public abstract class AProductManager extends ManagerBase {
             product.page = pageManager.getPage(product.pageId);
         }
         
-        product.attributesAdded = new HashMap();
-        for (String attrid : product.attributes) {
-            AttributeValue val = pool.getAttributeByValueId(attrid);
-            if (val != null) {
-                product.attributesAdded.put(val.groupName, val.value);
-            }
-        }
 
         if (taxGroups.get(1) != null && product.taxGroupObject == null && product.taxgroup == -1) {
             product.taxGroupObject = taxGroups.get(1);
@@ -143,9 +131,6 @@ public abstract class AProductManager extends ManagerBase {
                 Product product = (Product) object;
                 products.put(product.id, product);
             }
-            if (object instanceof AttributeValue) {
-                pool.addAttributeValue((AttributeValue) object);
-            }
             if (object instanceof ProductList) {
                 ProductList list = (ProductList) object;
                 productList.put(list.id, list);
@@ -200,8 +185,6 @@ public abstract class AProductManager extends ManagerBase {
             }
         }
 
-        cachedResult = new AttributeSummary(pool);
-
         if (searchCriteria.listId != null && searchCriteria.listId.trim().length() > 0) {
             List<Entry> list = listManager.getList(searchCriteria.listId);
             for (Entry entry : list) {
@@ -212,31 +195,8 @@ public abstract class AProductManager extends ManagerBase {
                 product = finalize(product);
                 retProducts.add(product);
 
-                if (searchCriteria.attributeFilter.isEmpty()) {
-                    cachedResult.addToSummary(product);
-                }
 
             }
-        }
-
-        if (searchCriteria.attributeFilter.size() > 0) {
-            ArrayList<Product> filteredProducts = new ArrayList();
-            for (Product prod : retProducts) {
-                boolean found = true;
-                for (String groupId : searchCriteria.attributeFilter.keySet()) {
-                    if (prod.attributes.contains(groupId)) {
-                        found = true;
-                    } else {
-                        found = false;
-                        break;
-                    }
-                }
-                if (found) {
-                    filteredProducts.add(prod);
-                    cachedResult.addToSummary(prod);
-                }
-            }
-            retProducts = filteredProducts;
         }
 
         return retProducts;

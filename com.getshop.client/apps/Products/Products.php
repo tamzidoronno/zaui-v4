@@ -81,7 +81,14 @@ class Products extends \WebshopApplication implements \Application {
         $product->dynamicPriceInPercent = $_POST['dynamicPriceInPercent'];
         $product->accountingSystemId = $_POST['accountingSystemId'];
         $product->discountedPrice = $_POST['discountedPrice'];
-        $product->category = $_POST['category'];
+        $product->categories = $_POST['categories'];
+        
+        $product->addedAttributes = array();
+        foreach($_POST['attributes'] as $attrid => $object) {
+            $obj = new \core_productmanager_data_AttributeItem();
+            $obj->text = $object['text'];
+            $product->addedAttributes[$attrid] = $obj;
+        }
         
         
         foreach ($this->getApi()->getProductManager()->getProductLists() as $list) {
@@ -101,7 +108,7 @@ class Products extends \WebshopApplication implements \Application {
         echo $product->shortDescription;
         
         
-        $prices = [];
+        $prices = array();
         foreach ($product->prices as $dynamicPrice) {
             $dynamicPrice->from = $_POST['price_from_'.$dynamicPrice->id];
             $dynamicPrice->to = $_POST['price_to_'.$dynamicPrice->id];

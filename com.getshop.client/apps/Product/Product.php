@@ -16,9 +16,14 @@ class Product extends \ApplicationBase implements \Application {
         return $this->__f("Product");
     }
 
-    public function loadCategory() {
+    public function loadAttribute() {
         $id = $_POST['data']['id'];
         $this->printAttribute($id);
+    }
+
+    public function loadCategory() {
+        $id = $_POST['data']['id'];
+        $this->printCategory($id);
     }
     
     public function renderOnStartup() {
@@ -57,14 +62,24 @@ class Product extends \ApplicationBase implements \Application {
         return $text;
     }
 
-    public function printAttribute($id) {
+    public function printAttribute($id, $attr = null) {
         $allAttributes = $this->getApi()->getListManager()->getJsTree("attributes");
         $crumb = $this->buildCrumb($allAttributes->nodes, $id, 0);
+        $val = new \core_productmanager_data_AttributeItem();
+        if($attr) {
+            $val = $attr;
+        }
         echo "<div class='addedattrrow' attrid='$id'><i class='fa fa-trash-o removeattr'></i> ".  $crumb;
         if(!stristr($crumb, "/")) {
-            echo "<input type='text' class='dontfuckwithposition' style='width:100px; padding: 3px; margin-left: 10px; display:inline-block;'></input>";
+            echo "<input type='text' class='dontfuckwithposition attrtext' style='width:100px; padding: 3px; margin-left: 10px; display:inline-block;' value='".$val->text."'></input>";
         }
         echo "</div>";
+    }
+
+    public function printCategory($id) {
+        $allAttributes = $this->getApi()->getListManager()->getJsTree("categories");
+        $crumb = $this->buildCrumb($allAttributes->nodes, $id, 0);
+        echo "<div class='addedcatrow' attrid='$id'><i class='fa fa-trash-o removecat'></i> ".  $crumb . "</div>";
     }
 
 }

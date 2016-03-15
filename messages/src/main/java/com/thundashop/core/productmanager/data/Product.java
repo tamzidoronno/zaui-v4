@@ -60,18 +60,16 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public long campaing_end_date = 0;
     
     public String accountingSystemId;
-    public String category = "";
     
-    //AttributegroupId, AttributeSelected
-    public List<String> attributes = new ArrayList();
+    public HashMap<String, AttributeItem> addedAttributes = new HashMap();
+    
+    public List<String> categories = new ArrayList();
     
     @Transient
     public Page page;
     
     public TaxGroup taxGroupObject;
     
-    @Transient
-    public HashMap<String, String> attributesAdded = new HashMap();
     
     @Transient
     public HashMap<String, String> attributesToSave = new HashMap();

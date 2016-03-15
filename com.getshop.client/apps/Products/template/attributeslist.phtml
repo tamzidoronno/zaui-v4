@@ -1,5 +1,6 @@
 <?php
 /* @var $this \ns_e9d04f19_6eaa_4a17_9b7b_aa387dbaed92\CategoryLister */
+$product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
 ?>
 <span class='gss_button gss_add_attribute'>Add attribute to product</span>
 <br>
@@ -8,7 +9,13 @@
 <div class="addedattributes" style="float:right; border: solid 1px #bbb; padding: 10px; background-color:#fff;">
     <h2>Already added attributes</h2>
     <div class='addedattributeslist'>
-        
+        <?php
+        $prod = new ns_06f9d235_9dd3_4971_9b91_88231ae0436b\Product();
+        foreach($product->addedAttributes as $cat => $val) {
+            $prod->printAttribute($cat, $val);
+        }
+        ?>
+
     </div>
 </div>
 

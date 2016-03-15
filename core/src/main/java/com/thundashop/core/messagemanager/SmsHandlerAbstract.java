@@ -56,6 +56,14 @@ public abstract class SmsHandlerAbstract implements Runnable {
 
     
     private HashMap<String, String> validatePhone(String phone, String countryCode) {
+        if(phone == null) {
+            return null;
+        }
+        
+        if(countryCode == null) {
+            countryCode = "+47";
+        }
+        
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         String prefix = "";
         phone = phone.replace("++", "+");

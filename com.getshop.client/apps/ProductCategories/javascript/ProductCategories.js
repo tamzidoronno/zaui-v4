@@ -3,7 +3,7 @@ app.ProductCategories = {
         $(document).on('click', '.ProductCategories .savecategoryconfig', app.ProductCategories.saveCategoryList);
     },
     loadSettings: function(element, application) {
-        var config = { showSettings : true, draggable: true, title: "Settings", items: [] }
+        var config = { draggable: true, title: "Settings", items: [] }
         var toolbox = new GetShopToolbox(config, application);
         toolbox.show();
         toolbox.attachToElement(application, 2);

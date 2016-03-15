@@ -761,4 +761,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         return null;
     }
+
+    boolean canAdd(Booking bookingToAdd) {
+        List<Booking> toCheck = new ArrayList();
+        toCheck.add(bookingToAdd);
+        return canAdd(toCheck);
+    }
 }

@@ -11,8 +11,21 @@ app.Products = {
     init: function () {
         $(document).on('click', '#gss_gotoproduct', app.Products.goToProduct);
         $(document).on('click', '.gss_product_saveuploadimage', app.Products.uploadBoxClick);
+        $(document).on('click', '.gss_add_attribute', app.Products.addAttributeToProduct);
         $(document).on('click', '.setupDynamicPricing', app.Products.setupDynamicPricing);
         $(document).on('change', '#gss_filterproducts', app.Products.filterProducts);
+    },
+    addAttributeToProduct : function() {
+        var node = $("#attributelist").jstree("get_selected");
+        var id = node[0];
+
+        var event = thundashop.Ajax.createEvent('','loadCategory','Product', {
+            "id" : id
+        });
+        thundashop.Ajax.postWithCallBack(event, function(data) {
+            $('.addedattributes').prepend(data);
+        });
+        
     },
     setupDynamicPricing: function() {
         var ans = prompt(__f("How many different prices do you wish to use? 0 = disabled"));

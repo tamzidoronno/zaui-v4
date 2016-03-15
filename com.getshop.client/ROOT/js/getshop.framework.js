@@ -1660,6 +1660,9 @@ thundashop.framework = {
         if (!value) {
             value = element.val();
         }
+        if(element.hasClass("clicksubmitcheckbox")) {
+            value = element.is(':checked');
+        }
 
         var data = {}
         data[name] = value;

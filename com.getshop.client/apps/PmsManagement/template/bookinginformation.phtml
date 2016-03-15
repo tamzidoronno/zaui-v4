@@ -37,6 +37,20 @@ if(!$booking->confirmed) {
     <?php
 }
 
+if($booking->isDeleted) {
+    ?>
+    <div style='background-color:red; color: white; padding: 10px; margin-bottom: 10px; text-align:center;'>
+    This booking is deleted,
+    <span gstype="form" method="undeleteBooking">
+        <input type='hidden' gsname='bookingid' value='<? echo $booking->id; ?>'>
+        <span gstype="submitToInfoBox" type="button" style='color:yellow; cursor:pointer;'>undelete it?</span>
+    </span>
+
+                                   
+    </div>
+    <?php
+}
+
 echo "<div class='bookinginfo'>";
 $this->includefile("contactdata");
 $this->includeLegacyStuffForSemlagerhotell($booking);

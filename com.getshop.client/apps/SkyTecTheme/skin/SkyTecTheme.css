@@ -270,6 +270,8 @@ h2 { font-weight: 700; }
 
 .gsrotating .ContentManager h1 { font-size: 72px !important; }
 .Login .login_content { text-align: center; }
+.AttributePrinter .attrrow { border-bottom: solid 1px #DDD; }
+.AttributePrinter .attrprefix { display:inline-block; width: 17.22%; text-transform: uppercase; font-weight: bold; }
 
 
 

@@ -1,0 +1,10 @@
+<?php
+/* @var $this \ns_50dc8615_10d3_4ed9_8cdf_09858bd76015\AttributePrinter */
+$attr = $this->getProduct()->addedAttributes;
+foreach($attr as $id => $value) {
+    $attribute = $this->getAttr($id);
+    echo "<div class='attrrow'>";
+    echo "<span class='attrprefix'>" . $attribute->text . ":" . "</span><span class='attrvalue'>" . $value->text . "</span>";
+    echo "</div>";
+}
+?>

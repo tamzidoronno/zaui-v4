@@ -66,5 +66,20 @@ class ProductCategories extends \WebshopApplication implements \Application {
         return $res;
     }
 
+    /**
+     * @param \core_listmanager_data_TreeNode[] $nodes
+     */
+    public function printCategoryList($nodes) {
+        echo "<ul>";
+        foreach($nodes as $node) {
+            echo "<li>" . $node->text;
+            if(sizeof($node->children) > 0) {
+                $this->printCategoryList($node->children);
+            }
+            echo "</li>";
+        }
+        echo "</ul>";
+    }
+
 }
 ?>

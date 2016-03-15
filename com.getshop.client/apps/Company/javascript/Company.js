@@ -1,6 +1,20 @@
 app.Company = {
+    init: function() {
+        $(document).on('click', '.gss_show_company', app.Company.showSelectedCompany);
+    },
     
+    showSelectedCompany: function() {
+        var companyId = $('.gsschangeusercompany').val();
+        if (!companyId) {
+            alert("No company selected");
+            return;
+        }
+        
+        app.Company.gssinterface.showCompany(companyId);
+    }
 }
+
+app.Company.init();
 
 app.Company.gssinterface =  {
     showCompany: function(companyId) {

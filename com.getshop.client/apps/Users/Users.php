@@ -296,5 +296,23 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         return $retApps;
     }
 
+    public function getCompanyGroupInfo($comp) {
+        if (!$comp) {
+            return "";
+        }
+        
+        if (!$comp->groupId) {
+            return "";
+        }
+        
+        $group = $this->getApi()->getUserManager()->getGroup($comp->groupId);
+        if ($group) {
+            return " ( ".$group->groupName." )";
+        }
+        
+        return "";
+        
+    }
+
 }
 ?>

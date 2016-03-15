@@ -53,9 +53,7 @@ foreach ($users as $user) {
                 <?
             }
             
-            if ($user->groups) {
-                $group = $this->getApi()->getUserManager()->getGroup($user->groups[0]);
-            }
+            $group = $this->getApi()->getUserManager()->getGroup($user->companyObject->groupId);
             
             if ($user->company) {
                 $company = $this->getApi()->getUserManager()->getCompany($user->company[0]);    

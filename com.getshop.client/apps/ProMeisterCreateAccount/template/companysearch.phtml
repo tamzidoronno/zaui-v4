@@ -7,8 +7,8 @@ $companies = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($_POST['da
     if (!count($companies)) {
         echo "Not found";
     } else {
-        foreach ($companies as $vat => $companyName) {
-            echo "<div class=''><input value='$vat' type='radio' name='selectedCompany'/>".$companyName."</div>";
+        foreach ($companies as $company) {
+            echo "<div class=''><input value='$company->vatNumber' type='radio' name='selectedCompany'/>".$company->name."</div>";
         }
     }
     ?>

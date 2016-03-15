@@ -99,7 +99,7 @@ public interface IUserManager {
     public List<User> getAllUsers() throws ErrorException;
     
 
-    @Administrator
+    @Editor
     public List<User> getUsersByType(int type);
     /**
      * Fetch all the users registered to this webshop.
@@ -306,7 +306,6 @@ public interface IUserManager {
      * 
      * @throws ErrorException 
      */
-    @Administrator
     public void impersonateUser(String userId) throws ErrorException;
     
     /**
@@ -366,6 +365,8 @@ public interface IUserManager {
     
     @Administrator
     public Company saveCompany(Company company);
+    
+    public void assignCompanyToGroup(Company company, String groupId);
     
     @Administrator
     public void deleteCompany(String companyId);

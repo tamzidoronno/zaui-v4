@@ -22,6 +22,7 @@ class ProMeisterCreateCompanyAccount extends \MarketingApplication implements \A
         $companyId = $this->getModalVariable("companyid");
         $users = $this->getApi()->getUserManager()->getUsersByCompanyId($companyId);
         $company = $this->getApi()->getUserManager()->getCompany($companyId);
+        
         $reference = $this->getReference($users);
         $groupId = $this->getGroupId($users);
         
@@ -30,8 +31,8 @@ class ProMeisterCreateCompanyAccount extends \MarketingApplication implements \A
         $user->emailAddress = $_POST['data']['email'];
         $user->cellPhone = $_POST['data']['cellphone'];
         $user->password = $_POST['data']['password'];
-        $user->groups = [];
-        $user->groups[] = $groupId;
+        
+        $this->getApi()->getUserManager()->assignCompanyToGroup($company, $groupId);
         
         if ($reference) {
             $user->metaData['groupreference'] = $reference;

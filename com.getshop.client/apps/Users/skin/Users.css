@@ -78,3 +78,12 @@
 #backsidesettings .user_entry_row:hover {
     background-color: #EDEDED;
 }
+
+#backsidesettings .user_entry_row .fa-building-o {
+    color: #FFF;
+    position: absolute;
+    left: 42px;
+    bottom: 28px;
+    font-size: 22px;
+    
+}

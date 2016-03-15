@@ -1,10 +1,14 @@
+<div class="shop_button" gs_show_modal="add_company_account" companyid="<? echo $this->getLoggedOnUser()->companyObject->id; ?>">
+    <? echo $this->__w("Add new user"); ?>
+</div>
+
 <?
 /* @var $this ns_1de1b272_2de3_482f_90cd_6bb8ceb77aca\ProMeisterSpiderDiagram */
 $users = $this->getApi()->getUserManager()->getUsersByCompanyId($this->getLoggedOnUser()->companyObject->id);
 $currentUser = $this->getCurrentUser();
 $isCompanyOverview = $this->isCompanySelected();
 
-echo "<select style='box-sizing: border-box; width: 100%;' class='gsniceselect1 changeviewofchart'> ";
+echo "<select style='box-sizing: border-box; width: calc(100% - 100); line-height: 31px;' class='gsniceselect1 changeviewofchart'> ";
 echo "<option value='company'>".$this->getLoggedOnUser()->companyObject->name."</option>";
 foreach ($users as $user) {
     $checked = $user->id == $currentUser->id && !$isCompanyOverview ? "selected='true'" : "";
@@ -12,3 +16,4 @@ foreach ($users as $user) {
 }
 echo "</select>";
 ?>
+

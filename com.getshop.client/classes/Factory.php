@@ -254,7 +254,7 @@ class Factory extends FactoryBase {
         if ($this->isAmchartsEnabled()) {
             $this->addJavascriptFile("js/amcharts/amcharts.js");
             $this->addJavascriptFile("js/amcharts/radar.js");
-            $this->addJavascriptFile("js/amcharts/light.js");
+            $this->addJavascriptFile("js/amcharts/themes/light.js");
         }
         
         

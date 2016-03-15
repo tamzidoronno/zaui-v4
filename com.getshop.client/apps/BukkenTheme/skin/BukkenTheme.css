@@ -224,7 +224,9 @@ body {
     .gscell[cellid="a505af39-65a6-4548-9a1f-41817c7a3a18"] { width: 50%; }
     .gscell[cellid="39f57e5c-341a-4977-b851-633bc67cdbf3"] { width: 50%; }
 
-    
+    .gsrotateleft { background-image: url('{IMAGEFOLDER}/left.png'); left: 50px;}
+    .gsrotateright { background-image: url('{IMAGEFOLDER}/right.png'); right: 50px; }
+    .gsucell[cellid="f162af06-a5de-4cc4-bb4f-b15df27d7990"] { padding-left: 20px; }
 }
 
 @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {

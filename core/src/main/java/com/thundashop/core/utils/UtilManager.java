@@ -6,6 +6,8 @@ package com.thundashop.core.utils;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.utilmanager.data.FileObject;
 import com.thundashop.core.common.ErrorException;
@@ -19,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,8 +40,11 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     private FrameworkConfig frameworkConfig;
     
     @Autowired
-    public BrRegEngine brRegEngine;
+    private List<CompanySearchEngine> companyEngines;
     
+    @Autowired
+    private StoreApplicationPool storeApplicationPool;
+            
     private int currentStartup;
 
     @Override
@@ -60,14 +66,15 @@ public class UtilManager extends ManagerBase implements IUtilManager {
         setManagerSetting("startupcount", ""+currentStartup);
     }
 
+    
     @Override
     public Company getCompanyFromBrReg(String companyVatNumber) throws ErrorException {
-        return brRegEngine.getCompany(companyVatNumber);
+        return getCompanySearchEngine().getCompany(companyVatNumber, true);
     }
 
     @Override
-    public HashMap<String, String> getCompaniesFromBrReg(String search) throws ErrorException {
-        return brRegEngine.search(search);
+    public List<Company> getCompaniesFromBrReg(String search) throws ErrorException {
+        return getCompanySearchEngine().search(search);
     }
 
     @Override
@@ -162,4 +169,24 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     public int getStartupCount() {
         return currentStartup;
     }
+    
+    @Override
+    public Company getCompanyFree(String companyVatNumber) throws ErrorException {
+        return getCompanySearchEngine().getCompany(companyVatNumber, false);
+    }
+
+    private CompanySearchEngine getCompanySearchEngine() {
+        Application app = storeApplicationPool.getApplication("278fc1b5-efec-47af-b3d2-f7dbe2194968");
+        if (app != null) {
+            return companyEngines.stream().filter(o -> o.getName().equals("allabolag"))
+                    .findFirst()
+                    .orElse(null);
+        } else {
+            return companyEngines.stream().filter(o -> o.getName().equals("brreg"))
+                    .findFirst()
+                    .orElse(null);
+        }
+        
+    }
+
 }

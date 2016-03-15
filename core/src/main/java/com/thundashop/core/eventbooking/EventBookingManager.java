@@ -807,6 +807,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public List<ExternalCertificate> getExternalCertificates(String userId, String eventId) {
+        User user = userManager.getUserById(userId);
+        if (user == null) {
+            throw new ErrorException(26);
+        }
+        
+        userManager.checkUserAccess(user);
+        
         List<ExternalCertificate> ret = externalCertificates.values()
                 .stream()
                 .filter(o -> o.userId.equals(userId))

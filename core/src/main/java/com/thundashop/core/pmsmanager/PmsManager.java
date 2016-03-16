@@ -469,6 +469,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         } else if (filter.filterType.equals("active")) {
+            filter.needToBeConfirmed = true;
             for (PmsBooking booking : bookings.values()) {
                 if (booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
                     result.add(booking);

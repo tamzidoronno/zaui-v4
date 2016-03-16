@@ -17,6 +17,7 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         echo "<div class='filelist'>";
         $this->includefile("uploadedFiles");
         echo "</div>";
+        echo "<div style='clear:both;'></div>";
     }
     
     function reloadFileList() {

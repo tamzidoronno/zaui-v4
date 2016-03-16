@@ -12,7 +12,7 @@ foreach($entries as $entry) {
     echo "<tr fileid='".$entry->id."'>";
     echo "<td width='50'>";
     if($this->isEditorMode()) {
-        echo "<i class='fa fa-trash-o'></i>";
+        echo "<i class='fa fa-trash-o'></i> ";
     }
     echo "<i class='fa fa-" . $this->translateFile($entry->name, $entry->type) . "'></i></td>";
     echo "<td width='80'>" . date("d.m.Y", strtotime($entry->rowCreatedDate)) . "</td>";

@@ -8,10 +8,23 @@ if (!count($unconfirmed)) {
 }
 
 foreach ($unconfirmed as $user) {
+    $extraInfo = @$user->metaData->{"need_access_to_other_companies"};
     ?>
     <div style='border: solid 1px #dDD; margin-bottom: 30px; padding: 20px;'>
         <div><? echo $user->fullName; ?></div>
         <div><? echo $this->__f("Company").": ".$user->companyObject->name; ?></div>
+
+        <?
+        if ($extraInfo) {
+        ?>
+        
+            <div style='padding: 20px;'>
+                <? echo $this->__f("Need access to other companies"); ?><br/>
+                <? echo $extraInfo; ?>
+            </div>
+        <?
+        }
+        ?>
         <div class='shop_button' gsclick='confirm' userid='<? echo $user->id; ?>'><? echo $this->__f("Confirm"); ?></div>
         <div class='shop_button' gsclick='reject' userid='<? echo $user->id; ?>'><? echo $this->__f("Reject"); ?></div>
     </div>

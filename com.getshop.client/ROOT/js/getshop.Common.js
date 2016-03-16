@@ -208,8 +208,18 @@ thundashop.common.showModal = function(modalName, data) {
     });
 }
 
-thundashop.common.closeModal = function() {
-    $('#dynamicmodal').html("");
+thundashop.common.closeModal = function(done) {
+    var event = thundashop.Ajax.createEvent(null, "closeModal", null, {});
+    event['synchron'] = true;
+    thundashop.Ajax.post(event, function(res) {
+        $('#dynamicmodal').html("");
+        $(window).scrollTop(0);
+        if (done) {
+            done();
+        }
+    });
+    
+    
 }
 
 thundashop.common.updateColorsFromPicker = function() {

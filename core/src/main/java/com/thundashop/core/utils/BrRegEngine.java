@@ -48,6 +48,9 @@ public class BrRegEngine implements CompanySearchEngine {
     @Override
     public Company getCompany(String organisationNumber, boolean fetch) {
 
+        if (organisationNumber == null)
+            return null;
+        
         String content = read(organisationNumber.trim(), false);
         ReturnValue fromJson = gson.fromJson(content, ReturnValue.class);
 

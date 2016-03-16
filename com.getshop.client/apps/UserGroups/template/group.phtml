@@ -55,6 +55,32 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
         </div>
     </div>
     
+    
+    <div class="textfield gss_setting"  id="referencePlaceHolder">
+        <span class="title"><?php echo $this->__f("Reference placeholder"); ?></span>
+        <input type="textfield" gs_model='groupmodel' gs_model_attr='usersRequireGroupReferencePlaceholder' value="<? echo $group->usersRequireGroupReferencePlaceholder; ?>" placeholder="Reference">
+        <div class="description">
+            <?php echo $this->__("What should the reference be for this."); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="usersRequireGroupReferenceValidationMin">
+        <span class="title"><?php echo $this->__f("Reference placeholder"); ?></span>
+        <input type="textfield" gs_model='groupmodel' gs_model_attr='usersRequireGroupReferenceValidationMin' value="<? echo $group->usersRequireGroupReferenceValidationMin; ?>" placeholder="8">
+        <div class="description">
+            <?php echo $this->__("How many chars should this reference be minimum?"); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="usersRequireGroupReferenceValidationMax">
+        <span class="title"><?php echo $this->__f("Reference placeholder"); ?></span>
+        <input type="textfield" gs_model='groupmodel' gs_model_attr='usersRequireGroupReferenceValidationMax' value="<? echo $group->usersRequireGroupReferenceValidationMax; ?>" placeholder="10">
+        <div class="description">
+            <?php echo $this->__("How many chars should this reference be maximum?"); ?>
+        </div>
+    </div>
+
+    
     <div class="textfield gss_setting"  id="">
         <span class="title"><?php echo $this->__f("Is public?"); ?></span>
         <div class="gss_onoff" gs_model="groupmodel" gs_model_attr="isPublic">

@@ -1,0 +1,27 @@
+<?
+/* @var $this ns_77bd71b1_a0e2_494e_a9e9_6dcee3829c5c\ProMeisterCreateAccount */
+$groups = $this->getApi()->getUserManager()->getAllGroups();
+?>
+<div class="registrationform">
+    <div class="registration_step step1">
+        <div class="stepinfo">
+            <? echo $this->__f("Step") . " 1/3"; ?>
+        </div>
+        <div class="step_content">
+            <?
+            echo $this->__w("Please select group");
+            echo "<br/>";
+            echo "<br/>";
+            foreach ($groups as $group) {
+                echo "<div gsclick='selectGroup' class='groupselect' value='$group->id'>";
+                if ($group->imageId) {
+                    echo "<img src='displayImage.php?id=$group->imageId'/>";
+                } else {
+                    echo $group->groupName;
+                }
+                echo "</div>";
+            }
+            ?>
+        </div>
+    </div>
+</div>

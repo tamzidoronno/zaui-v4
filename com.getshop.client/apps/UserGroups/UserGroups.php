@@ -65,6 +65,9 @@ class UserGroups extends \ApplicationBase implements \Application {
         
         $group->isPublic = $_POST['isPublic'];
         $group->imageId = $_POST['imageId'];
+        $group->usersRequireGroupReferencePlaceholder = $_POST['usersRequireGroupReferencePlaceholder'];
+        $group->usersRequireGroupReferenceValidationMin = $_POST['usersRequireGroupReferenceValidationMin'];
+        $group->usersRequireGroupReferenceValidationMax = $_POST['usersRequireGroupReferenceValidationMax'];
         $group->usersRequireGroupReference = $_POST['usersRequireGroupReference'];
         
         $this->getApi()->getUserManager()->saveGroup($group);

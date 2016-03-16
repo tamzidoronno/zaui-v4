@@ -1,28 +1,87 @@
 app.ProMeisterCreateAccount = {
     init: function() {
         $(document).on("keyup",'.ProMeisterCreateAccount #searchforcompany', app.ProMeisterCreateAccount.companySearch)
-        $(document).on("click",'.ProMeisterCreateAccount .groupselect', app.ProMeisterCreateAccount.groupSelected)
-        $(document).on("click",'.ProMeisterCreateAccount .userinformationnext', app.ProMeisterCreateAccount.addUserInformation)
-        $(document).on("click",'.ProMeisterCreateAccount .companyselected', app.ProMeisterCreateAccount.companySelected)
+        $(document).on("click",'.ProMeisterCreateAccount .searchforcompanyicon', app.ProMeisterCreateAccount.companySearch)
+        $(document).on("click",'.ProMeisterCreateAccount .userGroupNumberEntered', app.ProMeisterCreateAccount.userGroupNumberEntered)
+        $(document).on("click",'.ProMeisterCreateAccount .createAccount', app.ProMeisterCreateAccount.createAccount)
+        $(document).on("change",'.ProMeisterCreateAccount input[name="isgarageleader"]', app.ProMeisterCreateAccount.garageLeaderChanged)
     },
     
-    companySelected: function() {
-        var selected = $('input[name="selectedCompany"]:checked').val();
+    garageLeaderChanged: function() {
+        if ($(this).is(':checked')) {
+            $('.ProMeisterCreateAccount .othercompanies').slideDown();
+        } else {
+            $('.ProMeisterCreateAccount .othercompanies').slideUp();
+        }
+    },
+    
+    userGroupNumberEntered: function() {
+        var number = $('.ProMeisterCreateAccount .customerNumber').val();
+        var max = $('.ProMeisterCreateAccount .customerNumber').attr('max');
+        var min = $('.ProMeisterCreateAccount .customerNumber').attr('min');
         
-        if (!selected) {
-            alert(__w("Please select a company"));
+        if (max) {
+            max = parseInt(max);
+        }
+        
+        if (min) {
+            min = parseInt(min);
+        }
+        
+        if (max && min) {
+            if (number.length < min || number.length > max) {
+                var text = __w("Please enter correct number of chars, min: {min}, max: {max}");
+                text = text.replace("{min}", min);
+                text = text.replace("{max}", max);
+                alert(text);
+                return;
+            }
+        }
+        
+        thundashop.Ajax.simplePost(this, "setCustomerReference", { ref: number });
+    },
+    
+    validateEmail: function(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    },
+    
+    createAccount: function() {
+        var data = {};
+        data.fullname = $('.ProMeisterCreateAccount input[name="fullname"]').val();
+        data.email = $('.ProMeisterCreateAccount input[name="email"]').val();
+        data.invoicemail = $('.ProMeisterCreateAccount input[name="invoicemail"]').val();
+        data.cellphone = $('.ProMeisterCreateAccount input[name="cellphone"]').val();
+        data.isgarageleader = $('.ProMeisterCreateAccount input[name="isgarageleader"]:checked').length;
+        data.otherCompanies = $('.ProMeisterCreateAccount input[name="othercompanies"]').val();
+        data.password = $('.ProMeisterCreateAccount input[name="password"]').val();
+        
+        if (!app.ProMeisterCreateAccount.validateEmail(data.invoicemail)) {
+            alert(__w("Please check your the invoice email address"));
             return;
         }
         
-        app.ProMeisterCreateAccount.data.company = selected;
+        if ($('input[name="storeid"]').val() === "6524eb45-fa17-4e8c-95a5-7387d602a69b") {
+            data.cellphone = data.cellphone.replace(" ", "");
+            data.cellphone = data.cellphone.replace("-", "");
+            
+            if (data.cellphone.length !== 10) {
+                alert(__w("The cellphone must be 10 digit"));
+                return;
+            }
+        }
         
-        var event = thundashop.Ajax.createEvent(null, "createAccount", this, app.ProMeisterCreateAccount.data);
+        
+        var event = thundashop.Ajax.createEvent(null, "createAccount", this, data);
         event['synchron'] = true;
         thundashop.Ajax.postWithCallBack(event, app.ProMeisterCreateAccount.loginResult);
     },
     
     loginResult: function(res) {
-        thundashop.common.closeModal();
+        thundashop.common.closeModal(function() {
+            document.location = document.location;
+        });
+        
     },
     
     validatePassword: function() {
@@ -56,69 +115,19 @@ app.ProMeisterCreateAccount = {
         return allGood;
     },
     
-    addUserInformation: function() {
-        if (!app.ProMeisterCreateAccount.validateUserInformation()) {
+    companySearch: function(e) {
+        if (e.keyCode !== 13 && e.type !== "click") {
             return;
         }
         
-        if (!app.ProMeisterCreateAccount.validatePassword()) {
-            alert(__f("Please make sure your repeated password is the same as original"));
-            return;
-        }
-        
-        app.ProMeisterCreateAccount.collectUserInformation();
-        
-        $('.ProMeisterCreateAccount .registration_step').hide();
-        $('.ProMeisterCreateAccount .registration_step.step3').show();
-    },
-    
-    collectUserInformation: function() {
-        app.ProMeisterCreateAccount.data.fullname = $('.ProMeisterCreateAccount input[name="fullname"]').val();
-        app.ProMeisterCreateAccount.data.email = $('.ProMeisterCreateAccount input[name="email"]').val();
-        app.ProMeisterCreateAccount.data.invoicemail = $('.ProMeisterCreateAccount input[name="invoicemail"]').val();
-        app.ProMeisterCreateAccount.data.cellphone = $('.ProMeisterCreateAccount input[name="cellphone"]').val();
-        app.ProMeisterCreateAccount.data.isgarageleader = $('.ProMeisterCreateAccount input[name="isgarageleader"]:checked').length;
-        app.ProMeisterCreateAccount.data.password = $('.ProMeisterCreateAccount input[name="password"]').val();
-        
-        if ($('.ProMeisterCreateAccount input[name="groupreference"]').val()) {
-            app.ProMeisterCreateAccount.data.groupreference = $('.ProMeisterCreateAccount input[name="groupreference"]').val();    
-        }
-        
-    },
-    
-    groupSelected: function() {
-        app.ProMeisterCreateAccount.data = {
-            groupId : $(this).attr('value')
-        }
-        
-        app.ProMeisterCreateAccount.hideShowGroupFields();
-        $('.ProMeisterCreateAccount .registration_step').hide();
-        $('.ProMeisterCreateAccount .registration_step.step2').show();
-    },
-    
-    hideShowGroupFields: function() {
-         $('.ProMeisterCreateAccount .groupfield').each(function() {
-             var activatedForGroups = $(this).attr('avtivatedForGroups');
-             if (activatedForGroups.indexOf(app.ProMeisterCreateAccount.data.groupId) > -1) {
-                 $(this).show();
-             } else {
-                 $(this).hide();
-             }
-         })
-    },
-    
-    companySearch: function() {
         var theapp = $(this).closest(".app");
-        var text = $(this).val();
-        if (text.length < 4) {
-            theapp.find(".searchresult").html(__w("Please enter minimum three characters"));
-        } else {
-            var event = thundashop.Ajax.createEvent(null, "searchForCompanies", this, {
-                text: text
-            });
-            event['synchron'] = true;
-            thundashop.Ajax.postWithCallBack(event, app.ProMeisterCreateAccount.showCompanies);
-        }
+        var text = $('.ProMeisterCreateAccount input').val();
+        
+        var event = thundashop.Ajax.createEvent(null, "searchForCompanies", this, {
+            text: text
+        });
+        event['synchron'] = true;
+        thundashop.Ajax.postWithCallBack(event, app.ProMeisterCreateAccount.showCompanies);
     },
     
     showCompanies: function(res) {

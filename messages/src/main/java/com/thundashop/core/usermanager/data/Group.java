@@ -17,6 +17,9 @@ public class Group extends DataCommon {
     public String imageId = "";
 
     public boolean usersRequireGroupReference = false;
+    public String usersRequireGroupReferencePlaceholder = "";
+    public int usersRequireGroupReferenceValidationMin = 0;
+    public int usersRequireGroupReferenceValidationMax = 0;
     
     public List<Address> extraAddresses = new ArrayList();
     public Address defaultDeliveryAddress = new Address();

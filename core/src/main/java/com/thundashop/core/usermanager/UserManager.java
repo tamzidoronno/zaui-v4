@@ -1173,7 +1173,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         Company companyToUse = companies.values().stream()
-                .filter(o -> o.vatNumber.equals(company.vatNumber))
+                .filter(o -> o.vatNumber.equals(company.vatNumber) && o.reference.equals(company.reference))
                 .findAny()
                 .orElse(null);
         
@@ -1295,6 +1295,23 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (company != null && (company.groupId == null || company.groupId.isEmpty())) {
             company.groupId = groupId;
             saveCompany(company);
+        }
+    }
+
+    @Override
+    public Company getCompanyByReference(String companyReference) {
+        return companies.values().stream()
+                .filter(o -> o.reference.equals(companyReference))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public void assignReferenceToCompany(String companyId, String companyReference) {
+        Company company = getCompany(companyId);
+        if (company != null && (company.reference == null || company.reference.isEmpty())) {
+            company.reference = companyReference;
+            saveObject(company);
         }
     }
 

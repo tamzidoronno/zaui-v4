@@ -15,6 +15,18 @@
     width: 100%;
 }
 
+
+.ProMeisterCreateAccount .searchforcompanyicon {
+    line-height: 25px;
+    vertical-align: top;
+    border-radius: 0px;
+}
+.ProMeisterCreateAccount #searchforcompany {
+    width: calc(100% - 50px);
+    margin-right: 10px;
+    vertical-align: top;
+}
+
 .ProMeisterCreateAccount .groupselect {
     border: solid 1px #DDD;
     text-align: center;
@@ -32,21 +44,47 @@
     line-height: 50px;
     padding-left: 20px;
     text-align: center;
-    margin-bottom: 10px;
 }
 
 .ProMeisterCreateAccount .groupselect:last-child {
     margin-bottom: 0px;
 }
 
-.ProMeisterCreateAccount .registration_step {
-    display: none;
+
+.ProMeisterCreateAccount .select_company_button {
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+    
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,e5e5e5+100;White+3D */
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+
 }
 
-.ProMeisterCreateAccount .registration_step.step1 {
-    display: block;
+.ProMeisterCreateAccount .select_company_button .vatnumber {
+    font-size: 10px;
 }
 
 .ProMeisterCreateAccount .missing {
     border: solid 1px red;
+}
+
+.ProMeisterCreateAccount .step_content {
+    padding: 20px;
+    border-left: solid 1px #DDD;
+    border-right: solid 1px #DDD;
+    border-bottom: solid 1px #DDD;
+}
+
+.ProMeisterCreateAccount .othercompanies {
+    
+    margin-top: 10px;
+    display: none;
 }

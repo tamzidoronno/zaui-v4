@@ -381,4 +381,8 @@ public interface IUserManager {
     
     @Customer
     public List<User> getUsersByCompanyId(String companyId);
+    
+    public Company getCompanyByReference(String companyReference);
+    
+    public void assignReferenceToCompany(String companyId, String companyReference);
 }

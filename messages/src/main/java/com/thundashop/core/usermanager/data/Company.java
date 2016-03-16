@@ -1,6 +1,8 @@
 package com.thundashop.core.usermanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -21,9 +23,15 @@ public class Company extends DataCommon {
     public String contactPerson = "";
     public String groupId = "";
     
+    public String reference = "";
+    
     /* This are legacy attributes, replaced with address field*/
     public String streetAddress = "";
     public String postnumber = "";
     public String country = "";
     public String city = "";
+    
+    public String invoiceReference = "";
+    
+    public List<Company> subCompanies = new ArrayList();
 }

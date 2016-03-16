@@ -1,0 +1,25 @@
+<?
+/* @var $this ns_77bd71b1_a0e2_494e_a9e9_6dcee3829c5c\ProMeisterCreateAccount */
+$group = $this->getSelectedGroup();
+
+?>
+<div class="registrationform">
+    <div class="registration_step step2">
+        <div class="stepinfo">
+            <? echo $this->__f("Step") . " 2/3"; ?>
+        </div>
+
+        <div class="step_content">
+            <?
+            echo "* ".$this->__f("Please enter your customernumber");
+            ?>
+            <br/>
+            <input class="gsniceinput1 customerNumber" min='<? echo $group->usersRequireGroupReferenceValidationMin; ?>' max='<? echo $group->usersRequireGroupReferenceValidationMax; ?>' placeholder="<? echo $group->usersRequireGroupReferencePlaceholder; ?>"/>
+            <br/>
+            <br/>
+            <div class="shop_button userGroupNumberEntered">
+                <? echo $this->__f("Next"); ?>
+            </div>
+        </div>
+    </div>
+</div>

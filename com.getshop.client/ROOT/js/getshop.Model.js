@@ -28,6 +28,7 @@ getshop.Models = {
         var attr = $(field).attr('gs_model_attr');
         var val = $(field).find('i').hasClass('fa-toggle-on');
         this.setAttr(model, attr, val);
+        PubSub.publish("GS_TOGGLE_CHANGED", { model : model, attr: attr, val : val });
     },
     selectChanged: function (field) {
         if (!$(field).is('select')) {

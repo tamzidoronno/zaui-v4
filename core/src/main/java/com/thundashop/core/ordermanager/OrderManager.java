@@ -461,6 +461,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return toPay;
     }
     
+    public Double getTotalAmountExTaxes(Order order) {
+        List<CartTax> taxes = getTaxes(order);
+        double totalTax = 0.0;
+        for(CartTax tax : taxes) {
+            totalTax += tax.sum;
+        }
+        
+        return getTotalAmount(order) - totalTax;
+    }
+
+    
     private void updateCouponsCount(Order order) throws ErrorException {
         cartManager.updateCoupons(order.cart.coupon);
     }
@@ -1182,4 +1193,5 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return order -> new Integer(order.status).equals(Integer.valueOf(filterOptions.extra.get("orderstatus")));
     }
+
 }

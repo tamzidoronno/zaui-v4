@@ -469,7 +469,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         } else if (filter.filterType.equals("active")) {
-            filter.needToBeConfirmed = true;
             for (PmsBooking booking : bookings.values()) {
                 if (booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
                     result.add(booking);
@@ -516,7 +515,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void removeNotConfirmed(PmsBookingFilter filter, List<PmsBooking> result) {
         List<PmsBooking> toRemove = new ArrayList();
-        if (filter.needToBeConfirmed) {
+        if (filter.needToBeConfirmed) { 
             for (PmsBooking booking : result) {
                 if (!booking.confirmed) {
                     toRemove.add(booking);
@@ -2319,6 +2318,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = PmsBookingFilter.PmsBookingFilterTypes.active;
         filter.startDate = new Date();
+        filter.needToBeConfirmed = true;
         filter.endDate = new Date();
         List<PmsBooking> allBookings = getAllBookings(filter);
         for (PmsBooking booking : allBookings) {

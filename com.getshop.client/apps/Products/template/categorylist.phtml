@@ -1,0 +1,30 @@
+<?php
+/* @var $this \ns_e9d04f19_6eaa_4a17_9b7b_aa387dbaed92\CategoryLister */
+$product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
+?>
+<span class='gss_button gss_add_category'>Add category to product</span>
+<br>
+<br>
+<div class="addedcategories" style="float:right; border: solid 1px #bbb; padding: 10px; background-color:#fff;">
+    <h2>Already added categories</h2>
+    <div class='addedcategorieslist'>
+        <?php
+        $prod = new ns_06f9d235_9dd3_4971_9b91_88231ae0436b\Product();
+        foreach($product->categories as $cat) {
+            $prod->printCategory($cat);
+        }
+        ?>
+    </div>
+</div>
+
+<div id="categorylist">
+<?
+$list = $this->getApi()->getListManager()->getJsTree("categories");
+$generator = new JsTreeGenerator();
+$generator->printTree($list);
+?>
+</div>
+
+<script>
+  getshop.jstree.initJsTree("categorylist", "categories");
+</script>

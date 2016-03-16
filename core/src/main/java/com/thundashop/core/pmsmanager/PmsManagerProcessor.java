@@ -7,6 +7,7 @@ import com.thundashop.core.arx.ArxManager;
 import com.thundashop.core.arx.Card;
 import com.thundashop.core.arx.Door;
 import com.thundashop.core.arx.Person;
+import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class PmsManagerProcessor {
         try { processArx(); }catch(Exception e) { e.printStackTrace(); }
         try { processOrdersToCreate(); }catch(Exception e) { e.printStackTrace(); }
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
+        try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
     }
 
     private void processStarting(int hoursAhead, int maxAhead) {
@@ -725,6 +727,30 @@ public class PmsManagerProcessor {
         }
         
         return new ArrayList(result.values());
+    }
+
+    private void checkForIncosistentBookings() {
+        List<Booking> allBookings = manager.bookingEngine.getAllBookings();
+        List<String> allBookingIds = new ArrayList();
+        for(PmsBooking booking : manager.bookings.values()) {
+            if(booking.isDeleted) {
+                continue;
+            }
+            if(booking.rooms != null) {
+                for(PmsBookingRooms room : booking.rooms) {
+                    if(room.bookingId != null) {
+                        allBookingIds.add(room.bookingId);
+                    }
+                }
+            }
+        }
+        
+        for(Booking test : allBookings) {
+            if(!allBookingIds.contains(test.id)) {
+                manager.messageManager.sendErrorNotification(test.id + " this is missing on the bookingengine, the booking engine and the pms manager is out of sync: " + test.startDate + " - " + test.endDate + ", created: " + test.rowCreatedDate);
+                manager.bookingEngine.deleteBooking(test.id);
+            }
+        }
     }
 
 }

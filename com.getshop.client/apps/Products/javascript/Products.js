@@ -11,8 +11,71 @@ app.Products = {
     init: function () {
         $(document).on('click', '#gss_gotoproduct', app.Products.goToProduct);
         $(document).on('click', '.gss_product_saveuploadimage', app.Products.uploadBoxClick);
+        $(document).on('click', '.gss_add_attribute', app.Products.addAttributeToProduct);
+        $(document).on('click', '.gss_add_category', app.Products.addCategoryToProduct);
+        $(document).on('click', '.removeattr', app.Products.removeAttr);
+        $(document).on('click', '.removecat', app.Products.removeCat);
+        $(document).on('keyup', '.attrtext', app.Products.updateAttrText);
         $(document).on('click', '.setupDynamicPricing', app.Products.setupDynamicPricing);
         $(document).on('change', '#gss_filterproducts', app.Products.filterProducts);
+    },
+    updateAttrText : function() {
+        var id = $(this).closest('.addedattrrow').attr('attrid');
+        getshop.Model.productmodel.attributes[id].text = $(this).val();
+    },
+    removeAttr : function() {
+        var id = $(this).closest('.addedattrrow').attr('attrid');
+        delete getshop.Model.productmodel.attributes[id];
+        $(this).closest('.addedattrrow').remove();
+    },
+    removeCat : function() {
+        var id = $(this).closest('.addedcatrow').attr('attrid');
+        var index = getshop.Model.productmodel.categories.indexOf(id);
+        if (index > -1) {
+            getshop.Model.productmodel.categories.splice(index, 1);
+        }
+        
+        $(this).closest('.addedcatrow').remove();
+    },
+    addAttributeToProduct : function() {
+        var nodes = $("#attributelist").jstree("get_selected");
+        for(var k in nodes) {
+            var id = nodes[k];
+            if($('[attrid="'+id+'"]').length > 0) {
+                return;
+            }
+
+            var event = thundashop.Ajax.createEvent('','loadAttribute','ns_06f9d235_9dd3_4971_9b91_88231ae0436b\\Product', {
+                "id" : id
+            });
+
+            var data = thundashop.Ajax.postSynchron(event);
+            if(!getshop.Model.productmodel.attributes) {
+                getshop.Model.productmodel.attributes = {};
+            }
+            getshop.Model.productmodel.attributes[id] = {};
+            getshop.Model.productmodel.attributes[id].text = "";
+            $('.addedattributeslist').prepend(data);
+        }
+    },
+    addCategoryToProduct : function() {
+        var nodes = $("#categorylist").jstree("get_selected");
+        for(var k in nodes) {
+            var id = nodes[k];
+            if($('[attrid="'+id+'"]').length > 0) {
+                return;
+            }
+
+            var event = thundashop.Ajax.createEvent('','loadCategory','ns_06f9d235_9dd3_4971_9b91_88231ae0436b\\Product', {
+                "id" : id
+            });
+            var data = thundashop.Ajax.postSynchron(event);
+            if(!getshop.Model.productmodel.categories) {
+                getshop.Model.productmodel.categories = [];
+            }
+            getshop.Model.productmodel.categories.push(id);
+            $('.addedcategorieslist').prepend(data);
+        }
     },
     setupDynamicPricing: function() {
         var ans = prompt(__f("How many different prices do you wish to use? 0 = disabled"));

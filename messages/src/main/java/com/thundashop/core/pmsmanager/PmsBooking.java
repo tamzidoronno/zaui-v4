@@ -213,4 +213,16 @@ public class PmsBooking extends DataCommon {
         }
         return false;
     }
+    
+    public void printInvoicedTo() {
+        for(PmsBookingRooms room : rooms) {
+            if(room.invoicedTo != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(room.invoicedTo);
+                if(cal.get(Calendar.MONTH) == 2) {
+                    System.out.println(room.invoicedTo);
+                }
+            }
+        }
+    }
 }

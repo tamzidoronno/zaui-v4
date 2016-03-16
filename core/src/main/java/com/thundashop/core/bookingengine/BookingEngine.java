@@ -235,4 +235,8 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public void checkConsistency() {
         bookingEngineAbstract.checkConsistency();
     }
+
+    public boolean canAdd(Booking bookingToAdd) {
+        return bookingEngineAbstract.canAdd(bookingToAdd);
+    }
 }

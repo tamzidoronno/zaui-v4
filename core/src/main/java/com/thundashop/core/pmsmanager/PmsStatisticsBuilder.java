@@ -38,8 +38,8 @@ class PmsStatisticsBuilder {
                 for(PmsBookingRooms room : booking.rooms) {
                     if(room.isActiveOnDay(cal.getTime())) {
                         Double price = room.getDailyPrice(booking.priceType, cal);
-                        if(pricesExTax) {
-                            price /= 1 - (room.taxes/100);
+                        if(!pricesExTax) {
+                            price /= 1 + (room.taxes/100);
                         }
                         
                         entry.totalPrice += price;
@@ -73,11 +73,16 @@ class PmsStatisticsBuilder {
             for(PmsBooking booking : bookings) {
                 for(String orderId : booking.orderIds) {
                     Order order = orderManager.getOrderSecure(orderId);
-                    if(cal == null || cal.getTime() == null || order == null) {
+                    if(cal.getTime() == null || order == null) {
                         continue;
                     }
+                    if(order.status == Order.Status.CANCELED) {
+                        continue;
+                    }
+                    
                     if(order.createdOnDay(cal.getTime())) {
-                        Double total = orderManager.getTotalAmount(order);
+                        Double total = orderManager.getTotalAmountExTaxes(order);
+                        System.out.println(order.incrementOrderId + " - " + total);
                         entry.totalPrice += total;
                         entry.numberOfOrders++;
                         entry.date = cal.getTime();

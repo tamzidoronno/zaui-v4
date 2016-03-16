@@ -182,6 +182,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         
         if($this->isItemPage() && !$lastItemPage) {
             $day = "month";
+            $_SESSION['calendardaytype'] = $day;
         }
         
         $_SESSION['lastItemPage'] = $this->isItemPage();

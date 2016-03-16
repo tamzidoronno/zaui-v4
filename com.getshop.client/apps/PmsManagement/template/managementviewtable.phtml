@@ -55,10 +55,15 @@ foreach($types as $id => $type) {
     echo $type->name . "</span>";
 }
 $checked = "";
+$incDeleted = "";
 if($this->isGroupedByBooking()) {
     $checked = "CHECKED";
 }
-echo "<input type='checkbox' gstype='clicksubmitforce' method='groupByBooking' gsname='id' gsvalue='' $checked> Group by booking";
+if($this->isIncludeDeleted()) {
+    $incDeleted = "CHECKED";
+}
+echo "<input type='checkbox' gstype='clicksubmitforce' method='groupByBooking' gsname='id' gsvalue='' $checked> Group by booking ";
+echo "<input type='checkbox' gstype='clicksubmitforce' method='includeDeleted' gsname='incdelete' $incDeleted class='clicksubmitcheckbox'> Include deleted";
 echo "<br>";
 echo "<br>";
 

@@ -1,17 +1,5 @@
 <?php
 /* @var $this ns_1ee40ca9_27ac_4b97_944a_0eb02506d5e9\ProductCategories */
-$categories = $this->getApi()->getProductManager()->getAllCategories();
-echo "<div class='categoryheading'>";
-$this->wrapContentManager("catheading_".$this->getAppInstanceId(), "Categories");
-echo "</div>";
-echo "<div class='category' gstype='clicksubmit' gsvalue='' gsname='id' method='setFilter'>";
-echo $this->__w("Show all products");
-echo "</div>";
-foreach($categories as $category) {
-    $selected = "";
-    if($this->isThisFilter($category->id)) {
-        $selected = "selected";
-    }
-    echo "<div class='category $selected' gstype='clicksubmit' gsvalue='".$category->id."' gsname='id' method='setFilter'>" . $category->name . "</div>";
-}
+$categories = $this->getApi()->getListManager()->getJsTree("categories");
+$this->printCategoryList($categories->nodes[0]->children);
 ?>

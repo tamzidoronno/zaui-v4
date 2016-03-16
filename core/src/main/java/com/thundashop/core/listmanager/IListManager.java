@@ -4,8 +4,10 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.databasemanager.updatescripts.ProductCategories;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.listmanager.data.EntryList;
+import com.thundashop.core.listmanager.data.JsTreeList;
 import com.thundashop.core.listmanager.data.Menu;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -171,6 +173,11 @@ public interface IListManager {
      */
     @Administrator
     public void createMenuList(String menuApplicationId) throws ErrorException;
+    
+    @Administrator
+    public void saveJsTree(String name, JsTreeList list);
+    
+    public JsTreeList getJsTree(String name);
     
     public List<Menu> getMenues(String applicationInstanceId);
 }

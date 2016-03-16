@@ -1,11 +1,9 @@
 package com.thundashop.core.productmanager;
 
 import com.thundashop.core.common.Administrator;
-import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -32,13 +30,6 @@ public interface IProductManager {
      */
     @Editor
     public void changeStockQuantity(String productId, int count) throws ErrorException;
-    
-    /**
-     * Fetch all attributes connected to all products.
-     * @return
-     * @throws ErrorException 
-     */
-    public List<AttributeValue> getAllAttributes() throws ErrorException;
     
     /**
      * Find the product uuid set for an application.
@@ -75,13 +66,6 @@ public interface IProductManager {
      * @throws ErrorException 
      */
     public List<Product> getLatestProducts(int count) throws ErrorException;
-    
-    /**
-     * Update the attribute pool. This will replace the old one, so all entries has to be included here.
-     * @param groups
-     * @throws ErrorException 
-     */
-    public void updateAttributePool(List<AttributeValue> groups) throws ErrorException;
     
     /**
      * Remove an existing product.
@@ -147,13 +131,6 @@ public interface IProductManager {
      */
     public List<Product> getAllProducts() throws ErrorException;
     
-    /**
-     * Whenever you use the getproducts function call, you will be able to fetch a summary of the attributes.
-     * Comes in handy to filter result when fetching data from for example a product list.
-     * @return
-     * @throws ErrorException 
-     */
-    public AttributeSummary getAttributeSummary() throws ErrorException;
     
     /**
      * Get price for a product with variations

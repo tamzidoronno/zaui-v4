@@ -11,6 +11,8 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
     <div class='gss_tab gss_tab_active' gss_tab='1'><? echo $this->__f("Product info"); ?></div>
     <div class='gss_tab' gss_tab='3'><? echo $this->__f("Images"); ?></div>
     <div class='gss_tab' gss_tab='2'><? echo $this->__f("Lists"); ?></div>
+    <div class='gss_tab' gss_tab='4'><? echo $this->__f("Attributes"); ?></div>
+    <div class='gss_tab' gss_tab='5'><? echo $this->__f("Categories"); ?></div>
     <div class='gss_tab_content'>
         <input type="hidden" gs_model='productmodel' gs_model_attr='productid' value="<? echo $product->id; ?>">
         <div class='gss_tab_view gss_tab_active' gss_tab='1'>
@@ -117,28 +119,7 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
                     </select>
                 </div>
             </div>
-            
-            <?
-            $cats = $this->getApi()->getProductManager()->getAllCategories();
-            if(isset($cats)) {
-                ?>
-                <div class="gss_setting" id='category'>
-                    <div class="text inline title"><?php echo $this->__f("Please select a category"); ?></div>
-                    <div class="gss_dropdown">
-                        <select class="config" gs_model='productmodel' gs_model_attr='category'>
-                            <?php
-                            echo "<option value=''>No category</option>";
-                            foreach($cats as $cat) {
-                                $selected = $product->category == $cat->id ? "selected='true'"  : "";
-                                echo "<option value='". $cat->id . "' $selected>" . $cat->name . "</option>";
-                            }
-                            ?>                            
-                        </select>
-                    </div>
-                </div>
-            <? } ?>
-
-
+           
             <div class="textarea gss_setting"  id="listviewdescription">
                 <span class="title"><?php echo $this->__f("Listview description"); ?></span>
                 <textarea class='gss_mediumsize' gs_model='productmodel' gs_model_attr='lisviewdescription'><? echo $product->shortDescription; ?></textarea>
@@ -154,6 +135,14 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
 
         <div class='gss_tab_view' gss_tab='2'>
             <?  $this->includefile("productlist"); ?>
+        </div>
+        
+        <div class='gss_tab_view' gss_tab='4'>
+            <?  $this->includefile("attributeslist"); ?>
+        </div>
+        
+        <div class='gss_tab_view' gss_tab='5'>
+            <?  $this->includefile("categorylist"); ?>
         </div>
         
 

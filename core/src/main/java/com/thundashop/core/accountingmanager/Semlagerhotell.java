@@ -129,7 +129,11 @@ public class Semlagerhotell implements AccountingInterface {
             for(CartItem item : order.cart.getItems()) {
                 HashMap<Integer, String> orderLine = new HashMap();
                 orderLine.put(1, "L");
-                orderLine.put(2, "200"); //Produktnummer?
+                if(userManager.getUserById(order.userId).company.size() > 0) {
+                    orderLine.put(2, "200");
+                } else {
+                    orderLine.put(2, "100");
+                }
                 orderLine.put(3, ""); //Avgiftskode (hentes fra kunde)
                 
                 String metatekst = createLineText(item);
@@ -138,7 +142,7 @@ public class Semlagerhotell implements AccountingInterface {
                 orderLine.put(5, item.getCount() + "");
                 orderLine.put(6, item.getProduct().price + "");
                 orderLine.put(7, "");
-                orderLine.put(8, "");
+                orderLine.put(8, "J01");
                 orderLine.put(9, "");
                 orderLine.put(10, "");
                 result.add(makeLine(orderLine));
@@ -157,7 +161,7 @@ public class Semlagerhotell implements AccountingInterface {
             toAdd = toAdd.replace(",", "");
             result += toAdd;
             if(i != line.size()) {
-                result += ",";
+                result += ";";
             }
         }
         return result + "\r\n";

@@ -28,6 +28,15 @@ class ApplicationManager extends FactoryBase {
         $this->getApi()->getPageManager()->saveMobileLink($_POST['data']['link']);
     }
     
+    public function saveJsTree() {
+        $jsTreeGenerator = new \JsTreeGenerator();
+        $list = $jsTreeGenerator->generateTreeFromPostedData();
+
+        $current = $this->getApi()->getListManager()->getJsTree($_POST['data']['listName']);
+        $current->nodes = $list;
+        $this->getApi()->getListManager()->saveJsTree($_POST['data']['listName'], $current);
+    }
+    
     function switchArea() {
         $pageId = $this->getPage()->id;
         $fromArea = $_POST['data']['area'];

@@ -1,10 +1,8 @@
 package com.thundashop.core.productmanager;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pagemanager.PageManager;
-import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -43,13 +41,6 @@ public class ProductManager extends AProductManager implements IProductManager {
             throw new ErrorException(87);
         }
         product.original_price = product.price;
-
-        product.attributes = new ArrayList();
-        for (String group : product.attributesToSave.keySet()) {
-            AttributeValue value = pool.findAttributeValue(group, product.attributesToSave.get(group));
-            product.attributes.add(value.id);
-
-        }
 
         saveObject(product);
         products.put(product.id, product);
@@ -130,15 +121,6 @@ public class ProductManager extends AProductManager implements IProductManager {
         return super.latestProducts(count);
     }
 
-    @Override
-    public List<AttributeValue> getAllAttributes() throws ErrorException {
-        return pool.getAll();
-    }
-
-    @Override
-    public AttributeSummary getAttributeSummary() throws ErrorException {
-        return cachedResult;
-    }
 
     @Override
     public Double getPrice(String productId, List<String> variations) throws ErrorException {
@@ -191,31 +173,6 @@ public class ProductManager extends AProductManager implements IProductManager {
         return list;
     }
 
-    @Override
-    public void updateAttributePool(List<AttributeValue> groups) throws ErrorException {
-        List<String> valuesAdded = new ArrayList();
-        for (AttributeValue val : groups) {
-            val.storeId = storeId;
-            saveObject(val);
-            pool.addAttributeValue(val);
-            valuesAdded.add(val.id);
-        }
-
-        for (AttributeValue value : pool.getAll()) {
-            if (!valuesAdded.contains(value.id)) {
-                databaseSaver.deleteObject(value, credentials);
-                pool.remove(value.id);
-
-                for (Product product : products.values()) {
-                    if (product.attributes != null && product.attributes.contains(value.id)) {
-                        product.attributes.remove(value.id);
-                        saveObject(product);
-                    }
-                }
-            }
-        }
-
-    }
 
     @Override
     public String getPageIdByName(String name) {
@@ -375,5 +332,5 @@ public class ProductManager extends AProductManager implements IProductManager {
         return result;
     }
 
- 
+
 }

@@ -437,6 +437,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->startDate = $this->formatTimeToJavaDate(time()-(86400*3));
         $filter->endDate = $this->formatTimeToJavaDate(time()+(86400*3));
         $filter->sorting = "regdate";
+        $filter->includeDeleted = true;
         return $filter;
     }
 
@@ -745,6 +746,22 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<span style='color:blue; cursor:pointer;' onClick=\"window.open('/scripts/generateContract.php?userid=$userId&bookingId=$bookingId&engine=$engine');\"><i class='fa fa-file-pdf-o'></i> Last ned kontrakt</span><br>";
         echo "<span style='color:blue; cursor:pointer;' onClick=\"window.open('/scripts/generateContract.php?userid=$userId&bookingId=$bookingId&type=bilag&engine=$engine');\"><i class='fa fa-plus-circle'></i> Last ned bilag</span>";
         echo "</span>";
+    }
+    
+    public function undeleteBooking() {
+        $bookingId = $_POST['data']['bookingid'];
+        $this->getApi()->getPmsManager()->undeleteBooking($this->getSelectedName(), $bookingId);
+        $this->showBookingInformation();
+    }
+
+    public function includeDeleted() {
+        $filter = $this->getSelectedFilter();
+        $filter->includeDeleted = $_POST['data']['incdelete'] == "true";
+        $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
+    }
+    
+    public function isIncludeDeleted() {
+        return $this->getSelectedFilter()->includeDeleted;
     }
 
 }

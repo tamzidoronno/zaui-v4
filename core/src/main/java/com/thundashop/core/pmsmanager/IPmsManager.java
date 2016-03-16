@@ -113,6 +113,9 @@ public interface IPmsManager {
     @Administrator
     public PmsBookingRooms getRoomForItem(String itemId, Date atTime);
     
+    @Administrator
+    public void undeleteBooking(String bookingId);
+    
     public PmsConfiguration getConfiguration();
     public void processor();
     public String getCurrenctContract() throws Exception;

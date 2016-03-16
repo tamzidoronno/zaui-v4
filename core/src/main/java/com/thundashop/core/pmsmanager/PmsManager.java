@@ -302,25 +302,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         Integer result = 0;
-        List<Booking> bookingsToAdd = new ArrayList();
-        List<PmsBookingRooms> removeRooms = new ArrayList();
-        for (PmsBookingRooms room : booking.rooms) {
-            if (!room.canBeAdded) {
-                removeRooms.add(room);
-                BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                String name = "";
-                if (item != null) {
-                    name = item.name;
-                }
-                String text = "Removed room: " + name + " since it can't be added: " + room.date.start + " - " + room.date.end;
-                logEntry(text, booking.id, null);
-                System.out.println(text);
-                continue;
-            }
-            Booking bookingToAdd = createBooking(room);
-            bookingsToAdd.add(bookingToAdd);
-        }
-        booking.rooms.removeAll(removeRooms);
+        booking.isDeleted = false;
+        List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
         try {
             result = completeBooking(bookingsToAdd, booking);
 
@@ -532,7 +515,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void removeNotConfirmed(PmsBookingFilter filter, List<PmsBooking> result) {
         List<PmsBooking> toRemove = new ArrayList();
-        if (filter.needToBeConfirmed) {
+        if (filter.needToBeConfirmed) { 
             for (PmsBooking booking : result) {
                 if (!booking.confirmed) {
                     toRemove.add(booking);
@@ -2335,6 +2318,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = PmsBookingFilter.PmsBookingFilterTypes.active;
         filter.startDate = new Date();
+        filter.needToBeConfirmed = true;
         filter.endDate = new Date();
         List<PmsBooking> allBookings = getAllBookings(filter);
         for (PmsBooking booking : allBookings) {
@@ -2604,6 +2588,41 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             months++;
         }
         return months;
+    }
+
+    @Override
+    public void undeleteBooking(String bookingId) {
+        PmsBooking booking = getBooking(bookingId);
+        List<Booking> toAdd = buildRoomsToAddToEngineList(booking);
+        bookingEngine.addBookings(toAdd);
+        booking.attachBookingItems(toAdd);
+        booking.isDeleted = false;
+        saveBooking(booking);
+    }
+
+    private List<Booking> buildRoomsToAddToEngineList(PmsBooking booking) {
+        List<Booking> bookingsToAdd = new ArrayList();
+        List<PmsBookingRooms> removeRooms = new ArrayList();
+        for (PmsBookingRooms room : booking.rooms) {
+            Booking bookingToAdd = createBooking(room);
+            if (!bookingEngine.canAdd(bookingToAdd)) {
+                room.canBeAdded = false;
+                removeRooms.add(room);
+                BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                String name = "";
+                if (item != null) {
+                    name = item.name;
+                }
+                String text = "Removed room: " + name + " since it can't be added: " + room.date.start + " - " + room.date.end;
+                logEntry(text, booking.id, null);
+                System.out.println(text);
+                continue;
+            }
+            
+            bookingsToAdd.add(bookingToAdd);
+        }
+        booking.rooms.removeAll(removeRooms);
+        return bookingsToAdd;
     }
 
 }

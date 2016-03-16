@@ -111,6 +111,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
+                booking.printInvoicedTo();
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof PmsPricing) {

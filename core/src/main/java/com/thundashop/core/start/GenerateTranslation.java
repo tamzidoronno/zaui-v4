@@ -121,6 +121,9 @@ public class GenerateTranslation {
 
         File root = new File(path);
         File[] list = root.listFiles();
+        if(list == null) {
+            return;
+        }
         for (File f : list) {
             String filePath = f.getAbsolutePath().toString().toLowerCase();
             String fileOriginal = f.getCanonicalPath().toString();

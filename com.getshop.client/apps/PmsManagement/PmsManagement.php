@@ -552,8 +552,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 foreach($types as $type) {
                     /* @var $item core_bookingengine_data_BookingItem */
                     $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $type->id, $start, $end);
-                    if($number > 0) 
+                    if($number > 0) {
                         echo "<option value='".$type->id."'>". $type->name . "</option>";
+                    } else {
+                        echo "<option value='".$type->id."'>". $type->name . " (opptatt)</option>";
+                    }
                 }
                 ?>
             </select>

@@ -9,7 +9,7 @@ import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Date; 
 import java.util.List;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
@@ -164,7 +164,7 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean needInvoicing(NewOrderFilter filter) {
-        
+       
         if(filter.forceInvoicing) {
             return true;
         }

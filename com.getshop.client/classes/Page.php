@@ -1769,13 +1769,22 @@ class Page {
     }
 
     public function printLanguageSelection() {
+        $langText = array();
+        $langText['nb_NO'] = "Norsk";
+        $langText['se'] = "Svenska";
+        $langText['en_en'] = "English";
+        
         $languages = $this->factory->getLanguageCodes();
         if (count($languages)) {
             $mainLangCode = $this->factory->getMainLanguage();
             echo "<div class='gs_language_selection'>";
-            echo "<a href='?setLanguage=$mainLangCode'><div class='gs_language_code gs_lang_code_$mainLangCode'>".$mainLangCode."</div></a>";
+            echo "<a href='?setLanguage=$mainLangCode'><div class='gs_language_code gs_lang_code_$mainLangCode'>";
+            echo $langText[$mainLangCode];
+            echo "</div></a>";
             foreach ($languages as $lang) {
-                echo "<a href='?setLanguage=$lang'><div class='gs_language_code gs_lang_code_$lang'>".$lang."</div></a>";
+                echo "<a href='?setLanguage=$lang'><div class='gs_language_code gs_lang_code_$lang'>";
+                echo $langText[$lang];
+                echo "</div></a>";
             }
             echo "</div>";
         }

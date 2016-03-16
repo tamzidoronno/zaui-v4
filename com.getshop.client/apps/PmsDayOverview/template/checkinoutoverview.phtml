@@ -13,40 +13,50 @@ $items = $this->indexList($items);
 <?php
 
 echo "<h1>Checking in today</h1>";
-echo "<table width='100%' cellspacing='0' cellpadding='0'>";
-echo "<tr>";
-echo "<th>Room</th>";
-echo "<th>Bookers name</th>";
-echo "<th>Guest name</th>";
-echo "<th>Guest phone</th>";
-echo "<th>Guest email</th>";
-echo "</tr>";
+printCheckingTodayTable($bookings, $items, $filter, $this);
 
-$roomList = array();
-foreach($bookings as $booking) {
-    foreach($booking->rooms as $room) {
-        $pmsManager = new ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement();
-        if(!$pmsManager->isActive($room, $filter)) {
-            continue;
-        }
-        $room->userId = $booking->userId;
-        $roomList[$items[$room->bookingItemId]->bookingItemName] = $room;
-    }
-}
+$filter = $this->getSelectedFilter(true, 1);
+$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+echo "<h1>Checking in tomorrow</h1>";
+printCheckingTodayTable($bookings, $items, $filter, $this);
 
-ksort($roomList);
 
-foreach($roomList as $room) {
-    $user = $this->getApi()->getUserManager()->getUserById($room->userId);
+function printCheckingTodayTable($bookings, $items, $filter,$object) {
+    echo "<table width='100%' cellspacing='0' cellpadding='0'>";
     echo "<tr>";
-    echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td><td>" . $user->fullName . "</td>";
-    echo "<td>" . $room->guests[0]->name . "</td>";
-    echo "<td>" . $room->guests[0]->phone . "</td>";
-    echo "<td>" . $room->guests[0]->email . "</td>";
+    echo "<th>Room</th>";
+    echo "<th>Bookers name</th>";
+    echo "<th>Guest name</th>";
+    echo "<th>Guest phone</th>";
+    echo "<th>Guest email</th>";
     echo "</tr>";
-}
 
-echo "</table>";
+    $roomList = array();
+    foreach($bookings as $booking) {
+        foreach($booking->rooms as $room) {
+            $pmsManager = new ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement();
+            if(!$pmsManager->isActive($room, $filter)) {
+                continue;
+            }
+            $room->userId = $booking->userId;
+            $roomList[$items[$room->bookingItemId]->bookingItemName] = $room;
+        }
+    }
+
+    ksort($roomList);
+
+    foreach($roomList as $room) {
+        $user = $object->getApi()->getUserManager()->getUserById($room->userId);
+        echo "<tr>";
+        echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td><td>" . $user->fullName . "</td>";
+        echo "<td>" . $room->guests[0]->name . "</td>";
+        echo "<td>" . $room->guests[0]->phone . "</td>";
+        echo "<td>" . $room->guests[0]->email . "</td>";
+        echo "</tr>";
+    }
+
+    echo "</table>";    
+}
 
 
 $filter = $this->getSelectedFilter(false);

@@ -24,6 +24,10 @@ h2 { font-weight: 700; }
     padding-top: 50px;
 }
 
+.gsarea[area="footer"] {
+    color: #758589;
+    font-size: 14px !important;
+}
 .gsarea[area="footer"] .Menu .menuentries {
     width: 100%;
 }
@@ -273,7 +277,10 @@ h2 { font-weight: 700; }
 .AttributePrinter .attrrow { border-bottom: solid 1px #DDD; }
 .AttributePrinter .attrprefix { display:inline-block; width: 17.22%; text-transform: uppercase; font-weight: bold; }
 
-
+.ProductLists .templatebox_2 .addProductToCart { display:none;  }
+.ProductLists .templatebox_2 .product_price { display:none;  }
+.ProductLists .templatebox_2 .productimage  { border-right: solid 1px #ddd; } 
+.ProductLists .templatebox_2 .productbox { border-color: #ddd; }
 
 @media only all and (max-width: 1100px) { 
     .gsrotating .ContentManager h1 { font-size: 30px !important; }

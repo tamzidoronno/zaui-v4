@@ -91,7 +91,7 @@
     right: 0px;
 }
 
-.ProductLists .products {
+.ProductLists .products.grid_view {
     font-size: 0px;
 }
 .ProductLists .products .content {
@@ -417,6 +417,12 @@
     margin: 0px;
     box-sizing: border-box;
 }
+
+
+.ProductLists .templatebox_2 .productbox { border: solid 1px; margin-bottom: 20px; height: 250px; }
+.ProductLists .templatebox_2 .productimage { width: 500px; height: 250px; background-size: cover; }
+.ProductLists .templatebox_2 .product_title{ position: absolute; left: 520px; top: 15px; }
+.ProductLists .templatebox_2 .short_desc { position: absolute; left: 520px; top: 65px; padding-right: 10px; }
 
 @media only all and (max-width: 800px) { 
     .productbox { width: 100% !important; margin-bottom: 20px; }

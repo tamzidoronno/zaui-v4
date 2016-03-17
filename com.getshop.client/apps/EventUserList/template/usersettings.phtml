@@ -9,10 +9,10 @@ $participatedStatus = @$event->participationStatus->{$_POST['data']['userId']};
     Please select status: &nbsp;&nbsp;
     
     <select class="gsniceselect1 participationstatus" userid="<? echo $_POST['data']['userId']; ?>" eventId='<? echo $_POST['data']['eventId']; ?>'>
-        <option value="participated" <? echo $participatedStatus == "participated" ? "selected='true'" : ""; ?>><? echo $this->__w("Participated"); ?></option>
-        <option value="participated_free" <? echo $participatedStatus == "participated_free" ? "selected='true'" : ""; ?>><? echo $this->__w("Participated free"); ?></option>
-        <option value="participated_50" <? echo $participatedStatus == "participated_50" ? "selected='true'" : ""; ?>><? echo $this->__w("Not participated illegal reason"); ?></option>
-        <option value="not_participated" <? echo $participatedStatus == "not_participated" ? "selected='true'" : ""; ?>><? echo $this->__w("Not participated legal reason"); ?></option>
+        <option value="participated" <? echo $participatedStatus == "participated" ? "selected='true'" : ""; ?>><? echo $this->getParticiationText("participated") ?></option>
+        <option value="participated_free" <? echo $participatedStatus == "participated_free" ? "selected='true'" : ""; ?>><? echo $this->getParticiationText("participated_free") ?></option>
+        <option value="participated_50" <? echo $participatedStatus == "participated_50" ? "selected='true'" : ""; ?>><? echo $this->getParticiationText("participated_50") ?></option>
+        <option value="not_participated" <? echo $participatedStatus == "not_participated" ? "selected='true'" : ""; ?>><? echo $this->getParticiationText("not_participated") ?></option>
     </select>
     
     ( Automatically saved )

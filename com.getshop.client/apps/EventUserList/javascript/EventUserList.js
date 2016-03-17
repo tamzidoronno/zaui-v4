@@ -2,9 +2,14 @@ app.EventUserList = {
     init: function() {
         $(document).on('click', '.EventUserList .addcomment', app.EventUserList.showUserComments);
         $(document).on('click', '.EventUserList .showsettings', app.EventUserList.showSettings);
+        $(document).on('click', '.EventUserList .downloadReport', app.EventUserList.downloadReport);
         $(document).on('change', '.EventUserList .participationstatus', app.EventUserList.participationStatusChanged);
         $(document).on('mouseenter', '.EventUserList .showspecialinfo', app.EventUserList.showspecialinfo);
         $(document).on('mouseleave', '.EventUserList .showspecialinfo', app.EventUserList.hidespecialinfo);
+    },
+    
+    downloadReport: function() {
+        alert("OKE");
     },
     
     showspecialinfo: function() {

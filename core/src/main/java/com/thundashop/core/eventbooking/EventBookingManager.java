@@ -374,6 +374,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
         event.bookingItem = item;
         event.bookingItemId = item.id;
+        event.comments = inMemory.comments;
+        event.participationStatus = inMemory.participationStatus;
         
         events.put(event.id, event);
         saveObject(event);

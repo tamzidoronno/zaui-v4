@@ -34,7 +34,7 @@ class CreateEvent extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
         $event = new \core_eventbooking_Event();
         $event->bookingItem = new \core_bookingengine_data_BookingItem();
         if (isset($_POST['data']['entryId']) && $_POST['data']['entryId']) {
-            $event->id = $_POST['data']['entryId'];
+            $event = $this->getApi()->getEventBookingManager()->getEvent($this->getBookingEgineName(), $_POST['data']['entryId']);
         }
         $event->bookingItem->bookingSize = $_POST['data']['spots'];
         $event->bookingItem->fullWhenCountHit = $_POST['data']['spots'];

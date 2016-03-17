@@ -20,8 +20,13 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
         <center>Reports</center>
         <?
         foreach ($groups as $group) {
-            echo "<div class='shop_button'> $group->groupName</div>&nbsp;";
+            $groupId = $group->id;
+            $groupName = $group->groupName;
+            $eventId = $event->id;
+            echo "<div class='shop_button' gs_downloadExcelReport='downloadReport' gs_fileName='users' eventId='$eventId' groupId='$groupId'> $groupName </div>&nbsp;";
         }
+        
+        echo "<div class='shop_button' gs_downloadExcelReport='downloadReport' gs_fileName='users' eventId='$eventId' groupId='all'> All </div>&nbsp;";
         ?>
     </div>
 <?

@@ -9,7 +9,7 @@
     padding: 10px;
 }
 
-.EventLog .eventlogentry .action { width: 150px; }
+.EventLog .eventlogentry .action { width: 150px; text-align: center; }
 .EventLog .eventlogentry .blame { width: 200px; }
 .EventLog .eventlogentry .comment { width: calc(100% - 554px); }
 .EventLog .eventlogentry .date { width: 200px; }

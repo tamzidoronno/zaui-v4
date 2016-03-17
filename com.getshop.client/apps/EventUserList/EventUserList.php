@@ -115,5 +115,164 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
     public function moveUserFromWaitinglist() {
         $this->getApi()->getEventBookingManager()->transferUserFromWaitingToEvent($this->getBookingEngineName(), $_POST['data']['userid'], $_POST['data']['eventid']);
     }
+    
+    public function downloadReport() {
+        $event = $this->getApi()->getEventBookingManager()->getEvent($this->getBookingEngineName(), $_POST['data']['eventid']);
+        $users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getBookingEngineName(), $event->id);
+        $usersWaitingList = $this->getApi()->getEventBookingManager()->getUsersForEventWaitinglist($this->getBookingEngineName(), $event->id);
+        $group = $this->getApi()->getUserManager()->getGroup($_POST['data']['groupid']);
+        $groupName = $group == null ? "All" : $group->groupName;
+        
+        $usersFiltered = $this->filterUsers($users, $group);
+        $usersWaitingListFiltered = $this->filterUsers($usersWaitingList, $group);
+        
+        $excel = [];
+        $excel[] = $this->getHeaderColumns();
+        $excel[] = $this->getEventInformation($event, $groupName);
+        
+        $excel[] = [];
+        $excel[] = ["VAT", "Reference", "Company Information", "Company email", "Candiate name", "Candidate email", "Comment", "Status", "Price"];
+        
+        foreach ($usersFiltered as $user) {
+            $excel[] = $this->createUserRow($user, $event, false);
+        }
+        
+        $excel[] = [];
+        if (count($usersWaitingListFiltered)) {
+            $excel[] = ["Waitinglist"];
+
+            foreach ($usersWaitingListFiltered as $user) {
+                $excel[] = $this->createUserRow($user, $event, true);
+            }
+        }
+        
+        echo json_encode($excel);
+    }
+
+    public function getHeaderColumns() {
+        return ["Event", "Location", "Date", "Group", "Days"];
+    }
+
+    /**
+     * 
+     * @param \core_eventbooking_Event $event
+     * @param \core_usermanager_data_Group $group
+     * @return type
+     */
+    public function getEventInformation($event, $groupName) {
+        return [$event->bookingItemType->name, $event->location->name." ".$event->subLocation->name, $event->mainStartDate, $groupName, count($event->days)];
+    }
+
+    /**
+     * 
+     * @param \core_usermanager_data_User $user
+     * @param \core_eventbooking_Event $event
+     */
+    public function createUserRow($user, $event, $waitinglist) {
+        $row = [];
+        
+        $row[] = $user->companyObject ? $user->companyObject->vatNumber : "-";
+        $row[] = $user->companyObject ? $user->companyObject->reference : "-";
+        $row[] = $user->companyObject ? $user->companyObject->name."\n".$user->companyObject->address->address."\n".$user->companyObject->address->postCode." - ".$user->companyObject->address->city : "-";
+        $row[] = $user->companyObject ? $user->companyObject->invoiceEmail : "-";
+        $row[] = $user->fullName;
+        $row[] = $user->emailAddress;
+        $row[] = $this->createComment($user, $event);
+        
+        if (!$waitinglist) {
+            $row[] = $this->getParticiationText(@$event->participationStatus->{$user->id});
+            $row[] = $this->getPriceForEvent($event, $user);
+        }
+        
+        return $row;
+    }
+
+    /**
+     * 
+     * @param \core_usermanager_data_User[] $users
+     * @param type $group
+     * @return type
+     */
+    public function filterUsers($users, $group) {
+        if (!$group) {
+            return $users;
+        }
+        
+        $retUsers = [];
+        
+        foreach ($users as $user) {
+            if ($user->companyObject && $user->companyObject->groupId == $group->id) {
+                $retUsers[] = $user;
+            }
+        }
+        
+        return $retUsers;
+    }
+
+    public function createComment($user, $event) {
+        $comments = @$event->comments->{$user->id};
+        if ($comments) {
+            $useComment = "";
+            foreach ($comments as $comment) {
+                $useComment .= $comment->comment." \n ";
+            }
+            
+            return $useComment;
+        } 
+        
+        return "";
+    }
+
+    public function getParticiationText($participatedStatus) {
+        if (!$participatedStatus || $participatedStatus == "participated") {
+            return $this->__w("Participated");
+        }
+        
+        if ($participatedStatus == "participated_free") {
+            return $this->__w("Participated free");
+        }
+        
+        if ($participatedStatus == "participated_50") {
+            return $this->__w("Not participated illegal reason");
+        }
+        
+        if ($participatedStatus == "not_participated") {
+            return $this->__w("Not participated legal reason");
+        }
+        
+        return "Unkown";
+        
+    }
+
+    /**
+     * 
+     * @param \core_eventbooking_Event $event
+     * @param \core_usermanager_data_User $user
+     */
+    public function getPriceForEvent($event, $user) {
+        if (!$event->price) {
+            return "";
+        }
+        
+        $status = @$event->participationStatus->{$user->id};
+        if (!$status || $status == "participated") {
+            return $event->price;
+        }
+        
+        if ($status == "participated_free") {
+            return "0,-";
+        }
+        
+        if ($status == "participated_50") {
+            return $event->price/2;
+        }
+        
+        if ($status == "not_participated") {
+            return "0,-";
+        }
+        
+        return "";
+    }
+
 }
 ?>

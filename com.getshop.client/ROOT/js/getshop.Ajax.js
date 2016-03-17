@@ -30,6 +30,7 @@ thundashop.Ajax = {
     
     init: function() {
         $(document).on('click','*[gsclick]', thundashop.Ajax.postgeneral);
+        $(document).on('click','*[gs_downloadExcelReport]', thundashop.Ajax.createExcelFile);
         $(document).on('click','*[gs_show_modal]', thundashop.Ajax.showModal);
     },
     
@@ -43,6 +44,35 @@ thundashop.Ajax = {
         });
         
         thundashop.common.showModal($(this).attr('gs_show_modal'), data);
+    },
+    
+    createExcelFile: function() {
+        var method = $(this).attr('gs_downloadExcelReport');
+        var filename = $(this).attr('gs_fileName');
+        var data = {};
+   
+        $.each(this.attributes, function(i, attrib) {
+            var name = attrib.name;
+            var value = attrib.value;
+            data[name] = value;
+        });
+        
+        data['synchron'] = true;
+        
+        var evt = thundashop.Ajax.createEvent(null, method, this, data);
+        
+        thundashop.Ajax.postWithCallBack(evt, function(res) {
+            var base64 = thundashop.base64.encode(res);
+            var url = '/scripts/createExcelFile.php';
+            var form = $('<form method="POST" action="' + url + '">');
+            form.append($('<input type="hidden" name="data" value="' + base64 + '">'));
+            form.append($('<input type="hidden" name="filename" value="' + filename + '">'));
+            
+            $('body').append(form);
+            
+            form.submit();
+            form.remove();
+        });
     },
     
     postgeneral: function() {

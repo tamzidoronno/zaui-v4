@@ -54,3 +54,17 @@ Naming convension:
 
 Framework translation: __f("");
 
+
+
+Settings configuration example:
+<div gstype="form" method="saveAppInstanceSettings">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%">Template</td>
+        <td width="50%">
+            <input type='text' gsname="setting_template" value="<?php echo $this->getConfigurationSetting("template"); ?>">
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

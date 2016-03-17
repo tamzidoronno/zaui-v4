@@ -14,6 +14,7 @@ Add content to slider;-;Innhold på slideren
 Add google maps to your page, pin point locatins and restrict it to a given area, and even connect the locations to a given page.;-;Legg inn kart på websiden din, pin lokasjoner og begrens områdene for hvor du kan se, du kan til og med knytte opp lokasjoner mot andre websider.
 Add menus to your page and administrate them. Menus are the root of all pages, adding a new menu entry is the same as creating a new page.;-;Legg til menyer og administrer dem. Menyer er selve roten til alle sidene, det å legge til et nytt meny entry er det samme som å opprette en ny side.
 Add more dates / repeat event;-;Legg til en ekstra dato / gjenta en hendelse
+Add new user;-;Legg til en ny bruker
 Add row below;-;Legg til en rad under
 Add slides for carousel to mobile view;-;Legg til slidere som skal vises i mobil visning
 Add spacing to grid;-;Legg til midlertidig spacing
@@ -179,6 +180,7 @@ Guest information for room;-;Gjesteinformasjon for rom
 Height;-;Høyde
 Height (px);-;Høyde (px)
 Height (px) mobile;-;Høyde (px) mobil
+Height is maximum height;-;Høyde er maksimum høyde
 Hide on mobile;-;Ikke vis på mobilen
 Hide this cell on a cell phone;-;Gjem denne cellen på mobiltelefonen
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
@@ -387,7 +389,6 @@ Shipping cost;-;Fraktkostnader
 Shipping price;-;Forendelse pris
 Short description;-;Kort beskrivelse
 Show;-;Vis
-Show all products;-;Vis alle produter
 Show log;-;Vis logg
 Sign up;-;Registrer deg
 Sign up with facebook;-;Logg inn me facebook
@@ -507,7 +508,10 @@ day of the month;-;Fast dato i måneden
 day of the week;-;Fast ukedag
 days;-;dager
 description;-;Beskrivelse
+dk;-;Dansk
 email;-;E-post
+en_en;-;English
+fi_FI;-;Suomalainen
 forgot?;-;Glemt?
 free spots;-;ledige plasser
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
@@ -516,7 +520,10 @@ location;-;Sted
 login;-;logg inn
 month;-;måned
 months;-;måneder
+nb_NO;-;Norsk
+nl_NL;-;Nederlands
 read;-;les
+se;-;Svenska
 show selected dates;-;Vis valgte datoer
 summary;-;oppsummering
 tax;-;moms

@@ -1,11 +1,11 @@
 app.Settings = {
     init: function() {
-        $(document).on('click', '.gss_button_area .addLanguage', app.Settings.addLanguage)
+        $(document).on('click', '.addLanguage', app.Settings.addLanguage)
         
     },
     
     addLanguage: function() {
-        var ans = prompt(__f("Enter the name of the lanaguge, example (se,no,en)"));
+        var ans = $('[gs_model_attr="language"]').val();
         var data = {
             value : ans
         }

@@ -77,7 +77,10 @@ public class Hybelhotell implements AccountingInterface {
             for(int i = 0; i < 60; i++) {
                 String entry = "";
                 if(toAdd.containsKey(i)) {
-                    entry = toAdd.get(i);
+                    String text = toAdd.get(i);
+                    text = text.replaceAll(";", "");
+                    text = text.replaceAll("\n", "");
+                    resultLine += text + ";";
                 }
                 resultLine += entry + ";";
             }
@@ -119,12 +122,16 @@ public class Hybelhotell implements AccountingInterface {
          String result = "";
          for(int i = 0; i < 90; i++) {
              if(toAdd.containsKey(i)) {
-                 result += toAdd.get(i) + ";";
+                    String text = toAdd.get(i);
+                    text = text.replaceAll(";", "");
+                    text = text.replaceAll("\n", "");
+                    result += text + ";";
              } else {
                  result += ";";
              }
          }
          result += "EOL\r\n";
+         
          return result;
     }
 
@@ -149,6 +156,12 @@ public class Hybelhotell implements AccountingInterface {
 
         lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
         
+         try {
+             lineText = new String(lineText.getBytes("ISO-8859-1"),"UTF-8");
+         }catch(Exception e) {
+             e.printStackTrace();
+         }
+         
         return lineText;
     }
 

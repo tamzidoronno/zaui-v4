@@ -3,6 +3,12 @@ app.Product = {
         $(document).on('click', '.addProductToCart', app.Product.addProductToCart);
         $(document).on('click', '.gshideproductaddedbox', app.Product.hideProductAddedBox);
         $(document).on('click', '.gsgotocart', app.Product.gsgotocart);
+        PubSub.subscribe("backendviewloaded", function(a,b) {
+           if(b === "gss_productwork_area") {
+               getshop.Model.productmodel.categories = gsscategorylist;
+               getshop.Model.productmodel.addedAttributes = gssproducsattributes;
+           }
+        });
     },
     gsgotocart : function() {
         $('.gsaddedtocartbox').fadeOut();

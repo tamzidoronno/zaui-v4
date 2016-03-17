@@ -27,4 +27,6 @@ $generator->printTree($list);
 
 <script>
   getshop.jstree.initJsTree("categorylist", "categories");
+  gsscategorylist = <?php echo json_encode($product->categories); ?>
+
 </script>

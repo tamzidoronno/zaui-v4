@@ -145,6 +145,8 @@ getshop.Settings = {
         }
         
         getshop.Models.addWatchers(response['data']);
+        
+        PubSub.publish("backendviewloaded", view);
     },
     reloadCss: function() {
         getshop.Settings.loadJavascripts();

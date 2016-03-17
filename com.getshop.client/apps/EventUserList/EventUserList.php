@@ -79,8 +79,41 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $this->setConfigurationSetting("event_canceled_mail_subject", $_POST['event_canceled_mail_subject']);
         $this->setConfigurationSetting("automatic_reminder_template_frequence", $_POST['automatic_reminder_template_frequence']);
         
+        // Waitinglist removed
+        $this->setConfigurationSetting("removedemail_waitinglist", $_POST['removedemail_waitinglist']);
+        $this->setConfigurationSetting("removedsms_waitinglist", $_POST['removedsms_waitinglist']);
+        $this->setConfigurationSetting("removed_mail_subject_waitinglist", $_POST['removed_mail_subject_waitinglist']);
+        $this->setConfigurationSetting("removed_mailcontent_waitinglist", $_POST['removed_mailcontent_waitinglist']);
+        $this->setConfigurationSetting("removed_sms_content_waitinglist", $_POST['removed_sms_content_waitinglist']);
+        
+        // Waitinglist signup
+        $this->setConfigurationSetting("signupemail_waitinglist", $_POST['signupemail_waitinglist']);
+        $this->setConfigurationSetting("signupsms_waitinglist", $_POST['signupsms_waitinglist']);
+        $this->setConfigurationSetting("signup_subject_waitinglist", $_POST['signup_subject_waitinglist']);
+        $this->setConfigurationSetting("signup_mailcontent_waitinglist", $_POST['signup_mailcontent_waitinglist']);
+        $this->setConfigurationSetting("signup_sms_content_waitinglist", $_POST['signup_sms_content_waitinglist']);
+        
         $this->getApi()->getEventBookingManager()->startScheduler("booking", $_POST['crontab']);
-//        $this->setConfigurationSetting("", $_POST['']);
+    }
+
+    public function setCurrentUser($user) {
+        $this->currentUser = $user;
+    }
+    
+    public function getCurrentUser() {
+        return $this->currentUser;
+    }
+
+    public function setViewingWaitinglist($param0) {
+        $this->inWaitingList = $param0;
+    }
+    
+    public function isInWaitinglist() {
+        return $this->inWaitingList;
+    }
+
+    public function moveUserFromWaitinglist() {
+        $this->getApi()->getEventBookingManager()->transferUserFromWaitingToEvent($this->getBookingEngineName(), $_POST['data']['userid'], $_POST['data']['eventid']);
     }
 }
 ?>

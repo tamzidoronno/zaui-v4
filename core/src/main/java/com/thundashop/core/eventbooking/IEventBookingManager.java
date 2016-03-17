@@ -160,4 +160,7 @@ public interface IEventBookingManager {
     
     @Administrator
     public void markQuestBackSent(String eventId);
+    
+    @Editor
+    public void transferUserFromWaitingToEvent(String userId, String eventId);
 }

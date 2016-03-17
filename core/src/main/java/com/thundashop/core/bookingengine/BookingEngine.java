@@ -114,8 +114,8 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         return deepClone(bookingEngineAbstract.getBooking(bookingId));
     }
 
-    public void deleteBooking(String id) {
-        bookingEngineAbstract.deleteBooking(id);
+    public boolean  deleteBooking(String id) {
+        return bookingEngineAbstract.deleteBooking(id);
     }
 
     @Override

@@ -117,6 +117,9 @@ class ProductCategories extends \WebshopApplication implements \Application {
             if(sizeof($node->children) > 0) {
                 $ids = array_merge($ids, $this->findNodes($node->children, $found, $level+1));
             }
+            if($node->id == $id) {
+                $found = false;
+            }
         }
         return $ids;
     }

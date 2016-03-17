@@ -2350,7 +2350,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if (additional.isClean(false)) {
                         additional.markDirty();
                         needSaving = true;
-                        messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Room is active, but marked as clean, room: " + item.bookingItemName, "Owner: " + ownerMail, "pal@getshop.com", "pal@getshop.com");
                         logEntry("Marking item " + item.bookingItemName + " as dirty (failure in marking)", booking.id, item.id);
                         saveObject(additional);
                     }

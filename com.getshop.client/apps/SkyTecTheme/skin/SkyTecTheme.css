@@ -281,6 +281,9 @@ h2 { font-weight: 700; }
 .ProductLists .templatebox_2 .product_price { display:none;  }
 .ProductLists .templatebox_2 .productimage  { border-right: solid 1px #ddd; } 
 .ProductLists .templatebox_2 .productbox { border-color: #ddd; }
+.ProductCategories .attrselect { display:block; }
+.ProductCategories .attrselect.selected { font-weight: bold; }
+.ProductCategories .attrselect:hover { color: blue; }
 
 @media only all and (max-width: 1100px) { 
     .gsrotating .ContentManager h1 { font-size: 30px !important; }

@@ -57,9 +57,10 @@ class ProductCategories extends \WebshopApplication implements \Application {
         }
         
         $curFilter = $this->isFilterActive();
+        $nodesSelected = $this->getAllSelectedNodes();
         $res = array();
         foreach($products as $prod) {
-            if($prod->category == $curFilter) {
+            if($this->hasCategory($nodesSelected, $prod->categories)) {
                 $res[] = $prod;
             }
         }
@@ -69,16 +70,64 @@ class ProductCategories extends \WebshopApplication implements \Application {
     /**
      * @param \core_listmanager_data_TreeNode[] $nodes
      */
-    public function printCategoryList($nodes) {
+    public function printCategoryList($nodes, $level) {
         echo "<ul>";
+        if($level == 0) {
+            echo "<li method='setFilter' gstype='clicksubmit' gsname='id' gsvalue=''>".$this->__w("All products")."</li>";
+        }
         foreach($nodes as $node) {
-            echo "<li>" . $node->text;
+            $selected = "";
+            if($node->id == $this->isFilterActive()) {
+                $selected = "selected";
+            }
+            
+            echo "<li><span class='attrselect $selected' method='setFilter' gstype='clicksubmit' gsname='id' gsvalue='".$node->id."'>" . $node->text . "</span>";
             if(sizeof($node->children) > 0) {
-                $this->printCategoryList($node->children);
+                $this->printCategoryList($node->children, $level+1);
             }
             echo "</li>";
         }
         echo "</ul>";
+    }
+
+    public function getAllSelectedNodes() {
+        $filter = $this->getApi()->getListManager()->getJsTree("categories");
+        $ids = $this->findNodes($filter->nodes, false, 0);
+        print_r($ids);
+        return $ids;
+    }
+
+    /**
+     * 
+     * @param \core_listmanager_data_TreeNode[] $nodes
+     * @param type $param1
+     * @param type $param2 
+     */
+    public function findNodes($nodes, $found, $level) {
+        $id = $this->isFilterActive();
+
+        $ids = array();
+        foreach($nodes as $node) {
+            if($node->id == $id) {
+                $found = true;
+            }
+            if($found) {
+                $ids[] = $node->id;
+            }
+            if(sizeof($node->children) > 0) {
+                $ids = array_merge($ids, $this->findNodes($node->children, $found, $level+1));
+            }
+        }
+        return $ids;
+    }
+    
+    public function hasCategory($nodesSelected, $categoryOnProduct) {
+        foreach($nodesSelected as $node) {
+            if(in_array($node, $categoryOnProduct)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

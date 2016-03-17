@@ -53,6 +53,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public HashMap<String, Certificate> certificates = new HashMap();
     public HashMap<String, BookingItemTypeMetadata> bookingTypeMetaDatas = new HashMap();
     public HashMap<String, ExternalCertificate> externalCertificates = new HashMap();
+    public HashMap<String, WaitingListBooking> waitingListBookings = new HashMap();
     
     @Autowired
     public EventLoggerHandler eventLoggerHandler;
@@ -111,6 +112,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             if (data instanceof ExternalCertificate) {
                 ExternalCertificate externalCertificate = (ExternalCertificate)data;
                 externalCertificates.put(externalCertificate.id, externalCertificate);
+            }
+            
+            if (data instanceof WaitingListBooking) {
+                WaitingListBooking waitingListBooking = (WaitingListBooking)data;
+                waitingListBookings.put(waitingListBooking.id, waitingListBooking);
             }
         }
         
@@ -209,8 +215,18 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             saveObject(logEntry);
         }
         
+        if (action.equals("USER_REMOVED_WAITING")) {
+            logEntry.comment = eventLoggerHandler.compareWaiting(event, (User)additional, false);
+            saveObject(logEntry);
+        }
+        
         if (action.equals("USER_ADDED")) {
             logEntry.comment = eventLoggerHandler.compare(event, (User)additional, true);
+            saveObject(logEntry);
+        }
+        
+        if (action.equals("USER_ADDED_WAITING")) {
+            logEntry.comment = eventLoggerHandler.compareWaiting(event, (User)additional, true);
             saveObject(logEntry);
         }
         
@@ -386,6 +402,15 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             return;
         }
         
+        BookingItem item = bookingEngine.getBookingItem(event.bookingItemId);
+        if (item.isFull) {
+            addToWaitingList(user, event);
+        } else {
+            signupUserToEvent(event, user);
+        }
+    }   
+
+    private void signupUserToEvent(Event event, User user) {
         Booking booking = createBooking(event, user);
         List<Booking> bookings = new ArrayList();
         bookings.add(booking);
@@ -417,7 +442,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public List<User> getUsersForEventWaitinglist(String eventId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return waitingListBookings.values().stream()
+                .filter(o -> o.eventId.equals(eventId))
+                .map(o -> userManager.getUserById(o.userId))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -434,11 +462,27 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         User user = userManager.getUserById(userId);
         if (booking != null) {
-            bookingEngine.deleteBooking(booking.id);
-            log("USER_REMOVED", event, user);
+            boolean removed = bookingEngine.deleteBooking(booking.id);
+            if (removed) {
+                log("USER_REMOVED", event, user);
+                sendRemovedUserFromEventNotification(user, event);
+            }
         }
         
-        sendRemovedUserFromEventNotification(user, event);
+        WaitingListBooking waitingListBooking = getWaitingListBooking(eventId, userId);
+        if (waitingListBooking != null) {
+            waitingListBookings.remove(waitingListBooking.id);
+            deleteObject(waitingListBooking);
+            log("USER_REMOVED_WAITING", event, user);
+            sendRemovedUserFromWaitinglistEventNotification(user, event);
+        }
+    }
+    
+    private WaitingListBooking getWaitingListBooking(String eventId, String userId) {
+        return waitingListBookings.values().stream()
+                .filter(o -> o.eventId.equals(eventId) && o.userId.equals(userId))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -957,11 +1001,23 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         Application settingsApp = getSettingsApplication();
         
         if (settingsApp.getSetting("signupemail").equals("true")) {
-            sendSignupEmail(settingsApp, user, event);
+            sendSignupEmail(settingsApp, user, event, "signup_subject", "signup_mailcontent");
         }
         
         if (settingsApp.getSetting("signupsms").equals("true")) {
-            sendSms(settingsApp, user, event);
+            sendSms(settingsApp, user, event, "signup_sms_content");
+        }
+    }
+    
+    private void sendUserAddedToEventNotificationsWaitinglist(User user, Event event) {
+        Application settingsApp = getSettingsApplication();
+        
+        if (settingsApp.getSetting("signupemail_waitinglist").equals("true")) {
+            sendSignupEmail(settingsApp, user, event, "signup_subject_waitinglist", "signup_mailcontent_waitinglist");
+        }
+        
+        if (settingsApp.getSetting("signupsms_waitinglist").equals("true")) {
+            sendSms(settingsApp, user, event, "signup_mailcontent_waitinglist");
         }
     }
 
@@ -969,9 +1025,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return applicationPool.getApplication("bd751f7e-5062-4d0d-a212-b1fc6ead654f");
     }
 
-    private void sendSignupEmail(Application settingsApp, User user, Event event) {
-        String subject = formatText(settingsApp.getSetting("signup_subject"), user, event);
-        String content = formatText(settingsApp.getSetting("signup_mailcontent"), user, event);
+    private void sendSignupEmail(Application settingsApp, User user, Event event, String subjectkey, String contentKey) {
+        String subject = formatText(settingsApp.getSetting(subjectkey), user, event);
+        String content = formatText(settingsApp.getSetting(contentKey), user, event);
         
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
             String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
@@ -996,8 +1052,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return text;
     }
 
-    private void sendSms(Application settingsApp, User user, Event event) {
-        String content = formatText(settingsApp.getSetting("signup_sms_content"), user, event);
+    private void sendSms(Application settingsApp, User user, Event event, String contentKey) {
+        String content = formatText(settingsApp.getSetting(contentKey), user, event);
         String prefix = user.prefix;
         String phoneNumber = user.cellPhone;
         String storeName = getStoreName();
@@ -1014,17 +1070,29 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         Application settingsApp = getSettingsApplication();
         
         if (settingsApp.getSetting("removedemail").equals("true")) {
-            sendRemovedEmail(settingsApp, user, event);
+            sendRemovedEmail(settingsApp, user, event, "removed_mail_subject", "removed_mailcontent");
         }
         
         if (settingsApp.getSetting("removedsms").equals("true")) {
-            sendRemovedSms(settingsApp, user, event);
+            sendRemovedSms(settingsApp, user, event, "removed_sms_content");
+        }
+    }
+    
+    private void sendRemovedUserFromWaitinglistEventNotification(User user, Event event) {
+        Application settingsApp = getSettingsApplication();
+        
+        if (settingsApp.getSetting("removedemail_waitinglist").equals("true")) {
+            sendRemovedEmail(settingsApp, user, event, "removed_mail_subject_waitinglist", "removed_mailcontent_waitinglist");
+        }
+        
+        if (settingsApp.getSetting("removedsms_waitinglist").equals("true")) {
+            sendRemovedSms(settingsApp, user, event, "removed_sms_content_waitinglist");
         }
     }
 
-    private void sendRemovedEmail(Application settingsApp, User user, Event event) {
-        String subject = formatText(settingsApp.getSetting("removed_mail_subject"), user, event);
-        String content = formatText(settingsApp.getSetting("removed_mailcontent"), user, event);
+    private void sendRemovedEmail(Application settingsApp, User user, Event event, String subjectKey, String contentKey) {
+        String subject = formatText(settingsApp.getSetting(subjectKey), user, event);
+        String content = formatText(settingsApp.getSetting(contentKey), user, event);
         
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
             String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
@@ -1034,8 +1102,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
     }
 
-    private void sendRemovedSms(Application settingsApp, User user, Event event) {
-        String content = formatText(settingsApp.getSetting("removed_sms_content"), user, event);
+    private void sendRemovedSms(Application settingsApp, User user, Event event, String contentKey) {
+        String content = formatText(settingsApp.getSetting(contentKey), user, event);
         String prefix = user.prefix;
         String phoneNumber = user.cellPhone;
         String storeName = getStoreName();
@@ -1229,6 +1297,42 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             event.questBackSent = true;
             saveObject(event);
             logEventEntry(event, "EVENT_QUESTBACK_SENT", "QuestBack has been sent for event", "");
+        }
+    }
+
+    private void addToWaitingList(User user, Event event) {
+        if (getWaitingListBooking(event.id, user.id) != null) {
+            return;
+        }
+        
+        WaitingListBooking booking = new WaitingListBooking();
+        booking.eventId = event.id;
+        booking.userId = user.id;
+        
+        saveObject(booking);
+        waitingListBookings.put(booking.id, booking);
+        log("USER_ADDED_WAITING", event, user);
+        
+        sendUserAddedToEventNotificationsWaitinglist(user, event);
+    }
+
+    @Override
+    public void transferUserFromWaitingToEvent(String userId, String eventId) {
+        Event event = events.get(eventId);
+        if (event == null) {
+            return;
+        }
+        
+        User user = userManager.getUserById(userId);
+        if (user == null) {
+            return;
+        }
+        
+        WaitingListBooking booking = getWaitingListBooking(eventId, userId);
+        if (booking != null) {
+            deleteObject(booking);
+            waitingListBookings.remove(booking.id);
+            signupUserToEvent(event, user);
         }
     }
 

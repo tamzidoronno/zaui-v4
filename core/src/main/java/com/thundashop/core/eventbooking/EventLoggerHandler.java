@@ -80,4 +80,19 @@ public class EventLoggerHandler {
         
         return toReturn;
     }
+    
+    public String compareWaiting(Object event, User user, boolean added) {
+        String toReturn = "User removed from event waitinglist";
+        if (added) {
+            toReturn = "User added to event waitinglist";
+        }
+        
+        toReturn += "\n &nbsp;&nbsp;&nbsp; Name: " + user.fullName + "\n &nbsp;&nbsp;&nbsp; Email: " + user.emailAddress;
+        
+        if (user.companyObject != null) {
+            toReturn += "\n &nbsp;&nbsp;&nbsp; Company: " + user.companyObject.name + ", " + user.companyObject.vatNumber;
+        }
+        
+        return toReturn;
+    }
 }

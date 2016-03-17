@@ -394,16 +394,20 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return result;
     }
 
-    public void deleteBooking(String id) {
+    public boolean deleteBooking(String id) {
         Booking booking = getBooking(id);
         bookings.remove(id);
         deleteObject(booking);
         
         for (BookingItem item : items.values()) {
             boolean removed = item.bookingIds.removeIf(o -> o.equals(booking.id));
-            if (removed)
+            if (removed) {
                 saveObject(item);
+                return true;
+            }
         }
+        
+        return false;
     }
 
     public void deleteBookingItem(String id) {
@@ -766,5 +770,35 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         List<Booking> toCheck = new ArrayList();
         toCheck.add(bookingToAdd);
         return canAdd(toCheck);
+    }
+    
+    public BookingGroup addBookingToWaitingList(String bookingItemId, List<Booking> bookings) {
+        validateBookings(bookings);
+        
+        BookingItem bookingItem = getBookingItem(bookingItemId);
+        
+        if (bookingItem == null) {
+            throw new BookingEngineException("Could not add booking to waitinglist, the bookingitem does not exists");
+        }
+        
+        int newSize = bookings.size() + bookingItem.waitingListBookingIds.size();
+        if (bookingItem.waitingListSize > newSize) {
+            throw new BookingEngineException("There is not enough space left to add user to waitinglist.");
+        }
+        
+        BookingGroup bookingGroup = new BookingGroup();
+        if (getSession() != null && getSession().currentUser != null) {
+            bookingGroup.userCreatedByUserId = getSession().currentUser.id;
+        }
+        
+        for (Booking booking : bookings) {
+            booking.bookingItemId = bookingItemId;
+            saveObject(booking);
+            this.bookings.put(booking.id, booking);
+            bookingGroup.bookingIds.add(booking.id);
+            bookingItem.waitingListBookingIds.add(booking.id);
+        }
+        
+        return bookingGroup;
     }
 }

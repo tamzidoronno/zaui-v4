@@ -1,0 +1,75 @@
+<?
+/* @var $this ns_bd751f7e_5062_4d0d_a212_b1fc6ead654f\EventUserList */
+$user = $this->getCurrentUser();
+
+$event = $this->getEvent();
+
+$isAdministrator = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
+$waitinglistView = $this->isInWaitinglist();
+
+$gradCapColor = "#006e63";
+$participatedStatus = @$event->participationStatus->{$user->id};
+$gradCapColor = $participatedStatus == "participated" ? "#006e63" : $gradCapColor;
+$gradCapColor = $participatedStatus == "participated_free" ? "#006e63" : $gradCapColor;
+$gradCapColor = $participatedStatus == "participated_50" ? "#d71e27" : $gradCapColor;
+$gradCapColor = $participatedStatus == "not_participated" ? "#d71e27" : $gradCapColor;
+
+$specialInfo = $this->getUserAdditionalInformation($user);
+?>
+<div class="userline">
+    <?
+    if ($isAdministrator) {
+        ?>
+        <div class="gs_shop_small_icon" gsclick="removeUserFromEvent" gs_confirm="<? echo $this->__f("Are you sure you want to remove user from this event?"); ?>" eventid="<? echo $event->id; ?>"  userid="<? echo $user->id; ?>"><i class="fa fa-trash"></i></div>
+        <?
+    }
+    $company = null;
+    $group = null;
+
+    if ($specialInfo && $isAdministrator) {
+        ?>
+        <div class="gs_shop_small_icon showspecialinfo">
+            <i class='fa fa-warning'></i>
+            <div class='user_special_comments'><? echo $specialInfo; ?></div>
+        </div>
+        <?
+    }
+
+    $group = $this->getApi()->getUserManager()->getGroup($user->companyObject->groupId);
+
+    if ($user->company) {
+        $company = $this->getApi()->getUserManager()->getCompany($user->company[0]);
+    }
+
+    $commentColor = array_key_exists($user->id, $event->comments) ? "style='color: green;'" : "";
+
+    echo $user->fullName;
+    if ($company) {
+        echo " - " . $company->name;
+    } else {
+        echo " - N/A";
+    }
+
+    if ($group) {
+        echo " - " . $group->groupName;
+    } else {
+        echo " - N/A";
+    }
+
+    if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+        ?>
+        <div class="options">
+            <div class="gs_shop_small_icon addcomment" userId="<? echo $user->id; ?>" eventId="<? echo $event->id; ?>"><i class="fa fa-comments" <? echo $commentColor; ?>></i></div>
+            <?
+            if (!$waitinglistView) {
+            ?>
+                <div class="gs_shop_small_icon showsettings" userId="<? echo $user->id; ?>" eventId="<? echo $event->id; ?>"><i class="fa fa-gears"></i></div>
+                <i class='fa fa-graduation-cap' style='color: <? echo $gradCapColor; ?>'></i>
+            <? } else { ?>
+                <div class="gs_shop_small_icon" gsclick="moveUserFromWaitinglist" userid="<? echo $user->id; ?>" eventid="<? echo $event->id; ?>" title="Transfer user to event"><i class="fa fa-bullseye"></i></div>
+            <? } ?>
+        </div>
+        <?
+    }
+    ?>
+</div>

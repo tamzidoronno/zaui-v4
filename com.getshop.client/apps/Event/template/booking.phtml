@@ -2,6 +2,8 @@
 /* @var $this ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event  */
 $event = $this->getEvent();
 
+$isFull = false;
+
 if (!$event->isInFuture) {
     echo "<div class='event_warning'>";
     echo "<i class='fa fa-warning'></i> ".$this->__w("This event has already been passed");
@@ -14,6 +16,7 @@ if (!$event->isInFuture) {
     echo "<div class='event_warning'>";
     echo "<i class='fa fa-warning'></i> ".$this->__w("No available spots left for this event");
     echo "</div>";
+    $isFull = true;
 } else if ($event->isCanceled) {
     echo "<div class='event_warning'>";
     echo "<i class='fa fa-warning'></i> ".$this->__w("This event has been canceled");
@@ -22,9 +25,10 @@ if (!$event->isInFuture) {
     echo "<div class='event_warning'>";
     echo "<i class='fa fa-warning'></i> ".$this->__w("No available spots left for this event");
     echo "</div>";
+    $isFull = true;
 }
 
-if (!$event->canBook) {
+if (!$event->canBook && !$isFull) {
     return;
 }
 
@@ -42,7 +46,7 @@ if (!$companyOwner) {
         if (!$isSignedUp) {
         ?>
             <div class='shop_button' gs_show_modal="event_signon" eventId="<? echo $event->id; ?>" userid="<? echo $user->id; ?>">
-                <? echo $this->__w("Singup"); ?>
+                <? echo $isFull ? $this->__w("Signup waitinglist") : $this->__w("Singup"); ?>
             </div>
         <?
         } else {
@@ -66,12 +70,14 @@ if (!$companyOwner) {
                 if (!$isSignedUp) {
                 ?>
                     <div class='shop_button' gs_show_modal="event_signon" eventId="<? echo $event->id; ?>" userid="<? echo $user->id; ?>">
-                        <? echo $this->__w("Singup"); ?>
+                        <? 
+                        echo $isFull ? $this->__w("Signup waitinglist") : $this->__w("Singup"); 
+                        ?>
                     </div>
                 <?
                 } else {
                     echo "<div class='signedup'>".$this->__w("Already signed up")."</div>";
-                } 
+                }
                 ?>
             </div>
         <?

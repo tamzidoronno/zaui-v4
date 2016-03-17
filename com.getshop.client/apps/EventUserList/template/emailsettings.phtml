@@ -18,10 +18,36 @@
 </div>
 
 <div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Should send email when user signs up for waitinglist?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="signupemail_waitinglist">
+        <?
+        $class = ($this->getConfigurationSetting("signupemail_waitinglist") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting">
     <span class="title"><?php echo $this->__f("Should send email when user is removed?"); ?></span>
     <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="removedemail">
         <?
         $class = ($this->getConfigurationSetting("removedemail") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Should send email when user is removed from waitinglist?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="removedemail_waitinglist">
+        <?
+        $class = ($this->getConfigurationSetting("removedemail_waitinglist") == "true") ? "fa-toggle-on" : "fa-toggle-off";
         ?>
         <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
     </div>
@@ -71,10 +97,36 @@
 </div>
 
 <div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Should send sms when user signs up waitinglist?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="signupsms_waitinglist">
+        <?
+        $class = ($this->getConfigurationSetting("signupsms_waitinglist") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting">
     <span class="title"><?php echo $this->__f("Should send sms when user is removed?"); ?></span>
     <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="removedsms">
         <?
         $class = ($this->getConfigurationSetting("removedsms") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Should send sms when user is removed from waitinglist?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="removedsms_waitinglist">
+        <?
+        $class = ($this->getConfigurationSetting("removedsms_waitinglist") == "true") ? "fa-toggle-on" : "fa-toggle-off";
         ?>
         <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
     </div>
@@ -143,6 +195,29 @@
         </div>
     </div>
 
+<center><h2><? echo $this->__f("Signup emails / sms (waitinglist)"); ?></h2></center>
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Registration subject"); ?></span>
+        <input type='textfield' gs_model='emailmodel' gs_model_attr='signup_subject_waitinglist' value="<? echo $this->getConfigurationSetting("signup_subject_waitinglist"); ?>"/>
+        <div class="description">
+            <?php echo $this->__("What should the subject be?"); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Mailcontent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='signup_mailcontent_waitinglist' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("signup_mailcontent_waitinglist"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("SmsContent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='signup_sms_content_waitinglist' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("signup_sms_content_waitinglist"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
 <center><h2><? echo $this->__f("User removed emails / sms"); ?></h2></center>
     <div class="textfield gss_setting"  id="">
         <span class="title"><?php echo $this->__f("Registration subject"); ?></span>
@@ -165,6 +240,38 @@
         <div class="description">
         </div>
     </div>
+
+
+
+
+
+<center><h2><? echo $this->__f("User removed emails / sms (waitinglist)"); ?></h2></center>
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Registration subject"); ?></span>
+        <input type='textfield' gs_model='emailmodel' gs_model_attr='removed_mail_subject_waitinglist' value="<? echo $this->getConfigurationSetting("removed_mail_subject_waitinglist"); ?>"/>
+        <div class="description">
+            <?php echo $this->__("What should the subject be?"); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Mailcontent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='removed_mailcontent_waitinglist' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("removed_mailcontent_waitinglist"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("SmsContent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='removed_sms_content_waitinglist' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("removed_sms_content_waitinglist"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+
+
+
+
 
 <center><h2><? echo $this->__f("Event canceled emails / sms"); ?></h2></center>
     <div class="textfield gss_setting"  id="">

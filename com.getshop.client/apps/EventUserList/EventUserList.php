@@ -200,6 +200,10 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         
         $retUsers = [];
         
+        if (!count($users) || is_array($users)) {
+            return $users;
+        }
+        
         foreach ($users as $user) {
             if ($user->companyObject && $user->companyObject->groupId == $group->id) {
                 $retUsers[] = $user;

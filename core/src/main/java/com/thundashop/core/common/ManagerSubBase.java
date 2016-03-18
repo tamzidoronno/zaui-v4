@@ -302,6 +302,10 @@ public class ManagerSubBase {
         }
     }
     
+    public String getStoreDefaultAddress() {
+        return storePool.getStore(storeId).getDefaultWebAddress();
+    }
+    
     public String getStoreEmailAddress() {
         return storePool.getStore(storeId).configuration.emailAdress;
     }

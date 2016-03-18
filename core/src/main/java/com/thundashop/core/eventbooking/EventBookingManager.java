@@ -20,6 +20,7 @@ import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -374,8 +375,6 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
         event.bookingItem = item;
         event.bookingItemId = item.id;
-        event.comments = inMemory.comments;
-        event.participationStatus = inMemory.participationStatus;
         
         events.put(event.id, event);
         saveObject(event);
@@ -795,15 +794,22 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     private boolean isTypeAvailble(BookingItemType o) {
         BookingItemTypeMetadata metaData = getBookingTypeMetaData(o.id);
         
-        if (getSession() != null && getSession() == null) {
+        if (getSession() == null || getSession().currentUser == null) {
             return metaData.publicVisible;
         }
-        
-        if (getSession().currentUser.groups.get(0) == null) {
+
+        // Admins and editors.
+        if (getSession().currentUser.type > 10) {
             return true;
         }
         
-        return metaData.visibleForGroup.get(getSession().currentUser.groups.get(0));
+        if (getSession().currentUser.companyObject == null) {
+            return metaData.publicVisible;
+        }
+        
+        String groupId = getSession().currentUser.companyObject.groupId;
+        
+        return metaData.visibleForGroup.get(groupId);
         
     }
 
@@ -1043,6 +1049,21 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         text = text.replace("{User.Name}", checkNull(user.fullName));
         text = text.replace("{User.Email}", checkNull(user.emailAddress));
         text = text.replace("{Event.Name}", checkNull(event.bookingItemType.name));
+        
+        text = text.replace("{Event.Dates}", getDate(event));
+        text = text.replace("{Event.Location}", checkNull(event.location == null ? "" : event.location.name));
+        text = text.replace("{Event.SubLocation}", checkNull(event.subLocation == null ? "" : event.subLocation.name));
+        text = text.replace("{Group.Logo}", checkNull(getGroupLogo(user)));
+        
+        text = text.replace("{Company.Name}", checkNull(user.companyObject == null ? "" : user.companyObject.name));
+        text = text.replace("{Company.Vatnumber}", checkNull(user.companyObject == null ? "" : user.companyObject.vatNumber));
+        text = text.replace("{Company.Postnumber}", checkNull(user.companyObject == null || user.companyObject.address == null ? "" : user.companyObject.address.postCode));
+        text = text.replace("{Company.Country}", checkNull(user.companyObject == null || user.companyObject.address == null ? "" : user.companyObject.address.countryname));
+        text = text.replace("{Company.City}", checkNull(user.companyObject == null || user.companyObject.address == null ? "" : user.companyObject.address.city));
+        
+        
+        text = text.replace("\n", "<br/>");
+        
         return text;
     }
 
@@ -1336,6 +1357,34 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             waitingListBookings.remove(booking.id);
             signupUserToEvent(event, user);
         }
+    }
+
+    private String getDate(Event event) {
+        String dates = "";
+        
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM-yyyy HH:mm");
+        
+        for (Day day : event.days) {
+            dates += dateFormatter.format(day.startDate) + " - " + dateFormatter.format(day.endDate) + "\n";
+        }
+        
+        return dates;
+            
+    }
+
+    private String getGroupLogo(User user) {
+        if (user.company == null) {
+            return "";
+        }
+        
+        Group group = userManager.getGroup(user.companyObject.groupId);
+        if (group != null && group.imageId != null && !group.imageId.isEmpty()) {
+            String addr = getStoreDefaultAddress();
+//            return "<img src='http://"+addr+"/displayImage.php?id="+group.id+"'/>";
+            return "<img src='http://"+addr+"/displayImage.php?id="+group.imageId+"'/>";
+        }
+        
+        return "";
     }
 
 }

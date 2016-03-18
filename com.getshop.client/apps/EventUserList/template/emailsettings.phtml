@@ -167,9 +167,18 @@
     <br/>
     <? echo $this->__f("Variables that can be used in email and subject"); ?>:
     <br/> {User.Name} = <? echo $this->__f("Name of the customer"); ?>
+    <br/> {User.Cellphone} = <? echo $this->__f("Name of the customer"); ?>
     <br/> {User.Email} = <? echo $this->__f("Email of the customer"); ?>
     <br/> {Event.Name} = <? echo $this->__f("Name of the event"); ?>
-    
+    <br/> {Event.Dates} = <? echo $this->__f("Date of the event"); ?>
+    <br/> {Event.Location} = <? echo $this->__f("Location of the event"); ?>
+    <br/> {Event.SubLocation} = <? echo $this->__f("Sublocation of the event"); ?>
+    <br/> {Group.Logo} = <? echo $this->__f("Group Logo"); ?>
+    <br/> {Company.Name} = <? echo $this->__f("Company name"); ?>
+    <br/> {Company.Vatnumber} = <? echo $this->__f("Company Vatnumber"); ?>
+    <br/> {Company.Postnumber} = <? echo $this->__f("Company postnumber"); ?>
+    <br/> {Company.Country} = <? echo $this->__f("Company country"); ?>
+    <br/> {Company.City} = <? echo $this->__f("Company city"); ?>
 </div>
 
 <center><h2><? echo $this->__f("Signup emails / sms"); ?></h2></center>

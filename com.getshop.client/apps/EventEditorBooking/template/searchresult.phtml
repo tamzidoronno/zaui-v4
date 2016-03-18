@@ -42,10 +42,15 @@ if (isset($_SESSION['EventEditorBooking_current_searchfor']) && $_SESSION['Event
                     continue;
                 }
 
+                
                 $companyName = $user && $user->companyObject != null ? $user->companyObject->name : "N/A";
                 
                 echo "<div class='usersearchrow'>";
-                    echo "<div>$user->fullName</div>";
+                    echo "<div>";
+                    ?>
+                    <span onclick='app.Users.gssinterface.showUser("<? echo $user->id; ?>")' title="Edit user" class="gs_shop_small_icon"><i class="fa fa-edit"></i></span> &nbsp;
+                    <?
+                    echo $user->fullName."</div>";
                     echo "<div>$user->emailAddress</div>";
                     echo "<div>$user->cellPhone</div>";
                     

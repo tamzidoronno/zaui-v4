@@ -20,6 +20,9 @@ class EmbedCode extends \ApplicationBase implements \Application {
         return $this->getConfigurationSetting("code");
     }
     public function getCodeStartup() {
+        if(isset($_GET['avoidembedstartupcode'])) {
+            return;
+        }
         if(isset($this->applicationSettings->settings->{"code_startup"})) {
             return $this->applicationSettings->settings->{"code_startup"}->value;
         }

@@ -110,7 +110,13 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         }
         
         if (@$factory->isMobile()) {
+            $factory->addCssToBody("skin/default/responsiveignored.css");
             $factory->addCssToBody("skin/default/responsive.css");
+            echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
+            echo '<script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>';
+            echo "<script>isMobile=true;</script>";
+        } else if (@$factory->isMobileIgnoreDisabled()) {
+            $factory->addCssToBody("skin/default/responsiveignored.css");
             echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
             echo '<script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>';
             echo "<script>isMobile=true;</script>";

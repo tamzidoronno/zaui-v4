@@ -1,6 +1,8 @@
 <?php
 if(isset($_POST['event']) && $_POST['event'] == "addEmail") {
-    echo "<h1>" . $this->__w("Thank you, you have now registered your email") . "</h1>";
+    echo "<script>";
+    echo "thundashop.common.goToPage('?page=thankyou_collect');";
+    echo "</script>";
 } else {
 ?>
 <div gstype="form" method="addEmail">

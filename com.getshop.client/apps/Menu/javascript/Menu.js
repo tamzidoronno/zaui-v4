@@ -18,7 +18,7 @@ getshop.MenuEditor = {
         $(document).on('mouseenter', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.showSubEntries);
         $(document).on('mouseleave', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.hideSubEntries);
         $(document).on('click', ".Menu .save", getshop.MenuEditor.saveMenuEditor);
-        $(document).on('click', ".Menu .mobilenavigatemenu .fa-navicon", getshop.MenuEditor.showMenu);
+        $(document).on('click', ".Menu .mobilenavigatemenu", getshop.MenuEditor.showMenu);
         $(document).on('click', ".Menu .cancel", getshop.MenuEditor.closeMenuEditor);
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
         $(document).on('change', ".menu_item_language", getshop.MenuEditor.itemLanguageChanged);

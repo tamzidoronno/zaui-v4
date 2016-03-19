@@ -248,7 +248,7 @@ class Page {
 
             $styles = $area->styles;
 
-            if($this->factory->isMobile()) {
+            if($this->factory->isMobileIgnoreDisabled()) {
                 $lines = explode("\n", $styles);
                 $newstyle = "";
                 $found = false;
@@ -265,8 +265,9 @@ class Page {
                     $newstyle .= $line . "\n";
                 }
                 $styles = $newstyle;
+                $styles = $this->removeAllHoverEffects($styles);
             }
-            
+                        
             if (isset($area->styles) && $area->styles) {
                 $area->styles = str_replace("{incrementcellid}", $area->incrementalCellId, $area->styles);
                 echo "<style cellid='" . $area->cellId . "'>" . $styles . "</style>" . "\n";
@@ -456,7 +457,7 @@ class Page {
             $showDesktopHiddenFields = $user->showHiddenFields;
         }
 
-        if ($this->factory->isMobile()) {
+        if ($this->factory->isMobileIgnoreDisabled()) {
             if ($cell->hideOnMobile && !$this->factory->isEditorMode()) {
                 return false;
             }
@@ -483,7 +484,7 @@ class Page {
         
         if ($cell->mode == "ROTATING") {
             $additionalinfo = "height='" . $cell->carouselConfig->height . "' timer='" . $cell->carouselConfig->time . "' type='" . $cell->carouselConfig->type . "'";
-            if ($this->editCarouselForMobile() || $this->factory->isMobile()) {
+            if ($this->editCarouselForMobile() || $this->factory->isMobileIgnoreDisabled()) {
                 $styles .= "height: " . $cell->carouselConfig->heightMobile . "px;";
             } else {
                 $styles .= "height: " . $cell->carouselConfig->height . "px;";
@@ -547,11 +548,11 @@ class Page {
         }
         $this->printFloatingHeader($cell, $floatData, $parent);
 
-        if ($cell->mode == "ROTATING" && $this->editCarouselForMobile() && !$this->factory->isMobile()) {
+        if ($cell->mode == "ROTATING" && $this->editCarouselForMobile() && !$this->factory->isMobileIgnoreDisabled()) {
             echo "<div class='gsmobilecarouseleditdesc'>" . $this->factory->__w("Add slides for carousel to mobile view") . "</div>";
         }
 
-        if($this->factory->isMobile() && (!$parent || !$parent->keepOriginalLayoutOnMobile)) {
+        if($this->factory->isMobileIgnoreDisabled() && (!$parent || !$parent->keepOriginalLayoutOnMobile)) {
             $styles = "";
         }
         $gslayoutbox = "";
@@ -584,14 +585,14 @@ class Page {
         
         $lastInRow = (count(@$parent->cells) - 1) == $count ?  "gs_last_in_row" : "";
         $firstInRowClass = $count == 0 ?  "gs_first_in_row" : "";
-        echo "<div selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo $styles width='$width' $keepMobile class='gsucell $themeClass $lastInRow $firstInRowClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        echo "<div class='gsucell $themeClass $lastInRow $firstInRowClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' $styles incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "' selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo width='$width' $keepMobile>";
         $this->printEffectTrigger($cell, $depth);
         
         if ($anchor) {
             echo "<a id='$anchor' name='$anchor'></a>";
         }
         
-        if ($this->factory->isMobile() && $gsrowmode == "") {
+        if ($this->factory->isMobileIgnoreDisabled() && $gsrowmode == "") {
             $this->printMobileAdminMenu($depth, $cell);
         }
 
@@ -603,7 +604,7 @@ class Page {
         $this->printRowEditButtons($depth, $edit, $cell);
         $this->printEasyModeLayer($edit, $cell, $parent);
 
-        echo "<div $innerstyles class='$gscellinner $themeClassInner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
+        echo "<div class='$gscellinner $themeClassInner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells' $innerstyles>";
         if ($header && $depth == 0 && $count == 0) {
             $this->printLanguageSelection();
         }
@@ -628,7 +629,7 @@ class Page {
         }
 
         $this->printFloatingEnd($cell);
-        if ($cell->mode == "ROTATING" && $this->factory->isMobile()) {
+        if ($cell->mode == "ROTATING" && $this->factory->isMobileIgnoreDisabled()) {
             $this->resizeContainer($cell);
         }
         
@@ -848,11 +849,11 @@ class Page {
         /* @var $config core_pagemanager_data_CarouselConfig */
         $config = $cell->carouselConfig;
         $height = $config->height;
-        if ($this->factory->isMobile() || $this->editCarouselForMobile()) {
+        if ($this->factory->isMobileIgnoreDisabled() || $this->editCarouselForMobile()) {
             $height = $config->heightMobile;
         }
         
-        if($config->keepAspect && !$this->factory->isMobile()) {
+        if($config->keepAspect && !$this->factory->isMobileIgnoreDisabled()) {
             ?>
             <script>
 //                $(function() {
@@ -897,7 +898,7 @@ class Page {
 //                });
             </script>
             <?
-        } else if($this->factory->isMobile()) {
+        } else if($this->factory->isMobileIgnoreDisabled()) {
             ?>
             <script>
                 $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]').find('.gsfloatingframe').each(function() {
@@ -1017,7 +1018,7 @@ class Page {
 
             echo "<span class='gstabbtn $active' incrementid='" . $innercell->incrementalCellId . "' cellid='" . $innercell->cellId . "'>$tabName</span>";
         }
-        if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
+        if ($this->factory->isEditorMode() && !$this->factory->isMobileIgnoreDisabled()) {
             echo "<i class='fa fa-plus gsoperatecell' type='addrow' target='container' title='" . $this->factory->__w("Add another tab") . "'></i> ";
             echo "<i class='fa fa-cogs tabsettings' title='" . $this->factory->__w("Tab settings") . "' style='cursor:pointer;'></i>";
         }
@@ -1026,7 +1027,7 @@ class Page {
 
     public function printCarourselMenu() {
         $hideBg = "";
-        if (!$this->factory->isEditorMode() || $this->factory->isMobile()) {
+        if (!$this->factory->isEditorMode() || $this->factory->isMobileIgnoreDisabled()) {
             return;
         }
         if ($this->editCarouselForMobile()) {
@@ -1057,7 +1058,7 @@ class Page {
      */
     public function printCarouselDots($totalcells, $count, $cellid, $config) {
         $editdots = "";
-        if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
+        if ($this->factory->isEditorMode() && !$this->factory->isMobileIgnoreDisabled()) {
             $editdots = "gscarouseldotseditmode";
         }
         
@@ -1087,7 +1088,7 @@ class Page {
             }
            echo "</i>";
         }
-        if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
+        if ($this->factory->isEditorMode() && !$this->factory->isMobileIgnoreDisabled()) {
             if ($this->editCarouselForMobile()) {
                 echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrow' target='container' mode='rowmobile' title='" . $this->factory->__w("Add another slider") . "'></i>";
             } else {
@@ -1494,7 +1495,7 @@ class Page {
         if ($cell->mode == "FLOATING") {
 
             $floatingClass = "";
-            if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
+            if ($this->factory->isEditorMode() && !$this->factory->isMobileIgnoreDisabled()) {
                 $floatingClass = "gsfloatingbox";
             }
 
@@ -1522,7 +1523,7 @@ class Page {
 
     public function getCellsToPrint($cells, $mode) {
 
-        if ($this->factory->isMobile()) {
+        if ($this->factory->isMobileIgnoreDisabled()) {
             $result = array();
             foreach ($cells as $innercell) {
                 if (!$innercell->hideOnMobile) {
@@ -1561,9 +1562,9 @@ class Page {
         $found = false;
         
         $firstId = $parent->cells[0]->cellId;
-        if(($this->factory->isMobile() || $this->editCarouselForMobile())) {
+        if(($this->factory->isMobileIgnoreDisabled() || $this->editCarouselForMobile())) {
             foreach($parent->cells as $tmpcell) {
-                if(($this->factory->isMobile() || $this->editCarouselForMobile()) && !$tmpcell->hideOnMobile) {
+                if(($this->factory->isMobileIgnoreDisabled() || $this->editCarouselForMobile()) && !$tmpcell->hideOnMobile) {
                     $firstId = $tmpcell->cellId;
                     break;
                 }
@@ -1573,7 +1574,7 @@ class Page {
         if($selectedPosition) {
             foreach($parent->cells as $tmpcell) {
                 /* @var $tmpcell core_pagemanager_data_PageCell */
-                if(($this->factory->isMobile() || $this->editCarouselForMobile()) && $tmpcell->hideOnMobile) {
+                if(($this->factory->isMobileIgnoreDisabled() || $this->editCarouselForMobile()) && $tmpcell->hideOnMobile) {
                     continue;
                 }
                 
@@ -1871,5 +1872,27 @@ class Page {
         echo "</div>";
 
     }
+
+    public function removeAllHoverEffects($styles) {
+        $offset = 0;
+        $i = 0;
+        while(true) {
+            $offset = strpos($styles, ":hover", $offset);
+            if($offset === FALSE) {
+                break;
+            }
+            $offsetStart = strpos($styles, "{", $offset)+1;
+            $offsetEnd = strpos($styles, "}", $offset);
+            
+            $start = substr($styles, 0, $offsetStart);
+            $end = substr($styles, $offsetEnd);
+            
+            $styles = $start.$end;
+            $i++;
+            $offset += 1;
+        }
+        return $styles;
+    }
+
 }
 

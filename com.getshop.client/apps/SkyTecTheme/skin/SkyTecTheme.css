@@ -47,6 +47,9 @@ h2 { font-weight: 700; }
 .gsarea[area="header"] .Menu {
     text-align: right;
 }
+.gsarea[area="header"] .Menu .entry {
+    text-align: left;
+}
 .gsarea[area="header"] .Menu a {
     color: #005596;
     font-size: 17px;
@@ -96,7 +99,7 @@ h2 { font-weight: 700; }
 
 .gsarea[area="footer"] .gsucell[cellid="7151f8f4-5b40-4764-ac9f-bc2343a1f566"].gsdepth_0.gscount_0 {
     background-color: #363839;
-    height: 438px;
+    min-height: 438px;
     box-sizing: border-box;
     padding-top: 80px;
     padding-bottom: 80px;
@@ -285,6 +288,45 @@ h2 { font-weight: 700; }
 .ProductCategories .attrselect.selected { font-weight: bold; }
 .ProductCategories .attrselect:hover { color: blue; }
 
-@media only all and (max-width: 1100px) { 
+.Menu .mobilenavigatemenu {
+    position: absolute;
+    left: 10px;
+    font-size: 25px;
+    top: 6px;
+    z-index: 10;
+}
+
+@media only all and (max-width: 800px) {
+    .Menu .menuentries.horizontal {
+        left: 10px;
+        top: 41px;
+        width: inherit;
+        padding-right: 30px;
+        padding-left: 30px;
+        background-color: #000;
+    }
+    .ProductLists .templatebox_1 .productbox:hover .addProductToCart { background-color: inherit !important; color:#000 !important; }
+    .gs_page_width { padding-left: 10px; padding-right: 10px; }
+    .gsarea[area="header"] .Menu .menuentries .entries .entries .entry div { border-bottom: 0px; }
+    .gsarea[area="header"] .Menu .menuentries .entries .entries {background-color: #000; }
+    .gsuicell .gscell_49 { display:none !important; }
+    .CartHeader { margin-right: 10px; }
+    
+    .gscell_34 .imagecontainer.adjust_center { display:none; }
+    
+    .gsrotateright {
+        right: 0px;
+        top: 35px;
+    }
+    .gsrotateleft {
+        left: 0px;
+        top: 35px;
+    }
+
+}
+    @media only all and (max-width: 1100px) { 
     .gsrotating .ContentManager h1 { font-size: 30px !important; }
+    
+    
+    
 }

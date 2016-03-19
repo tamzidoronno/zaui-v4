@@ -1,6 +1,8 @@
 package com.thundashop.core.productmanager.data;
 
-public class AttributeItem {
+import java.io.Serializable;
+
+public class AttributeItem implements Serializable {
     public String text;
     public double price;
     

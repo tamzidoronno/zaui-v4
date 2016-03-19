@@ -313,6 +313,14 @@ h2 { font-weight: 700; }
     .CartHeader { margin-right: 10px; }
     
     .gscell_34 .imagecontainer.adjust_center { display:none; }
+    
+    .gsrotatingrow {
+        margin-left: 0px;
+        margin-right: 0px;
+        border-radius: 0px;
+        background-color: #e0e0e0;
+    }
+
 }
     @media only all and (max-width: 1100px) { 
     .gsrotating .ContentManager h1 { font-size: 30px !important; }

@@ -420,9 +420,9 @@
 #informationbox.Menu { color:#000; }
 
 @media only all and (max-width: 800px) {
-    .Menu .menuentries { width: 100%; background-color: #2c2c2c; }
+    .Menu .menuentries.horizontal { width: 100%; background-color: #2c2c2c;display:none; position:absolute; left:0px; top: 0px; display:none;z-index: 10; }
+    .Menu .mobilenavigatemenu { display:block; }
     .Menu .menuentries a { color:#fff !important; }
-    
     .Menu .menuentries .entry { 
         width: 100% !important; 
         display:block !important; 
@@ -431,25 +431,9 @@
         font-size: 16px; 
         line-height: 30px;
         box-sizing: border-box; 
-/*        
-        background: rgb(77,77,77);  Old browsers 
-        background: -moz-linear-gradient(top,  rgba(77,77,77,1) 0%, rgba(43,43,43,1) 100%);  FF3.6+ 
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(77,77,77,1)), color-stop(100%,rgba(43,43,43,1)));  Chrome,Safari4+ 
-        background: -webkit-linear-gradient(top,  rgba(77,77,77,1) 0%,rgba(43,43,43,1) 100%);  Chrome10+,Safari5.1+ 
-        background: -o-linear-gradient(top,  rgba(77,77,77,1) 0%,rgba(43,43,43,1) 100%);  Opera 11.10+ 
-        background: -ms-linear-gradient(top,  rgba(77,77,77,1) 0%,rgba(43,43,43,1) 100%);  IE10+ 
-        background: linear-gradient(to bottom,  rgba(77,77,77,1) 0%,rgba(43,43,43,1) 100%);  W3C 
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4d4d4d', endColorstr='#2b2b2b',GradientType=0 );  IE6-9 */
+    }
+    .Menu .menuentries.horizontal .entries .entries { position: inherit; display: block; }
 
-    }
-    
-    .Menu .menuentries .entry .entries .entry { 
-        border-bottom: 1px dashed rgba(255,255,255,.05);
-        padding-left: 0px;
-        margin-left: 15px;
-        /*background: rgba(0,0,0,0.01);*/
-        /*background-color: #2b2b2b;*/
-    }
     
     .Menu .menuentries .entry .entries .entry:last-child {
         border-bottom: solid 0px;

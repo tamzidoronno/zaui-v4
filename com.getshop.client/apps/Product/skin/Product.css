@@ -93,4 +93,7 @@
     .Product .images,.Product .images .mainimage { width: 100% !important; }
     .Product .product_title { text-align:center; font-size: 19px; }
     .Product .product_price { position: inherit; text-align: center; }
+    .gsaddedtocartbox { border-radius: 0px;left: 0px; width: 100% !important; box-sizing: border-box; padding: 10px; }
+    .gsaddedtocartbox .shop_button, .gs_button { width: 100% !important; box-sizing: border-box; }
+
 }

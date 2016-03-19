@@ -64,7 +64,11 @@ app.Product = {
                  var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
                 thundashop.Ajax.postWithCallBack(event, function() {
                     PubSub.publish("PRODUCT_ADDED_TO_CART");
-                    $('.gsaddedtocartbox').css('left', button.offset().left);
+                    if(isMobile) {
+                        $('.gsaddedtocartbox').css('left', "0px");
+                    } else {
+                        $('.gsaddedtocartbox').css('left', button.offset().left);
+                    }
                     $('.gsaddedtocartbox').css('top', button.offset().top-$(this).scrollTop());
                     $('.gsaddedtocartbox').fadeIn();
                 });

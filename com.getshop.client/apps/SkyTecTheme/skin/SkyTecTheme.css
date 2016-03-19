@@ -47,6 +47,9 @@ h2 { font-weight: 700; }
 .gsarea[area="header"] .Menu {
     text-align: right;
 }
+.gsarea[area="header"] .Menu .entry {
+    text-align: left;
+}
 .gsarea[area="header"] .Menu a {
     color: #005596;
     font-size: 17px;
@@ -285,6 +288,32 @@ h2 { font-weight: 700; }
 .ProductCategories .attrselect.selected { font-weight: bold; }
 .ProductCategories .attrselect:hover { color: blue; }
 
-@media only all and (max-width: 1100px) { 
+.Menu .mobilenavigatemenu {
+    position: absolute;
+    left: 10px;
+    font-size: 25px;
+    top: 6px;
+    z-index: 10;
+}
+
+@media only all and (max-width: 800px) {
+    .Menu .menuentries.horizontal {
+        left: 10px;
+        top: 41px;
+        width: inherit;
+        padding-right: 30px;
+        padding-left: 30px;
+        background-color: #000;
+    }
+    .gs_page_width { padding-left: 10px; padding-right: 10px; }
+    .gsarea[area="header"] .Menu .menuentries .entries .entries .entry div { border-bottom: 0px; }
+    .gsarea[area="header"] .Menu .menuentries .entries .entries {background-color: #000; }
+    .gsuicell .gscell_49 { display:none !important; }
+    .CartHeader { margin-right: 10px; }
+}
+    @media only all and (max-width: 1100px) { 
     .gsrotating .ContentManager h1 { font-size: 30px !important; }
+    
+    
+    
 }

@@ -58,13 +58,7 @@ class Factory extends FactoryBase {
         return $this->getMainLanguage();
     }
 
-    public function isMobile() {
-        
-        if ($this->getStoreConfiguration()->disableMobileMode) {
-            return false;
-        }
-        
-        
+    public function isMobileIgnoreDisabled() {
         if(stristr($_SERVER['HTTP_HOST'], "gsmobile")) {
             return true;
         }
@@ -77,6 +71,13 @@ class Factory extends FactoryBase {
             return true;
         
         return false;
+    }
+    
+    public function isMobile() {
+        if ($this->getStoreConfiguration()->disableMobileMode) {
+            return false;
+        }
+        return $this->isMobileIgnoreDisabled();
     }
 
 

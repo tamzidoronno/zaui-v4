@@ -376,6 +376,8 @@ public class BookingEngineItemAssignerOptimal {
         Booking booking = new Booking();
         booking.startDate = getDate(start);
         booking.endDate = getDate(end);
+        booking.bookingItemTypeId = type1.id;
+        
         if (item != null) {
             booking.bookingItemId = item.id;
         }

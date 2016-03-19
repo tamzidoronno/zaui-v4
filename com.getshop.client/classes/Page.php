@@ -248,7 +248,7 @@ class Page {
 
             $styles = $area->styles;
 
-            if($this->factory->isMobile()) {
+            if($this->factory->isMobileIgnoreDisabled()) {
                 $lines = explode("\n", $styles);
                 $newstyle = "";
                 $found = false;
@@ -265,8 +265,9 @@ class Page {
                     $newstyle .= $line . "\n";
                 }
                 $styles = $newstyle;
+                $styles = $this->removeAllHoverEffects($styles);
             }
-            
+                        
             if (isset($area->styles) && $area->styles) {
                 $area->styles = str_replace("{incrementcellid}", $area->incrementalCellId, $area->styles);
                 echo "<style cellid='" . $area->cellId . "'>" . $styles . "</style>" . "\n";
@@ -1871,5 +1872,27 @@ class Page {
         echo "</div>";
 
     }
+
+    public function removeAllHoverEffects($styles) {
+        $offset = 0;
+        $i = 0;
+        while(true) {
+            $offset = strpos($styles, ":hover", $offset);
+            if($offset === FALSE) {
+                break;
+            }
+            $offsetStart = strpos($styles, "{", $offset)+1;
+            $offsetEnd = strpos($styles, "}", $offset);
+            
+            $start = substr($styles, 0, $offsetStart);
+            $end = substr($styles, $offsetEnd);
+            
+            $styles = $start.$end;
+            $i++;
+            $offset += 1;
+        }
+        return $styles;
+    }
+
 }
 

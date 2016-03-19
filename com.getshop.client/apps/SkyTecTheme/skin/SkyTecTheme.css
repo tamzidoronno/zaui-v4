@@ -314,11 +314,13 @@ h2 { font-weight: 700; }
     
     .gscell_34 .imagecontainer.adjust_center { display:none; }
     
-    .gsrotatingrow {
-        margin-left: 0px;
-        margin-right: 0px;
-        border-radius: 0px;
-        background-color: #e0e0e0;
+    .gsrotateright {
+        right: 0px;
+        top: 35px;
+    }
+    .gsrotateleft {
+        left: 0px;
+        top: 35px;
     }
 
 }

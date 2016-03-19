@@ -754,7 +754,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 new BookingItemAssignerOptimal(type, toCheck, bookingItems, shouldThrowException()).canAssign();
             }
         } catch (Exception x) {
-            messageManager.sendErrorNotification(x.getMessage());
+            messageManager.sendErrorNotification(x.getMessage(), x);
         }
     }
 

@@ -18,7 +18,10 @@ import com.thundashop.core.usermanager.data.User;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,11 +154,29 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         }
     }
 
-    public void sendErrorNotification(String text) {
-        text += "<br>";
-        text += "Store id: " + storeId + "(" + storeManager.getMyStore().configuration.emailAdress + ")" + "<bR>";
+    public void sendErrorNotification(String inText, Exception ex) {
+        String text = "";
+        text += "Store id: " + storeId;
+        text += "<br/>Date: " + new Date();
+        text += "<br/>Store email: " + getStoreEmailAddress();
+        text += "<br/>Store name: " + getStoreName();
+        text += "<br/>Store default address: " + getStoreDefaultAddress();
+        text += "<br/>";
+        text += "<br/><b>Message:</b> <br/>";
+        text += inText.replace("\n", "<br/>");
         
-        sendMail("post@getshop.com", "post@getshop.com", "error notification", text, "post@getshop.com", "post@getshop.com");
+        
+        if (ex != null) {
+            text += "<br/>";
+            text += "<br/> <b> Stacktrace: </b>";
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            text += "<br/>   " + sw.toString().replace("\n", "<br/>");
+            text += "<br/>";
+        }
+        
+        sendMail("post@getshop.com", "post@getshop.com", "Error Notification (" + getStoreDefaultAddress() +")", text, "post@getshop.com", "post@getshop.com");
     }
 
     public void sendMailWithDefaults(String name, String email, String title, String message) {

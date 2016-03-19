@@ -747,7 +747,7 @@ public class PmsManagerProcessor {
         
         for(Booking test : allBookings) {
             if(!allBookingIds.contains(test.id)) {
-                manager.messageManager.sendErrorNotification(test.id + " this is missing on the bookingengine, the booking engine and the pms manager is out of sync: " + test.startDate + " - " + test.endDate + ", created: " + test.rowCreatedDate);
+                manager.messageManager.sendErrorNotification(test.id + " this is missing on the bookingengine, the booking engine and the pms manager is out of sync: " + test.startDate + " - " + test.endDate + ", created: " + test.rowCreatedDate, null);
                 manager.bookingEngine.deleteBooking(test.id);
             }
         }

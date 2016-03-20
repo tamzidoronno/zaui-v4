@@ -17,6 +17,10 @@ public interface IAccountingManager {
     @Administrator
     public HashMap<String, String> getAllFiles();
     @Administrator
+    public List<SavedOrderFile> getAllFilesNotTransferredToAccounting();
+    @Administrator
+    public void markAsTransferredToAccounting(String id);
+    @Administrator
     public List<String> getFile(String id);
     
     @Administrator

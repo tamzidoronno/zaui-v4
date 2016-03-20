@@ -155,4 +155,22 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         return this.config;
     }
 
+    @Override
+    public List<SavedOrderFile> getAllFilesNotTransferredToAccounting() {
+        List<SavedOrderFile> res = new ArrayList();
+        for(SavedOrderFile file :files.values()) {
+            if(!file.transferred) {
+                res.add(file);
+            }
+        }
+        return res;
+    }
+
+    @Override
+    public void markAsTransferredToAccounting(String id) {
+        SavedOrderFile file = files.get(id);
+        file.transferred = true;
+        saveObject(file);
+    }
+
 }

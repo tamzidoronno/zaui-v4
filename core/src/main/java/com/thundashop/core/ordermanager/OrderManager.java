@@ -97,6 +97,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         incrementingOrderId++;
         credited.incrementOrderId = incrementingOrderId;
         credited.isCreditNote = true;
+        credited.status = Order.Status.CREATED;
+        credited.parentOrder = order.id;
+        credited.creditOrderId.clear();
         order.creditOrderId.add(credited.id);
         saveOrder(credited);
         saveOrder(order);
@@ -556,7 +559,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public Order getOrderByReference(String referenceId) throws ErrorException {
         for (Order order : orders.values()) {
             if (order.reference.equals(referenceId)) {
-                return order;
+                return order; 
             }
         }
         return null;
@@ -580,6 +583,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 returnOrders.add(order);
             }
         }
+        sortOrderList(returnOrders);
         return returnOrders;
     }
     
@@ -1165,7 +1169,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(filterOrdersBySearchWord(filterOptions))
                 .filter(filterOrdersByStatus(filterOptions))
                 .collect(Collectors.toList());
-        
+        sortOrderList(allOrders);
         return pageIt(allOrders, filterOptions);
     }
 
@@ -1192,6 +1196,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return order -> new Integer(order.status).equals(Integer.valueOf(filterOptions.extra.get("orderstatus")));
+    }
+
+    private void sortOrderList(List<Order> returnOrders) {
+
+        Collections.sort(returnOrders ,new Comparator<Order>(){
+        public int compare(Order o1, Order o2){
+            if(o1.incrementOrderId == o2.incrementOrderId)
+                return 0;
+            return o1.incrementOrderId > o2.incrementOrderId ? -1 : 1;
+        }
+        });
     }
 
 }

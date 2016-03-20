@@ -144,3 +144,6 @@
     display: none;
 }
 
+.gss_orderview .lineStartDate,
+.gss_orderview .lineEndDate, 
+.gss_orderview .additionalMetaData { color: blue; cursor:pointer; }

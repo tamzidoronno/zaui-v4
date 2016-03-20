@@ -49,6 +49,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date startDate = null;
     public Date endDate = null;
     public Integer paymentTerms = 15;
+    public String parentOrder = "";
     
     public Order jsonClone() {
         Gson gson = new Gson();

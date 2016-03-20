@@ -17,6 +17,18 @@ class OrderManager extends GSTableCommon implements \Application {
         
     }
     
+    public function updateAdditionalData() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['value']);
+        $type = $_POST['type'];
+        foreach($order->cart->items as $item) {
+            if($item->cartItemId == $_POST['itemid']) {
+                if($type == "startDate") { $item->startDate = $this->convertToJavaDate(strtotime($_POST['newValue'])); }
+                if($type == "endDate") { $item->endDate = $this->convertToJavaDate(strtotime($_POST['newValue'])); }
+            }
+        }
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
     public function updateInvoiceInformation() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['orderId']);
         $order->invoiceNote = $_POST['text'];
@@ -105,7 +117,13 @@ class OrderManager extends GSTableCommon implements \Application {
     }
     
     public function updateOrderCount() {
-        $this->getApi()->getOrderManager()->updateCountForOrderLine($_POST['cartItemId'], $_POST['value'], $_POST['count']);
+        $count = $_POST['count'];
+        $orderId = $_POST['value'];
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        if($order->isCreditNote && $count > 0) {
+            $count *= -1;
+        }
+        $this->getApi()->getOrderManager()->updateCountForOrderLine($_POST['cartItemId'], $orderId, $count);
     }
     
     public function addItemToOrder() {
@@ -115,7 +133,11 @@ class OrderManager extends GSTableCommon implements \Application {
     }
     
     public function updateOrderLine() {
-        $this->getApi()->getOrderManager()->updatePriceForOrderLine($_POST['cartItemId'], $_POST['value'], $_POST['price']);
+        $price = $_POST['price'];
+        if($price < 0) {
+            $price *= -1;
+        }
+        $this->getApi()->getOrderManager()->updatePriceForOrderLine($_POST['cartItemId'], $_POST['value'], $price);
     }
     
     public function changePaymentType() {

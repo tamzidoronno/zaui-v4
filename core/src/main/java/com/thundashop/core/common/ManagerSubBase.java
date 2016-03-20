@@ -93,7 +93,22 @@ public class ManagerSubBase {
             gsscheduler.multilevelName = ((GetShopSessionBeanNamed)this).getName();
         }
         
-        startScheduler(gsscheduler);
+        startScheduler(gsscheduler, false);
+        saveObject(gsscheduler);
+    }
+    
+    public void createProcessor(String schedulerReference, Class schedulerType) {
+        GetShopScheduler gsscheduler = new GetShopScheduler();
+        gsscheduler.storeId = storeId;
+        gsscheduler.schedulerClassName = schedulerType;
+        gsscheduler.id = schedulerReference;
+        gsscheduler.multilevelName = "";
+        
+        if (this instanceof GetShopSessionBeanNamed) {
+            gsscheduler.multilevelName = ((GetShopSessionBeanNamed)this).getName();
+        }
+        
+        startScheduler(gsscheduler, true);
         saveObject(gsscheduler);
     }
     
@@ -131,7 +146,7 @@ public class ManagerSubBase {
             for (DataCommon common : dataRetreived.data) {
                 if (common instanceof GetShopScheduler) {
                     GetShopScheduler sched = (GetShopScheduler)common;
-                    startScheduler(sched);
+                    startScheduler(sched, false);
                 }
             }
         }
@@ -273,7 +288,7 @@ public class ManagerSubBase {
         }
     }
 
-    private void startScheduler(GetShopScheduler gsscheduler) {
+    private void startScheduler(GetShopScheduler gsscheduler, boolean autostart) {
         if (schedulers.containsKey(gsscheduler.id)) {
             return;
         }
@@ -295,7 +310,11 @@ public class ManagerSubBase {
             GetShopSchedulerBase ret = (GetShopSchedulerBase) ctor.newInstance(webAddress, user.username, user.metaData.get("password"), gsscheduler.scheduler, gsscheduler.multilevelName);
 
             schedulersBases.put(gsscheduler.id, ret);
-            schedulers.put(gsscheduler.id, gsscheduler);
+            if(autostart) {
+                new Thread(ret).start();
+            } else {
+                schedulers.put(gsscheduler.id, gsscheduler);
+            }
         } catch (Exception ex) {
             System.out.println("Could not start scheduler");
             ex.printStackTrace();

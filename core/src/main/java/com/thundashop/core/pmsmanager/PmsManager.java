@@ -128,6 +128,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 addiotionalItemInfo.put(res.itemId, res);
             }
         }
+        
+        createProcessor("logfetcher", ArxLogFetcher.class);
     }
 
     @Override

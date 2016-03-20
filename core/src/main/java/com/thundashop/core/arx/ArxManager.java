@@ -103,7 +103,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
     private String arxUsername = null;
     private String arxPassword = null;
     private boolean doneClosedForToday = false;
-    private ArxLogFetcherThread arxLogFetcher;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -168,65 +167,8 @@ public class ArxManager extends ManagerBase implements IArxManager {
             address = arxHost + address;
         }
         
-//        System.out.println(address);
-        
-        String loginToken = null;
-        String loginUrl = address;
-        
-        HttpParams my_httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(my_httpParams, 3000);
-        HttpConnectionParams.setSoTimeout(my_httpParams, 6000);
-        
-        DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
-        client = wrapClient(client);
-        HttpResponse httpResponse;
-        
-
-        HttpEntity entity;
-        HttpPost request = new HttpPost(loginUrl);
-        byte[] bytes = (username + ":" + password).getBytes();
-        String encoding = Base64.encode(bytes);
-
-        request.addHeader("Authorization", "Basic " + encoding);
-
-        StringBody comment = new StringBody("A binary file of some kind", ContentType.TEXT_PLAIN);
-
-        StringBody body = new StringBody(content, ContentType.TEXT_PLAIN);
-
-        HttpEntity reqEntity = MultipartEntityBuilder.create()
-                .addPart("upfile", body)
-                .addPart("comment", comment)
-                .build();
-
-        request.setEntity(reqEntity);
-
-//        System.out.println("Now sending to arx");
-        httpResponse = client.execute(request);
-
-        Integer statusCode = httpResponse.getStatusLine().getStatusCode();
-        if(statusCode == 401) {
-            return "401";
-        }
-
-
-        entity = httpResponse.getEntity();
-
-
-
-//        System.out.println("Done sending to arx");
-
-        if (entity != null) {
-            InputStream instream = entity.getContent();
-            int ch;
-            StringBuilder sb = new StringBuilder();
-            while ((ch = instream.read()) != -1) {
-                sb.append((char) ch);
-            }
-            String result = sb.toString();
-            return result.trim();
-        }
-            
-        return "failed";
+        ArxConnection connection = new ArxConnection();
+        return connection.httpLoginRequest(address, username, password, content);
     }
     
     
@@ -466,6 +408,11 @@ public class ArxManager extends ManagerBase implements IArxManager {
     @Override
     public HashMap<String, List<AccessLog>> getLogForAllDoor(long start, long end) throws Exception {
         String result = getDoorLog(start, end);
+        return generateDoorLogForAllDoorsFromResult(result);
+    }
+
+    @Override
+    public HashMap<String, List<AccessLog>> generateDoorLogForAllDoorsFromResult(String result) throws Exception {
         if(result.isEmpty()) {
             return new HashMap();
         }
@@ -753,22 +700,8 @@ public class ArxManager extends ManagerBase implements IArxManager {
         return result;
     }
     
-    public void startFetcherThread() {
-        if(arxLogFetcher != null) {
-            return;
-        }
-        arxLogFetcher = new ArxLogFetcherThread(this);
-        arxLogFetcher.username = arxUsername;
-        arxLogFetcher.password = arxPassword;
-        arxLogFetcher.hostname = arxHostname;
-        arxLogFetcher.start();
-    }
 
     public String getDoorLog(long start, long end) {
-        
-        if(arxLogFetcher != null) {
-            return arxLogFetcher.result;
-        }
         return getDoorLogForced(start, end);
     }
 

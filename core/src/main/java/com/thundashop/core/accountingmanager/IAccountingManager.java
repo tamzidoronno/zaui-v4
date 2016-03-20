@@ -28,5 +28,9 @@ public interface IAccountingManager {
     @Administrator
     public void setAccountingManagerConfig(AccountingManagerConfig config);
     
+    @Administrator
+    public void transferFilesToAccounting();
+    
+    @Administrator
     public AccountingManagerConfig getAccountingManagerConfig();
 }

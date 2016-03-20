@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -198,6 +200,15 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
 
     @Override
     public void transferFilesToAccounting() {
+        //First create a file if needed.
+        if(!hasOrdersToTransfer()) {
+            return;
+        }
+        try {
+            createCombinedOrderFile(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         List<SavedOrderFile> filesToTransfer = getAllFilesNotTransferredToAccounting();
         for(SavedOrderFile saved : filesToTransfer) {
             String path = saveFileToDisk(saved);
@@ -237,6 +248,18 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 e.printStackTrace();
         }
         return null;
+    }
+
+    private boolean hasOrdersToTransfer() {
+        for(Order order : orderManager.getOrders(null, null, null)) {
+            if(!config.statesToInclude.contains(order.status)) {
+                continue;
+            }
+            if(!order.transferredToAccountingSystem) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

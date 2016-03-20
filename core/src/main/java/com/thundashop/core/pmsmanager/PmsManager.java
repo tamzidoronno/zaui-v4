@@ -331,7 +331,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             return booking;
         } catch (Exception e) {
-            messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id);
+            messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id, e);
             e.printStackTrace();
             return null;
         }
@@ -2436,7 +2436,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         finalize(booking);
         for (PmsBookingRooms room : booking.rooms) {
             if (room.booking == null) {
-                messageManager.sendErrorNotification("Booking failure for booking: " + booking.id + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress);
+                messageManager.sendErrorNotification("Booking failure for booking: " + booking.id + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, null);
                 return false;
             }
         }

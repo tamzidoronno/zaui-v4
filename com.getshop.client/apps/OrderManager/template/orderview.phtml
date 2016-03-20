@@ -43,11 +43,18 @@ $cart = $order->cart;
         </div>
         
         <div class='gss_label_content'>
+        <?
+        if($order->isCreditNote) {
+            echo '<input type="button" gss_view="gss_orderview" gss_fragment="orderview" gss_method="showOrder" gss_value="'.$order->parentOrder.'" value="Open parent order" style="float:right;">';
+        }
+        ?>
         <? if(!$this->canChangeOrder($order)) { ?>
             <? if(sizeof($order->creditOrderId) > 0) {
                 for($i = 1; $i <= sizeof($order->creditOrderId); $i++) {
                     $creditId = $order->creditOrderId[($i-1)];
-                    echo '<input type="button" gss_view="gss_orderview" gss_fragment="orderview" gss_method="showOrder" gss_value="'.$creditId.'" value="Open credited order '.$i.'" style="float:right;">';
+                    $creditedOrder = $this->getApi()->getOrderManager()->getOrder($creditId);
+                    $creditedPrice = $this->getApi()->getOrderManager()->getTotalAmount($creditedOrder);
+                    echo '<input type="button" gss_view="gss_orderview" gss_fragment="orderview" gss_method="showOrder" gss_value="'.$creditId.'" value="Open credited order ('.$creditedPrice.')" style="float:right;">';
                 }
             }  ?>
             <input type="button" value="Credit order" class="creditinvoice" style="float:right;" orderid="<? echo $order->id; ?>" style='margin-right:10px;'>

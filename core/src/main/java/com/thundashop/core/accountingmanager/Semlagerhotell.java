@@ -142,7 +142,7 @@ public class Semlagerhotell implements AccountingInterface {
                 orderLine.put(5, item.getCount() + "");
                 orderLine.put(6, item.getProduct().price + "");
                 orderLine.put(7, "");
-                orderLine.put(8, "J01");
+                orderLine.put(8, item.getProduct().additionalMetaData);
                 orderLine.put(9, "");
                 orderLine.put(10, "");
                 result.add(makeLine(orderLine));
@@ -182,7 +182,11 @@ public class Semlagerhotell implements AccountingInterface {
             endDate = end.toString("dd.MM.yy");
         }
 
-        lineText = item.getProduct().name + " (" + startDate + " - " + endDate + ")";
+        if(!item.getProduct().additionalMetaData.isEmpty()) {
+            lineText = item.getProduct().name + ", " + item.getProduct().additionalMetaData + " (" + startDate + " - " + endDate + ")";
+        } else {
+            lineText = item.getProduct().name + " (" + startDate + " - " + endDate + ")";
+        }
         return lineText;
     }    
 }

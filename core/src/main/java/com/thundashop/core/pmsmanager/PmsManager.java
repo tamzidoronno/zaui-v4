@@ -853,6 +853,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             item.getProduct().discountedPrice = price;
             item.getProduct().price = price;
             item.getProduct().metaData = guestName;
+            item.getProduct().externalReferenceId = room.pmsBookingRoomId;
             item.setCount(daysInPeriode);
             room.invoicedTo = endDate;
             foundInvoice = true;
@@ -1862,7 +1863,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         item.getProduct().name = type.name;
         if (bookingitem != null) {
-            item.getProduct().name += " (" + bookingitem.bookingItemName + ")";
+            item.getProduct().additionalMetaData = bookingitem.bookingItemName;
         }
         return item;
     }

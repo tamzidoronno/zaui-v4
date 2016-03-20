@@ -97,6 +97,9 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String sku;
     
     public String metaData = "";
+    public String additionalMetaData = "";
+    /* This we need i case we need to track down more data later on (used for bookings) */
+    public String externalReferenceId = "";
 
     public void setMainImage(String fileId) {
         mainImage = fileId;

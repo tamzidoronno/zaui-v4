@@ -22,6 +22,8 @@ header("Expires: 0");
 
 if(isset($_GET['id'])) {
     $res = $factory->getApi()->getAccountingManager()->getFile($_GET['id']);
+} else if($_GET['type'] == "combined") {
+    $res = $factory->getApi()->getAccountingManager()->createCombinedOrderFile($_GET["onlynew"]);
 } else if($_GET['type'] == "user") {
     if(isset($_GET['onlynew'])) {
         $res = $factory->getApi()->getAccountingManager()->createUserFile(true);

@@ -30,10 +30,12 @@ $config = $this->getApi()->getAccountingManager()->getAccountingManagerConfig();
 
 
 <div class='gss_settings_content'>
-    <div class='gss_button_area' style='display:inline-block; float:right;'>
+    <div class='gss_button_area' style='text-align:center;'>
         <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=user&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Download only new users"); ?></div>
         <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=user');"><i class='fa fa-save'></i><?php echo $this->__("Download users"); ?></div>
         <div class="gss_button" onclick="window.open('/scripts/accounting.php');"><i class='fa fa-save'></i><?php echo $this->__("Download order file"); ?></div>
+        <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=combined&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Combine order file and new user file"); ?></div>
+        <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=combined&onlynew=false');"><i class='fa fa-save'></i><?php echo $this->__("Combine order file and all user file"); ?></div>
     </div>
 <?php
 echo "<h2>Download orderfile history</h2>";
@@ -43,6 +45,7 @@ foreach($files as $fileId => $date) {
 ?>
     <div style='clear:both;'></div>
     <?php
+    echo "<h2>States to include in the file</h2>";
     foreach($states as $state => $val) {
     ?>    
         <div class="textfield gss_setting" id="admin">
@@ -55,9 +58,47 @@ foreach($files as $fileId => $date) {
             </div>
         </div>
     <?php } ?>
+    <h2>Ftp transfer setup</h2>
+    <div class="textfield gss_setting" id="ftpuser">
+        <span class="title">Username</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="ftpuser" value="<?php echo $config->username; ?>">
+        <div class="description">
+            Ftp username
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="ftppassword">
+        <span class="title">Password</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="ftppassword" value="<?php echo $config->password; ?>">
+        <div class="description">
+            Ftp password
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="hostname">
+        <span class="title">Hostname</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="ftphostname" value="<?php echo $config->hostname; ?>">
+        <div class="description">
+            Ftp hostname
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="ftppath">
+        <span class="title">Path</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="ftppath" value="<?php echo $config->path; ?>">
+        <div class="description">
+            Ftp path to put the file in
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="extension">
+        <span class="title">File extension</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="extension" value="<?php echo $config->extension; ?>">
+        <div class="description">
+            Example: .edi
+        </div>
+    </div>
     
     <div class='gss_button_area'>
+        <?php if($config->username) { ?>
+            <div class="gss_button" gss_method="transferNewFiles" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Transfer new files to ftp"); ?></div>
+        <?php } ?>
         <div class="gss_button" gss_method="saveAccountingConfig" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
     </div>
-
 </div>

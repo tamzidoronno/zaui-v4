@@ -17,10 +17,20 @@ public interface IAccountingManager {
     @Administrator
     public HashMap<String, String> getAllFiles();
     @Administrator
+    public List<SavedOrderFile> getAllFilesNotTransferredToAccounting();
+    @Administrator
+    public void markAsTransferredToAccounting(String id);
+    @Administrator
     public List<String> getFile(String id);
+    @Administrator
+    public List<String> createCombinedOrderFile(boolean newUsersOnly) throws Exception;
     
     @Administrator
     public void setAccountingManagerConfig(AccountingManagerConfig config);
     
+    @Administrator
+    public void transferFilesToAccounting();
+    
+    @Administrator
     public AccountingManagerConfig getAccountingManagerConfig();
 }

@@ -43,11 +43,18 @@ $cart = $order->cart;
         </div>
         
         <div class='gss_label_content'>
+        <?
+        if($order->isCreditNote) {
+            echo '<input type="button" gss_view="gss_orderview" gss_fragment="orderview" gss_method="showOrder" gss_value="'.$order->parentOrder.'" value="Open parent order" style="float:right;">';
+        }
+        ?>
         <? if(!$this->canChangeOrder($order)) { ?>
             <? if(sizeof($order->creditOrderId) > 0) {
                 for($i = 1; $i <= sizeof($order->creditOrderId); $i++) {
                     $creditId = $order->creditOrderId[($i-1)];
-                    echo '<input type="button" gss_view="gss_orderview" gss_fragment="orderview" gss_method="showOrder" gss_value="'.$creditId.'" value="Open credited order '.$i.'" style="float:right;">';
+                    $creditedOrder = $this->getApi()->getOrderManager()->getOrder($creditId);
+                    $creditedPrice = $this->getApi()->getOrderManager()->getTotalAmount($creditedOrder);
+                    echo '<input type="button" gss_view="gss_orderview" gss_fragment="orderview" gss_method="showOrder" gss_value="'.$creditId.'" value="Open credited order ('.$creditedPrice.')" style="float:right;">';
                 }
             }  ?>
             <input type="button" value="Credit order" class="creditinvoice" style="float:right;" orderid="<? echo $order->id; ?>" style='margin-right:10px;'>
@@ -118,13 +125,16 @@ $cart = $order->cart;
         $metaText = $cartItem->product->metaData ? " ( " .$cartItem->product->metaData." )" : "";
         
         $dates = "";
-        if($cartItem->startDate) {
-            $dates .= date("d.m.Y H:i", strtotime($cartItem->startDate));
+        if(!$canChangeOrder) {
+            $additionalMetaData = $cartItem->product->additionalMetaData ? " (" .$cartItem->product->additionalMetaData.")" : "";
+            if($cartItem->startDate) { $dates .= date("d.m.Y H:i", strtotime($cartItem->startDate)); }
+            if($cartItem->endDate) { $dates .= " - " . date("d.m.Y H:i", strtotime($cartItem->endDate)); }
+        } else {
+            $additionalMetaData = $cartItem->product->additionalMetaData ? " (<span class='additionalMetaData' gstype='metaData'>" .$cartItem->product->additionalMetaData."</span>)" : "";
+        if($cartItem->startDate) { $dates .= "<span class='lineStartDate' gstype='startDate'>" . date("d.m.Y H:i", strtotime($cartItem->startDate)) . "</span>"; }
+            if($cartItem->endDate) { $dates .= " - <span class='lineEndDate' gstype='endDate'>" . date("d.m.Y H:i", strtotime($cartItem->endDate)) . "</span>"; }
         }
-        if($cartItem->endDate) {
-            $dates .= " - " . date("d.m.Y H:i", strtotime($cartItem->endDate));
-        }
-        echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>$editCountButton ".$cartItem->count." x ".$cartItem->product->name." $metaText $dates<span class='gss_order_line_price'>".$cartItem->product->price." $editButton</span></div>";
+        echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>$editCountButton ".$cartItem->count." x ".$cartItem->product->name." $metaText $additionalMetaData $dates<span class='gss_order_line_price'>".$cartItem->product->price." $editButton</span></div>";
 //        echo "</div>";
     }
     if($this->canChangeOrder($order)) {

@@ -1,5 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
@@ -21,6 +22,9 @@ public interface IPmsManager {
     
     @Administrator
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
+    
+    @Administrator
+    public void logEntry(String logText, String bookingId, String itemId);
     
     @Administrator
     public PmsBooking getBooking(String bookingId);
@@ -134,4 +138,6 @@ public interface IPmsManager {
     public PmsBooking completeCurrentBooking();
     public void returnedKey(String roomId);
     public Integer getNumberOfAvailable(String itemType, Date start, Date end);
+    public void handleDoorControl(String doorId, List<AccessLog> accessLogs) throws Exception;
+    public void checkDoorStatusControl() throws Exception;
 }

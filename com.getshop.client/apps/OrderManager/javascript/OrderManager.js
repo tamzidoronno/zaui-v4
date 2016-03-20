@@ -12,12 +12,31 @@ app.OrderManager = {
         $(document).on('click', '.gsscheckallorders', app.OrderManager.checkallorders);   
         $(document).on('click', '.creditinvoice', app.OrderManager.creditOrder);   
         $(document).on('click', '.gss_setneworderstate', app.OrderManager.setNewOrderState);   
+        $(document).on('click', '.gss_orderview .lineStartDate,.gss_orderview .lineEndDate,.gss_orderview .additionalMetaData', app.OrderManager.setNewData);   
         $(document).on('click', '#updateinvoiceinfo', app.OrderManager.updateInvoiceInformation);
         $(document).on('click', '.gsspayorder', app.OrderManager.payorder);
         $(document).on('click', '.gss_changePaymentType', function() {
             $('.gss_orderview_available_payments').slideDown();
         });   
     },
+    
+    setNewData : function() {
+        var res = prompt("New value", $(this).text());
+        if(!res) {
+            return;
+        }
+        var orderId = $('.orderoverview').attr('orderid');
+        var data = {
+            gss_fragment: 'orderview',
+            gss_view: 'gss_orderview',
+            "value" : orderId,
+            "newValue" : res,
+            "itemid" : $(this).closest('.gss_order_line').attr('cartitemid'),
+            "type" : $(this).attr('gstype')
+        }
+        getshop.Settings.post(data, "updateAdditionalData"); 
+    },
+    
     setNewOrderState : function() {
         var orders = [];
         $('.gssordercheckbox').each(function() {

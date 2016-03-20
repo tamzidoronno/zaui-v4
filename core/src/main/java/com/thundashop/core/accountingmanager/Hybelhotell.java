@@ -153,9 +153,13 @@ public class Hybelhotell implements AccountingInterface {
             DateTime end = new DateTime(item.endDate);
             endDate = end.toString("dd.MM.yy");
         }
-
-        lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
         
+        if(!item.getProduct().additionalMetaData.isEmpty()) {
+            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + " (" + startDate + " - " + endDate + ")";
+        } else {
+            lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
+        }
+    
          try {
              lineText = new String(lineText.getBytes("ISO-8859-1"),"UTF-8");
          }catch(Exception e) {

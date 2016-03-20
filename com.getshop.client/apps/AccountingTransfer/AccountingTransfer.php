@@ -18,6 +18,10 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
         $this->includefile("accountingconfig");
     }
     
+    public function transferNewFiles() {
+        $this->getApi()->getAccountingManager()->transferFilesToAccounting();
+    }
+    
     public function saveAccountingConfig() {
         $states = array();
         for($i = 1; $i <= 10; $i++) {
@@ -28,6 +32,11 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
         
         $config = $this->getApi()->getAccountingManager()->getAccountingManagerConfig();
         $config->statesToInclude = $states;
+        $config->username = $_POST['ftpuser'];
+        $config->password = $_POST['ftppassword'];
+        $config->hostname = $_POST['ftphostname'];
+        $config->path = $_POST['ftppath'];
+        $config->extension = $_POST['extension'];
         $this->getApi()->getAccountingManager()->setAccountingManagerConfig($config);
     }
 }

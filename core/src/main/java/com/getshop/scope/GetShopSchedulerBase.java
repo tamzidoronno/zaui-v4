@@ -30,7 +30,9 @@ public abstract class GetShopSchedulerBase implements Runnable {
         this.webAddress = webAddress;
         this.multiLevelName = multiLevelName;
         
-        createScheduler(scheduler);
+        if(scheduler != null) {
+            createScheduler(scheduler);
+        }
     }
     
     protected GetShopApi getApi() throws Exception {

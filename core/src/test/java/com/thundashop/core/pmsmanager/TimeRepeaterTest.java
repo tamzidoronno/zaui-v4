@@ -7,6 +7,7 @@ package com.thundashop.core.pmsmanager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -104,8 +105,10 @@ public class TimeRepeaterTest {
         TimeRepeaterData data = new TimeRepeaterData();
         
         TimeRepeaterDateRange firstEvent = new TimeRepeaterDateRange();
-        firstEvent.start = new Date();
-        firstEvent.end = new Date(firstEvent.start.getTime()+(60*1000*60*3));
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 15);
+        firstEvent.start = cal.getTime();
+        firstEvent.end = new Date(firstEvent.start.getTime()+(60*1000*60*1));
         
         //Ending 10 days from now.
         data.firstEvent = firstEvent;

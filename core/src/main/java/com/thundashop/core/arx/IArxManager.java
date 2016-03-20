@@ -31,4 +31,5 @@ interface IArxManager {
     public Person getPerson(String id) throws Exception;
     public Person addCard(String personId, Card card) throws Exception;
     public void clearDoorCache() throws Exception;
+    public HashMap<String, List<AccessLog>> generateDoorLogForAllDoorsFromResult(String resultFromArx) throws Exception;
 }

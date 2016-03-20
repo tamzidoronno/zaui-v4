@@ -15,6 +15,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar;
+import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.ArxManager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
@@ -128,6 +129,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 addiotionalItemInfo.put(res.itemId, res);
             }
         }
+        
+        createProcessor("logfetcher", ArxLogFetcher.class);
     }
 
     @Override
@@ -853,6 +856,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             item.getProduct().discountedPrice = price;
             item.getProduct().price = price;
             item.getProduct().metaData = guestName;
+            item.getProduct().externalReferenceId = room.pmsBookingRoomId;
             item.setCount(daysInPeriode);
             room.invoicedTo = endDate;
             foundInvoice = true;
@@ -1862,7 +1866,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         item.getProduct().name = type.name;
         if (bookingitem != null) {
-            item.getProduct().name += " (" + bookingitem.bookingItemName + ")";
+            item.getProduct().additionalMetaData = bookingitem.bookingItemName;
         }
         return item;
     }
@@ -2127,6 +2131,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
+    @Override
     public void logEntry(String logText, String bookingId, String itemId) {
         logEntry(logText, bookingId, itemId, null);
 
@@ -2623,6 +2628,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         booking.rooms.removeAll(removeRooms);
         return bookingsToAdd;
+    }
+
+    @Override
+    public void handleDoorControl(String doorId, List<AccessLog> accessLogs) throws Exception {
+        PmsManagerDoorSurveilance sur = new PmsManagerDoorSurveilance(this);
+        sur.handleDoorControl(doorId, accessLogs);
+    }
+
+    @Override
+    public void checkDoorStatusControl() throws Exception {
+        PmsManagerDoorSurveilance sur = new PmsManagerDoorSurveilance(this);
+        sur.checkStatus();
     }
 
 }

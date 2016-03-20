@@ -98,7 +98,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     public List<String> createCombinedOrderFile(boolean newUsersOnly) throws Exception {
         getInterfaceForStore();
         List<String> users = createUserFile(newUsersOnly);
-        List<String> orders = createOrderFile();
+        List<String> orders = createOrderFile(false);
         users.addAll(orders);
         saveFile(users);
         return users;
@@ -106,29 +106,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     
     @Override
     public List<String> createOrderFile() throws Exception {
-        getInterfaceForStore();
-
-        for(AccountingInterface iface : interfaces) {
-            List<Order> orders = new ArrayList();
-            for(Order order : orderManager.getOrders(null, null, null)) {
-                if(!config.statesToInclude.contains(order.status)) {
-                    continue;
-                }
-                if(!order.transferredToAccountingSystem) {
-                    orders.add(order);
-                }
-            }
-            if(!orders.isEmpty()) {
-                List<String> result = iface.createOrderFile(orders);
-                saveFile(result);
-                for(Order ord : orders) {
-                    ord.transferredToAccountingSystem = true;
-                    orderManager.saveOrder(ord);
-                }
-                return result;
-            }
-        }
-        return new ArrayList();
+        return createOrderFile(true);
     }
 
     private void saveFile(List<String> result) {
@@ -260,6 +238,34 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
         }
         return false;
+    }
+
+    private List<String> createOrderFile(boolean save) throws Exception {
+        getInterfaceForStore();
+
+        for(AccountingInterface iface : interfaces) {
+            List<Order> orders = new ArrayList();
+            for(Order order : orderManager.getOrders(null, null, null)) {
+                if(!config.statesToInclude.contains(order.status)) {
+                    continue;
+                }
+                if(!order.transferredToAccountingSystem) {
+                    orders.add(order);
+                }
+            }
+            if(!orders.isEmpty()) {
+                List<String> result = iface.createOrderFile(orders);
+                if(save) {
+                    saveFile(result);
+                }
+                for(Order ord : orders) {
+                    ord.transferredToAccountingSystem = true;
+                    orderManager.saveOrder(ord);
+                }
+                return result;
+            }
+        }
+        return new ArrayList();    
     }
 
 }

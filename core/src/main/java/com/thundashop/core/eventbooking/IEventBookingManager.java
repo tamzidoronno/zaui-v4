@@ -47,6 +47,8 @@ public interface IEventBookingManager {
     
     public List<Event> getEvents();
     
+    public List<Event> getAllEvents();
+    
     public Location getLocation(String locationId);
     
     public List<Event> getBookingsByPageId(String pageId, boolean showOnlyNew);
@@ -57,7 +59,7 @@ public interface IEventBookingManager {
     public void saveEvent(Event event);
     
     @Customer
-    public void bookCurrentUserToEvent(String eventId);
+    public void bookCurrentUserToEvent(String eventId, String source);
     
     @Editor
     public List<User> getUsersForEvent(String eventId);
@@ -66,7 +68,7 @@ public interface IEventBookingManager {
     public List<User> getUsersForEventWaitinglist(String eventId);
     
     @Editor
-    public void removeUserFromEvent(String eventId, String userId);
+    public void removeUserFromEvent(String eventId, String userId, boolean silent);
     
     @Editor
     public void addUserComment(String userId, String eventId, String comment);
@@ -82,7 +84,7 @@ public interface IEventBookingManager {
     @Administrator
     public void markAsReady(String eventId);
     
-    public void addUserToEvent(String eventId, String userId);
+    public void addUserToEvent(String eventId, String userId, boolean silent, String source);
     
     @Editor
     public List<ReminderTemplate> getReminderTemplates(); 
@@ -163,4 +165,7 @@ public interface IEventBookingManager {
     
     @Editor
     public void transferUserFromWaitingToEvent(String userId, String eventId);
+    
+    @Editor
+    public String getSource(String eventId, String userId);
 }

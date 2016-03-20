@@ -383,17 +383,17 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     @Override
-    public void bookCurrentUserToEvent(String eventId) {
+    public void bookCurrentUserToEvent(String eventId, String source) {
         Event event = getEvent(eventId);
         
         if (event == null) {
             throw new ErrorException(1035);
         }
         
-        AddUserToEvent(event, getSession().currentUser);
+        AddUserToEvent(event, getSession().currentUser, false, source);
     }   
 
-    private void AddUserToEvent(Event event, User user) {
+    private void AddUserToEvent(Event event, User user, boolean silent, String source) {
         List<Booking> alreadyBooked = bookingEngine.getAllBookingsByBookingItem(event.bookingItem.id);
         boolean userdBooked = alreadyBooked.stream()
                 .filter( o -> o.userId != null && o.userId.equals(user.id))
@@ -405,18 +405,21 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         BookingItem item = bookingEngine.getBookingItem(event.bookingItemId);
         if (item.isFull) {
-            addToWaitingList(user, event);
+            addToWaitingList(user, event, silent, source);
         } else {
-            signupUserToEvent(event, user);
+            signupUserToEvent(event, user, silent, source);
         }
     }   
 
-    private void signupUserToEvent(Event event, User user) {
+    private void signupUserToEvent(Event event, User user, boolean silent, String source) {
         Booking booking = createBooking(event, user);
+        booking.source = source;
         List<Booking> bookings = new ArrayList();
         bookings.add(booking);
         bookingEngine.addBookings(bookings);
-        sendUserAddedToEventNotifications(user, event);
+        if (!silent) {
+            sendUserAddedToEventNotifications(user, event);
+        }
         log("USER_ADDED", event, user);
     }   
 
@@ -450,7 +453,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     @Override
-    public void removeUserFromEvent(String eventId, String userId) {
+    public void removeUserFromEvent(String eventId, String userId, boolean silent) {
         Event event = getEvent(eventId);
         if (event == null) {
             throw new ErrorException(1035);
@@ -466,7 +469,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             boolean removed = bookingEngine.deleteBooking(booking.id);
             if (removed) {
                 log("USER_REMOVED", event, user);
-                sendRemovedUserFromEventNotification(user, event);
+                if (!silent) {
+                    sendRemovedUserFromEventNotification(user, event);
+                }
             }
         }
         
@@ -475,7 +480,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             waitingListBookings.remove(waitingListBooking.id);
             deleteObject(waitingListBooking);
             log("USER_REMOVED_WAITING", event, user);
-            sendRemovedUserFromWaitinglistEventNotification(user, event);
+            if (!silent) {
+                sendRemovedUserFromWaitinglistEventNotification(user, event);
+            }
         }
     }
     
@@ -535,7 +542,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         for (Event event : events) {
             finalize(event);
-            if (locationFilters.contains(event.location.id)) {
+            if (event.location != null && locationFilters.contains(event.location.id)) {
                 retEvents.add(event);
             }
         }
@@ -544,7 +551,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     private void finalize(Location loc) {
-        loc.isFiltered = getLocationFilters().contains(loc.id);
+        if (loc != null) {
+            loc.isFiltered = getLocationFilters().contains(loc.id);
+        }
     }
 
     @Override
@@ -586,7 +595,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     @Override
-    public void addUserToEvent(String eventId, String userId) {
+    public void addUserToEvent(String eventId, String userId, boolean silent, String source) {
         Event event = getEvent(eventId);
         if (event == null) {
             throw new ErrorException(1035);
@@ -596,7 +605,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         userManager.checkUserAccess(user);
         
         if (user != null) {
-            AddUserToEvent(event, user);
+            AddUserToEvent(event, user, silent, source);
         }
     }
 
@@ -923,7 +932,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         Booking res = bookingEngine.getAllBookingsByBookingItem(event.bookingItemId)
                 .stream()
-                .filter(o -> o.userId.equals(userId))
+                .filter(o -> o.userId != null && o.userId.equals(userId))
                 .findAny()
                 .orElse(null);
         
@@ -1323,7 +1332,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
     }
 
-    private void addToWaitingList(User user, Event event) {
+    private void addToWaitingList(User user, Event event, boolean silent, String source) {
         if (getWaitingListBooking(event.id, user.id) != null) {
             return;
         }
@@ -1331,12 +1340,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         WaitingListBooking booking = new WaitingListBooking();
         booking.eventId = event.id;
         booking.userId = user.id;
+        booking.source = source;
         
         saveObject(booking);
         waitingListBookings.put(booking.id, booking);
         log("USER_ADDED_WAITING", event, user);
-        
-        sendUserAddedToEventNotificationsWaitinglist(user, event);
+        if (!silent) {
+            sendUserAddedToEventNotificationsWaitinglist(user, event);
+        }
     }
 
     @Override
@@ -1355,7 +1366,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         if (booking != null) {
             deleteObject(booking);
             waitingListBookings.remove(booking.id);
-            signupUserToEvent(event, user);
+            signupUserToEvent(event, user, false, booking.source);
         }
     }
 
@@ -1382,6 +1393,32 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             String addr = getStoreDefaultAddress();
 //            return "<img src='http://"+addr+"/displayImage.php?id="+group.id+"'/>";
             return "<img src='http://"+addr+"/displayImage.php?id="+group.imageId+"'/>";
+        }
+        
+        return "";
+    }
+
+    @Override
+    public List<Event> getAllEvents() {
+        events.values().forEach(o -> finalize(o));
+        return new ArrayList(events.values());
+    }
+
+    @Override
+    public String getSource(String eventId, String userId) {
+        Booking booking = bookingEngine.getAllBookings()
+                .stream()
+                .filter(o -> 
+                        o.userId != null && 
+                        o.userId.equals(userId) && 
+                        o.bookingItemId != null && 
+                        o.bookingItemId.equals(eventId)
+                )
+                .findFirst()
+                .orElse(null);
+        
+        if (booking != null) {
+            return booking.source;
         }
         
         return "";

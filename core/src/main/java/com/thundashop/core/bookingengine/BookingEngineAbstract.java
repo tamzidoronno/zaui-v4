@@ -64,6 +64,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             }
         };
         Collections.sort(result, comparator);
+        result.stream().forEach(o -> finalize(o));
         return result;
     }
     
@@ -345,14 +346,22 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
 
     public BookingItemType updateBookingItemType(BookingItemType type) {
         BookingItemType savedItem = getBookingItemType(type.id);
+        
         if (savedItem == null) {
-            throw new BookingEngineException("Could not update itemType, it does not exists. Use createBookingItemType to make a new one");
+            if (type != null && type.id != null && !type.id.isEmpty()) {
+                types.put(type.id, type);
+                saveObject(type);
+                savedItem = type;
+            } else {
+                throw new BookingEngineException("Could not update itemType, it does not exists. Use createBookingItemType to make a new one");
+            }
         }
         
+        System.out.println(savedItem.pageId);
         savedItem.size = type.size;
         savedItem.name = type.name;
-        savedItem.productId = type.productId;
         savedItem.pageId = type.pageId;
+        savedItem.productId = type.productId;
         savedItem.visibleForBooking = type.visibleForBooking;
         savedItem.addon = type.addon;
         savedItem.rules = type.rules;
@@ -709,6 +718,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
 
     private void ensureNotOverwritingParameters(BookingItem item) {
+        
+        if (item == null) {
+            System.out.println("What?");
+        }
         BookingItem inMemory = items.get(item.id);
         if (inMemory != null) {
             item.bookingIds = inMemory.bookingIds;
@@ -800,5 +813,13 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         return bookingGroup;
+    }
+
+    private void finalize(BookingItemType o) {
+        if (o.pageId == null || o.pageId.isEmpty()) {
+            Page page = pageManager.createPageFromTemplatePage(getName()+"_bookingegine_type_template");
+            o.pageId = page.id;
+            saveObject(o);
+        }
     }
 }

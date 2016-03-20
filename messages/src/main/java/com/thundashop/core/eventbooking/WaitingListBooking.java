@@ -14,4 +14,5 @@ import com.thundashop.core.common.DataCommon;
 public class WaitingListBooking extends DataCommon {
     public String userId;
     public String eventId;
+    public String source;
 }

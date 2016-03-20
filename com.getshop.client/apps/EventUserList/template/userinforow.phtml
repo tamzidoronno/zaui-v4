@@ -1,18 +1,31 @@
+<div class="fa "></div>
 <?
 /* @var $this ns_bd751f7e_5062_4d0d_a212_b1fc6ead654f\EventUserList */
 $user = $this->getCurrentUser();
 
+if (!$user) {
+    return;
+}
+
 $event = $this->getEvent();
+
+$source = $this->getApi()->getEventBookingManager()->getSource($this->getBookingEngineName(), $event->id, $user->id);
+
+$sourceIcon = "<i class='fa fa-question' style='width: 20px; text-align: center;'></i>";
+$sourceIcon = $source == "mobile" ? "<i style='width: 20px; text-align: center;' class='fa fa-mobile'></i>" : $sourceIcon;
+$sourceIcon = $source == "webpage" ? "<i style='width: 20px; text-align: center;' class='fa fa-globe'></i>" : $sourceIcon;
 
 $isAdministrator = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
 $waitinglistView = $this->isInWaitinglist();
+
+
 
 $gradCapColor = "#006e63";
 $participatedStatus = @$event->participationStatus->{$user->id};
 $gradCapColor = $participatedStatus == "participated" ? "#006e63" : $gradCapColor;
 $gradCapColor = $participatedStatus == "participated_free" ? "#006e63" : $gradCapColor;
 $gradCapColor = $participatedStatus == "participated_50" ? "#d71e27" : $gradCapColor;
-$gradCapColor = $participatedStatus == "not_participated" ? "#d71e27" : $gradCapColor;
+$gradCapColor = $participatedStatus == "not_participated" ? "#dbde00" : $gradCapColor;
 
 $specialInfo = $this->getUserAdditionalInformation($user);
 ?>
@@ -66,6 +79,9 @@ $specialInfo = $this->getUserAdditionalInformation($user);
             ?>
                 <div class="gs_shop_small_icon showsettings" userId="<? echo $user->id; ?>" eventId="<? echo $event->id; ?>"><i class="fa fa-gears"></i></div>
                 <i class='fa fa-graduation-cap' style='color: <? echo $gradCapColor; ?>'></i>
+                <? 
+                echo $sourceIcon;
+                ?>
             <? } else { ?>
                 <div class="gs_shop_small_icon" gsclick="moveUserFromWaitinglist" userid="<? echo $user->id; ?>" eventid="<? echo $event->id; ?>" title="Transfer user to event"><i class="fa fa-bullseye"></i></div>
             <? } ?>

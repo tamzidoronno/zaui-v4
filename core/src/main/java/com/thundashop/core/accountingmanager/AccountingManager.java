@@ -80,6 +80,16 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     }
     
     @Override
+    public List<String> createCombinedOrderFile(boolean newUsersOnly) throws Exception {
+        getInterfaceForStore();
+        List<String> users = createUserFile(newUsersOnly);
+        List<String> orders = createOrderFile();
+        users.addAll(orders);
+        saveFile(users);
+        return users;
+    }
+    
+    @Override
     public List<String> createOrderFile() throws Exception {
         getInterfaceForStore();
 

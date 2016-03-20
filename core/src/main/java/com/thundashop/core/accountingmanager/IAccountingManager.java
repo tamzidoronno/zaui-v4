@@ -22,6 +22,8 @@ public interface IAccountingManager {
     public void markAsTransferredToAccounting(String id);
     @Administrator
     public List<String> getFile(String id);
+    @Administrator
+    public List<String> createCombinedOrderFile(boolean newUsersOnly) throws Exception;
     
     @Administrator
     public void setAccountingManagerConfig(AccountingManagerConfig config);

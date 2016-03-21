@@ -24,7 +24,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public List<String> imagesAdded = new LinkedList();
     public List<ProductVariation> variations = new ArrayList();
     public List<String> descriptions = new ArrayList();
-    
+
+    public String selectedProductTemplate = "ecommerce_product_template_1";
     @Translation
     public String description;
     @Translation

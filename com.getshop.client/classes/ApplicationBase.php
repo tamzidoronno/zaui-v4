@@ -613,5 +613,9 @@ class ApplicationBase extends FactoryBase {
         
         $this->wrapApp("320ada5b-a53a-46d2-99b2-9b0b26a7105a", $referenceName);
     }
+    
+    public function getAvailableProductTemplates() {
+        return ["ecommerce_product_template_1"];
+    }
 }
 ?>

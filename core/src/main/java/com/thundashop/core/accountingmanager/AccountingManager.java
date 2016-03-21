@@ -76,6 +76,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                     if(user.isTransferredToAccountSystem) {
                         continue;
                     }
+                    if(user.isAdministrator() || user.isEditor()) {
+                        continue;
+                    }
                     toFetch.add(user);
                 }
             } else {

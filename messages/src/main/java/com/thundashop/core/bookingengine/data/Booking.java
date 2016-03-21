@@ -23,6 +23,11 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     public String externalReference;
     public String userId;
     
+    /**
+     * Where did this booking come from ?
+     */
+    public String source = "";
+    
     public String getInformation() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");
         return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",startDate="+dateFormat.format(startDate)+",endDate="+dateFormat.format(endDate)+"]";

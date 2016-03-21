@@ -69,13 +69,6 @@ public class BookingEngineTest extends TestCommon {
         Assert.assertEquals(type2.pageId, "new_page_id");
     }
     
-    @Test(expected = BookingEngineException.class)
-    public void throwExecptionIfUpdatingANoneExsistingType() {
-        BookingItemType type = new BookingItemType();
-        type.id = UUID.randomUUID().toString();
-        bookingEngine.updateBookingItemType(type);
-    }
-    
     @Test
     public void canUpdateBookingItemType() {
         BookingItemType type = bookingEngine.createABookingItemType("Booking Item Test");

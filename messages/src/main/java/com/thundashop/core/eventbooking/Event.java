@@ -7,6 +7,7 @@ package com.thundashop.core.eventbooking;
 
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.calendarmanager.data.EntryComment;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class Event extends DataCommon {
     public boolean mailReminderSent;
     
     public boolean questBackSent = false;
+    
+    public List<EntryComment> eventComments = new ArrayList();
     
     @Editor
     public HashMap<String, List<UserComment>> comments = new HashMap();

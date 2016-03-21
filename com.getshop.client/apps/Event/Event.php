@@ -20,7 +20,7 @@ class Event extends EventCommon implements \Application {
     }
     
     public function bookNow() {
-        $this->getApi()->getEventBookingManager()->bookCurrentUserToEvent($this->getBookingEngineName(), $_POST['data']['eventid']);
+        $this->getApi()->getEventBookingManager()->bookCurrentUserToEvent($this->getBookingEngineName(), $_POST['data']['eventid'], "web");
     }
 }
 ?>

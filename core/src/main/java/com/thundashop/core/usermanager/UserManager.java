@@ -337,6 +337,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
      * @param user 
      */
     public void checkUserAccess(User user) {
+        if (user == null) {
+            return;
+        }
+        
         // Avoid degradation of the same user.
         if (getSession().currentUser != null && getSession().currentUser.id.equals(user.id)) {
             if ((user.type < getSession().currentUser.type) && getSession().currentUser.type < User.Type.GETSHOPADMINISTRATOR) {
@@ -370,7 +374,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
     }
     
-    private void preventOverwriteOfData(User user, User savedUser) {
+     private void preventOverwriteOfData(User user, User savedUser) {
          if(savedUser != null) {
             //Reset the password.
             user.password = savedUser.password;

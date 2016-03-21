@@ -19,7 +19,7 @@ class EventEditorBooking extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventC
     }
         
     public function addUserToEvent() {
-        $this->getApi()->getEventBookingManager()->addUserToEvent($this->getBookingEngineName(), $_POST['data']['eventid'], $_POST['data']['userid']);
+        $this->getApi()->getEventBookingManager()->addUserToEvent($this->getBookingEngineName(), $_POST['data']['eventid'], $_POST['data']['userid'], false, "web");
     }
 
     /**

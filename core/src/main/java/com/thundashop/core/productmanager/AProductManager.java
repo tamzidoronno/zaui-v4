@@ -3,12 +3,9 @@ package com.thundashop.core.productmanager;
 import com.getshop.scope.GetShopDataMapRepository;
 import com.thundashop.app.content.ContentManager;
 import com.thundashop.core.common.*;
-import com.thundashop.core.common.ExchangeConvert;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
-import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.Product;
@@ -29,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -99,6 +95,14 @@ public abstract class AProductManager extends ManagerBase {
         product.uniqueName = product.name;
         
         ensureUniqueNameWhenDuplicate(product);
+    
+        if (product.pageId != null && !product.pageId.isEmpty()) {
+            Page page = pageManager.getPage(product.pageId);
+            if (page.isASlavePage() && !page.masterPageId.equals(product.selectedProductTemplate)) {
+                pageManager.changeTemplateForPage(product.pageId, product.selectedProductTemplate);
+                System.out.println("Updated");
+            }
+        }
         
 //        updateTranslation(product);
         return product;

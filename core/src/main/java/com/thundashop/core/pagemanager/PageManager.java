@@ -833,4 +833,19 @@ public class PageManager extends ManagerBase implements IPageManager {
     public String getMobileLink() {
         return commonPageData.mobileLink;
     }
+
+    public void changeTemplateForPage(String pageId, String selectedProductTemplate) {
+        Page page = getPage(selectedProductTemplate);
+        
+        if (page == null) {
+            page = createPage(pageId);
+        }
+        
+        if (page != null) {
+            Page newPage = page.jsonClone();
+            newPage.masterPageId = page.id;
+            newPage.id = pageId;
+            savePage(newPage);
+        }
+    }
 }

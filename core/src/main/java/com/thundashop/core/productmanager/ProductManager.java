@@ -332,5 +332,5 @@ public class ProductManager extends AProductManager implements IProductManager {
         return result;
     }
 
-
+    
 }

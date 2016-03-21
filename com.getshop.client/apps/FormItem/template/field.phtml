@@ -9,6 +9,7 @@ if(!$type) {
     $required = $this->getField("required");
     $requiredField = "needed='false'";
     $placeholder = $this->getField("placeholder");
+    $additional = $this->getField("additionalMessage");
     if($required == "true") {
         $title = "* ".$title;
         $requiredField = "needed='true'";
@@ -22,19 +23,19 @@ if(!$type) {
     
     switch($type) {
         case "checkbox_textleft":
-            echo "<div class='checkbox_textleft'>$title</div> <input type='checkbox' formtype='$type' class='formiteminput' name='$title'> ";
+            echo "<div class='checkbox_textleft'>$title</div> <input type='checkbox' formtype='$type' class='formiteminput' name='$title' additionalmsg='$additional' $requiredField> ";
             break;
         case "checkbox_textright":
-            echo "<input type='checkbox' formtype='$type' class='formiteminput' name='$title'> <span class='checkbox_textright'>$title</span>";
+            echo "<input type='checkbox' formtype='$type' class='formiteminput' name='$title' additionalmsg='$additional' $requiredField> <span class='checkbox_textright'>$title</span>";
             break;
         case "h1":
-            echo "<h1 formtype='$type' class='formiteminput'>" . $title . "</h3>";
+            echo "<h1 formtype='$type' class='formiteminput' additionalmsg='$additional'>" . $title . "</h3>";
             break;
         case "h2":
-            echo "<h2 formtype='$type' class='formiteminput'>" . $title . "</h3>";
+            echo "<h2 formtype='$type' class='formiteminput' additionalmsg='$additional'>" . $title . "</h3>";
             break;
         case "h3":
-            echo "<h3 formtype='$type' class='formiteminput'>" . $title . "</h3>";
+            echo "<h3 formtype='$type' class='formiteminput' additionalmsg='$additional'>" . $title . "</h3>";
             break;
         case "recaptcha":
             echo '<div id="recaptchafield" data-sitekey="'.$this->getCaptchaKey().'"></div>';
@@ -50,7 +51,7 @@ if(!$type) {
             <?
             break;
         case "infofield":
-            echo "<div formtype='$type' class='formiteminput'>";
+            echo "<div formtype='$type' class='formiteminput' additionalmsg='$additional'>";
             echo nl2br($title);
             echo "</div>";
             break;
@@ -59,7 +60,7 @@ if(!$type) {
             echo "<label>";
             echo "<span class='title'>$title</span>";
             $submitOnEnter = $this->getField("submitonenter");
-            echo "<input submitonenter='$submitOnEnter' type='$type' name='$title' formtype='$type' class='inputfield formiteminput $dinput' placeholder='$placeholder' $requiredField>";
+            echo "<input submitonenter='$submitOnEnter' type='$type' name='$title' formtype='$type' additionalmsg='$additional' class='inputfield formiteminput $dinput' placeholder='$placeholder' $requiredField>";
             echo "</label>";
             break;
         case "radio":
@@ -68,7 +69,7 @@ if(!$type) {
                 $selected = "CHECKED";
             }
             echo "<label>";
-            echo "<input type='$type' name='$name' formtype='$type' class='radioinput formiteminput' $selected value='$title' $requiredField>";
+            echo "<input type='$type' name='$name' formtype='$type' additionalmsg='$additional' class='radioinput formiteminput' $selected value='$title' $requiredField>";
             echo "<span class='radiotitle'>" .$title . "</span>";
             echo "</label>";
             break;
@@ -93,18 +94,18 @@ if(!$type) {
                 $thankYouModal = $this->getField('thankyoumodal');
                 if ($thankYouModal) {
                     echo "<script>thundashop.common.showModal('".$thankYouModal."');</script>";
-                    echo "<input type='$type' name='$name' formtype='$type' class='submitForm' value='$title'>";
+                    echo "<input type='$type' name='$name' formtype='$type' additionalmsg='$additional' class='submitForm' value='$title'>";
                 } else {
                     echo "<b><div style='padding: 10px;'><i class='fa fa-thumbs-o-up'></i> The form has been submitted, you can download it <a href='$data' target='_new'>here</a>, thank you for your interest.</div></b>";
                 }
             } else {
-                echo "<input type='$type' name='$name' formtype='$type' class='submitForm' value='$title'>";
+                echo "<input type='$type' name='$name' formtype='$type' additionalmsg='$additional' class='submitForm' value='$title'>";
             }
             break;
         case "textarea":
             echo "<label>";
             echo "<span class='title'>$title</span>";
-            echo "<textarea type='txt' formtype='$type' name='$title' class='inputfield formiteminput' $requiredField></textarea>";
+            echo "<textarea type='txt' formtype='$type' additionalmsg='$additional' name='$title' class='inputfield formiteminput' $requiredField></textarea>";
             echo "</label>";
             break;
     }

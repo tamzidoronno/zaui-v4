@@ -72,27 +72,29 @@ class FormItem extends \MarketingApplication implements \Application {
                 $name = $res['name'];
             }
             $type = $res['type'];
+            $additional = $res['additionalmsg'];
+            if($additional) { $additional = " (" . $additional . ")"; }
             if($type == "textarea") {
                 $result .= "<tr>";
-                $result .= "<td colspan='2' valign='top'><b>" . $name . "</b><br>" . $res['val'] . "<br><br>";
+                $result .= "<td colspan='2' valign='top'><b>" . $name . "</b><br>" . $res['val'] . $additional . "<br><br>";
                 $result .= "</tr>";
             } elseif($type == "checkbox_textleft" || $type == "checkbox_textright") {
                 $result .= "<tr>";
                 $result .= "<td width='50%' valign='top'><b>" . $name . "</b></td>";
-                $result .= "<td width='50%' valign='top'>" . $res['val'] . "<br><br></td>";
+                $result .= "<td width='50%' valign='top'>" . $res['val'] . $additional . "<br><br></td>";
                 $result .= "</tr>";
             } elseif($type == "infofield") {
                 $result .= "<tr>";
-                $result .= "<td colspan='2' valign='top'><br><br>" . $res['val'] . "<br><br>";
+                $result .= "<td colspan='2' valign='top'><br><br>" . $res['val'] . $additional  . "<br><br>";
                 $result .= "</tr>";
             } elseif($type == "h1" || $type == "h2" || $type == "h3") {
                 $result .= "<tr>";
-                $result .= "<td width='50%' colspan='2' valign='top'><$type>" . $res['val'] . "</$type>";
+                $result .= "<td width='50%' colspan='2' valign='top'><$type>" . $res['val'] . $additional  . "</$type>";
                 $result .= "</tr>";
             } else {
                 $result .= "<tr>";
                 $result .= "<td width='50%' valign='top'><b>" . $name . "</b></td>";
-                $result .= "<td width='50%' valign='top'>" . $res['val'] . "<br><br></td>";
+                $result .= "<td width='50%' valign='top'>" . $res['val'] . $additional . "<br><br></td>";
                 $result .= "</tr>";
             }
         }
@@ -123,6 +125,7 @@ class FormItem extends \MarketingApplication implements \Application {
         $this->setConfigurationSetting("thankyoupage", $_POST['data']['thankyoupage']);
         $this->setConfigurationSetting("thankyoumodal", $_POST['data']['thankyoumodal']);
         $this->setConfigurationSetting("submitonenter", $_POST['data']['submitonenter']);
+        $this->setConfigurationSetting("additionalMessage", $_POST['data']['additionalMessage']);
         
         for($i = 0; $i < 10; $i++) {
             $this->setConfigurationSetting("dropdown_$i", $_POST['data']['dropdown_'.$i]);

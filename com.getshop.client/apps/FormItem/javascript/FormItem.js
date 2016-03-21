@@ -36,6 +36,7 @@ app.FormItem = {
             var value = field.val();
             var required = field.attr("needed");
             var formtype = field.attr("formtype");
+            var additional = field.attr('additionalmsg');
             
             if(!field.is("input") && !field.is('textarea') && !field.is('select')) {
                 value = field.html();
@@ -46,6 +47,9 @@ app.FormItem = {
             }
             
             if(field.is(':checkbox') && !field.is(':checked')) {
+                if(required) {
+                    valid = false;
+                }
                 return;
             } 
             
@@ -61,6 +65,7 @@ app.FormItem = {
                 "name" : $(this).attr("name"),
                 "val" : value,
                 "required" : required,
+                "additionalmsg" : additional,
                 "type" : formtype
             };
             result.push(obj);

@@ -1148,7 +1148,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return o -> o.createdBetween(filterOptions.startDate, filterOptions.endDate);
     }
-
+    
     private Predicate<? super User> filterUsersBySearchWord(FilterOptions filterOptions) {
         return o -> o.matchByString(filterOptions.searchWord);
     }

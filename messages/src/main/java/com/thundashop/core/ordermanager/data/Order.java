@@ -237,6 +237,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         if (cart != null && cart.address != null && cart.address.fullName != null) {
             match = cart.address.fullName.toLowerCase().contains(searchWord.toLowerCase());
         }
+        if(searchWord.equals(incrementOrderId + "")) {
+            return true;
+        }
         
         // Add more search criterias here ? :D
         

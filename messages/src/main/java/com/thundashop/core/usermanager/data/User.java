@@ -196,6 +196,8 @@ public class User extends DataCommon implements Comparable<User> {
        if(cellPhone != null) {
            toCompare += cellPhone;
        }
+       toCompare += " customerId, " + customerId;
+       
        return toCompare;
     }
 
@@ -219,6 +221,7 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean matchByString(String search) {
         if (search == null || search.isEmpty())
             return true;
+        
         
         return toString().toLowerCase().contains(search.toLowerCase());
     }

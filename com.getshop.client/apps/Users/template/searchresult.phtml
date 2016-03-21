@@ -90,6 +90,7 @@ foreach ($users as $user) {
                 }
                 echo "</div>";
             }
+            echo "<br>Userid " . $user->customerId . "<br>";
             if(sizeof($user->company) > 0) {
                 echo "<b>Company: ";
                 $complist = array();

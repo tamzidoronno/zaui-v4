@@ -98,11 +98,6 @@ public class PmsManagerDoorSurveilance {
                 if (book != null) {
                     for (PmsBookingRooms room : book.rooms) {
                         if (room.code.equals(logEntry.card)) {
-                            if(room.forcedOpenDate != null && room.forcedOpenDate.getTime() == logEntry.timestamp) {
-                                continue;
-                            }
-                            room.forcedOpenDate = new Date();
-                            room.forcedOpenDate.setTime(logEntry.timestamp);
                             if(!room.forcedOpen) {
                                 manager.logEntry("Forced open door: " + logEntry.door, book.id, room.bookingItemId);
                                 connection.doorAction(config.arxHostname, config.arxUsername, config.arxPassword, doorId, "forceOpen", true);
@@ -213,13 +208,12 @@ public class PmsManagerDoorSurveilance {
             System.out.println("Could not find item when closing door, id: "  + itemToClose);
             return;
         }
-        manager.arxManager.overrideCredentials(manager.configuration.arxHostname, manager.configuration.arxUsername, manager.configuration.arxPassword);
+        ArxConnection con = new ArxConnection();
         List<Door> doors = manager.arxManager.getAllDoors();
         for (Door door : doors) {
             if (door.name.equals(item.bookingItemName) || door.name.equals(item.bookingItemAlias) || door.name.equals(item.doorId)) {
-                manager.arxManager.doorAction(door.externalId, "forceOpen", false);
+                con.doorAction(manager.configuration.arxHostname, manager.configuration.arxUsername, manager.configuration.arxPassword, door.externalId, "forceOpen", false);
                 manager.logEntry("Ran close on : " + door.externalId, bookingId, itemToClose);
-                manager.arxManager.clearOverRideCredentials();
             }
         }
     }

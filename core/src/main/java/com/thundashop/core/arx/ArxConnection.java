@@ -19,12 +19,13 @@ import org.apache.http.params.HttpParams;
 public class ArxConnection {
     
     public void doorAction(String hostname, String username, String password, String externalId, String state, boolean setOn) throws Exception {
-        String hostName = ":5002/arx/door_actions?externalid="+externalId+"&type="+state;
+        String hostName = "https://" + hostname + ":5002/arx/door_actions?externalid="+externalId+"&type="+state;
         if(setOn) {
             hostName += "&value=on";
         } else {
             hostName += "&value=off";
         }
+        System.out.println(hostName);
         httpLoginRequest(hostName, username, password, "");
     }
     

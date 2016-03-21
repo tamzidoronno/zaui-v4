@@ -10,6 +10,7 @@ class bjaroytheme extends \ThemeApplication implements \Application {
         echo "\n" . "<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans+SC' rel='stylesheet' type='text/css'>";
         echo "\n" . "<link href='https://fonts.googleapis.com/css?family=Quicksand:400,300,100' rel='stylesheet' type='text/css'>";
         echo "\n" . "<link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>";
+        echo "\n" . "<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>";
     }   
     
     public function getName() {
@@ -18,6 +19,10 @@ class bjaroytheme extends \ThemeApplication implements \Application {
 
     public function render() {
         
+    }
+    
+    public function getThemeClasses() {
+        return ["subpages"];
     }
 }
 ?>

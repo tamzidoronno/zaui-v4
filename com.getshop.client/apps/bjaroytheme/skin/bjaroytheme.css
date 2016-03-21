@@ -42,3 +42,4 @@ gsarea[area="body"] { margin-top: 0px; }
 
 .gsucell.subpages h2 { text-transform: uppercase; letter-spacing: 4px; text-align: center; }
 .gsucell.subpages h3 {font-family: 'Montserrat', sans-serif; font-weight: normal; }
+#gsbody .subpages { font-weight: 400 !important; letter-spacing: 1px; }

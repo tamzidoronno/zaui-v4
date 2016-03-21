@@ -40,5 +40,5 @@ gsarea[area="body"] { margin-top: 0px; }
 .News h2 { text-transform: uppercase; margin-top: 10px; margin-bottom: 10px; }
 .News .news_container { letter-spacing: 0px; color:#000 !important; }
 
-.gsucell.subpages h2 { text-transform: uppercase; letter-spacing: 6px; text-align: center; }
+.gsucell.subpages h2 { text-transform: uppercase; letter-spacing: 4px; text-align: center; }
 .gsucell.subpages h3 {font-family: 'Montserrat', sans-serif; font-weight: normal; }

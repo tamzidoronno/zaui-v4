@@ -19,6 +19,11 @@ public class ArxLogFetcher extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
+        
+        if(!getApi().getStoreManager().isProductMode()) {
+            return;
+        }
+        
         PmsConfiguration config = getApi().getPmsManager().getConfiguration(getMultiLevelName());
         if(config.arxHostname == null || config.arxHostname.isEmpty()) {
             return;

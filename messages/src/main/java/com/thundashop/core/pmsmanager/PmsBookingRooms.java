@@ -164,7 +164,6 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean needInvoicing(NewOrderFilter filter) {
-       
         if(filter.forceInvoicing) {
             return true;
         }
@@ -177,9 +176,9 @@ public class PmsBookingRooms implements Serializable {
             return false;
         }
         
+        Date toInvoiceFrom = invoicedTo;
         if(filter.prepayment && invoicedTo != null) {
             //If invoiced into the future. 
-            Date toInvoiceFrom = invoicedTo;
             if(filter.prepaymentDaysAhead >= 0) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(invoicedTo);
@@ -199,7 +198,7 @@ public class PmsBookingRooms implements Serializable {
             return false;
         }
         
-        if(invoicedTo.before(filter.endInvoiceAt) && !sameDay(invoicedTo, filter.endInvoiceAt)) {
+        if(toInvoiceFrom.before(filter.endInvoiceAt) && !sameDay(toInvoiceFrom, filter.endInvoiceAt)) {
             return true;
         }
         

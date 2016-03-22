@@ -28,9 +28,6 @@ public interface IPmsManager {
     public void logEntry(String logText, String bookingId, String itemId);
     
     @Administrator
-    public PmsBooking getBooking(String bookingId);
-    
-    @Administrator
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId);
     
     @Administrator
@@ -121,6 +118,7 @@ public interface IPmsManager {
     @Administrator
     public void undeleteBooking(String bookingId);
     
+    public PmsBooking getBooking(String bookingId);
     public PmsConfiguration getConfiguration();
     public void processor();
     public String getCurrenctContract() throws Exception;
@@ -142,4 +140,6 @@ public interface IPmsManager {
     public Integer getNumberOfAvailable(String itemType, Date start, Date end);
     public void handleDoorControl(String doorId, List<AccessLog> accessLogs) throws Exception;
     public void checkDoorStatusControl() throws Exception;
+    public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
+    
 }

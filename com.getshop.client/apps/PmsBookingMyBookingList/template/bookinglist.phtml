@@ -34,11 +34,11 @@ echo "</tr>";
 
 foreach($bookings as $booking) {
     foreach($booking->rooms as $room) {
-        echo "<tr bookingid='".$booking->id."' roomid='".$room->pmsBookingRoomId."'>";
+        echo "<tr bookingid='".$booking->id."' roomid='".$room->pmsBookingRoomId ."'>";
         echo "<td width='30'>";
         if(strtotime($room->date->start) > time()) {
             echo "<i class='fa fa-trash-o deleteroom'></i> ";
-            echo "<i class='fa fa-edit'></i>";
+            echo "<i class='fa fa-edit editroom'></i>";
         }
         echo "</td>";
         echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td>";
@@ -86,7 +86,7 @@ if($config->requirePayments) {
     foreach($orders as $order) {
         echo "<tr>";
         echo "<td valign='top'>" . $order->incrementOrderId . "</td>";
-        echo "<td valign='top'>" . date("d.m.Y", strtotime($order->incrementOrderId)) . "</td>";
+        echo "<td valign='top'>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
         echo "<td>";
         $items = $order->cart->items;
         foreach($items as $cartItem) {

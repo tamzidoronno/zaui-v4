@@ -544,6 +544,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking getBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
+        checkSecurity(booking);
         if (booking == null) {
             return null;
         }
@@ -2671,6 +2672,39 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         throw new ErrorException(26);
+    }
+
+    @Override
+    public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception {
+        PmsBooking booking = getBooking(bookingId);
+        PmsBookingRooms oldRoom = booking.getRoom(room.pmsBookingRoomId);
+        
+        List<Integer> errors = new ArrayList();
+        if(!oldRoom.date.start.equals(room.date.start)) {
+            System.out.println("Need to set a new start date");
+            if(room.isStarted()) {
+                errors.add(1);
+                room.date.start = oldRoom.date.start;
+            }
+        }
+        if(!room.date.end.equals(room.date.end)) {
+            if(room.isEnded()) {
+                errors.add(2);
+                room.date.end = oldRoom.date.end;
+            }
+        }
+        
+        if(!oldRoom.date.start.equals(room.date.start) || !oldRoom.date.end.equals(room.date.end)) {
+            PmsBookingRooms res = changeDates(room.pmsBookingRoomId, bookingId, room.date.start, room.date.end);
+            if(res == null) {
+                errors.add(3);
+            }
+        }
+        
+        oldRoom.numberOfGuests = room.numberOfGuests;
+        oldRoom.guests = room.guests;
+        
+        return errors;
     }
 
 }

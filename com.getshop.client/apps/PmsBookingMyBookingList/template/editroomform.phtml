@@ -1,0 +1,61 @@
+<?php
+/* @var $this \ns_b675ce83_d771_4332_ba09_a54ed8537282\PmsBookingMyBookingList */
+$booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
+$room = null;
+foreach($booking->rooms as $room) {
+    if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+        $room = $room;
+        break;
+    }
+}
+?>
+<span gstype="form" method="updateBooking">
+    <input type='hidden' gsname='bookingid' value='<?php echo $_POST['data']['bookingid']; ?>'>
+    <input type='hidden' gsname='roomid' value='<?php echo $_POST['data']['roomid']; ?>'>
+    <table cellspacing='0' cellpadding='0'>
+        <tr><th></th><th></th></tr>
+        <tr><td>Start date</td><td><input type="txt" value='<?php echo date("d.m.Y H:i", strtotime($room->date->start)); ?>' gsname='startdate'></td></tr>
+        <tr><td>end date</td><td><input type="txt" value='<?php echo date("d.m.Y H:i", strtotime($room->date->end)); ?>' gsname='enddate'></td></tr>
+        <tr><td>Number of guests</td><td>
+            <select class='changeGuestCount' gsname='guestcount'>
+                <?php for($i = 1; $i <= 10; $i++) {
+                    $selected = "";
+                    if($i == $room->numberOfGuests) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='$i' $selected>$i</option>";
+                }
+                ?>
+            </select>
+        </td>
+        </tr>
+    </table>
+    <br><b>Guest information</b>
+    <?php
+    echo "<table>";
+    echo "<tr>";
+    echo "<th>Name</th>";
+    echo "<th>Phone</th>";
+    echo "<th>Email</th>";
+    echo "</tr>";
+    for($i = 0; $i < 10; $i++) {
+        $guest = new core_pmsmanager_PmsGuests();
+        if(isset($room->guests[$i])) {
+            $guest = $room->guests[$i];
+        }
+        echo "<tr countnumber='$i'>";
+        echo "<td><input type='txt' value='".$guest->name."' gsname='name_$i'></td>";
+        echo "<td><input type='txt' value='".$guest->phone."' gsname='phone_$i'></td>";
+        echo "<td><input type='txt' value='".$guest->email."' gsname='email_$i'></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    ?>
+    <div style='text-align: right'>
+        <span class='shop_button' gstype='submit'>Save</span>
+    </div>
+</span>
+
+<script>
+    app.PmsBookingMyBookingList.setGuestCountTable(<?php echo $room->numberOfGuests; ?>);
+</script>

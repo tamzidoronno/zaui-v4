@@ -1,7 +1,38 @@
 app.PmsBookingMyBookingList = {
     init : function() {
         $(document).on('click', '.PmsBookingMyBookingList .deleteroom', app.PmsBookingMyBookingList.deleteRoom);
+        $(document).on('click', '.PmsBookingMyBookingList .editroom', app.PmsBookingMyBookingList.editRoom);
+        $(document).on('change', '.PmsBookingMyBookingList .changeGuestCount', app.PmsBookingMyBookingList.changeGuestCount);
     },
+    changeGuestCount : function() {
+        app.PmsBookingMyBookingList.setGuestCountTable($(this).val());
+    },
+    setGuestCountTable : function(count) {
+        for(var i = 0; i < 10; i++) {
+            if(count > i) {
+                $('tr[countnumber="'+i+'"]').show();
+            } else {
+                $('tr[countnumber="'+i+'"]').hide();
+            }
+        }
+    },
+    editRoom : function() {
+        var data = {
+            "roomid" : $(this).closest('tr').attr('roomid'),
+            "bookingid" : $(this).closest('tr').attr('bookingid')
+        }
+        var event = thundashop.Ajax.createEvent('','loadEditRoom', $(this), data);
+        var room = $('.PmsBookingMyBookingList .editroomform');
+        room.css('left', $(this).position().left + 20);
+        room.css('top', $(this).position().top);
+        thundashop.Ajax.postWithCallBack(event, function(data) {
+            $('.editroomform').html(data);
+            room.slideDown();
+        });
+        
+        
+    },
+    
     deleteRoom : function() {
         var confirmed = confirm("Are you sure you want to delete this room?");
         if(!confirmed) {

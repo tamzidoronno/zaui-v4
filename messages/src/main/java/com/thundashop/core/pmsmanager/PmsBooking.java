@@ -143,6 +143,15 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
+    PmsBookingRooms getRoom(String pmsBookingRoomId) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                return room;
+            }
+        }
+        
+        return null;
+    }
 
     public static class PriceType {
         public static Integer daily = 1;

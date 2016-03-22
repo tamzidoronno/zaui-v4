@@ -10,6 +10,10 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
         return "PmsBookingMyBookingList";
     }
 
+    public function loadEditRoom() {
+        $this->includefile("editroomform");
+    }
+    
     public function render() {
         if(!$this->getSelectedName()) {
             echo "Please specify a booking engine first. <br>";
@@ -19,7 +23,30 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
                 echo '<div gstype="clicksubmit" style="font-size: 16px; cursor:pointer; margin-top: 10px;" method="selectEngine" gsname="name" gsvalue="'.$engine.'">' . $engine . "</div>";
             }
         }
+        echo "<span class='editroomform'></span>";
         $this->includefile("bookinglist");
+    }
+    
+    public function updateBooking() {
+        $bookingid = $_POST['data']['bookingid'];
+        $roomid = $_POST['data']['roomid'];
+        
+        $room = new \core_pmsmanager_PmsBookingRooms();
+        $room->date = new \core_pmsmanager_PmsBookingDateRange();
+        $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['startdate']));
+        $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['enddate']));
+        $room->numberOfGuests = $_POST['data']['guestcount'];
+        $room->guests = array();
+        $room->pmsBookingRoomId = $_POST['data']['roomid'];
+        for($i = 0; $i < $room->numberOfGuests; $i++) {
+            $guest = new \core_pmsmanager_PmsGuests();
+            $guest->name = $_POST['data']['name_'.$i];
+            $guest->phone = $_POST['data']['phone_'.$i];
+            $guest->email = $_POST['data']['email_'.$i];
+            $room->guests[] = $guest;
+        }
+        
+        $this->getApi()->getPmsManager()->updateRoomByUser($this->getSelectedName(), $bookingid, $room);
     }
     
     public function deleteRoom() {

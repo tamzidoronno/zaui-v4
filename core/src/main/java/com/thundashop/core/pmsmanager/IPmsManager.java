@@ -4,6 +4,7 @@ import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.util.Date;
@@ -21,13 +22,13 @@ public interface IPmsManager {
     @Administrator
     public void markRoomAsCleaned(String itemId);
     
-    @Administrator
+    @Editor
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
-    @Administrator
+    @Editor
     public void logEntry(String logText, String bookingId, String itemId);
     
-    @Administrator
+    @Editor
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId);
     
     @Administrator
@@ -44,8 +45,6 @@ public interface IPmsManager {
     
     @Administrator
     public void saveBooking(PmsBooking booking);
-    
-    public PmsPricing getPrices(Date start, Date end); 
     
     @Administrator
     public PmsPricing setPrices(PmsPricing prices); 
@@ -68,22 +67,22 @@ public interface IPmsManager {
     @Customer
     public void removeFromBooking(String bookingId, String roomId) throws Exception;
     
-    @Administrator
+    @Editor
     public String getContract(String bookingId) throws Exception;
     
-    @Administrator
+    @Editor
     public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter);
     
-    @Administrator
+    @Editor
     public Boolean isClean(String itemId);
     
-    @Administrator
+    @Editor
     public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms();
     
-    @Administrator
+    @Editor
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
     
-    @Administrator
+    @Editor
     public List<PmsBookingRooms> getRoomsNeedingCheckoutCleaning(Date day);
     
     @Administrator
@@ -95,16 +94,16 @@ public interface IPmsManager {
     @Administrator
     public String getDefaultMessage(String bookingId);
     
-    @Administrator
+    @Editor
     public void doNotification(String key, String bookingId);
     
-    @Administrator
+    @Editor
     public void addComment(String bookingId, String comment);
     
     @Administrator
     public String createPrepaymentOrder(String bookingId);
     
-    @Administrator
+    @Editor
     public List<PmsLog> getLogEntries(PmsLog filter);
     
     @Administrator
@@ -118,6 +117,7 @@ public interface IPmsManager {
     @Administrator
     public void undeleteBooking(String bookingId);
     
+    public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);
     public PmsConfiguration getConfiguration();
     public void processor();

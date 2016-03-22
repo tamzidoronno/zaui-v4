@@ -138,6 +138,11 @@ class Login extends \SystemApplication implements \Application {
         return unserialize($_SESSION['loggedin']);
     }
     
+    public static function isCustomer() {
+        $user = Login::getUserObject();
+        return ($user && (int)$user->type == 10);
+    }
+
     public static function isEditor() {
         $user = Login::getUserObject();
         return ($user && (int)$user->type > 10);
@@ -164,6 +169,8 @@ class Login extends \SystemApplication implements \Application {
 
     public function setUp() {
     }
+
+
 }
 
 ?>

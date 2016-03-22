@@ -24,99 +24,106 @@ foreach($config->data as $key => $value) {
     }
 }
 
+
 $completeText = $this->getConfigurationSetting("complete_order_button");
+
 if(!$completeText) {
     $completeText = "Complete";
 }
-echo "<div class='chooseregform'>";
-echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_private'> ". $this->__w("Private person");
-echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_company'> ". $this->__w("Organisation");
-if($this->isEditorMode()) {
-    echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registered_user'> ". $this->__w("Registered customer");
-}
-echo "</div>";
 
-if($this->isEditorMode()) {
-    echo "<div class='registered_user regforminput'>";
-    echo "<br>";
-    echo "<select class='selectregisterduser' style='width:100%;'>";
-    $users = $this->getApi()->getUserManager()->getAllUsers();
-    foreach($users as $user) {
-        $SELECTED = "";
-        if($booking->userId == $user->id) {
-            $SELECTED = "SELECTED";
-        }
-        echo "<option value='".$user->id."' $SELECTED>" . $user->fullName . "</option>";
-    }
-    echo "</select>";
-    echo "<br><br>";
-    echo "</div>";
-}
-
-echo "<div class='registration_private regforminput'>";
-$this->counter = 0;
-foreach($config->data as $key => $value) {
-    /* @var $value core_bookingengine_data_RegistrationRulesField */
-    if(stristr($key, "user_")) {
-        $this->printField($value);
-    }
-}
-echo "</div>";
-
-echo "<div class='registration_company regforminput'>";
-$this->counter = 0;
-foreach($config->data as $key => $value) {
-    /* @var $value core_bookingengine_data_RegistrationRulesField */
-    if(stristr($key, "company_")) {
-        $this->printField($value);
-    }
-}
-echo "</div>";
-
-if($config->displayContactsList) {
-    echo "<div class='pmscontacts'>";
-    $i = 0;
-    foreach($this->getCurrentBooking()->registrationData->contactsList as $contacts) {
-        echo "";
-        echo "<label class='col-25'><i style='float:left;padding-right: 3px; cursor:pointer; ' class='fa fa-trash-o'  gstype='clicksubmit' method='removeIndex' gsname='index' gsvalue='$i'></i> Navn<input type='txt' style='box-sizing:border-box;' gsname='contact_name_$i' value='".@$contacts->name."'></label>";
-        echo "<label class='col-25'>Epost<input type='txt' style='box-sizing:border-box;' gsname='contact_email_$i' value='".@$contacts->email."'></label>";
-        echo "<label class='col-25'>Mobil<input type='txt' style='box-sizing:border-box;' gsname='contact_phone_$i' value='".@$contacts->phone."'></label>";
-        echo "<label class='col-25'>Tittel<input type='txt' style='box-sizing:border-box;' gsname='contact_title_$i' value='".@$contacts->title."'></label>";
-        $i++;
-        echo "<div style='clear:both;'>";
-        echo "</div>";
-        echo "<br>";
-    }
-    echo "<div gstype='clicksubmit' method='addContact' gsname='id' gsvalue='somevalue' style='cursor:pointer;'>".$this->__w("Click here if you need to add more contacts") . "</div>";
-    echo "</div>";
-    echo "<br><br>";
-}
-
-$config2 = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-echo "<div class='whenTypeIsSelected'>";
-if($config2->needToAgreeOnContract) {
-    echo "<div>";
-    echo "<span class='col-50'><div style='padding-bottom: 5px;'><input type='checkbox' gsname='agreetoterms'> ". $this->__w("I agree to the terms and conditions");
-      echo "<span class='errordesc' style='font-size: 20px;'>";
-        if(isset($this->validation['agreetoterms'])) {
-            echo "* " . $this->validation['agreetoterms'];
-        } else {
-            echo "&nbsp;";
-        }
-        echo "</span>";
-
-        echo "</label>";
-    echo "</div>";
-    echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?readable=true&engine=".$this->getSelectedName()."');\" >". $this->__w("Read the terms and conditions")."</a><br>";
-    echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?engine=".$this->getSelectedName()."');\">". $this->__w("Download the terms and conditions")."</a>";
-    echo "</span>";
-    echo "<span class='col-50' style='padding-right:0px;'><span class='complete_button' gstype='submit'>$completeText</span></span>";
-    echo "</div>";
-} else {
+if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
     echo "<span class='complete_button' gstype='submit'>$completeText</span>";
+} else {
+    echo "<div class='chooseregform'>";
+    echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_private'> ". $this->__w("Private person");
+    echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_company'> ". $this->__w("Organisation");
+    if($this->isEditorMode()) {
+        echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registered_user'> ". $this->__w("Registered customer");
+    }
+    echo "</div>";
+
+    if($this->isEditorMode()) {
+        echo "<div class='registered_user regforminput'>";
+        echo "<br>";
+        echo "<select class='selectregisterduser' style='width:100%;'>";
+        $users = $this->getApi()->getUserManager()->getAllUsers();
+        foreach($users as $user) {
+            $SELECTED = "";
+            if($booking->userId == $user->id) {
+                $SELECTED = "SELECTED";
+            }
+            echo "<option value='".$user->id."' $SELECTED>" . $user->fullName . "</option>";
+        }
+        echo "</select>";
+        echo "<br><br>";
+        echo "</div>";
+    }
+
+    echo "<div class='registration_private regforminput'>";
+    $this->counter = 0;
+    foreach($config->data as $key => $value) {
+        /* @var $value core_bookingengine_data_RegistrationRulesField */
+        if(stristr($key, "user_")) {
+            $this->printField($value);
+        }
+    }
+    echo "</div>";
+
+    echo "<div class='registration_company regforminput'>";
+    $this->counter = 0;
+    foreach($config->data as $key => $value) {
+        /* @var $value core_bookingengine_data_RegistrationRulesField */
+        if(stristr($key, "company_")) {
+            $this->printField($value);
+        }
+    }
+    echo "</div>";
+
+    if($config->displayContactsList) {
+        echo "<div class='pmscontacts'>";
+        $i = 0;
+        foreach($this->getCurrentBooking()->registrationData->contactsList as $contacts) {
+            echo "";
+            echo "<label class='col-25'><i style='float:left;padding-right: 3px; cursor:pointer; ' class='fa fa-trash-o'  gstype='clicksubmit' method='removeIndex' gsname='index' gsvalue='$i'></i> Navn<input type='txt' style='box-sizing:border-box;' gsname='contact_name_$i' value='".@$contacts->name."'></label>";
+            echo "<label class='col-25'>Epost<input type='txt' style='box-sizing:border-box;' gsname='contact_email_$i' value='".@$contacts->email."'></label>";
+            echo "<label class='col-25'>Mobil<input type='txt' style='box-sizing:border-box;' gsname='contact_phone_$i' value='".@$contacts->phone."'></label>";
+            echo "<label class='col-25'>Tittel<input type='txt' style='box-sizing:border-box;' gsname='contact_title_$i' value='".@$contacts->title."'></label>";
+            $i++;
+            echo "<div style='clear:both;'>";
+            echo "</div>";
+            echo "<br>";
+        }
+        echo "<div gstype='clicksubmit' method='addContact' gsname='id' gsvalue='somevalue' style='cursor:pointer;'>".$this->__w("Click here if you need to add more contacts") . "</div>";
+        echo "</div>";
+        echo "<br><br>";
+    }
+
+    $config2 = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+    echo "<div class='whenTypeIsSelected'>";
+    if($config2->needToAgreeOnContract) {
+        echo "<div>";
+        echo "<span class='col-50'><div style='padding-bottom: 5px;'><input type='checkbox' gsname='agreetoterms'> ". $this->__w("I agree to the terms and conditions");
+          echo "<span class='errordesc' style='font-size: 20px;'>";
+            if(isset($this->validation['agreetoterms'])) {
+                echo "* " . $this->validation['agreetoterms'];
+            } else {
+                echo "&nbsp;";
+            }
+            echo "</span>";
+
+            echo "</label>";
+        echo "</div>";
+        echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?readable=true&engine=".$this->getSelectedName()."');\" >". $this->__w("Read the terms and conditions")."</a><br>";
+        echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?engine=".$this->getSelectedName()."');\">". $this->__w("Download the terms and conditions")."</a>";
+        echo "</span>";
+        echo "<span class='col-50' style='padding-right:0px;'><span class='complete_button' gstype='submit'>$completeText</span></span>";
+        echo "</div>";
+    } else {
+        echo "<span class='complete_button' gstype='submit'>$completeText</span>";
+    }
+    echo "</div>";
+    echo "<div style='clear:both;'></div>";
 }
-echo "</div>";
-echo "<div style='clear:both;'></div>";
 echo "</div>";
 
 $curAddedFields = $this->getCurrentBooking()->registrationData->resultAdded;

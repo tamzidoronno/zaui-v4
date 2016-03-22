@@ -221,10 +221,10 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         
         
         
-        if($_POST['data']['choosetyperadio'] == "registration_private" && stristr($key, "company_")) {
+        if(isset($_POST['data']['choosetyperadio']) && $_POST['data']['choosetyperadio'] == "registration_private" && stristr($key, "company_")) {
             return;
         }
-        if($_POST['data']['choosetyperadio'] == "registration_company" && stristr($key, "user_")) {
+        if(isset($_POST['data']['choosetyperadio']) && $_POST['data']['choosetyperadio'] == "registration_company" && stristr($key, "user_")) {
             return;
         }
         

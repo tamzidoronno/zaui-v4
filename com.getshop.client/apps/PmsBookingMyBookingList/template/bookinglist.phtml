@@ -4,6 +4,8 @@ $bookings = $this->getApi()->getPmsManager()->getAllBookingsForLoggedOnUser($thi
 $items = $this->getBookingItems();
 $types = $this->getBookingItemTypes();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$rules = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
+
 
 $prices = array();
 $prices[1] = "daily";
@@ -22,9 +24,11 @@ echo "<tr>";
 echo "<th width='10'></th>";
 echo "<th width='10'>Room</th>";
 echo "<th width='200'>Time periode</th>";
-echo "<th>Guest name</th>";
-echo "<th>Guest phone</th>";
-echo "<th>Guest email</th>";
+if($rules->includeGuestData) {
+    echo "<th>Guest name</th>";
+    echo "<th>Guest phone</th>";
+    echo "<th>Guest email</th>";
+}
 echo "<th width='100'>Room type</th>";
 if($config->requirePayments) {
     echo "<th width='100'>Price</th>";
@@ -36,28 +40,32 @@ foreach($bookings as $booking) {
     foreach($booking->rooms as $room) {
         echo "<tr bookingid='".$booking->id."' roomid='".$room->pmsBookingRoomId ."'>";
         echo "<td width='30'>";
-        if(strtotime($room->date->start) > time()) {
-            echo "<i class='fa fa-trash-o deleteroom'></i> ";
-            echo "<i class='fa fa-edit editroom'></i>";
+        echo "<i class='fa fa-trash-o deleteroom'></i> ";
+        echo "<i class='fa fa-edit editroom'></i>";
+        echo "</td>";
+        echo "<td>";
+        if(isset($items[$room->bookingItemId])) {
+            echo $items[$room->bookingItemId]->bookingItemName;
         }
         echo "</td>";
-        echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td>";
         echo "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
-        echo "<td>";
-        foreach($room->guests as $guest) {
-            echo $guest->name . "<bR>";
+        if($rules->includeGuestData) {
+            echo "<td>";
+            foreach($room->guests as $guest) {
+                echo $guest->name . "<bR>";
+            }
+            echo "</td>";
+            echo "<td>";
+            foreach($room->guests as $guest) {
+                echo $guest->phone . "<bR>";
+            }
+            echo "</td>";
+            echo "<td>";
+            foreach($room->guests as $guest) {
+                echo $guest->email . "<bR>";
+            }
+            echo "</td>";
         }
-        echo "</td>";
-        echo "<td>";
-        foreach($room->guests as $guest) {
-            echo $guest->phone . "<bR>";
-        }
-        echo "</td>";
-        echo "<td>";
-        foreach($room->guests as $guest) {
-            echo $guest->email . "<bR>";
-        }
-        echo "</td>";
         echo "<td>" . $types[$room->bookingItemTypeId]->name . "</td>";
         if($config->requirePayments) {
             echo "<td>".$room->price ."</td>";

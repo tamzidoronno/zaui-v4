@@ -201,9 +201,16 @@ getshop.MenuEditor = {
             var id = show.replace("container_","");
             var list = window["tree_"+id];
             
+            var items = list.config.items;
+            for(var key in items) {
+                if(!items[key].link) {
+                    items[key].link = items[key].linke;
+                }
+            }
+            
             data[$(this).attr('appid')] = {
                 "name" : list.config.menuname,
-                "items" : list.config.items,
+                "items" : items,
                 "deleted" : $(this).attr('deleted')
             }    
         });

@@ -1,0 +1,106 @@
+<?php
+/* @var $this \ns_b675ce83_d771_4332_ba09_a54ed8537282\PmsBookingMyBookingList */
+$bookings = $this->getApi()->getPmsManager()->getAllBookingsForLoggedOnUser($this->getSelectedName());
+$items = $this->getBookingItems();
+$types = $this->getBookingItemTypes();
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+
+$prices = array();
+$prices[1] = "daily";
+$prices[2] = "monthly";
+$prices[3] = "weekly";
+$prices[4] = "minutly";
+$prices[5] = "hourly";
+$prices[6] = "secondly";
+$prices[7] = "daily";
+$prices[8] = "daily";
+
+echo "<b>Rooms booked</b>";
+
+echo "<table cellspacing='0' cellpadding='0' width='100%'>";
+echo "<tr>";
+echo "<th width='10'></th>";
+echo "<th width='10'>Room</th>";
+echo "<th width='200'>Time periode</th>";
+echo "<th>Guest name</th>";
+echo "<th>Guest phone</th>";
+echo "<th>Guest email</th>";
+echo "<th width='100'>Room type</th>";
+if($config->requirePayments) {
+    echo "<th width='100'>Price</th>";
+    echo "<th width='100'>Invoiced to</th>";
+}
+echo "</tr>";
+
+foreach($bookings as $booking) {
+    foreach($booking->rooms as $room) {
+        echo "<tr bookingid='".$booking->id."' roomid='".$room->pmsBookingRoomId."'>";
+        echo "<td width='30'>";
+        if(strtotime($room->date->start) > time()) {
+            echo "<i class='fa fa-trash-o deleteroom'></i> ";
+            echo "<i class='fa fa-edit'></i>";
+        }
+        echo "</td>";
+        echo "<td>" . $items[$room->bookingItemId]->bookingItemName . "</td>";
+        echo "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
+        echo "<td>";
+        foreach($room->guests as $guest) {
+            echo $guest->name . "<bR>";
+        }
+        echo "</td>";
+        echo "<td>";
+        foreach($room->guests as $guest) {
+            echo $guest->phone . "<bR>";
+        }
+        echo "</td>";
+        echo "<td>";
+        foreach($room->guests as $guest) {
+            echo $guest->email . "<bR>";
+        }
+        echo "</td>";
+        echo "<td>" . $types[$room->bookingItemTypeId]->name . "</td>";
+        if($config->requirePayments) {
+            echo "<td>".$room->price ."</td>";
+            if($room->invoicedTo) {
+                echo "<td>".date("d.m.Y", strtotime($room->invoicedTo)) ."</td>";
+            } else {
+                echo "<td>Not invoiced yet</td>";
+            }
+        }
+        echo "</tr>";
+    }
+}
+echo "</table>";
+
+if($config->requirePayments) {
+    echo "<br><br><b>Order history</b>";
+    $orders = $this->getApi()->getOrderManager()->getAllOrdersForUser($this->getApi()->getUserManager()->getLoggedOnUser()->id);
+    echo "<table cellspacing='0' width='100%'>";
+    echo "<tr>";
+    echo "<th>Orderid</th>";
+    echo "<th>Order date</th>";
+    echo "<th>Orderlines</th>";
+    echo "<th width='10'>Total</th>";
+    echo "</tr>";
+    
+    foreach($orders as $order) {
+        echo "<tr>";
+        echo "<td valign='top'>" . $order->incrementOrderId . "</td>";
+        echo "<td valign='top'>" . date("d.m.Y", strtotime($order->incrementOrderId)) . "</td>";
+        echo "<td>";
+        $items = $order->cart->items;
+        foreach($items as $cartItem) {
+            $metaText = $cartItem->product->metaData ? " ( " .$cartItem->product->metaData." )" : "";
+            $dates = "";
+            $additionalMetaData = $cartItem->product->additionalMetaData ? " (" .$cartItem->product->additionalMetaData.")" : "";
+            if($cartItem->startDate) { $dates .= date("d.m.Y H:i", strtotime($cartItem->startDate)); }
+            if($cartItem->endDate) { $dates .= " - " . date("d.m.Y H:i", strtotime($cartItem->endDate)); }
+            echo "<div cartItemId='".$cartItem->cartItemId."'>".$cartItem->count." x ".$cartItem->product->name." $metaText $additionalMetaData $dates<span style='float:right;'>".$cartItem->product->price."</span></div>";
+        }
+        echo "</td>";
+        echo "<td valign='top'>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+?>

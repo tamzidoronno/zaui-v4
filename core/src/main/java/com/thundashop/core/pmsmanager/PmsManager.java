@@ -342,7 +342,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String createPrepaymentOrder(String bookingId) {
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingUnsecure(bookingId);
         NewOrderFilter filter = new NewOrderFilter();
         filter.prepayment = true;
         filter.startInvoiceFrom = booking.getStartDate();
@@ -545,7 +545,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return finalized;
     }
 
-    @Override
+    public PmsBooking getBookingUnsecure(String bookingId) {
+        PmsBooking booking = bookings.get(bookingId);
+        if (booking == null) {
+            return null;
+        }
+        return finalize(booking);
+    }
+    
     public PmsBooking getBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
         checkSecurity(booking);
@@ -793,7 +800,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String createOrder(String bookingId, NewOrderFilter filter) {
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingUnsecure(bookingId);
         
         if(addBookingToCart(booking, filter)) {
             Order order = createOrderFromCart(booking);
@@ -914,7 +921,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Administrator
     public void doNotification(String key, String bookingId) {
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingUnsecure(bookingId);
         doNotification(key, booking, null);
     }
 
@@ -1074,7 +1081,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void confirmBooking(String bookingId, String message) {
         this.specifiedMessage = message;
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingUnsecure(bookingId);
         booking.confirmed = true;
         saveBooking(booking);
         doNotification("booking_confirmed", booking, null);
@@ -1084,7 +1091,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void unConfirmBooking(String bookingId, String message) {
         this.specifiedMessage = message;
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingUnsecure(bookingId);
         booking.unConfirmed = true;
         saveBooking(booking);
         deleteBooking(bookingId);
@@ -1137,7 +1144,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void removeFromBooking(String bookingId, String roomId) throws Exception {
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingUnsecure(bookingId);
         checkSecurity(booking);
         List<PmsBookingRooms> toRemove = new ArrayList();
         String roomName = "";
@@ -1193,7 +1200,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String getContract(String bookingId) throws Exception {
         PmsBooking booking = getCurrentBooking();
         if (booking == null || !booking.id.equals(bookingId)) {
-            booking = getBooking(bookingId);
+            booking = getBookingUnsecure(bookingId);
         }
         if (booking == null) {
             return "Booking could not be found";
@@ -2095,7 +2102,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String getDefaultMessage(String bookingId) {
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingUnsecure(bookingId);
         String message = getConfiguration().defaultMessage.get(booking.language);
         if (message == null) {
             return "";
@@ -2106,7 +2113,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void addComment(String bookingId, String comment) {
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingUnsecure(bookingId);
         PmsBookingComment commentToAdd = new PmsBookingComment();
         commentToAdd.userId = userManager.getLoggedOnUser().id;
         commentToAdd.comment = comment;
@@ -2606,7 +2613,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void undeleteBooking(String bookingId) {
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingUnsecure(bookingId);
         List<Booking> toAdd = buildRoomsToAddToEngineList(booking);
         bookingEngine.addBookings(toAdd);
         booking.attachBookingItems(toAdd);
@@ -2670,6 +2677,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void checkSecurity(PmsBooking booking) {
         User loggedonuser = getSession().currentUser;
+        
+        if(loggedonuser != null && (booking.userId == null || booking.userId.isEmpty())) {
+            return;
+        }
+
+        if(loggedonuser == null) {
+            throw new ErrorException(26);
+        }
+        
         if(loggedonuser.isEditor() || loggedonuser.isAdministrator()) {
             return;
         }

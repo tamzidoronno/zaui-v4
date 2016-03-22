@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.util.Date;
@@ -67,7 +68,7 @@ public interface IPmsManager {
     @Administrator
     public PmsStatistics getStatistics(PmsBookingFilter filter);
     
-    @Administrator
+    @Customer
     public void removeFromBooking(String bookingId, String roomId) throws Exception;
     
     @Administrator
@@ -126,6 +127,7 @@ public interface IPmsManager {
     public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
     public void removeFromCurrentBooking(String roomId) throws Exception;
     public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
+    public List<PmsBooking> getAllBookingsForLoggedOnUser();
     public RegistrationRules initBookingRules();
     public void addRepeatingData(PmsRepeatingData data) throws Exception;
     public List<Integer> getAvailabilityForType(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);

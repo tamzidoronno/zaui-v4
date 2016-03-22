@@ -90,7 +90,6 @@ foreach ($users as $user) {
                 }
                 echo "</div>";
             }
-            echo "<br>Userid " . $user->customerId . "<br>";
             if(sizeof($user->company) > 0) {
                 echo "<b>Company: ";
                 $complist = array();
@@ -101,7 +100,7 @@ foreach ($users as $user) {
                 echo join(", ", $complist) . "</b>";
             }
             ?>
-            <div class="created"><? echo $created; ?></div>
+            <div class="created">Userid <? echo $user->customerId . ", " . $created; ?></div>
         </div>
         
         <?

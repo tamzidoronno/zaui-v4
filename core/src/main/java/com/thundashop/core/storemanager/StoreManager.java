@@ -430,7 +430,11 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         Set<String> names = new TreeSet();
         
         for (GetShopSessionBeanNamed named : getShopScope.getSessionNamedObjects()) {
-            names.add(named.getName());
+            if(named == null || named.getName() == null) {
+                System.out.println("Null name");
+            } else {
+                names.add(named.getName());
+            }
         }
         
         return new ArrayList(names);

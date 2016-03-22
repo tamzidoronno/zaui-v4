@@ -468,7 +468,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         } else if (filter.filterType == null || filter.filterType.equals("registered")) {
             for (PmsBooking booking : bookings.values()) {
-                if (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate)) {
+                if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
                     result.add(booking);
                 }
             }
@@ -1133,6 +1133,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void removeFromBooking(String bookingId, String roomId) throws Exception {
         PmsBooking booking = getBooking(bookingId);
+        checkSecurity(booking);
         List<PmsBookingRooms> toRemove = new ArrayList();
         String roomName = "";
         for (PmsBookingRooms room : booking.rooms) {
@@ -1152,6 +1153,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveObject(booking);
 
         logEntry(roomName + " removed from booking ", bookingId, null);
+        if(booking.rooms.isEmpty()) {
+            deleteBooking(booking.id);
+        }
     }
 
     @Override
@@ -2640,6 +2644,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void checkDoorStatusControl() throws Exception {
         PmsManagerDoorSurveilance sur = new PmsManagerDoorSurveilance(this);
         sur.checkStatus();
+    }
+
+    @Override
+    public List<PmsBooking> getAllBookingsForLoggedOnUser() {
+        String userId = getSession().currentUser.id;
+        PmsBookingFilter filter = new PmsBookingFilter();
+        List<PmsBooking> allBookings = getAllBookings(filter);
+        List<PmsBooking> result = new ArrayList();
+        for(PmsBooking booking : allBookings) {
+            if(booking.userId != null && booking.userId.equals(userId)) {
+                result.add(booking);
+            }
+        }
+        return result;
+    }
+
+    private void checkSecurity(PmsBooking booking) {
+        User loggedonuser = getSession().currentUser;
+        if(loggedonuser.isEditor() || loggedonuser.isAdministrator()) {
+            return;
+        }
+        
+        if(booking.userId.equals(loggedonuser.id)) {
+            return;
+        }
+        
+        throw new ErrorException(26);
     }
 
 }

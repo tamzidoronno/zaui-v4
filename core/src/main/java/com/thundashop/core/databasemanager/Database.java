@@ -384,7 +384,9 @@ public class Database {
         for (String dbName : dbsToCheck) {
             DB db = mongo.getDB(dbName);
             if (db.collectionExists(collectionPrefix+storeId)) {
-                retValues.add(dbName.split("_")[1]);
+                if(dbName.split("_").length > 1) {
+                    retValues.add(dbName.split("_")[1]);
+                }
             }
         }
         

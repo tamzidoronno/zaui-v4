@@ -29,9 +29,10 @@ Coupon = {
     },
     
     save : function(data, from) {
-        var event = thundashop.Ajax.createEvent(null, "save", from, data);
+        var event = thundashop.Ajax.createEvent(null, "save", "ns_90cd1330_2815_11e3_8224_0800200c9a66\\Coupon", data);
         event['synchron'] = true;
         thundashop.Ajax.post(event, Coupon.update, {}, true);
+        getshop.Settings.reload();
     },
             
     applyCoupon: function() {
@@ -54,9 +55,10 @@ Coupon = {
             
     removeCoupon: function() {
         var code = $(this).closest('tr').find('.code').text();
-        var event = thundashop.Ajax.createEvent(null, "deleteCode", this,  { code : code });
+        var event = thundashop.Ajax.createEvent(null, "deleteCode", "ns_90cd1330_2815_11e3_8224_0800200c9a66\\Coupon",  { code : code });
         event['synchron'] = true;
         thundashop.Ajax.post(event, Coupon.update, {}, true);
+        getshop.Settings.reload();
     }
 };
 

@@ -99,6 +99,7 @@ public class User extends DataCommon implements Comparable<User> {
     public Integer invoiceDuePeriode = 14;
     public int sessionTimeOut = 23;
     public boolean canChangeLayout = false;
+    public String couponId = "";
     
     public List<String> company = new ArrayList();
     

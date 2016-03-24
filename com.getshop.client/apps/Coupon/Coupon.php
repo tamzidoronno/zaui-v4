@@ -50,6 +50,48 @@ class Coupon extends \WebshopApplication implements \Application {
         return ($val !== true) && ((string)(int) $val) === ((string) $val);
     }
     
+    public function updateUser() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['userid']);
+        $user->couponId = $_POST['couponid'];
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
+    /**
+     * @param \core_usermanager_data_User $user
+     */
+    public function renderUserSettings($user) {
+                ?>
+        <div class="gss_overrideapp" gss_use_app_id="90cd1330-2815-11e3-8224-0800200c9a66">
+            
+            <input type='hidden' gs_model='companymodel' gs_model_attr='userid' value='<?php echo $user->id; ?>'>
+            <div class="textfield gss_setting">
+                <span class="title"><?php echo $this->__f("Selected a coupon"); ?></span>
+                <?
+                    $coupons = $this->getCoupons();
+                    echo "<select class='gsschangeusercompany backsideselect' gs_model_attr='couponid' gs_model='companymodel'>";
+                    echo "<option value=''>Set a coupon</option>";
+                    foreach($coupons as $coupon) {
+                        $sel = "";
+                        if($coupon->id == $user->couponId) {
+                            $sel = "SELECTED";
+                        }
+                        echo "<option value='".$coupon->id."' $sel>" . $coupon->code . "</option>";
+                    }
+                    echo "</select>";
+                    
+                ?>
+                <div class="description">
+                    <?php echo $this->__("When adding this coupon, everything bought by this user will get this discount."); ?>
+                </div>
+            </div>
+            <div class='gss_button_area'>
+                  <div class="gss_button" gss_method="updateUser" gss_model="companymodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+            </div>
+        </div>
+        
+        <?php
+    }
+    
     public function createCoupons($data, $fixed) {
         
         $coupon = new \core_cartmanager_data_Coupon();
@@ -72,7 +114,7 @@ class Coupon extends \WebshopApplication implements \Application {
             die();
         }
         
-        if (!$fixed && ($coupon->amount < 1 || $coupon->amount > 99)) {
+        if (!$fixed && ($coupon->amount < 0 || $coupon->amount > 100)) {
             echo "NotValidPercentage";
             die();
         }
@@ -86,6 +128,9 @@ class Coupon extends \WebshopApplication implements \Application {
         $this->getApi()->getCartManager()->addCoupon($coupon);
     }
     
+    /**
+     * @return \core_cartmanager_data_Coupon[]
+     */
     public function getCoupons() {
         return $this->getApi()->getCartManager()->getCoupons();
     }

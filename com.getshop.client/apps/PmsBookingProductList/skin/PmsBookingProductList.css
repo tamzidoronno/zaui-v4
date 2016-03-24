@@ -12,7 +12,8 @@
 .PmsBookingProductList .selectbutton { border: solid 1px; position:absolute; right: 10px; width: 200px; text-align: center; padding: 10px; text-transform: uppercase;  }
 .PmsBookingProductList .productentry.selected { border: solid 1px; }
 .PmsBookingProductList .price.withselectbtn { top:inherit; bottom: 10px; }
-.PmsBookingProductList .roomimg { max-width: 150px; }
+.PmsBookingProductList .roomimg { max-width: 150px; max-height: 100%; }
 .PmsBookingProductList .imgcontainer { background-color:#000; position: absolute; left: 0px; top: 0px; display:inline-block; height: 100px; }
 .PmsBookingProductList .selectedtext { position:absolute; right: 10px; }
 .PmsBookingProductList .outofstocktext {position:absolute; right: 10px; top: 10px; }
+.PmsBookingProductList .roomdesc { font-size: 14px; font-weight: normal; margin-top: 10px; }

@@ -37,7 +37,7 @@ foreach($rooms as $room) {
     <div class='productentry <? echo $selected . " " . $imgDisplayed; ?>'>
         <?php
         if($this->getText("hideimages") != "true") {
-            $imgs = $this->getImagesFromPage($room->type->id);
+            $imgs = $this->getImagesFromPage($room->type->pageId);
             foreach($imgs as $img) {
                 echo "<span class='imgcontainer'>";
                 echo "<img class='roomimg' src='displayImage.php?id=" . $img."'>";
@@ -95,6 +95,9 @@ foreach($rooms as $room) {
         <?php 
             if($this->isEditorMode()) {
                 echo "  <span style='position:absolute; top: 35px;left:170px;font-size: 12px;'><a href='?page=".$room->type->pageId."'>Configure</a></span>";
+            }
+            if($room->type->description) {
+                echo "<div class='roomdesc'>" . $room->type->description . "</div>";
             }
         ?>
     </span>

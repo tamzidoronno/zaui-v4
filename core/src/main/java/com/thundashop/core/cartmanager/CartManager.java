@@ -5,6 +5,7 @@ import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.cartmanager.data.Coupon;
+import com.thundashop.core.cartmanager.data.CouponType;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -299,6 +300,46 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
         
         return count;
+    }
+
+    public double calculatePriceForCoupon(String couponCode, double price) {
+        Coupon coupon = getCoupon(couponCode);
+        double newPrice = 0.0;
+        if(coupon != null) {
+            if(coupon.timesLeft > 0) {
+                if(coupon.type == CouponType.FIXED) {
+                    newPrice = price - coupon.amount;
+                }
+                if(coupon.type == CouponType.PERCENTAGE) {
+                    double multiplier = (double)(100-coupon.amount)/(double)100;
+                    newPrice = price * multiplier;
+                }
+                coupon.timesLeft--;
+                saveObject(coupon);
+            }
+        }
+        
+        if(newPrice < 0) {
+            newPrice = 0;
+        }
+        
+        return newPrice;
+    }
+
+    
+    
+    public Coupon getCoupon(String couponCode) {
+        return coupons.get(couponCode);
+    }
+
+    public Coupon getCouponById(String couponId) {
+        for(Coupon cop :getCoupons()) {
+            if(cop.id.equals(couponId)) {
+                return cop;
+            }
+        }
+
+        return null;
     }
 
 

@@ -33,6 +33,7 @@ public class PmsBooking extends DataCommon {
     public boolean isDeleted = false;
     public PmsRepeatingData lastRepeatingData = null;
     public String invoiceNote = "";
+    public String couponCode = "";
     
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();

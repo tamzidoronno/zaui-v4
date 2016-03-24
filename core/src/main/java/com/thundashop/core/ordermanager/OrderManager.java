@@ -836,55 +836,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         orders.clear();
     }
 
-    private double getPriceBasedOnUserDiscount(CartItem item, User user) {
-        double price = productManager.getPrice(item.getProduct().id, item.getVariations());
-        price = price * (user.discount / 100);
-        return price;
-    }
-    
-    private double getPriceBasedOnProgressiveModel(CartItem item) {
-        double totalPrice = 0;
-        Product product = item.getProduct();
-        for (int i=1; i<=item.getCount(); i++) {
-            boolean found = false;
-            for (ProductDynamicPrice iprice : product.prices) {
-                if (i >= iprice.from && i <= iprice.to ) {
-                     totalPrice += getPriceForDynamicProductItem(item, iprice);
-                     found = true;
-                }
-            }
-            
-            if (!found) {
-                totalPrice += productManager.getPrice(product.id, item.getVariations());
-            }
-        }
-        
-        return totalPrice / (double)item.getCount();
-    }
-    
-    private double getPriceBasedOnCount(CartItem item) {
-        Product product = item.getProduct();
-        for (ProductDynamicPrice iprice : product.prices) {
-            int count = item.getCount();
-            if (count >= iprice.from && count <= iprice.to ) {
-                 return getPriceForDynamicProductItem(item, iprice);
-            }
-        }
-        
-        return productManager.getPrice(item.getProduct().id, item.getVariations());
-    }
-
-    private double getPriceForDynamicProductItem(CartItem item, ProductDynamicPrice price) {
-        Product product = item.getProduct();
-        if (product.dynamicPriceInPercent) {
-            double retPrice = item.getProduct().getPrice(null);
-            double discount = retPrice * price.price/100;
-            return retPrice - discount;
-        } else {
-            return price.price;
-        }
-    }
-    
     @Override
     public List<Order> getOrdersNotTransferredToAccountingSystem() {
         List<Order> allOrders = getOrders(new ArrayList(), null, null);

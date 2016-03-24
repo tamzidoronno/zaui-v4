@@ -26,6 +26,7 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
@@ -155,7 +156,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             Room room = new Room();
             room.type = type;
-            room.price = calculatePrice(type.id, start, end, true);
+            String couponcode = getCouponCode("");
+            room.price = calculatePrice(type.id, start, end, true, couponcode);
             result.add(room);
         }
 
@@ -165,6 +167,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
         booking.sessionId = getSession().id;
+        
+        if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
+            Coupon cop = cartManager.getCoupon(booking.couponCode);
+            if(cop == null) {
+                booking.couponCode = "";
+            }
+        }
 
         booking.priceType = prices.defaultPriceType;
         for (PmsBookingRooms room : booking.rooms) {
@@ -179,8 +188,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (room.date.end != null && room.date.start != null) {
                 totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
             }
+            
             room.count = totalDays;
-            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, true);
+            String couponCode = getCouponCode(booking.couponCode);
+            
+            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, true, couponCode);
             room.taxes = calculateTaxes(room.bookingItemTypeId);
             for (PmsGuests guest : room.guests) {
                 if (guest.prefix != null) {
@@ -781,21 +793,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return prices;
     }
 
-    private Double calculatePrice(String typeId, Date start, Date end, boolean avgPrice) {
+    private Double calculatePrice(String typeId, Date start, Date end, boolean avgPrice, String couponCode) {
+        double price = 0.0;
         if (prices.defaultPriceType == 1) {
-            return calculateDailyPricing(typeId, start, end, avgPrice);
+            price = calculateDailyPricing(typeId, start, end, avgPrice);
         }
         if (prices.defaultPriceType == 2) {
-            return calculateMonthlyPricing(typeId);
+            price = calculateMonthlyPricing(typeId);
         }
         if (prices.defaultPriceType == 7) {
-            return calculateProgressivePrice(typeId, start, end, 0, avgPrice);
+            price = calculateProgressivePrice(typeId, start, end, 0, avgPrice);
         }
         if (prices.defaultPriceType == 8) {
-            return calculateIntervalPrice(typeId, start, end, avgPrice);
+            price = calculateIntervalPrice(typeId, start, end, avgPrice);
         }
-
-        return 0.0;
+        
+        if(couponCode != null && !couponCode.isEmpty()) {
+            price = cartManager.calculatePriceForCoupon(couponCode, price);
+        }
+        
+        return price;
     }
 
     @Override
@@ -2728,6 +2745,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         oldRoom.guests = room.guests;
         
         return errors;
+    }
+
+    private String getCouponCode(String couponCode) {
+        Session loggedonuser = getSession();
+        if(loggedonuser != null && loggedonuser.currentUser != null && loggedonuser.currentUser.couponId != null) {
+            if(!loggedonuser.currentUser.couponId.isEmpty()) {
+                Coupon coupon = cartManager.getCouponById(loggedonuser.currentUser.couponId);
+                if(coupon != null) {
+                    return coupon.code;
+                }
+            }
+        }
+        return couponCode;
     }
 
 }

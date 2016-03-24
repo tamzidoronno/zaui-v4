@@ -205,5 +205,38 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         return $data;
     }
 
+    public function includeCouponSystem() {
+        $coupon = $this->getApi()->getStoreApplicationPool()->getApplication("90cd1330-2815-11e3-8224-0800200c9a66");
+        if($coupon) {
+            if($this->getCurrentBooking()->couponCode) {
+                echo "<i class='fa fa-trash-o'  gstype='clicksubmit' method='removeCouponCode' gsname='id' gsvalue='somevalue'></i> ";
+                echo "Coupon code added: " . $this->getCurrentBooking()->couponCode;
+            } else {
+                if(isset($_POST['data']['code'])) {
+                    echo "Invalid code";
+                }
+                ?>
+                <div gstype="form" method="addCouponCode">
+                    <input type='text' gsname='code' gstype='submitenter'><span class='addcouponbutton' gstype='submit'>Add coupon</span>
+                </div>
+                <?php
+            }
+        }
+    }
+    
+    public function addCouponCode() {
+        $code = $_POST['data']['code'];
+        $curBooking = $this->getCurrentBooking();
+        $curBooking->couponCode = $code;
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $curBooking);
+        $this->curBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+    }
+    
+    public function removeCouponCode() {
+        $curBooking = $this->getCurrentBooking();
+        $curBooking->couponCode = "";
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $curBooking);
+        $this->curBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+    }
 }
 ?>

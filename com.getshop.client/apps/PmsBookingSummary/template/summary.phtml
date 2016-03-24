@@ -13,6 +13,9 @@ $bookingitems = $this->getApi()->getBookingEngine()->getBookingItems($this->getS
 foreach($bookingitems as $item) {
     $bookingitems[$item->id] = $item;
 }
+
+$this->includeCouponSystem();
+
 echo "<br>";
 $addonsText = $this->getConfigurationSetting("heading_summary");
 if(!$addonsText) {

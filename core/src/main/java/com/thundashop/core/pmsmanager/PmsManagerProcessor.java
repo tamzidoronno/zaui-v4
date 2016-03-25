@@ -31,9 +31,14 @@ public class PmsManagerProcessor {
     public void doProcessing() {
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(0, 12, false); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(12, 12 * 2, false); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(24, 24 * 2, false); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(48, 24 * 3, false); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(0, 12, true); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(12, 12 * 2, true); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(24, 24 * 2, true); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(48, 24 * 3, true); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
@@ -47,13 +52,19 @@ public class PmsManagerProcessor {
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
     }
 
-    private void processStarting(int hoursAhead, int maxAhead) {
+    private void processStarting(int hoursAhead, int maxAhead, boolean started) {
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
 
             boolean save = false;
             for (PmsBookingRooms room : booking.rooms) {
-                if (!isBetween(room.date.start, hoursAhead - 24, maxAhead - 24)) {
+                int start = hoursAhead - 24;
+                int end = maxAhead - 24;
+                if(started) {
+                    start *= -1;
+                    end *= -1;
+                }
+                if (!isBetween(room.date.start, start, end)) {
                     continue;
                 }
                 if (room.isEnded()) {
@@ -61,6 +72,9 @@ public class PmsManagerProcessor {
                 }
                 booking = manager.finalize(booking);
                 String key = "room_starting_" + hoursAhead + "_hours";
+                if(started) {
+                    key = "room_started_" + hoursAhead + "_hours";
+                }
                 if (room.notificationsSent.contains(key)) {
                     continue;
                 }
@@ -174,41 +188,6 @@ public class PmsManagerProcessor {
                 manager.saveBooking(booking);
             }
         }
-    }
-
-    private String generateCode(String code) {
-        if (code != null && !code.isEmpty()) {
-            return code;
-        }
-
-        for (int i = 0; i < 100000; i++) {
-            int start = 1;
-            int end = 10;
-            for (int j = 0; j < manager.configuration.codeSize - 1; j++) {
-                start *= 10;
-                end *= 10;
-            }
-            end = end - 1;
-
-            Integer newcode = new Random().nextInt(end - start) + start;
-            if (!codeExist(newcode)) {
-                return newcode.toString();
-            }
-        }
-        System.out.println("Tried 100 000 times to generate a code without success");
-        return null;
-    }
-
-    private boolean codeExist(int newcode) {
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
-        for (PmsBooking booking : bookings) {
-            for (PmsBookingRooms room : booking.rooms) {
-                if (room.code.equals(newcode) && room.addedToArx) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private void processAutoAssigning() {
@@ -331,7 +310,6 @@ public class PmsManagerProcessor {
     }
 
     private boolean pushToArx(PmsBookingRooms room, boolean deleted) {
-        room.code = generateCode(room.code);
         Person person = new Person();
         if (!room.guests.isEmpty() && room.guests.get(0).name != null && room.guests.get(0).name.contains(" ")) {
             person.firstName = room.guests.get(0).name.split(" ")[0];
@@ -388,7 +366,6 @@ public class PmsManagerProcessor {
     }
 
     private boolean pushToGetShop(PmsBookingRooms room, boolean deleted) {
-        room.code = generateCode(room.code);
         BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
         if (item == null) {
             return false;

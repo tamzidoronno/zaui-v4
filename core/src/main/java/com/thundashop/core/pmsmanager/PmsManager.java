@@ -57,6 +57,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.joda.time.DateTime;
@@ -574,6 +575,40 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return finalize(booking);
     }
 
+    
+    private String generateCode() {
+        for (int i = 0; i < 100000; i++) {
+            int start = 1;
+            int end = 10;
+            for (int j = 0; j < configuration.codeSize - 1; j++) {
+                start *= 10;
+                end *= 10;
+            }
+            end = end - 1;
+
+            Integer newcode = new Random().nextInt(end - start) + start;
+            if (!codeExist(newcode)) {
+                return newcode.toString();
+            }
+        }
+        System.out.println("Tried 100 000 times to generate a code without success");
+        return null;
+    }
+
+    private boolean codeExist(int newcode) {
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.rooms == null) {
+                continue;
+            }
+            for (PmsBookingRooms room : booking.rooms) {
+                if (room.code != null && (room.code.equals(newcode) && !room.isEnded())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     public PmsBooking finalize(PmsBooking booking) {
         if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
             Calendar nowCal = Calendar.getInstance();
@@ -592,6 +627,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         for (PmsBookingRooms room : booking.rooms) {
+            if(room.code == null || room.code.isEmpty()) {
+                room.code = generateCode();
+                saveBooking(booking);
+            }
             if (room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
                 if (room.booking != null) {
@@ -1245,6 +1284,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         booking.isDeleted = true;
         saveBooking(booking);
+        logEntry("booking has been deleted", bookingId, null);
     }
 
     private void removeDeleted(PmsBookingFilter filter, List<PmsBooking> result) {
@@ -2636,6 +2676,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.attachBookingItems(toAdd);
         booking.isDeleted = false;
         saveBooking(booking);
+        logEntry("booking has been undeleted", bookingId, null);
     }
 
     private List<Booking> buildRoomsToAddToEngineList(PmsBooking booking) {

@@ -304,7 +304,7 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     public double calculatePriceForCoupon(String couponCode, double price) {
         Coupon coupon = getCoupon(couponCode);
-        double newPrice = 0.0;
+        double newPrice = price;
         if(coupon != null) {
             if(coupon.timesLeft > 0) {
                 if(coupon.type == CouponType.FIXED) {

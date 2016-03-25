@@ -853,7 +853,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             price = cartManager.calculatePriceForCoupon(couponCode, price);
         }
         
-        System.out.println(price);
         return price;
     }
 
@@ -1893,10 +1892,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             days++;
             if(priceType.equals(PmsBooking.PriceType.daily)) { cal.add(Calendar.DAY_OF_YEAR, 1); }
-            if(priceType.equals(PmsBooking.PriceType.progressive)) { cal.add(Calendar.DAY_OF_YEAR, 1); }
-            if(priceType.equals(PmsBooking.PriceType.weekly)) { cal.add(Calendar.DAY_OF_YEAR, 7); }
-            if(priceType.equals(PmsBooking.PriceType.monthly)) { cal.add(Calendar.MONTH, 1); }
-            if(priceType.equals(PmsBooking.PriceType.hourly)) { cal.add(Calendar.HOUR, 1); }
+            else if(priceType.equals(PmsBooking.PriceType.weekly)) { cal.add(Calendar.DAY_OF_YEAR, 7); }
+            else if(priceType.equals(PmsBooking.PriceType.monthly)) { cal.add(Calendar.MONTH, 1); }
+            else if(priceType.equals(PmsBooking.PriceType.hourly)) { cal.add(Calendar.HOUR, 1); }
+            else { cal.add(Calendar.DAY_OF_YEAR, 1); }
             if (end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
                 break;
             }

@@ -38,13 +38,13 @@ class Dibs extends \PaymentApplication implements \Application {
                 $order->status = 7;
                 $order->payment->transactionLog->{time()*1000} = "Payment completed, capturing needed.";
                 $this->getApi()->getOrderManager()->saveOrder($order);
-                header('Location: ' . "/?page=".$paymentsuccess);
+                header('Location: ' . "/?page=payment_success");
             } else {
                 $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
                 $order->status = 5;
                 $order->payment->transactionLog->{time()*1000} = "Payment failed /cancelled by user.";
                 $this->getApi()->getOrderManager()->saveOrder($order);
-                header('Location: ' . "/?page=".$paymentfailed);
+                header('Location: ' . "/?page=payment_failed");
             }
         }
     }

@@ -14,7 +14,6 @@
     </form>    
 </div>
 
-
 <script>
     var token = "<? echo $this->getApi()->getBrainTreeManager()->getClientToken(); ?>";
     braintree.setup(token, "custom", {id: "braintreecheckoutform"});

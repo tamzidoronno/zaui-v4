@@ -19,7 +19,7 @@ class BrainTree extends \PaymentApplication implements \Application {
     }
     
     public function simplePayment() {
-        $this->includefile("paymentformdirect");
+        $this->includefile("paymentformsimple");
     }
     
     public function render() {

@@ -27,11 +27,20 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             if($config->payAfterBookingCompleted) {
                 $curBooking = $this->getCurrentBooking();
                 $orderId = $curBooking->orderIds[0];
-                ?>
-                <script>
-                    document.location.href="/?page=cart&payorder=<?php echo $orderId; ?>";
-                </script>
-                <?
+                
+                if(!$orderId) {
+                    ?>
+                    <script>
+                        document.location.href="/?page=payment_success";
+                    </script>
+                    <?
+                } else {
+                    ?>
+                    <script>
+                        document.location.href="/?page=cart&payorder=<?php echo $orderId; ?>";
+                    </script>
+                    <?
+                }
             } else {
                 ?>
                 <script>

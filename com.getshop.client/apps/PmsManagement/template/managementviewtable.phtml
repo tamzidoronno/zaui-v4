@@ -212,7 +212,11 @@ foreach($bookings as $booking) {
         } else if(!$booking->confirmed) {
             $state = "Unconfirmed";
         }
-        $row .= "<td align='center' class='$state'>$state</td>";
+        $row .= "<td align='center' class='$state'>$state";
+        if($hasPrices && !$booking->payedFor) {
+            $row .= "<br>Missing payment";
+        }
+        $row .= "</td>";
         $row .= "</tr>";
         
         $index = $i;

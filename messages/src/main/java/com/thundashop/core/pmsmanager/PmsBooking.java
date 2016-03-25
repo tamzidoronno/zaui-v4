@@ -31,6 +31,7 @@ public class PmsBooking extends DataCommon {
     public boolean confirmed = false;
     public boolean unConfirmed = false;
     public boolean isDeleted = false;
+    public boolean payedFor = false;
     public PmsRepeatingData lastRepeatingData = null;
     public String invoiceNote = "";
     public String couponCode = "";

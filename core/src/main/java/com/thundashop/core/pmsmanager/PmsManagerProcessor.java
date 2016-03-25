@@ -9,6 +9,7 @@ import com.thundashop.core.arx.Door;
 import com.thundashop.core.arx.Person;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,7 @@ public class PmsManagerProcessor {
     }
 
     public void doProcessing() {
+        try { confirmWhenPaid(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(0, 12, false); }catch(Exception e) { e.printStackTrace(); }
@@ -271,17 +273,6 @@ public class PmsManagerProcessor {
         return (sameDay && sameMonth && sameYear);
     }
 
-    private Date addOneMonth(Date invoicedTo) {
-        Calendar toCheckCal = Calendar.getInstance();
-        toCheckCal.setTime(invoicedTo);
-        toCheckCal.add(Calendar.MONTH, 1);
-        return toCheckCal.getTime();
-    }
-
-    private boolean isAfterOrToday(Date invoicedTo) {
-        return (invoicedTo.before(new Date()) || isSameDay(new Date(), invoicedTo));
-    }
-
     private List<PmsBooking> getAllConfirmedNotDeleted() {
         List<PmsBooking> res = new ArrayList(manager.bookings.values());
         List<PmsBooking> toRemove = new ArrayList();
@@ -296,6 +287,9 @@ public class PmsManagerProcessor {
                 toRemove.add(booking);
             }
             if (!booking.confirmed) {
+                toRemove.add(booking);
+            }
+            if (!booking.payedFor) {
                 toRemove.add(booking);
             }
         }
@@ -496,25 +490,6 @@ public class PmsManagerProcessor {
         manager.makeSureCleaningsAreOkay();
     }
 
-    private List<AccessLog> makeLatestAccessLog(List<AccessLog> accessLogs) {
-        HashMap<String, AccessLog> result = new HashMap();
-        
-        for(AccessLog log : accessLogs) {
-            if(log.card != null && log.card.isEmpty()) {
-                AccessLog current = result.get(log.card);
-                if(current == null) {
-                    current = log;
-                    result.put(log.card, current);
-                }
-                
-                if(log.timestamp > current.timestamp) {
-                    result.put(log.card, log);
-                }
-            }
-        }
-        
-        return new ArrayList(result.values());
-    }
 
     private void checkForIncosistentBookings() {
         List<Booking> allBookings = manager.bookingEngine.getAllBookings();
@@ -536,6 +511,53 @@ public class PmsManagerProcessor {
             if(!allBookingIds.contains(test.id)) {
                 manager.messageManager.sendErrorNotification(test.id + " this is missing on the bookingengine, the booking engine and the pms manager is out of sync: " + test.startDate + " - " + test.endDate + ", created: " + test.rowCreatedDate, null);
                 manager.bookingEngine.deleteBooking(test.id);
+            }
+        }
+    }
+
+    private void confirmWhenPaid() {
+        for(PmsBooking booking : manager.bookings.values()) {
+            if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
+                continue;
+            }
+            
+            if(!manager.configuration.requirePayments) {
+                if(!booking.payedFor) {
+                    booking.payedFor = true;
+                }
+                continue;
+            }
+            
+            
+            if(booking.orderIds == null || booking.orderIds.isEmpty()) {
+                booking.payedFor = true;
+                manager.logEntry("Automarking booking as paid for, since no orders has been added", booking.id, null);
+                manager.saveBooking(booking);
+                continue;
+            }
+            boolean hasordersnotpaidfor = false;
+            for(String orderId : booking.orderIds) {
+                Order order = manager.orderManager.getOrderSecure(orderId);
+                if(order == null) {
+                    continue;
+                }
+                if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+                    continue;
+                }
+                
+                if(order.status != Order.Status.PAYMENT_COMPLETED) {
+                    hasordersnotpaidfor = true;
+                }
+            }
+            
+            if(!hasordersnotpaidfor && !booking.payedFor) {
+                booking.payedFor = true;
+                manager.logEntry("Automarking booking as paid for", booking.id, null);
+                manager.saveBooking(booking);
+            } else if(hasordersnotpaidfor && booking.payedFor) {
+                booking.payedFor = false;
+                manager.logEntry("This booking has orders not paid for yet.", booking.id, null);
+                manager.saveBooking(booking);
             }
         }
     }

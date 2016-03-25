@@ -411,7 +411,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (loggedonuser != null && configuration.autoconfirmRegisteredUsers) {
             booking.confirmed = true;
         }
-
+        
         booking.sessionId = "";
 
         saveBooking(booking);
@@ -866,6 +866,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return "Could not create order.";
             }
             booking.orderIds.add(order.id);
+            booking.payedFor = false;
             saveBooking(booking);
         }
         return "";
@@ -875,6 +876,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         cartManager.clear();
 
         boolean foundInvoice = false;
+        double totalprice = 0;
         for (PmsBookingRooms room : booking.rooms) {
             if(!room.needInvoicing(filter)) {
                 continue;
@@ -923,6 +925,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 guestName = room.guests.get(0).name;
             }
 
+            totalprice += price;
+            
             item.getProduct().discountedPrice = price;
             item.getProduct().price = price;
             item.getProduct().metaData = guestName;
@@ -932,6 +936,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             foundInvoice = true;
             cartManager.saveCartItem(item);
         }
+        
+        if(totalprice == 0.0) {
+            return false;
+        }
+        
         return foundInvoice;
     }
 
@@ -2625,6 +2634,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         } else if (booking.priceType.equals(PmsBooking.PriceType.weekly)) {
             price = (room.price / 7);
         }
+        
+        price = cartManager.calculatePriceForCoupon(booking.couponCode, price);
         return price;
     }
 

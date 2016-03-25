@@ -26,10 +26,6 @@ if($this->getOrder()) {
     </form>    
 </div>
 
-<?php
-print_r($_POST);
-?>
-
 <script>
     var token = "<? echo $this->getApi()->getBrainTreeManager()->getClientToken(); ?>";
     braintree.setup(token, "custom", {id: "braintreecheckoutform"});

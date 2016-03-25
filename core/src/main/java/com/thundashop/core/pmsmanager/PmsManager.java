@@ -133,6 +133,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         createProcessor("logfetcher", ArxLogFetcher.class);
+        createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
     }
 
     @Override
@@ -158,7 +159,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Room room = new Room();
             room.type = type;
             String couponcode = getCouponCode("");
-            room.price = calculatePrice(type.id, start, end, true, couponcode);
+            room.price = calculatePrice(type.id, start, end, true, couponcode, PmsBooking.PriceType.daily);
             result.add(room);
         }
 
@@ -193,7 +194,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.count = totalDays;
             String couponCode = getCouponCode(booking.couponCode);
             
-            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, true, couponCode);
+            room.price = calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, true, couponCode, booking.priceType);
             room.taxes = calculateTaxes(room.bookingItemTypeId);
             for (PmsGuests guest : room.guests) {
                 if (guest.prefix != null) {
@@ -833,7 +834,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return prices;
     }
 
-    private Double calculatePrice(String typeId, Date start, Date end, boolean avgPrice, String couponCode) {
+    private Double calculatePrice(String typeId, Date start, Date end, boolean avgPrice, String couponCode, Integer priceType) {
         double price = 0.0;
         if (prices.defaultPriceType == 1) {
             price = calculateDailyPricing(typeId, start, end, avgPrice);
@@ -842,7 +843,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             price = calculateMonthlyPricing(typeId);
         }
         if (prices.defaultPriceType == 7) {
-            price = calculateProgressivePrice(typeId, start, end, 0, avgPrice);
+            price = calculateProgressivePrice(typeId, start, end, 0, avgPrice, priceType);
         }
         if (prices.defaultPriceType == 8) {
             price = calculateIntervalPrice(typeId, start, end, avgPrice);
@@ -852,6 +853,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             price = cartManager.calculatePriceForCoupon(couponCode, price);
         }
         
+        System.out.println(price);
         return price;
     }
 
@@ -1869,7 +1871,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return -0.333;
     }
 
-    private Double calculateProgressivePrice(String typeId, Date start, Date end, int offset, boolean avgPrice) {
+    private Double calculateProgressivePrice(String typeId, Date start, Date end, int offset, boolean avgPrice, Integer priceType) {
         ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
         if (priceRange == null) {
             System.out.println("No progressive price found for type");
@@ -1890,10 +1892,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
             days++;
-            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(priceType.equals(PmsBooking.PriceType.daily)) { cal.add(Calendar.DAY_OF_YEAR, 1); }
+            if(priceType.equals(PmsBooking.PriceType.progressive)) { cal.add(Calendar.DAY_OF_YEAR, 1); }
+            if(priceType.equals(PmsBooking.PriceType.weekly)) { cal.add(Calendar.DAY_OF_YEAR, 7); }
+            if(priceType.equals(PmsBooking.PriceType.monthly)) { cal.add(Calendar.MONTH, 1); }
+            if(priceType.equals(PmsBooking.PriceType.hourly)) { cal.add(Calendar.HOUR, 1); }
             if (end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
                 break;
             }
+            if(priceType.equals(PmsBooking.PriceType.daily) || priceType.equals(PmsBooking.PriceType.progressive)) { 
+                if(isSameDay(cal.getTime(), end)) {
+                    break;
+                }
+            }
+
         }
 
         if (avgPrice) {
@@ -2606,7 +2618,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             price = room.price;
         } else if (booking.priceType.equals(PmsBooking.PriceType.progressive)) {
             int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(startDate)).getDays();
-            price = calculateProgressivePrice(room.bookingItemTypeId, startDate, endDate, days, true);
+            price = calculateProgressivePrice(room.bookingItemTypeId, startDate, endDate, days, true, booking.priceType);
         } else if (booking.priceType.equals(PmsBooking.PriceType.daily)
                 || booking.priceType.equals(PmsBooking.PriceType.interval)
                 || booking.priceType.equals(PmsBooking.PriceType.progressive)) {

@@ -44,9 +44,11 @@ public class PmsManagerProcessor {
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
         try { processIntervalCleaning(false); }catch(Exception e) { e.printStackTrace(); }
         try { processIntervalCleaning(true); }catch(Exception e) { e.printStackTrace(); }
-        try { manager.checkDoorStatusControl(); } catch (Exception e) { e.printStackTrace(); }
-
-        try { processArx(); }catch(Exception e) { e.printStackTrace(); }
+        
+        if(manager.storeManager.isProductMode()) {
+            try { manager.checkDoorStatusControl(); } catch (Exception e) { e.printStackTrace(); }
+            try { processArx(); }catch(Exception e) { e.printStackTrace(); }
+        }
         try { processOrdersToCreate(); }catch(Exception e) { e.printStackTrace(); }
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }

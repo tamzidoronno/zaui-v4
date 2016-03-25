@@ -1075,33 +1075,43 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
             }
-            for (PmsGuests guest : room.guests) {
+            
+            if(room.guests == null || room.guests.isEmpty() || !bookingEngine.getConfig().rules.includeGuestData) {
                 if (type.equals("email")) {
-                    String email = guest.email;
-                    if (bookingEngine.getConfig().rules.includeGuestData) {
-                        email = userManager.getUserById(booking.userId).emailAddress;
-                    }
-                    if (email == null || email.isEmpty()) {
-                        logEntry("Email not sent due to no email set for guest " + guest.name, booking.id, null);
-                        continue;
-                    }
+                    String email = userManager.getUserById(booking.userId).emailAddress;
+                    String name = userManager.getUserById(booking.userId).fullName;
                     String title = configuration.emailTitles.get(key);
-                    title = formatMessage(message, booking, room, guest);
-                    messageManager.sendMail(guest.email, guest.name, title, message, getFromEmail(), getFromName());
+                    title = formatMessage(message, booking, room, null);
+                    messageManager.sendMail(email, name, title, message, getFromEmail(), getFromName());
                     repicientList.add(email);
                 } else {
-                    String phone = guest.phone;
-                    if (!bookingEngine.getConfig().rules.includeGuestData) {
-                        phone = userManager.getUserById(booking.userId).cellPhone;
-                    }
-
-                    if (phone == null || phone.isEmpty()) {
-                        logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
-                        continue;
-                    }
-
-                    messageManager.sendSms("sveve", phone, message, guest.prefix, configuration.smsName);
+                    String phone = userManager.getUserById(booking.userId).cellPhone;
+                    String prefix = userManager.getUserById(booking.userId).prefix;
+                    messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
                     repicientList.add(phone);
+                }
+            } else {
+                for (PmsGuests guest : room.guests) {
+                    if (type.equals("email")) {
+                        String email = guest.email;
+                        if (email == null || email.isEmpty()) {
+                            logEntry("Email not sent due to no email set for guest " + guest.name, booking.id, null);
+                            continue;
+                        }
+                        String title = configuration.emailTitles.get(key);
+                        title = formatMessage(message, booking, room, guest);
+                        messageManager.sendMail(guest.email, guest.name, title, message, getFromEmail(), getFromName());
+                        repicientList.add(email);
+                    } else {
+                        String phone = guest.phone;
+                        if (phone == null || phone.isEmpty()) {
+                            logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
+                            continue;
+                        }
+
+                        messageManager.sendSms("sveve", phone, message, guest.prefix, configuration.smsName);
+                        repicientList.add(phone);
+                    }
                 }
             }
         }

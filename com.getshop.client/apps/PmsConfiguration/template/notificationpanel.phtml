@@ -260,6 +260,19 @@ $days[7] = "Sunday";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->ignoreTimeIntervalsOnNotification) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='ignoreTimeIntervalsOnNotification' <? echo $checked; ?>>
+            </span>
+            Send all notifications regarding of the timeframe.
+        </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->autoExtend) {
                     $checked = "CHECKED";
                 }

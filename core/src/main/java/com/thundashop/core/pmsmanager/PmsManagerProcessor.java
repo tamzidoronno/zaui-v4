@@ -57,6 +57,10 @@ public class PmsManagerProcessor {
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
+        if(manager.configuration.ignoreTimeIntervalsOnNotification) {
+            hoursAhead = 0;
+        }
+        
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
 
@@ -65,8 +69,8 @@ public class PmsManagerProcessor {
                 int start = hoursAhead - 24;
                 int end = maxAhead - 24;
                 if(started) {
-                    start *= -1;
-                    end *= -1;
+                    start = end * -1;
+                    end = (hoursAhead - 24) * -1;
                 }
                 if (!isBetween(room.date.start, start, end)) {
                     continue;

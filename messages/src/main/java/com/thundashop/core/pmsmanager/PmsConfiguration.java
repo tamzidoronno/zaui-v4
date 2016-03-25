@@ -29,6 +29,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean isItemBookingInsteadOfTypes = false;
     public boolean autoExtend = false;
     public boolean copyEmailsToOwnerOfStore = false;
+    public boolean ignoreTimeIntervalsOnNotification = false;
 
     /* Invoice creation options */
     public boolean autoCreateInvoices = false;

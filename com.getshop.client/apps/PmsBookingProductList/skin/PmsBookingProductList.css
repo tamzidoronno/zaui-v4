@@ -9,7 +9,7 @@
 .PmsBookingProductList .productentry .roomtypeselection { position:absolute; left: 10px; bottom: 10px;  font-size: 20px; }
 .PmsBookingProductList .productentry .roomtypeselection select { margin-right: 5px; border: solid 1px #bbb; background-color:#fff; }
 .PmsBookingProductList .continue_button.disabled { background-color:#efefef !important; color:#bbb !important; cursor:inherit; }
-.PmsBookingProductList .selectbutton { border: solid 1px; position:absolute; right: 10px; width: 200px; text-align: center; padding: 10px; text-transform: uppercase;  }
+.PmsBookingProductList .selectbutton { border: solid 1px; position:absolute; right: 10px; width: 200px; text-align: center; padding: 10px; text-transform: uppercase;z-index:5;  }
 .PmsBookingProductList .productentry.selected { border: solid 1px; }
 .PmsBookingProductList .price.withselectbtn { top:inherit; bottom: 10px; }
 .PmsBookingProductList .roomimg { max-width: 150px; max-height: 100%; }
@@ -17,3 +17,13 @@
 .PmsBookingProductList .selectedtext { position:absolute; right: 10px; }
 .PmsBookingProductList .outofstocktext {position:absolute; right: 10px; top: 10px; }
 .PmsBookingProductList .roomdesc { font-size: 14px; font-weight: normal; margin-top: 10px; }
+
+@media only all and (max-width: 800px) {
+    .PmsBookingProductList .selectbutton { width: 100px; }
+    .PmsBookingProductList .roomdesc {
+        position: absolute;
+        left: 94px;
+        top: 55px;
+        padding-right: 60px;
+    }
+}

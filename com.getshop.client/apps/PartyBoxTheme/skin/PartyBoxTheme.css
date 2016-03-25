@@ -86,6 +86,10 @@ h1 { letter-spacing: 2px; }
     cursor:pointer;
 }
 
+.PmsBookingProductList .productentry.imgdisplayed {
+    padding-left: 90px;
+}
+
 .PmsBookingProductList .productentry.selected { border: solid 1px #77b55a; background-color:#4ed965; }
 .PmsBookingProductList .selectedtext { color:#2b7637; }
 .PmsBookingSummary,.PmsBookingContactData { padding-left: 100px; padding-right: 100px; }

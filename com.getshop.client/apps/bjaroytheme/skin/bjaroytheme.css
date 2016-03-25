@@ -41,7 +41,7 @@ gsarea[area="body"] { margin-top: 0px; }
 .News .news_container { letter-spacing: 0px; color:#000 !important; }
 
 #gsbody .subpages { font-weight: 400 !important; letter-spacing: 1px; font-family: 'Raleway', sans-serif; font-size: 16px; line-height: 26px; font-weight: 400; }
-.gsucell.subpages h1 { text-transform: uppercase; letter-spacing: 6px; font-size: 28px; line-height: 36px; font-weight: 800; }
-.gsucell.subpages h2 { text-transform: uppercase; letter-spacing: 6px; }
+.gsucell.subpages h1 { text-transform: uppercase; letter-spacing: 6px; font-size: 28px; line-height: 36px; font-weight: 600; }
+.gsucell.subpages h2 { text-transform: uppercase; letter-spacing: 6px; font-weight: 600; }
 .gsucell.subpages h3 {font-family: 'Montserrat', sans-serif; font-weight: normal;line-height: 28px; }
 .gsucell.subpages h4 { text-transform: uppercase; font-size: 14px; font-weight: 600; letter-spacing: 6px; margin: 0px; margin-bottom: 8px; }

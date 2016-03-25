@@ -796,6 +796,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             String logText = "Changed room to " + bookingEngine.getBookingItem(itemId).bookingItemName + " from " + from;
             logEntry(logText, bookingId, null, roomId);
+            doNotification("room_changed", booking, room);
         } catch (BookingEngineException ex) {
             return ex.getMessage();
         }

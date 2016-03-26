@@ -1,0 +1,37 @@
+{
+  "name": "zcp",
+  "version": "0.0.1",
+  "dependencies": {},
+  "devDependencies": {
+    "express": "^4.10.1",
+    "gulp": "^3.8.9",
+    "gulp-angular-templatecache": "^1.4.2",
+    "gulp-babel": "^5.2.1",
+    "gulp-concat": "^2.4.1",
+    "gulp-debug": "^2.0.1",
+    "gulp-filter": "^2.0.2",
+    "gulp-less": "^1.3.6",
+    "gulp-manifest": "0.0.9",
+    "gulp-notify": "^2.0.0",
+    "gulp-plumber": "^1.0.0",
+    "gulp-footer": "^1.0.0",
+    "gulp-print": "^1.1.0",
+    "gulp-header": "^1.1.0",
+    "event-stream": "^0.8",
+    "gulp-size": "^2.0.0",
+    "gulp-sourcemaps": "^1.2.7",
+    "js-string-escape": "^1.0.1",
+    "gulp-uglify": "^1.4.0",
+    "gulp-util": "^3.0.4",
+    "gulp-watch": "^4.3.5",
+    "http-proxy": "^1.7.1",
+    "jshint-stylish": "~0.1.3",
+    "main-bower-files": "^2.6.2",
+    "proxy-middleware": "^0.7.0",
+    "request": "^2.53.0"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}
+

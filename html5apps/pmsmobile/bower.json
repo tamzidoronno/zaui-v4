@@ -1,0 +1,13 @@
+{
+    "name": "com.getshop.pmsmobile",
+    "version": "1.0.0",
+    "dest": "public_html/bower_components",
+    "dependencies": {
+        "angular": "1.5.3",
+        "bootstrap": "3.3.6",
+        "angular-ui-router": "*",
+        "jquery": "2.1.4",
+        "gulp": "3.9.1",
+        "components-font-awesome": "~4.5.0"
+    }
+}

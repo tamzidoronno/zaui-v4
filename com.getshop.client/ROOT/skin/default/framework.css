@@ -2654,5 +2654,7 @@ select.gsniceselect1:active {
 
 .gs_modalIsOpen {
    height: 100vh;
-   overflow-y: scroll;
+   overflow-y: hidden;
+   position: fixed;
+   width: 100%;
 }

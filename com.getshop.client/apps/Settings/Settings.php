@@ -108,6 +108,7 @@ class Settings extends \SystemApplication implements \Application {
         $storeSettings->phoneNumber = $_POST['phoneNumber'];
         $storeSettings->paymentMethod = $_POST['paymentMethod'];
         $storeSettings->disableMobileMode = $_POST['disableMobileMode'];
+        $storeSettings->defaultPrefix = $_POST['defaultPrefix'];
         
         $this->getApi()->getStoreManager()->saveStore($storeSettings);
         
@@ -124,6 +125,14 @@ class Settings extends \SystemApplication implements \Application {
 
     public function deleteStore() {
         $this->getApi()->getStoreManager()->delete();
+    }
+
+    public function getDefaultPrefix() {
+        if (isset($this->getFactory()->getStoreConfiguration()->defaultPrefix)) {
+            return $this->getFactory()->getStoreConfiguration()->defaultPrefix;
+        }
+        
+        return "";
     }
 
 }

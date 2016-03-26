@@ -88,3 +88,11 @@
     margin-top: 10px;
     display: none;
 }
+
+.ProMeisterCreateAccount .cellprefix {
+    width: 50px !important;
+}
+
+.ProMeisterCreateAccount .cellphonenumber {
+    width: calc(100% - 77px) !important;
+}

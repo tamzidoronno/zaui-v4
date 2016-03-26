@@ -31,6 +31,8 @@ public class StoreConfiguration extends DataCommon {
     public String state;
     public String country;
     public String paymentMethod = "";
+    public int defaultPrefix = 47;
+    
     @Translation
     public List<TranslationObject> translationMatrix = new ArrayList();
     public HashMap<String, String> configurationFlags;

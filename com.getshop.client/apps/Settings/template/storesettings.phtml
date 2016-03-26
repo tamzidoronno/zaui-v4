@@ -1,4 +1,6 @@
 <?
+/* @var $this \ns_d755efca_9e02_4e88_92c2_37a3413f3f41\Settings */
+ 
 $countrycodes = $this->getFactory()->getTerritoriesList();
 /* @var $factory Factory */
 $factory = $this->getFactory();
@@ -87,6 +89,14 @@ $states['fi_FI'] = "Finish";
         <input type="textfield" gs_model='storesettings' gs_model_attr='phoneNumber' value="<? echo $this->getMainMobilePhone(); ?>">
         <div class="description">
             <?php echo $this->__("This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address."); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="defaultprefix">
+        <span class="title"><?php echo $this->__f("Default phone prefix"); ?></span>
+        <input type="textfield" gs_model='storesettings' gs_model_attr='defaultPrefix' value="<? echo $this->getDefaultPrefix(); ?>">
+        <div class="description">
+            <?php echo $this->__("In registration forms and where prefix is not specified it will uses this as the default prefix."); ?>
         </div>
     </div>
 

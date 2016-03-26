@@ -57,6 +57,7 @@ class ProMeisterCreateAccount extends \MarketingApplication implements \Applicat
         $user->cellPhone = $_POST['data']['cellphone'];
         $user->password = $_POST['data']['password'];
         $user->wantToBecomeCompanyOwner = isset($_POST['data']['isgarageleader']) && ($_POST['data']['isgarageleader'] == "1" || $_POST['data']['isgarageleader'] == 1);
+        $user->prefix = $_POST['data']['cellPrefix'];
         
         $company = $this->getCompany();
         $company->invoiceEmail = $_POST['data']['email'];

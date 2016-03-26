@@ -55,6 +55,7 @@ app.ProMeisterCreateAccount = {
         data.isgarageleader = $('.ProMeisterCreateAccount input[name="isgarageleader"]:checked').length;
         data.otherCompanies = $('.ProMeisterCreateAccount input[name="othercompanies"]').val();
         data.password = $('.ProMeisterCreateAccount input[name="password"]').val();
+        data.cellPrefix = $('.ProMeisterCreateAccount input[name="cellprefix"]').val();
         
         if (!app.ProMeisterCreateAccount.validateEmail(data.invoicemail)) {
             alert(__w("Please check your the invoice email address"));

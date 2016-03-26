@@ -20,7 +20,8 @@ $group = $this->getSelectedGroup();
             <br/><input class="gsniceinput1" type="txt"  mandatory="yes" name="invoicemail"/>
             <br/>
             <br/><label>* <? echo $this->__f("Cellphone"); ?></label>
-            <br/><input class="gsniceinput1" type="txt"  mandatory="yes" name="cellphone"/>
+            <br/>+ <input class="gsniceinput1 cellprefix" type="txt"  mandatory="yes" name="cellprefix" value="<? echo $this->getApi()->getStoreManager()->getMyStore()->configuration->defaultPrefix; ?>"/>
+            - <input class="gsniceinput1 cellphonenumber" type="txt"  mandatory="yes" name="cellphone"/>
             <br/>
             <br/><input class="gsniceinput1" type="checkbox" name="isgarageleader"/><? echo $this->__f("Garage leader"); ?>
             <br/> <? echo $this->__f("Check this if you administrate your mechanics."); ?>

@@ -109,6 +109,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         updateBookingTypesIfTypeChanged();
+        createScheduler("pmsprocessor", "0 6,16 * * *", CheckConsistencyCron.class);
     }
     
     public Availability getAvailbility(String id) {

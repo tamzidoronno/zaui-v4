@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.pmsmanager;
+package com.thundashop.core.bookingengine;
 
 import com.getshop.scope.GetShopSchedulerBase;
 
@@ -11,16 +11,16 @@ import com.getshop.scope.GetShopSchedulerBase;
  *
  * @author boggi
  */
-public class CheckPmsProcessing extends GetShopSchedulerBase {
+class CheckConsistencyCron extends GetShopSchedulerBase {
 
-    public CheckPmsProcessing(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
+    public CheckConsistencyCron(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
         super(webAddress, username, password, scheduler, multiLevelName);
     }
 
     @Override
     public void execute() throws Exception {
         String name = getMultiLevelName();
-        getApi().getPmsManager().processor(name);
+        getApi().getBookingEngine().checkConsistency(name);
     }
     
 }

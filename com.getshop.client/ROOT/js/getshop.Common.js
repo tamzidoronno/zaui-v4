@@ -203,6 +203,7 @@ thundashop.common.showModal = function(modalName, data) {
     var event = thundashop.Ajax.createEvent(null, "showModal", null, data);
     event['synchron'] = true;
     thundashop.Ajax.post(event, function(res) {
+        $('#gsbody').addClass('gs_modalIsOpen');
         $('#dynamicmodal').html(res);
         $(window).scrollTop(0);
     });
@@ -1214,6 +1215,10 @@ GetShopUtil = {
 thundashop.common.logout = function() {
     document.location = '/logout.php?goBackToHome=true';
 };
+
+thundashop.common.sendPubSubMessage = function(data) {
+    PubSub.publish("EVENT_POST_NAV_ACTION", data);
+}
 
 thundashop.common.triggerTimeoutCheck = function() {
     var timeOutUser = $('.gsbody_inner').attr('userTimeout');

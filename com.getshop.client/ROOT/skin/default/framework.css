@@ -2651,3 +2651,10 @@ select.gsniceselect1:active {
 .gs_first_in_carousel {
     display: none !important;
 }
+
+.gs_modalIsOpen {
+   height: 100vh;
+   overflow-y: hidden;
+   position: fixed;
+   width: 100%;
+}

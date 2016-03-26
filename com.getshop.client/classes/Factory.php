@@ -219,6 +219,7 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/jquery.fileupload-ui.js");
         $this->addJavascriptFile("js/getshop.imageupload.js");
         $this->addJavascriptFile("js/PubSub.js");
+        $this->addJavascriptFile("js/getshop.Modal.js");
         $this->addJavascriptFile("js/mutate.events.js");
         $this->addJavascriptFile("js/mutate.min.js");
         $this->addJavascriptFile("js/getshop.ApplicationManager.js");

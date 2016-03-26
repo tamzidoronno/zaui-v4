@@ -139,6 +139,7 @@ thundashop.Ajax = {
                     PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
                 }
                 thundashop.common.triggerTimeoutCheck();
+                thundashop.common.sendPubSubMessage(data);
             },
             error: thundashop.handleAjaxError
         });
@@ -195,6 +196,7 @@ thundashop.Ajax = {
                 }
                 
                 thundashop.common.triggerTimeoutCheck();
+                thundashop.common.sendPubSubMessage(data);
             },
             xhr: function()
             {
@@ -231,6 +233,7 @@ thundashop.Ajax = {
                 result = response;
                 PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
                 thundashop.common.triggerTimeoutCheck();
+                thundashop.common.sendPubSubMessage(data);
             },
             error: thundashop.handleAjaxError
         });
@@ -250,6 +253,7 @@ thundashop.Ajax = {
             success: function(response) {
                 thundashop.Ajax.updateFromResponse(response);
                 thundashop.common.triggerTimeoutCheck();
+                thundashop.common.sendPubSubMessage(thundashop.base64.encodeForAjax(event));
                 if (response.errors && response.errors !== "")
                     result = false;
             },
@@ -316,6 +320,12 @@ thundashop.Ajax = {
         $('#loaderbox').show();
         variables = variables.substring(variables.indexOf('?') + 1);
         url = 'json.php?' + variables + '&scopeid=' + scopeid;
+        
+        var info = {
+            url : url,
+            variables : variables
+        }
+        
         $.ajax({
             type: "POST",
             url: url,
@@ -324,6 +334,7 @@ thundashop.Ajax = {
             success: function(response) {
                 thundashop.Ajax.updateFromResponse(response);
                 thundashop.common.triggerTimeoutCheck();
+                thundashop.common.sendPubSubMessage(info);
                 PubSub.publish('navigation_complete', variables);
                 if (typeof(callback) !== "undefined" && typeof(callback) !== "boolean" && typeof(callback) == "function") {
                     callback();

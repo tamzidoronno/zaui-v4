@@ -229,7 +229,7 @@ public class StorePool {
     private Object[] runTroughAntiSamy(JsonObject2 object, Object[] argumentValues) throws ErrorException {
         StoreHandler storeHandler = getStoreHandler(object.sessionId);
         
-        if (storeHandler != null && storeHandler.isAdministrator(object.sessionId, object)) {
+        if (storeHandler != null && (storeHandler.isAdministrator(object.sessionId, object) || storeHandler.isEditor(object.sessionId, object))) {
             return argumentValues;
         }
         

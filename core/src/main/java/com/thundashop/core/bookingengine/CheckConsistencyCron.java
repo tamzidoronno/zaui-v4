@@ -11,7 +11,7 @@ import com.getshop.scope.GetShopSchedulerBase;
  *
  * @author boggi
  */
-class CheckConsistencyCron extends GetShopSchedulerBase {
+public class CheckConsistencyCron extends GetShopSchedulerBase {
 
     public CheckConsistencyCron(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
         super(webAddress, username, password, scheduler, multiLevelName);

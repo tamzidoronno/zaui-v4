@@ -448,4 +448,16 @@ public class StoreHandler {
             ex.printStackTrace();
         }
     }
+
+    boolean isEditor(String sessionId, JsonObject2 object) {
+        scope.setStoreId(storeId, object.multiLevelName, getSession(sessionId));
+
+        UserManager manager = getManager(UserManager.class, null, null);
+        User user = manager.getUserBySessionId(sessionId);
+        if (user != null) {
+            return user.isEditor();
+        }
+
+        return false;
+    }
 }

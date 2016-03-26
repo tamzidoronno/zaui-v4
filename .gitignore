@@ -136,3 +136,11 @@ com.getshop.client/events/com
 /com.getshop.pullserverjar/nbproject/private/
 
 private/*
+/com.getshop.mobile/arxapp/nbproject/private/
+/com.getshop.pmsmobile/nbproject/private/
+
+
+html5apps/*/node_modules
+html5apps/*/build
+html5apps/*/nbproject/privat*
+html5apps/*/public_html/bower_components

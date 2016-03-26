@@ -2224,7 +2224,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.bookingItemTypeId = item.bookingItemTypeId;
 
             if (room.bookingId != null) {
-                bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
+                    try {
+                        bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
+                    }catch(Exception e) {
+                        if(warnedAbout.contains("Itemchangedfailed_" + room.pmsBookingRoomId)) {
+                            messageManager.sendErrorNotification("Booking failure for room: " + room.pmsBookingRoomId + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, null);
+                            warnedAbout.add("Itemchangedfailed_" + room.pmsBookingRoomId);
+                        }
+                    }
+                
             }
             PmsBooking booking = getBookingFromRoom(room.pmsBookingRoomId);
             String bookingId = "";
@@ -2445,15 +2453,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
 
                 String ownerMail = storeManager.getMyStore().configuration.emailAdress;
+                String addressMail = storeManager.getMyStore().webAddress;
                 if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
-                    //Notify that a booking has started without a booking item... wtf.
-                    messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item", "Owner: " + ownerMail, "pal@getshop.com", "pal@getshop.com");
+                    System.out.println("Booking started without item, Owner: " + ownerMail + ", address:" + addressMail);
                     continue;
                 }
 
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 if (item == null) {
-                    messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item (nullitem)", "Owner: " + ownerMail, "pal@getshop.com", "pal@getshop.com");
+                    messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item (nullitem)", "Owner: " + ownerMail + ", address:" + addressMail, "pal@getshop.com", "pal@getshop.com");
                 } else {
                     PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
                     if (additional.isClean(false)) {

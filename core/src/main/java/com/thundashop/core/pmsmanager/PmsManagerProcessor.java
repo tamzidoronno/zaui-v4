@@ -203,7 +203,7 @@ public class PmsManagerProcessor {
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.rooms) {
-                if (!room.isStartingToday()) {
+                if (room.isStartingToday() || room.isStarted()) {
                     continue;
                 }
                 if (room.isEnded()) {

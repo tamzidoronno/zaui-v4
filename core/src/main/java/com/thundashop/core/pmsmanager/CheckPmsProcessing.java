@@ -21,6 +21,7 @@ public class CheckPmsProcessing extends GetShopSchedulerBase {
     public void execute() throws Exception {
         String name = getMultiLevelName();
         getApi().getPmsManager().processor(name);
+        getApi().getBookingEngine().checkConsistency(name);
     }
     
 }

@@ -1,0 +1,70 @@
+.ProMeisterCandidateSearch .searchresult {   
+    margin-top: 20px;
+}
+
+.ProMeisterCandidateSearch .search_for_users {   
+    line-height: 25px;
+    vertical-align: top;
+    margin-left: 10px;
+}
+
+.ProMeisterCandidateSearch .userrow {
+    padding: 10px;
+}
+
+.ProMeisterCandidateSearch .userrow:nth-child(odd) {
+    background-color: #F9F9F9;
+}
+
+.ProMeisterCandidateSearch .userrow div {
+    display: inline-block;
+}
+.ProMeisterCandidateSearch .userrow .starred {
+    width: 30px;
+    text-align: center;
+}
+
+.ProMeisterCandidateSearch .userrow .groupname {
+    width: 150px;
+}
+
+.ProMeisterCandidateSearch .userrow .name {
+    width: calc(100% - 280px);
+}
+
+.ProMeisterCandidateSearch div .userInformation .event_row {
+    border-top: dashed 1px #DDD;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    padding: 10px;
+}
+
+.ProMeisterCandidateSearch div .userInformation .event_row:first-child {
+    border-top: solid 0px;
+}
+
+.ProMeisterCandidateSearch div .userInformation {
+    display: none;
+    width: 100%;
+}
+
+.ProMeisterCandidateSearch .companyrow {
+    border: solid 1px #DDD;
+    margin-bottom: 20px;
+}
+
+.ProMeisterCandidateSearch .companyrow .companyname {
+    padding: 10px;
+    background-color: #00731e;
+    color: #FFF;
+}
+
+.ProMeisterCandidateSearch .favorits {
+    margin-bottom: 50px;
+}
+
+.ProMeisterCandidateSearch .searchfueld {
+    padding: 20px;
+    background-color: #FAFAFA;
+}

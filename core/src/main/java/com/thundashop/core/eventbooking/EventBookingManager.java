@@ -1424,4 +1424,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return "";
     }
 
+    @Override
+    public List<Event> getEventsForUser(String userId) {
+        List<Event> rets = bookingEngine.getAllBookings().stream()
+                .filter(booking -> booking.userId != null && booking.userId.equals(userId))
+                .map( booking -> finalize(getEventByBooking(booking)))
+                .collect(Collectors.toList());
+        
+        return rets;
+    }
+
 }

@@ -233,7 +233,7 @@ thundashop.Ajax = {
                 result = response;
                 PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
                 thundashop.common.triggerTimeoutCheck();
-                thundashop.common.sendPubSubMessage(data);
+                thundashop.common.sendPubSubMessage(thundashop.base64.encodeForAjax(event));
             },
             error: thundashop.handleAjaxError
         });

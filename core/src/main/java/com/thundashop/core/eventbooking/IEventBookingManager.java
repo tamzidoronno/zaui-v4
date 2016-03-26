@@ -168,4 +168,8 @@ public interface IEventBookingManager {
     
     @Editor
     public String getSource(String eventId, String userId);
+    
+    @Editor
+    public List<Event> getEventsForUser(String userId);
+    
 }

@@ -1,0 +1,20 @@
+<?
+/* @var $this \ns_294a8d9e_bd48_44f4_a607_b7d86d2d85fc\ProMeisterCandidateSearch */
+$searchValue = isset($_SESSION['ProMeisterCandidateSearch_searchword']) ? $_SESSION['ProMeisterCandidateSearch_searchword'] : "";
+
+?>
+
+<div class="searchfueld">
+    <input class="gsniceinput1 search_text" value="<? echo $searchValue; ?>"/><i class="fa fa-search gs_shop_small_icon search_for_users"></i>
+</div>
+
+<div class="searchresult">
+    <? 
+    if (!$searchValue) {
+        $this->includefile("nosearch"); 
+    } else {
+        $this->includefile("searchresult"); 
+    }
+    
+    ?>
+</div>

@@ -778,7 +778,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return "Booking does not exists";
         }
         try {
-            PmsBookingRooms room = booking.findRoom(roomId);
+             PmsBookingRooms room = booking.findRoom(roomId);
             if (room == null) {
                 return "Room does not exists";
             }
@@ -786,6 +786,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
             resetBookingItem(room, itemId, booking);
+            finalize(booking);
 
             String from = "none";
             if (room.bookingItemId != null) {
@@ -2846,6 +2847,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this);
         return filtering.filterRooms(filter);
+    }
+
+    @Override
+    public void setGuestOnRoom(List<PmsGuests> guests, String bookingId, String roomId) {
+        PmsBooking booking = getBooking(bookingId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        room.guests = guests;
+        room.numberOfGuests = guests.size();
+        logEntry("Changed guest information", bookingId, roomId);
+        saveBooking(booking);
     }
 
 }

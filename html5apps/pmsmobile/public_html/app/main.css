@@ -6,15 +6,14 @@ body { background-color:#3a99d7; }
 .box:hover { background-color: #494949; cursor:pointer; }
 .innerview .additionalinfo { text-align: center;  border-top-left-radius: 5px; border-top-right-radius: 5px; font-size: 16px; margin-top: 20px; padding: 5px; color:#fff; background-color:#000; }
 .innerview .additionalinfobottom { background-color: #000; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; padding: 5px; }
-.roomrow { border: solid 1px; color:#fff !important; cursor:pointer;  }
-.roomrow a { color: #fff !important; }
-.roomrow.notstarted { border: solid 1px; background-color:#efefef;  }
-.roomrow.started { border: solid 1px; background-color:green; color:#fff !important; }
-.roomrow.ended { border: solid 1px; background-color:red;  }
+.roomrow { border-bottom: solid 1px; color:#fff !important; cursor:pointer;  }
+.roomrow.notnotstarted { background-color:#efefef; color:#000 !important; }
+.roomrow.started { background-color:green; color:#fff !important; }
+.roomrow.ended { background-color:#ffe39f; color:#000 !important; }
 .roomrow.waitingforlock { border: solid 1px; background-color:blue;  }
 .roomrow .guestinfo { height: 70px;position: relative; padding: 10px; }
 .roomrow .dateinfo { color:#aaa; position:absolute; bottom: 5px; right: 5px; }
 .roomrow .code { float: right; }
 .roomrow .roominfoblock { border-right: solid 1px; padding: 10px; min-height: 70px;}
 .roomrow .guestinfocol { min-height: 70px; position: relative; padding-top: 5px; }
-a, a:hover { color:#fff; }
+a, a:hover { color:#000; } 

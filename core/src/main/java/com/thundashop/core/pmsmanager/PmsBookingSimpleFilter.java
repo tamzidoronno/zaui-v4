@@ -5,6 +5,8 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PmsBookingSimpleFilter {
@@ -26,7 +28,11 @@ public class PmsBookingSimpleFilter {
             }
         }
         
-        
+        Collections.sort(result, new Comparator<PmsRoomSimple>(){
+            public int compare(PmsRoomSimple o1, PmsRoomSimple o2){
+                return o1.room.compareTo(o2.room);
+            }
+        });
         return result;
     }
 
@@ -34,7 +40,9 @@ public class PmsBookingSimpleFilter {
         PmsRoomSimple simple = new PmsRoomSimple();
         simple.start = room.date.start.getTime();
         simple.end = room.date.end.getTime();
-        simple.code = room.code;
+        if(manager.configuration.hasLockSystem()) {
+            simple.code = room.code;
+        }
         simple.pmsRoomId = room.pmsBookingRoomId;
         simple.bookingId = booking.id;
         User user = manager.userManager.getUserById(booking.userId);

@@ -56,6 +56,9 @@ public interface IPmsManager {
     public void saveConfiguration(PmsConfiguration notifications);
     
     @Administrator
+    public void setGuestOnRoom(List<PmsGuests> guests, String bookingId, String roomId);
+    
+    @Administrator
     public void confirmBooking(String bookingId, String message);
     
     @Administrator

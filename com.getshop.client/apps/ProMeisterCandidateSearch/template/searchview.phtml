@@ -5,16 +5,13 @@ $searchValue = isset($_SESSION['ProMeisterCandidateSearch_searchword']) ? $_SESS
 ?>
 
 <div class="searchfueld">
-    <input class="gsniceinput1 search_text" value="<? echo $searchValue; ?>"/><i class="fa fa-search gs_shop_small_icon search_for_users"></i>
+    <center>
+        
+        <?
+        echo "<div style='font-size: 25px; margin-bottom: 20px;'>".$this->__f("Search")."</div>";
+        ?>
+    
+        <input class="gsniceinput1 search_text" value="<? echo $searchValue; ?>"/><i class="fa fa-search gs_shop_small_icon search_for_users"></i>
+    </center>
 </div>
 
-<div class="searchresult">
-    <? 
-    if (!$searchValue) {
-        $this->includefile("nosearch"); 
-    } else {
-        $this->includefile("searchresult"); 
-    }
-    
-    ?>
-</div>

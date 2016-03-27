@@ -24,6 +24,13 @@ if (!count($users)) {
         foreach ($users as $user) {
             
             $events = $this->getApi()->getEventBookingManager()->getEventsForUser($this->getBookingEngineName(), $user->id);
+            if (!is_array($events)) {
+                $events = [];
+            }
+            
+            $oldEvents = $this->getOldEvents($events);
+            $newEvents = $this->getNewEvents($events);
+            
             $inFavList = in_array($user->id, $favList);
             $color = $inFavList ? "style='color: #0dac0d'" : "";;
             $count = count($events);
@@ -36,14 +43,11 @@ if (!count($users)) {
                 <div class="info"> <i class="fa fa-info-circle gs_shop_small_icon show_user_information"> (<? echo $count; ?>)</i></div>
                 <div class="userInformation">
                     <?
-                    if (!is_array($events)) {
+                    if (!count($newEvents) && !count($oldEvents)) {
                         echo $this->__f("Hos not participated on any events");
                     } else {
-                        foreach ($events as $event) {
-                            $start = date("d.m.Y H:i", strtotime($event->mainStartDate));
-                            $end = date("d.m.Y H:i", strtotime($event->mainEndDate));
-                            echo "<div class='event_row'>$start - $end: ".$event->bookingItemType->name."</div>";
-                        }
+                        $this->printEventRows($oldEvents, false);
+                        $this->printEventRows($newEvents, true);
                     }
                     ?>
                 </div>

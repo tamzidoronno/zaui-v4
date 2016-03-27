@@ -33,15 +33,15 @@
 }
 
 .ProMeisterCandidateSearch div .userInformation .event_row {
-    border-top: dashed 1px #DDD;
+    border-bottom: dashed 1px #DDD;
     width: 100%;
     box-sizing: border-box;
     display: block;
     padding: 10px;
 }
 
-.ProMeisterCandidateSearch div .userInformation .event_row:first-child {
-    border-top: solid 0px;
+.ProMeisterCandidateSearch div .userInformation .event_row.lastInRow {
+    border-bottom: solid 0px;
 }
 
 .ProMeisterCandidateSearch div .userInformation {
@@ -67,4 +67,20 @@
 .ProMeisterCandidateSearch .searchfueld {
     padding: 20px;
     background-color: #FAFAFA;
+}
+
+.ProMeisterCandidateSearch .event_list_title {
+    background-color: #00d528;
+    width: 100%;
+    border-bottom: solid 0px;
+    margin-top: 20px;
+}
+
+.ProMeisterCandidateSearch .event_list_title span {
+    padding: 10px;
+    display: inline-block;
+}
+
+.ProMeisterCandidateSearch .event_list_title.old_events {
+    background-color: #d2ff00;
 }

@@ -18,6 +18,8 @@ public class PmsConfiguration extends DataCommon {
     public String emailTemplate = "{content}";
     
     public HashMap<String, String> contracts = new HashMap();
+    public String fireinstructions = "";
+    public String otherinstructions = "";
     
     /* other configurations */
     public boolean needConfirmation = false;

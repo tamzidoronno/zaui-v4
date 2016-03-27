@@ -123,6 +123,9 @@ public interface IPmsManager {
     @Administrator
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter);
     
+    @Administrator
+    public void sendMessageToAllTodaysGuests(String message);
+    
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);
     public PmsConfiguration getConfiguration();

@@ -5537,6 +5537,18 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'sendMessageToAllTodaysGuests' : function(multilevelname, message, silent) {
+        data = {
+            args : {
+                message : JSON.stringify(message),
+            },
+            method: 'sendMessageToAllTodaysGuests',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'setBooking' : function(multilevelname, addons, silent) {
         data = {
             args : {

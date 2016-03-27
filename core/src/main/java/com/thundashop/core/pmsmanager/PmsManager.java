@@ -2859,4 +2859,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
+    @Override
+    public void sendMessageToAllTodaysGuests(String message) {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = PmsBookingFilter.PmsBookingFilterTypes.active;
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.set(Calendar.HOUR, 1);
+        end.set(Calendar.HOUR, 23);
+        filter.startDate = start.getTime();
+        filter.endDate = end.getTime();
+        
+        List<PmsRoomSimple> allRooms = getSimpleRooms(filter);
+        String from = "GetShop";
+        if(configuration.smsName != null && configuration.smsName.isEmpty()) {
+            from = configuration.smsName;
+        }
+        for(PmsRoomSimple simple : allRooms) {
+            for(PmsGuests guest : simple.guest) {
+                messageManager.sendSms("sveve", guest.phone, message, guest.prefix);
+            }
+        }
+    }
+
 }

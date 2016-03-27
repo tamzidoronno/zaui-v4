@@ -6,6 +6,16 @@ app.PmsConfiguration = {
                 autogrow : false
             });
         });
+        $(document).on('click', '.PmsConfiguration #otherinstructionsfiled', function() {
+            thundashop.common.activateCKEditor('otherinstructionsfiled', {
+                autogrow : false
+            });
+        });
+        $(document).on('click', '.PmsConfiguration #fireinstructions', function() {
+            thundashop.common.activateCKEditor('fireinstructions', {
+                autogrow : false
+            });
+        });
     },
     changeview : function() {
         thundashop.common.destroyCKEditors();

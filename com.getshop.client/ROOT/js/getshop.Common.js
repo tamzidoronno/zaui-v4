@@ -269,9 +269,11 @@ thundashop.common.destroyCKEditors = function() {
 }
 thundashop.common.saveCKEditor = function(data, target, notify) {
     var altid = target.attr('altid');
+    data.fromid = target.attr('id');
     var event = thundashop.Ajax.createEvent(null, 'saveContent', target, {
         "content": data,
-        "altid": altid
+        "altid": altid,
+        "fromid" : $(target).attr('id')
     });
     var text = $("<p>" + data + "</p>").text();
     text = text.replace(/^\s+|\s+$/g, "");

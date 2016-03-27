@@ -23,6 +23,21 @@ angular.module('app', ['ui.router'])
       url: "/findguest",
       templateUrl: "pages/findguest.html",
       controller: getshop.findguestController
+    })
+    .state('fire', {
+      url: "/fire",
+      templateUrl: "pages/fire.html",
+      controller: getshop.fireController
+    })
+    .state('sms', {
+      url: "/sms",
+      templateUrl: "pages/sms.html",
+      controller: getshop.smsController
+    })
+    .state('otherinstruction', {
+      url: "/otherinstruction",
+      templateUrl: "pages/otherinstruction.html",
+      controller: getshop.otherInstructionController
     });
 })
 .value('$routerRootComponent', 'app')

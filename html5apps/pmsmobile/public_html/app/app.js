@@ -34,6 +34,11 @@ angular.module('app', ['ui.router'])
       templateUrl: "pages/sms.html",
       controller: getshop.smsController
     })
+    .state('log', {
+      url: "/log",
+      templateUrl: "pages/log.html",
+      controller: getshop.logController
+    })
     .state('otherinstruction', {
       url: "/otherinstruction",
       templateUrl: "pages/otherinstruction.html",

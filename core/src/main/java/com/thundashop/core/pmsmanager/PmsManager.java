@@ -2272,20 +2272,57 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsLog> getLogEntries(PmsLog filter) {
+        
         List<PmsLog> res = new ArrayList();
-
-        for (PmsLog log : logentries) {
-            if (filter.bookingId.equals(log.bookingId)) {
-                res.add(log);
+        if(filter != null) {
+            for (PmsLog log : logentries) {
+                if(filter.includeAll) {
+                    res.add(log);
+                } else if (!filter.bookingId.isEmpty() && filter.bookingId.equals(log.bookingId)) {
+                    res.add(log);
+                } else if (!filter.bookingItemId.isEmpty() && filter.bookingItemId.equals(log.bookingItemId)) {
+                    res.add(log);
+                }
             }
+        } else {
+            res = logentries;
         }
+        
+        
 
         Collections.sort(res, new Comparator<PmsLog>() {
             public int compare(PmsLog o1, PmsLog o2) {
                 return o2.dateEntry.compareTo(o1.dateEntry);
             }
         });
+        
+        for(PmsLog log : res) {
+            User user = userManager.getUserById(log.userId);
+            if(user != null) {
+                log.userName = user.fullName;
+            }
+            if(log.bookingItemId != null && !log.bookingItemId.isEmpty()) {
+                BookingItem item = bookingEngine.getBookingItem(log.bookingItemId);
+                if(item != null) {
+                    log.roomName = item.bookingItemName;
+                }
+            }
+        }
 
+        
+        if(res.size() > 200) {
+            List<PmsLog> newres = new ArrayList();
+            int i = 0;
+            for(PmsLog test : res) {
+                i++;
+                newres.add(test);
+                if(i > 200) {
+                    break;
+                }
+            }
+            res = newres;
+        }
+        
         return res;
     }
 
@@ -2500,6 +2537,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
             if (additional != null) {
                 if (additional.unsetMarkedDirtyPastThirtyMinutes()) {
+                    additional.markCleaned();
                     logEntry("Unsetting cleaning for this room.", bookingId, room.bookingItemId);
                     saveObject(additional);
                 }

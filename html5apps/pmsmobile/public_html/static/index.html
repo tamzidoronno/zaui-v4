@@ -8,7 +8,14 @@
   </head>
 
   <body ng-app="app">
-    <div ui-view></div>
+<div class='row'>
+    <div class='col-md-4 col-xs-1'></div>
+    <div class='col-md-4 col-xs-10'>
+        <div ui-view></div>
+    </div>
+   <div class='col-md-4 col-xs-1'></div>
+</div>
+
     <script src="vendors.js"></script>
     <script src="main.js"></script>
     
@@ -27,6 +34,10 @@
                     alert('disconnected');
                 });
             }
+        }
+        
+        function getMultilevelName() {
+            return localStorage.getItem("multilevelname");
         }
     </script>
     

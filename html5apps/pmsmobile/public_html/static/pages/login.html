@@ -1,8 +1,16 @@
-<div>
-    <form>
-         Address <input type="text" ng-model="login.address" value="partybox.3.0.local.getshop.com"/><br />
-         Username <input type="text" ng-model="login.username" value="post@getshop.com"/><br />
-        Password <input type="text" ng-model="login.password" value="gakkgakk11"/><br />
-         <input type="submit" ng-click="doLogin(login)" value="Sign in"/><br />
-    </form>
-</div>
+<h1>Login</h1>
+<form>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Hostname</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" ng-model="login.address" placeholder='Hostname'>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Username</label>
+    <input type="email" class="form-control" id="exampleInputPassword1"  ng-model="login.username">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1"  ng-model="login.password">
+  </div>
+    <button type="submit" class="btn btn-default form-control" ng-click="doLogin(login);">Login</button>
+</form>        

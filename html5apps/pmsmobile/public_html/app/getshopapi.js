@@ -1086,19 +1086,20 @@ GetShopApiWebSocket.BookingEngine = function(communication) {
 }
 
 GetShopApiWebSocket.BookingEngine.prototype = {
-    'changeBookingItemOnBooking' : function(booking,item, silent) {
+    'changeBookingItemOnBooking' : function(multilevelname, booking,item, silent) {
         data = {
             args : {
                 booking : JSON.stringify(booking),
                 item : JSON.stringify(item),
             },
             method: 'changeBookingItemOnBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'changeDatesOnBooking' : function(bookingId,start,end, silent) {
+    'changeDatesOnBooking' : function(multilevelname, bookingId,start,end, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
@@ -1106,111 +1107,121 @@ GetShopApiWebSocket.BookingEngine.prototype = {
                 end : JSON.stringify(end),
             },
             method: 'changeDatesOnBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'changeTypeOnBooking' : function(bookingId,itemTypeId, silent) {
+    'changeTypeOnBooking' : function(multilevelname, bookingId,itemTypeId, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
                 itemTypeId : JSON.stringify(itemTypeId),
             },
             method: 'changeTypeOnBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'checkConsistency' : function(silent) {
+    'checkConsistency' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'checkConsistency',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'createABookingItemType' : function(name, silent) {
+    'createABookingItemType' : function(multilevelname, name, silent) {
         data = {
             args : {
                 name : JSON.stringify(name),
             },
             method: 'createABookingItemType',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'deleteBookingItem' : function(id, silent) {
+    'deleteBookingItem' : function(multilevelname, id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
             },
             method: 'deleteBookingItem',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'deleteBookingItemType' : function(id, silent) {
+    'deleteBookingItemType' : function(multilevelname, id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
             },
             method: 'deleteBookingItemType',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'deleteOpeningHours' : function(repeaterId, silent) {
+    'deleteOpeningHours' : function(multilevelname, repeaterId, silent) {
         data = {
             args : {
                 repeaterId : JSON.stringify(repeaterId),
             },
             method: 'deleteOpeningHours',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllAvailbleItems' : function(start,end, silent) {
+    'getAllAvailbleItems' : function(multilevelname, start,end, silent) {
         data = {
             args : {
                 start : JSON.stringify(start),
                 end : JSON.stringify(end),
             },
             method: 'getAllAvailbleItems',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllBookings' : function(silent) {
+    'getAllBookings' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getAllBookings',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllBookingsByBookingItem' : function(bookingItemId, silent) {
+    'getAllBookingsByBookingItem' : function(multilevelname, bookingItemId, silent) {
         data = {
             args : {
                 bookingItemId : JSON.stringify(bookingItemId),
             },
             method: 'getAllBookingsByBookingItem',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAvailbleItems' : function(typeId,start,end, silent) {
+    'getAvailbleItems' : function(multilevelname, typeId,start,end, silent) {
         data = {
             args : {
                 typeId : JSON.stringify(typeId),
@@ -1218,74 +1229,81 @@ GetShopApiWebSocket.BookingEngine.prototype = {
                 end : JSON.stringify(end),
             },
             method: 'getAvailbleItems',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getBookingItem' : function(id, silent) {
+    'getBookingItem' : function(multilevelname, id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
             },
             method: 'getBookingItem',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getBookingItemType' : function(id, silent) {
+    'getBookingItemType' : function(multilevelname, id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
             },
             method: 'getBookingItemType',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getBookingItemTypes' : function(silent) {
+    'getBookingItemTypes' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getBookingItemTypes',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getBookingItems' : function(silent) {
+    'getBookingItems' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getBookingItems',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getConfig' : function(silent) {
+    'getConfig' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getConfig',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getDefaultRegistrationRules' : function(silent) {
+    'getDefaultRegistrationRules' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getDefaultRegistrationRules',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getNumberOfAvailable' : function(itemType,start,end, silent) {
+    'getNumberOfAvailable' : function(multilevelname, itemType,start,end, silent) {
         data = {
             args : {
                 itemType : JSON.stringify(itemType),
@@ -1293,73 +1311,80 @@ GetShopApiWebSocket.BookingEngine.prototype = {
                 end : JSON.stringify(end),
             },
             method: 'getNumberOfAvailable',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'getOpeningHours' : function(itemId, silent) {
+    'getOpeningHours' : function(multilevelname, itemId, silent) {
         data = {
             args : {
                 itemId : JSON.stringify(itemId),
             },
             method: 'getOpeningHours',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveBookingItem' : function(item, silent) {
+    'saveBookingItem' : function(multilevelname, item, silent) {
         data = {
             args : {
                 item : JSON.stringify(item),
             },
             method: 'saveBookingItem',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveDefaultRegistrationRules' : function(rules, silent) {
+    'saveDefaultRegistrationRules' : function(multilevelname, rules, silent) {
         data = {
             args : {
                 rules : JSON.stringify(rules),
             },
             method: 'saveDefaultRegistrationRules',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveOpeningHours' : function(time,itemId, silent) {
+    'saveOpeningHours' : function(multilevelname, time,itemId, silent) {
         data = {
             args : {
                 time : JSON.stringify(time),
                 itemId : JSON.stringify(itemId),
             },
             method: 'saveOpeningHours',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'setConfirmationRequired' : function(confirmationRequired, silent) {
+    'setConfirmationRequired' : function(multilevelname, confirmationRequired, silent) {
         data = {
             args : {
                 confirmationRequired : JSON.stringify(confirmationRequired),
             },
             method: 'setConfirmationRequired',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
     },
 
-    'updateBookingItemType' : function(type, silent) {
+    'updateBookingItemType' : function(multilevelname, type, silent) {
         data = {
             args : {
                 type : JSON.stringify(type),
             },
             method: 'updateBookingItemType',
+            multiLevelName: multilevelname,
             interfaceName: 'core.bookingengine.IBookingEngine',
         };
         return this.communication.send(data, silent);
@@ -2213,7 +2238,7 @@ GetShopApiWebSocket.EventBookingManager = function(communication) {
 }
 
 GetShopApiWebSocket.EventBookingManager.prototype = {
-    'addExternalCertificate' : function(userId,fileId,eventId, silent) {
+    'addExternalCertificate' : function(multilevelname, userId,fileId,eventId, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
@@ -2221,23 +2246,25 @@ GetShopApiWebSocket.EventBookingManager.prototype = {
                 eventId : JSON.stringify(eventId),
             },
             method: 'addExternalCertificate',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'addLocationFilter' : function(locationId, silent) {
+    'addLocationFilter' : function(multilevelname, locationId, silent) {
         data = {
             args : {
                 locationId : JSON.stringify(locationId),
             },
             method: 'addLocationFilter',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'addUserComment' : function(userId,eventId,comment, silent) {
+    'addUserComment' : function(multilevelname, userId,eventId,comment, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
@@ -2245,12 +2272,13 @@ GetShopApiWebSocket.EventBookingManager.prototype = {
                 comment : JSON.stringify(comment),
             },
             method: 'addUserComment',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'addUserToEvent' : function(eventId,userId,silent,source) {
+    'addUserToEvent' : function(multilevelname, eventId,userId,silent,source, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
@@ -2259,99 +2287,108 @@ GetShopApiWebSocket.EventBookingManager.prototype = {
                 source : JSON.stringify(source),
             },
             method: 'addUserToEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'bookCurrentUserToEvent' : function(eventId,source, silent) {
+    'bookCurrentUserToEvent' : function(multilevelname, eventId,source, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
                 source : JSON.stringify(source),
             },
             method: 'bookCurrentUserToEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'canDownloadCertificate' : function(eventId, silent) {
+    'canDownloadCertificate' : function(multilevelname, eventId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
             },
             method: 'canDownloadCertificate',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'cancelEvent' : function(eventId, silent) {
+    'cancelEvent' : function(multilevelname, eventId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
             },
             method: 'cancelEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'checkToSendReminders' : function(silent) {
+    'checkToSendReminders' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'checkToSendReminders',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'clearFilters' : function(silent) {
+    'clearFilters' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'clearFilters',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'createEvent' : function(event, silent) {
+    'createEvent' : function(multilevelname, event, silent) {
         data = {
             args : {
                 event : JSON.stringify(event),
             },
             method: 'createEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'deleteCertificate' : function(certificateId, silent) {
+    'deleteCertificate' : function(multilevelname, certificateId, silent) {
         data = {
             args : {
                 certificateId : JSON.stringify(certificateId),
             },
             method: 'deleteCertificate',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'deleteEvent' : function(eventId, silent) {
+    'deleteEvent' : function(multilevelname, eventId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
             },
             method: 'deleteEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'deleteExternalCertificates' : function(userId,fileId,eventId, silent) {
+    'deleteExternalCertificates' : function(multilevelname, userId,fileId,eventId, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
@@ -2359,326 +2396,368 @@ GetShopApiWebSocket.EventBookingManager.prototype = {
                 eventId : JSON.stringify(eventId),
             },
             method: 'deleteExternalCertificates',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'deleteLocation' : function(locationId, silent) {
+    'deleteLocation' : function(multilevelname, locationId, silent) {
         data = {
             args : {
                 locationId : JSON.stringify(locationId),
             },
             method: 'deleteLocation',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'deleteReminderTemplate' : function(templateId, silent) {
+    'deleteReminderTemplate' : function(multilevelname, templateId, silent) {
         data = {
             args : {
                 templateId : JSON.stringify(templateId),
             },
             method: 'deleteReminderTemplate',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllEvents' : function(silent) {
+    'getAllEvents' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getAllEvents',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllLocations' : function(silent) {
+    'getAllLocations' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getAllLocations',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getBookingItemTypes' : function(silent) {
+    'getBookingItemTypes' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getBookingItemTypes',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getBookingTypeMetaData' : function(id, silent) {
+    'getBookingTypeMetaData' : function(multilevelname, id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
             },
             method: 'getBookingTypeMetaData',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getBookingsByPageId' : function(pageId,showOnlyNew, silent) {
+    'getBookingsByPageId' : function(multilevelname, pageId,showOnlyNew, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
                 showOnlyNew : JSON.stringify(showOnlyNew),
             },
             method: 'getBookingsByPageId',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getCertificate' : function(certificateId, silent) {
+    'getCertificate' : function(multilevelname, certificateId, silent) {
         data = {
             args : {
                 certificateId : JSON.stringify(certificateId),
             },
             method: 'getCertificate',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getCertificates' : function(silent) {
+    'getCertificates' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getCertificates',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getEvent' : function(eventId, silent) {
+    'getEvent' : function(multilevelname, eventId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
             },
             method: 'getEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getEventLog' : function(eventId, silent) {
+    'getEventLog' : function(multilevelname, eventId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
             },
             method: 'getEventLog',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getEvents' : function(silent) {
+    'getEvents' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getEvents',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getEventsWhereEndDateBetween' : function(from,to, silent) {
+    'getEventsForUser' : function(multilevelname, userId, silent) {
+        data = {
+            args : {
+                userId : JSON.stringify(userId),
+            },
+            method: 'getEventsForUser',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.eventbooking.IEventBookingManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getEventsWhereEndDateBetween' : function(multilevelname, from,to, silent) {
         data = {
             args : {
                 from : JSON.stringify(from),
                 to : JSON.stringify(to),
             },
             method: 'getEventsWhereEndDateBetween',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getExternalCertificates' : function(userId,eventId, silent) {
+    'getExternalCertificates' : function(multilevelname, userId,eventId, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
                 eventId : JSON.stringify(eventId),
             },
             method: 'getExternalCertificates',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getFilteredLocations' : function(silent) {
+    'getFilteredLocations' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getFilteredLocations',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getFromDateTimeFilter' : function(silent) {
+    'getFromDateTimeFilter' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getFromDateTimeFilter',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getLocation' : function(locationId, silent) {
+    'getLocation' : function(multilevelname, locationId, silent) {
         data = {
             args : {
                 locationId : JSON.stringify(locationId),
             },
             method: 'getLocation',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getMyEvents' : function(silent) {
+    'getMyEvents' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getMyEvents',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getReminder' : function(reminderId, silent) {
+    'getReminder' : function(multilevelname, reminderId, silent) {
         data = {
             args : {
                 reminderId : JSON.stringify(reminderId),
             },
             method: 'getReminder',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getReminderTemplate' : function(id, silent) {
+    'getReminderTemplate' : function(multilevelname, id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
             },
             method: 'getReminderTemplate',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getReminderTemplates' : function(silent) {
+    'getReminderTemplates' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getReminderTemplates',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getReminders' : function(eventId, silent) {
+    'getReminders' : function(multilevelname, eventId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
             },
             method: 'getReminders',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getSource' : function(eventId,userId, silent) {
+    'getSource' : function(multilevelname, eventId,userId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
                 userId : JSON.stringify(userId),
             },
             method: 'getSource',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getToDateTimeFilter' : function(silent) {
+    'getToDateTimeFilter' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getToDateTimeFilter',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getUsersForEvent' : function(eventId, silent) {
+    'getUsersForEvent' : function(multilevelname, eventId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
             },
             method: 'getUsersForEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getUsersForEventWaitinglist' : function(eventId, silent) {
+    'getUsersForEventWaitinglist' : function(multilevelname, eventId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
             },
             method: 'getUsersForEventWaitinglist',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'isUserSignedUpForEvent' : function(eventId,userId, silent) {
+    'isUserSignedUpForEvent' : function(multilevelname, eventId,userId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
                 userId : JSON.stringify(userId),
             },
             method: 'isUserSignedUpForEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'markAsReady' : function(eventId, silent) {
+    'markAsReady' : function(multilevelname, eventId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
             },
             method: 'markAsReady',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'markQuestBackSent' : function(eventId, silent) {
+    'markQuestBackSent' : function(multilevelname, eventId, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
             },
             method: 'markQuestBackSent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'removeUserFromEvent' : function(eventId,userId,silent) {
+    'removeUserFromEvent' : function(multilevelname, eventId,userId,silent, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
@@ -2686,78 +2765,85 @@ GetShopApiWebSocket.EventBookingManager.prototype = {
                 silent : JSON.stringify(silent),
             },
             method: 'removeUserFromEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveBookingTypeMetaData' : function(bookingItemTypeMetadata, silent) {
+    'saveBookingTypeMetaData' : function(multilevelname, bookingItemTypeMetadata, silent) {
         data = {
             args : {
                 bookingItemTypeMetadata : JSON.stringify(bookingItemTypeMetadata),
             },
             method: 'saveBookingTypeMetaData',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveCertificate' : function(certificate, silent) {
+    'saveCertificate' : function(multilevelname, certificate, silent) {
         data = {
             args : {
                 certificate : JSON.stringify(certificate),
             },
             method: 'saveCertificate',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveEvent' : function(event, silent) {
+    'saveEvent' : function(multilevelname, event, silent) {
         data = {
             args : {
                 event : JSON.stringify(event),
             },
             method: 'saveEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveLocation' : function(location, silent) {
+    'saveLocation' : function(multilevelname, location, silent) {
         data = {
             args : {
                 location : JSON.stringify(location),
             },
             method: 'saveLocation',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveReminderTemplate' : function(template, silent) {
+    'saveReminderTemplate' : function(multilevelname, template, silent) {
         data = {
             args : {
                 template : JSON.stringify(template),
             },
             method: 'saveReminderTemplate',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'sendReminder' : function(reminder, silent) {
+    'sendReminder' : function(multilevelname, reminder, silent) {
         data = {
             args : {
                 reminder : JSON.stringify(reminder),
             },
             method: 'sendReminder',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'setParticipationStatus' : function(eventId,userId,status, silent) {
+    'setParticipationStatus' : function(multilevelname, eventId,userId,status, silent) {
         data = {
             args : {
                 eventId : JSON.stringify(eventId),
@@ -2765,41 +2851,45 @@ GetShopApiWebSocket.EventBookingManager.prototype = {
                 status : JSON.stringify(status),
             },
             method: 'setParticipationStatus',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'setTimeFilter' : function(from,to, silent) {
+    'setTimeFilter' : function(multilevelname, from,to, silent) {
         data = {
             args : {
                 from : JSON.stringify(from),
                 to : JSON.stringify(to),
             },
             method: 'setTimeFilter',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'startScheduler' : function(scheduler, silent) {
+    'startScheduler' : function(multilevelname, scheduler, silent) {
         data = {
             args : {
                 scheduler : JSON.stringify(scheduler),
             },
             method: 'startScheduler',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'transferUserFromWaitingToEvent' : function(userId,eventId, silent) {
+    'transferUserFromWaitingToEvent' : function(multilevelname, userId,eventId, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
                 eventId : JSON.stringify(eventId),
             },
             method: 'transferUserFromWaitingToEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.eventbooking.IEventBookingManager',
         };
         return this.communication.send(data, silent);
@@ -4790,67 +4880,73 @@ GetShopApiWebSocket.PmsEventManager = function(communication) {
 }
 
 GetShopApiWebSocket.PmsEventManager.prototype = {
-    'createEvent' : function(id, silent) {
+    'createEvent' : function(multilevelname, id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
             },
             method: 'createEvent',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmseventmanager.IPmsEventManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'deleteEntry' : function(entryId, silent) {
+    'deleteEntry' : function(multilevelname, entryId, silent) {
         data = {
             args : {
                 entryId : JSON.stringify(entryId),
             },
             method: 'deleteEntry',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmseventmanager.IPmsEventManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getEntry' : function(entryId, silent) {
+    'getEntry' : function(multilevelname, entryId, silent) {
         data = {
             args : {
                 entryId : JSON.stringify(entryId),
             },
             method: 'getEntry',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmseventmanager.IPmsEventManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getEntryShort' : function(shortId, silent) {
+    'getEntryShort' : function(multilevelname, shortId, silent) {
         data = {
             args : {
                 shortId : JSON.stringify(shortId),
             },
             method: 'getEntryShort',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmseventmanager.IPmsEventManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getEventEntries' : function(filter, silent) {
+    'getEventEntries' : function(multilevelname, filter, silent) {
         data = {
             args : {
                 filter : JSON.stringify(filter),
             },
             method: 'getEventEntries',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmseventmanager.IPmsEventManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveEntry' : function(entry, silent) {
+    'saveEntry' : function(multilevelname, entry, silent) {
         data = {
             args : {
                 entry : JSON.stringify(entry),
             },
             method: 'saveEntry',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmseventmanager.IPmsEventManager',
         };
         return this.communication.send(data, silent);
@@ -4862,18 +4958,19 @@ GetShopApiWebSocket.PmsManager = function(communication) {
 }
 
 GetShopApiWebSocket.PmsManager.prototype = {
-    'addAddonToCurrentBooking' : function(itemtypeId, silent) {
+    'addAddonToCurrentBooking' : function(multilevelname, itemtypeId, silent) {
         data = {
             args : {
                 itemtypeId : JSON.stringify(itemtypeId),
             },
             method: 'addAddonToCurrentBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'addBookingItem' : function(bookingId,item,start,end, silent) {
+    'addBookingItem' : function(multilevelname, bookingId,item,start,end, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
@@ -4882,12 +4979,13 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 end : JSON.stringify(end),
             },
             method: 'addBookingItem',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'addBookingItemType' : function(bookingId,item,start,end, silent) {
+    'addBookingItemType' : function(multilevelname, bookingId,item,start,end, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
@@ -4896,35 +4994,38 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 end : JSON.stringify(end),
             },
             method: 'addBookingItemType',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'addComment' : function(bookingId,comment, silent) {
+    'addComment' : function(multilevelname, bookingId,comment, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
                 comment : JSON.stringify(comment),
             },
             method: 'addComment',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'addRepeatingData' : function(data, silent) {
+    'addRepeatingData' : function(multilevelname, data, silent) {
         data = {
             args : {
                 data : JSON.stringify(data),
             },
             method: 'addRepeatingData',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'changeDates' : function(roomId,bookingId,start,end, silent) {
+    'changeDates' : function(multilevelname, roomId,bookingId,start,end, silent) {
         data = {
             args : {
                 roomId : JSON.stringify(roomId),
@@ -4933,144 +5034,157 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 end : JSON.stringify(end),
             },
             method: 'changeDates',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'checkDoorStatusControl' : function(silent) {
+    'checkDoorStatusControl' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'checkDoorStatusControl',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'completeCurrentBooking' : function(silent) {
+    'completeCurrentBooking' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'completeCurrentBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'confirmBooking' : function(bookingId,message, silent) {
+    'confirmBooking' : function(multilevelname, bookingId,message, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
                 message : JSON.stringify(message),
             },
             method: 'confirmBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'createOrder' : function(bookingId,filter, silent) {
+    'createOrder' : function(multilevelname, bookingId,filter, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
                 filter : JSON.stringify(filter),
             },
             method: 'createOrder',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'createPrepaymentOrder' : function(bookingId, silent) {
+    'createPrepaymentOrder' : function(multilevelname, bookingId, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'createPrepaymentOrder',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'deleteBooking' : function(bookingId, silent) {
+    'deleteBooking' : function(multilevelname, bookingId, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'deleteBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'doNotification' : function(key,bookingId, silent) {
+    'doNotification' : function(multilevelname, key,bookingId, silent) {
         data = {
             args : {
                 key : JSON.stringify(key),
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'doNotification',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllAdditionalInformationOnRooms' : function(silent) {
+    'getAllAdditionalInformationOnRooms' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getAllAdditionalInformationOnRooms',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllBookings' : function(state, silent) {
+    'getAllBookings' : function(multilevelname, state, silent) {
         data = {
             args : {
                 state : JSON.stringify(state),
             },
             method: 'getAllBookings',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllBookingsForLoggedOnUser' : function(silent) {
+    'getAllBookingsForLoggedOnUser' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getAllBookingsForLoggedOnUser',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllBookingsUnsecure' : function(state, silent) {
+    'getAllBookingsUnsecure' : function(multilevelname, state, silent) {
         data = {
             args : {
                 state : JSON.stringify(state),
             },
             method: 'getAllBookingsUnsecure',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllRoomTypes' : function(start,end, silent) {
+    'getAllRoomTypes' : function(multilevelname, start,end, silent) {
         data = {
             args : {
                 start : JSON.stringify(start),
                 end : JSON.stringify(end),
             },
             method: 'getAllRoomTypes',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAvailabilityForType' : function(bookingItemId,startTime,endTime,intervalInMinutes, silent) {
+    'getAvailabilityForType' : function(multilevelname, bookingItemId,startTime,endTime,intervalInMinutes, silent) {
         data = {
             args : {
                 bookingItemId : JSON.stringify(bookingItemId),
@@ -5079,118 +5193,129 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 intervalInMinutes : JSON.stringify(intervalInMinutes),
             },
             method: 'getAvailabilityForType',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getBooking' : function(bookingId, silent) {
+    'getBooking' : function(multilevelname, bookingId, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'getBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getBookingFromRoom' : function(pmsBookingRoomId, silent) {
+    'getBookingFromRoom' : function(multilevelname, pmsBookingRoomId, silent) {
         data = {
             args : {
                 pmsBookingRoomId : JSON.stringify(pmsBookingRoomId),
             },
             method: 'getBookingFromRoom',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getConfiguration' : function(silent) {
+    'getConfiguration' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getConfiguration',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getContract' : function(bookingId, silent) {
+    'getContract' : function(multilevelname, bookingId, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'getContract',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getCurrenctContract' : function(silent) {
+    'getCurrenctContract' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getCurrenctContract',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getCurrentBooking' : function(silent) {
+    'getCurrentBooking' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getCurrentBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getDefaultDateRange' : function(silent) {
+    'getDefaultDateRange' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getDefaultDateRange',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getDefaultMessage' : function(bookingId, silent) {
+    'getDefaultMessage' : function(multilevelname, bookingId, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'getDefaultMessage',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getIntervalAvailability' : function(filter, silent) {
+    'getIntervalAvailability' : function(multilevelname, filter, silent) {
         data = {
             args : {
                 filter : JSON.stringify(filter),
             },
             method: 'getIntervalAvailability',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getLogEntries' : function(filter, silent) {
+    'getLogEntries' : function(multilevelname, filter, silent) {
         data = {
             args : {
                 filter : JSON.stringify(filter),
             },
             method: 'getLogEntries',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getNumberOfAvailable' : function(itemType,start,end, silent) {
+    'getNumberOfAvailable' : function(multilevelname, itemType,start,end, silent) {
         data = {
             args : {
                 itemType : JSON.stringify(itemType),
@@ -5198,102 +5323,123 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 end : JSON.stringify(end),
             },
             method: 'getNumberOfAvailable',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getPrices' : function(start,end, silent) {
+    'getPrices' : function(multilevelname, start,end, silent) {
         data = {
             args : {
                 start : JSON.stringify(start),
                 end : JSON.stringify(end),
             },
             method: 'getPrices',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getRoomForItem' : function(itemId,atTime, silent) {
+    'getRoomForItem' : function(multilevelname, itemId,atTime, silent) {
         data = {
             args : {
                 itemId : JSON.stringify(itemId),
                 atTime : JSON.stringify(atTime),
             },
             method: 'getRoomForItem',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getRoomsNeedingCheckoutCleaning' : function(day, silent) {
+    'getRoomsNeedingCheckoutCleaning' : function(multilevelname, day, silent) {
         data = {
             args : {
                 day : JSON.stringify(day),
             },
             method: 'getRoomsNeedingCheckoutCleaning',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getRoomsNeedingIntervalCleaning' : function(day, silent) {
+    'getRoomsNeedingIntervalCleaning' : function(multilevelname, day, silent) {
         data = {
             args : {
                 day : JSON.stringify(day),
             },
             method: 'getRoomsNeedingIntervalCleaning',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getStatistics' : function(filter, silent) {
+    'getSimpleRooms' : function(multilevelname, filter, silent) {
+        data = {
+            args : {
+                filter : JSON.stringify(filter),
+            },
+            method: 'getSimpleRooms',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getStatistics' : function(multilevelname, filter, silent) {
         data = {
             args : {
                 filter : JSON.stringify(filter),
             },
             method: 'getStatistics',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'handleDoorControl' : function(doorId,accessLogs, silent) {
+    'handleDoorControl' : function(multilevelname, doorId,accessLogs, silent) {
         data = {
             args : {
                 doorId : JSON.stringify(doorId),
                 accessLogs : JSON.stringify(accessLogs),
             },
             method: 'handleDoorControl',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'initBookingRules' : function(silent) {
+    'initBookingRules' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'initBookingRules',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'isClean' : function(itemId, silent) {
+    'isClean' : function(multilevelname, itemId, silent) {
         data = {
             args : {
                 itemId : JSON.stringify(itemId),
             },
             method: 'isClean',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'logEntry' : function(logText,bookingId,itemId, silent) {
+    'logEntry' : function(multilevelname, logText,bookingId,itemId, silent) {
         data = {
             args : {
                 logText : JSON.stringify(logText),
@@ -5301,100 +5447,109 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 itemId : JSON.stringify(itemId),
             },
             method: 'logEntry',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'markRoomAsCleaned' : function(itemId, silent) {
+    'markRoomAsCleaned' : function(multilevelname, itemId, silent) {
         data = {
             args : {
                 itemId : JSON.stringify(itemId),
             },
             method: 'markRoomAsCleaned',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'processor' : function(silent) {
+    'processor' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'processor',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'removeFromBooking' : function(bookingId,roomId, silent) {
+    'removeFromBooking' : function(multilevelname, bookingId,roomId, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
                 roomId : JSON.stringify(roomId),
             },
             method: 'removeFromBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'removeFromCurrentBooking' : function(roomId, silent) {
+    'removeFromCurrentBooking' : function(multilevelname, roomId, silent) {
         data = {
             args : {
                 roomId : JSON.stringify(roomId),
             },
             method: 'removeFromCurrentBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'returnedKey' : function(roomId, silent) {
+    'returnedKey' : function(multilevelname, roomId, silent) {
         data = {
             args : {
                 roomId : JSON.stringify(roomId),
             },
             method: 'returnedKey',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveBooking' : function(booking, silent) {
+    'saveBooking' : function(multilevelname, booking, silent) {
         data = {
             args : {
                 booking : JSON.stringify(booking),
             },
             method: 'saveBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'saveConfiguration' : function(notifications, silent) {
+    'saveConfiguration' : function(multilevelname, notifications, silent) {
         data = {
             args : {
                 notifications : JSON.stringify(notifications),
             },
             method: 'saveConfiguration',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'setBooking' : function(addons, silent) {
+    'setBooking' : function(multilevelname, addons, silent) {
         data = {
             args : {
                 addons : JSON.stringify(addons),
             },
             method: 'setBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'setBookingItem' : function(roomId,bookingId,itemId, silent) {
+    'setBookingItem' : function(multilevelname, roomId,bookingId,itemId, silent) {
         data = {
             args : {
                 roomId : JSON.stringify(roomId),
@@ -5402,24 +5557,26 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 itemId : JSON.stringify(itemId),
             },
             method: 'setBookingItem',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'setNewCleaningIntervalOnRoom' : function(roomId,interval, silent) {
+    'setNewCleaningIntervalOnRoom' : function(multilevelname, roomId,interval, silent) {
         data = {
             args : {
                 roomId : JSON.stringify(roomId),
                 interval : JSON.stringify(interval),
             },
             method: 'setNewCleaningIntervalOnRoom',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'setNewRoomType' : function(roomId,bookingId,newType, silent) {
+    'setNewRoomType' : function(multilevelname, roomId,bookingId,newType, silent) {
         data = {
             args : {
                 roomId : JSON.stringify(roomId),
@@ -5427,85 +5584,93 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 newType : JSON.stringify(newType),
             },
             method: 'setNewRoomType',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'setPrices' : function(prices, silent) {
+    'setPrices' : function(multilevelname, prices, silent) {
         data = {
             args : {
                 prices : JSON.stringify(prices),
             },
             method: 'setPrices',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'startBooking' : function(silent) {
+    'startBooking' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'startBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'toggleAddon' : function(itemId, silent) {
+    'toggleAddon' : function(multilevelname, itemId, silent) {
         data = {
             args : {
                 itemId : JSON.stringify(itemId),
             },
             method: 'toggleAddon',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'unConfirmBooking' : function(bookingId,message, silent) {
+    'unConfirmBooking' : function(multilevelname, bookingId,message, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
                 message : JSON.stringify(message),
             },
             method: 'unConfirmBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'undeleteBooking' : function(bookingId, silent) {
+    'undeleteBooking' : function(multilevelname, bookingId, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'undeleteBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'updateRepeatingDataForBooking' : function(data,bookingId, silent) {
+    'updateRepeatingDataForBooking' : function(multilevelname, data,bookingId, silent) {
         data = {
             args : {
                 data : JSON.stringify(data),
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'updateRepeatingDataForBooking',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'updateRoomByUser' : function(bookingId,room, silent) {
+    'updateRoomByUser' : function(multilevelname, bookingId,room, silent) {
         data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
                 room : JSON.stringify(room),
             },
             method: 'updateRoomByUser',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
         return this.communication.send(data, silent);
@@ -5517,11 +5682,12 @@ GetShopApiWebSocket.PmsManagerProcessor = function(communication) {
 }
 
 GetShopApiWebSocket.PmsManagerProcessor.prototype = {
-    'doProcessing' : function(silent) {
+    'doProcessing' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'doProcessing',
+            multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManagerProcessor',
         };
         return this.communication.send(data, silent);

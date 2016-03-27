@@ -9,5 +9,14 @@
         "jquery": "2.1.4",
         "gulp": "3.9.1",
         "components-font-awesome": "~4.5.0"
-    }
+    },
+    "overrides": {
+        "bootstrap": {
+          "main": [
+            "dist/js/bootstrap.js",
+            "dist/css/bootstrap.css",
+            "less/bootstrap.less"
+              ]
+          }
+      }
 }

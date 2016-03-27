@@ -1,3 +1,16 @@
-Logg inn
+<div class='additionalinfo'>
+    {{ address }}
+</div>
+<select ng-model="dataSelected" ng-options="item.id as item.name for item in multilevelnames" ng-change="updateMultilevelName(dataSelected)"></select>
+<div class='row'>
+    <a ui-sref="findguest"><div class='col-md-4'><span class='box'><i class='fa fa-user'></i><span class='text'>Find guest</span></span></div></a>
+    <div class='col-md-4'><span class='box'><i class='fa fa-info-circle'></i><span class='text'>Other instructions</span></span></div>
+    <div class='col-md-4'><span class='box'><i class='fa fa-fire'></i><span class='text'>Fire</span></span></div>
+</div>
+<div class='row'>
+    <div class='col-md-4'><span class='box'><i class='fa fa-inbox'></i><span class='text'>Sms</span></span></div>
+    <div class='col-md-4'><span class='box'><i class='fa fa-road'></i><span class='text'>Log</span></span></div>
+    <div class='col-md-4'><span class='box'><i class='fa fa-sign-in'></i><span class='text'>Doors</span></span></div>
+</div>
 
-<span ng-click="logout()">Sign out</span>
+<div class='additionalinfo' ng-click="logout()">Sign out</div>

@@ -1,0 +1,34 @@
+<div class='additionalinfo'>
+    Find a guest
+</div>
+<br>
+<div class="input-group">
+    <input type="text" class="form-control" placeholder="Search for...">
+    <span class="input-group-btn">
+        <button class="btn btn-default" type="button">Find guest</button>
+    </span>
+</div>
+
+<div class='additionalinfo'>
+    Todays guest list
+</div>
+
+<div ng-repeat="room in rooms" class='col-xs-12 roomrow {{room.progressState}}'>
+    <a ui-sref="guestinfo({ roomid: '{{room.pmsRoomId}}', bookingid: '{{room.bookingId}}' })">
+        <span class='col-xs-1 roominfoblock'>
+            <span class='roominfo'>{{room.room}}</span>
+            <span class='code'>{{room.code}}</span>
+        </span>
+        <span class='col-xs-11 guestinfocol'>
+            <span class='guestinfo'>
+                {{room.guest[0].name}}
+                {{room.guest[0].phone}}
+            </span>
+            <br><span class='dateinfo'>
+                {{room.owner}} - 
+                {{convertDate(room.start)}} - 
+                {{convertDate(room.end)}}
+            </span>
+        </span>
+    </a>
+</div>

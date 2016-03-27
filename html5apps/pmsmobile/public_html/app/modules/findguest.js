@@ -25,6 +25,16 @@ getshop.findguestController = function($scope, $state) {
         ("00" + d.getMinutes()).slice(-2);
            return dformat;
     };
+    $scope.doSearch = function(searchWord) {
+        var filter = {};
+        console.log('searching');
+        filter.searchWord = searchWord;
+        var searching = getshopclient.PmsManager.getSimpleRooms(getMultilevelName(), filter);
+        searching.done(function(res) {
+            $scope.rooms = res;
+            $scope.$apply();
+        });
+    };
     $scope.urlEncoder = function(text) {
         return encodeURIComponent(text);
     };

@@ -5563,6 +5563,20 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'setGuestOnRoom' : function(multilevelname, guests,bookingId,roomId, silent) {
+        data = {
+            args : {
+                guests : JSON.stringify(guests),
+                bookingId : JSON.stringify(bookingId),
+                roomId : JSON.stringify(roomId),
+            },
+            method: 'setGuestOnRoom',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'setNewCleaningIntervalOnRoom' : function(multilevelname, roomId,interval, silent) {
         data = {
             args : {

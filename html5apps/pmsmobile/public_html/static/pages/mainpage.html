@@ -1,7 +1,9 @@
-<div class='additionalinfo'>
+<div class='additionalinfo row'>
     {{ address }}
 </div>
-<select ng-model="dataSelected" ng-options="item.id as item.name for item in multilevelnames" ng-change="updateMultilevelName(dataSelected)"></select>
+<div class='row'>
+    <select ng-model="dataSelected" ng-options="item.id as item.name for item in multilevelnames" ng-change="updateMultilevelName(dataSelected)" class='form-control'></select>
+</div>
 <div class='row'>
     <a ui-sref="findguest"><div class='col-md-4'><span class='box'><i class='fa fa-user'></i><span class='text'>Find guest</span></span></div></a>
     <div class='col-md-4'><span class='box'><i class='fa fa-info-circle'></i><span class='text'>Other instructions</span></span></div>
@@ -12,5 +14,7 @@
     <div class='col-md-4'><span class='box'><i class='fa fa-road'></i><span class='text'>Log</span></span></div>
     <div class='col-md-4'><span class='box'><i class='fa fa-sign-in'></i><span class='text'>Doors</span></span></div>
 </div>
-
-<div class='additionalinfo' ng-click="logout()">Sign out</div>
+<div class='row'>
+    <br>
+</div>
+<div class='additionalinfobottom row' ng-click="logout()" style='text-align: center; color:#fff;'>Sign out</div>

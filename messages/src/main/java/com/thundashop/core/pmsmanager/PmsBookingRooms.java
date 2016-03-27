@@ -7,6 +7,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date; 
@@ -256,5 +257,53 @@ public class PmsBookingRooms implements Serializable {
         cal2.setTime(date2);
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                   cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+    }
+
+    boolean containsSearchWord(String searchWord) {
+        for(PmsGuests guest : guests) {
+            if(guest.email != null && guest.email.toLowerCase().contains(searchWord)) {
+                return true;
+            }
+            if(guest.phone != null && guest.phone.toLowerCase().contains(searchWord)) {
+                return true;
+            }
+            if(guest.name != null && guest.name.toLowerCase().contains(searchWord)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean isSameDay(Date date1, Date date2) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        return fmt.format(date1).equals(fmt.format(date2));
+    }
+
+    boolean isActiveInPeriode(Date startDate, Date endDate) {
+        if(date != null && date.end != null && date.start != null && date.start.before(endDate) && date.end.after(startDate)) {
+            return true;
+        }
+        if(isSameDay(date.start, startDate)) {
+            return true;
+        }
+        return false;
+    }
+
+    boolean checkingInBetween(Date startDate, Date endDate) {
+        if((date.start.after(startDate) && date.start.before(endDate)) || 
+            isSameDay(date.start, endDate) ||
+            isSameDay(date.start, startDate)) {
+            return true;
+        }
+        return false;
+    }
+
+    boolean checkingOutBetween(Date startDate, Date endDate) {
+        if((date.end.after(startDate) && date.end.before(endDate)) || 
+                isSameDay(date.end, endDate) ||
+                isSameDay(date.end, startDate)) {
+            return true;
+        }
+        return false;
     }
 }

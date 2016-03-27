@@ -117,6 +117,9 @@ public interface IPmsManager {
     @Administrator
     public void undeleteBooking(String bookingId);
     
+    @Administrator
+    public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter);
+    
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);
     public PmsConfiguration getConfiguration();

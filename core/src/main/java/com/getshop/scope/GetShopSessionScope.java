@@ -101,8 +101,15 @@ public class GetShopSessionScope implements Scope {
         return objectMap.get(name + "_" + storeId);
     }
     
-    public List<GetShopSessionBeanNamed> getSessionNamedObjects() {
-        return new ArrayList(namedSessionObjects.values());
+ public List<GetShopSessionBeanNamed> getSessionNamedObjects() {
+        long threadId = Thread.currentThread().getId();
+        String storeId = threadStoreIds.get(threadId);
+        return new ArrayList(
+                namedSessionObjects.values()
+                        .stream()
+                        .filter(o -> ((GetShopSessionBeanNamed)o).getStoreId().equals(storeId))
+                        .collect(Collectors.toList())
+        );
     }
 
     public Object remove(String name) {

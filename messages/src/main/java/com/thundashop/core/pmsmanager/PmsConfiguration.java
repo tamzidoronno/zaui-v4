@@ -71,5 +71,9 @@ public class PmsConfiguration extends DataCommon {
     public String senderName = "";
     public String senderEmail = "";
     public String sendAdminTo = "";
+    
+    boolean hasLockSystem() {
+        return (arxHostname != null && !arxHostname.isEmpty());
+    }
 
 }

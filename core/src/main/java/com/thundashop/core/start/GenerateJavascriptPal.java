@@ -16,7 +16,7 @@ public class GenerateJavascriptPal {
     public static void main(String[] args) throws ClassNotFoundException, IOException, URISyntaxException {
         GenerateJavascriptApi.pathToBuildClasses = "/home/boggi/netbeans/3.0.0/GetShop Core/build/classes/";
         GenerateJavascriptApi.pathToJavaSource = "/source/getshop/3.0.0/core/src/main/java/";
-        GenerateJavascriptApi.storeFileIn = "/tmp/getshopapi.js";
+        GenerateJavascriptApi.storeFileIn = "/source/getshop/3.0.0/html5apps/pmsmobile/public_html/app/getshopapi.js";
         GenerateJavascriptApi.main(args);
     }
 }

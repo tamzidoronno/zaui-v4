@@ -2537,7 +2537,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
             if (additional != null) {
                 if (additional.unsetMarkedDirtyPastThirtyMinutes()) {
-                    additional.markCleaned();
                     logEntry("Unsetting cleaning for this room.", bookingId, room.bookingItemId);
                     saveObject(additional);
                 }

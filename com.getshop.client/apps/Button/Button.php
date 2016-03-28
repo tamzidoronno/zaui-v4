@@ -23,6 +23,12 @@ class Button extends \ApplicationBase implements \Application {
     }
 
     public function render() {
+        if (isset($_POST['event']) && $_POST['event'] == "sendMail") {
+            $successMessage = $this->getConfigurationSetting("successMessage");
+            if ($successMessage) {
+                echo "<script>alert('$successMessage');</script>";
+            }
+        }
         $this->includefile("button");
     }
     
@@ -90,6 +96,45 @@ class Button extends \ApplicationBase implements \Application {
     
     public function setToLogout() {
         $this->setConfigurationSetting("type", "logout");
+    }
+    
+    public function saveEmailConfig() {
+        $this->setConfigurationSetting("type", "send_email");
+        $this->setConfigurationSetting("successMessage", $_POST['data']['successMessage']);
+        $this->setConfigurationSetting("subject", $_POST['data']['subject']);
+        $this->setConfigurationSetting("content", $_POST['data']['content']);
+        $this->setConfigurationSetting("to", $_POST['data']['to']);   
+        $this->setConfigurationSetting("sendToUser", $_POST['data']['sendToUser']);   
+    }
+    
+    public function sendMail() {
+        $to = $this->getConfigurationSetting("to");
+        $subject = $this->getConfigurationSetting("subject");
+        $content = $this->getConfigurationSetting("content");
+        $from = $this->getFactory()->getStoreConfiguration()->emailAdress;
+        $content = $this->manipulateString($content);
+        $subject = $this->manipulateString($subject);
+        $fromName = $this->getFactory()->getStoreConfiguration()->shopName;
+        $this->getApi()->getMessageManager()->sendMail($to, $to, $subject, $content, $from, $fromName);
+        
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        if ($user && $this->getConfigurationSetting("sendToUser") == "true") {
+            $this->getApi()->getMessageManager()->sendMail($user->emailAddress, $user->fullName, $subject, $content, $from, $fromName);
+        }
+    }
+
+    public function manipulateString($content) {
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        $content = str_replace("{User.FullName}", @$user->fullName, $content);
+        $content = str_replace("{User.Company.Name}", @$user->companyObject->name, $content);
+        $content = str_replace("{User.Company.Vatnumber}", @$user->companyObject->vatNumber, $content);
+        $content = str_replace("{User.Email}", @$user->emailAddress, $content);
+        $content = str_replace("{User.Cellphone}", @$user->cellPhone, $content);
+        $content = str_replace("{User.Company.Address}", @$user->companyObject->address->address, $content);
+        $content = str_replace("{User.Company.Postnumber}", @$user->companyObject->address->postCode, $content);
+        $content = str_replace("{User.Company.City}", @$user->companyObject->address->city, $content);
+        
+        return $content;
     }
 
 }

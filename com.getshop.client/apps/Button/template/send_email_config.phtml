@@ -1,0 +1,17 @@
+<?
+/* @var $this ns_2996287a_c23e_41ad_a801_c77502372789\Button */
+?>
+<table gstype="form" method="saveEmailConfig">
+    <tr><td width="100">To</td><td> 
+            <input gsname="to" type="textfield" style="width: 790px;" class="gsniceinput1" value="<? echo $this->getConfigurationSetting("to"); ?>"/>
+        </td></tr>
+    <tr><td>Subject</td><td> <input gsname="subject" type="textfield" style="width: 790px;" class="gsniceinput1" value="<? echo $this->getConfigurationSetting("subject"); ?>"/></td></tr>
+    <tr><td colspan="2">Content:</td></tr>
+    <tr><td colspan="2"><textarea gsname="content" style="width: 910px; height: 400px;"><? echo $this->getConfigurationSetting("content"); ?></textarea></td></tr>
+    <tr><td>Success message</td><td><input gsname="successMessage" type="textfield" style="width: 790px;" class="gsniceinput1" value="<? echo $this->getConfigurationSetting("successMessage"); ?>"/></td></tr>
+    <?
+    $checked = $this->getConfigurationSetting("sendToUser") == "true" ? "checked='checked'" : "";
+    ?>
+    <tr><td>Send mail to logged in user too?</td><td><input <? echo $checked; ?> gsname="sendToUser" type="checkbox"/></td></tr>
+    <tr><td colspan="2"><div class='gs_button small' gstype="submit" >Save</div></td></tr>
+</table>

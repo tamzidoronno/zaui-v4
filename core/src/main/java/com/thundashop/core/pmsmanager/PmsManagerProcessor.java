@@ -533,7 +533,7 @@ public class PmsManagerProcessor {
             }
             
             
-            if(booking.orderIds == null || booking.orderIds.isEmpty()) {
+            if((booking.orderIds == null || booking.orderIds.isEmpty()) && !booking.payedFor) {
                 booking.payedFor = true;
                 manager.logEntry("Automarking booking as paid for, since no orders has been added", booking.id, null);
                 manager.saveBooking(booking);

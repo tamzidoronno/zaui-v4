@@ -65,7 +65,6 @@ class Page {
             $this->includeLayoutHistory();
         }
         
-        
         echo "<div class='gsbody_inner $editormodeclass $canChangeLayout' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn' userTimeout='$timeout'>";
         
         $this->printCompanySelectList();
@@ -128,7 +127,6 @@ class Page {
                 }
 
                 $this->displayResizing();
-                $this->printApplicationAddCellRow();
                 $this->addCellConfigPanel();
                 $this->addCellResizingPanel();
                 $this->addCellLayouts();
@@ -428,7 +426,7 @@ class Page {
         <?
     }
 
-    private function printApplicationAddCellRow() {
+    public function printApplicationAddCellRow() {
         $this->factory->includefile("applicationlist", 'Common');
     }
 

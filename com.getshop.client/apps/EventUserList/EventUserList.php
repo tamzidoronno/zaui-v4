@@ -131,7 +131,7 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $excel[] = $this->getEventInformation($event, $groupName);
         
         $excel[] = [];
-        $excel[] = ["VAT", "Reference", "Company Information", "Company email", "Candiate name", "Candidate email", "Comment", "Status", "Price"];
+        $excel[] = ["VAT", "Reference", "Company Information", "Company email", "Candiate name", "Candidate email", "Comment", "Group", "Status", "Price"];
         
         foreach ($usersFiltered as $user) {
             $excel[] = $this->createUserRow($user, $event, false);
@@ -178,6 +178,17 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $row[] = $user->fullName;
         $row[] = $user->emailAddress;
         $row[] = $this->createComment($user, $event);
+        
+        $groupName = "";
+        
+        if ($user->companyObject != null && $user->companyObject->groupId) {
+            $group = $this->getApi()->getUserManager()->getGroup($user->companyObject->groupId);
+            if ($group) {
+                $groupName = $group->groupName;
+            }
+        }
+        
+        $row[] = $groupName;
         
         if (!$waitinglist) {
             $row[] = $this->getParticiationText(@$event->participationStatus->{$user->id});

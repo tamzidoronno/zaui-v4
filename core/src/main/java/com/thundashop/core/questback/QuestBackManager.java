@@ -55,7 +55,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
     private UserManager userManager;
     
     @Autowired
-    private StoreApplicationPool storeApplicationPool;
+    private StoreApplicationPool storeApplicationPool; 
     
     @Autowired
     private MessageManager messageManager;

@@ -20,6 +20,7 @@ $templates["template5"] = "template5";
             <option show_view='setup_internal_page' value='go_to_page_internal'><? echo $this->__f("Go to a internal page"); ?></option>
             <option show_view='setup_external_page' value='go_to_page_external'><? echo $this->__f("Go to a external page"); ?></option>
             <option show_view='setup_modal_page' value='go_to_modal'><? echo $this->__f("Show a modal"); ?></option>
+            <option show_view='setup_send_email' value='send_email'><? echo $this->__f("Send email"); ?></option>
             <option value="setToLogout"><? echo $this->__f("Logout"); ?></option>
         </select>
     </div><br>
@@ -61,6 +62,10 @@ $templates["template5"] = "template5";
             <br/>
             <br/>
             <? $this->includefile("page_search_result"); ?>
+        </div>
+        
+        <div class="setup_send_email select_option_setup_button">
+            <? $this->includefile("send_email_config"); ?>
         </div>
         
         <div class="setup_modal_page select_option_setup_button">

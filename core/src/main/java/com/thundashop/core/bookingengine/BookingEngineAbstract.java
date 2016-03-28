@@ -125,9 +125,26 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         ensureNotOverwritingParameters(item);
         validate(item);
         updateBookingTypesIfTypeChanged();
+        ensureItemIsValidWithAllBookings(item);
         saveObject(item);
         items.put(item.id, item);
         return finalize(item);
+    }
+
+    private void ensureItemIsValidWithAllBookings(BookingItem item) {
+        if (item.id != null && !item.id.isEmpty()) {
+            BookingItem inMemoryItem = items.get(item.id);
+            items.put(item.id, item);
+            try {
+                checkAllBookings();
+            } catch (Exception ex) {
+                if (inMemoryItem != null) {
+                    items.put(inMemoryItem.id, inMemoryItem);
+                }
+                updateBookingTypesIfTypeChanged();
+                throw ex;
+            }
+        }
     }
 
     public BookingItem getBookingItem(String id) {
@@ -758,17 +775,21 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     
     public void checkConsistency() {
         try {
-            for (BookingItemType type : types.values()) {
-                List<BookingItem> bookingItems = getBookingItemsByType(type.id);
-                List<Booking> toCheck = bookings.values()
-                        .stream()
-                        .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(type.id))
-                        .collect(Collectors.toList());
-                
-                new BookingItemAssignerOptimal(type, toCheck, bookingItems, shouldThrowException()).canAssign();
-            }
+            checkAllBookings();
         } catch (Exception x) {
             messageManager.sendErrorNotification(x.getMessage(), x);
+        }
+    }
+
+    private void checkAllBookings() {
+        for (BookingItemType type : types.values()) {
+            List<BookingItem> bookingItems = getBookingItemsByType(type.id);
+            List<Booking> toCheck = bookings.values()
+                    .stream()
+                    .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(type.id))
+                    .collect(Collectors.toList());
+            
+            new BookingItemAssignerOptimal(type, toCheck, bookingItems, shouldThrowException()).canAssign();
         }
     }
 

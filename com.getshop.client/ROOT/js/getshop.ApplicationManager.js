@@ -56,7 +56,7 @@ thundashop.ApplicationManager = {
         };
         
         var event = thundashop.Ajax.createEvent(null, "addApplicationToCell", this, data);
-        thundashop.Ajax.post(event);
+        thundashop.Ajax.post(event, thundashop.ApplicationManager.closeAppList);
     }
 };
 

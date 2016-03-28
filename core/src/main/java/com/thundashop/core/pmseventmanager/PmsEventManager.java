@@ -79,7 +79,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
 
     @Override
     public PmsBookingEventEntry createEvent(String id) {
-        PmsBooking result = pmsManager.getBooking(id);
+        PmsBooking result = pmsManager.getBookingUnsecure(id);
         PmsBookingEventEntry entry = new PmsBookingEventEntry();
         entry.id = result.id;
         entry.title = result.registrationData.resultAdded.get("title");
@@ -127,7 +127,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     }
 
     private PmsBookingEventEntry finalize(PmsBookingEventEntry get) {
-        PmsBooking booking = pmsManager.getBooking(get.id);
+        PmsBooking booking = pmsManager.getBookingUnsecure(get.id);
         setRooms(get, booking);
         get.arrangedBy = userManager.getUserById(booking.userId).fullName;
         return get;
@@ -136,7 +136,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     private void removeDeadEvents() {
         List<PmsBookingEventEntry> toremove = new ArrayList();
         for(PmsBookingEventEntry event : entries.values()) {
-            PmsBooking booking = pmsManager.getBooking(event.id);
+            PmsBooking booking = pmsManager.getBookingUnsecure(event.id);
             if(booking == null || booking.isDeleted) {
                 toremove.add(event);
             }

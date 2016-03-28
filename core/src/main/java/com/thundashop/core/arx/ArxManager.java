@@ -4,20 +4,11 @@ package com.thundashop.core.arx;
 import com.assaabloy.arxdata.persons.AccessCategoryList;
 import com.assaabloy.arxdata.persons.AccessCategoryType;
 import com.assaabloy.arxdata.persons.Arxdata;
-import com.assaabloy.arxdata.persons.CardListType;
-import com.assaabloy.arxdata.persons.CardType;
 import com.assaabloy.arxdata.persons.PersonListType;
 import com.assaabloy.arxdata.persons.PersonType;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import com.ibm.icu.util.Calendar;
-import com.thundashop.app.logo.ILogoManager;
-import com.thundashop.app.newsmanager.data.MailSubscription;
-import com.thundashop.app.newsmanager.data.NewsEntry;
-import com.thundashop.core.arx.Door;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.storemanager.StoreManager;
@@ -25,68 +16,43 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.URLEncoder;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509ExtendedTrustManager;
-import javax.net.ssl.X509TrustManager;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import org.apache.axis.encoding.Base64;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.xerces.dom.ElementNSImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 @Component
 @GetShopSession
@@ -119,11 +85,6 @@ public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
     }
          
     public String httpLoginRequest(String address, String content) throws Exception {
-        User currentUser = null;
-        if(getSession() != null) {
-            currentUser = getSession().currentUser;
-        }
-        
         String username = pmsManager.configuration.arxUsername;
         String arxHost = pmsManager.configuration.arxHostname;
         String password = pmsManager.configuration.arxPassword;

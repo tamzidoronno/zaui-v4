@@ -202,13 +202,13 @@ public class PmsManagerProcessor {
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.rooms) {
-                if (room.isStartingToday() || room.isStarted()) {
+                if (!room.isStartingToday() && !room.isStarted()) {
                     continue;
                 }
                 if (room.isEnded()) {
                     continue;
                 }
-                if(room.bookingItemId == null) {
+                if(room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                     booking = manager.finalize(booking);
                     if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                         manager.autoAssignItem(room);

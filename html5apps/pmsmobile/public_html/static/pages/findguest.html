@@ -17,7 +17,7 @@
 
 
 <div class="row">
-    <div ng-repeat="room in rooms" class='col-xs-12 roomrow {{room.progressState}}'>
+    <div ng-repeat="room in rooms" class='col-xs-12 roomrow {{room.progressState}}' style="border: solid 1px #2f749f;">
         <a ui-sref="guestinfo({ roomid: '{{room.pmsRoomId}}', bookingid: '{{room.bookingId}}' })">
             <span class='col-xs-4 roominfoblock'>
                 <div><span class='roominfo'>{{room.room}}</span></div>
@@ -36,13 +36,15 @@
             </span>
         </a>
     </div>
-    
-    <br><br>
-    Color descriptions:<br>
-    <div class="roomrow notnotstarted">Not started yet</div>
-    <div class="roomrow started">Started</div>
-    <div class="roomrow ended">Ended</div>
-    <div class="roomrow waitingforlock">Waiting for clean room</div>
+    <div style="clear:both;"></div>
+    <br>
+    <div class="col-xs-12">
+        Color descriptions:<br>
+        <div class="roomrow notnotstarted">Not started yet</div>
+        <div class="roomrow started">Started</div>
+        <div class="roomrow ended">Ended</div>
+        <div class="roomrow waitingforlock">Waiting for clean room</div>
+    </div>
 </div>
 
 <div class='additionalinfobottom row'></div>

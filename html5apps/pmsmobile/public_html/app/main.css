@@ -1,23 +1,23 @@
 body { background-color:#3a99d7; }
 .innerview .row { background-color:#fff; padding: 10px; }
 .box .text { width: 100%;  position:absolute; bottom: 15px; display:inline-block; left:0px; font-size: 20px;}
-.box { background-color:#000; display:inline-block; width: 100%; height: 160px; color:#fff; position: relative; margin-top: 20px;text-align: center;}
+.box { background-color:#2f749f; display:inline-block; width: 100%; height: 160px; color:#fff; position: relative; margin-top: 20px;text-align: center;}
 .box i { font-size: 80px; margin-top: 20px; }
 .box:hover { background-color: #494949; cursor:pointer; }
-.innerview .additionalinfo { text-align: center;  border-top-left-radius: 5px; border-top-right-radius: 5px; font-size: 16px; margin-top: 20px; padding: 5px; color:#fff; background-color:#000; }
-.innerview .additionalinfobottom { background-color: #000; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; padding: 5px; }
+.innerview .additionalinfo { text-align: center;  border-top-left-radius: 5px; border-top-right-radius: 5px; font-size: 16px; margin-top: 20px; padding: 5px; color:#fff; background-color:#2f749f; }
+.innerview .additionalinfobottom { background-color: #2f749f; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; padding: 5px; }
 .roomrow { border-bottom: solid 1px; color:#fff !important; cursor:pointer;  }
 .roomrow.notnotstarted { background-color:#efefef; color:#000 !important; }
 .roomrow.started { background-color:green; color:#fff !important; }
 .roomrow.ended { background-color:#ffe39f; color:#000 !important; }
 .roomrow.waitingforlock { border: solid 1px; background-color:blue;  }
-.roomrow .guestinfo { height: 70px;position: relative; padding: 10px; }
-.roomrow .dateinfo { color:#aaa; position:absolute; bottom: 5px; right: 5px; }
-.roomrow .code { float: right; }
+.roomrow .guestinfo { height: 70px;position: relative; }
+.roomrow .dateinfo { color:#aaa; position:absolute; bottom: 5px; left: 10px; }
 .roomrow .roominfoblock { border-right: solid 1px; padding: 10px; min-height: 70px;}
 .roomrow .guestinfocol { min-height: 70px; position: relative; padding-top: 5px; }
 a, a:hover { color:#000; } 
 .loading { text-align: center; font-size: 40px; }
 .doorlogrow { height: 80px; }
 .doorlogrow .dooractionbutton i { font-size: 30px; width: 100%; }
-.doorlogrow .dooractionbutton { float: right; margin-right: 5px; border: solid 1px; border-radius: 5px; text-align: center; width: 70px; height: 70px; padding: 12px; font-size: 8px; }
+.doorlogrow .dooractionbutton { float: right; margin-right: 5px; border: solid 1px; border-radius: 5px; text-align: center; width: 70px; height: 70px; padding: 12px; font-size: 8px; background-color:#2f749f; color:#fff;}
+.doorlogrow .dooractionbutton:hover { background-color: #494949; cursor:pointer; }

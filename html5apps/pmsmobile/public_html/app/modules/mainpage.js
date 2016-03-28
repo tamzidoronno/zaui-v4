@@ -2,6 +2,26 @@ if(typeof(getshop) === "undefined") { var getshop = {}; }
 getshop.mainpageController = function($scope, $state) {
     $scope.address = localStorage.getItem("address");
     var loadNames = getshopclient.StoreManager.getMultiLevelNames();
+    $scope.hasOtherInstructions = false;
+    $scope.hasFireInstructions = false;
+    $scope.hasDoorControl = false;
+    
+    var config = getshopclient.PmsManager.getConfiguration(getMultilevelName());
+    config.done(function(res) {
+        
+        console.log(res);
+        if(res.arxHostname) {
+            $scope.hasDoorControl = true;
+        }
+        if(res.otherinstructions) {
+            $scope.hasOtherInstructions = true;
+        }
+        if(res.fireinstructions) {
+            $scope.hasFireInstructions = true;
+        }
+        $scope.$apply();
+    });
+    
     loadNames.done(function(data) {
         var names = [];
         var current = getMultilevelName();

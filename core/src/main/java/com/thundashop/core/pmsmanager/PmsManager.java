@@ -124,14 +124,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 configuration = (PmsConfiguration) dataCommon;
             }
             if (dataCommon instanceof PmsLog) {
-                logentries.add((PmsLog) dataCommon);
+                PmsLog entry = (PmsLog) dataCommon;
+                if(entry.logText.contains("Automarking booking as paid for, since no orders has been added") || entry.logText.equals("Booking saved / updated") || entry.logText.contains("booking has been deleted")) {
+                    deleteObject(entry);
+                } else {
+                    logentries.add(entry);
+                }
             }
             if (dataCommon instanceof PmsAdditionalItemInformation) {
                 PmsAdditionalItemInformation res = (PmsAdditionalItemInformation) dataCommon;
                 addiotionalItemInfo.put(res.itemId, res);
             }
         }
-        
+         
         createProcessor("logfetcher", ArxLogFetcher.class);
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
     }
@@ -241,7 +246,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking currentBooking = findBookingForSession();
 
         if (currentBooking != null) {
-            deleteBooking(currentBooking, true);
+            hardDeleteBooking(currentBooking);
         }
 
         PmsBooking booking = new PmsBooking();
@@ -615,7 +620,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Calendar nowCal = Calendar.getInstance();
             nowCal.add(Calendar.HOUR_OF_DAY, -4);
             if (!booking.rowCreatedDate.after(nowCal.getTime())) {
-                deleteBooking(booking.id);
+                hardDeleteBooking(booking);
                 return null;
             }
         }
@@ -665,17 +670,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return booking;
     }
 
-    private void deleteBooking(PmsBooking booking, boolean onInit) {
-        if (!onInit) {
-            System.out.println("Booking are being deleted");
-        }
-
-        String bookingId = booking.id;
-        bookings.remove(booking.id);
-        deleteObject(booking);
-
-        logEntry("Booking deleted", bookingId, null);
-    }
 
     private void checkForIncosistentBookings() {
         List<String> added = new ArrayList();
@@ -756,7 +750,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         validatePhoneNumbers(booking);
         bookings.put(booking.id, booking);
         saveObject(booking);
-        logEntry("Booking saved / updated", booking.id, null);
     }
 
     private void validatePhoneNumbers(PmsBooking booking) {
@@ -1306,9 +1299,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         booking.isDeleted = true;
         saveBooking(booking);
-        logEntry("booking has been deleted", bookingId, null);
     }
 
+    
+    private void hardDeleteBooking(PmsBooking booking) {
+        bookings.remove(booking.id);
+        deleteObject(booking);
+}
+    
     private void removeDeleted(PmsBookingFilter filter, List<PmsBooking> result) {
         if (filter != null && filter.filterType != null && filter.filterType.equalsIgnoreCase("deleted")) {
             return;

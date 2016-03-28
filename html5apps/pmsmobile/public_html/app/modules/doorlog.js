@@ -35,6 +35,7 @@ getshop.doorlogController = function ($scope, $state, $stateParams) {
     $scope.endTime = endDate;
     $scope.updateLogData = function() {
         $scope.loading = true;
+        $scope.notfound = false;
         var start = $scope.startTime.getTime();
         var end = $scope.endTime.getTime();
         var entries = getshopclient.DoorManager.getLogForDoor(getMultilevelName(), $stateParams.externalId, start, end);

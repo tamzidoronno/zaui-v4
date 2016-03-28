@@ -29,51 +29,32 @@ public class PmsManagerProcessor {
     }
 
     public void doProcessing() {
-        long start = System.currentTimeMillis();
         try { confirmWhenPaid(); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
+        long start = System.currentTimeMillis();
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
+        System.out.println("Check takes: " + (System.currentTimeMillis() - start));
         try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(0, 12, false); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(12, 12 * 2, false); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(24, 24 * 2, false); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(48, 24 * 3, false); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(0, 12, true); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(12, 12 * 2, true); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(24, 24 * 2, true); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(48, 24 * 3, true); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processEndings(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processIntervalCleaning(false); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { processIntervalCleaning(true); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         
         if(manager.storeManager.isProductMode()) {
             try { manager.checkDoorStatusControl(); } catch (Exception e) { e.printStackTrace(); }
             try { processArx(); }catch(Exception e) { e.printStackTrace(); }
         }
-        System.out.println(System.currentTimeMillis() - start);
         try { processOrdersToCreate(); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println(System.currentTimeMillis() - start);
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
@@ -229,10 +210,12 @@ public class PmsManagerProcessor {
                 if (room.isEnded()) {
                     continue;
                 }
-                booking = manager.finalize(booking);
-                if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
-                    manager.autoAssignItem(room);
-                    save = true;
+                if(room.bookingItemId == null) {
+                    booking = manager.finalize(booking);
+                    if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+                        manager.autoAssignItem(room);
+                        save = true;
+                    }
                 }
             }
             if (save) {

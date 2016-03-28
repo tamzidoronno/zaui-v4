@@ -6,21 +6,6 @@ getshop.mainpageController = function($scope, $state) {
     $scope.hasFireInstructions = false;
     $scope.hasDoorControl = false;
     
-    var config = getshopclient.PmsManager.getConfiguration(getMultilevelName());
-    config.done(function(res) {
-        
-        console.log(res);
-        if(res.arxHostname) {
-            $scope.hasDoorControl = true;
-        }
-        if(res.otherinstructions) {
-            $scope.hasOtherInstructions = true;
-        }
-        if(res.fireinstructions) {
-            $scope.hasFireInstructions = true;
-        }
-        $scope.$apply();
-    });
     
     loadNames.done(function(data) {
         console.log(data);
@@ -36,6 +21,23 @@ getshop.mainpageController = function($scope, $state) {
         $scope.multilevelnames = names;
         $scope.dataSelected = current;
         $scope.$apply();
+        
+        var config = getshopclient.PmsManager.getConfiguration(getMultilevelName());
+        config.done(function(res) {
+
+            console.log(res);
+            if(res.arxHostname) {
+                $scope.hasDoorControl = true;
+            }
+            if(res.otherinstructions) {
+                $scope.hasOtherInstructions = true;
+            }
+            if(res.fireinstructions) {
+                $scope.hasFireInstructions = true;
+            }
+            $scope.$apply();
+        });
+        
     })
     $scope.updateMultilevelName = function(name) {
         localStorage.setItem("multilevelname", name);

@@ -31,9 +31,8 @@
                 return;
             }
             var hostToUse = localStorage.getItem("address");
-            console.log(hostToUse);
             if(hostToUse) {
-                getshopclient = new GetShopApiWebSocket(hostToUse, "31330");
+                getshopclient = new GetShopApiWebSocket(hostToUse, "31332");
                 getshopclient.connect();
                 getshopclient.setConnectedEvent(function () {
                     $('.disconnectedPage').fadeOut();

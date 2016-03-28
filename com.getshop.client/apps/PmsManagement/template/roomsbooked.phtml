@@ -186,8 +186,14 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                         <span class='editmode' gstype='form' method="setNewStartDate">
                             <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                             <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                            <span style='display:inline-block; width: 80px;'>Start</span> <input type='text' gsname='start' value='<? echo date("d.m.Y H:i", strtotime($room->date->start)); ?>'><br>
-                            <span style='display:inline-block; width: 80px;'>End</span> <input type='text' gsname='end' value='<? echo date("d.m.Y H:i", strtotime($room->date->end)); ?>'><br>
+                            <span style='display:inline-block; width: 80px;'>Start</span> 
+                                <input type='text' gsname='start' value='<? echo date("d.m.Y", strtotime($room->date->start)); ?>' style='width:80px;' class='calinput'>
+                                <input type='text' gsname='starttime' value='<? echo date("H:i", strtotime($room->date->start)); ?>'  style='width:40px;'>
+                                <br>
+                            <span style='display:inline-block; width: 80px;'>End</span> 
+                            <input type='text' gsname='end' value='<? echo date("d.m.Y", strtotime($room->date->end)); ?>' style='width:80px;' class='calinput'>
+                            <input type='text' gsname='endtime' value='<? echo date("H:i", strtotime($room->date->end)); ?>' style='width:40px;'>
+                            <br>
                             <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
                         </span>
                     </span>
@@ -295,3 +301,8 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
 <?php
 }
 ?>
+
+<script>
+    $('.calinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>
+    

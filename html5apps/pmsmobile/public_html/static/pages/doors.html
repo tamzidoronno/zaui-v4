@@ -5,13 +5,17 @@
 <div class='row'>
      <div ng-repeat="door in doors" class='col-sm-12 doorlogrow'>
         <div class='col-sm-12'>
-            <a ui-sref="doorlog({{door}})">
-                <span class='dooractionbutton'>
-                    <i class="fa fa-tasks"></i>
-                    Door log
-                </span>
-            </a>
-            <span class='dooractionbutton' ng-click="pulseOpen(door.externalId, 'pulseOpen')">
+            <div class="col-xs-12 col-md-4">
+                <b>{{door.name}}</b>
+            </div>
+            <div class="col-xs-12 col-md-8">
+                <a ui-sref="doorlog({{door}})">
+                    <span class='dooractionbutton'>
+                        <i class="fa fa-tasks"></i>
+                        Door log
+                    </span>
+                </a>
+                <span class='dooractionbutton' ng-click="pulseOpen(door.externalId, 'pulseOpen')">
                     <i class="fa fa-heartbeat"></i>
                     Pulse open
                 </span>
@@ -23,7 +27,7 @@
                     <i class="fa fa-sign-out"></i>
                     Force close
                 </span>
-            <b>{{door.name}}</b><br>
+            </div>
         </div>
     </div>
 </div>

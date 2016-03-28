@@ -1,48 +1,48 @@
 
 <div class='additionalinfo row'>Bookers information</div>
 <div class='row fdsaf'>
-    <div class='col-xs-6'>Full name</div>
-    <div class='col-xs-6'><input type="txt" ng-model="user.fullName" class="form-control"></div>
+    <div class='col-xs-4'>Full name</div>
+    <div class='col-xs-8'><input type="txt" ng-model="user.fullName" class="form-control"></div>
 </div>
 <div class='row'>
-    <div class='col-xs-6'>Email</div>
-    <div class='col-xs-6'><input type="txt" ng-model="user.emailAddress" class="form-control"></div>
+    <div class='col-xs-4'>Email</div>
+    <div class='col-xs-8'><input type="txt" ng-model="user.emailAddress" class="form-control"></div>
 </div>
 <div class='row'>
-    <div class='col-xs-6'>Prefix</div>
-    <div class='col-xs-6'><input type="txt" ng-model="user.prefix" class="form-control"></div>
+    <div class='col-xs-4'>Prefix</div>
+    <div class='col-xs-8'><input type="txt" ng-model="user.prefix" class="form-control"></div>
 </div>
 <div class='row'>
-    <div class='col-xs-6'>Phone</div>
-    <div class='col-xs-6'><input type="txt" ng-model="user.cellPhone" class="form-control"></div>
+    <div class='col-xs-4'>Phone</div>
+    <div class='col-xs-8'><input type="txt" ng-model="user.cellPhone" class="form-control"></div>
 </div>
 <div class='row'>
-    <div class='col-xs-6'>Address</div>
-    <div class='col-xs-6'><input type="txt" ng-model="user.address.address" class="form-control"></div>
+    <div class='col-xs-4'>Address</div>
+    <div class='col-xs-8'><input type="txt" ng-model="user.address.address" class="form-control"></div>
 </div>
 <div class='row'>
-    <div class='col-xs-6'>Postcode</div>
-    <div class='col-xs-6'><input type="txt" ng-model="user.address.postCode" class="form-control"></div>
+    <div class='col-xs-4'>Postcode</div>
+    <div class='col-xs-8'><input type="txt" ng-model="user.address.postCode" class="form-control"></div>
 </div>
 <div class='row'>
-    <div class='col-xs-6'>City</div>
-    <div class='col-xs-6'><input type="txt" ng-model="user.address.city" class="form-control"></div>
+    <div class='col-xs-4'>City</div>
+    <div class='col-xs-8'><input type="txt" ng-model="user.address.city" class="form-control"></div>
 </div>
 <div class='row'>
-    <div class='col-xs-6'></div>
-    <div class='col-xs-6'><span class="btn btn-success form-control" ng-click="saveUser()">Update user</span></div>
+    <div class='col-xs-4'></div>
+    <div class='col-xs-8'><span class="btn btn-success form-control" ng-click="saveUser()">Update user</span></div>
 </div>
 <div class='additionalinfobottom row'></div>
 
 
 <div class='additionalinfo row'>Room</div>
 <div class='row'>
-    <div class='col-xs-6 contactdata'>Room</div>
-    <div class='col-xs-6 othercontactdata'><select class="form-control" ng-model='selectedroom'  ng-options="item.id as item.bookingItemName for item in items"></select></div>
+    <div class='col-xs-4 contactdata'>Room</div>
+    <div class='col-xs-8 othercontactdata'><select class="form-control" ng-model='selectedroom'  ng-options="item.id as item.bookingItemName for item in items"></select></div>
 </div>
 <div class='row'>
-    <div class='col-xs-6 contactdata'></div>
-    <div class='col-xs-6 othercontactdata'><span class="btn btn-success form-control" ng-click="changeRoom(selectedroom)">Change room</span></div>
+    <div class='col-xs-4 contactdata'></div>
+    <div class='col-xs-8 othercontactdata'><span class="btn btn-success form-control" ng-click="changeRoom(selectedroom)">Change room</span></div>
 </div>
 <div class='additionalinfobottom row'></div>
 
@@ -50,33 +50,33 @@
 
 <div class='additionalinfo row'>Room information</div>
 <div class='row'>
-    <div class='col-xs-6 contactdata'>Code</div>
-    <div class='col-xs-6 othercontactdata'>{{ room.code }}</div>
+    <div class='col-xs-4 contactdata'>Code</div>
+    <div class='col-xs-8 othercontactdata'>{{ room.code }}</div>
 </div>
 <div class='row'>
-    <div class='col-xs-6 contactdata'>Created when</div>
-    <div class='col-xs-6 othercontactdata'>{{ booking.rowCreatedDate }}</div>
+    <div class='col-xs-4 contactdata'>Created when</div>
+    <div class='col-xs-8 othercontactdata'>{{ booking.rowCreatedDate }}</div>
 </div>
 <div class='row'>
-    <div class='col-xs-6 contactdata'>Booking starting at</div>
-    <div class='col-xs-6 othercontactdata'><input type="datetime-local" class="form-control" ng-model="room.date.start">
+    <div class='col-xs-4 contactdata'>Booking starting at</div>
+    <div class='col-xs-8 othercontactdata'><input type="datetime-local" class="form-control" ng-model="room.date.start">
     </div>
 </div>
 <div class='row'>
-    <div class='col-xs-6 contactdata'>Booking ending at</div>
-    <div class='col-xs-6 othercontactdata'><input type="datetime-local" class="form-control" ng-model="room.date.end"></div>
+    <div class='col-xs-4 contactdata'>Booking ending at</div>
+    <div class='col-xs-8 othercontactdata'><input type="datetime-local" class="form-control" ng-model="room.date.end"></div>
 </div>
 <div class='row'>
-    <div class='col-xs-6 contactdata'></div>
-    <div class='col-xs-6 othercontactdata'><span class="btn btn-success form-control" ng-click="changeStay();">Update stay</span></div>
+    <div class='col-xs-4 contactdata'></div>
+    <div class='col-xs-8 othercontactdata'><span class="btn btn-success form-control" ng-click="changeStay();">Update stay</span></div>
 </div>
 <div class='additionalinfobottom row'></div>
 
 
 <div class='additionalinfo row'>Guest information</div>
 <div class='row'>
-    <div class='col-xs-6 contactdata'>Number of guests</div>
-    <div class='col-xs-6 othercontactdata'><input type="number" class="form-control" ng-model="room.numberOfGuests" ng-change="changeRoomCount(room.numberOfGuests)"></div>
+    <div class='col-xs-4 contactdata'>Number of guests</div>
+    <div class='col-xs-8 othercontactdata'><input type="number" class="form-control" ng-model="room.numberOfGuests" ng-change="changeRoomCount(room.numberOfGuests)"></div>
 </div>
 <div ng-repeat="guest in room.guests" class='guestrow row no-gutter'>
     <div class='col-xs-3'>
@@ -102,7 +102,7 @@
 </div>
 <div class='row'>
     <div class='col-xs-6 contactdata'></div>
-    <div class='col-xs-6 othercontactdata'><span class="btn btn-success form-control" ng-click="saveGuests();">Update guest information</span></div>
+    <div class='col-xs-6 othercontactdata'><span class="btn btn-success form-control" ng-click="saveGuests();">Update</span></div>
 </div>
 
 <div class='additionalinfobottom row'></div>

@@ -39,6 +39,11 @@ angular.module('app', ['ui.router'])
       templateUrl: "pages/log.html",
       controller: getshop.logController
     })
+    .state('doors', {
+      url: "/doors",
+      templateUrl: "pages/doors.html",
+      controller: getshop.doorsController
+    })
     .state('otherinstruction', {
       url: "/otherinstruction",
       templateUrl: "pages/otherinstruction.html",

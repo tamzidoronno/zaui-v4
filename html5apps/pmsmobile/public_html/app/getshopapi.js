@@ -883,94 +883,102 @@ GetShopApiWebSocket.ArxManager = function(communication) {
 }
 
 GetShopApiWebSocket.ArxManager.prototype = {
-    'addCard' : function(personId,card, silent) {
+    'addCard' : function(multilevelname, personId,card, silent) {
         data = {
             args : {
                 personId : JSON.stringify(personId),
                 card : JSON.stringify(card),
             },
             method: 'addCard',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'clearDoorCache' : function(silent) {
+    'clearDoorCache' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'clearDoorCache',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'doorAction' : function(externalId,state, silent) {
+    'doorAction' : function(multilevelname, externalId,state, silent) {
         data = {
             args : {
                 externalId : JSON.stringify(externalId),
                 state : JSON.stringify(state),
             },
             method: 'doorAction',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'generateDoorLogForAllDoorsFromResult' : function(resultFromArx, silent) {
+    'generateDoorLogForAllDoorsFromResult' : function(multilevelname, resultFromArx, silent) {
         data = {
             args : {
                 resultFromArx : JSON.stringify(resultFromArx),
             },
             method: 'generateDoorLogForAllDoorsFromResult',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllAccessCategories' : function(silent) {
+    'getAllAccessCategories' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getAllAccessCategories',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllDoors' : function(silent) {
+    'getAllDoors' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getAllDoors',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getAllPersons' : function(silent) {
+    'getAllPersons' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'getAllPersons',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getLogForAllDoor' : function(start,end, silent) {
+    'getLogForAllDoor' : function(multilevelname, start,end, silent) {
         data = {
             args : {
                 start : JSON.stringify(start),
                 end : JSON.stringify(end),
             },
             method: 'getLogForAllDoor',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getLogForDoor' : function(externalId,start,end, silent) {
+    'getLogForDoor' : function(multilevelname, externalId,start,end, silent) {
         data = {
             args : {
                 externalId : JSON.stringify(externalId),
@@ -978,33 +986,36 @@ GetShopApiWebSocket.ArxManager.prototype = {
                 end : JSON.stringify(end),
             },
             method: 'getLogForDoor',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'getPerson' : function(id, silent) {
+    'getPerson' : function(multilevelname, id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
             },
             method: 'getPerson',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'isLoggedOn' : function(silent) {
+    'isLoggedOn' : function(multilevelname, silent) {
         data = {
             args : {
             },
             method: 'isLoggedOn',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'logonToArx' : function(hostname,username,password, silent) {
+    'logonToArx' : function(multilevelname, hostname,username,password, silent) {
         data = {
             args : {
                 hostname : JSON.stringify(hostname),
@@ -1012,17 +1023,19 @@ GetShopApiWebSocket.ArxManager.prototype = {
                 password : JSON.stringify(password),
             },
             method: 'logonToArx',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);
     },
 
-    'updatePerson' : function(person, silent) {
+    'updatePerson' : function(multilevelname, person, silent) {
         data = {
             args : {
                 person : JSON.stringify(person),
             },
             method: 'updatePerson',
+            multiLevelName: multilevelname,
             interfaceName: 'core.arx.IArxManager',
         };
         return this.communication.send(data, silent);

@@ -97,6 +97,7 @@ public class PmsManagerDoorSurveilance {
                 PmsBooking book = getActiveRoomWithCard(logEntry.card);
                 if (book != null) {
                     for (PmsBookingRooms room : book.rooms) {
+                        manager.logEntry("Card / code used " + logEntry.card + " has been entered", book.id, room.bookingItemId);
                         if (room.code.equals(logEntry.card)) {
                             if(!room.forcedOpen) {
                                 manager.logEntry("Forced open door: " + logEntry.door, book.id, room.bookingItemId);
@@ -111,8 +112,8 @@ public class PmsManagerDoorSurveilance {
                                 manager.saveBooking(book);
                                 processKeepDoorOpenClosed();
                             }
+                            break;
                         }
-                        break;
                     }
                 }
             }

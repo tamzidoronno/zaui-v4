@@ -1033,5 +1033,9 @@ class ApplicationManager extends FactoryBase {
         
         $this->getPage()->renderModal($areaname);
     }
+    
+    public function setSessionCompany() {
+        $this->getApi()->getUserManager()->setSessionCompany($_POST['data']['company']);
+    }
 }
 ?>

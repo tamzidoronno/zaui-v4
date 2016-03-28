@@ -420,7 +420,20 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
 
     @Override
     public int getProgress(String testId) {
-        UserTestResult testResult = getResultTest(testId, getSession().currentUser.id);
+        return getProgressForUser(getSession().currentUser.id, testId);
+        
+    }
+    
+    public int getProgressForUser(String userId, String testId) {
+        User user = userManager.getUserById(userId);
+        
+        if (user == null) {
+            return 0;
+        }
+        
+        userManager.checkUserAccess(user);
+        
+        UserTestResult testResult = getResultTest(testId, user.id);
         if (testResult == null) {
             return 0;
         }
@@ -518,5 +531,20 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         }
         
         return retRes;
+    }
+
+    @Override
+    public List<QuestTest> getTestsForUser(String userId) {
+        User user = userManager.getUserById(userId);
+        
+        if (user == null) {
+            return new ArrayList();
+        }
+        
+        userManager.checkUserAccess(user);
+        
+        return tests.values().stream()
+            .filter(test -> test.userIds.contains(userId))
+            .collect(Collectors.toList());
     }
 }

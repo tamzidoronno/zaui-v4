@@ -1,0 +1,13 @@
+<?
+/* @var $this ns_a6d68820_a8e3_4eac_b2b6_b05043c28d78\Company */
+
+$companies = $this->searchForCompanies();
+
+$userid = $_POST['userid'];
+
+foreach ($companies as $company) {
+    $companyId = $company->id;
+    echo "<div gss_method='addCompanyToUser' gss_fragment='companies' gss_view='gss_view_of_companies_user_has' gss_value='$userid' gss_value_2='$companyId' class='gss_company_search_row'> $company->name <i class='fa fa-plus'></i></div>";
+}
+?>
+

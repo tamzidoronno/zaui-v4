@@ -1387,6 +1387,12 @@ var initializeFlipping = function() {
     $('.gsflipback').css('display','block');
 };
 
+thundashop.common.setSelectedCompany = function() {
+    thundashop.Ajax.simplePost(this, "setSessionCompany", {company : $(this).val() });
+}
+
+$(document).on('change', '.gs_select_session_company', thundashop.common.setSelectedCompany)
+
 $(document).ready(function() {
     PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', resizeLeftBar);
     PubSub.subscribe('NAVIGATION_COMPLETED', resizeLeftBar);

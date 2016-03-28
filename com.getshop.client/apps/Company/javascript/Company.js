@@ -1,10 +1,18 @@
 app.Company = {
     init: function() {
         $(document).on('click', '.gss_show_company', app.Company.showSelectedCompany);
+        $(document).on('keyup', '.gss_search_user_company', app.Company.startSearch);
+    },
+    
+    startSearch: function(e) {
+        if (e.keyCode == 13) {
+            $('#gss_startSearchForCompany').click();
+        }
     },
     
     showSelectedCompany: function() {
-        var companyId = $('.gsschangeusercompany').val();
+        var companyId = $(this).closest('.gss_companyrow').attr('gs_model_attr');
+        
         if (!companyId) {
             alert("No company selected");
             return;

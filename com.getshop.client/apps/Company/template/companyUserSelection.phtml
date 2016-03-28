@@ -1,0 +1,20 @@
+<?
+
+?>
+<div class="gss_overrideapp" gss_use_app_id="a6d68820-a8e3-4eac-b2b6-b05043c28d78">      
+    <input type='hidden' gs_model='companymodel' gs_model_attr='userid' value='<?php echo $user->id; ?>'>
+      
+    <div class="gss_view_of_companies_user_has">
+        <?
+        $this->includefile("companies");
+        ?>
+    </div>
+    
+    <div style='position: relative; padding-top: 57px;'>
+        <input style='right: 30px' gs_model='companysearch' gs_model_attr='value' type="textfield" placeholder="Search for company" class='gss_search_user_company' /> 
+        <input type='hidden' gs_model="companysearch" gs_model_attr="userid" value="<? echo $this->selectedUser->id; ?>" />
+        <div id='gss_startSearchForCompany' style='position: absolute; padding: 5px; top: 11px; right: 0px; border: solid 1px #DDD; border-radius: 5px;' gss_method='searchForCompanies' gss_model='companysearch' gss_fragment='searchforuser' gss_view='gss_company_user_search_result'><i class='fa fa-search'></i></div>
+            
+        <div class='gss_company_user_search_result'></div>
+    </div>
+</div>

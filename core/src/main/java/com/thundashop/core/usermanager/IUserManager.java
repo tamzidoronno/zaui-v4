@@ -373,6 +373,9 @@ public interface IUserManager {
     
     public void assignCompanyToUser(Company company, String userId);
     
+    @Editor
+    public void removeUserFromCompany(String companyId, String userId);
+    
     @Administrator
     public List<User> getUnconfirmedCompanyOwners();
     
@@ -385,4 +388,10 @@ public interface IUserManager {
     public Company getCompanyByReference(String companyReference);
     
     public void assignReferenceToCompany(String companyId, String companyReference);
+    
+    @Editor
+    public List<Company> searchForCompanies(String searchWord);
+    
+    @Customer
+    public void setSessionCompany(String companyId);
 }

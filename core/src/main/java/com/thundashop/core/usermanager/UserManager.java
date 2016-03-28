@@ -35,6 +35,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1186,7 +1187,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             companyToUse = company;
         }
         
-        user.company.add(companyToUse.id);
+        if (!user.company.contains(companyToUse.id)) {
+            user.company.add(companyToUse.id);
+        }
+        
         saveUserSecure(user);
    }
 
@@ -1317,6 +1321,42 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             company.reference = companyReference;
             saveObject(company);
         }
+    }
+
+    @Override
+    public List<Company> searchForCompanies(String searchWord) {
+        final String searchWordLower = searchWord.toLowerCase();
+        
+        return companies.values()
+                .stream()
+                .filter(comp -> searchCompany(comp, searchWordLower))
+                .collect(Collectors.toList());
+                
+    }
+
+    private boolean searchCompany(Company company, String searchWord) {
+        if (company.name.toLowerCase().contains(searchWord))
+            return true;
+        
+        if (company.vatNumber.toLowerCase().contains(searchWord))
+            return true;
+        
+        return false;
+    }
+
+    @Override
+    public void removeUserFromCompany(String companyId, String userId) {
+        User user = getUserStoreCollection(storeId).getUser(userId);
+        
+        if (user != null) {
+            user.company.remove(companyId);
+            saveObject(user);
+        }
+    }
+
+    @Override
+    public void setSessionCompany(String companyId) {
+        getSession().put("user_company_sessionid", companyId);
     }
 
 }

@@ -2658,3 +2658,10 @@ select.gsniceselect1:active {
    position: fixed;
    width: 100%;
 }
+
+.company_header_selector {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: none;
+}

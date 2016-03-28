@@ -43,6 +43,20 @@ class ContentManager extends \WebshopApplication implements \Application {
 
     public function loadContent() {
         $this->content = $this->getApi()->getContentManager()->getContent($this->getConfiguration()->id);
+        
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            return;
+        }
+        
+        preg_match_all('~{(.+?)}~', $this->content, $m);
+        
+        if (count($m[0])) {
+            foreach ($m[0] as $key) {
+                if (isset($_SESSION[$key])) {
+                    $this->content = str_replace($key, $_SESSION[$key], $this->content);
+                }
+            }
+        }
     }
 
     public function render() {

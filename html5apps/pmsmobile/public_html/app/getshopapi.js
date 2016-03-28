@@ -878,11 +878,11 @@ GetShopApiWebSocket.StoreApplicationPool.prototype = {
     },
 
 }
-GetShopApiWebSocket.ArxManager = function(communication) {
+GetShopApiWebSocket.DoorManager = function(communication) {
     this.communication = communication;
 }
 
-GetShopApiWebSocket.ArxManager.prototype = {
+GetShopApiWebSocket.DoorManager.prototype = {
     'addCard' : function(multilevelname, personId,card, silent) {
         data = {
             args : {
@@ -891,7 +891,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'addCard',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -902,7 +902,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'clearDoorCache',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -915,7 +915,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'doorAction',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -927,7 +927,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'generateDoorLogForAllDoorsFromResult',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -938,7 +938,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'getAllAccessCategories',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -949,7 +949,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'getAllDoors',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -960,7 +960,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'getAllPersons',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -973,7 +973,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'getLogForAllDoor',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -987,7 +987,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'getLogForDoor',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -999,32 +999,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'getPerson',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
-        };
-        return this.communication.send(data, silent);
-    },
-
-    'isLoggedOn' : function(multilevelname, silent) {
-        data = {
-            args : {
-            },
-            method: 'isLoggedOn',
-            multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
-        };
-        return this.communication.send(data, silent);
-    },
-
-    'logonToArx' : function(multilevelname, hostname,username,password, silent) {
-        data = {
-            args : {
-                hostname : JSON.stringify(hostname),
-                username : JSON.stringify(username),
-                password : JSON.stringify(password),
-            },
-            method: 'logonToArx',
-            multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -1036,7 +1011,7 @@ GetShopApiWebSocket.ArxManager.prototype = {
             },
             method: 'updatePerson',
             multiLevelName: multilevelname,
-            interfaceName: 'core.arx.IArxManager',
+            interfaceName: 'core.arx.IDoorManager',
         };
         return this.communication.send(data, silent);
     },
@@ -8377,7 +8352,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.GetShopApplicationPool = new GetShopApiWebSocket.GetShopApplicationPool(this);
     this.StoreApplicationInstancePool = new GetShopApiWebSocket.StoreApplicationInstancePool(this);
     this.StoreApplicationPool = new GetShopApiWebSocket.StoreApplicationPool(this);
-    this.ArxManager = new GetShopApiWebSocket.ArxManager(this);
+    this.DoorManager = new GetShopApiWebSocket.DoorManager(this);
     this.BigStock = new GetShopApiWebSocket.BigStock(this);
     this.BookingEngine = new GetShopApiWebSocket.BookingEngine(this);
     this.BrainTreeManager = new GetShopApiWebSocket.BrainTreeManager(this);

@@ -21,13 +21,11 @@ import java.util.List;
 
 @GetShopApi
 @GetShopMultiLayerSession
-interface IArxManager {
+interface IDoorManager {
     @Administrator
     public List<Door> getAllDoors() throws Exception;
     @Administrator
     public List<Person> getAllPersons() throws Exception;
-    @Administrator
-    public boolean isLoggedOn();
     @Administrator
     public List<AccessCategory> getAllAccessCategories() throws Exception;
     @Administrator

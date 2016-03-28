@@ -10,6 +10,7 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.doormanager.DoorManagerConfiguration;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -56,10 +57,7 @@ import org.w3c.dom.NodeList;
 
 @Component
 @GetShopSession
-public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
-
-    public HashMap<String, String> userPasswords = new HashMap();
-    
+public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager {
     @Autowired
     UserManager usermanager;
     
@@ -70,9 +68,6 @@ public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
     PmsManager pmsManager;
     
     private List<Door> doorList = new ArrayList();
-    private String arxHostname = null;
-    private String arxUsername = null;
-    private String arxPassword = null;
     private boolean doneClosedForToday = false;
     
     @Override
@@ -173,7 +168,6 @@ public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export_accesscategory";
-        String password = userPasswords.get(currentUser.id);
 //        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName, "");
@@ -207,7 +201,6 @@ public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?include_accesscategory_id=true&exclude_deleted=true";
-        String password = userPasswords.get(currentUser.id);
 //        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName, "");
@@ -234,18 +227,6 @@ public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
             personlist.add(tmpPerson);
         }
         return personlist;
-    }
-
-    @Override
-    public boolean isLoggedOn() {
-        if(usermanager.isLoggedIn()) {
-            if(userPasswords.containsKey(getSession().currentUser.id)) {
-                return true;
-            } else {
-                usermanager.logout();
-            }
-        }
-        return false;
     }
 
     private List<Door> recursiveFindDoors(NodeList nodeList, int depth) throws UnsupportedEncodingException {
@@ -326,7 +307,6 @@ public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
             saveObject(door);
         }
         
-        String password = userPasswords.get(currentUser.id);
 //        System.out.println(hostName);
         httpLoginRequest(hostName,"");
     }
@@ -472,15 +452,7 @@ public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
         toPost += "</cards>\n";
         toPost += "</arxdata>\n";
         
-        User currentUser = getSession().currentUser;
         String hostName = ":5002/arx/import";
-        String password = arxPassword;
-        String username = arxUsername;
-        if(currentUser != null) {
-            password = userPasswords.get(currentUser.id);
-            username = currentUser.username;
-        }
-        
         httpLoginRequest(hostName,toPost);
         
         return person;
@@ -491,7 +463,6 @@ public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?external_id=" + id + "&exclude_deleted=1";
-        String password = userPasswords.get(currentUser.id);
 //        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName,"");
@@ -669,18 +640,6 @@ public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
         return null;
     }
 
-    /**
-     * A One time override of username and password.
-     * @param arxHostname
-     * @param arxUsername
-     * @param arxPassword 
-     */
-    public void overrideCredentials(String arxHostname, String arxUsername, String arxPassword) {
-        this.arxHostname = arxHostname;
-        this.arxUsername = arxUsername;
-        this.arxPassword = arxPassword;
-    }
-
     private String convertToIso(String firstName) throws UnsupportedEncodingException {
         
         byte[] utf8bytes = firstName.getBytes();
@@ -696,12 +655,6 @@ public class ArxManager extends GetShopSessionBeanNamed implements IArxManager {
         String string2 = new String ( iso88591bytes, iso88591charset );
 
         return string2;
-    }
-
-    public void clearOverRideCredentials() {
-        arxHostname = null;
-        arxPassword = null;
-        arxUsername = null;
     }
 
     public void closeAllForTheDay() throws Exception {

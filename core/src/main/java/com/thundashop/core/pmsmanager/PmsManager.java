@@ -14,9 +14,9 @@ import com.google.gson.Gson;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
-import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.Calendar; 
 import com.thundashop.core.arx.AccessLog;
-import com.thundashop.core.arx.ArxManager;
+import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
@@ -93,7 +93,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     CartManager cartManager;
 
     @Autowired
-    ArxManager arxManager;
+    DoorManager arxManager;
 
     @Autowired
     StoreManager storeManager;

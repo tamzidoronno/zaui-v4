@@ -72,13 +72,9 @@ public class PmsManagerDoorSurveilance {
         
         com.ibm.icu.util.Calendar cal = com.ibm.icu.util.Calendar.getInstance();
         if(cal.get(com.ibm.icu.util.Calendar.HOUR_OF_DAY) > hour) {
-            manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
             manager.arxManager.closeAllForTheDay();
-            manager.arxManager.clearOverRideCredentials();
         } else if(cal.get(com.ibm.icu.util.Calendar.HOUR_OF_DAY) == hour && cal.get(com.ibm.icu.util.Calendar.MINUTE) >= minute) {
-            manager.arxManager.overrideCredentials(arxHostname, arxUsername, arxPassword);
             manager.arxManager.closeAllForTheDay();
-            manager.arxManager.clearOverRideCredentials();
         } else {
             manager.arxManager.clearCloseForToday();
         }

@@ -253,15 +253,18 @@ public class BookingItemAssignerOptimal {
     }
 
     private BookingItemTimeline getBookingItemTimeline(Booking booking, List<BookingItemTimeline> bookingItemsFlatten, OptimalBookingTimeLine optimalTimeLine) {
-        BookingItemTimeline timeLine = bookingItemsFlatten.stream().filter(o -> o.bookingItemId.equals(booking.bookingItemId)).findFirst().orElse(null);
-        if (timeLine == null) {
+        List<BookingItemTimeline> timeLines = bookingItemsFlatten.stream().filter(o -> o.bookingItemId.equals(booking.bookingItemId)).collect(Collectors.toList());
+
+        if (timeLines.isEmpty()) {
             throw new BookingEngineException("Is there a booking assigned to an item that does not exists?");
         }
         
-        if (timeLine.isAvailable(booking.startDate, booking.endDate)) {
-            timeLine.add(booking.startDate, booking.endDate);
-            timeLine.setOptimalBookingTimeLineId(optimalTimeLine.uuid);
-            return timeLine;
+        for (BookingItemTimeline timeLine : timeLines) {
+            if (timeLine.isAvailable(booking.startDate, booking.endDate)) {
+                timeLine.add(booking.startDate, booking.endDate);
+                timeLine.setOptimalBookingTimeLineId(optimalTimeLine.uuid);
+                return timeLine;
+            }
         }
         
         return null;

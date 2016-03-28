@@ -7,7 +7,9 @@
 package com.thundashop.core.arx;
 
 import com.thundashop.core.arx.Door;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,18 +20,28 @@ import java.util.List;
  */
 
 @GetShopApi
-interface IArxManager {
-    public boolean logonToArx(String hostname, String username, String password);
+@GetShopMultiLayerSession
+interface IDoorManager {
+    @Administrator
     public List<Door> getAllDoors() throws Exception;
+    @Administrator
     public List<Person> getAllPersons() throws Exception;
-    public boolean isLoggedOn();
+    @Administrator
     public List<AccessCategory> getAllAccessCategories() throws Exception;
+    @Administrator
     public void doorAction(String externalId, String state) throws Exception;
+    @Administrator
     public List<AccessLog> getLogForDoor(String externalId, long start, long end) throws Exception;
+    @Administrator
     public HashMap<String, List<AccessLog>> getLogForAllDoor(long start, long end) throws Exception;
+    @Administrator
     public Person updatePerson(Person person) throws Exception;
+    @Administrator
     public Person getPerson(String id) throws Exception;
+    @Administrator
     public Person addCard(String personId, Card card) throws Exception;
+    @Administrator
     public void clearDoorCache() throws Exception;
+    @Administrator
     public HashMap<String, List<AccessLog>> generateDoorLogForAllDoorsFromResult(String resultFromArx) throws Exception;
 }

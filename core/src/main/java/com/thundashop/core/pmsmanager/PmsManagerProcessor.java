@@ -3,7 +3,6 @@ package com.thundashop.core.pmsmanager;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.arx.AccessCategory;
 import com.thundashop.core.arx.AccessLog;
-import com.thundashop.core.arx.ArxManager;
 import com.thundashop.core.arx.Card;
 import com.thundashop.core.arx.Door;
 import com.thundashop.core.arx.Person;
@@ -351,12 +350,7 @@ public class PmsManagerProcessor {
         person.accessCategories.add(category);
 
         try {
-            manager.arxManager.overrideCredentials(manager.configuration.arxHostname,
-                    manager.configuration.arxUsername,
-                    manager.configuration.arxPassword);
-
             manager.arxManager.updatePerson(person);
-            manager.arxManager.clearOverRideCredentials();
         } catch (Exception e) {
             e.printStackTrace();
             manager.warnArxDown();
@@ -533,7 +527,7 @@ public class PmsManagerProcessor {
             }
             
             
-            if(booking.orderIds == null || booking.orderIds.isEmpty()) {
+            if((booking.orderIds == null || booking.orderIds.isEmpty()) && !booking.payedFor) {
                 booking.payedFor = true;
                 manager.logEntry("Automarking booking as paid for, since no orders has been added", booking.id, null);
                 manager.saveBooking(booking);

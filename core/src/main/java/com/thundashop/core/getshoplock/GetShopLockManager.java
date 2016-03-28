@@ -6,7 +6,7 @@
 package com.thundashop.core.getshoplock;
 
 import com.getshop.scope.GetShopSession;
-import static com.thundashop.core.arx.ArxManager.wrapClient;
+import static com.thundashop.core.arx.DoorManager.wrapClient;
 import com.thundashop.core.usermanager.data.User;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -28,7 +28,7 @@ import org.apache.http.params.HttpParams;
 import org.springframework.stereotype.Component;
 
 
-@Component
+@Component 
 @GetShopSession
 public class GetShopLockManager {
     public String username = "";

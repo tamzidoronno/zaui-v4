@@ -21,7 +21,13 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     
     public function saveContent() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-        $config->contracts->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['content'];
+        if($_POST['data']['fromid'] == "fireinstructions") {
+            $config->fireinstructions = $_POST['data']['content'];
+        } else if($_POST['data']['fromid'] == "otherinstructionsfiled") {
+            $config->otherinstructions = $_POST['data']['content'];
+        } else {
+            $config->contracts->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['content'];
+        }
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
     }
     

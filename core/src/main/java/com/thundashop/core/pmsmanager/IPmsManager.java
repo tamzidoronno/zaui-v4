@@ -56,6 +56,9 @@ public interface IPmsManager {
     public void saveConfiguration(PmsConfiguration notifications);
     
     @Administrator
+    public void setGuestOnRoom(List<PmsGuests> guests, String bookingId, String roomId);
+    
+    @Administrator
     public void confirmBooking(String bookingId, String message);
     
     @Administrator
@@ -116,6 +119,12 @@ public interface IPmsManager {
     
     @Administrator
     public void undeleteBooking(String bookingId);
+    
+    @Administrator
+    public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter);
+    
+    @Administrator
+    public void sendMessageToAllTodaysGuests(String message);
     
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);

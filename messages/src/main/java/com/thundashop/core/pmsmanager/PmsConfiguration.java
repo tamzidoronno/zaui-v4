@@ -18,6 +18,8 @@ public class PmsConfiguration extends DataCommon {
     public String emailTemplate = "{content}";
     
     public HashMap<String, String> contracts = new HashMap();
+    public String fireinstructions = "";
+    public String otherinstructions = "";
     
     /* other configurations */
     public boolean needConfirmation = false;
@@ -71,5 +73,9 @@ public class PmsConfiguration extends DataCommon {
     public String senderName = "";
     public String senderEmail = "";
     public String sendAdminTo = "";
+    
+    boolean hasLockSystem() {
+        return (arxHostname != null && !arxHostname.isEmpty());
+    }
 
 }

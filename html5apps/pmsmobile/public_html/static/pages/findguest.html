@@ -1,0 +1,41 @@
+<div class='additionalinfo row'>
+    Find a guest
+</div>
+<div class='row'>
+    <div class="input-group">
+        <input type="text" class="form-control" ng-model="searchWord" ng-keydown="$event.which === 13 && doSearch(searchWord)" placeholder="Search for...">
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="button" ng-click="doSearch(searchWord)">Find guest</button>
+        </span>
+    </div>
+</div>
+<div class="row">
+    <div ng-repeat="room in rooms" class='col-xs-12 roomrow {{room.progressState}}'>
+        <a ui-sref="guestinfo({ roomid: '{{room.pmsRoomId}}', bookingid: '{{room.bookingId}}' })">
+            <span class='col-xs-1 roominfoblock'>
+                <span class='roominfo'>{{room.room}}</span>
+                <span class='code'>{{room.code}}</span>
+            </span>
+            <span class='col-xs-11 guestinfocol'>
+                <span class='guestinfo'>
+                    {{room.guest[0].name}}
+                    {{room.guest[0].phone}}
+                </span>
+                <br><span class='dateinfo'>
+                    {{room.owner}} - 
+                    {{convertDate(room.start)}} - 
+                    {{convertDate(room.end)}}
+                </span>
+            </span>
+        </a>
+    </div>
+    
+    <br><br>
+    Color descriptions:<br>
+    <div class="roomrow notnotstarted">Not started yet</div>
+    <div class="roomrow started">Started</div>
+    <div class="roomrow ended">Ended</div>
+    <div class="roomrow waitingforlock">Waiting for clean room</div>
+</div>
+
+<div class='additionalinfobottom row'></div>

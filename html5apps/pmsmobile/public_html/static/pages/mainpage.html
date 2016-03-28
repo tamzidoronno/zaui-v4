@@ -1,0 +1,20 @@
+<div class='additionalinfo row'>
+    {{ address }}
+</div>
+<div class='row'>
+    <select ng-model="dataSelected" ng-options="item.id as item.name for item in multilevelnames" ng-change="updateMultilevelName(dataSelected)" class='form-control'></select>
+</div>
+<div class='row'>
+    <a ui-sref="findguest"><div class='col-md-4'><span class='box'><i class='fa fa-user'></i><span class='text'>Find guest</span></span></div></a>
+    <a ui-sref="otherinstruction"><div class='col-md-4'><span class='box'><i class='fa fa-info-circle'></i><span class='text'>Other instructions</span></span></div></a>
+    <a ui-sref="fire"><div class='col-md-4'><span class='box'><i class='fa fa-fire'></i><span class='text'>Fire</span></span></div></a>
+</div>
+<div class='row'>
+    <a ui-sref="sms"><div class='col-md-4'><span class='box'><i class='fa fa-inbox'></i><span class='text'>Sms</span></span></div></a>
+    <a ui-sref="log"><div class='col-md-4'><span class='box'><i class='fa fa-road'></i><span class='text'>Log</span></span></div></a>
+    <a ui-sref="doors"><div class='col-md-4'><span class='box'><i class='fa fa-sign-in'></i><span class='text'>Doors</span></span></div></a>
+</div>
+<div class='row'>
+    <br>
+</div>
+<div class='additionalinfobottom row' ng-click="logout()" style='text-align: center; color:#fff;'>Sign out</div>

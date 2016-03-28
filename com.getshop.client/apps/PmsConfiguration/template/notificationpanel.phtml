@@ -68,11 +68,12 @@ $days[7] = "Sunday";
 
 <span class="changeview pmsbutton active" data-panel='email_notifcations'>Emails</span>
 <span class="changeview pmsbutton" data-panel='sms_notifcations'>Sms'es</span>
-<span class="changeview pmsbutton" data-panel='admin_notifications'>Admin messages</span>
+<span class="changeview pmsbutton" data-panel='admin_notifications'>Admin msg</span>
 <span class="changeview pmsbutton" data-panel='email_template'>Email template</span>
 <span class="changeview pmsbutton" data-panel='contracts'>Contracts</span>
-<span class="changeview pmsbutton" data-panel='defaultmessage'>Default message</span>
-<span class="changeview pmsbutton" data-panel='other_config'>Other configuration</span>
+<span class="changeview pmsbutton" data-panel='instructions'>Instructions</span>
+<span class="changeview pmsbutton" data-panel='defaultmessage'>Default msg</span>
+<span class="changeview pmsbutton" data-panel='other_config'>Other</span>
 <div style='padding-top: 20px;'>
     Variables: {code},
     {room},
@@ -162,6 +163,25 @@ $days[7] = "Sunday";
         <div id="contractfield" gsname='<? echo $contractfield; ?>' style="border: solid 1px; min-height: 400px;"><?
             if(isset($notificationSettings->contracts->{$langauge})) {
                 echo $notificationSettings->contracts->{$langauge};
+            }
+        ?></div>
+    </div>
+    
+    <div class='instructions notificationpanel'>
+        <h2>
+            Other instructions
+        </h2>
+        <div id="otherinstructionsfiled" gsname='otherinstructions' style="border: solid 1px; min-height: 400px;"><?
+            if(isset($notificationSettings->otherinstructions)) {
+                echo $notificationSettings->otherinstructions;
+            }
+        ?></div>
+        <h2>
+            Fire instructions
+        </h2>
+        <div id="fireinstructions" gsname='fireinstructions' style="border: solid 1px; min-height: 400px;"><?
+            if(isset($notificationSettings->fireinstructions)) {
+                echo $notificationSettings->fireinstructions;
             }
         ?></div>
     </div>

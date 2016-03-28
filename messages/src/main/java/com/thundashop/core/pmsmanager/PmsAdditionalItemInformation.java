@@ -73,16 +73,11 @@ public class PmsAdditionalItemInformation extends DataCommon {
 
     boolean unsetMarkedDirtyPastThirtyMinutes() {
         Date toRemove = null;
-        for(Date cleaniDate : cleaningDates) {
-            long when = cleaniDate.getTime();
-            long now = System.currentTimeMillis();
-            long diff = now - when;
-            if(diff > (1000*60*60)) {
-                toRemove = cleaniDate;
-            }
-        }
-        if(toRemove != null) {
-            cleaningDates.remove(toRemove);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -30);
+        Date now = cal.getTime();
+        if(lastUsed != null && lastUsed.after(now)) {
+            lastUsed = null;
             return true;
         }
         return false;

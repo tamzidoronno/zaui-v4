@@ -39,16 +39,8 @@ public class PmsBooking extends DataCommon {
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
         for(PmsBookingRooms room : rooms) {
-            for(PmsGuests guest :room.guests) {
-                if(guest.email != null && guest.email.toLowerCase().contains(searchWord)) {
-                    return true;
-                }
-                if(guest.phone != null && guest.phone.toLowerCase().contains(searchWord)) {
-                    return true;
-                }
-                if(guest.name != null && guest.name.toLowerCase().contains(searchWord)) {
-                    return true;
-                }
+            if(room.containsSearchWord(searchWord)) {
+                return true;
             }
         }
         
@@ -193,10 +185,7 @@ public class PmsBooking extends DataCommon {
 
     boolean isActiveInPeriode(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {
-            if(room.date.end != null && room.date.start != null && room.date.start.before(endDate) && room.date.end.after(startDate)) {
-                return true;
-            }
-            if(isSameDay(room.date.start, startDate)) {
+            if(room.isActiveInPeriode(startDate, endDate)) {
                 return true;
             }
         }
@@ -205,9 +194,7 @@ public class PmsBooking extends DataCommon {
 
     boolean checkingInBetween(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {
-            if((room.date.start.after(startDate) && room.date.start.before(endDate)) || 
-                    isSameDay(room.date.start, endDate) ||
-                    isSameDay(room.date.start, startDate)) {
+            if(room.checkingInBetween(startDate, endDate)) {
                 return true;
             }
         }
@@ -216,9 +203,7 @@ public class PmsBooking extends DataCommon {
 
     boolean checkingOutBetween(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {
-            if((room.date.end.after(startDate) && room.date.end.before(endDate)) || 
-                    isSameDay(room.date.end, endDate) ||
-                    isSameDay(room.date.end, startDate)) {
+            if(room.checkingOutBetween(startDate, endDate)) {
                 return true;
             }
         }

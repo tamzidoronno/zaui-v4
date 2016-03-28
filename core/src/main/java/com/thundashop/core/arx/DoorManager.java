@@ -4,104 +4,70 @@ package com.thundashop.core.arx;
 import com.assaabloy.arxdata.persons.AccessCategoryList;
 import com.assaabloy.arxdata.persons.AccessCategoryType;
 import com.assaabloy.arxdata.persons.Arxdata;
-import com.assaabloy.arxdata.persons.CardListType;
-import com.assaabloy.arxdata.persons.CardType;
 import com.assaabloy.arxdata.persons.PersonListType;
 import com.assaabloy.arxdata.persons.PersonType;
 import com.getshop.scope.GetShopSession;
-import com.ibm.icu.util.Calendar;
-import com.thundashop.app.logo.ILogoManager;
-import com.thundashop.app.newsmanager.data.MailSubscription;
-import com.thundashop.app.newsmanager.data.NewsEntry;
-import com.thundashop.core.arx.Door;
+import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.doormanager.DoorManagerConfiguration;
+import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.URLEncoder;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509ExtendedTrustManager;
-import javax.net.ssl.X509TrustManager;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import org.apache.axis.encoding.Base64;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.xerces.dom.ElementNSImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 @Component
 @GetShopSession
-public class ArxManager extends ManagerBase implements IArxManager {
-
-    public HashMap<String, String> userPasswords = new HashMap();
-    
+public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager {
     @Autowired
     UserManager usermanager;
     
     @Autowired
     StoreManager storeManager;
     
+    @Autowired
+    PmsManager pmsManager;
+    
     private List<Door> doorList = new ArrayList();
-    private String arxHostname = null;
-    private String arxUsername = null;
-    private String arxPassword = null;
     private boolean doneClosedForToday = false;
     
     @Override
@@ -112,59 +78,14 @@ public class ArxManager extends ManagerBase implements IArxManager {
             }
         }
     }
-            
-    @Override
-    public boolean logonToArx(String hostname, String username, String password) {
-        String result = "";
-        try {
-            result = httpLoginRequest("https://" + hostname + ":5002/arx/export?external_id=fasdfsadfasf", username, password, "");
-            if(result.equals("401")) {
-                return false;
-            }
-        }catch(Exception e) {}
-        
-        
-        
-        User user = usermanager.getUserUserName(username);
-        if(user == null) {
-            user = new User();
-            user.username = username;
-            user.password = password;
-            user.fullName = hostname;
-            user.storeId = storeId;
-            usermanager.createUser(user);
-        }
-        user.storeId = storeId;
-        
-        usermanager.forceLogon(user);
-        
-        userPasswords.put(user.id, password);
-        
-        return true;
-    }
-
-    
-    public String httpLoginRequest(String address, String username, String password, String content) throws Exception {
-        User currentUser = null;
-        if(getSession() != null) {
-            currentUser = getSession().currentUser;
-        }
-        
-        if(arxHostname != null) {
-            address = "https://" + arxHostname + address;
-            username = arxUsername;
-            password = arxPassword;
-        } else {
-            username = "";
-            if(currentUser != null) {
-                username = currentUser.username;
-            }
-            password = userPasswords.get(currentUser.id);
-        }
+         
+    public String httpLoginRequest(String address, String content) throws Exception {
+        String username = pmsManager.configuration.arxUsername;
+        String arxHost = pmsManager.configuration.arxHostname;
+        String password = pmsManager.configuration.arxPassword;
         
         if(!address.startsWith("http")) {
-            String arxHost = "https://" + currentUser.fullName;
-            address = arxHost + address;
+            address = "https://" + arxHost + address;
         }
         
         ArxConnection connection = new ArxConnection();
@@ -227,7 +148,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
 
         String hostName = ":5002/arx/export_accessarea";
         
-        String result = httpLoginRequest(hostName, "", "", "");
+        String result = httpLoginRequest(hostName, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
         
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -247,10 +168,9 @@ public class ArxManager extends ManagerBase implements IArxManager {
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export_accesscategory";
-        String password = userPasswords.get(currentUser.id);
 //        System.out.println("Looking at : " + hostName);
         
-        String result = httpLoginRequest(hostName, currentUser.username, password, "");
+        String result = httpLoginRequest(hostName, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
         
         JAXBContext context = JAXBContext.newInstance("com.assaabloy.arxdata.access");
@@ -281,10 +201,9 @@ public class ArxManager extends ManagerBase implements IArxManager {
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?include_accesscategory_id=true&exclude_deleted=true";
-        String password = userPasswords.get(currentUser.id);
 //        System.out.println("Looking at : " + hostName);
         
-        String result = httpLoginRequest(hostName, currentUser.username, password, "");
+        String result = httpLoginRequest(hostName, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
         
         JAXBContext context = JAXBContext.newInstance("com.assaabloy.arxdata.persons");
@@ -308,18 +227,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
             personlist.add(tmpPerson);
         }
         return personlist;
-    }
-
-    @Override
-    public boolean isLoggedOn() {
-        if(usermanager.isLoggedIn()) {
-            if(userPasswords.containsKey(getSession().currentUser.id)) {
-                return true;
-            } else {
-                usermanager.logout();
-            }
-        }
-        return false;
     }
 
     private List<Door> recursiveFindDoors(NodeList nodeList, int depth) throws UnsupportedEncodingException {
@@ -369,7 +276,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         } else {
             hostName += "&value=off";
         }
-        httpLoginRequest(hostName, "", "", "");
+        httpLoginRequest(hostName,"");
     }
     
     @Override
@@ -400,9 +307,8 @@ public class ArxManager extends ManagerBase implements IArxManager {
             saveObject(door);
         }
         
-        String password = userPasswords.get(currentUser.id);
 //        System.out.println(hostName);
-        httpLoginRequest(hostName, currentUser.username, password, "");
+        httpLoginRequest(hostName,"");
     }
 
     @Override
@@ -546,16 +452,8 @@ public class ArxManager extends ManagerBase implements IArxManager {
         toPost += "</cards>\n";
         toPost += "</arxdata>\n";
         
-        User currentUser = getSession().currentUser;
         String hostName = ":5002/arx/import";
-        String password = arxPassword;
-        String username = arxUsername;
-        if(currentUser != null) {
-            password = userPasswords.get(currentUser.id);
-            username = currentUser.username;
-        }
-        
-        httpLoginRequest(hostName, username, password, toPost);
+        httpLoginRequest(hostName,toPost);
         
         return person;
     }
@@ -565,10 +463,9 @@ public class ArxManager extends ManagerBase implements IArxManager {
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?external_id=" + id + "&exclude_deleted=1";
-        String password = userPasswords.get(currentUser.id);
 //        System.out.println("Looking at : " + hostName);
         
-        String result = httpLoginRequest(hostName, currentUser.username, password, "");
+        String result = httpLoginRequest(hostName,"");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
         
         JAXBContext context = JAXBContext.newInstance("com.assaabloy.arxdata.persons");
@@ -683,9 +580,8 @@ public class ArxManager extends ManagerBase implements IArxManager {
         User currentUser = getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/import";
-        String password = userPasswords.get(currentUser.id);
         
-        httpLoginRequest(hostName, currentUser.username, password, toPost);
+        httpLoginRequest(hostName, toPost);
         
         return getPerson(personId);
     }
@@ -744,18 +640,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
         return null;
     }
 
-    /**
-     * A One time override of username and password.
-     * @param arxHostname
-     * @param arxUsername
-     * @param arxPassword 
-     */
-    public void overrideCredentials(String arxHostname, String arxUsername, String arxPassword) {
-        this.arxHostname = arxHostname;
-        this.arxUsername = arxUsername;
-        this.arxPassword = arxPassword;
-    }
-
     private String convertToIso(String firstName) throws UnsupportedEncodingException {
         
         byte[] utf8bytes = firstName.getBytes();
@@ -771,12 +655,6 @@ public class ArxManager extends ManagerBase implements IArxManager {
         String string2 = new String ( iso88591bytes, iso88591charset );
 
         return string2;
-    }
-
-    public void clearOverRideCredentials() {
-        arxHostname = null;
-        arxPassword = null;
-        arxUsername = null;
     }
 
     public void closeAllForTheDay() throws Exception {
@@ -798,7 +676,7 @@ public class ArxManager extends ManagerBase implements IArxManager {
         String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end;
         String result = "";
         try {
-            result = httpLoginRequest(hostName, "", "", "");
+            result = httpLoginRequest(hostName, "");
         }catch(Exception e) {
             e.printStackTrace();
         }

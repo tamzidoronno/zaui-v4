@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="vendors.css"/>
+    <link rel="stylesheet" href="main.css"/>
+    <title>Pms Management</title>
+  </head>
+
+  <body ng-app="app">
+<div class='row'>
+    <div class='col-md-2 col-xs-1 col-lg-4'></div>
+    <div class='col-md-8 col-xs-10 col-lg-4'>
+        <div class='innerview' ui-view></div>
+    </div>
+   <div class='col-md-2 col-xs-1 col-lg-4'></div>
+</div>
+
+    <script src="vendors.js"></script>
+    <script src="main.js"></script>
+    
+    <script>
+        createGetshopClient();
+
+        function createGetshopClient() {
+            var hostToUse = localStorage.getItem("address");
+            if(hostToUse) {
+                getshopclient = new GetShopApiWebSocket(hostToUse, "31330");
+                getshopclient.connect();
+                getshopclient.setConnectedEvent(function () {
+                });
+
+                getshopclient.setDisconnectedEvent(function() {
+                    alert('disconnected');
+                });
+            }
+        }
+        
+        function getMultilevelName() {
+            return localStorage.getItem("multilevelname");
+        }
+    </script>
+    
+  </body>
+</html>
+

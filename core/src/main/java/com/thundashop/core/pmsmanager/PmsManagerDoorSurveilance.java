@@ -56,18 +56,18 @@ public class PmsManagerDoorSurveilance {
     
     private void closeForTheDay() throws Exception {
         
-        if (!manager.configuration.keepDoorOpenWhenCodeIsPressed) {
+        if (!manager.getConfigurationSecure().keepDoorOpenWhenCodeIsPressed) {
             return;
         }
         
-        String closeAtEnd = manager.configuration.closeAllDoorsAfterTime;
+        String closeAtEnd = manager.getConfigurationSecure().closeAllDoorsAfterTime;
         String[] time = closeAtEnd.split(":");
         int hour = new Integer(time[0]);
         int minute = new Integer(time[1]);
         
-        String arxHostname = manager.configuration.arxHostname;
-        String arxUsername = manager.configuration.arxUsername;
-        String arxPassword = manager.configuration.arxPassword;
+        String arxHostname = manager.getConfigurationSecure().arxHostname;
+        String arxUsername = manager.getConfigurationSecure().arxUsername;
+        String arxPassword = manager.getConfigurationSecure().arxPassword;
         
         
         com.ibm.icu.util.Calendar cal = com.ibm.icu.util.Calendar.getInstance();
@@ -138,7 +138,7 @@ public class PmsManagerDoorSurveilance {
     }
     
     private void processKeepDoorOpenClosed() throws Exception {
-        if (!manager.configuration.keepDoorOpenWhenCodeIsPressed) {
+        if (!manager.getConfigurationSecure().keepDoorOpenWhenCodeIsPressed) {
             return;
         }
         
@@ -209,7 +209,7 @@ public class PmsManagerDoorSurveilance {
         List<Door> doors = manager.arxManager.getAllDoors();
         for (Door door : doors) {
             if (door.name.equals(item.bookingItemName) || door.name.equals(item.bookingItemAlias) || door.name.equals(item.doorId)) {
-                con.doorAction(manager.configuration.arxHostname, manager.configuration.arxUsername, manager.configuration.arxPassword, door.externalId, "forceOpen", false);
+                con.doorAction(manager.getConfigurationSecure().arxHostname, manager.getConfigurationSecure().arxUsername, manager.getConfigurationSecure().arxPassword, door.externalId, "forceOpen", false);
                 manager.logEntry("Ran close on : " + door.externalId, bookingId, itemToClose);
             }
         }

@@ -29,34 +29,55 @@ public class PmsManagerProcessor {
     }
 
     public void doProcessing() {
+        long start = System.currentTimeMillis();
         try { confirmWhenPaid(); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(0, 12, false); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(12, 12 * 2, false); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(24, 24 * 2, false); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(48, 24 * 3, false); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(0, 12, true); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(12, 12 * 2, true); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(24, 24 * 2, true); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processStarting(48, 24 * 3, true); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processEndings(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processIntervalCleaning(false); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { processIntervalCleaning(true); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         
         if(manager.storeManager.isProductMode()) {
             try { manager.checkDoorStatusControl(); } catch (Exception e) { e.printStackTrace(); }
             try { processArx(); }catch(Exception e) { e.printStackTrace(); }
         }
+        System.out.println(System.currentTimeMillis() - start);
         try { processOrdersToCreate(); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
+        System.out.println(System.currentTimeMillis() - start);
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
-        if(manager.configuration.ignoreTimeIntervalsOnNotification) {
+        if(manager.getConfigurationSecure().ignoreTimeIntervalsOnNotification) {
             hoursAhead = 0;
         }
         
@@ -98,7 +119,7 @@ public class PmsManagerProcessor {
     }
 
     private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
-        if (manager.configuration.locktype.isEmpty() || manager.configuration.locktype.equals("arx")) {
+        if (manager.getConfigurationSecure().locktype.isEmpty() || manager.getConfigurationSecure().locktype.equals("arx")) {
             return pushToArx(room, deleted);
         } else {
             return pushToGetShop(room, deleted);
@@ -153,7 +174,7 @@ public class PmsManagerProcessor {
     }
 
     private void processArx() {
-        if (manager.configuration.arxHostname == null || manager.configuration.arxHostname.isEmpty()) { 
+        if (manager.getConfigurationSecure().arxHostname == null || manager.getConfigurationSecure().arxHostname.isEmpty()) { 
             return;
         }
         
@@ -161,7 +182,7 @@ public class PmsManagerProcessor {
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.rooms) {
-                if (!manager.isClean(room.bookingItemId) && manager.configuration.cleaningInterval > 0) {
+                if (!manager.isClean(room.bookingItemId) && manager.getConfigurationSecure().cleaningInterval > 0) {
                     continue;
                 }
 
@@ -223,7 +244,7 @@ public class PmsManagerProcessor {
 
     private void processOrdersToCreate() {
         
-        if(!manager.configuration.autoCreateInvoices) { 
+        if(!manager.getConfigurationSecure().autoCreateInvoices) { 
             return;
         }
         
@@ -244,10 +265,10 @@ public class PmsManagerProcessor {
 
     private void createPeriodeInvoices(PmsBooking booking) {
         NewOrderFilter filter = new NewOrderFilter();
-        filter.prepaymentDaysAhead = manager.configuration.prepaymentDaysAhead;
-        filter.increaseUnits = manager.configuration.increaseUnits;
+        filter.prepaymentDaysAhead = manager.getConfigurationSecure().prepaymentDaysAhead;
+        filter.increaseUnits = manager.getConfigurationSecure().increaseUnits;
         
-        if (!manager.configuration.prepayment) {
+        if (!manager.getConfigurationSecure().prepayment) {
             filter.prepayment = false;
             filter.startInvoiceFrom = beginningOfMonth(-1);
             filter.endInvoiceAt = beginningOfMonth(0);
@@ -320,13 +341,13 @@ public class PmsManagerProcessor {
             person.firstName = "Unknown";
         }
 
-        if (manager.configuration.arxCardFormat == null || manager.configuration.arxCardFormat.isEmpty()) {
+        if (manager.getConfigurationSecure().arxCardFormat == null || manager.getConfigurationSecure().arxCardFormat.isEmpty()) {
             System.out.println("Card format not set yet");
             return false;
         }
 
         Card card = new Card();
-        card.format = manager.configuration.arxCardFormat;
+        card.format = manager.getConfigurationSecure().arxCardFormat;
         card.cardid = room.code;
 
         person.cards.add(card);
@@ -370,7 +391,7 @@ public class PmsManagerProcessor {
         }
         String result = "";
         try {
-            PmsConfiguration config = manager.configuration;
+            PmsConfiguration config = manager.getConfigurationSecure();
             manager.getShopLockManager.setCredentials(config.arxUsername, config.arxPassword, config.arxHostname);
             if (deleted) {
                 result = manager.getShopLockManager.removeCode(room.pmsBookingRoomId);
@@ -386,7 +407,7 @@ public class PmsManagerProcessor {
     }
 
     private void processAutoExtend() {
-        if (manager.configuration.autoExtend) {
+        if (manager.getConfigurationSecure().autoExtend) {
             List<PmsBooking> bookings = getAllConfirmedNotDeleted();
             for (PmsBooking booking : bookings) {
                 boolean needSaving = false;
@@ -423,9 +444,9 @@ public class PmsManagerProcessor {
     }
 
     private void processIntervalCleaning(boolean isCheckoutCleaning) {
-        int maxNum = manager.configuration.numberOfIntervalCleaning;
+        int maxNum = manager.getConfigurationSecure().numberOfIntervalCleaning;
         if (isCheckoutCleaning) {
-            maxNum = manager.configuration.numberOfCheckoutCleanings;
+            maxNum = manager.getConfigurationSecure().numberOfCheckoutCleanings;
         }
         if (maxNum == 0) {
             return;
@@ -438,8 +459,8 @@ public class PmsManagerProcessor {
             int maxNumAtDay = 0;
             int numberOfInterval = 0;
             int weekOfDay = time.getDayOfWeek();
-            if (manager.configuration.cleaningDays.containsKey(weekOfDay)) {
-                boolean check = manager.configuration.cleaningDays.get(weekOfDay);
+            if (manager.getConfigurationSecure().cleaningDays.containsKey(weekOfDay)) {
+                boolean check = manager.getConfigurationSecure().cleaningDays.get(weekOfDay);
                 if (check) {
                     maxNumAtDay = maxNum;
                 }
@@ -519,7 +540,7 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            if(!manager.configuration.requirePayments) {
+            if(!manager.getConfigurationSecure().requirePayments) {
                 if(!booking.payedFor) {
                     booking.payedFor = true;
                 }

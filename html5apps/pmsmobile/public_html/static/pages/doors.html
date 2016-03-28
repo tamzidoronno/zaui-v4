@@ -1,13 +1,29 @@
 <div class='additionalinfo row'>Doors</div>
+
+<div class='row ng-hide loading' ng-show="loading"><i class="fa fa-spinner fa-spin"></i></div>
+
 <div class='row'>
-     <div ng-repeat="door in doors" class='col-sm-12'>
-        <div class='col-sm-3'>
-            <b>{{log.roomName}}</b><br>
-        </div>
-        <div class='col-sm-9'>
-            <div>{{log.logText}}</div>
-            <b>{{log.userName}}</b> - {{log.dateEntry}}<br>
-            <br>
+     <div ng-repeat="door in doors" class='col-sm-12 doorlogrow'>
+        <div class='col-sm-12'>
+            <a ui-sref="doorlog({{door}})">
+                <span class='dooractionbutton'>
+                    <i class="fa fa-tasks"></i>
+                    Door log
+                </span>
+            </a>
+            <span class='dooractionbutton' ng-click="pulseOpen(door.externalId, 'pulseOpen')">
+                    <i class="fa fa-heartbeat"></i>
+                    Pulse open
+                </span>
+                <span class='dooractionbutton' ng-click="pulseOpen(door.externalId, 'forceOpen')">
+                    <i class="fa fa-sign-in"></i>
+                    Force open
+                </span>
+                <span class='dooractionbutton' ng-click="pulseOpen(door.externalId, 'forceClose')">
+                    <i class="fa fa-sign-out"></i>
+                    Force close
+                </span>
+            <b>{{door.name}}</b><br>
         </div>
     </div>
 </div>

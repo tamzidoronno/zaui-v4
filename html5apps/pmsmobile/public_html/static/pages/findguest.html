@@ -1,6 +1,8 @@
 <div class='additionalinfo row'>
     Find a guest
 </div>
+
+
 <div class='row'>
     <div class="input-group">
         <input type="text" class="form-control" ng-model="searchWord" ng-keydown="$event.which === 13 && doSearch(searchWord)" placeholder="Search for...">
@@ -9,14 +11,19 @@
         </span>
     </div>
 </div>
+
+
+<div class='row ng-hide loading' ng-show="loading"><i class="fa fa-spinner fa-spin"></i></div>
+
+
 <div class="row">
     <div ng-repeat="room in rooms" class='col-xs-12 roomrow {{room.progressState}}'>
         <a ui-sref="guestinfo({ roomid: '{{room.pmsRoomId}}', bookingid: '{{room.bookingId}}' })">
-            <span class='col-xs-1 roominfoblock'>
-                <span class='roominfo'>{{room.room}}</span>
-                <span class='code'>{{room.code}}</span>
+            <span class='col-xs-4 roominfoblock'>
+                <div><span class='roominfo'>{{room.room}}</span></div>
+                <div><span class='code'>{{room.code}}</span></div>
             </span>
-            <span class='col-xs-11 guestinfocol'>
+            <span class='col-xs-8 guestinfocol'>
                 <span class='guestinfo'>
                     {{room.guest[0].name}}
                     {{room.guest[0].phone}}

@@ -40,7 +40,7 @@ public class PmsBookingSimpleFilter {
         PmsRoomSimple simple = new PmsRoomSimple();
         simple.start = room.date.start.getTime();
         simple.end = room.date.end.getTime();
-        if(manager.configuration.hasLockSystem()) {
+        if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;
         }
         simple.pmsRoomId = room.pmsBookingRoomId;
@@ -56,7 +56,7 @@ public class PmsBookingSimpleFilter {
         
         simple.paidFor = booking.payedFor;
         if(room.isStarted() && !room.isEnded()) {
-            if(manager.configuration.hasLockSystem() && !room.addedToArx) {
+            if(manager.getConfiguration().hasLockSystem() && !room.addedToArx) {
                 simple.progressState = "waitingforlock";
             } else {
                 simple.progressState = "started";

@@ -73,7 +73,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public HashMap<String, PmsBooking> bookings = new HashMap();
     public HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
     public PmsPricing prices = new PmsPricing();
-    public PmsConfiguration configuration = new PmsConfiguration();
+    private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
     private List<String> warnedAbout = new ArrayList();
 
@@ -145,6 +145,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void setSession(Session session) {
         super.setSession(session); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    
 
     @Override
     public List<Room> getAllRoomTypes(Date start, Date end) {
@@ -483,7 +485,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 for (PmsBookingRooms room : booking.rooms) {
                     if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                         BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
-                        if (item.bookingItemName.contains(filter.searchWord)) {
+                        if (item != null && item.bookingItemName != null && item.bookingItemName.contains(filter.searchWord)) {
                             result.add(booking);
                         }
                     }
@@ -2915,6 +2917,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 messageManager.sendSms("sveve", guest.phone, message, guest.prefix);
             }
         }
+    }
+
+    public PmsConfiguration getConfigurationSecure() {
+        return configuration;
     }
 
 }

@@ -17,3 +17,7 @@ body { background-color:#3a99d7; }
 .roomrow .roominfoblock { border-right: solid 1px; padding: 10px; min-height: 70px;}
 .roomrow .guestinfocol { min-height: 70px; position: relative; padding-top: 5px; }
 a, a:hover { color:#000; } 
+.loading { text-align: center; font-size: 40px; }
+.doorlogrow { height: 80px; }
+.doorlogrow .dooractionbutton i { font-size: 30px; width: 100%; }
+.doorlogrow .dooractionbutton { float: right; margin-right: 5px; border: solid 1px; border-radius: 5px; text-align: center; width: 70px; height: 70px; padding: 12px; font-size: 8px; }

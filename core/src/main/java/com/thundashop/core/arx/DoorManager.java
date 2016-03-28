@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -80,16 +81,16 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
     }
          
     public String httpLoginRequest(String address, String content) throws Exception {
-        String username = pmsManager.configuration.arxUsername;
-        String arxHost = pmsManager.configuration.arxHostname;
-        String password = pmsManager.configuration.arxPassword;
+        String username = pmsManager.getConfigurationSecure().arxUsername;
+        String arxHost = pmsManager.getConfigurationSecure().arxHostname;
+        String password = pmsManager.getConfigurationSecure().arxPassword;
         
         if(!address.startsWith("http")) {
             address = "https://" + arxHost + address;
         }
         
         ArxConnection connection = new ArxConnection();
-        return connection.httpLoginRequest(address, username, password, content);
+         return connection.httpLoginRequest(address, username, password, content);
     }
     
     
@@ -149,6 +150,11 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
         String hostName = ":5002/arx/export_accessarea";
         
         String result = httpLoginRequest(hostName, "");
+        
+        if(result.isEmpty()) {
+            return new ArrayList();
+        }
+        
         InputStream is = new ByteArrayInputStream( result.getBytes() );
         
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -334,6 +340,9 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
     @Override
     public List<AccessLog> getLogForDoor(String externalId, long start, long end) throws Exception {
         String result = getDoorLog(start, end);
+        if(result == null || result.isEmpty()) {
+            return new ArrayList();
+        }
         return generateDoorAccessLogFromResult(result, externalId);
     }
 
@@ -673,7 +682,14 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
     }
 
     public String getDoorLogForced(long start, long end) {
-        String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end;
+        
+        String filter = "<filter><name><mask>controller.access.card.valid.standard</mask></name></filter>";
+        try {
+            filter = URLEncoder.encode(filter, "UTF-8");
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end + "&filter="+filter;
         String result = "";
         try {
             result = httpLoginRequest(hostName, "");

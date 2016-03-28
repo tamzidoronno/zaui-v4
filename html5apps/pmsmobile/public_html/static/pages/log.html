@@ -2,6 +2,10 @@
 <div class='row'>
     <select class="form-control" ng-model='selectedroom' ng-change="updateLogList(selectedroom)" ng-options="item.id as item.bookingItemName for item in items"></select>
 </div>
+
+<div class='row ng-hide loading' ng-show="loading"><i class="fa fa-spinner fa-spin"></i></div>
+
+
 <div class='row'>
     <div ng-repeat="log in logs" class='col-sm-12'>
         <div class='col-sm-3'>

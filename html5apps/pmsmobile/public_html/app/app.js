@@ -44,6 +44,11 @@ angular.module('app', ['ui.router'])
       templateUrl: "pages/doors.html",
       controller: getshop.doorsController
     })
+    .state('doorlog', {
+      url: "/doorlog/:externalId/:name",
+      templateUrl: "pages/doorlog.html",
+      controller: getshop.doorlogController
+    })
     .state('otherinstruction', {
       url: "/otherinstruction",
       templateUrl: "pages/otherinstruction.html",

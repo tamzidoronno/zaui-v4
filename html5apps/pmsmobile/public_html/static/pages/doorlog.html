@@ -1,0 +1,36 @@
+<div class='additionalinfo row'>{{doorname}}</div>
+<div class='row'>
+    <div class='col-xs-6'>
+        <label>Start date
+            <input type='datetime-local' ng-model="startTime" class='form-control'>
+        </label>
+    </div>
+    <div class='col-xs-6'>
+        <label>End date
+            <input type='datetime-local' ng-model="endTime" class='form-control'>
+        </label>
+    </div>
+</div>
+<div class='row'>
+    <div class="col-xs-12">
+        <span class="btn btn-success form-control" ng-click="updateLogData()">Load data</span>
+    </div>
+</div>
+
+<div class='row ng-hide loading' ng-show="loading"><i class="fa fa-spinner fa-spin"></i></div>
+
+<div class='row ng-hide' ng-show="notfound">
+        <div class="col-xs-12">
+            Sorry, no entries where found for this date.
+        </div>
+</div>
+
+
+<div class='row'>
+    <div  ng-repeat="logentry in logentries" class="col-xs-12">
+        {{formatTime(logentry.timestamp)}} - {{logentry.card}} - {{logentry.personName}}
+    </div>
+</div>
+
+
+<div class='additionalinfobottom row'></div>

@@ -14,6 +14,7 @@ getshop.findguestController = function($scope, $state) {
     
     filter.startDate = start;
     filter.endDate = end;
+    $scope.loading = true;
     var loadBookings = getshopclient.PmsManager.getSimpleRooms(getMultilevelName(), filter);
     $scope.convertDate = function(time) {
         var d = new Date();
@@ -27,10 +28,11 @@ getshop.findguestController = function($scope, $state) {
     };
     $scope.doSearch = function(searchWord) {
         var filter = {};
-        console.log('searching');
+        $scope.loading = true;
         filter.searchWord = searchWord;
         var searching = getshopclient.PmsManager.getSimpleRooms(getMultilevelName(), filter);
         searching.done(function(res) {
+            $scope.loading = false;
             $scope.rooms = res;
             $scope.$apply();
         });
@@ -39,6 +41,7 @@ getshop.findguestController = function($scope, $state) {
         return encodeURIComponent(text);
     };
     loadBookings.done(function(data) {
+        $scope.loading = false;
         $scope.rooms = data;
         $scope.$apply();
     });

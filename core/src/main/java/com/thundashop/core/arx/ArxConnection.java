@@ -30,6 +30,10 @@ public class ArxConnection {
     }
     
     public String httpLoginRequest(String address, String username, String password, String content) throws Exception {
+        if(address == null || address.isEmpty() || !address.startsWith("http") || address.contains("://:50")) {
+            System.out.println("Tried accessing arx with empty host: " + address);
+            return "";
+        }
         String loginToken = null;
         String loginUrl = address;
         

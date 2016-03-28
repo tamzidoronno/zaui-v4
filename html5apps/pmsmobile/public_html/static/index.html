@@ -6,7 +6,11 @@
     <link rel="stylesheet" href="main.css"/>
     <title>Pms Management</title>
   </head>
-
+  
+  <div class="disconnectedPage">
+      You have been disconnected, working on establishing the connection again... Please wait.
+  </div>
+  
   <body ng-app="app">
 <div class='row'>
     <div class='col-md-2 col-xs-1 col-lg-4'></div>
@@ -23,20 +27,32 @@
         createGetshopClient();
 
         function createGetshopClient() {
+            if(typeof(getshopclient) !== "undefined") {
+                return;
+            }
             var hostToUse = localStorage.getItem("address");
+            console.log(hostToUse);
             if(hostToUse) {
                 getshopclient = new GetShopApiWebSocket(hostToUse, "31330");
                 getshopclient.connect();
                 getshopclient.setConnectedEvent(function () {
+                    $('.disconnectedPage').fadeOut();
                 });
 
                 getshopclient.setDisconnectedEvent(function() {
-                    alert('disconnected');
+                    $('.disconnectedPage').fadeIn();
                 });
             }
         }
         
         function getMultilevelName() {
+            createGetshopClient();
+            var loggedOn = getshopclient.UserManager.isLoggedIn();
+            loggedOn.done(function(res) {
+                if(!res) {
+                    window.location.href="/index.html#/login";
+                }
+            });
             return localStorage.getItem("multilevelname");
         }
     </script>

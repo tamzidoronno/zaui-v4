@@ -23,6 +23,7 @@ getshop.mainpageController = function($scope, $state) {
     });
     
     loadNames.done(function(data) {
+        console.log(data);
         var names = [];
         var current = getMultilevelName();
         for(var key in data) {

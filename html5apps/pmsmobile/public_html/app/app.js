@@ -57,15 +57,3 @@ angular.module('app', ['ui.router'])
 })
 .value('$routerRootComponent', 'app')
 
-.component('app', {
-  template:
-    '<nav>\n' +
-    '  <a ui-sref="state1">Crisis Center</a>\n' +
-    '  <a ui-sref="state2">Heroes</a>\n' +
-    '</nav>\n' +
-    '<ng-outlet></ng-outlet>\n',
-  $routeConfig: [
-    {path: '/crisis-center/...', name: 'CrisisCenter', component: 'crisisCenter', useAsDefault: true},
-    {path: '/heroes/...', name: 'Heroes', component: 'heroes' }
-  ]
-});

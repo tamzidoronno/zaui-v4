@@ -1426,12 +1426,34 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public List<Event> getEventsForUser(String userId) {
+        
+        User user = userManager.getUserById(userId);
+        
+        if (user == null) {
+            return new ArrayList();
+        }
+        
+        userManager.checkUserAccess(user);
+        
         List<Event> rets = bookingEngine.getAllBookings().stream()
                 .filter(booking -> booking.userId != null && booking.userId.equals(userId))
+                .filter(booking -> isStatusParticipated(booking))
                 .map( booking -> finalize(getEventByBooking(booking)))
+                .filter(event -> !event.isCanceled)
                 .collect(Collectors.toList());
         
         return rets;
+    }
+
+    private boolean isStatusParticipated(Booking booking) {
+        Event event = getEventByBooking(booking);
+        
+        String status = event.participationStatus.get(booking.userId);
+        if (status != null && (status.equals("participated_50") || status.equals("not_participated"))) {
+            return false;
+        }
+        
+        return true;
     }
 
 }

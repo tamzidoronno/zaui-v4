@@ -138,3 +138,9 @@ body {
 .gss_new_user_button {
     display: none;
 }
+
+.company_header_selector {
+    display: block;
+    background-color: #005a51;
+    color: #FFF;
+}

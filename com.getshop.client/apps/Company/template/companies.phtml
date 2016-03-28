@@ -1,0 +1,22 @@
+<?
+/* @var $this ns_a6d68820_a8e3_4eac_b2b6_b05043c28d78\Company */
+if (!$this->selectedUser && $_POST['value']) {
+   $this->selectedUser = $this->getApi()->getUserManager()->getUserById($_POST['value']);
+}
+
+$userid = $this->selectedUser->id;
+$companyIds = $this->selectedUser->company;
+
+$userCompanies = [];
+foreach ($companyIds as $companyId) {
+    $userCompanies[] = $this->getApi()->getUserManager()->getCompany($companyId);
+}
+
+foreach ($userCompanies as $company) {
+    $companyId = $company->id;
+    $remove = "<i gss_confirmation='Area you sure you want to remove this company from this user?' gss_method='removeCompanyFromUser' gss_fragment='companies' gss_view='gss_view_of_companies_user_has' gss_value='$userid' gss_value_2='$companyId' class='fa fa-trash' title='Remove company'></i><div class='gss_show_company'>";
+    echo "<div class='gss_companyrow'>$remove ".$company->name."</div></div>";
+}
+
+?>
+

@@ -79,6 +79,8 @@ public class UserStoreCollection {
             user.companyObject = userManager.getCompany(user.company.get(0));
         }
         
+        setUserSessionCompany(user);
+        
         return user;
     }
     
@@ -426,6 +428,18 @@ public class UserStoreCollection {
         }
         
         return false;
+    }
+
+    private void setUserSessionCompany(User user) {
+        if (userManager.getSession() != null && userManager.getSession().get("user_company_sessionid") != null) {
+            String id = (String) userManager.getSession().get("user_company_sessionid");
+            if (user.company.contains(id)) {
+                Company company = userManager.getCompany(id);
+                if (company != null) {
+                    user.companyObject = company;
+                }
+            }
+        }
     }
 
 }

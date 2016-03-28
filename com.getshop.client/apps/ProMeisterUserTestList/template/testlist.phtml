@@ -1,0 +1,24 @@
+<?
+/* @var $this ns_a97cd73e_11f6_4742_ad1e_07ffd9e51e9f\ProMeisterUserTestList */
+$userId = isset($_SESSION['ProMeisterSpiderDiager_current_user_id_toshow']) ? $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] : \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+$allTests = $this->getApi()->getQuestBackManager()->getTestsForUser($userId);
+
+?>
+
+<div class='yourtests'>
+    
+    <?
+    if (!count($allTests)) {
+        echo $this->__f("You currently dont have any tests, please contact admin to get access to one");
+    } else {
+        foreach ($allTests as $test) {
+            echo "<div class='test' testid='$test->id'>";
+            echo $test->name;
+            $progress = $this->getApi()->getQuestBackManager()->getProgressForUser($userId, $test->id);
+            echo "<div class='progress_in_test'>$progress %</div>";
+            echo "</div>";
+        }
+    }
+    ?>
+
+</div>

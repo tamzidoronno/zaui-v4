@@ -22,3 +22,39 @@
 #backsidesettings .gss_company_userrow:hover {
     background-color: #EEE;
 }
+
+#backsidesettings .gss_companyrow {
+    font-size: 16px;
+    padding: 10px;
+    line-height: 30px;
+    background-color: #F9F9F9;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    margin-bottom: 5px;
+}
+
+#backsidesettings .gss_show_company {
+    display: inline-block;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+#backsidesettings .gss_company_search_row i {
+    position: absolute;
+    right: 0;
+    top: 0px;
+    bottom: 0px;
+    width: 43px;
+    line-height: 39px;
+    text-align: center;
+    background-color: #EEE;
+}
+
+#backsidesettings .gss_company_search_row {
+    padding: 10px;
+    border: solid 1px #DDD;
+    margin-bottom: 5px;
+    position: relative;
+    cursor: pointer;
+}

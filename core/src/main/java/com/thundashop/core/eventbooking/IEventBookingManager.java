@@ -169,7 +169,7 @@ public interface IEventBookingManager {
     @Editor
     public String getSource(String eventId, String userId);
     
-    @Editor
+    @Customer
     public List<Event> getEventsForUser(String userId);
     
 }

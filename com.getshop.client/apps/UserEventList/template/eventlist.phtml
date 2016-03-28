@@ -1,7 +1,8 @@
 <?
 /* @var $this ns_138a1b9a_d8e3_4fec_8f3f_1cae11bca54f\UserEventList */
 
-$events = $this->getApi()->getEventBookingManager()->getMyEvents($this->getBookingEngineName());
+$userId = isset($_SESSION['ProMeisterSpiderDiager_current_user_id_toshow']) ? $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] : \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+$events = $this->getApi()->getEventBookingManager()->getEventsForUser($this->getBookingEngineName(), $userId);
 if (!$events) {
     $events = [];
 }

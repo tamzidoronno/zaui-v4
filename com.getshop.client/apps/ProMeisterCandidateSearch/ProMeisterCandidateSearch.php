@@ -2,6 +2,8 @@
 namespace ns_294a8d9e_bd48_44f4_a607_b7d86d2d85fc;
 
 class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon implements \Application {
+    private $currentlyLoading = "";
+    
     public function getDescription() {
         
     }
@@ -11,8 +13,13 @@ class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
     }
 
     public function render() {
-        $this->includefile("favor");
+        $this->currentlyLoading = "favor";
+        $this->includefile("searchresult");
+        
         $this->includefile("searchview");
+        
+        $this->currentlyLoading = "searchview";
+        $this->includefile("searchresult");
     }
     
     public function searchForUsers() {
@@ -70,7 +77,7 @@ class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
 
     public function getUsers($mode) {
         
-        if ($mode == "fav") {
+        if ($this->currentlyLoading == "favor") {
             $favList = $this->getFavList();
             $retUsers = [];
             
@@ -98,10 +105,66 @@ class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
             return $retUser2;
         }
         
-        if ($mode == "search") {
+        if ($this->currentlyLoading == "searchview") {
             $searchValue = isset($_SESSION['ProMeisterCandidateSearch_searchword']) ? $_SESSION['ProMeisterCandidateSearch_searchword'] : "";
-            return $this->getApi()->getUserManager()->findUsers($searchValue);
+            if ($searchValue) {
+                return $this->getApi()->getUserManager()->findUsers($searchValue);
+            }
+            
+            return [];
         }
+    }
+
+    /**
+     * 
+     * @param \core_eventbooking_Event[] $events
+     */
+    public function getOldEvents($events) {
+        $ret = [];
+        
+        foreach ($events as $event) {
+            if (!$event->isInFuture) {
+                $ret[] = $event;
+            }
+        }
+        
+        return $ret;
+    }
+
+    /**
+     * 
+     * @param \core_eventbooking_Event[] $events
+     */
+    public function getNewEvents($events) {
+        $ret = [];
+        
+        foreach ($events as $event) {
+            if ($event->isInFuture) {
+                $ret[] = $event;
+            }
+        }
+        
+        return $ret;
+    }
+
+    public function printEventRows($oldEvents, $new) {
+        if (count($oldEvents)) {
+            if ($new) {
+                echo "<div class='event_list_title'><span>".$this->__w("Upcoming events")."</span></div>";
+            } else {
+                echo "<div class='event_list_title old_events'><span>".$this->__w("Old events")."</span></div>";
+            }
+            
+            $i = 0;
+            foreach ($oldEvents as $event) {
+                $i++;
+                $start = date("d.m.Y H:i", strtotime($event->mainStartDate));
+                $end = date("d.m.Y H:i", strtotime($event->mainEndDate));
+                $lastInRow = count($oldEvents) == $i ? "lastInRow" : "";
+                echo "<div class='event_row $lastInRow'>$start - $end: ".$event->bookingItemType->name."</div>";
+            }
+        }
+
     }
 
 }

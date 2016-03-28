@@ -1,0 +1,16 @@
+.ProMeisterUserTestList .yourtests .test {
+    position: relative;
+    border: solid 1px #DDD;
+    line-height: 20px;
+    padding: 10px;
+}
+
+.ProMeisterUserTestList {
+    margin-left: 10px;
+}
+
+.ProMeisterUserTestList .yourtests .test .progress_in_test {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}

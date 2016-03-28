@@ -67,6 +67,9 @@ class Page {
         
         
         echo "<div class='gsbody_inner $editormodeclass $canChangeLayout' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn' userTimeout='$timeout'>";
+        
+        $this->printCompanySelectList();
+        
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
             $edited = $this->printArea($layout->areas->{'header'}, true);
@@ -1892,6 +1895,27 @@ class Page {
             $offset += 1;
         }
         return $styles;
+    }
+
+    public function printCompanySelectList() {
+        $user = $this->factory->getApi()->getUserManager()->getLoggedOnUser();
+        if ($user && count($user->company) > 1) {
+            echo "<div class='company_header_selector'>";
+                echo $this->factory->__w("Select company").": ";
+                echo "<select class='gsniceselect1 gs_select_session_company'>";
+
+                foreach ($user->company as $companyId) {
+                    $company = $this->factory->getApi()->getUserManager()->getCompany($companyId);
+
+                    if ($company) {
+                        $selected = $companyId == $user->companyObject->id ? "SELECTED='SELECTED'" : "";
+                        echo "<option $selected value='$companyId'>$company->name</option>";
+                    }
+                }
+
+                echo "</select>";
+            echo "</div>";
+        }
     }
 
 }

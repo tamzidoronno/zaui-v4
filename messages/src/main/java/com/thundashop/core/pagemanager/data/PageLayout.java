@@ -6,25 +6,46 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import org.mongodb.morphia.annotations.Transient;
 
 public class PageLayout implements Serializable {
-
+    private ArrayList<PageCell> body = new ArrayList();
+    
+    @Transient
     private HashMap<String, ArrayList<PageCell>> areas = new HashMap();
+    
     LinkedList<String> mobileList = new LinkedList();
     private LinkedList<String> mobileTmpList;
     private boolean flatMobileList = false;
     
     void clear() {
-        areas.put("body", new ArrayList());
+        putAreas("body", new ArrayList());
+    }
+    
+    private void putAreas(String area, ArrayList<PageCell> list) {
+        if (area.equals("body")) {
+            body = list;
+        } else {
+            areas.put(area, list);
+        }
+    }
+    
+    private ArrayList<PageCell> getArea(String area) {
+        if (area.equals("body")) {
+            return body;
+        } else {
+            areas.put("body", body);
+            return areas.get(area);
+        }
+        
     }
 
     public void moveCell(String cellid, boolean moveUp) {
         boolean identical = true;
         mobileTmpList = new LinkedList();
-        buildMobileList(areas.get("body"), true);
+        buildMobileList(getArea("body"), true);
         if(mobileList.size() != mobileTmpList.size()) {
             identical = false;
         } else {
@@ -37,11 +58,11 @@ public class PageLayout implements Serializable {
         }
         
         String area = findAreaForCell(cellid);
-        areas.put(area, moveCellRecursive(areas.get(area), cellid, moveUp));
+        putAreas(area, moveCellRecursive(getArea(area), cellid, moveUp));
         
         if(identical) {
             mobileTmpList = new LinkedList();
-            buildMobileList(areas.get("body"), true);
+            buildMobileList(getArea("body"), true);
             mobileList = mobileTmpList;
         }
     }
@@ -50,19 +71,19 @@ public class PageLayout implements Serializable {
         if (area == null || area.isEmpty()) {
             area = "body";
         }
-        if (areas.get(area) == null) {
-            areas.put(area, new ArrayList());
+        if (getArea(area) == null) {
+            putAreas(area, new ArrayList());
         }
 
-        areas.get(area).add(cell);
+        getArea(area).add(cell);
     }
 
     public void removeCellFromList(PageCell cell) {
         for (String area : areas.keySet()) {
-            if(areas.get(area) == null) {
+            if(getArea(area) == null) {
                 continue;
             }
-            areas.get(area).remove(cell);
+            getArea(area).remove(cell);
         }
     }
 
@@ -71,16 +92,16 @@ public class PageLayout implements Serializable {
             area = "body";
         }
 
-        if (areas.get(area) != null && !force) {
-            areas.get(area).clear();
-            areas.get(area).addAll(newList);
+        if (getArea(area) != null && !force) {
+            getArea(area).clear();
+            getArea(area).addAll(newList);
         } else {
-            areas.put(area, newList);
+            putAreas(area, newList);
         }
     }
 
     private Iterable<PageCell> getAreaList(String area) {
-        ArrayList<PageCell> list = areas.get(area);
+        ArrayList<PageCell> list = getArea(area);
         if (list == null) {
             return new ArrayList();
         }
@@ -90,7 +111,7 @@ public class PageLayout implements Serializable {
     private ArrayList<PageCell> getAllCells() {
         ArrayList<PageCell> cells = new ArrayList();
         for (String area : areas.keySet()) {
-            ArrayList<PageCell> areastoadd = areas.get(area);
+            ArrayList<PageCell> areastoadd = getArea(area);
             if(areastoadd != null) {
                 cells.addAll(areastoadd);
         }
@@ -350,7 +371,7 @@ public class PageLayout implements Serializable {
 
     private String findAreaForCell(String cellId) {
         for (String area : areas.keySet()) {
-            PageCell cell = findCell(areas.get(area), cellId);
+            PageCell cell = findCell(getArea(area), cellId);
             if (cell != null) {
                 return area;
             }
@@ -360,9 +381,9 @@ public class PageLayout implements Serializable {
 
     public LinkedList<PageCell> getCellsInBodyFlatList() {
         LinkedList<PageCell> arrayList = new LinkedList();
-        List<PageCell> cells = areas.get("body");
+        List<PageCell> cells = getArea("body");
         if (cells != null) {
-            for (PageCell row : areas.get("body")) {
+            for (PageCell row : getArea("body")) {
                 arrayList.addAll(row.getCellsFlatList());
             }
         }
@@ -372,8 +393,8 @@ public class PageLayout implements Serializable {
     public ArrayList<PageCell> getCellsFlatList() {
         ArrayList<PageCell> arrayList = new ArrayList();
         for (String area : areas.keySet()) {
-            if(areas != null && areas.get(area) != null) {
-                for (PageCell row : areas.get(area)) {
+            if(areas != null && getArea(area) != null) {
+                for (PageCell row : getArea(area)) {
                     arrayList.addAll(row.getCellsFlatList());
                 }
             }
@@ -411,7 +432,7 @@ public class PageLayout implements Serializable {
     public void resetMobileList() {
         flatMobileList = false;
         mobileList = new LinkedList();
-        buildMobileList(areas.get("body"), false);
+        buildMobileList(getArea("body"), false);
     }
     
     private PageCell initNewCell(String mode) {
@@ -489,7 +510,7 @@ public class PageLayout implements Serializable {
     }
 
     public void addApplicationToFirstFreeBodyCell(String appId) {
-        List<PageCell> cells =  areas.get("body");
+        List<PageCell> cells =  getArea("body");
         if (cells == null || cells.size() == 0) {
             return;
         }
@@ -499,7 +520,7 @@ public class PageLayout implements Serializable {
     
     public void updateMobileList() {
         if(mobileList.isEmpty()) {
-            buildMobileList(areas.get("body"), false);
+            buildMobileList(getArea("body"), false);
         }
     }
     
@@ -568,7 +589,7 @@ public class PageLayout implements Serializable {
 
     private void finalizeMobileList() {
         mobileTmpList = new LinkedList();
-        buildMobileList(areas.get("body"), true);
+        buildMobileList(getArea("body"), true);
         
         //Any elements been removed?
         List<String> toRemove = new ArrayList();
@@ -591,7 +612,7 @@ public class PageLayout implements Serializable {
     }
 
     public List<PageCell> getCells(String area) {
-        return areas.get(area);
+        return getArea(area);
     }
 
     PageLayout jsonClone() {
@@ -601,7 +622,7 @@ public class PageLayout implements Serializable {
 
     List<PageCell> getMobileBody() {
         if(mobileList.isEmpty()) {
-            return areas.get("body");
+            return getArea("body");
         }
         
         List<PageCell> cells = new LinkedList();
@@ -617,7 +638,7 @@ public class PageLayout implements Serializable {
     void flattenMobileLayout() {
         flatMobileList = true;
         mobileList = new LinkedList();
-        buildMobileList(areas.get("body"), false);
+        buildMobileList(getArea("body"), false);
     }
 
     PageCell getParent(String cellId) {

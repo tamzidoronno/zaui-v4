@@ -58,6 +58,8 @@ public interface IQuestBackManager {
     @Customer
     public List<QuestTest> getTests();
     
+    public List<QuestTest> getTestsForUser(String userId);
+    
     @Customer
     public String getNextQuestionPage(String testId);
     
@@ -72,6 +74,9 @@ public interface IQuestBackManager {
     
     @Customer
     public int getProgress(String testId);
+    
+    @Customer
+    public int getProgressForUser(String userId, String testId);
     
     @Administrator
     public UserTestResult getTestResults(String userId, String testId);
@@ -95,6 +100,5 @@ public interface IQuestBackManager {
     public QuestBackQuestion getQuestion(String id);
     
     @Customer
-    public UserTestResult getBestCategoryResultForCompany(String userId, String catId);
-    
+    public UserTestResult getBestCategoryResultForCompany(String userId, String catId);   
 }

@@ -30,9 +30,7 @@ public class PmsManagerProcessor {
 
     public void doProcessing() {
         try { confirmWhenPaid(); }catch(Exception e) { e.printStackTrace(); }
-        long start = System.currentTimeMillis();
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println("Check takes: " + (System.currentTimeMillis() - start));
         try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(0, 12, false); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(12, 12 * 2, false); }catch(Exception e) { e.printStackTrace(); }

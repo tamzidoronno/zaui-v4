@@ -19,6 +19,6 @@ public class EventBookingScheduler extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
-        getApi().getEventBookingManager().checkToSendReminders(getMultiLevelName());
+//        getApi().getEventBookingManager().checkToSendReminders(getMultiLevelName());
     }   
 }

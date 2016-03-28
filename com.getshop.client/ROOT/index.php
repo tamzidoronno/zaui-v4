@@ -305,6 +305,11 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         </script>
         
         <div id="errorbox"></div>
+        <?
+        if ($factory->isEditorMode()) {
+            $factory->getPage()->printApplicationAddCellRow();
+        }
+        ?>
         <div id="gsbody" class="<? echo  isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOpen" : "";?> ">
             <?php echo $html; ?>
         </div>

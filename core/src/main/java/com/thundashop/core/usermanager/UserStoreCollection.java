@@ -170,6 +170,9 @@ public class UserStoreCollection {
     }
     
     public boolean isEmpty() {
+        if(users.size() == 1 && users.containsKey("gs_system_scheduler_user")) {
+            return true;
+        }
         return users.isEmpty();
     }
 

@@ -1,9 +1,9 @@
 if(getshop === undefined) { getshop = {}; }
 getshop.loginController = function($scope, $state) {
     $scope.login = {
-        "address" : "partybox.3.0.local.getshop.com",
-        "username" : "post@getshop.com",
-        "password" : "gakkgakk"
+        "address" : localStorage.getItem("address"),
+        "username" : localStorage.getItem("username"),
+        "password" : localStorage.getItem("password")
     };
     $scope.doLogin = function(user) {
         localStorage.setItem("address", user.address);

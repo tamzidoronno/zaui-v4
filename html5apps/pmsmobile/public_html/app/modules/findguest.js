@@ -31,18 +31,27 @@ getshop.findguestController = function($scope, $state) {
         $scope.loading = true;
         filter.searchWord = searchWord;
         var searching = getshopclient.PmsManager.getSimpleRooms(getMultilevelName(), filter);
+        $scope.notfound = false;
         searching.done(function(res) {
             $scope.loading = false;
             $scope.rooms = res;
+            if(res.length === 0) {
+                $scope.notfound = true;
+            }
             $scope.$apply();
         });
     };
     $scope.urlEncoder = function(text) {
         return encodeURIComponent(text);
     };
+    $scope.notfound = false;
     loadBookings.done(function(data) {
         $scope.loading = false;
         $scope.rooms = data;
+        if(data.length === 0) {
+            $scope.notfound = true;
+        }
+
         $scope.$apply();
     });
 };

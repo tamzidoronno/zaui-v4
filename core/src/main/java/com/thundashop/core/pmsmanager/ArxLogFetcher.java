@@ -46,7 +46,7 @@ public class ArxLogFetcher extends GetShopSchedulerBase {
                 if(i < 3) {
                     System.out.println("Time takes to fetch from arx server 12: " + diff + "(" + hostName + "), result length: " + result.length());
                 }
-                HashMap<String, List<AccessLog>> res = getApi().getArxManager().generateDoorLogForAllDoorsFromResult(result);
+                HashMap<String, List<AccessLog>> res = getApi().getDoorManager().generateDoorLogForAllDoorsFromResult(getMultiLevelName(), result);
                 for(String doorId : res.keySet()) {
                     List<AccessLog> events = res.get(doorId);
                     for(AccessLog log : events) {

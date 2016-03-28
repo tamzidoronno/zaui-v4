@@ -30,9 +30,7 @@ public class PmsManagerProcessor {
 
     public void doProcessing() {
         try { confirmWhenPaid(); }catch(Exception e) { e.printStackTrace(); }
-        long start = System.currentTimeMillis();
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println("Check takes: " + (System.currentTimeMillis() - start));
         try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(0, 12, false); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(12, 12 * 2, false); }catch(Exception e) { e.printStackTrace(); }
@@ -204,13 +202,13 @@ public class PmsManagerProcessor {
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.rooms) {
-                if (room.isStartingToday() || room.isStarted()) {
+                if (!room.isStartingToday() && !room.isStarted()) {
                     continue;
                 }
                 if (room.isEnded()) {
                     continue;
                 }
-                if(room.bookingItemId == null) {
+                if(room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                     booking = manager.finalize(booking);
                     if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                         manager.autoAssignItem(room);

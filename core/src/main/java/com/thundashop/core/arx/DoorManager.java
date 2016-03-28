@@ -28,6 +28,8 @@ import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -618,6 +620,14 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
         Document document = builder.parse(is);
         NodeList nodeList = document.getDocumentElement().getChildNodes();
         List<AccessLog> retresult = recursiveFindDoorLogEntry(nodeList, externalId);
+        
+        Collections.sort(retresult, new Comparator<AccessLog>(){
+            public int compare(AccessLog o1, AccessLog o2){
+                return o1.timestamp > o2.timestamp ? -1 : 1;
+            }
+       });
+
+        
         return retresult;
     }
 
@@ -689,7 +699,8 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
         }catch(Exception e) {
             e.printStackTrace();
         }
-        String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end + "&filter="+filter;
+//        String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end + "&filter="+filter;
+        String hostName = ":5002/arx/eventexport?start_date="+start+"&end_date="+end;
         String result = "";
         try {
             result = httpLoginRequest(hostName, "");

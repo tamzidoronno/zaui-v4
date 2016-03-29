@@ -118,7 +118,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
             $roomCleaningInterval = $room->intervalCleaning;
         }
         ?>
-        <tr>
+        <tr bookingid='<? echo $bookingId; ?>' roomid='<? echo $room->pmsBookingRoomId; ?>'>
             <td>
                 <span gstype='form' method="removeRoom">
                     <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
@@ -130,8 +130,8 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                         ?>
                         <span gstype='form' method="markKeyReturned">
                             <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
-                            <input type='hidden' value='<? echo $room->bookingItemId; ?>' gsname='roomid'>
-                            <i class='fa fa-key' gstype='submitToInfoBox' <?php if($room->keyIsReturned) { echo "style='color:green';"; } ?>></i>
+                            <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                            <i class='fa fa-key' gstype='submitToInfoBox' <?php if($room->keyIsReturned) { echo "style='color:green;'"; } ?>></i>
                         </span>
                 
                         <?php
@@ -282,7 +282,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                     </span>
                 </td>
             <? } ?>
-                <td>
+                <td class="changeInvoiceTo">
                     <? 
                     if($room->invoicedTo) {
                         echo date("d.m.Y" , strtotime($room->invoicedTo)); 

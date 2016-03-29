@@ -129,6 +129,9 @@ public interface IPmsManager {
     @Administrator
     public void markKeyDeliveredForAllEndedRooms();
     
+    @Administrator
+    public void changeInvoiceDate(String roomId, Date newDate);
+    
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);
     public PmsConfiguration getConfiguration();

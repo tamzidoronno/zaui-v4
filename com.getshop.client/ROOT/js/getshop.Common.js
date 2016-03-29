@@ -1223,7 +1223,12 @@ thundashop.common.sendPubSubMessage = function(data) {
 }
 
 thundashop.common.triggerTimeoutCheck = function() {
+    if ($('.gsbody_inner').length === 0) {
+        return;
+    }
+    
     var timeOutUser = $('.gsbody_inner').attr('userTimeout');
+    
     if (!timeOutUser) {
         timeOutUser = 0;
     }

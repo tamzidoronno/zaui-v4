@@ -470,6 +470,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return toPay;
     }
     
+    @Override
     public Double getTotalAmountExTaxes(Order order) {
         List<CartTax> taxes = getTaxes(order);
         double totalTax = 0.0;
@@ -592,6 +593,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         sortOrderList(returnOrders);
+        finalize(returnOrders);
         return returnOrders;
     }
     

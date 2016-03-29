@@ -186,11 +186,6 @@ public class Cart extends DataCommon {
     public List<CartTax> getCartTaxes() {
         Map<Integer, CartTax> taxes = new HashMap<Integer, CartTax>();
         
-        Double remainingCouponCost = couponCost;
-        if (remainingCouponCost == null) {
-            remainingCouponCost = 0D;
-        } 
-        
         for (CartItem cartItem : getItems()) {
             if (cartItem.getProduct() != null && cartItem.getProduct().taxGroupObject != null) {
                 TaxGroup taxGroup = cartItem.getProduct().taxGroupObject;
@@ -202,13 +197,7 @@ public class Cart extends DataCommon {
                 }
                 
                 Double productPrice = getCartItemTotal(cartItem);
-                Double newProductPrice = productPrice-remainingCouponCost;
-                remainingCouponCost = remainingCouponCost - productPrice;
-                if (remainingCouponCost < 0) {
-                    remainingCouponCost = 0D;
-                }
-                
-                Double productTax = newProductPrice - (newProductPrice/(taxGroup.getTaxRate()+1));
+                Double productTax = productPrice - (productPrice/(taxGroup.getTaxRate()+1));
                 cartTax.sum += productTax;
             }
         }
@@ -222,9 +211,7 @@ public class Cart extends DataCommon {
         
         List retTaxes = new ArrayList();
         for (CartTax tax : taxes.values()) {
-            if (tax.sum > 0) {
-                retTaxes.add(tax);
-            }
+            retTaxes.add(tax);
         }
         
         return retTaxes;

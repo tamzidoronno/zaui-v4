@@ -2937,4 +2937,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
+    @Override
+    public void changeInvoiceDate(String roomId, Date newDate) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.pmsBookingRoomId.equals(roomId)) {
+                room.invoicedTo = newDate;
+            }
+        }
+        saveBooking(booking);
+    }
+
 }

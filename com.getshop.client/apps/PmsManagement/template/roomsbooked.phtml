@@ -118,7 +118,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
             $roomCleaningInterval = $room->intervalCleaning;
         }
         ?>
-        <tr>
+        <tr bookingid='<? echo $bookingId; ?>' roomid='<? echo $room->pmsBookingRoomId; ?>'>
             <td>
                 <span gstype='form' method="removeRoom">
                     <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
@@ -282,7 +282,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                     </span>
                 </td>
             <? } ?>
-                <td>
+                <td class="changeInvoiceTo">
                     <? 
                     if($room->invoicedTo) {
                         echo date("d.m.Y" , strtotime($room->invoicedTo)); 

@@ -13,6 +13,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return "Administrate all your bookings from this application";
     }
     
+    public function changeInvoicedTo() {
+        $this->getApi()->getPmsManager()->changeInvoiceDate($this->getSelectedName(), $_POST['data']['roomid'], $this->convertToJavaDate(strtotime($_POST['data']['newdate'])));
+        $this->showBookingInformation();
+    }
+    
     public function showBookingInformation() {
         $this->includefile("bookinginformation");
     }

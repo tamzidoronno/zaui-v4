@@ -56,24 +56,27 @@ public class PmsManagerProcessor {
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
+        int hoursAheadCheck = hoursAhead;
+        int maxAheadCheck = maxAhead;
         if(manager.getConfigurationSecure().ignoreTimeIntervalsOnNotification) {
-            hoursAhead = 0;
+            hoursAheadCheck = 0;
+            maxAheadCheck = 72;
         }
-        
+
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
 
             boolean save = false;
             for (PmsBookingRooms room : booking.rooms) {
-                int start = hoursAhead - 24;
-                int end = maxAhead - 24;
+                int start = hoursAheadCheck - 24;
+                int end = maxAheadCheck - 24;
                 if(started) {
                     start = end * -1;
-                    end = (hoursAhead - 24) * -1;
+                    end = (hoursAheadCheck - 24) * -1;
                 }
-                if (!isBetween(room.date.start, start, end)) {
-                    continue;
-                }
+                    if (!isBetween(room.date.start, start, end)) {
+                        continue;
+                    }
                 if (room.isEnded()) {
                     continue;
                 }
@@ -86,6 +89,7 @@ public class PmsManagerProcessor {
                     continue;
                 }
                 save = true;
+                System.out.println(key);
                 manager.doNotification(key, booking, room);
                 room.notificationsSent.add(key);
                 manager.markRoomAsDirty(room.bookingItemId);

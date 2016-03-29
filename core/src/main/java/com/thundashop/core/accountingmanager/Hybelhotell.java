@@ -46,7 +46,7 @@ public class Hybelhotell implements AccountingInterface {
 
     
     private List<String> createOrderLine(Order order) {
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyymmdd");
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
 
         List<String> allLines = new ArrayList();
         int linenumber = 1;

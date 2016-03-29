@@ -313,4 +313,10 @@ public class PmsBookingRooms implements Serializable {
         cal.add(Calendar.DAY_OF_YEAR, daysAgo);
         return date.end.before(cal.getTime());
     }
+
+    boolean startingInHours(int maxAhead) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR_OF_DAY, maxAhead * -1);
+        return date.start.after(cal.getTime());
+    }
 }

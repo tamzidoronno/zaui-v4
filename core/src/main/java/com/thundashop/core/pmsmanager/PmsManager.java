@@ -2400,10 +2400,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 saveBooking(booking);
                 if (!room.isEndingToday() && room.keyIsReturned) {
-                    String roomName = bookingEngine.getBookingItem(roomId).bookingItemName;
-                    String msg = "Key delivered for someone not checking out today, at room: " + roomName;
-                    String email = storeManager.getMyStore().configuration.emailAdress;
-                    messageManager.sendMail(email, email, msg, msg, email, email);
+                    if(!room.isEnded()) {
+                        User usr = userManager.getUserById(booking.userId);
+                        String roomName = bookingEngine.getBookingItem(roomId).bookingItemName;
+                        String msg = "Key delivered for someone not checking out today, at room: " + roomName + ", booked by: " + usr.fullName;
+                        String email = storeManager.getMyStore().configuration.emailAdress;
+                        messageManager.sendMail(email, email, msg, msg, email, email);
+                        System.out.println(msg);
+                    }
                 }
                 return;
             }

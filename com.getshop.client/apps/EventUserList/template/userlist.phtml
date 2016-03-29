@@ -23,7 +23,8 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
             $groupId = $group->id;
             $groupName = $group->groupName;
             $eventId = $event->id;
-            echo "<div class='shop_button' gs_downloadExcelReport='downloadReport' gs_fileName='users' eventId='$eventId' groupId='$groupId'> $groupName </div>&nbsp;";
+            $filename = date('d-m-Y', strtotime($event->mainStartDate))."-".$event->location->name."-".$event->subLocation->name."-".$event->bookingItemType->name."-".$groupName;
+            echo "<div class='shop_button' gs_downloadExcelReport='downloadReport' gs_fileName='$filename' eventId='$eventId' groupid='$groupId'> $groupName </div>&nbsp;";
         }
         
         echo "<div class='shop_button' gs_downloadExcelReport='downloadReport' gs_fileName='users' eventId='$eventId' groupId='all'> All </div>&nbsp;";

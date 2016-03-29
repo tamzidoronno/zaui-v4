@@ -4,6 +4,11 @@ app.PmsBookingMyBookingList = {
         $(document).on('click', '.PmsBookingMyBookingList .editroom', app.PmsBookingMyBookingList.editRoom);
         $(document).on('change', '.PmsBookingMyBookingList #chooseuser', app.PmsBookingMyBookingList.switchUser);
         $(document).on('change', '.PmsBookingMyBookingList .changeGuestCount', app.PmsBookingMyBookingList.changeGuestCount);
+        $(document).on('click', '.PmsBookingMyBookingList .showorderbutton', app.PmsBookingMyBookingList.showOrder);
+    },
+    showOrder : function() {
+        thundashop.common.hideInformationBox();
+        app.OrderManager.gssinterface.showOrder($(this).attr('orderid'));
     },
     changeGuestCount : function() {
         app.PmsBookingMyBookingList.setGuestCountTable($(this).val());

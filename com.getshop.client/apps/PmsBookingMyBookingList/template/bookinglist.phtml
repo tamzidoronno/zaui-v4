@@ -96,7 +96,13 @@ if($config->requirePayments) {
     $totalTaxes = 0;
     foreach($orders as $order) {
         echo "<tr>";
-        echo "<td valign='top'>" . $order->incrementOrderId . "</td>";
+        echo "<td valign='top'>";
+        if($this->isEditorMode()) {
+            echo "<span style='color:blue; cursor:pointer;' class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</span>";
+        } else {
+            echo $order->incrementOrderId;
+        }
+        echo "</td>";
         echo "<td valign='top'>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
         echo "<td>";
         $items = $order->cart->items;

@@ -49,7 +49,11 @@ public class StoreHandler {
         }
     }
         
-    public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
+    public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
+        return executeMethod(inObject, types, argumentValues);
+    }
+    
+    public Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
         initMultiLevels(storeId, getSession(inObject.sessionId));
         
         scope.setStoreId(storeId, inObject.multiLevelName, getSession(inObject.sessionId));

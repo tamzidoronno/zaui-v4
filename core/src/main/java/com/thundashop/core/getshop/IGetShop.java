@@ -1,6 +1,7 @@
 package com.thundashop.core.getshop;
 
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.GetShopNotSynchronized;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.PartnerData;
@@ -78,4 +79,7 @@ public interface IGetShop {
     public void saveSmsCallback(SmsResponse smsResponses);
     
     public String startStoreFromStore(StartData startData);
+    
+    @GetShopNotSynchronized
+    public String getBase64EncodedPDFWebPage(String urlToPage);
 }

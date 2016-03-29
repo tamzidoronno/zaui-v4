@@ -1,5 +1,6 @@
 package com.thundashop.core.getshop;
 
+import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSessionScope;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -23,11 +24,16 @@ import com.thundashop.core.getshop.data.StartData;
 import com.thundashop.core.getshop.data.WebPageData;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,6 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -545,5 +553,51 @@ public class GetShop extends ManagerBase implements IGetShop {
 
     public SmsResponse getSmsResponse(String msgId) {
         return smsResponses.get(msgId);
+    }
+
+    @Override
+    public String getBase64EncodedPDFWebPage(String urlToPage) {
+        urlToPage = urlToPage.replaceAll("&amp;", "&");
+        String tmpPdfName = "/tmp/"+UUID.randomUUID().toString() + ".pdf";
+        boolean executed = executeCommand("/usr/local/bin/wkhtmltopdf.sh " + urlToPage + " " + tmpPdfName);
+        
+        if (!executed) {
+            executed = executeCommand("wkhtmltopdf -B 0 -L 0 -R 0 -T 0  " + urlToPage + " " + tmpPdfName);
+        }
+        
+        if (!executed) {
+            throw new ErrorException(1033);
+        }
+        
+        File file = new File(tmpPdfName);
+        byte[] bytes;
+        try {
+            bytes = InvoiceManager.loadFile(file);
+            byte[] encoded = Base64.encodeBase64(bytes);
+            String encodedString = new String(encoded);
+            file.delete();
+            return encodedString;
+        } catch (IOException ex) {
+            throw new ErrorException(1033);
+        }
+    }
+    
+    
+    private boolean executeCommand(String command) {
+        try {
+            Process p = Runtime.getRuntime().exec(command);
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            String d = "";
+            
+            boolean ok = true;
+            while ((d = stdError.readLine()) != null) {
+                if (d.contains("error"))
+                    ok = false;
+            }
+            
+            return ok;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

@@ -130,6 +130,6 @@ foreach($rooms as $room) {
     } elseif($found == true) {
         $marked = "style='background-color:green;color:#fff;'";
     }
-    echo "<span class='keyreturnedroom' roomid='".$room->id."' $marked>" . $room->bookingItemName . "</span>";
+    echo "<span class='keyreturnedroom' roomid='".$room->pmsBookingRoomId."' $marked>" . $room->bookingItemName . "</span>";
 }
 ?>

@@ -2387,13 +2387,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void returnedKey(String roomId) {
         for (PmsBooking booking : getAllBookings(null)) {
             for (PmsBookingRooms room : booking.rooms) {
-                if (room.bookingItemId == null || !room.bookingItemId.equals(roomId)) {
+                if (room.pmsBookingRoomId == null || !room.pmsBookingRoomId.equals(roomId)) {
                     continue;
                 }
                 if (room.keyIsReturned) {
                     room.keyIsReturned = false;
+                    logEntry("Key undelivered for room: " + bookingEngine.getBookingItem(room.bookingItemId).bookingItemName, booking.id, roomId);
                 } else {
                     room.keyIsReturned = true;
+                    logEntry("Key delivered for room: " + bookingEngine.getBookingItem(room.bookingItemId).bookingItemName, booking.id, roomId);
                 }
                 saveBooking(booking);
                 if (!room.isEndingToday() && room.keyIsReturned) {
@@ -2402,8 +2404,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     String email = storeManager.getMyStore().configuration.emailAdress;
                     messageManager.sendMail(email, email, msg, msg, email, email);
                 }
-
-                logEntry("Key delivered for room: " + bookingEngine.getBookingItem(roomId).bookingItemName, booking.id, roomId);
                 return;
             }
         }

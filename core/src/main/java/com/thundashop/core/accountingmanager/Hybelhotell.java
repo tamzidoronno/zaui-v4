@@ -1,7 +1,4 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package com.thundashop.core.accountingmanager;
 
@@ -70,7 +67,7 @@ public class Hybelhotell implements AccountingInterface {
             toAdd.put(22, "døgn");
             toAdd.put(23, item.getCount() + "");
             toAdd.put(25, item.getProduct().price+ "");
-            toAdd.put(28, "22");
+            toAdd.put(28, "22N");
             toAdd.put(32, order.invoiceNote);
             
             String resultLine = "";

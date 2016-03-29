@@ -58,7 +58,7 @@ public class PmsManagerProcessor {
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
         int hoursAheadCheck = hoursAhead;
         int maxAheadCheck = maxAhead;
-        if(manager.getConfigurationSecure().ignoreTimeIntervalsOnNotification) {
+        if(manager.getConfigurationSecure().ignoreTimeIntervalsOnNotification && !started) {
             hoursAheadCheck = 0;
             maxAheadCheck = 72;
         }

@@ -306,4 +306,11 @@ public class PmsBookingRooms implements Serializable {
         }
         return false;
     }
+
+    boolean isEndedDaysAgo(int daysAgo) {
+        daysAgo *= -1;
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, daysAgo);
+        return date.end.before(cal.getTime());
+    }
 }

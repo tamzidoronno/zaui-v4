@@ -91,6 +91,10 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
     }
     
+    public function markAllKeyDelivered() {
+        $this->getApi()->getPmsManager()->markKeyDeliveredForAllEndedRooms($this->getSelectedName());
+    }
+    
     public function showSettings() {
         $this->includefile("settings");
     }

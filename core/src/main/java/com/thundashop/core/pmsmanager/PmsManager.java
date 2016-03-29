@@ -2390,23 +2390,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (room.bookingItemId == null || !room.bookingItemId.equals(roomId)) {
                     continue;
                 }
-                if ((room.isStarted() && (!room.isEnded()) || room.isEndingToday())) {
-                    if (room.keyIsReturned) {
-                        room.keyIsReturned = false;
-                    } else {
-                        room.keyIsReturned = true;
-                    }
-                    saveBooking(booking);
-                    if (!room.isEndingToday()) {
-                        String roomName = bookingEngine.getBookingItem(roomId).bookingItemName;
-                        String msg = "Key delivered for someone not checking out today, at room: " + roomName;
-                        String email = storeManager.getMyStore().configuration.emailAdress;
-                        messageManager.sendMail(email, email, msg, msg, email, email);
-                    }
-
-                    logEntry("Key delivered for room: " + bookingEngine.getBookingItem(roomId).bookingItemName, booking.id, roomId);
-                    return;
+                if (room.keyIsReturned) {
+                    room.keyIsReturned = false;
+                } else {
+                    room.keyIsReturned = true;
                 }
+                saveBooking(booking);
+                if (!room.isEndingToday()) {
+                    String roomName = bookingEngine.getBookingItem(roomId).bookingItemName;
+                    String msg = "Key delivered for someone not checking out today, at room: " + roomName;
+                    String email = storeManager.getMyStore().configuration.emailAdress;
+                    messageManager.sendMail(email, email, msg, msg, email, email);
+                }
+
+                logEntry("Key delivered for room: " + bookingEngine.getBookingItem(roomId).bookingItemName, booking.id, roomId);
+                return;
             }
         }
 
@@ -2921,6 +2919,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public PmsConfiguration getConfigurationSecure() {
         return configuration;
+    }
+
+    @Override
+    public void markKeyDeliveredForAllEndedRooms() {
+        for(PmsBooking booking : bookings.values()) {
+            boolean needsaving = false;
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.isEnded() && !room.keyIsReturned) {
+                    room.keyIsReturned = true;
+                    needsaving = true;
+                }
+            }
+            if(needsaving) {
+                saveBooking(booking);
+            }
+        }
     }
 
 }

@@ -126,6 +126,9 @@ public interface IPmsManager {
     @Administrator
     public void sendMessageToAllTodaysGuests(String message);
     
+    @Administrator
+    public void markKeyDeliveredForAllEndedRooms();
+    
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);
     public PmsConfiguration getConfiguration();

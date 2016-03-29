@@ -393,23 +393,32 @@ public class PmsManagerProcessor {
             for (PmsBooking booking : bookings) {
                 boolean needSaving = false;
                 for (PmsBookingRooms room : booking.rooms) {
-                    if (room.isEnded() && room.isEndingToday() && !room.keyIsReturned) {
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(room.date.end);
-                        cal.add(Calendar.DAY_OF_YEAR, 1);
-                        room.date.end = cal.getTime();
-                        BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
-                        if (item != null) {
-                            String text = "Autoextending room " + item.bookingItemName;
-                            PmsBookingRooms res = manager.changeDates(room.pmsBookingRoomId, booking.id, room.date.start, room.date.end);
-                            if(res != null) {
+                    if (room.isEnded() && !room.keyIsReturned) {
+                        if(room.isEndedDaysAgo(7)) {
+                            room.keyIsReturned = true;
+                            needSaving = true;
+                        } else {
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(room.date.end);
+                            cal.add(Calendar.DAY_OF_YEAR, 1);
+                            room.date.end = cal.getTime();
+                            BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
+                            Date start = room.date.start;
+                            Date end = room.date.end;
+                            if (item != null) {
+                                String text = "Autoextending room " + item.bookingItemName;
+                                PmsBookingRooms res = manager.changeDates(room.pmsBookingRoomId, booking.id, start, end);
+                                if(res == null) {
+                                    text = "Not able to extend stay for room: " + item.bookingItemName;
+                                    manager.warnAboutUnableToAutoExtend(item.bookingItemName,"Not able to extend");
+                                }
+
+                                text += " (" + start + " to " + end + ")";
+                                System.out.println(text);
                                 manager.logEntry(text, booking.id, room.bookingItemId);
-                            } else {
-                                manager.logEntry("Not able to extend stay for room: " + item.bookingItemName, booking.id, room.bookingItemId);
-                                manager.warnAboutUnableToAutoExtend(item.bookingItemName,"Not able to extend");
                             }
+                            needSaving = true;
                         }
-                        needSaving = true;
                     }
                 }
                 if (needSaving) {

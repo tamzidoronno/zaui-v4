@@ -125,6 +125,18 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                     <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                     <i class='fa fa-trash-o' gstype='submitToInfoBox'></i>
                 </span>
+                    <?php
+                    if($config->autoExtend) {
+                        ?>
+                        <span gstype='form' method="markKeyReturned">
+                            <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                            <input type='hidden' value='<? echo $room->bookingItemId; ?>' gsname='roomid'>
+                            <i class='fa fa-key' gstype='submitToInfoBox' <?php if($room->keyIsReturned) { echo "style='color:green';"; } ?>></i>
+                        </span>
+                
+                        <?php
+                    }
+                    ?>
             </td>
             <td>
                 <? echo $types[$room->bookingItemTypeId]->name; ?>

@@ -336,6 +336,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function markKeyReturned() {
+        $this->getApi()->getPmsManager()->returnedKey($this->getSelectedName(), $_POST['data']['roomid']);
+        $this->showBookingInformation();
+    }
+    
     public function setNewEndDate() {
         $room = $this->getRoomFromPost();
         $error = $this->getManager()->changeDates($this->getSelectedName(),

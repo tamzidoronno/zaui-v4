@@ -116,6 +116,9 @@ public interface IEventBookingManager {
     @Administrator
     public List<Certificate> getCertificates();
     
+    @Editor
+    public Certificate getCertificateForEvent(String eventId, String userId);
+    
     @Administrator
     public Certificate getCertificate(String certificateId);
     

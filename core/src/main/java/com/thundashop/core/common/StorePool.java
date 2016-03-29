@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.common;
 
+import com.getshop.scope.GetShopSession;
 import org.owasp.validator.html.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -260,11 +261,74 @@ public class StorePool {
             if (handler == null) {
                 throw new ErrorException(1000010);
             }
-            res = handler.executeMethod(object, types, argumentValues);
+            
+            Class aClass = loadClass(object.interfaceName);
+            Method method = getMethodToExecute(aClass, object.method, types, argumentValues);
+            method = getCorrectMethod(method);
+            
+            if (aClass != null && method != null && method.getAnnotation(GetShopNotSynchronized.class) != null) {
+                if (aClass.getAnnotation(GetShopSession.class) != null) {
+                    throw new RuntimeException("@GetShopNotSynchronized can not be used on components that is scoped with @GetShopSession");
+                }
+                
+                res = handler.executeMethod(object, types, argumentValues);
+            } else {
+                res = handler.executeMethodSync(object, types, argumentValues);
+            }
         }
         
         return res;
     }
+    
+    
+    private Method getCorrectMethod(Method executeMethod) throws ErrorException {
+        Class<?>[] interfaces = executeMethod.getDeclaringClass().getInterfaces();
+
+        ErrorException retex = new ErrorException(86);
+        for (Class iface : interfaces) {
+            if (iface.isAnnotationPresent(GetShopApi.class)) {
+                try {
+                    return iface.getDeclaredMethod(executeMethod.getName(), executeMethod.getParameterTypes());
+                } catch (Exception ex) {
+                    retex.additionalInformation = ex.getMessage();
+                    throw retex;
+                }
+            }
+        }
+
+        retex.additionalInformation = "Did not find the interface method for the called method";
+        throw retex;
+    }
+
+    
+    private Method getMethodToExecute(Class aClass, String method, Class[] types, Object[] argumentValues) throws ErrorException {
+        try {
+            for (Method emethod : aClass.getMethods()) {
+                if (emethod != null && emethod.getName().equals(method) && emethod.getParameterTypes().length == argumentValues.length) {
+                    return emethod;
+                }
+            }
+
+            return aClass.getMethod(method, types);
+        } catch (NoSuchMethodException ex) {
+            throw new ErrorException(82);
+        } catch (SecurityException ex) {
+            throw new ErrorException(83);
+        }
+    }
+    
+    private Class loadClass(String objectName) throws ErrorException {
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            return classLoader.loadClass("com.thundashop." + objectName);
+        } catch (ClassNotFoundException ex) {
+            ErrorException gex = new ErrorException(81);
+            gex.additionalInformation = ex.getMessage();
+            ex.printStackTrace();
+            throw gex;
+        }
+    }
+
 
     private StoreHandler getStoreHandler(String sessionId) throws ErrorException {
         Store store = storePool.getStoreBySessionId(sessionId);

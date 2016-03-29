@@ -18,6 +18,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
@@ -1456,6 +1457,27 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         return true;
+    }
+
+    @Override
+    public Certificate getCertificateForEvent(String eventId, String userId) {
+        Event event = getEvent(eventId);
+        User user = userManager.getUserById(userId);
+        BookingItemTypeMetadata metaData = getBookingTypeMetaData(event);
+        Company company = user.companyObject;
+        Group group = userManager.getGroup(company.groupId);
+        
+        if (event == null || user == null || metaData == null || company == null || group == null) {
+            return null;
+        }
+        
+        List<String> certificateIds = metaData.certificateIds.get(group.id);
+        
+        return certificates.values().stream()
+                .filter(o -> o.validFrom.before(event.mainStartDate) && o.validTo.before(event.mainStartDate))
+                .filter(o -> certificateIds.contains(o.id))
+                .findFirst()
+                .orElse(null);
     }
 
 }

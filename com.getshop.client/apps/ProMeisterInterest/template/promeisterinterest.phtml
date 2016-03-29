@@ -1,0 +1,10 @@
+<?
+/* @var $this ns_de7403c4_6b8e_4fb5_8d8a_d9fdc14ce76d\ProMeisterInterest */
+
+$types = $this->getApi()->getEventBookingManager()->getBookingItemTypes($this->getBookingEngineName());
+
+foreach ($types as $type) {
+    echo "<div class='selectInterestEmail' gsclick='sendInterestMessage' typeid='$type->id'>$type->name</div>";
+}
+
+?>

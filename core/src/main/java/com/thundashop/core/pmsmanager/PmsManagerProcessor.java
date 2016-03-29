@@ -92,8 +92,9 @@ public class PmsManagerProcessor {
                 System.out.println(key);
                 manager.doNotification(key, booking, room);
                 room.notificationsSent.add(key);
-                manager.markRoomAsDirty(room.bookingItemId);
-
+                if(hoursAhead == 0) {
+                    manager.markRoomAsDirty(room.bookingItemId);
+                }
             }
             if (save) {
                 manager.saveBooking(booking);

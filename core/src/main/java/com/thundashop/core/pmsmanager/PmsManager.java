@@ -1397,7 +1397,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         saveAdditionalInfo(additional);
 
-        String logText = "Marked room: " + bookingEngine.getBookingItem(additional.itemId).bookingItemName + " as cleaned, item in use: ";
+        String logText = "Marked room as cleaned, item in use: ";
         if (itemInUse) {
             logText += " in use";
         } else {
@@ -1413,7 +1413,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         BookingItem item = bookingEngine.getBookingItem(additional.itemId);
         if (item != null) {
-            String logText = "Marked room: " + bookingEngine.getBookingItem(additional.itemId).bookingItemName + " as dirty, item in use";
+            String logText = "Marked room as dirty, item in use";
             logEntry(logText, null, additional.itemId);
         }
     }

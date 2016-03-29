@@ -21,7 +21,7 @@ import java.util.Map;
  * @author ktonder
  */
 public class Cart extends DataCommon {
-    private List<CartItem> items = new ArrayList();
+    private List<CartItem> items = new ArrayList(); 
     private double shippingCost = 0;
     public boolean isShippingFree = false;
     public TaxGroup shippingTax = null;

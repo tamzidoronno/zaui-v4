@@ -126,6 +126,12 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return false;
     }
+
+    public void doFinalize() {
+        for(CartItem item : cart.getItems()) {
+            item.doFinalize();
+        }
+    }
     
     public static class Status  {
         public static int CREATED = 1;

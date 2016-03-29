@@ -1,0 +1,19 @@
+<?php
+/* @var $this ns_b675ce83_d771_4332_ba09_a54ed8537282\PmsBookingMyBookingList */
+$users = $this->getApi()->getUserManager()->getAllUsers();
+
+echo "<select id='chooseuser' style='width:100%'>";
+foreach($users as $user) {
+    $selected = "";
+    if($this->getTmpUser() == $user->id) {
+        $selected = "SELECTED";
+    }
+    echo "<option value='" . $user->id ."' $selected>" . $user->fullName . "</option>";
+}
+echo "</select>";
+echo "<br><br>";
+?>
+
+<script>
+    $('#chooseuser').chosen();
+</script>

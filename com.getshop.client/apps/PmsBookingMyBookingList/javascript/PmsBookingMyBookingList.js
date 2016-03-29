@@ -2,6 +2,7 @@ app.PmsBookingMyBookingList = {
     init : function() {
         $(document).on('click', '.PmsBookingMyBookingList .deleteroom', app.PmsBookingMyBookingList.deleteRoom);
         $(document).on('click', '.PmsBookingMyBookingList .editroom', app.PmsBookingMyBookingList.editRoom);
+        $(document).on('change', '.PmsBookingMyBookingList #chooseuser', app.PmsBookingMyBookingList.switchUser);
         $(document).on('change', '.PmsBookingMyBookingList .changeGuestCount', app.PmsBookingMyBookingList.changeGuestCount);
     },
     changeGuestCount : function() {
@@ -15,6 +16,11 @@ app.PmsBookingMyBookingList = {
                 $('tr[countnumber="'+i+'"]').hide();
             }
         }
+    },
+    switchUser : function() {
+        thundashop.Ajax.simplePost($(this), "setTmpUser", {
+            "userid" : $(this).val()
+        });
     },
     editRoom : function() {
         var data = {

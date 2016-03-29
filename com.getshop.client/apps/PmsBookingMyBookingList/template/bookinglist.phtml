@@ -1,6 +1,6 @@
 <?php
 /* @var $this \ns_b675ce83_d771_4332_ba09_a54ed8537282\PmsBookingMyBookingList */
-$bookings = $this->getApi()->getPmsManager()->getAllBookingsForLoggedOnUser($this->getSelectedName());
+$bookings = $this->getBookings();
 $items = $this->getBookingItems();
 $types = $this->getBookingItemTypes();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
@@ -82,7 +82,7 @@ echo "</table>";
 
 if($config->requirePayments) {
     echo "<br><br><b>Order history</b>";
-    $orders = $this->getApi()->getOrderManager()->getAllOrdersForUser($this->getApi()->getUserManager()->getLoggedOnUser()->id);
+    $orders = $this->getApi()->getOrderManager()->getAllOrdersForUser($this->getTmpUser());
     echo "<table cellspacing='0' width='100%'>";
     echo "<tr>";
     echo "<th>Orderid</th>";

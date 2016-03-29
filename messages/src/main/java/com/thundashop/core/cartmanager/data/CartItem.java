@@ -82,5 +82,9 @@ public class CartItem implements Serializable {
 
     public List<String> getVariations() {
         return variations;
+    } 
+
+    public void doFinalize() {
+        product.doFinalize();
     }
 }

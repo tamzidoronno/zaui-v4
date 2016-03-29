@@ -165,6 +165,7 @@ public interface IOrderManager {
      * @return 
      */
     public Double getTotalAmount(Order order);
+    public Double getTotalAmountExTaxes(Order order);
     
     
     /**

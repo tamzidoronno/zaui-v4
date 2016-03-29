@@ -1,6 +1,6 @@
 <?php
 /* @var $this \ns_b675ce83_d771_4332_ba09_a54ed8537282\PmsBookingMyBookingList */
-$bookings = $this->getApi()->getPmsManager()->getAllBookingsForLoggedOnUser($this->getSelectedName());
+$bookings = $this->getBookings();
 $items = $this->getBookingItems();
 $types = $this->getBookingItemTypes();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
@@ -82,15 +82,18 @@ echo "</table>";
 
 if($config->requirePayments) {
     echo "<br><br><b>Order history</b>";
-    $orders = $this->getApi()->getOrderManager()->getAllOrdersForUser($this->getApi()->getUserManager()->getLoggedOnUser()->id);
+    echo "<div>";
+    echo "</div>";
+    $orders = $this->getApi()->getOrderManager()->getAllOrdersForUser($this->getTmpUser());
     echo "<table cellspacing='0' width='100%'>";
     echo "<tr>";
     echo "<th>Orderid</th>";
     echo "<th>Order date</th>";
     echo "<th>Orderlines</th>";
-    echo "<th width='10'>Total</th>";
+    echo "<th width='150'>Total</th>";
     echo "</tr>";
-    
+    $total = 0;
+    $totalTaxes = 0;
     foreach($orders as $order) {
         echo "<tr>";
         echo "<td valign='top'>" . $order->incrementOrderId . "</td>";
@@ -103,12 +106,30 @@ if($config->requirePayments) {
             $additionalMetaData = $cartItem->product->additionalMetaData ? " (" .$cartItem->product->additionalMetaData.")" : "";
             if($cartItem->startDate) { $dates .= date("d.m.Y H:i", strtotime($cartItem->startDate)); }
             if($cartItem->endDate) { $dates .= " - " . date("d.m.Y H:i", strtotime($cartItem->endDate)); }
-            echo "<div cartItemId='".$cartItem->cartItemId."'>".$cartItem->count." x ".$cartItem->product->name." $metaText $additionalMetaData $dates<span style='float:right;'>".$cartItem->product->price."</span></div>";
+            echo "<div cartItemId='".$cartItem->cartItemId."'>".$cartItem->count." x ".$cartItem->product->name." $metaText $additionalMetaData $dates<span style='float:right;'>".round($cartItem->product->priceExTaxes,2)."</span></div>";
         }
+        
+        $taxes = $this->getApi()->getOrderManager()->getTaxes($order);
+        $taxsum = 0;
+        foreach($taxes as $tax) {
+            $taxsum += round($tax->sum,2);
+            echo "<div>" . $tax->taxGroup->taxRate . "% MVA <span style='float:right;'>" . round($tax->sum,2) . "</span></div>";
+        }
+        
+        $rowTotal = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
+        $total += $rowTotal;
+        $totalTaxes += $taxsum;
         echo "</td>";
-        echo "<td valign='top'>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
+        echo "<td valign='top'>";
+        echo "Eks mva <span style='float:right;'>" . round($rowTotal,0) . "</span><br>";
+        echo "Ink mva <span style='float:right;'>" . round($rowTotal+$taxsum,0) . "</span><br>";
+        echo "</td>";
         echo "</tr>";
     }
+    echo "<tr>";
+    echo "<td colspan='3'>Total</td>";
+    echo "<td>Eks mva: $total<br>Ink mva: ".round($total + $totalTaxes). "</td>";
+    echo "</tr>";
     echo "</table>";
 }
 ?>

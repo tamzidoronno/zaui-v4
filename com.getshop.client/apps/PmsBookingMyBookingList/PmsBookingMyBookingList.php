@@ -13,8 +13,23 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
     public function loadEditRoom() {
         $this->includefile("editroomform");
     }
+
+    
+    public function getTmpUser() {
+        if(isset($_SESSION['mybookinglist_tmp_user'])) {
+            return $_SESSION['mybookinglist_tmp_user'];
+        }
+        return $this->getApi()->getUserManager()->getLoggedOnUser()->id;
+    }
+    
+    public function setTmpUser() {
+        $_SESSION['mybookinglist_tmp_user'] = $_POST['data']['userid'];
+    }
     
     public function render() {
+        if($this->isEditorMode()) {
+            $this->includefile("allusersdropdown");
+        }
         if(!$this->getSelectedName()) {
             echo "Please specify a booking engine first. <br>";
             $engns = $this->getApi()->getStoreManager()->getMultiLevelNames();
@@ -77,6 +92,18 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
     public function getBookingItemTypes() {
         $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
         return $this->indexList($types);
+    }
+
+    public function getBookings() {
+        if(!$this->getTmpUser()) {
+            return $this->getApi()->getPmsManager()->getAllBookingsForLoggedOnUser($this->getSelectedName());
+        }
+        
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->userId = $this->getTmpUser();
+        
+        return $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+      
     }
 
 }

@@ -538,6 +538,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         finalized = sortList(finalized, filter.sorting);
 
         finalized = filterTypes(finalized, filter.typeFilter);
+        finalized = filterByUser(finalized,filter.userId);
 
         return finalized;
     }
@@ -2946,6 +2947,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         saveBooking(booking);
+    }
+
+    private List<PmsBooking> filterByUser(List<PmsBooking> finalized, String userId) {
+        if(userId == null || userId.isEmpty()) {
+            return finalized;
+        }
+        
+        List<PmsBooking> res = new ArrayList();
+        for(PmsBooking booking : finalized) {
+            if(booking.userId != null && booking.userId.equals(userId)) {
+                res.add(booking);
+            }
+        }
+        return res;
     }
 
 }

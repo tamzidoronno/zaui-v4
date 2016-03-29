@@ -66,7 +66,7 @@ public class Hybelhotell implements AccountingInterface {
             toAdd.put(19, lineText);
             toAdd.put(22, "døgn");
             toAdd.put(23, item.getCount() + "");
-            toAdd.put(25, item.getProduct().price+ "");
+            toAdd.put(25, item.getProduct().priceExTaxes+ "");
             toAdd.put(28, "22N");
             toAdd.put(32, order.invoiceNote);
             

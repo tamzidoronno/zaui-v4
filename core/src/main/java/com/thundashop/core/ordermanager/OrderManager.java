@@ -101,6 +101,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         credited.parentOrder = order.id;
         credited.creditOrderId.clear();
         order.creditOrderId.add(credited.id);
+        order.doFinalize();
         saveOrder(credited);
         saveOrder(order);
         return credited;
@@ -292,6 +293,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = createOrderInternally(address);
         saveOrder(order);
         updateStockAndSendConfirmation(order);
+        order.doFinalize();
         return order;
     }
 
@@ -307,6 +309,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.userId = user.id;
         saveOrder(order);
         updateStockAndSendConfirmation(order);
+        order.doFinalize();
         return order;
     }
     
@@ -319,6 +322,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.userId = user.id;
         saveOrder(order);
         updateStockAndSendConfirmation(order);
+        order.doFinalize();
         return order;
     }
     
@@ -362,6 +366,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         
+        finalize(result);
         return result;
     }
     
@@ -443,6 +448,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public Order getOrderByincrementOrderId(Integer id) throws ErrorException {
         for (Order order : orders.values()) {
             if (order.incrementOrderId == id) {
+                order.doFinalize();
                 return order;
             }
         }
@@ -464,6 +470,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return toPay;
     }
     
+    @Override
     public Double getTotalAmountExTaxes(Order order) {
         List<CartTax> taxes = getTaxes(order);
         double totalTax = 0.0;
@@ -502,6 +509,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         incrementingOrderId++;
         order.incrementOrderId = incrementingOrderId;
+        order.doFinalize();
         return order;
     }
     
@@ -559,6 +567,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public Order getOrderByReference(String referenceId) throws ErrorException {
         for (Order order : orders.values()) {
             if (order.reference.equals(referenceId)) {
+                order.doFinalize();
                 return order; 
             }
         }
@@ -579,11 +588,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> returnOrders = new ArrayList();
         for (Order order : orders.values()) {
-            if ((order.userId != null && order.userId.equals(userId)) || (user != null && user.isAdministrator())) {
+            if ((order.userId != null && order.userId.equals(userId))) {
                 returnOrders.add(order);
             }
         }
         sortOrderList(returnOrders);
+        finalize(returnOrders);
         return returnOrders;
     }
     
@@ -634,8 +644,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return new ArrayList<Order>();
         }
         
-        return getOrders(listOrderIds, page, pageSize);
-        
+        List<Order> res = getOrders(listOrderIds, page, pageSize);
+        finalize(res);
+        return res;
     }
     
     private boolean isInteger(String search) {
@@ -869,7 +880,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 notTransferred.add(order);
             }
         }
-        
+        finalize(notTransferred);
         return notTransferred;
     }
 
@@ -894,7 +905,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public Order getOrderSecure(String orderId) throws ErrorException {
-        return orders.get(orderId);
+        Order order = orders.get(orderId);
+        if(order != null) {
+            order.doFinalize();
+        }
+        return order;
     }
 
     @Override
@@ -905,6 +920,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 ordersToReturn.add(order);
             }
         }
+        finalize(ordersToReturn);
         return ordersToReturn;
     }
 
@@ -1030,7 +1046,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 orderresult.add(order);
             }
         }
-        
+        finalize(orderresult);
         return orderresult;
     }
 
@@ -1121,6 +1137,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(filterOrdersByStatus(filterOptions))
                 .collect(Collectors.toList());
         sortOrderList(allOrders);
+        finalize(allOrders);
         return pageIt(allOrders, filterOptions);
     }
 
@@ -1158,6 +1175,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return o1.incrementOrderId > o2.incrementOrderId ? -1 : 1;
         }
         });
+    }
+
+    private void finalize(List<Order> result) {
+        for(Order order : result) {
+            order.doFinalize();
+        }
+        
     }
 
 }

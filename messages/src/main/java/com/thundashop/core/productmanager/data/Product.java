@@ -101,6 +101,9 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String additionalMetaData = "";
     /* This we need i case we need to track down more data later on (used for bookings) */
     public String externalReferenceId = "";
+    
+    @Transient
+    public double priceExTaxes;
 
     public void setMainImage(String fileId) {
         mainImage = fileId;
@@ -198,5 +201,13 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public Product clone() {
         Gson gson = new Gson();
         return gson.fromJson(gson.toJson(this), this.getClass());
+    }
+
+    public void doFinalize() {
+        if(taxGroupObject != null && taxGroupObject.taxRate != null) {
+            priceExTaxes = price / (1 + (taxGroupObject.taxRate/100));
+        } else {
+            priceExTaxes = price;
+        }
     }
 }

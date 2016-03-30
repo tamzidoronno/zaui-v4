@@ -25,7 +25,8 @@ public class TranslationFile {
     public HashMap<String, String> translationMatrix = new HashMap();
     public String filename;
 
-    TranslationFile(String fileName) throws FileNotFoundException, IOException {
+    TranslationFile(String fileName) throws FileNotFoundException, IOException { 
+        //Test
         readFile(fileName);
         this.filename = fileName;
     }

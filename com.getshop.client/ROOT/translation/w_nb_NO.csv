@@ -215,6 +215,7 @@ Les mer;-;Les mer
 Link this cell;-;Link denne cellen
 Load;-;Last
 Loading;-;Laster
+Logged in;-;Innlogget
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
 March;-;Mars
@@ -270,6 +271,7 @@ Number of guests;-;Antall gjester
 Number of instances added;-;Antall av instanser lagt til
 October;-;Oktober
 Offset;-;Offset
+Old events;-;Gamle eventer
 Old password;-;Gammelt passord
 Open;-;Åpen
 Open styling;-;Åpne styling
@@ -390,10 +392,12 @@ Shipping price;-;Forendelse pris
 Short description;-;Kort beskrivelse
 Show;-;Vis
 Show log;-;Vis logg
+Sign out;-;Logg ut
 Sign up;-;Registrer deg
 Sign up with facebook;-;Logg inn me facebook
 Sign up with google;-;Logg inn med google
 Single date;-;Enkeltdato
+Singup;-;Registrering
 Slide left;-;Slide til venstre
 Slide left (px) (negative is from right);-;Slide til venstre (px) (negativt vil være for høyre side)
 Slide right;-;Slide til høyre
@@ -433,7 +437,6 @@ Thank you for your order, an email has been sent to you with the invoice attache
 Thank you for your order.;-;Takk for din bestilling.
 Thank you message;-;Takkemelding
 Thank you page;-;Takkeside
-Thank you, you have now registered your email;-;Takk, du har nå registrert din epost.
 Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
 The carousel is not rotating while logged in as administrator.;-;Karusellen roterer ikke når man er logget inn som administrator.
 The company name;-;Firmaet navn
@@ -508,10 +511,7 @@ day of the month;-;Fast dato i måneden
 day of the week;-;Fast ukedag
 days;-;dager
 description;-;Beskrivelse
-dk;-;Dansk
 email;-;E-post
-en_en;-;English
-fi_FI;-;Suomalainen
 forgot?;-;Glemt?
 free spots;-;ledige plasser
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
@@ -520,10 +520,7 @@ location;-;Sted
 login;-;logg inn
 month;-;måned
 months;-;måneder
-nb_NO;-;Norsk
-nl_NL;-;Nederlands
 read;-;les
-se;-;Svenska
 show selected dates;-;Vis valgte datoer
 summary;-;oppsummering
 tax;-;moms

@@ -176,6 +176,9 @@ public class GenerateTranslation {
                 }
             } while (offset >= 0);
         }
+        br.close();
+        in.close();
+        fstream.close();
     }
 
     private String getTranslationKey(String strLine) {

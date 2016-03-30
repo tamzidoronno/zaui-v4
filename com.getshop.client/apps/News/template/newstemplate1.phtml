@@ -20,7 +20,8 @@ foreach($entries as $entry) {
     }
     echo "<div class='news_entry_header'><h2>" . $entry->subject . "</h2></div>";
     echo "<div class='content'>";
-    echo $entry->content;
+    echo $entry->content . "<br>";
+    echo "<a href='?page=".$entry->pageId."'>". $this->__w("Read more") . "</a>";
     echo "</div>";
     echo "<div class='news_entry_footer'>" . $entry->date ."</div>";
     echo "</div>";

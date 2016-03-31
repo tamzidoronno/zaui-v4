@@ -92,7 +92,7 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
         }
         
         ArxConnection connection = new ArxConnection();
-         return connection.httpLoginRequest(address, username, password, content);
+        return connection.httpLoginRequest(address, username, password, content);
     }
     
     
@@ -289,33 +289,37 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
     
     @Override
     public void doorAction(String externalId, String state) throws Exception {
-        User currentUser = getSession().currentUser;
-        String arxHost = "https://" + currentUser.fullName;
-        String hostName = arxHost + ":5002/arx/door_actions?externalid="+externalId+"&type="+state;
-        if(state.equals("forceOpen")) {
-            Door door = getDoor(externalId);
+        String hostName = ":5002/arx/door_actions?externalid="+externalId+"&type=";
+        Door door = getDoor(externalId);
+        if(state.equals("forceOpenOn")) {
+            hostName += "forceOpen&value=on";
+            door.forcedOpen = true;
+        } else if(state.equals("forceOpenOff")) {
+            hostName += "forceOpen&value=off";
+            door.forcedOpen = false;
+        } else if(state.equals("forceOpen")) {
             if(door.forcedOpen) {
-                hostName += "&value=off";
+                hostName += "forceOpen&value=off";
                 door.forcedOpen = false;
             } else {
-                hostName += "&value=on";
+                hostName += "forceOpen&value=on";
                 door.forcedOpen = true;
             }
             saveObject(door);
-        }
-        if(state.equals("forceClose")) {
-            Door door = getDoor(externalId);
+        } else if(state.equals("forceClose")) {
             if(door.forcedClose) {
-                hostName += "&value=off";
+                hostName += "forceClose&value=off";
                 door.forcedClose = false;
             } else {
-                hostName += "&value=on";
+                hostName += "forceClosev&alue=on";
                 door.forcedClose = true;
             }
             saveObject(door);
+        } else {
+            hostName += "pulseOpen";
         }
         
-//        System.out.println(hostName);
+        System.out.println(hostName);
         httpLoginRequest(hostName,"");
     }
 

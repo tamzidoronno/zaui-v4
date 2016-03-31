@@ -180,18 +180,18 @@ public class PmsManagerDoorSurveilance {
                     }
                     
                     if (room.pmsBookingRoomId.equals(itemToClose)) {
-                        if(room.forcedOpen) {
-                            BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
-                            String itemName = "";
-                            if(item != null) {
-                                itemName = item.bookingItemName + "(" + item.bookingItemAlias + ")";
-                            }
-                            manager.logEntry("Closing door: " + itemName, booking.id, room.bookingItemId);
-                            closeRoom(room.bookingItemId, booking.id);
-                            room.forcedOpenCompleted = true;
-                            room.forcedOpenNeedClosing = false;
-                            needSaving = true;
+                        BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
+                        String itemName = "";
+                        if(item != null) {
+                            itemName = item.bookingItemName + "(" + item.bookingItemAlias + ")";
                         }
+                        if(room.forcedOpen) {
+                            manager.logEntry("Closing door: " + itemName, booking.id, room.bookingItemId);
+                        }
+                        closeRoom(room.bookingItemId, booking.id);
+                        room.forcedOpenCompleted = true;
+                        room.forcedOpenNeedClosing = false;
+                        needSaving = true;
                     }
                 }
                 if (needSaving) {

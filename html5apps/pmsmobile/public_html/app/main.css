@@ -19,6 +19,6 @@ a, a:hover { color:#000; }
 .loading { text-align: center; font-size: 40px; }
 .doorlogrow { height: 80px; }
 .doorlogrow .dooractionbutton i { font-size: 20px; width: 100%; }
-.doorlogrow .dooractionbutton { display:inline-block; margin-right: 5px; border: solid 1px; border-radius: 5px; text-align: center; width: 60px; height: 60px; padding: 7px; font-size: 8px; background-color:#2f749f; color:#fff;}
+.doorlogrow .dooractionbutton { display:inline-block; margin-right: 5px; border: solid 1px; border-radius: 5px; text-align: center; width: 60px; height: 60px; padding: 7px; font-size: 8px; background-color:#2f749f; color:#fff; float:right;}
 .doorlogrow .dooractionbutton:hover { background-color: #494949; cursor:pointer; }
 .disconnectedPage { position: fixed; z-index: 10; width: 100%; height: 100%; background-color:rgba(0,0,0,0.5); color: #fff; font-size: 30px; text-align: center; padding: 30px; display:none; }

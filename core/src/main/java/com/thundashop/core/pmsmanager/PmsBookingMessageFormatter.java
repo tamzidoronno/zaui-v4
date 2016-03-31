@@ -26,8 +26,8 @@ class PmsBookingMessageFormatter {
         message = message.replace("{checkout_time}", new SimpleDateFormat("H:").format(room.date.end) + endMinute);
         message = message.replace("{roomType}", new SimpleDateFormat("H:").format(room.date.end) + endMinute);
         
-        if(room.booking != null && room.booking.bookingItemTypeId != null) {
-             BookingItemType type = bookingEngine.getBookingItemType(room.booking.bookingItemTypeId);
+        if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
+             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
              if(type != null) {
                 message = message.replace("{roomType}", type.name);
              } else if(type != null) {
@@ -37,8 +37,8 @@ class PmsBookingMessageFormatter {
              }
         }
         
-        if(room.booking != null && room.booking.bookingItemId != null && !room.booking.bookingItemId.trim().isEmpty()) {
-            message = message.replace("{roomName}", bookingEngine.getBookingItem(room.booking.bookingItemId).bookingItemName);
+        if(room.bookingItemId != null && !room.bookingItemId.trim().isEmpty()) {
+            message = message.replace("{roomName}", bookingEngine.getBookingItem(room.bookingItemId).bookingItemName);
         } else {
             message = message.replace("{roomName}", "unknown");
         }
@@ -57,8 +57,15 @@ class PmsBookingMessageFormatter {
             if(user.emailAddress != null) { message = message.replace("{email}", user.emailAddress); }
             if(user.prefix != null) { message = message.replace("{prefix}", user.prefix); }
             if(user.cellPhone != null) { message = message.replace("{phone}", user.cellPhone); }
-        } else if(booking.registrationData.resultAdded.containsKey("user_fullName")) {
+        }
+        if(booking.registrationData.resultAdded.containsKey("user_fullName")) {
             message = message.replace("{name}", booking.registrationData.resultAdded.get("user_fullName"));
+        }
+        if(booking.registrationData.resultAdded.containsKey("user_cellPhone")) {
+            message = message.replace("{phone}", booking.registrationData.resultAdded.get("user_cellPhone"));
+        }
+        if(booking.registrationData.resultAdded.containsKey("user_emailAddress")) {
+            message = message.replace("{email}", booking.registrationData.resultAdded.get("user_emailAddress"));
         }
         
         if(user != null) {
@@ -80,7 +87,7 @@ class PmsBookingMessageFormatter {
     String formatBookingData(String message, PmsBooking booking, BookingEngine bookingEngine) {
         String bookingData = "";
         for(PmsBookingRooms room : booking.rooms) {
-            if(room.booking != null && room.booking.bookingItemTypeId != null) {
+            if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
                 bookingData += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " ";
             }
             long diff = 365*60*60*100;

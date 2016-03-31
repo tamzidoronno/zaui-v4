@@ -46,7 +46,7 @@ class PmsBookingMessageFormatter {
         return message;
     }
     
-    public String formatContactData(String message, User user, PmsGuests guest) {
+    public String formatContactData(String message, User user, PmsGuests guest, PmsBooking booking) {
         if(guest != null) {
             if(guest.name != null) { message = message.replace("{name}", guest.name); }
             if(guest.email != null) { message = message.replace("{email}", guest.email); } 
@@ -57,6 +57,8 @@ class PmsBookingMessageFormatter {
             if(user.emailAddress != null) { message = message.replace("{email}", user.emailAddress); }
             if(user.prefix != null) { message = message.replace("{prefix}", user.prefix); }
             if(user.cellPhone != null) { message = message.replace("{phone}", user.cellPhone); }
+        } else if(booking.registrationData.resultAdded.containsKey("user_fullName")) {
+            message = message.replace("{name}", booking.registrationData.resultAdded.get("user_fullName"));
         }
         
         if(user != null) {
@@ -81,18 +83,26 @@ class PmsBookingMessageFormatter {
             if(room.booking != null && room.booking.bookingItemTypeId != null) {
                 bookingData += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " ";
             }
-            
-            long diff = (room.date.end.getTime() - room.date.start.getTime()) / 1000;
+            long diff = 365*60*60*100;
+            if(room.date.end != null && room.date.start != null) {
+                diff = (room.date.end.getTime() - room.date.start.getTime()) / 1000;
+            }
             if(diff > (365*60*60)) {
                 bookingData += formatDate(room.date.start);
             } else {
                 bookingData += formatDate(room.date.start) + " - " + formatDate(room.date.end) + " ";
             }
-            if(room.booking != null && room.booking.bookingItemId != null) {
-                BookingItem item = bookingEngine.getBookingItem(room.booking.bookingItemId);
+            if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 if(item != null) {
                     bookingData += "(" + item.bookingItemName + ")";
                 }
+            } else if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
+                BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                if(item != null) {
+                    bookingData += "(" + item.name + ")";
+                }
+
             }
             for(PmsGuests guest : room.guests) {
                 bookingData += "<br>";

@@ -322,6 +322,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking completeCurrentBooking() {
         PmsBooking booking = getCurrentBooking();
+        notifyAdmin("booking_completed_" + booking.language, booking);
         if (!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
         }
@@ -1001,7 +1002,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         repicientList.clear();
 
         String message2 = notify(key, booking, "email", room);
-        notifyAdmin(key, booking);
+        if(!key.contains("booking_completed")) {
+            notifyAdmin(key, booking);
+        }
         specifiedMessage = "";
         List<String> emailRecp = repicientList;
 
@@ -1144,7 +1147,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room != null) {
             message = formater.formatRoomData(message, room, bookingEngine);
         }
-        message = formater.formatContactData(message, userManager.getUserById(booking.userId), null);
+        message = formater.formatContactData(message, userManager.getUserById(booking.userId), null, booking);
         message = formater.formatBookingData(message, booking, bookingEngine);
 
         message = message.replace("{extrafield}", configuration.extraField);

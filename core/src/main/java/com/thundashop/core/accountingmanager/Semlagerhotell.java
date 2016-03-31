@@ -70,7 +70,11 @@ public class Semlagerhotell implements AccountingInterface {
         for(User user : users) {
             HashMap<Integer, String> line = new HashMap();
             line.put(1, "A");
-            line.put(2, user.customerId + "");
+            if(user.accountingId != null && !user.accountingId.isEmpty()) {
+                line.put(2, user.accountingId + "");
+            } else {
+                line.put(2, user.customerId + "");
+            }
             line.put(3, user.fullName);
             if(user.address == null) {
                 line.put(4, "");
@@ -109,12 +113,17 @@ public class Semlagerhotell implements AccountingInterface {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
         List<String> result = new ArrayList<String>();
         for(Order order : orders) {
+            User user = userManager.getUserById(order.userId);
+            String customerId = user.customerId + "";
+            if(user.accountingId != null && !user.accountingId.isEmpty()) {
+                customerId = user.accountingId;
+            }
             HashMap<Integer, String> ordreHode = new HashMap();
             ordreHode.put(1, "H");
             ordreHode.put(2, "1");
             ordreHode.put(3, "1");
             ordreHode.put(4, order.incrementOrderId + "");
-            ordreHode.put(5, userManager.getUserById(order.userId).customerId + "");
+            ordreHode.put(5, customerId + "");
             ordreHode.put(6, format1.format(order.rowCreatedDate));
             if(order.startDate != null) {
                 ordreHode.put(7, format1.format(order.startDate));

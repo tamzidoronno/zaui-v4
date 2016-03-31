@@ -39,6 +39,13 @@ if(!$user->address) {
         <tr><td>Address</td><td><input type="txt" gsname="address.address" value="<?php echo $user->address->address; ?>"></td><tr>
         <tr><td>Postcode</td><td><input type="txt" gsname="address.postCode" value="<?php echo $user->address->postCode; ?>"></td><tr>
         <tr><td>City</td><td><input type="txt" gsname="address.city" value="<?php echo $user->address->city; ?>"></td><tr>
+            <?php 
+                if($this->hasAccountingTransfer()) {
+                    ?>
+                    <tr><td>Accounting id</td><td><input type="txt" gsname="accountingId" value="<?php echo $user->accountingId; ?>"></td><tr>
+                    <?php
+                }
+            ?>
         <tr><td></td><td><span class='pmsbutton closeadduser' style='background-color:red;'>Close</span> <span class='pmsbutton' gstype='submitToInfoBox'>Save changes</span></td><tr>
     </table>
 </div>

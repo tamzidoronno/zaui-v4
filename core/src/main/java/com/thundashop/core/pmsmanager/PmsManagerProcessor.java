@@ -32,7 +32,8 @@ public class PmsManagerProcessor {
         try { confirmWhenPaid(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(0, 12, false); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(0, 4, false); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(4, 12, false); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(12, 12 * 2, false); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(24, 24 * 2, false); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(48, 24 * 3, false); }catch(Exception e) { e.printStackTrace(); }

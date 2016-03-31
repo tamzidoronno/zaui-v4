@@ -29,6 +29,9 @@ foreach($rooms as $room) {
     $start = $this->convertToJavaDate($this->getStartDate());
     $end = $this->convertToJavaDate($this->getEndDate());
     $availability = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $room->type->id, $start, $end);
+    if($this->getText("ignorefullybooked") == "true") {
+        $availability = 10;
+    }
     $imgDisplayed = "";
     if($this->getText("hideimages") != "true") {
         $imgDisplayed = "imgdisplayed";

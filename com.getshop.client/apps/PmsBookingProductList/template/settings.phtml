@@ -53,6 +53,12 @@ $dateType = $this->getConfigurationSetting("date_type");
             <input type="checkbox" gsname="displaytopcontinue" <?php if($this->getText("displaytopcontinue") == "true") { echo "CHECKED"; } ?> >
         </td>
     </tr>
+    <tr>
+        <td width="50%">Ignore fully booked warning?</td>
+        <td width="50%">
+            <input type="checkbox" gsname="ignorefullybooked" <?php if($this->getText("ignorefullybooked") == "true") { echo "CHECKED"; } ?> >
+        </td>
+    </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

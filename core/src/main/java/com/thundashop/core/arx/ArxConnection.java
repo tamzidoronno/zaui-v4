@@ -64,8 +64,14 @@ public class ArxConnection {
 
         request.setEntity(reqEntity);
         
-        httpResponse = client.execute(request);
-
+        try {
+            httpResponse = client.execute(request);
+        }catch(Exception e) {
+            System.out.println("Failed lookup on address: " + address);
+            e.printStackTrace();
+            throw e;
+        }
+        
         Integer statusCode = httpResponse.getStatusLine().getStatusCode();
         if(statusCode == 401) {
             return "401";

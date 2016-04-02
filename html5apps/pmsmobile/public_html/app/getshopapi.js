@@ -2,7 +2,6 @@ GetShopApiWebSocket = function(address) {
     this.sentMessages =  [];
     this.address = address;
 };
-
 GetShopApiWebSocket.prototype = {
     websocket: null,
     connectionEstablished: null,
@@ -10,6 +9,7 @@ GetShopApiWebSocket.prototype = {
     transferStarted: null,
     shouldConnect: true,
     sessionId: false,
+    initialConnect :false,
     
     connect: function() {
         if (!this.shouldConnect)
@@ -21,7 +21,7 @@ GetShopApiWebSocket.prototype = {
         if (this.connectionEstablished === null) {
             this.fireDisconnectedEvent();
         }
-        var address = "ws://"+this.address+":31330/";
+        var address = "ws://"+this.address+":31332/";
         this.socket = new WebSocket(address);
         this.socket.onopen = $.proxy(this.connected, this);
         this.socket.onclose = function() {
@@ -56,6 +56,9 @@ GetShopApiWebSocket.prototype = {
     },
             
     reconnect: function() {
+        if(!this.initialConnect) {
+            return;
+        }
         var me = this;
         this.shouldConnect = true;
         exec = function() {
@@ -74,6 +77,7 @@ GetShopApiWebSocket.prototype = {
         this.initializeStore();
         this.fireConnectedEvent();
         this.connectionEstablished = true;
+        this.initialConnect = true;
     },
     
     setSessionId: function() {
@@ -91,12 +95,24 @@ GetShopApiWebSocket.prototype = {
     },
             
     disconnected: function() {
-        this.sentMessages = []; 
-        this.fireDisconnectedEvent();
-        this.connectionEstablished = false;
-        this.reconnect();
+        this.sentMessages = [];
+        if(this.connectionEstablished) {
+            this.fireDisconnectedEvent();
+            this.connectionEstablished = false;
+            this.reconnect();
+        } else {
+            this.fireFailedInitialConnectEvent();
+        }
     },
             
+    fireFailedInitialConnectEvent: function() {
+        if (this.initConnectionFailed === null || this.initConnectionFailed && typeof(this.initConnectionFailed) === "function") {
+            if (this.initConnectionFailed) {
+                this.initConnectionFailed();
+            }
+        }
+    },
+    
     fireDisconnectedEvent: function() {
         if (this.connectionEstablished === null || this.connectionEstablished && typeof(this.disconnectedCallback) === "function") {
             if (this.disconnectedCallback) {
@@ -115,6 +131,10 @@ GetShopApiWebSocket.prototype = {
             
     setDisconnectedEvent: function(callback) {
         this.disconnectedCallback = callback;
+    },
+            
+    setInitConnectionFailed: function(callback) {
+        this.initConnectionFailed = callback;
     },
             
     setConnectedEvent: function(callback) {

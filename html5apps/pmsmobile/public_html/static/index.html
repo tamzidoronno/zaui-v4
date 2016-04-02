@@ -39,7 +39,7 @@
                 });
 
                 getshopclient.setDisconnectedEvent(function() {
-                    $('.disconnectedPage').fadeIn();
+                    getshopclient.avoidReconnect = false;
                 });
             }
         }

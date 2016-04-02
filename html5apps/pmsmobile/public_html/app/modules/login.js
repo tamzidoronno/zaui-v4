@@ -14,15 +14,23 @@ getshop.loginController = function($scope, $state) {
         createGetshopClient();
         $scope.loading=true;
         var logon = getshopclient.UserManager.logOn(user.username, user.password);
+        
+        getshopclient.setInitConnectionFailed(function() {
+            $scope.loading=false;
+            alert('Logon failed');
+            $scope.$apply();
+        });
+        
         logon.done(function(res) {
             $scope.loading=false;
-            if(res.errorCode === 13) {
+            if(res.errorCode) {
                 alert('failed to logon');
             } else {
                 $state.go("mainpage");
             }
             $scope.$apply();
         });
+        
         logon.fail(function(res) {
             $scope.loading=false;
             alert('Logon failed');

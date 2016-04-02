@@ -185,7 +185,12 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         if(!sizeof($this->validation) > 0) {
             $this->getCurrentBooking();
             $this->currentBooking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
-            $this->bookingCompleted = true;
+            if($this->currentBooking) {
+                $this->bookingCompleted = true;
+            } else {
+                $this->validation[] = "An unknown error occured, could not complete the booking.";
+                $this->unknownError = "An unknown error occured, could not complete the booking.";
+            }
         }
     }
 

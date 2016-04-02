@@ -122,6 +122,9 @@ if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
         echo "<span class='complete_button' gstype='submit'>$completeText</span>";
     }
     echo "</div>";
+    if(isset($this->unknownError) && $this->unknownError) {
+        echo "<b style='color:red'>" . $this->unknownError . ", please verify that all your dates are valid.</b>";
+    }
     echo "<div style='clear:both;'></div>";
 }
 echo "</div>";

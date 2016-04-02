@@ -51,10 +51,10 @@ gsarea[area="body"] { margin-top: 0px; }
 
 
 @media only all and (max-width: 800px) {
-    .gsarea[area="header"] { height: 150px !important; }
+    .gsarea[area="header"] { height: inherit !important; padding-bottom: 10px; }
     .gsarea[area="header"] img { width: 100% !important; }
     .Menu {
-        z-index: 10;
+        z-index: 20;
         font-size: 20px;
     }
     .Menu .entry a { padding: 0px; }

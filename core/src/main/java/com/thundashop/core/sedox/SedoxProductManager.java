@@ -131,7 +131,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         
         try {
-            resetEvcOrders();
+//            resetEvcOrders();
         } catch (ErrorException ex) {
             // limited
         }
@@ -337,8 +337,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxProduct.uploadOrigin = origin;
 
         sedoxProduct.addDeveloperHasBeenNotifiedHistory(getSession().currentUser.id);
-        databaseSaver.saveObject(sharedProduct, credentials);
-        databaseSaver.saveObject(sedoxProduct, credentials);
+        saveObject(sharedProduct);
+        saveObject(sedoxProduct);
         sendFileCreatedNotification(sedoxProduct);
         sendNotificationToUploadedUser(sedoxProduct);
         notifyOnSocket(sedoxProduct);
@@ -419,8 +419,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sharedProduct.binaryFiles.add(sedoxBinaryFile);
         sharedProduct.setParametersBasedOnFileString(fileName);
         sedoxProduct.addFileAddedHistory(getSession().currentUser.id, fileType);
-        databaseSaver.saveObject(sharedProduct, credentials);
-        databaseSaver.saveObject(sedoxProduct, credentials);
+        saveObject(sharedProduct);
+        saveObject(sedoxProduct);
         notifyOnSocket(sedoxProduct);
     }
 
@@ -437,7 +437,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         user.orders.add(order);
         int nextTransactionalId = getNextTransactionId();
         user.creditAccount.addOrderToCreditHistory(order, getSharedProductById(product.sharedProductId), nextTransactionalId);
-        databaseSaver.saveObject(user, credentials);
+        saveObject(user);
         users.put(user.id, user);
 
         sendNotificationProductPurchased(product, user, order);
@@ -530,7 +530,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             sedoxCreditOrder.magentoOrderId = order.orderId;
 
             sedoxUser.addCreditOrderUpdate(sedoxCreditOrder, null);
-            databaseSaver.saveObject(sedoxUser, credentials);
+            saveObject(sedoxUser);
 
             addCreditToMaster(sedoxUser, sedoxCreditOrder, order);
         }
@@ -804,7 +804,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         user.id = getshopUser.id;
         user.storeId = storeId;
-        databaseSaver.saveObject(user, credentials);
+        saveObject(user);
         users.put(user.id, user);
     }
 
@@ -892,7 +892,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             sedoxCreditOrder.magentoOrderId = tranid;
 
             user.addCreditOrderUpdate(sedoxCreditOrder, description);
-            databaseSaver.saveObject(user, credentials);
+            saveObject(user);
             users.put(user.id, user);
         }
     }
@@ -928,7 +928,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
         
         sharedProduct.originalChecksum = checksum;
-        databaseSaver.saveObject(sharedProduct, credentials);
+        saveObject(sharedProduct);
     }
 
     @Override
@@ -1120,7 +1120,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxUser user = getSedoxUserAccountById(userId);
         user.isActiveDelevoper = disabled;
         users.put(user.id, user);
-        databaseSaver.saveObject(user, credentials);
+        saveObject(user);
     }
 
     @Override
@@ -1215,7 +1215,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         if (sedoxProduct != null) {
             sharedProduct.removeBinaryFile(fileId);
-            databaseSaver.saveObject(sharedProduct, credentials);
+            saveObject(sharedProduct);
             notifyOnSocket(sedoxProduct);
         }
     }
@@ -1224,14 +1224,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public void toggleAllowNegativeCredit(String userId, boolean allow) throws ErrorException {
         SedoxUser sedoxUser = getSedoxUserAccountById(userId);
         sedoxUser.creditAccount.allowNegativeCredit = allow;
-        databaseSaver.saveObject(sedoxUser, credentials);
+        saveObject(sedoxUser);
     }
 
     @Override
     public void toggleAllowWindowsApp(String userId, boolean allow) throws ErrorException {
         SedoxUser sedoxUser = getSedoxUserAccountById(userId);
         sedoxUser.canUseExternalProgram = allow;
-        databaseSaver.saveObject(sedoxUser, credentials);
+        saveObject(sedoxUser);
     }
 
     /**
@@ -1359,7 +1359,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 SedoxUser master = getSedoxUserAccountById(sedoxUser.masterUserId);
                 master.addCreditOrderUpdate(kickbackCreditOrder, "Added " + kickbackCreditOrder.amount + " credit to your account, your partner " + masterGetshopUser.fullName + " placed order for " + order.credit + " credits");
 
-                databaseSaver.saveObject(master, credentials);
+                saveObject(master);
             }
         }
     }
@@ -1567,13 +1567,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 SedoxCreditOrder sedoxSlaveCreditOrder = new SedoxCreditOrder();
                 sedoxSlaveCreditOrder.amount = amount;
                 slaveUser.addCreditOrderUpdate(sedoxSlaveCreditOrder, "Transfered credit from " + user.fullName);
-                databaseSaver.saveObject(slaveUser, credentials);
+                saveObject(slaveUser);
                 
                 User islaveUser = getGetshopUser(slaveUser.id);
                 SedoxCreditOrder sedoxCreditOrder = new SedoxCreditOrder();
                 sedoxCreditOrder.amount = amount * -1;
                 sedoxMaster.addCreditOrderUpdate(sedoxCreditOrder, "Transfered credit to " + islaveUser.fullName);
-                databaseSaver.saveObject(sedoxMaster, credentials); 
+                saveObject(sedoxMaster); 
             }
         }
     }   
@@ -1683,7 +1683,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxUser user = getSedoxUserAccountById(userId);
         if (user != null) {
             user.fixedPrice = price;
-            databaseSaver.saveObject(user, credentials);
+            saveObject(user);
         }
     }
 
@@ -1799,7 +1799,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         creditOrder.amount = order.credit;
         
         user.addEvcCreditOrder(creditOrder);
-        databaseSaver.saveObject(user, credentials);
+        saveObject(user);
     }
 
     private boolean hasAlreadyFailed(SedoxMagentoIntegration.Order order) {

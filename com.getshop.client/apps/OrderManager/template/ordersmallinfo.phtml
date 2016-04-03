@@ -1,14 +1,18 @@
 <?
 /* @var $this \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager */
 $order = $this->getCurrentOrder();
-$address = $order->cart->address;
  if(!isset($order->cart->address->fullName)) {
     $name = $this->__w("Unknown name");
 } else {
     $name = $order->cart->address->fullName;
 }
 $cart = $order->cart;
-
+$user = $this->getApi()->getUserManager()->getUserById($order->userId);
+$address = $user->address;
+if($user->companyObject) {
+    /* @var $company core_usermanager_data_Company */
+    $address = $user->companyObject->address;
+}
 ?>
 
 <div class='gss_small_order_listview'>
@@ -28,6 +32,8 @@ $cart = $order->cart;
                 <th><? echo $this->__f("Price"); ?></th>
                 <?
                 $i = 0;
+                $taxes = $this->getApi()->getOrderManager()->getTaxes($order);
+                $taxsum = 0;
                 
                 foreach ($cart->items as $item) {
                     $i++;
@@ -50,10 +56,17 @@ $cart = $order->cart;
                     <tr>    
                     <!--<div class="product <? echo $addClass ; ?>">-->            
                         <td><? echo $item->count; ?> x <?php echo $product->name  . " " . $dates ?></td>
-                        <td width='50' style='text-align: right;' valign='top'><?php echo round($this->getPriceWithTaxSpecifed($product->price, $product),1); ?></td>
-                        
+                        <td width='50' style='text-align: right;' valign='top'><?php echo $product->priceExTaxes; ?></td>
                     </tr>
-            <? } ?>
+                    <?php
+                }
+                foreach($taxes as $tax) {
+                    $taxsum += round($tax->sum,2);
+                    echo "<tr>";
+                    echo "<td>" . $tax->taxGroup->taxRate . "% MVA</td><td width='50' style='text-align: right;' >" . round($tax->sum,2) . "</td>";
+                    echo "</tr>";
+                }
+                ?>
             </table>
         </div>
     </div>

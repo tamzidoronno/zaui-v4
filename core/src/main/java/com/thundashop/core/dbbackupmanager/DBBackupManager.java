@@ -67,7 +67,7 @@ public class DBBackupManager extends ManagerBase implements IDBBackupManager {
     }
 
     @Override
-    public List<DBChange> getChanges(String className, String id) {
+    public List<DBChange> getChangesById(String className, String id) {
         BasicDBObject dbObject = new BasicDBObject();
         dbObject.put("originalClassName", className);
         dbObject.put("originalId", id);

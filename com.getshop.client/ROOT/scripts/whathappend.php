@@ -8,13 +8,13 @@ if (isset($_POST['checklist'])) {
     $d1 = $_POST['checklist'][0];
     $d2 = $_POST['checklist'][1];
     
-    $result = $factory->getApi()->getDBBackupManager()->getDiff("com.thundashop.core.usermanager.data.User", $d1, $d2);
+    $result = $factory->getApi()->getDBBackupManager()->getDiff($_GET['className'], $d1, $d2);
     echo $result;
     return;
 }
 
 
-$changes = $factory->getApi()->getDBBackupManager()->getChanges($_GET['className'], $_GET['entityId']);
+$changes = $factory->getApi()->getDBBackupManager()->getChangesById($_GET['className'], $_GET['entityId']);
 
 if (!count($changes)) {
     echo "No changes";
@@ -22,7 +22,7 @@ if (!count($changes)) {
 }
 
 ?>
-<form method="POST" action="whathappend.php">
+<form method="POST" action="whathappend.php?className=<? echo $_GET['className']; ?>">
 <?
     echo "<input value='HEAD' name='checklist[]' type='checkbox'/> HEAD";
 

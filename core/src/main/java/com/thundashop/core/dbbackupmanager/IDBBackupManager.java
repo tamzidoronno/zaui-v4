@@ -19,7 +19,7 @@ public interface IDBBackupManager {
     public List<DBChange> getChanges(String className);
     
     @Administrator
-    public List<DBChange> getChanges(String className, String id);
+    public List<DBChange> getChangesById(String className, String id);
     
     @Administrator
     public String getDiff(String className, String id1, String id2);

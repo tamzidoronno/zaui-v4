@@ -26,7 +26,7 @@ public class PmsBookingRooms implements Serializable {
     public Double price = 0.0;
     public double taxes = 8;
     public String bookingId;
-    String code = "";
+    public String code = "";
     boolean forcedOpen = false;
     boolean forcedOpenCompleted = false;
     public Integer intervalCleaning = null;
@@ -90,7 +90,7 @@ public class PmsBookingRooms implements Serializable {
         throw new UnsupportedOperationException("Not implented yet");
     }
 
-    boolean isEnded() {
+    public boolean isEnded() {
         Date now = new Date();
         return isEnded(now);
     }
@@ -100,7 +100,7 @@ public class PmsBookingRooms implements Serializable {
         return result;
     }
 
-    boolean isStarted() {
+    public boolean isStarted() {
         return isStarted(new Date());
     }
     

@@ -30,6 +30,8 @@ interface IDoorManager {
     public List<AccessCategory> getAllAccessCategories() throws Exception;
     @Administrator
     public void doorAction(String externalId, String state) throws Exception;
+
+    public String pmsDoorAction(String code, String type) throws Exception;
     @Administrator
     public List<AccessLog> getLogForDoor(String externalId, long start, long end) throws Exception;
     @Administrator

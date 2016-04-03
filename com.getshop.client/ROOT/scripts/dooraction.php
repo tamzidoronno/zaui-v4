@@ -2,7 +2,7 @@
 chdir("../");
 include '../loader.php';
 
-if(isset($_GET['code']) && $_GET['code']) {
+if(isset($_GET['code'])) {
     $code = $_GET['code'];
     $type = $_GET['type'];
     $name = $_GET['name'];

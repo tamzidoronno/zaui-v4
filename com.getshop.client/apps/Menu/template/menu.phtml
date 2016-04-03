@@ -19,7 +19,7 @@ foreach ($menus as $menu) {
     ?>
 
     <div class='mobilenavigatemenu'>
-    <i class="fa fa-navicon"> Menu </i>
+    <i class="fa fa-navicon"> <?php echo $this->__w("Menu"); ?> </i>
     </div>
     <div class="menuentries horizontal" menuname="<? echo $menu->name; ?>" <? echo $singleSetup ? "" : "style='display: none'";?>>
         <?

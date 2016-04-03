@@ -8,9 +8,14 @@ import com.assaabloy.arxdata.persons.PersonListType;
 import com.assaabloy.arxdata.persons.PersonType;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.doormanager.DoorManagerConfiguration;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingFilter;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -28,6 +33,7 @@ import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -70,6 +76,9 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
     @Autowired
     PmsManager pmsManager;
     
+    @Autowired
+    BookingEngine bookingEngine;
+    
     private List<Door> doorList = new ArrayList();
     private boolean doneClosedForToday = false;
     
@@ -92,6 +101,10 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
         }
         
         ArxConnection connection = new ArxConnection();
+        if(!storeManager.isProductMode()) {
+            System.out.println("Executing:" + address);
+            return "";
+        }
         return connection.httpLoginRequest(address, username, password, content);
     }
     
@@ -713,6 +726,68 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
         }
         
         return result;
+    }
+
+    @Override
+    public String pmsDoorAction(String code, String type) throws Exception {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = PmsBookingFilter.PmsBookingFilterTypes.active;
+        
+        
+        //This is a temp solution for bydel alna.. if it works... rewrite it.
+        if(code.equals("432511")) {
+            try {
+                if(type.equalsIgnoreCase("open")) {
+                    doorAction("Lindeberglokalet", "forceOpenOn");
+                } else {
+                    doorAction("Lindeberglokalet", "forceOpenOff");
+                }
+                return "success";
+            }catch(Exception e) {
+                e.printStackTrace();
+                return "Unable to connect to server";
+            }
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        
+        filter.startDate = cal.getTime();
+        cal.set(Calendar.HOUR, 23);
+        cal.set(Calendar.MINUTE, 59);
+        filter.endDate = cal.getTime();
+        
+        List<PmsBooking> bookings = pmsManager.getAllBookings(filter);
+        boolean codeFound = false;
+        for(PmsBooking booking : bookings) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.code.equals(code)) {
+                    codeFound = true;
+                    BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                    try {
+                        if(type.equalsIgnoreCase("open")) {
+                            if(room.isStarted() && !room.isEnded()) {
+                                doorAction(item.doorId, "forceOpenOn");
+                            } else {
+                                return "You booking has expired";
+                            }
+                        } else {
+                            doorAction(item.doorId, "forceOpenOff");
+                        }
+                    }catch(Exception e) {
+                        e.printStackTrace();
+                        return "Unable to connect to server";
+                    }
+                }
+            }
+        }
+        
+        if(!codeFound) {
+            return "Invalid code";
+        }
+        
+        return "Success";
     }
 
 }

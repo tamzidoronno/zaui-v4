@@ -29,6 +29,15 @@ public class ArxLogFetcher extends GetShopSchedulerBase {
             return;
         }
         
+        boolean found = false;
+        if(config.locktype == null || config.locktype.isEmpty() || config.locktype.equalsIgnoreCase("arx")) {
+            found = true;
+        }
+        
+        if(!found) {
+            return;
+        }
+        
         ArxConnection connection = new ArxConnection();
         
         long start = System.currentTimeMillis();

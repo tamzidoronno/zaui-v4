@@ -179,16 +179,19 @@ public class PmsManagerDoorSurveilance {
                         continue;
                     }
                     
+                    List<String> closed = new ArrayList();
+                    
                     if (room.pmsBookingRoomId.equals(itemToClose)) {
                         BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
                         String itemName = "";
                         if(item != null) {
                             itemName = item.bookingItemName + "(" + item.bookingItemAlias + ")";
                         }
-                        if(room.forcedOpen) {
+                        if(!closed.contains(room.bookingItemId)) {
                             manager.logEntry("Closing door: " + itemName, booking.id, room.bookingItemId);
+                            closeRoom(room.bookingItemId, booking.id);
+                            closed.add(room.bookingItemId);
                         }
-                        closeRoom(room.bookingItemId, booking.id);
                         room.forcedOpenCompleted = true;
                         room.forcedOpenNeedClosing = false;
                         needSaving = true;

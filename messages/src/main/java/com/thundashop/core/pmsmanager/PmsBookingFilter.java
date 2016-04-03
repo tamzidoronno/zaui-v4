@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public class PmsBookingFilter implements Serializable {
-    static class PmsBookingFilterTypes {
+    public static class PmsBookingFilterTypes {
         public static String registered = "registered";
         public static String active = "active";
         public static String uncofirmed = "uncofirmed";

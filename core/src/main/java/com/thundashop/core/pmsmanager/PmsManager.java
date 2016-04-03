@@ -322,6 +322,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking completeCurrentBooking() {
         PmsBooking booking = getCurrentBooking();
+        
+        if(booking.rooms.isEmpty()) {
+            return null;
+        }
+        
         notifyAdmin("booking_completed_" + booking.language, booking);
         if (!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
@@ -343,23 +348,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                     }
                 }
-            }
 
-            try {
-                if (!configuration.payAfterBookingCompleted) {
-                    processor();
-                } else {
-                    createPrepaymentOrder(booking.id);
+                try {
+                    if (!configuration.payAfterBookingCompleted) {
+                        processor();
+                    } else {
+                        createPrepaymentOrder(booking.id);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                return booking;
             }
-            return booking;
         } catch (Exception e) {
             messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id, e);
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     @Override

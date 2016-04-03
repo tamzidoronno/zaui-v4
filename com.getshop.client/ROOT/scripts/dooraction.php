@@ -37,7 +37,7 @@ if(isset($_GET['code']) && $_GET['code']) {
             <block id="key8">8</block>
             <block id="key9">9</block>
             
-            <block id="keyX">CLOSE</block>
+            <block id="keyX">LOCK</block>
             <block id="key0">0</block>
             <block id="keyOk">OPEN</block>
         </container>
@@ -94,7 +94,7 @@ var completeApp = {
     numpadClicked: function () {
         var html = $(this).text();
         console.log(html);
-        if (html === "CLOSE") {
+        if (html === "LOCK") {
             completeApp.checkCode("close");
             return;
         }

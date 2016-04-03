@@ -39,7 +39,7 @@ if(isset($_GET['code']) && $_GET['code']) {
             
             <block id="keyX">LOCK</block>
             <block id="key0">0</block>
-            <block id="keyOk">OPEN</block>
+            <block id="keyOk">UNLOCK</block>
         </container>
         
     </body>
@@ -98,7 +98,7 @@ var completeApp = {
             completeApp.checkCode("close");
             return;
         }
-        if (html === "OPEN") {
+        if (html === "UNLOCK") {
             completeApp.checkCode("open");
             return;
         }

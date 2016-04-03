@@ -184,10 +184,9 @@ block {
     -moz-box-sizing: border-box;
     width: 32%;
     height: 100px;
-    margin: 5px;
     background: red;
     text-align: center;
-    font-size: 50px;
+    font-size: 20px;
     line-height: 100px;
     border: solid 1px #DDD;
     cursor: pointer;

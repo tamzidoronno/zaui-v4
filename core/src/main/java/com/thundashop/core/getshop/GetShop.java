@@ -37,13 +37,10 @@ import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +57,6 @@ public class GetShop extends ManagerBase implements IGetShop {
     private HashMap<String, PartnerData> partnerData = new HashMap();
     private ConcurrentHashMap<String, SmsResponse> smsResponses = new ConcurrentHashMap();
 
-    
     @Autowired
     public Database database;
 
@@ -151,7 +147,7 @@ public class GetShop extends ManagerBase implements IGetShop {
 
         partnerList.add(newPartner);
         newPartner.storeId = storeId;
-        databaseSaver.saveObject(newPartner, credentials);
+        saveObject(newPartner);
     }
 
     private void removeFromPartnersIfExists(String userId) {
@@ -263,7 +259,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     private void savePartnerData(PartnerData data) throws ErrorException {
         partnerData.put(data.partnerId, data);
         data.storeId = storeId;
-        databaseSaver.saveObject(data, credentials);
+        saveObject(data);
     }
 
     public String getPartnerId(String userId) {
@@ -347,7 +343,6 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
     
     public String copyStore(String originalStoreId, String newAddress, StartData start) throws UnknownHostException {
-        Database database = AppContext.appContext.getBean(Database.class);
         String newStoreId = UUID.randomUUID().toString();
         
         Mongo m = new MongoClient("localhost", Database.mongoPort);

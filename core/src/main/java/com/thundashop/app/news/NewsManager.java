@@ -89,7 +89,7 @@ public class NewsManager extends ManagerBase implements INewsManager {
     @Override
     public String addNews(NewsEntry entry) throws ErrorException {
         entry.storeId = storeId;
-        databaseSaver.saveObject(entry, credentials);
+        saveObject(entry);
         entries.put(entry.id, entry);
         return entry.id;
     }
@@ -97,7 +97,7 @@ public class NewsManager extends ManagerBase implements INewsManager {
     @Override
     public void deleteNews(String id) throws ErrorException {
         NewsEntry entry = entries.remove(id);
-        databaseSaver.deleteObject(entry, credentials);
+        deleteObject(entry);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class NewsManager extends ManagerBase implements INewsManager {
         MailSubscription sub = new MailSubscription();
         sub.email = email;
         sub.storeId = storeId;
-        databaseSaver.saveObject(sub, credentials);
+        saveObject(sub);
         
         if(subscribers == null) {
             subscribers = new HashMap();
@@ -141,7 +141,7 @@ public class NewsManager extends ManagerBase implements INewsManager {
     }
 
     private void removeSubscriberEntry(MailSubscription subscriber) throws ErrorException {
-        databaseSaver.deleteObject(subscriber, credentials);
+        deleteObject(subscriber);
         subscribers.remove(subscriber);
     }
 
@@ -150,7 +150,7 @@ public class NewsManager extends ManagerBase implements INewsManager {
         NewsEntry entry = entries.get(id);
         mobileManager.sendMessageToAll(entry.subject);
         entry.isPublished = true;
-        databaseSaver.saveObject(entry, credentials);
+        saveObject(entry);
     }
 
     private void finalizeList(List<NewsEntry> data) {

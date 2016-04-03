@@ -213,29 +213,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             throw new ErrorException(88);
         }
     }
-    
-    @Override
-    public void setDeepFreeze(boolean mode, String password) throws ErrorException {
-        Store store = getMyStore();
-        
-        if (!store.isDeepFreezed && mode) {
-            store.isDeepFreezed = true;
-            store.deepFreezePassword = encrypt(password);
-            storePool.saveStore(store);
-            database.saveWithOverrideDeepfreeze(store, credentials);
-        }
-        
-        if (store.isDeepFreezed && !mode && store.deepFreezePassword != null && !store.deepFreezePassword.equals(encrypt(password))) {
-            throw new ErrorException(98);
-        }
-        
-        if (store.isDeepFreezed && !mode && store.deepFreezePassword != null && store.deepFreezePassword.equals(encrypt(password))) {
-            store.isDeepFreezed = false;
-            store.deepFreezePassword = null;
-            storePool.saveStore(store);
-            database.saveWithOverrideDeepfreeze(store, credentials);
-        }
-    }
+
 
     @Override
     public int generateStoreId() throws ErrorException {

@@ -8,10 +8,8 @@ import com.getshop.scope.GetShopSession;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Sender;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.mobilemanager.data.Token;
@@ -50,7 +48,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
     @Override
     public void registerToken(Token token) throws ErrorException {
         token.storeId = storeId;
-        databaseSaver.saveObject(token, credentials);
+        saveObject(token);
         tokens.put(token.tokenId, token);
     }
 

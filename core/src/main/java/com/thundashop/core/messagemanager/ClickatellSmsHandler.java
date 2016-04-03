@@ -5,18 +5,11 @@
  */
 package com.thundashop.core.messagemanager;
 
-import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.Database;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.logging.Level;
 
 /**
  *

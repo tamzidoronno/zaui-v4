@@ -44,7 +44,7 @@ public class LogoManager extends ManagerBase implements ILogoManager {
         if(logo == null) {
             throw new ErrorException(1000006);
         }
-        databaseSaver.deleteObject(logo, credentials);
+        deleteObject(logo);
         logos.remove(storeId);
     }
 
@@ -62,7 +62,7 @@ public class LogoManager extends ManagerBase implements ILogoManager {
         savedLogo.LogoId = fileId;
         savedLogo.storeId = storeId;
         
-        databaseSaver.saveObject(savedLogo, credentials);
+        saveObject(savedLogo);
         logos.put(storeId, savedLogo);
         
         return savedLogo;

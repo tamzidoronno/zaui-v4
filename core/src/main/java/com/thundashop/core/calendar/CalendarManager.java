@@ -138,7 +138,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
 
         mymonth.addEntry(day, entry);
         mymonth.storeId = storeId;
-        databaseSaver.saveObject(mymonth, credentials);
+        saveObject(mymonth);
         months.put(mymonth.id, mymonth);
     }
 
@@ -328,7 +328,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
                         retentry = entry;
                         entry.attendees.remove(userId);
                     }
-                    databaseSaver.saveObject(month, credentials);
+                    saveObject(month);
                 }
             }
         }
@@ -348,7 +348,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
                         retentry = entry;
                         entry.waitingList.remove(userId);
                     }
-                    databaseSaver.saveObject(month, credentials);
+                    saveObject(month);
                 }
             }
         }
@@ -484,7 +484,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
 
         if (onDay != null && removeEntry != null && onMonth != null) {
             onDay.entries.remove(removeEntry);
-            databaseSaver.saveObject(onMonth, credentials);
+            saveObject(onMonth);
         }
 
         return onMonth;
@@ -550,12 +550,12 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         }
 
         if (smsHistory.users.size() > 0) {
-            databaseSaver.saveObject(smsHistory, credentials);
+            saveObject(smsHistory);
             reminderHistory.add(smsHistory);
         }
 
         if (emailHistory.users.size() > 0) {
-            databaseSaver.saveObject(emailHistory, credentials);
+            saveObject(emailHistory);
             reminderHistory.add(emailHistory);
         }
     }
@@ -582,7 +582,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
                         metaInfo.userId = userId;
                         entry.metaInfo.put(userId, metaInfo);
 
-                        databaseSaver.saveObject(month, credentials);
+                        saveObject(month);
 
                         User user = userManager.getUserById(userId);
                         sendMessages(user, entry, password, waitingList);
@@ -648,7 +648,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
                 }
             }
 
-            databaseSaver.saveObject(month, credentials);
+            saveObject(month);
         }
     }
 
@@ -806,7 +806,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
                 entry.waitingList.remove(userId);
                 entry.attendees.add(userId);
                 Month month = getMonth(entry.year, entry.month);
-                databaseSaver.saveObject(month, credentials);
+                saveObject(month);
 
                 User userObject = userManager.getUserById(userId);
                 sendMessages(userObject, entry, "", false);
@@ -916,7 +916,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
             }
         }
 
-        databaseSaver.saveObject(location, credentials);
+        saveObject(location);
         locations.put(location.id, location);
 
         return location;
@@ -962,7 +962,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
     public void deleteLocation(String locationId) throws ErrorException {
         Location loc = locations.remove(locationId);
         if (loc != null) {
-            databaseSaver.deleteObject(loc, credentials);
+            deleteObject(loc);
         }
     }
 
@@ -1061,7 +1061,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         }
 
         data.storeId = storeId;
-        databaseSaver.saveObject(data, credentials);
+        saveObject(data);
         eventData.put(data.pageId, data);
     }
 
@@ -1082,7 +1082,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
             cursign.signature = signature;
             signatures.put(cursign.userid, cursign);
         }
-        databaseSaver.saveObject(cursign, credentials);
+        saveObject(cursign);
     }
 
     @Override

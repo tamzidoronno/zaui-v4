@@ -2,9 +2,7 @@ package com.thundashop.core.messagemanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.storemanager.StoreManager;
@@ -89,7 +87,7 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
             groups.remove(remove);
             
             try {
-                databaseSaver.deleteObject(remove, credentials);
+                deleteObject(remove);
             } catch (ErrorException ex) {
                 log.error(this, "Could not save newsletter", ex);
             }
@@ -126,7 +124,7 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
         if(user != null) {
             sendEmail(user.emailAddress, group.title, body);
         }
-        databaseSaver.saveObject(group, credentials);
+        saveObject(group);
     }
     
     private void sendEmail(String email, String title, String body) {
@@ -136,6 +134,6 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
     private void addGroup(NewsLetterGroup group) throws ErrorException {
         group.storeId = storeId;
         groups.add(group);
-        databaseSaver.saveObject(group, credentials);
+        saveObject(group);
     }
 }

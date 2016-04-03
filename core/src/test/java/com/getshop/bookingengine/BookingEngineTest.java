@@ -11,7 +11,6 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.databasemanager.data.Credentials;
-import java.util.UUID;
 import org.junit.After;
 import org.junit.Assert;
 import static org.junit.Assert.assertNotNull;
@@ -63,7 +62,7 @@ public class BookingEngineTest extends TestCommon {
         BookingItemType type = bookingEngine.createABookingItemType("Booking Item Test");
         BookingItemType type2 = bookingEngine.getBookingItemType(type.id);
         
-        verify(databaseSaver, times(1)).saveObject(any(BookingItemType.class), any(Credentials.class));
+        verify(database, times(1)).save(any(BookingItemType.class), any(Credentials.class));
         verify(pageManager, times(1)).createPageFromTemplatePage(bookingEngine.getName()+"_bookingegine_type_template");
         assertNotNull(type2);
         Assert.assertEquals(type2.pageId, "new_page_id");
@@ -74,10 +73,10 @@ public class BookingEngineTest extends TestCommon {
         BookingItemType type = bookingEngine.createABookingItemType("Booking Item Test");
         type.name = "New Booking Item Name";
         
-        reset(databaseSaver);
+        reset(database);
         bookingEngine.updateBookingItemType(type);
         String newName = bookingEngine.getBookingItemType(type.id).name;
-        verify(databaseSaver, times(1)).saveObject(any(BookingItemType.class), any(Credentials.class));
+        verify(database, times(1)).save(any(BookingItemType.class), any(Credentials.class));
         
         Assert.assertEquals("New Booking Item Name", newName);
     }
@@ -91,7 +90,7 @@ public class BookingEngineTest extends TestCommon {
         BookingItemType type = bookingEngine.createABookingItemType("Booking Item Test");
         BookingItem item = helper.createAValidBookingItem(type.id);
         BookingItem savedItem = bookingEngine.saveBookingItem(item);
-        verify(databaseSaver, times(3)).saveObject(any(BookingItem.class), any(Credentials.class));
+        verify(database, times(3)).save(any(BookingItem.class), any(Credentials.class));
         
         BookingItem item2 = bookingEngine.getBookingItem(item.id);
         assertNotNull(item2);

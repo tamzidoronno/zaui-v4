@@ -34,9 +34,6 @@ public class ManagerSubBase {
     protected Credentials credentials = null;
     
     @Autowired
-    protected DatabaseSaver databaseSaver;
-    
-    @Autowired
     protected Logger log;
     
     @Autowired
@@ -54,15 +51,13 @@ public class ManagerSubBase {
 
     private ManagerSetting managerSettings = new ManagerSetting();
     
-    private Database database;
+    @Autowired
+    protected Database database;
     private HashMap<String, GetShopScheduler> schedulers = new HashMap();
     private HashMap<String, GetShopSchedulerBase> schedulersBases = new HashMap();
 
-    @Autowired
-    public void setDatabase(Database database) {
-        this.database = database;
-    }
-
+    
+    
     public Database getDatabase() {
         return database;
     }
@@ -123,15 +118,13 @@ public class ManagerSubBase {
         if (getSessionBasedName() != null) {
             credentials.manangerName += "_"+getSessionBasedName();
         }
-        if (databaseSaver == null) {
-            throw new NullPointerException("No database saver?");
-        }
+
         
         if (database == null) {
             throw new NullPointerException("No database saver?");
         }
         
-        if (databaseSaver != null && database != null && !credentials.manangerName.equals("LoggerManager")) {
+        if (database != null && !credentials.manangerName.equals("LoggerManager")) {
             DataRetreived dataRetreived = new DataRetreived();
             dataRetreived.data = database.retreiveData(credentials);
             
@@ -204,14 +197,14 @@ public class ManagerSubBase {
 
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
-        databaseSaver.saveObject(data, credentials);
+        database.save(data, credentials);
     }
  
     public void deleteObject(DataCommon data) throws ErrorException {
         if (getSession() != null && getSession().currentUser != null) {
             data.gsDeletedBy = getSession().currentUser.id;
         }
-        databaseSaver.deleteObject(data, credentials);
+        database.delete(data, credentials);
     }
 
     protected void setManagerSetting(String key, String value) {

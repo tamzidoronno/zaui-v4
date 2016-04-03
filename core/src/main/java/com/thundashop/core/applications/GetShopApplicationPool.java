@@ -28,9 +28,6 @@ public class GetShopApplicationPool extends ManagerBase implements IGetShopAppli
     
     @Autowired
     private ApplicationModulePool modulePool;
-    
-    @Autowired
-    private Database database;
 
     private Map<String, Application> applications;
 

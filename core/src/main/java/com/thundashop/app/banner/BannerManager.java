@@ -33,7 +33,7 @@ public class BannerManager extends ManagerBase implements IBannerManager {
             bannerSet.storeId = storeId;
         
         bannerSet.id = id;
-        databaseSaver.saveObject(bannerSet, credentials);
+        saveObject(bannerSet);
         banners.put(id, bannerSet);
         return bannerSet;
     }
@@ -48,7 +48,7 @@ public class BannerManager extends ManagerBase implements IBannerManager {
         savedSet.showDots = set.showDots;
         savedSet.banners = set.banners;
       
-        databaseSaver.saveObject(savedSet, credentials);
+        saveObject(savedSet);
         return savedSet;
     }
 
@@ -117,14 +117,14 @@ public class BannerManager extends ManagerBase implements IBannerManager {
         banner.imageId = fileId;
         set.banners.add(banner);
         set.storeId = storeId;
-        databaseSaver.saveObject(set, credentials);
+        saveObject(set);
     }
 
     private void removeBannerSet(String id) throws ErrorException {
         BannerSet set = findBannerSet(id);
         banners.remove(set.id);
         
-        databaseSaver.deleteObject(set, credentials);
+        deleteObject(set);
     }
 
     private void removeFromBannerSet(String bannerSetId, String fileId) throws ErrorException {
@@ -141,7 +141,7 @@ public class BannerManager extends ManagerBase implements IBannerManager {
             set.banners.remove(toRemove);
         }
         
-        databaseSaver.saveObject(set, credentials);
+        saveObject(set);
     }
 
     @Override

@@ -37,6 +37,10 @@ public class GetShopSessionScope implements Scope {
         String storeId = threadStoreIds.get(threadId);
         String sessionBeanName = threadSessionBeanNames.get(threadId);
         
+        if (storeId == null && name != null && name.equals("scopedTarget.database")) {
+            storeId = "all";
+        }
+        
         if (storeId == null) {
             throw new NullPointerException("There is scoped bean created without being in a context of a store, object: " + name);
         }

@@ -61,7 +61,7 @@ public class ListManager extends ManagerBase implements IListManager {
                         allEntries.put(listObject.appId, listObject);
                     } else {
                         try {
-                            databaseSaver.deleteObject(listObject, credentials);
+                            deleteObject(listObject);
                         } catch (ErrorException ex) {
                             java.util.logging.Logger.getLogger(ListManager.class.getName()).log(Level.SEVERE, null, ex);
                         }

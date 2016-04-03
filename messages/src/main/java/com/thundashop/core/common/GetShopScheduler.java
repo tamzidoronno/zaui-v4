@@ -9,6 +9,7 @@ package com.thundashop.core.common;
  *
  * @author ktonder
  */
+@GetShopIgnoreBackup
 public class GetShopScheduler extends DataCommon {
     public String scheduler;
     public String multilevelName = "";

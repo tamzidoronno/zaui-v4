@@ -69,7 +69,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         }
 
         products.remove(product.id);
-        databaseSaver.deleteObject(product, credentials);
+        deleteObject(product);
 
         listManager.removeProductFromListsIfExists(productId);
     }
@@ -194,7 +194,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     public void setTaxes(List<TaxGroup> groups) throws ErrorException {
         //Remove the old ones first.
         for (TaxGroup grp : taxGroups.values()) {
-            databaseSaver.deleteObject(grp, credentials);
+            deleteObject(grp);
         }
 
         taxGroups = new HashMap();

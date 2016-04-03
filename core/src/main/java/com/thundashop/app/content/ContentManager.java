@@ -59,7 +59,7 @@ public class ContentManager extends ManagerBase implements IContentManager {
     @Override
     public void deleteContent(String id) throws ErrorException {
         ContentData data = getContentData(id);
-        databaseSaver.deleteObject(data, credentials);
+        deleteObject(data);
         memory.remove(id);
     }
  

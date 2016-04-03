@@ -452,7 +452,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         BookingItem deleted = items.remove(id);
-        databaseSaver.deleteObject(deleted, credentials);
+        deleteObject(deleted);
     }
     
     public void changeTypeOnBooking(String bookingId, String itemTypeId) {

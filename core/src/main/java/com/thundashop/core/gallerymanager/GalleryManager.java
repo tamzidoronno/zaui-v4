@@ -64,7 +64,7 @@ public class GalleryManager extends ManagerBase implements IGalleryManager {
         old_entry.description = entry.description;
         old_entry.title = entry.title;
         
-        databaseSaver.saveObject(old_entry, credentials);
+        saveObject(old_entry);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class GalleryManager extends ManagerBase implements IGalleryManager {
         entry.imageId = imageId;
         entry.title = title;
         entry.storeId = storeId;
-        databaseSaver.saveObject(entry, credentials);
+        saveObject(entry);
         return entry;
     }
 
@@ -92,7 +92,7 @@ public class GalleryManager extends ManagerBase implements IGalleryManager {
         List<ImageEntry> collection = getCollection(galleryId);
         entry.appId = galleryId;
         collection.add(entry);
-        databaseSaver.saveObject(entry, credentials);
+        saveObject(entry);
     }
 
     private ImageEntry findEntry(String entryId) throws ErrorException {
@@ -124,7 +124,7 @@ public class GalleryManager extends ManagerBase implements IGalleryManager {
     private void removeFromCollection(List<ImageEntry> collection, String entryId) throws ErrorException {
         ImageEntry entry = findEntry(entryId);
         collection.remove(entry);
-        databaseSaver.deleteObject(entry, credentials);
+        deleteObject(entry);
     }
 
     @Override

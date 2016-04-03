@@ -5,16 +5,12 @@
  */
 package com.thundashop.core.common;
 
-import difflib.Delta;
-import java.util.List;
-
 /**
  *
  * @author ktonder
  */
 public class DataCommonBackup extends DataCommon {
     public DataCommon oldObject;
-    public List<Delta> deltas;
     public String doneByUserId;
     public String originalClassName;
     public String originalId;

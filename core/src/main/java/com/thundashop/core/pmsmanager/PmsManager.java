@@ -746,7 +746,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logEntry(logText, bookingId, null, roomId);
             return room;
         } catch (BookingEngineException ex) {
-            ex.printStackTrace();
+//            ex.printStackTrace();
             return null;
         }
     }

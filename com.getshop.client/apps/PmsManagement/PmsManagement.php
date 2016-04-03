@@ -590,7 +590,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<tr>";
         echo "<th width='110'>Date</th>";
         echo "<th width='110'>User</th>";
-        echo "<th>Logtext</th>";
+        echo "<th></th>";
+        echo "<th width='110'>Logtext</th>";
         echo "</tr>";
         
         foreach($entries as $entry) {
@@ -598,6 +599,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
             echo "<td valign='top'>" . date("d.m.Y H:i", strtotime($entry->dateEntry)) . "</td>";
             echo "<td valign='top'>" . $this->getUsersName($entry->userId) . "</td>";
             echo "<td valign='top'>" . $entry->logText . "</td>";
+            $item = "";
+            if($entry->bookingItemId) {
+                $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $entry->bookingItemId)->bookingItemName;
+            }
+            echo "<td valign='top'>" . $item . "</td>";
             echo "</tr>";
         }
         echo "</table>";

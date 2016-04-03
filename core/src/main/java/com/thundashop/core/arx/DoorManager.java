@@ -765,15 +765,16 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
                 if(room.code.equals(code)) {
                     codeFound = true;
                     BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                    pmsManager.logEntry("Running action " + type + " on door", booking.id, room.bookingItemId);
                     try {
                         if(type.equalsIgnoreCase("open")) {
                             if(room.isStarted() && !room.isEnded()) {
-                                doorAction(item.doorId, "forceOpenOn");
+                                doorActionForItem(item, "forceOpenOn");
                             } else {
                                 return "You booking has expired";
                             }
                         } else {
-                            doorAction(item.doorId, "forceOpenOff");
+                            doorActionForItem(item, "forceOpenOff");
                         }
                     }catch(Exception e) {
                         e.printStackTrace();
@@ -788,6 +789,15 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
         }
         
         return "Success";
+    }
+    
+    private void doorActionForItem(BookingItem item, String type) throws Exception {
+        List<Door> doors = getAllDoors();
+        for (Door door : doors) {
+            if (door.name.equals(item.bookingItemName) || door.name.equals(item.bookingItemAlias) || door.name.equals(item.doorId) || door.externalId.equals(item.doorId) || door.externalId.equals(item.bookingItemAlias) || door.externalId.equals(item.bookingItemName)) {
+                doorAction(door.externalId, type);
+            }
+        }
     }
 
 }

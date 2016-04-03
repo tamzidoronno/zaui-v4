@@ -55,13 +55,13 @@ public class BookingEngineAvailabilityTests extends TestCommon {
      */
     @Test
     public void addAvailability() {
-        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, databaseSaver);
+        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, database);
         helper.getAValidAvailability(item, bookingEngine);
         
         item = bookingEngine.getBookingItem(item.id);
         assertEquals(1, item.availabilitieIds.size());
         assertEquals(1, item.availabilities.size());
-        verify(databaseSaver, times(2)).saveObject(any(DataCommon.class), any(Credentials.class));
+        verify(database, times(2)).save(any(DataCommon.class), any(Credentials.class));
     }
     
     
@@ -79,7 +79,7 @@ public class BookingEngineAvailabilityTests extends TestCommon {
      */
     @Test(expected = BookingEngineException.class)
     public void failsIfDatesNotSpecifiedInAvailbility() {
-        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, databaseSaver);
+        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, database);
         Availability availability = helper.getAValidAvailability(item, bookingEngine);
         availability.startDate = null;
         availability.endDate = null;
@@ -98,7 +98,7 @@ public class BookingEngineAvailabilityTests extends TestCommon {
      */
     @Test(expected = BookingEngineException.class)
     public void testThrowsExceptionIfBookingAvailiblityOverlapsInBeginning() throws ParseException {
-        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, databaseSaver);
+        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, database);
         Availability availability = helper.getAValidAvailability(item, bookingEngine);
         
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -122,7 +122,7 @@ public class BookingEngineAvailabilityTests extends TestCommon {
      */
     @Test(expected = BookingEngineException.class)
     public void testThrowsExceptionIfBookingAvailiblityOverlapsInEnd() throws ParseException {
-        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, databaseSaver);
+        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, database);
         Availability availability = helper.getAValidAvailability(item, bookingEngine);
         
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -147,7 +147,7 @@ public class BookingEngineAvailabilityTests extends TestCommon {
      */
     @Test(expected = BookingEngineException.class)
     public void testThrowsExceptionIfBookingAvailiblityOverall() throws ParseException {
-        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, databaseSaver);
+        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, database);
         Availability availability = helper.getAValidAvailability(item, bookingEngine);
         
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -171,7 +171,7 @@ public class BookingEngineAvailabilityTests extends TestCommon {
      */
     @Test(expected = BookingEngineException.class)
     public void testThrowsExceptionIfBookingAvailiblityExact() throws ParseException {
-        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, databaseSaver);
+        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, database);
         helper.getAValidAvailability(item, bookingEngine);
         
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -193,7 +193,7 @@ public class BookingEngineAvailabilityTests extends TestCommon {
      */
     @Test
     public void addThreeAvailbilitesInARow() throws ParseException {
-        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, databaseSaver);
+        BookingItem item = helper.createAValidBookingItemAndResetDatabaseSaver(bookingEngine, database);
         helper.getAValidAvailability(item, bookingEngine);
         
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");

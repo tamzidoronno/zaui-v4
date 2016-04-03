@@ -30,12 +30,20 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     
     public String getInformation() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");
-        return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",startDate="+dateFormat.format(startDate)+",endDate="+dateFormat.format(endDate)+"]";
+        try {
+            return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",startDate="+dateFormat.format(startDate)+",endDate="+dateFormat.format(endDate)+"]";
+        } catch (NullPointerException ex) {
+            return "";
+        }
     }
     
     public String getHumanReadableDates() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");
-        return dateFormat.format(startDate)+" - "+dateFormat.format(endDate);
+        if (endDate != null && startDate != null) {
+            return dateFormat.format(startDate)+" - "+dateFormat.format(endDate);
+        } 
+        
+        return "";
     }
 
     // Got this solution from: http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap

@@ -7,13 +7,10 @@ package com.thundashop.core.cartuning;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -43,6 +40,6 @@ public class CarTuningManager extends ManagerBase implements ICarTuningManager {
     public void saveCarTuningData(List<CarTuningData> data) throws ErrorException {
         carTuningCollection.entries = data;
         carTuningCollection.storeId = storeId;
-        databaseSaver.saveObject(carTuningCollection, credentials);
+        saveObject(carTuningCollection);
     }
 }

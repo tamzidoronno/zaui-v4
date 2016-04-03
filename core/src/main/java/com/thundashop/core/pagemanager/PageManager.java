@@ -76,7 +76,7 @@ public class PageManager extends ManagerBase implements IPageManager {
             page.id = pageId;
         }
 
-        databaseSaver.saveObject(page, credentials);
+        saveObject(page);
         pages.put(page.id, page);
         return page;
     }
@@ -319,7 +319,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public void savePage(Page page) {
         pages.put(page.id, page);
-        databaseSaver.saveObject(page, credentials);
+        saveObject(page);
         saveCommonAreas();
     }
 
@@ -382,7 +382,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     private void saveCommonAreas() {
         commonPageData.storeId = storeId;
-        databaseSaver.saveObject(commonPageData, credentials);
+        saveObject(commonPageData);
     }
 
     private List<Page> getPagesThatHasCell(String pageCellId) {

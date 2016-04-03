@@ -6,6 +6,7 @@
 package com.thundashop.core.usermanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopIgnoreBackup;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.Map;
  *
  * @author ktonder
  */
+@GetShopIgnoreBackup
 public class LoginHistory extends DataCommon {
     /** Old Logins before 7 feb 2014 */
     private Map<String, List<Date>> logins = new HashMap();

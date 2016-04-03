@@ -5,9 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -85,7 +83,7 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
             report.changed = false;
 
             report.storeId = storeId;
-            databaseSaver.saveObject(report, credentials);
+            saveObject(report);
         }
     }
 

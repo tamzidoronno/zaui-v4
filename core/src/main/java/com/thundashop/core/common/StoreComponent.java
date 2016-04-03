@@ -4,14 +4,20 @@
  */
 package com.thundashop.core.common;
 
+import com.getshop.scope.GetShopSessionObject;
+
 /**
  *
  * @author ktonder
  */
-public class StoreComponent {
+public class StoreComponent extends GetShopSessionObject {
     public String storeId;
 
     public void setStoreId(String storeId) {
         this.storeId = storeId;
+    }
+
+    @Override
+    public void clearSession() {
     }
 }

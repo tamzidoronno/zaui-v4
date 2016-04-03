@@ -4,7 +4,6 @@
  */
 package com.thundashop.core.usermanager;
 
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.start.Runner;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
  * @author hjemme
  */
 public class UserStoreCollection {
-    private DatabaseSaver databaseSaver;
     private Credentials credentials;
     private String storeId;
     private UserManager userManager;
@@ -84,9 +82,8 @@ public class UserStoreCollection {
         return user;
     }
     
-    public UserStoreCollection(String storeId, DatabaseSaver databaseSaver, Credentials credentials, UserManager userManager) {
+    public UserStoreCollection(String storeId, Credentials credentials, UserManager userManager) {
         this.storeId = storeId;
-        this.databaseSaver = databaseSaver;
         this.credentials = credentials;
         this.userManager = userManager;
     }
@@ -97,7 +94,7 @@ public class UserStoreCollection {
 
     public User addUser(User user) throws ErrorException {
         user.storeId = storeId;
-        databaseSaver.saveObject(user, credentials);
+        userManager.saveObject(user);
         users.put(user.id, user);
         return finalize(user);
     }
@@ -179,7 +176,7 @@ public class UserStoreCollection {
     public User deleteUser(String userId) throws ErrorException {
         User user = users.get(userId);
         if (user != null) {
-            databaseSaver.deleteObject(user, credentials);
+            userManager.deleteObject(user);
             users.remove(user.id);
             return user;
         }
@@ -241,7 +238,7 @@ public class UserStoreCollection {
         if (group.id == null || group.id.equals("")) 
             group.id = UUID.randomUUID().toString();
         
-        databaseSaver.saveObject(group, credentials);
+        userManager.saveObject(group);
         groups.put(group.id, group);
     }
 
@@ -249,7 +246,7 @@ public class UserStoreCollection {
         Group foundGroup = groups.remove(groupId);
         
         if (foundGroup != null) {
-            databaseSaver.deleteObject(foundGroup, credentials);
+            userManager.deleteObject(foundGroup);
         }
     }
 
@@ -287,7 +284,7 @@ public class UserStoreCollection {
             if(!exists) {
                 user.referenceKey = key;
                 try {
-                    databaseSaver.saveObject(user, credentials);
+                    userManager.saveObject(user);
                 }catch(ErrorException e) {
                     e.printStackTrace();
                 }
@@ -299,7 +296,7 @@ public class UserStoreCollection {
     void saveFirstUser(User user) {
         user.storeId = storeId;
         user.type = User.Type.ADMINISTRATOR;
-        databaseSaver.saveObject(user, credentials);
+        userManager.saveObject(user);
         users.put(user.id, user);
     }
 

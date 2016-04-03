@@ -136,7 +136,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
 
         if (!userStoreCollections.containsKey(storeId)) {
-            UserStoreCollection collection = new UserStoreCollection(storeId, databaseSaver, credentials, this);
+            UserStoreCollection collection = new UserStoreCollection(storeId, credentials, this);
             userStoreCollections.put(storeId, collection);
         }
 
@@ -213,7 +213,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         user.password = encryptPassword(user.password);
         
-        databaseSaver.saveObject(user, credentials);
+        saveObject(user);
         
         sendWelcomeEmail(user, uncryptedPassword);
         return user;
@@ -268,7 +268,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         user.lastLoggedIn = new Date();
         user.loggedInCounter++;
-        databaseSaver.saveObject(user, credentials);
+        saveObject(user);
         return user;
     }
     
@@ -464,7 +464,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
 
         toReset.password = encryptPassword(newPassword);
-        databaseSaver.saveObject(toReset, credentials);
+        saveObject(toReset);
 
         return 0;
     }
@@ -501,7 +501,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     private void saveSessionFactory() throws ErrorException {
         sessionFactory.storeId = storeId;
-        databaseSaver.saveObject(sessionFactory, credentials);
+        saveObject(sessionFactory);
     }
 
     @Override
@@ -532,7 +532,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         logonEncrypted(user.username, user.password);
 
         user.key = null;
-        databaseSaver.saveObject(user, credentials);
+        saveObject(user);
         return user;
     }
 
@@ -714,7 +714,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user != null) {
             comment.createdByUserId = getSession() != null && getSession().currentUser != null ? getSession().currentUser.id : "";
             user.comments.put(comment.getCommentId(), comment);
-            databaseSaver.saveObject(user, credentials);
+            saveObject(user);
         }
     }
 
@@ -724,7 +724,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         if (user != null) {
             user.comments.remove(commentId);
-            databaseSaver.saveObject(user, credentials);
+            saveObject(user);
         }
     }
 

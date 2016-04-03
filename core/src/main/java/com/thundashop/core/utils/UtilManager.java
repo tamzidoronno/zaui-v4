@@ -80,7 +80,7 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     @Override
     public String saveFile(FileObject file) throws ErrorException {
         file.storeId = storeId;
-        databaseSaver.saveObject(file, credentials);
+        saveObject(file);
         files.put(file.id, file);
         return file.id;
     }

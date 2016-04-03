@@ -41,7 +41,7 @@ public class BookingEngineConfigurationTest extends TestCommon {
         boolean isConfirmationRequired = bookingEngine.isConfirmationRequired();
         Assert.assertEquals(true, isConfirmationRequired);
         
-        Mockito.verify(databaseSaver).saveObject(any(DataCommon.class), any(Credentials.class));
+        Mockito.verify(database).save(any(DataCommon.class), any(Credentials.class));
         
         bookingEngine.setConfirmationRequired(false);
         boolean isConfirmationRequired2 = bookingEngine.isConfirmationRequired();

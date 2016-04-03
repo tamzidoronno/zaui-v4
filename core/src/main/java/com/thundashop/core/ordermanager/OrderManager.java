@@ -130,8 +130,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 Order order = (Order) dataFromDatabase;
                 if (order.cart == null || order.cart.address == null) {
                     try {
-                        System.out.println("Removing order: " + order.id + " due to incorrect data on them");
-                        databaseSaver.deleteObject(dataFromDatabase, credentials);
+                        deleteObject(dataFromDatabase);
                     } catch (ErrorException ex) {
                         ex.printStackTrace();
                     }
@@ -155,7 +154,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.session = getSession().id;
         
         order.storeId = storeId;
-        databaseSaver.saveObject(order, credentials);
+        saveObject(order);
         if(order.incrementOrderId > incrementingOrderId) {
             incrementingOrderId = order.incrementOrderId;
         }

@@ -1,15 +1,24 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.thundashop.core.databasemanager;
 
-import com.mongodb.*;
+import com.getshop.scope.GetShopSession;
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
-import com.thundashop.core.storemanager.StorePool;
+import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +35,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.mapping.MappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +43,16 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class Database {
+@GetShopSession
+public class Database extends StoreComponent {
+
     public static int mongoPort = 27018;
-    
+
     private Mongo mongo;
     private Morphia morphia;
+    
     private String collectionPrefix = "col_";
+    
     @Autowired
     public Logger logger;
 
@@ -48,6 +60,9 @@ public class Database {
 
     @Autowired
     private StorePool storePool;
+    
+    @Autowired
+    private BackupRepository backupRepository;
 
     public void activateSandBox() {
         sandbox = true;
@@ -56,7 +71,7 @@ public class Database {
     public Mongo getMongo() {
         return mongo;
     }
-    
+
     public Database() throws UnknownHostException {
         try {
             createDataFolder();
@@ -95,29 +110,6 @@ public class Database {
         return false;
     }
 
-    public synchronized void save(DataCommon data, Credentials credentials) throws ErrorException {
-        if (data.rowCreatedDate == null) {
-            data.rowCreatedDate = new Date();
-        }
-
-        if (isDeepFreezed(data)) {
-            return;
-        }
-
-        saveWithOverrideDeepfreeze(data, credentials);
-    }
-
-    public synchronized void saveWithOverrideDeepfreeze(DataCommon data, Credentials credentials) throws ErrorException {
-        checkId(data);
-        data.onSaveValidate();
-
-        if (sandbox) {
-            return;
-        }
-
-        addDataCommonToDatabase(data, credentials);
-    }
-
     private void createDataFolder() throws IOException {
         File file = new File("data");
 
@@ -142,6 +134,7 @@ public class Database {
     }
 
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
+        logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
         data.gs_manager = credentials.manangerName;
         DBObject dbObject = morphia.toDBObject(data);
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
@@ -152,17 +145,17 @@ public class Database {
         DBCollection collection = mongoDb.getCollection("col_" + credentials.storeid);
         return getData(collection);
     }
-    
+
     public List<DataCommon> getAllDataForStore(String storeId) {
         ArrayList<DataCommon> datas = new ArrayList();
-        
+
         for (String db : mongo.getDatabaseNames()) {
             DB mongoDb = mongo.getDB(db);
             for (String colName : mongoDb.getCollectionNames()) {
                 if (colName.contains(storeId)) {
                     DBCollection collection = mongoDb.getCollection(colName);
                     DBCursor cur = collection.find();
-                    
+
                     while (cur.hasNext()) {
                         DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, cur.next());
                         dataCommon.gs_manager = mongoDb.getName();
@@ -172,7 +165,7 @@ public class Database {
                 }
             }
         }
-        
+
         return datas;
     }
 
@@ -212,9 +205,9 @@ public class Database {
 
     public synchronized void delete(Class mangagerClass, DataCommon data) {
         data.deleted = new Date();
-        save(mangagerClass.getSimpleName(), collectionPrefix+data.storeId, data);
+        save(mangagerClass.getSimpleName(), collectionPrefix + data.storeId, data);
     }
-    
+
     public synchronized void delete(DataCommon data, Credentials credentials) throws ErrorException {
         if (sandbox) {
             return;
@@ -263,9 +256,17 @@ public class Database {
     }
 
     public DataCommon getObject(Credentials credentials, String id) {
-        DBCollection collection = mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + credentials.storeid);
+        return getObjectDirect(credentials.manangerName, collectionPrefix + credentials.storeid, id);
+    }
+
+    private DataCommon getObjectDirect(String database, String collectionName, String id) {
+        DBCollection collection = mongo.getDB(database).getCollection(collectionName);
         DBObject searchById = new BasicDBObject("_id", id);
         DBObject found = collection.findOne(searchById);
+
+        if (found == null) {
+            return null;
+        }
 
         try {
             return morphia.fromDBObject(DataCommon.class, found);
@@ -321,7 +322,7 @@ public class Database {
                     if (common.deleted != null) {
                         return null;
                     }
-                    
+
                     return common;
                 }
             }
@@ -350,28 +351,30 @@ public class Database {
             DBCollection col = mongo.getDB(data.gs_manager).getCollection(data.colection);
             DBObject obj = morphia.toDBObject(data);
             col.save(obj);
-       }
+        }
     }
-    
+
     public boolean exists(String database, String collection, DataCommon data) {
         DBCollection col = mongo.getDB(database).getCollection(collection);
         return col.findOne(data.id) != null;
     }
-    
+
     public void save(Class managerClass, DataCommon data) {
         checkId(data);
-        
+
         if (data.storeId == null || data.storeId.isEmpty()) {
             throw new RuntimeException("storeid not specified");
         }
-        
-        save(managerClass.getSimpleName(), collectionPrefix+data.storeId, data);
+
+        save(managerClass.getSimpleName(), collectionPrefix + data.storeId, data);
     }
-    
+
     public void save(String database, String collection, DataCommon data) {
         checkId(data);
         DBCollection col = mongo.getDB(database).getCollection(collection);
         DBObject dbObject = morphia.toDBObject(data);
+
+        logSavedMessge(data, database, collection);
         col.save(dbObject);
     }
 
@@ -379,32 +382,68 @@ public class Database {
         List<String> dbsToCheck = mongo.getDatabaseNames().stream()
                 .filter(name -> name.startsWith(simpleName))
                 .collect(Collectors.toList());
-        
+
         List<String> retValues = new ArrayList();
         for (String dbName : dbsToCheck) {
             DB db = mongo.getDB(dbName);
-            if (db.collectionExists(collectionPrefix+storeId)) {
-                if(dbName.split("_").length > 1) {
+            if (db.collectionExists(collectionPrefix + storeId)) {
+                if (dbName.split("_").length > 1) {
                     retValues.add(dbName.split("_")[1]);
                 }
             }
         }
-        
+
         return retValues;
     }
-    
+
     public List<DataCommon> query(String manager, String storeId, DBObject query) {
         DB db = mongo.getDB(manager);
         DBCollection col = db.getCollection("col_" + storeId);
         DBCursor res = col.find(query);
         List<DataCommon> retObjecs = new ArrayList();
-        while(res.hasNext()) {
+        while (res.hasNext()) {
             DBObject nx = res.next();
             DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
             retObjecs.add(data);
         }
-        
+
         return retObjecs;
+    }
+
+    /**
+     * ************** SAVE FUNCTIONS ****************
+     */
+    public synchronized void save(DataCommon data, Credentials credentials) throws ErrorException {
+        if (data.rowCreatedDate == null) {
+            data.rowCreatedDate = new Date();
+        }
+
+        if (isDeepFreezed(data)) {
+            return;
+        }
+
+        checkId(data);
+        data.onSaveValidate();
+
+        if (sandbox) {
+            return;
+        }
+        
+        addDataCommonToDatabase(data, credentials);
+    }
+
+    private void logSavedMessge(DataCommon newObject, String database, String collection) {
+        String userId = "";
+        if (getSession() != null && getSession().currentUser != null) {
+            userId = getSession().currentUser.id;
+        }
+                
+        DataCommon oldObject = getObjectDirect(database, collection, newObject.id);
+        if (oldObject != null) {
+            backupRepository.saveBackup(userId, oldObject, storeId, database, collection);
+        }
+
+        
     }
 }
 

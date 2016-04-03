@@ -117,7 +117,7 @@ public class BigStock extends ManagerBase implements IBigStock {
         order.credit = credit;
         bigStockCreditAccount.addOrder(order);
         
-        databaseSaver.saveObject(bigStockCreditAccount, credentials);
+        saveObject(bigStockCreditAccount);
     }
     
     private String getContent(String address) {
@@ -159,7 +159,7 @@ public class BigStock extends ManagerBase implements IBigStock {
         
         bigStockCreditAccount.creditAccount = credits;
         bigStockCreditAccount.storeId = storeId;
-        databaseSaver.saveObject(bigStockCreditAccount, credentials);
+        saveObject(bigStockCreditAccount);
     }
 
     @Override
@@ -170,7 +170,7 @@ public class BigStock extends ManagerBase implements IBigStock {
     @Override
     public void addGetShopImageIdToBigStockOrder(String downloadUrl, String imageId) throws ErrorException {
         bigStockCreditAccount.addGetShopImageId(downloadUrl, imageId);
-        databaseSaver.saveObject(bigStockCreditAccount, credentials);
+        saveObject(bigStockCreditAccount);
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author ktonder
  */
+@GetShopIgnoreBackup
 public class SessionFactory extends DataCommon {
     private ConcurrentHashMap<String, ThundashopSession> sessions = new ConcurrentHashMap<String, ThundashopSession>();
     public boolean ready;

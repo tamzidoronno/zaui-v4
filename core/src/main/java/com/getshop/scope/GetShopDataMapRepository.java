@@ -6,9 +6,9 @@
 package com.getshop.scope;
 
 import com.thundashop.core.applications.StoreApplicationPool;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Session;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.storemanager.StoreManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +32,14 @@ public class GetShopDataMapRepository<K, V> extends GetShopSessionObject {
     private StoreApplicationPool storeApplicationPool;
     
     @Autowired
-    public DatabaseSaver databaseSaver;
+    public Database database;
     
     public GetShopDataMap<K, V> createNew(ManagerBase parentManager) {
         GetShopDataMap<K, V> retMap = new GetShopDataMap<K, V>();
         retMap.storeId = storeId;
         retMap.storeManager = storeManager;
         retMap.storeApplicationPool = storeApplicationPool;
-        retMap.databaseSaver = databaseSaver;
+        retMap.database = database;
         retMap.parentManager = parentManager;
         maps.add(retMap);
         return retMap;

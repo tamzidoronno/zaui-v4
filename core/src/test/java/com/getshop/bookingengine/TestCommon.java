@@ -7,9 +7,9 @@ package com.getshop.bookingengine;
 
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.Session;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.PageManager;
@@ -36,7 +36,7 @@ import org.springframework.context.ApplicationContextAware;
 public abstract class TestCommon implements ApplicationContextAware {
     
     @Mock
-    DatabaseSaver databaseSaver;
+    Database database;
     
     @Mock
     PageManager pageManager;
@@ -61,7 +61,7 @@ public abstract class TestCommon implements ApplicationContextAware {
                 }
                 
                 return invocation;
-            }}).when(databaseSaver).saveObject(any(DataCommon.class), any(Credentials.class));
+            }}).when(database).save(any(DataCommon.class), any(Credentials.class));
         
         Page page = new Page();
         page.id = "new_page_id";

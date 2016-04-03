@@ -17,10 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.springframework.stereotype.Component;
-import com.thundashop.core.common.DatabaseSaver;
-import com.thundashop.core.common.Logger;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 public class YouTubeManager extends ManagerBase implements IYouTubeManager {

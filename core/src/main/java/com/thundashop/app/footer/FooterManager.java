@@ -26,7 +26,7 @@ public class FooterManager extends ManagerBase implements IFooterManager {
                 Configuration confobj = (Configuration)dbobj;
                 if(confobj.columnIds == null) {
                     try {
-                        databaseSaver.deleteObject(confobj, credentials);
+                        deleteObject(confobj);
                     }catch(ErrorException e) {
                         e.printStackTrace();
                     }
@@ -41,7 +41,7 @@ public class FooterManager extends ManagerBase implements IFooterManager {
     public Configuration setLayout(Integer numberOfColumns) throws ErrorException {
         Configuration config = getConfiguration();
         config.numberOfColumns = numberOfColumns;
-        databaseSaver.saveObject(config, credentials);
+        saveObject(config);
 
         return config;
     }
@@ -57,7 +57,7 @@ public class FooterManager extends ManagerBase implements IFooterManager {
                 this.configObject.columnIds.put(i, UUID.randomUUID().toString());
             }
             this.configObject.storeId = storeId;
-            databaseSaver.saveObject(this.configObject, credentials);
+            saveObject(this.configObject);
         }
         return configObject;
     }
@@ -66,7 +66,7 @@ public class FooterManager extends ManagerBase implements IFooterManager {
     public Configuration setType(Integer column, Integer type) throws ErrorException {
         Configuration config = getConfiguration();
         config.columnType.put(column, type);
-        databaseSaver.saveObject(config, credentials);
+        saveObject(config);
         return config;
     }
 }

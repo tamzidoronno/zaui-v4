@@ -1,21 +1,15 @@
 package com.thundashop.core.chat;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.chatmanager.ChatMessage;
 import com.thundashop.core.chatmanager.Chatter;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.data.User;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -120,7 +114,7 @@ public class ChatManager extends ManagerBase implements IChatManager, Runnable {
         
 
         chatter.messages.add(chatMessage);
-        databaseSaver.saveObject(chatter, credentials);
+        saveObject(chatter);
     }
 
     @Override
@@ -140,7 +134,7 @@ public class ChatManager extends ManagerBase implements IChatManager, Runnable {
         Chatter chatter = getChatterById(id);
         ChatMessage chatMessage = createChateMessage(message);
         chatter.messages.add(chatMessage);
-        databaseSaver.saveObject(chatter, credentials);
+        saveObject(chatter);
     }
 
     @Override
@@ -148,7 +142,7 @@ public class ChatManager extends ManagerBase implements IChatManager, Runnable {
         Chatter chatter = getChatterById(id);
         if (chatter != null) {
             chatter.closed = true;
-            databaseSaver.saveObject(chatter, credentials);
+            saveObject(chatter);
             chatters.remove(chatter.sessionId);
         }
     }

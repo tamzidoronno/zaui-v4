@@ -157,15 +157,6 @@ public interface IStoreManager {
      */
     @Administrator
     public void setIsTemplate(String storeId, boolean isTemplate);
-    /**
-     * This option will enable / disable the deepfreeze mode.
-     * if a websolution is set to deepfreeze, it will automatically be 
-     * reverted to the original state each hour. No options will be stored.
-     * 
-     * @param mode - true / false
-     */
-    @Administrator
-    public void setDeepFreeze(boolean mode, String password) throws ErrorException;
     
     /**
      * On registration, generate a new id this store, which will become a part of the hostname.

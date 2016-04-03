@@ -63,9 +63,9 @@ public class BookingEngineBookingTests extends TestCommon {
         bookings.add(helper.getValidBooking(1, bookingEngine));
         bookings.add(helper.getValidBooking(2, bookingEngine));
         
-        reset(databaseSaver);
+        reset(database);
         BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
-        verify(databaseSaver, times(5)).saveObject(any(DataCommon.class), any(Credentials.class));
+        verify(database, times(5)).save(any(DataCommon.class), any(Credentials.class));
         Assert.assertNotNull(bookingGroup);
     }
     
@@ -155,9 +155,9 @@ public class BookingEngineBookingTests extends TestCommon {
         bookings.add(helper.getValidBooking(1, bookingEngine));
         bookingEngine.setConfirmationRequired(true);
         
-        reset(databaseSaver);
+        reset(database);
         bookingEngine.addBookings(bookings);
-        verify(databaseSaver, times(3)).saveObject(any(DataCommon.class), any(Credentials.class));
+        verify(database, times(3)).save(any(DataCommon.class), any(Credentials.class));
         
         List<Booking> required = bookingEngine.getConfirmationList(bookings.get(0).bookingItemTypeId);
         Assert.assertEquals(1, required.size());
@@ -176,9 +176,9 @@ public class BookingEngineBookingTests extends TestCommon {
         bookings.add(helper.getValidBooking(1, bookingEngine));
         bookingEngine.setConfirmationRequired(false);
         
-        reset(databaseSaver);
+        reset(database);
         bookingEngine.addBookings(bookings);
-        verify(databaseSaver, times(3)).saveObject(any(DataCommon.class), any(Credentials.class));
+        verify(database, times(3)).save(any(DataCommon.class), any(Credentials.class));
         
         List<Booking> required = bookingEngine.getConfirmationList(bookings.get(0).bookingItemTypeId);
         Assert.assertEquals(0, required.size());
@@ -262,9 +262,9 @@ public class BookingEngineBookingTests extends TestCommon {
         BookingGroup group = bookingEngine.addBookings(bookings);
         
         
-        reset(databaseSaver);
+        reset(database);
         bookingEngine.deleteBooking(group.bookingIds.get(0));
-        verify(databaseSaver, times(1)).deleteObject(any(Booking.class), any(Credentials.class));
+        verify(database, times(1)).delete(any(Booking.class), any(Credentials.class));
        
         Booking deletedBooking = bookingEngine.getBooking(group.bookingIds.get(0));
         Assert.assertNull(deletedBooking);
@@ -281,9 +281,9 @@ public class BookingEngineBookingTests extends TestCommon {
         BookingItem item = helper.createAValidBookingItem(type.id);
         bookingEngine.saveBookingItem(item);
         
-        reset(databaseSaver);
+        reset(database);
         bookingEngine.deleteBookingItem(item.id);
-        verify(databaseSaver, times(1)).deleteObject(any(Booking.class), any(Credentials.class));
+        verify(database, times(1)).delete(any(Booking.class), any(Credentials.class));
     }
     
     @Test(expected = BookingEngineException.class)
@@ -318,9 +318,9 @@ public class BookingEngineBookingTests extends TestCommon {
         BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
         String bookingId = bookingGroup.bookingIds.get(0);
         
-        reset(databaseSaver);
+        reset(database);
         bookingEngine.changeTypeOnBooking(bookingId, type2.id);
-        verify(databaseSaver, times(1)).saveObject(any(Booking.class), any(Credentials.class));
+        verify(database, times(1)).save(any(Booking.class), any(Credentials.class));
     }
     
     @Test(expected = BookingEngineException.class)
@@ -416,9 +416,9 @@ public class BookingEngineBookingTests extends TestCommon {
         BookingGroup group = bookingEngine.addBookings(bookings);
         String bookingId = group.bookingIds.get(0);
         
-        reset(databaseSaver);
+        reset(database);
         bookingEngine.changeDatesOnBooking(bookingId, helper.getDate("2014-01-02 08:00"), helper.getDate("2014-01-03 08:00"));
-        verify(databaseSaver, times(1)).saveObject(any(DataCommon.class), any(Credentials.class));
+        verify(database, times(1)).save(any(DataCommon.class), any(Credentials.class));
         
         Booking booking = bookingEngine.getBooking(bookingId);
         Assert.assertEquals(helper.getDate("2014-01-02 08:00"), booking.startDate);
@@ -461,9 +461,9 @@ public class BookingEngineBookingTests extends TestCommon {
         bookings.add(helper.getValidBooking(1, bookingEngine, savedItem));
         BookingGroup bookingGroup = bookingEngine.addBookings(bookings);
         
-        reset(databaseSaver);
+        reset(database);
         bookingEngine.changeBookingItemOnBooking(bookingGroup.bookingIds.get(0), savedItem2.id);
-        verify(databaseSaver, times(1)).saveObject(any(DataCommon.class), any(Credentials.class));
+        verify(database, times(1)).save(any(DataCommon.class), any(Credentials.class));
         
         Booking savedBooking = bookingEngine.getBooking(bookingGroup.bookingIds.get(0));
         Assert.assertEquals(savedItem2.id, savedBooking.bookingItemId);
@@ -535,9 +535,9 @@ public class BookingEngineBookingTests extends TestCommon {
     public void testDeleteBookingItemType() {
         BookingItemType type = bookingEngine.createABookingItemType("Type");
         
-        reset(databaseSaver);
+        reset(database);
         bookingEngine.deleteBookingItemType(type.id);
-        verify(databaseSaver, times(1)).deleteObject(any(BookingItemType.class), any(Credentials.class));
+        verify(database, times(1)).delete(any(BookingItemType.class), any(Credentials.class));
         
         BookingItemType bookingType = bookingEngine.getBookingItemType(type.id);
         Assert.assertNull(bookingType);

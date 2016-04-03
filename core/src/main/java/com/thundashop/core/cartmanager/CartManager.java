@@ -174,7 +174,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     @Override
     public void addCoupon(Coupon coupon) throws ErrorException {
         coupon.storeId = storeId;
-        databaseSaver.saveObject(coupon, credentials);
+        saveObject(coupon);
         coupons.put(coupon.code, coupon);
     }
 
@@ -197,7 +197,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     @Override
     public void removeAllCoupons() throws ErrorException {
         for (Coupon coupon : coupons.values()) {
-            databaseSaver.deleteObject(coupon, credentials);
+            deleteObject(coupon);
         }
         coupons.clear();
     }
@@ -210,10 +210,10 @@ public class CartManager extends ManagerBase implements ICartManager {
             }
             if (inMemoryCoupon.timesLeft > 1) {
                 inMemoryCoupon.timesLeft--;
-                databaseSaver.saveObject(inMemoryCoupon, credentials);
+                saveObject(inMemoryCoupon);
             } else {
                 coupons.remove(coupon.code);
-                databaseSaver.deleteObject(inMemoryCoupon, credentials);
+                deleteObject(inMemoryCoupon);
             }
         }
     }
@@ -222,7 +222,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     public void removeCoupon(String code) throws ErrorException {
         Coupon coupon = coupons.remove(code);
         if (coupon != null) {
-            databaseSaver.deleteObject(coupon, credentials);
+            deleteObject(coupon);
         }
     }
 

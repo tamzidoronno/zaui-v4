@@ -96,7 +96,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         return settings;
     }
  
-    private Session getSession() {
+    private Session getMailSession() {
         Authenticator authenticator = new Authenticator();
 
         Properties properties = new Properties();
@@ -234,7 +234,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
 
     @Override
     public void run() {
-        MimeMessage message = new MimeMessage(getSession());
+        MimeMessage message = new MimeMessage(getMailSession());
         boolean delivered = false;
         for(int i = 0; i < 24; i++) {
             try {

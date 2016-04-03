@@ -10,7 +10,7 @@ import com.thundashop.core.bookingengine.data.Availability;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.common.DatabaseSaver;
+import com.thundashop.core.databasemanager.Database;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,7 +60,7 @@ public class BookingEngineTestHelper {
     }
     
     
-    public BookingItem createAValidBookingItemAndResetDatabaseSaver(BookingEngine bookingEngine, DatabaseSaver databaseSaver) {
+    public BookingItem createAValidBookingItemAndResetDatabaseSaver(BookingEngine bookingEngine, Database databaseSaver) {
         BookingItemType type = bookingEngine.createABookingItemType("Booking Item Test");
         BookingItem item = createAValidBookingItem(type.id);
         item = bookingEngine.saveBookingItem(item);

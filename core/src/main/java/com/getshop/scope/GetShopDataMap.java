@@ -8,9 +8,9 @@ package com.getshop.scope;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Session;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.storemanager.StoreManager;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class GetShopDataMap<K, V>  implements Map<K,V>  {
     public String storeId = "";
     StoreManager storeManager;
     StoreApplicationPool storeApplicationPool = null;
-    public DatabaseSaver databaseSaver;
+    public Database database;
     private long currentThreadId = -100;
     private String storeMainLanguage = "";
     
@@ -135,12 +135,12 @@ public class GetShopDataMap<K, V>  implements Map<K,V>  {
         
         if (saved) {
             if (parentManager != null 
-                    && databaseSaver != null 
+                    && database != null 
                     && dataCommon.storeId != null 
                     && dataCommon.id != null 
                     && !dataCommon.storeId.equals("") 
                     && !dataCommon.id.equals("")) {
-                databaseSaver.saveObject(dataCommon, parentManager.getCredentials());
+                database.save(dataCommon, parentManager.getCredentials());
             }
         }
     }

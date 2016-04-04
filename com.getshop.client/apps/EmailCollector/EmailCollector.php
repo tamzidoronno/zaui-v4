@@ -24,8 +24,16 @@ class EmailCollector extends \MarketingApplication implements \Application {
 
     public function printEmailList() {
         $list = $this->getApi()->getMessageManager()->getCollectedEmails();
+        $res = array();
         foreach($list as $email) {
-            echo $email . "<br>";
+            if(!stristr($email, "@")) {
+                continue;
+            }
+            $res[$email] = "a";
+        }
+        
+        foreach($res as $r => $t) {
+            echo $r . "<br>";
         }
     }
 

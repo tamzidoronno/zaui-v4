@@ -285,7 +285,7 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     public function saveOrder() {
         if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
             $certegoOrder = new \core_certego_data_CertegoOrder();
-            $certegoOrder->data = json_encode($_POST);
+            $certegoOrder->data = base64_encode(json_encode($_POST));
             $this->getApi()->getCertegoManager()->saveOrder($certegoOrder);
         }
     }

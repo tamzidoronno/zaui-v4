@@ -185,6 +185,9 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         if(!sizeof($this->validation) > 0) {
             $this->getCurrentBooking();
             $this->currentBooking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
+            if("s" == "d") {
+                
+            }
             if($this->currentBooking) {
                 $this->bookingCompleted = true;
             } else {

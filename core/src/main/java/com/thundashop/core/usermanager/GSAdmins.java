@@ -32,7 +32,7 @@ public class GSAdmins extends ManagerBase {
         user.cellPhone = "48311484";
         user.prefix = "47";
         user.type = 100;
-        user.password = "D12DDF5C72A3748F5669E6669F2835DF5C061A81B025308002792765B5C8526E";
+        user.password = "839AEB0CCC08E57D476A51F850C58AE49C0A5809CAFC3233D7FBC4A018C9C45C";
         admins.put(user.id, user);
         
         User user2 = new User();

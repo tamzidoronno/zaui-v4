@@ -153,7 +153,6 @@ public interface IPmsManager {
     public PmsBooking completeCurrentBooking();
     public void returnedKey(String roomId);
     public Integer getNumberOfAvailable(String itemType, Date start, Date end);
-    public void handleDoorControl(String doorId, List<AccessLog> accessLogs) throws Exception;
     public void checkDoorStatusControl() throws Exception;
     public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
     

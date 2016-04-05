@@ -47,7 +47,7 @@ app.FormItem = {
             }
             
             if(field.is(':checkbox') && !field.is(':checked')) {
-                if(required) {
+                if(required !== "false") {
                     valid = false;
                 }
                 return;

@@ -137,7 +137,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
          
-        createProcessor("logfetcher", ArxLogFetcher.class);
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
     }
 
@@ -2792,12 +2791,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         booking.rooms.removeAll(removeRooms);
         return bookingsToAdd;
-    }
-
-    @Override
-    public void handleDoorControl(String doorId, List<AccessLog> accessLogs) throws Exception {
-        PmsManagerDoorSurveilance sur = new PmsManagerDoorSurveilance(this);
-        sur.handleDoorControl(doorId, accessLogs);
     }
 
     @Override

@@ -27,8 +27,6 @@ public class PmsBookingRooms implements Serializable {
     public double taxes = 8;
     public String bookingId;
     public String code = "";
-    boolean forcedOpen = false;
-    boolean forcedOpenCompleted = false;
     public Integer intervalCleaning = null;
     public boolean addedByRepeater = false;
     public Date invoicedTo = null;
@@ -36,6 +34,7 @@ public class PmsBookingRooms implements Serializable {
     
     //Processor stuff.
     public boolean ended = false;
+    public boolean sentCloseSignal = false;
     public List<String> notificationsSent = new ArrayList();
     boolean addedToArx = false;
     boolean canBeAdded = true;

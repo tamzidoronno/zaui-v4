@@ -322,11 +322,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         $time = $this->getSelectedDay();
         if($this->getDayType() == "day" || $this->getFactory()->isMobile()) {
             $time += 86400;
-        }
-        if($this->getDayType() == "week") {
+        } else if($this->getDayType() == "week") {
             $time += (86400 * 7);
-        }
-        if($this->getDayType() == "month") {
+        } else if($this->getDayType() == "month") {
             $time = strtotime("+1 month", $this->getSelectedDay());
         }
         $_SESSION['calday'] = $time;

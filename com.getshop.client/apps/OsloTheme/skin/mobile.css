@@ -6,7 +6,7 @@ body {
     -webkit-font-smoothing: antialiased;
     font-size: 14px;
 }
-.body { padding-top: 40px !important; }
+body { padding-top: 40px !important; }
 .capasity { position:absolute; right: 10px; top: 10px; }
 .PmsCalendar .continuebuttonmobile { background-color:#ed70ec; color:#fff; }
 .PmsCalendar .continue_button,.PmsBookingContactData .complete_button { text-transform: uppercase; background-color:#ed70ec; }

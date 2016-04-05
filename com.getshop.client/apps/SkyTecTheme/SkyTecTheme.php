@@ -23,5 +23,10 @@ class SkyTecTheme extends \ThemeApplication implements \Application {
         return true;
     }
 
+    
+    public function getThemeClasses() {
+        return ["people"];
+    }
+    
 }
 ?>

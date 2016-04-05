@@ -77,6 +77,9 @@ app.PmsBookingSummary = {
         thundashop.Ajax.postWithCallBack(event, function() {
             row.fadeOut(function() {
                 row.remove();
+                if($('.itemrow').length <= 1) {
+                    $('.PmsBookingSummary .no-room-selected').fadeIn();
+                }
             });
         });
     },

@@ -32,3 +32,4 @@
 .PmsBookingSummary .repatingroomlist { display:none; }
 .PmsBookingSummary .showRepeatDates { color: blue; cursor:pointer; }
 .PmsBookingSummary .addcouponbutton { border: solid 1px; padding: 2px; padding-left: 10px; padding-right: 10px; cursor:pointer; }
+.PmsBookingSummary .no-room-selected { padding: 5px; border: solid 1px; background-color: red; color:#fff; display:none; margin-bottom: 10px; }

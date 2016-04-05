@@ -142,6 +142,8 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     if(!$room->canBeAdded) {
         $canNotBeAded = "cantbeadded";
     }
+    echo "<div class='no-room-selected'>Du må minst velge ett rom før du kan fortsette.</div>";
+    
     echo "<div class='itemrow $canNotBeAded'>";
     echo "<i class='fa fa-trash-o removeAddon bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></i> ";
     $addonsAdded[$room->bookingItemTypeId] = true;

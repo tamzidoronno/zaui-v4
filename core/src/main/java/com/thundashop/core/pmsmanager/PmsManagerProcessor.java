@@ -58,10 +58,13 @@ public class PmsManagerProcessor {
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
         int hoursAheadCheck = hoursAhead;
+        if(hoursAheadCheck == 0) {
+            //Send sms even though the event has started, 12 hours later.
+            hoursAheadCheck = -12;
+        }
         int maxAheadCheck = maxAhead;
         if(manager.getConfigurationSecure().ignoreTimeIntervalsOnNotification && !started) {
-            hoursAheadCheck = 0;
-            maxAheadCheck = 72;
+            hoursAheadCheck = -12;
         }
 
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
@@ -69,15 +72,15 @@ public class PmsManagerProcessor {
 
             boolean save = false;
             for (PmsBookingRooms room : booking.rooms) {
-                int start = hoursAheadCheck - 24;
-                int end = maxAheadCheck - 24;
+                int start = hoursAheadCheck;
+                int end = maxAheadCheck;
                 if(started) {
                     start = end * -1;
-                    end = (hoursAheadCheck - 24) * -1;
+                    end = end * -1;
                 }
-                    if (!isBetween(room.date.start, start, end)) {
-                        continue;
-                    }
+                if (!isBetween(room.date.start, start, end)) {
+                    continue;
+                }
                 if (room.isEnded()) {
                     continue;
                 }
@@ -90,7 +93,6 @@ public class PmsManagerProcessor {
                     continue;
                 }
                 save = true;
-                System.out.println(key);
                 manager.doNotification(key, booking, room);
                 room.notificationsSent.add(key);
                 if(hoursAhead == 0) {
@@ -416,7 +418,6 @@ public class PmsManagerProcessor {
                             }
 
                             text += " (" + start + " to " + end + ")";
-                            System.out.println(text);
                             manager.logEntry(text, booking.id, room.bookingItemId);
                         }
                         needSaving = true;

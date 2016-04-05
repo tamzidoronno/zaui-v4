@@ -111,7 +111,7 @@ foreach($bookings as $booking) {
     }
     
     foreach($booking->rooms as $room) {
-        if(!$this->isActive($room, $filter)) {
+        if(!$this->isActive($room, $filter, $booking)) {
             continue;
         }
          

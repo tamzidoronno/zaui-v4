@@ -389,8 +389,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function setFilter() {
         $filter = new \core_pmsmanager_PmsBookingFilter();
-        $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-        $filter->endDate = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 00:00"));
+        $filter->endDate = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 23:59"));
         $filter->filterType = $_POST['data']['filterType'];
         $filter->state = 0;
         $filter->searchWord = $_POST['data']['searchWord'];
@@ -445,8 +445,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->state = 0;
-        $filter->startDate = $this->formatTimeToJavaDate(time()-(86400*3));
-        $filter->endDate = $this->formatTimeToJavaDate(time()+(86400*3));
+        $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))-(86400*3));
+        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 23:59", time()))+(86400*3));
         $filter->sorting = "regdate";
         $filter->includeDeleted = true;
         return $filter;
@@ -686,38 +686,44 @@ class PmsManagement extends \WebshopApplication implements \Application {
     /**
      * @param \core_pmsmanager_PmsBookingRooms $room
      * @param \core_pmsmanager_PmsBookingFilter $filter
+     * @param \core_pmsmanager_PmsBooking $booking
      */
-    public function isActive($room, $filter) {
-        
-        if(!isset($filter->filterType) || $filter->filterType == "registered" || $filter->filterType == "deleted" || $filter->filterType == "stats" || $filter->filterType == "unconfirmed") {
+    public function isActive($room, $filter, $booking) {
+        if(!$room || !isset($room->date)) {
             return true;
         }
-        
-        //Same start date
-        if($this->sameDay($room->date->start, $filter->startDate)) {
-            return true;
-        }
-        
-        //Same end date
-        if($this->sameDay($room->date->start, $filter->endDate)) {
-            return true;
-        }
-        
-        //Same start date
-        if($this->sameDay($room->date->end, $filter->startDate)) {
-            return true;
-        }
-        
-        //Same end date
-        if($this->sameDay($room->date->end, $filter->endDate)) {
-            return true;
-        }
-        
+
         $filterStart = strtotime($filter->startDate);
         $filterEnd = strtotime($filter->endDate);
         
         $roomStart = strtotime($room->date->start);
         $roomEnd = strtotime($room->date->end);
+        
+        if(!isset($filter->filterType) || $filter->filterType == "registered" || $filter->filterType == "deleted" || $filter->filterType == "stats" || $filter->filterType == "uncofirmed") {
+            $roomStart = strtotime($booking->rowCreatedDate);
+            $roomEnd = strtotime($booking->rowCreatedDate);
+        }
+
+        //Same start date
+        if($this->sameDay($roomStart, $filter->startDate)) {
+            return true;
+        }
+        
+        //Same end date
+        if($this->sameDay($roomStart, $filter->endDate)) {
+            return true;
+        }
+        
+        //Same start date
+        if($this->sameDay($roomEnd, $filter->startDate)) {
+            return true;
+        }
+        
+        //Same end date
+        if($this->sameDay($roomEnd, $filter->endDate)) {
+            return true;
+        }
+        
         
         //Start in periode selected
         if($roomStart > $filterStart && $roomStart < $filterEnd) {
@@ -740,7 +746,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function sameDay($time1, $time2) {
-        return date("dmy", strtotime($time1)) == date("dmy", strtotime($time2));
+        return date("dmy", $time1) == date("dmy", strtotime($time2));
     }
 
     /**

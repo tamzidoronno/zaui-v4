@@ -135,14 +135,29 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
         </div>
     </div>
 </div>
+<?php
 
-<? if(isset($_GET['autologin'])) { ?>
-<script>
-    document.getElementById("getshoploginform").submit();
-</script>
-<? } ?>
+if(isset($_POST['username'])) {
+    if(!ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
+        echo "<center><h1 id='loginfailed'>Login failed</h1></center>";
+        ?>
+        <script>
+            setTimeout(function() {
+                var element = document.getElementById("loginfailed");
+                element.parentNode.removeChild(element);
+            }, "1000");
+        </script>
+        <?php
+    }
+}
 
-<?
+if(isset($_GET['autologin'])) { 
+    ?>
+    <script>
+        document.getElementById("getshoploginform").submit();
+    </script>
+<? }
+
 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
     echo "<script>document.location = '/'</script>";
 }

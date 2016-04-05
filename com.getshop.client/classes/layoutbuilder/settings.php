@@ -61,6 +61,24 @@
 <div style='clear:both;'></div>
 <br>
 <div>
+    <label><? echo $this->factory->__w("Cell name"); ?>
+        <span class='gscssinput'>
+            <input type='txt' gsname='cellName'> 
+        </span>
+    </label>
+</div>
+<div style='clear:both;'></div>
+<br>
+<div>
+    <label><? echo $this->factory->__w("Clone cell"); ?>
+        <span class='gscssinput'>
+            <input type='txt' gsname='cloneCellId'> 
+        </span>
+    </label>
+</div>
+<div style='clear:both;'></div>
+<br>
+<div>
     <label><? echo $this->factory->__w("Link this cell"); ?>
         <span class='gscssinput'>
             <input type='txt' gsname='link'> 

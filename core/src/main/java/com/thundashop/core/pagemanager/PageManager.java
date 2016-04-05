@@ -180,6 +180,9 @@ public class PageManager extends ManagerBase implements IPageManager {
         page.layoutBackups = new LinkedList();
         page.layoutBackups.addAll(savedCommonPageData.getSavedLayouts(page.id));
         
+        List<PageCell> cells = getAllCells();
+        page.fixedClonedCells(cells);
+        
         return page;
     }
 
@@ -847,5 +850,13 @@ public class PageManager extends ManagerBase implements IPageManager {
             newPage.id = pageId;
             savePage(newPage);
         }
+    }
+
+    private List<PageCell> getAllCells() {
+        List<PageCell> allCells = new ArrayList();
+        for(Page p : pages.values()) {
+            allCells.addAll(p.getCellsFlatList());
+        }
+        return allCells;
     }
 }

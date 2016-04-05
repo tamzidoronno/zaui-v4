@@ -68,7 +68,15 @@ public class PageCell implements Serializable {
         hideOnDesktop = cell.hideOnDesktop;
     }
 
-    
+    void cloneCell(PageCell cell2) {
+        link = cell2.link;
+        selectedThemeClass = cell2.selectedThemeClass;
+        mode = cell2.mode;
+        cells = cell2.cells;
+        carouselConfig = cell2.carouselConfig;
+        styles = cell2.styles;
+    }
+
     PageCell createCell(String before) {
         PageCell newcell = new PageCell();
         if (before == null || before.isEmpty()) {
@@ -108,7 +116,7 @@ public class PageCell implements Serializable {
         return PageCell.CellMode.rotating.equalsIgnoreCase(mode);
     }
 
-    public boolean isTab() {   
+    public boolean isTab() {
         return PageCell.CellMode.tab.equalsIgnoreCase(mode); 
     }
 

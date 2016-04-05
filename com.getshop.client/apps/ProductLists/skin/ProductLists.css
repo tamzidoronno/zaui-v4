@@ -401,7 +401,6 @@
     vertical-align: top;
 }
 .ProductPictures .mainimage { background-color:#fff !important; }
-.ProductLists .templatebox_1 .productbox:hover .addProductToCart { background-color: blue !important; color: white !important; }
 .ProductLists .templatebox_1 .productbox { padding: 0px !important; height: 470px !important; }
 .ProductLists .templatebox_1 .productbox .product_price { font-size: 18px !important; }
 .ProductLists .templatebox_1 .productbox .product_row { width: 100%; height: 100%; background-size: 100%; background-repeat: no-repeat; }
@@ -448,7 +447,7 @@
         padding: 20px;
         box-sizing: border-box;
     }
-    .ProductLists .slidelist .product  img {
+    .ProductLists .slidelist .product img {
         max-width: 100%;
     }
     

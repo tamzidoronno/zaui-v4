@@ -575,7 +575,6 @@ class Page {
       
         $anchor = $cell->anchor;
         
-        
         $themeClass = $cell->selectedThemeClass;
         
         if ($depth === 0) {
@@ -614,7 +613,6 @@ class Page {
             $this->printArrows($parent, $count, $totalcells);
         }
 
-        
         if($this->factory->isEditorMode()) {
             $this->printCellBox($edit, $cell, $parent, $depth);
         }

@@ -1,4 +1,5 @@
 .ProductCategories .selected { font-weight: bold; }
 .ProductCategories ul { list-style: none; padding: 0px; margin: 0px; }
-.ProductCategories li { border-bottom: solid 1px #efefef; padding: 10px; cursor:pointer; }
-.ProductCategories li ul li { border: solid 0px; padding: 2px; padding-left: 10px; padding-top: 5px; }
+.ProductCategories li { border-bottom: solid 1px #efefef; padding: 10px; cursor:pointer; margin: 10px; }
+.ProductCategories li ul { list-style: initial;padding-left: 20px;}
+.ProductCategories li ul li { border: solid 0px; padding: 2px;  padding-top: 5px; }

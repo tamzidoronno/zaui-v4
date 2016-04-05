@@ -7,6 +7,8 @@ public class PageCellSettings implements Serializable {
     public boolean displayWhenLoggedOut = true;
     public Integer editorLevel = 0;
     
+    public String cloneCellId = "";
+    public String cellName = "";
     public boolean paralexxRow = false;
     public boolean scrollFadeIn = false;
     public String isFlipping = "";

@@ -61,10 +61,18 @@ h2 { font-weight: 700; }
     border-bottom: solid 1px #005596;
 }
 
+.gsarea[area="header"] .Menu .entries .entries .entry a {
+    color:#000 !important;
+}
+
 .gsarea[area="header"] .Menu .entry {
     padding-left: 20px;
     padding-right: 20px;
 }
+.gsarea[area="header"] .Menu .entries .entries {
+    padding-bottom: 20px;
+}
+.gsarea[area="header"] .Menu .entries .entries,
 .gsarea[area="header"] .Menu .entries .entries .entry {
     min-width: 80px;
     border-bottom: 0px !important;
@@ -73,12 +81,16 @@ h2 { font-weight: 700; }
 
 
 .gsarea[area="header"] .Menu .menuentries .entries .entries {
-    background-color: #DDD;
+    background-color: #9e9fa3;
     text-align: left;
 }
 
+.gsarea[area="header"] .Menu .menuentries .entries .entries .entry:hover div {
+    border-color:#2091d8;
+}
+
 .gsarea[area="header"] .Menu .menuentries .entries .entries .entry div {
-    border-bottom: solid 1px #FFF;
+    border-bottom: solid 1px #b2b3b5;
 }
 
 .shop_button_template1 {
@@ -286,8 +298,11 @@ h2 { font-weight: 700; }
 .ProductLists .templatebox_2 .productbox { border-color: #ddd; }
 .ProductCategories .attrselect { display:block; }
 .ProductCategories .attrselect.selected { font-weight: bold; }
-.ProductCategories .attrselect:hover { color: blue; }
-
+.ProductCategories .attrselect:hover { color: #006699; }
+.ProductLists .templatebox_1 .productbox:hover .addProductToCart { background-color: #006699 !important; color: white !important; }
+.ProductCategories .selected { color: #006699; }
+.Menu .entries .entries .entry:hover { background-color:#2091d8; }
+.Menu .entries .entries .entry:hover div { color:#fff !important; }
 .Menu .mobilenavigatemenu {
     position: absolute;
     left: 10px;

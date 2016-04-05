@@ -187,6 +187,19 @@ public class Page extends DataCommon implements Cloneable {
         return layout.getParent(cellId);
     }
 
+    public void fixedClonedCells(List<PageCell> allCells) {
+        List<PageCell> cells = getCellsFlatList();
+        for(PageCell cell : cells) {
+            if(cell.settings != null && !cell.settings.cloneCellId.isEmpty()) {
+                for(PageCell cell2 :allCells) {
+                    if(cell2.settings != null && cell2.settings.cellName.equals(cell.settings.cloneCellId)) {
+                        cell.cloneCell(cell2);
+                    }
+                }
+            }
+        }
+    }
+
     public static class DefaultPages {
 
         public static String OrderOverviewPageId = "orderoverview";

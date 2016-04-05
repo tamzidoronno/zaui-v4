@@ -43,19 +43,21 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 }
             } else {
                 ?>
-                <script>
                     <?php
                     if($curBooking->confirmed) {
                         ?>
-                        document.location.href="/?page=booking_completed_<? echo $this->getSelectedName(); ?>_confirmed";
+                        <script>
+                            document.location.href="/?page=booking_completed_<? echo $this->getSelectedName(); ?>_confirmed";
+                        </script>
                         <?php
                     } else {
                         ?>
-                        document.location.href="/?page=booking_completed_<? echo $this->getSelectedName(); ?>";
+                        <script>
+                            document.location.href="/?page=booking_completed_<? echo $this->getSelectedName(); ?>";
+                        </script>
                         <?php
                     }
                     ?>
-                </script>
                 <?
             }
         } else {

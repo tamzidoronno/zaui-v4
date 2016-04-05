@@ -1,15 +1,42 @@
 <?php
 /* @var $this ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
 $cagetories = $this->getCategories();
+$time = "";
+if(isset($_GET['time'])) {
+    $time = $_GET['time'];
+}
 $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_GET['eventid']);
 $starttime = $event->dateRanges[0]->start;
 if(!$event->starttime) {
     $event->starttime = date("H:i", strtotime($starttime));
 }
 ?>
+<?php if(sizeof($event->dateRanges) > 0) { ?>
+<center>
+    <form action="" method="GET" id="changedates">
+        <input type="hidden" name="page" value="<?php echo $_GET['page']; ?>">
+        <input type="hidden" name="eventid" value="<?php echo $_GET['eventid']; ?>">
+        <select name="time" onchange="$('#changedates').submit();" style="width: 480px;">
+            <option value="">Endre for alle datoer</option>
+            <?php
+            foreach($event->dateRanges as $range) {
+                $selected = "";
+                if($time == strtotime($range->start)) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='".strtotime($range->start)."' $selected>" . date("d.m.Y", strtotime($range->start)). "</option>";
+            }
+            ?>
+        </select>
+    </form>
+</center>
+<?php } ?>
+
 <div class='eventconfig'>
     <div gstype='form' method='updateEventFields' class='eventeditform'>
+        <br><br>
         <input type='hidden' value='<?echo $_GET['eventid']; ?>' gsname='eventid'>
+        <input type='hidden' value='<?echo $time; ?>' gsname='time'>
         <label>
             <span class='text'><?echo $this->__w("Title"); ?></span>
             <input type='text' gsname='title' value='<?php echo $event->title; ?>' maxlength="30">

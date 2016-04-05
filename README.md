@@ -1,0 +1,1 @@
+GetShop Code, based on the core created by Kai and Pål Tønder back in the days.

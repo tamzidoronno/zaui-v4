@@ -1,13 +1,19 @@
-<span style='position:fixed; top: 0px; left: 0px; z-index: 245;background-color:#fff; padding: 2px; border-bottom: solid 1px; border-right: solid 1px; width: 60px; height:22px;'>
-    <div onclick="$('#pmscalendarmobilemenu').fadeIn();">
-        <i class='fa fa-bars'></i> Meny
-    </div>
-    <span style='position:absolute; width: 200px; display:inline-block; border: solid 1px; left: 0px;top: 0px;z-index: 250;background-color: #fff; display:none;' id='pmscalendarmobilemenu'>
-        <div style='padding: 5px; padding-left: 10px;'>
-            <a href='<?php echo $this->getMobileMenu(); ?>'><i class='fa fa-bars'></i> Oversikt over rom</a>
+<div style="text-align: center; position:fixed; top: 0px;background-color:#fff; width:100%; height: 35px;padding-top: 5px;z-index:245;">
+    <span style='background-color:#fff;font-size: 20px;'>
+        <div onclick="$('#pmscalendarmobilemenu').fadeIn();">
+            <i class='fa fa-bars'></i> Meny
         </div>
-        <div style='padding: 5px; padding-left: 10px;'>
-            <i class='fa fa-question-circle'></i> Hjelp
-        </div>
+        <span style='position:absolute; width: 100%; display:inline-block; border: solid 1px;text-align: left; left: 0px;top: 0px;z-index: 250;background-color: #fff; display:none;' id='pmscalendarmobilemenu'>
+            <div style='padding: 5px; padding-left: 10px;'>
+                <a href='<?php echo $this->getMobileMenu(); ?>'><i class='fa fa-bars'></i> Oversikt over rom</a>
+            </div>
+            <div style='padding: 5px; padding-left: 10px;'>
+                <i class='fa fa-question-circle'></i> Hjelp
+            </div>
+        </span>
     </span>
-</span>
+</div>
+
+<style>
+
+</style>

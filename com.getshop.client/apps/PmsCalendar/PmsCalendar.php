@@ -320,7 +320,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     
     public function setNext() {
         $time = $this->getSelectedDay();
-        if($this->getDayType() == "day") {
+        if($this->getDayType() == "day" || $this->getFactory()->isMobile()) {
             $time += 86400;
         }
         if($this->getDayType() == "week") {
@@ -347,6 +347,10 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
     
     public function setCalendarDay() {
+        if(!$_POST['data']['day']) {
+            return;
+        }
+        $tocheck = $_POST['data']['day'];
         $_SESSION['calday'] = strtotime($_POST['data']['day']);
     }
     

@@ -70,7 +70,7 @@
 .PmsCalendar .roomentry { display:inline-block; min-height: 100px; width:100%; position:relative; min-height: 50px; background-color:#fff;  }
 .PmsCalendar .roomentry img { width: 100%; }
 .PmsCalendar .singleroomentry img { width: 100%; }
-.PmsCalendar .singleroomentry { position: fixed; z-index: 10; top:0px; width: 100%; }
+.PmsCalendar .singleroomentry { position: fixed; z-index: 10; top:0px; width: 100%; top: 40px; }
 
 .PmsCalendar .roomlistmobileouter { padding: 10px; box-sizing: border-box; }
 .PmsCalendar .bottomdesc {position:absolute; width: 100%; bottom: 0px; height: 30%; background-color:rgba(241,241,241,0.9); padding: 10px; box-sizing: border-box; }

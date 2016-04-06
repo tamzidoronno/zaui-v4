@@ -153,7 +153,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                                     echo "<span title='$notifications'>" . $items[$room->booking->bookingItemId]->bookingItemName . "</span>";
                                 }
                                 if(!$object->getFactory()->isProductionMode()) {
-                                    echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
+//                                    echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
                                 }
 
                                 ?>

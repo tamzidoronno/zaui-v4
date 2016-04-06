@@ -95,7 +95,7 @@ public interface IUserManager {
      * @return
      * @throws ErrorException 
      */
-    @Administrator
+    @Editor
     public List<User> getAllUsers() throws ErrorException;
     
 

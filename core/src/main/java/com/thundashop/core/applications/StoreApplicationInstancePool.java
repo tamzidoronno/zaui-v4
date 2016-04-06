@@ -133,6 +133,10 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     }
 
     private ApplicationInstance checkSecurity(ApplicationInstance secureClone) {
+        if(getSession().currentUser != null && (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor())) {
+            return secureClone;
+        }
+        
         List<String> pages = pageManger.getPagesForApplicationOnlyBody(secureClone.id);
 
         int lowestAccessLevelForAppOnPages = Integer.MAX_VALUE;

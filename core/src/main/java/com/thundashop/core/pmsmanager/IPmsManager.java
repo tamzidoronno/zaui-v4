@@ -93,7 +93,7 @@ public interface IPmsManager {
     @Administrator
     public String addBookingItemType(String bookingId, String item, Date start, Date end);
     
-    @Administrator
+    @Editor
     public String getDefaultMessage(String bookingId);
     
     @Editor

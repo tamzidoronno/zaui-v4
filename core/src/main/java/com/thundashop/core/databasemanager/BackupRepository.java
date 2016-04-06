@@ -24,50 +24,51 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class BackupRepository {
-    public static int mongoPort = 27000;
-    
-    private Mongo mongo;
-    private Morphia morphia;
+//    public static int mongoPort = 27000;
+//    
+//    private Mongo mongo;
+//    private Morphia morphia;
 
     public BackupRepository() {
-        try {
-            mongo = new MongoClient("localhost", mongoPort);
-            
-            morphia = new Morphia();
-            morphia.map(DataCommon.class);   
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        try {
+//            mongo = new MongoClient("localhost", mongoPort);
+//            
+//            morphia = new Morphia();
+//            morphia.map(DataCommon.class);   
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
     }
     
     public void saveBackup(String userId, DataCommon oldObject, String storeId, String database, String collection) {
-        if (oldObject == null) {
-            return;
-        }
-        
-        GetShopIgnoreBackup ignoreLogging = oldObject.getClass().getAnnotation(GetShopIgnoreBackup.class);
-        
-        if (ignoreLogging != null) {
-            return;
-        }
-        
-        BackupRepositoryWorker backupWorker = new BackupRepositoryWorker(userId, oldObject, mongo, morphia, storeId, database, collection);
-        new Thread(backupWorker).start();
+//        if (oldObject == null) {
+//            return;
+//        }
+//        
+//        GetShopIgnoreBackup ignoreLogging = oldObject.getClass().getAnnotation(GetShopIgnoreBackup.class);
+//        
+//        if (ignoreLogging != null) {
+//            return;
+//        }
+//        
+//        BackupRepositoryWorker backupWorker = new BackupRepositoryWorker(userId, oldObject, mongo, morphia, storeId, database, collection);
+//        new Thread(backupWorker).start();
     }
 
     public List<DataCommon> query(DBObject dbObject, String storeId) {
-        DB db = mongo.getDB("backup");
-        DBCollection col = db.getCollection("col_" + storeId);
-        DBCursor cur = col.find(dbObject);
-        
-        List<DataCommon> dataRet = new ArrayList();
-        while(cur.hasNext()) {
-            DBObject obj = cur.next();
-            DataCommon data = morphia.fromDBObject(DataCommon.class, obj);
-            dataRet.add(data);
-        }
-        
-        return dataRet;
+        return new ArrayList();
+//        DB db = mongo.getDB("backup");
+//        DBCollection col = db.getCollection("col_" + storeId);
+//        DBCursor cur = col.find(dbObject);
+//        
+//        List<DataCommon> dataRet = new ArrayList();
+//        while(cur.hasNext()) {
+//            DBObject obj = cur.next();
+//            DataCommon data = morphia.fromDBObject(DataCommon.class, obj);
+//            dataRet.add(data);
+//        }
+//        
+//        return dataRet;
     }
 
 }

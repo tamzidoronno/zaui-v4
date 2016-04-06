@@ -275,6 +275,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public void addTempUserForcedLogon(User user) {
         getUserStoreCollection(storeId).addUserDirect(user);
         sessionFactory.addToSession(getSession().id, "user", user.id);
+        saveSessionFactory();
     }
     
     @Override
@@ -782,11 +783,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         checkUserAccess(user);
         sessionFactory.addToSession(getSession().id, "impersonatedUser", userId);
+        saveSessionFactory();
     }
 
     @Override
     public void cancelImpersonating() throws ErrorException {
         sessionFactory.cancelImpersonating(getSession().id);
+        saveSessionFactory();
     }
 
     @Override

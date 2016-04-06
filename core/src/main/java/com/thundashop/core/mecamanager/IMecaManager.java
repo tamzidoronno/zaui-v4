@@ -5,20 +5,37 @@
  */
 package com.thundashop.core.mecamanager;
 
+import com.thundashop.core.common.Customer;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.meca.data.RPCResult;
-import com.thundashop.core.meca.data.Vehicle;
+import java.util.List;
 
 /**
  *
  * @author emil
  */
 @GetShopApi
-public interface IMecaApi {
+public interface IMecaManager {
     
-    RPCResult createAccount(String phoneNumber);
-    RPCResult login(String phoneNumber, String password);
-    RPCResult changePassword(String phoneNumber, String oldPassword, String newPassword1, String newPassword2);
-    RPCResult addVehicle(String phoneNumber, Vehicle vehicle);
+
+    @Editor
+    public MecaFleet createFleet(MecaFleet fleet);
     
+    @Editor
+    public List<MecaFleet> getFleets();
+    
+    @Customer
+    public MecaFleet getFleetPageId(String pageId);
+    
+    @Editor
+    public void saveFleetCar(String pageId, MecaCar car);
+    
+    @Customer
+    public List<MecaCar> getCarsForMecaFleet(String pageId);
+    
+    @Editor
+    public void deleteCar(String carId);
+    
+    @Customer
+    public MecaCar getCarByPageId(String pageId);
 }

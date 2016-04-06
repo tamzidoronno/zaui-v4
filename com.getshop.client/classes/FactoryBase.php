@@ -110,6 +110,10 @@ class FactoryBase {
         return \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor();
     }
 
+    public function isAdminMode() {
+        return \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
+    }
+
     public function __f($string) {
         return $this->__($string);
     }

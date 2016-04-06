@@ -41,7 +41,9 @@ foreach($bookings as $booking) {
         echo "<tr bookingid='".$booking->id."' roomid='".$room->pmsBookingRoomId ."'>";
         echo "<td width='30'>";
         echo "<i class='fa fa-trash-o deleteroom'></i> ";
-        echo "<i class='fa fa-edit editroom'></i>";
+        if($this->isEditorMode() || $this->isAdminMode() || $config->autoconfirmRegisteredUsers) {
+            echo "<i class='fa fa-edit editroom'></i>";
+        }
         echo "</td>";
         echo "<td>";
         if(isset($items[$room->bookingItemId])) {

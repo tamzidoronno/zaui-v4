@@ -8,6 +8,16 @@ app.PmsEventCalendar = {
         $(document).on('change', '.PmsEventCalendar .eventeditform select', app.PmsEventCalendar.updateFields);
         $(document).on('change', '.PmsEventCalendar .eventeditform textarea', app.PmsEventCalendar.updateFields);
         $(document).on('change', '.PmsManagement .addToEventList', app.PmsEventCalendar.addToEventList);
+        $(document).on('click', '.PmsEventCalendar .deleteevent', app.PmsEventCalendar.deleteevent);
+        
+    },
+    deleteevent : function() {
+        var dodelete = confirm("Are you sure you want to delete this event?");
+        if(dodelete) {
+            thundashop.Ajax.simplePost($(this), 'removeEntry', {
+                "id" : $(this).attr('eventid')
+            });
+        }
     },
     addToEventList : function() {
         var instanceid = $(this).attr('instanceid');

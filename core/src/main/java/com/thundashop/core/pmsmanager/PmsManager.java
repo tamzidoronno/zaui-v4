@@ -423,6 +423,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (loggedonuser != null && configuration.autoconfirmRegisteredUsers) {
             booking.confirmed = true;
         }
+        if(loggedonuser != null && (loggedonuser.isAdministrator() || loggedonuser.isEditor())) {
+            booking.confirmed = true;
+        }
         
         booking.sessionId = "";
 
@@ -2957,6 +2960,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsBooking> filterByUser(List<PmsBooking> finalized, String userId) {
         if(userId == null || userId.isEmpty()) {
             return finalized;
+        }
+        
+        User loggedon = userManager.getLoggedOnUser();
+        if(loggedon == null) {
+            return new ArrayList();
+        }
+        if(!loggedon.isAdministrator() && !loggedon.isEditor()) {
+            if(!loggedon.id.equals(userId)) {
+                return new ArrayList();
+            }
         }
         
         List<PmsBooking> res = new ArrayList();

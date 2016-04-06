@@ -39,7 +39,7 @@ foreach($sortList as $idx => $date) {
         $shortId = explode("-", $eventEntry->id);
         $edit = "";
         if($this->isEditorMode()) {
-            $edit = "<a><i class='fa fa-trash-o'  gstype='clicksubmit' method='removeEntry' gsname='id' gsvalue='".$eventEntry->id."' ></i></a> ";
+            $edit = "<i class='fa fa-trash-o deleteevent' eventid='".$eventEntry->id."' ></i> ";
             $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><i class='fa fa-edit'></i></a> ";
         }
         echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$date."'>" . $eventEntry->title  . " <span style='font-size: 12px;'>les mer</span></a></h2>";

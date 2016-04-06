@@ -131,7 +131,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             $endTime = $start + (60*$minutes*$i);
             $state = $this->getBlockState($room, $day, $startTime, $endTime);
             if(!$lines[$i-1]) {
-                if(!$this->isEditorMode()) {
+                if(!$this->isAdminMode()) {
                     $state = "not_available";
                 }
             }

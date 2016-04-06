@@ -1,4 +1,7 @@
 .gs_page_width { max-width: 1024px; margin: auto;}
+
+.gsarea[area="header"] .gs_page_width { max-width: 100% !important; }
+
 .Menu { text-align:  left; color: #aaa; padding-top: 20px !important; }
 .Menu .entry a { color: #aaa; font-size: 12px; text-transform: uppercase;
           letter-spacing: 3px;

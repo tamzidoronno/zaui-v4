@@ -150,7 +150,7 @@ class ApplicationManager extends FactoryBase {
         $config->keepAspect = $_POST['data']['keepAspect'];
         $config->windowWidth = $_POST['data']['windowWidth'];
         $config->innerWidth = $_POST['data']['innerWidth'];
-        $config->heightIsMaximumHeight = $_POST['data']['heightIsMaximumHeight'];
+        $config->heightIsMaximumHeight = ($_POST['data']['heightIsMaximumHeight'] == "true");
         $config->hideDots = $_POST['data']['hideDots'];
         
         if($_POST['data']['carouselnumber'] == "true") {

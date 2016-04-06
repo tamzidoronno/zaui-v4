@@ -56,9 +56,7 @@ class PmsDayOverview extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
     }
 
-    public function markedAsReturned($roomid) {
-        $time = strtotime(date("d.m.Y 08:00", time()));
-        $room = $this->getApi()->getPmsManager()->getRoomForItem($this->getSelectedName(),  $roomid, $this->convertToJavaDate($time));
+    public function markedAsReturned($roomid, $room) {
         if($room != null) {
             return $room->keyIsReturned;
         }

@@ -124,12 +124,19 @@ Click on the room where the key has been returned.<br>
 $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 foreach($rooms as $room) {
     $marked = "";
-    $found = $this->markedAsReturned($room->id);
+    $time = strtotime(date("d.m.Y 08:00", time()));
+    $pmsroom = $this->getApi()->getPmsManager()->getRoomForItem($this->getSelectedName(),$room->id, $this->convertToJavaDate($time));
+    
+    $found = $this->markedAsReturned($room->id, $pmsroom);
     if($found === "notinuse") {
         $marked = "style='background-color:gray;'";
     } elseif($found == true) {
         $marked = "style='background-color:green;color:#fff;'";
     }
-    echo "<span class='keyreturnedroom' roomid='".$room->pmsBookingRoomId."' $marked>" . $room->bookingItemName . "</span>";
+    $pmsid = "";
+    if($pmsroom) {
+        $pmsid = $pmsroom->pmsBookingRoomId;
+    }
+    echo "<span class='keyreturnedroom' roomid='".$pmsid."' $marked>" . $room->bookingItemName . "</span>";
 }
 ?>

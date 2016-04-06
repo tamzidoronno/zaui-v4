@@ -7,18 +7,15 @@ package com.thundashop.core.mecamanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.meca.data.MecaUser;
-import com.thundashop.core.meca.data.RPCResult;
-import com.thundashop.core.meca.data.Vehicle;
-import com.thundashop.core.meca.data.Workshop;
-import com.thundashop.core.messagemanager.MessageManager;
-import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.pagemanager.PageManager;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,111 +25,172 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @GetShopSession
-public class MecaManager extends ManagerBase implements IMecaApi {
+public class MecaManager extends ManagerBase implements IMecaManager {
 
-    private Map<String, MecaUser> mecaUsers = new HashMap<String, MecaUser>();
-    private Map<String, Workshop> workshops = new HashMap<String, Workshop>();
+    @Autowired
+    public PageManager pageManager;
     
-    @Autowired
-    private UserManager userManager;
-    @Autowired
-    private MessageManager messageManager;
+    private Map<String, MecaFleet> fleets = new HashMap();
+    private Map<String, MecaCar> cars = new HashMap();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
         
         for (DataCommon obj : data.data) {
-            // load users
-            if (obj instanceof MecaUser) {
-                MecaUser mu = (MecaUser) obj;
-                mecaUsers.put(mu.getUserId(), mu);
-                
-                // link meca user to getshop user on transient field
-                // just for coding convenience
-                User getshopUser = userManager.getUserById(mu.getUserId());
-                mu.setGetshopUser(getshopUser);
-                if (getshopUser == null) {
-                    System.out.println("Found meca user for which there is no getshop user. Id: " + mu.getUserId());
-                }
-            }
             // load workshops
-            if (obj instanceof Workshop) {
-                Workshop workshop = (Workshop) obj;
-                workshops.put(workshop.id, workshop);
+            if (obj instanceof MecaFleet) {
+                MecaFleet fleet = (MecaFleet) obj;
+                fleets.put(fleet.id, fleet);
             }
+            
+            if (obj instanceof MecaCar) {
+                MecaCar car = (MecaCar) obj;
+                cars.put(car.id, car);
+            }
+        }
+    }
+
+    @Override
+    public MecaFleet createFleet(MecaFleet fleet) {
+        saveObject(fleet);
+        fleets.put(fleet.id, fleet);
+        return fleet;
+    }
+
+    @Override
+    public List<MecaFleet> getFleets() {
+        fleets.values().stream().forEach(o -> finalize(o));
+        return new ArrayList(fleets.values());
+    }
+
+    private void finalize(MecaFleet o) {
+        if (o == null) {
+            return;
+        }
+        
+        if (o.pageId == null || o.pageId.isEmpty()) {
+            o.pageId = pageManager.createPageFromTemplatePage("mecafleet_template_page").id;
+            saveObject(o);
+        }
+        
+        checkAccess(o);
+    }
+
+    @Override
+    public MecaFleet getFleetPageId(String pageId) {
+        
+        MecaFleet fleet = fleets.values().stream()
+                .filter(o -> o.pageId.equals(pageId))
+                .findFirst()
+                .orElse(null);
+        
+        finalize(fleet);
+        
+        return fleet;
+    }
+
+    private void checkAccess(MecaFleet fleet) {
+        // TODO
+    }
+
+    @Override
+    public void saveFleetCar(String pageId, MecaCar car) {
+        MecaFleet fleet = getFleetPageId(pageId);
+        
+        if (fleet == null) {
+            fleet = getFleetThatCarBelongsTo(car);
+        }
+        
+        finalize(fleet);
+        
+        if (fleet == null) {
+            throw new NullPointerException("Why is there cars created without connections to a fleet?");
+        }
+        
+        saveObject(car);
+        finalize(car);
+        cars.put(car.id, car);
+        
+        if (!fleet.cars.contains(car.id)) {
+            fleet.cars.add(car.id);
+            saveObject(fleet);
+        }
+        
+        
+    }
+
+    @Override
+    public List<MecaCar> getCarsForMecaFleet(String pageId) {
+        MecaFleet fleet = getFleetPageId(pageId);
+        finalize(fleet);
+        
+        if (fleet == null) {
+            return new ArrayList();
+        }
+        
+        List<MecaCar> retCars = fleet.cars.stream()
+                .map(o -> cars.get(o))
+                .collect(Collectors.toList());
+        
+        retCars.forEach(o -> finalize(o));
+        return retCars;
+    }
+    
+    public void deleteCar(String carId) {
+        fleets.values().stream()
+                .forEach(o -> removeCarFromList(o, carId));
+        
+        MecaCar car = cars.remove(carId);
+        if (car != null) {
+            deleteObject(car);
+        }
+    }
+
+    private void removeCarFromList(MecaFleet fleet, String carId) {
+        boolean removed = fleet.cars.remove(carId);
+        if (removed) {
+            saveObject(fleet);
+        }
+    }
+
+    private void finalize(MecaCar car) {
+        if (car == null) {
+            return;
+        }
+        
+        if (car.pageId == null || car.pageId.isEmpty()) {
+            car.pageId = pageManager.createPageFromTemplatePage("meca_car_template").id;
+            saveObject(car);
         }
         
     }
 
     @Override
-    public RPCResult createAccount(String phoneNumber) {
-        // Validate input
-        if (phoneNumber == null || phoneNumber.isEmpty())
-            return new RPCResult(RPCResult.ERROR, "phoneNumber is null or empty");
-        if (phoneNumber.length() != 8 || phoneNumber.matches("[0-9]+"))
-            return new RPCResult(RPCResult.ERROR, "phoneNumber is invalid");
+    public MecaCar getCarByPageId(String pageId) {
+        MecaCar car = cars.values().stream()
+                .filter(o -> o.pageId != null && o.pageId.equals(pageId))
+                .findFirst()
+                .orElse(null);
         
-        // Check if given phone number doesn't already have an account
-        for (MecaUser mecaUser : mecaUsers.values()) {
-            if (mecaUser.getGetshopUser() == null) 
-                continue;
-            if (phoneNumber.equals(mecaUser.getGetshopUser().cellPhone)) {
-                return new RPCResult(RPCResult.ERROR, "This phone number already has an account.");
-            }
+        if (car == null) {
+            return null;
         }
         
-        // Generate 4 digit number and set it as temporary password for new user
-        String generatedNumber = "9999";
-        // Create new user
-        User getshopUser = new User();
-        getshopUser.id = UUID.randomUUID().toString();
-        getshopUser.type = User.Type.CUSTOMER;
-        getshopUser.password = generatedNumber;
-        getshopUser.storeId = storeId;
-        getshopUser.cellPhone = phoneNumber;
-        getshopUser = userManager.createUser(getshopUser);
-
-        MecaUser mecaUser = new MecaUser();
-        mecaUser.setGetshopUser(getshopUser);
-        mecaUser.setUserId(getshopUser.id);
-        mecaUser.storeId = storeId;
+        MecaFleet fleet = getFleetThatCarBelongsTo(car);
+        if (fleet == null) {
+            throw new ErrorException(26);
+        }
         
-        saveObject(mecaUser);
+        checkAccess(fleet);
         
-        mecaUsers.put(mecaUser.getUserId(), mecaUser);
-        
-        // Send temporary password to the given phone number
-        // For now everything goes to Emil's phone number
-//        messageManager.sendSms("46505705", "Meca here. Your temporary password is: " + generatedNumber);
-        
-        return new RPCResult();
+        return car;
     }
 
-    @Override
-    public RPCResult login(String phoneNumber, String password) {
-        // Check if such account exists and try to authenticate
-        
-        // Check if it is first-time login. If so we should ask to change password.
-        
-        
-        return null;
-    }
-
-    @Override
-    public RPCResult changePassword(String phoneNumber, String oldPassword, String newPassword1, String newPassword2) {
-        // Check if user exists
-        
-        // First try to authenticate user with old password
-        
-        // Validate new password
-        
-        // Set new password
-        return null;
-    }
-
-    @Override
-    public RPCResult addVehicle(String phoneNumber, Vehicle vehicle) {
-        return null;
+    private MecaFleet getFleetThatCarBelongsTo(MecaCar car) {
+        return fleets.values().stream()
+                .filter(o -> o.cars.contains(car.id))
+                .findAny()
+                .orElse(null);
     }
 
 }

@@ -6,6 +6,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
@@ -76,7 +77,7 @@ public interface IBookingEngine {
     @Administrator
     public void deleteOpeningHours(String repeaterId);
     
-    @Administrator
+    @Editor
     List<BookingItem> getAllAvailbleItems(Date start, Date end);
     
     @Administrator

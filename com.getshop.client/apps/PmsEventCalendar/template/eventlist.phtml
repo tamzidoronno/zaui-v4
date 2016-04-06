@@ -50,7 +50,8 @@ foreach($sortList as $idx => $date) {
         $edit = "";
         if($this->isEditorMode()) {
             $edit = "<i class='fa fa-trash-o deleteevent' eventid='".$eventEntry->id."' ></i> ";
-            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."&time=$date'><i class='fa fa-edit'></i></a> ";
+            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><i class='fa fa-pencil-square' title='Endre alle eventer i denne serien'></i></a> ";
+            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."&time=$date'><i class='fa fa-edit' title='Endre dette enkelteventet'></i></a> ";
         }
         echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$date."'>" . $title  . " <span style='font-size: 12px;'>les mer</span></a></h2>";
 

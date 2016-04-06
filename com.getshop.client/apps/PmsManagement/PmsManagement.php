@@ -693,6 +693,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return true;
         }
 
+        
+        if($filter->searchWord) {
+            return true;
+        }
+        
         $filterStart = strtotime($filter->startDate);
         $filterEnd = strtotime($filter->endDate);
         

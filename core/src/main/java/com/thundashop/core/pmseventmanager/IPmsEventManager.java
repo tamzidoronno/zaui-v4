@@ -15,12 +15,12 @@ import java.util.List;
 @GetShopMultiLayerSession
 public interface IPmsEventManager {
     public List<PmsBookingEventEntry> getEventEntries(PmsEventFilter filter);
-    public void saveEntry(PmsBookingEventEntry entry);
+    public void saveEntry(PmsBookingEventEntry entry, String day);
     @Administrator
-    public void deleteEntry(String entryId);
+    public void deleteEntry(String entryId, String day);
     @Administrator
     public PmsBookingEventEntry createEvent(String id);
             
-    public PmsBookingEventEntry getEntry(String entryId);
-    public PmsBookingEventEntry getEntryShort(String shortId);
+    public PmsBookingEventEntry getEntry(String entryId, String day);
+    public PmsBookingEventEntry getEntryShort(String shortId, String day);
 }

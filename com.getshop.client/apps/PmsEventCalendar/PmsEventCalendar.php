@@ -107,7 +107,12 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     }
     
     public function savePostedForm() {
-        $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_POST['data']['eventid']);
+        $day = "";
+        $time = $_POST['data']['time'];
+        if($time) {
+            $day = date("Y-m-d", $time);
+        }
+        $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_POST['data']['eventid'], $day);
         $event->{"title"} = $_POST['data']['title'];
         $event->{"shortdesc"} = $_POST['data']['shortdesc'];
         $event->{"starttime"} = $_POST['data']['starttime'];
@@ -115,7 +120,7 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         $event->{"description"} = $_POST['data']['description'];
         
         
-        $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event);
+        $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
     }
     
     public function render() {

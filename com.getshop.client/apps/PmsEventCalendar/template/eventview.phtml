@@ -1,7 +1,13 @@
 <?php
 /* @var $this \ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
+$day = "";
 
-$event = $this->getApi()->getPmsEventManager()->getEntryShort($this->getSelectedName(), $_GET['readevent']);
+if(isset($_GET['time'])) {
+    $time = $_GET['time'];
+    $day = date("Y-m-d", $time);
+}
+
+$event = $this->getApi()->getPmsEventManager()->getEntryShort($this->getSelectedName(), $_GET['readevent'], $day);
 $edit = "";
 if($this->isEditorMode()) {
     $edit = "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$event->id."'><i class='fa fa-edit'></i></a> ";
@@ -30,9 +36,6 @@ echo "<h1>" .$edit . $event->title . "</h1>";
 echo "<div style='font-size:12px;'>";
 $time = strtotime($idx);
 
-if(isset($_GET['time'])) {
-    $time = $_GET['time'];
-}
 
 echo $this->__w(date("l", $time)) . " " . (int)date("d", $time) . ". " . strtolower($this->__w(date("F", $time))) . " klokken " . $event->starttime;
 echo "</div>";

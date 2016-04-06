@@ -24,31 +24,41 @@ foreach($sortList as $idx => $date) {
     if(!$eventEntry->starttime) {
         $eventEntry->starttime = date("H:i", strtotime($eventEntry->dateRanges[0]->start));
     }
+    $title = $eventEntry->title;
+    $starttime = $eventEntry->starttime;
+    $shortDesc = $eventEntry->shortdesc;
+    $day = date("Y-m-d", $date);
+    
+    if(isset($eventEntry->overrideEntries->{$day})) {
+        $title = $eventEntry->overrideEntries->{$day}->title;
+        $starttime = $eventEntry->overrideEntries->{$day}->starttime;
+        $shortDesc = $eventEntry->overrideEntries->{$day}->shortdesc;
+    }
     if(isset($_GET['list']) && $_GET['list'] == "tiny") {
         echo "<tr>";
         echo "<td valign='top' width='50'><div>".date("d.", $date). "<br>" . date("M", $date) ."</div></td>";
         echo "<td valign='top' class='listtext'>";
-        echo $eventEntry->title . "<br>";
-        echo $eventEntry->starttime;
+        echo $title . "<br>";
+        echo $starttime;
         echo "</td>";
         echo "</tr>";
     } else {
         echo "<tr>";
-        echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $date). " " . date("M", $date) ."</div><div>".$eventEntry->starttime."</div></td>";
+        echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $date). " " . date("M", $date) ."</div><div>".$starttime."</div></td>";
         echo "<td valign='top' class='listtext'>";
         $shortId = explode("-", $eventEntry->id);
         $edit = "";
         if($this->isEditorMode()) {
             $edit = "<i class='fa fa-trash-o deleteevent' eventid='".$eventEntry->id."' ></i> ";
-            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><i class='fa fa-edit'></i></a> ";
+            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."&time=$date'><i class='fa fa-edit'></i></a> ";
         }
-        echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$date."'>" . $eventEntry->title  . " <span style='font-size: 12px;'>les mer</span></a></h2>";
+        echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$date."'>" . $title  . " <span style='font-size: 12px;'>les mer</span></a></h2>";
 
         echo "<div class='arrangedby'>" . $eventEntry->arrangedBy . "</div>";
         if(isset($cats[$eventEntry->category])) {
 //            echo "<div><span class='cat'>" . $cats[$eventEntry->category] . "</span></div>";
         }
-        echo nl2br(trim($eventEntry->shortdesc)) . "<br><br>";
+        echo nl2br(trim($shortDesc)) . "<br><br>";
         echo "</td>";
         echo "<tr>";
     }

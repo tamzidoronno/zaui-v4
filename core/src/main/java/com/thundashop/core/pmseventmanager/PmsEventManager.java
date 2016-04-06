@@ -58,21 +58,27 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
             return result;
         }
         for(String id : filter.bookingIds) {
-            result.add(getEntry(id));
+            result.add(getEntry(id, ""));
         }
         
         return result;
     }
 
     @Override
-    public void saveEntry(PmsBookingEventEntry entry) {
-        entries.put(entry.id, entry);
-        saveObject(entry);
+    public void saveEntry(PmsBookingEventEntry entry, String day) {
+        if(day != null && !day.isEmpty()) {
+            PmsBookingEventEntry oldentry = getEntry(entry.id, "");
+            oldentry.saveDay(entry, day);
+            saveObject(oldentry);
+        } else {
+            entries.put(entry.id, entry);
+            saveObject(entry);
+        }
     }
 
     @Override
-    public void deleteEntry(String entryId) {
-        PmsBookingEventEntry entry = getEntry(entryId);
+    public void deleteEntry(String entryId, String day) {
+        PmsBookingEventEntry entry = getEntry(entryId, day);
         entries.remove(entryId);
         deleteObject(entry);
     }
@@ -86,22 +92,29 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         entry.shortdesc = result.registrationData.resultAdded.get("shortdesc");
         setRooms(entry, result);
         entries.put(entry.id, entry);
-        saveEntry(entry);
+        saveEntry(entry, "");
         return entry;
     }
 
     @Override
-    public PmsBookingEventEntry getEntry(String entryId) {
+    public PmsBookingEventEntry getEntry(String entryId, String day) {
         if(entries.get(entryId) == null) {
             createEvent(entryId);
         }
-        return finalize(entries.get(entryId));
+        
+        PmsBookingEventEntry entry = finalize(entries.get(entryId));
+        if(day != null && !day.isEmpty()) {
+            entry = entry.getDay(day);
+            entry.id = entryId;
+        }
+        return entry;
     }
 
     @Override
-    public PmsBookingEventEntry getEntryShort(String shortId) {
+    public PmsBookingEventEntry getEntryShort(String shortId, String day) {
         for(PmsBookingEventEntry entry : entries.values()) {
             if(entry.id.startsWith(shortId)) {
+                entry = getEntry(entry.id, day);
                 finalize(entry);
                 return entry;
             }

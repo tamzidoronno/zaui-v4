@@ -2,16 +2,20 @@
 /* @var $this ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
 $cagetories = $this->getCategories();
 $time = "";
-if(isset($_GET['time'])) {
+$day = "";
+if(isset($_GET['time']) && $_GET['time']) {
     $time = $_GET['time'];
+    $day = date("Y-m-d", $time);
 }
-$event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_GET['eventid']);
+
+
+$event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_GET['eventid'], $day);
 $starttime = $event->dateRanges[0]->start;
 if(!$event->starttime) {
     $event->starttime = date("H:i", strtotime($starttime));
 }
 ?>
-<?php if(sizeof($event->dateRanges) > 0) { ?>
+<?php if(sizeof($event->dateRanges) > 1) { ?>
 <center>
     <form action="" method="GET" id="changedates">
         <input type="hidden" name="page" value="<?php echo $_GET['page']; ?>">

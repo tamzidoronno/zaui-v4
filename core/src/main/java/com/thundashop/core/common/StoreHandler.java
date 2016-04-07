@@ -270,6 +270,10 @@ public class StoreHandler {
         if (userLevel == null) {
             userLevel = executeMethod.getAnnotation(Editor.class);
         }
+        
+        if (userLevel == null) {
+            userLevel = executeMethod.getAnnotation(Customer.class);
+        }
 
         if (userLevel != null) {
             User user = findUser(getShopInterfaceClass, inObject);
@@ -302,6 +306,9 @@ public class StoreHandler {
                 throw new ErrorException(26);
             }
             if (userLevel instanceof Editor && (!user.isEditor() && !user.isAdministrator())) {
+                throw new ErrorException(26);
+            }
+            if (userLevel instanceof Customer && (user == null || user.type < 10)) {
                 throw new ErrorException(26);
             }
         }

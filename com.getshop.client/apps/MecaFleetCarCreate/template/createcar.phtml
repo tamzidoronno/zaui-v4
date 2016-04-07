@@ -1,0 +1,40 @@
+<?
+/* @var $this ns_cf32e5a8_faf9_4039_92cd_176b5d3113ec\MecaFleetCarCreate */
+$car = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
+
+$id = $car ? $car->id : "";
+$regnr = $car ? $car->licensePlate : "";
+$km = $car ? $car->kilometers : "";
+$phone = $car ? $car->cellPhone : "";
+$eutime = $car && $car->prevControll ? strtotime($car->prevControll) : time();
+$eu =date('Y-m-d',$eutime);
+
+?>
+<div gstype="form" method="saveCar">
+    <input type='hidden' value='<? echo $id; ?>' gsname='carId'/>
+    <div>
+        Reg nr:
+        <br/><input class="gsniceinput1" type="textfield" gsname="regnr" placeholder="RZ17527" value='<? echo $regnr; ?>'/>
+    </div>
+    <br/>
+    
+    <div>
+        Telefonnr:
+        <br/><input class="gsniceinput1" type="textfield" gsname="phone" placeholder="42411473"  value='<? echo $phone; ?>'/>
+    </div>
+    <br/>
+    
+    <div>
+        Km stand:
+        <br/><input class="gsniceinput1" type="textfield" gsname="kmstand" placeholder="127000"  value='<? echo $km; ?>'/>
+    </div>
+    <br/>
+    
+    <div>
+        Siste EU Kontroll gjennomført:
+        <br/><input class="gsniceinput1" type="date" gsname="eukontroll" value='<? echo $eu; ?>'/>
+        <div style='padding-top: 10px; padding-left: 20px;'> * Hvis bilen er ny, sett denne datoen 2 år får den skal inn på neste kontroll.</div>
+    </div>
+    <br/>
+    <div class="shop_button" gstype="submit"  ><i class="fa fa-save"></i> Lagre</div>
+</div>

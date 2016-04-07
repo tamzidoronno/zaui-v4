@@ -1,0 +1,20 @@
+<?
+/* @var $this ns_13e03ff7_8334_45eb_a280_c772c3262325\MecaFleetCars */
+$cars = $this->getApi()->getMecaManager()->getCarsForMecaFleet($this->getPage()->getId());
+
+if (!count($cars)) {
+    return;
+}
+
+foreach ($cars as $car) {
+?>
+    <a href='/?page=<? echo $car->pageId; ?>'>
+        <div class='car'>
+            <div><? echo $car->licensePlate; ?></div>
+            <div>Telefonnr: <? echo $car->cellPhone; ?></div>
+            <div>Nåværende kilometerstand: <? echo $car->kilometers; ?></div>
+        </div>
+    </a>
+<?
+}
+?>

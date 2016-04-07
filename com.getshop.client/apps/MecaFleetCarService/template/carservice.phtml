@@ -1,0 +1,58 @@
+<?
+/* @var $this ns_c5ecb4c4_1f18_4016_8c15_0ea519c91974\MecaFleetCarService */
+$car = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
+$date = $car && $car->lastService ? date('Y-m-d',strtotime($car->lastService)) : date('Y-m-d', time());
+
+$nextServiceDate = $car ? date('d/m-Y',strtotime($car->nextService)) : "";
+$nextControll = $car ? date('d/m-Y',strtotime($car->nextControll)) : "";
+
+?>
+
+<div gstype='form' method='save'>
+    <div>Når var den inne sist<br/> <input type='date' class='gsniceinput1' gsname='lastservicedate' value='<? echo $date; ?>'/> </div>
+
+    <br/><div>Når var den inne kilometerstand<br/> <input type='textfield' class='gsniceinput1' placeholder='120000' gsname='lastservicekm' value='<? echo $car->lastServiceKilomters; ?>'/> </div>
+
+    <br/><div>Hvor mange kilometer mellom hver service?<br/> <input type='textfield' class='gsniceinput1' placeholder='12000' gsname='servicekm' value='<? echo $car->kilometersBetweenEachService; ?>'/> </div>
+
+    <br/><div>Hvor mange måneder mellom hver service?<br/> <input type='textfield' class='gsniceinput1' placeholder='18' gsname='months' value='<? echo $car->monthsBetweenServices; ?>'/> </div>
+
+    <br/><div gstype='submit' class='shop_button'><i class='fa fa-save'></i> Lagre serviceintervaller </div>
+</div>
+
+<br/>
+<div>
+    <b>Neste service:</b> 
+    <? if (!$car->nextServiceKilometers && !$car->nextService) { ?>
+        Ukjent.
+    <?
+    } else {
+    ?>
+        <br/>
+    <? } ?>
+    
+    
+    
+    <? if ($car->nextServiceKilometers) { ?>
+        Bilen skal inn på kontroll når kilomterstanden har nådd <? echo $car->nextServiceKilometers; ?> km 
+        
+    <? } ?>
+    <? if ($nextServiceDate && $car->nextService) { ?>
+        eller 
+    <? } ?>
+    <? if ($car->nextService) { ?>
+        innen datoen <? echo $nextServiceDate; ?>.
+    <? } ?>
+        
+    <br/>
+    <br/><b>Neste EU Kontroll:</b> 
+    <?
+    if ($car->nextControll) {
+    ?>
+    <br/><? echo $nextControll; ?>
+    <? } else { ?>
+        Ukjent
+    <? } ?>
+    
+   
+</div>

@@ -1,0 +1,61 @@
+.MecaFleetGroupList .fleet {
+    cursor: pointer;
+    position: relative;
+}
+
+.MecaFleetGroupList .rightcontent,
+.MecaFleetGroupList .leftcontent {
+    display: inline-block;
+    vertical-align: top;
+    color: #666;
+}
+
+.MecaFleetGroupList .leftcontent {
+    width: 120px; 
+    height: 120px;
+    border-radius: 100px;
+    background-color: #FFF;
+    text-align: center;
+    line-height: 120px;
+    font-size: 50px;
+    
+}
+
+.MecaFleetGroupList .rightcontent {
+    width: calc(100% - 170px);
+    border: solid 0px;
+    margin-left: 30px;
+}
+
+.MecaFleetGroupList .rightcontent .description {
+    padding: 10px;
+    line-height: 25px;
+}
+
+.MecaFleetGroupList .fleet .shop_button {
+    position: absolute;
+    right: 45px;
+    bottom: 45px;
+}
+
+.MecaFleetGroupList .rightcontent .title {
+    border-bottom: solid 1px #DDD;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    font-size: 20px;
+}
+
+.MecaFleetGroupList .fleet {
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+
+    height: 200px;
+    box-sizing: border-box;
+    padding: 30px;
+    border: solid 1px #EEE;
+    margin-top: 50px;
+}
+

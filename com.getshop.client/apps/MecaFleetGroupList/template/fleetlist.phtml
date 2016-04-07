@@ -1,0 +1,26 @@
+<?
+/* @var $this \ns_4efffb46_74a9_404f_8be0_2ac856bad401\MecaFleetGroupList */
+$fleets = $this->getApi()->getMecaManager()->getFleets();
+foreach ($fleets as $fleet) {
+    $carCount = count($fleet->cars);
+    ?>
+    <a href="/index.php?page=<? echo $fleet->pageId; ?>">
+        <div class="fleet">
+            <div class="leftcontent">
+                <? echo $carCount; ?>
+            </div>
+            <div class="rightcontent">
+                <div class="title"><? echo $fleet->name; ?></div>    
+                <div class="description">
+                    Det er <? echo $carCount; ?> bil(er) i denne gruppen. 
+                    <br/> Antall biler som skal på EU Kontroll innen 30 dager: 0
+                    <br/> Siste oppdatert kilometerstand: 12 jan 2016 kl 10:00
+                </div>
+            </div>
+
+            <div class="shop_button">Se mer</div>
+        </div>
+    </a>
+    <?  
+}
+?>

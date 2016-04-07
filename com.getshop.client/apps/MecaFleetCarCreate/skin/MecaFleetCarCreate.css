@@ -1,0 +1,10 @@
+.MecaFleetCarCreate {
+    border: solid 1px #EEE;
+    padding: 30px;
+    background-color: #FEFEFE;
+}
+
+.MecaFleetCarCreate input {
+    width: 100%;
+    box-sizing: border-box;
+}

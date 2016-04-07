@@ -171,14 +171,12 @@ body {
     
     .mobilenavigatemenu { display:none; }
     .gsarea[area="header"] .Menu .entry div {
-        padding-top: 0px;
-        padding-bottom: 0px;
+        padding: 0px;
         margin-top: 2px; margin-bottom: 2px;
     }
     .Menu .menuentries .entries .entry {
-        width: inherit !important; 
+        width: 25% !important; 
         display: inline-block !important; 
-        padding: 7px; 
         padding-left: 10px; 
         color:#000;
     }

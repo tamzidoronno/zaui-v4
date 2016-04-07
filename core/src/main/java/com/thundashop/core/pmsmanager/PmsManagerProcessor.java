@@ -32,6 +32,7 @@ public class PmsManagerProcessor {
         try { confirmWhenPaid(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
+        try { processStarting(-4, 0, false); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(0, 4, false); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(4, 12, false); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(12, 12 * 2, false); }catch(Exception e) { e.printStackTrace(); }
@@ -62,11 +63,12 @@ public class PmsManagerProcessor {
             //Send sms even though the event has started, 12 hours later.
             hoursAheadCheck = -12;
         }
+        
         int maxAheadCheck = maxAhead;
         if(manager.getConfigurationSecure().ignoreTimeIntervalsOnNotification && !started) {
             hoursAheadCheck = -12;
         }
-
+        
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
 
@@ -85,9 +87,9 @@ public class PmsManagerProcessor {
                     continue;
                 }
                 booking = manager.finalize(booking);
-                String key = "room_starting_" + hoursAhead + "_hours";
+                String key = "room_starting_" + maxAhead + "_hours";
                 if(started) {
-                    key = "room_started_" + hoursAhead + "_hours";
+                    key = "room_started_" + maxAhead + "_hours";
                 }
                 if (room.notificationsSent.contains(key)) {
                     continue;

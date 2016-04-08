@@ -314,16 +314,23 @@ h2 { font-weight: 700; }
 .ProductCategories .selected { color: #006699; }
 .Menu .entries .entries .entry:hover { background-color:#2091d8; }
 .Menu .entries .entries .entry:hover div { color:#fff !important; }
+.gs_language_selection { position:absolute; top: -70px; right: 0px; border: 0px; }
+.gs_language_code { background-repeat: no-repeat; font-size: 0px; height: 37px; width: 37px; padding:0px !important; margin-right: 10px; }
+.gs_lang_code_nb_NO { background-image: url('https://skytec.getshop.com/displayImage.php?id=eeeff579-0b75-483a-9574-725a0c29fead'); background-size: 37px 37px; }
+.gs_lang_code_en_en { background-image: url('https://skytec.getshop.com/displayImage.php?id=a1626d35-83cc-49c7-9c35-60a0f9784b05'); background-size: 35px 35px; }
 .Menu .mobilenavigatemenu {
     position: absolute;
     left: 10px;
     font-size: 25px;
-    top: 6px;
-    z-index: 10;
+    top: 16px;
+    z-index: 280;
 }
 
 h1,h2,h3 { color: #006699; }
 @media only all and (max-width: 800px) {
+    .gsarea[area="header"] {
+        padding-top: 25px;
+    }
     .Menu .menuentries.horizontal {
         left: 10px;
         top: 41px;
@@ -331,15 +338,19 @@ h1,h2,h3 { color: #006699; }
         padding-right: 30px;
         padding-left: 30px;
         background-color: #000;
+        width:100%;
+        box-sizing: border-box;
+        
     }
     .ProductLists .templatebox_1 .productbox:hover .addProductToCart { background-color: inherit !important; color:#000 !important; }
-    .gs_page_width { padding-left: 10px; padding-right: 10px; }
-    .gsarea[area="header"] .Menu .menuentries .entries .entries .entry div { border-bottom: 0px; }
+    .gs_page_width { padding-left: 20px; padding-right: 20px; }
+    .gsarea[area="header"] .Menu .menuentries .entries .entries .entry div { border-bottom: 0px; color:#fff; }
     .gsarea[area="header"] .Menu .menuentries .entries .entries {background-color: #000; }
     .gsuicell .gscell_49 { display:none !important; }
-    .CartHeader { margin-right: 10px; }
-    
+    .CartHeader { margin-right: 10px; margin-top: 10px; }
+    .gstabheader .gstabbtn { margin: 0px !important;}
     .gscell_34 .imagecontainer.adjust_center { display:none; }
+    .gscell_339.gsuicell .shop_button { width: 100%; }
     
     .gsrotateright {
         right: 0px;
@@ -349,9 +360,9 @@ h1,h2,h3 { color: #006699; }
         left: 0px;
         top: 35px;
     }
-
+    h1 { font-size: 30px; }
 }
-    @media only all and (max-width: 1100px) { 
+    @media only all and (max-width: 1100px) {
     .gsrotating .ContentManager h1 { font-size: 30px !important; }
     
     

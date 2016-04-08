@@ -694,7 +694,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
 
         
-        if($filter->searchWord) {
+        if(isset($filter->searchWord) && $filter->searchWord) {
             return true;
         }
         

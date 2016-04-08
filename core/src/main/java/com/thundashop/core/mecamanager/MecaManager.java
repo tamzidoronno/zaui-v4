@@ -163,6 +163,8 @@ public class MecaManager extends ManagerBase implements IMecaManager {
             saveObject(car);
         }
         
+        car.calculateNextValues();
+        
     }
 
     @Override

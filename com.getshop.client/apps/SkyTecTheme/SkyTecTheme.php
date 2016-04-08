@@ -28,5 +28,10 @@ class SkyTecTheme extends \ThemeApplication implements \Application {
         return ["people"];
     }
     
+    
+    public function getAvailableProductTemplates() {
+        return ["ecommerce_product_template_1", "ecommerce_product_template_2"];
+    }
+    
 }
 ?>

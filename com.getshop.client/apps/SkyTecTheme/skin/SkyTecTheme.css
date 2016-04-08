@@ -318,12 +318,15 @@ h2 { font-weight: 700; }
     position: absolute;
     left: 10px;
     font-size: 25px;
-    top: 6px;
-    z-index: 10;
+    top: 16px;
+    z-index: 280;
 }
 
 h1,h2,h3 { color: #006699; }
 @media only all and (max-width: 800px) {
+    .gsarea[area="header"] {
+        padding-top: 25px;
+    }
     .Menu .menuentries.horizontal {
         left: 10px;
         top: 41px;
@@ -340,8 +343,8 @@ h1,h2,h3 { color: #006699; }
     .gsarea[area="header"] .Menu .menuentries .entries .entries .entry div { border-bottom: 0px; color:#fff; }
     .gsarea[area="header"] .Menu .menuentries .entries .entries {background-color: #000; }
     .gsuicell .gscell_49 { display:none !important; }
-    .CartHeader { margin-right: 10px; }
-    
+    .CartHeader { margin-right: 10px; margin-top: 10px; }
+    .gstabheader .gstabbtn { margin: 0px !important;}
     .gscell_34 .imagecontainer.adjust_center { display:none; }
     .gscell_339.gsuicell .shop_button { width: 100%; }
     
@@ -355,7 +358,7 @@ h1,h2,h3 { color: #006699; }
     }
     h1 { font-size: 30px; }
 }
-    @media only all and (max-width: 1100px) { 
+    @media only all and (max-width: 1100px) {
     .gsrotating .ContentManager h1 { font-size: 30px !important; }
     
     

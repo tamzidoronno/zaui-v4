@@ -314,6 +314,10 @@ h2 { font-weight: 700; }
 .ProductCategories .selected { color: #006699; }
 .Menu .entries .entries .entry:hover { background-color:#2091d8; }
 .Menu .entries .entries .entry:hover div { color:#fff !important; }
+.gs_language_selection { position:absolute; top: -70px; right: 0px; border: 0px; }
+.gs_language_code { background-repeat: no-repeat; font-size: 0px; height: 37px; width: 37px; padding:0px !important; margin-right: 10px; }
+.gs_lang_code_nb_NO { background-image: url('https://skytec.getshop.com/displayImage.php?id=eeeff579-0b75-483a-9574-725a0c29fead'); background-size: 37px 37px; }
+.gs_lang_code_en_en { background-image: url('https://skytec.getshop.com/displayImage.php?id=a1626d35-83cc-49c7-9c35-60a0f9784b05'); background-size: 35px 35px; }
 .Menu .mobilenavigatemenu {
     position: absolute;
     left: 10px;

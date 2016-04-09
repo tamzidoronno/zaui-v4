@@ -1948,7 +1948,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         BookingItemType item = bookingEngine.getBookingItemType(bookingItemTypeId);
         if (item.productId != null && !item.productId.isEmpty()) {
             Product product = productManager.getProduct(item.productId);
-            if (product.taxGroupObject != null) {
+            if (product != null && product.taxGroupObject != null) {
                 return product.taxGroupObject.taxRate;
             }
             return -1.0;

@@ -32,10 +32,15 @@ function printCheckingTodayTable($bookings, $items, $filter,$object) {
     echo "</tr>";
 
     $roomList = array();
+    
+    if(!$bookings) {
+        $bookings= array();
+    }
+    
     foreach($bookings as $booking) {
         foreach($booking->rooms as $room) {
             $pmsManager = new ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement();
-            if(!$pmsManager->isActive($room, $filter)) {
+            if(!$pmsManager->isActive($room, $filter, $booking)) {
                 continue;
             }
             $room->userId = $booking->userId;
@@ -125,8 +130,8 @@ $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelected
 foreach($rooms as $room) {
     $marked = "";
     $time = strtotime(date("d.m.Y 08:00", time()));
+
     $pmsroom = $this->getApi()->getPmsManager()->getRoomForItem($this->getSelectedName(),$room->id, $this->convertToJavaDate($time));
-    
     $found = $this->markedAsReturned($room->id, $pmsroom);
     if($found === "notinuse") {
         $marked = "style='background-color:gray;'";

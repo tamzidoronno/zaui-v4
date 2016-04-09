@@ -1634,10 +1634,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         double mostExpensive = 0;
         if (files != null) {
-            for (int fileId : files) {
-                SedoxBinaryFile binFile = sharedProduct.getFileById(fileId);
-                if (binFile != null && binFile.getPrice(user) > mostExpensive) {
-                    mostExpensive = binFile.getPrice(user);
+            for (Integer fileId : files) {
+                if(fileId != null) {
+                    SedoxBinaryFile binFile = sharedProduct.getFileById(fileId);
+                    if (binFile != null && binFile.getPrice(user) > mostExpensive) {
+                        mostExpensive = binFile.getPrice(user);
+                    }
                 }
             }
         }

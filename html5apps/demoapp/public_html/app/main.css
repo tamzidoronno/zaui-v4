@@ -1,11 +1,26 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : Mar 26, 2016, 11:46:54 AM
-    Author     : boggi
-*/
+body {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#87e0fd+0,53cbf1+40,05abe0+100;Blue+3D+%23+16 */
+    background: rgb(135,224,253); /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  rgba(135,224,253,1) 0%, rgba(83,203,241,1) 40%, rgba(5,171,224,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg,  rgba(135,224,253,1) 0%,rgba(83,203,241,1) 40%,rgba(5,171,224,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg,  rgba(135,224,253,1) 0%,rgba(83,203,241,1) 40%,rgba(5,171,224,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#87e0fd', endColorstr='#05abe0',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    background-position: fixed;
+    padding-bottom: 50px;
+    margin: 0px;
+    padding: 0px;
+}
 
-body { background-color:#efefef; }
+.gs_header {
+    height: 100px;
+    text-align: center;
+}
+
+.gs_footer {
+    position: fixed;
+    bottom: 0px;
+    text-align: center;
+    width: 100%;
+    height: 50px;
+    border-top: solid 1px rgba(0,0,0,0.2);
+}

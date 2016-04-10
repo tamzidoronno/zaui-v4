@@ -71,7 +71,7 @@ gulp.task('build', function () {
     var start = Date.now();
     gulp.src(['public_html/app/**/*.js'])
         .pipe(sourcemaps.init())
-        .pipe(babel().on('error', function (a) {
+        .pipe(babel({compact: false}).on('error', function (a) {
           console.log('Error compiling JavaScript', a)
         }))
         .pipe(concat('main.js'))

@@ -1777,12 +1777,15 @@ class Page {
         $languages = $this->factory->getLanguageCodes();
         if (count($languages)) {
             $mainLangCode = $this->factory->getMainLanguage();
+            $selectedTranslation = $this->factory->getSelectedTranslation();
+            $active = $mainLangCode == $selectedTranslation ? "active" : "";
             echo "<div class='gs_language_selection'>";
-            echo "<a href='?setLanguage=$mainLangCode'><div class='gs_language_code gs_lang_code_$mainLangCode'>";
+            echo "<a href='?setLanguage=$mainLangCode'><div class='gs_language_code gs_lang_code_$mainLangCode $active'>";
             echo $langText[$mainLangCode];
             echo "</div></a>";
             foreach ($languages as $lang) {
-                echo "<a href='?setLanguage=$lang'><div class='gs_language_code gs_lang_code_$lang'>";
+                $active = $lang == $selectedTranslation ? "active" : "";
+                echo "<a href='?setLanguage=$lang'><div class='gs_language_code gs_lang_code_$lang $active'>";
                 echo $langText[$lang];
                 echo "</div></a>";
             }
@@ -1866,7 +1869,7 @@ class Page {
         echo "<div class='gsarea gs_modalouter' area='$areaname'>";
             echo "<div class='".$areaname."_inner gs_modalinner gs_page_width'>";
             echo "<div class='gs_close_modal' gsclick='closemodal'><i class='fa fa-close'></i></div>";
-            $page->printArea($layout->areas->{$areaname}, true);
+            $page->printArea($layout->areas->{$areaname}, false);
             echo "</div>";
         echo "</div>";
 

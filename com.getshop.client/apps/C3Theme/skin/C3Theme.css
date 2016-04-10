@@ -1,4 +1,4 @@
-.gs_page_width { max-width: 1200px; margin: auto; background-color:#fff;box-shadow: 0 4px 5px rgba(0,0,0,0.3); padding-left: 70px; padding-right: 70px; }
+.gs_page_width { max-width: 1200px; margin: auto; background-color:#fff; padding-left: 70px; padding-right: 70px; }
 .Menu a { font-size: 16px; font-weight: bold; color:#18bbb1; padding-right: 30px; display:inline-block; }
 .Menu .lastentry a { padding-right: 0px; }
 body { background-color: #525659; padding-top: 10px; }
@@ -23,3 +23,24 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .Logout .loggedonmarker { padding: 10px; border-radius: 10px; background-color:#939598; color:#fff; font-weight: bold; padding-left: 30px; padding-right: 30px; margin-right: 20px; font-size: 14px;}
 .Logout .logoutclick { color: #8194c1; cursor: pointer; }
 .Login { display:inline-block; }
+
+.gs_language_code.active {
+    font-weight: bold;
+}
+
+.Menu .entries {
+    background-color: #FFF;
+}
+
+.Menu .entries .entries .entry {
+    padding: 5px;
+    border-bottom: solid 1px rgba(0,0,0,0.1) !important;
+}
+
+.Menu .entries .entries .entry:last-child {
+    border-bottom: solid 0px;
+}
+
+.Menu .entries .entries {
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+}

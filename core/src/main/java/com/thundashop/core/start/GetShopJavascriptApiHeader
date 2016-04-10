@@ -1,6 +1,18 @@
-GetShopApiWebSocket = function(address) {
+var GetShopApiWebSocket = function(address, port, identifier) {
     this.sentMessages =  [];
     this.address = address;
+
+    if (typeof(port) === "undefined" || !port) {
+        this.port = "31330";
+    } else {
+        this.port = port;
+    }
+    
+    if (typeof(identifier) === "undefined" || !identifier) {
+        this.identifier = this.address;
+    } else {
+        this.identifier = identifier;
+    }
 };
 
 GetShopApiWebSocket.prototype = {
@@ -21,7 +33,7 @@ GetShopApiWebSocket.prototype = {
         if (this.connectionEstablished === null) {
             this.fireDisconnectedEvent();
         }
-        var address = "ws://"+this.address+":31330/";
+        var address = "ws://"+this.address+":"+this.port+"/";
         this.socket = new WebSocket(address);
         this.socket.onopen = $.proxy(this.connected, this);
         this.socket.onclose = function() {
@@ -65,7 +77,7 @@ GetShopApiWebSocket.prototype = {
             
     initializeStore: function() {
         if (this.socket.OPEN)
-            this.socket.send('initstore:'+this.address);
+            this.socket.send('initstore:'+this.identifier);
     },
             
     connected: function() {
@@ -124,7 +136,7 @@ GetShopApiWebSocket.prototype = {
         var deferred = $.Deferred();
         message.messageId = this.makeid();
         deferred.messageId = message.messageId;
-        messageJson = JSON.stringify(message);
+        var messageJson = JSON.stringify(message);
         if (this.sentMessages.length === 0 && this.transferStarted && silent !== true) {
             this.transferStarted();
         }
@@ -145,7 +157,7 @@ GetShopApiWebSocket.prototype = {
     },
 
     getMessage: function(id) {
-        for (i=0;i<this.sentMessages.length; i++) {
+        for (var i=0;i<this.sentMessages.length; i++) {
             if (this.sentMessages[i].messageId === id) {
                 var message = this.sentMessages[i];
                 this.sentMessages.splice(i, 1);

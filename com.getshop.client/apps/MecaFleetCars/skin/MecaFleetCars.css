@@ -1,3 +1,6 @@
+.MecaFleetCars .carrowouter {
+    position: relative;
+}
 .MecaFleetCars .car {
     border: solid 1px #EEE;
     font-size: 16px;
@@ -32,4 +35,10 @@
     background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(250,250,250,1) 100%);
     background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(250,250,250,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#fafafa', GradientType=0 );
+}
+
+.MecaFleetCars .carrowouter .deletecar{
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }

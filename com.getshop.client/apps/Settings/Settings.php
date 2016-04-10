@@ -121,6 +121,8 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("currencycode", "NOK");
         $this->setConfigurationSetting("autonavigatetocart", $_POST['autonavigatetocart']);
         $this->setConfigurationSetting("seo",  $_POST['seo']);
+        
+        $this->getApi()->getStoreManager()->setStoreIdentifier($_POST['identifier']);
     }
 
     public function deleteStore() {
@@ -133,6 +135,10 @@ class Settings extends \SystemApplication implements \Application {
         }
         
         return "";
+    }
+
+    public function getIdentifier() {
+        return $this->getApi()->getStoreManager()->getMyStore()->identifier;
     }
 
 }

@@ -142,6 +142,7 @@ public class StorePool {
     }
     
     public synchronized Store initialize(String webAddress, String sessionId) throws ErrorException {
+        getSessionFactory().removeFromSession(sessionId);
         Store store = getStoreByWebaddress(webAddress);
         
         if (store == null) {
@@ -158,6 +159,10 @@ public class StorePool {
                 webAddress = webAddress.replace(".3.0", "");
                 store = getStoreByWebaddress(webAddress);
             }
+            
+            if (store == null) {
+                store = getStoreByIdentifier(webAddress);
+            }
         }
         
         
@@ -169,6 +174,7 @@ public class StorePool {
             webAddress = "www."+webAddress;
             store = getStoreByWebaddress(webAddress);
         }
+        
         if (store == null) {
             return null;
         }
@@ -176,6 +182,7 @@ public class StorePool {
         if (store != null) {
             initStore(store, sessionId);
         }
+        
         
         return store;
     }
@@ -297,5 +304,15 @@ public class StorePool {
     
     public List<Store> getAllStores() {
         return new ArrayList(stores.values());
+    }
+
+    private Store getStoreByIdentifier(String id) {
+        for (Store store : stores.values()) {
+            if (store.identifier != null && store.identifier.equals(id)) {
+                return store;
+            }
+        }
+
+        return null;
     }
 }

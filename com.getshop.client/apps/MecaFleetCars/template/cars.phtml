@@ -8,13 +8,22 @@ if (!count($cars)) {
 
 foreach ($cars as $car) {
 ?>
-    <a href='/?page=<? echo $car->pageId; ?>'>
-        <div class='car'>
-            <div><? echo $car->licensePlate; ?></div>
-            <div>Telefonnr: <? echo $car->cellPhone; ?></div>
-            <div>Nåværende kilometerstand: <? echo $car->kilometers; ?></div>
+    
+        <div class="carrowouter">
+            <a href='/?page=<? echo $car->pageId; ?>'>
+                <div class='car'>
+                
+                    <div><? echo $car->licensePlate; ?></div>
+                    <div>Telefonnr: <? echo $car->cellPhone; ?></div>
+                    <div>Nåværende kilometerstand: <? echo $car->kilometers; ?></div>        
+                </div>
+            </a>
+            
+            <div class="deletecar">
+                <i gs_confirm="Are you sure you want to delete the car?" gsclick="deleteCar" carid='<? echo $car->id; ?>' class='gs_shop_small_icon fa fa-trash'></i>
+            </div>
         </div>
-    </a>
+    
 <?
 }
 ?>

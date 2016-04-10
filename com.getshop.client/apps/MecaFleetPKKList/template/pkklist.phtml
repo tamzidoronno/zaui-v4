@@ -1,0 +1,32 @@
+<?
+/* @var $this ns_b48c3e14_676d_4c9e_acfc_60591c711c57\MecaFleetPKKList */
+$carList = $this->getApi()->getMecaManager()->getCarsPKKList();
+
+
+?>
+<div class='pkkrow'>
+    <div> Regnr </div>
+    <div> Dato for kontroll </div>
+    <div> Flåte</div>
+</div>
+
+<?
+foreach ($carList as $car) {
+    $fleet = $this->getApi()->getMecaManager()->getFleetByCar($car);
+    ?>
+        <div class='pkkrow'>
+            <div><? echo $car->licensePlate; ?></div>
+            <div><? echo isset($car->nextControll) ? $car->nextControll : 'N/A'; ?></div>
+            <div><? echo isset($fleet->name) ? $fleet->name : "N/A"; ?> </div>
+            <div>
+                <i gsclick='doPkkCheckUpdate' 
+                   class='gs_shop_small_icon fa fa-wrench' 
+                   title='Kontroll gjennomført' 
+                   gs_confirm='Er du sikker på at du har gjennomført kontrollen?'>
+                </i>
+            </div>
+
+        </div>
+    <?
+}
+?>

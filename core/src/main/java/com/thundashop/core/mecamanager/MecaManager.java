@@ -10,8 +10,10 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,9 @@ public class MecaManager extends ManagerBase implements IMecaManager {
     @Autowired
     public PageManager pageManager;
     
+    @Autowired
+    public MessageManager messageManager;
+    
     private Map<String, MecaFleet> fleets = new HashMap();
     private Map<String, MecaCar> cars = new HashMap();
     
@@ -37,15 +42,25 @@ public class MecaManager extends ManagerBase implements IMecaManager {
     public void dataFromDatabase(DataRetreived data) {
         
         for (DataCommon obj : data.data) {
-            // load workshops
             if (obj instanceof MecaFleet) {
                 MecaFleet fleet = (MecaFleet) obj;
                 fleets.put(fleet.id, fleet);
-            }
+            }    
+        }
+        
+        for (DataCommon obj : data.data) {
+            // load workshops
+           
             
             if (obj instanceof MecaCar) {
                 MecaCar car = (MecaCar) obj;
-                cars.put(car.id, car);
+                MecaFleet fleet = getFleetByCar(car);
+                
+                if (fleet == null) {
+                    deleteCar(car.id);
+                } else {
+                    cars.put(car.id, car);
+                }
             }
         }
     }
@@ -73,6 +88,7 @@ public class MecaManager extends ManagerBase implements IMecaManager {
             saveObject(o);
         }
         
+        o.cars.removeIf(carId -> cars.get(carId) == null);
         checkAccess(o);
     }
 
@@ -130,12 +146,14 @@ public class MecaManager extends ManagerBase implements IMecaManager {
         
         List<MecaCar> retCars = fleet.cars.stream()
                 .map(o -> cars.get(o))
+                .filter(o -> o != null)
                 .collect(Collectors.toList());
         
         retCars.forEach(o -> finalize(o));
         return retCars;
     }
     
+    @Override
     public void deleteCar(String carId) {
         fleets.values().stream()
                 .forEach(o -> removeCarFromList(o, carId));
@@ -193,6 +211,122 @@ public class MecaManager extends ManagerBase implements IMecaManager {
                 .filter(o -> o.cars.contains(car.id))
                 .findAny()
                 .orElse(null);
+    }
+
+    @Override
+    public List<MecaCar> getCarsPKKList() {
+        cars.values().stream()
+                .forEach(car -> finalize(car));
+        
+        List<MecaCar> allCars = new ArrayList(cars.values());
+        Collections.sort(allCars, (MecaCar car1, MecaCar car2) -> {
+            if (car1 == null || car2 == null || car1.nextControll == null || car2.nextControll == null) {
+                return 0;
+            }
+            
+            return car1.nextControll.compareTo(car2.nextControll);
+        });
+        
+        return allCars;
+    }
+
+    @Override
+    public MecaFleet getFleetByCar(MecaCar car) {
+        MecaFleet fleet = getFleetThatCarBelongsTo(car);
+        return fleet;
+    }
+
+    @Override
+    public List<MecaCar> getCarsServiceList() {
+        cars.values().stream()
+                .forEach(car -> finalize(car));
+        
+        List<MecaCar> allCars = new ArrayList(cars.values());
+        
+        Collections.sort(allCars, (MecaCar car1, MecaCar car2) -> {
+            if (car1 == null || car2 == null || car1.nextService == null || car2.nextService == null) {
+                return 0;
+            }
+            
+            return car1.nextService.compareTo(car2.nextService);
+            
+        });
+        
+        return allCars;
+    }
+
+    @Override
+    public List<MecaCar> getCarsByCellphone(String cellPhone) {
+        return cars.values().stream()
+                .filter(car -> car.cellPhone != null && car.cellPhone.equals(cellPhone))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void callMe(String cellPhone) {
+        String content = "Hei";
+        content += "<br/>";
+        content += "<br/> Jeg ønsker å bli oppringt på telefonnr: " + cellPhone;
+        content += "<br/>";
+        content += "<br/> Melding fra Meca Fleet APP";
+        
+        String subject = "Ønsker å bli oppringt";
+        
+        String storeName = getStoreName();
+        String storeEmail = getStoreEmailAddress();
+        
+        messageManager.sendMail(storeEmail, storeName, subject, content, storeEmail, storeName);
+    }
+
+    public String nl2br(String text) {
+        return text.replace("\n\n", "<p>").replace("\n", "<br>");
+    }
+    
+    @Override
+    public void sendEmail(String cellPhone, String message) {
+        List<MecaCar> cars = getCarsByCellphone(cellPhone);
+        
+        MecaCar currentCar = null;
+        if (cars.size() > 0) {
+            currentCar = cars.get(0);
+        }
+        
+        String content = "Fra: Kontaktskjema i MECA Fleet APP.";
+        content += "<br/>";
+        content += "<br/> =================================================";
+        content += "<br/>" + nl2br(message);
+        content += "<br/>" + nl2br(message);
+        content += "<br/> =================================================";
+        
+        if (currentCar != null) {
+            content += "<br/>";
+            content += "<br/> Regnr: " + currentCar.licensePlate;
+            content += "<br/> Telefonr: " + currentCar.cellPhone;
+            content += "<br/>";
+            content += "<br/> Melding fra MECA Fleet APP system";
+        }
+        
+        String subject = "Melding fra MECA Fleet APP";
+        
+        String storeName = getStoreName();
+        String storeEmail = getStoreEmailAddress();
+        
+        messageManager.sendMail(storeEmail, storeName, subject, content, storeEmail, storeName);
+    }
+
+    @Override
+    public void sendKilometers(String cellPhone, int kilometers) {
+        List<MecaCar> cars = getCarsByCellphone(cellPhone);
+        
+        MecaCar currentCar = null;
+        if (cars.size() > 0) {
+            currentCar = cars.get(0);
+        } else {
+            return;
+        }
+        
+        currentCar.kilometers = kilometers;
+        saveObject(currentCar);
     }
 
 }

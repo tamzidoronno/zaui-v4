@@ -445,6 +445,25 @@ public class Database extends StoreComponent {
 
         
     }
+
+    public boolean verifyThatStoreIdentifierNotInUse(String identifier) {
+        DB db = mongo.getDB("StoreManager");
+        
+        for (String colName : db.getCollectionNames()) {
+            DBCollection col = db.getCollection(colName);
+            
+            BasicDBObject finder = new BasicDBObject();
+            finder.put("className", "com.thundashop.core.storemanager.data.Store");
+            finder.put("identifier", identifier);
+            
+            int found = col.find(finder).size();
+            if (found > 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
 
 class DataCommonSorter implements Comparator<DataCommon> {

@@ -6,9 +6,9 @@
 package com.thundashop.core.mecamanager;
 
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.pagemanager.data.Page;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -37,6 +37,13 @@ public class MecaCar extends DataCommon {
     public Integer nextServiceKilometers = null;
     
     @Transient
+    public Integer kilometersToNextService = null;
+    
+    @Transient
+    public Integer monthsToNextService = 0;
+    
+    
+    @Transient
     public Date nextControll = null;
 
     /**
@@ -45,6 +52,8 @@ public class MecaCar extends DataCommon {
     public void calculateNextValues() {
         if (lastServiceKilomters != null) {
             nextServiceKilometers = lastServiceKilomters + kilometersBetweenEachService;
+            kilometersToNextService = nextServiceKilometers - kilometers;
+            monthsToNextService = getMonthsBetweenService();
         }
         
         if (prevControll != null) {
@@ -60,5 +69,24 @@ public class MecaCar extends DataCommon {
             cal.add(Calendar.MONTH, monthsBetweenServices);
             nextService = cal.getTime();
         }
+        
+        
+    }
+
+    private Integer getMonthsBetweenService() {
+        if (nextService == null) {
+            return 0;
+        }
+        
+        Calendar startCalendar = new GregorianCalendar();
+        startCalendar.setTime(new Date());
+        
+        Calendar endCalendar = new GregorianCalendar();
+        endCalendar.setTime(nextService);
+
+        int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
+        int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+        
+        return diffMonth;
     }
 }

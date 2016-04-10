@@ -1,0 +1,37 @@
+<div class='topinfobox'>
+    Vi har følgende opplysninger registrert på deg og din bil.    
+</div>
+
+<br/>
+<br/>
+<br/>
+    
+<div class='car_row'>
+    <i class='fa fa-car'></i>
+    <b>Bilnr</b>
+    <div>{{car.licensePlate}}</div>
+</div>
+
+<div class='car_row'>
+    <i class='fa fa-signal'></i>
+    <b>Siste registrete kilometerstand</b>
+    <div>{{car.kilometers}}</div>
+</div>
+
+<div class='car_row'>
+    <i class='fa fa-wrench'></i>
+    <b>Neste service når bilen har gått</b>
+    <div>{{car.kilometersToNextService}} km</div>
+</div>
+
+<div class='car_row'>
+    <i class='fa fa-calendar'></i>
+    <b>Eller dato:</b>
+    <div>{{car.nextService | dateformatter}} </div>
+</div>
+
+<div class='car_row'>
+    <i class='fa fa-check'></i>
+    <b>Neste EU Kontroll:</b>
+    <div>{{car.nextControll | dateformatter}} </div>
+</div>

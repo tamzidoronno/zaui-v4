@@ -21,6 +21,7 @@ if ($eventToUse) {
     $sublocationId = $eventToUse->subLocationId;
     $eventUserHelderId = $eventToUse->eventHelderUserId;
     $finishedClass = $eventToUse->markedAsReady ? "finished" : "";
+    $typeId = $eventToUse->bookingItemType->id;
 }
 ?>
 
@@ -31,7 +32,8 @@ if ($eventToUse) {
             <?
             $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getBookingEgineName());
             foreach ($types as $type) {
-                echo "<option value='$type->id'>" . $type->name . "</option>";
+                $selected = $type->id == $typeId ? "selected='true'" : "";
+                echo "<option $selected value='$type->id'>" . $type->name . "</option>";
             }
             ?>
         </select>

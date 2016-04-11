@@ -101,12 +101,12 @@ class OrderManager extends GSTableCommon implements \Application {
      * @return type
      */
     public function canChangeOrder($order) {
-        if($order->transferredToAccountingSystem) {
-            return false;
-        }
-        if($order->status == 7) {
-            return false;
-        }
+//        if($order->transferredToAccountingSystem) {
+//            return false;
+//        }
+//        if($order->status == 7) {
+//            return false;
+//        }
         
         return true;
     }

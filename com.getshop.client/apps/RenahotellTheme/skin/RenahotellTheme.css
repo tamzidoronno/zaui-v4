@@ -1,10 +1,10 @@
 .gs_page_width { max-width: 1024px; margin: auto; }
 .Menu { text-transform: uppercase; text-align: center;  }
-.Menu a div { padding: 20px; color:#fff;background-color:#265170; margin: 1px; width: 150px;margin-bottom: 10px; margin-top: 10px; letter-spacing: 2px; }
+.Menu a div { padding: 20px; color:#fff;background-color:#265170; margin: 1px; width: 150px;margin-bottom: 10px; margin-top: 10px; letter-spacing: 2px; font-family: Sintony; }
 .Menu .entries .entries div { margin: 0px; }
 .gsarea[area="header"] { background-color: #23323F; padding-top: 10px; }
 .gsarea[area="footer"] { background-color: #23323F; padding-top: 10px; padding-top: 80px; padding-bottom: 80px; color:#fff; }
-body { font-size: 18px; font-family: Sintony; }
+body { font-size: 18px; font-family: verdana,geneva; }
 .PmsBooking .pmsfront {
     background-color: rgba(0,0,0,0.8);
     color:#fff;
@@ -12,7 +12,7 @@ body { font-size: 18px; font-family: Sintony; }
     border: solid 0px;
 }
 
-h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; }
+h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-family: 'Rufina', serif; font-weight: 400; }
 
 .PmsBooking .pmsfront .heading {
     text-transform: uppercase;
@@ -29,6 +29,7 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; }
     background-color: #536f94; 
     text-transform: uppercase;
 }
+.PmsBookingProductList .productentry .roomtypeselection { left: 170px; }
 
 .frontpagebox .gsdepth_1.gsinner { border: solid 1px #ddd; margin: 10px; box-sizing: border-box; }
 .frontpagebox .gsdepth_2.gscount_0 { border-bottom: solid 1px #ddd; padding-top: 5px; }

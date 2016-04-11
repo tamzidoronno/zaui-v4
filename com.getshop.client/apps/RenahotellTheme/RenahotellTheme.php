@@ -14,7 +14,12 @@ class RenahotellTheme extends \ThemeApplication implements \Application {
         
     }
     
-        public function getThemeClasses() {
+    public function addScripts() {
+        return "\n"."<link href='https://fonts.googleapis.com/css?family=Rufina' rel='stylesheet' type='text/css'>";
+        return "\n"."<link href='https://fonts.googleapis.com/css?family=Sintony' rel='stylesheet' type='text/css'>";
+    }
+    
+    public function getThemeClasses() {
         return ["frontpagebox"];
     }
 }

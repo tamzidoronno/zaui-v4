@@ -118,6 +118,10 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $this->getApi()->getSedoxProductManager()->setExtraInformationForFile($_POST['data']['productId'], $_POST['data']['fileId'], $_POST['data']['info']);
     }
     
+    public function setChecksum() {
+        $this->getApi()->getSedoxProductManager()->setChecksum($_POST['data']['productId'], $_POST['data']['checksum']);
+    }
+    
     public function renderUserSettings($user) {
         $this->currentSedoxUser = $user;
         $this->includefile("usersettings");

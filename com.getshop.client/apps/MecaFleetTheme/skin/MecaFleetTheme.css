@@ -17,7 +17,6 @@ body {
     background: -webkit-linear-gradient(-45deg,  rgba(43,149,255,1) 0%,rgba(2,99,147,1) 33%,rgba(2,61,130,1) 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(135deg,  rgba(43,149,255,1) 0%,rgba(2,99,147,1) 33%,rgba(2,61,130,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2b95ff', endColorstr='#023d82',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
 }
 
 .gsarea[area="header"] .Menu  {

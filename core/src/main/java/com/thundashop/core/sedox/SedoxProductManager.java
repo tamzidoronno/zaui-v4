@@ -927,7 +927,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct product = getProductById(productId);
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
         
-        sharedProduct.originalChecksum = checksum;
+        if("".equals(checksum)) {
+            sharedProduct.originalChecksum = null;
+        } else {
+            sharedProduct.originalChecksum = checksum;
+        }
         saveObject(sharedProduct);
     }
 

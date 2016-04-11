@@ -12,6 +12,7 @@ import java.util.List;
 public class Store extends DataCommon {
     public String webAddress;
     public String webAddressPrimary;
+    public String identifier;
     public List<String> additionalDomainNames;
     public boolean registeredDomain=false;
     public boolean readIntroduction=false;

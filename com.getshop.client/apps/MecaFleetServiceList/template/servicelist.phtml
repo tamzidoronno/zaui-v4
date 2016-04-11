@@ -1,0 +1,43 @@
+<?
+/* @var $this ns_e4a506de_4702_4d82_8224_f30e5fdb1d2e\MecaFleetServiceList */
+$cars = $this->getApi()->getMecaManager()->getCarsServiceList();
+?>
+<div class='servicerow'>
+    <div>Regnr </div>
+    <div>KM/Service</div>
+    <div>Måneder til neste service</div>
+    <div>Flåte</div>
+</div>
+<?
+foreach ($cars as $car) {
+    $fleet = $this->getApi()->getMecaManager()->getFleetByCar($car);
+    $nextServiceDate = isset($car->nextService) ? date('d/m-Y', strtotime($car->nextService)) : "";
+    
+    $nextControllState = "";
+    
+    if ($car->kilometersToNextService < 4000) {
+        $nextControllState = "yellow";
+    } 
+    
+    if ($car->kilometersToNextService < 2000) {
+        $nextControllState = "red";
+    } 
+    ?>
+        <div class='servicerow <? echo $nextControllState; ?>'>
+            <div><? echo $car->licensePlate; ?></div>
+            <div><? echo isset($car->kilometersToNextService) ? $car->kilometersToNextService: 'N/A'; ?></div>
+            <div><? echo isset($car->monthsToNextService) ? $car->monthsToNextService." ( $nextServiceDate ) " : "N/A"; ?> </div>
+            <div><? echo isset($fleet->name) ? $fleet->name : "N/A"; ?> </div>
+            <div>
+                <a href='/?page=<? echo $car->pageId;?>'><i class='gs_shop_small_icon fa fa-edit'></i></a>
+                <i gsclick='doServiceUpdate' 
+                   class='gs_shop_small_icon fa fa-wrench' 
+                   title='Service gjennomført' 
+                   gs_confirm='Er du sikker på at du har gjennomført servicen?'>
+                </i>
+            </div>
+
+        </div>
+    <?
+}
+?>

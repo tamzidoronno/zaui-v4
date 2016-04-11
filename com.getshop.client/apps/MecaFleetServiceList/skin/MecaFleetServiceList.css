@@ -1,0 +1,35 @@
+.MecaFleetServiceList .servicerow {
+    border-bottom: solid 1px #DDD;
+    padding: 5px;
+    position: relative;
+    padding-bottom: 10px;
+}
+.MecaFleetServiceList .servicerow:hover {
+    background-color : #E9E9E9;
+}
+
+.MecaFleetServiceList .servicerow:last-child {
+    border-bottom: solid 0px;
+}
+
+.MecaFleetServiceList .servicerow div {
+    display: inline-block;
+}
+
+.MecaFleetServiceList .servicerow div:nth-child(1) { width: 150px; padding-left: 10px;}
+.MecaFleetServiceList .servicerow div:nth-child(2) { width: 250px; }
+.MecaFleetServiceList .servicerow div:nth-child(3) { width: 300px; }
+.MecaFleetServiceList .servicerow div:nth-child(4) { width: 200px; }
+.MecaFleetServiceList .servicerow div:nth-child(5) { 
+    position: absolute;
+    right: 5px;
+}
+
+.MecaFleetServiceList .servicerow.red {
+    color: #FFF;
+    background-color: #ff0000;
+}
+
+.MecaFleetServiceList .servicerow.yellow {
+    background-color: #e0dd00;    
+}

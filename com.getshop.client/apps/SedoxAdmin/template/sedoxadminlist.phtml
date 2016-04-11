@@ -9,6 +9,7 @@ $developers = $this->getApi()->getSedoxProductManager()->getDevelopers();
 $activeDevelopers = 0;
 
 $date = date("Y-m-d", time() - (86400*$daysBack));
+$dayName = date("l", time() - (86400*$daysBack));
 $title = "";
 foreach ($developers as $dev) {
     if ($dev->isActiveDelevoper) {
@@ -22,7 +23,10 @@ foreach ($developers as $dev) {
 <div class='SedoxAdminStatistic'>
     <div class='statcol'>
         Date
-        <div><? echo $date; ?></div>
+        <div class="date">
+            <? echo $date; ?>
+            <div class="day_name"><? echo "(".$dayName.")"; ?></div>
+        </div>
     </div>
     <div class='statcol'>
         Files

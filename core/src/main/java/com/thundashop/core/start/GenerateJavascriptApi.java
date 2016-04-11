@@ -108,10 +108,10 @@ public class GenerateJavascriptApi {
                     argstring = argstring.substring(0, argstring.length() - 1);
                 }
                 
-                argstring = argstring.equals("") ? "silent" : argstring + ", silent";
+                argstring = argstring.equals("") ? "gs_silent" : argstring + ", gs_silent";
                 argstring = argstring.replace(",,", ",");
                 javascriptFile += "    '" + method.getName() + "' : function(" + argstring + ") {\n";
-                javascriptFile += "        data = {\n";
+                javascriptFile += "        var data = {\n";
                 javascriptFile += "            args : {\n";
                 for (String arg : arguments) {
                     javascriptFile += "                " + arg + " : JSON.stringify(" + arg + "),\n";
@@ -123,7 +123,7 @@ public class GenerateJavascriptApi {
                 }
                 javascriptFile += "            interfaceName: '" + clazz.getCanonicalName().replace("com.thundashop.", "") + "',\n";
                 javascriptFile += "        };\n";
-                javascriptFile += "        return this.communication.send(data, silent);\n";
+                javascriptFile += "        return this.communication.send(data, gs_silent);\n";
                 javascriptFile += "    },\n";
                 javascriptFile += "\n";
             }

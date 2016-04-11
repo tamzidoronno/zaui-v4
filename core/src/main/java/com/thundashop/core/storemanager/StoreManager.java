@@ -431,4 +431,15 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             getSession().put("ignoreBookingErrors", "true");
         }
     }
+
+    @Override
+    public void setStoreIdentifier(String identifier) {
+        boolean isInUse = database.verifyThatStoreIdentifierNotInUse(identifier);
+        
+        if (!isInUse) {
+            Store store = getMyStore();
+            store.identifier = identifier;
+            storePool.saveStore(store);
+        }
+    }
 }

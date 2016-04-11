@@ -181,4 +181,7 @@ public interface IStoreManager {
     
     @Administrator
     public void toggleIgnoreBookingErrors(String password);
+    
+    @Administrator
+    public void setStoreIdentifier(String identifier);
 }

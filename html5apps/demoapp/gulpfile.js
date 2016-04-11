@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 
-var angularTemplateCache = require('gulp-angular-templatecache');
 var babel = require('gulp-babel');
 var concat = require('gulp-concat');
 var debug = require('gulp-debug');
@@ -72,7 +71,7 @@ gulp.task('build', function () {
     var start = Date.now();
     gulp.src(['public_html/app/**/*.js'])
         .pipe(sourcemaps.init())
-        .pipe(babel().on('error', function (a) {
+        .pipe(babel({compact: false}).on('error', function (a) {
           console.log('Error compiling JavaScript', a)
         }))
         .pipe(concat('main.js'))
@@ -88,7 +87,7 @@ gulp.task('build', function () {
     var start = Date.now();
     gulp.src(['public_html/app/**/*.css'])
         .pipe(concat('main.css'))
-      .pipe(gulp.dest('build/'))
+        .pipe(gulp.dest('build/'))
         .pipe(notify(function () {
           console.log('built main CSS in ' + (Date.now() - start) + 'ms');
           done && done();
@@ -98,8 +97,7 @@ gulp.task('build', function () {
   var bundleTemplates = function (events, done) {
     var start = Date.now();
     gulp.src('public_html/app/**/*.html')
-        .pipe(angularTemplateCache({standalone: true}))
-        .pipe(gulp.dest('./build/'))
+        .pipe(gulp.dest('build/'))
         .pipe(notify(function () {
           console.log('built TEMPLATES in ' + (Date.now() - start) + 'ms');
           done && done();

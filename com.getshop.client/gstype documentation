@@ -36,8 +36,12 @@ attribute gstypes;
         special silent, does not update or show loader (silent execute):
         example: <div gsclick="appFunctionName" attr1="1" attr2="2" .... gssilent="true">whatever</div>
 
+        gs_confirm="Are you sure you want to delete?"
+        <div gsclick="save" gs_confirm="Are you sure">Test</div>
+
     gs_show_modal:
         example: <div gs_show_modal="modalname">Open Modal</div>
+
 attribute output:
     standard / not set: The default output.
     informationbox : Forward the result into an informationbox.

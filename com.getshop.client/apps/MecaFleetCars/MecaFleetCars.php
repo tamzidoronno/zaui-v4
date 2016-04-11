@@ -13,5 +13,9 @@ class MecaFleetCars extends \MarketingApplication implements \Application {
     public function render() {
         $this->includefile('cars');
     }
+    
+    public function deleteCar() {
+        $this->getApi()->getMecaManager()->deleteCar($_POST['data']['carid']);
+    }
 }
 ?>

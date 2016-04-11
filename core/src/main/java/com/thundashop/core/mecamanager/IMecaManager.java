@@ -17,7 +17,6 @@ import java.util.List;
 @GetShopApi
 public interface IMecaManager {
     
-
     @Editor
     public MecaFleet createFleet(MecaFleet fleet);
     
@@ -36,6 +35,23 @@ public interface IMecaManager {
     @Editor
     public void deleteCar(String carId);
     
+    @Editor
+    public List<MecaCar> getCarsPKKList();
+    
     @Customer
     public MecaCar getCarByPageId(String pageId);
+        
+    @Editor
+    public MecaFleet getFleetByCar(MecaCar car);
+    
+    @Editor
+    public List<MecaCar> getCarsServiceList();
+    
+    public List<MecaCar> getCarsByCellphone(String cellPhone);
+    
+    public void callMe(String cellPhone);
+    
+    public void sendEmail(String cellPhone, String message);
+    
+    public void sendKilometers(String cellPhone, int kilometers);
 }

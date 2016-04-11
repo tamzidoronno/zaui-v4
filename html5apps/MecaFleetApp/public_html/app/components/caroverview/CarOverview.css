@@ -1,0 +1,14 @@
+.car_row {
+    background-color: rgba(0,0,0,0.05);
+    padding: 10px;
+    margin-bottom: 20px;
+    padding-left: 50px;
+    position: relative;
+}
+
+.car_row i {
+    position: absolute;
+    left: 10px;
+    line-height: 40px;
+    font-size: 25px;
+}

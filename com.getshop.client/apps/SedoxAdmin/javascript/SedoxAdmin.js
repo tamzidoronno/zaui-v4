@@ -6,6 +6,7 @@ app.SedoxAdmin = {
         $(document).on('click', '.SedoxAdmin .sedox_admin_upload_file', app.SedoxAdmin.showModal);
         $(document).on('click', '.SedoxAdmin .filetype', app.SedoxAdmin.fileTypeSelected);
         $(document).on('click', '.SedoxAdmin .setInformation', app.SedoxAdmin.setInformation);
+        $(document).on('click', '.SedoxAdmin .setChecksum', app.SedoxAdmin.setChecksum);
         $(document).on('click', '.SedoxAdmin .sedoxadmin_see_user_button', app.SedoxAdmin.showUser);
         
         
@@ -28,6 +29,18 @@ app.SedoxAdmin = {
             });
             
         }
+    },
+    
+    setChecksum: function() {
+        var checksum = prompt("Please enter the checksum");
+        if(!checksum) {
+          checksum = "";
+        }
+        thundashop.Ajax.simplePost(this, "setChecksum", {
+            checksum: checksum,
+            productId : $(this).closest('.col_row_content').attr('productid'),
+            fileId : $(this).attr('sedox_file_id')
+        })
     },
     
     fileTypeSelected: function() {

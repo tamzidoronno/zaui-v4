@@ -1,0 +1,25 @@
+.MecaFleetPKKList .pkkrow {
+    border-bottom: solid 1px #DDD;
+    padding: 5px;
+    position: relative;
+    padding-bottom: 10px;
+}
+.MecaFleetPKKList .pkkrow:hover {
+    background-color : #E9E9E9;
+}
+
+.MecaFleetPKKList .pkkrow:last-child {
+    border-bottom: solid 0px;
+}
+
+.MecaFleetPKKList .pkkrow div {
+    display: inline-block;
+}
+
+.MecaFleetPKKList .pkkrow div:nth-child(1) { width: 150px; }
+.MecaFleetPKKList .pkkrow div:nth-child(2) { width: 650px; }
+.MecaFleetPKKList .pkkrow div:nth-child(3) { width: 200px; }
+.MecaFleetPKKList .pkkrow div:nth-child(4) { 
+    position: absolute;
+    right: 5px;
+}

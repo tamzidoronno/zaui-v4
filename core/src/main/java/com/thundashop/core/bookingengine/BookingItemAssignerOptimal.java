@@ -30,6 +30,8 @@ public class BookingItemAssignerOptimal {
         this.bookings = bookings;
         this.items = items;
         
+        removeBookingsThatHasNullDates();
+        
         if (throwException != null) {
             this.throwException = throwException;
         }
@@ -334,6 +336,10 @@ public class BookingItemAssignerOptimal {
         }
  
         return null;
+    }
+
+    private void removeBookingsThatHasNullDates() {
+        bookings.removeIf(o -> o.startDate == null || o.endDate == null);
     }
 
 }

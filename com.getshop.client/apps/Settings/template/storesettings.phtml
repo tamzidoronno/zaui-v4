@@ -108,6 +108,14 @@ $states['fi_FI'] = "Finish";
         </div>
     </div>
     
+    <div class="textfield gss_setting" >
+        <span class="title"><?php echo $this->__("Unique identifier"); ?></span>
+        <input type="textfield" gs_model='storesettings' gs_model_attr='identifier' value="<? echo $this->getIdentifier(); ?>">
+        <div class="description">
+            <?php echo $this->__f("Unique identifier that can be used to identify this store over api."); ?>
+        </div>
+    </div>
+    
     <div class="textfield gss_setting"  id="url">
         <span class="title"><?php echo $this->__("Url"); ?></span>
         <input type="textfield" gs_model='storesettings' gs_model_attr='url' value="<? echo $this->getUrl(); ?>">

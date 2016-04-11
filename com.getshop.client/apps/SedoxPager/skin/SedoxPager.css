@@ -15,6 +15,7 @@
 
 .SedoxPager .pagerbutton.active {
     font-weight: bold;
+    background-color: rgba(210, 210, 210, 0.70);
 }
 
 .SedoxPager {

@@ -1,0 +1,131 @@
+.SedoxSetProductInformation .information_title {
+    height: 40px;
+    background-color: #e8e9eb;
+    text-align: center;
+    border-bottom: solid 1px #d9dce1;
+}
+
+.SedoxSetProductInformation .information_form_container {
+    background-color: white;
+}
+
+.SedoxSetProductInformation .information_title {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 45px;
+    color: #46566f;
+    vertical-align: middle;
+}
+
+.SedoxSetProductInformation .information_form {
+    margin: auto;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    width: 50%;
+    text-align: center;
+}
+
+.SedoxSetProductInformation .information_text {
+    padding-bottom: 15px;
+}
+
+.SedoxSetProductInformation .information_text input {
+    width: 95%;
+    border: solid 1px #dcdcdc;
+    transition: box-shadow 0.3s, border 0.3s;
+    height: 20px;
+}
+
+.SedoxSetProductInformation .information_radio_buttons {
+    width: 85%;
+    margin: auto;
+    font-family: 'Lato', sans-serif;
+    color: #344758;
+    font-size: 14px;
+}
+
+.SedoxSetProductInformation .radio_button {
+    position: relative;
+    height: 25px;
+    text-align: left;
+}
+
+.SedoxSetProductInformation .radio_button input[type=radio]{
+    visibility: hidden;
+    margin-left: 10px;
+}
+
+.SedoxSetProductInformation .radio_button label {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    position: absolute;
+    top: 3px;
+    left: 0;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    margin-right: 20px;
+}
+
+.SedoxSetProductInformation .radio_button label:after {
+    content: '';
+    width: 7px;
+    height: 3px;
+    position: absolute;
+    top: 4px;
+    left: 3px;
+    border: 3px solid #333;
+    border-top: none;
+    border-right: none;
+    background: transparent;
+    opacity: 0;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.SedoxSetProductInformation .radio_button input[type="radio"]:checked + label:after {
+    opacity: 1;
+}
+
+.SedoxSetProductInformation .information_save {
+    margin-top: 15px;
+}
+
+.SedoxSetProductInformation .information_save_button {
+    background-color: #40c1e1;
+    text-align: center;
+    line-height: 35px;
+    color: #FFF;
+    border-radius: 3px;
+    width: 50%;
+    margin: auto;
+    cursor: pointer;
+}
+
+.SedoxSetProductInformation .information_save_button:hover {
+    background-color: #24adcf;
+}
+
+.gs_modalinner {
+    width: 30%;
+    margin: auto;
+}
+
+.gs_modalouter .gs_modalinner .gs_close_modal {
+    right: 0px;
+    top: 0px;
+    background: none !important;
+    color: gray;
+    height: 17px;
+    width: 17px;
+    z-index: 1;
+}
+
+.gs_modalouter .gs_modalinner .gs_close_modal:hover {
+    color: darkgray;
+}
+
+.gs_modalouter .gs_modalinner {
+    padding: 0px;
+}

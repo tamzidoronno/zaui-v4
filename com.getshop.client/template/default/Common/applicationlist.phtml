@@ -26,6 +26,7 @@ foreach ($apps as $app) {
 }
 
 echo "<div class='gsselectappmodule'>";
+print_r($types);
 foreach($types as $type => $count) {
     echo "<span class='gsselectmoduletab' data-module='$type'> " . $type . " (" . $count . ")" . "</span>";
 }

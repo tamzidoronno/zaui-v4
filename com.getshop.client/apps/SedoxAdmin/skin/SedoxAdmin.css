@@ -378,3 +378,12 @@
 .SedoxAdmin .price {
     font-size: 15px !important;
 }
+
+.SedoxAdmin div.day_name {
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 1px;
+    font-size: 24px;
+    width: 35%;
+    text-align: right;
+}

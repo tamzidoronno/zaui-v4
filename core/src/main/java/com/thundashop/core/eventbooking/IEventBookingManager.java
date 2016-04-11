@@ -175,4 +175,7 @@ public interface IEventBookingManager {
     @Customer
     public List<Event> getEventsForUser(String userId);
     
+    @Editor
+    public List<Event> getEventsByType(String eventTypeId);
+    
 }

@@ -39,6 +39,15 @@ foreach ($users as $user) {
     $this->includefile("userinforow");
 }
 
+?>
+<br/>
+
+<div style='padding-left: 20px;'>
+    <div class='shop_button' gs_show_modal="send_tests" eventid="<? echo $event->id; ?>">Send tests</div>
+    <div class='shop_button' gs_show_modal="send_reminder" eventid="<? echo $event->id; ?>">Send reminders</div>
+    <a class='gs_ignorenavigate' href="/scripts/promeister/download.php?eventId=<? echo $event->id; ?>"><div class='shop_button'>Download PDFs</div></a>
+</div>
+<?
 if (count($waitingListUsers)) {
     echo "<div class='waitinglistusers'>";
         echo "<center>".$this->__f("Waitinglist")."</center>";
@@ -52,9 +61,4 @@ if (count($waitingListUsers)) {
 
 ?>
 
-<br/>
-<div style='padding-left: 20px;'>
-    <div class='shop_button' gs_show_modal="send_tests" eventid="<? echo $event->id; ?>">Send tests</div>
-    <div class='shop_button' gs_show_modal="send_reminder" eventid="<? echo $event->id; ?>">Send reminders</div>
-    <a class='gs_ignorenavigate' href="/scripts/promeister/download.php?eventId=<? echo $event->id; ?>"><div class='shop_button'>Download PDFs</div></a>
-</div>
+

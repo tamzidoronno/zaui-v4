@@ -60,6 +60,7 @@ class EditEventType extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
     }
 
     public function render() {
+        $this->includeFile("showsconnected");
         $this->includeFile("edit_event_type");
     }
     

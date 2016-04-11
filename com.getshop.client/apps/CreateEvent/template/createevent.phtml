@@ -96,6 +96,10 @@ if ($eventToUse) {
     if ($eventToUse && !$eventToUse->isCanceled) {
         echo "<div class='shop_button' gsclick='cancelEvent' eventid='$eventToUse->id' gs_confirm='Are you sure you want to cancel this as ready ?'>Cancel event</div>";
     }
+    
+    if ($eventToUse && $this->hasWriteAccess() && count($eventToUse->bookingItem->bookingIds) == 0) {
+        echo " <div class='shop_button' style='background-color: red; background: red; color: #FFF;' gsclick='deleteEvent' eventid='$eventToUse->id' gs_confirm='Are you sure you want to delete this event?'>Delete event</div>";
+    }
     ?>
 </div>
 

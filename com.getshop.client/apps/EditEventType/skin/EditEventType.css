@@ -21,3 +21,18 @@
     padding-top: 0px;
     margin-bottom: 20px;
 }
+
+.EditEventType .connectedEvents .row {
+    border-bottom: solid 1px #DDD;
+    padding: 10px;
+}
+
+.EditEventType .connectedEvents a:last-child .row {
+    border-bottom: solid 0px;
+}
+
+.EditEventType .connectedEvents {
+    margin-bottom: 50px;
+    border: solid 1px #DDD;
+    padding: 20px;
+}

@@ -23,12 +23,14 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; }
 .PmsBookingCalendar .calendar .calendar_header,
 .PmsBookingCalendar .calendar .day.selected,
 .PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
 .PmsBooking .pmsfront .check_available_button,
 .PmsBooking .pmsfront .fa-calendar {
-    background-color: #656565; 
+    background-color: #536f94; 
     text-transform: uppercase;
 }
 
 .frontpagebox .gsdepth_1.gsinner { border: solid 1px #ddd; margin: 10px; box-sizing: border-box; }
 .frontpagebox .gsdepth_2.gscount_0 { border-bottom: solid 1px #ddd; padding-top: 5px; }
 .frontpagebox .gsdepth_2.gscount_1 { padding: 10px; }
+.shop_button { background: #536f94; border-radius: 0px; color:#fff; }

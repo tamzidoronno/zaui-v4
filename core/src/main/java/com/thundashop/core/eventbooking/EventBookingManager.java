@@ -1480,4 +1480,18 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .orElse(null);
     }
 
+    @Override
+    public List<Event> getEventsByType(String eventTypeId) {
+        List<Event> retEvents = events.values().stream()
+                .filter(event -> bookingEngine.getBookingItem(event.bookingItemId).bookingItemTypeId.equals(eventTypeId))
+                .collect(Collectors.toList());
+        
+        retEvents.stream().forEach(event -> finalize(event));
+        
+        String test = "";
+        
+        Collections.sort(retEvents, (Event event1, Event event2) -> { return event2.mainStartDate.compareTo(event1.mainStartDate); } );
+        
+        return retEvents;
+    }
 }

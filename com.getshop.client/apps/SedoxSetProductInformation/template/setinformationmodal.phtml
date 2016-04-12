@@ -1,0 +1,57 @@
+<?
+/* @var $this \ns_6de59d68_05bb_4f25_b7ea_f98e468a5fde\SedoxSetProductInformation */
+?>
+
+<div class="modal_information">
+    <div class="information_title">
+        Extra Informations
+    </div>
+    <div class="information_form_container">
+        <div class="information_form">
+                <div class="information_text">
+                    <input type="text" name="extraInformation"></input>
+                </div>
+                <div class="information_radio_buttons">
+                    <div class="radio_button">
+                        <input type="radio" name="requestType" id="roundRadioButton1">Tuning with DPF removal</input>
+                        <label for="roundRadioButton1"></label>
+                   </div>
+                    <div class="radio_button">
+                        <input type="radio" name="requestType" id="roundRadioButton2">Power with DPF removal</input>
+                        <label for="roundRadioButton2"></label>
+                    </div>
+                    <div class="radio_button">
+                        <input type="radio" name="requestType" id="roundRadioButton3">Tuning with EGR removal</input>
+                        <label for="roundRadioButton3"></label>
+                    </div>
+                    <div class="radio_button">
+                        <input type="radio" name="requestType" id="roundRadioButton4">Power with EGR removal</input>
+                        <label for="roundRadioButton4"></label>
+                    </div>
+                    <div class="radio_button">
+                        <input type="radio" name="requestType" id="roundRadioButton5">Tuning with DPF and EGR removal</input>
+                        <label for="roundRadioButton5"></label>
+                    </div>
+                    <div class="radio_button">
+                        <input type="radio" name="requestType" id="roundRadioButton6">Power with DPF and EGR removal</input>
+                        <label for="roundRadioButton6"></label>
+                    </div>
+                    <div class="radio_button">
+                        <input type="radio" name="requestType" id="roundRadioButton7">DPF removal only</input>
+                        <label for="roundRadioButton7"></label>
+                    </div>
+                    <div class="radio_button">
+                        <input type="radio" name="requestType" id="roundRadioButton8">EGR removal only</input>
+                        <label for="roundRadioButton8"></label>
+                    </div>
+                    <div class="radio_button">
+                        <input type="radio" name="requestType" id="roundRadioButton9">DPF and EGR removal only</input>
+                        <label for="roundRadioButton9"></label>
+                    </div>
+                </div>
+                <div class="information_save">
+                    <div class="information_save_button" productid="<?php echo $this->getModalVariable("productid") ?>" sedox_file_id="<?php echo $this->getModalVariable("sedox_file_id") ?>">Save Informations</div>
+                </div>
+        </div>
+    </div>
+</div>

@@ -61,10 +61,14 @@
     margin-top: 0px;
 }
 
+.EventLister .col {
+    border: solid 0px;
+}
 .EventLister .col.col1 { width: 200px; }
 .EventLister .col.col2 { width: 300px; }
 .EventLister .col.col3 { width: 300px; }
-.EventLister .col.col4 { width: 80px; }
+.EventLister .col.col4 { width: 75px; }
+.EventLister .col.col5 { width: 38px; }
 
 .EventLister .daysinformation {
     

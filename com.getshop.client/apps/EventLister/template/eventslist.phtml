@@ -45,12 +45,6 @@ echo "<div class='eventlist'>";
             ?>
             <div class='eventline' style='display: inline-block;'>
             <?
-                                    
-            if ($this->hasWriteAccess()) {
-                ?>
-                <div class='gs_shop_small_icon' gsclick='deleteEvent' gs_confirm='Are you sure you want to delete event?' eventid='<? echo $event->id; ?>'><i class='fa fa-trash'></i></div>
-                <?  
-            }
             
             echo "<a href='/$pageId'>";
             ?>
@@ -67,6 +61,7 @@ echo "<div class='eventlist'>";
                 </div>
 
                 <div class="col col4 availablespots"><? echo $event->bookingItem->freeSpots; ?></div>
+                <div class="col col5 availablespots"><i class="gs_shop_small_icon fa fa-arrow-right"></i></div>
             <?
             echo "</a>";
             ?>

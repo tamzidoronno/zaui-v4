@@ -64,7 +64,7 @@ $selectedInterval = $this->getInterval();
     foreach($result->itemTimeLines as $itemId => $days) {
         $taken = false;
         foreach($days as $time => $value) {
-            if($value != 0) {
+            if($value->count != 0) {
                 $taken = true;
             }
         }
@@ -115,6 +115,8 @@ $selectedInterval = $this->getInterval();
     echo "<div class='timelineoverview'>";
     echo "<div class='topspacingitemoverview'></div>";
     foreach($result->itemTimeLines as $itemId => $days) {
+        $lastid = "";
+        $toggle = true;
         if($printHeader) {
             echo "<div class='dateheadingrow'>";
             echo "<span class='valueentry_placeholder'>&nbsp;</span>";
@@ -129,11 +131,23 @@ $selectedInterval = $this->getInterval();
         echo "<span class='valueentry_item'>" . $items[$itemId]->bookingItemName . "</span>";
         echo "<span class='valueentry_placeholder'>&nbsp;</span>";
         foreach($days as $time => $value) {
-            $free = "full";
-            if($value == 0) {
-                $free = "available";
+            if($toggle) {
+                $free = "full";
+            } else {
+                $free = "full full_second";
             }
-            echo "<span class='valueentry $free' time='$time' itemid='".$itemId."'>&nbsp;</span>";
+            $id = "";
+            if($value->count == 0) {
+                $free = "available";
+            } else {
+                $id = $value->bookingIds[0];
+            }
+            if($id != $lastid) {
+                if($lastid)
+                   $toggle = !$toggle;
+                $lastid = $id;
+            }
+            echo "<span class='valueentry $free' time='$time' itemid='".$itemId."' bid='$id'>&nbsp;</span>";
         }
         echo "<div style='clear:both;'></div>";
     }

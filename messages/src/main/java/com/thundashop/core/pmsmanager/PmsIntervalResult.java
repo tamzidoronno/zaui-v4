@@ -8,5 +8,5 @@ import java.util.List;
 
 public class PmsIntervalResult implements Serializable {
     public LinkedHashMap<String, List<BookingTimeLine>> typeTimeLines = new LinkedHashMap();
-    public LinkedHashMap<String, LinkedHashMap<Long, Integer>> itemTimeLines = new LinkedHashMap();
+    public LinkedHashMap<String, LinkedHashMap<Long, IntervalResultEntry>> itemTimeLines = new LinkedHashMap();
 }

@@ -1,0 +1,165 @@
+.SedoxBannerAndOpening .banner_and_opening {
+    background-color: transparent;
+}
+
+.SedoxBannerAndOpening .opening_container {
+    background-color: #f9fafc;
+    border: solid 1px #e4ebf1;
+    margin: 1%;
+    display: inline-block;
+    height: 100px;
+    width: 47.5%;
+}
+
+.SedoxBannerAndOpening .description {
+    border-right: solid 1px #e4ebf1;
+    height: 100%;
+    width: 29.5%;
+    display: inline-block;
+    float: left;
+}
+
+.SedoxBannerAndOpening .opening_data {
+    width: 70%;
+    display: inline-block;
+    float: right;
+    text-align: center;
+    margin-top: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    color: #555555;
+    font-style: italic;
+}
+
+.SedoxBannerAndOpening .description_content {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.SedoxBannerAndOpening .description_content .fa {
+    font-size: 50px;
+    color: #B22222;
+    vertical-align: bottom;
+    margin-left: 15px;
+    margin-right: 10px;
+    margin-bottom: 2px;
+}
+
+.SedoxBannerAndOpening .description_content .description_text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 24px;
+    color: #343434;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.SedoxBannerAndOpening .description_text {
+    width: 120px;
+    display: inline-block;
+    text-align: left;
+}
+
+.SedoxBannerAndOpening .banner_container {
+    background-color: #f9fafc;
+    border: solid 1px #e4ebf1;
+    margin: 1%;
+    display: inline-block;
+    height: 100px;
+    width: 47.5%;
+}
+
+.SedoxBannerAndOpening .banner_description {
+    border-right: solid 1px #e4ebf1;
+    height: 100%;
+    width: 29.5%;
+    display: inline-block;
+    float: left;
+}
+
+.SedoxBannerAndOpening .banner_data {
+    display: inline-block;
+    float: left;
+    margin-top: 10px;
+    color: #B22222;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 20px;
+    margin-left: 10%;
+}
+
+.SedoxBannerAndOpening .two_fifth_width {
+    height: 100%;
+    width: 39%;
+    display: inline-block;
+}
+
+.SedoxBannerAndOpening .one_fifth_width {
+    height: 100%;
+    width: 20%;
+    display: inline-block;
+}
+
+.SedoxBannerAndOpening .half_width {
+    width: 49%;
+    display: inline-block;
+    height: 66%;
+}
+
+.SedoxBannerAndOpening .full_width {
+    width: 100%;
+    height: 66%;
+}
+
+.SedoxBannerAndOpening .open_days {
+    height: 33%;
+    width: 100%;
+    color: #B22222;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    font-family: 'Lato', sans-serif;
+    margin-bottom: 10px;
+}
+
+.SedoxBannerAndOpening .SedoxBannerAndOpening .opening_data span {
+    display: block;
+}
+
+.SedoxBannerAndOpening .half_width span:first-child {
+    margin-bottom: 5px;
+}
+
+.SedoxBannerAndOpening .full_width span:first-child {
+    margin-bottom: 5px;
+}
+
+.SedoxBannerAndOpening .one_forth_height {
+    height: 25%;
+    width: 100%;
+}
+
+.SedoxBannerAndOpening .two_forth_height {
+    height: 50%;
+    width: 100%;
+}
+
+.SedoxBannerAndOpening .one_forth_height span:first-child {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.SedoxBannerAndOpening .one_forth_height span:last-child {
+    display: inline-block;
+}
+
+.SedoxBannerAndOpening .two_forth_height span:first-child {
+    margin-left: 10px;
+    margin-right: 10px;
+    vertical-align: middle;
+    margin-bottom: 20px;
+}
+
+.SedoxBannerAndOpening .two_forth_height span:last-child {
+    display: inline-block;
+}

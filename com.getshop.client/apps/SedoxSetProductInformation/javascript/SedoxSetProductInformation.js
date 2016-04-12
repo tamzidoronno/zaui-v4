@@ -8,13 +8,18 @@ app.SedoxSetProductInformation = {
         var radioValue = $.trim($(".radio_button input[type=radio]:checked").parent().text());
         var allInfo = information + (radioValue && information ? " - " : "") + radioValue;
         if (information || radioValue) {
-            thundashop.Ajax.simplePost(this, "setInformation", {
+            var data = {
                 info: allInfo,
                 productId : $(this).attr('productid'),
                 fileId : $(this).attr('sedox_file_id')
+            }
+            
+            var event = thundashop.Ajax.createEvent(null, "setInformation", this, data);
+            
+            thundashop.Ajax.post(event, function() {
+                thundashop.common.closeModal();
             });
         }
-        $(".gsarea gs_modalouter").fadeOut();
     }
 }
 

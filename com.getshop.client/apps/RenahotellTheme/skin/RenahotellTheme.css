@@ -63,7 +63,6 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
 
 
 .PmsBookingCalendar .calendar .calendar_header:hover, 
-.PmsBookingCalendar .calendar .day.selected:hover, 
 .PmsBookingProductList .continue_button:hover, 
 .PmsBookingContactData .complete_button:hover, 
 .PmsBooking .pmsfront .check_available_button:hover, 
@@ -74,3 +73,6 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
     transition: all 0.5s ease;
     background-color:#17222b; 
 }
+
+.PmsBookingCalendar .calendar .day { border-color: #efefef; }
+.day.dayheader { font-size: 12px; }

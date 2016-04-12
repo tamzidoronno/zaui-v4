@@ -1,0 +1,24 @@
+<?php
+$d = new DateTime('first day of this month');
+$d = strtotime("-1 month", $d->getTimestamp());
+$d2 = time();
+if(isset($_POST['event']) && $_POST['event'] == "globalInvoiceCreation") {
+    echo "<h1>Orders has been created...</h1>";
+}
+
+?>
+<div gstype="form" method="globalInvoiceCreation">
+    <h2>Global order creation</h2>
+    <select gsname="type">
+        <option value="ended">Ended</option>
+        <option value="ended">Not ended</option>
+    </select>
+    <input type="txt" gsname="startdate" value="<?php echo date("d.m.Y", $d); ?>">
+    <input type="txt" gsname="enddate" value="<?php echo date("d.m.Y", $d2); ?>">
+    <span class="pmsbutton" gstype="submit">Create orders</span>
+</div>
+
+<script>
+    $('input[gsname=startdate]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('input[gsname=enddate]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

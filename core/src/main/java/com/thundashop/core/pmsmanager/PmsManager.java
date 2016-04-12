@@ -952,6 +952,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private int getNumberOfDays(PmsBookingRooms room, Date startDate, Date endDate) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(room.date.start);
+        cal.set(Calendar.HOUR_OF_DAY, 11);
+        
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(room.date.end);
+        endCal.set(Calendar.HOUR_OF_DAY, 12);
+        
         int days = 0;
         while (true) {
             if (cal.getTime().after(startDate) && (cal.getTime().before(endDate) || cal.getTime().equals(endDate))) {
@@ -959,7 +965,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
 
             cal.add(Calendar.DAY_OF_YEAR, 1);
-            if (cal.getTime().after(room.date.end)) {
+            if (cal.getTime().after(endCal.getTime())) {
                 break;
             }
         }

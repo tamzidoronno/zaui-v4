@@ -58,7 +58,11 @@ class Page {
 
         $timeout = "";
         if ($loggedIn == "true") {
-            $timeout = $this->factory->getApi()->getUserManager()->getUserById(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id)->sessionTimeOut;
+            $user = $this->factory->getApi()->getUserManager()->getUserById(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);
+            $timeout = 99999;
+            if(isset($user->sessionTimeOut)) {
+                $timeout = $user->sessionTimeOut;
+            }
         }
         
         if($this->factory->isEditorMode()) {

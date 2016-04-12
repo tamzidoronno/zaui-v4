@@ -35,8 +35,8 @@ if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
     echo "<span class='complete_button' gstype='submit'>$completeText</span>";
 } else {
     echo "<div class='chooseregform'>";
-    echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_private'> ". $this->__w("Private person");
-    echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_company'> ". $this->__w("Organisation");
+    echo "<label><input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_private'> ". $this->__w("Private person") . "</label>";
+    echo "<label><input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_company'> ". $this->__w("Organisation") . "</label>";
     if($this->isEditorMode()) {
         echo "<input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registered_user'> ". $this->__w("Registered customer");
     }

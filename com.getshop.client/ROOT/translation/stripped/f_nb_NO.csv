@@ -342,6 +342,8 @@ Type 4;-;
 Type to search;-;
 Unassigned;-;
 Unassigned users;-;
+Unique identifier;-;
+Unique identifier that can be used to identify this store over api.;-;
 Unsupported data format;-;
 Upload a favicon to your site.;-;
 Url;-;

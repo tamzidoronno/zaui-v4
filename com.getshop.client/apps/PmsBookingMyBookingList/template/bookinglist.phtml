@@ -17,24 +17,28 @@ $prices[6] = "secondly";
 $prices[7] = "daily";
 $prices[8] = "daily";
 
-echo "<b>Rooms booked</b>";
+echo "<b>".$this->__w("Rooms booked")."</b>";
 
 echo "<table cellspacing='0' cellpadding='0' width='100%'>";
 echo "<tr>";
 echo "<th width='10'></th>";
-echo "<th width='10'>Room</th>";
-echo "<th width='200'>Time periode</th>";
+echo "<th width='10'>".$this->__w("Room")."</th>";
+echo "<th width='200'>".$this->__w("Time periode")."</th>";
 if($rules->includeGuestData) {
-    echo "<th>Guest name</th>";
-    echo "<th>Guest phone</th>";
-    echo "<th>Guest email</th>";
+    echo "<th>".$this->__w("Guest name")."</th>";
+    echo "<th>".$this->__w("Guest phone")."</th>";
+    echo "<th>".$this->__w("Guest email")."</th>";
 }
 echo "<th width='100'>Room type</th>";
 if($config->requirePayments) {
-    echo "<th width='100'>Price</th>";
-    echo "<th width='100'>Invoiced to</th>";
+    echo "<th width='100'>".$this->__w("Price")."</th>";
+    echo "<th width='100'>".$this->__w("Invoiced to")."</th>";
 }
 echo "</tr>";
+
+if(!$bookings) {
+    $bookings = array();
+}
 
 foreach($bookings as $booking) {
     foreach($booking->rooms as $room) {
@@ -74,7 +78,7 @@ foreach($bookings as $booking) {
             if($room->invoicedTo) {
                 echo "<td>".date("d.m.Y", strtotime($room->invoicedTo)) ."</td>";
             } else {
-                echo "<td>Not invoiced yet</td>";
+                echo "<td>".$this->__w("Not invoiced yet")."</td>";
             }
         }
         echo "</tr>";
@@ -83,16 +87,16 @@ foreach($bookings as $booking) {
 echo "</table>";
 
 if($config->requirePayments) {
-    echo "<br><br><b>Order history</b>";
+    echo "<br><br><b>".$this->__w("Order history")."</b>";
     echo "<div>";
     echo "</div>";
     $orders = $this->getApi()->getOrderManager()->getAllOrdersForUser($this->getTmpUser());
     echo "<table cellspacing='0' width='100%'>";
     echo "<tr>";
-    echo "<th>Orderid</th>";
-    echo "<th>Order date</th>";
-    echo "<th>Orderlines</th>";
-    echo "<th width='150'>Total</th>";
+    echo "<th>".$this->__w("Orderid")."</th>";
+    echo "<th>".$this->__w("Order date")."</th>";
+    echo "<th>".$this->__w("Orderlines")."</th>";
+    echo "<th width='150'>".$this->__w("Total")."</th>";
     echo "</tr>";
     $total = 0;
     $totalTaxes = 0;
@@ -135,7 +139,7 @@ if($config->requirePayments) {
         echo "</tr>";
     }
     echo "<tr>";
-    echo "<td colspan='3'>Total</td>";
+    echo "<td colspan='3'>".$this->__w("Total")."</td>";
     echo "<td>Eks mva: $total<br>Ink mva: ".round($total + $totalTaxes). "</td>";
     echo "</tr>";
     echo "</table>";

@@ -30,11 +30,10 @@ app.PmsAvailabilityTimeline = {
     
     loadBooking : function() {
         var data = {
-            "time" : $(this).attr('time'),
-            "itemid" : $(this).attr('itemid')
+            "bid" : $(this).attr('bid')
         }
         var instanceId = $('#bookinginstanceid').val();
-        var event = thundashop.Ajax.createEvent('','showInfoBoxForBookingAtTime',instanceId,data);
+        var event = thundashop.Ajax.createEvent('','showBookingOnBookingEngineId',instanceId,data);
         event.core.appname = "PmsManagement";
         thundashop.common.showInformationBoxNew(event,'Configuration');
     },

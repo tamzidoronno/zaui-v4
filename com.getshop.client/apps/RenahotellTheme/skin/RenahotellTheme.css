@@ -20,6 +20,12 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
     border-color: #265170;
 }
 
+.PmsBookingProductList .imgcontainer { background-color:#f5f5f5; }
+.PmsBookingSummary .itemrow { font-size: 18px; }
+.PmsBookingSummary .bottomborder { margin-bottom: 10px; }
+.PmsBookingContactData h3.paymentheaders { margin-top: 10px; margin-bottom: 10px; font-size: 16px; }
+.PmsBookingContactData h2.paymentheaders {  margin-bottom: 25px; }
+
 .PmsBookingCalendar .calendar .calendar_header,
 .PmsBookingCalendar .calendar .day.selected,
 .PmsBookingProductList .continue_button,
@@ -35,3 +41,12 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
 .frontpagebox .gsdepth_2.gscount_0 { border-bottom: solid 1px #ddd; padding-top: 5px; }
 .frontpagebox .gsdepth_2.gscount_1 { padding: 10px; }
 .shop_button { background: #536f94; border-radius: 0px; color:#fff; }
+
+.PmsBookingContactData label input[type="text"], .PmsBookingContactData label textarea, .PmsBookingContactData label select, .PmsBookingContactData label .titletext, .PmsBookingContactData label input[type="password"] {
+    height: 45px;
+    line-height: 45px;
+    font-size: 30px;
+}
+.PmsBookingContactData .complete_button {
+    padding: 15px;
+} 

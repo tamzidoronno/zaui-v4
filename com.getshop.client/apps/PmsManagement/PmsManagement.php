@@ -18,6 +18,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function globalInvoiceCreation() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        $filter->onlyEnded = false;
+        $filter->prepayment = $config->prepayment;
+        if($_POST['data']['type'] == "ended") {
+            $filter->onlyEnded = true;
+        }
+        
+        $filter->startInvoiceFrom = $this->convertToJavaDate(strtotime($_POST['data']['startdate']));
+        $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($_POST['data']['enddate']));
+        $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), null, $filter);
+    }
+    
     public function showBookingInformation() {
         $this->includefile("bookinginformation");
     }

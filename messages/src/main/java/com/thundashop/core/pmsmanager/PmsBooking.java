@@ -117,6 +117,9 @@ public class PmsBooking extends DataCommon {
 
     boolean isEndedOverTwoMonthsAgo() {
         Date ended = getEndDate();
+        if(ended == null) {
+            return false;
+        }
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MONTH, -2);
         if(now.getTime().after(ended)) {

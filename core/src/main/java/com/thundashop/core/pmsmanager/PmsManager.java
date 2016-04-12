@@ -669,12 +669,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (type != null) {
                     String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
                     if (productId != null) {
-                        if (productManager.getProduct(productId).taxGroupObject != null) {
-                            room.taxes = productManager.getProduct(productId).taxGroupObject.taxRate;
+                        Product product = productManager.getProduct(productId);
+                        if (product != null && product.taxGroupObject != null) {
+                            room.taxes = product.taxGroupObject.taxRate;
                         }
                     }
                 }
-
             }
         }
 
@@ -863,16 +863,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String createOrder(String bookingId, NewOrderFilter filter) {
-        PmsBooking booking = getBookingUnsecure(bookingId);
-        
-        if(addBookingToCart(booking, filter)) {
-            Order order = createOrderFromCart(booking);
-            if (order == null) {
-                return "Could not create order.";
+        List<PmsBooking> allbookings = new ArrayList();
+        if(bookingId == null) {
+            List<PmsBooking> tocheck = getAllBookings(null);
+            for(PmsBooking book : tocheck) {
+                if(book.isEndedOverTwoMonthsAgo() || !shouldBeProcessed(book)) {
+                    continue;
+                }
+                allbookings.add(book);
             }
-            booking.orderIds.add(order.id);
-            booking.payedFor = false;
-            saveBooking(booking);
+        } else {
+            PmsBooking booking = getBookingUnsecure(bookingId);
+            allbookings.add(booking);
+        }
+        
+        for(PmsBooking booking : allbookings) {
+            if(addBookingToCart(booking, filter)) {
+                Order order = createOrderFromCart(booking);
+                if (order == null) {
+                    return "Could not create order.";
+                }
+                booking.orderIds.add(order.id);
+                booking.payedFor = false;
+                saveBooking(booking);
+            }
         }
         return "";
     }
@@ -921,7 +935,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             if (prices.pricesExTaxes && includeTaxes) {
                 double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
-                //Order price needs to be inc taxes..
+                //Order price needs to be inc taxes.. 
                 price *= tax;
             }
 
@@ -2985,6 +2999,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return res;
+    }
+
+    private boolean shouldBeProcessed(PmsBooking booking) {
+        if (booking.rooms == null) {
+            return false;
+        }
+        if (booking.isDeleted) {
+            return false;
+        }
+        if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
+            return false;
+        }
+        if (!booking.confirmed) {
+            return false;
+        }
+        if (!booking.payedFor) {
+            return false;
+        }
+        return true;
     }
 
 }

@@ -468,6 +468,18 @@ $days[7] = "Sunday";
         </div>
         <div class='configrow'>
             <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->includeGlobalOrderCreationPanel) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='includeGlobalOrderCreationPanel' <? echo $checked; ?>>
+            </span>
+            Include global create invoice panel
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
                 <input type='number' style='width: 40px;' gsname='prepaymentDaysAhead' value='<? echo $notificationSettings->prepaymentDaysAhead; ?>'>
             </span>
             Specify the number of days you would like to create the order in advance.

@@ -50,7 +50,8 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
             if($room->bookingId == $_POST['data']['bookingid']) {
                 echo date("d.m.Y", strtotime($room->date->start)) . " - " . date("d.m.Y", strtotime($room->date->end)) . "<br>";
                 echo "Room : " . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . "<bR>";
-                echo "Guest : " . $room->guests[0]->name;
+                if($room->guests[0]->name)
+                    echo "Guest : " . $room->guests[0]->name;
             }
         }
     }

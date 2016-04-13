@@ -42,6 +42,7 @@ public class PmsConfiguration extends DataCommon {
     public Integer prepaymentDaysAhead = -1;
     public Integer increaseUnits = -1;
     boolean substractOneDayOnOrder = false;
+    boolean includeGlobalOrderCreationPanel = false;
     
 
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily

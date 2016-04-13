@@ -413,7 +413,6 @@ Off;-;Av
 On;-;På
 Open settings;-;Gå til instillinger
 Or create a new one by clicking on the button below;-;Eller opprret en ny en ved å trykke på knappen under
-Order date;-;Ordre dato
 Order email;-;Bestillings epost
 Order lines;-;Ordre linjer
 Order not found;-;Ordre ble ikke funnet
@@ -421,7 +420,6 @@ Order number;-;Ordre nummer
 Order subject;-;Emne på eposten
 OrderId;-;Orderid
 OrderManager;-;Ordrebehandling
-Orderlines;-;Ordrelinjer
 Orders;-;Ordrer
 Orders added;-;Ordrer lagt til
 Orders created summary;-;Oppsummering over ordrer opprettet

@@ -47,7 +47,7 @@
 
 .SedoxSetProductInformation .radio_button {
     position: relative;
-    height: 25px;
+    min-height: 25px;
     text-align: left;
 }
 

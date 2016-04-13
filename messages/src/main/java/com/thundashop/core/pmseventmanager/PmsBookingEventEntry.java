@@ -54,4 +54,12 @@ public class PmsBookingEventEntry extends DataCommon {
         PmsBookingEventEntry result = gson.fromJson(res, PmsBookingEventEntry.class);
         return result;
     }
+
+    void finalizeSubEntries() {
+        for(PmsBookingEventEntry entry : overrideEntries.values()) {
+            entry.dateRanges = dateRanges;
+            entry.roomNames = roomNames;
+        }
+    }
+
 }

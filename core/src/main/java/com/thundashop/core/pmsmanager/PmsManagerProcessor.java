@@ -52,7 +52,7 @@ public class PmsManagerProcessor {
             try { manager.checkDoorStatusControl(); } catch (Exception e) { e.printStackTrace(); }
             try { processArx(); }catch(Exception e) { e.printStackTrace(); }
         }
-        try { processOrdersToCreate(); }catch(Exception e) { e.printStackTrace(); }
+        try { createPeriodeInvoices(); }catch(Exception e) { e.printStackTrace(); }
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
     }
@@ -107,6 +107,27 @@ public class PmsManagerProcessor {
         }
     }
 
+    private void processOrdersToCreate() {
+        
+        if(!manager.getConfigurationSecure().autoCreateInvoices) { 
+            return;
+        }
+        
+        if (manager.lastOrderProcessed != null && isSameDay(manager.lastOrderProcessed, new Date())) {
+            return;
+        }
+
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
+        for (PmsBooking booking : bookings) {
+            if (booking.isEndedOverTwoMonthsAgo()) {
+                continue;
+            }
+
+            createPeriodeInvoices();
+        }
+        manager.lastOrderProcessed = new Date();
+    }
+    
     private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
         if (manager.getConfigurationSecure().locktype.isEmpty() || manager.getConfigurationSecure().locktype.equals("arx")) {
             return pushToArx(room, deleted);
@@ -233,28 +254,7 @@ public class PmsManagerProcessor {
         }
     }
 
-    private void processOrdersToCreate() {
-        
-        if(!manager.getConfigurationSecure().autoCreateInvoices) { 
-            return;
-        }
-        
-        if (manager.lastOrderProcessed != null && isSameDay(manager.lastOrderProcessed, new Date())) {
-            return;
-        }
-
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
-        for (PmsBooking booking : bookings) {
-            if (booking.isEndedOverTwoMonthsAgo()) {
-                continue;
-            }
-
-            createPeriodeInvoices(booking);
-        }
-        manager.lastOrderProcessed = new Date();
-    }
-
-    private void createPeriodeInvoices(PmsBooking booking) {
+    private void createPeriodeInvoices() {
         NewOrderFilter filter = new NewOrderFilter();
         filter.prepaymentDaysAhead = manager.getConfigurationSecure().prepaymentDaysAhead;
         filter.increaseUnits = manager.getConfigurationSecure().increaseUnits;
@@ -263,17 +263,16 @@ public class PmsManagerProcessor {
             filter.prepayment = false;
             filter.startInvoiceFrom = beginningOfMonth(-1);
             filter.endInvoiceAt = beginningOfMonth(0);
-            manager.createOrder(booking.id, filter);
+            manager.createOrder(null, filter);
 
             filter.onlyEnded = true;
             filter.endInvoiceAt = new Date();
-            manager.createOrder(booking.id, filter);
-
+            manager.createOrder(null, filter);
         } else {
             filter.prepayment = true;
             filter.startInvoiceFrom = beginningOfMonth(0);
             filter.endInvoiceAt = beginningOfMonth(1);
-            manager.createOrder(booking.id, filter);
+            manager.createOrder(null, filter);
         }
     }
 

@@ -1,6 +1,27 @@
 app.PmsAvailabilityTimeline = {
     init : function() {
         $(document).on('click', '.PmsAvailabilityTimeline .valueentry.full', app.PmsAvailabilityTimeline.loadBooking);
+        $(document).on('mouseover', '.PmsAvailabilityTimeline .valueentry.full', app.PmsAvailabilityTimeline.mouseOver);
+    },
+    mouseOver : function() {
+        if(typeof(pmsAvailabilityTimelineTimeout) !== "undefined") {
+            clearTimeout(pmsAvailabilityTimelineTimeout);
+        }
+        
+        var bookingid = $(this).attr('bid');
+        var from = $(this);
+        $('.ui-tooltip').remove();
+        
+        pmsAvailabilityTimelineTimeout = setTimeout(function() {
+            var event = thundashop.Ajax.createEvent('', 'loadHover', from, {
+                "bookingid" : bookingid
+            });
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                from.tooltip({ content: res });
+                from.attr('title', res);
+                from.tooltip("open");
+            });
+        }, "500");
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});
@@ -9,11 +30,10 @@ app.PmsAvailabilityTimeline = {
     
     loadBooking : function() {
         var data = {
-            "time" : $(this).attr('time'),
-            "itemid" : $(this).attr('itemid')
+            "bid" : $(this).attr('bid')
         }
         var instanceId = $('#bookinginstanceid').val();
-        var event = thundashop.Ajax.createEvent('','showInfoBoxForBookingAtTime',instanceId,data);
+        var event = thundashop.Ajax.createEvent('','showBookingOnBookingEngineId',instanceId,data);
         event.core.appname = "PmsManagement";
         thundashop.common.showInformationBoxNew(event,'Configuration');
     },

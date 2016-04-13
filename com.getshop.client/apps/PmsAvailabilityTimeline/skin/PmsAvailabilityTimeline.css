@@ -1,5 +1,5 @@
 .PmsAvailabilityTimeline .timelineresult { margin-top: 30px; }
-.PmsAvailabilityTimeline .full { background-color:#881212; color: white; }
+.PmsAvailabilityTimeline .full { background-color:#881212; color: white; cursor: pointer; }
 .PmsAvailabilityTimeline .available { background-color:green; color: white; }
 .PmsAvailabilityTimeline th { background-color:#efefef; padding-left: 5px; padding-right: 5px; }
 .PmsAvailabilityTimeline .valueentry_item { width: 60px; font-size: 10px; height: 12px; position:absolute; border-bottom: solid 1px #efefef; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }
@@ -16,3 +16,4 @@
 .PmsAvailabilityTimeline .timelineoverviewouter { width: 100%;  max-height: 800px;overflow: auto; box-sizing: border-box; position:relative; }
 .PmsAvailabilityTimeline .dateheadingrow { background-color:#fff; height: 20px; padding-top: 30px; }
 .PmsAvailabilityTimeline .topspacingitemoverview { height: 50px; clear:both;}
+.PmsAvailabilityTimeline .full_second { background-color: #d23b3b; cursor: pointer; }

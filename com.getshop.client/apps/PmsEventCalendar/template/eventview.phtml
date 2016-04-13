@@ -1,7 +1,7 @@
 <?php
 /* @var $this \ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
 $day = "";
-
+$time = false;
 if(isset($_GET['time'])) {
     $time = $_GET['time'];
     $day = date("Y-m-d", $time);
@@ -34,7 +34,9 @@ if(!$event->starttime) {
 
 echo "<h1>" .$edit . $event->title . "</h1>";
 echo "<div style='font-size:12px;'>";
-$time = strtotime($idx);
+if(!$time) {
+    $time = strtotime($idx);
+}
 
 
 echo $this->__w(date("l", $time)) . " " . (int)date("d", $time) . ". " . strtolower($this->__w(date("F", $time))) . " klokken " . $event->starttime;

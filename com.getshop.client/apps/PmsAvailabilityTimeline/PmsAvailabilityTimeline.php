@@ -42,6 +42,20 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         return array();
     }
     
+    public function loadHover() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedName(), $_POST['data']['bookingid']);
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        echo "<b>" . $user->fullName . "</b><br>";
+        foreach($booking->rooms as $room) {
+            if($room->bookingId == $_POST['data']['bookingid']) {
+                echo date("d.m.Y", strtotime($room->date->start)) . " - " . date("d.m.Y", strtotime($room->date->end)) . "<br>";
+                echo "Room : " . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . "<bR>";
+                if($room->guests[0]->name)
+                    echo "Guest : " . $room->guests[0]->name;
+            }
+        }
+    }
+    
     public function getStart() {
         $data = $this->getData();
         if(isset($data['start'])) {

@@ -57,6 +57,7 @@ Canceled;-;Kanselert
 Carousel menu;-;Karusell meny
 Carousel settings;-;Instillinger for karusellen
 Cart overview;-;Handlekurv oversikt
+Cell name;-;Cellenavn
 Cell phone;-;Mobil tlf
 Cell settings;-;Instillinger for celle
 Change password;-;Endre passord
@@ -71,6 +72,7 @@ Choose;-;Velg
 City;-;By
 Click here if you need to add more contacts;-;Trykk her hvis du vil legge til flere kontaktpersoner
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
+Clone cell;-;Klon cellen
 Close;-;Lukk
 Collection failed;-;Innkreving feilet
 Color transition;-;Fargetransisjoner
@@ -175,8 +177,11 @@ Full name;-;Hele navnet
 Gallery;-;Galleri
 Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Group;-;Gruppe
+Guest email;-;Gjestens epost
 Guest information;-;Gjesteinformasjon
 Guest information for room;-;Gjesteinformasjon for rom
+Guest name;-;Gjestens navn
+Guest phone;-;Gjestens tlf
 Height;-;Høyde
 Height (px);-;Høyde (px)
 Height (px) mobile;-;Høyde (px) mobil
@@ -199,6 +204,7 @@ Invalid payment method;-;Ugyldig betalings metode
 Invalid reset code.;-;Ugyldig tilbakestillings kode
 Invoice email;-;Faktura epost
 InvoicePayment;-;Faktura
+Invoiced to;-;Fakturert frem til
 Is private person;-;Er privat person
 Is visible for booking;-;Er synlig for booking
 It's all about selling products online, GetShop is where you start!;-;Det handler å selge produkter online, GetShop er hvor du starter!
@@ -266,6 +272,7 @@ No companies registered yet!;-;Ingen firma er registrert enda.
 No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
 No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen header har blitt lastet opp for potrait modus på mobil enda, vennligst last opp et.
 No items;-;Ingen elementer
+Not invoiced yet;-;Ikke fakturert enda
 November;-;November
 Number of fields;-;Antall felt
 Number of guests;-;Antall gjester
@@ -278,7 +285,11 @@ Open;-;Åpen
 Open styling;-;Åpne styling
 Order;-;Ordre
 Order cleaning;-;Bestill vask
+Order date;-;Ordredato
+Order history;-;Ordrehistorikk
 Order id;-;Ordreid
+Orderid;-;Ordreid
+Orderlines;-;Ordrelinjer
 Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
 Original (hp);-;Orginal hp
@@ -356,6 +367,7 @@ Repeats montly same day in week;-;Repeters daglig på fast dag i uken
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
 Room;-;Rom
+Rooms booked;-;Rom booket
 Rooms selected;-;Rommene som er valgt
 Row is not displayed on mobile, click for make it reappear;-;Raden vises ikke på mobiltelefon, trykk her for å vise den.
 Row options;-;Rad instillinger
@@ -453,6 +465,7 @@ This is a {} days event.;-;Dette er et {} dagers event.
 This user has not attended any events yet;-;Denne brukeren har ikke deltatt på noen eventer enda
 Thu;-;Tor
 Thursday;-;Torsdag
+Time periode;-;Tidsperiode
 Timeless black and white design.;-;Tidsløst svart og hvitt design
 Timer (ms);-;Timer (ms)
 Title;-;Tittel

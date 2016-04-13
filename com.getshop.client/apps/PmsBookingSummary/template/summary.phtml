@@ -23,7 +23,7 @@ if(!$addonsText) {
 }
 $startingFromText = $this->__w("Starting from");
 
-echo "<h3 class='bottomborder'>" . $addonsText . "</h3>";
+echo "<h2 class='bottomborder'>" . $addonsText . "</h2>";
 foreach($booking->rooms as $room) {
     if($room->addedByRepeater || $room->isAddon) {
         continue;

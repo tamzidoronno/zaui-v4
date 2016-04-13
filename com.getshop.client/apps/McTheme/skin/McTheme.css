@@ -1,5 +1,5 @@
 body { background-color:#13110c; }
-.gs_page_width { background-color:#fff; max-width: 1024px; width:auto; }
+.gs_page_width { background-color:#fff; max-width: 1024px; margin:auto; }
 .gsarea[area="body"] .gscell .gsinner { padding: 0px; }
 .gsarea[area="header"] { display:none; }
 .gsarea[area="footer"] { display:none; }

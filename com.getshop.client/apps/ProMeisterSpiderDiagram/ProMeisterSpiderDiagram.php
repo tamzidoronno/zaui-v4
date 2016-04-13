@@ -86,26 +86,24 @@ class ProMeisterSpiderDiagram extends \MarketingApplication implements \Applicat
         
         $dataProvider = "";
 
-        foreach ($groupRequirement as $catid => $cat) {
-            if (!in_array($catid, $requirement->catsThatShouldBeUsed)) {
+        foreach ($groupRequirement as $testId => $req) {
+            if (!in_array($testId, $requirement->testsThatShouldBeUsed)) {
                 continue;
             }
+            
+            $test = $this->getApi()->getQuestBackManager()->getTest($testId);
+            $requiredInSixScale = $this->translateToSixScore($req->required);
+            $testName = $test->name;
 
-            $catObject = $this->getApi()->getQuestBackManager()->getQuestion($catid);
-            $behov = $this->translateToSixScore($cat->mandatory);
-            $krav = $this->translateToSixScore($cat->required);
-            $catName = $catObject->name;
-
-            $catScore = $this->getCatScore($result, $catid, $user, $requirement->testId);
+            $catScore = $this->getTestScore($user, $testId);
 
             $score = $this->translateToSixScore($catScore);
 
 
             $dataProvider .= "{";
-            $dataProvider .= "\"country\": \"$catName\",";
+            $dataProvider .= "\"country\": \"$testName\",";
             $dataProvider .= "\"nuläge\": \"$score\",";
-            $dataProvider .= "\"krav\": \"$krav\",";
-            $dataProvider .= "\"behov\": \"$behov\"";
+            $dataProvider .= "\"krav\": \"$requiredInSixScale\",";
             $dataProvider .= "}";
             $dataProvider .= ",";
         }
@@ -133,13 +131,13 @@ class ProMeisterSpiderDiagram extends \MarketingApplication implements \Applicat
         return isset($_SESSION['ProMeisterSpiderDiager_current_user_id']) && $_SESSION['ProMeisterSpiderDiager_current_user_id'] == "company";
     }
 
-    public function getCatScore($result, $catid, $user, $testid) {
+    public function getTestScore($user, $testid) {
         if ($this->isCompanySelected()) {
-            $bestTestResult = $this->getApi()->getQuestBackManager()->getBestCategoryResultForCompany($testid, $catid);
-            return \ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter::getResult($bestTestResult, $catid);    
+//            $bestTestResult = $this->getApi()->getQuestBackManager()->getBestCategoryResultForCompany($testid, $catid);
+//            return \ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter::getResult($bestTestResult, $catid);    
         }
         
-        return \ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter::getResult($result, $catid);
+        return $this->getApi()->getQuestBackManager()->getScoreForTest($user->id, $testid);
     }
 
 }

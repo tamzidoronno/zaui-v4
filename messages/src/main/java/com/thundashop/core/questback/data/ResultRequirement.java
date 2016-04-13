@@ -17,6 +17,6 @@ import java.util.Map;
  */
 public class ResultRequirement extends DataCommon {
     public String testId = "";
-    public List<String> catsThatShouldBeUsed = new ArrayList();
+    public List<String> testsThatShouldBeUsed = new ArrayList();
     public Map<String, GroupRequirement> groupRequiments = new HashMap();
 }

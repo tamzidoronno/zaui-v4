@@ -64,4 +64,13 @@ public class UserTestResult extends DataCommon {
             answerForQuestion.percentageOfCorrect = 50;
         }
     }
+
+    public Integer  getAverageResult() {
+        if (answers.size() == 0) {
+            return null;
+        }
+        
+        int sumOfPercentCorrect = answers.stream().mapToInt(o -> o.percentageOfCorrect).sum();
+        return sumOfPercentCorrect / answers.size();
+    }
 }

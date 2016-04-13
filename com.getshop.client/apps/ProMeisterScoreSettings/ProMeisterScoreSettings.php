@@ -20,16 +20,15 @@ class ProMeisterScoreSettings extends \MarketingApplication implements \Applicat
             $score = new \core_questback_data_ResultRequirement();
         }
         
-        $score->testId = $_POST['data']['testname'];
         $score->requirements = [];
         
         $groups = $this->getApi()->getUserManager()->getAllGroups();
-        $categories = $this->getApi()->getQuestBackManager()->getCategories();
+        $tests = $this->getApi()->getQuestBackManager()->getAllTests();
         
-        $score->catsThatShouldBeUsed = [];
-        foreach ($categories as $cat) {
-            if (isset($_POST['data']['use_'.$cat->id]) && $_POST['data']['use_'.$cat->id] == "true") {
-                $score->catsThatShouldBeUsed[] = $cat->id;
+        $score->testsThatShouldBeUsed = [];
+        foreach ($tests as $test) {
+            if (isset($_POST['data']['use_'.$test->id]) && $_POST['data']['use_'.$test->id] == "true") {
+                $score->testsThatShouldBeUsed[] = $test->id;
             }
         }
         
@@ -39,11 +38,11 @@ class ProMeisterScoreSettings extends \MarketingApplication implements \Applicat
                 $score->groupRequiments->{$group->id} = new \core_questback_data_GroupRequirement();
             }
             
-            foreach ($categories as $cat) {
+            foreach ($tests as $test) {
                 $requirement = new \core_questback_data_Requirement();    
-                $requirement->required = $_POST['data']['required_'.$groupid."_".$cat->id];
-                $requirement->mandatory = $_POST['data']['mandatory_'.$groupid."_".$cat->id];
-                $score->groupRequiments->{$group->id}->requirements->{$cat->id} = $requirement;
+                $requirement->required = $_POST['data']['required_'.$groupid."_".$test->id];
+                $score->groupRequiments->{$group->id}->requirements->{$test->id} = $requirement;
+
             }
         }
         

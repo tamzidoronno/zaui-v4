@@ -547,4 +547,14 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             .filter(test -> test.userIds.contains(userId))
             .collect(Collectors.toList());
     }
+
+    @Override
+    public Integer getScoreForTest(String userId, String testId) {
+        UserTestResult testResult = getTestResult(testId);
+        if (testResult != null) {
+            return testResult.getAverageResult();
+        }
+        
+        return null;
+    }
 }

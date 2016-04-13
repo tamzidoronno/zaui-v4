@@ -128,5 +128,13 @@ public class TranslationHandler implements Serializable {
         
         return changed;
     }
+    
+    public boolean hasTranslations() {
+        return !translationStrings.isEmpty();
+    }
+    
+    public void resetLanguage() {
+        translationStrings = new HashMap();
+    }
    
 }

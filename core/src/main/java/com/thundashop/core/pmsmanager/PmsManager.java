@@ -2437,7 +2437,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (!room.isEndingToday() && room.keyIsReturned) {
                     if(!room.isEnded()) {
                         User usr = userManager.getUserById(booking.userId);
-                        String roomName = bookingEngine.getBookingItem(roomId).bookingItemName;
+                        BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                        String roomName = "";
+                        if(item != null) {
+                            roomName = item.bookingItemName;
+                        }
                         String msg = "Key delivered for someone not checking out today, at room: " + roomName + ", booked by: " + usr.fullName;
                         String email = storeManager.getMyStore().configuration.emailAdress;
                         messageManager.sendMail(email, email, msg, msg, email, email);

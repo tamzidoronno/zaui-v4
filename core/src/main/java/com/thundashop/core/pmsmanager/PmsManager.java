@@ -1000,6 +1000,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.arxUsername = "";
         toReturn.arxPassword = "";
         toReturn.arxHostname = "";
+        
+        toReturn.wubookusername = "";
+        toReturn.wubookpassword = "";
+        toReturn.wubookproviderkey = "";
 
         return toReturn;
     }

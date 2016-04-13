@@ -21,6 +21,9 @@
     if ($type && $type == "logout") {
         $onClick = "thundashop.common.logout()";
     }
+    if ($type && $type == "goback") {
+        $onClick = "window.history.back()";
+    }
     
     if ($type && $type == "link_to_interal_page") {
         $pageid = $this->getConfigurationSetting("page_id");

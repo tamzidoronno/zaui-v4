@@ -18,6 +18,11 @@ app.Button = {
         alert("SUCCESS");
     },
     
+    setGoBack : function() {
+        thundashop.Ajax.simplePost($('.Button'), 'setGoBack', {});
+        alert("SUCCESS");
+    },
+    
     saveModal: function() {
         var data = {
             link: $('.Button #button_link_to_modal').val()
@@ -134,6 +139,10 @@ app.Button = {
         
         if ($(this).val() === "setToLogout") {
             app.Button.setToLogout();
+            return;
+        }
+        if ($(this).val() === "setGoBack") {
+            app.Button.setGoBack();
             return;
         }
         

@@ -55,7 +55,7 @@ public class NewsManager extends ManagerBase implements INewsManager {
     }
 
     @Override
-    public List<NewsEntry> getAllNews() throws ErrorException {
+    public List<NewsEntry> getAllNews(String newsListId) throws ErrorException {
         List<NewsEntry> data;
         if (entries != null) {
             data = new ArrayList<NewsEntry>(entries.values());
@@ -77,7 +77,7 @@ public class NewsManager extends ManagerBase implements INewsManager {
                 }
             }
         });
-        finalizeList(data);
+        data = finalizeList(data, newsListId);
         return data;
     }
 
@@ -87,7 +87,7 @@ public class NewsManager extends ManagerBase implements INewsManager {
     }
 
     @Override
-    public String addNews(NewsEntry entry) throws ErrorException {
+    public String addNews(NewsEntry entry, String newsListId) throws ErrorException {
         entry.storeId = storeId;
         saveObject(entry);
         entries.put(entry.id, entry);
@@ -153,10 +153,15 @@ public class NewsManager extends ManagerBase implements INewsManager {
         saveObject(entry);
     }
 
-    private void finalizeList(List<NewsEntry> data) {
+    private List<NewsEntry> finalizeList(List<NewsEntry> data, String newslistid) {
+        List<NewsEntry> newlist = new ArrayList();
         for(NewsEntry entry : data) {
-            finalize(entry);
+            if(entry.newsListId.equals(newslistid) || (newslistid == null && entry.newsListId.isEmpty())) {
+                finalize(entry);
+                newlist.add(entry);
+            }
         }
+        return newlist;
     }
 
     private void finalize(NewsEntry entry) {

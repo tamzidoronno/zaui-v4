@@ -32,7 +32,11 @@ class News extends \MarketingApplication implements \Application {
      * @return \app_newsmanager_data_NewsEntry[]
      */
     public function getAllEntries() {
-        return $this->getApi()->getNewsManager()->getAllNews();
+        return $this->getApi()->getNewsManager()->getAllNews($this->getNewsListId());
+    }
+    
+    public function getNewsListId() {
+        return $this->getConfigurationSetting("newslistid");
     }
 
     public function getStarted() {
@@ -46,7 +50,7 @@ class News extends \MarketingApplication implements \Application {
         $news->content = $_POST['data']['text'];
         $news->content = nl2br($news->content);
         $news->image = $image->getImageId();
-        $newsId = $this->getApi()->getNewsManager()->addNews($news);
+        $newsId = $this->getApi()->getNewsManager()->addNews($news, $this->getNewsListId());
         $this->clearAutoSavedText();
         $image->deleteImage();
     }

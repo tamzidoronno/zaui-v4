@@ -20,6 +20,7 @@ public class NewsEntry extends DataCommon {
     public boolean isPublished = false;
     public String userId = "";
     public String pageId = "";
+    public String newsListId = "";
     
     @Transient
     public String usersName = "";

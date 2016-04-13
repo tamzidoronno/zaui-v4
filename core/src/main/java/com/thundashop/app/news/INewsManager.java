@@ -20,7 +20,7 @@ public interface INewsManager {
      * @return
      * @throws ErrorException 
      */
-    public List<NewsEntry> getAllNews() throws ErrorException;
+    public List<NewsEntry> getAllNews(String newsListId) throws ErrorException;
     
     /**
      * Add a new news entry.
@@ -30,7 +30,7 @@ public interface INewsManager {
      */
     @Administrator
     @Writing
-    public String addNews(NewsEntry newsEntry) throws ErrorException;
+    public String addNews(NewsEntry newsEntry, String newsListId) throws ErrorException;
     
     
     /**

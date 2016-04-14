@@ -19,8 +19,12 @@ class SedoxBannerAndOpening extends \MarketingApplication implements \Applicatio
     }
     
     public function saveHours() {
-         $this->setConfigurationSetting("monday_fri_fullservice", $_POST['monday_fri_fullservice']);
-         $this->setConfigurationSetting("monday_fri_limitedservice", $_POST['monday_fri_limitedservice']);
+        $this->setConfigurationSetting("monday_friday_fullservice", $_POST['monday_friday_fullservice']);
+        $this->setConfigurationSetting("monday_friday_limitedservice", $_POST['monday_friday_limitedservice']);
+        $this->setConfigurationSetting("saturday_fullservice", $_POST['saturday_limitedservice']);
+        $this->setConfigurationSetting("saturday_limitedservice", $_POST['saturday_limitedservice']);
+        $this->setConfigurationSetting("sunday_limitedservice", $_POST['sunday_limitedservice']);
+        $this->setConfigurationSetting("address", $_POST['address']);
     }
 }
 ?>

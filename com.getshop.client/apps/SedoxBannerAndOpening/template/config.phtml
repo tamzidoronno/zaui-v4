@@ -3,46 +3,61 @@
 ?>
 
 <div class='gss_settings_header'>
-
     <span class="fa-stack fa-lg" style="margin-right: 60px;">
         <i class="fa fa-gears fa-stack-1x"></i>
-
     </span>
-
-
-
     <div class='gss_settings_header_description'>
         <div class='gss_settings_header_title'>
-            <? echo $this->__f("Sedox Performance"); ?>
+            <? echo $this->__f("Sedox Performance Configuration"); ?>
         </div>
         <div class='gss_settings_header_description_inner'>
             <?
-            echo $this->__f("Configuration for Sedox Performance.");
+            echo $this->__f("Opening Hours And Contact");
             ?>	
         </div>
-
     </div>	
 </div>
-
 <div class='gss_settings_content'>
     <div class="textfield gss_setting"  id="name">
-        <span class="title"><?php echo $this->__f("Name"); ?></span>
-        <input type="textfield" gs_model='sedoxopenmodel' gs_model_attr='monday_fri_fullservice' value="<? echo $this->getConfigurationSetting("monday_fri_fullservice"); ?>" placeholder="">
+        <span class="title"><?php echo $this->__f("Monday - Friday"); ?></span>
+        <input type="textfield" gs_model='sedoxopenmodel' gs_model_attr='monday_friday_fullservice' value="<? echo $this->getConfigurationSetting("monday_friday_fullservice"); ?>" placeholder="">
         <div class="description">
-            <?php echo $this->__("Full service hours monday - friday"); ?>
+            <?php echo $this->__("Full File Service Hours"); ?>
         </div>
     </div>
-    
     <div class="textfield gss_setting"  id="name">
-        <span class="title"><?php echo $this->__f("Name"); ?></span>
-        <input type="textfield" gs_model='sedoxopenmodel' gs_model_attr='monday_fri_limitedservice' value="<? echo $this->getConfigurationSetting("monday_fri_limitedservice"); ?>" placeholder="">
+        <span class="title"><?php echo $this->__("Monday - Friday"); ?></span>
+        <input type="textfield" gs_model='sedoxopenmodel' gs_model_attr='monday_friday_limitedservice' value="<? echo $this->getConfigurationSetting("monday_friday_limitedservice"); ?>" placeholder="">
         <div class="description">
-            <?php echo $this->__("Limited service hours monday - friday."); ?>
+            <?php echo $this->__("Limited File Service Hours"); ?>
         </div>
     </div>
-
+    <div class="textfield gss_setting"  id="name">
+        <span class="title"><?php echo $this->__("Saturday"); ?></span>
+        <input type="textfield" gs_model='sedoxopenmodel' gs_model_attr='saturday_fullservice' value="<? echo $this->getConfigurationSetting("saturday_fullservice"); ?>" placeholder="">
+        <div class="description">
+            <?php echo $this->__("Full File Service Hours"); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="name">
+        <span class="title"><?php echo $this->__("Saturday"); ?></span>
+        <input type="textfield" gs_model='sedoxopenmodel' gs_model_attr='saturday_limitedservice' value="<? echo $this->getConfigurationSetting("saturday_limitedservice"); ?>" placeholder="">
+        <div class="description">
+            <?php echo $this->__("Limited File Service Hours"); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="name">
+        <span class="title"><?php echo $this->__("Sunday"); ?></span>
+        <input type="textfield" gs_model='sedoxopenmodel' gs_model_attr='sunday_limitedservice' value="<? echo $this->getConfigurationSetting("sunday_limitedservice"); ?>" placeholder="">
+        <div class="description">
+            <?php echo $this->__("Limited File Service Hours"); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="name">
+        <span class="title"><?php echo $this->__("Address"); ?></span>
+        <input type="textfield" gs_model='sedoxopenmodel' gs_model_attr='address' value="<? echo $this->getConfigurationSetting("address"); ?>" placeholder="">
+    </div>
     <div class='gss_button_area'>
         <div class="gss_button" gss_method="saveHours" gss_model="sedoxopenmodel"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
     </div>
-
 </div>

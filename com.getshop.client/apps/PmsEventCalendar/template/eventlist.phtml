@@ -2,11 +2,15 @@
 /* @var $this ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
 $cats = $this->getCategories();
 $datelist = array();
+$indexrange = array();
 foreach($this->getEventList() as $eventEntry) {
+    $j = 0;
     foreach($eventEntry->dateRanges as $idx => $range) {
         $start = strtotime($range->start);
         $datelist[] = $eventEntry;
         $sortList[] = $start;
+        $indexrange[] = $j;
+        $j++;
     }
 }
 
@@ -20,6 +24,9 @@ foreach($sortList as $idx => $date) {
     if($date < $today) {
         continue;
     }
+    
+    $dateidx = $indexrange[$idx];
+    
     $eventEntry = $datelist[$idx];
     if(!$eventEntry->starttime) {
         $eventEntry->starttime = date("H:i", strtotime($eventEntry->dateRanges[0]->start));
@@ -55,7 +62,13 @@ foreach($sortList as $idx => $date) {
         }
         echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$date."'>" . $title  . " <span style='font-size: 12px;'>les mer</span></a></h2>";
 
-        echo "<div class='arrangedby'>" . $eventEntry->arrangedBy . "</div>";
+        if(!isset($eventEntry->roomNames[$dateidx])) {
+            print_r($eventEntry->roomNames);
+        }
+        echo "<div style='margin-top: 5px; margin-bottom: 5px;'>";
+        echo  $eventEntry->roomNames[$dateidx];
+        echo "<span class='arrangedby'>" . ", " . $eventEntry->arrangedBy . "</span>";
+        echo "</div>";
         if(isset($cats[$eventEntry->category])) {
 //            echo "<div><span class='cat'>" . $cats[$eventEntry->category] . "</span></div>";
         }

@@ -75,6 +75,13 @@ public class PmsConfiguration extends DataCommon {
     public String senderEmail = "";
     public String sendAdminTo = "";
     
+    /* Wubook settings */
+    public String wubookusername = "";
+    public String wubookpassword = "";
+    public String wubookproviderkey = "";
+    public String wubooklcode = "";
+    
+    
     boolean hasLockSystem() {
         return (arxHostname != null && !arxHostname.isEmpty());
     }

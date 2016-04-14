@@ -557,31 +557,64 @@ $days[7] = "Sunday";
                 <input type='txt' gsname='closeAllDoorsAfterTime' value="<?php echo $notificationSettings->closeAllDoorsAfterTime; ?>">
             </span>
             Keep door open when keycode is entered.
-        </div>   
+        </div>
+        
+        <br><br>
+        <h2>Messaging settings</h2>
+        <br><br>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='text' gsname='senderName' value='<? echo $notificationSettings->senderName; ?>'>
+            </span>
+            Senders name
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='text' gsname='senderEmail' value='<? echo $notificationSettings->senderEmail; ?>'>
+            </span>
+            Senders email
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='text' gsname='sendAdminTo' value='<? echo $notificationSettings->sendAdminTo; ?>'>
+            </span>
+            Email to notify to
+        </div>
+        
+        
+        <h2>Wubook settings</h2>
+        <br><br>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='text' gsname='wubookusername' value='<? echo $notificationSettings->wubookusername; ?>'>
+            </span>
+            Wubook username
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='text' gsname='wubookpassword' value='<? echo $notificationSettings->wubookpassword; ?>'>
+            </span>
+            Wubook password
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='text' gsname='wubookproviderkey' value='<? echo $notificationSettings->wubookproviderkey; ?>'>
+            </span>
+            Wubook provider key
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='text' gsname='wubooklcode' value='<? echo $notificationSettings->wubooklcode; ?>'>
+            </span>
+            Wubook lcode
+        </div>
+        
+        <div style='text-align: right;'>
+            <span class='pmsbutton' gstype='clicksubmit' method="markAllKeyDelivered">Mark all rooms as key delivered</span>
+        </div>
     </div>
     <br><br>
-    <h2>Lock settings</h2>
-    <br><br>
-    <div class='configrow'>
-        <span class='configentry'>
-            <input type='text' gsname='senderName' value='<? echo $notificationSettings->senderName; ?>'>
-        </span>
-        Senders name
-    </div>
-    <div class='configrow'>
-        <span class='configentry'>
-            <input type='text' gsname='senderEmail' value='<? echo $notificationSettings->senderEmail; ?>'>
-        </span>
-        Senders email
-    </div>
-    <div class='configrow'>
-        <span class='configentry'>
-            <input type='text' gsname='sendAdminTo' value='<? echo $notificationSettings->sendAdminTo; ?>'>
-        </span>
-        Email to notify to
-    </div>
     <div style='text-align: right;'>
-        <span class='pmsbutton' gstype='clicksubmit' method="markAllKeyDelivered">Mark all rooms as key delivered</span>
         <span class='pmsbutton' gstype='submit'>Save changes</span>
     </div>
 </div>

@@ -107,27 +107,6 @@ public class PmsManagerProcessor {
         }
     }
 
-    private void processOrdersToCreate() {
-        
-        if(!manager.getConfigurationSecure().autoCreateInvoices) { 
-            return;
-        }
-        
-        if (manager.lastOrderProcessed != null && isSameDay(manager.lastOrderProcessed, new Date())) {
-            return;
-        }
-
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
-        for (PmsBooking booking : bookings) {
-            if (booking.isEndedOverTwoMonthsAgo()) {
-                continue;
-            }
-
-            createPeriodeInvoices();
-        }
-        manager.lastOrderProcessed = new Date();
-    }
-    
     private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
         if (manager.getConfigurationSecure().locktype.isEmpty() || manager.getConfigurationSecure().locktype.equals("arx")) {
             return pushToArx(room, deleted);
@@ -255,6 +234,14 @@ public class PmsManagerProcessor {
     }
 
     private void createPeriodeInvoices() {
+        if(!manager.getConfigurationSecure().autoCreateInvoices) { 
+            return;
+        }
+        
+        if (manager.lastOrderProcessed != null && isSameDay(manager.lastOrderProcessed, new Date())) {
+            return;
+        }
+        
         NewOrderFilter filter = new NewOrderFilter();
         filter.prepaymentDaysAhead = manager.getConfigurationSecure().prepaymentDaysAhead;
         filter.increaseUnits = manager.getConfigurationSecure().increaseUnits;

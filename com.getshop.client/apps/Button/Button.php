@@ -98,6 +98,10 @@ class Button extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("type", "logout");
     }
     
+    public function setGoBack() {
+        $this->setConfigurationSetting("type", "goback");
+    }
+    
     public function saveEmailConfig() {
         $this->setConfigurationSetting("type", "send_email");
         $this->setConfigurationSetting("successMessage", $_POST['data']['successMessage']);

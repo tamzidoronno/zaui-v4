@@ -7,6 +7,7 @@ package com.thundashop.core.questback;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.questback.data.QuestBackQuestion;
 import com.thundashop.core.questback.data.QuestTest;
@@ -101,4 +102,13 @@ public interface IQuestBackManager {
     
     @Customer
     public UserTestResult getBestCategoryResultForCompany(String userId, String catId);   
+    
+    /**
+     * Returns the calculated result in percent (0 - 100)
+     * @param userId
+     * @param testId
+     * @return 
+     */
+    @Editor
+    public Integer getScoreForTest(String userId, String testId);
 }

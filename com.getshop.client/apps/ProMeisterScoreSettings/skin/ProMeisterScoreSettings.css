@@ -23,6 +23,17 @@
 }
 
 .ProMeisterScoreSettings .groupsetting .catrow {
-    border-bottom: solid 1px #DDD;
+    padding: 20px;
+    display: inline-block;
+    text-align: center;
+}
+
+.ProMeisterScoreSettings .groupsetting .catrow input {
+    width: 100px;
+}
+
+.ProMeisterScoreSettings .testselection {
+    border: solid 1px #DDD;
+    margin-bottom: 30px;
     padding: 20px;
 }

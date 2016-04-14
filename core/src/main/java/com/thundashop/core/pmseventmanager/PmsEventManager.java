@@ -135,6 +135,8 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
             BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
             if(item != null) {
                 entry.roomNames.add(item.bookingItemName);
+            } else {
+                entry.roomNames.add(type.name);
             }
         }
     }
@@ -143,6 +145,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         PmsBooking booking = pmsManager.getBookingUnsecure(get.id);
         setRooms(get, booking);
         get.arrangedBy = userManager.getUserById(booking.userId).fullName;
+        get.finalizeSubEntries();
         return get;
     }
 

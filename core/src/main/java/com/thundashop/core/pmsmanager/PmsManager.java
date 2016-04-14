@@ -1000,6 +1000,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.arxUsername = "";
         toReturn.arxPassword = "";
         toReturn.arxHostname = "";
+        
+        toReturn.wubookusername = "";
+        toReturn.wubookpassword = "";
+        toReturn.wubookproviderkey = "";
 
         return toReturn;
     }
@@ -1378,9 +1382,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (BookingItem item : items) {
             BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
             List<BookingTimeLine> timelines = line.getTimelines(filter.interval);
-            LinkedHashMap<Long, Integer> itemCountLine = new LinkedHashMap();
+            LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap();
             for (BookingTimeLine tl : timelines) {
-                itemCountLine.put(tl.start.getTime(), tl.count);
+                IntervalResultEntry tmpres = new IntervalResultEntry();
+                tmpres.bookingIds = tl.bookingIds;
+                tmpres.count = tl.count;
+                tmpres.time = tl.start.getTime();
+                
+                itemCountLine.put(tl.start.getTime(), tmpres);
             }
             res.itemTimeLines.put(item.id, itemCountLine);
         }
@@ -2432,7 +2441,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (!room.isEndingToday() && room.keyIsReturned) {
                     if(!room.isEnded()) {
                         User usr = userManager.getUserById(booking.userId);
-                        String roomName = bookingEngine.getBookingItem(roomId).bookingItemName;
+                        BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                        String roomName = "";
+                        if(item != null) {
+                            roomName = item.bookingItemName;
+                        }
                         String msg = "Key delivered for someone not checking out today, at room: " + roomName + ", booked by: " + usr.fullName;
                         String email = storeManager.getMyStore().configuration.emailAdress;
                         messageManager.sendMail(email, email, msg, msg, email, email);
@@ -3018,6 +3031,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public PmsBooking getBookingFromBookingEngineId(String bookingEngineId) {
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.bookingId != null && room.bookingId.equals(bookingEngineId)) {
+                    return booking;
+                }
+            }
+        }
+        return null;
     }
 
 }

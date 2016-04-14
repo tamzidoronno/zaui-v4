@@ -1,8 +1,9 @@
-.gs_page_width { max-width: 1200px; margin: auto; background-color:#fff; padding-left: 70px; padding-right: 70px; }
+.gs_page_width { max-width: 1200px; margin: auto; }
 .Menu a { font-size: 16px; font-weight: bold; color:#18bbb1; padding-right: 30px; display:inline-block; }
 .Menu .lastentry a { padding-right: 0px; }
-body { background-color: #525659; padding-top: 10px; }
-.gsarea[area="header"] .gs_page_width { height: 200px; }
+.Menu .entries .entries a { width: 300px; }
+body {    background-color: #FFF; padding-top: 10px; font-family: arial; }
+.gsarea[area="header"] .gs_page_width { height: 200px;  border-bottom: solid 2px #FFA500; margin-bottom: 20px; }
 .gsarea[area="footer"] .gs_page_width { background-color:#000;
                                         padding-top: 20px;
                                         padding-bottom: 20px;
@@ -27,6 +28,8 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .gs_language_code.active {
     font-weight: bold;
 }
+
+.shop_button { border: solid 1px #DDD; padding: 10px; line-height: 20px; height: 20px; padding-left: 20px; padding-right: 20px;}
 
 .Menu .entries {
     background-color: #FFF;

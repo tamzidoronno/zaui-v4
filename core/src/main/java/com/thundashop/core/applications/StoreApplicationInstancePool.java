@@ -186,9 +186,9 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         boolean hasEditorOrAdminPriveliges = getSession() != null && getSession().currentUser != null && getSession().currentUser.type >= 50;
         
         for (String key : application.settings.keySet()) {
-            if (secureClone.settings.containsKey(key)) {
-                continue;
-            }
+//            if (secureClone.settings.containsKey(key)) {
+//                continue;
+//            }
             
             if (hasEditorOrAdminPriveliges) {
                 secureClone.settings.put(key, application.settings.get(key));

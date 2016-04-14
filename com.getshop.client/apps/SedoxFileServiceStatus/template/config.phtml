@@ -1,0 +1,33 @@
+<?
+/* @var $this \ns_b9642995_2bb2_474c_b1e8_5c859dad67a1\SedoxFileServiceStatus */
+?>
+
+<div class='gss_settings_header'>
+    <span class="fa-stack fa-lg" style="margin-right: 60px;">
+        <i class="fa fa-gears fa-stack-1x"></i>
+    </span>
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Sedox Performance Configuration"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("File Service Status");
+            ?>	
+        </div>
+    </div>	
+</div>
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting"  id="name">
+        <span class="title"><?php echo $this->__f("Force Service Status"); ?></span>
+        <div class="gss_onoff" gs_model="servicestatus" gs_model_attr="forced">
+            <?
+            $faclass = $this->getConfigurationSetting("forced") == "true" ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+    </div>
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveStatus" gss_model="servicestatus"><i class='fa fa-save'></i><?php echo $this->__f("Save"); ?></div>
+    </div>
+</div>

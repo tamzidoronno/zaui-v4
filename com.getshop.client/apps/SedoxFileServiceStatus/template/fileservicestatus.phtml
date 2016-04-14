@@ -1,7 +1,10 @@
-<? /* @var $this \ns_b9642995_2bb2_474c_b1e8_5c859dad67a1\SedoxFileServiceStatus */ ?>
+<?
+/* @var $this \ns_b9642995_2bb2_474c_b1e8_5c859dad67a1\SedoxFileServiceStatus */
+?>
+
 <div class='status1'>
     LOCAL TIME: <? echo $this->getTime(); ?>
 </div>
 <div class='status2'>
-    <i class='fa fa-file-o'></i> FILE SERVICE STATUS: <div class='filestatus green'></div>
+    <i class='fa fa-file-o'></i> FILE SERVICE STATUS: <div class='filestatus <?php echo $this->getStatus() ?>'></div>
 </div>

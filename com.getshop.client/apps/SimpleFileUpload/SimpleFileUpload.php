@@ -13,8 +13,12 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
     }
     
     public function render() {
-        $this->includefile("uploadbutton");
-        echo "<div class='filelist'>";
+        $withWriteAccess = "";
+        if($this->hasWriteAccess()) {
+            $this->includefile("uploadbutton");
+            $withWriteAccess = "withwacces";
+        }
+        echo "<div class='filelist $withWriteAccess'>";
         $this->includefile("uploadedFiles");
         echo "</div>";
         echo "<div style='clear:both;'></div>";

@@ -1,4 +1,5 @@
-#imgtodisplay { width: 100%; padding: 10px; box-sizing: border-box; height: 400px; background-size: cover; }
+#imgtodisplay { width: 100%; padding: 10px; box-sizing: border-box; background-size: cover; }
+#imgtodisplay img { width: 100%; }
 .latestnewsline {  white-space: nowrap;
                    display:block;
                    width: 100%;

@@ -89,6 +89,9 @@ public class NewsManager extends ManagerBase implements INewsManager {
     @Override
     public String addNews(NewsEntry entry, String newsListId) throws ErrorException {
         entry.storeId = storeId;
+        if(newsListId != null && !newsListId.isEmpty()) {
+            entry.newsListId = newsListId;
+        }
         saveObject(entry);
         entries.put(entry.id, entry);
         return entry.id;

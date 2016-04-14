@@ -6,7 +6,7 @@
     /* @var $this ns_f65ee7f2_134f_413f_82d2_2606ab8440dd\NewsElements */
     $entry = $this->getApi()->getNewsManager()->getNewsForPage($this->getPage()->javapage->id);
 
-    $news = $this->getApi()->getNewsManager()->getAllNews();
+    $news = $this->getApi()->getNewsManager()->getAllNews("");
     $i = 0;
     foreach($news as $new) {
         echo "<span class='latestnewsline'>" . $new->content . "</span>";

@@ -26,6 +26,9 @@ class News extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        if ($this->hasWriteAccess()) {
+            $this->includefile("addnewnews");
+        } 
         $this->includefile("filter");
         $this->includefile("NewsTemplate");
     }

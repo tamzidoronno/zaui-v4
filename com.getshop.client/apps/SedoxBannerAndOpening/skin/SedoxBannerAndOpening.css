@@ -8,19 +8,19 @@
     margin: 1%;
     display: inline-block;
     height: 100px;
-    width: 47.5%;
+    width: calc(48% - 2px);
 }
 
 .SedoxBannerAndOpening .description {
     border-right: solid 1px #e4ebf1;
     height: 100%;
-    width: 29.5%;
+    width: 30%;
     display: inline-block;
     float: left;
 }
 
 .SedoxBannerAndOpening .opening_data {
-    width: 70%;
+    width: calc(70% - 1px);
     display: inline-block;
     float: right;
     text-align: center;
@@ -65,18 +65,19 @@
     margin: 1%;
     display: inline-block;
     height: 100px;
-    width: 47.5%;
+    width: calc(48% - 2px);
 }
 
 .SedoxBannerAndOpening .banner_description {
     border-right: solid 1px #e4ebf1;
     height: 100%;
-    width: 29.5%;
+    width: 30%;
     display: inline-block;
     float: left;
 }
 
 .SedoxBannerAndOpening .banner_data {
+    width: calc(70% - 1px);
     display: inline-block;
     float: left;
     margin-top: 10px;
@@ -85,12 +86,11 @@
     font-weight: bold;
     font-size: 13px;
     line-height: 20px;
-    margin-left: 10%;
 }
 
 .SedoxBannerAndOpening .two_fifth_width {
     height: 100%;
-    width: 39%;
+    width: 40%;
     display: inline-block;
 }
 
@@ -101,7 +101,7 @@
 }
 
 .SedoxBannerAndOpening .half_width {
-    width: 49%;
+    width: 50%;
     display: inline-block;
     height: 66%;
 }

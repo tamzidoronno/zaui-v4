@@ -13,5 +13,14 @@ class SedoxBannerAndOpening extends \MarketingApplication implements \Applicatio
     public function render() {
         $this->includefile("bannerandopening");
     }
+    
+    public function renderConfig() {
+        $this->includefile("config");
+    }
+    
+    public function saveHours() {
+         $this->setConfigurationSetting("monday_fri_fullservice", $_POST['monday_fri_fullservice']);
+         $this->setConfigurationSetting("monday_fri_limitedservice", $_POST['monday_fri_limitedservice']);
+    }
 }
 ?>

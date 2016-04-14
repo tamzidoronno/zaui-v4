@@ -163,3 +163,7 @@
 .SedoxBannerAndOpening .two_forth_height span:last-child {
     display: inline-block;
 }
+
+.SedoxBannerAndOpening .data_wrapper {
+    margin-left: 10%;
+}

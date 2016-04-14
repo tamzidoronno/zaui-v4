@@ -133,6 +133,8 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     }
 
     private ApplicationInstance checkSecurity(ApplicationInstance secureClone) {
+        overrideGlobalSettings(secureClone);
+        
         if(getSession().currentUser != null && (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor())) {
             return secureClone;
         }
@@ -168,9 +170,31 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         List<ApplicationInstance> result = new ArrayList();
         for(ApplicationInstance app : applicationInstances.values()) {
             if(app.appSettingsId.equals(applicationId)) {
-                result.add(checkSecurity(app));
+                if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type >= 50) {
+                    result.add(checkSecurity(app));
+                } else {
+                    result.add(checkSecurity(app.secureClone()));
+                }                
             }
         }
+        
         return result;
+    }
+
+    private void overrideGlobalSettings(ApplicationInstance secureClone) {
+        Application application = applicationPool.getApplication(secureClone.appSettingsId);
+        boolean hasEditorOrAdminPriveliges = getSession() != null && getSession().currentUser != null && getSession().currentUser.type >= 50;
+        
+        for (String key : application.settings.keySet()) {
+            if (secureClone.settings.containsKey(key)) {
+                continue;
+            }
+            
+            if (hasEditorOrAdminPriveliges) {
+                secureClone.settings.put(key, application.settings.get(key));
+            } else {
+                secureClone.settings.put(key, application.settings.get(key).secureClone());
+            }
+        }
     }
 }

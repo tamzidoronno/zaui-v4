@@ -17,6 +17,8 @@
     box-sizing: border-box;
 }
 
+.News .ui-widget-header { background: #fff; }
+
 .News .gs_button.addevent, .News .gs_button.delete { position: absolute;right: 0px;bottom: 10px;}
 .News .gs_button.delete {display:none;}
 .News .gs_button.publish {right: 180px;}
@@ -25,7 +27,6 @@
 
 .News .newsboxtemplate_1 { font-size: 14px; }
 .News .newsboxtemplate_1 .news_container .news_entry_footer { text-align: center;font-size: 10px;padding-top: 10px;}
-.News .newsboxtemplate_1 .newscontainerbox { display:none; }
 .News .newsboxtemplate_1 .news_container { margin-top: 5px;padding: 10px;position: relative;}
 .News .newsboxtemplate_1 .news_entry_footer { clear:both; }
 .News .newsboxtemplate_1 .news_container img { max-width: 200px; margin: 10px; }

@@ -1,5 +1,5 @@
 app.News = { 
-    
+    needPackery : false,
     init: function() {
         $(document).on('click', '.News .addevent', $.proxy(this.addEvent, app.News));
         $(document).on('click', '.News .delete', this.deleteEvent );
@@ -19,7 +19,27 @@ app.News = {
         var event = thundashop.Ajax.createEvent('', 'publishEntry', $('.News'), data);
         thundashop.Ajax.post(event);
     },
-            
+    loadFilteredNews : function(event, ui) {
+        var offset = ui.value;
+        var type = $( "#slider-range-max" ).attr('type');
+        var event = thundashop.Ajax.createEvent('','loadFilteredNews',$('.News'), {
+            "type" : type,
+            "newsdate" : $('.grid13[offset="'+offset+'"]').attr('type'),
+            "offset" : offset
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.globalnewsbox').html(res);
+            if(app.News.needPackery) {
+                $(document).find('img').batchImageLoad({
+                    loadingCompleteCallback: function() {
+                        $('.newscontainerbox').packery({ gutter: 10 });
+                    }
+                });
+            }
+        });
+        
+    },
     deleteEvent: function() {
         var id = $(this).closest('.news_container').attr('id');
         var data = {

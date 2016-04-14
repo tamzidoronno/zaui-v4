@@ -1,0 +1,71 @@
+<?php
+
+/* @var $this ns_dabb8a85_f593_43ec_bf0d_240467118a40\News */
+$entries = $this->getAllEntries();
+$top = null;
+$bottom = null;
+
+foreach($entries as $entry) {
+    $created = strtotime($entry->rowCreatedDate);
+    if($created > $top || !$top) {
+        $top = $created;
+    }
+    if($created < $bottom || !$bottom) {
+        $bottom = $created;
+    }
+}
+
+$diff = ($top - $bottom) / (86400);
+
+$type = "monthly";
+if($diff > 30) {
+    $type = "monthly";
+}
+if($diff > 365) {
+    $type = "yearly";
+}
+
+?>
+
+<div id="slider-range-max" type="<?php echo $type; ?>"></div>
+<br>
+
+<?php
+echo "<span style='width:6%; display:inline-block;'>".$this->__w("Latest")."</span>";
+if($type == "monthly") {
+    $time = $top;
+    $offset = 1;
+    for($i = 12; $i >= 1; $i--) {
+        $type = date("m.Y", $time);
+        echo "<span class='grid13' offset='$offset' type='$type'>".$this->__w(date("M-y", $time)) ."</span>";
+        $time = strtotime(date('Y-m-d H:i:s', $time) . ' -1 month');
+        $offset++;
+    }
+} else {
+    $startyear = date("Y", $top);
+    $offset = 1;
+    for($i = 0; $i < 12; $i++) {
+        $type = date("Y", $startyear);
+        echo "<span class='grid13' offset='$offset' type='$type'>".$startyear."</span>";
+        $startyear--;
+        $offset++;
+    }
+}
+?>
+
+<br><br>
+<style>
+    .grid13 { display:inline-block; width: 7.6923%; text-align: left; box-sizing: border-box; }
+</style>
+  <script>
+  $(function() {
+    $( "#slider-range-max" ).slider({
+      range: "max",
+      min: 0,
+      max: 13,
+      value: 0,
+      stop: app.News.loadFilteredNews
+    });
+    $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );
+  });
+  </script>

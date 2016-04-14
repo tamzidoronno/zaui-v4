@@ -47,3 +47,19 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .Menu .entries .entries {
     box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
 }
+
+.News .newsboxtemplate_1 .news_container, .News .grid-sizer { width: 375px; }
+.News .newsboxtemplate_1 .news_container img { max-width: 100%; }
+
+
+.News .addnewsrow {
+    border: solid 1px #ddd;
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.News .addnewsrow td {
+    font-size: 16px;
+}

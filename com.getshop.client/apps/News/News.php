@@ -4,6 +4,7 @@ namespace ns_dabb8a85_f593_43ec_bf0d_240467118a40;
 class News extends \MarketingApplication implements \Application {
     public $singleton = true;
     var $entries;
+    var $noNewsFound;
     
     public function getDescription() {
         return $this->__("A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.");
@@ -25,6 +26,11 @@ class News extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        $this->includefile("filter");
+        $this->includefile("NewsTemplate");
+    }
+    
+    public function loadFilteredNews() {
         $this->includefile("NewsTemplate");
     }
     
@@ -32,7 +38,17 @@ class News extends \MarketingApplication implements \Application {
      * @return \app_newsmanager_data_NewsEntry[]
      */
     public function getAllEntries() {
-        return $this->getApi()->getNewsManager()->getAllNews($this->getNewsListId());
+        $res = $this->getApi()->getNewsManager()->getAllNews($this->getNewsListId());
+        $this->noNewsFound = false;
+        if(isset($_POST['event']) && $_POST['event'] == "loadFilteredNews") {
+            $type = $_POST['data']['type'];
+            $offset = $_POST['data']['offset'];
+            $res = $this->filterNews($type, $offset, $res);
+        }
+        if(sizeof($res) == 0) {
+            $this->noNewsFound = true;
+        }
+        return $res;
     }
     
     public function getNewsListId() {
@@ -85,6 +101,34 @@ class News extends \MarketingApplication implements \Application {
         return $number;
     }
 
-}
+    /**
+     * 
+     * @param type $type
+     * @param type $offset
+     * @param \app_newsmanager_data_NewsEntry[] $news
+     * @return type
+     */
+    public function filterNews($type, $offset, $news) {
+        if($offset == 0) {
+            return $news;
+        }
+        $res = array();
+        if($type == "monthly") {
+            foreach($news as $new) {
+                if(date("m.Y", strtotime($new->rowCreatedDate)) == $_POST['data']['newsdate']) {
+                    $res[] = $new;
+                }
+            }
+        } else {
+            foreach($news as $new) {
+                if(date("Y", strtotime($new->rowCreatedDate)) == $_POST['data']['newsdate']) {
+                    $res[] = $new;
+                }
+            }
+        }
+        
+        return $res;
+    }
 
+}
 ?>

@@ -48,6 +48,11 @@ class SedoxFileServiceStatus extends \MarketingApplication implements \Applicati
     
     public function getStatusColor($day, $hour, $openingApp) {
         $app = $this->getApi()->getStoreApplicationPool()->getApplication("cf3f46d9-0073-4966-977d-8e202dc5abbb");
+        
+        if (!$app) {
+            return "red";
+        }
+        
         $openingApp = $this->getFactory()->getApplicationPool()->createInstace($app);
         $day = strtolower($day);
         

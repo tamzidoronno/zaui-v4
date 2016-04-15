@@ -18,6 +18,10 @@ class SedoxDatabankTheme extends \ThemeApplication implements \Application {
         return true;
     }
     
+    public function isBodyFooterEnabled() {
+        return true;
+    }
+    
     public function addScripts() {
         echo "\n" . "<link href='https://fonts.googleapis.com/css?family=Lato|Roboto' rel='stylesheet' type='text/css'>";
     }   

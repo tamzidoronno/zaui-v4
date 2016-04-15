@@ -95,10 +95,12 @@ class Page {
                     
                     echo "<div class='gs_main_column'>";
                     $edited = $this->printArea($layout->areas->{'body'});
+                    $this->printBodyFooter($layout);
                     echo "</div>";
                     echo "</div>";
                 } else {
                     $edited = $this->printArea($layout->areas->{'body'});
+                    $this->printBodyFooter($layout);
                 }
                 
                 if ($edited) {
@@ -1918,6 +1920,14 @@ class Page {
 
                 echo "</select>";
             echo "</div>";
+        }
+    }
+
+    public function printBodyFooter($layout) {
+        if ($this->themeApp->isBodyFooterEnabled()) {
+            echo "<div class='gsarea gs_bodyfooter' area='bodyfooter'><div class='gs_bodyfooter_inner'>";
+            $this->printArea($layout->areas->{'bodyfooter'});
+            echo "</div></div>";
         }
     }
 

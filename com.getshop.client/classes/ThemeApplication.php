@@ -147,6 +147,10 @@ class ThemeApplication extends PredefinedPagesConfig {
     public function printArrowsOutSideOnCarousel() {
         return true;
     }
+    
+    public function isBodyFooterEnabled() {
+        return false;
+    }
 }
 
 ?>

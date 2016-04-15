@@ -13,9 +13,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -65,6 +63,7 @@ public class Page extends DataCommon implements Cloneable {
     public void finalizePage(CommonPageData pagedata) {
         layout.setNewList(pagedata.header, "header", true);
         layout.setNewList(pagedata.footer, "footer", true);
+        layout.setNewList(pagedata.bodyFooter, "bodyfooter", true);
         if (layout.getAreas().get("body") == null || layout.getAreas().get("body").isEmpty()) {
             layout.clear();
         }

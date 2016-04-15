@@ -185,6 +185,10 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         Application application = applicationPool.getApplication(secureClone.appSettingsId);
         boolean hasEditorOrAdminPriveliges = getSession() != null && getSession().currentUser != null && getSession().currentUser.type >= 50;
         
+        if (application == null || application.settings == null) {
+            return;
+        }
+        
         for (String key : application.settings.keySet()) {
 //            if (secureClone.settings.containsKey(key)) {
 //                continue;

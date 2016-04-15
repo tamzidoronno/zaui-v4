@@ -8,6 +8,7 @@ getshop.Models = {
         $(document).on('change', 'textarea[gs_model]', this.inputChanged);
         $(document).on('change', 'select[gs_model]', this.selectChanged);
         $(document).on('click', '[gs_model].gss_onoff', this.toggleOnOff);
+        $(document).on('click', '.gss_slider label', this.moveSlider);
     },
     toggleOnOff: function (silent) {
         var fontAwesomeIcon = $(this).find('i');
@@ -132,6 +133,25 @@ getshop.Models = {
         if (getshop.Models.isSelectBox(field)) {
             getshop.Models.selectChanged(field);
         }
+    },
+    moveSlider: function() {
+        var status = $(this).attr("for");
+        if(status == "state_one") {
+            $(".gss_slider .slider_button").css("left", "-2px");
+            $(".gss_slider .slider_button").css("background-color", "red");
+        } else if(status == "state_two") {
+            $(".gss_slider .slider_button").css("left", "16px");
+            $(".gss_slider .slider_button").css("background-color", "yellow");
+        } else if (status == "state_three") {
+            $(".gss_slider .slider_button").css("left", "34px");
+            $(".gss_slider .slider_button").css("background-color", "green");
+        }
+        
+        var model = $(this).parent().attr("gs_model");
+        var attr = $(this).parent().attr("gs_model_attr");
+        var val = $(this).parent().find("[id=" + status + "]").val();
+        
+        getshop.Model[model][attr] = val;
     }
 }
 

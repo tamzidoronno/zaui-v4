@@ -18,5 +18,7 @@ public class CommonPageData extends DataCommon {
     public ArrayList<PageCell> header = new ArrayList();
     public ArrayList<PageCell> footer = new ArrayList();
     
+    public ArrayList<PageCell> bodyFooter = new ArrayList();
+    
     public String mobileLink = "";
 }

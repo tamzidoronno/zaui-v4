@@ -20,7 +20,8 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .gs_language_selection { right: 0px; border: 0px; }
 
 .SimpleFileUpload .uploadform { display: inline-block; width: 50%; float:left;}
-.SimpleFileUpload .filelist { display: inline-block; width: 50%;  box-sizing: border-box; float:left; padding: 10px; background-color:#d7d8da;}
+.SimpleFileUpload .filelist { display: inline-block; width: 100%;  box-sizing: border-box; float:left; padding: 10px; background-color:#d7d8da;}
+.SimpleFileUpload .filelist.withwacces { width: 50%;  }
 .Logout .loggedonmarker { padding: 10px; border-radius: 10px; background-color:#939598; color:#fff; font-weight: bold; padding-left: 30px; padding-right: 30px; margin-right: 20px; font-size: 14px;}
 .Logout .logoutclick { color: #8194c1; cursor: pointer; }
 .Login { display:inline-block; }
@@ -63,3 +64,6 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .News .addnewsrow td {
     font-size: 16px;
 }
+
+.News .content { color: #696969 !important; }
+.News .news_dates { font-size: 12px !important; }

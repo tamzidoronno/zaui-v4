@@ -2,7 +2,7 @@
 .Menu a { font-size: 16px; font-weight: bold; color:#18bbb1; padding-right: 30px; display:inline-block; }
 .Menu .lastentry a { padding-right: 0px; }
 .Menu .entries .entries a { width: 300px; }
-body {    background-color: #FFF; padding-top: 10px; font-family: arial; }
+body {    background-color: #FFF; padding-top: 10px; font-family: arial; font-size: 18px; }
 .gsarea[area="header"] .gs_page_width { height: 200px;  border-bottom: solid 2px #FFA500; margin-bottom: 20px; }
 .gsarea[area="footer"] .gs_page_width { background-color:#000;
                                         padding-top: 20px;

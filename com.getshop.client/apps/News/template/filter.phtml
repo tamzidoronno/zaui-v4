@@ -27,9 +27,9 @@ if($diff > 365) {
 
 ?>
 
+<div class="news_dates">
 <div id="slider-range-max" type="<?php echo $type; ?>"></div>
 <br>
-
 <?php
 echo "<span style='width:6%; display:inline-block;'>".$this->__w("Latest")."</span>";
 if($type == "monthly") {
@@ -52,6 +52,7 @@ if($type == "monthly") {
     }
 }
 ?>
+</div>
 
 <br><br>
 <style>

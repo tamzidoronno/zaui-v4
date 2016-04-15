@@ -24,44 +24,48 @@ class SedoxFileServiceStatus extends \MarketingApplication implements \Applicati
     
     public function saveStatus() {
         $this->setConfigurationSetting("forced", $_POST['forced']);
+        $this->setConfigurationSetting("forcedstatus", $_POST['forcedstatus']);
     }
     
     public function getStatus() {
-        $app = $this->getApi()->getStoreApplicationPool()->getApplication("cf3f46d9-0073-4966-977d-8e202dc5abbb");
-        $openingApp = $this->getFactory()->getApplicationPool()->createInstace($app);
-        
         $forced = filter_var($this->getConfigurationSetting("forced"), FILTER_VALIDATE_BOOLEAN);
         $colorClass = "red";
         
         if($forced) {
-            
-        } else if(!$forced) {
-            $day = date("l");
-            $hour = date("H");
-            
-            if($day == "Sunday") {
-                $limitedOpenTime = explode("-", $openingApp->getConfigurationSetting("sunday_limitedservice"));
-                if($hour >= $limitedOpenTime[0] && $hour < $limitedOpenTime[1]) {
-                    $colorClass = "yellow";
-                }
-            } else if ($day == "Saturday") {
-                $fullOpenTime = explode("-", $openingApp->getConfigurationSetting("saturday_fullservice"));
-                $limitedOpenTime = explode("-", $openingApp->getConfigurationSetting("saturday_limitedservice"));
-                if($hour >= $fullOpenTime[0] && $hour < $fullOpenTime[1]) {
-                    $colorClass = "green";
-                } else if($hour >= $limitedOpenTime[0] && $hour < $limitedOpenTime[1]) {
-                    $colorClass = "yellow";
-                }
-            } else {
-                $fullOpenTime = explode("-", $openingApp->getConfigurationSetting("monday_friday_fullservice"));
-                $limitedOpenTime = explode("-", $openingApp->getConfigurationSetting("monday_friday_limitedservice"));
-                if($hour >= $fullOpenTime[0] && $hour < $fullOpenTime[1]) {
-                    $colorClass = "green";
-                } else if($hour >= $limitedOpenTime[0] && $hour < $limitedOpenTime[1]) {
-                    $colorClass = "yellow";
-                }
+            $forcedStatus = $this->getConfigurationSetting("forcedstatus");
+            if($forcedStatus == "off") {
+                $colorClass = "red";
+            } else if($forcedStatus == "limited") {
+                $colorClass = "yellow";
+            } else if($forcedStatus == "full") {
+                $colorClass = "green";
             }
+        } else if(!$forced) {
+            $colorClass = $this->getStatusColor(date("l"), date("H"), $openingApp);
         }
+        return $colorClass;
+    }
+    
+    public function getStatusColor($day, $hour, $openingApp) {
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication("cf3f46d9-0073-4966-977d-8e202dc5abbb");
+        $openingApp = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $day = strtolower($day);
+        
+        if($day != "sunday" && $day != "saturday") {
+            $day = "monday_friday";
+        }
+        
+        if($day != "sunday") {
+            $fullOpenTime = explode("-", $openingApp->getConfigurationSetting($day . "_fullservice"));
+        }
+        $limitedOpenTime = explode("-", $openingApp->getConfigurationSetting($day . "_limitedservice"));
+        
+        if($hour >= $fullOpenTime[0] && $hour < $fullOpenTime[1]  && $day != "sunday") {
+            $colorClass = "green";
+        } else if($hour >= $limitedOpenTime[0] && $hour < $limitedOpenTime[1]) {
+            $colorClass = "yellow";
+        }
+        
         return $colorClass;
     }
 }

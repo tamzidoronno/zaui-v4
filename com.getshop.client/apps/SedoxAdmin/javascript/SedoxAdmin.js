@@ -60,6 +60,8 @@ app.SedoxAdmin = {
     
     showModal: function() {
         app.SedoxAdmin.currentProductId = $(this).attr('productid');
+        $('.SedoxAdmin .selectfiletypearea .filetype').removeClass("origType");
+        $('.SedoxAdmin .selectfiletypearea .filetype[type="' + $(this).attr('sedox_file_type') + '"]').addClass("origType");
         $('.SedoxAdmin .uploadfilemodal .progressbararea').hide();
         $('.SedoxAdmin .uploadfilemodal .selectarea').show();
         $('.SedoxAdmin .uploadfilemodal').fadeIn();

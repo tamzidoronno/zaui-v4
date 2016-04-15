@@ -336,9 +336,15 @@
     cursor: pointer;
 }
 
+.SedoxAdmin .origType {
+    background-color: #4eb61e;
+    box-shadow: inset 0px 0px 1px black;
+}
+
 .SedoxAdmin .progressbararea .selectfiletypearea .filetype:hover {
     background-color: #40c1e1;
     color: #FFF;
+    box-shadow: none;
 }
 
 .SedoxAdmin .sedox_file_actions {
@@ -387,3 +393,4 @@
     width: 35%;
     text-align: right;
 }
+

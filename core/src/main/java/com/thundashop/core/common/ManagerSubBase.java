@@ -34,7 +34,7 @@ public class ManagerSubBase {
     protected Credentials credentials = null;
     
     @Autowired
-    protected Logger log;
+    protected Logger log; 
     
     @Autowired
     private GetShopSessionScope scope;

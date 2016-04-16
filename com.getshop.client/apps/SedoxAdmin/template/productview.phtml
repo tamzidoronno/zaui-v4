@@ -3,6 +3,7 @@
 /* @var $product core_sedox_SedoxProduct */
 $product = $this->getCurrentProduct();
 $productName = $product->printableName;
+$origRequestType = "";
 
 if (!function_exists("sedox_notAvailableCheck")) {
     function sedox_notAvailableCheck($input) {
@@ -17,6 +18,7 @@ $expaned = $this->isExpanded($product->id) ? "expanded" : "";
 
 $_POST['data']['productId'] = $product->id;
 $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
+
 ?>
 <div class="sedox_internal_view <? echo $expaned; ?>" productid='<? echo $product->id; ?>'>
     <div class="innerview" productid='<? echo $product->id; ?>'>
@@ -32,6 +34,9 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
                 <?
                 echo "<select class='fileselector'>";
                 foreach ($product->binaryFiles as $binFile) {
+                    if($binFile->fileType == "Original") {
+                        $origRequestType = $binFile->options->requested_remaptype;
+                    }   
                     
                     if ($this->isSelected($product->id, $binFile->id)) {
                         $_POST['data']['fileId'] = $binFile->id;
@@ -68,7 +73,7 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
                     <div class='trash_button smallbutton' gs_confirm="Are you sure you want to delete it?" gsclick="deleteFile" sedox_file_id="" productid="<? echo $product->id; ?>"><i class='fa fa-trash'></i></div>
                 </div>
                 <div class='priceview'>
-                    <div class='sedox_blue_button sedox_admin_upload_file' productid='<? echo $product->id; ?>'>UPLOAD FILE</div>
+                    <div class='sedox_blue_button sedox_admin_upload_file' productid='<? echo $product->id; ?>' sedox_file_type="<? echo $origRequestType ?>" >UPLOAD FILE</div>
                 </div>
             </div>
         </div>

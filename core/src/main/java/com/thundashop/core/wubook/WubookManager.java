@@ -537,6 +537,18 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private void addBookingToPms(WubookBooking booking) throws Exception {
+        if(booking.delete) {
+            List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+            for(PmsBooking pmsbook : allbookings) {
+                if(pmsbook.wubookreservationid != null && pmsbook.wubookreservationid.equals(booking.reservationCode)) {
+                    pmsManager.logEntry("Deleted by channel manager", pmsbook.id, null);
+                    pmsManager.deleteBooking(pmsbook.id);
+                }
+            }
+            return;
+        }
+        
+        
         PmsBooking newbooking = pmsManager.startBooking();
         newbooking.wubookchannelid = booking.channelId;
         newbooking.wubookchannelreservationcode = booking.channel_reservation_code;

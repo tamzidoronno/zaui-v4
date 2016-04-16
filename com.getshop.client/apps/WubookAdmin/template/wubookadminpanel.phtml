@@ -5,7 +5,25 @@
 <span class='shop_button' gstype="clicksubmit" gsvalue='fetchAllBookings' gsname='type' method='doAction'>Fetch all bookings</span>
 <span class='shop_button' gstype="clicksubmit" gsvalue='fetchNewBookings' gsname='type' method='doAction'>Fetch new bookings</span>
 <span class='shop_button' gstype="clicksubmit" gsvalue='updateAvailability' gsname='type' method='doAction'>Update availability</span>
-<span class='shop_button' gstype="clicksubmit" gsvalue='markNoShow' gsname='type' method='doAction'>Mark booking as no show</span>
 <span class='shop_button' gstype="clicksubmit" gsvalue='updatePrices' gsname='type' method='doAction'>Update prices</span>
 <span class='shop_button' gstype="clicksubmit" gsvalue='addAllRooms' gsname='type' method='doAction'>Insert rooms to wubook</span>
-<span class='shop_button' gstype="clicksubmit" gsvalue='markCCInvalid' gsname='type' method='doAction'>Mark credit card as invalid</span>
+<br>
+<br>
+<h2>Booking actions</h2>
+<div gstype='form' method="doAction">
+    <input type="text" gsname="id" value="1460806042">
+    <input type="hidden" gsname="type" value='addBooking'>
+    <span class='shop_button' gstype="submit">Add booking to GetShop</span>
+</div>
+
+<div gstype='form' method="doAction">
+    <input type="text" gsname="id">
+    <input type="hidden" gsname="type" value='markCCInvalid'>
+    <span class='shop_button' gstype="submit">Mark credit card as invalid</span>
+</div>
+<div gstype='form' method="doAction">
+    <input type="text" gsname="id">
+    <input type="hidden" gsname="type" value='markNoShow'>
+    <span class='shop_button' gstype="submit">Mark booking as no show</span>
+</div>
+

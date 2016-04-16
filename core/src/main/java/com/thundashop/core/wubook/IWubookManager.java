@@ -21,19 +21,21 @@ public interface IWubookManager {
     @Administrator
     public boolean testConnection() throws Exception;
     @Administrator
-    public List<String> fetchAllBookings() throws Exception;
+    public List<WubookBooking> fetchAllBookings(Integer daysback) throws Exception;
     @Administrator
-    public List<String> fetchNewBookings() throws Exception;
+    public List<WubookBooking> fetchNewBookings() throws Exception;
     @Administrator
-    public boolean fetchBooking(String rcode) throws Exception;
+    public WubookBooking fetchBooking(String rcode) throws Exception;
+    @Administrator
+    public void addBooking(String rcode) throws Exception;
     @Administrator
     public String updateAvailability() throws Exception;
     @Administrator
-    public void markNoShow(String rcode) throws Exception;
+    public String markNoShow(String rcode) throws Exception;
     @Administrator
     public String updatePrices() throws Exception;
     @Administrator
-    public void markCCInvalid(String rcode) throws Exception;
+    public String markCCInvalid(String rcode) throws Exception;
     @Administrator
     public List<String> insertAllRooms() throws Exception;
 }

@@ -20,8 +20,32 @@ if($action == "testConnection") {
     } else {
         echo "Unable to connect to the api, make sure the username and password set in booking admin configuration are correct.";
     }
+} else if($action == "markCCInvalid") {
+    $id = $_POST['data']['id'];
+    $res = $wubookmgr->markCCInvalid($name, $id);
+    if(!$res) {
+        echo "OK"; 
+    } else {
+        echo $res;
+    }
+} else if($action == "markNoShow") {
+    $id = $_POST['data']['id'];
+    $res = $wubookmgr->markNoShow($name, $id);
+    if(!$res) {
+        echo "OK"; 
+    } else {
+        echo $res;
+    }
 } else if($action == "fetchAllBookings") {
-    $res = $wubookmgr->fetchAllBookings($name);
+    $res = $wubookmgr->fetchAllBookings($name, 900);
+    $this->printBookingTable($res);
+} else if($action == "fetchNewBookings") {
+    $res = $wubookmgr->fetchNewBookings($name);
+    $this->printBookingTable($res);
+} else if($action == "addBooking") {
+    $id = $_POST['data']['id'];
+    $res = $wubookmgr->addBooking($name, $id);
+    print_r($res);
 } else if($action == "updatePrices") {
     $res = $wubookmgr->updatePrices($name);
     if(!$res) {

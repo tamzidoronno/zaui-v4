@@ -536,16 +536,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         addBookingToPms(booking);
     }
 
-    private void addBookingToPms(WubookBooking booking) throws Exception {
+    private String addBookingToPms(WubookBooking booking) throws Exception {
         if(booking.delete) {
             List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+            boolean found = false;
             for(PmsBooking pmsbook : allbookings) {
                 if(pmsbook.wubookreservationid != null && pmsbook.wubookreservationid.equals(booking.reservationCode)) {
                     pmsManager.logEntry("Deleted by channel manager", pmsbook.id, null);
                     pmsManager.deleteBooking(pmsbook.id);
+                    found = true;
                 }
             }
-            return;
+            if(!found) {
+                return "Did not find booking to delete.";
+            } 
+            return "";
         }
         
         
@@ -588,6 +593,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         pmsManager.setBooking(newbooking);
         
         pmsManager.completeCurrentBooking();
+        return "";
     }
 
     private String getTypeFromWubookRoomId(int roomId) {
@@ -615,5 +621,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         cal.set(Calendar.MINUTE, new Integer(starting[1]));
         
         return cal.getTime();
+    }
+
+    @Override
+    public String deleteBooking(String rcode) throws Exception {
+        WubookBooking booking = fetchBooking(rcode);
+        booking.delete = true;
+        return addBookingToPms(booking);
     }
 }

@@ -36,6 +36,14 @@ if($action == "testConnection") {
     } else {
         echo $res;
     }
+} else if($action == "removeFromBooking") {
+    $id = $_POST['data']['id'];
+    $res = $wubookmgr->deleteBooking($name, $id);
+    if(!$res) {
+        echo "OK"; 
+    } else {
+        echo $res;
+    }
 } else if($action == "fetchAllBookings") {
     $res = $wubookmgr->fetchAllBookings($name, 900);
     $this->printBookingTable($res);

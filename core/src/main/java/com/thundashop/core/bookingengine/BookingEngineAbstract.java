@@ -424,6 +424,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     public boolean deleteBooking(String id) {
         Booking booking = getBooking(id);
         bookings.remove(id);
+        if(booking == null) {
+            return false;
+        }
         deleteObject(booking);
         
         for (BookingItem item : items.values()) {

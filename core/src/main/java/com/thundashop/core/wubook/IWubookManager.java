@@ -38,4 +38,6 @@ public interface IWubookManager {
     public String markCCInvalid(String rcode) throws Exception;
     @Administrator
     public List<String> insertAllRooms() throws Exception;
+    @Administrator
+    public String deleteBooking(String rcode) throws Exception;
 }

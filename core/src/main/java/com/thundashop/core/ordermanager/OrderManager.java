@@ -293,11 +293,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrder(order);
         updateStockAndSendConfirmation(order);
         order.doFinalize();
-        
-        String email = storeManager.getMyStore().configuration.emailAdress;
-        if(email != null && !email.isEmpty()) {
-            mailFactory.send("post@getshop.com", email, "New order creaated", "A new order has been created for " + address.fullName);
-        }
         return order;
     }
 

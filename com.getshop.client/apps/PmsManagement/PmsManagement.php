@@ -9,6 +9,36 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $checkedCanAdd = array();
     public $roomTable = "";
     
+    public function loadTakenRoomList() {
+        $bookingid = $_POST['data']['bookingid'];
+        $roomid = $_POST['data']['roomid'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomid) {
+                $start = $this->convertToJavaDate(time());
+                $end = $room->date->end;
+                
+                $filter = new \core_pmsmanager_PmsBookingFilter();
+                $filter->filterType = "active";
+                $filter->startDate = $start;
+                $filter->endDate = $end;
+                
+                $allRooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
+                $toPrint = "";
+                foreach($allRooms as $takenroom) {
+                    if($takenroom->bookingItemId == $_POST['data']['itemid']) {
+                        $toPrint .= $takenroom->owner . " - " . date("d.m.Y H:i", $takenroom->start / 1000) . " - " . date("d.m.Y H:i", $takenroom->end / 1000) . "<br>";
+                    }
+                }
+                if($toPrint) {
+                    echo "<i class='fa fa-close' style='float:right; cursor:pointer;' onclick=\"$('.tiparea').hide()\"></i>";
+                    echo "<b>Item is taken by</b><br>";
+                    echo $toPrint;
+                }
+            }
+        }
+    }
+    
     public function getDescription() {
         return "Administrate all your bookings from this application";
     }

@@ -163,17 +163,25 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                                 <select gsname='itemid'>
                                     <?php 
-                                    $availableItems = $object->getApi()->getBookingEngine()->getAllAvailbleItems($object->getSelectedName(), $room->date->start, $room->date->end);
-                                    foreach($availableItems as $item) {
+                                    $now = $object->convertToJavaDate(time());
+                                    $isAvailableItem = $object->getApi()->getBookingEngine()->getAllAvailbleItems($object->getSelectedName(), $now, $room->date->end);
+                                    $isAvailableItem = $object->indexList($isAvailableItem);
+                                    $allItems = $object->getApi()->getBookingEngine()->getBookingItems($object->getSelectedName());
+                                    foreach($allItems as $item) {
                                         $selected = "";
                                         if($types[$item->bookingItemTypeId]->addon > 0) {
                                             continue;
+                                        }
+                                        
+                                        $taken = " (" .$object->__w("Occupied"). ")";
+                                        if($isAvailableItem[$item->id]) {
+                                            $taken = "";
                                         }
 
                                         if($room->booking->bookingItemId == $item->id) {
                                             $selected = "SELECTED";
                                         }
-                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")" . "</option>";
+                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")$taken" . "</option>";
                                     }
                                     ?>
                                 </select>

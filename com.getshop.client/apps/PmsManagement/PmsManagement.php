@@ -570,7 +570,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     if($number > 0) {
                         echo "<option value='".$type->id."'>". $type->name . "</option>";
                     } else {
-                        echo "<option value='".$type->id."'>". $type->name . " (opptatt)</option>";
+                        echo "<option value='".$type->id."'>". $type->name . " (".$this->__w("Occupied").") </option>";
                     }
                 }
                 ?>

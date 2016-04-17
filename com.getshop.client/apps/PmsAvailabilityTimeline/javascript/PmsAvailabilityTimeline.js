@@ -29,6 +29,7 @@ app.PmsAvailabilityTimeline = {
     },
     
     loadBooking : function() {
+        $('.ui-tooltip').remove();
         var data = {
             "bid" : $(this).attr('bid')
         }

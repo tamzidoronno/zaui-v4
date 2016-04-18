@@ -8,6 +8,7 @@ import java.util.List;
 public class PmsRoomSimple implements Serializable {
     public String bookingId = "";
     public String pmsRoomId = "";
+    public String bookingItemId = "";
     public String owner = "";
     public List<PmsGuests> guest = new ArrayList();
     public long start;

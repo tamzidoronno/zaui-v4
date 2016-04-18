@@ -21,6 +21,25 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
         $(document).on('change','.PmsManagement .repeat_type', app.PmsManagement.changeRepeatType);
         $(document).on('click','.PmsManagement .changeInvoiceTo', app.PmsManagement.changeInvoiceTo);
+        $(document).on('change','.PmsManagement select[gsname="itemid"]', app.PmsManagement.loadTakenRoomList);
+    },
+    loadTakenRoomList : function() {
+        var row = $(this).closest('tr');
+        var bookingid = row.attr('bookingid');
+        var roomid = row.attr('roomid');
+        var event = thundashop.Ajax.createEvent('','loadTakenRoomList', $(this), {
+            "bookingid" : bookingid,
+            "roomid" : roomid,
+            "itemid" : $(this).val()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            row.find('.tiparea').hide()
+            if(result) {
+                row.find('.tiparea').fadeIn();
+                row.find('.tiparea').html(result);
+            }
+        });
     },
     changeInvoiceTo : function() {
         var newDate = prompt("Specify a new date");

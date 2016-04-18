@@ -334,6 +334,12 @@ class CartManager extends \SystemApplication implements \Application {
             $this->order = $this->getApi()->getOrderManager()->createOrder($address);
         }
             
+        $email = $this->getApi()->getStoreManager()->getMyStore()->configuration->emailAdress;
+        if($email) {
+            $this->getApi()->getMessageManager()->sendMail($email, $email, "New order creaated", "A new order has been created for " . $address->fullName, "post@getshop.com", "post@getshop.com");
+        }
+
+        
             
         if (isset($this->shippingApplication)) {
             $this->order->shipping = $this->shippingApplication;

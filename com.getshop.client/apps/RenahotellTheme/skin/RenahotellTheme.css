@@ -41,7 +41,7 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
 .frontpagebox .gsdepth_2.gscount_0 { border-bottom: solid 1px #ddd; padding-top: 5px; }
 .frontpagebox .gsdepth_2.gscount_1 { padding: 10px; }
 .Login .form .gs_button, .Login .form .loginbutton,
-.shop_button { background: #536f94; border-radius: 0px; color:#fff; }
+.shop_button { background: #536f94; border-radius: 0px; color:#fff; margin: 5px; }
 .Login .login_content { text-align: center; }
 
 .PmsBookingContactData label input[type="text"], 

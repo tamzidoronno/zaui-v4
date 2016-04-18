@@ -181,7 +181,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         ?>
 
 
-        <title class='pagetitle'><?php echo $title; ?></title>
+        <title class='pagetitle'></title>
     <script>
      $(function() {
         if (typeof(CKEDITOR) !== "undefined") {         

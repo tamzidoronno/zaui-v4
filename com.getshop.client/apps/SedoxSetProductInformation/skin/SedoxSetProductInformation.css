@@ -38,37 +38,36 @@
 }
 
 .SedoxSetProductInformation .information_radio_buttons {
-    width: 85%;
-    margin: auto;
+    margin-left: 35%;
     font-family: 'Lato', sans-serif;
     color: #344758;
     font-size: 14px;
 }
 
-.SedoxSetProductInformation .radio_button {
+.SedoxSetProductInformation .checkbox {
     position: relative;
     min-height: 25px;
     text-align: left;
 }
 
-.SedoxSetProductInformation .radio_button input[type=radio]{
+.SedoxSetProductInformation .checkbox input[type=checkbox]{
     visibility: hidden;
     margin-left: 10px;
 }
 
-.SedoxSetProductInformation .radio_button label {
+.SedoxSetProductInformation .checkbox label {
     width: 15px;
     height: 15px;
     cursor: pointer;
     position: absolute;
     top: 3px;
     left: 0;
-    border-radius: 10px;
+    border-radius: 4px;
     box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
     margin-right: 20px;
 }
 
-.SedoxSetProductInformation .radio_button label:after {
+.SedoxSetProductInformation .checkbox label:after {
     content: '';
     width: 7px;
     height: 3px;
@@ -84,7 +83,7 @@
     transform: rotate(-45deg);
 }
 
-.SedoxSetProductInformation .radio_button input[type="radio"]:checked + label:after {
+.SedoxSetProductInformation .checkbox input[type="checkbox"]:checked + label:after {
     opacity: 1;
 }
 

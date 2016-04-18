@@ -135,6 +135,9 @@ public interface ISedoxProductManager  {
     
     @Editor
     public void setExtraInformationForFile(String productId, int fileId, String text) throws ErrorException;
+    
+    @Editor
+    public void setSpecialRequestsForFile(String productId, int fileId, boolean dpf, boolean egr, boolean decat, boolean vmax, boolean adblue, boolean dtc) throws ErrorException;
  
     @Editor
     public void toggleSaleableProduct(String productId, boolean saleable) throws ErrorException;

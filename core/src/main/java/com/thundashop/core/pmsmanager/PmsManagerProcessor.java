@@ -400,9 +400,11 @@ public class PmsManagerProcessor {
                         if (item != null) {
                             String text = "Autoextending room " + item.bookingItemName;
                             PmsBookingRooms res = manager.changeDates(room.pmsBookingRoomId, booking.id, start, end);
-                            if(res == null) {
+                            if(res == null && (room.warnedAboutAutoExtend == null || room.warnedAboutAutoExtend.equals(room.ended))) {
                                 text = "Not able to extend stay for room: " + item.bookingItemName;
                                 manager.warnAboutUnableToAutoExtend(item.bookingItemName,"Not able to extend");
+                                room.warnedAboutAutoExtend = room.date.end;
+                                needSaving = true;
                             }
 
                             text += " (" + start + " to " + end + ")";

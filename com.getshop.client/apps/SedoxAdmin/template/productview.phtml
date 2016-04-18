@@ -4,6 +4,7 @@
 $product = $this->getCurrentProduct();
 $productName = $product->printableName;
 $origRequestType = "";
+$extraRequests = "";
 
 if (!function_exists("sedox_notAvailableCheck")) {
     function sedox_notAvailableCheck($input) {
@@ -34,18 +35,42 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
                 <?
                 echo "<select class='fileselector'>";
                 foreach ($product->binaryFiles as $binFile) {
+                    $extraInfo = $binFile->extraInformation;
+                    
                     if($binFile->fileType == "Original") {
                         $origRequestType = $binFile->options->requested_remaptype;
-                    }   
+                        var_dump($binFile->id);
+                        if($binFile->options->requested_adblue) {
+                            $extraRequests .= "AdBlue, ";
+                        }
+                        if($binFile->options->requested_decat) {
+                            $extraRequests .= "Decat, ";
+                        }
+                        if($binFile->options->requested_dpf) {
+                            $extraRequests .= "DPF, ";
+                        }
+                        if($binFile->options->requested_dtc) {
+                            $extraRequests .= "DTC, ";
+                        }
+                        if($binFile->options->requested_egr) {
+                            $extraRequests .= "EGR, ";
+                        }
+                        if($binFile->options->requested_vmax) {
+                            $extraRequests .= "Vmax, ";
+                        }
+                        if($extraRequests != "") {
+                            $extraRequests = substr($extraRequests, 0, -2);
+                        }
+                    }
                     
                     if ($this->isSelected($product->id, $binFile->id)) {
                         $_POST['data']['fileId'] = $binFile->id;
                     }
                     
                     $checksumCorrect = $binFile->checksumCorrected ? "Yes" : "No";
-                    $extraInfo = sedox_notAvailableCheck($binFile->extraInformation);
                     $selected = $this->isSelected($product->id, $binFile->id) ? "selected='true'" : "";
-                    echo "<option $selected checksumupdated='$checksumCorrect' extrainfo='$binFile->extraInformation' admintools='N/A' value='$binFile->id'>" . $binFile->fileType . "</option>";
+                    $extraInfo = $binFile->extraInformation . ($binFile->extraInformation != "" && $extraRequests != "" ? " - " : "") . $extraRequests;
+                    echo "<option $selected checksumupdated='$checksumCorrect' extrainfo='$extraInfo' admintools='N/A' value='$binFile->id'>" . $binFile->fileType . "</option>";
                 }
                 echo "</select>";
                 ?>
@@ -67,13 +92,13 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
 
                 
                 <div class='sedox_file_actions'>
-                    <div class='smallbutton'><i class='fa fa-download action_purchase_product' sedox_file_id="" productid="<? echo $product->id; ?>"></i></div>
-                    <div class='smallbutton'><i class='fa fa-info-circle' gs_show_modal="setProductInformation" sedox_file_id="" productid="<? echo $product->id; ?>"></i></div>
-                    <div class='smallbutton'><i class='fa fa-hashtag setChecksum' sedox_file_id=""></i></div>
-                    <div class='trash_button smallbutton' gs_confirm="Are you sure you want to delete it?" gsclick="deleteFile" sedox_file_id="" productid="<? echo $product->id; ?>"><i class='fa fa-trash'></i></div>
+                    <div class='smallbutton' title="Download File"><i class='fa fa-download action_purchase_product' sedox_file_id="" productid="<? echo $product->id; ?>"></i></div>
+                    <div class='smallbutton' title="Extra Information"><i class='fa fa-info-circle' gs_show_modal="setProductInformation" sedox_file_id="" productid="<? echo $product->id; ?>" extrarequests="<? echo $extraRequests ?>"></i></div>
+                    <div class='smallbutton' title="Change 8-bit Sum"><i class='fa fa-hashtag setChecksum' sedox_file_id=""></i></div>
+                    <div class='trash_button smallbutton' gs_confirm="Are you sure you want to delete it?" gsclick="deleteFile" sedox_file_id="" productid="<? echo $product->id; ?>" title="Delete File"><i class='fa fa-trash'></i></div>
                 </div>
                 <div class='priceview'>
-                    <div class='sedox_blue_button sedox_admin_upload_file' productid='<? echo $product->id; ?>' sedox_file_type="<? echo $origRequestType ?>" >UPLOAD FILE</div>
+                    <div class='sedox_blue_button sedox_admin_upload_file' productid='<? echo $product->id; ?>' sedox_file_type="<? echo $origRequestType ?>">UPLOAD FILE</div>
                 </div>
             </div>
         </div>

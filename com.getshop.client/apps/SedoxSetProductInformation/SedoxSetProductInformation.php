@@ -16,6 +16,14 @@ class SedoxSetProductInformation extends \MarketingApplication implements \Appli
     
     public function setInformation() {
         $this->getApi()->getSedoxProductManager()->setExtraInformationForFile($_POST['data']['productId'], $_POST['data']['fileId'], $_POST['data']['info']);
+        $this->getApi()->getSedoxProductManager()->setSpecialRequestsForFile($_POST['data']['productId'], $_POST['data']['fileId'], 
+            filter_var($_POST['data']['dpf'], FILTER_VALIDATE_BOOLEAN), 
+            filter_var($_POST['data']['egr'], FILTER_VALIDATE_BOOLEAN), 
+            filter_var($_POST['data']['decat'], FILTER_VALIDATE_BOOLEAN), 
+            filter_var($_POST['data']['vmax'], FILTER_VALIDATE_BOOLEAN), 
+            filter_var($_POST['data']['adblue'], FILTER_VALIDATE_BOOLEAN), 
+            filter_var($_POST['data']['dtc'], FILTER_VALIDATE_BOOLEAN)
+        );
     }
 }
 ?>

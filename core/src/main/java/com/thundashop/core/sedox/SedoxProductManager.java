@@ -1426,8 +1426,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct product = getProductById(productId);
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
         
-        if (product != null) {
-            for (SedoxBinaryFile binFile : sharedProduct.binaryFiles) {
+        if (product != null) {s 
+           for (SedoxBinaryFile binFile : sharedProduct.binaryFiles) {
                 if (binFile.id == fileId) {
                     binFile.options.requested_dpf = dpf;
                     binFile.options.requested_egr = egr;

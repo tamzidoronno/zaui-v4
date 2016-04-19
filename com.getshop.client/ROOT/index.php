@@ -309,8 +309,13 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         if ($factory->isEditorMode()) {
             $factory->getPage()->printApplicationAddCellRow();
         }
+        $disableMobileview = "gsdisabledmobileview";
+        if(!$factory->getStoreConfiguration()->disableMobileMode) {
+            $disableMobileview = "gsnotdisabledmobileview";
+        }
+        
         ?>
-        <div id="gsbody" class="<? echo  isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOpen" : "";?> ">
+        <div id="gsbody" class="<? echo  isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOpen" : ""; echo " " . $disableMobileview; ?> ">
             <?php echo $html; ?>
         </div>
         

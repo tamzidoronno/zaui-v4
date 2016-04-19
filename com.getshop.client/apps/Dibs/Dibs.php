@@ -73,19 +73,14 @@ class Dibs extends \PaymentApplication implements \Application {
         $callBack = "http://pullserver_".$key."_".$store->id.".nettmannen.no";
         $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
         
-        $paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
-        $paymentfailed = $this->getConfigurationSetting("paymentfailed");
-        
-        $amount = round($amount, 2);
-        
         echo '<form method="post" id="dibsform" action="https://sat1.dibspayment.com/dibspaymentwindow/entrypoint">
             <input value="' . $merchid . '" name="merchant" type="hidden" />
             <input value="' . $currency . '" name="currency" type="hidden" />
             <input value="' . $orderId . '" name="orderId" type="hidden" />
             <input value="' . $amount . '" name="amount" type="hidden" />
             <input value="' . $language .  '" name="language" type="hidden" />
-            <input value="' . $redirect_url . $paymentsuccess . '" name="acceptReturnUrl" type="hidden" />
-            <input value="' . $redirect_url . $paymentfailed . '" name="cancelReturnUrl" type="hidden" />
+            <input value="' . $redirect_url . 'payment_success" name="acceptReturnUrl" type="hidden" />
+            <input value="' . $redirect_url . 'payment_failed" name="cancelReturnUrl" type="hidden" />
             <input value="' . $callBack . '" name="callbackUrl" type="hidden" />';
             if($this->saveCard()) {
                 echo '<INPUT TYPE="hidden" NAME="createTicket" VALUE="1">';

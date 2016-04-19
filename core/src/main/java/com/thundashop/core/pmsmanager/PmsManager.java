@@ -747,6 +747,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
             logEntry(logText, bookingId, null, roomId);
+            doNotification("date_changed", booking, room);
             return room;
         } catch (BookingEngineException ex) {
 //            ex.printStackTrace();

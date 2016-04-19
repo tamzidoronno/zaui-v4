@@ -5,9 +5,11 @@ $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedN
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 
 $hasPrices = false;
-if(($prices->defaultPriceType == 1 && !$prices->dailyPrices) || $prices->defaultPriceType != 1) {
+
+if($config->requirePayments) {
     $hasPrices = true;
 }
 foreach($items as $item) {
@@ -212,10 +214,10 @@ foreach($bookings as $booking) {
         } else if(!$booking->confirmed) {
             $state = "Unconfirmed";
         }
-        $row .= "<td align='center' class='$state'>$state";
         if($hasPrices && !$booking->payedFor) {
-            $row .= "<br>Missing payment";
+            $state = "Unpaid";
         }
+        $row .= "<td align='center' class='$state'>$state";
         $row .= "</td>";
         $row .= "</tr>";
         

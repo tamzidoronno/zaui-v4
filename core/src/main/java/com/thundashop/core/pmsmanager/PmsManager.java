@@ -109,6 +109,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     Date lastOrderProcessed;
     private List<PmsLog> logentries = new ArrayList();
     private boolean initFinalized = false;
+    private String orderIdToSend;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -1056,6 +1057,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private String notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
         String message = configuration.smses.get(key);
+        
         if (type.equals("email")) {
             message = configuration.emails.get(key);
             if (message != null) {
@@ -1066,6 +1068,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (message == null || message.isEmpty()) {
             return "";
         }
+        
+        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+            message = message.replace("{orderid}", this.orderIdToSend);
+        }
+        
 
         message = formatMessage(message, booking, room, null);
         if (room != null) {
@@ -3078,6 +3085,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.attachBookingItems(bookingToAddList);
         
         return "";
+    }
+
+    @Override
+    public void sendPaymentLink(String orderId, String bookingId) {
+        orderIdToSend = orderId;
+        doNotification("booking_sendpaymentlink", bookingId);
+    }
+
+    @Override
+    public void sendMissingPayment(String orderId, String bookingId) {
+        orderIdToSend = orderId;
+        doNotification("booking_paymentmissing", bookingId);
     }
 
 }

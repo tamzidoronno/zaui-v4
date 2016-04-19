@@ -39,6 +39,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function sendPaymentLink() {
+        $orderid = $_POST['data']['orderid'];
+        $bookingid = $_POST['data']['bookingid'];
+        $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderid, $bookingid);
+    }
+    
     public function getDescription() {
         return "Administrate all your bookings from this application";
     }

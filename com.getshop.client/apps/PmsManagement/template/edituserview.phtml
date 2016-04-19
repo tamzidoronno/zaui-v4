@@ -39,6 +39,7 @@ if(!$user->address) {
         <tr><td>Address</td><td><input type="txt" gsname="address.address" value="<?php echo $user->address->address; ?>"></td><tr>
         <tr><td>Postcode</td><td><input type="txt" gsname="address.postCode" value="<?php echo $user->address->postCode; ?>"></td><tr>
         <tr><td>City</td><td><input type="txt" gsname="address.city" value="<?php echo $user->address->city; ?>"></td><tr>
+        <tr><td>Birthdate</td><td><input type="txt" gsname="address.city" value="<?php echo $user->birthDay; ?>"></td><tr>
             <?php 
                 if($this->hasAccountingTransfer()) {
                     ?>

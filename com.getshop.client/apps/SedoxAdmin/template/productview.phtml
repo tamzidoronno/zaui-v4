@@ -93,9 +93,9 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
 
                 
                 <div class='sedox_file_actions'>
-                    <div class='smallbutton' title="Download File"><i class='fa fa-download action_purchase_product' sedox_file_id="" productid="<? echo $product->id; ?>"></i></div>
-                    <div class='smallbutton' title="Extra Information"><i class='fa fa-info-circle' gs_show_modal="setProductInformation" sedox_file_id="" productid="<? echo $product->id; ?>" extrarequests="<? echo $originalExtraRequests ?>"></i></div>
-                    <div class='smallbutton' title="Change 8-bit Sum"><i class='fa fa-hashtag setChecksum' sedox_file_id=""></i></div>
+                    <div class='smallbutton action_purchase_product' title="Download File" sedox_file_id="" productid="<? echo $product->id; ?>"><i class='fa fa-download'></i></div>
+                    <div class='smallbutton' title="Extra Information" gs_show_modal="setProductInformation" sedox_file_id="" productid="<? echo $product->id; ?>" extrarequests="<? echo $originalExtraRequests ?>"><i class='fa fa-info-circle'></i></div>
+                    <div class='smallbutton setChecksum' title="Change 8-bit Sum" sedox_file_id=""><i class='fa fa-hashtag '></i></div>
                     <div class='trash_button smallbutton' gs_confirm="Are you sure you want to delete it?" gsclick="deleteFile" sedox_file_id="" productid="<? echo $product->id; ?>" title="Delete File"><i class='fa fa-trash'></i></div>
                 </div>
                 <div class='priceview'>

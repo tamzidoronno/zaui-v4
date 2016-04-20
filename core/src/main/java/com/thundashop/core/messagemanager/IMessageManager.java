@@ -56,4 +56,6 @@ public interface IMessageManager  {
     
     public SmsMessage getSmsMessage(String smsMessageId);
     
+    public void sendMessageToStoreOwner(String message, String subject);
+    
 }

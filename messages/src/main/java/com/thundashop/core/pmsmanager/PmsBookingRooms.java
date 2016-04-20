@@ -5,6 +5,7 @@ import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -26,6 +27,8 @@ public class PmsBookingRooms implements Serializable {
     public Double price = 0.0;
     public double taxes = 8;
     public String bookingId;
+    
+    @Editor
     public String code = "";
     public Integer intervalCleaning = null;
     public boolean addedByRepeater = false;

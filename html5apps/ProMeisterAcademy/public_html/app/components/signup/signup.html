@@ -1,0 +1,32 @@
+<div class='modal' ng-class="{active: showFilterModal}">
+    <div>{{ 'Please select locations' || translate }}</div>
+    <div ng-repeat="location in locations" class='event'> 
+        <div class='selectLocation' ng-click="toggleSelectedFilter(location.id)" ng-class="{checked: isSelected(location.id)}"><i class='fa fa-check-square'></i> {{ location.name }}</div>
+    </div>
+    
+    <br/>
+    <div class='button' ng-click="toggleFilter()">{{ 'Done' || translate }}</div>
+</div>
+    
+<div class='topinfobox'>
+    {{ 'To sign up for an event you can select the event below, to find your events easier you can tap the filter at the bottom' || translate }}
+</div>
+
+
+<div class='SignupPage'>
+    <div ng-repeat="event in events" class='event'> 
+        <a href='#/signup/{{ event.id }}'>
+            <div>
+                <div class='title'>{{ event.bookingItemType.name }}</div>
+                <div>{{ 'Location' || translate }}: {{ event.location.name }} -  {{ event.subLocation.name }}</div>
+                <div>{{ 'Date' || translate }}: {{ event.mainStartDate }}</div>
+                <i class='fa fa-arrow-right'></i>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class='menu'>
+    <div class='col col_size_2' onclick="window.history.back()"><i class='fa fa-arrow-left'></i> {{ 'Back' || translate }} </div>
+    <div class='col col_size_2' ng-click="toggleFilter()" ng-class="{filterSelected: selectedLocations.length > 0}"><i class='fa fa-filter'></i>{{ 'Filter' || translate }} </div>
+</div>

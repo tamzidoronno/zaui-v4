@@ -1,0 +1,46 @@
+<div class='topinfobox'>
+    {{ 'Hi' || translate }} {{ user.fullName }}
+    <br/> {{ 'Please select one of the entries below to get more information' || translate }}
+</div>
+
+<a href='#/signup'>    
+    <div class="frontbox">
+        <i class="fa fa-graduation-cap"></i>
+        {{ 'Signup' || translate }}
+    </div>
+</a>
+
+<a href='#/overview'>    
+    <div class="frontbox">
+        <i class="fa fa-list-alt"></i>
+        {{ 'Your overview'  || translate }}
+    </div>
+</a>
+
+<a href='#/sendkm'>    
+    <div class="frontbox">
+        <i class="fa fa-line-chart"></i>
+        {{ 'Your skillset'  || translate }}
+    </div>
+</a>
+
+<a href='#/contact'>    
+    <div class="frontbox">
+        <i class="fa fa-comment"></i>
+        {{ 'Contact ProMeister Academy' || translate }}
+    </div>
+</a>
+
+<a href='#/news'>    
+    <div class="frontbox">
+        <i class="fa fa-newspaper-o"></i>
+        {{ 'News' || translate }}
+    </div>
+</a>
+
+<a href='#/login'>    
+    <div class="frontbox" ng-click="doLogout()">
+        <i class="fa fa-lock"></i>
+       {{ 'SIGN OUT' || translate }}
+    </div>
+</a>

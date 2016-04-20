@@ -11,7 +11,7 @@
 
 .EventTypeList .eventtype {
     border: solid 1px #DDD;
-    
+    padding-left: 10px;
     line-height: 50px;
     vertical-align: top;
     line-height: 50px;
@@ -19,10 +19,15 @@
     margin-bottom: 20px;
 }
 
+.EventTypeList .eventtype span {
+    min-width: 600px;
+    display: inline-block;
+}
 
 .EventTypeList .eventtype i {
     vertical-align: top;
     border-right: solid 1px #DDD;
+    border-left: solid 1px #DDD;
     display: inline-block;
     line-height: 50px;
     width: 50px;

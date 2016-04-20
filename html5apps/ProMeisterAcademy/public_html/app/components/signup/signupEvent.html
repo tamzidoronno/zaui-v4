@@ -1,0 +1,20 @@
+<div class='topinfobox'>
+    <div>{{ selectedEvent.bookingItemType.name }}</div>
+    <div ng-repeat="day in selectedEvent.days">
+        {{ 'Day' | translate }}: {{ day.startDate | dateformatter }} - {{ day.endDate | dateformatter }}
+    </div>
+    
+    <br/>
+    <div> {{ 'Location' | translate }}: <br/> {{ selectedEvent.location.name }} - {{ selectedEvent.subLocation.name }} </div>
+    <div class='availableSpots'> {{ 'Available spots' | translate }}: {{ selectedEvent.bookingItem.freeSpots }}</div>
+</div>
+
+<div ng-show='selectedEvent.canBook'>
+    <div class='button' ng-show="alreadySignOnToCurrentEvent === false" ng-click="signMeUp()">{{ 'Sign up' | translate }}</div>
+    <div class='topinfobox' ng-show='alreadySignOnToCurrentEvent === true'><i class='fa fa-check' ></i>&nbsp; {{ 'You are signed up for this event' | translate }}</div>    
+</div>
+
+
+<div class='menu'>
+    <div class='col col_size_1' onclick="window.history.back()"><i class='fa fa-arrow-left'></i> {{ 'Back' || translate }} </div>
+</div>

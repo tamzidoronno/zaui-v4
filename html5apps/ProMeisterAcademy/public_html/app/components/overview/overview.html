@@ -1,0 +1,44 @@
+<div class='topinfobox'>
+    {{ 'Your overview' | translate }}
+</div>
+
+
+<div class='overview_title'><i class='fa fa-graduation-cap'></i> {{ 'Upcoming events' | translate }}</div>
+<div ng-show='newEvents.length > 0'>
+    <div ng-repeat="event in newEvents" class='upcomingEvent'>
+        {{ event.bookingItemType.name }}
+        <br/> {{ 'Date' | translate }}: {{ event.mainStartDate | dateformatter }}
+    </div>
+</div>
+
+<div ng-show='newEvents.length == 0' class='noEventsAvailable'>
+    {{ 'No events available' | translate }}
+</div>
+
+<div class='overview_title'><i class='fa fa-history'></i> {{ 'Old events' | translate }}</div>
+<div ng-show='oldEvents.length > 0'>
+    <div ng-repeat="event in oldEvents" class='upcomingEvent'>
+        {{ event.bookingItemType.name }}
+        <br/> {{ 'Date' | translate }}: {{ event.mainStartDate | dateformatter }}
+    </div>
+</div>
+
+<div ng-show='oldEvents.length == 0' class='noEventsAvailable'>
+    {{ 'No events available' | translate }}
+</div>
+
+
+<div class='overview_title'><i class='fa fa-check-circle'></i> {{ 'Tests' | translate }}</div>
+<div ng-show='tests.length > 0'>
+    <div ng-repeat="test in tests" class='upcomingEvent'>
+        {{ test.name }}
+    </div>
+</div>
+
+<div ng-show='tests.length === 0' class='noEventsAvailable'>
+    {{ 'No tests available' | translate }}
+</div>
+
+<div class='menu'>
+    <div class='col col_size_1' onclick="window.history.back()"><i class='fa fa-arrow-left'></i> {{ 'Back' || translate }} </div>
+</div>

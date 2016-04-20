@@ -1513,4 +1513,24 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .findAny()
                 .orElse(null);
     }
+
+    @Override
+    public List<Location> getActiveLocations() {
+        List<Event> activeEvents = events.values().stream()
+                .filter(event -> event.isInFuture)
+                .collect(Collectors.toList());
+        
+        activeEvents.forEach(o -> finalize(o));
+                
+        List<Location> activeLocations = activeEvents.stream()
+                .map(event -> event.location)
+                .distinct()
+                .sorted( (o1, o2) -> { return o1.name.compareTo(o2.name); })
+                .collect(Collectors.toList());
+        
+        activeLocations.stream()
+                .forEach(location -> finalize(location));
+        
+        return activeLocations;
+    }
 }

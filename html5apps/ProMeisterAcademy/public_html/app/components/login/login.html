@@ -1,0 +1,20 @@
+<div class="logintext">
+    {{ 'Du må logge inn for å få tilgang til din oversikt. Fyll ut informasjonen under og trykk på logg inn.' || translate }}
+</div>
+    
+<input type="textfield" placeholder="{{ 'Username' || translate }}"  ng-model="username"/>
+
+<br/>
+<br/>
+<input type="password" placeholder="{{ 'Password' || translate }}"  ng-model="password" />
+<br/>
+<br/>
+<div class="button" ng-click="doLogin()">{{ 'Log in' || translate }}</div>
+
+<div class='create_new_user'>
+    <i class='fa fa-user'></i>
+    {{ 'New User' || translate }}
+</div><div class='recover_password'>
+    <i class='fa fa-key'></i>
+    {{ 'Recover password' || translate }}
+</div>

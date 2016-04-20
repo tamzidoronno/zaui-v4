@@ -239,4 +239,10 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         
         return "";
     }
+
+    @Override
+    public void sendMessageToStoreOwner(String message, String subject) {
+        String email = getStoreDefaultAddress();
+        mailFactory.send(email, email, subject, message);
+    }
 }

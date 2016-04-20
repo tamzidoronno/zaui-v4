@@ -7,7 +7,6 @@ import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.CheckSendQuestBackScheduler;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -284,7 +283,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             finalize(loc);
         }
         
-        return new ArrayList(locations.values());
+        List<Location> locationsToRet = new ArrayList(locations.values());
+        
+        Collections.sort(locationsToRet, (Location a, Location b) -> {
+            return a.name.compareTo(b.name);
+        });
+        
+        return locationsToRet;
     }
 
     @Override
@@ -939,6 +944,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .findAny()
                 .orElse(null);
         
+        if (res == null && getWaitingListBooking(event.id, user.id) != null) {
+            return true;
+        }
+        
         return res != null;
     }
 
@@ -1493,5 +1502,15 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         Collections.sort(retEvents, (Event event1, Event event2) -> { return event2.mainStartDate.compareTo(event1.mainStartDate); } );
         
         return retEvents;
+    }
+
+    @Override
+    public Event getEventByPageId(String pageId) {
+        events.values().forEach(o -> finalize(o));
+        
+        return events.values().stream()
+                .filter(o -> o.bookingItem.pageId.equals(pageId))
+                .findAny()
+                .orElse(null);
     }
 }

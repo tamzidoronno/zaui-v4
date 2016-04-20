@@ -5,21 +5,29 @@ app.SedoxSetProductInformation = {
     
     setInformation: function() {
         var information = $(".information_text input").val();
-        var radioValue = $.trim($(".radio_button input[type=radio]:checked").parent().text());
-        var allInfo = information + (radioValue && information ? " - " : "") + radioValue;
-        if (information || radioValue) {
-            var data = {
-                info: allInfo,
-                productId : $(this).attr('productid'),
-                fileId : $(this).attr('sedox_file_id')
-            }
-            
-            var event = thundashop.Ajax.createEvent(null, "setInformation", this, data);
-            
-            thundashop.Ajax.post(event, function() {
-                thundashop.common.closeModal();
-            });
+        var dpf = $(".checkbox #dpf").is(":checked");
+        var egr = $(".checkbox #egr").is(":checked");
+        var decat = $(".checkbox #decat").is(":checked");
+        var vmax = $(".checkbox #vmax").is(":checked");
+        var adblue = $(".checkbox #adblue").is(":checked");
+        var dtc = $(".checkbox #dtc").is(":checked");
+        var data = {
+            info: information,
+            dpf: dpf,
+            egr: egr,
+            decat: decat,
+            vmax: vmax,
+            adblue: adblue,
+            dtc: dtc,
+            productId : $(this).attr('productid'),
+            fileId : $(this).attr('sedox_file_id')
         }
+            
+        var event = thundashop.Ajax.createEvent(null, "setInformation", this, data);
+            
+        thundashop.Ajax.post(event, function() {
+            thundashop.common.closeModal();
+        });
     }
 }
 

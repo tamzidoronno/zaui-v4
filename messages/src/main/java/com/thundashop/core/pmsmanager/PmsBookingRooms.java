@@ -44,6 +44,7 @@ public class PmsBookingRooms implements Serializable {
     boolean isAddon = false;
     Date forcedOpenDate;
     boolean forcedOpenNeedClosing = false;
+    public Date warnedAboutAutoExtend = null;
     
     /**
      * Finalized entries
@@ -55,6 +56,15 @@ public class PmsBookingRooms implements Serializable {
     @Transient
     public BookingItemType type;
 
+    void clear() {
+        pmsBookingRoomId = UUID.randomUUID().toString();
+        date.start = new Date();
+        addedToArx = false;
+        canBeAdded = true;
+        bookingId = "";
+        bookingItemId = "";
+    }
+    
     boolean isActiveOnDay(Date time) {
         if(date.end == null || date.start == null) {
             return false;

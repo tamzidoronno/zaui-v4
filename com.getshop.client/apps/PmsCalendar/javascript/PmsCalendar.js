@@ -8,11 +8,10 @@ app.PmsCalendar = {
         $(document).on('mousedown', '.PmsCalendar .continue_button', app.PmsCalendar.continueToForm);
         $(document).on('click', '.PmsCalendar .loadbookingonclick', app.PmsCalendar.loadBookingId);
         $(document).on('click', '.PmsCalendar .gotopage', app.PmsCalendar.gotopage);
-        $(document).on('click', '.PmsCalendar .continuebuttonmobile', app.PmsCalendar.continueButtonMobile);
         $(document).on('blur', '.PmsCalendar .changemonthmobile', app.PmsCalendar.changemonthmobile);
         $(document).on('mouseup', app.PmsCalendar.mouseup);
     },
-    continueButtonMobile : function() {
+    continueButtonMobile : function(element) {
         var start = $('.selecteddate').val() + " " + $('.starthour').val() + ":" + $('.startminute').val();
         var end = $('.selecteddate').val() + " " + $('.endhour').val() + ":" + $('.endminute').val();
         var typeId = $('.addbookingpopup').attr('typeid');
@@ -23,7 +22,7 @@ app.PmsCalendar = {
             "room" : typeId
         };
         
-        var event = thundashop.Ajax.createEvent('','continueToForm',$(this), data);
+        var event = thundashop.Ajax.createEvent('','continueToForm',element, data);
         thundashop.Ajax.postWithCallBack(event, function() {
             var continueTo = $(".PmsCalendar .continue").val();
             thundashop.common.goToPage(continueTo);
@@ -39,7 +38,9 @@ app.PmsCalendar = {
         box.find('.startminute').val($(this).attr('startminute'));
         box.find('.endhour').val($(this).attr('endtime'));
         box.find('.endminute').val($(this).attr('endminute'));
-        box.fadeIn();
+        
+        app.PmsCalendar.continueButtonMobile($(this));
+        
     },
     
     gotopage : function() {

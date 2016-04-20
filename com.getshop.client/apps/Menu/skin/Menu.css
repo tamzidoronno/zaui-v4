@@ -434,7 +434,7 @@
     }
     .Menu .menuentries.horizontal .entries .entries { position: inherit; display: block; }
 
-    
+    .gsnotdisabledmobileview .Menu .menuentries.horizontal { display: block !important; }
     .Menu .menuentries .entry .entries .entry:last-child {
         border-bottom: solid 0px;
     }

@@ -58,6 +58,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.joda.time.DateTime;
@@ -108,6 +109,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     Date lastOrderProcessed;
     private List<PmsLog> logentries = new ArrayList();
     private boolean initFinalized = false;
+    private String orderIdToSend;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -746,6 +748,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
             logEntry(logText, bookingId, null, roomId);
+            doNotification("date_changed", booking, room);
             return room;
         } catch (BookingEngineException ex) {
 //            ex.printStackTrace();
@@ -786,7 +789,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (room == null) {
                 return "Room does not exists";
             }
-
+            room = splitBookingIfNesesary(booking, room);
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
             resetBookingItem(room, itemId, booking);
@@ -1054,6 +1057,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private String notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
         String message = configuration.smses.get(key);
+        
         if (type.equals("email")) {
             message = configuration.emails.get(key);
             if (message != null) {
@@ -1064,6 +1068,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (message == null || message.isEmpty()) {
             return "";
         }
+        
+        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+            message = message.replace("{orderid}", this.orderIdToSend);
+        }
+        
 
         message = formatMessage(message, booking, room, null);
         if (room != null) {
@@ -2195,16 +2204,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.end = end;
         room.guests.add(new PmsGuests());
 
-        Booking bookingToAdd = createBooking(room);
-        List<Booking> bookingToAddList = new ArrayList();
-        bookingToAddList.add(bookingToAdd);
-        if (!canAdd(bookingToAddList)) {
-            return "The room can not be added, its not available.";
+        String res = addBookingToBookingEngine(booking, room);
+        if(!res.isEmpty()) {
+            return res;
         }
-
-        bookingEngine.addBookings(bookingToAddList);
-        booking.rooms.add(room);
-        booking.attachBookingItems(bookingToAddList);
         saveBooking(booking);
 
         logEntry(typeToAdd.name + " added to booking " + " time: " + convertToStandardTime(start) + " " + convertToStandardTime(end), bookingId, null);
@@ -2462,9 +2465,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Calendar cal = Calendar.getInstance();
         Integer day = cal.get(Calendar.DAY_OF_YEAR);
         String warningString = bookingItemName + "-" + day;
-        if (warnedAbout.contains(warningString)) {
-            return;
-        }
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
         messageManager.sendMail(copyadress, copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
         messageManager.sendMail("pal@getshop.com", copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
@@ -3043,6 +3043,60 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    /**
+     * If a book has been started, it the old one need to keep staying on the old room ( for statistics etc)
+     * Also, if a person moves between rooms, it has to gain access to two rooms at the same time.
+     * @param booking
+     * @param room
+     * @return 
+     */
+    private PmsBookingRooms splitBookingIfNesesary(PmsBooking booking, PmsBookingRooms room) {
+        if(!room.isStarted() || room.isStartingToday()) {
+            return room;
+        }
+
+        Gson gson = new Gson();
+        String copy = gson.toJson(room);
+        
+        room.date.end = new Date();
+        bookingEngine.changeDatesOnBooking(room.bookingId, room.date.start, room.date.end);
+        
+        PmsBookingRooms newRoom = gson.fromJson(copy, PmsBookingRooms.class);
+        newRoom.clear();
+        
+        addBookingToBookingEngine(booking, newRoom);
+        
+        return newRoom;
+    }
+
+    private String addBookingToBookingEngine(PmsBooking booking, PmsBookingRooms room) {
+        Booking bookingToAdd = createBooking(room);
+
+        List<Booking> bookingToAddList = new ArrayList();
+        bookingToAddList.add(bookingToAdd);
+        if (!canAdd(bookingToAddList)) {
+            return "The room can not be added, its not available.";
+        }
+
+        bookingEngine.addBookings(bookingToAddList);
+        booking.rooms.add(room);
+        booking.attachBookingItems(bookingToAddList);
+        
+        return "";
+    }
+
+    @Override
+    public void sendPaymentLink(String orderId, String bookingId) {
+        orderIdToSend = orderId;
+        doNotification("booking_sendpaymentlink", bookingId);
+    }
+
+    @Override
+    public void sendMissingPayment(String orderId, String bookingId) {
+        orderIdToSend = orderId;
+        doNotification("booking_paymentmissing", bookingId);
     }
 
 }

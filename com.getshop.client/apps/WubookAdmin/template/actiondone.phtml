@@ -1,0 +1,79 @@
+<?php
+/* @var $this ns_2d93c325_b7eb_4876_8b08_ae771c73f95a\WubookAdmin */
+$action = "";
+if(isset($_POST['event']) && $_POST['event'] == "doAction") {
+    $action = $_POST['data']['type'];
+}
+
+if(!$action) {
+    return;
+}
+
+echo "<div>";
+echo "<br>";
+$wubookmgr = $this->getApi()->getWubookManager();
+$name = $this->getSelectedName();
+if($action == "testConnection") {
+    $testing = $wubookmgr->testConnection($name);
+    if($testing) {
+        echo "Sucesfully connected to the wubook api.";
+    } else {
+        echo "Unable to connect to the api, make sure the username and password set in booking admin configuration are correct.";
+    }
+} else if($action == "markCCInvalid") {
+    $id = $_POST['data']['id'];
+    $res = $wubookmgr->markCCInvalid($name, $id);
+    if(!$res) {
+        echo "OK"; 
+    } else {
+        echo $res;
+    }
+} else if($action == "markNoShow") {
+    $id = $_POST['data']['id'];
+    $res = $wubookmgr->markNoShow($name, $id);
+    if(!$res) {
+        echo "OK"; 
+    } else {
+        echo $res;
+    }
+} else if($action == "removeFromBooking") {
+    $id = $_POST['data']['id'];
+    $res = $wubookmgr->deleteBooking($name, $id);
+    if(!$res) {
+        echo "OK"; 
+    } else {
+        echo $res;
+    }
+} else if($action == "fetchAllBookings") {
+    $res = $wubookmgr->fetchAllBookings($name, 900);
+    $this->printBookingTable($res);
+} else if($action == "fetchNewBookings") {
+    $res = $wubookmgr->fetchNewBookings($name);
+    $this->printBookingTable($res);
+} else if($action == "addBooking") {
+    $id = $_POST['data']['id'];
+    $res = $wubookmgr->addBooking($name, $id);
+    print_r($res);
+} else if($action == "updatePrices") {
+    $res = $wubookmgr->updatePrices($name);
+    if(!$res) {
+        echo "Prices has been updated";
+    }
+} else if($action == "updateAvailability") {
+    $res = $wubookmgr->updateAvailability($name);
+    if(!$res) {
+        echo "Availability has been updated";
+    }
+} else if($action == "addAllRooms") {
+    $res = $wubookmgr->insertAllRooms($name);
+    echo "<pre>";
+    print_r($res);
+    echo "</pre>";
+} else {
+    echo $action;
+}
+
+echo "<br><br>";
+echo "</div>";
+
+?>

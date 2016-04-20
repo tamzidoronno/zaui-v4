@@ -24,6 +24,7 @@ $paymentTypes[6] = "SENT";
 $paymentTypes[7] = "PAYMENT COMPLETED";
 $paymentTypes[8] = "COLLECTION_FAILED";
 $paymentTypes[9] = "NEEDCOLLECTING";
+$paymentTypes[10] = "SENTTOINVOICE";
 
 $pricetypes = array();
 $pricetypes[1] = "Daily";
@@ -102,7 +103,7 @@ if($booking->orderIds) {
         echo "<td>";
         echo $this->translatePaymenttype($order->payment->paymentType, $instances);
         if($order->status <= 5) {
-            echo " - <a href='/?page=cart&payorder=" . $order->id."'>pay</a>";
+            echo " - <a href='/?page=cart&payorder=" . $order->id."'>pay</a> - <span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send payment link</span>";
         }
         echo "</td>";
         echo "<td align='center'>";

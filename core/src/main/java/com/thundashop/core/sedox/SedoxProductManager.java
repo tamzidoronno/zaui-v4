@@ -1419,7 +1419,28 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             saveObject(sharedProduct);
             notifyOnSocket(product);
         }
+    }
+    
+    @Override
+    public void setSpecialRequestsForFile(String productId, int fileId, boolean dpf, boolean egr, boolean decat, boolean vmax, boolean adblue, boolean dtc) throws ErrorException {
+        SedoxProduct product = getProductById(productId);
+        SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
+        
+        if (product != null) {
+            for (SedoxBinaryFile binFile : sharedProduct.binaryFiles) {
+                if (binFile.id == fileId) {
+                    binFile.options.requested_dpf = dpf;
+                    binFile.options.requested_egr = egr;
+                    binFile.options.requested_decat = decat;
+                    binFile.options.requested_vmax = vmax;
+                    binFile.options.requested_adblue = adblue;
+                    binFile.options.requested_dtc = dtc;
+                }
+            }
 
+            saveObject(sharedProduct);
+            notifyOnSocket(product);
+        }
     }
 
     private void sendNotificationProductPurchased(SedoxProduct product, SedoxUser user, SedoxOrder order) throws ErrorException {

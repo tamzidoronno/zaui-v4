@@ -30,6 +30,7 @@ $notifications['room_started_12_hours_'.$langauge] = "Booking started 12 hours a
 $notifications['room_started_24_hours_'.$langauge] = "Booking started 24 hours ago";
 $notifications['room_started_48_hours_'.$langauge] = "Booking started 48 hours ago";
 $notifications['room_changed_'.$langauge] = "Room has been changed while stay is started";
+$notifications['date_changed_'.$langauge] = "Stay dates has been changed";
 $notifications['booking_completed_'.$langauge] = "Booking has been completed";
 $notifications['booking_confirmed_'.$langauge] = "Booking has been confirmed";
 $notifications['booking_notconfirmed_'.$langauge] = "Booking has been rejected";
@@ -87,12 +88,11 @@ $days[7] = "Sunday";
     {roomType}, 
     {email}, 
     {city},
+    {phone},
     {address}, 
+    {orderid}, 
     {postCode},
-    {contact_name},
     {contact_prefix},
-    {contact_phone},
-    {contact_email},
     {personalMessage},
     {roomlist},
     {bookingid},
@@ -595,12 +595,6 @@ $days[7] = "Sunday";
                 <input type='text' gsname='wubookpassword' value='<? echo $notificationSettings->wubookpassword; ?>'>
             </span>
             Wubook password
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='text' gsname='wubookproviderkey' value='<? echo $notificationSettings->wubookproviderkey; ?>'>
-            </span>
-            Wubook provider key
         </div>
         <div class='configrow'>
             <span class='configentry'>

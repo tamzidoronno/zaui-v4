@@ -4,7 +4,7 @@ body {
     background-color: #fff;
     font-family: 'Open Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
-    font-size: 14px;
+    font-size: 13px;
 }
 body { padding-top: 40px !important; }
 .capasity { position:absolute; right: 10px; top: 10px; }

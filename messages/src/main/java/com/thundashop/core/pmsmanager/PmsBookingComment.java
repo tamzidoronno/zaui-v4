@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class PmsBookingComment implements Serializable {
-    String userId = "";
-    String comment = "";
-    Date added = new Date();
+    public String userId = "";
+    public String comment = "";
+    public Date added = new Date();
 }

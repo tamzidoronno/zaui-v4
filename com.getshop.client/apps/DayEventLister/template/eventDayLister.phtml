@@ -8,6 +8,6 @@ if (!count($events)) {
 }
 
 foreach ($events as $event) {
-    echo "<a href='/$event->eventPage'>".date("d/m-Y h:i", strtotime($event->mainStartDate))." - ".date("d/m-Y h:i", strtotime($event->mainEndDate))."</a><br/>";
+    echo "<a href='/$event->eventPage'>".date("d / m - Y", strtotime($event->mainStartDate))."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".date("H:i", strtotime($event->mainStartDate))." - ".date("H:i", strtotime($event->mainEndDate)). "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;". $event->location->name."</a><br/>";
 }
 ?>

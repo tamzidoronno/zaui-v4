@@ -351,10 +351,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
 
                 try {
-                    if (!configuration.payAfterBookingCompleted) {
-                        processor();
-                    } else {
+                    if (configuration.payAfterBookingCompleted) {
                         createPrepaymentOrder(booking.id);
+                    } else {
+                        processor();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

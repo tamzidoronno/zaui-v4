@@ -61,8 +61,6 @@ public class TimeRepeater {
         DateTime startIterator = startTime.withDayOfWeek(DateTimeConstants.MONDAY);
         Date startingAt = data.firstEvent.start;
         while(true) {
-            startTime = startTime.plusWeeks(data.repeatEachTime);
-            endTime = endTime.plusWeeks(data.repeatEachTime);
             startIterator = startIterator.plusWeeks(data.repeatEachTime);
             if(startIterator.toDate().after(data.endingAt) && !isSameDay(endTime.toDate(), data.endingAt)) {
                 break;
@@ -75,7 +73,9 @@ public class TimeRepeater {
                 range = new TimeRepeaterDateRange();
                 range.start = starting.toDate();
                 range.end = ending.toDate();
-                list.add(range);
+                if(range.start.after(start)) {
+                    list.add(range);
+                }
             }
             
             starting = startTime.withDayOfWeek(DateTimeConstants.TUESDAY);
@@ -84,7 +84,8 @@ public class TimeRepeater {
                 range = new TimeRepeaterDateRange();
                 range.start = starting.toDate();
                 range.end = ending.toDate();
-                list.add(range);
+                if(range.start.after(start))
+                    list.add(range);
             }
             
             starting = startTime.withDayOfWeek(DateTimeConstants.WEDNESDAY);
@@ -93,7 +94,8 @@ public class TimeRepeater {
                 range = new TimeRepeaterDateRange();
                 range.start = starting.toDate();
                 range.end = ending.toDate();
-                list.add(range);
+                if(range.start.after(start))
+                    list.add(range);
             }
             
             starting = startTime.withDayOfWeek(DateTimeConstants.THURSDAY);
@@ -102,7 +104,8 @@ public class TimeRepeater {
                 range = new TimeRepeaterDateRange();
                 range.start = starting.toDate();
                 range.end = ending.toDate();
-                list.add(range);
+                if(range.start.after(start))
+                    list.add(range);
             }
             
             starting = startTime.withDayOfWeek(DateTimeConstants.FRIDAY);
@@ -111,7 +114,8 @@ public class TimeRepeater {
                 range = new TimeRepeaterDateRange();
                 range.start = starting.toDate();
                 range.end = ending.toDate();
-                list.add(range);
+                if(range.start.after(start))
+                    list.add(range);
             }
             
             starting = startTime.withDayOfWeek(DateTimeConstants.SATURDAY);
@@ -120,7 +124,8 @@ public class TimeRepeater {
                 range = new TimeRepeaterDateRange();
                 range.start = starting.toDate();
                 range.end = ending.toDate();
-                list.add(range);
+                if(range.start.after(start))
+                    list.add(range);
             }
             
             starting = startTime.withDayOfWeek(DateTimeConstants.SUNDAY);
@@ -129,8 +134,12 @@ public class TimeRepeater {
                 range = new TimeRepeaterDateRange();
                 range.start = starting.toDate();
                 range.end = ending.toDate();
-                list.add(range);
+                if(range.start.after(start))
+                    list.add(range);
             }
+            
+            startTime = startTime.plusWeeks(data.repeatEachTime);
+            endTime = endTime.plusWeeks(data.repeatEachTime);
         }
         return list;
     }

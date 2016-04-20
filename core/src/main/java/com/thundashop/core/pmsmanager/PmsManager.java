@@ -631,7 +631,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsBooking finalize(PmsBooking booking) {
         if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
             Calendar nowCal = Calendar.getInstance();
-            nowCal.add(Calendar.HOUR_OF_DAY, -4);
+            nowCal.add(Calendar.HOUR_OF_DAY, -1);
             if (!booking.rowCreatedDate.after(nowCal.getTime())) {
                 hardDeleteBooking(booking);
                 return null;

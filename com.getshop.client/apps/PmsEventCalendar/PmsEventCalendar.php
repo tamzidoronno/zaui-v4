@@ -150,20 +150,24 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     
     public function removeLink() {
         $index = $_POST['data']['index'];
-        $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_POST['data']['eventid']);
+        $day = $day = date("Y-m-d", $_POST['data']['time']);
+        $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_POST['data']['eventid'], $day);
         unset($event->lenker[$index]);
-        $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event);
+        $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
         $_GET['eventid'] = $_POST['data']['eventid'];
+        $_GET['time'] = $_POST['data']['time'];
     }
     
     public function addlink() {
-        $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_POST['data']['eventid']);
+        $day = $day = date("Y-m-d", $_POST['data']['time']);
+        $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_POST['data']['eventid'], $day);
         $link = new \core_pmseventmanager_PmsBookingEventLink();
         $link->name = $_POST['data']['name'];
         $link->link = $_POST['data']['link'];
         $event->lenker[] = $link;
-        $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event);
+        $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
         $_GET['eventid'] = $_POST['data']['eventid'];
+        $_GET['time'] = $_POST['data']['time'];
     }
 
     /**

@@ -91,6 +91,7 @@ if(!$event->starttime) {
             echo "<div style='margin-bottom: 5px;'>";
             echo "<span gstype='form' method='removeLink'>";
             echo "<input type='hidden' value='".$_GET['eventid']."' gsname='eventid'>";
+            echo "<input type='hidden' value='".$time."' gsname='time'>";
             echo "<input type='hidden' value='$i' gsname='index'>";
             echo "<i gstype='submit' method='removeLink' gsname='index' gsvalue='$i' class='fa fa-trash-o'></i></span> <a href='".$link->link."'>".$link->name . " (" . $link->link . ")". "</a>";
             echo "</div>";
@@ -101,6 +102,7 @@ if(!$event->starttime) {
     ?>
     
     <div gstype='form' method='addlink'>
+        <input type='hidden' value='<?php echo $time; ?>' gsname='time'>
         <input type='hidden' value='<?echo $_GET['eventid']; ?>' gsname='eventid'>
         <label style='width:40%;float:left;'>
             <span class='text'>Lenke</span>

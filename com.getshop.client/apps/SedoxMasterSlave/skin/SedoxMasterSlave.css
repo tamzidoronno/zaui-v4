@@ -6,7 +6,7 @@
     padding: none;
 }
 
-.SedoxMasterSlave .jstree-hidden {
+.jstree-hidden {
     display: none !important;
 }
 

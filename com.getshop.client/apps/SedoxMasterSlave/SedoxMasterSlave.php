@@ -25,9 +25,7 @@ class SedoxMasterSlave extends \MarketingApplication implements \Application {
     public function saveInformation() {
         $this->getApi()->getSedoxProductManager()->togglePassiveSlaveMode($_POST['data']['slaveid'], filter_var($_POST['data']['passiveslave'], FILTER_VALIDATE_BOOLEAN));
         $this->getApi()->getSedoxProductManager()->addCreditToSlave($_POST['data']['slaveid'], filter_var($_POST['data']['income'], FILTER_VALIDATE_FLOAT));
-        if($_POST['data']['masterid']) {
-            $this->getApi()->getSedoxProductManager()->addSlaveToUser($_POST['data']['masterid'], $_POST['data']['slaveid']);
-        }
+        $this->getApi()->getSedoxProductManager()->addSlaveToUser($_POST['data']['masterid'], $_POST['data']['slaveid']);
     }
 }
 ?>

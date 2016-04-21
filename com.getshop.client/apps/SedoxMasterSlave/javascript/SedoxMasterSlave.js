@@ -1,6 +1,5 @@
 app.SedoxMasterSlave = {
     init: function() {
-        $(document).on('click', '.SedoxMasterSlave .sedox_populate_tree', app.SedoxMasterSlave.populateTree);
         $(document).on('click', '.SedoxMasterSlave .jstree-node', app.SedoxMasterSlave.getInformationOnUser);
         $(document).on('click', '.SedoxMasterSlave .save_information', app.SedoxMasterSlave.saveInformation);
     },
@@ -9,8 +8,7 @@ app.SedoxMasterSlave = {
         var event = thundashop.Ajax.createEvent(null, "listUserHierarchy", $(".SedoxMasterSlave"), {});
         
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            $('#jstree').jstree({ //'core' : { 'data' : eval(res) },
-                                  'types' : { 'default' : { icon : 'fa fa-user icon-state-warning icon-lg' } },
+            $('#jstree').jstree({ 'types' : { 'default' : { icon : 'fa fa-user icon-state-warning icon-lg' } },
                                   'search' : {"show_only_matches" : true, "show_only_matches_children" : true},
                                   'plugins' : [ "sort", "search", "types", "wholerow" ]
                                 });
@@ -57,7 +55,7 @@ app.SedoxMasterSlave = {
             slaveid: $(this).attr("slave_id"),
             income: $(".SedoxMasterSlave .income_input").val(),
             passiveslave: $(".SedoxMasterSlave .checkbox #passiveslavebox").is(":checked"),
-            masterid: $("option:contains('" + $(".SedoxMasterSlave .gs_datalist_input").val() + "')").attr("value")
+            masterid: $("option:contains('" + $(".SedoxMasterSlave .gs_datalist_input").val() + "')").val()
         };
         
         var event = thundashop.Ajax.createEvent(null, "saveInformation", this, data);

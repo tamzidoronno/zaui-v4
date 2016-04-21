@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -1352,8 +1352,24 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public void addSlaveToUser(String masterUserId, String slaveUserId) throws ErrorException {
         SedoxUser slave = getSedoxUserAccountById(slaveUserId);
-        slave.masterUserId = masterUserId;
-        saveUser(slave);
+        boolean canAdd = true;
+        
+        if(masterUserId != null) {
+            SedoxUser toBeMaster = getSedoxUserAccountById(masterUserId);
+        
+            while(toBeMaster != null) {
+                if(slaveUserId.equals(toBeMaster.masterUserId)) {
+                    canAdd = false;
+                    break;
+                }
+                toBeMaster = getSedoxUserAccountById(toBeMaster.masterUserId);
+            }
+        }
+        
+        if(canAdd) {
+            slave.masterUserId = masterUserId;
+            saveUser(slave);
+        }
     }
 
     @Override

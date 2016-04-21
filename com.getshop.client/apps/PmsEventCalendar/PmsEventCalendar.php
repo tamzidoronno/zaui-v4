@@ -23,6 +23,21 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         return $res;
     }
     
+    public function fileUplaoded($fileId) {
+        $time = $_SESSION['timeusedpmsmanager'];
+        $eventid = $_SESSION['pmseventid'];
+        
+        $day = "";
+        if($time) {
+            $day = date("Y-m-d", $time);
+        }
+        
+        $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $eventid, $day);
+        $event->imageId = $fileId;
+        $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
+    }
+    
+    
     public function requestAdminRights() {
         $this->requestAdminRight("StoreApplicationPool", "setSetting", $this->__o("Need to update configurationskeys."));
         $this->requestAdminRight("ApplicationPool", "createNewInstance", "automatically add fileupload app");

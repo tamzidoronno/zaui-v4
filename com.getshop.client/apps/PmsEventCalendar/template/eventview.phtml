@@ -50,7 +50,16 @@ echo $event->location . "</div><br>";
 echo nl2br($event->shortdesc) . "<br><br>";
 
 $imgDisplayer = $this->getImageDisplayer($event->id);
-$imgDisplayer->displayImage();
+$fileid = $imgDisplayer->getImageId();
+if($fileid && !$event->imageId) {
+    $event->imageId = $fileid;
+    $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
+}
+
+if($event->imageId) {
+    echo "<img id='imgtodisplay' src='/displayImage.php?id=" . $event->imageId . "' style='max-width: 600px; max-height: 600px;'>";
+}
+
 echo $event->description;
 echo "<div style='clear:both;'></div>";
 if(sizeof($event->lenker) > 0) {
@@ -60,16 +69,6 @@ if(sizeof($event->lenker) > 0) {
     }
 }
 
-ob_start();
-$imgDisplayer->displayAdditionalFiles();
-$data = ob_get_contents();
-ob_end_clean();
-if(stristr($data, "<a")) {
-    echo "<div class='filelist'>";
-    echo "<h2>Flere filer og tillegg</h2>";
-    echo $data;
-    echo "</div>";
-}
 ?>
 
 <script>

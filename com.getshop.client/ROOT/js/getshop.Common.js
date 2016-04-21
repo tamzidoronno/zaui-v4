@@ -1304,6 +1304,7 @@ var resizeLeftBar = function() {
             }
         }
     }
+}
 
 var initializeFlipping = function() {
     $(".gsflipcard").each(function() {

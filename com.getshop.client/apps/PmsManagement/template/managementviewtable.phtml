@@ -217,7 +217,14 @@ foreach($bookings as $booking) {
         if($hasPrices && !$booking->payedFor) {
             $state = "Unpaid";
         }
+        
+        
         $row .= "<td align='center' class='$state'>$state";
+        
+        if($booking->avoidAutoDelete) {
+            $row .= "<br>No autodelete";
+        } 
+        
         $row .= "</td>";
         $row .= "</tr>";
         

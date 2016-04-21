@@ -899,6 +899,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 booking.orderIds.add(order.id);
                 booking.payedFor = false;
+                if(getSession() != null && getSession().currentUser != null && 
+                        (getSession().currentUser.isEditor() || getSession().currentUser.isAdministrator())) {
+                    booking.avoidAutoDelete = true;
+                }
                 saveBooking(booking);
             }
         }

@@ -8,10 +8,15 @@ app.SedoxMasterSlave = {
         var event = thundashop.Ajax.createEvent(null, "listUserHierarchy", $(".SedoxMasterSlave"), {});
         
         thundashop.Ajax.postWithCallBack(event, function(res) {
+            $("#jstree").on("redraw.jstree", function(e, data) {
+                resizeLeftBar(); 
+            });
+            
             $('#jstree').jstree({ 'types' : { 'default' : { icon : 'fa fa-user icon-state-warning icon-lg' } },
                                   'search' : {"show_only_matches" : true, "show_only_matches_children" : true},
                                   'plugins' : [ "sort", "search", "types", "wholerow" ]
                                 });
+            
             $('#jstree').jstree(true).settings.core.data = eval(res);
             $('#jstree').jstree(true).refresh();
 
@@ -22,6 +27,7 @@ app.SedoxMasterSlave = {
                 }
                 timeOut = setTimeout(function () {
                     $('#jstree').jstree('search', $('#jstreesearch').val());
+                    resizeLeftBar(); 
                 }, 500);
             });
         });

@@ -1,0 +1,50 @@
+<?
+/* @var $this ns_2e9edff6_b2f1_4aba_9b55_9813e58b1214\SedoxMasterSlave */
+
+
+$user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+$sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($_POST['data']['userid']);
+$masterUser = $this->getApi()->getUserManager()->getUserById($sedoxUser->masterUserId);
+?>
+
+
+<div class="information_container">
+    <div class="informationtitle">
+        User Information
+    </div>
+    <div class="information_data">
+        Name:
+        <div class="aligned_data text_data"><? echo $user->fullName; ?></div>
+    </div>
+    <div class="information_data">
+        <div class="data_description">Income:</div>
+        <div class="aligned_data"><input class="income_input" value="<? echo $sedoxUser->slaveIncome; ?>"/></div>
+    </div>
+    <div class="information_data income_data">
+        Passive Slave:
+        <div class="aligned_data checkbox">
+            <input id="passiveslavebox" type="checkbox" <? echo $sedoxUser->isPassiveSlave == "true" ? "checked" : ""?>>
+            <label for="passiveslavebox"></label>
+        </div>
+    </div>
+    <div class="information_data">
+        <div class="data_description">Master:</div>
+        <div class="aligned_data">
+            <input class="gs_datalist_input" datalist="users" multiple value="<? echo $masterUser != null ? $masterUser->fullName . " | " . $masterUser->emailAddress : "";?>"/>
+            <datalist id="users">
+
+                <?
+                foreach($this->getApi()->getSedoxProductManager()->getAllUsers() as $user) {
+                    if($user->id != $sedoxUser->id) {
+                        $value = $user->fullName . " | " . $user->emailAddress;
+                    echo "<option value='" . $user->id . "'>". $value . "</option>";
+                    }
+                }
+                ?>
+
+            </datalist>
+        </div>
+    </div>
+    <div class="sedox_blue_button save_information" slave_id="<? echo $sedoxUser->id; ?>">Save</div>
+</div>
+

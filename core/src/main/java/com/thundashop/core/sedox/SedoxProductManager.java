@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.DummySmsFactory;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MailFactoryImpl;
@@ -230,7 +231,53 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         return retUsers;
     }
-
+    
+    @Override
+    public synchronized List<TreeNode> getAllUsersAsTreeNodes() throws ErrorException {
+        List<TreeNode> userTree = new ArrayList();
+        for(SedoxUser sedoxUser : users.values()) {
+            User user = userManager.getUserById(sedoxUser.id);
+            if(user != null) {
+                TreeNode userNode = new TreeNode();
+                userNode.id = user.id;
+                if(sedoxUser.masterUserId == null || sedoxUser.masterUserId.isEmpty()) {
+                    userNode.parent = "#";
+                } else {
+                    userNode.parent = sedoxUser.masterUserId;
+                }
+                
+                String userName = isAttributeGiven(user.fullName) ? user.fullName : "N/A";
+                String userEmail = isAttributeGiven(user.emailAddress) ? user.emailAddress : "N/A";
+                String userPhone = isAttributeGiven(user.cellPhone) ? user.cellPhone : "N/A";
+                
+                userNode.text = userName + " | " + userEmail + " | " + userPhone;
+                userTree.add(userNode);
+            }
+        }
+        
+        return userTree;
+    }
+    
+    @Override
+    public synchronized List<User> getAllUsers() throws ErrorException {
+        List<User> sedoxUsers = new ArrayList();
+        for(SedoxUser sedoxUser : users.values()) {
+            User user = userManager.getUserById(sedoxUser.id);
+            if(user != null) {
+                sedoxUsers.add(user);
+            }
+        }
+        return sedoxUsers;
+    }
+    
+    public boolean isAttributeGiven(String attribute) {
+        boolean given = false;
+        if(attribute != null && !attribute.isEmpty() && !"null null".equals(attribute) && !"false".equals(attribute)) {
+            given = true;
+        }
+        return given;
+    }
+    
     @Override
     public synchronized List<SedoxProduct> getProductsByDaysBack(int daysBack) throws ErrorException {
         List<SedoxProduct> retProducts = new ArrayList<>();

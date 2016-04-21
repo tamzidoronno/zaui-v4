@@ -176,7 +176,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function saveUser() {
         $selected = $this->getSelectedBooking();
-        $user = $this->getApi()->getUserManager()->getUserById($selected->userId);
+        $selected->userId = $_POST['data']['userid'];
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
         $user->fullName = $_POST['data']['fullName'];
         $user->prefix = $_POST['data']['prefix'];
         $user->emailAddress = $_POST['data']['emailAddress'];
@@ -189,6 +190,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->postCode = $_POST['data']['address.postCode'];
         $user->address->city = $_POST['data']['address.city'];
         $this->getApi()->getUserManager()->saveUser($user);
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $selected);
         $this->showBookingInformation();
     }
     

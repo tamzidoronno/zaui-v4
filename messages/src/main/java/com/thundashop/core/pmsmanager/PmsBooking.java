@@ -39,6 +39,7 @@ public class PmsBooking extends DataCommon {
     public String wubookchannelreservationcode = "";
     public String wubookreservationid = "";
     public String countryCode = "";
+    public boolean avoidAutoDelete = false;
     
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();

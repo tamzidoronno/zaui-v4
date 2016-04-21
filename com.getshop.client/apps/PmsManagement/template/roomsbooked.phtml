@@ -130,7 +130,6 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                             <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                             <i class='fa fa-key' gstype='submitToInfoBox' <?php if($room->keyIsReturned) { echo "style='color:green;'"; } ?>></i>
                         </span>
-                
                         <?php
                     }
                     ?>
@@ -166,7 +165,6 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                                 if(strtotime($now) < time()) {
                                     $now = $object->convertToJavaDate(time());
                                 }
-                                echo $now;
                                 ?>
                                 <select gsname='itemid'>
                                     <?php 
@@ -199,7 +197,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                 </td>
                 <td>
                 <span class='roomattribute'>
-                    <span class='roompostfix'>
+                    <span class='roompostfix' style='width: 230px;'>
                         <span class="viewmode">
                             <?php echo date("d.m.Y H:i", strtotime($date->start)); ?>
                              - 

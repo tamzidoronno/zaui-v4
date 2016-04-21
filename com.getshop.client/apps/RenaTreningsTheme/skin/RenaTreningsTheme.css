@@ -8,3 +8,5 @@ body { font-size: 16px; }
 }
 
 .gsarea[area="header"] img { max-height: 130px; }
+
+.PmsBookingProductList .roomdesc { margin-top: 25px; }

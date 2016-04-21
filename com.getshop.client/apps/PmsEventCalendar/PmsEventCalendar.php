@@ -149,8 +149,11 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     }
     
     public function removeLink() {
+        $day = "";
+        if($_POST['data']['time'] > 0) {
+            $day = date("Y-m-d", $_POST['data']['time']);
+        }
         $index = $_POST['data']['index'];
-        $day = $day = date("Y-m-d", $_POST['data']['time']);
         $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_POST['data']['eventid'], $day);
         unset($event->lenker[$index]);
         $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
@@ -159,7 +162,10 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     }
     
     public function addlink() {
-        $day = $day = date("Y-m-d", $_POST['data']['time']);
+        $day = "";
+        if($_POST['data']['time'] > 0) {
+            $day = date("Y-m-d", $_POST['data']['time']);
+        }
         $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_POST['data']['eventid'], $day);
         $link = new \core_pmseventmanager_PmsBookingEventLink();
         $link->name = $_POST['data']['name'];

@@ -192,8 +192,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->address = $_POST['data']['address.address'];
         $user->address->postCode = $_POST['data']['address.postCode'];
         $user->address->city = $_POST['data']['address.city'];
+        $user->birthDay = $_POST['data']['birthDay'];
         $this->getApi()->getUserManager()->saveUser($user);
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $selected);
+        $this->selectedBooking = null;
         $this->showBookingInformation();
     }
     

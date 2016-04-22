@@ -10,6 +10,10 @@ class RenaTreningsTheme extends \ThemeApplication implements \Application {
         return "RenaTreningsTheme";
     }
 
+    public function getThemeClasses() {
+        return ["pagebox"];
+    }    
+    
     public function render() {
         
     }

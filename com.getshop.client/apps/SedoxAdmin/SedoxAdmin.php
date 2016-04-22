@@ -148,7 +148,6 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         }
         
         $this->setConfigurationSetting("uploadadminsubject", $_POST['uploadadminsubject']);
-        $this->setConfigurationSetting("uploadadminemail", $_POST['uploadadminemail']);
         $this->setConfigurationSetting("uploadadminspecialemail", $_POST['uploadadminspecialemail']);
         $this->setConfigurationSetting("uploadadminnospecialemail", $_POST['uploadadminnospecialemail']);
         
@@ -157,6 +156,9 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         
         $this->setConfigurationSetting("purchaseadminsubject", $_POST['purchaseadminsubject']);
         $this->setConfigurationSetting("purchaseadminemail", $_POST['purchaseadminemail']);
+        
+        $this->setConfigurationSetting("filereadyusernoattachmentemail", $_POST['filereadyusernoattachmentemail']);
+        $this->setConfigurationSetting("filereadyuserattachmentemail", $_POST['filereadyuserattachmentemail']);
         
         $this->setConfigurationSetting("signature", $_POST['signature']);
     }

@@ -1215,7 +1215,10 @@ GetShopUtil = {
 
 
 thundashop.common.logout = function() {
-    document.location = '/logout.php?goBackToHome=true';
+    if(!avoidLoggingOut) {
+        document.location = '/logout.php?goBackToHome=true';
+    }
+    avoidLoggingOut = false;
 };
 
 thundashop.common.sendPubSubMessage = function(data) {
@@ -1252,6 +1255,7 @@ thundashop.common.triggerTimeoutCheck = function() {
  * a loop that checks weather it needs to logout or not.
  */
 var timeCheckMs = 1000;
+var avoidLoggingOut = false;
 thundashop.common.checkTimeout = function() {
     
     if (!localStorage.getItem("gs_login_timeout")) {
@@ -1292,12 +1296,17 @@ var resizeLeftBar = function() {
     if ($(".left_side_bar").length) {
         var windowHeight = $(document).height() - $('.gsarea[area="header"]').outerHeight() - $('.gsarea[area="footer"]').outerHeight();
         var gsAreaHeight = $('.gs_main_column').height();
-//        debugger;
-        if (windowHeight > gsAreaHeight) {
-            $(".left_side_bar").css("min-height", windowHeight+"px");
-        } else {
-            $(".left_side_bar").css("min-height", gsAreaHeight+"px");
-        } 
+        
+        $(".left_side_bar").css("min-height", gsAreaHeight);
+        
+        if(gsAreaHeight < windowHeight) {
+            var sideBarHeight = $(".left_side_bar").height();
+            windowHeight = $(document).height() - $('.gsarea[area="header"]').outerHeight() - $('.gsarea[area="footer"]').outerHeight();
+        
+            if(sideBarHeight < windowHeight) {
+                $(".left_side_bar").css("min-height", windowHeight);
+            }
+        }
     }
 }
 

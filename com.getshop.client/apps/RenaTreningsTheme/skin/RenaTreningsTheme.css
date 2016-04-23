@@ -1,0 +1,53 @@
+.gs_page_width { max-width: 1100px; margin: auto;}
+.Menu { text-align: center; width:100%; }
+.Menu .entry a { min-width: 140px; display:inline-block; text-align: center; padding: 5px; padding-top: 10px; padding-bottom: 10px; color:#000; margin: 1px; font-size: 18px; }
+body { font-size: 16px; }
+.gsarea[area="header"],
+.gsarea[area="footer"] {
+    background: #66b6fc; /* Old browsers */
+}
+
+.gsarea[area="header"] img { max-height: 130px; }
+
+.PmsBookingProductList .roomdesc { margin-top: 25px; }
+
+.shop_button { 
+    transition: background-color 0.5s ease;
+    border: solid 1px #bbb; 
+    border-radius: 0px; 
+    width:100%; 
+    box-sizing: border-box; 
+    background: #22939d; 
+    color:#FFF; 
+    text-transform: uppercase;
+}
+
+.PmsBookingCalendar .calendar .calendar_header:hover, 
+.PmsBookingProductList .continue_button:hover, 
+.PmsBookingContactData .complete_button:hover, 
+.PmsBooking .pmsfront .check_available_button:hover, 
+.PmsBooking .pmsfront .fa-calendar:hover,
+.Contact .shop_button:hover,
+.Login .form .gs_button:hover, .Login .form .loginbutton:hover {
+    transition: all 0.5s ease;
+    background-color:#22939d; 
+}
+
+
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBookingCalendar .calendar .day.selected,
+.PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
+.PmsBooking .pmsfront .check_available_button,
+.PmsBooking .pmsfront .fa-calendar {
+    background-color: #22939d; 
+    text-transform: uppercase;
+}
+
+
+.shop_button:hover { background: #1d7e87; }
+h1,h2,h3 { margin: 0px;  }
+.pagebox { margin-top: 50px; margin-bottom: 50px; }
+.pagebox .gsdepth_1.gsinner { border: solid 1px #ddd; margin: 10px; box-sizing: border-box; }
+.pagebox .gsdepth_2.gscount_0.gsinner { border-bottom: solid 1px #ddd; padding-top: 5px; padding: 10px; text-align: center; padding-top: 20px; }
+.pagebox .gsdepth_2.gscount_1 { padding: 10px; }

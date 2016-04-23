@@ -1,0 +1,67 @@
+<h1><? echo $this->__f("Email Template Codes"); ?></h1>
+
+<span class="templatecode"><?php echo $this->__f("{product-id} - Product - ID"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{product-fullname} - Product - Name"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{product-comment} - Product - Comment"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{product-reference} - Product - reference"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{product-tool} - Product - Tool"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{product-geartype} - Product - Gear Type"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{product-file-names} - Product - File List - Names"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{product-file-type-and-information} - Product - File List - Type & Information"); ?></span>
+
+<span class="templatecode"><?php echo $this->__f("{special-info} - Product - Special Information"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{link-to-product} - Product - Link"); ?></span>
+
+<span class="templatecode"><?php echo $this->__f("{user-id} - User - ID"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{user-name} - User - Name"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{user-email} - User - Email Address"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{user-creditbalance} - User - Credit Balance"); ?></span>
+
+<span class="templatecode"><?php echo $this->__f("{order-credit} - Order - Credit Amount"); ?></span>
+
+<h1><? echo $this->__f("Email Templates"); ?></h1>
+
+<div class="textfield gss_setting new_email">
+        <span class="title"><?php echo $this->__f("User - File Ready Notification - Without Attachment"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='filereadyusernoattachmentemail' style='margin-top: 15px; position: initial; width: 930px; height: 200px;'><? echo $this->getConfigurationSetting("filereadyusernoattachmentemail"); ?></textarea>
+        <br>
+        <span class="title"><?php echo $this->__f("User - File Ready Notification - With Attachment"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='filereadyuserattachmentemail' style='margin-bottom: 10px; margin-top: 15px; position: initial; width: 930px; height: 200px;'><? echo $this->getConfigurationSetting("filereadyuserattachmentemail"); ?></textarea>
+</div>
+
+<div class="textfield gss_setting ">
+    <span class="title"><?php echo $this->__f("User - Upload Notification"); ?></span>
+    <input type='textfield' gs_model='emailmodel' gs_model_attr='uploadusersubject' value="<? echo $this->getConfigurationSetting("uploadusersubject"); ?>"/>
+</div>
+<div class="textfield gss_setting new_email">
+    <span class="title"><?php echo $this->__f("User - Upload Notification"); ?></span>
+    <textarea gs_model='emailmodel' gs_model_attr='uploaduseremail' style='margin-top: 15px; position: initial; width: 930px; height: 200px;'><? echo $this->getConfigurationSetting("uploaduseremail"); ?></textarea>
+</div>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Admin - Upload Notification"); ?></span>
+    <input type='textfield' gs_model='emailmodel' gs_model_attr='uploadadminsubject' value="<? echo $this->getConfigurationSetting("uploadadminsubject"); ?>"/>
+</div>
+<div class="textfield gss_setting new_email">
+        <span class="title"><?php echo $this->__f("Admin - Upload Notification - Normal Request"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='uploadadminnospecialemail' style='margin-top: 15px; position: initial; width: 930px; height: 200px;'><? echo $this->getConfigurationSetting("uploadadminnospecialemail"); ?></textarea>
+        <br>
+        <span class="title"><?php echo $this->__f("Admin - Upload Notification - Special Request"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='uploadadminspecialemail' style='margin-bottom: 10px; margin-top: 15px; position: initial; width: 930px; height: 200px;'><? echo $this->getConfigurationSetting("uploadadminspecialemail"); ?></textarea>
+</div>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Admin - Purchase Notification"); ?></span>
+    <input type='textfield' gs_model='emailmodel' gs_model_attr='purchaseadminsubject' value="<? echo $this->getConfigurationSetting("purchaseadminsubject"); ?>"/>
+</div>
+<div class="textfield gss_setting new_email">
+    <span class="title"><?php echo $this->__f("Admin - Purchase Notification"); ?></span>
+    <textarea gs_model='emailmodel' gs_model_attr='purchaseadminemail' style='margin-top: 15px; position: initial; width: 930px; height: 200px;'><? echo $this->getConfigurationSetting("purchaseadminemail"); ?></textarea>
+</div>
+
+
+
+<div class="textfield gss_setting new_email">
+    <span class="title"><?php echo $this->__f("Signature"); ?></span>
+    <textarea gs_model='emailmodel' gs_model_attr='signature' style='margin-top: 15px; position: initial; width: 930px; height: 150px;'><? echo $this->getConfigurationSetting("signature"); ?></textarea>
+</div>

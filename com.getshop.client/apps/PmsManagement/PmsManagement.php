@@ -15,7 +15,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $roomid) {
-                $start = $this->convertToJavaDate(time());
+                $start = $room->date->start;
+                if(strtotime($start) < time()) {
+                    $start = $this->convertToJavaDate(time());
+                }
                 $end = $room->date->end;
                 
                 $filter = new \core_pmsmanager_PmsBookingFilter();
@@ -176,7 +179,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function saveUser() {
         $selected = $this->getSelectedBooking();
-        $user = $this->getApi()->getUserManager()->getUserById($selected->userId);
+        $selected->userId = $_POST['data']['userid'];
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
         $user->fullName = $_POST['data']['fullName'];
         $user->prefix = $_POST['data']['prefix'];
         $user->emailAddress = $_POST['data']['emailAddress'];
@@ -188,7 +192,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->address = $_POST['data']['address.address'];
         $user->address->postCode = $_POST['data']['address.postCode'];
         $user->address->city = $_POST['data']['address.city'];
+        $user->birthDay = $_POST['data']['birthDay'];
         $this->getApi()->getUserManager()->saveUser($user);
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $selected);
+        $this->selectedBooking = null;
         $this->showBookingInformation();
     }
     

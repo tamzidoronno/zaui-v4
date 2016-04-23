@@ -42,6 +42,15 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         }
     }
     
+    public function getImageId() {
+        foreach($this->getAllFiles() as $file) {
+            if($this->isImage($file)) {
+                return $file->id;
+            }
+        }
+        return "";
+    }
+    
     function deleteFile() {
         $this->getApi()->getFileManager()->deleteFileEntry($_POST['data']['fileid']);
         $arrayres = array();

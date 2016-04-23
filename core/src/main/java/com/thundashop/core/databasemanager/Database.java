@@ -93,7 +93,7 @@ public class Database extends StoreComponent {
     }
 
     private void checkId(DataCommon data) throws ErrorException {
-        if (data.id == null || data.id == "") {
+        if (data.id == null || data.id.isEmpty()) {
             data.id = UUID.randomUUID().toString();
         }
     }

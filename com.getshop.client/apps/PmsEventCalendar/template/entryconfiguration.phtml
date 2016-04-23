@@ -10,6 +10,14 @@ if(isset($_GET['time']) && $_GET['time']) {
 
 
 $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_GET['eventid'], $day);
+
+$imgDisplayer = $this->getImageDisplayer($event->id);
+$fileid = $imgDisplayer->getImageId();
+if($fileid && !$event->imageId) {
+    $event->imageId = $fileid;
+    $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
+}
+
 $starttime = $event->dateRanges[0]->start;
 if(!$event->starttime) {
     $event->starttime = date("H:i", strtotime($starttime));
@@ -54,14 +62,22 @@ if(!$event->starttime) {
             <input type='text' gsname='starttime' value='<?php echo $event->starttime; ?>'>
         </label>
         <div class='imagecontainer'>
-            <span class='text'>Last opp et bilde eller et vedlegg</span>
+            <span class='text'>Last opp et bilde</span>
             <div style="margin-top: 10px">
                 <?php
                     //Upload image here.
                     $imgDisplayer = $this->getImageDisplayer($_GET['eventid']);
-                    $this->getFactory()->getPage()->renderApplicationSimple($imgDisplayer->configuration->id,$this);
+                    $app = $this->wrapApp("994d7fed-d0cf-4a78-a5ff-4aad16b9bcab", "imageuploaderforeventcalendarpms");
+                    $_SESSION['timeusedpmsmanager'] = @$_GET['time'];
+                    $_SESSION['pmseventid'] = $_GET['eventid'];
                 ?>
             </div>
+            
+            <?php
+            if($event->imageId) {
+                echo "<img id='imgtodisplay' src='/displayImage.php?id=" . $event->imageId . "' style='max-width: 600px; max-height: 600px;'>";
+            }
+            ?>
         </div>
         <label>
             <span class='text'><?echo $this->__w("Select a category"); ?></span>
@@ -91,6 +107,7 @@ if(!$event->starttime) {
             echo "<div style='margin-bottom: 5px;'>";
             echo "<span gstype='form' method='removeLink'>";
             echo "<input type='hidden' value='".$_GET['eventid']."' gsname='eventid'>";
+            echo "<input type='hidden' value='".$time."' gsname='time'>";
             echo "<input type='hidden' value='$i' gsname='index'>";
             echo "<i gstype='submit' method='removeLink' gsname='index' gsvalue='$i' class='fa fa-trash-o'></i></span> <a href='".$link->link."'>".$link->name . " (" . $link->link . ")". "</a>";
             echo "</div>";
@@ -101,6 +118,7 @@ if(!$event->starttime) {
     ?>
     
     <div gstype='form' method='addlink'>
+        <input type='hidden' value='<?php echo $time; ?>' gsname='time'>
         <input type='hidden' value='<?echo $_GET['eventid']; ?>' gsname='eventid'>
         <label style='width:40%;float:left;'>
             <span class='text'>Lenke</span>

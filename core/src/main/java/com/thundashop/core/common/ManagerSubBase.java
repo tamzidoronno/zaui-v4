@@ -355,6 +355,9 @@ public class ManagerSubBase {
     }
     
     public void clearCache() {
+        if (cachingFactory == null)
+            return;
+        
         cachingFactory.clear(storeId, getClass().getSimpleName());
     }
     

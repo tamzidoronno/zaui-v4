@@ -222,7 +222,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public void setSessionLanguage(String id) throws ErrorException {
-        getSession().language = id;
+        getSessionSilent().language = id;
     }
 
     @Override

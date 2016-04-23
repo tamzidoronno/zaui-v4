@@ -171,7 +171,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     private Event finalize(Event event) {
         event.bookingItem = bookingEngine.getBookingItem(event.bookingItemId);
         
-        if (event.bookingItem != null) {
+        if (event.bookingItem != null && (event.bookingItemType == null || !event.bookingItemType.id.equals(event.bookingItem.bookingItemTypeId))) {
             event.bookingItemType = bookingEngine.getBookingItemType(event.bookingItem.bookingItemTypeId);
         }
         
@@ -185,7 +185,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         event.isInFuture = isInFuture(event);
         
-        if (event.markedAsReady || !isInFuture(event) || event.bookingItem == null || event.bookingItem.isFull || event.bookingItem.freeSpots < 1 || event.isCanceled) {
+        if (event.markedAsReady || !isInFuture(event) || event.bookingItem == null || event.isCanceled) {
             event.canBook = false;
         } else {
             event.canBook = true;
@@ -1497,10 +1497,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         retEvents.stream().forEach(event -> finalize(event));
         
-        String test = "";
-        
         Collections.sort(retEvents, (Event event1, Event event2) -> { return event2.mainStartDate.compareTo(event1.mainStartDate); } );
-        
         return retEvents;
     }
 

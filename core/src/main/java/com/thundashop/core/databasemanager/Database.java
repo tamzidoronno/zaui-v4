@@ -16,6 +16,7 @@ import com.mongodb.Mongo;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
+import com.thundashop.core.common.Session;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.storemanager.StorePool;
@@ -434,8 +435,8 @@ public class Database extends StoreComponent {
 
     private void logSavedMessge(DataCommon newObject, String database, String collection) {
         String userId = "";
-        if (getSession() != null && getSession().currentUser != null) {
-            userId = getSession().currentUser.id;
+        if (getSessionSilent() != null && getSessionSilent().currentUser != null) {
+            userId = getSessionSilent().currentUser.id;
         }
                 
         DataCommon oldObject = getObjectDirect(database, collection, newObject.id);
@@ -463,6 +464,11 @@ public class Database extends StoreComponent {
         }
         
         return false;
+    }
+
+    @Override
+    public void setSession(Session session) {
+        super.setSession(session); //To change body of generated methods, choose Tools | Templates.
     }
 }
 

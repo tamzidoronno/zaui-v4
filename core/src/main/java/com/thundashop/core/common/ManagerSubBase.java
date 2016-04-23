@@ -13,6 +13,7 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.socket.CacheFactory;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayInputStream;
@@ -21,6 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +47,13 @@ public class ManagerSubBase {
     @Autowired
     public com.thundashop.core.storemanager.StorePool storePool;
     
+    @Autowired
+    private CacheFactory cachingFactory;
+    
     protected boolean isSingleton = false;
     protected boolean ready = false;
+    
+    private boolean sessionUsed = false;
     private Session session;
 
     private ManagerSetting managerSettings = new ManagerSetting();
@@ -147,8 +154,17 @@ public class ManagerSubBase {
         this.ready = true;
     }
 
-    public Session getSession() {
+    public Session getSessionSilent() {
         return session;
+    }
+    
+    public Session getSession() {
+        sessionUsed = true;    
+        return session;
+    }
+    
+    public boolean isSessionUsed() {
+        return sessionUsed;
     }
 
     /**
@@ -198,6 +214,7 @@ public class ManagerSubBase {
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
         database.save(data, credentials);
+        clearCache();
     }
  
     public void deleteObject(DataCommon data) throws ErrorException {
@@ -242,6 +259,7 @@ public class ManagerSubBase {
     }
     
     public void setSession(Session session) {
+        sessionUsed = false;
         this.session = session;
     }
     
@@ -254,6 +272,16 @@ public class ManagerSubBase {
     }
   
     protected <V> V deepClone(V object) {
+        if (object instanceof DataCommon) {
+            try {
+                V newObject = (V)((DataCommon)object).clone();
+                ((DataCommon)newObject).deleted = new Date();
+                return newObject;
+            } catch (CloneNotSupportedException ex) {
+                ex.printStackTrace();
+            }
+        }
+        
         try {
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
           ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -324,5 +352,13 @@ public class ManagerSubBase {
     
     public String getStoreName() {
         return applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41").getSetting("title");
+    }
+    
+    public void clearCache() {
+        cachingFactory.clear(storeId, getClass().getSimpleName());
+    }
+    
+    public void clearUsedSession() {
+        sessionUsed = false;
     }
 }

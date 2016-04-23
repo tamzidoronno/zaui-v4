@@ -100,7 +100,6 @@ public abstract class AProductManager extends ManagerBase {
             Page page = pageManager.getPage(product.pageId);
             if (page.isASlavePage() && !page.masterPageId.equals(product.selectedProductTemplate)) {
                 pageManager.changeTemplateForPage(product.pageId, product.selectedProductTemplate);
-                System.out.println("Updated");
             }
         }
         

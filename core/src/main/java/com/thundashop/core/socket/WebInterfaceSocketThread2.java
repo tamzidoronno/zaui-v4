@@ -9,6 +9,7 @@ import com.thundashop.core.common.MessageBase;
 import com.thundashop.core.common.StorePool;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -27,12 +28,18 @@ public class WebInterfaceSocketThread2 implements Runnable {
         this.socket = socket;
     }
     
-    private List<MessageBase> executeMessage(String message, String addr) {
-        try {
-            Object result = storePool.ExecuteMethod(message, addr);
-            sendMessage(result);
-        } catch (ErrorException d) {
-            sendMessage(new ErrorMessage(d));
+    private List<MessageBase> executeMessage(String message, String addr) throws IOException {
+        String cachedResult = storePool.getCachedResult(message, addr);
+        
+        if (cachedResult != null) {
+            sendContent(cachedResult);
+        } else {
+            try {
+                Object result = storePool.ExecuteMethod(message, addr);
+                sendMessage(result, message, addr);
+            } catch (ErrorException d) {
+                sendMessage(new ErrorMessage(d), message, addr);
+            }
         }
    
         List<MessageBase> messages = new ArrayList();
@@ -62,15 +69,20 @@ public class WebInterfaceSocketThread2 implements Runnable {
         }
     }
 
-    private void sendMessage(Object result) {
+    private void sendMessage(Object result, String message, String addr) {
         try {
             Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
             String json = gson.toJson((Object) result);
-            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            dos.write((json + "\n").getBytes("UTF8"));
-            dos.flush();
+            sendContent(json);
+            storePool.writeCachedResult(message, addr, json);
         } catch (Exception d) {
             d.printStackTrace();
         }
+    }
+
+    private void sendContent(String json) throws IOException {
+        DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+        dos.write((json + "\n").getBytes("UTF8"));
+        dos.flush();
     }
 }

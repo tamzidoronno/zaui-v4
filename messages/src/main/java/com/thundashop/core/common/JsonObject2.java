@@ -7,7 +7,7 @@ import java.util.Map;
  *
  * @author boggi
  */
-public class JsonObject2 implements Serializable {
+public class JsonObject2 implements Serializable, Cloneable {
     public String method;
     public String interfaceName;
     public String sessionId;
@@ -17,4 +17,8 @@ public class JsonObject2 implements Serializable {
     public String addr;
     public String messageId = "";
     public String realInterfaceName;
+    
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

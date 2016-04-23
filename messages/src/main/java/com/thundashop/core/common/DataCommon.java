@@ -20,7 +20,7 @@ import org.mongodb.morphia.annotations.PostLoad;
  */
 
 @Entity("Credentials")
-public class DataCommon extends TranslationHandler implements Serializable {
+public class DataCommon extends TranslationHandler implements Serializable, Cloneable {
     @Id 
     public String id = "";
     public String storeId = "";
@@ -85,5 +85,9 @@ public class DataCommon extends TranslationHandler implements Serializable {
             return true;
         
         return false;
+    }
+    
+    public DataCommon clone() throws CloneNotSupportedException {
+        return (DataCommon)super.clone();
     }
 }

@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.thundashop.core.socket.CacheFactory;
 import com.thundashop.core.storemanager.data.Store;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -29,6 +30,7 @@ public class StorePool {
     private com.thundashop.core.storemanager.StorePool storePool;
     private final AntiSamy antiySamy;
     private Policy policy;
+    private final CacheFactory cacheFactory;
 
     public StorePool() {
         if (AppContext.appContext != null) {
@@ -45,6 +47,11 @@ public class StorePool {
         
         antiySamy = new AntiSamy();
         
+        boolean productionMode = AppContext.appContext.getBean(FrameworkConfig.class).productionMode;
+        
+        cacheFactory = AppContext.appContext.getBean(CacheFactory.class);
+        cacheFactory.setStorePool(this);
+        cacheFactory.setEnabled(!productionMode);
     }
 
     private Type[] getArgumentsTypes(JsonObject2 object) throws ErrorException {
@@ -57,7 +64,7 @@ public class StorePool {
 
     }
 
-    private Class<?>[] getArguments(JsonObject2 object) throws ErrorException {
+    public Class<?>[] getArguments(JsonObject2 object) throws ErrorException {
         try {
             Method method = getMethod(object);
             return (Class<?>[]) method.getParameterTypes();
@@ -154,29 +161,43 @@ public class StorePool {
     }
     
     public Object ExecuteMethod(String message, String addr, String sessionId) throws ErrorException {
-        Gson gson = new GsonBuilder().serializeNulls().create();
-
-        Type type = new TypeToken<JsonObject2>() {
-        }.getType();
-
-        message = message.replace("\"args\":[]", "\"args\":{}");
-
-        JsonObject2 object = null;
         
-        try {
-            object = gson.fromJson(message, type);
-            object.addr = addr;
-        } catch (JsonSyntaxException ex) {
-            System.out.println("Could not decode: " + message);
-            ex.printStackTrace();
-            return null;
+        JsonObject2 object = createJsonObject(message, addr);
+        
+        Class[] types = getArguments(object);
+        Object[] executeArgs = createExecuteArgs(object, types, message);
+
+        object.realInterfaceName = object.interfaceName;
+        object.interfaceName = object.interfaceName.replace(".I", ".");
+
+        if (sessionId != null) {
+            object.sessionId = sessionId;
         }
-        
-        object.multiLevelName = gson.fromJson(object.multiLevelName, String.class);
 
+        long start = System.currentTimeMillis();
+        Object result = ExecuteMethod(object, types, executeArgs, message, addr);
+
+        long end = System.currentTimeMillis();
+        long diff = end - start;
+        if (diff > 40) {
+            System.out.println("" + diff + " : " + object.interfaceName + " method: " + object.method);
+        }
+        result = (result == null) ? new ArrayList() : result;
+
+        if (!object.messageId.equals("")) {
+            WebSocketReturnMessage returnmessage = new WebSocketReturnMessage();
+            returnmessage.messageId = object.messageId;
+            returnmessage.object = result;
+            return returnmessage;
+        }
+
+        return result;
+    }
+
+    public Object[] createExecuteArgs(JsonObject2 object, Class[] types, String message) throws ErrorException {
+        Gson gson = new GsonBuilder().serializeNulls().create();
         int i = 0;
         Object[] executeArgs = new Object[object.args.size()];
-        Class[] types = getArguments(object);
         Type[] casttypes = getArgumentsTypes(object);
         for (String parameter : object.args.keySet()) {
             try {
@@ -199,32 +220,7 @@ public class StorePool {
             }
             i++;
         }
-
-        object.realInterfaceName = object.interfaceName;
-        object.interfaceName = object.interfaceName.replace(".I", ".");
-
-        if (sessionId != null) {
-            object.sessionId = sessionId;
-        }
-
-        long start = System.currentTimeMillis();
-        Object result = ExecuteMethod(object, types, executeArgs);
-
-        long end = System.currentTimeMillis();
-        long diff = end - start;
-        if (diff > 40) {
-            System.out.println("" + diff + " : " + object.interfaceName + " method: " + object.method);
-        }
-        result = (result == null) ? new ArrayList() : result;
-
-        if (!object.messageId.equals("")) {
-            WebSocketReturnMessage returnmessage = new WebSocketReturnMessage();
-            returnmessage.messageId = object.messageId;
-            returnmessage.object = result;
-            return returnmessage;
-        }
-
-        return result;
+        return executeArgs;
     }
     
     private Object[] runTroughAntiSamy(JsonObject2 object, Object[] argumentValues) throws ErrorException {
@@ -245,8 +241,9 @@ public class StorePool {
         return cleanOject;
     }
 
-    private Object ExecuteMethod(JsonObject2 object, Class[] types, Object[] argumentValues) throws ErrorException {
+    private Object ExecuteMethod(JsonObject2 object, Class[] types, Object[] argumentValues, String message, String addr) throws ErrorException {
         argumentValues = runTroughAntiSamy(object, argumentValues);
+        
         
         Object res;
         if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStore")) {
@@ -271,9 +268,9 @@ public class StorePool {
                     throw new RuntimeException("@GetShopNotSynchronized can not be used on components that is scoped with @GetShopSession");
                 }
                 
-                res = handler.executeMethod(object, types, argumentValues);
+                res = handler.executeMethod(object, types, argumentValues, cacheFactory, message, addr);
             } else {
-                res = handler.executeMethodSync(object, types, argumentValues);
+                res = handler.executeMethodSync(object, types, argumentValues, cacheFactory, message, addr);
             }
         }
         
@@ -330,11 +327,13 @@ public class StorePool {
     }
 
 
-    private StoreHandler getStoreHandler(String sessionId) throws ErrorException {
+    public StoreHandler getStoreHandler(String sessionId) throws ErrorException {
         Store store = storePool.getStoreBySessionId(sessionId);
+        
         if (store == null) {
             return null;
         }
+        
         return get(store.id);
     }
 
@@ -367,5 +366,37 @@ public class StorePool {
 
     public void stop(Store store) {
         storeHandlers.remove(store.id);
+    }
+
+    public JsonObject2 createJsonObject(String message, String addr) {
+        Gson gson = new GsonBuilder().serializeNulls().create();
+
+        Type type = new TypeToken<JsonObject2>() {
+        }.getType();
+
+        message = message.replace("\"args\":[]", "\"args\":{}");
+
+        JsonObject2 object = null;
+        
+        try {
+            object = gson.fromJson(message, type);
+            object.addr = addr;
+        } catch (JsonSyntaxException ex) {
+            System.out.println("Could not decode: " + message);
+            ex.printStackTrace();
+            return null;
+        }
+        
+        object.multiLevelName = gson.fromJson(object.multiLevelName, String.class);
+        
+        return object;
+    }
+
+    public String getCachedResult(String message, String addr) {
+        return cacheFactory.getCachedResult(message, addr);
+    }
+    
+    public void writeCachedResult(String message, String addr, String jsonMessage) {
+        cacheFactory.writeContent(message, addr, jsonMessage);
     }
 }

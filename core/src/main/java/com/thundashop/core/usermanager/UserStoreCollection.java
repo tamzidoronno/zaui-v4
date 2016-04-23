@@ -431,12 +431,13 @@ public class UserStoreCollection {
     }
 
     private void setUserSessionCompany(User user) {
-        if (userManager.getSession() != null && userManager.getSession().get("user_company_sessionid") != null) {
+        if (userManager.getSessionSilent() != null && userManager.getSessionSilent().get("user_company_sessionid") != null) {
             String id = (String) userManager.getSession().get("user_company_sessionid");
             if (user.company.contains(id)) {
                 Company company = userManager.getCompany(id);
                 if (company != null) {
                     user.companyObject = company;
+                    userManager.getSession();
                 }
             }
         }

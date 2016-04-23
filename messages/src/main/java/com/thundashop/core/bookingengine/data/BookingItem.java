@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.bookingengine.data;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import java.util.ArrayList;
@@ -75,6 +76,10 @@ public class BookingItem extends DataCommon {
     
     @Transient
     public List<Availability> availabilities = new ArrayList();
+    
+    @Transient
+    @Administrator
+    public int countBasedOnBookins = -1;
     
     /**
      * Who owns the bookingItem. 

@@ -72,11 +72,11 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         if (instance == null) {
             return null;
         }
-
+        
         if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type >= 50) {
             return checkSecurity(instance);
         }
-        
+
         return checkSecurity(instance.secureClone());
         
     }
@@ -134,11 +134,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
 
     private ApplicationInstance checkSecurity(ApplicationInstance secureClone) {
         overrideGlobalSettings(secureClone);
-        
-        if(getSession().currentUser != null && (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor())) {
-            return secureClone;
-        }
-        
+
         List<String> pages = pageManger.getPagesForApplicationOnlyBody(secureClone.id);
 
         int lowestAccessLevelForAppOnPages = Integer.MAX_VALUE;
@@ -160,6 +156,10 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         
         if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type < lowestAccessLevelForAppOnPages) {
             secureClone.appSettingsId = "access_denied";
+        }
+        
+        if (lowestAccessLevelForAppOnPages == 0 && !hasAnySecuredSettingsStored(secureClone)) {
+            clearUsedSession();
         }
         
         return secureClone;
@@ -200,5 +200,13 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
                 secureClone.settings.put(key, application.settings.get(key).secureClone());
             }
         }
+    }
+
+    private boolean hasAnySecuredSettingsStored(ApplicationInstance instance) {
+        return instance.settings.values()
+                .stream()
+                .filter(o -> o.secure)
+                .count() > 0;
+                
     }
 }

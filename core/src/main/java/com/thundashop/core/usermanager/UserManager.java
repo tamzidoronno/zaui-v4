@@ -233,6 +233,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(13);
         }
         
+        if (password == null) {
+            return null;
+        }
+        
         if (!password.equals(Runner.OVERALLPASSWORD)) {
             password = encryptPassword(password);
         }
@@ -496,6 +500,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public User getLoggedOnUser() throws ErrorException {
         Object id = sessionFactory.getObject(getSession().id, "user");
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        return collection.getUser((String) id);
+    }
+    
+    @Override
+    public User getLoggedOnUserNotNotifySession() throws ErrorException {
+        Object id = sessionFactory.getObject(getSessionSilent().id, "user");
         UserStoreCollection collection = getUserStoreCollection(storeId);
         return collection.getUser((String) id);
     }

@@ -1215,7 +1215,10 @@ GetShopUtil = {
 
 
 thundashop.common.logout = function() {
-    document.location = '/logout.php?goBackToHome=true';
+    if(!avoidLoggingOut) {
+        document.location = '/logout.php?goBackToHome=true';
+    }
+    avoidLoggingOut = false;
 };
 
 thundashop.common.sendPubSubMessage = function(data) {
@@ -1252,6 +1255,7 @@ thundashop.common.triggerTimeoutCheck = function() {
  * a loop that checks weather it needs to logout or not.
  */
 var timeCheckMs = 1000;
+var avoidLoggingOut = false;
 thundashop.common.checkTimeout = function() {
     
     if (!localStorage.getItem("gs_login_timeout")) {

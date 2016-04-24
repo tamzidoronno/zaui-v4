@@ -2,6 +2,7 @@
 /* @var $this ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event  */
 $event = $this->getEvent();
 
+$isFull = false;
 
 if (!$event->isInFuture) {
     echo "<div class='event_warning'>";
@@ -15,6 +16,7 @@ if (!$event->isInFuture) {
     echo "<div class='event_warning'>";
     echo "<i class='fa fa-warning'></i> ".$this->__w("No available spots left for this event");
     echo "</div>";
+    $isFull = true;
 } else if ($event->isCanceled) {
     echo "<div class='event_warning'>";
     echo "<i class='fa fa-warning'></i> ".$this->__w("This event has been canceled");
@@ -23,11 +25,10 @@ if (!$event->isInFuture) {
     echo "<div class='event_warning'>";
     echo "<i class='fa fa-warning'></i> ".$this->__w("No available spots left for this event");
     echo "</div>";
+    $isFull = true;
 }
 
-$isFull = $event->bookingItem->freeSpots < 1;
-
-if (!$event->canBook) {
+if (!$event->canBook && !$isFull) {
     return;
 }
 

@@ -392,14 +392,8 @@ public interface IUserManager {
     @Editor
     public List<Company> searchForCompanies(String searchWord);
     
-    @Editor
-    public List<Company> getAllCompaniesForGroup(String groupId);
-    
     @Customer
     public void setSessionCompany(String companyId);
 
-    @Editor
-    public long getCompaniesConnectedToGroupCount(String groupId);
-    
     public User getLoggedOnUserNotNotifySession();
 }

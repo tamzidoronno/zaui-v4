@@ -11,7 +11,7 @@ app.Company = {
     },
     
     showSelectedCompany: function() {
-        var companyId = $(this).closest('.gss_companyrow').find('i').attr('gss_value_2')
+        var companyId = $(this).closest('.gss_companyrow').attr('gs_model_attr');
         
         if (!companyId) {
             alert("No company selected");

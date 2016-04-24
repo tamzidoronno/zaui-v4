@@ -232,6 +232,13 @@ $group = $this->getApi()->getUserManager()->getGroup($_POST['value']);
         $this->includefile("usersingroup");
         ?>    
     </div>
+    
+    <center><h3><?php echo $this->__f("Companies in group"); ?></h3></center>
+    <div class="gss_users_in_group" style="background-color: #F9f9f9; margin-top: 20px; padding: 10px; border: solid 1px #DDD;">
+        <?
+        $this->includefile("companies");
+        ?>    
+    </div>
 </div>
 
 <?

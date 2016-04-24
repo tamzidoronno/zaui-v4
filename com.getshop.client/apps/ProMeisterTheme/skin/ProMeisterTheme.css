@@ -144,3 +144,7 @@ body {
     background-color: #005a51;
     color: #FFF;
 }
+
+.news_container.item.news_container_0 {
+    border: solid 2px #DDD !important;
+}

@@ -35,7 +35,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1377,6 +1376,20 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public void setSessionCompany(String companyId) {
         getSession().put("user_company_sessionid", companyId);
+    }
+
+    @Override
+    public long getCompaniesConnectedToGroupCount(String groupId) {
+        return companies.values().stream()
+                .filter(company -> company.groupId != null && company.groupId.equals(groupId))
+                .count();
+    }
+
+    @Override
+    public List<Company> getAllCompaniesForGroup(String groupId) {
+        return companies.values().stream()
+                .filter(company -> company.groupId != null && company.groupId.equals(groupId))
+                .collect(Collectors.toList());
     }
 
 }

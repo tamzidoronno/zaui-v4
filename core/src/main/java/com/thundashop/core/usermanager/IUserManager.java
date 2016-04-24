@@ -400,6 +400,5 @@ public interface IUserManager {
 
     @Editor
     public long getCompaniesConnectedToGroupCount(String groupId);
-    
-    public User getLoggedOnUserNotNotifySession();
+
 }

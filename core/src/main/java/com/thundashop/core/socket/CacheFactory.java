@@ -254,7 +254,7 @@ public class CacheFactory {
             }
         });
 
-        if (files != null) {
+        if(files != null ) {
             for (final File file : files) {
                 deleteDirectory(file);
             }

@@ -1469,7 +1469,6 @@ thundashop.framework = {
         return element;
     },
     simpleaddrow: function () {
-        
         var button = $(this);
         var metaData = {
             rowId: "",
@@ -1488,12 +1487,9 @@ thundashop.framework = {
         var selected = function (result) {
             var before = cellobj.attr('cellid');
             if (result.direction === "below") {
-                before = cellobj.next().attr('cellid');
-                if (cellobj.next().hasClass("gseditinfo")) {
-                    before = cellobj.next().next().attr('cellid');
-                }
+                var rows = cellobj.closest('.gsucell_extra_outer').nextAll('.gsucell_extra_outer');
+                before = rows.first().find('.gsucell').attr('cellid');
             }
-
             var data = {
                 "area": button.closest('.gsarea').attr('area'),
                 "cellid": before,

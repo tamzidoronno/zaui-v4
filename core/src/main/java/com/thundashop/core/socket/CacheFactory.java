@@ -187,8 +187,10 @@ public class CacheFactory {
             }
         });
 
-        for (final File file : files) {
-            deleteDirectory(file);
+        if(files != null ) {
+            for (final File file : files) {
+                deleteDirectory(file);
+            }
         }
     }
 

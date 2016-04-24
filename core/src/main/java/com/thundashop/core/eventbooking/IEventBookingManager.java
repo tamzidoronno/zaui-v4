@@ -180,5 +180,6 @@ public interface IEventBookingManager {
     @Editor
     public List<Event> getEventsByType(String eventTypeId);
 
+    @Editor
     public Event getEventByPageId(String eventId);
 }

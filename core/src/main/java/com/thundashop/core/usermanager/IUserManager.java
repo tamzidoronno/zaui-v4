@@ -394,6 +394,4 @@ public interface IUserManager {
     
     @Customer
     public void setSessionCompany(String companyId);
-
-    public User getLoggedOnUserNotNotifySession();
 }

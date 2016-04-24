@@ -45,6 +45,9 @@ public abstract class AProductManager extends ManagerBase {
     public PageManager pageManager;
 
     @Autowired
+    private ContentManager contentManager;
+
+    @Autowired
     public ListManager listManager;
     
     @Autowired

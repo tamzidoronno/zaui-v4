@@ -40,21 +40,19 @@ public class BackupRepository {
 //        }
     }
     
-    public boolean saveBackup(String userId, DataCommon oldObject, String storeId, String database, String collection) {
-        if (oldObject == null) {
-            return false;
-        }
-        
-        GetShopIgnoreBackup ignoreLogging = oldObject.getClass().getAnnotation(GetShopIgnoreBackup.class);
-        
-        if (ignoreLogging != null) {
-            return false;
-        }
-        
+    public void saveBackup(String userId, DataCommon oldObject, String storeId, String database, String collection) {
+//        if (oldObject == null) {
+//            return;
+//        }
+//        
+//        GetShopIgnoreBackup ignoreLogging = oldObject.getClass().getAnnotation(GetShopIgnoreBackup.class);
+//        
+//        if (ignoreLogging != null) {
+//            return;
+//        }
+//        
 //        BackupRepositoryWorker backupWorker = new BackupRepositoryWorker(userId, oldObject, mongo, morphia, storeId, database, collection);
 //        new Thread(backupWorker).start();
-        
-        return true;
     }
 
     public List<DataCommon> query(DBObject dbObject, String storeId) {

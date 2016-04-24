@@ -134,12 +134,11 @@ public class Database extends StoreComponent {
 
     }
 
-    private boolean addDataCommonToDatabase(DataCommon data, Credentials credentials) {
-        boolean ret = logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
+    private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
+        logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
         data.gs_manager = credentials.manangerName;
         DBObject dbObject = morphia.toDBObject(data);
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
-        return ret;
     }
 
     public List<DataCommon> retreiveData(Credentials credentials) {
@@ -210,17 +209,17 @@ public class Database extends StoreComponent {
         save(mangagerClass.getSimpleName(), collectionPrefix + data.storeId, data);
     }
 
-    public synchronized boolean delete(DataCommon data, Credentials credentials) throws ErrorException {
+    public synchronized void delete(DataCommon data, Credentials credentials) throws ErrorException {
         if (sandbox) {
-            return false;
+            return;
         }
 
         if (isDeepFreezed(data)) {
-            return false;
+            return;
         }
 
         data.deleted = new Date();
-        return save(data, credentials);
+        save(data, credentials);
     }
 
     public List<DataCommon> find(String collection, Date startDate, Date endDate, String db, HashMap<String, String> searchCriteria) {
@@ -415,26 +414,26 @@ public class Database extends StoreComponent {
     /**
      * ************** SAVE FUNCTIONS ****************
      */
-    public synchronized boolean save(DataCommon data, Credentials credentials) throws ErrorException {
+    public synchronized void save(DataCommon data, Credentials credentials) throws ErrorException {
         if (data.rowCreatedDate == null) {
             data.rowCreatedDate = new Date();
         }
 
         if (isDeepFreezed(data)) {
-            return false;
+            return;
         }
 
         checkId(data);
         data.onSaveValidate();
 
         if (sandbox) {
-            return false;
+            return;
         }
         
-        return addDataCommonToDatabase(data, credentials);
+        addDataCommonToDatabase(data, credentials);
     }
 
-    private boolean logSavedMessge(DataCommon newObject, String database, String collection) {
+    private void logSavedMessge(DataCommon newObject, String database, String collection) {
         String userId = "";
         if (getSessionSilent() != null && getSessionSilent().currentUser != null) {
             userId = getSessionSilent().currentUser.id;
@@ -442,10 +441,10 @@ public class Database extends StoreComponent {
                 
         DataCommon oldObject = getObjectDirect(database, collection, newObject.id);
         if (oldObject != null) {
-            return backupRepository.saveBackup(userId, oldObject, storeId, database, collection);
+            backupRepository.saveBackup(userId, oldObject, storeId, database, collection);
         }
 
-        return false;
+        
     }
 
     public boolean verifyThatStoreIdentifierNotInUse(String identifier) {

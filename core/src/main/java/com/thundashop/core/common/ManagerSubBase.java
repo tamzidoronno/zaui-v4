@@ -7,12 +7,14 @@ package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.socket.CacheFactory;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -32,6 +34,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
+import org.owasp.validator.html.CleanResults;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -222,23 +226,15 @@ public class ManagerSubBase {
 
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
-        Boolean clearCache = database.save(data, credentials);
-        
-        if (clearCache != null && clearCache.booleanValue()) {
-            clearCache(null);
-        }
+        database.save(data, credentials);
+        clearCache(null);
     }
  
     public void deleteObject(DataCommon data) throws ErrorException {
         if (getSession() != null && getSession().currentUser != null) {
             data.gsDeletedBy = getSession().currentUser.id;
         }
-        
-        boolean updateCache = database.delete(data, credentials);
-        
-        if (updateCache) {
-            clearCache(null);
-        }
+        database.delete(data, credentials);
     }
 
     protected void setManagerSetting(String key, String value) {

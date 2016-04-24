@@ -38,7 +38,10 @@ class Page {
                 }
             }
         }
-
+        if($this->factory->isEditorMode()) {
+            $this->includeLayotDNDPanel();
+        }
+        
         $editedCellid = null;
         $gs_page_type = $this->javapage->type;
         
@@ -1929,6 +1932,28 @@ class Page {
             $this->printArea($layout->areas->{'bodyfooter'});
             echo "</div></div>";
         }
+    }
+
+    public function includeLayotDNDPanel() {
+        ?>
+        <div class='gsdndlayoutpanelouter'>
+            <div class='gsdndpanelstepup'>
+                <i class='fa fa-arrow-circle-up'></i> Go to cell above
+            </div>
+            <div class="gsdndlayoutpanel gsrowdndlayoutpanel">
+                <div class='gsoperatecell' target='this' type='addbefore'><i class='fa fa-arrow-up'></i> Add row above</div>
+                <div class='gsoperatecell' target='this' type='addrow'><i class='fa fa-bars'></i> Split into rows</div>
+                <div class='gsoperatecell' target='this' type='addcolumn'><i class='fa fa-columns'></i> Split into columns</div>
+                <div class='gsoperatecell' target='this' type='addafter'><i class='fa fa-arrow-down'></i> Add row below</div>
+            </div>
+            <div class="gsdndlayoutpanel gscolumndndlayoutpanel">
+                <div class='gsoperatecell' target='this' type='addbefore'><i class='fa fa-arrow-left'></i> Add column to the left</div>
+                <div class='gsoperatecell' target='this' type='addrow'><i class='fa fa-bars'></i> Split into rows</div>
+                <div class='gsoperatecell' target='this' type='addcolumn'><i class='fa fa-columns'></i> Split into columns</div>
+                <div class='gsoperatecell' target='this' type='addafter'><i class='fa fa-arrow-right'></i> Add column to the right</div>
+            </div>
+        </div>
+        <?php
     }
 
 }

@@ -7,12 +7,14 @@ package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.socket.CacheFactory;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -21,10 +23,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import javax.annotation.PostConstruct;
+import org.owasp.validator.html.CleanResults;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -55,6 +66,8 @@ public class ManagerSubBase {
     
     private boolean sessionUsed = false;
     private Session session;
+    
+    private List<ManagerSubBase> otherManagersThisIsUsing = new ArrayList();
 
     private ManagerSetting managerSettings = new ManagerSetting();
     
@@ -214,7 +227,7 @@ public class ManagerSubBase {
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
         database.save(data, credentials);
-        clearCache();
+        clearCache(null);
     }
  
     public void deleteObject(DataCommon data) throws ErrorException {
@@ -354,14 +367,73 @@ public class ManagerSubBase {
         return applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41").getSetting("title");
     }
     
-    public void clearCache() {
-        if (cachingFactory == null)
+    public void clearCache(ClearCacheMessage msg) {
+        if (cachingFactory == null || !ready)
             return;
         
-        cachingFactory.clear(storeId, getClass().getSimpleName());
+        cachingFactory.clear(storeId, getClass().getSimpleName());    
+        clearNotify(msg);
     }
     
     public void clearUsedSession() {
         sessionUsed = false;
+    }
+
+    private void clearNotify(ClearCacheMessage clearCacheMessage) {
+        if (clearCacheMessage == null) {
+            clearCacheMessage = new ClearCacheMessage();
+        }
+        
+        clearCacheMessage.processedClasses.add(this.getClass());
+        
+        for (ManagerSubBase manager : otherManagersThisIsUsing) {
+            manager.clearCacheMessage(clearCacheMessage);
+        }
+    }
+    
+    public void clearCacheMessage(ClearCacheMessage msg) {
+        if (msg.processedClasses.contains(this.getClass())) {
+            return;
+        }
+        
+        clearCache(msg);
+        msg.processedClasses.add(this.getClass());
+        
+        for (ManagerSubBase manager : otherManagersThisIsUsing) {
+            manager.clearCacheMessage(msg);
+        }
+    }
+ 
+    @PostConstruct
+    public void buildDependencyMap() {
+        List<Field> fileds = getAllFields(new LinkedList<Field>(), getClass());
+
+        for (Field field : fileds) {
+            if (ManagerSubBase.class.isAssignableFrom(field.getType())) {
+                addManager(field);
+            }
+        }
+    }
+
+    private void addManager(Field field) throws SecurityException {
+        try {
+            field.setAccessible(true);
+            ManagerSubBase manager = (ManagerSubBase) field.get(this);
+            otherManagersThisIsUsing.add(manager);
+        } catch (IllegalArgumentException ex) {
+            java.util.logging.Logger.getLogger(ManagerSubBase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ManagerSubBase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+
+        if (type.getSuperclass() != null) {
+            fields = getAllFields(fields, type.getSuperclass());
+        }
+
+        return fields;
     }
 }

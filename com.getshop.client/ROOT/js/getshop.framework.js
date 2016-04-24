@@ -1577,8 +1577,12 @@ thundashop.framework = {
                 newcellid = "";
             }
             var before = cellobj.next().attr('cellid');
-            if (cellobj.next().hasClass("gseditinfo")) {
-                before = cellobj.next().next().attr('cellid');
+            var next = cellobj.nextAll('.gsucell').first();
+            if(next.length === 0) {
+                next = cellobj.closest('.gsucell_extra_outer').nextAll('.gsucell_extra_outer').first().find('.gsucell').first();
+            }
+            if (next.length > 0) {
+                before = next.attr('cellid');
             }
 
             data['before'] = before;

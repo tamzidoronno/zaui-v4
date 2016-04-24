@@ -86,13 +86,12 @@ thundashop.dndlayout = {
         dndpanel.css('left',offset.left);
         dndpanel.fadeIn();
         
-        
         var spot = $('<span class="gsmodifycellindicator"></span>');
         cell.append(spot);
     }
 };
 
 $(function() {
-    $('.gsdndpanelstepup').on('click', thundashop.dndlayout.stepup);
+   $(document).on('click', '.gsdndpanelstepup', thundashop.dndlayout.stepup);
    thundashop.dndlayout.init(); 
 });

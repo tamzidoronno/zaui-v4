@@ -71,8 +71,10 @@ public class CacheFactory {
         File folder = new File(getStoreCacheFolder(""));
         final File[] files = folder.listFiles();
         
-        for (final File dir : files) {
-            deleteDirectory(dir);
+        if (files != null) {
+            for (final File dir : files) {
+                deleteDirectory(dir);
+            }
         }
     }
     

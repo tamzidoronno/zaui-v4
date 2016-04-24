@@ -2,9 +2,15 @@
 /* @var $this \ns_294a8d9e_bd48_44f4_a607_b7d86d2d85fc\ProMeisterCandidateSearch */
 $users = $this->getUsers("search");
 $favList = $this->getFavList();
-
-if (!count($users)) {
-    $this->wrapContentManager("no_users_found", "Did not find the users by the criteria you inserted, please try to modify and retry");
+?>
+<div class="searchresult_content">
+<?
+if (!count($users) && $this->currentlyLoading != "favor") {
+    if (isset($_SESSION['ProMeisterCandidateSearch_searchword']) && $_SESSION['ProMeisterCandidateSearch_searchword'] != "") {
+        echo "<div class='errormessage'>";
+        $this->wrapContentManager("no_users_found", "Did not find the users by the criteria you inserted, please try to modify and retry");
+        echo "</div>";
+    }
 } else {
     $grouped = $this->groupByCompany($users);
     foreach ($grouped as $companyId => $users) {
@@ -58,3 +64,5 @@ if (!count($users)) {
     }
 }
 ?>
+
+</div>

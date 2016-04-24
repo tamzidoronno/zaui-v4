@@ -4,15 +4,6 @@ $groupedEvents = $this->getEvents();
 $locations = $this->getLocations($groupedEvents);
 $loggedOnUser = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
 
-if (!count($groupedEvents)) {
-    $this->wrapContentManager("no_events", "Please come back later, no events available");
-    
-    if ($loggedOnUser != null && $loggedOnUser->type > 10) {
-        echo "<br/><center><div class='shop_button' gsclick='clearFilters'> Clear filter </div></center>";
-    }
-    
-    return;
-}
 
 echo "<div class='locationlist'>";
     foreach ($locations as $loc) {
@@ -24,6 +15,11 @@ echo "</div>";
 
 
 echo "<div class='eventlist'>";
+    if (!count($groupedEvents)) {
+        $this->wrapContentManager("no_events", "Please come back later, no events available");
+        return;
+    }
+
     foreach ($groupedEvents as $key => $events) {
         ?>
             <div class='monthheader'>

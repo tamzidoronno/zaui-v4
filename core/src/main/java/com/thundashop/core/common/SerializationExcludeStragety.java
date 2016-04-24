@@ -15,6 +15,7 @@ import com.thundashop.core.usermanager.data.User;
  */
 public class SerializationExcludeStragety implements ExclusionStrategy {
     private final User user;
+    private boolean neededToSkipData = false;
 
     public SerializationExcludeStragety(User user) {
         this.user = user;
@@ -24,18 +25,21 @@ public class SerializationExcludeStragety implements ExclusionStrategy {
     @Override
     public boolean shouldSkipField(FieldAttributes fa) {
         if (fa.getAnnotation(Administrator.class) != null) {
+            neededToSkipData = true;
             if (user == null || user.type < 100) {
                 return true;
             }
         }
         
         if (fa.getAnnotation(Editor.class) != null) {
+            neededToSkipData = true;
             if (user == null || user.type < 50) {
                 return true;
             }
         }
         
         if (fa.getAnnotation(Customer.class) != null) {
+            neededToSkipData = true;
             if (user == null || user.type < 10) {
                 return true;
             }
@@ -44,6 +48,10 @@ public class SerializationExcludeStragety implements ExclusionStrategy {
         return false;
     }
 
+    public boolean isNeededToSkipData() {
+        return neededToSkipData;
+    }
+    
     @Override
     public boolean shouldSkipClass(Class<?> type) {
         

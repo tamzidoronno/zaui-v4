@@ -74,7 +74,6 @@ public class WebInterfaceSocketThread2 implements Runnable {
             Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
             String json = gson.toJson((Object) result);
             sendContent(json);
-            storePool.writeCachedResult(message, addr, json);
         } catch (Exception d) {
             d.printStackTrace();
         }

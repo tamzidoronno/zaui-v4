@@ -504,6 +504,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return collection.getUser((String) id);
     }
     
+    public User getLoggedOnUserNotNotifySession(String sessionId) throws ErrorException {
+        Object id = sessionFactory.getObject(sessionId, "user");
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        return collection.getUser((String) id);
+    }
+    
     @Override
     public User getLoggedOnUserNotNotifySession() throws ErrorException {
         Object id = sessionFactory.getObject(getSessionSilent().id, "user");

@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.productmanager.data;
+package com.thundashop.core.common;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +12,6 @@ import java.util.List;
  *
  * @author ktonder
  */
-public class SearchResult implements Serializable {
-    public List<Product> products = new ArrayList();
-    public int pages = 0;
-    public int pageNumber = 0;
+class ClearCacheMessage {
+    public List<Class> processedClasses = new ArrayList();
 }

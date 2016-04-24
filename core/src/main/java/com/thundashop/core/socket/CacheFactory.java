@@ -5,14 +5,24 @@
  */
 package com.thundashop.core.socket;
 
+import com.getshop.scope.GetShopSessionScope;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.JsonObject2;
+import com.thundashop.core.common.SerializationExcludeStragety;
 import com.thundashop.core.common.StoreHandler;
+import static com.thundashop.core.common.StoreHandler.getJsonSerializer;
 import com.thundashop.core.common.StorePool;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -24,6 +34,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,9 +47,33 @@ public class CacheFactory {
     private final HashMap<String, Boolean> canCache = new HashMap();
     private StorePool storePool;
     private boolean enabled = true;
+    
+    @Autowired
+    private GetShopSessionScope getShopSessionScope;
 
     public void setStorePool(StorePool storePool) {
         this.storePool = storePool;
+    }
+    
+    /**
+     * We delete all the cache on startup
+     */
+    @PostConstruct
+    public void clearAllCache() {
+        if (!enabled)
+            return;
+        
+        File file = new File(getStoreCacheFolder(""));
+        if (file.isDirectory()) {
+            file.mkdir();
+        }
+        
+        File folder = new File(getStoreCacheFolder(""));
+        final File[] files = folder.listFiles();
+        
+        for (final File dir : files) {
+            deleteDirectory(dir);
+        }
     }
     
     public void setEnabled(boolean enabled) {
@@ -45,6 +81,10 @@ public class CacheFactory {
     }
 
     public String getCachedResult(String message, String addr) {
+        if (!enabled) {
+            return null;
+        }
+
         JsonObject2 object = storePool.createJsonObject(message, addr);
 
         String md5Sum = readMd5Sum(object);
@@ -53,10 +93,25 @@ public class CacheFactory {
             return null;
         }
 
-        return getFileContent(md5Sum, object);
+        String noSecurityNeededResult = getFileContentNoSecurity(md5Sum, object);
+        
+        if (noSecurityNeededResult != null) {
+            return noSecurityNeededResult;
+        }
+        
+        Object cachedResult = getFileContent(md5Sum, object);
+        return runTroughSecurity(cachedResult, object, md5Sum);
     }
 
-    public void writeContent(String message, String addr, String jsonContent) {
+    public void writeContent(String message, String addr, Object jsonResult) {
+        if (!enabled) {
+            return;
+        }
+        
+        if (jsonResult == null) {
+            return;
+        }
+        
         JsonObject2 object = storePool.createJsonObject(message, addr);
         String md5Sum = readMd5Sum(object);
         
@@ -64,21 +119,30 @@ public class CacheFactory {
             return;
         }
 
-        Path path = createPath(md5Sum, object);
+        String path = createPath(md5Sum, object);
         try {
-            Files.write(path, jsonContent.getBytes("UTF-8"));
+            FileOutputStream fout = new FileOutputStream(path);
+            ObjectOutputStream oos = new ObjectOutputStream(fout);   
+            oos.writeObject(jsonResult);
+            oos.close();
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(CacheFactory.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(CacheFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void notify(JsonObject2 inObject, boolean wasUsed, String message, String addr) {
+        if (!enabled) {
+            return;
+        }
+        
+        JsonObject2 object = storePool.createJsonObject(message, addr);
+        String md5Sum = readMd5Sum(object);
+        canCache.put(md5Sum, !wasUsed);
+    }
 
     private boolean canCache(JsonObject2 object, String message, String md5) throws ErrorException {
-        if (!enabled) {
-            return false;
-        }
-
         StoreHandler handler = storePool.getStoreHandler(object.sessionId);
 
         if (handler == null) {
@@ -86,8 +150,8 @@ public class CacheFactory {
         }
 
         // Cant cache init store, this needs to be run whatever happens.
-        if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStore")) {
-            return true;
+        if (object.interfaceName.equals("core.storemanager.IStoreManager") && object.method.equals("initializeStore")) {
+            return false;
         }
         Class[] types = storePool.getArguments(object);
         Object[] args = storePool.createExecuteArgs(object, types, message);
@@ -99,10 +163,7 @@ public class CacheFactory {
 
         Boolean booleanCanCache = canCache.get(md5);
         
-        
-        
         if (booleanCanCache != null && booleanCanCache.equals(Boolean.TRUE)) {
-//            System.out.println("Caching");
             return true;
         }
         
@@ -146,18 +207,24 @@ public class CacheFactory {
         return hexString.toString();
     }
 
-    private String getFileContent(String md5Sum, JsonObject2 inObject) {
-        Path path = createPath(md5Sum, inObject);
+    private Object getFileContent(String md5Sum, JsonObject2 inObject) {
+        String path = createPath(md5Sum, inObject);
 
-        if (Files.isReadable(path)) {
+        Object retObject = null;
+        if (Files.isReadable(Paths.get(path))) {
             try {
-                return new String(Files.readAllBytes(path));
+                FileInputStream fout = new FileInputStream(path);
+                ObjectInputStream oos = new ObjectInputStream(fout);
+                retObject = oos.readObject();
+                oos.close();
             } catch (IOException ex) {
                 return null;
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(CacheFactory.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
-        return null;
+        return retObject;
     }
 
     private String getStoreCacheFolder(String storeId) {
@@ -165,16 +232,16 @@ public class CacheFactory {
         return folder;
     }
 
-    private Path createPath(String md5Sum, JsonObject2 object) {
-        String folder = getStoreCacheFolder(storePool.getStoreHandler(object.sessionId).storeId) + "/" + object.interfaceName;
+    private String createPath(String md5Sum, JsonObject2 object) {
+        String storeId = storePool.getStoreHandler(object.sessionId).storeId;
+        String folder = getStoreCacheFolder(storeId) + "/" + object.interfaceName;
 
         File file = new File(folder);
         if (!file.exists()) {
             file.mkdirs();
         }
 
-        Path path = Paths.get(folder + "/" + md5Sum);
-        return path;
+        return folder + "/" + md5Sum;
     }
 
     public void clear(String storeId, String simpleName) {
@@ -194,7 +261,7 @@ public class CacheFactory {
         }
     }
 
-    public boolean deleteDirectory(File directory) {
+    private boolean deleteDirectory(File directory) {
         if (directory.exists()) {
             File[] files = directory.listFiles();
             if (null != files) {
@@ -210,11 +277,49 @@ public class CacheFactory {
         return (directory.delete());
     }
 
-    
-    public void notify(JsonObject2 inObject, boolean wasUsed, String message, String addr) {
-        JsonObject2 object = storePool.createJsonObject(message, addr);
-        String md5Sum = readMd5Sum(object);
-        canCache.put(md5Sum, !wasUsed);
+    private String runTroughSecurity(Object cachedResult, JsonObject2 object, String md5) {
+        String storeId = storePool.getStoreHandler(object.sessionId).storeId;
+        
+        if (cachedResult == null) {
+            return null;
+        }
+        
+        UserManager userManager = (UserManager)getShopSessionScope.getManagerBasedOnNameAndStoreId("scopedTarget.userManager", storeId);
+        if (userManager == null) {
+            return null;
+        }
+        
+        User user = userManager.getLoggedOnUserNotNotifySession(object.sessionId);
+        SerializationExcludeStragety excludeStrategy = new SerializationExcludeStragety(user);
+        Gson gson = getJsonSerializer(excludeStrategy);
+        String result = gson.toJson(cachedResult);
+        
+        if (excludeStrategy.isNeededToSkipData()) {
+            return result;
+        }
+        
+        try {
+            String folder = createPath(md5, object) + ".noSecurityNeeded";
+            Files.write(Paths.get(folder), result.getBytes());
+        } catch (IOException ex) {
+            Logger.getLogger(CacheFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return result;
+    }
+
+    private String getFileContentNoSecurity(String md5sum, JsonObject2 inObject) {
+        String fileName = createPath(md5sum, inObject) + ".noSecurityNeeded";
+        
+        if (Files.exists(Paths.get(fileName))) {
+            try {
+                return new String(Files.readAllBytes(Paths.get(fileName)));
+            } catch (IOException ex) {
+                Logger.getLogger(CacheFactory.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return null;
     }
 
 }

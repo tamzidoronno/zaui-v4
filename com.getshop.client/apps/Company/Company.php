@@ -86,5 +86,10 @@ class Company extends \SystemApplication implements \Application {
         $company = $this->getApi()->getUserManager()->getCompany($_POST['value2']);
         $this->getApi()->getUserManager()->assignCompanyToUser($company, $_POST['value']);
     }
+    
+    public function renderExtraGroupList($group) {
+        $count = $this->getApi()->getUserManager()->getCompaniesConnectedToGroupCount($group->id);
+        echo "<div style='font-size: 13px; font-style: italic;'>Companies: $count </div>";
+    }
 }
 ?>

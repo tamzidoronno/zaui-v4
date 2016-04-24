@@ -399,6 +399,6 @@ public interface IUserManager {
     public void setSessionCompany(String companyId);
 
     @Editor
-    public long getCompaniesConnectedToGroupCount(String groupId);
+    public Long getCompaniesConnectedToGroupCount(String groupId);
 
 }

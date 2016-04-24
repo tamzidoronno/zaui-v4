@@ -60,7 +60,7 @@ public abstract class TestCommon implements ApplicationContextAware {
                     data.id = UUID.randomUUID().toString();
                 }
                 
-                return invocation;
+                return false;
             }}).when(database).save(any(DataCommon.class), any(Credentials.class));
         
         Page page = new Page();

@@ -13,15 +13,10 @@ import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
 import com.thundashop.core.pagemanager.data.PageCellSettings;
 import com.thundashop.core.pagemanager.data.SavedCommonPageData;
-import com.thundashop.core.productmanager.ProductManager;
-import com.thundashop.core.productmanager.data.Product;
-import com.thundashop.core.productmanager.data.ProductConfiguration;
 import com.thundashop.core.usermanager.UserManager;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -44,12 +39,6 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Autowired
     private StoreApplicationInstancePool instancePool;
-
-    @Autowired
-    private ProductManager productManager;
-
-    @Autowired
-    private StoreApplicationInstancePool storeApplicationPool;
 
     @Autowired
     private UserManager userManager;
@@ -144,7 +133,6 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     private Page finalizePage(Page page) {
         page.finalizePage(commonPageData);
-        addProductDetailsIfNeeded(page);
         
         Entry entry = listManager.findEntryByPageId(page.id);
         if(entry != null) {
@@ -496,92 +484,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         cell.outerWidth = outerWidth;
         cell.outerWidthWithMargins = outerWidthWithMargins;
         savePage(page);
-    }
-
-    private void addProductDetailsIfNeeded(Page page) {
-        productManager.productConfiguration = new ProductConfiguration();
-        productManager.productConfiguration.productTabs = new LinkedHashMap();
-        productManager.productConfiguration.productTabs.put("info", false);
-        productManager.productConfiguration.productTabs.put("relatedProducts", false);
-        productManager.productConfiguration.productTabs.put("comments", false);
-        productManager.productConfiguration.productTabs.put("attributes", true);
-        
-        boolean modified = false;
-        if(page.type != null && page.type.equals("product")) {
-            PageCell tabcell = null;
-            List<PageCell> cells = page.layout.getCells("body");
-            for(PageCell cell : cells) {
-               if(cell.isTab()) {
-                   tabcell = cell;
-                   break;
-               } 
-            }
-            
-            if(tabcell == null) {
-                String cell = page.layout.createCell("", "", PageCell.CellMode.tab, "body");
-                tabcell = page.layout.getCell(cell);
-                tabcell.cells = new ArrayList();
-                modified=true;
-            }
-            
-            //Add missing tabs.
-            HashMap<String, Boolean> productattrs = productManager.productConfiguration.productTabs;
-            for(String cellName : productattrs.keySet()) {
-                boolean subcellfound = false;
-                for(PageCell subcell : page.layout.getCellsFlatList()) {
-                    if(subcell.systemCellName.equals(cellName)) {
-                        subcellfound = true;
-                        if(subcell.isHidden != productattrs.get(cellName)) {
-                            subcell.isHidden = productattrs.get(cellName);
-                            modified = true;
-                        }
-                    }
-                }
-                if(!subcellfound) {
-                    //We need to add this tab.
-                    String newCell = page.layout.createCell(tabcell.cellId, null, PageCell.CellMode.row, "body");
-                    PageCell newCellObject = page.layout.getCell(newCell);
-                    newCellObject.cellName = cellName;
-                    newCellObject.systemCellName = cellName;
-                    attachProductApplications(newCell, page);
-                    modified = true;
-                }
-            }
-            
-            //Check if any areas has been removed.
-            List<String> cellsToRemove = new ArrayList();
-            for(PageCell subcell : tabcell.cells) {
-                boolean subcellfound = false;
-                for(String cellName : productattrs.keySet()) {
-                    if(subcell.systemCellName.equals(cellName)) {
-                        subcellfound = true;
-                    }
-                }
-                if(!subcellfound && !subcell.systemCellName.isEmpty()) {
-                    cellsToRemove.add(subcell.cellId);
-                }
-            }
-            
-            for(String id : cellsToRemove) {
-                page.layout.deleteCell(id);
-                modified = true;
-            }
-        }
-        
-        if(modified) {
-            savePage(page);
-        }
-    }
-
-    private void attachProductApplications(String newCell, Page page) {
-        PageCell cell = page.layout.getCell(newCell);
-        if(cell.cellName.equals("info")) {
-            String contentManager = "320ada5b-a53a-46d2-99b2-9b0b26a7105a";
-            ApplicationInstance instance = storeApplicationPool.createNewInstance(contentManager);
-            if(instance != null) {
-                cell.appId = instance.id;
-            }
-        }
     }
 
     @Override

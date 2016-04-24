@@ -13,5 +13,5 @@ import java.util.List;
  * @author ktonder
  */
 class ClearCacheMessage {
-    public List<Class> processedClasses = new ArrayList();
+    public List<Object> processedClasses = new ArrayList();
 }

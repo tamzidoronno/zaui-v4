@@ -7,9 +7,11 @@ package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -31,7 +33,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import org.springframework.aop.framework.Advised;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -393,24 +397,34 @@ public class ManagerSubBase {
             clearCacheMessage = new ClearCacheMessage();
         }
         
-        clearCacheMessage.processedClasses.add(this.getClass());
-        
-        for (ManagerSubBase manager : otherManagersThisIsUsing) {
-            manager.clearCacheMessage(clearCacheMessage);
-        }
+        clearCacheMessage.processedClasses.add(this);
+        sendClearMessageToAllManagers(clearCacheMessage);
     }
     
     public void clearCacheMessage(ClearCacheMessage msg) {
-        if (msg.processedClasses.contains(this.getClass())) {
+        if (msg.processedClasses.contains(this)) {
             return;
         }
-        
-        clearCache(msg);
-        msg.processedClasses.add(this.getClass());
-        
-        for (ManagerSubBase manager : otherManagersThisIsUsing) {
-            manager.clearCacheMessage(msg);
+
+        for (ManagerSubBase subBase : otherManagersThisIsUsing) {
+            try {
+                ManagerSubBase realObject;
+                if (subBase instanceof Advised) {
+                    Advised adv = (Advised)subBase;
+                    realObject = (ManagerSubBase) adv.getTargetSource().getTarget();
+                } else {
+                    realObject = subBase;
+                }
+                
+                if (msg.processedClasses.contains(realObject) && !realObject.equals(this) ) {
+                    msg.processedClasses.add(this);
+                    realObject.clearCache(msg);
+                }
+            } catch (Exception ex) {
+                java.util.logging.Logger.getLogger(ManagerSubBase.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        
     }
  
     @PostConstruct
@@ -444,5 +458,26 @@ public class ManagerSubBase {
         }
 
         return fields;
+    }
+
+    private void sendClearMessageToAllManagers(ClearCacheMessage clearCacheMessage) {
+        if (AppContext.appContext == null) {
+            return;
+        }
+        
+        ArrayList<ManagerBase> messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
+        
+        for (ManagerBase base : messageHandler) {
+            base.clearCacheMessage(clearCacheMessage);
+        }
+        
+        for (GetShopSessionBeanNamed base : scope.getAllForStore(storeId)) {
+            base.clearCacheMessage(clearCacheMessage);
+        }
+     
+    }
+
+    private Class getMyClass() {
+        return this.getClass();
     }
 }

@@ -1362,7 +1362,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     @Override
-    public long getCompaniesConnectedToGroupCount(String groupId) {
+    public Long getCompaniesConnectedToGroupCount(String groupId) {
         return companies.values().stream()
                 .filter(company -> company.groupId != null && company.groupId.equals(groupId))
                 .count();

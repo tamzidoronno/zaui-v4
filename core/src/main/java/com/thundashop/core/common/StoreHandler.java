@@ -68,7 +68,7 @@ public class StoreHandler {
             User user = findUser(getShopInterfaceClass, inObject);
             Annotation userLevel = authenticateUserLevel(executeMethod, aClass, getShopInterfaceClass, inObject);
             Object result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
-            notifyIfCacheCanBeUsed(inObject, cacheFactory, message, addr, result);
+            notifyIfCacheCanBeUsed(inObject, cacheFactory, message, addr);
             clearSessionObject();
             result = cloneResult(result, user);
             return result;
@@ -400,34 +400,27 @@ public class StoreHandler {
      * We need to clone the data before leaving this class. This class is considered threadsafe, and leaking
      * live objects here is bad because they might be modified.
      * 
-     * This also excludes security data from the result if the user is not logged in.
-     *
      * Ideal would have been to return a String instead of a cloned object.
      * 
      * @param <V>
      * @param result
      * @return 
      */
-    public static <V> V cloneResult(V result, User user) {
+    private <V> V cloneResult(V result, User user) {
         if (result == null) {
             return result;
         }
        
-        SerializationExcludeStragety exclude = new SerializationExcludeStragety(user);
-        Gson gson = getJsonSerializer(exclude);        
+        Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .disableInnerClassSerialization()
+                .addSerializationExclusionStrategy(new SerializationExcludeStragety(user))
+                .create();
+                
         String json = gson.toJson((Object) result);
         V retObject = (V)gson.fromJson(json, result.getClass());
         
         return retObject;
-    }
-
-    public static Gson getJsonSerializer(SerializationExcludeStragety exclude) {
-        Gson gson = new GsonBuilder()
-                .serializeNulls()
-                .disableInnerClassSerialization()
-                .addSerializationExclusionStrategy(exclude)
-                .create();
-        return gson;
     }
 
     private void initMultiLevels(String storeId, Session session) {
@@ -500,7 +493,7 @@ public class StoreHandler {
         return true;
     }
 
-    private void notifyIfCacheCanBeUsed(JsonObject2 inObject, CacheFactory cacheFactory, String message, String addr, Object result) {
+    private void notifyIfCacheCanBeUsed(JsonObject2 inObject, CacheFactory cacheFactory, String message, String addr) {
         boolean wasUsed = false;
         for (ManagerBase base : messageHandler) {
             if (base.isSessionUsed()) {
@@ -512,8 +505,7 @@ public class StoreHandler {
                 wasUsed = true;
             }
         }
-
-        cacheFactory.writeContent(message, addr, result);
+        
         cacheFactory.notify(inObject, wasUsed, message, addr);
     }
 }

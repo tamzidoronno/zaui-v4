@@ -396,7 +396,7 @@ public class StorePool {
         return cacheFactory.getCachedResult(message, addr);
     }
     
-    public void writeCachedResult(String message, String addr, Object jsonMessage) {
+    public void writeCachedResult(String message, String addr, String jsonMessage) {
         cacheFactory.writeContent(message, addr, jsonMessage);
     }
 }

@@ -222,9 +222,9 @@ public class ManagerSubBase {
 
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
-        Boolean clearCache = database.save(data, credentials);
+        boolean clearCache = database.save(data, credentials);
         
-        if (clearCache != null && clearCache.booleanValue()) {
+        if (clearCache) {
             clearCache(null);
         }
     }

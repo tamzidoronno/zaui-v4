@@ -331,15 +331,20 @@ public class ManagerSubBase {
             return;
         }
         
+        
         try {
             UserManager userManager = null;
 
             if (this instanceof UserManager) {
                 userManager = (UserManager)this;
             } else {
-                userManager = AppContext.appContext.getBean(UserManager.class);
+                userManager = AppContext.appContext != null ? AppContext.appContext.getBean(UserManager.class) : null;
             }
 
+            if (userManager == null) {
+                return;
+            }
+            
             User user = userManager.getInternalApiUser();
             String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
             

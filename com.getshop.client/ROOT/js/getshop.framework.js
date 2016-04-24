@@ -1238,7 +1238,6 @@ thundashop.framework = {
         return thundashop.framework.get_inherited_bg(jquery_object.parent());
     },
     showCellResizing: function () {
-        
         if (typeof (cssEditorForCell) !== "undefined") {
             cssEditorForCell.destroy();
             cssEditorForCell = null;
@@ -1246,6 +1245,7 @@ thundashop.framework = {
 
         $('.tabsettingspanel').hide();
         var resizingpanel = $('.gsresizingpanel');
+        resizingpanel.find('input').val('');
         var target = $(this).attr('target');
 
         if ($(this).closest('.gscellsettingspanel').length === 0) {

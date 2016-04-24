@@ -21,4 +21,8 @@ public class JsonObject2 implements Serializable, Cloneable {
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
+
+    public String getPrintableName() {
+        return interfaceName + " " + method;
+    }
 }

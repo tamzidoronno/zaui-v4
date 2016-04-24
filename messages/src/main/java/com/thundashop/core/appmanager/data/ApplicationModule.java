@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.appmanager.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author boggi
  */
-public class ApplicationModule {
+public class ApplicationModule implements Serializable {
     public boolean needToShowInMenu = false;
     public String moduleName;
     public String id;

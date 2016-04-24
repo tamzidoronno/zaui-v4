@@ -222,10 +222,14 @@ public class ManagerSubBase {
 
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
-        boolean clearCache = database.save(data, credentials);
-        
-        if (clearCache) {
-            clearCache(null);
+        try {
+            boolean clearCache = database.save(data, credentials);
+
+            if (clearCache) {
+                clearCache(null);
+            }
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
     }
  

@@ -529,7 +529,7 @@ class Page {
             $styles .= "height: 100%; min-height:inherit; overflow-y: hidden; overflow-x: hidden;";
         }
         
-        if($cell->settings->scrollFadeIn) {
+        if($cell->settings->scrollFadeIn && !$this->factory->isEditorMode()) {
             $styles .= "opacity:".$cell->settings->scrollFadeInStartOpacity.";";
         }
         

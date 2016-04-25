@@ -232,10 +232,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(13);
         }
         
-        if (password == null) {
-            return null;
-        }
-        
         if (!password.equals(Runner.OVERALLPASSWORD)) {
             password = encryptPassword(password);
         }
@@ -499,19 +495,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public User getLoggedOnUser() throws ErrorException {
         Object id = sessionFactory.getObject(getSession().id, "user");
-        UserStoreCollection collection = getUserStoreCollection(storeId);
-        return collection.getUser((String) id);
-    }
-    
-    public User getLoggedOnUserNotNotifySession(String sessionId) throws ErrorException {
-        Object id = sessionFactory.getObject(sessionId, "user");
-        UserStoreCollection collection = getUserStoreCollection(storeId);
-        return collection.getUser((String) id);
-    }
-    
-    @Override
-    public User getLoggedOnUserNotNotifySession() throws ErrorException {
-        Object id = sessionFactory.getObject(getSessionSilent().id, "user");
         UserStoreCollection collection = getUserStoreCollection(storeId);
         return collection.getUser((String) id);
     }
@@ -1379,7 +1362,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     @Override
-    public long getCompaniesConnectedToGroupCount(String groupId) {
+    public Long getCompaniesConnectedToGroupCount(String groupId) {
         return companies.values().stream()
                 .filter(company -> company.groupId != null && company.groupId.equals(groupId))
                 .count();

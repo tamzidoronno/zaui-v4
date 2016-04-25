@@ -219,16 +219,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             item.availabilities.add(availabilities.get(availabilityId));
         }
         
-        
-        if (bookings.size() != item.countBasedOnBookins) {
-            long counter = bookings.values().parallelStream()
-                    .filter(booking -> booking.bookingItemId != null && booking.bookingItemId.equals(item.id))
-                    .count();
-
-            item.freeSpots = (int) (item.bookingSize - counter);
-            item.countBasedOnBookins = bookings.size();
-        }
-        
+        item.freeSpots = item.bookingSize - getAllBookingsByBookingItem(item.id).size();
         item.isFull = item.freeSpots < 1;
         
         return item;

@@ -399,7 +399,6 @@ public interface IUserManager {
     public void setSessionCompany(String companyId);
 
     @Editor
-    public long getCompaniesConnectedToGroupCount(String groupId);
-    
-    public User getLoggedOnUserNotNotifySession();
+    public Long getCompaniesConnectedToGroupCount(String groupId);
+
 }

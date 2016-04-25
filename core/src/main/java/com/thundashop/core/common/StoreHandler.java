@@ -11,7 +11,6 @@ import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.thundashop.core.databasemanager.Database;
-import com.thundashop.core.socket.CacheFactory;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -36,7 +35,7 @@ public class StoreHandler {
 
     private List<String> inittedNamedBeans = new ArrayList();
     private List<ManagerBase> messageHandler;
-    public String storeId;
+    private String storeId;
     private HashMap<String, Session> sessions = new HashMap();
     private GetShopSessionScope scope;
     private ArrayList<GetShopSessionObject> sessionScopedBeans;
@@ -50,11 +49,11 @@ public class StoreHandler {
         }
     }
         
-    public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues, CacheFactory cacheFactory, String message, String addr) throws ErrorException {
-        return executeMethod(inObject, types, argumentValues, cacheFactory, message, addr);
+    public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
+        return executeMethod(inObject, types, argumentValues);
     }
     
-    public Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues, CacheFactory cacheFactory, String message, String addr) throws ErrorException {
+    public Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
         initMultiLevels(storeId, getSession(inObject.sessionId));
         
         scope.setStoreId(storeId, inObject.multiLevelName, getSession(inObject.sessionId));
@@ -68,7 +67,6 @@ public class StoreHandler {
             User user = findUser(getShopInterfaceClass, inObject);
             Annotation userLevel = authenticateUserLevel(executeMethod, aClass, getShopInterfaceClass, inObject);
             Object result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
-            notifyIfCacheCanBeUsed(inObject, cacheFactory, message, addr, result);
             clearSessionObject();
             result = cloneResult(result, user);
             return result;
@@ -121,7 +119,7 @@ public class StoreHandler {
         return null;
     }
 
-    public Method getMethodToExecute(Class aClass, String method, Class[] types, Object[] argumentValues) throws ErrorException {
+    private Method getMethodToExecute(Class aClass, String method, Class[] types, Object[] argumentValues) throws ErrorException {
         try {
             for (Method emethod : aClass.getMethods()) {
                 if (emethod != null && emethod.getName().equals(method) && emethod.getParameterTypes().length == argumentValues.length) {
@@ -222,7 +220,7 @@ public class StoreHandler {
         }
         
         try {
-            session.currentUser = userManager.getLoggedOnUserNotNotifySession();
+            session.currentUser = userManager.getLoggedOnUser();
         } catch (ErrorException ex) {
             session.currentUser = null;
         }
@@ -338,7 +336,7 @@ public class StoreHandler {
 
         try {
             UserManager manager = getManager(UserManager.class, getShopInterfaceClass, inObject);
-            return manager.getLoggedOnUserNotNotifySession();
+            return manager.getLoggedOnUser();
         } catch (ErrorException e) {
             // Errorhiding is an antipattern! :P
             // http://en.wikipedia.org/wiki/Error_hiding
@@ -400,34 +398,27 @@ public class StoreHandler {
      * We need to clone the data before leaving this class. This class is considered threadsafe, and leaking
      * live objects here is bad because they might be modified.
      * 
-     * This also excludes security data from the result if the user is not logged in.
-     *
      * Ideal would have been to return a String instead of a cloned object.
      * 
      * @param <V>
      * @param result
      * @return 
      */
-    public static <V> V cloneResult(V result, User user) {
+    private <V> V cloneResult(V result, User user) {
         if (result == null) {
             return result;
         }
        
-        SerializationExcludeStragety exclude = new SerializationExcludeStragety(user);
-        Gson gson = getJsonSerializer(exclude);        
+        Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .disableInnerClassSerialization()
+                .addSerializationExclusionStrategy(new SerializationExcludeStragety(user))
+                .create();
+                
         String json = gson.toJson((Object) result);
         V retObject = (V)gson.fromJson(json, result.getClass());
         
         return retObject;
-    }
-
-    public static Gson getJsonSerializer(SerializationExcludeStragety exclude) {
-        Gson gson = new GsonBuilder()
-                .serializeNulls()
-                .disableInnerClassSerialization()
-                .addSerializationExclusionStrategy(exclude)
-                .create();
-        return gson;
     }
 
     private void initMultiLevels(String storeId, Session session) {
@@ -479,41 +470,5 @@ public class StoreHandler {
         }
 
         return false;
-    }
-
-    public boolean isPublicMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) {
-        Class aClass = loadClass(inObject.interfaceName);
-        Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues);
-        
-        if (executeMethod.getAnnotation(Administrator.class) != null) {
-            return false;
-        }
-        
-        if (executeMethod.getAnnotation(Editor.class) != null) {
-            return false;
-        }
-        
-        if (executeMethod.getAnnotation(Customer.class) != null) {
-            return false;
-        }
-        
-        return true;
-    }
-
-    private void notifyIfCacheCanBeUsed(JsonObject2 inObject, CacheFactory cacheFactory, String message, String addr, Object result) {
-        boolean wasUsed = false;
-        for (ManagerBase base : messageHandler) {
-            if (base.isSessionUsed()) {
-                wasUsed = true;
-            }
-        }
-        for (GetShopSessionObject base : sessionScopedBeans) {
-            if (base.isSessionUsed()) {
-                wasUsed = true;
-            }
-        }
-
-        cacheFactory.writeContent(message, addr, result);
-        cacheFactory.notify(inObject, wasUsed, message, addr);
     }
 }

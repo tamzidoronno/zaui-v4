@@ -7,15 +7,12 @@ package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.socket.CacheFactory;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayInputStream;
@@ -23,19 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import org.springframework.aop.framework.Advised;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -58,16 +45,9 @@ public class ManagerSubBase {
     @Autowired
     public com.thundashop.core.storemanager.StorePool storePool;
     
-    @Autowired
-    private CacheFactory cachingFactory;
-    
     protected boolean isSingleton = false;
     protected boolean ready = false;
-    
-    private boolean sessionUsed = false;
     private Session session;
-    
-    private List<ManagerSubBase> otherManagersThisIsUsing = new ArrayList();
 
     private ManagerSetting managerSettings = new ManagerSetting();
     
@@ -167,17 +147,8 @@ public class ManagerSubBase {
         this.ready = true;
     }
 
-    public Session getSessionSilent() {
-        return session;
-    }
-    
     public Session getSession() {
-        sessionUsed = true;    
         return session;
-    }
-    
-    public boolean isSessionUsed() {
-        return sessionUsed;
     }
 
     /**
@@ -226,23 +197,14 @@ public class ManagerSubBase {
 
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
-        boolean clearCache = database.save(data, credentials);
-        
-        if (clearCache) {
-            clearCache(null);
-        }
+        database.save(data, credentials);
     }
  
     public void deleteObject(DataCommon data) throws ErrorException {
         if (getSession() != null && getSession().currentUser != null) {
             data.gsDeletedBy = getSession().currentUser.id;
         }
-        
-        boolean updateCache = database.delete(data, credentials);
-        
-        if (updateCache) {
-            clearCache(null);
-        }
+        database.delete(data, credentials);
     }
 
     protected void setManagerSetting(String key, String value) {
@@ -280,7 +242,6 @@ public class ManagerSubBase {
     }
     
     public void setSession(Session session) {
-        sessionUsed = false;
         this.session = session;
     }
     
@@ -293,16 +254,6 @@ public class ManagerSubBase {
     }
   
     protected <V> V deepClone(V object) {
-        if (object instanceof DataCommon) {
-            try {
-                V newObject = (V)((DataCommon)object).clone();
-                ((DataCommon)newObject).deleted = new Date();
-                return newObject;
-            } catch (CloneNotSupportedException ex) {
-                ex.printStackTrace();
-            }
-        }
-        
         try {
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
           ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -335,20 +286,15 @@ public class ManagerSubBase {
             return;
         }
         
-        
         try {
             UserManager userManager = null;
 
             if (this instanceof UserManager) {
                 userManager = (UserManager)this;
             } else {
-                userManager = AppContext.appContext != null ? AppContext.appContext.getBean(UserManager.class) : null;
+                userManager = AppContext.appContext.getBean(UserManager.class);
             }
 
-            if (userManager == null) {
-                return;
-            }
-            
             User user = userManager.getInternalApiUser();
             String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
             
@@ -378,106 +324,5 @@ public class ManagerSubBase {
     
     public String getStoreName() {
         return applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41").getSetting("title");
-    }
-    
-    public void clearCache(ClearCacheMessage msg) {
-        if (cachingFactory == null || !ready)
-            return;
-        
-        cachingFactory.clear(storeId, getClass().getSimpleName());    
-        clearNotify(msg);
-    }
-    
-    public void clearUsedSession() {
-        sessionUsed = false;
-    }
-
-    private void clearNotify(ClearCacheMessage clearCacheMessage) {
-        if (clearCacheMessage == null) {
-            clearCacheMessage = new ClearCacheMessage();
-        }
-        
-        clearCacheMessage.processedClasses.add(this);
-        sendClearMessageToAllManagers(clearCacheMessage);
-    }
-    
-    public void clearCacheMessage(ClearCacheMessage msg) {
-        if (msg.processedClasses.contains(this)) {
-            return;
-        }
-
-        for (ManagerSubBase subBase : otherManagersThisIsUsing) {
-            try {
-                ManagerSubBase realObject;
-                if (subBase instanceof Advised) {
-                    Advised adv = (Advised)subBase;
-                    realObject = (ManagerSubBase) adv.getTargetSource().getTarget();
-                } else {
-                    realObject = subBase;
-                }
-                
-                if (msg.processedClasses.contains(realObject) && !realObject.equals(this) ) {
-                    msg.processedClasses.add(this);
-                    realObject.clearCache(msg);
-                }
-            } catch (Exception ex) {
-                java.util.logging.Logger.getLogger(ManagerSubBase.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-    }
- 
-    @PostConstruct
-    public void buildDependencyMap() {
-        List<Field> fileds = getAllFields(new LinkedList<Field>(), getClass());
-
-        for (Field field : fileds) {
-            if (ManagerSubBase.class.isAssignableFrom(field.getType())) {
-                addManager(field);
-            }
-        }
-    }
-
-    private void addManager(Field field) throws SecurityException {
-        try {
-            field.setAccessible(true);
-            ManagerSubBase manager = (ManagerSubBase) field.get(this);
-            otherManagersThisIsUsing.add(manager);
-        } catch (IllegalArgumentException ex) {
-            java.util.logging.Logger.getLogger(ManagerSubBase.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ManagerSubBase.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
-        fields.addAll(Arrays.asList(type.getDeclaredFields()));
-
-        if (type.getSuperclass() != null) {
-            fields = getAllFields(fields, type.getSuperclass());
-        }
-
-        return fields;
-    }
-
-    private void sendClearMessageToAllManagers(ClearCacheMessage clearCacheMessage) {
-        if (AppContext.appContext == null) {
-            return;
-        }
-        
-        ArrayList<ManagerBase> messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
-        
-        for (ManagerBase base : messageHandler) {
-            base.clearCacheMessage(clearCacheMessage);
-        }
-        
-        for (GetShopSessionBeanNamed base : scope.getAllForStore(storeId)) {
-            base.clearCacheMessage(clearCacheMessage);
-        }
-     
-    }
-
-    private Class getMyClass() {
-        return this.getClass();
     }
 }

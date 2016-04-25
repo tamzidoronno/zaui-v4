@@ -14,27 +14,13 @@ import com.thundashop.core.common.Session;
 public abstract class GetShopSessionObject {
     public String storeId = "";
     private Session session;
-    private boolean sessionUsed = false;
 
     public void setSession(Session session) {
-        sessionUsed = false;
         this.session = session;
     }
     
-    public Session getSessionSilent() {
-        return session;
-    }
-    
     public Session getSession() {
-        if (1 == 1)
-            throw new NullPointerException();
-        
-        sessionUsed = true;
         return session;
-    }
-
-    public boolean isSessionUsed() {
-        return sessionUsed;
     }
     
     public abstract void clearSession();

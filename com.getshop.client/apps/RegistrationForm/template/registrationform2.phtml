@@ -1,0 +1,128 @@
+<?php
+/* @var $this \ns_c6fe1e9b_a5f6_400b_aaa1_a422d2400222\RegistrationForm */
+$rules = $this->getRules();
+$data = $rules->data;
+$currentUser = $this->getApi()->getUserManager()->getLoggedOnUser();
+
+function startsWith($haystack, $needle) {
+    // search backwards starting from haystack length characters from the end
+    return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
+}
+
+
+
+foreach($data as $key => $field) {
+    if(!$field->active) {
+        continue;
+    }
+    if(!startsWith($key, "user_") || startsWith($key, "user_address_")) {
+        continue;
+    }
+    
+    $userkey = str_replace("user_", "", $key);
+    $val = "";
+    if(isset($currentUser->{$userkey})) {
+        $val = $currentUser->{$userkey};
+    }
+    if($userkey == "password") {
+        $val = "";
+    }
+    
+    if(isset($_POST['data'][$key])) {
+        $val = $_POST['data'][$key];
+    }
+    echo "<label>";
+    echo "<div>" . $field->title . "</div>";
+    echo "<input type='txt' class='gsniceinput1' placeholder='".$field->title."' gsname='$key' value='$val' style='width:100%;box-sizing: border-box;'>";
+    echo $this->validateField($key);
+    echo "</label>";
+}
+
+echo "<br>";
+echo "<br>";
+$this->wrapContentManager("heading_comp", "<h2>Address</h2>");
+foreach($data as $key => $field) {
+    if(!$field->active) {
+        continue;
+    }
+    if(!startsWith($key, "user_address_")) {
+        continue;
+    }
+    $userkey = str_replace("user_address_", "", $key);
+    $val = "";
+    if(isset($currentUser->address->{$userkey})) {
+        $val = $currentUser->address->{$userkey};
+    }
+    
+    if(isset($_POST['data'][$key])) {
+        $val = $_POST['data'][$key];
+    }
+    echo "<label>";
+    echo "<div>" . $field->title . "</div>";
+    echo "<input type='txt' class='gsniceinput1' placeholder='".$field->title."' gsname='$key' value='$val' style='width:100%;box-sizing: border-box;'>";
+    echo $this->validateField($key);
+    echo "</label>";
+}
+
+if(sizeof($currentUser->company) > 0) {
+    $this->wrapContentManager("heading_comp_details", "<h2>Company details</h2>");
+    
+    foreach($data as $key => $field) {
+        if(!$field->active) {
+            continue;
+        }
+        if(!startsWith($key, "company_") || startsWith($key, "company_address_")) {
+            continue;
+        }
+
+        $userkey = str_replace("user_", "", $key);
+        $val = "";
+        if(isset($currentUser->{$userkey})) {
+            $val = $currentUser->{$userkey};
+        }
+        if($userkey == "password") {
+            $val = "";
+        }
+
+        if(isset($_POST['data'][$key])) {
+            $val = $_POST['data'][$key];
+        }
+        echo "<label>";
+        echo "<div>" . $field->title . "</div>";
+        echo "<input type='txt' class='gsniceinput1' placeholder='".$field->title."' gsname='$key' value='$val' style='width:100%;box-sizing: border-box;'>";
+        echo $this->validateField($key);
+        echo "</label>";
+    }
+
+    $this->wrapContentManager("heading_comp_address", "<h2>Company address</h2>");
+    foreach($data as $key => $field) {
+        if(!$field->active) {
+            continue;
+        }
+        if(!startsWith($key, "company_address_")) {
+            continue;
+        }
+
+        $userkey = str_replace("user_", "", $key);
+        $val = "";
+        if(isset($currentUser->{$userkey})) {
+            $val = $currentUser->{$userkey};
+        }
+        if($userkey == "password") {
+            $val = "";
+        }
+
+        if(isset($_POST['data'][$key])) {
+            $val = $_POST['data'][$key];
+        }
+        echo "<label>";
+        echo "<div>" . $field->title . "</div>";
+        echo "<input type='txt' class='gsniceinput1' placeholder='".$field->title."' gsname='$key' value='$val' style='width:100%;box-sizing: border-box;'>";
+        echo $this->validateField($key);
+        echo "</label>";
+    }
+}
+
+?>
+<br>
+<span class="shop_button" gstype='submit'><?php echo $this->__w("Update"); ?></span>

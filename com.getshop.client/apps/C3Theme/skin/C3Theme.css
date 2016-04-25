@@ -1,7 +1,7 @@
 .gs_page_width { max-width: 1200px; margin: auto; }
 .Menu a { font-size: 16px; font-weight: bold; color:#18bbb1; padding-right: 30px; display:inline-block; }
 .Menu .lastentry a { padding-right: 0px; }
-.Menu .entries .entries a { width: 300px; }
+.Menu .entries .entries a { width: 200px; }
 body {    background-color: #FFF; padding-top: 10px; font-family: arial; font-size: 18px; }
 .gsarea[area="header"] .gs_page_width { height: 200px;  border-bottom: solid 2px #FFA500; margin-bottom: 20px; }
 .gsarea[area="footer"] .gs_page_width { background-color:#000;
@@ -45,7 +45,17 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     border-bottom: solid 0px;
 }
 
+.Menu .entries .entries div:hover {
+    color: #000;
+}
+.Menu .entries .entries div {
+    color: #696969;
+    font-size:12px;
+    font-weight: normal;
+}
+
 .Menu .entries .entries {
+    border: solid 1px #bbb;
     box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
 }
 

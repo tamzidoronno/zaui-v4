@@ -223,7 +223,11 @@ foreach($bookings as $booking) {
         
         if($booking->avoidAutoDelete) {
             $row .= "<br>No autodelete";
-        } 
+        }
+        if($hasPrices && $booking->payedFor && $booking->needCapture) {
+            $row .= "<br><span title='This transaction has not yet been captured by the card vendor, this should be completed within a couple of minutes.'>(need capture)</span>";
+        }
+        
         
         $row .= "</td>";
         $row .= "</tr>";

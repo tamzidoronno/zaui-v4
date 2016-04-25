@@ -134,8 +134,9 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         
         
         if($this->selectPrint) {
-            echo "</select>";
+            echo "</select></label>";
             $this->selectPrint = false;
+            return;
         }
         
         if($this->lastFieldPrintedType == "radio" && $value->type != "radio") {

@@ -448,6 +448,17 @@ class Page {
         }
     }
 
+    /**
+     * 
+     * @param core_pagemanager_data_PageCell $cell
+     * @param type $count
+     * @param type $depth
+     * @param type $totalcells
+     * @param type $edit
+     * @param type $parent
+     * @param type $header
+     * @return boolean
+     */
     function printCell($cell, $count, $depth, $totalcells, $edit, $parent, $header=false) {
         if ($this->factory->isMobile() && $cell->hideOnMobile) {
              return;
@@ -517,7 +528,11 @@ class Page {
             $innerstyles = "style='min-height:inherit; height:100%;'";
             $styles .= "height: 100%; min-height:inherit; overflow-y: hidden; overflow-x: hidden;";
         }
-
+        
+        if($cell->settings->scrollFadeIn) {
+            $styles .= "opacity:".$cell->settings->scrollFadeInStartOpacity.";";
+        }
+        
         $styles .= "'";
 
         $container = "";
@@ -1812,13 +1827,29 @@ class Page {
         }
     }
 
+    /**
+     * 
+     * @param core_pagemanager_data_PageCell $cell
+     * @param type $depth
+     * @return type
+     */
     public function printEffectTriggerLoaded($cell, $depth) {
         if (!$this->factory->isEffectsEnabled()) {
             return;
         }
         
         $cellId = $cell->cellId;
-        echo "<script>getshopScrollMagic.rowLoaded('$cellId');</script>";
+        ?>
+        <script>
+            $(function() {
+                $(document).find('img').batchImageLoad({
+                    loadingCompleteCallback: function() {
+                        getshopScrollMagic.rowLoaded('<?php echo $cellId; ?>');
+                    }
+                });
+            });
+        </script>
+        <?php
     }
 
 

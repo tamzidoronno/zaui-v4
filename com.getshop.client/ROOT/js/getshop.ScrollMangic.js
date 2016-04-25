@@ -18,7 +18,11 @@ getshopScrollMagic = {
         }, data);
 
         $(document).ready(function() {
-            execFuntion();
+            $(document).find('img').batchImageLoad({
+                loadingCompleteCallback: function() {
+                    execFuntion();
+                }
+            });
         });
     },
     

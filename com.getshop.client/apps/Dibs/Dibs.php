@@ -92,7 +92,7 @@ class Dibs extends \PaymentApplication implements \Application {
         echo '</form>';
 
         echo "<script>";
-//        echo "$('#dibsform').submit();";
+        echo "$('#dibsform').submit();";
         echo "</script>";
         
         /* @var $order core_ordermanager_data_Order */

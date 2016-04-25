@@ -52,6 +52,19 @@ $hmac = $this->getConfigurationSetting("hmac");
                    <?php echo $this->__w("Save the cards instead of extracting the amount?"); ?>
                </div>
         </div>
+        
+        <div class="textfield gss_setting"  id="testmode">
+               <span class="title"><?php echo $this->__f("Test mode"); ?></span>
+               <div class="gss_onoff" gs_model="dibsmodel" gs_model_attr="testmode">
+                   <?
+                   $class = $this->getConfigurationSetting("testmode") == "true" ? "fa-toggle-on" : "fa-toggle-off";
+                   ?>
+                   <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+               </div>
+               <div class="description">
+                   <?php echo $this->__w("Run dibs in test mode?"); ?>
+               </div>
+        </div>
     </div>
 
     <div class='gss_button_area'>

@@ -33,7 +33,7 @@ class Dibs extends \PaymentApplication implements \Application {
         $paymentfailed = $this->getConfigurationSetting("paymentfailed");
         
         if (isset($_GET['orderId'])) {
-            if($nextPage == $paymentsuccess) {
+            if($nextPage == "payment_success") {
                 $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
                 $order->status = 7;
                 $order->payment->transactionLog->{time()*1000} = "Payment completed, capturing needed.";
@@ -85,14 +85,14 @@ class Dibs extends \PaymentApplication implements \Application {
             if($this->saveCard()) {
                 echo '<INPUT TYPE="hidden" NAME="createTicket" VALUE="1">';
             }
-        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+        if($this->isTestMode()) {
                 echo '<input type="hidden" name="test" value="1"/>';
                 echo "This is in test mode...";
             }
         echo '</form>';
 
         echo "<script>";
-        echo "$('#dibsform').submit();";
+//        echo "$('#dibsform').submit();";
         echo "</script>";
         
         /* @var $order core_ordermanager_data_Order */
@@ -123,11 +123,21 @@ class Dibs extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("paymentcancelled", $_POST['paymentcancelled']);
         $this->setConfigurationSetting("hmac", $_POST['hmac']);
         $this->setConfigurationSetting("savecard", $_POST['savecard']);
+        $this->setConfigurationSetting("testmode", $_POST['testmode']);
     }
     
     public function saveCard() {
         return $this->getConfigurationSetting("savecard") == "true";
     }
+
+    public function isTestMode() {
+        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+            return true;
+        }
+        
+        return $this->getConfigurationSetting("testmode") == "true";
+    }
+
 }
 
 ?>

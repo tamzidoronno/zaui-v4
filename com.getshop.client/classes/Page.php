@@ -1971,6 +1971,10 @@ class Page {
             <div class='gsdndpanelstepup'>
                 <i class='fa fa-arrow-circle-up'></i> Go to cell above
             </div>
+            <div class="gsdndlayoutpanel gsfloatingdndlayoutpanel">
+                <div class='gsoperatecell' target='this' type='addrow'><i class='fa fa-bars'></i> Split into rows</div>
+                <div class='gsoperatecell' target='this' type='addcolumn'><i class='fa fa-columns'></i> Split into columns</div>
+            </div>
             <div class="gsdndlayoutpanel gsrowdndlayoutpanel">
                 <div class='gsoperatecell' target='this' type='addbefore'><i class='fa fa-arrow-up'></i> Add row above</div>
                 <div class='gsoperatecell' target='this' type='addrow'><i class='fa fa-bars'></i> Split into rows</div>

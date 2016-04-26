@@ -77,6 +77,8 @@ thundashop.dndlayout = {
         $('.gsdndlayoutpanel').hide();
         if(cell.hasClass('gscolumn')) {
             $('.gscolumndndlayoutpanel').show();
+        } else if(cell.hasClass('gsfloating')) {
+            $('.gsfloatingdndlayoutpanel').show();
         } else {
             $('.gsrowdndlayoutpanel').show();
         }

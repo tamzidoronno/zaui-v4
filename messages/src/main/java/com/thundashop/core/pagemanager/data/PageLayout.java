@@ -237,10 +237,10 @@ public class PageLayout implements Serializable {
                             cell.mode = currentMode;
                         }
                     }
-                    if(cell.cells.size() == 1) {
+                    if(cell.cells.size() == 1 && !cell.cells.get(0).isFloating()) {
                         cell.extractDataFrom(cell.cells.get(0), true);
                     }
-                    if (cell.cells.isEmpty() && (cell.isTab())) {
+                    if (cell.cells.isEmpty() && cell.isColumn()) {
                         cell.mode = PageCell.CellMode.row;
                     }
                 }

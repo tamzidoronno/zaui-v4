@@ -122,6 +122,8 @@ thundashop.framework = {
         $(document).on('click', '.gsresetmobilelayout', this.resetMobileLayout);
         $(document).on('click', '.gsflattenmobile', this.gsflattenmobile);
         $(document).on('keyup', '#gs_start_store_email', this.startFromCurrentStore);
+        $(document).on('keyup', '.gsheightsetting', this.setHeightOnCell);
+        $(document).on('change', '.gsheightsettingprefix', this.setHeightOnCell);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
@@ -131,7 +133,34 @@ thundashop.framework = {
         $(document).on('keyup', '[gstype="clicksubmitToInfoBox"]', thundashop.framework.postToInformationBox);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
-    
+    setHeightOnCell : function() {
+        var cellid = $('.gsresizingpanel').attr('cellid');
+        var attr = $('.gsheightsetting').val();
+        var type = $('.gsheightsettingprefix').val();
+        var height = attr + type;
+        $('.gsucell[cellid="'+cellid+'"]').attr('gsheight',height);
+        thundashop.framework.loadHeight(cellid);
+    },
+    loadHeight : function(cellid) {
+        var cell = $('.gsucell[cellid="'+cellid+'"]');
+        var height = cell.attr('gsheight');
+        var newHeight = 0;
+        if(height.indexOf("%") > 0) {
+            height = height.replace("%", "");
+            newHeight = $(window).height() * (height / 100);
+        }
+        if(height.indexOf("px") > 0) {
+            height = height.replace("px", "");
+            newHeight = height;
+        }
+        if(height.indexOf("ar") > 0) {
+            height = height.replace("ar", "");
+            var splitted = height.split(":");
+            var toCalc = splitted[1] / splitted[0];
+            newHeight = $(window).width() * toCalc;
+        }
+        cell.css('height', newHeight + "px");
+    },
     createSideBar: function() {
         var postEvent = thundashop.Ajax.createEvent(null, "toggleSideBar", this, { name : $(this).val()});
         thundashop.Ajax.post(postEvent, function() {
@@ -447,6 +476,9 @@ thundashop.framework = {
     },
     setCssAttributes: function (event) {
         var target = $(event.target);
+        if(target.hasClass('gsignoreaddcss')) {
+            return;
+        }
         var cellid = target.closest('.gsresizingpanel').attr('cellid');
 
         var val = target.val();
@@ -1162,11 +1194,17 @@ thundashop.framework = {
             }
         });
         
+        var attr = $('.gsheightsetting').val();
+        var type = $('.gsheightsettingprefix').val();
+        var height = attr + type;
+        
+        
         var data = {
             "cellid": cellid,
             "styles": styles,
             "anchor" : $('#gs_settings_cell_anchor').val(),
             "colsizes": colsizes,
+            "height" : height,
             "settings" : settings,
             "selectedThemeClass" : $('#gs_select_cell_theme_class').val(),
             "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked'),    
@@ -1317,6 +1355,18 @@ thundashop.framework = {
             thundashop.framework.loadResizing(cell, false);
         }
         resizingpanel.find('.tabbtn[target="background"]').click();
+        
+        var height = cell.attr('gsheight');
+        var dropdown = $('.gsheightsettingprefix');
+        dropdown.find('option').each(function() {
+            var prefix = $(this).attr('value');
+            if(height.indexOf(prefix) > 0) {
+                dropdown.val(prefix);
+                var toSet = height.replace(prefix, "");
+                $('.gsheightsetting').val(toSet);
+            }
+        });
+        
         thundashop.framework.loadCssEditor();
         thundashop.framework.loadCssAttributes();
         thundashop.framework.loadThemeClasses(cell, resizingpanel);

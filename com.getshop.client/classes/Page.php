@@ -609,7 +609,10 @@ class Page {
         
         $lastInRow = (count(@$parent->cells) - 1) == $count ?  "gs_last_in_row" : "";
         $firstInRowClass = $count == 0 ?  "gs_first_in_row" : "";
-        echo "<div class='gsucell $themeClass $lastInRow $firstInRowClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' $styles incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "' selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo width='$width' $keepMobile>";
+        $height = $cell->height;
+        
+        
+        echo "<div class='gsucell $themeClass $lastInRow $firstInRowClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' $styles incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "' selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo width='$width' gsheight='$height' $keepMobile>";
         $this->printEffectTrigger($cell, $depth);
         
         if ($anchor) {
@@ -661,6 +664,9 @@ class Page {
         }
         
         $this->printEffectTriggerLoaded($cell, $depth);
+        
+        $this->resizeHeight($cell);
+        
         return true;
     }
     
@@ -1989,6 +1995,14 @@ class Page {
             </div>
         </div>
         <?php
+    }
+
+    public function resizeHeight($cell) {
+        if($cell->height) {
+            echo "<script>";
+            echo "thundashop.framework.loadHeight('" . $cell->cellId. "');";
+            echo "</script>";
+        }
     }
 
 }

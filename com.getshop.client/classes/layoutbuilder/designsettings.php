@@ -121,7 +121,13 @@ $factory = IocContainer::getFactorySingelton();
     </div>
     <div style='clear:both;'></div>
     <div class="gscssrow">
-        <? echo $this->factory->__w("Height"); ?> <span class="gscssinput"><input type='text' data-attr="min-height" data-prefix="px" data-level='.gsuicell'><span class='gsprefixbox'>px</span></span>
+        <? echo $this->factory->__w("Height"); ?> <span class="gscssinput"><input type='text' class='gsheightsetting gsignoreaddcss'><span class='gsprefixbox' style='width:auto;'>
+                <select class='gsheightsettingprefix'>
+                    <option value='px'>PX</option>
+                    <option value='%'>%</option>
+                    <option value='ar'>AR</option>
+                </select>
+            </span></span>
     </div>
     <div style='clear:both;'></div>
     <span style='float:right;padding-right:36px; font-size: 10px; padding-top: 5px;'>Inner - Outer</span>

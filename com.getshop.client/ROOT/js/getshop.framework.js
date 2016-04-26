@@ -1245,7 +1245,7 @@ thundashop.framework = {
 
         $('.tabsettingspanel').hide();
         var resizingpanel = $('.gsresizingpanel');
-        resizingpanel.find('input').val('');
+        resizingpanel.find('.gscssinput input').val('');
         var target = $(this).attr('target');
 
         if ($(this).closest('.gscellsettingspanel').length === 0) {

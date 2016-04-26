@@ -1973,7 +1973,7 @@ class Page {
 
     public function includeLayotDNDPanel() {
         ?>
-        <div class='gsdndlayoutpanelouter'>
+        <div class='gsdndlayoutpanelouter' style='display:none;'>
             <div class='gsdndpanelstepup'>
                 <i class='fa fa-arrow-circle-up'></i> Go to cell above
             </div>

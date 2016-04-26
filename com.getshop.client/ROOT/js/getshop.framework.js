@@ -15,6 +15,58 @@ thundashop.framework = {
     historyboxshown : false,
     cssEditorCount: 0,
     firstCellIdToMove : null,
+    
+    activatePageScrolling : function () {
+        isScrolling = false;
+       function doPageScroll(up) {
+           if(isScrolling) {
+               return;
+           }
+           isScrolling = true;
+           var scrollTop = $(window).scrollTop();
+           var page = parseInt(scrollTop / $(window).height());
+           if(scrollTop / $(window).height() > page) {
+               page++;
+           }
+
+           if(up) {
+               scrollTop = $(window).height() * (page-1);
+           } else {
+               scrollTop = $(window).height() * (page+1);
+           }
+
+           $("html, body").animate({ scrollTop: scrollTop }, { "easing" : "easeInOutExpo", "duration" : 1000, complete: function() {
+                   isScrolling = false;
+               }
+           });
+       }
+
+
+        $(document).bind('DOMMouseScroll', function(e){
+        if(e.originalEvent.detail > 0) {
+            doPageScroll(false);
+        }else {
+            doPageScroll(true);
+        }
+
+        //prevent page fom scrolling
+        return false;
+       });
+
+       //IE, Opera, Safari
+       $(document).bind('mousewheel', function(e){
+           if(e.originalEvent.wheelDelta < 0) {
+                doPageScroll(false);
+           }else {
+                doPageScroll(true);
+           }
+
+           //prevent page fom scrolling
+           return false;
+       });
+       $('html').css('overflow', 'hidden');
+    },
+    
     bindEvents: function () {
         $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
             if($(this).hasClass('disabled')) {

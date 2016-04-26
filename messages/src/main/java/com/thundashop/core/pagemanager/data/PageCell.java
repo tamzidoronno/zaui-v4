@@ -119,7 +119,16 @@ public class PageCell implements Serializable {
     public boolean isTab() {
         return PageCell.CellMode.tab.equalsIgnoreCase(mode); 
     }
-
+    
+    boolean isColumn() {
+        return PageCell.CellMode.column.equalsIgnoreCase(mode); 
+    }
+    
+    boolean isFloating() {
+        return PageCell.CellMode.floating.equalsIgnoreCase(mode);
+    }
+    
+    
     void finalizeCell() {
     }
     

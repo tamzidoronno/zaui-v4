@@ -161,8 +161,9 @@ public class PageLayout implements Serializable {
                 if (!cell.cells.isEmpty() && !cell.cells.get(0).mode.equals(mode)) {
                     PageCell newcell = initNewCell(mode);
                     newcell.extractDataFrom(cell, true);
+                    newcell.mode = mode;
                     cell.clear();
-                    cell.mode = mode;
+//                    cell.mode = mode;
                     cell.cells.add(newcell);
                 }
             }
@@ -237,10 +238,10 @@ public class PageLayout implements Serializable {
                             cell.mode = currentMode;
                         }
                     }
-                    if(cell.cells.size() == 1) {
+                    if(cell.cells.size() == 1 && !cell.cells.get(0).isFloating()) {
                         cell.extractDataFrom(cell.cells.get(0), true);
                     }
-                    if (cell.cells.isEmpty() && (cell.isTab())) {
+                    if (cell.cells.isEmpty() && cell.isColumn()) {
                         cell.mode = PageCell.CellMode.row;
                     }
                 }

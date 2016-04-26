@@ -30,9 +30,9 @@ thundashop.framework = {
            }
 
            if(up) {
-               scrollTop = $(window).height() * (page-1);
+               scrollTop = $(window).outerHeight() * (page-1);
            } else {
-               scrollTop = $(window).height() * (page+1);
+               scrollTop = $(window).outerHeight() * (page+1);
            }
 
            $("html, body").animate({ scrollTop: scrollTop }, { "easing" : "easeInOutExpo", "duration" : 1000, complete: function() {
@@ -48,10 +48,32 @@ thundashop.framework = {
         }else {
             doPageScroll(true);
         }
-
-        //prevent page fom scrolling
         return false;
        });
+
+       var firstY = -1;
+
+        $('body').bind('touchmove', function(e) { 
+            if(isScrolling) {
+                return false;
+            }
+            var currentY = e.originalEvent.touches[0].clientY;
+            if(firstY < 0) {
+                firstY = currentY;
+                return false;
+            }
+            var diff = currentY - firstY;
+            if((diff > 0 && diff < 20) || (diff < 0 && diff > -20)) {
+                return false;
+            }
+            firstY = -1;
+            if(diff < -10){
+                doPageScroll(false);
+            }else {
+                doPageScroll(true);
+            }
+            return false;
+        });
 
        //IE, Opera, Safari
        $(document).bind('mousewheel', function(e){
@@ -60,8 +82,6 @@ thundashop.framework = {
            }else {
                 doPageScroll(true);
            }
-
-           //prevent page fom scrolling
            return false;
        });
        $('html').css('overflow', 'hidden');

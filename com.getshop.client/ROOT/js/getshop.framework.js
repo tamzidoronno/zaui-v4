@@ -159,7 +159,7 @@ thundashop.framework = {
             var toCalc = splitted[1] / splitted[0];
             newHeight = $(window).width() * toCalc;
         }
-        cell.css('height', newHeight + "px");
+        cell.css('min-height', newHeight + "px");
     },
     createSideBar: function() {
         var postEvent = thundashop.Ajax.createEvent(null, "toggleSideBar", this, { name : $(this).val()});
@@ -1991,4 +1991,11 @@ $(document).on('scroll', function() {
         var newpos = startpos - $(window).scrollTop();
         button.css('top',newpos);
     }
+});
+
+$(window).on('resize', function() {
+    $('[gsheight]').each(function() {
+        var toChange = $(this).attr('gsheight');
+        thundashop.framework.loadHeight($(this).attr('cellid'));
+    });
 });

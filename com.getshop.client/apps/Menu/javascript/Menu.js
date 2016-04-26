@@ -15,6 +15,7 @@ getshop.MenuEditor = {
         $(document).on('keyup', ".Menu .titleinformation #scrollAnchor", getshop.MenuEditor.scrollAnchorChanged);
         $(document).on('keyup', ".Menu .titleinformation #scrollPageId", getshop.MenuEditor.scrollPageIdChanged);
         $(document).on('click', ".Menu .titleinformation #hideElement", getshop.MenuEditor.hideElementChanged);
+        $(document).on('click', ".Menu .titleinformation #pageScroll", getshop.MenuEditor.pageScrollElementChanged);
         $(document).on('mouseenter', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.showSubEntries);
         $(document).on('mouseleave', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.hideSubEntries);
         $(document).on('click', ".Menu .save", getshop.MenuEditor.saveMenuEditor);
@@ -24,7 +25,9 @@ getshop.MenuEditor = {
         $(document).on('change', ".menu_item_language", getshop.MenuEditor.itemLanguageChanged);
         $(document).on('click', ".gs_scrollitem", getshop.MenuEditor.scrollToAnchor);
     },
-    
+    pageScrollElementChanged : function() {
+        getshop.MenuEditor.activeItem.pageScroll = $(this).is(':checked');
+    },
     differentSelected: function() {
         getshop.MenuEditor.menuChanged();
         $(this).closest('.Menu').find('.menuentries:visible').find('.entry:first-child a').click();
@@ -343,6 +346,11 @@ getshop.MenuEditor = {
             } else {
                 $('.titleinformation #hideElement').removeAttr('checked');
             }
+            if(getshop.MenuEditor.activeItem.pageScroll) {
+                $('.titleinformation #pageScroll').attr('checked','true');
+            } else {
+                $('.titleinformation #pageScroll').removeAttr('checked');
+            }
             if (getshop.MenuEditor.activeItem.link) {
                 $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.link);
                 $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.link);
@@ -353,6 +361,7 @@ getshop.MenuEditor = {
             }
 
             $('.titleinformation #icontext').val(getshop.MenuEditor.activeItem.icon);    
+            $('.titleinformation #pageScroll').val(getshop.MenuEditor.activeItem.pageScroll);    
             
             var userLevel = this.activeItem.userLevel;
             if (!userLevel) {

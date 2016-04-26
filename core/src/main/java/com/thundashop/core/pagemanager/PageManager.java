@@ -149,6 +149,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         Entry entry = listManager.findEntryByPageId(page.id);
         if(entry != null) {
             page.title = entry.name;
+            page.pageScroll = entry.pageScroll;
         }
         
         List<PageCell> cellsWithoutIncrementalId = page.getCellsFlatList().stream()

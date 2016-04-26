@@ -29,6 +29,10 @@ class Page {
     function loadSkeleton() {
         /* @var $layout core_pagemanager_data_PageLayout */
         $layout = $this->javapage->layout;
+        
+        if($this->javapage->pageScroll) {
+            echo "<script>thundashop.framework.activatePageScrolling();</script>";
+        }
 
         $beenEdited = false;
         foreach ($layout->areas as $area => $rowsToPrint) {

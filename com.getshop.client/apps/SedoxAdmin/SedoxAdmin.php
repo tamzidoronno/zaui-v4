@@ -78,17 +78,16 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     }
     
     public function sendFileByMail() {
-        $files = [$_POST['data']['sedox_file_id']];
+        $files = array($_POST['data']['sedox_file_id']);
         $this->getApi()->getSedoxProductManager()->sendProductByMail($_POST['data']['productid'], "", $files);
     }
     
     public function notifyByEmail() {
-        $files = [$_POST['data']['sedox_file_id']];
         $this->getApi()->getSedoxProductManager()->notifyForCustomer($_POST['data']['productid'], "");
     }
     
     public function purchaseOrder() {
-        $files = [$_POST['data']['sedox_file_id']];
+        $files = array($_POST['data']['sedox_file_id']);
         $this->getApi()->getSedoxProductManager()->purchaseOnlyForCustomer($_POST['data']['productid'], $files);
     }
 
@@ -142,5 +141,26 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         
     }
     
+    public function gsEmailSetup($model) {
+        if (!$model) {
+            $this->includefile("emailsettings");
+            return;
+        }
+        
+        $this->setConfigurationSetting("uploadadminsubject", $_POST['uploadadminsubject']);
+        $this->setConfigurationSetting("uploadadminspecialemail", $_POST['uploadadminspecialemail']);
+        $this->setConfigurationSetting("uploadadminnospecialemail", $_POST['uploadadminnospecialemail']);
+        
+        $this->setConfigurationSetting("uploadusersubject", $_POST['uploadusersubject']);
+        $this->setConfigurationSetting("uploaduseremail", $_POST['uploaduseremail']);
+        
+        $this->setConfigurationSetting("purchaseadminsubject", $_POST['purchaseadminsubject']);
+        $this->setConfigurationSetting("purchaseadminemail", $_POST['purchaseadminemail']);
+        
+        $this->setConfigurationSetting("filereadyusernoattachmentemail", $_POST['filereadyusernoattachmentemail']);
+        $this->setConfigurationSetting("filereadyuserattachmentemail", $_POST['filereadyuserattachmentemail']);
+        
+        $this->setConfigurationSetting("signature", $_POST['signature']);
+    }
 }
 ?>

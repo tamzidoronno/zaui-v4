@@ -400,9 +400,11 @@ public class PmsManagerProcessor {
                         if (item != null) {
                             String text = "Autoextending room " + item.bookingItemName;
                             PmsBookingRooms res = manager.changeDates(room.pmsBookingRoomId, booking.id, start, end);
-                            if(res == null) {
+                            if(res == null && (room.warnedAboutAutoExtend == null || room.warnedAboutAutoExtend.equals(room.ended))) {
                                 text = "Not able to extend stay for room: " + item.bookingItemName;
                                 manager.warnAboutUnableToAutoExtend(item.bookingItemName,"Not able to extend");
+                                room.warnedAboutAutoExtend = room.date.end;
+                                needSaving = true;
                             }
 
                             text += " (" + start + " to " + end + ")";
@@ -535,6 +537,7 @@ public class PmsManagerProcessor {
                 continue;
             }
             boolean hasordersnotpaidfor = false;
+            boolean needCapture = false;
             for(String orderId : booking.orderIds) {
                 Order order = manager.orderManager.getOrderSecure(orderId);
                 if(order == null) {
@@ -543,19 +546,31 @@ public class PmsManagerProcessor {
                 if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
                     continue;
                 }
+                if(!order.captured) {
+                    needCapture = true;
+                }
                 
                 if(order.status != Order.Status.PAYMENT_COMPLETED) {
                     hasordersnotpaidfor = true;
                 }
             }
             
+            boolean needSaving = false;
+            if(booking.needCapture != needCapture) {
+                booking.needCapture = needCapture;
+                needSaving = true;
+            }
+            
             if(!hasordersnotpaidfor && !booking.payedFor) {
+                needSaving = true;
                 booking.payedFor = true;
                 manager.logEntry("Automarking booking as paid for", booking.id, null);
-                manager.saveBooking(booking);
             } else if(hasordersnotpaidfor && booking.payedFor) {
+                needSaving = true;
                 booking.payedFor = false;
                 manager.logEntry("This booking has orders not paid for yet.", booking.id, null);
+            }
+            if(needSaving) {
                 manager.saveBooking(booking);
             }
         }

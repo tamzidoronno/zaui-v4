@@ -130,7 +130,6 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                             <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                             <i class='fa fa-key' gstype='submitToInfoBox' <?php if($room->keyIsReturned) { echo "style='color:green;'"; } ?>></i>
                         </span>
-                
                         <?php
                     }
                     ?>
@@ -161,9 +160,14 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                             <span class="editmode" gstype='form' method='setBookingItem' >
                                 <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                                <?php
+                                $now = $room->date->start;
+                                if(strtotime($now) < time()) {
+                                    $now = $object->convertToJavaDate(time());
+                                }
+                                ?>
                                 <select gsname='itemid'>
                                     <?php 
-                                    $now = $object->convertToJavaDate(time());
                                     $isAvailableItem = $object->getApi()->getBookingEngine()->getAllAvailbleItems($object->getSelectedName(), $now, $room->date->end);
                                     $isAvailableItem = $object->indexList($isAvailableItem);
                                     $allItems = $object->getApi()->getBookingEngine()->getBookingItems($object->getSelectedName());
@@ -193,7 +197,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                 </td>
                 <td>
                 <span class='roomattribute'>
-                    <span class='roompostfix'>
+                    <span class='roompostfix' style='width: 230px;'>
                         <span class="viewmode">
                             <?php echo date("d.m.Y H:i", strtotime($date->start)); ?>
                              - 

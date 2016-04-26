@@ -105,6 +105,12 @@ public interface IPmsManager {
     @Administrator
     public String createPrepaymentOrder(String bookingId);
     
+    @Administrator
+    public void sendPaymentLink(String orderId, String bookingId);
+    
+    @Administrator
+    public void sendMissingPayment(String orderId, String bookingId);
+    
     @Editor
     public List<PmsLog> getLogEntries(PmsLog filter);
     

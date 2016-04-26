@@ -33,7 +33,7 @@ class Dibs extends \PaymentApplication implements \Application {
         $paymentfailed = $this->getConfigurationSetting("paymentfailed");
         
         if (isset($_GET['orderId'])) {
-            if($nextPage == $paymentsuccess) {
+            if($nextPage == "payment_success") {
                 $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
                 $order->status = 7;
                 $order->payment->transactionLog->{time()*1000} = "Payment completed, capturing needed.";
@@ -73,24 +73,19 @@ class Dibs extends \PaymentApplication implements \Application {
         $callBack = "http://pullserver_".$key."_".$store->id.".nettmannen.no";
         $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
         
-        $paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
-        $paymentfailed = $this->getConfigurationSetting("paymentfailed");
-        
-        $amount = round($amount, 2);
-        
         echo '<form method="post" id="dibsform" action="https://sat1.dibspayment.com/dibspaymentwindow/entrypoint">
             <input value="' . $merchid . '" name="merchant" type="hidden" />
             <input value="' . $currency . '" name="currency" type="hidden" />
             <input value="' . $orderId . '" name="orderId" type="hidden" />
             <input value="' . $amount . '" name="amount" type="hidden" />
             <input value="' . $language .  '" name="language" type="hidden" />
-            <input value="' . $redirect_url . $paymentsuccess . '" name="acceptReturnUrl" type="hidden" />
-            <input value="' . $redirect_url . $paymentfailed . '" name="cancelReturnUrl" type="hidden" />
+            <input value="' . $redirect_url . 'payment_success" name="acceptReturnUrl" type="hidden" />
+            <input value="' . $redirect_url . 'payment_failed" name="cancelReturnUrl" type="hidden" />
             <input value="' . $callBack . '" name="callbackUrl" type="hidden" />';
             if($this->saveCard()) {
                 echo '<INPUT TYPE="hidden" NAME="createTicket" VALUE="1">';
             }
-        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+        if($this->isTestMode()) {
                 echo '<input type="hidden" name="test" value="1"/>';
                 echo "This is in test mode...";
             }
@@ -128,11 +123,21 @@ class Dibs extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("paymentcancelled", $_POST['paymentcancelled']);
         $this->setConfigurationSetting("hmac", $_POST['hmac']);
         $this->setConfigurationSetting("savecard", $_POST['savecard']);
+        $this->setConfigurationSetting("testmode", $_POST['testmode']);
     }
     
     public function saveCard() {
         return $this->getConfigurationSetting("savecard") == "true";
     }
+
+    public function isTestMode() {
+        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+            return true;
+        }
+        
+        return $this->getConfigurationSetting("testmode") == "true";
+    }
+
 }
 
 ?>

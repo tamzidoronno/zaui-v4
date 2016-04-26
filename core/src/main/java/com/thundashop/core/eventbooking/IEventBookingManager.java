@@ -43,6 +43,8 @@ public interface IEventBookingManager {
     
     public List<Location> getFilteredLocations();
     
+    public List<Location> getActiveLocations();
+    
     public List<Event> getEventsWhereEndDateBetween(Date from, Date to);
     
     public List<Event> getEvents();
@@ -177,5 +179,7 @@ public interface IEventBookingManager {
     
     @Editor
     public List<Event> getEventsByType(String eventTypeId);
-    
+
+    @Editor
+    public Event getEventByPageId(String eventId);
 }

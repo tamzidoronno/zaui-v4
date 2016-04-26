@@ -84,3 +84,13 @@
 .ProMeisterCandidateSearch .event_list_title.old_events {
     background-color: #d2ff00;
 }
+
+.ProMeisterCandidateSearch .searchresult_content {
+    padding-top: 20px;
+}
+.ProMeisterCandidateSearch .errormessage {
+    text-align: center;
+}
+.ProMeisterCandidateSearch {
+    margin-bottom: 50px;
+}

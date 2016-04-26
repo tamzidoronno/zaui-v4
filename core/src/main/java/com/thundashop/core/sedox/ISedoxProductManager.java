@@ -9,6 +9,7 @@ import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.usermanager.data.User;
 import java.util.List;
 
@@ -37,6 +38,9 @@ public interface ISedoxProductManager  {
     
     @Editor
     public List<SedoxUser> getAllUsersWithNegativeCreditLimit() throws ErrorException;
+    
+    @Editor
+    public List<TreeNode> getAllUsersAsTreeNodes() throws ErrorException;
     
     /**
      * Return the products created by days back.
@@ -123,6 +127,9 @@ public interface ISedoxProductManager  {
     public void addCreditToSlave(String slaveId, double amount) throws ErrorException;
     
     public List<SedoxUser> getSlaves(String masterUserId);
+    
+    @Editor
+    public List<User> getAllUsers() throws ErrorException;
     
     @Editor
     public void togglePassiveSlaveMode(String userId, boolean toggle) throws ErrorException;

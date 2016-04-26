@@ -15,7 +15,7 @@ import java.util.List;
 public class PmsBooking extends DataCommon {
  
     public List<PmsBookingRooms> rooms = new ArrayList(); 
-    public HashMap<Long, PmsBookingComment> comments = new HashMap();
+    public HashMap<Long, PmsBookingComment> comments = new HashMap(); 
     public String sessionId;
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;
@@ -39,6 +39,8 @@ public class PmsBooking extends DataCommon {
     public String wubookchannelreservationcode = "";
     public String wubookreservationid = "";
     public String countryCode = "";
+    public boolean avoidAutoDelete = false;
+    public boolean needCapture;
     
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();

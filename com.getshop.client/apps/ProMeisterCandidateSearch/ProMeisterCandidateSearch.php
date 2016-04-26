@@ -2,7 +2,7 @@
 namespace ns_294a8d9e_bd48_44f4_a607_b7d86d2d85fc;
 
 class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon implements \Application {
-    private $currentlyLoading = "";
+    public $currentlyLoading = "";
     
     public function getDescription() {
         

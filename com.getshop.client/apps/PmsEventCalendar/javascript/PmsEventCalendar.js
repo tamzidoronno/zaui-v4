@@ -10,6 +10,9 @@ app.PmsEventCalendar = {
         $(document).on('change', '.PmsManagement .addToEventList', app.PmsEventCalendar.addToEventList);
         $(document).on('click', '.PmsEventCalendar .deleteevent', app.PmsEventCalendar.deleteevent);
         
+        PubSub.subscribe("SIMPELFILEUPLOAD_COMPLETED", function(data, test) {
+            $('#imgtodisplay').attr('src', 'displayImage.php?id='+test);
+        });
     },
     deleteevent : function() {
         var dodelete = confirm("Are you sure you want to delete this event?");

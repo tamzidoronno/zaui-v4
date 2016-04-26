@@ -1,0 +1,155 @@
+.SedoxMasterSlave .sedox_blue_button {
+    height: 45px;
+    width: 200px;
+    margin: auto;
+    margin-top: 30px;
+    padding: none;
+}
+
+.jstree-hidden {
+    display: none !important;
+}
+
+.SedoxMasterSlave .half_width {
+    width: 50%;
+    display: inline-block;
+}
+
+.SedoxMasterSlave .hierarchy_container input[type=text] {
+    padding: 10px;
+    border: solid 2px #EEE;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    margin-left: 45px;
+    width: 50%;
+}
+
+.SedoxMasterSlave .hierarchy_container .jstree {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.SedoxMasterSlave .searchtitle {
+    font-size: 24px;
+    font-weight: normal;
+    margin-left: 45px;
+    margin-top: 30px;
+    padding-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+    color: #626b7a;
+}
+
+.SedoxMasterSlave .informationtitle {
+    font-size: 24px;
+    font-weight: normal;
+    margin-left: 15px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+    color: #626b7a;
+}
+
+.SedoxMasterSlave .information_container {
+    top: 250px;
+    position: fixed;
+    background-color: #f9fafc;
+    border: solid 1px #e4ebf1;
+    width: 35%;
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    color: #626b7a;
+}
+
+.SedoxMasterSlave .information_container .gs_datalist_input {
+    padding: 10px;
+    border: solid 2px #EEE;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    width: 200px;
+}
+
+.SedoxMasterSlave .income_input {
+    padding: 10px;
+    border: solid 2px #EEE;
+    border-radius: 8px;
+    width: 200px;
+    text-align: right;
+}
+
+.SedoxMasterSlave .information_data {
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-bottom: 5px;
+}
+
+.SedoxMasterSlave .aligned_data {
+    float: right;
+}
+
+.SedoxMasterSlave .save_information {
+    width: 100px;
+    margin-bottom: 15px;
+}
+
+.ui-autocomplete {
+    width: 220px !important;
+    height: 184px !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.SedoxMasterSlave .checkbox {
+    position: relative;
+    min-height: 25px;
+    text-align: left;
+}
+
+.SedoxMasterSlave .checkbox input[type=checkbox]{
+    visibility: hidden;
+}
+
+.SedoxMasterSlave .checkbox label {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    position: absolute;
+    top: 3px;
+    left: 0;
+    border-radius: 4px;
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.5);
+    background-color: white;
+    margin-top: 2px;
+}
+
+.SedoxMasterSlave .checkbox label:after {
+    content: '';
+    width: 7px;
+    height: 3px;
+    position: absolute;
+    top: 4px;
+    left: 3px;
+    border: 3px solid #333;
+    border-top: none;
+    border-right: none;
+    background: transparent;
+    opacity: 0;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.SedoxMasterSlave .checkbox input[type="checkbox"]:checked + label:after {
+    opacity: 1;
+}
+
+.SedoxMasterSlave .text_data {
+    margin-right: 5px;
+}
+
+.SedoxMasterSlave .data_description {
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.SedoxMasterSlave .income_data {
+    margin-top: 15px;
+}

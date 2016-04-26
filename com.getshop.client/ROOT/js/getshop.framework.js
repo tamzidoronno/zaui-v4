@@ -1238,7 +1238,6 @@ thundashop.framework = {
         return thundashop.framework.get_inherited_bg(jquery_object.parent());
     },
     showCellResizing: function () {
-        
         if (typeof (cssEditorForCell) !== "undefined") {
             cssEditorForCell.destroy();
             cssEditorForCell = null;
@@ -1246,6 +1245,7 @@ thundashop.framework = {
 
         $('.tabsettingspanel').hide();
         var resizingpanel = $('.gsresizingpanel');
+        resizingpanel.find('input').val('');
         var target = $(this).attr('target');
 
         if ($(this).closest('.gscellsettingspanel').length === 0) {
@@ -1469,7 +1469,6 @@ thundashop.framework = {
         return element;
     },
     simpleaddrow: function () {
-        
         var button = $(this);
         var metaData = {
             rowId: "",
@@ -1488,12 +1487,9 @@ thundashop.framework = {
         var selected = function (result) {
             var before = cellobj.attr('cellid');
             if (result.direction === "below") {
-                before = cellobj.next().attr('cellid');
-                if (cellobj.next().hasClass("gseditinfo")) {
-                    before = cellobj.next().next().attr('cellid');
-                }
+                var rows = cellobj.closest('.gsucell_extra_outer').nextAll('.gsucell_extra_outer');
+                before = rows.first().find('.gsucell').attr('cellid');
             }
-
             var data = {
                 "area": button.closest('.gsarea').attr('area'),
                 "cellid": before,
@@ -1581,8 +1577,12 @@ thundashop.framework = {
                 newcellid = "";
             }
             var before = cellobj.next().attr('cellid');
-            if (cellobj.next().hasClass("gseditinfo")) {
-                before = cellobj.next().next().attr('cellid');
+            var next = cellobj.nextAll('.gsucell').first();
+            if(next.length === 0) {
+                next = cellobj.closest('.gsucell_extra_outer').nextAll('.gsucell_extra_outer').first().find('.gsucell').first();
+            }
+            if (next.length > 0) {
+                before = next.attr('cellid');
             }
 
             data['before'] = before;

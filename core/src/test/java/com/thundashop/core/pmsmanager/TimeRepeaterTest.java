@@ -54,34 +54,34 @@ public class TimeRepeaterTest {
     
     @Test
     public void testWeeklyRepeatIntervalMondays() {
-        doTestWeeklyRepeatInterval(1, true, false, false, false, false, false, false);
-        doTestWeeklyRepeatInterval(2, true, false, false, false, false, false, false);
-        doTestWeeklyRepeatInterval(5, true, false, false, false, false, false, false);
-        doTestWeeklyRepeatInterval(10, true, false, false, false, false, false, false);
+        doTestWeeklyRepeatInterval(1, true, false, false, false, false, false, false,4);
+        doTestWeeklyRepeatInterval(2, true, false, false, false, false, false, false,2);
+        doTestWeeklyRepeatInterval(5, true, false, false, false, false, false, false,1);
+        doTestWeeklyRepeatInterval(10, true, false, false, false, false, false, false,1);
     }
     
     @Test
     public void testWeeklyRepeatIntervalMondaysWednesDays() {
-        doTestWeeklyRepeatInterval(1, true, false, true, false, false, false, false);
-        doTestWeeklyRepeatInterval(2, true, false, true, false, false, false, false);
-        doTestWeeklyRepeatInterval(5, true, false, true, false, false, false, false);
-        doTestWeeklyRepeatInterval(10, true, false, true, false, false, false, false);
+        doTestWeeklyRepeatInterval(1, true, false, true, false, false, false, false,8);
+        doTestWeeklyRepeatInterval(2, true, false, true, false, false, false, false,4);
+        doTestWeeklyRepeatInterval(5, true, false, true, false, false, false, false,1);
+        doTestWeeklyRepeatInterval(10, true, false, true, false, false, false, false,1);
     }
     
     @Test
     public void testWeeklyRepeatIntervalMondaysWednesDayFriday() {
-        doTestWeeklyRepeatInterval(1, true, false, true, false, true, false, false);
-        doTestWeeklyRepeatInterval(2, true, false, true, false, true, false, false);
-        doTestWeeklyRepeatInterval(5, true, false, true, false, true, false, false);
-        doTestWeeklyRepeatInterval(10, true, false, true, false, true, false, false);
+        doTestWeeklyRepeatInterval(1, true, false, true, false, true, false, false,12);
+        doTestWeeklyRepeatInterval(2, true, false, true, false, true, false, false,6);
+        doTestWeeklyRepeatInterval(5, true, false, true, false, true, false, false,1);
+        doTestWeeklyRepeatInterval(10, true, false, true, false, true, false, false,1);
     }
     
     @Test
     public void testWeeklyRepeatIntervalWeekEnds() {
-        doTestWeeklyRepeatInterval(1, false, false, false, false, false, true, true);
-        doTestWeeklyRepeatInterval(2, false, false, false, false, false, true, true);
-        doTestWeeklyRepeatInterval(5, false, false, false, false, false, true, true);
-        doTestWeeklyRepeatInterval(10, false, false, false, false, false, true, true);
+        doTestWeeklyRepeatInterval(1, false, false, false, false, false, true, true,9);
+        doTestWeeklyRepeatInterval(2, false, false, false, false, false, true, true,5);
+        doTestWeeklyRepeatInterval(5, false, false, false, false, false, true, true,1);
+        doTestWeeklyRepeatInterval(10, false, false, false, false, false, true, true,1);
     }
     
     @Test
@@ -133,13 +133,13 @@ public class TimeRepeaterTest {
         }
     }
 
-    private void doTestWeeklyRepeatInterval(int interval, boolean mon, boolean tue, boolean wed, boolean thu, boolean fri, boolean sat, boolean sun) {
+    private void doTestWeeklyRepeatInterval(int interval, boolean mon, boolean tue, boolean wed, boolean thu, boolean fri, boolean sat, boolean sun, long expect) {
         TimeRepeaterData data = new TimeRepeaterData();
         
         TimeRepeaterDateRange firstEvent = new TimeRepeaterDateRange();
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            firstEvent.start = sdf.parse("2016-01-03");
+            firstEvent.start = sdf.parse("2016-01-04");
             data.endingAt = sdf.parse("2016-02-01");
         }catch(Exception e) {
             assertTrue(false);
@@ -164,21 +164,15 @@ public class TimeRepeaterTest {
         List<TimeRepeaterDateRange> result = instance.generateRange(data);
         
         int numberOfRepeats = 0;
-        if(mon) { numberOfRepeats++; };
-        if(tue) { numberOfRepeats++; };
-        if(wed) { numberOfRepeats++; };
-        if(thu) { numberOfRepeats++; };
-        if(fri) { numberOfRepeats++; };
-        if(sat) { numberOfRepeats++; };
-        if(sun) { numberOfRepeats++; };
+        if(mon) { numberOfRepeats++; }
+        if(tue) { numberOfRepeats++; }
+        if(wed) { numberOfRepeats++; }
+        if(thu) { numberOfRepeats++; }
+        if(fri) { numberOfRepeats++; }
+        if(sat) { numberOfRepeats++; }
+        if(sun) { numberOfRepeats++; }
         
-        int resultNumber = (4 / interval) * numberOfRepeats;
-        resultNumber++;
-        
-        if(resultNumber != result.size()) {
-            System.out.println("Failed to generate correct result: " + result.size() + " ");
-        }
-        assertEquals(resultNumber, result.size());
+        assertEquals(expect, result.size());
         
         for(TimeRepeaterDateRange res : result) {
             assertNotNull(res.start);

@@ -26,6 +26,9 @@ $image = $this->getDefaultImage($product);
         } else {
             $price = ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price, 0);
         }
+        if($product->price == 0) {
+            $price = "&nbsp;";
+        }
         echo $price;
         ?></div>
 

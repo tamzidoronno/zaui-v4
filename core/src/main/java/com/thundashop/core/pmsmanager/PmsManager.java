@@ -109,6 +109,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     Date lastOrderProcessed;
     private List<PmsLog> logentries = new ArrayList();
     private boolean initFinalized = false;
+    private String orderIdToSend;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -350,10 +351,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
 
                 try {
-                    if (!configuration.payAfterBookingCompleted) {
-                        processor();
-                    } else {
+                    if (configuration.payAfterBookingCompleted) {
                         createPrepaymentOrder(booking.id);
+                    } else {
+                        processor();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -628,14 +629,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     public PmsBooking finalize(PmsBooking booking) {
+        Calendar nowCal = Calendar.getInstance();
+        nowCal.add(Calendar.HOUR_OF_DAY, -1);
         if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
-            Calendar nowCal = Calendar.getInstance();
-            nowCal.add(Calendar.HOUR_OF_DAY, -4);
             if (!booking.rowCreatedDate.after(nowCal.getTime())) {
                 hardDeleteBooking(booking);
                 return null;
             }
         }
+        
+        if (!booking.payedFor && 
+                !booking.avoidAutoDelete && 
+                !configuration.requirePayments && 
+                booking.rowCreatedDate.before(nowCal.getTime())) {
+                hardDeleteBooking(booking);
+                return null;
+        }
+        
+        
+        
         if (booking.isDeleted) {
             booking.state = 2;
             return booking;
@@ -747,6 +759,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
             logEntry(logText, bookingId, null, roomId);
+            doNotification("date_changed", booking, room);
             return room;
         } catch (BookingEngineException ex) {
 //            ex.printStackTrace();
@@ -886,6 +899,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 booking.orderIds.add(order.id);
                 booking.payedFor = false;
+                if(getSession() != null && getSession().currentUser != null && 
+                        (getSession().currentUser.isEditor() || getSession().currentUser.isAdministrator())) {
+                    booking.avoidAutoDelete = true;
+                }
                 saveBooking(booking);
             }
         }
@@ -1055,6 +1072,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private String notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
         String message = configuration.smses.get(key);
+        
         if (type.equals("email")) {
             message = configuration.emails.get(key);
             if (message != null) {
@@ -1065,6 +1083,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (message == null || message.isEmpty()) {
             return "";
         }
+        
+        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+            message = message.replace("{orderid}", this.orderIdToSend);
+        }
+        
 
         message = formatMessage(message, booking, room, null);
         if (room != null) {
@@ -2457,9 +2480,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Calendar cal = Calendar.getInstance();
         Integer day = cal.get(Calendar.DAY_OF_YEAR);
         String warningString = bookingItemName + "-" + day;
-        if (warnedAbout.contains(warningString)) {
-            return;
-        }
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
         messageManager.sendMail(copyadress, copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
         messageManager.sendMail("pal@getshop.com", copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
@@ -3080,6 +3100,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.attachBookingItems(bookingToAddList);
         
         return "";
+    }
+
+    @Override
+    public void sendPaymentLink(String orderId, String bookingId) {
+        orderIdToSend = orderId;
+        doNotification("booking_sendpaymentlink", bookingId);
+    }
+
+    @Override
+    public void sendMissingPayment(String orderId, String bookingId) {
+        orderIdToSend = orderId;
+        doNotification("booking_paymentmissing", bookingId);
     }
 
 }

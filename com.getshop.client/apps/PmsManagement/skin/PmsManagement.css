@@ -9,6 +9,7 @@
 .PmsManagement .guestrow input { width: 20%; float:left; }
 .PmsManagement .Confirmed { color:green; }
 .PmsManagement .Unconfirmed { color:red; }
+.PmsManagement .Unpaid { color:red; }
 .PmsManagement .tiparea {
     position: absolute;
     background-color: #fff;

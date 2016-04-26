@@ -45,7 +45,6 @@ GetShopApiWebSocket.prototype = {
     },
 
     handleMessage: function(msg) {
-        console.log(msg);
         var data = msg.data;
         var jsonObject = JSON.parse(data);
         var corrolatingMessage = this.getMessage(jsonObject.messageId);

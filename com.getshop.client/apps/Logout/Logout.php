@@ -11,25 +11,25 @@ class Logout extends \SystemApplication implements \Application {
     }
 
     public function render() {
-        $temp = $this->getConfigurationSetting("template");
-        if(!$temp || $temp == 1) {
-            $this->doLogout();
-        } else {
-            $this->includefile("template_" . $temp);
-        }
+        $this->doLogout();
     }
 
     public function doLogout() {
-        if(!$this->isEditorMode()) {
-            $this->logout();
+        if($this->getApi()->getUserManager()->getLoggedOnUser()->showHiddenFields) {
+            echo "<div style='text-align: center; margin-top: 20px;'><h1>Administrators is logging out using the menu to the left.</h1></div>";
         } else {
-            echo "<h1>Administrators is logging out using the menu to the left.</h1>";
+            $this->logout();
         }
     }
 
     public function logout() {
         session_destroy();
+        ?>
+        <script>
+            avoidLoggingOut = true;
+            thundashop.common.goToPage("loggedout");
+        </script>
+        <?
     }
-
 }
 ?>

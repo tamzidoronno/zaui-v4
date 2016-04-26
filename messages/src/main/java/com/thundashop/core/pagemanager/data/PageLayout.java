@@ -171,7 +171,9 @@ public class PageLayout implements Serializable {
                 int count = cell.cells.size();
                 double percentage = (double) ((100 / count) + 100) / 100;
                 newwidth = resizeCells(cell.cells, true, percentage);
-                cell.width = newwidth;
+                if(newwidth >= 0) {
+                    cell.width = newwidth;
+                }
             }
 
             PageCell newcell = cell.createCell(before);
@@ -228,15 +230,16 @@ public class PageLayout implements Serializable {
                 boolean deleted = deleteCellRecusive(cellId, cell.cells);
                 if (deleted) {
                     PageCell parent = getParent(cell.cellId);
-                    if (parent != null && cell.cells.size() == 1 && parent.mode.equals(PageCell.CellMode.column) && cell.mode.equals(PageCell.CellMode.row)) {
-                        parent.extractDataFrom(cell.cells.get(0), true);
-                    } else if (cell.cells.size() == 1 && !cell.type.equals(PageCell.CellType.floating) && !cell.isRotating()) {
+                    if (cell.cells.size() == 1 && !cell.type.equals(PageCell.CellType.floating) && !cell.isRotating()) {
                         String currentMode = cell.mode;
                         if(!cell.isRotating() && !cell.isTab()) {
                             cell.extractDataFrom(cell.cells.get(0), true);
-                                cell.mode = currentMode;
-                            }
+                            cell.mode = currentMode;
                         }
+                    }
+                    if(cell.cells.size() == 1) {
+                        cell.extractDataFrom(cell.cells.get(0), true);
+                    }
                     if (cell.cells.isEmpty() && (cell.isTab())) {
                         cell.mode = PageCell.CellMode.row;
                     }

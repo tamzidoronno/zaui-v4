@@ -14,6 +14,8 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.getshop.pullserver.PullMessage;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pmsmanager.CheckPmsProcessing;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
@@ -66,6 +68,14 @@ public class DibsManager extends ManagerBase implements IDibsManager {
     private UserManager userManager;
     
     private boolean sentPollFailed = false;
+    
+
+    @Override
+    public void dataFromDatabase(DataRetreived data) {
+        createScheduler("dibscollector", "* * * * *", CheckDibsCollector.class);
+    }
+    
+    
     /**
      * postToDIBS Sends a post to the specified DIBS function
      *

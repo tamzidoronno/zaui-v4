@@ -25,7 +25,18 @@ class EventCommon extends \MarketingApplication {
     }
     
     public function getEvent() {
+        $event = $this->getApi()->getEventBookingManager()->getEventByPageId($this->getBookingEngineName(), $this->getPage()->getId());
+        
+        if ($event)
+            return $event;
+        
         if (!isset($_SESSION[$this->getAppInstanceId()."_currentEvent"])) {
+            
+            
+            if ($event) {
+                return $event;
+            }
+            
             return false;
         }
         

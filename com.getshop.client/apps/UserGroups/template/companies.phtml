@@ -1,0 +1,11 @@
+<?
+/* @var $this ns_3983a370_d0cc_46de_ba94_cc22fe7becbb\UserGroups */
+$companies = $this->getApi()->getUserManager()->getAllCompaniesForGroup($_POST['value']);
+if (!$companies) {
+    echo "<div style='padding: 30px'><center> No Companies added</center></div>";
+    return;
+}
+foreach ($companies as $company) {
+    echo "<div class='gss_companyrow'><div class='gss_show_company'><i class='fa fa-building' gss_value_2='$company->id'></i> ".$company->name."</div></div>";
+}
+?>

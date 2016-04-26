@@ -81,3 +81,20 @@ box-shadow: 0 4px 5px rgba(0,0,0,0.3); ;
 .PmsBookingContactData .complete_button { background-color:#ed70ec; }
 .ui-tooltip { z-index: 250; }
 .PmsBookingSummary, .PmsBookingContactData { margin-left: 200px; margin-right: 200px; }
+
+ @media only all and (max-width: 650px) {
+     .PmsCalendar .headerouterblock .timeheader { font-size: 7px; }
+     .ContentManager[appid="9c661c69-6c98-4543-abff-bc17f1e71c53"] .content { 
+        position: absolute;
+        top: -49px;
+        font-size: 10px;
+     }
+     .PmsCalendar .weektimeheader { font-size:7px; }
+     .PmsCalendar .weektimeheader span { font-size: 7px !important; }
+     .calendartopheader.withSideBar div { text-align: left; }
+     .PmsBookingSummary, .PmsBookingContactData { margin-left: 10px; margin-right: 10px; }
+     .PmsCalendar .roomdescouter { width: 33%; }
+     .PmsCalendar .roomdescouter.roomdesc_month { width: 25px; }
+     .PmsCalendar .roomdescouter.roomdesc_month .roomdesc { font-size: 14px; }
+     .PmsCalendar .timecontainer.withSideBar { width: 65%; }
+ }

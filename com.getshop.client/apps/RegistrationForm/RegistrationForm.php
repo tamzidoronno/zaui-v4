@@ -14,9 +14,10 @@ class RegistrationForm extends \WebshopApplication implements \Application {
         ?>
         <span gstype="form" class="registrationform<?php echo $this->getConfigurationSetting("number"); ?>" method='doRegistration'>
         <?php
+        echo "<input type='hidden' gsname='templatenumber' value='".$this->getConfigurationSetting("number")."'>";
+        
             $this->includefile("registrationform" . $this->getConfigurationSetting("number"));
         ?>
-            <span class="shop_button" gstype='submit'><?php echo $this->__w("Create an account"); ?></span>
         </span>
         <?php
     }
@@ -61,12 +62,17 @@ class RegistrationForm extends \WebshopApplication implements \Application {
     public function registerNewUser() {
         $gen = $this->getFieldGenerator();
         $user = $gen->createUserObject();
-        $this->getApi()->getUserManager()->createUser($user);
-        $login = new \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login();
-        if($user->username) {
-            $login->commonLogin($user->username, $user->password);
+        if(isset($_POST['data']['templatenumber']) && $_POST['data']['templatenumber'] == "2") {
+            $user->id = $this->getApi()->getUserManager()->getLoggedOnUser()->id;
+            $this->getApi()->getUserManager()->saveUser($user);
         } else {
-            $login->commonLogin($user->emailAddress, $user->password);
+            $this->getApi()->getUserManager()->createUser($user);
+            $login = new \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login();
+            if($user->username) {
+                $login->commonLogin($user->username, $user->password);
+            } else {
+                $login->commonLogin($user->emailAddress, $user->password);
+            }
         }
     }
 

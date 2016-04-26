@@ -1,0 +1,36 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 17, 2016, 6:32:07 PM
+    Author     : ktonder
+*/
+
+.overview_title i {
+    width: 30px;
+    margin-left: 10px;
+}
+
+.overview_title {
+    font-size: 20px;
+    border-bottom: solid 2px rgba(0,0,0,0.1);
+    padding: 10px;
+    margin-top: 50px;
+}
+
+.upcomingEvent {
+    background-color: rgba(0,0,0,0.1);
+    padding: 10px;
+    border-bottom: solid 1px rgba(0,0,0,0.2);
+    padding-left: 20px;
+}
+
+.upcomingEvent:last-child {
+    border-bottom: solid 0px;
+}
+
+.noEventsAvailable {
+    padding: 20px;
+}

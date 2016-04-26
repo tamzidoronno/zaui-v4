@@ -1,0 +1,12 @@
+<div class='topinfobox'>
+    {{ 'You can contact us by filling out the form below, we will get back to you as soon as possible' | translate}}
+</div>
+
+<textarea ng-model="message"></textarea>
+
+<br/>
+<br/><div class='button' ng-click="sendMessage()">{{ 'Send message' | translate }}</div>
+
+<div class='menu'>
+    <div class='col col_size_1' onclick="window.history.back()"><i class='fa fa-arrow-left'></i> {{ 'Back' || translate }} </div>
+</div>

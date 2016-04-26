@@ -41,16 +41,17 @@ class SedoxFileServiceStatus extends \MarketingApplication implements \Applicati
                 $colorClass = "green";
             }
         } else if(!$forced) {
-            $colorClass = $this->getStatusColor(date("l"), date("H"), $openingApp);
+            $colorClass = $this->getStatusColor(date("l"), date("H"));
         }
         return $colorClass;
     }
     
-    public function getStatusColor($day, $hour, $openingApp) {
+    public function getStatusColor($day, $hour) {
         $app = $this->getApi()->getStoreApplicationPool()->getApplication("cf3f46d9-0073-4966-977d-8e202dc5abbb");
+        $colorClass = "red";
         
         if (!$app) {
-            return "red";
+            return $colorClass;
         }
         
         $openingApp = $this->getFactory()->getApplicationPool()->createInstace($app);

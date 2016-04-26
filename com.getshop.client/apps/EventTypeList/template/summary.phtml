@@ -10,11 +10,11 @@
     foreach ($eventTypes as $type) {
         $delete = $this->hasWriteAccess() ? "<i class='fa fa-trash' gsclick='deleteEventType' value='$type->id'></i>" : "";
         echo "<div class='eventtype'>";
-        echo $delete . "<div class='show_eventinformation'>".$type->name."</div>";
-            echo "<div class='show_eventinformation_inner'>";
+        echo "<span>$type->name</span>";
+        echo $delete ;
+            
                 echo "<a href='/?page=$type->pageId'><div class='shop_button'>".$this->__f("Go to page")."</div></a>";
                 echo "&nbsp;&nbsp;<a href='/?page=edit_event_type&bookingItemTypeId=$type->id'><div class='shop_button'>".$this->__f("Edit")."</div></a>";
-            echo "</div>";
         echo "</div>";
     }
 ?>

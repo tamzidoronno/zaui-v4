@@ -1,14 +1,16 @@
-/*
+ /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.thundashop.core.sedox;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.DummySmsFactory;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MailFactoryImpl;
@@ -230,7 +232,53 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         return retUsers;
     }
-
+    
+    @Override
+    public synchronized List<TreeNode> getAllUsersAsTreeNodes() throws ErrorException {
+        List<TreeNode> userTree = new ArrayList();
+        for(SedoxUser sedoxUser : users.values()) {
+            User user = userManager.getUserById(sedoxUser.id);
+            if(user != null) {
+                TreeNode userNode = new TreeNode();
+                userNode.id = user.id;
+                if(sedoxUser.masterUserId == null || sedoxUser.masterUserId.isEmpty()) {
+                    userNode.parent = "#";
+                } else {
+                    userNode.parent = sedoxUser.masterUserId;
+                }
+                
+                String userName = isAttributeGiven(user.fullName) ? user.fullName : "N/A";
+                String userEmail = isAttributeGiven(user.emailAddress) ? user.emailAddress : "N/A";
+                String userPhone = isAttributeGiven(user.cellPhone) ? user.cellPhone : "N/A";
+                
+                userNode.text = userName + " | " + userEmail + " | " + userPhone;
+                userTree.add(userNode);
+            }
+        }
+        
+        return userTree;
+    }
+    
+    @Override
+    public synchronized List<User> getAllUsers() throws ErrorException {
+        List<User> sedoxUsers = new ArrayList();
+        for(SedoxUser sedoxUser : users.values()) {
+            User user = userManager.getUserById(sedoxUser.id);
+            if(user != null) {
+                sedoxUsers.add(user);
+            }
+        }
+        return sedoxUsers;
+    }
+    
+    public boolean isAttributeGiven(String attribute) {
+        boolean given = false;
+        if(attribute != null && !attribute.isEmpty() && !"null null".equals(attribute) && !"false".equals(attribute)) {
+            given = true;
+        }
+        return given;
+    }
+    
     @Override
     public synchronized List<SedoxProduct> getProductsByDaysBack(int daysBack) throws ErrorException {
         List<SedoxProduct> retProducts = new ArrayList<>();
@@ -946,12 +994,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private String getSignature() {
-        String signature = "<br><br>Thank you for using tuningfiles.com";
-        signature += "<br>tuningfiles.com - The ultimate file delivery system!";
-        signature += "<br>Phone: +47 909 16 585";
-        signature += "<br>";
-        signature += "<br><font style='color:red'>Note: If Your Credit depot is empty and You want to download the tuning file.";
-        signature += "<br>please purchase Credit from the following link: </font><a href='http://www.tuningfiles.com/100-credits-configure-your-credit.html'>http://www.tuningfiles.com/100-credits-configure-your-credit.html</a>";
+        String signature = null;
+        Application app = applicationPool.getApplication("1475891a-3154-49f9-a2b4-ed10bfdda1fc");
+                
+        if(app != null && app.getSetting("signature") != null) {
+            signature = "<br><br>" + app.getSetting("signature").replaceAll("\n", "<br>");
+        }
+        
         return signature;
     }
 
@@ -1073,48 +1122,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct product = getProductById(productId);
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
         
-        String content = "Your file is ready! :)";
-        if (extraText != null && !extraText.equals("")) {
-            content += "<br>";
-            content += "<br> Please note:";
-            content += "<br> " + extraText.replace("\n", "<br/>");
-        }
-        
-        if (product != null 
-                && product.reference != null 
-                && product.reference.get(product.firstUploadedByUserId) != null 
-                && !product.reference.get(product.firstUploadedByUserId).isEmpty()
-            ) {
-            content += "<br>";
-            content += "<br> Reference:";
-            content += "<br> " + product.reference.get(product.firstUploadedByUserId).replace("\n", "<br/>");
-        }
-        
-        if (sharedProduct != null && files != null && !files.isEmpty()) {
-            content += "<br>";
-            content += "<br>Files: ";
-            
-            for (Integer fileId : files) {
-                SedoxBinaryFile file = sharedProduct.getFileById(fileId);
-                if (file == null) {
-                    continue;
-                }
+        String content = "";
+        Application app = applicationPool.getApplication("1475891a-3154-49f9-a2b4-ed10bfdda1fc");
                 
-                content += "<br> " + file.fileType;
-                if (file.extraInformation != null && !file.extraInformation.isEmpty()) {
-                    content += " - " + file.extraInformation;
-                }
+        if(app != null) {
+            if(order != null && files != null) {
+                content = app.getSetting("filereadyuserattachmentemail");
+            } else {
+                content = app.getSetting("filereadyusernoattachmentemail");
             }
+            content = replaceEmailVariables(content, null, product, sharedProduct, null, user, order, files);
         }
         
-        
-        if (order != null) {
-            content += "<br/><br/> Your account has been changed with: -" + order.creditAmount;
-            content += "<br/> New account balance is now: " + user.creditAccount.getBalance() + " credit";
-        } else {
-            content += "<br/><br/> Your current account balance: " + user.creditAccount.getBalance() + " credit";
-        }
-        content += "<br/><br/>Link to product <a href='http://databank.tuningfiles.com/index.php?page=productview&productId=" + productId + "'>http://databank.tuningfiles.com/index.php?page=productview&productId=" + productId + "</a>";
         content += getSignature();
         return content;
     }
@@ -1158,37 +1177,32 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         User user = getGetshopUser(sedoxProduct.firstUploadedByUserId);
         SedoxUser sedoxUser = getSedoxUserAccountById(sedoxProduct.firstUploadedByUserId);
-        String content = "New file uploaded";
-
-        if (special != null) {
-            content = "Special file request!";
-            content += "<br>Comment:";
-            content += "<br>" + special;
-            user = getSession().currentUser;
-            sedoxUser = getSedoxUserAccountById(user.id);
-        }
-
-        content += "<br><b>Car details: </b>" + sharedProduct.getName();
-        content += "<br>";
-        content += "<br>Name: " + user.fullName;
-        content += "<br>Email: " + user.emailAddress;
-        content += "<br>Customer id: " + user.id;
-
-        if (special == null) {
-            content += "<br>Tool: " + sharedProduct.tool;
-            content += "<br>Gearbox: " + sharedProduct.gearType;
-            content += "<br>Comment: ";
-            content += "<br> " + sedoxProduct.comment;
-            content += "<br>";
-            for (SedoxBinaryFile file : sharedProduct.binaryFiles) {
-                content += "<br>Original filename: " + file.orgFilename;
+        
+        String title = "";
+        String content = "";
+        Application app = applicationPool.getApplication("1475891a-3154-49f9-a2b4-ed10bfdda1fc");
+                
+        if(app != null) {
+            title = app.getSetting("uploadadminsubject");
+            
+            if(special != null) {
+                user = getSession().currentUser;
+                sedoxUser = getSedoxUserAccountById(user.id);
+                
+                content = app.getSetting("uploadadminspecialemail");
+            } else if (special == null) {
+                content = app.getSetting("uploadadminnospecialemail");
+            }
+            
+            if(title != null) {
+                title = replaceEmailVariables(title, special, sedoxProduct, sharedProduct, user, sedoxUser, null, null);
+            }
+            if(content != null) {
+                content = replaceEmailVariables(content, special, sedoxProduct, sharedProduct, user, sedoxUser, null, null);
             }
         }
-
-        content += "<br> ";
-        content += "<br>Credit balance: " + sedoxUser.creditAccount.getBalance();
-        content += "</br><br/>Link to product <a href='http://databank.tuningfiles.com/index.php?page=productview&productId=" + sedoxProduct.id + "'>http://databank.tuningfiles.com/index.php?page=productview&productId=" + sedoxProduct.id + "</a>";
-        sedoxDatabankMailAccount.sendWithAttachments(user.emailAddress, emailAddress, "Upload id: " + sedoxProduct.id + " - " + sharedProduct.getName(), content, fileMap, false);
+        
+        sedoxDatabankMailAccount.sendWithAttachments(user.emailAddress, emailAddress, title, content, fileMap, false);
     }
 
     private double getAlreadySpentOnProduct(SedoxProduct sedoxProduct, SedoxUser user) {
@@ -1211,7 +1225,84 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         return spent;
     }
-
+    
+    private String replaceEmailVariables(String text, String special, SedoxProduct sedoxProduct, SedoxSharedProduct sharedProduct, User user, SedoxUser sedoxUser, SedoxOrder order, List<Integer> fileIds) {
+        if(special != null) {
+            text = text.replace("{special-info}", special);
+            
+            user = getSession().currentUser;
+            sedoxUser = getSedoxUserAccountById(user.id);
+        }
+        
+        if(sharedProduct != null) {
+            text = text.replace("{product-fullname}", sharedProduct.getName());
+            text = text.replace("{product-tool}", sharedProduct.tool);
+            text = text.replace("{product-geartype}", sharedProduct.gearType);
+            
+            String binaryFiles = "";
+            for (SedoxBinaryFile file : sharedProduct.binaryFiles) {
+                binaryFiles += "<br>Original filename: " + file.orgFilename;
+            }
+            
+            text = text.replace("{product-file-names}", binaryFiles);
+        }
+        
+        if(sedoxProduct != null) {
+            text = text.replace("{product-id}", sedoxProduct.id);
+            text = text.replace("{product-comment}", sedoxProduct.comment);
+            
+            if (sedoxProduct != null 
+                && sedoxProduct.reference != null 
+                && sedoxProduct.reference.get(sedoxProduct.firstUploadedByUserId) != null 
+                && !sedoxProduct.reference.get(sedoxProduct.firstUploadedByUserId).isEmpty()) {
+                    text = text.replace("{product-reference}", sedoxProduct.reference.get(sedoxProduct.firstUploadedByUserId));
+                } else {
+                    text = text.replace("{product-reference}", "N/A");
+            }
+        }
+        
+        if(sedoxProduct != null && sharedProduct != null) {
+            String link = "<a href='http://databank.tuningfiles.com/index.php?page=productview&productId=" + sedoxProduct.id + "'>http://databank.tuningfiles.com/index.php?page=productview&productId=" + sedoxProduct.id + "</a>";
+            text = text.replace("{link-to-product}", link);
+        }
+        
+        if(sharedProduct != null && fileIds != null && !fileIds.isEmpty()) {
+            String files = "";
+            
+            for (Integer fileId : fileIds) {
+                SedoxBinaryFile file = sharedProduct.getFileById(fileId);
+                if (file == null) {
+                    continue;
+                }
+                
+                files += "<br>" + file.fileType;
+                if (file.extraInformation != null && !file.extraInformation.isEmpty()) {
+                    files += " - " + file.extraInformation;
+                }
+            }
+            
+            text = text.replace("{product-file-type-and-information}", files);
+        }
+        
+        if(user != null) {
+            text = text.replace("{user-name}", user.fullName);
+            text = text.replace("{user-email}", user.emailAddress);
+            text = text.replace("{user-id}", user.id);
+        }
+        
+        if(sedoxUser != null) {
+            text = text.replace("{user-creditbalance}", "" + sedoxUser.creditAccount.getBalance());
+        }
+        
+        if(order != null) {
+            text = text.replace("{order-credit}", "" + order.creditAmount);
+        }
+        
+        text = text.replace("\n", "<br>");
+        
+        return text;
+    }
+    
     @Override
     public void removeBinaryFileFromProduct(String productId, int fileId) throws ErrorException {
         SedoxProduct sedoxProduct = getProductById(productId);
@@ -1305,8 +1396,24 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public void addSlaveToUser(String masterUserId, String slaveUserId) throws ErrorException {
         SedoxUser slave = getSedoxUserAccountById(slaveUserId);
-        slave.masterUserId = masterUserId;
-        saveUser(slave);
+        boolean canAdd = true;
+        
+        if(masterUserId != null) {
+            SedoxUser toBeMaster = getSedoxUserAccountById(masterUserId);
+        
+            while(toBeMaster != null) {
+                if(slaveUserId.equals(toBeMaster.masterUserId)) {
+                    canAdd = false;
+                    break;
+                }
+                toBeMaster = getSedoxUserAccountById(toBeMaster.masterUserId);
+            }
+        }
+        
+        if(canAdd) {
+            slave.masterUserId = masterUserId;
+            saveUser(slave);
+        }
     }
 
     @Override
@@ -1447,16 +1554,29 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         User getshopUser = userManager.getUserById(user.id);
         
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
-
-        String subject = "Product purchased: " + product.id + " - " + sharedProduct.getName();
-        String message = "Purchased by user: " + user.id + " - " + getshopUser.fullName;
-        message += "<br/> Credit amount: " + order.creditAmount;
-        message += "<br/> New credit balance: " + user.creditAccount.getBalance();
+        
+        String title = "";
+        String content = "";
+        Application app = applicationPool.getApplication("1475891a-3154-49f9-a2b4-ed10bfdda1fc");
+                
+        if(app != null) {
+            title = app.getSetting("purchaseadminsubject");
+            content = app.getSetting("purchaseadminemail");
+            
+            if(title != null) {
+                title = replaceEmailVariables(title, null, product, sharedProduct, getshopUser, user, order, null);
+            }
+            if(content != null) {
+                content = replaceEmailVariables(content, null, product, sharedProduct, getshopUser, user, order, null);
+            }
+        }
+        
+        
 
         for (SedoxUser developer : getDevelopers()) {
             if (developer.isActiveDelevoper) {
                 User getshopUserDeveloper = userManager.getUserById(developer.id);
-                mailFactory.send(getshopUser.emailAddress, getshopUserDeveloper.emailAddress, subject, message);
+                mailFactory.send(getshopUser.emailAddress, getshopUserDeveloper.emailAddress, title, content);
             }
         }
     }
@@ -1464,14 +1584,24 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private void sendNotificationToUploadedUser(SedoxProduct sedoxProduct) throws ErrorException {
         SedoxSharedProduct sharedProduct = getSharedProductById(sedoxProduct.sharedProductId);
         User getshopUser = userManager.getUserById(sedoxProduct.firstUploadedByUserId);
-        String subject = "We have received your file request";
-        String message = "You uploaded file: " + sharedProduct.getName();
-        message += "<br/>";
-        message += "<br/>Thank you. You will receive an email from us when we have processed your file.";
-        message += "<br/>";
-        message += "<br/>Best Regards";
-        message += "<br/>Tuningfiles Support";
-        mailFactory.send("files@tuningfiles.com", getshopUser.emailAddress, subject, message);
+        
+        String title = "";
+        String content = "";
+        Application app = applicationPool.getApplication("1475891a-3154-49f9-a2b4-ed10bfdda1fc");
+                
+        if(app != null) {
+            title = app.getSetting("uploadusersubject");
+            content = app.getSetting("uploaduseremail");
+            
+            if(title != null) {
+                title = replaceEmailVariables(title, null, sedoxProduct, sharedProduct, null, null, null, null);
+            }
+            if(content != null) {
+                content = replaceEmailVariables(content, null, sedoxProduct, sharedProduct, null, null, null, null);
+            }
+        }
+        
+        mailFactory.send("files@tuningfiles.com", getshopUser.emailAddress, title, content);
     }
 
     @Override

@@ -30,7 +30,7 @@ class Page {
         /* @var $layout core_pagemanager_data_PageLayout */
         $layout = $this->javapage->layout;
         
-        if($this->javapage->pageScroll && !$this->factory->isMobile()) {
+        if($this->javapage->pageScroll && !$this->factory->isMobile() && !$this->factory->isEditorMode()) {
             echo "<script>thundashop.framework.activatePageScrolling();</script>";
         }
 

@@ -161,8 +161,9 @@ public class PageLayout implements Serializable {
                 if (!cell.cells.isEmpty() && !cell.cells.get(0).mode.equals(mode)) {
                     PageCell newcell = initNewCell(mode);
                     newcell.extractDataFrom(cell, true);
+                    newcell.mode = mode;
                     cell.clear();
-                    cell.mode = mode;
+//                    cell.mode = mode;
                     cell.cells.add(newcell);
                 }
             }

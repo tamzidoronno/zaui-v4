@@ -30,6 +30,9 @@ class Page {
         /* @var $layout core_pagemanager_data_PageLayout */
         $layout = $this->javapage->layout;
         
+        $this->printEffectTriggerLoaded();
+        
+        
         if($this->javapage->pageScroll && !$this->factory->isMobile() && !$this->factory->isEditorMode()) {
             echo "<script>thundashop.framework.activatePageScrolling();</script>";
         }
@@ -666,8 +669,6 @@ class Page {
         if(!$this->factory->isEditorMode() && $cell->link) {
             echo "</a>";
         }
-        
-        $this->printEffectTriggerLoaded($cell, $depth);
         
         $this->resizeHeight($cell);
         
@@ -1843,19 +1844,22 @@ class Page {
      * @param type $depth
      * @return type
      */
-    public function printEffectTriggerLoaded($cell, $depth) {
+    public function printEffectTriggerLoaded() {
         if (!$this->factory->isEffectsEnabled()) {
             return;
         }
         
-        $cellId = $cell->cellId;
         ?>
         <script>
-            $(function() {
-                $(document).find('img').batchImageLoad({
-                    loadingCompleteCallback: function() {
-                        getshopScrollMagic.rowLoaded('<?php echo $cellId; ?>');
-                    }
+            PubSub.subscribe('NAVIGATION_COMPLETED', function() {
+                $('.gsucell').each(function() {
+                    var cell = $(this);
+                    $(document).find('img').batchImageLoad({
+                        loadingCompleteCallback: function() {
+                            console.log('loading:' + cell.attr('cellid'));
+                            getshopScrollMagic.rowLoaded(cell.attr('cellid'));
+                        }
+                    });
                 });
             });
         </script>

@@ -16,6 +16,12 @@ thundashop.framework = {
     cssEditorCount: 0,
     firstCellIdToMove : null,
     
+    scrollToPosition : function(scrollTop) {
+        $("html, body").animate({ scrollTop: scrollTop }, { "easing" : "easeInOutExpo", "duration" : 1000, complete: function() {
+                isScrolling = false;
+            }
+        });
+    },    
     activatePageScrolling : function () {
         isScrolling = false;
        function doPageScroll(up) {
@@ -35,10 +41,7 @@ thundashop.framework = {
                scrollTop = $(window).outerHeight() * (page+1);
            }
 
-           $("html, body").animate({ scrollTop: scrollTop }, { "easing" : "easeInOutExpo", "duration" : 1000, complete: function() {
-                   isScrolling = false;
-               }
-           });
+           thundashop.framework.scrollToPosition(scrollTop);
        }
 
 
@@ -219,7 +222,7 @@ thundashop.framework = {
         var newHeight = 0;
         if(height.indexOf("%") > 0) {
             height = height.replace("%", "");
-            newHeight = $(window).height() * (height / 100);
+            newHeight = $(window).outerHeight(true) * (height / 100);
         }
         if(height.indexOf("px") > 0) {
             height = height.replace("px", "");
@@ -231,7 +234,7 @@ thundashop.framework = {
             var toCalc = splitted[1] / splitted[0];
             newHeight = $(window).width() * toCalc;
         }
-        cell.css('min-height', newHeight + "px");
+        cell.find('.gsinner').first().css('min-height', newHeight + "px");
     },
     createSideBar: function() {
         var postEvent = thundashop.Ajax.createEvent(null, "toggleSideBar", this, { name : $(this).val()});
@@ -2064,10 +2067,14 @@ $(document).on('scroll', function() {
         button.css('top',newpos);
     }
 });
-
+ PubSub.subscribe('NAVIGATION_COMPLETED', function() {
+     $('[gsheight]').each(function() {
+        thundashop.framework.loadHeight($(this).attr('cellid'));
+    });
+ });
+ 
 $(window).on('resize', function() {
     $('[gsheight]').each(function() {
-        var toChange = $(this).attr('gsheight');
         thundashop.framework.loadHeight($(this).attr('cellid'));
     });
 });

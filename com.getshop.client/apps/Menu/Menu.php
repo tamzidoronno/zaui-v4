@@ -55,7 +55,11 @@ class Menu extends \SystemApplication implements \Application {
     }
 
     public function render() {
-        $this->includefile("menu");
+        if($this->getConfigurationSetting("isscrollmenu")) {
+            $this->includefile("scrollmenu");
+        } else {
+            $this->includefile("menu");
+        }
     }
 
     public function renderSetup() {
@@ -288,7 +292,7 @@ class Menu extends \SystemApplication implements \Application {
         
         return $this->menues;
     }
-    
+
 }
 
 class EntryItem {

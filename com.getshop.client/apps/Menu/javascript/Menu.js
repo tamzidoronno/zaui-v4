@@ -24,7 +24,34 @@ getshop.MenuEditor = {
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
         $(document).on('change', ".menu_item_language", getshop.MenuEditor.itemLanguageChanged);
         $(document).on('click', ".gs_scrollitem", getshop.MenuEditor.scrollToAnchor);
+        $(document).on('click', ".doscrollnav", getshop.MenuEditor.doScrollNavigate);
+        $(document).on('mouseenter', ".Menu .dots .dot", getshop.MenuEditor.showIndicator);
+        $(document).on('mouseleave', ".Menu .dots .dot", getshop.MenuEditor.hideIndicator);
     },
+    hideIndicator : function() {
+        $('.menuindicator').remove();
+    },
+    
+    doScrollNavigate : function() {
+        var page = $(this).attr('page');
+        var scrollTop = $(window).outerHeight() * (page-1);
+        thundashop.framework.scrollToPosition(scrollTop);
+    },
+    
+    showIndicator : function() {
+        var indicator = $(this).attr('data-indicator');
+        var top = $(this).offset().top + 5 - $(document).scrollTop();
+        var right = $(this).closest('.Menu').width();
+        $('.menuindicator').remove();
+        var menuindicator = $('<span class="menuindicator">' + indicator + "</span>");
+        menuindicator.css('position', 'fixed');
+        menuindicator.css('z-index', '100');
+        menuindicator.css('top', top);
+        menuindicator.hide();
+        $("body").prepend(menuindicator);
+        menuindicator.show();
+    },
+    
     pageScrollElementChanged : function() {
         getshop.MenuEditor.activeItem.pageScroll = $(this).is(':checked');
     },
@@ -426,11 +453,12 @@ app.Menu = {
             draggable: true,
             app : true,
             application: application,
+            showSettings : true,
             title: "Settings",
             items: [
                 {
                     icontype: "awesome",
-                    icon: "fa-edit",
+                    icon: "fa-pencil-square",
                     iconsize : "30",
                     title: __f("Edit menu"),
                     click: function() {

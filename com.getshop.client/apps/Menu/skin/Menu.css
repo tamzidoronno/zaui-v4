@@ -415,7 +415,7 @@
     border: 1px solid #000;
 }
 
-
+.Menu .dots .dot:hover .indicator { display:block; }
 .Menu .mobilenavigatemenu { display:none; }
 #informationbox.Menu { color:#000; }
 

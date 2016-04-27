@@ -1,0 +1,16 @@
+<div gstype="form" method="saveAppInstanceSettings">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%">Is scroll menu</td>
+        <td width="50%">
+            <?php $checked = "";
+            if($this->getConfigurationSetting("isscrollmenu")) {
+                $checked = "CHECKED";
+            }
+            ?>
+            <input type='checkbox' gsname="setting_isscrollmenu" <?php echo $checked; ?>>
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

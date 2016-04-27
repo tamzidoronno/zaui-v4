@@ -147,6 +147,9 @@ public class PageManager extends ManagerBase implements IPageManager {
         addProductDetailsIfNeeded(page);
         
         Entry entry = listManager.findEntryByPageId(page.id);
+        if(entry == null) {
+            entry = listManager.getListEntry(page.id);
+        }
         if(entry != null) {
             page.title = entry.name;
             page.pageScroll = entry.pageScroll;

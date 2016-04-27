@@ -110,7 +110,7 @@ public interface IListManager {
      * @return 
      */
     public Entry getListEntry(String id) throws ErrorException;
-    
+    public Entry getEntryByPageId(String pageId) throws ErrorException;
     /**
      * Translate all antries found in a given list of entry ids.
      * @param entryIds A list of entries id to translate.

@@ -8,6 +8,7 @@ public class PageCellSettings implements Serializable {
     public Integer editorLevel = 0;
     
     public String cloneCellId = "";
+    public String youtubebgmovie = "";
     public String cellName = "";
     public boolean paralexxRow = false;
     public boolean scrollFadeIn = false;

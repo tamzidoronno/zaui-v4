@@ -88,6 +88,15 @@
 <div style='clear:both;'></div>
 <br>
 <div>
+    <label><? echo $this->factory->__w("Youtube background movie"); ?>
+        <span class='gscssinput'>
+            <input type='txt' gsname='youtubebgmovie'> 
+        </span>
+    </label>
+</div>
+<div style='clear:both;'></div>
+<br>
+<div>
     <label> <? echo $this->factory->__w("Anchor"); ?>
         <span class='gscssinput'>
                 <input id="gs_settings_cell_anchor" type='text'/>

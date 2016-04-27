@@ -1854,9 +1854,26 @@ class Page {
             PubSub.subscribe('NAVIGATION_COMPLETED', function() {
                 $('.gsucell').each(function() {
                     var cell = $(this);
+                    var settings = JSON.parse($(this).attr('data-settings'));
+                    if(settings.youtubebgmovie) {
+                        var selector = '.player_'+settings.youtubebgmovie;
+                        var embeded = $(selector);
+                        console.log( "(" + selector + ")");
+                        console.log(embeded);
+                        if(embeded.length === 0) {
+                            $(this).attr('id', $(this).attr('cellid'));
+                            var toEmbed = $('<span></span>');
+                            toEmbed.addClass('player');
+                            toEmbed.addClass('player_' + settings.youtubebgmovie);
+                            toEmbed.attr('id', "youtubeplayer_"+settings.youtubebgmovie);
+                            toEmbed.attr('data-property','{videoURL:"https://www.youtube.com/watch?v='+settings.youtubebgmovie+'",containment:"#'+$(this).attr('cellid')+'",autoPlay:true, mute:true, startAt:0,opacity:1}');
+                            toEmbed.text('video player : ' + settings.youtubebgmovie);
+                            $('body').prepend(toEmbed);
+                            toEmbed.mb_YTPlayer();
+                        }
+                    }
                     $(document).find('img').batchImageLoad({
                         loadingCompleteCallback: function() {
-                            console.log('loading:' + cell.attr('cellid'));
                             getshopScrollMagic.rowLoaded(cell.attr('cellid'));
                         }
                     });

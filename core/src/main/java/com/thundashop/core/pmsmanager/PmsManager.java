@@ -2444,6 +2444,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void returnedKey(String roomId) {
         for (PmsBooking booking : getAllBookings(null)) {
+            if(booking.isDeleted) {
+                continue;
+            }
             for (PmsBookingRooms room : booking.rooms) {
                 if (room.pmsBookingRoomId == null || !room.pmsBookingRoomId.equals(roomId)) {
                     continue;

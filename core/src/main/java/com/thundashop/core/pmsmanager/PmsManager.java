@@ -539,9 +539,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
-        removeNotConfirmed(filter, result);
-        removeDeleted(filter, result);
-        removeBeingProcessed(result);
+        removeInactive(filter, result);
 
         List<PmsBooking> finalized = finalizeList(result);
 
@@ -2443,10 +2441,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void returnedKey(String roomId) {
-        for (PmsBooking booking : getAllBookings(null)) {
-            if(booking.isDeleted) {
-                continue;
-            }
+        List<PmsBooking> result = getAllBookings(null);
+        PmsBookingFilter filter = new PmsBookingFilter(); 
+        removeInactive(filter, result);
+        
+        for (PmsBooking booking : result) {
+            
             for (PmsBookingRooms room : booking.rooms) {
                 if (room.pmsBookingRoomId == null || !room.pmsBookingRoomId.equals(roomId)) {
                     continue;
@@ -2621,7 +2621,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBookingRooms getRoomForItem(String itemId, Date atTime) {
-        for (PmsBooking booking : bookings.values()) {
+        List<PmsBooking> allbookings = new ArrayList(bookings.values());
+        PmsBookingFilter filter = new PmsBookingFilter();
+        removeInactive(filter, allbookings);
+        for (PmsBooking booking : allbookings) {
             for (PmsBookingRooms room : booking.rooms) {
                 if (room.isEnded(atTime)) {
                     continue;
@@ -3115,6 +3118,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void sendMissingPayment(String orderId, String bookingId) {
         orderIdToSend = orderId;
         doNotification("booking_paymentmissing", bookingId);
+    }
+
+    private void removeInactive(PmsBookingFilter filter, List<PmsBooking> result) {
+        removeNotConfirmed(filter, result);
+        removeDeleted(filter, result);
+        removeBeingProcessed(result);
     }
 
 }

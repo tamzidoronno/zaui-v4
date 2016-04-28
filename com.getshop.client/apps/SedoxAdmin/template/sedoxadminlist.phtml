@@ -63,13 +63,13 @@ foreach ($developers as $dev) {
             $user = $this->getApi()->getUserManager()->getUserById($file->firstUploadedByUserId);
             $sedoxUserAccount = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($file->firstUploadedByUserId);
             $balance = $sedoxUserAccount->creditAccount->balance;
-            $seeUserButton = "<div class='sedoxadmin_see_user_button' userid='$user->id'><i class='fa fa-search'></i></div>";
+            $seeUserButton = "<div class='sedoxadmin_see_user_button' userid='$user->id' title='Check User'><i class='fa fa-search'></i></div>";
             
             
             $status = "";
             if (!$file->started) {
                 
-                $status = "<div class='current_status_line'><div class='start_button' gsclick='markProductAsStarted' productid='$file->id'>START</div></div>";
+                $status = "<div class='current_status_line'><div class='start_button' gsclick='markProductAsStarted' productid='$file->id' title='Start Tuning'>START</div></div>";
             } else {
                 $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
                 $status = "<div class='current_status_line'><b>Started by</b>: $startedByUser->fullName <div gsclick='markProductAsStarted' productid='$file->id' class='stop_button'><i class='fa fa-stop-circle'></i></div></div>";

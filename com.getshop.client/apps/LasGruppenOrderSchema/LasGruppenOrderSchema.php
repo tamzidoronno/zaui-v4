@@ -16,7 +16,7 @@ namespace ns_7004f275_a10f_4857_8255_843c2c7fb3ab;
 
 class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
 //    public static $url = "http://20192.3.0.local.getshop.com";
-    public static $url = "https://20192.getshop.com";
+    public static $url = "https://certegobeta2.getshop.com";
     
     public function getDescription() {
         return "TEST";
@@ -85,7 +85,7 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
             $_POST['data']['hidePinCode'] = false;
             $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
             $attachments = $this->getAttachments();
-            $this->sendMail("system@certego.no", $attachments);
+            $this->sendMail($this->getEmailAddress(), $attachments);
         }
         
         if ($_POST['data']['page4']['securitytype'] == "signature") {
@@ -133,7 +133,7 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     public function doLogin() {
         $user = $this->getApi()->getUserManager()->checkUserNameAndPassword($_POST['data']['username'], $_POST['data']['password']);
         if ($user) {
-            echo "success";
+            $this->requestPincode();
         } else {
             echo "failed";
         }
@@ -285,7 +285,7 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     public function saveOrder() {
         if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
             $certegoOrder = new \core_certego_data_CertegoOrder();
-            $certegoOrder->data = json_encode($_POST);
+            $certegoOrder->data = base64_encode(json_encode($_POST));
             $this->getApi()->getCertegoManager()->saveOrder($certegoOrder);
         }
     }
@@ -303,4 +303,28 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("page3_shippinginformation_bedriftspakke", $_POST['data']['page3_shippinginformation_bedriftspakke']);
         $this->setConfigurationSetting("page3_shippinginformation_service", $_POST['data']['page3_shippinginformation_service']);
     }
+
+    public function getEmailAddress() {
+        $userObject = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        /** @var $app ns_48a459b8_90b2_4dea_9bae_f548d006f526\CertegoSystemDepartments */
+        $appJava = $this->getApi()->getStoreApplicationPool()->getApplication("48a459b8-90b2-4dea-9bae-f548d006f526");
+        $app = $this->getFactory()->getApplicationPool()->createInstace($appJava);
+        
+        $email = $app->getDefaultEmailAddress(); 
+        
+        if ($userObject && $userObject->groups[0]) {
+            $group = $this->getApi()->getUserManager()->getGroup($userObject->groups[0]);
+            if ($group) {
+                $app->currentGroup = $group;
+                $selectedGroup = $app->getCurrentSelectedGroup(); 
+                
+                if ($selectedGroup) {
+                    $email = $app->getEmailAddress($selectedGroup);
+                }
+            }
+        }
+        
+        return $email;
+    }
+
 }

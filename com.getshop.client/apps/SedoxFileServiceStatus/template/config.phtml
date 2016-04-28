@@ -33,12 +33,12 @@
             <?
             $forcedstatus = $this->getConfigurationSetting("forcedstatus");
             ?>
-            <input type="radio" name="forcedStatus" <? echo $forcedstatus == "off" ? "checked" : ""; ?> id="state_one" value="off"></input>
-            <input type="radio" name="forcedStatus" <? echo $forcedstatus == "limited" ? "checked" : ""; ?> id="state_two" value="limited"></input>
-            <input type="radio" name="forcedStatus" <? echo $forcedstatus == "full" ? "checked" : ""; ?> id="state_three" value="full"></input>
-            <label for="state_one"></label>
-            <label for="state_two"></label>
-            <label for="state_three"></label>
+            <input type="radio" name="forcedStatus" <? echo $forcedstatus == "off" ? "checked" : ""; ?> id="forcedstatus_state_one" value="off"></input>
+            <input type="radio" name="forcedStatus" <? echo $forcedstatus == "limited" ? "checked" : ""; ?> id="forcedstatus_state_two" value="limited"></input>
+            <input type="radio" name="forcedStatus" <? echo $forcedstatus == "full" ? "checked" : ""; ?> id="forcedstatus_state_three" value="full"></input>
+            <label for="forcedstatus_state_one"></label>
+            <label for="forcedstatus_state_two"></label>
+            <label for="forcedstatus_state_three"></label>
             <?
             if($forcedstatus == "off") {
                 $left = "-2px";

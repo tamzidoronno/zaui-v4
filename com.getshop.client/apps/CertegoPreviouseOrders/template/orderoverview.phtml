@@ -1,0 +1,83 @@
+<?
+/* @var $this ns_f85a81c8_f91a_45b3_a107_31ca3961affd\CertegoPreviouseOrders */
+$orders = $this->getApi()->getCertegoManager()->getOrders();
+
+if (!$orders) {
+    echo "<div class='order_row'>";
+    echo "Du har ikke gjennomført noen bestillinger";
+    echo "</div>";
+    return;
+}
+
+?>
+<div style="text-align: center; margin-bottom: 20px;">
+    <input class='gsniceinput1 filterlist' placeholder="filter"/>
+</div>
+<?
+foreach ($orders as $order) {
+    
+    echo "<div class='order_row'>";
+    $data = json_decode(base64_decode($order->data))->data;
+    $firstSystemNumber = $this->getFirstSystemNumber($data);
+    
+    echo "<div class='header'>";
+    echo "<span>".$firstSystemNumber."</span><span>".$order->created."</span>";
+    echo "</div>";
+    echo '<span><a class="gs_ignorenavigate" href="/scripts/downloadPdfLasGruppen.php?orderId='.$order->id.'"><i class="fa fa-download"></i> Last ned PDF </a></span>';
+    
+    ?>
+    <div class="order_content">
+        <?
+        if ($data->page2->keys == "true") {
+            ?>
+            <div class='keybox'>
+                <center><b>Nøkler</b></center>
+                <div class='keyline'><div>Systemnummer</div><div>Antall</div><div>Merking</div></div>
+                <?
+
+                echo "<div class='keyline'>";
+                foreach ($data->page2->keys_setup as $keySetup) {
+                    echo "<div>".$keySetup->systemNumber."</div>";
+                    echo "<div>".$keySetup->count."</div>";
+                    echo "<div>".$keySetup->marking."</div>";
+                }   
+                echo "</div>";
+                ?>
+            </div>
+        <?
+        }
+        
+        if ($data->page2->cylinders == "true") {
+            echo "<div class='cylinderbox'>";
+            ?>
+                <center><b style='font-size: 15px;'>Sylindrer</b></center>
+                <div class='cylinderline'>
+                    <div>Systemnummer</div>
+                    <div>Antall</div>
+                    <div>Type sylinder</div>
+                    <div>Dørtykkelse</div>
+                    <div>Nøkler som skal passe</div>
+                    <div>Overflate</div>
+                    <div>Beskrivelse i låsplan</div>
+                </div>
+                <?
+                echo "<div class='cylinderline'>";
+                foreach ($data->page2->cylinder_setup as $cylindersetup) {
+                    echo "<div>".$cylindersetup->systemNumber."</div>";
+                    echo "<div>".$cylindersetup->count."</div>";
+                    echo "<div>".$cylindersetup->cylinder_type."</div>";
+                    echo "<div>".$cylindersetup->door_thickness."</div>";
+                    echo "<div>".$cylindersetup->keys_that_fits."</div>";
+                    echo "<div>".$cylindersetup->texture."</div>";
+                    echo "<div>".$cylindersetup->cylinder_description."</div>";
+                }   
+                echo "</div>";
+            echo "</div>";
+        }
+        ?>
+    </div>
+    <?
+    echo "</div>";
+    
+}
+?>

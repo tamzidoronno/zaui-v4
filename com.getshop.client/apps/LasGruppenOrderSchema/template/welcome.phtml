@@ -155,7 +155,7 @@ if (!$user->prevLoggedIn) {
         <div class="menu_entry invoiceaddresses_button" goto="invoiceaddresses">Fakturaadresser</div>
         <br/>
         <div class="certego_pagetitle" style="text-align: center;">Arkiv</div>
-        <div class="menu_entry" goto='ordersoverview'>Tidligere bestillinger</div>
+        <div class="menu_entry" gs_show_modal="tidligere">Tidligere bestillinger</div>
         <br/>
         <div class="certego_pagetitle" style="text-align: center;">Bestilling</div>
         <div class="menu_entry" goto="neworder">Ny bestilling</div>
@@ -202,7 +202,8 @@ if (!$user->prevLoggedIn) {
                 echo "Dine bestillinger (klikk på for å laste ned pdf): ";
                 foreach ($orders as $order) {
                     echo "<a class='gs_ignorenavigate' href='/scripts/downloadPdfLasGruppen.php?orderId=$order->id'><div style='cursor: pointer; border: solid 1px #DDD; margin-top: 10px; padding: 5px;'>$order->created</div></a>";
-                    $tmpData = json_decode($order->data);
+                    $tmpData = base64_decode($order->data);
+                    $tmpData = json_decode($tmpData);
                     $tmpData->data->created = $order->created;
                     $_SESSION[$order->id] = json_encode($tmpData);
                 }

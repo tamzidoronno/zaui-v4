@@ -217,6 +217,19 @@ $days[7] = "Sunday";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->hasNoEndDate) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='hasNoEndDate' <? echo $checked; ?>>
+            </span>
+            Has no end date, we don't know when the bookings will end.
+        </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->exposeUnsecureBookings) {
                     $checked = "CHECKED";
                 }
@@ -303,7 +316,7 @@ $days[7] = "Sunday";
         
         <div class='configrow'>
             <span class='configentry'>
-                <input type='number' style='width: 40px;' gsname='minStay' value='<? echo $notificationSettings->minStay; ?>'>
+                 <input type='number' style='width: 40px;' gsname='minStay' value='<? echo $notificationSettings->minStay; ?>'>
             </span>
             Minimum stay
         </div>
@@ -333,8 +346,8 @@ $days[7] = "Sunday";
                 <input style='width: 120px;' gsname='smsName' value='<? echo $notificationSettings->smsName; ?>' maxlength="9">
             </span>
             Sms name
-        </div>
-        <br><br>
+        </div> 
+       <br><br>
         <h2>
             Cleaning configuration
         </h2>

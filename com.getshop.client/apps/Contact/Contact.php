@@ -70,7 +70,7 @@ class Contact extends \WebshopApplication implements \Application {
         if(isset($_POST['event']) && ($_POST['event'] == "sendContactForm" || $_POST['event'] == "sendMessage")) {
             if($this->getThankYouPage()) {
                 echo "<script>";
-                echo "window.location.href='" . $this->getThankYouPage() . "'; alert('fasdf');";
+                echo "window.location.href='" . $this->getThankYouPage() . "';";
                 echo "</script>";
             } else {
                 echo $this->getThankYouMessage();
@@ -270,7 +270,7 @@ class Contact extends \WebshopApplication implements \Application {
         $to = $this->getEmail();
         
         $this->getApi()->getMessageManager()->sendMail($to, "Webshop owner", $title, $content, $replyAddress, "GetShop");
-        echo $this->getThankYouPage();
+//        echo $this->getThankYouPage();
     }
 
     public function getThankYouMessage() {

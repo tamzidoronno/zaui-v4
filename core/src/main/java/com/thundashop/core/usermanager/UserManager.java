@@ -963,7 +963,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         User user = getUserByUserNameAndPassword(username, password);
         
         if (user != null && user.pinCode != null && user.pinCode.equals(pinCode)) {
-            this.requestNewPincode(username, password);
             addUserToSession(user);
             return user;
         }

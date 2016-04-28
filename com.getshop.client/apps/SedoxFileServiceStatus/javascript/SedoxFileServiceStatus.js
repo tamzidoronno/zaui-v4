@@ -5,12 +5,14 @@ app.SedoxFileServiceStatus = {
     
     colorSlider: function() {
         var status = $(this).attr("for");
-        if(status == "state_one") {
-            $(".gss_slider .slider_button").css("background-color", "red");
-        } else if(status == "state_two") {
-            $(".gss_slider .slider_button").css("background-color", "yellow");
-        } else if (status == "state_three") {
-            $(".gss_slider .slider_button").css("background-color", "green");
+        var attr = $(this).parent().attr("gs_model_attr");
+        
+        if(status == attr + "_state_one") {
+            $(this).parent().find(".slider_button").css("background-color", "red");
+        } else if(status == attr + "_state_two") {
+            $(this).parent().find(".slider_button").css("background-color", "yellow");
+        } else if (status == attr + "_state_three") {
+            $(this).parent().find(".slider_button").css("background-color", "green");
         }
     }
 }

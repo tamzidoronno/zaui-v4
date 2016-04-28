@@ -75,6 +75,11 @@ class SettingsFactory extends FactoryBase {
         if ($certegoapp) {
             echo "<div class='gss_submenu_entry' gss_goto_app='27a320a3-e983-4f55-aae8-cf94add661c2'><i class='fa fa-tint'></i> Systems</div>";
         }
+        
+        $certegodepartment = $factory->getApplicationPool()->getApplicationSetting("48a459b8-90b2-4dea-9bae-f548d006f526");
+        if ($certegodepartment) {
+            echo "<div class='gss_submenu_entry' gss_goto_app='48a459b8-90b2-4dea-9bae-f548d006f526'><i class='fa fa-locate'></i> System Departments</div>";
+        }
     }
 }
 

@@ -289,6 +289,10 @@ public class DibsManager extends ManagerBase implements IDibsManager {
     public void checkForOrdersToCapture() {
         Gson gson = new Gson();
         
+        if (storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8") == null) {
+            return;
+        }
+        
         String pollKey = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("merchantid");
         if(frameworkConfig.productionMode) {
             pollKey += "-prod";

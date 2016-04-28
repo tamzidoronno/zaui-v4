@@ -1,0 +1,33 @@
+<?
+/* @var $this ns_48a459b8_90b2_4dea_9bae_f548d006f526\CertegoSystemDepartments */
+$departments = $this->getDepartments();
+?>
+
+
+<div class="gss_settings_content gss_overrideapp" style="position: relative;" gss_use_app_id="48a459b8-90b2-4dea-9bae-f548d006f526">
+    
+    <div class="gss_setting" id="language">
+        <div class="text inline title">Velg systemavdeling</div>
+
+        <div class="gss_dropdown">
+            <select class="gs_select_certego_system_department" groupId='<? echo $_POST['value']; ?>' gs_model='certegosytemsmodel' gs_model_attr='current_selected_department'>
+                <?
+                $currentSelected = $this->getCurrentSelectedGroup();
+                $selected = !$currentSelected ? "selected='true'" : "";
+                ?>
+                <option <? echo $selected; ?> value="">Ingen valgt</option>
+                <?
+                
+                foreach ($departments as $deparment) {
+                    $selected = $this->getCurrentSelectedGroup() == $deparment ? "selected='true'" : "";
+                    ?>
+                    <option <? echo $selected; ?> value="<? echo $deparment; ?>"><? echo $this->getDepartmentName($deparment); ?></option>
+                    <?
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    
+    <div style='display: none;' id="gs_save_connection_group" class="gss_button" gss_view="asdf" gss_method="saveGroupConnection" gss_model="certegosytemsmodel" gss_value="<? echo $_POST['value']; ?>"><i class="fa fa-save"></i>Oppdater</div>
+</div>

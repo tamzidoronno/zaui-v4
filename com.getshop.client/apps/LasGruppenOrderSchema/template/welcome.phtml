@@ -202,7 +202,8 @@ if (!$user->prevLoggedIn) {
                 echo "Dine bestillinger (klikk på for å laste ned pdf): ";
                 foreach ($orders as $order) {
                     echo "<a class='gs_ignorenavigate' href='/scripts/downloadPdfLasGruppen.php?orderId=$order->id'><div style='cursor: pointer; border: solid 1px #DDD; margin-top: 10px; padding: 5px;'>$order->created</div></a>";
-                    $tmpData = json_decode($order->data);
+                    $tmpData = base64_decode($order->data);
+                    $tmpData = json_decode($tmpData);
                     $tmpData->data->created = $order->created;
                     $_SESSION[$order->id] = json_encode($tmpData);
                 }

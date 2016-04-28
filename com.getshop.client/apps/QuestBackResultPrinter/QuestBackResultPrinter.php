@@ -17,15 +17,9 @@ class QuestBackResultPrinter extends \MarketingApplication implements \Applicati
     
     public function getCategories() {
         $test = $this->getCurrentTest();
+        $categories = $this->getApi()->getQuestBackManager()->getCategoriesForTest($test->id);
         $result = $this->getCurrentTestResults();
-        
-        $categories = [];
-        foreach($result->answers as $answer) {
-            if (!in_array($answer->parent, $categories)) {
-                $categories[] = $answer->parent;
-            }
-        }
-        
+
         foreach ($categories as $cat) {
             $cat->result = QuestBackResultPrinter::getResult($result, $cat);
         }

@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -557,4 +558,27 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         
         return null;
     }
+
+    @Override
+    public List<QuestBackQuestion> getCategoriesForTest(String testId) {
+        QuestTest test = getTest(testId);
+        if (test == null)
+            return new ArrayList();
+        
+        UserTestResult testResult = getResultTest(testId, getSession().currentUser.id);
+        
+        if (testResult == null) {
+            return new ArrayList();
+        }
+        
+        List<QuestBackQuestion> returnResult = test.questions.stream()
+                .map(o -> getQuestion(o))
+                .map(question -> getQuestion(question.parentId))
+                .filter(o -> o != null)
+                .distinct()
+                .collect(Collectors.toList());
+        
+        return returnResult;
+    }
+
 }

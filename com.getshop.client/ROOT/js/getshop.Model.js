@@ -138,13 +138,24 @@ getshop.Models = {
         var status = $(this).attr("for");
         if(status == "state_one") {
             $(".gss_slider .slider_button").css("left", "-2px");
-            $(".gss_slider .slider_button").css("background-color", "red");
         } else if(status == "state_two") {
             $(".gss_slider .slider_button").css("left", "16px");
-            $(".gss_slider .slider_button").css("background-color", "yellow");
         } else if (status == "state_three") {
             $(".gss_slider .slider_button").css("left", "34px");
-            $(".gss_slider .slider_button").css("background-color", "green");
+        } else if (status == "state_three") {
+            $(".gss_slider .slider_button").css("left", "52px");
+        } else if (status == "state_three") {
+            $(".gss_slider .slider_button").css("left", "70px");
+        } else if (status == "state_three") {
+            $(".gss_slider .slider_button").css("left", "88px");
+        } else if (status == "state_three") {
+            $(".gss_slider .slider_button").css("left", "106px");
+        } else if (status == "state_three") {
+            $(".gss_slider .slider_button").css("left", "124px");
+        } else if (status == "state_three") {
+            $(".gss_slider .slider_button").css("left", "142px");
+        } else if (status == "state_three") {
+            $(".gss_slider .slider_button").css("left", "160px");
         }
         
         var model = $(this).parent().attr("gs_model");

@@ -29,6 +29,13 @@ class Page {
     function loadSkeleton() {
         /* @var $layout core_pagemanager_data_PageLayout */
         $layout = $this->javapage->layout;
+        
+        $this->printEffectTriggerLoaded();
+        
+        
+        if($this->javapage->pageScroll && !$this->factory->isMobile() && !$this->factory->isEditorMode()) {
+            echo "<script>thundashop.framework.activatePageScrolling();</script>";
+        }
 
         $beenEdited = false;
         foreach ($layout->areas as $area => $rowsToPrint) {
@@ -609,7 +616,10 @@ class Page {
         
         $lastInRow = (count(@$parent->cells) - 1) == $count ?  "gs_last_in_row" : "";
         $firstInRowClass = $count == 0 ?  "gs_first_in_row" : "";
-        echo "<div class='gsucell $themeClass $lastInRow $firstInRowClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' $styles incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "' selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo width='$width' $keepMobile>";
+        $height = $cell->height;
+        
+        
+        echo "<div class='gsucell $themeClass $lastInRow $firstInRowClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' $styles incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "' selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo width='$width' gsheight='$height' $keepMobile>";
         $this->printEffectTrigger($cell, $depth);
         
         if ($anchor) {
@@ -660,7 +670,8 @@ class Page {
             echo "</a>";
         }
         
-        $this->printEffectTriggerLoaded($cell, $depth);
+        $this->resizeHeight($cell);
+        
         return true;
     }
     
@@ -1833,19 +1844,39 @@ class Page {
      * @param type $depth
      * @return type
      */
-    public function printEffectTriggerLoaded($cell, $depth) {
+    public function printEffectTriggerLoaded() {
         if (!$this->factory->isEffectsEnabled()) {
             return;
         }
         
-        $cellId = $cell->cellId;
         ?>
         <script>
-            $(function() {
-                $(document).find('img').batchImageLoad({
-                    loadingCompleteCallback: function() {
-                        getshopScrollMagic.rowLoaded('<?php echo $cellId; ?>');
+            PubSub.subscribe('NAVIGATION_COMPLETED', function() {
+                $('.gsucell').each(function() {
+                    var cell = $(this);
+                    var settings = JSON.parse($(this).attr('data-settings'));
+                    if(settings.youtubebgmovie) {
+                        var selector = '.player_'+settings.youtubebgmovie;
+                        var embeded = $(selector);
+                        console.log( "(" + selector + ")");
+                        console.log(embeded);
+                        if(embeded.length === 0) {
+                            $(this).attr('id', $(this).attr('cellid'));
+                            var toEmbed = $('<span></span>');
+                            toEmbed.addClass('player');
+                            toEmbed.addClass('player_' + settings.youtubebgmovie);
+                            toEmbed.attr('id', "youtubeplayer_"+settings.youtubebgmovie);
+                            toEmbed.attr('data-property','{videoURL:"https://www.youtube.com/watch?v='+settings.youtubebgmovie+'",containment:"#'+$(this).attr('cellid')+'",autoPlay:true, mute:true, startAt:0,opacity:1}');
+                            toEmbed.text('video player : ' + settings.youtubebgmovie);
+                            $('body').prepend(toEmbed);
+                            toEmbed.mb_YTPlayer();
+                        }
                     }
+                    $(document).find('img').batchImageLoad({
+                        loadingCompleteCallback: function() {
+                            getshopScrollMagic.rowLoaded(cell.attr('cellid'));
+                        }
+                    });
                 });
             });
         </script>
@@ -1967,7 +1998,7 @@ class Page {
 
     public function includeLayotDNDPanel() {
         ?>
-        <div class='gsdndlayoutpanelouter'>
+        <div class='gsdndlayoutpanelouter' style='display:none;'>
             <div class='gsdndpanelstepup'>
                 <i class='fa fa-arrow-circle-up'></i> Go to cell above
             </div>
@@ -1989,6 +2020,14 @@ class Page {
             </div>
         </div>
         <?php
+    }
+
+    public function resizeHeight($cell) {
+        if($cell->height) {
+            echo "<script>";
+            echo "thundashop.framework.loadHeight('" . $cell->cellId. "');";
+            echo "</script>";
+        }
     }
 
 }

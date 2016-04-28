@@ -52,6 +52,7 @@ public class PageCell implements Serializable {
     public Double width = -1.0;
     public int outerWidth = -1;
     public int outerWidthWithMargins = -1;
+    public String height = "";
     public boolean keepOriginalLayoutOnMobile = false;
     
     //Permissions.
@@ -62,6 +63,7 @@ public class PageCell implements Serializable {
         styles = cell.styles;
         anchor = cell.anchor;
         link = cell.link;
+        height = cell.height;
         selectedThemeClass = cell.selectedThemeClass;
         keepOriginalLayoutOnMobile = cell.keepOriginalLayoutOnMobile;
         hideOnMobile = cell.hideOnMobile;

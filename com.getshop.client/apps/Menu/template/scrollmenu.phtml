@@ -1,0 +1,61 @@
+<?php
+/* @var $this \ns_a11ac190_4f9a_11e3_8f96_0800200c9a66\Menu */
+$list = $this->getMenuLists();
+?>
+<i class="fa fa-bars menutogger"></i>
+<div class='scrolltopmenu' id='scrolltopmenu'>
+    <?php
+    
+    $entries = $list[0]->entries;
+    foreach($entries as $entry) {
+        echo "<a href='?page=". $entry->pageId."'>" . $entry->name . "</a>";
+    }
+    ?>
+    <i class='fa fa-close closescrollmenu'></i>
+</div>
+<?php
+$listentry = $this->getApi()->getListManager()->getEntryByPageId($this->getPage()->javapage->id);
+?>
+<span class='dots'>
+<?php
+$i =1;
+foreach($listentry->subentries as $entry) {
+    echo "<i class='fa fa-circle-o dot doscrollnav' data-indicator='".$entry->name."' page='$i'><span class='indicator'></span></i>";
+    $i++;
+}
+?>
+</span>
+
+<script>
+    var menuScrollCurPage = 0;
+    $(window).scroll(function() {
+        var page = ($(window).scrollTop()-$(window).outerHeight()/2) / $(window).outerHeight();
+        page = parseInt(page+2);
+        if(page !== menuScrollCurPage) {
+            menuScrollCurPage = page;
+            $('.activescrollnav').removeClass('activescrollnav');
+            $('.doscrollnav[page="'+page+'"]').addClass('activescrollnav');
+        }
+    });
+    $('.doscrollnav[page="1"]').addClass('activescrollnav');
+    var scrtmnu = $('#scrolltopmenu');
+    scrtmnu.detach();
+    $('.gsarea[area="header"] .gsinner').prepend(scrtmnu);
+    $('.Menu .menutogger').click(function() {
+        $('#scrolltopmenu').animate({
+            top: '0'
+        }, {
+            duration: 1000,
+            "easing" : "easeOutElastic"
+        });
+    });
+
+    $('.closescrollmenu').click(function(){
+        $('#scrolltopmenu').animate({
+            top: '-120'
+        }, {
+            duration: 1000,
+            "easing" : "easeOutBounce"
+        });
+    });
+</script>

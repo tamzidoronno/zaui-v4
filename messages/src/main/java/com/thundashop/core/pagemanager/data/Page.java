@@ -40,6 +40,7 @@ public class Page extends DataCommon implements Cloneable {
 
     public String leftSideBarName = "left_side_bar";
     public boolean leftSideBar = false;
+    public boolean pageScroll = false;
     
     public String masterPageId = "";
     

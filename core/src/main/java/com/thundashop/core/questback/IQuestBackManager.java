@@ -12,6 +12,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.questback.data.QuestBackQuestion;
 import com.thundashop.core.questback.data.QuestTest;
 import com.thundashop.core.questback.data.ResultRequirement;
+import com.thundashop.core.questback.data.UserQuestionAnswer;
 import com.thundashop.core.questback.data.UserTestResult;
 import java.util.List;
 
@@ -111,4 +112,7 @@ public interface IQuestBackManager {
      */
     @Editor
     public Integer getScoreForTest(String userId, String testId);
+    
+    @Customer
+    public List<QuestBackQuestion> getCategoriesForTest(String testId);
 }

@@ -55,7 +55,11 @@ class Menu extends \SystemApplication implements \Application {
     }
 
     public function render() {
-        $this->includefile("menu");
+        if($this->getConfigurationSetting("isscrollmenu")) {
+            $this->includefile("scrollmenu");
+        } else {
+            $this->includefile("menu");
+        }
     }
 
     public function renderSetup() {
@@ -84,6 +88,7 @@ class Menu extends \SystemApplication implements \Application {
             $entryItem->name = $item->name;
             $entryItem->linke = $item->hardLink;
             $entryItem->fontAwsomeIcon = $item->fontAwsomeIcon;
+            $entryItem->pageScroll = $item->pageScroll;
             $entryItem->userLevel = $item->userLevel;
             $entryItem->scrollAnchor = $item->scrollAnchor;
             $entryItem->scrollPageId = $item->scrollPageId;
@@ -115,6 +120,7 @@ class Menu extends \SystemApplication implements \Application {
         @$entry->scrollPageId = $item['scrollPageId'];
         @$entry->scrollAnchor = $item['scrollAnchor'];
         @$entry->hidden = $item['hidden'] == "true";
+        @$entry->pageScroll = $item['pageScroll'];
         
         if (isset($item['userLevel'])) {
             $entry->userLevel = $item['userLevel'];
@@ -286,7 +292,7 @@ class Menu extends \SystemApplication implements \Application {
         
         return $this->menues;
     }
-    
+
 }
 
 class EntryItem {

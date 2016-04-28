@@ -2,6 +2,7 @@ package com.thundashop.core.listmanager;
 
 import com.getshop.scope.GetShopDataMapRepository;
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -181,7 +182,8 @@ public class ListManager extends ManagerBase implements IListManager {
         return null;
     }
     
-    private Entry getEntryByPageId(String pageId) throws ErrorException {
+    @Administrator
+    public Entry getEntryByPageId(String pageId) throws ErrorException {
         for (String key : allEntries.keySet()) {
             Entry entry = recursiveEntrySearchByPageId(pageId, allEntries.get(key).entries);
             if (entry != null) {

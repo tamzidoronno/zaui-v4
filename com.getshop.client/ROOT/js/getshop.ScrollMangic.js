@@ -68,7 +68,9 @@ getshopScrollMagic = {
         var doubleHeight = height*2;
         var duration = doubleHeight;
         var offset = cellSettings.parallaxoffset;
-        
+        if(offset === -1) {
+            offset = $(window).height();
+        }
         if (cell.position().top < $(window).height()) {
             offset += $(window).height()-cell.position().top;
         }

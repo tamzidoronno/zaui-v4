@@ -15,6 +15,7 @@ getshop.MenuEditor = {
         $(document).on('keyup', ".Menu .titleinformation #scrollAnchor", getshop.MenuEditor.scrollAnchorChanged);
         $(document).on('keyup', ".Menu .titleinformation #scrollPageId", getshop.MenuEditor.scrollPageIdChanged);
         $(document).on('click', ".Menu .titleinformation #hideElement", getshop.MenuEditor.hideElementChanged);
+        $(document).on('click', ".Menu .titleinformation #pageScroll", getshop.MenuEditor.pageScrollElementChanged);
         $(document).on('mouseenter', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.showSubEntries);
         $(document).on('mouseleave', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.hideSubEntries);
         $(document).on('click', ".Menu .save", getshop.MenuEditor.saveMenuEditor);
@@ -23,8 +24,37 @@ getshop.MenuEditor = {
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
         $(document).on('change', ".menu_item_language", getshop.MenuEditor.itemLanguageChanged);
         $(document).on('click', ".gs_scrollitem", getshop.MenuEditor.scrollToAnchor);
+        $(document).on('click', ".doscrollnav", getshop.MenuEditor.doScrollNavigate);
+        $(document).on('mouseenter', ".Menu .dots .dot", getshop.MenuEditor.showIndicator);
+        $(document).on('mouseleave', ".Menu .dots .dot", getshop.MenuEditor.hideIndicator);
+    },
+    hideIndicator : function() {
+        $('.menuindicator').remove();
     },
     
+    doScrollNavigate : function() {
+        var page = $(this).attr('page');
+        var scrollTop = $(window).outerHeight() * (page-1);
+        thundashop.framework.scrollToPosition(scrollTop);
+    },
+    
+    showIndicator : function() {
+        var indicator = $(this).attr('data-indicator');
+        var top = $(this).offset().top + 5 - $(document).scrollTop();
+        var right = $(this).closest('.Menu').width();
+        $('.menuindicator').remove();
+        var menuindicator = $('<span class="menuindicator">' + indicator + "</span>");
+        menuindicator.css('position', 'fixed');
+        menuindicator.css('z-index', '100');
+        menuindicator.css('top', top);
+        menuindicator.hide();
+        $("body").prepend(menuindicator);
+        menuindicator.show();
+    },
+    
+    pageScrollElementChanged : function() {
+        getshop.MenuEditor.activeItem.pageScroll = $(this).is(':checked');
+    },
     differentSelected: function() {
         getshop.MenuEditor.menuChanged();
         $(this).closest('.Menu').find('.menuentries:visible').find('.entry:first-child a').click();
@@ -343,6 +373,11 @@ getshop.MenuEditor = {
             } else {
                 $('.titleinformation #hideElement').removeAttr('checked');
             }
+            if(getshop.MenuEditor.activeItem.pageScroll) {
+                $('.titleinformation #pageScroll').attr('checked','true');
+            } else {
+                $('.titleinformation #pageScroll').removeAttr('checked');
+            }
             if (getshop.MenuEditor.activeItem.link) {
                 $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.link);
                 $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.link);
@@ -353,6 +388,7 @@ getshop.MenuEditor = {
             }
 
             $('.titleinformation #icontext').val(getshop.MenuEditor.activeItem.icon);    
+            $('.titleinformation #pageScroll').val(getshop.MenuEditor.activeItem.pageScroll);    
             
             var userLevel = this.activeItem.userLevel;
             if (!userLevel) {
@@ -417,11 +453,12 @@ app.Menu = {
             draggable: true,
             app : true,
             application: application,
+            showSettings : true,
             title: "Settings",
             items: [
                 {
                     icontype: "awesome",
-                    icon: "fa-edit",
+                    icon: "fa-pencil-square",
                     iconsize : "30",
                     title: __f("Edit menu"),
                     click: function() {

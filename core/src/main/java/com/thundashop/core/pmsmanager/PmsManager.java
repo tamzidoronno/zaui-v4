@@ -926,6 +926,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
             if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
                 daysInPeriode = getNumberOfMonthsBetweenDates(startDate, endDate);
+                if(daysInPeriode > 1000) {
+                    //Infinate dates, noone wants to pay 100 years in advance.
+                    daysInPeriode = 1;
+                }
             }
             Double price = getPriceInPeriode(booking, room, startDate, endDate);
             CartItem item = createCartItem(room, startDate, endDate);

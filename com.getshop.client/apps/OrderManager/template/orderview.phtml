@@ -81,11 +81,21 @@ $cart = $order->cart;
                 echo $changeText.$paymentApp->getName();
                 echo "<br/>";
             }
-            
-            echo $orderStatusText; 
+
+            $cards  = $paymentApp->getSavedCards($order->userId);
+            if(sizeof($cards) > 0) {
+                echo "<div>";
+                echo "<select id='gssselectedcard'>";
+                foreach($cards as $card) {
+                    echo "<option value='".$card->card . "'>" . $card->mask . " - " . $card->expireMonth . " / " . $card->expireYear . " - " . $card->savedByVendor . "</option>";
+                }
+                echo "</select>";
+                echo "<input type='button' class='gsspaywithcard' value='Pay with saved card' orderId='".$order->id."'>";
+                echo "</div>";
+            }
             
             if($order->status == 2 || $order->status == 5 || $order->status == 3) {
-                echo " - <a class='gsspayorder' style='color:blue; cursor:pointer;' orderid='".$order->id."'>pay order</a>";
+                echo " - <a class='gsspayorder' style='color:blue; cursor:pointer;' orderid='".$order->id."'>pay order with payment link</a>";
             }
             ?>
             

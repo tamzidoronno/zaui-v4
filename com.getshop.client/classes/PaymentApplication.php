@@ -26,6 +26,9 @@ class PaymentApplication extends ApplicationBase {
         return $this->order;
     }
     
+    public function getSavedCards($userId) {
+    }
+    
     public function initPaymentMethod() {
         $this->order->status = 2;
         $this->order->payment->paymentType = get_class($this);

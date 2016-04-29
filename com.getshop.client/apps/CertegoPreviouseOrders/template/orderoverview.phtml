@@ -23,7 +23,7 @@ foreach ($orders as $order) {
     echo "<div class='header'>";
     echo "<span>".$firstSystemNumber."</span><span>".$order->created."</span>";
     echo "</div>";
-    echo '<span><a class="gs_ignorenavigate" href="/scripts/downloadPdfLasGruppen.php?orderId='.$order->id.'"><i class="fa fa-download"></i> Last ned PDF </a></span>';
+    echo '<span><a target="_new" class="gs_ignorenavigate" href="/scripts/downloadPdfLasGruppen.php?orderId='.$order->id.'"><i class="fa fa-download"></i> Last ned PDF </a></span>';
     
     ?>
     <div class="order_content">

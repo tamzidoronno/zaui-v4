@@ -225,6 +225,14 @@ public interface IUserManager {
      * @return 
      */
     public List<Group> getAllGroups() throws ErrorException;
+
+    /**
+     * Gets a set of filetered groups 
+     * 
+     * @param filter
+     * @return 
+     */
+    public FilteredData getAllGroupsFiletered(FilterOptions filter);
     
     /**
      * Check if a user already exists with the given email.

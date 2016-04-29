@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author ktonder
  */
-public class Group extends DataCommon {
+public class Group extends DataCommon implements Comparable<Group> {
     public String groupName = "";
     public String imageId = "";
 
@@ -26,5 +26,10 @@ public class Group extends DataCommon {
     public Address invoiceAddress = new Address();
     
     public boolean isPublic = true;
+
+    @Override
+    public int compareTo(Group o) {
+        return o.groupName.compareTo(this.groupName);
+    }
     
 }

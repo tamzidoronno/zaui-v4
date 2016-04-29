@@ -53,9 +53,15 @@ class GSTableCommon extends \WebshopApplication {
     public function filterOrders() {
         $_SESSION[$this->getSessionName('gss_orders_currentPageNumber')] = 1;
         $_SESSION[$this->getSessionName('gss_orders_filter')] = $_POST['order_filter'];
-        $_SESSION[$this->getSessionName('gss_orders_startdate')] = $_POST['start_date'];
-        $_SESSION[$this->getSessionName('gss_orders_enddate')] = $_POST['end_date'];
-        $_SESSION[$this->getSessionName('gss_orders_status')] = $_POST['status'];
+        
+        if (isset($_POST['start_date']))
+            $_SESSION[$this->getSessionName('gss_orders_startdate')] = $_POST['start_date'];
+        
+        if (isset($_POST['end_date']))
+            $_SESSION[$this->getSessionName('gss_orders_enddate')] = $_POST['end_date'];
+        
+        if (isset($_POST['status']))
+            $_SESSION[$this->getSessionName('gss_orders_status')] = $_POST['status'];
     }
     
     public function setPageSize() {

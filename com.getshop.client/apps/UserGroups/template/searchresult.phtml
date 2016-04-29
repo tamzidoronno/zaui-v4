@@ -1,0 +1,53 @@
+<?
+/* @var $this ns_3983a370_d0cc_46de_ba94_cc22fe7becbb\UserGroups */
+$groups = $this->getFilteredData();
+
+?>
+
+    <?
+    if (!count($groups)) {
+        echo $this->__f("You have not created any groups yet");
+    } else {
+        foreach ($groups as $group) {
+            ?>
+            <div style='min-height: 38px; height: inherit;' gss_fragment='group' gss_view='gs_user_workarea' gss_value='<? echo $group->id ?>' class='gss_product'>
+               <div class='gss_product_inner_desc'>
+                   <div class='gss_product_title'>
+                       <? 
+                       echo $group->groupName; 
+                       $this->printExtraInformation($group);
+                       ?>
+                   </div>
+               </div>
+            </div>
+            <?
+        }
+    }
+    ?>
+   
+<div class="gss_pagenumber_bottom">
+    <? echo $this->__f("Page") . ": " . $this->getPageNumber() . "/" . $this->getTotalPageCount(); ?>
+    
+    <div style='margin-top: 10px; text-align: center;'>
+        <? echo $this->__f("Pagesize"); ?>
+        <span gss_method='setPageSize' gss_value='3' style='cursor: pointer;'>3</span>,
+        <span gss_method='setPageSize' gss_value='10' style='cursor: pointer;'>10</span>,
+        <span gss_method='setPageSize' gss_value='20' style='cursor: pointer;'>20</span>,
+        <span gss_method='setPageSize' gss_value='30' style='cursor: pointer;'>30</span>,
+        <span gss_method='setPageSize' gss_value='50' style='cursor: pointer;'>50</span>,
+        <span gss_method='setPageSize' gss_value='100' style='cursor: pointer;'>100</span>,
+        <span gss_method='setPageSize' gss_value='200' style='cursor: pointer;'>200</span>,
+        <span gss_method='setPageSize' gss_value='300' style='cursor: pointer;'>300</span>,
+        <span gss_method='setPageSize' gss_value='500' style='cursor: pointer;'>500</span>
+    </div>
+</div>
+
+<div class="gss_order_nextprevbuttons">
+    <? if ($this->hasPrevPage()) { ?>
+        <div class='gss_button order_gss_prev_buttons' gss_method="prevOrderPage"><i class='fa fa-arrow-left'></i> <? echo $this->__f("Previouse page"); ?></div>
+    <? } ?>
+
+    <? if ($this->hasNextPage()) { ?>
+        <div class='gss_button order_gss_next_buttons' gss_method="nextOrderPage"><i class='fa fa-arrow-right'></i> <? echo $this->__f("Next page"); ?></div>
+    <? } ?>
+</div>

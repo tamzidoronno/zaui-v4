@@ -1374,4 +1374,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public FilteredData getAllGroupsFiletered(FilterOptions filterOptions) {
+        List<Group> filteredList = getAllGroups().stream()
+                .filter(o -> o.groupName != null && o.groupName.toLowerCase().contains(filterOptions.searchWord.toLowerCase()))
+                .collect(Collectors.toList());
+        
+        return pageIt(filteredList, filterOptions);
+    }
+
 }

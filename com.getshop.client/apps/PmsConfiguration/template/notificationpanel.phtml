@@ -412,7 +412,20 @@ $days[7] = "Sunday";
         <h2>
             Payment and order creations
         </h2>
-<div class='configrow'>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->runAutoPayWithCard) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='runAutoPayWithCard' <? echo $checked; ?>>
+            </span>
+            Run autopay order by creditcard function
+        </div>
+        
+        <div class='configrow'>
             <span class='configentry'>
                 <?
                 $checked = "";

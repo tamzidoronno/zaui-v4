@@ -83,7 +83,7 @@ $cart = $order->cart;
             }
 
             $cards  = $paymentApp->getSavedCards($order->userId);
-            if(sizeof($cards) > 0) {
+            if(sizeof($cards) > 0 && $order->status != 7) {
                 echo "<div>";
                 echo "<select id='gssselectedcard'>";
                 foreach($cards as $card) {

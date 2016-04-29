@@ -60,7 +60,7 @@ class OrderManager extends GSTableCommon implements \Application {
         $this->includefile("dashboardwidget");
     }
     
-    public function getDashboardChart($year) {
+    public function getDashboardChart($year = false) {
         $statistics = $this->getApi()->getOrderManager()->getSalesNumber($year);
         $newStat = [];
         foreach ($statistics as $stat) {

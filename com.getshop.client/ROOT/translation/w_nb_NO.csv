@@ -300,6 +300,7 @@ Original (nm);-;Original nm
 Other attributes;-;Andre attributter
 Other operations;-;Andre operasjoner
 Our local time is:;-;Vår lokale tid er
+Out of stock.;-;Ikke på lager
 Outer background;-;Ytre bakgrunn
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
@@ -375,6 +376,7 @@ Rooms selected;-;Rommene som er valgt
 Row is not displayed on mobile, click for make it reappear;-;Raden vises ikke på mobiltelefon, trykk her for å vise den.
 Row options;-;Rad instillinger
 Run account in sandbox?;-;Kjør kontoen i sandbox modus?
+Run dibs in test mode?;-;Kjør dibs i testmodus
 Sa;-;Lø
 Sat;-;Lør
 Saturday;-;Lørdag
@@ -446,7 +448,7 @@ Taxes;-;Skatter
 Terms and Conditions;-;Bruksvilkår
 Text color;-;Tekst farge
 Text editor;-;Tekst editor
-Th;-;Ti
+Th;-;To
 Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
 Thank you for your message;-;Takk for din melding
 Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;Takk for din bestilling, en epost har blitt sendt med fakturaen vedlagt. Vi sender bestillingen når vi har mottat betalingen.
@@ -477,7 +479,7 @@ Today;-;Idag
 Top spacing;-;Øvre spacing
 Top speed;-;Topp hastighet
 Total;-;Total
-Tu;-;To
+Tu;-;Ti
 Tue;-;Tir
 Tuesday;-;Tirsdag
 Tune your online store by setting currency, does customers need to register to buy from your store, show cookie warning, etc;-;Finjuster nettbutikken din ved å f.eks velge valutta, bestemme om kundene dine må registrere seg for å handle, vis cookie advarsel, osv.
@@ -522,6 +524,7 @@ Your order has now been completed and is waiting to be shipped.;-;Orderen din ha
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
 Your product has been added to the cart.;-;Produktet er nå lagt i handlekurven
+Youtube background movie;-;Youtube bakgrundsfilm
 cellphone;-;Mobilnr
 day;-;dag
 day of the month;-;Fast dato i måneden

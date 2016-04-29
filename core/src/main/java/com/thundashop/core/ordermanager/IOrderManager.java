@@ -81,6 +81,9 @@ public interface IOrderManager {
     @Administrator
     public List<Order> getOrdersFromPeriode(long start, long end, boolean statistics) throws ErrorException;
     
+    @Administrator
+    public boolean payOrderByCard(String cardId, String orderId) throws Exception;
+    
     @Internal
     public Order getOrderSecure(String orderId) throws ErrorException;
     

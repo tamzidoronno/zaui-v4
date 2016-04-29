@@ -51,7 +51,7 @@ foreach($rooms as $room) {
         if($availability == 0) {
             $text = $this->getText("no_rooms_available");
             if(!$text) {
-                $text = "We are out of this type of room, select a different one.";
+                $text = $this->__w("Out of stock.");
             }
         } else {
             $text = $this->getText("selected_room_count_text");
@@ -105,7 +105,7 @@ foreach($rooms as $room) {
         ?>
     </span>
     <?php if($room->price > 0 && $booking->priceType != 8) { ?>
-        <span class='price <?php if($singleSelection) { echo "withselectbtn"; } ?>'><? echo round($room->price); ?>,-</span>
+        <span class='price <?php if($singleSelection) { echo "withselectbtn"; } ?>'><? echo round($room->price); ?>,- per dag</span>
     <?php } ?>
     <?php if($booking->priceType == 8) { 
         $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(),$this->convertToJavaDate(time()),$this->convertToJavaDate(time()));

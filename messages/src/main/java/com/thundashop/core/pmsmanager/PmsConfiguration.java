@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 public class PmsConfiguration extends DataCommon {
 
+
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;
@@ -33,9 +34,11 @@ public class PmsConfiguration extends DataCommon {
     public boolean copyEmailsToOwnerOfStore = false;
     public boolean ignoreTimeIntervalsOnNotification = false;
     public boolean hasNoEndDate = false;
+    public boolean autoDeleteUnpaidBookings = false;
 
     /* Invoice creation options */
     public boolean autoCreateInvoices = false;
+    public boolean runAutoPayWithCard = false;
     public Integer createOrderAtDayInMonth = 0;
     public boolean prepayment = false;
     public boolean payAfterBookingCompleted = false;

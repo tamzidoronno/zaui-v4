@@ -1183,4 +1183,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
     }
 
+    @Override
+    public boolean payOrderByCard(String cardId, String orderId) throws Exception {
+        Order order = getOrder(orderId);
+        User user = userManager.getUserById(order.userId);
+        if(user != null) {
+            for(UserCard card : user.savedCards) {
+                if(card.card.equals(cardId)) {
+                    if(card.savedByVendor.equalsIgnoreCase("dibs")) {
+                        dibsManager.payWithCard(order, card);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 }

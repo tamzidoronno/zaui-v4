@@ -156,6 +156,12 @@ public class PmsBooking extends DataCommon {
         return null;
     }
 
+    void dump() {
+        for(String key : registrationData.resultAdded.keySet()) {
+            System.out.println(key + " : " + registrationData.resultAdded.get(key));
+        }
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

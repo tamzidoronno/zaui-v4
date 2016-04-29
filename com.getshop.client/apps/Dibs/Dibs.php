@@ -21,6 +21,20 @@ class Dibs extends \PaymentApplication implements \Application {
         
     }
     
+    public function getSavedCards($userId) {
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        $cards = $user->savedCards;
+        $toReturn = array();
+        foreach($cards as $card) {
+            if(!stristr($card->savedByVendor, "dibs")) {
+                continue;
+            }
+            $toReturn[] = $card;
+        }
+        return $toReturn;
+    }
+
+    
     public function simplePayment() {
         $this->preProcess();
     }

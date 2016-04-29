@@ -116,7 +116,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
-                booking.printInvoicedTo();
+//                dumpBooking(booking);
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof PmsPricing) {
@@ -638,9 +638,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        if (!booking.payedFor && 
-                !booking.avoidAutoDelete && 
-                !configuration.requirePayments && 
+        if (!booking.payedFor && configuration.autoDeleteUnpaidBookings && 
+                !booking.avoidAutoDelete &&
                 booking.rowCreatedDate.before(nowCal.getTime())) {
                 hardDeleteBooking(booking);
                 return null;
@@ -926,6 +925,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
             if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
                 daysInPeriode = getNumberOfMonthsBetweenDates(startDate, endDate);
+                if(daysInPeriode > 1000) {
+                    //Infinate dates, noone wants to pay 100 years in advance.
+                    daysInPeriode = 1;
+                }
             }
             Double price = getPriceInPeriode(booking, room, startDate, endDate);
             CartItem item = createCartItem(room, startDate, endDate);
@@ -3126,6 +3129,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         removeNotConfirmed(filter, result);
         removeDeleted(filter, result);
         removeBeingProcessed(result);
+    }
+
+    private boolean checkDate(PmsBooking booking) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(booking.rowCreatedDate);
+        if(cal.get(Calendar.DAY_OF_MONTH) == 25 && cal.get(Calendar.MONTH) == 3) {
+            return true;
+        }
+        return false;
+    }
+
+    private void dumpBooking(PmsBooking booking) {
+        if(checkDate(booking)) {
+            if((!booking.payedFor && booking.deleted != null) && (booking.sessionId == null || booking.sessionId.isEmpty())) {
+                booking.dump();
+                for(PmsBookingRooms room : booking.rooms) {
+                    BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                    System.out.println("\t" + type.name + " - " + room.date.start + " frem til : " + room.date.end);
+                }
+            } 
+            User user = userManager.getUserById(booking.userId);
+            if(user != null) {
+                System.out.println(user.fullName); 
+            }
+            System.out.println("-------");
+        }
+        booking.sessionId = "";
     }
 
 }

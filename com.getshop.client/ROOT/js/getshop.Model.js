@@ -137,34 +137,38 @@ getshop.Models = {
     moveSlider: function() {
         var status = $(this).attr("for");
         
-        var model = $(this).parent().attr("gs_model");
-        console.log(model);
-        var attr = $(this).parent().attr("gs_model_attr");
-        var val = $(this).parent().find("[id=" + status + "]").val();
-        
-        if(status == attr + "_state_one") {
-            $(this).parent().find(".slider_button").css("left", "-2px");
-        } else if(status == attr + "_state_two") {
-            $(this).parent().find(".slider_button").css("left", "16px");
-        } else if (status == attr + "_state_three") {
-            $(this).parent().find(".slider_button").css("left", "34px");
-        } else if (status == attr + "_state_three") {
-            $(this).parent().find(".slider_button").css("left", "52px");
-        } else if (status == attr + "_state_three") {
-            $(this).parent().find(".slider_button").css("left", "70px");
-        } else if (status == attr + "_state_three") {
-            $(this).parent().find(".slider_button").css("left", "88px");
-        } else if (status == attr + "_state_three") {
-            $(this).parent().find(".slider_button").css("left", "106px");
-        } else if (status == attr + "_state_three") {
-            $(this).parent().find(".slider_button").css("left", "124px");
-        } else if (status == attr + "_state_three") {
-            $(this).parent().find(".slider_button").css("left", "142px");
-        } else if (status == attr + "_state_three") {
-            $(this).parent().find(".slider_button").css("left", "160px");
+        if($(this).parent().hasClass("frontSlider") == false) {
+            var model = $(this).parent().attr("gs_model");
+            var attr = $(this).parent().attr("gs_model_attr");
+            var val = $(this).parent().find("[id=" + status + "]").val();
+            
+            getshop.Model[model][attr] = val;
         }
         
-        getshop.Model[model][attr] = val;
+        status = status.split("_");
+        status = status[1] + "_" + status[2];
+        
+        if(status == "state_one") {
+            $(this).parent().find(".slider_button").css("left", "-2px");
+        } else if(status == "state_two") {
+            $(this).parent().find(".slider_button").css("left", "16px");
+        } else if (status == "state_three") {
+            $(this).parent().find(".slider_button").css("left", "34px");
+        } else if (status == "state_three") {
+            $(this).parent().find(".slider_button").css("left", "52px");
+        } else if (status == "state_three") {
+            $(this).parent().find(".slider_button").css("left", "70px");
+        } else if (status == "state_three") {
+            $(this).parent().find(".slider_button").css("left", "88px");
+        } else if (status == "state_three") {
+            $(this).parent().find(".slider_button").css("left", "106px");
+        } else if (status == "state_three") {
+            $(this).parent().find(".slider_button").css("left", "124px");
+        } else if (status == "state_three") {
+            $(this).parent().find(".slider_button").css("left", "142px");
+        } else if (status == "state_three") {
+            $(this).parent().find(".slider_button").css("left", "160px");
+        }
     }
 }
 

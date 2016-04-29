@@ -1,0 +1,138 @@
+<?
+/* @var $this \ns_df607cb0_efb4_44f8_bbac_7bf6fa4bc5b7\Carousel */
+?>
+
+<div class="slide_options">
+    <div class="carousel_height">
+        Carousel Height
+        <div class="value_input">
+            <input type="text" name="carouselheight" value="<? echo $this->getConfigurationSetting("carouselheight"); ?>">px
+        </div>      
+    </div>
+    <div class="auto_slide">
+        Automatic Slide
+        <div class="gss_slider frontSlider" style="width: 36px;">
+            <?
+            $autoslide = $this->getConfigurationSetting("autoslide");
+            ?>
+            <input type="radio" name="autoslide" <? echo $autoslide == "false" ? "checked" : ""; ?> id="autoslide_state_one" value="false"></input>
+            <input type="radio" name="autoslide" <? echo $autoslide == "true" ? "checked" : ""; ?> id="autoslide_state_two" value="true"></input>
+            <label for="autoslide_state_one"></label>
+            <label for="autoslide_state_two"></label>
+            <?
+            if($autoslide == "false") {
+                $left = "-2px";
+                $color = "red";
+            } else if($autoslide == "true") {
+                $left = "16px";
+                $color = "green";
+            }
+            ?>
+            <div class="slider_button colorchanging" style="left: <? echo $left ?>; background-color: <? echo $color ?>"></div>
+        </div>
+    </div>
+    <div class="slide_direction">
+        Slide Direction
+        <div class="gss_slider frontSlider" style="width: 36px;">
+            <?
+            $slidedirection = $this->getConfigurationSetting("slidedirection");
+            ?>
+            <input type="radio" name="slidedirection" <? echo $slidedirection == "left" ? "checked" : ""; ?> id="slidedirection_state_one" value="left"></input>
+            <input type="radio" name="slidedirection" <? echo $slidedirection == "right" ? "checked" : ""; ?> id="slidedirection_state_two" value="right"></input>
+            <label for="slidedirection_state_one"></label>
+            <label for="slidedirection_state_two"></label>
+            <?
+            if($slidedirection == "left") {
+                $left = "-2px";
+            } else if($slidedirection == "right") {
+                $left = "16px";
+            }
+            ?>
+            <div class="slider_button textchanging" style="left: <? echo $left ?>;"><? echo $slidedirection == "left" ? "L" : "R" ?></div>
+        </div>
+    </div>
+    <div class="slide_speed">
+        Slide Speed
+        <div class="value_input">
+            <input type="text" name="slidespeed" value="<? echo $this->getConfigurationSetting("slidespeed"); ?>">ms
+        </div>        
+    </div>
+    <div class="show_bullets">
+        Show Bullets
+        <div class="gss_slider frontSlider" style="width: 36px;">
+            <?
+            $bullets = $this->getConfigurationSetting("showbullets");
+            ?>
+            <input type="radio" name="showbullets" <? echo $bullets == "false" ? "checked" : ""; ?> id="showbullets_state_one" value="false"></input>
+            <input type="radio" name="showbullets" <? echo $bullets == "true" ? "checked" : ""; ?> id="showbullets_state_two" value="true"></input>
+            <label for="showbullets_state_one"></label>
+            <label for="showbullets_state_two"></label>
+            <?
+            if($bullets == "false") {
+                $left = "-2px";
+                $color = "red";
+            } else if($bullets == "true") {
+                $left = "16px";
+                $color = "green";
+            }
+            ?>
+            <div class="slider_button colorchanging" style="left: <? echo $left ?>; background-color: <? echo $color ?>"></div>
+        </div>
+    </div>
+    <div class="show_arrows">
+        Show Arrows
+        <div class="gss_slider frontSlider" style="width: 36px;">
+            <?
+            $arrows = $this->getConfigurationSetting("showarrows");
+            ?>
+            <input type="radio" name="showarrows" <? echo $arrows == "false" ? "checked" : ""; ?> id="showarrows_state_one" value="false"></input>
+            <input type="radio" name="showarrows" <? echo $arrows == "true" ? "checked" : ""; ?> id="showarrows_state_two" value="true"></input>
+            <label for="showarrows_state_one"></label>
+            <label for="showarrows_state_two"></label>
+            <?
+            if($arrows == "false") {
+                $left = "-2px";
+                $color = "red";
+            } else if($arrows == "true") {
+                $left = "16px";
+                $color = "green";
+            }
+            ?>
+            <div class="slider_button colorchanging" style="left: <? echo $left ?>; background-color: <? echo $color ?>"></div>
+        </div>
+    </div>
+    <div class="arrow_location_vertical">
+        Arrow Location From Top
+        <div class="value_input">
+            <input type="text" name="arrowvertical" value="<? echo $this->getConfigurationSetting("arrowvertical"); ?>">%
+        </div>      
+    </div>
+    <div class="arrow_location_horizontal">
+        Arrow Location From Sides
+        <div class="value_input">
+            <input type="text" name="arrowhorizontal" value="<? echo $this->getConfigurationSetting("arrowhorizontal"); ?>">%
+        </div>      
+    </div>
+    <div class="slides_title">
+        Slides
+    </div>
+    <div class="gss_button change_slide_number" num_change="-1"><i class='fa fa-minus'></i></div>
+    <div class="gss_button change_slide_number" num_change="+1"><i class='fa fa-plus'></i></div>
+    <div class="slides_container">
+        <?
+            for ($i = 1; $i <= $this->getConfigurationSetting("slidenumber"); $i++) {
+        ?>
+        <div class="slide_image" slidenumber="<? echo $i; ?>">
+            Slide #<?echo $i; ?>
+            <div class="value_input">
+                <input type="file" name="slideimage">
+            </div>      
+        </div>
+        <?
+            }
+        ?>
+    </div>
+    <div class='gss_button_area'>
+        <div class="gss_button save_carousel_settings"><i class='fa fa-save'></i><?php echo $this->__f("Save"); ?></div>
+    </div>
+</div>

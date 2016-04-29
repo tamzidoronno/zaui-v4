@@ -287,6 +287,9 @@ public class PmsBookingRooms implements Serializable {
     }
     
     private boolean isSameDay(Date date1, Date date2) {
+        if(date1 == null || date2 == null) {
+            return false;
+        }
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
         return fmt.format(date1).equals(fmt.format(date2));
     }

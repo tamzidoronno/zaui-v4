@@ -13,7 +13,7 @@ import org.mongodb.morphia.annotations.Transient;
  *
  * @author ktonder
  */
-public class CertegoSystem extends DataCommon {
+public class CertegoSystem extends DataCommon implements Comparable<CertegoSystem>{
     public String number ;
     public String name;
     public String phoneNumber;
@@ -23,4 +23,9 @@ public class CertegoSystem extends DataCommon {
     
     @Transient
     public Group group;
+
+    @Override
+    public int compareTo(CertegoSystem o) {
+        return o.name.compareTo(this.name);
+    }
 }

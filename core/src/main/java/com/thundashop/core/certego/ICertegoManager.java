@@ -9,6 +9,8 @@ import com.thundashop.core.certego.data.CertegoOrder;
 import com.thundashop.core.certego.data.CertegoSystem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.usermanager.data.Group;
 import java.util.List;
@@ -37,4 +39,6 @@ public interface ICertegoManager {
     public List<CertegoOrder> getOrders();
     
     public void saveOrder(CertegoOrder order);
+    
+    public FilteredData getSystemsFiltered(FilterOptions filterOptions);
 }

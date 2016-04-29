@@ -14,7 +14,7 @@
 
 namespace ns_27a320a3_e983_4f55_aae8_cf94add661c2;
 
-class CertegoSystems extends \ApplicationBase implements \Application {
+class CertegoSystems extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon implements \Application {
 
     private $systemsForGroup;
 
@@ -138,5 +138,10 @@ class CertegoSystems extends \ApplicationBase implements \Application {
         $system = $this->getSystem($_POST['value2']);
         $system->groupId = "";
         $this->getApi()->getCertegoManager()->saveSystem($system);
+    }
+    
+    public function loadData() {
+        if (!$this->filteredData)
+            $this->filteredData = $this->getApi()->getCertegoManager()->getSystemsFiltered ($this->createFilter());
     }
 }

@@ -85,7 +85,7 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
             $_POST['data']['hidePinCode'] = false;
             $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
             $attachments = $this->getAttachments();
-            $this->sendMail($this->getEmailAddress(), $attachments);
+            $this->sendMail($this->getEmailAddress(), $attachments, \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null);
         }
         
         if ($_POST['data']['page4']['securitytype'] == "signature") {
@@ -126,8 +126,20 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         return $attachments;
     }
     
-    private function sendMail($mailAddress, $attachments) {
-        $this->getApi()->getMessageManager()->sendMailWithAttachments($mailAddress, $mailAddress, "Bestilling fra Certego", "", "certego@getshop.com", "Certego AS", $attachments);
+    private function sendMail($mailAddress, $attachments, $loggedIn = false) {
+        $subject = $this->getFirstSystemNumber();
+        
+        if ($loggedIn) {
+            $subject .= " (INNLOGGET) ";
+        }
+        
+        if ($subject) {
+            $subject .= " - ";
+        }
+        
+        $subject .= "Bestilling fra Certego";
+        
+        $this->getApi()->getMessageManager()->sendMailWithAttachments($mailAddress, $mailAddress, $subject, "", "certego@getshop.com", "Certego AS", $attachments);
     }
     
     public function doLogin() {
@@ -268,7 +280,7 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $address->city = $_POST['data']['city'];
         $address->vatNumber = $_POST['data']['vatNumber'];
         $address->phone = $_POST['data']['phone'];
-        $address->email = $_POST['data']['email'];
+        $address->emailAddress = $_POST['data']['email'];
         $address->id = $_POST['data']['addrid'];
         
         $group = $this->getCurrentGroup();
@@ -325,6 +337,22 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         }
         
         return $email;
+    }
+
+    public function getFirstSystemNumber() {
+        $fromKey = @$_POST['data']['page2']['keys_setup'][0]['systemNumber'];
+        
+        if ($fromKey) {
+            return $fromKey;
+        }
+        
+        $fromCyl = @$_POST['data']['page2']['cylinder_setup'][0]['systemNumber'];
+        
+        if ($fromCyl) {
+            return $fromCyl;
+        }
+        
+        return "";
     }
 
 }

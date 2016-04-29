@@ -766,8 +766,14 @@ app.LasGruppenOrderSchema = {
             $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"]').show();
         }
         
-        if (pageNumber === 6) {
+        if (pageNumber === 6 && $('#signature').is(':checked')) {
+            $('.normalCertegoOrder').hide();
+            $('.downloadPdfManually').show();
             $('.showPdf').show();
+        } else {
+            $('.normalCertegoOrder').show();
+            $('.downloadPdfManually').hide();
+            $('.showPdf').hide();
         }
     },
     

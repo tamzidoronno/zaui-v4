@@ -51,7 +51,7 @@ foreach($rooms as $room) {
         if($availability == 0) {
             $text = $this->getText("no_rooms_available");
             if(!$text) {
-                $text = "We are out of this type of room, select a different one.";
+                $text = $this->__w("Out of stock.");
             }
         } else {
             $text = $this->getText("selected_room_count_text");

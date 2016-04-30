@@ -225,6 +225,10 @@ public class PmsBookingRooms implements Serializable {
             return date.start;
         }
         
+        if(date.start.after(invoicedTo)) {
+            return date.start;
+        }
+        
         return invoicedTo;
     }
 

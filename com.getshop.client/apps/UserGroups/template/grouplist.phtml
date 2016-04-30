@@ -1,7 +1,7 @@
 <?
 /* @var $this ns_3983a370_d0cc_46de_ba94_cc22fe7becbb\UserGroups */
 $groups = $this->getApi()->getUserManager()->getAllGroups();
-
+$searchtext = $this->getSearchText();
 ?>
 
 <div class='gss_settings_header'>
@@ -19,26 +19,20 @@ $groups = $this->getApi()->getUserManager()->getAllGroups();
     </div>	
 </div>
 
-<div class='gss_settings_content'>
-    <?
-    if (!count($groups)) {
-        echo $this->__f("You have not created any groups yet");
-    } else {
-        foreach ($groups as $group) {
-            ?>
-            <div style='min-height: 38px; height: inherit;' gss_fragment='group' gss_view='gs_user_workarea' gss_value='<? echo $group->id ?>' class='gss_product'>
-               <div class='gss_product_inner_desc'>
-                   <div class='gss_product_title'>
-                       <? 
-                       echo $group->groupName; 
-                       $this->printExtraInformation($group);
-                       ?>
-                   </div>
-               </div>
-            </div>
-            <?
-        }
-    }
-    ?>
-    
+<div class="gss_settings_header">
+    <i class="fa fa-search"></i>
+
+    <div class="gss_settings_header_description" >
+        <div class="gss_settings_header_title"><? echo $this->__f("Search (leave blank to see all)"); ?></div>
+        <div class="gss_settings_header_description_inner" style="position: relative; width: 868px;">
+            <input id='gss_order_filter_search_text' gs_model='orders' gs_model_attr='order_filter' type="textfield" style="left: 0px; top: 0px;" placeholder="<? echo $this->__f("Filter users"); ?>" value='<? echo $searchtext; ?>'/>
+           
+            <div id='gss_order_filter_search_button' gss_method='filterOrders' gss_view='gss_outer_searchresult' gss_fragment='searchresult' gss_model='orders' style='position: absolute; right: 0px;height: 11px;line-height: 11px;top: 2px;' class='gss_button'><? echo $this->__f("Search"); ?></div>
+        </div>
+    </div>	
 </div>
+
+<div class='gss_outer_searchresult gss_settings_content'>
+    <? $this->includefile("searchresult"); ?>
+</div>    
+

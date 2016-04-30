@@ -14,6 +14,8 @@ import com.thundashop.core.certego.data.CertegoOrder;
 import com.thundashop.core.certego.data.CertegoOrders;
 import com.thundashop.core.certego.data.CertegoSystem;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
@@ -30,6 +32,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -233,4 +236,33 @@ public class CertegoManager extends ManagerBase implements ICertegoManager {
         }
         return orderCollection; 
    }   
+
+    @Override
+    public FilteredData getSystemsFiltered(FilterOptions filterOptions) {
+        List<CertegoSystem> filteredResult = getSystems().stream()
+                .filter(o -> filtered(o, filterOptions.searchWord))
+                .collect(Collectors.toList());
+                
+       return pageIt(filteredResult, filterOptions);
+    }
+
+    private boolean filtered(CertegoSystem o, String searchWord) {
+        if (searchWord == null || searchWord.isEmpty()) {
+            return true;
+        }
+        
+        if (o.email != null && o.email.toLowerCase().contains(searchWord))
+            return true;
+        
+        if (o.name != null && o.name.toLowerCase().contains(searchWord))
+            return true;
+        
+        if (o.number != null && o.number.toLowerCase().contains(searchWord))
+            return true;
+        
+        if (o.phoneNumber != null && o.phoneNumber.toLowerCase().contains(searchWord))
+            return true;
+        
+        return false;
+    }
 }

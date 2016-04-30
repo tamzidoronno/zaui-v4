@@ -1,0 +1,59 @@
+<div id="gss_certego_systems_overview">
+<?
+/* @var $this \ns_27a320a3_e983_4f55_aae8_cf94add661c2\CertegoSystems */
+
+    $systems = $this->getFilteredData();
+
+    if (!count($systems)) {
+        echo $this->__f("You have not created any systems yet");
+    } else {
+        foreach ($systems as $system) {
+            $groupName = $this->getGroupName($system);
+            ?>
+            <div gss_fragment='editsystem' gss_view='gs_user_workarea' gss_value='<? echo $system->id ?>' class='gss_product gss_edit_system'>
+               <div class='gss_product_inner_desc'>
+                   <div class='gss_product_title'>
+                       <? $this->printSystem($system); ?>
+                   </div>
+                   <?
+                   if ($groupName) {
+                   ?>
+                        <div class='gss_product_title' style="font-style: italic;"><? echo $groupName; ?></div>
+                   <?
+                   }
+                   ?>
+               </div>
+            </div>
+            <?
+        }
+    }
+?>
+</div>
+
+
+<div class="gss_pagenumber_bottom">
+    <? echo $this->__f("Page") . ": " . $this->getPageNumber() . "/" . $this->getTotalPageCount(); ?>
+    
+    <div style='margin-top: 10px; text-align: center;'>
+        <? echo $this->__f("Pagesize"); ?>
+        <span gss_method='setPageSize' gss_value='3' style='cursor: pointer;'>3</span>,
+        <span gss_method='setPageSize' gss_value='10' style='cursor: pointer;'>10</span>,
+        <span gss_method='setPageSize' gss_value='20' style='cursor: pointer;'>20</span>,
+        <span gss_method='setPageSize' gss_value='30' style='cursor: pointer;'>30</span>,
+        <span gss_method='setPageSize' gss_value='50' style='cursor: pointer;'>50</span>,
+        <span gss_method='setPageSize' gss_value='100' style='cursor: pointer;'>100</span>,
+        <span gss_method='setPageSize' gss_value='200' style='cursor: pointer;'>200</span>,
+        <span gss_method='setPageSize' gss_value='300' style='cursor: pointer;'>300</span>,
+        <span gss_method='setPageSize' gss_value='500' style='cursor: pointer;'>500</span>
+    </div>
+</div>
+
+<div class="gss_order_nextprevbuttons">
+    <? if ($this->hasPrevPage()) { ?>
+        <div class='gss_button order_gss_prev_buttons' gss_method="prevOrderPage"><i class='fa fa-arrow-left'></i> <? echo $this->__f("Previouse page"); ?></div>
+    <? } ?>
+
+    <? if ($this->hasNextPage()) { ?>
+        <div class='gss_button order_gss_next_buttons' gss_method="nextOrderPage"><i class='fa fa-arrow-right'></i> <? echo $this->__f("Next page"); ?></div>
+    <? } ?>
+</div>

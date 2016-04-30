@@ -13,7 +13,7 @@
  */
 namespace ns_3983a370_d0cc_46de_ba94_cc22fe7becbb;
 
-class UserGroups extends \ApplicationBase implements \Application {
+class UserGroups extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon implements \Application {
     public function getDescription() {
         
     }
@@ -121,4 +121,8 @@ class UserGroups extends \ApplicationBase implements \Application {
         }
     }
 
+    public function loadData() {
+        if (!$this->filteredData)
+            $this->filteredData = $this->getApi()->getUserManager()->getAllGroupsFiletered($this->createFilter());
+    }
 }

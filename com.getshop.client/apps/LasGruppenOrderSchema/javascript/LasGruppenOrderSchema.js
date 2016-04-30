@@ -69,6 +69,7 @@ app.LasGruppenOrderSchema = {
         $(document).on('change', '.LasGruppenOrderSchema [name="shippingtype"]', app.LasGruppenOrderSchema.shipmentChanged);
         $(document).on('change', '.LasGruppenOrderSchema input[required]', app.LasGruppenOrderSchema.requiredFieldChanged);
         $(document).on('change', '.LasGruppenOrderSchema input[type_email]', app.LasGruppenOrderSchema.requiredFieldChanged);
+        $(document).on('change', '.LasGruppenOrderSchema select[required]', app.LasGruppenOrderSchema.requiredFieldChanged);
         $(document).on('change', '.LasGruppenOrderSchema .radio_required input', app.LasGruppenOrderSchema.requiredFieldChanged);
         $(document).on('change', '.LasGruppenOrderSchema #samedeliveryasinvoice', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '.LasGruppenOrderSchema .keyandcylinders', app.LasGruppenOrderSchema.keyandcylinders);
@@ -721,7 +722,6 @@ app.LasGruppenOrderSchema = {
         if (pageNumber === 5) {
             if ($('#signature').is(':checked')) {
                 app.LasGruppenOrderSchema.saveData(this, function() {
-                    window.location = "/scripts/downloadPdfLasGruppen.php";
                     app.LasGruppenOrderSchema.goToNextPage(6, me);
                 }, true);
                 
@@ -764,6 +764,16 @@ app.LasGruppenOrderSchema = {
         if ($('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"]').length) {
             $(target).closest('.orderpage').hide();
             $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"]').show();
+        }
+        
+        if (pageNumber === 6 && $('#signature').is(':checked')) {
+            $('.normalCertegoOrder').hide();
+            $('.downloadPdfManually').show();
+            $('.showPdf').show();
+        } else {
+            $('.normalCertegoOrder').show();
+            $('.downloadPdfManually').hide();
+            $('.showPdf').hide();
         }
     },
     
@@ -832,6 +842,13 @@ app.LasGruppenOrderSchema = {
         
         $('.helptext').remove();
         
+        page.find('select').each(function() {
+            if ($(this).attr('required') && $(this).is(':visible') && !$(this).val()) {
+                $(this).addClass('required');
+                validated = false;
+            }
+        });
+        
         page.find('input').each(function() {
             if ($(this).attr('required') && $(this).is(':visible') && !$(this).val()) {
                 $(this).addClass('required');
@@ -893,7 +910,7 @@ app.LasGruppenOrderSchema = {
             $('.pincodesetup').show();
         }
         if (selectedval === "2") {
-            $('.order_page4 .next').html('Last ned PDF');
+            $('.order_page4 .next').html('Til PDF');
             $('.signaturesecurity').show();
         }
     },

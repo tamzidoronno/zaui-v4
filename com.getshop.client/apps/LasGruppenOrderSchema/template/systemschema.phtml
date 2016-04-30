@@ -5,7 +5,7 @@ $group = $this->getCurrentGroup();
 $systems = $this->getSystems($group);
 
 
-$printSystems = "<input type='textfield' class='systemnumber systemnumber_uppercase'> ";
+$printSystems = "<input type='textfield' required='true' class='systemnumber systemnumber_uppercase'> ";
 if ($systems && count($systems)) {
     $printSystems = "<select style='width: 100px;' class='systemnumber'>";
     foreach ($systems as $system) {
@@ -39,7 +39,7 @@ if ($systems && count($systems)) {
     Legg til nøklene
     <table id="keys_setup_table">
         <tr><th>Systemnr.</th><th>Antall</th><th>Merking</th></tr>
-        <tr class='keys_template_row'><td><? echo $printSystems; ?></td><td><input type='textfield' class="keys_count"></td><td><input class="keys_marking" type='textfield'></td></tr>
+        <tr class='keys_template_row'><td><? echo $printSystems; ?></td><td><input type='textfield' required='true' class="keys_count"></td><td><input required='true' class="keys_marking" type='textfield'></td></tr>
     </table>
     <div class='shop_button add_key_row'>
         +1 Linje
@@ -63,13 +63,13 @@ if ($systems && count($systems)) {
                 echo $printSystems;
                 ?>
             </td>
-            <td><input type='textfield' style="width: 40px;" class='cylinder_count'></td>
-            <td><input type='textfield' class='cylinder_type'></td>
+            <td><input required='true' type='textfield' style="width: 40px;" class='cylinder_count'></td>
+            <td><input required='true' type='textfield' class='cylinder_type'></td>
             <td><input type='textfield' class='door_thickness'></td>
-            <td><input type='textfield' style="width: 240px" class='keys_that_fits'></td>
+            <td><input required='true' type='textfield' style="width: 240px" class='keys_that_fits'></td>
             <td>
-                <select class='texture'>
-                    <option value='overflate'>Overflate</option>
+                <select class='texture' required='true'>
+                    <option value=''>Overflate</option>
                     <option value='Forkrommet matt'>Forkrommet matt</option>
                     <option value='Forkrommet'>Forkrommet</option>
                     <option value='Messing matt'>Messing matt</option>

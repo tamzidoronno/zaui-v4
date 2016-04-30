@@ -13,5 +13,12 @@ class GetShop20Theme extends \ThemeApplication implements \Application {
     public function render() {
         
     }
+    
+        
+    public function getThemeClasses() {
+        return ["coolbgbox"];
+    }
+    
+    
 }
 ?>

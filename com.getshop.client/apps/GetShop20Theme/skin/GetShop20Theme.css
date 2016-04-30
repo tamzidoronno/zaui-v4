@@ -21,3 +21,30 @@
 }
 .closescrollmenu { position:absolute; right: 10px; top: 10px; font-size: 20px; cursor:pointer; }
 .scrolltopmenu a { font-size: 20px;display:inline-block; padding-right: 50px; margin-top: 40px;}
+
+
+.coolbgbox .gsadditionalspanincell {
+    background-size: cover !important;
+    transition: all 0.3s ease !important;
+    -moz-transition: all 0.3s ease !important;
+    -ms-transition: all 0.3s ease !important;
+    -webkit-transition: all 0.3s ease !important;
+    -o-transition: all 0.3s ease !important;
+    width:100% !important;
+    height:100% !important;
+    display:inline-block !important;
+    position:absolute !important;
+}
+
+.coolbgbox .coolbgbox_inner {
+    overflow:hidden;
+}
+ 
+.coolbgbox:hover .gsadditionalspanincell {
+    transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -webkit-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    -ms-transform: scale(1.05); /* IE 9 */ 
+}
+ 

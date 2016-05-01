@@ -13,12 +13,28 @@ import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.WebSocketReturnMessage;
 import com.thundashop.core.common.WebSocketWrappedMessage;
 import com.thundashop.core.websocket.WebSocketClient;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 import org.java_websocket.server.WebSocketServer;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -36,6 +52,13 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
     
     public WebSocketServerImpl() {
         super(new InetSocketAddress(31330));
+
+//      Starting of SSL implementation.
+//        try {
+//            initSll();
+//        } catch (Exception ex) {
+//            Logger.getLogger(WebSocketServerImpl.class.getName()).log(Level.SEVERE, null, ex);
+//        } 
     }
 
     @Override
@@ -96,6 +119,25 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
         for (WebSocketClient client : clients.values()) {
             client.sendMessage(string);
         }
+    }
+
+    private void initSll() throws FileNotFoundException, CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException {
+        InputStream is = new FileInputStream("/etc/nginx/ssl/getshop_com.crt");
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        X509Certificate caCert = (X509Certificate)cf.generateCertificate(is);
+
+        TrustManagerFactory tmf = TrustManagerFactory
+            .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+        ks.load(null); // You don't need the KeyStore instance to come from a file.
+//        ks.setCertificateEntry("caCert", caCert);
+
+        tmf.init(ks);
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, tmf.getTrustManagers(), null);
+
+        setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
     }
     
 }

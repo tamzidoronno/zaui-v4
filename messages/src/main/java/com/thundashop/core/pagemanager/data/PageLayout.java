@@ -36,9 +36,15 @@ public class PageLayout implements Serializable {
     }
     
     private ArrayList<PageCell> getArea(String area) {
-        areas.put("body", body);
-        areas.put("freeArea", freeArea);
-        return areas.get(area);
+        if(area.equals("body")) {
+            return body;
+        } else if(area.equals("freeArea")) {
+            return freeArea;
+        } else { 
+            areas.put("body", body);
+            areas.put("freeArea", freeArea);
+            return areas.get(area);
+        }
     }
 
     public void moveCell(String cellid, boolean moveUp) {

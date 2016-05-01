@@ -231,7 +231,6 @@
 }
 
 #slider1 {
-  font-family: 'Lato';
   width: 100%;
 }
 #slider1 > ul > li:nth-of-type(3) {

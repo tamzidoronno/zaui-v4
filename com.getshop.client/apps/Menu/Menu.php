@@ -211,7 +211,7 @@ class Menu extends \SystemApplication implements \Application {
         
         $i =1;
         foreach ($entries as $entry) {
-            if ($this->isDisabledDueToAccessLevel($entry) && !$this->isDisabledEnabled()) {
+            if ($this->isDisabledDueToAccessLevel($entry) && !$this->isDisabledEnabled($entry)) {
                 continue;
             }
             
@@ -243,7 +243,7 @@ class Menu extends \SystemApplication implements \Application {
             }
             
             $disabledClass = ""; 
-            if ($this->isDisabledEnabled() && $this->isDisabledDueToAccessLevel($entry)) {
+            if ($this->isDisabledEnabled($entry) && $this->isDisabledDueToAccessLevel($entry)) {
                 $disabledClass = "gs_menu_disabled";
                 $link = "?page=login";
                 $linkName = "?page=login";
@@ -275,7 +275,11 @@ class Menu extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("disableMenuItemsInsteadOfHide", $_POST['disableMenuItemsInsteadOfHide']);
     }
     
-    public function isDisabledEnabled() {
+    public function isDisabledEnabled($entry) {
+        if ($entry->userLevel > 10) {
+            return false;
+        }
+        
         $disabled = $this->getGlobalConfigurationSetting("disableMenuItemsInsteadOfHide");
         
         if (isset($disabled) && $disabled == "true") {

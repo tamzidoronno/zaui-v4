@@ -33,7 +33,7 @@ getshop.WebSocketClient = {
 //        var me = getshop.WebSocketClient;
         
         if (window.location.protocol == "https:") {
-            log.warn("WebSocket not available yet for SSL connections");
+            console.warn("WebSocket not available yet for SSL connections");
             return;
         }
         

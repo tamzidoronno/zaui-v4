@@ -644,7 +644,7 @@ class Page {
         }
 
         echo "<div class='$gscellinner $themeClassInner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells' $innerstyles>";
-        echo "<span class='gsadditionalspanincell'></span>";
+        echo "<span class='gsadditionalspanincell gsdepth_$depth'></span>";
         if ($header && $depth == 0 && $count == 0) {
             $this->printLanguageSelection();
         }
@@ -1854,7 +1854,7 @@ class Page {
         
         ?>
         <script>
-            
+//            ytp.proxy.autoPlayType = "preview";
             
             PubSub.subscribe('NAVIGATED', function() {
                 $('.gsyoutubeplayer').remove();
@@ -1873,7 +1873,7 @@ class Page {
                             toEmbed.addClass('player');
                             toEmbed.addClass('player_' + settings.youtubebgmovie);
                             toEmbed.attr('id', "youtubeplayer_"+settings.youtubebgmovie);
-                            toEmbed.attr('data-property','{videoURL:"https://www.youtube.com/watch?v='+settings.youtubebgmovie+'",containment:"#'+$(this).attr('cellid')+'",autoPlay:true, mute:true, startAt:0,opacity:1}');
+                            toEmbed.attr('data-property','{videoURL:"https://www.youtube.com/watch?v='+settings.youtubebgmovie+'",containment:"#'+$(this).attr('cellid')+'",autoPlay:true, mute:true, startAt:0,opacity:1, showControls:false, loop: true, autoPlay: true}');
                             toEmbed.text('video player : ' + settings.youtubebgmovie);
                             $('body').prepend(toEmbed);
                             toEmbed.mb_YTPlayer();

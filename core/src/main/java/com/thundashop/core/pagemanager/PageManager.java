@@ -344,7 +344,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         PageCell celltoReturn = page.getCell(cellId);
         if(celltoReturn == null) {
-            String tmpcellid = page.layout.createCell("", "", PageCell.CellMode.row, "freearea");
+            String tmpcellid = page.layout.createCell("", "", PageCell.CellMode.row, "freeArea");
             celltoReturn = page.getCell(tmpcellid);
             celltoReturn.cellId = cellId;
             savePage(page);

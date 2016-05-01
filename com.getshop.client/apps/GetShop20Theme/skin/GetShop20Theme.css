@@ -23,6 +23,10 @@
 .scrolltopmenu a { font-size: 20px;display:inline-block; padding-right: 50px; margin-top: 40px;}
 
 
+body {
+    font-family: 'Nunito', sans-serif;
+}
+
 .coolbgbox .gsadditionalspanincell {
     background-size: cover !important;
     transition: all 0.3s ease !important;
@@ -46,5 +50,31 @@
     -webkit-transform: scale(1.05);
     -o-transform: scale(1.05);
     -ms-transform: scale(1.05); /* IE 9 */ 
+}
+ 
+
+.slowzoom .gsadditionalspanincell {
+    background-size: cover !important;
+    transition: all 20s ease !important;
+    -moz-transition: all 20s ease !important;
+    -ms-transition: all 20s ease !important;
+    -webkit-transition: all 20s ease !important;
+    -o-transition: all 20s ease !important;
+    width:101% !important;
+    height:101% !important;
+    display:inline-block !important;
+    position:absolute !important;
+}
+
+.slowzoom .slowzoom_inner {
+    overflow:hidden;
+}
+ 
+.slowzoom:hover .gsadditionalspanincell {
+    transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    -ms-transform: scale(1.2); /* IE 9 */ 
 }
  

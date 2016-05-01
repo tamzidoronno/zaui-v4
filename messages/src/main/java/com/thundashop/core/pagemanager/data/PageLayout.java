@@ -12,6 +12,7 @@ import org.mongodb.morphia.annotations.Transient;
 
 public class PageLayout implements Serializable {
     private ArrayList<PageCell> body = new ArrayList();
+    private ArrayList<PageCell> freeArea = new ArrayList();
     
     @Transient
     private HashMap<String, ArrayList<PageCell>> areas = new HashMap();
@@ -27,19 +28,17 @@ public class PageLayout implements Serializable {
     private void putAreas(String area, ArrayList<PageCell> list) {
         if (area.equals("body")) {
             body = list;
+        } else if(area.equals("freeArea")) {
+            freeArea = list;
         } else {
             areas.put(area, list);
         }
     }
     
     private ArrayList<PageCell> getArea(String area) {
-        if (area.equals("body")) {
-            return body;
-        } else {
-            areas.put("body", body);
-            return areas.get(area);
-        }
-        
+        areas.put("body", body);
+        areas.put("freeArea", freeArea);
+        return areas.get(area);
     }
 
     public void moveCell(String cellid, boolean moveUp) {

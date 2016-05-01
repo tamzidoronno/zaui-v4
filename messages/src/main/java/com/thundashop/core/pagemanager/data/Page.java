@@ -72,7 +72,7 @@ public class Page extends DataCommon implements Cloneable {
         layout.setNewList(pagedata.leftSideBars.get(leftSideBarName), leftSideBarName, true);
         
         for (String key : pagedata.modals.keySet()) {
-            if (key.equals("header") || key.equals("footer") || key.equals("body")) {
+            if (key.equals("header") || key.equals("footer") || key.equals("body") || key.equals("freearea")) {
                 continue;
             }
             

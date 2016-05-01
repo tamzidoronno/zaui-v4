@@ -14,7 +14,10 @@ class GetShop20Theme extends \ThemeApplication implements \Application {
         
     }
     
-        
+    public function addScripts() {
+        return "\n"."<link href='https://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>";
+    }
+    
     public function getThemeClasses() {
         return ["coolbgbox", "slowzoom"];
     }

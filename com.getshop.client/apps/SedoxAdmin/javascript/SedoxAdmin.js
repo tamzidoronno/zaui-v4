@@ -11,6 +11,22 @@ app.SedoxAdmin = {
         $(document).on('dragover', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleDragOver);
         $(document).on('dragleave', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleDragOut);
         $(document).on('drop', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleFileSelect);
+        getshop.WebSocketClient.addListener("com.thundashop.core.sedox.ProductStartStopToggle", app.SedoxAdmin.notificationReceived);
+    },
+    
+    notificationReceived: function(data) {
+        var currentUserId = $('[name="userid"]').val();
+        
+        if (currentUserId !== data.userid) {
+            var dataToPost = {
+                productId : data.productId
+            };
+            
+            var event = thundashop.Ajax.createEvent(null, "renderProduct", $('.SedoxAdmin'), dataToPost);
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                $('.col_row_content[productid=90650]').html(res);
+            })
+        }  
     },
     
     showUser: function() {

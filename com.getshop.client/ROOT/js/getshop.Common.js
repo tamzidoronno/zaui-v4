@@ -146,7 +146,7 @@ $(function() {
 
         var url = getUrl(link);
         
-        if(avoidjavascriptnavigation) {
+        if(avoidjavascriptnavigation && window.location.href !== url) {
             window.location.href=url;
             return;
         }
@@ -1215,10 +1215,7 @@ GetShopUtil = {
 
 
 thundashop.common.logout = function() {
-    if(!avoidLoggingOut) {
-        document.location = '/logout.php?goBackToHome=true';
-    }
-    avoidLoggingOut = false;
+    document.location = '/logout.php?goBackToHome=true';
 };
 
 thundashop.common.sendPubSubMessage = function(data) {
@@ -1241,44 +1238,66 @@ thundashop.common.triggerTimeoutCheck = function() {
     var timeOut = currentTime + parseInt(timeOutUser)*60*1000;
     
     $(document).ready(function() {
-        var isLoggedIn = $('input[name="userid"]').val() != "";
+        var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
         
         if (isLoggedIn) {
             localStorage.setItem("gs_login_timeout", timeOut);
-        } else {
-            localStorage.setItem("gs_login_timeout", currentTime);
         }
     });
 };
+
+thundashop.common.checkWithServerIfLoggedOut = function() {
+    if ($('input[name="userid_in_body"]').length > 0) {
+        $.ajax({
+            type: "GET",
+            url: "/scripts/isLoggedIn.php",
+            success: function(response) {
+                if (response === "false") {
+                    var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
+                    if (isLoggedIn) {
+                        thundashop.common.logout();
+                    }
+                }
+                
+                if (response === "true") {
+                    var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
+                    if (!isLoggedIn) {
+                        document.location = "/";
+                    }
+                }
+            }
+        });        
+    }
+    
+    setTimeout(thundashop.common.checkWithServerIfLoggedOut, 5000);
+}
+
+thundashop.common.checkWithServerIfLoggedOut();
 
 /**
  * a loop that checks weather it needs to logout or not.
  */
 var timeCheckMs = 1000;
-var avoidLoggingOut = false;
 thundashop.common.checkTimeout = function() {
+    var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
     
-    if (!localStorage.getItem("gs_login_timeout")) {
+    if (!localStorage.getItem("gs_login_timeout") && !isLoggedIn) {
         setTimeout(thundashop.common.checkTimeout, timeCheckMs);
         return;
     }
-    
-    var isLoggedIn = $('input[name="userid"]').val() != "";
+  
     var newDateObj = new Date();
     var currentTime = newDateObj.getTime();
     var timeoutTime = parseInt(localStorage.getItem("gs_login_timeout"));
     var timeLeft = timeoutTime - currentTime;
     
-    if (timeLeft > 0 && !isLoggedIn) {
-        document.location = '/';
-    }
-    
-    if (timeLeft < 0 && isLoggedIn) {
-        thundashop.common.logout();
-    }
-    
-    if (timeLeft < 0) {
+    if (!isLoggedIn) {
+        timeLeft = 0;
         localStorage.removeItem("gs_login_timeout");
+    }
+    
+    if (timeLeft <= 0 && isLoggedIn) {
+        thundashop.common.logout();
     }
     
     if (timeLeft) {
@@ -1290,7 +1309,6 @@ thundashop.common.checkTimeout = function() {
 }
 
 setTimeout(thundashop.common.checkTimeout, timeCheckMs);
-
 
 var resizeLeftBar = function() {
     if ($(".left_side_bar").length) {

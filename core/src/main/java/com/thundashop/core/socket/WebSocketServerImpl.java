@@ -11,12 +11,11 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.WebSocketReturnMessage;
+import com.thundashop.core.common.WebSocketWrappedMessage;
 import com.thundashop.core.websocket.WebSocketClient;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -84,6 +83,19 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    public void sendMessage(Object data) {
+        WebSocketWrappedMessage wrapped = new WebSocketWrappedMessage();
+        wrapped.payLoad = data;
+        wrapped.coninicalName = data.getClass().getCanonicalName();
+        
+        Gson gson = new Gson();
+        String string = gson.toJson(wrapped);
+        
+        for (WebSocketClient client : clients.values()) {
+            client.sendMessage(string);
+        }
     }
     
 }

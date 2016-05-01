@@ -440,7 +440,7 @@ if(isset($_GET['avoidjavascriptnavigation']) || isset($_SESSION['avoidjavascript
 }
 if(isset($_GET['dojavascriptnavigation'])) {
     unset($_SESSION['dojavascriptnavigation']);
-    echo "<script>avoidjavascriptnavigation = false;";
+    echo "<script>avoidjavascriptnavigation = false;</script>";
 }
 
 

@@ -267,6 +267,9 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/timepicker/jquery-ui-timepicker-addon.js");
         $this->addJavascriptFile("js/batchImageLoad.jquery.js");
         
+        // WebSocket Support
+        $this->addJavascriptFile("js/getshop.WebSocketClient.js");
+        
         if ($this->isProductionMode) {
             echo "\n" . '<script  src="'.$fileName.'"></script>';
         }

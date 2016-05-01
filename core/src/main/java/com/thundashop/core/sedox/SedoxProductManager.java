@@ -1492,8 +1492,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public void notifyOnSocket(SedoxProduct sedoxProduct) {
         if (getSession() != null && getSession().currentUser != null) {
             String userid = getSession().currentUser.id;
-//            // TODO : SEND ON TOPIC.
-//            webSocketServer.sendMessage("{ \"action\": \"startstoptoggled\", \"userId\": \""+userid+"\" , \"productId\": \""+sedoxProduct.id+"\" }");    
+            ProductStartStopToggle toggle = new ProductStartStopToggle();
+            toggle.userid = userid;
+            toggle.productId = sedoxProduct.id;
+            webSocketServer.sendMessage(toggle);    
         }
     }
 

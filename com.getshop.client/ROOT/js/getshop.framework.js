@@ -399,14 +399,14 @@ thundashop.framework = {
         panel.css('left', button.offset().left-150);
         panel.css('top', button.offset().top + 50);
         panel.fadeIn();
-        panel.attr('cellid',$(this).closest('.gscell').attr('cellid'));
+        panel.attr('cellid',$(this).closest('.applicationarea').attr('area'));
     },
     
     dropCell : function() {
         var confirmed = confirm("Are you sure your want to delete this cell?");
         if(confirmed) {
             var cellid = $(this).closest('.gscell').attr('cellid');
-            var event = thundashop.Ajax.createEvent('','operateCell',$(this), {
+            var event = thundashop.Ajax.createEvent('','operateCell',$('body'), {
                 "cellid" : cellid,
                 "type" : "delete"
             });

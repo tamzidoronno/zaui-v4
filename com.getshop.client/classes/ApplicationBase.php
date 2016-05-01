@@ -40,6 +40,13 @@ class ApplicationBase extends FactoryBase {
         }
     }
 
+    public function printCell($areaname) {
+        $page = new \Page($this->getPage()->javapage, $this->getFactory());
+        $pageId = $this->getPage()->javapage->id;
+        $cell = $this->getApi()->getPageManager()->getLooseCell($pageId, $areaname);
+        
+        $page->printCell($cell, 0, 0, 0, false, null, false);
+    }
     
     public function getAutoSaved($name) {
         $key = 'autosaved_'.$this->getConfiguration()->id . "_" . $name;

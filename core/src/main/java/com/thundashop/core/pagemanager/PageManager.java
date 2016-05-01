@@ -339,6 +339,18 @@ public class PageManager extends ManagerBase implements IPageManager {
     public String createNewRow(String pageId) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    public PageCell getLooseCell(String pageId, String cellId) {
+        Page page = getPage(pageId);
+        PageCell celltoReturn = page.getCell(cellId);
+        if(celltoReturn == null) {
+            String tmpcellid = page.layout.createCell("", "", PageCell.CellMode.row, "freearea");
+            celltoReturn = page.getCell(tmpcellid);
+            celltoReturn.cellId = cellId;
+            savePage(page);
+        }
+        return celltoReturn;
+    }
 
     @Override
     public String addLayoutCell(String pageId, String incell, String beforecell, String mode, String area) throws ErrorException {

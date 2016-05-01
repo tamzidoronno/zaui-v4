@@ -93,6 +93,7 @@ class Page {
             }
             echo "</div>";
             echo "<div class='gsarea' area='body'>";
+                $this->printCurrentLoggedUserId();
                 $leftBarEnabled = $this->javapage->leftSideBar;
                 if ($leftBarEnabled)  {
                     
@@ -2034,6 +2035,12 @@ class Page {
             echo "thundashop.framework.loadHeight('" . $cell->cellId. "');";
             echo "</script>";
         }
+    }
+
+    public function printCurrentLoggedUserId() {
+        ?>
+        <input name="userid_in_body" type="hidden"  value="<?php echo  \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id : ""; ?>"/>
+        <?
     }
 
 }

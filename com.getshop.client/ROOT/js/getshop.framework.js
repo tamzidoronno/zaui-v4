@@ -17,7 +17,18 @@ thundashop.framework = {
     firstCellIdToMove : null,
     
     scrollToPosition : function(scrollTop) {
-        $("html, body").animate({ scrollTop: scrollTop }, { "easing" : "easeInOutExpo", "duration" : 1000, complete: function() {
+        
+        var cur = $(document).scrollTop();
+        var diff = cur - scrollTop;
+        if(diff < 0) {
+            diff *= -1;
+        }
+        
+        var pages = diff / $(window).outerHeight(true);
+        
+        var timer = pages * 800;
+        
+        $("html, body").animate({ scrollTop: scrollTop }, { "easing" : "swing", "duration" : timer, complete: function() {
                 isScrolling = false;
             }
         });

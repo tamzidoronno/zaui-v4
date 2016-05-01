@@ -637,8 +637,13 @@ class Page {
         $themeClassInner = $cell->selectedThemeClass ? $cell->selectedThemeClass."_inner" : "";
         $this->printRowEditButtons($depth, $edit, $cell);
         $this->printEasyModeLayer($edit, $cell, $parent);
+        
+        if($this->factory->isEditorMode()) {
+            $this->printCellBox($edit, $cell, $parent, $depth);
+        }
 
         echo "<div class='$gscellinner $themeClassInner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells' $innerstyles>";
+        echo "<span class='gsadditionalspanincell'></span>";
         if ($header && $depth == 0 && $count == 0) {
             $this->printLanguageSelection();
         }
@@ -647,9 +652,6 @@ class Page {
             $this->printArrows($parent, $count, $totalcells);
         }
 
-        if($this->factory->isEditorMode()) {
-            $this->printCellBox($edit, $cell, $parent, $depth);
-        }
         
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
@@ -1851,6 +1853,11 @@ class Page {
         
         ?>
         <script>
+            
+            
+            PubSub.subscribe('NAVIGATED', function() {
+                $('.gsyoutubeplayer').remove();
+            });
             PubSub.subscribe('NAVIGATION_COMPLETED', function() {
                 $('.gsucell').each(function() {
                     var cell = $(this);
@@ -1858,11 +1865,10 @@ class Page {
                     if(settings.youtubebgmovie) {
                         var selector = '.player_'+settings.youtubebgmovie;
                         var embeded = $(selector);
-                        console.log( "(" + selector + ")");
-                        console.log(embeded);
                         if(embeded.length === 0) {
                             $(this).attr('id', $(this).attr('cellid'));
                             var toEmbed = $('<span></span>');
+                            toEmbed.addClass('gsyoutubeplayer');
                             toEmbed.addClass('player');
                             toEmbed.addClass('player_' + settings.youtubebgmovie);
                             toEmbed.attr('id', "youtubeplayer_"+settings.youtubebgmovie);

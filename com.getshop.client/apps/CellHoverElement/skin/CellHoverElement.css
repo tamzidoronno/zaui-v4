@@ -1,0 +1,11 @@
+.CellHoverElement .hovercell {
+    border: solid 1px;
+    display:inline-block;
+    width: 20%;
+    border-color: #fff;
+    transition: all 0.5s ease;
+}
+
+.gslayoutbox:hover .CellHoverElement .hovercell {
+    width: 50% !important;
+}

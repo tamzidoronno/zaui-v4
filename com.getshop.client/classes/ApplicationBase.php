@@ -40,7 +40,7 @@ class ApplicationBase extends FactoryBase {
         }
     }
 
-    public function printAppArea($areaname) {
+    public function printCell($areaname) {
         $page = new \Page($this->getPage()->javapage, $this->getFactory());
         $pageId = $this->getPage()->javapage->id;
         $cell = $this->getApi()->getPageManager()->getLooseCell($pageId, $areaname);

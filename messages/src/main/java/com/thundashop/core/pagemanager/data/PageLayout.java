@@ -241,9 +241,15 @@ public class PageLayout implements Serializable {
                     if(cell.cells.size() == 1 && !cell.cells.get(0).isFloating()) {
                         cell.extractDataFrom(cell.cells.get(0), true);
                     }
-                    if (cell.cells.isEmpty() && cell.isColumn()) {
-                        cell.mode = PageCell.CellMode.row;
+                    
+                    if (parent.cells.size() == 1 && !parent.type.equals(PageCell.CellType.floating) && !parent.isRotating()) {
+                        String currentMode = parent.mode;
+                        if(!parent.isRotating() && !cell.isTab()) {
+                            parent.extractDataFrom(parent.cells.get(0), true);
+                            parent.mode = currentMode;
+                        }
                     }
+                    
                 }
             }
         }

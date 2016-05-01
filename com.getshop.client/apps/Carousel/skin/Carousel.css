@@ -325,3 +325,5 @@
 .change_slide_number > i {
     padding-right: 0px;
 }
+
+.Carousel .gseditrowbuttons { display:none !important; }

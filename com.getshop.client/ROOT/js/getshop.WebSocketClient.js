@@ -30,16 +30,21 @@ getshop.WebSocketClient = {
     },
     
     getClient: function() {
-        var me = getshop.WebSocketClient;
+//        var me = getshop.WebSocketClient;
+        
+        if (window.location.protocol == "https:") {
+            console.warn("WebSocket not available yet for SSL connections");
+            return;
+        }
         
         if (!getshop.WebSocketClient.client) {
             this.socket = new WebSocket("ws://"+window.location.host+":31330/");
-            this.socket.onopen = $.proxy(this.connected, this);
+            this.socket.onopen = getshop.WebSocketClient.connected;
             this.socket.onclose = function() {
-                me.disconnected();
+                getshop.WebSocketClient.disconnected();
             };
             this.socket.onmessage = function(msg) {
-                me.handleMessage(msg);
+                getshop.WebSocketClient.handleMessage(msg);
             };
         }
         

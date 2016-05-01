@@ -146,7 +146,7 @@ $(function() {
 
         var url = getUrl(link);
         
-        if(avoidjavascriptnavigation) {
+        if(avoidjavascriptnavigation && window.location.href !== url) {
             window.location.href=url;
             return;
         }

@@ -172,6 +172,8 @@ public interface IPageManager {
     @Internal
     public HashMap<String, Setting> getSecuredSettingsInternal(String appName);
     
+    public PageCell getLooseCell(String pageId, String cellId);
+    
     /**
      * Get all applications from the applicationPool.
      * 

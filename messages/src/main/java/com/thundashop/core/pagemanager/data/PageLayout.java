@@ -647,6 +647,9 @@ public class PageLayout implements Serializable {
 
     PageCell getParent(String cellId) {
         for(ArrayList<PageCell> cell : areas.values()) {
+            if(cell == null) {
+                continue;
+            }
             PageCell result = findParent(cell, cellId);
             if(result != null) {
                 if(result.cellId.equals(cellId)) {

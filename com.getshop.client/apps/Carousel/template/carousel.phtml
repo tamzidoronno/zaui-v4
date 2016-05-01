@@ -14,8 +14,15 @@
     <ul>
         <?
             for ($i = 1; $i <= $this->getConfigurationSetting("slidenumber"); $i++) {
-        ?>
-                <li> <img src="/displayImage.php?id=<? echo $this->getConfigurationSetting("slideimage" . $i); ?>"> </li>
+                $id = $this->getAppInstanceId();
+            ?>
+                <li style='padding-left: 150px;padding-right: 150px;'>
+                    <? 
+                    $this->printAppArea($id . "_" . $i);
+                    if($this->getConfigurationSetting("slideimage" . $i)) { ?>
+                        <img src="/displayImage.php?id=<? echo $this->getConfigurationSetting("slideimage" . $i); ?>"> 
+                    <? } ?>
+                </li>
         <?
             }
         ?>

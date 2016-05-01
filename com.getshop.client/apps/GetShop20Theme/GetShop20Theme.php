@@ -16,7 +16,7 @@ class GetShop20Theme extends \ThemeApplication implements \Application {
     
         
     public function getThemeClasses() {
-        return ["coolbgbox"];
+        return ["coolbgbox", "slowzoom"];
     }
     
     

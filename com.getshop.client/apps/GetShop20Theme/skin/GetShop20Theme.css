@@ -48,3 +48,29 @@
     -ms-transform: scale(1.05); /* IE 9 */ 
 }
  
+
+.slowzoom .gsadditionalspanincell {
+    background-size: cover !important;
+    transition: all 20s ease !important;
+    -moz-transition: all 20s ease !important;
+    -ms-transition: all 20s ease !important;
+    -webkit-transition: all 20s ease !important;
+    -o-transition: all 20s ease !important;
+    width:100% !important;
+    height:100% !important;
+    display:inline-block !important;
+    position:absolute !important;
+}
+
+.slowzoom .slowzoom_inner {
+    overflow:hidden;
+}
+ 
+.slowzoom:hover .gsadditionalspanincell {
+    transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    -ms-transform: scale(1.1); /* IE 9 */ 
+}
+ 

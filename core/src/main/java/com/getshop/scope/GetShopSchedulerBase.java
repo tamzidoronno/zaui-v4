@@ -19,10 +19,10 @@ public abstract class GetShopSchedulerBase implements Runnable {
     private final String sessionId = UUID.randomUUID().toString();
     private boolean loggedOn = false;
     private Scheduler scheduler;
-    private final String password;
-    private final String username;
-    private final String multiLevelName;
-    private final String webAddress;
+    private String password;
+    private String username;
+    private String multiLevelName;
+    private String webAddress;
     
     public GetShopSchedulerBase(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
         this.username = username;
@@ -33,6 +33,25 @@ public abstract class GetShopSchedulerBase implements Runnable {
         if(scheduler != null) {
             createScheduler(scheduler);
         }
+    }
+
+    public GetShopSchedulerBase() {
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setMultiLevelName(String multiLevelName) {
+        this.multiLevelName = multiLevelName;
+    }
+
+    public void setWebAddress(String webAddress) {
+        this.webAddress = webAddress;
     }
     
     protected GetShopApi getApi() throws Exception {

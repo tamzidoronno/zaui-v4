@@ -394,6 +394,20 @@
     text-align: right;
 }
 
+.SedoxAdmin .overlayblocker {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0,0,0,0.5);
+    text-align: center;
+    padding-top: 50px;
+    font-size: 20px;
+    color: #FFF;
+    display: none;
+}
+
 .gss_setting {
     padding-right: 0;
 }

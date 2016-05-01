@@ -92,19 +92,16 @@ public class ManagerSubBase {
         saveObject(gsscheduler);
     }
     
-    public void createProcessor(String schedulerReference, Class schedulerType) {
+    public void createProcessor(GetShopSchedulerBase process) {
         GetShopScheduler gsscheduler = new GetShopScheduler();
         gsscheduler.storeId = storeId;
-        gsscheduler.schedulerClassName = schedulerType;
-        gsscheduler.id = schedulerReference;
-        gsscheduler.multilevelName = "";
+        gsscheduler.getShopSchedulerBase = process;
         
         if (this instanceof GetShopSessionBeanNamed) {
             gsscheduler.multilevelName = ((GetShopSessionBeanNamed)this).getName();
         }
         
         startScheduler(gsscheduler, true);
-        saveObject(gsscheduler);
     }
     
     public void initialize() {
@@ -297,15 +294,20 @@ public class ManagerSubBase {
 
             User user = userManager.getInternalApiUser();
             String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
-            
-            Class<?> clazz = Class.forName(gsscheduler.schedulerClassName.getCanonicalName());
-            Constructor<?> ctor = clazz.getConstructor(String.class,String.class,String.class,String.class, String.class);
-            GetShopSchedulerBase ret = (GetShopSchedulerBase) ctor.newInstance(webAddress, user.username, user.metaData.get("password"), gsscheduler.scheduler, gsscheduler.multilevelName);
 
-            schedulersBases.put(gsscheduler.id, ret);
             if(autostart) {
-                new Thread(ret).start();
+                GetShopSchedulerBase base = (GetShopSchedulerBase)gsscheduler.getShopSchedulerBase;
+                base.setWebAddress(webAddress);
+                base.setUsername(user.username);
+                base.setPassword(user.metaData.get("password"));
+                base.setMultiLevelName(gsscheduler.multilevelName);
+                new Thread(base).start();
             } else {
+                Class<?> clazz = Class.forName(gsscheduler.schedulerClassName.getCanonicalName());
+                Constructor<?> ctor = clazz.getConstructor(String.class,String.class,String.class,String.class, String.class);
+                GetShopSchedulerBase ret = (GetShopSchedulerBase) ctor.newInstance(webAddress, user.username, user.metaData.get("password"), gsscheduler.scheduler, gsscheduler.multilevelName);
+
+                schedulersBases.put(gsscheduler.id, ret);
                 schedulers.put(gsscheduler.id, gsscheduler);
             }
         } catch (Exception ex) {

@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.sedox;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
@@ -26,7 +27,7 @@ public interface ISedoxProductManager  {
     @Customer
     public SedoxUser getSedoxUserAccount() throws ErrorException;
     
-    @Editor
+    @Customer
     public SedoxUser getSedoxUserAccountById(String userid) throws ErrorException;
     
     @Customer
@@ -58,7 +59,16 @@ public interface ISedoxProductManager  {
     public SedoxSharedProduct getSharedProductById(String id) throws ErrorException;
     
     @Customer
-    public SedoxProduct createSedoxProduct(SedoxSharedProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId, String origin, String comment, String useCredit, SedoxBinaryFileOptions options) throws ErrorException;
+    public void createSedoxProduct(SedoxSharedProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId, String origin, String comment, String useCredit, SedoxBinaryFileOptions options, String reference);
+    
+    @Administrator
+    public void finishUpload(String forSlaveId, SedoxSharedProduct sharedProduct, String useCredit, String comment, SedoxBinaryFile originalFile, SedoxBinaryFile cmdEncryptedFile, SedoxBinaryFileOptions options, String base64EncodeString, String originalFileName, String origin, String fromUserId);
+    
+    @Administrator
+    public void addFileToProductAsync(SedoxBinaryFile sedoxBinaryFile, String fileType, String fileName, String productId) ;
+    
+    @Administrator
+    public int getNextFileId();
     
     @Customer
     public SedoxSharedProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException;

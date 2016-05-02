@@ -44,6 +44,8 @@ if (!count($users) && $this->currentlyLoading != "favor") {
                     $inFavList = in_array($user->id, $favList);
                     $color = $inFavList ? "style='color: #0dac0d'" : "";;
                     $count = count($events);
+                    $impersonateText = $this->__f('Impersonate');
+                    $impersonate = !$inSearchView ? "<a href='/impersonate.php?userId=$user->id'><i title='$impersonateText' class='fa fa-magic gs_shop_small_icon'></i></a>" : "";
                     ?>
 
                     <div class="userrow">
@@ -52,7 +54,7 @@ if (!count($users) && $this->currentlyLoading != "favor") {
                         ?>
                         <div class="starred"> <i class="fa <? echo $fontAwseomIcon; ?>" <? echo $color; ?> gsclick="addToFav" userid="<? echo $user->id; ?>"></i></div>
                         <div class="groupname"><? echo $groupName; ?></div>
-                        <div class="name"><? echo $user->fullName; ?></div>
+                        <div class="name"><? echo $impersonate." ".$user->fullName; ?></div>
                         <div class="info"> <i class="fa fa-info-circle gs_shop_small_icon show_user_information"> (<? echo $count; ?>)</i></div>
                         <?
                         if (!$inSearchView) {

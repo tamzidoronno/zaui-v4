@@ -246,8 +246,8 @@ public class PageLayout implements Serializable {
                         cell.extractDataFrom(cell.cells.get(0), true);
                     }
                     
-                    PageCell parent = cell;
-                    if (parent.cells.size() == 1 && !parent.type.equals(PageCell.CellType.floating) && !parent.isRotating()) {
+                    PageCell parent = getParent(cell.cellId);
+                    if (parent != null && parent.cells.size() == 1 && !parent.type.equals(PageCell.CellType.floating) && !parent.isRotating()) {
                         String currentMode = parent.mode;
                         if(!parent.isRotating() && !cell.isTab()) {
                             parent.extractDataFrom(parent.cells.get(0), true);

@@ -1724,6 +1724,10 @@ thundashop.framework = {
             if (next.length > 0) {
                 before = next.attr('cellid');
             }
+            
+            if(cellobj.hasClass("gs_last_in_row")) {
+                before = "";
+            }
 
             data['before'] = before;
             data['cellid'] = newcellid;

@@ -1,0 +1,27 @@
+<div gstype="form" method="saveAppInstanceSettings">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%" valign='top'>Text to print</td>
+        <td width="50%">
+            <textarea gsname="setting_text" style='width:100%; height:200px;'><?php echo $this->getConfigurationSetting("text"); ?></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" valign='top'>Timer for start</td>
+        <td width="50%">
+            <input gsname="setting_timer" value='<?php echo $this->getConfigurationSetting("timer"); ?>'>
+        </td>
+    </tr>
+    <tr>
+        <td width="50%" valign='top'>Scroll start</td>
+        <td width="50%">
+            <input gsname="setting_scrollstart" value='<?php echo $this->getConfigurationSetting("scrollstart"); ?>'>
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>
+
+<script>
+    $('[gsname="setting_scrollstart"]').val($(window).scrollTop());
+</script>

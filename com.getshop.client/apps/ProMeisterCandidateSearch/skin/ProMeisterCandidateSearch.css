@@ -29,7 +29,7 @@
 }
 
 .ProMeisterCandidateSearch .userrow .name {
-    width: calc(100% - 280px);
+    width: calc(100% - 300px);
 }
 
 .ProMeisterCandidateSearch div .userInformation .event_row {
@@ -58,6 +58,7 @@
     padding: 10px;
     background-color: #00731e;
     color: #FFF;
+    cursor: pointer;
 }
 
 .ProMeisterCandidateSearch .favorits {
@@ -93,4 +94,7 @@
 }
 .ProMeisterCandidateSearch {
     margin-bottom: 50px;
+}
+.ProMeisterCandidateSearch .companyUsers {
+    display: none;
 }

@@ -51,7 +51,12 @@ app.SedoxAdmin = {
             type : $(this).attr('type')
         }
         
-        thundashop.Ajax.simplePost(this, "finalizeFileUpload", data);        
+        var event = thundashop.Ajax.createEvent(null, "finalizeFileUpload", this, data);
+        thundashop.Ajax.post(event, null, {}, true, true);
+//        thundashop.Ajax.simplePost(this, "finalizeFileUpload", data); 
+        $('.sedox_internal_view[productid="'+data.productid+'"] .overlayblocker').fadeIn();
+        $('.closebutton').click();
+        
     },
     
     handleDragOut: function(jevt) {

@@ -5,10 +5,12 @@
 package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FrameworkConfig;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +22,15 @@ public class SedoxPushOver {
    private String sendurl = "https://api.pushover.net/1/messages.json";
     private String applicationToken = "agzzgGjfWKovkVCvGQrhjQxNNc7P5n";
     
+    @Autowired
+    private FrameworkConfig frameworkConfig;
+    
     public void sendMessage(String pushoverUserId, String message) throws ErrorException {
+        if (!frameworkConfig.productionMode) {
+            System.out.println("Sending pushover message: " + message);
+            return;
+        }
+        
         String data = "token="+applicationToken+"&user=" + pushoverUserId + "&message=" + message;
         sendPushoverNotification(data);
     }

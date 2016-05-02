@@ -61,11 +61,9 @@ class SedoxFileUpload extends \MarketingApplication implements \Application {
         $options->requested_vmax = $_POST['data']['upload_vmax'] == "true";
         $options->requested_remaptype = $_POST['data']['upload_remaptype'];
         
-        $savedProduct = $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave, "webpage", $_POST['data']['upload_comment'], $useCredit, $options);
-        if (isset($_POST['data']['upload_reference']) && $_POST['data']['upload_reference'] != "") {
-            $this->getApi()->getSedoxProductManager()->addReference($savedProduct->id, $_POST['data']['upload_reference']);
-        }
-
+        $reference = isset($_POST['data']['upload_reference']) && $_POST['data']['upload_reference'] != "" ? $_POST['data']['upload_reference'] : "";
+        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave, "webpage", $_POST['data']['upload_comment'], $useCredit, $options, $reference);
+        
         $this->clear();
     }
     

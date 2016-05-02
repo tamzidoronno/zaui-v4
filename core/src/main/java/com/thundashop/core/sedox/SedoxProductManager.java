@@ -340,9 +340,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public synchronized SedoxProduct createSedoxProduct(SedoxSharedProduct sharedProduct, String base64EncodeString, String originalFileName, String forSlaveId, String origin, String comment, String useCredit, SedoxBinaryFileOptions options) throws ErrorException {
+    public void createSedoxProduct(SedoxSharedProduct sharedProduct, String base64EncodeString, String originalFileName, String forSlaveId, String origin, String comment, String useCredit, SedoxBinaryFileOptions options, String reference) {        
+        FileProcessor proc = new FileProcessor(sharedProduct, base64EncodeString, originalFileName, forSlaveId, origin, comment, useCredit, options, reference, sedoxCMDEncrypter, getSession().currentUser.id);
+        this.createProcessor(proc);
+    }
+
+    @Override
+    public void finishUpload(String forSlaveId, SedoxSharedProduct sharedProduct, String useCredit, String comment, SedoxBinaryFile originalFile, SedoxBinaryFile cmdEncryptedFile, SedoxBinaryFileOptions options, String base64EncodeString, String originalFileName, String origin, String fromUserId) {
         if (forSlaveId != null && !forSlaveId.equals("")) {
-            checkIfMasterOfSlave(forSlaveId);
+            checkIfMasterOfSlave(forSlaveId, fromUserId);
         }
         
         sharedProduct.id = UUID.randomUUID().toString();
@@ -351,17 +357,16 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         SedoxProduct sedoxProduct = new SedoxProduct();
         sedoxProduct.id = getNextProductId();
-        sedoxProduct.firstUploadedByUserId = forSlaveId != null && !forSlaveId.equals("") ? forSlaveId : getSession().currentUser.id;
+        sedoxProduct.firstUploadedByUserId = forSlaveId != null && !forSlaveId.equals("") ? forSlaveId : fromUserId;
         sedoxProduct.storeId = storeId;
         sedoxProduct.sharedProductId = sharedProduct.id;
         sedoxProduct.rowCreatedDate = new Date();
-        sedoxProduct.addCreatedHistoryEntry(getSession().currentUser.id);
+        sedoxProduct.addCreatedHistoryEntry(fromUserId);
         sedoxProduct.useCreditAccount = useCredit;
         sedoxProduct.comment = comment;
         
         products.put(sedoxProduct.id, sedoxProduct);
 
-        SedoxBinaryFile cmdEncryptedFile = saveCmdEncryptedFile(base64EncodeString, originalFileName);
         if (cmdEncryptedFile != null) {
             cmdEncryptedFile.options = options;
             sharedProduct.saleAble = false;
@@ -369,7 +374,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             sharedProduct.binaryFiles.add(cmdEncryptedFile);
         }
 
-        SedoxBinaryFile originalFile = getOriginalBinaryFile(base64EncodeString, originalFileName);
+        
         if (originalFile != null) {
             originalFile.options = options;
             sharedProduct.binaryFiles.add(originalFile);
@@ -384,7 +389,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sharedProduct.softwareSize = (fileData.length / 1024) + " KB";
         sedoxProduct.uploadOrigin = origin;
 
-        sedoxProduct.addDeveloperHasBeenNotifiedHistory(getSession().currentUser.id);
+        sedoxProduct.addDeveloperHasBeenNotifiedHistory(fromUserId);
         saveObject(sharedProduct);
         saveObject(sedoxProduct);
         sendFileCreatedNotification(sedoxProduct);
@@ -392,7 +397,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         notifyOnSocket(sedoxProduct);
 
         finalize(sedoxProduct);
-        return sedoxProduct;
     }
 
     @Override
@@ -456,7 +460,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public synchronized void addFileToProduct(String base64EncodedFile, String fileName, String fileType, String productId) throws ErrorException {
-        SedoxBinaryFile sedoxBinaryFile = getOriginalBinaryFile(base64EncodedFile, fileName);
+        FileProcessor proc = new FileProcessor(base64EncodedFile, fileName, fileType, productId);
+        this.createProcessor(proc);
+    }
+
+    @Override
+    public void addFileToProductAsync(SedoxBinaryFile sedoxBinaryFile, String fileType, String fileName, String productId) {
         sedoxBinaryFile.id = getNextFileId();
         sedoxBinaryFile.fileType = fileType;
         sedoxBinaryFile.updateParametersFromFileName(fileName);
@@ -723,7 +732,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
     }
     
-    private int getNextFileId() {
+    @Override
+    public int getNextFileId() {
         int i = 0;
         for (SedoxSharedProduct sedoxProduct : productsShared.values()) {
             for (SedoxBinaryFile file : sedoxProduct.binaryFiles) {
@@ -737,62 +747,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return i;
     }
 
-    private SedoxBinaryFile saveCmdEncryptedFile(String base64EncodeString, String originalFileName) throws ErrorException {
-        byte[] fileData = DatatypeConverter.parseBase64Binary(base64EncodeString);
-
-        if (isCmdFile(fileData)) {
-            SedoxBinaryFile cmdEncryptedFile = new SedoxBinaryFile();
-            cmdEncryptedFile.fileType = "CmdEncrypted";
-            cmdEncryptedFile.id = getNextFileId();
-            cmdEncryptedFile.md5sum = getMd5Sum(fileData);
-            cmdEncryptedFile.orgFilename = originalFileName + "-cmd-encrypted";
-
-            writeFile(fileData);
-
-            return cmdEncryptedFile;
-        }
-
-        return null;
-    }
-
-    private void writeFile(byte[] data) throws ErrorException {
-        try {
-            String fileName = "/opt/files/" + getMd5Sum(data);
-
-            FileOutputStream fos = new FileOutputStream(fileName);
-            fos.write(data);
-            fos.close();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private SedoxBinaryFile getOriginalBinaryFile(String base64EncodeString, String originalFileName) throws ErrorException {
-        // Check if needs to be decrypted.
-        byte[] fileData = DatatypeConverter.parseBase64Binary(base64EncodeString);
-
-        SedoxBinaryFile originalFile = new SedoxBinaryFile();
-
-        if (isCmdFile(fileData)) {
-            try {
-                fileData = doCMDEncryptedFile(fileData, originalFile);
-                if (fileData == null || fileData.length == 0) {
-                    return null;
-                }
-            } catch (Exception ex) {
-                return null;
-            }
-        }
-
-        originalFile.fileType = "Original";
-        originalFile.id = getNextFileId();
-        originalFile.md5sum = getMd5Sum(fileData);
-        originalFile.orgFilename = originalFileName;
-
-        writeFile(fileData);
-
-        return originalFile;
-    }
+    
 
     private void sendFileCreatedNotification(SedoxProduct sedoxProduct) throws ErrorException {
         sendAirgramMessages(userManager, sedoxProduct);
@@ -810,6 +765,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     private void sendPushoverMessage(String emailAddress, SedoxProduct sedoxProduct) throws ErrorException {
         User user = userManager.getUserById(sedoxProduct.firstUploadedByUserId);
+        userManager.checkUserAccess(user);
+        
         SedoxSharedProduct sharedProduct = getSharedProductById(sedoxProduct.sharedProductId);
         SedoxUser sedoxUser = getSedoxUserAccountById(user.id);
 
@@ -856,19 +813,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         users.put(user.id, user);
     }
 
-    private String getMd5Sum(byte[] data) throws ErrorException {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-            byte[] array = digest.digest(data);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < array.length; ++i) {
-                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new ErrorException(1024);
-        }
-    }
 
     private SedoxUser getSedoxUserById(String id) throws ErrorException {
         SedoxUser user = users.get(id);
@@ -1329,38 +1273,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         saveObject(sedoxUser);
     }
 
-    /**
-     * Checks if the binary data contains the acscii chars CMD in beginning of
-     * array
-     *
-     * @param fileData
-     * @return
-     */
-    private boolean isCmdFile(byte[] fileData) {
-        if (fileData.length > 3) {
-            String check = "" + fileData[0] + fileData[1] + fileData[2];;
-            return check.equals("677768");
-        }
 
-        return false;
-    }
 
-    private byte[] doCMDEncryptedFile(byte[] fileData, SedoxBinaryFile originalFile) {
-        FilesMessage message = sedoxCMDEncrypter.decrypt(fileData);
-        if (message.getFile_29Bl28Fm58W() != null) {
-            fileData = DatatypeConverter.parseBase64Binary(message.getFile_29Bl28Fm58W());
-            originalFile.cmdFileType = "29Bl28Fm58W";
-        }
-        if (message.getFile_mpc5Xxflash() != null) {
-            fileData = DatatypeConverter.parseBase64Binary(message.getFile_mpc5Xxflash());
-            originalFile.cmdFileType = "mpc5Xxflash";
-        }
-        if (message.getFile_seriale2Prom() != null) {
-            fileData = DatatypeConverter.parseBase64Binary(message.getFile_seriale2Prom());
-            originalFile.cmdFileType = "seriale2Prom";
-        }
-        return fileData;
-    }
 
     private String encryptProductAndZipToTmpFolder(SedoxProduct product, List<Integer> files) throws ErrorException {
         try {
@@ -1438,9 +1352,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
     }
 
-    private void checkIfMasterOfSlave(String forSlaveId) throws ErrorException {
+    private void checkIfMasterOfSlave(String forSlaveId, String currentUserId) throws ErrorException {
         SedoxUser slave = getSedoxUserAccountById(forSlaveId);
-        String currentUserId = getSession().currentUser.id;
 
         if (slave.masterUserId != null && slave.masterUserId.equals(currentUserId)) {
             return;

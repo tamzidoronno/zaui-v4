@@ -221,9 +221,6 @@ public class PHPApiBuilder {
             }
             
             for (String value : method.arguments.keySet()) {
-                if (method.arguments.get(value).contains("thundashop")) {
-                    value = method.arguments.get(value).replace("com.thundashop.", "").replace(".", "_");
-                }
                 args += "$" + value + ", ";
             }
             
@@ -256,9 +253,6 @@ public class PHPApiBuilder {
             phpClass += "\t     $data = array();\n";
             phpClass += "\t     $data['args'] = array();\n";
             for (String arg : method.arguments.keySet()) {
-                if (method.arguments.get(arg).contains("thundashop")) {
-                    arg = method.arguments.get(arg).replace("com.thundashop.", "").replace(".", "_");
-                }
                 phpClass += "\t     $data['args'][\"" + arg + "\"] = json_encode($this->transport->object_unset_nulls($" + arg + "));\n";
             }
             

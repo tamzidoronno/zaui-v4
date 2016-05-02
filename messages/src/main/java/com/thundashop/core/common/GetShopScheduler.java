@@ -14,4 +14,5 @@ public class GetShopScheduler extends DataCommon {
     public String scheduler;
     public String multilevelName = "";
     public Class schedulerClassName;
+    public Runnable getShopSchedulerBase;
 }

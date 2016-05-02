@@ -235,7 +235,6 @@ public class PageLayout implements Serializable {
             } else if (cell.cells.size() > 0) {
                 boolean deleted = deleteCellRecusive(cellId, cell.cells);
                 if (deleted) {
-                    PageCell parent = getParent(cell.cellId);
                     if (cell.cells.size() == 1 && !cell.type.equals(PageCell.CellType.floating) && !cell.isRotating()) {
                         String currentMode = cell.mode;
                         if(!cell.isRotating() && !cell.isTab()) {
@@ -247,6 +246,7 @@ public class PageLayout implements Serializable {
                         cell.extractDataFrom(cell.cells.get(0), true);
                     }
                     
+                    PageCell parent = cell;
                     if (parent.cells.size() == 1 && !parent.type.equals(PageCell.CellType.floating) && !parent.isRotating()) {
                         String currentMode = parent.mode;
                         if(!parent.isRotating() && !cell.isTab()) {

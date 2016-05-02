@@ -959,7 +959,7 @@ class Page {
                 <? if ($doCarousel) { ?>
                         thundashop.framework.activateCarousel($(".gsrotating[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);
                 <? } else { ?>
-                        if (!thundashop.framework.activeContainerCellId[cellid]) {
+                        if (!thundashop.framework.activeContainerCellId[cellid] || $('.gsrotatingrow[cellid="<? echo $cell->cells[0]->cellId; ?>"]').length === 0) {
                             thundashop.framework.setActiveContainerCellId('<? echo $cell->cells[0]->cellId; ?>', cellid);
                         }
                 <? } ?>

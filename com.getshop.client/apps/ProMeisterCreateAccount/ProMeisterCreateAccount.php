@@ -120,5 +120,40 @@ class ProMeisterCreateAccount extends \MarketingApplication implements \Applicat
         return null;
     }
 
+    /**
+     * 
+     * @param type $groups
+     * @return \core_usermanager_data_Group[]
+     */
+    public function getVipGroups($groups) {
+        $retgroups = [];
+        foreach ($groups as $group) {
+            if ($group->isVip) {
+                $retgroups[] = $group;
+            }
+        }
+        
+        shuffle($retgroups);
+        return $retgroups;
+    }
+
+    /**
+     * 
+     * @param type $groups
+     * @return \core_usermanager_data_Group[]
+     */
+    public function getNotVipGroups($groups) {
+        $retgroups = [];
+        
+        foreach ($groups as $group) {
+            if (!$group->isVip) {
+                $retgroups[] = $group;
+            }
+        }
+        
+        shuffle($retgroups);
+        return $retgroups;
+    }
+
 }
 ?>

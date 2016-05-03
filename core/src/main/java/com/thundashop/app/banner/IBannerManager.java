@@ -2,7 +2,9 @@
 package com.thundashop.app.banner;
 
 import com.thundashop.app.bannermanager.data.BannerSet;
+import com.thundashop.app.bannermanager.data.Slide;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 
@@ -84,4 +86,15 @@ public interface IBannerManager {
      * @throws ErrorException 
      */
     public BannerSet linkProductToImage(String bannerSetId, String imageId, String productId) throws ErrorException;
+    
+    @Editor
+    public String addSlide() throws ErrorException;
+    
+    @Editor
+    public void setImageForSlide(String slideId, String fileId) throws ErrorException;
+    
+    @Editor
+    public void deleteSlide(String slideId) throws ErrorException;
+    
+    public Slide getSlideById(String slideId) throws ErrorException;
 }

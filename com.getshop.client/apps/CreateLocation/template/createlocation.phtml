@@ -10,7 +10,7 @@ if (count($locations)) {
             <? 
             if ($this->hasWriteAccess()) {
                 ?>
-            <div class="gs_shop_small_icon" gsclick="deleteLocation" locationId="<? echo $loc->id; ?>"><i class="fa fa-trash"></i></div>
+            <div class="gs_shop_small_icon" gsclick="deleteLocation" gs_confirm="Are you sure you want to delete this location?" locationId="<? echo $loc->id; ?>"><i class="fa fa-trash"></i></div>
             <a href="?page=edit_location&locationId=<? echo $loc->id; ?>"><div class="gs_shop_small_icon"><i class="fa fa-edit"></i></div></a>
                 <?
             }

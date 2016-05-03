@@ -303,7 +303,12 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public void deleteLocation(String locationId) {
-        // TODO - check if location is in use somewhere.
+        List<Event> eventsConnectedToLocation = getEventsByLocation(locationId);
+        
+        if (!eventsConnectedToLocation.isEmpty()) {
+            throw new ErrorException(1036);
+        }
+        
         Location location = locations.remove(locationId);
         if (location != null)
             deleteObject(location);

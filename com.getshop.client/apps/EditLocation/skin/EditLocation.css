@@ -10,10 +10,19 @@
     box-sizing: border-box;
 }
 
+.EditLocation .deleteSubLocation {
+    background-color: red;
+}
+
 .EditLocation .sublocation {
     border: solid 1px #DDD;
     display: none;
     padding: 20px;
     background-color: #EEE;
     margin-top: 20px;
+}
+.EditLocation .eventsConnectedToThisLocation {
+    margin-top: 20px;
+    border: solid 1px #DDD;
+    padding: 20px;
 }

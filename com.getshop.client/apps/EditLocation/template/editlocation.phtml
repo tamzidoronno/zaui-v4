@@ -47,13 +47,26 @@ $subLocations = $location->locations;
         }
         ?>
         
-        <div class="shop_button" gstype="submit">Save</div>
+        <div class="shop_button" gstype="submit">Save</div> <div class="shop_button deleteSubLocation" >Delete</div>
     </div>    
 
+    
     <?
     }
     ?>
 
+</div>
+
+<div class="eventsConnectedToThisLocation">
+    Events connected to this location:
+    <?
+    $events = $this->getApi()->getEventBookingManager()->getEventsByLocation($this->getBookingEgineName(), $location->id);
+    foreach ($events as $event) {
+        $locName = $event->subLocation->name;
+        $pageId = $event->eventPage;
+        echo "<a href='/$pageId'><div>$event->mainStartDate - $locName</div></a>";
+    }
+    ?>
 </div>
 
 <script>
@@ -61,7 +74,6 @@ $subLocations = $location->locations;
         app.EditLocation.startup();
     });
 </script>
-    
 
 <div gstype="form" method="addSubLocation" class="addSubLocation">
     Create a new sub location?

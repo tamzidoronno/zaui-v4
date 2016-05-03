@@ -178,6 +178,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         event.location = getLocationBySubLocationId(event.subLocationId);
         event.subLocation = getSubLocation(event.subLocationId);
         
+        if (event.location == null || event.subLocation == null) {
+            event.subLocationId = null;
+        }
+        
         event.setMainDates(); 
         if (event.bookingItem != null) {
             event.eventPage = "?page="+event.bookingItem.pageId+"&eventId="+event.id;
@@ -1554,5 +1558,41 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .filter(type -> type.pageId != null && type.pageId.equals(pageId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public void deleteSubLocation(String subLocationId) {
+        long count = events.values().stream()
+                .filter(event -> event.subLocationId != null && event.subLocationId.equals(subLocationId))
+                .count();
+        
+        if (count > 0) {
+            throw new ErrorException(1036);
+        }
+        
+        Location location = getLocationBySubLocationId(subLocationId);
+        location.deleteSubLocation(subLocationId);
+        saveObject(location);
+    }
+
+    @Override
+    public List<Event> getEventsByLocation(String locationId) {
+        Location loc = getLocation(locationId);
+        
+        if (loc == null) {
+            return new ArrayList();
+        }
+        
+        List<Event> eventsToReturn = new ArrayList();
+        for (SubLocation sub : loc.locations) {
+            eventsToReturn.addAll(events.values().stream()
+                    .filter(event -> event.subLocationId != null && event.subLocationId.equals(sub.id))
+                    .collect(Collectors.toList()));
+        }
+        
+        eventsToReturn.stream()
+                .forEach(o -> finalize(o));
+        
+        return eventsToReturn;
     }
 }

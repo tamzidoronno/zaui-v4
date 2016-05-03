@@ -47,4 +47,11 @@ if ($price > -1) {
 
 <?
 }
+
+if ($event->extraInformation) {
+    echo "<div class='event_warning'>";
+    echo nl2br($event->extraInformation);
+    echo "</div>";
+}
+
 ?>

@@ -107,6 +107,10 @@ class FactoryBase {
     }
 
     public function isEditorMode() {
+        $disabledDuToEditor = IocContainer::getFactorySingelton()->isAccessToBackedForEditorDisabled();
+        if ($disabledDuToEditor)
+            return false;
+        
         return \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor();
     }
 

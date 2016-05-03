@@ -32,6 +32,7 @@
     padding-bottom : 10px;
     border-bottom: solid 1px #DDD;
     padding-left: 20px;
+    padding-right: 20px;
 }
 
 .CreateEvent .listrow.template {
@@ -49,4 +50,11 @@
 
 .CreateEvent .shop_button {
     margin-top: 10px;
+}
+.CreateEvent .extraComment {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100px;
+    padding: 20px;
+    color: #333;
 }

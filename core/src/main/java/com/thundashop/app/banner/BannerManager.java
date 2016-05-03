@@ -3,6 +3,7 @@ package com.thundashop.app.banner;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.app.bannermanager.data.Banner;
 import com.thundashop.app.bannermanager.data.BannerSet;
+import com.thundashop.app.bannermanager.data.Slide;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
@@ -10,6 +11,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,11 +23,17 @@ import org.springframework.stereotype.Component;
 public class BannerManager extends ManagerBase implements IBannerManager {
     public HashMap<String, BannerSet> banners = new HashMap();
     private String id;
+    public HashMap<String, Slide> slides = new HashMap();
    
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        for (DataCommon retData : data.data)
-            banners.put(retData.id, (BannerSet)retData);
+        for (DataCommon retData : data.data) {
+            if(retData instanceof BannerSet) {
+                banners.put(retData.id, (BannerSet)retData);
+            } else if (retData instanceof Slide) {
+                slides.put(retData.id, (Slide)retData);
+            }
+        }
     }
 
     private BannerSet saveBannerSet(String id, BannerSet bannerSet) throws ErrorException {
@@ -155,5 +163,31 @@ public class BannerManager extends ManagerBase implements IBannerManager {
             }
         }
         throw new ErrorException(1010);
+    }
+    
+    @Override
+    public String addSlide() {
+        Slide slide = new Slide();
+        
+        saveObject(slide);
+        slides.put(slide.id, slide);
+        
+        return slide.id;
+    }
+    
+    @Override
+    public void setImageForSlide(String slideId, String fileId) {
+        Slide slide = slides.get(slideId);
+        slide.backgroundFileId = fileId;
+    }
+    
+    @Override
+    public void deleteSlide(String slideId) {
+        slides.remove(slideId);
+    }
+    
+    @Override
+    public Slide getSlideById(String slideId) {
+        return slides.get(slideId);
     }
 }

@@ -68,7 +68,8 @@ app.CreateEvent = {
             spots : document.find('.availablespots').val(),
             subLocationId : document.find('.selectedSubLocation').val(),
             entryId : $(this).attr('entryId'),
-            selectedEventHelder : document.find('.selectedEventHelder').val()
+            selectedEventHelder : document.find('.selectedEventHelder').val(),
+            extra : $('.CreateEvent .extraComment').val()
         }
      
         thundashop.Ajax.simplePost(this, "createEvent", data);

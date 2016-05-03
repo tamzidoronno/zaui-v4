@@ -114,6 +114,7 @@ class Settings extends \SystemApplication implements \Application {
         
         $this->setConfigurationSetting("language", $_POST['language']);
         $this->setConfigurationSetting("title", $_POST['title']);
+        $this->setConfigurationSetting("disableEditorBackendAccess", $_POST['disableEditorBackendAccess']);
         $this->setConfigurationSetting("uniqueusersonemail", $_POST['uniqueusersonemail']);
         $this->setConfigurationSetting("doubleauthentication", $_POST['doubleauthentication']);
         $this->setConfigurationSetting("singlegrouptouser", $_POST['singlegrouptouser']);
@@ -139,6 +140,10 @@ class Settings extends \SystemApplication implements \Application {
 
     public function getIdentifier() {
         return $this->getApi()->getStoreManager()->getMyStore()->identifier;
+    }
+
+    public function isAccessToBackedForEditorDisabled() {
+        return $this->getConfigurationSetting("disableEditorBackendAccess");
     }
 
 }

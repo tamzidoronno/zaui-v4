@@ -43,6 +43,8 @@ public class Event extends DataCommon {
     
     public boolean questBackSent = false;
     
+    public String extraInformation = "";
+    
     public List<EntryComment> eventComments = new ArrayList();
     
     @Editor

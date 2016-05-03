@@ -241,7 +241,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
     }
 
     public void captureOrder(Order order, int amount) throws Exception {
-        String merchantId = order.payment.callBackParameters.get("merchant");
+        String merchantId = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("merchantid");
         
         
         String secretMacKey = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("hmac");
@@ -257,7 +257,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             currency = "NOK";
         }
         
-        if(!order.payment.callBackParameters.get("currency").equals(currency)) {
+        if(order.payment.callBackParameters.containsKey("currency") && !order.payment.callBackParameters.get("currency").equals(currency)) {
             messageManager.sendMail("post@getshop.com", "post@getshop.com", "Fraud attempt on order (" + order.incrementOrderId + ")", "", "post@getshop.com", "post@getshop.com");
             throw new Exception("Incorrect currency set");
         }

@@ -1,5 +1,7 @@
 <?
 /* @var $this \ns_df607cb0_efb4_44f8_bbac_7bf6fa4bc5b7\Carousel */
+
+$slideIds = array_filter(explode("|", $this->getConfigurationSetting("slideids")));
 ?>
 
 <div class="slide_options">
@@ -116,19 +118,21 @@
     <div class="slides_title">
         Slides
     </div>
-    <div class="gss_button change_slide_number" num_change="-1"><i class='fa fa-minus'></i></div>
-    <div class="gss_button change_slide_number" num_change="+1"><i class='fa fa-plus'></i></div>
+    <div class="gss_button add_slide" num_change="+1"><i class='fa fa-plus'></i></div>
     <div class="slides_container">
         <?
-            for ($i = 1; $i <= $this->getConfigurationSetting("slidenumber"); $i++) {
+            foreach($slideIds as $slideId) {
+                if($slideId != "") {
         ?>
-        <div class="slide_image" slidenumber="<? echo $i; ?>">
-            Slide #<?echo $i; ?>
-            <div class="value_input">
-                <input type="file" name="slideimage">
-            </div>      
-        </div>
+                    <div class="slide_image" slide_id="<? echo $slideId; ?>">
+                        <div class="gss_button delete_slide"><i class='fa fa-trash-o'></i></div>
+                        Background:
+                        <div class="background_select">
+                            <input type="file" name="slideimage">
+                        </div>      
+                    </div>
         <?
+                }
             }
         ?>
     </div>

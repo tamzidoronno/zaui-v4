@@ -3,7 +3,8 @@ app.Carousel = {
         $(document).on('click', '.Carousel .gss_slider label', this.colorSlider);
         $(document).on('click', '.Carousel .save_carousel_settings', this.saveSettings);
         $(document).on('change', '.Carousel input[name="slideimage"]', this.uploadSlideImage);
-        $(document).on('click', '.Carousel .change_slide_number', this.changeSlideNumber);
+        $(document).on('click', '.Carousel .add_slide', this.addSlide);
+        $(document).on('click', '.Carousel .delete_slide', this.deleteSlide);
     },
     
     loadSettings: function(element, application) {
@@ -56,13 +57,17 @@ app.Carousel = {
             arrowhorizontal: arrowhorizontal
         }
         
-        thundashop.Ajax.simplePost(this, "saveCarouselSettings", data);
+        var event = thundashop.Ajax.createEvent(null, "saveCarouselSettings", this, data);
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            location.reload();
+        });
     },
     
     uploadSlideImage: function() {
         var element = this;
         var file = $(this)[0].files[0];
-        var slideNumber = $(this).parent().parent().attr("slidenumber");
+        var slideId = $(this).parent().parent().attr("slide_id");
         
         console.log(file);
         
@@ -75,7 +80,7 @@ app.Carousel = {
 
                 var data = {
                     fileBase64: dataUri,
-                    slideNumber: slideNumber
+                    slideId: slideId
                 };
                
                 var event = thundashop.Ajax.createEvent(null, "saveSlideImage", element, data);
@@ -91,21 +96,25 @@ app.Carousel = {
         }
     },
     
-    changeSlideNumber: function() {
-        var data = {
-            slideNum: $(this).attr("num_change")
-        }
-        
-        var event = thundashop.Ajax.createEvent(null, "setSlideNumber", this, data);
+    addSlide: function() {        
+        var event = thundashop.Ajax.createEvent(null, "addSlide", this, null);
         
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            var toDo = res.split("_");
-            if(toDo[0] != "removeSlider") {
-                $(".slides_container").append(res);
-            } else if (toDo[0] == "removeSlider"){
-                $(".slide_image[slidenumber='" +  + toDo[1] + "']").remove();
-            }
-            
+            $(".slides_container").append(res);
+        });
+    },
+    
+    deleteSlide: function() {
+        var slideId = $(this).parent().attr("slide_id");
+        
+        var data = {
+            slideId: slideId
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "deleteSlide", this, data);
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            $(".slide_image[slide_id='" + slideId + "']").remove();
         });
     }
 }

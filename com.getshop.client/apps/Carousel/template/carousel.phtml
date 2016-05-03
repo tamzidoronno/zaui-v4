@@ -1,29 +1,35 @@
 <?
 /* @var $this \ns_df607cb0_efb4_44f8_bbac_7bf6fa4bc5b7\Carousel */
+
+$slideIds = array_filter(explode("|", $this->getConfigurationSetting("slideids")));
 ?>
 
 <div id="slider1" class="csslider infinity" style="<? echo $this->getConfigurationSetting("carouselheight") != "" ? "height: " . $this->getConfigurationSetting("carouselheight") . "px; " : ""?>">
   
     <?
-        for ($i = 1; $i <= $this->getConfigurationSetting("slidenumber"); $i++) {
+        foreach ($slideIds as $slideId) {
     ?>
-            <input type="radio" name="slides" id="slides_<? echo $i; ?>" <? echo $i == 1 ? "checked" : ""?>>
+            <input type="radio" name="slides" id="slides_<? echo $slideId; ?>" <? echo $slideId == $slideIds[0] ? "checked" : ""?>>
     <?
         }
     ?>
     <ul>
         <?
-            for ($i = 1; $i <= $this->getConfigurationSetting("slidenumber"); $i++) {
-                $id = $this->getAppInstanceId();
-            ?>
-                <li style='padding-left: 150px;padding-right: 150px;'>
-                    <? 
-                    $this->printCell($id . "_" . $i);
-                    if($this->getConfigurationSetting("slideimage" . $i)) { ?>
-                        <img src="/displayImage.php?id=<? echo $this->getConfigurationSetting("slideimage" . $i); ?>"> 
-                    <? } ?>
-                </li>
-        <?
+            if(!empty($slideIds)) {
+                foreach ($slideIds as $slideId) {
+                    $id = $this->getAppInstanceId();
+        ?>
+                    <li style="background-image: url(/displayImage.php?id=<? echo $this->getApi()->getBannerManager()->getSlideById($slideId)->backgroundFileId ?>">
+                        <? 
+                        $this->printCell($id . "_" . $slideId);
+                        ?>
+                    </li>
+        <?  
+                }
+            } else {
+                ?>
+                    <li class="start_adding_slides"><span>Start adding slides by using the application's settings!</span></li>
+                <?
             }
         ?>
     </ul>
@@ -42,21 +48,21 @@
     ?>
     <div class="arrows" style="<? echo $arrowStyle ?>" >
         <?
-            for ($i = 1; $i <= $this->getConfigurationSetting("slidenumber"); $i++) {
+            foreach ($slideIds as $slideId) {
         ?>
-                <label for="slides_<? echo $i; ?>"></label>
+                <label for="slides_<? echo $slideId; ?>"></label>
         <?
             }
         ?>
-        <label for="slides_1" class="goto-first"></label>
-        <label for="slides_<? echo $this->getConfigurationSetting("slidenumber")?>" class="goto-last"></label>
+        <label for="slides_<? echo $slideIds[0];?>" class="goto-first"></label>
+        <label for="slides_<? echo $slideIds[count($slideIds) - 1]; ?>" class="goto-last"></label>
     </div>
     <div class="navigation" <? echo $this->getConfigurationSetting("showbullets") == "false" ? "style='display: none;'" : "" ?> >
         <div>
             <?
-                for ($i = 1; $i <= $this->getConfigurationSetting("slidenumber"); $i++) {
+                foreach ($slideIds as $slideId) {
             ?>
-                    <label for="slides_<? echo $i; ?>"></label>
+                    <label for="slides_<? echo $slideId; ?>"></label>
             <?
                 }
             ?>

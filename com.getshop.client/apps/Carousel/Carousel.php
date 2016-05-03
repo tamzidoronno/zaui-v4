@@ -29,34 +29,60 @@ class Carousel extends \MarketingApplication implements \Application {
         $seperator = ";base64,";
         $index = strrpos($_POST['data']['fileBase64'], $seperator)+  strlen($seperator);
         $base64 = substr($_POST['data']['fileBase64'], $index);
-        $slideNumber = $_POST['data']['slideNumber'];
+        $slideId = $_POST['data']['slideId'];
         
         $fileId = \FileUpload::storeFile(base64_decode($base64));
         
-        $this->setConfigurationSetting("slideimage" . $slideNumber, $fileId);
-        
-        echo $fileId;
+        $this->getApi()->getBannerManager()->setImageForSlide($slideId, $fileId);
     }
     
-    public function setSlideNumber() {
-        if(!$this->getConfigurationSetting("slidenumber") || $this->getConfigurationSetting("slidenumber") == "") {
-            $this->setConfigurationSetting("slidenumber", 0);
-        }
+    public function addSlide() {
+        $slideIds = $this->getConfigurationSetting("slideids");
+        $slideIdsArray = array_filter(explode("|", $slideIds));
         
-        $currentSlideNumber = $this->getConfigurationSetting("slidenumber");
-        
-        if($_POST['data']['slideNum'] == "+1" && $currentSlideNumber != 10) {
-            $this->setConfigurationSetting("slidenumber", $currentSlideNumber + 1);
-            echo "<div class='slide_image' slidenumber='" . $this->getConfigurationSetting("slidenumber") . "'>";
-            echo "Slide #" . $this->getConfigurationSetting("slidenumber");
-            echo "<div class='value_input'>";
+        if(count($slideIdsArray) != 10) {
+            $slideId = $this->getApi()->getBannerManager()->addSlide();
+            
+            $this->setConfigurationSetting("slideids", $slideIds . ($slideIds != "" ? "|" : "") . $slideId);
+            
+            echo "<div class='slide_image' slide_id='" . $slideId . "'>";
+            echo "<div class='gss_button delete_slide'><i class='fa fa-trash-o'></i></div>";
+            echo " Background: ";
+            echo "<div class='background_select'>";
             echo "<input type='file' name='slideimage'>";
             echo "</div>";
             echo "</div>";
-        } else if($_POST['data']['slideNum'] == "-1" && $currentSlideNumber != 0) {
-            $this->setConfigurationSetting("slidenumber", $currentSlideNumber - 1);
-            echo "removeSlider_" . $currentSlideNumber;
+        } else {
+            echo "<div style='color: red;'>";
+            echo " Maximum slide number reached!";
+            echo "</div>";
         }
+    }
+    
+    public function deleteSlide() {
+        $slideId = $_POST['data']['slideId'];
+        $this->getApi()->getBannerManager()->deleteSlide($slideId);
+        $slideIds = explode("|", $this->getConfigurationSetting("slideids"));
+        
+        unset($slideIds[array_search($slideId, $slideIds)]);
+        
+        $slideIdsToSave = "";
+        foreach($slideIds as $slideId) {
+            $slideIdsToSave = $slideIdsToSave . ($slideIdsToSave != "" ? "|" : "") . $slideId;
+        }
+        
+        $this->setConfigurationSetting("slideids", $slideIdsToSave);
+    }
+    
+    public function applicationAdded() {
+        $this->setConfigurationSetting("carouselheight", "500");
+        $this->setConfigurationSetting("autoslide", "true");
+        $this->setConfigurationSetting("slidedirection", "right");
+        $this->setConfigurationSetting("slidespeed", "3000");
+        $this->setConfigurationSetting("showbullets", "true");
+        $this->setConfigurationSetting("showarrows", "true");
+        $this->setConfigurationSetting("arrowvertical", "50");
+        $this->setConfigurationSetting("arrowhorizontal", "2");
     }
 }
 ?>

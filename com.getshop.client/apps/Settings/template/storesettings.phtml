@@ -192,6 +192,17 @@ $states['fi_FI'] = "Finish";
         </div>
     </div>
     
+    <div class="textfield gss_setting" id="">
+        <span class="title"><?php echo $this->__f("Disable access for Editors to Admin Backend"); ?></span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="disableEditorBackendAccess">
+            <? $faclass = $this->isAccessToBackedForEditorDisabled() == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("Turn this on if you wish to remove the mainmenu/backend for editors."); ?>
+        </div>
+    </div>
+    
     <div class="textfield gss_setting" id="singlegrouptouser">
         <span class="title"><?php echo $this->__f("Your favicon"); ?>
         </span>

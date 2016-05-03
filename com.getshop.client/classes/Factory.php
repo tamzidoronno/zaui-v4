@@ -659,11 +659,16 @@ class Factory extends FactoryBase {
         return json_encode($this->translationMatrix);
     }
 
+    /**
+     * @return ns_d755efca_9e02_4e88_92c2_37a3413f3f41\Settings
+     */
     public function getSettings() {
         if ($this->storeSettings) {
             return $this->storeSettings;
         }
-        $this->storeSettings = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        $this->storeSettings = $this->applicationPool->createInstace($app);
+        
         return $this->storeSettings;
     }
 
@@ -895,8 +900,8 @@ class Factory extends FactoryBase {
 
     public function getPageTitle() {
         $javapage = $this->getPage()->javapage;
-        $settings = $this->getSettings();
-        $title = isset($settings->settings) && isset($settings->settings->title) ? $settings->settings->title->value : "";
+        $storeTitle = $this->getSettings()->getConfigurationSetting("title");
+        $title = isset($storeTitle) && $storeTitle ? $storeTitle : "";
         
 
         if($javapage->title) {
@@ -981,6 +986,21 @@ class Factory extends FactoryBase {
         // Hack, this should be done proberly. Its currently only used by ProMeister and 
         // with appliction ProMeisterSpiderDiagram application
         return $this->getStore()->id == "6524eb45-fa17-4e8c-95a5-7387d602a69b";
+    }
+    
+    public function isAccessToBackedForEditorDisabled() {
+        $currentUser = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        
+        if ($currentUser == null) {
+            return false;
+        }
+        
+        if ($currentUser->type > 50) {
+            return false;
+        }
+        
+        $settingsApp = $this->getSettings()->getConfigurationSetting("disableEditorBackendAccess");
+        return $settingsApp === "true";
     }
 
 }

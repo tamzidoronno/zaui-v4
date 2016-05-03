@@ -214,7 +214,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
             $factory->printTemplateFunctions();
         ?>
         
-        <? if ($factory->isEditorMode() && !$factory->isMobile()) {
+        <? if ($factory->isEditorMode() && !$factory->isMobile() && !$factory->isAccessToBackedForEditorDisabled()) {
             echo "<div class='gs_site_main_buttons_view'>";
                 echo "<div title='".$factory->__f("Open settings")."' class='gs_site_main_button store_settings_button'><i class='fa fa-gears'></i></div>";
                 

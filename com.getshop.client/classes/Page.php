@@ -29,7 +29,8 @@ class Page {
     function loadSkeleton() {
         /* @var $layout core_pagemanager_data_PageLayout */
         $layout = $this->javapage->layout;
-        
+
+        $this->printSlavePageHeader();
         $this->printEffectTriggerLoaded();
         
         
@@ -2041,6 +2042,13 @@ class Page {
         ?>
         <input name="userid_in_body" type="hidden"  value="<?php echo  \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id : ""; ?>"/>
         <?
+    }
+
+    public function printSlavePageHeader() {
+        $masterPage = $this->javapage->masterPageId;
+        if ($this->factory->isEditorMode() && $masterPage) {
+            echo "<div class='slavePageModificationIndicator'><i class='fa fa-warning'></i><a href='?page=$masterPage'> This page is a slave page, modification is made on master page </a></div>";
+        }
     }
 
 }

@@ -1307,7 +1307,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     private void sendMailReminder(User user, Event event, ReminderTemplate template, String emailAddress) throws ErrorException {
-        String subject = event.bookingItemType.name;
+        String subject = template.subject;
         String content = formatText(template.content, user, event);
         
         String emailToUser = user.emailAddress;

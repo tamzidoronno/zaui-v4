@@ -22,5 +22,13 @@ class Event extends EventCommon implements \Application {
     public function bookNow() {
         $this->getApi()->getEventBookingManager()->bookCurrentUserToEvent($this->getBookingEngineName(), $_POST['data']['eventid'], "web");
     }
+    
+    public static function formatMainStartDates($event) {
+        return date("d/m-Y", strtotime($event->mainStartDate))."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".date("H:i", strtotime($event->mainStartDate))." - ".date("H:i", strtotime($event->mainEndDate));
+    }
+    
+    public static function formatDates($date1, $date2) {
+        return date("d/m-Y", strtotime($date1))."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".date("H:i", strtotime($date1))." - ".date("H:i", strtotime($date2));
+    }
 }
 ?>

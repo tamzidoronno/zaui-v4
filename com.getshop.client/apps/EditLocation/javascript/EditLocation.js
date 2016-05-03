@@ -1,6 +1,17 @@
 app.EditLocation = {
     init: function() {
         $(document).on('change', '.EditLocation .selectsublocation', app.EditLocation.selectLocationChanged)
+        $(document).on('click', '.EditLocation .deleteSubLocation', app.EditLocation.deleteSubLocation)
+    },
+    
+    deleteSubLocation: function() {
+        var conf = confirm("Are you sure you want to delete this sublocation?");
+        
+        if (conf) {
+            thundashop.Ajax.simplePost(this, "deleteLocation", {
+                subLocationId : $('.selectsublocation').val()
+            });
+        }
     },
     
     startup: function() {

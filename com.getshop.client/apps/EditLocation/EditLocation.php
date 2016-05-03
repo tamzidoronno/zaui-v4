@@ -17,7 +17,6 @@ class EditLocation extends \ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\EngineCommon
     }
     
     public function render() {
-        
         if (!$this->getBookingEgineName()) {
             $this->printNotConnectedWarning();
         } else {
@@ -60,6 +59,10 @@ class EditLocation extends \ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\EngineCommon
         }
 
         $this->getApi()->getEventBookingManager()->saveLocation($this->getBookingEgineName(), $location);
+    }
+    
+    public function deleteLocation() {
+        $this->getApi()->getEventBookingManager()->deleteSubLocation($this->getBookingEgineName(), $_POST['data']['subLocationId']);
     }
 }
 ?>

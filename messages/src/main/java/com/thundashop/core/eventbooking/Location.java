@@ -20,4 +20,8 @@ public class Location extends DataCommon {
     
     @Transient
     public boolean isFiltered = false;
+
+    void deleteSubLocation(String subLocationId) {
+        locations.removeIf(o -> o.id.equals(subLocationId));
+    }
 }

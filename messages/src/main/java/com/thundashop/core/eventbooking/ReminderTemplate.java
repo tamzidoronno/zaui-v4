@@ -14,4 +14,5 @@ import com.thundashop.core.common.DataCommon;
 public class ReminderTemplate extends DataCommon {
     public String content = "";
     public String name = "";
+    public String subject = "";
 }

@@ -41,6 +41,7 @@ class CreateEvent extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
         $event->bookingItem->bookingItemTypeId = $_POST['data']['eventType'];
         $event->subLocationId = $_POST['data']['subLocationId'];
         $event->eventHelderUserId = $_POST['data']['selectedEventHelder'];
+        $event->freeTextEventHelder = $_POST['data']['freetexteventhelder'];
         $event->extraInformation = $_POST['data']['extra'];
         
         $event->days = [];

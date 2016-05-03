@@ -31,7 +31,9 @@ public class EventLoggerHandler {
         }
         
         if (!event1.getEventHelderUserId().equals(event2.getEventHelderUserId())) {
-            changes += "Eventhelder changed from : " + userManager.getUserById(event1.getEventHelderUserId()).fullName + " to " + userManager.getUserById(event2.getEventHelderUserId()).fullName + "\n";
+            String name1 = userManager.getUserById(event1.getEventHelderUserId()) != null ? userManager.getUserById(event1.getEventHelderUserId()).fullName : "";
+            String name2 = userManager.getUserById(event2.getEventHelderUserId()) != null ? userManager.getUserById(event2.getEventHelderUserId()).fullName : "";
+            changes += "Eventhelder changed from : " + name1 + " to " + name2  + "\n";
         }
         
         if (!event1.getSubLocationId().equals(event2.getSubLocationId())) {

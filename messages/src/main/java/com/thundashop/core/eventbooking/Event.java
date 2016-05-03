@@ -29,6 +29,8 @@ public class Event extends DataCommon {
 
     public String eventHelderUserId = "";
     
+    public String freeTextEventHelder = "";
+    
     public List<Day> days = new ArrayList();
     
     public boolean markedAsReady = false;
@@ -76,6 +78,9 @@ public class Event extends DataCommon {
     
     @Transient
     public boolean canBook = false;
+    
+    @Transient
+    public boolean canBookWaitingList = false;
     
     @Transient
     public Double price = -1D;

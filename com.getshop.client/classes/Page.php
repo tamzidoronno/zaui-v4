@@ -97,18 +97,20 @@ class Page {
                 $this->printCurrentLoggedUserId();
                 $leftBarEnabled = $this->javapage->leftSideBar;
                 if ($leftBarEnabled)  {
-                    
-                    $inner = strstr($this->javapage->leftSideBarName, "inner") ? "gs_page_width" : "";
-                    echo "<div class='$inner'>";
-                    
-                    echo "<div class='gsarea left_side_bar' area='".$this->javapage->leftSideBarName."'><div class='left_side_bar_inner'>";
-                    $edited = $this->printArea($layout->areas->{$this->javapage->leftSideBarName});
-                    echo "</div></div>";
-                    
-                    echo "<div class='gs_main_column'>";
-                    $edited = $this->printArea($layout->areas->{'body'});
-                    $this->printBodyFooter($layout);
-                    echo "</div>";
+                    $gsClassInnerPageWidth = method_exists($this->themeApp, "sideBarShouldBeInner") && $this->themeApp->sideBarShouldBeInner() ? "gs_page_width" : "";
+                    echo "<div class='$gsClassInnerPageWidth'>";
+                        $inner = strstr($this->javapage->leftSideBarName, "inner") ? "gs_page_width" : "";
+                        echo "<div class='$inner'>";
+
+                        echo "<div class='gsarea left_side_bar' area='".$this->javapage->leftSideBarName."'><div class='left_side_bar_inner'>";
+                        $edited = $this->printArea($layout->areas->{$this->javapage->leftSideBarName});
+                        echo "</div></div>";
+
+                        echo "<div class='gs_main_column'>";
+                        $edited = $this->printArea($layout->areas->{'body'});
+                        $this->printBodyFooter($layout);
+                        echo "</div>";
+                        echo "</div>";
                     echo "</div>";
                 } else {
                     $edited = $this->printArea($layout->areas->{'body'});

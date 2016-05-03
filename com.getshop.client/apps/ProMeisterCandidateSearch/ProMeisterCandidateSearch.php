@@ -74,7 +74,7 @@ class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
         
         return $retValues;
     }
-
+   
     public function getUsers($mode) {
         
         if ($this->currentlyLoading == "favor") {
@@ -165,6 +165,21 @@ class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
             }
         }
 
+    }
+
+    public function toggleVisibility() {
+        $key = 'ProMeisterCandidateSearch_visible_'.$_POST['data']['companyId'];
+        $_SESSION[$key] = $_POST['data']['visible'];
+    }
+    
+    public function isCompanyVisible($companyId) {
+        $key = 'ProMeisterCandidateSearch_visible_'.$companyId;
+        return isset($_SESSION[$key]) && $_SESSION[$key] == "true";
+    }
+    
+    public function toggleCompanyOwner() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $this->getApi()->getUserManager()->forceCompanyOwner($_POST['data']['userid'], !$user->isCompanyOwner);
     }
 
 }

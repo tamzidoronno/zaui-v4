@@ -408,5 +408,7 @@ public interface IUserManager {
 
     @Editor
     public Long getCompaniesConnectedToGroupCount(String groupId);
-
+    
+    @Editor
+    public void forceCompanyOwner(String userId, boolean isCompanyOwner);
 }

@@ -1383,4 +1383,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return pageIt(filteredList, filterOptions);
     }
 
+    @Override
+    public void forceCompanyOwner(String userId, boolean isCompanyOwner) {
+        User user = getUserById(userId);
+        if (user != null) {
+            user.isCompanyOwner = isCompanyOwner;
+            saveObject(user);
+        }
+    }
+
 }

@@ -17,6 +17,7 @@ public class Group extends DataCommon implements Comparable<Group> {
     public String imageId = "";
 
     public boolean usersRequireGroupReference = false;
+    public boolean isVip = false;
     public String usersRequireGroupReferencePlaceholder = "";
     public int usersRequireGroupReferenceValidationMin = 0;
     public int usersRequireGroupReferenceValidationMax = 0;

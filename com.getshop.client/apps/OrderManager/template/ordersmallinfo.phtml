@@ -47,9 +47,14 @@ if($user->companyObject) {
                     }
                     if($item->endDate) {
                         $dates .= " - " . date("d.m.Y", strtotime($item->endDate));
+                    
+                        
                     }
+                    $additionalMetaData = $item->product->additionalMetaData ? " (" .$item->product->additionalMetaData.")" : "";
+
+                    
                     if($dates) {
-                        $dates = " (" . $dates . ")";
+                        $dates = "$additionalMetaData (" . $dates . ")";
                     }
                     ?>
                     

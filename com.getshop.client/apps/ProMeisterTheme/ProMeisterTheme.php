@@ -25,6 +25,9 @@ class ProMeisterTheme extends \ThemeApplication implements \Application {
     public function isAllowingSideBar() {
         return true;
     }
-    
+
+    public function sideBarShouldBeInner() {
+        return true;
+    }
 }
 ?>

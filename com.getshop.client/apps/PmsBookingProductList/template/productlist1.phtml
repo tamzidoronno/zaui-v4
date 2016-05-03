@@ -106,7 +106,7 @@ foreach($rooms as $room) {
         ?>
     </span>
     <?php if($room->price > 0 && $booking->priceType != 8) { ?>
-        <span class='price <?php if($singleSelection) { echo "withselectbtn"; } ?>'><? echo round($room->price) . " " . $prefixtext; ?></span>
+        <span class='price <?php if($singleSelection) { echo "withselectbtn"; } ?>'><? echo round($room->price) . $prefixtext; ?></span>
     <?php } ?>
     <?php if($booking->priceType == 8) { 
         $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(),$this->convertToJavaDate(time()),$this->convertToJavaDate(time()));

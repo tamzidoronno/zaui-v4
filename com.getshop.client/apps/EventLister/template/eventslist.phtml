@@ -38,6 +38,32 @@ echo "<div class='eventlist'>";
         <?
         foreach ($events as $event) {
             $pageId = $event->eventPage;
+            
+            $buttonText = $this->__w("Book");
+            $canSignUp = true;
+            
+            if ($event->markedAsReady) {
+                $buttonText = $this->__w("Closed");
+                $canSignUp = false;
+            } else if (!$event->bookingItem->freeSpots) {
+                $buttonText = $this->__w("Full");
+                $canSignUp = false;
+            } else if ($event->isCanceled) {
+                $buttonText = $this->__w("Canceled");
+                $canSignUp = false;
+            } else if ($event->bookingItem->isFull) {
+                $buttonText = $this->__w("Full");
+                $canSignUp = false;
+            }
+            
+            if ($event->canBookWaitingList) {
+                $buttonText = $this->__w("Waitinglist");
+            }
+
+            if ($event->canBook || $event->canBookWaitingList) {
+                $canSignUp = true;
+            }
+            
             ?>
             <div class='eventline' style='display: inline-block;'>
             <?
@@ -58,7 +84,15 @@ echo "<div class='eventlist'>";
                 </div>
 
                 <div class="col col4 availablespots"><? echo $event->bookingItem->freeSpots; ?></div>
-                <div class="col col5 availablespots"><i class="gs_shop_small_icon fa fa-arrow-right"></i></div>
+                <div class="col col5 availablespots">
+                    <?
+                    if (!$canSignUp) {
+                    ?>
+                        <? echo $buttonText; ?>
+                    <? } else { ?>
+                        <i class="gs_shop_small_icon"><? echo $buttonText; ?></i>
+                    <? } ?>
+                </div>
             <?
             echo "</a>";
             ?>

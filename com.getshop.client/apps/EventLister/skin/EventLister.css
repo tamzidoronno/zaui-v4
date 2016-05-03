@@ -5,6 +5,8 @@
     border: solid 1px #DDD;
     position: relative;
     padding: 5px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .EventLister .col {
@@ -66,9 +68,9 @@
 }
 .EventLister .col.col1 { width: 200px; }
 .EventLister .col.col2 { width: 300px; }
-.EventLister .col.col3 { width: 300px; }
+.EventLister .col.col3 { width: 200px; }
 .EventLister .col.col4 { width: 75px; }
-.EventLister .col.col5 { width: 38px; }
+.EventLister .col.col5 { width: 120px; text-align: right; }
 
 .EventLister .daysinformation {
     

@@ -80,6 +80,9 @@ public class Event extends DataCommon {
     public boolean canBook = false;
     
     @Transient
+    public boolean canBookWaitingList = false;
+    
+    @Transient
     public Double price = -1D;
     
     @Transient

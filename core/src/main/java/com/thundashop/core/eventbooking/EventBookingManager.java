@@ -178,9 +178,12 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         event.location = getLocationBySubLocationId(event.subLocationId);
         event.subLocation = getSubLocation(event.subLocationId);
         
-        if (event.location == null || event.subLocation == null) {
-            event.subLocationId = null;
+        if (event.bookingItem != null) {
+            event.bookingItemType = bookingEngine.getBookingItemType(event.bookingItem.bookingItemTypeId);
         }
+        
+        event.location = getLocationBySubLocationId(event.subLocationId);
+        event.subLocation = getSubLocation(event.subLocationId);
         
         event.setMainDates(); 
         if (event.bookingItem != null) {
@@ -193,6 +196,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             event.canBook = false;
         } else {
             event.canBook = true;
+        }
+        
+        if (event.bookingItem.isFull || event.bookingItem.freeSpots < 1) {
+            event.canBookWaitingList = true;
         }
         
         event.price = getPrice(event);

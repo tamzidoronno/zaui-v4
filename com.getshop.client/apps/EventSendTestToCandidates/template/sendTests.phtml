@@ -25,7 +25,7 @@
     <?
     foreach ($users as $user) {
         $tests = $this->getApi()->getQuestBackManager()->getTestsForUser($user->id);
-        echo "<br/><input type='checkbox' gsname='$user->id' value='$user->id'/> ".$user->fullName;
+        echo "<br/><input checked='true' type='checkbox' gsname='$user->id' value='$user->id'/> ".$user->fullName;
         
         if ($tests) {
             echo " | Already has tests: (";

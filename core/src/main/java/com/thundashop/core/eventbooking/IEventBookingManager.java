@@ -182,4 +182,8 @@ public interface IEventBookingManager {
 
     @Editor
     public Event getEventByPageId(String eventId);
+    
+    public BookingItemType getBookingItemTypeByPageId(String pageId);
+    
+    public Double getPriceForEventType(String bookingItemTypeId);
 }

@@ -16,7 +16,7 @@ $event = $this->getEvent();
     echo $this->__w("Days").": ".count($event->days)."<br/>";
     echo "<div>";
     foreach ($event->days as $day) {
-        echo date("d/m-Y H:i", strtotime($day->startDate)) . " - " . date("d/m-Y H:i", strtotime($day->endDate)) . "<br/>";
+        echo ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatDates($day->startDate, $day->endDate). "<br/>";
     }
     echo "</div>";
     ?>

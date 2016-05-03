@@ -12,7 +12,7 @@ echo "<div class='connectedEvents'>";
     foreach ($events as $event) {
         $pageId = $event->bookingItem->pageId;
         echo "<a href='/?page=$pageId'><div class='row'>";
-        echo $event->mainStartDate. " - ".$event->mainEndDate;
+        echo ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event);
         echo "</div></a>";
     }
 echo "</div>";

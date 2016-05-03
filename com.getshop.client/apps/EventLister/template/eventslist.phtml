@@ -51,7 +51,8 @@ echo "<div class='eventlist'>";
                 <div class='col col3 daysinformation'>
                     <?
                     foreach ($event->days as $day) {
-                        echo date("d/m-Y h:m", strtotime($day->startDate))." ".date("d/m-Y h:m", strtotime($day->endDate))."<br/>";
+                        echo ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatDates($day->startDate, $day->endDate)."<br/>";
+//                        echo date("d/m-Y h:m", strtotime($day->startDate))." ".date("d/m-Y h:m", strtotime($day->endDate))."<br/>";
                     }
                     ?>
                 </div>

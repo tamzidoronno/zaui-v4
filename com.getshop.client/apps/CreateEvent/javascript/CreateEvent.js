@@ -69,6 +69,7 @@ app.CreateEvent = {
             subLocationId : document.find('.selectedSubLocation').val(),
             entryId : $(this).attr('entryId'),
             selectedEventHelder : document.find('.selectedEventHelder').val(),
+            freetexteventhelder : document.find('.freetexteventhelder').val(),
             extra : $('.CreateEvent .extraComment').val()
         }
      

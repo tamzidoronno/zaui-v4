@@ -8,6 +8,7 @@ $entryId = "";
 $sublocationId = "";
 $eventUserHelderId = "";
 $finishedClass = "";
+$freeTextEventHelder = "";
 
 if ($eventToUse) {
     $days = [];
@@ -22,6 +23,7 @@ if ($eventToUse) {
     $eventUserHelderId = $eventToUse->eventHelderUserId;
     $finishedClass = $eventToUse->markedAsReady ? "finished" : "";
     $typeId = $eventToUse->bookingItemType->id;
+    $freeTextEventHelder = $eventToUse->freeTextEventHelder;
 }
 ?>
 
@@ -71,15 +73,20 @@ if ($eventToUse) {
         <select class="gsniceselect1 selectedEventHelder">
         <?
             $filter = new core_common_FilterOptions();
-            
             $admins = $this->getApi()->getUserManager()->getUsersByType(100);
-
+            
+            echo "<option value=''>None (use freetext)</option>";
             foreach ($admins as $admin) {
                 $selected = $admin->id == $eventUserHelderId ? "selected='true'" : "";
                 echo "<option $selected value='$admin->id'>".$admin->fullName." - $admin->emailAddress</option>";
             }
         ?>
         </select>
+    </div>
+    
+    <div class="listrow">
+        <label><? echo $this->__f("Freetext event helder"); ?></label>
+        <input class="gsniceinput1 freetexteventhelder" value="<? echo $freeTextEventHelder; ?>"/>
     </div>
     
     <div class="listrow">

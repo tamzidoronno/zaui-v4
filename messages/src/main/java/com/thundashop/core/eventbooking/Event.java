@@ -29,6 +29,8 @@ public class Event extends DataCommon {
 
     public String eventHelderUserId = "";
     
+    public String freeTextEventHelder = "";
+    
     public List<Day> days = new ArrayList();
     
     public boolean markedAsReady = false;

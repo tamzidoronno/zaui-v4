@@ -8,12 +8,11 @@ if(isset($_POST['event']) && $_POST['event'] == "globalInvoiceCreation") {
 
 ?>
 <div gstype="form" method="globalInvoiceCreation">
-    <h2>Global order creation</h2>
+    <h2>Global order creation, just specify the end date of the order creation</h2>
     <select gsname="type">
         <option value="ended">Ended</option>
         <option value="not_ended">Not ended</option>
     </select>
-    <input type="txt" gsname="startdate" value="<?php echo date("d.m.Y", $d); ?>">
     <input type="txt" gsname="enddate" value="<?php echo date("d.m.Y", $d2); ?>">
     <span class="pmsbutton" gstype="submit">Create orders</span>
 </div>

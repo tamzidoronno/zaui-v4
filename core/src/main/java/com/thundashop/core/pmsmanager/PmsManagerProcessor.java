@@ -243,7 +243,6 @@ public class PmsManagerProcessor {
         
         if (!manager.getConfigurationSecure().prepayment) {
             filter.prepayment = false;
-            filter.startInvoiceFrom = beginningOfMonth(-1);
             filter.endInvoiceAt = beginningOfMonth(0);
             manager.createOrder(null, filter);
 
@@ -252,7 +251,6 @@ public class PmsManagerProcessor {
             manager.createOrder(null, filter);
         } else {
             filter.prepayment = true;
-            filter.startInvoiceFrom = beginningOfMonth(0);
             filter.endInvoiceAt = beginningOfMonth(1);
             manager.createOrder(null, filter);
         }

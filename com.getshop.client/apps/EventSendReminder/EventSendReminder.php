@@ -40,5 +40,9 @@ class EventSendReminder extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCo
     public function updateIndicator() {
         $this->includefile("indicator");
     }
+    
+    public function deleteTemplate() {
+        $this->getApi()->getEventBookingManager()->deleteReminderTemplate($this->getBookingEngineName(), $_POST['data']['templateId']);
+    }
 }
 ?>

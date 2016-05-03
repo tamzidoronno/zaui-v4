@@ -4,8 +4,19 @@ app.EventSendReminder = {
         $(document).on('change', '.EventSendReminder .templateselector', app.EventSendReminder.changedTemplate);
         $(document).on('click', '.EventSendReminder .sendmail', app.EventSendReminder.sendMail);
         $(document).on('click', '.EventSendReminder .sendsms', app.EventSendReminder.sendSms);
+        $(document).on('click', '.EventSendReminder .deleteTemplate', app.EventSendReminder.deleteTemplate);
    },
-    changedTemplate: function () {
+   
+   deleteTemplate: function() {
+       var yes = confirm("Are you sure you want to delete this template?");
+       if (yes) {
+           thundashop.Ajax.simplePost(this, "deleteTemplate", {
+               templateId: $('.EventSendReminder .templateselector').val()
+           });
+       }
+   },
+   
+   changedTemplate: function () {
         var content = $(this).find(':selected').attr('content');
         if (content) {
             content = thundashop.base64.decode(content)

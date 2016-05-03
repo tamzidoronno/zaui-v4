@@ -2,9 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.arx.AccessCategory;
-import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.Card;
-import com.thundashop.core.arx.Door;
 import com.thundashop.core.arx.Person;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
@@ -12,12 +10,8 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
 
 public class PmsManagerProcessor {
 
@@ -29,6 +23,7 @@ public class PmsManagerProcessor {
     }
 
     public void doProcessing() {
+        try { runAutoPayWithCard(); }catch(Exception e) { e.printStackTrace(); }
         try { confirmWhenPaid(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
@@ -574,6 +569,13 @@ public class PmsManagerProcessor {
                 manager.saveBooking(booking);
             }
         }
+    }
+
+    private void runAutoPayWithCard() {
+        if(!manager.getConfigurationSecure().runAutoPayWithCard) {
+            return;
+        }
+        manager.orderManager.checkForOrdersToAutoPay();
     }
 
 }

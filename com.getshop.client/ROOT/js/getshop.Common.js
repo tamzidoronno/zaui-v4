@@ -1279,9 +1279,11 @@ thundashop.common.checkWithServerIfLoggedOut();
  */
 var timeCheckMs = 1000;
 thundashop.common.checkTimeout = function() {
+    
+    var exists = $('input[name="userid_in_body"]').length > 0;
     var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
     
-    if (!localStorage.getItem("gs_login_timeout") && !isLoggedIn) {
+    if (!localStorage.getItem("gs_login_timeout") && !isLoggedIn || !exists) {
         setTimeout(thundashop.common.checkTimeout, timeCheckMs);
         return;
     }
@@ -1297,6 +1299,7 @@ thundashop.common.checkTimeout = function() {
     }
     
     if (timeLeft <= 0 && isLoggedIn) {
+        debugger;
         thundashop.common.logout();
     }
     

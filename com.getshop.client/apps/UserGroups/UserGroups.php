@@ -64,7 +64,7 @@ class UserGroups extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon 
         $group->invoiceAddress->phone = $_POST['invoiceCellPhone'];
         
         $group->isPublic = $_POST['isPublic'];
-        $group->imageId = $_POST['imageId'];
+        $group->isVip= $_POST['isVip'];
         $group->usersRequireGroupReferencePlaceholder = $_POST['usersRequireGroupReferencePlaceholder'];
         $group->usersRequireGroupReferenceValidationMin = $_POST['usersRequireGroupReferenceValidationMin'];
         $group->usersRequireGroupReferenceValidationMax = $_POST['usersRequireGroupReferenceValidationMax'];

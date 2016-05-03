@@ -985,7 +985,6 @@ thundashop.framework = {
         }
         var event = thundashop.Ajax.createEvent('','saveContainerPosition',$(this), data);
         thundashop.Ajax.postWithCallBack(event, function() {
-            console.log('Updated');
         });
     },
     loadResizing: function (cell, saveonmove) {
@@ -1562,6 +1561,11 @@ thundashop.framework = {
         return thundashop.framework.activeContainerCellId[containerid];
     },
     setActiveContainerCellId: function (id, containerid) {
+        if($('.gsrotatingrow[cellid="'+id+'"]').length === 0) {
+            var firstcell = $('.gscontainer[cellid="'+containerid+'"]').find('.gsrotatingrow').first();
+            id = firstcell.attr('cellid');
+            thundashop.framework.displayCarouselEntry(firstcell);
+        }
         thundashop.framework.activeContainerCellId[containerid] = id;
     },
     findActiveCell: function (container) {
@@ -1719,6 +1723,10 @@ thundashop.framework = {
             }
             if (next.length > 0) {
                 before = next.attr('cellid');
+            }
+            
+            if(cellobj.hasClass("gs_last_in_row")) {
+                before = "";
             }
 
             data['before'] = before;

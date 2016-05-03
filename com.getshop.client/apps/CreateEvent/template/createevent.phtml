@@ -82,6 +82,10 @@ if ($eventToUse) {
         </select>
     </div>
     
+    <div class="listrow">
+        <textarea class="extraComment" placeholder="Extra information"><? echo $eventToUse ? $eventToUse->extraInformation : ""; ?></textarea>
+    </div>
+    
     <div class="shop_button createbutton" entryId="<? echo $entryId; ?>">
         <? echo $eventToUse ? $this->__f("Save") : $this->__f("Create"); ?>
     </div>

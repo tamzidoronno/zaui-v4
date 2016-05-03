@@ -1,0 +1,21 @@
+.MagicText .line_1,
+.MagicText .line_2,
+.MagicText .line_3,
+.MagicText .line_4,
+.MagicText .line_5,
+.MagicText .line_6,
+.MagicText .line_7,
+.MagicText .line_8,
+.MagicText .line_9,
+.MagicText .line_10
+{ 
+    opacity: 0;
+}
+
+.MagicText .transition {
+    transition: all 1s ease !important;
+}
+
+.MagicText .isvisible {
+    opacity: 1;
+}

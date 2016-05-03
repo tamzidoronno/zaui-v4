@@ -2709,3 +2709,8 @@ select.gsniceselect1:active {
 .gsdndlayoutpanel div:hover { font-weight: bold; }
 .gsdndlayoutpanel { border-left: solid 1px; border-top: solid 1px; border-right: solid 1px; display:inline-block; }
 .gsdndlayoutpanel div { padding: 5px; border-bottom: solid 1px; cursor:pointer; }
+
+.slavePageModificationIndicator { font-size: 12px; padding: 3px; text-align: center; background-color: #deb200; }
+
+.slavePageModificationIndicator,
+.slavePageModificationIndicator a { color: #FFF;}

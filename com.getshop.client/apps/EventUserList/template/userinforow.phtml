@@ -30,10 +30,11 @@ $gradCapColor = $participatedStatus == "not_participated" ? "#dbde00" : $gradCap
 $specialInfo = $this->getUserAdditionalInformation($user);
 ?>
 <div class="userline">
-    <div onclick='app.Users.gssinterface.showUser("<? echo $user->id; ?>")' title="Edit user" class="gs_shop_small_icon"><i class="fa fa-edit"></i></div>
+    
     <?
     if ($isAdministrator) {
         ?>
+        <div onclick='app.Users.gssinterface.showUser("<? echo $user->id; ?>")' title="Edit user" class="gs_shop_small_icon"><i class="fa fa-edit"></i></div>
         <div title='Remove user' class="gs_shop_small_icon" gsclick="removeUserFromEvent" gs_confirm="<? echo $this->__f("Are you sure you want to remove user from this event?"); ?>" eventid="<? echo $event->id; ?>"  userid="<? echo $user->id; ?>"><i class="fa fa-trash"></i></div>
         <?
     }

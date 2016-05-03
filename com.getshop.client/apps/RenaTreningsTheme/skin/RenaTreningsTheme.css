@@ -1,15 +1,17 @@
 .gs_page_width { max-width: 1100px; margin: auto;}
 .Menu { text-align: center; width:100%; }
-.Menu .entry a { min-width: 140px; display:inline-block; text-align: center; padding: 5px; padding-top: 10px; padding-bottom: 10px; color:#000; margin: 1px; font-size: 18px; }
-body { font-size: 16px; }
+.Menu .entry a { min-width: 140px; display:inline-block; text-align: center; padding: 5px; padding-top: 10px; padding-bottom: 10px; color:#000; margin: 1px; font-size: 18px; color:#fff; line-height: 50px; }
+body { font-size: 16px; font-family: 'Roboto Condensed', sans-serif; font-weight: 300; }
 .gsarea[area="header"],
 .gsarea[area="footer"] {
-    background: #66b6fc; /* Old browsers */
+    background: #0088b5; /* Old browsers */
+    color:#fff;
 }
 
-.gsarea[area="header"] img { max-height: 130px; }
+.Menu .entries .entries { background-color:#000; }
 
-.PmsBookingProductList .roomdesc { margin-top: 25px; }
+.gsarea[area="header"] img { max-height: 130px; }
+.PmsBookingProductList .roomdesc { margin-top: 20px; }
 
 .shop_button { 
     transition: background-color 0.5s ease;
@@ -17,11 +19,14 @@ body { font-size: 16px; }
     border-radius: 0px; 
     width:100%; 
     box-sizing: border-box; 
-    background: #22939d; 
+    background: #585fe7; 
     color:#FFF; 
+    border-color: #575fff;
     text-transform: uppercase;
 }
 
+.UsersOrders th { background-color:#585fe7; }
+.PmsBookingProductList .productentry.selected { border-color:#bbb; }
 .PmsBookingCalendar .calendar .calendar_header:hover, 
 .PmsBookingProductList .continue_button:hover, 
 .PmsBookingContactData .complete_button:hover, 
@@ -30,18 +35,20 @@ body { font-size: 16px; }
 .Contact .shop_button:hover,
 .Login .form .gs_button:hover, .Login .form .loginbutton:hover {
     transition: all 0.5s ease;
-    background-color:#22939d; 
+    background-color:#585fe7; 
 }
 
-
+.PmsBookingProductList .selectbutton,
 .PmsBookingCalendar .calendar .calendar_header,
 .PmsBookingCalendar .calendar .day.selected,
 .PmsBookingProductList .continue_button,
 .PmsBookingContactData .complete_button,
 .PmsBooking .pmsfront .check_available_button,
 .PmsBooking .pmsfront .fa-calendar {
-    background-color: #22939d; 
+    background-color: #585fe7; 
     text-transform: uppercase;
+    color:#fff;
+    cursor:pointer;
 }
 
 

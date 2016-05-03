@@ -18,32 +18,54 @@ class MagicText extends \WebshopApplication implements \Application {
         $lines = explode("\n", $text);
         $i = 1;
         foreach($lines as $line) {
+            if(!$line) {
+                $line = "&nbsp;";
+            }
             echo "<div class='line_$i line'>$line</div>";
             $i++;
         }
         $config = array();
         $config['scrollstart'] = (int)$this->getConfigurationSetting("scrollstart");
         $config['timer'] = (int)$this->getConfigurationSetting("timer");
+        if(!$this->getConfigurationSetting("scrollstart")) {
+            return;
+        }
         ?>
+
+
         <script>
-            var magictextconfig = <?php echo json_encode($config); ?>;
+            var height = 10;
+            
+            if(typeof(magictextconfig) === "undefined") {
+                magictextconfig = {};
+            }
+            
+            var gsmagicsizeToSet = ($(window).width() * 0.00052083333)  * <?php echo $this->getConfigurationSetting("magicsize"); ?>;
+            console.log(gsmagicsizeToSet);
+            $('.app[appid="<?php echo $this->getAppInstanceId(); ?>"]').find('.line').css('font-size', gsmagicsizeToSet);
+
+            magictextconfig['<?php echo $this->getAppInstanceId(); ?>'] = <?php echo json_encode($config); ?>;
             $(document).bind('DOMMouseScroll', function(e){
                 if(e.originalEvent.detail > 0) {
-                    app.MagicText.doScrollText(false, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig);
+                    app.MagicText.doScrollText(false, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
                 }else {
-                    app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig);
+                    app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
                 }
            });
 
            $(document).bind('mousewheel', function(e){
                if(e.originalEvent.wheelDelta < 0) {
-                    app.MagicText.doScrollText(false, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig);
+                    app.MagicText.doScrollText(false, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
                }else {
-                    app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig);
+                    app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
                }
            });
            $(function() {
-               app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig);
+               app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
+           });
+           
+           PubSub.subscribe("GSPAGEANIMATE_COMPLETED", function() {
+               app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
            });
         </script>
         <?php

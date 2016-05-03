@@ -43,6 +43,8 @@ body {
 .coolbgbox .coolbgbox_inner {
     overflow:hidden;
 }
+
+.coolbgbox .MagicText { text-align:center; }
  
 .coolbgbox:hover .gsadditionalspanincell {
     transform: scale(1.05);

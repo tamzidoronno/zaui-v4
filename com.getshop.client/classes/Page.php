@@ -1858,7 +1858,7 @@ class Page {
         ?>
         <script>
 //            ytp.proxy.autoPlayType = "preview";
-            
+            var gsPageLoadedMagicCell = {};
             PubSub.subscribe('NAVIGATED', function() {
                 $('.gsyoutubeplayer').remove();
             });
@@ -1884,7 +1884,12 @@ class Page {
                     }
                     $(document).find('img').batchImageLoad({
                         loadingCompleteCallback: function() {
-                            getshopScrollMagic.rowLoaded(cell.attr('cellid'));
+                            var cellid = cell.attr('cellid');
+                            if(gsPageLoadedMagicCell[cellid]) {
+                                return;
+                            }
+                            gsPageLoadedMagicCell[cellid] = true;
+                            getshopScrollMagic.rowLoaded(cellid);
                         }
                     });
                 });

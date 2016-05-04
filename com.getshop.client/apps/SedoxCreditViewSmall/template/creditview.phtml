@@ -8,10 +8,12 @@ $user = $this->getApi()->getSedoxProductManager()->getSedoxUserAccount();
 $credit = $user->creditAccount->balance;
 $creditClass = $credit > 0 ? "green" : "red";
 ?>
-<div class="evc">
+<div class="evc" gs_show_modal="evccredit">
     EVC Credit
     <div class="creditValue boldFont green">
-       0
+       <?
+       echo $user->evcCurrentBalance;
+       ?>
     </div>
 </div>
 <div class="sedoxCredit">

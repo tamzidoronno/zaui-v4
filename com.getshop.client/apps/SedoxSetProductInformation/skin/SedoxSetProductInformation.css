@@ -106,11 +106,6 @@
     background-color: #24adcf;
 }
 
-.gs_modalinner {
-    width: 30%;
-    margin: auto;
-}
-
 .gs_modalouter .gs_modalinner .gs_close_modal {
     right: 0px;
     top: 0px;

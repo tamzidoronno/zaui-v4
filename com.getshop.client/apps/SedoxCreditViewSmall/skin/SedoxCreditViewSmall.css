@@ -38,4 +38,5 @@
 .SedoxCreditViewSmall .evc {
     padding-right: 10px;
     text-align: right;
+    cursor: pointer;
 }

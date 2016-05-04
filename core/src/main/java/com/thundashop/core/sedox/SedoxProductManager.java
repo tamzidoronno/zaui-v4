@@ -15,7 +15,6 @@ import com.thundashop.core.messagemanager.DummySmsFactory;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MailFactoryImpl;
 import com.thundashop.core.messagemanager.SMSFactory;
-import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -28,8 +27,6 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -130,12 +127,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 user.checkForCreatedDate();
                 users.put(user.id, user);
             }
-        }
-        
-        try {
-//            resetEvcOrders();
-        } catch (ErrorException ex) {
-            // limited
         }
     }
 
@@ -1871,6 +1862,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         creditOrder.amount = order.credit;
         
         user.addEvcCreditOrder(creditOrder);
+        user.evcCurrentBalance = evcApi.getPersonalAccountBalance(order.evccustomerid);
         saveObject(user);
     }
 
@@ -1882,16 +1874,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         
         return false;
-    }
-
-    private void resetEvcOrders() throws ErrorException {
-        if (failedEvcOrders.isEmpty()) {
-            List<SedoxMagentoIntegration.Order> orders = sedoxMagentoIntegration.getEvcOrders();
-            for (SedoxMagentoIntegration.Order order : orders) {
-                notifyEvcError("skipped", order, true);
-                System.out.println("Skipped it");
-            }
-        }
     }
 
     /**
@@ -2078,6 +2060,22 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxUser user = getSedoxUserAccountById(userId);
         user.pushoverId = pushover;
         saveObject(user);
+    }
+
+    @Override
+    public void refreshEvcCredit() {
+        User user = getSession().currentUser;
+        SedoxUser sedoxUser = getSedoxUserAccountById(user.id);
+        
+        String evcCustomerId = "";
+        for (SedoxEvcCreditOrder order : sedoxUser.evcCreditOrders) {
+            evcCustomerId = order.evcCustomerId;
+        }
+        
+        if (evcCustomerId != null && !evcCustomerId.isEmpty()) {
+            sedoxUser.evcCurrentBalance = evcApi.getPersonalAccountBalance(evcCustomerId);
+            saveObject(sedoxUser);
+        }
     }
 
 }

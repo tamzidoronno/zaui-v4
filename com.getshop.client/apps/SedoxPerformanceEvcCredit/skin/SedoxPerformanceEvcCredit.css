@@ -1,0 +1,16 @@
+.SedoxPerformanceEvcCredit .orderrow {
+    padding: 10px;
+}
+
+.SedoxPerformanceEvcCredit .orderrow div {
+    display: inline-block;
+    width: 33%;
+}
+
+.SedoxPerformanceEvcCredit .orderrow:nth-child(odd) { background-color: #EDEDED; }
+.SedoxPerformanceEvcCredit .title { text-align: center; font-size: 20px; padding: 10px;}
+
+.SedoxPerformanceEvcCredit .balance {
+    padding: 20px;
+    font-size: 20px;
+}

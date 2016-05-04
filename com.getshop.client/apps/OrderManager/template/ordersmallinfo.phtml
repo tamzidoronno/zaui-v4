@@ -47,9 +47,14 @@ if($user->companyObject) {
                     }
                     if($item->endDate) {
                         $dates .= " - " . date("d.m.Y", strtotime($item->endDate));
+                    
+                        
                     }
+                    $additionalMetaData = $item->product->additionalMetaData ? " (" .$item->product->additionalMetaData.")" : "";
+
+                    
                     if($dates) {
-                        $dates = " (" . $dates . ")";
+                        $dates = "$additionalMetaData (" . $dates . ")";
                     }
                     ?>
                     
@@ -60,11 +65,13 @@ if($user->companyObject) {
                     </tr>
                     <?php
                 }
-                foreach($taxes as $tax) {
-                    $taxsum += round($tax->sum,2);
-                    echo "<tr>";
-                    echo "<td>" . $tax->taxGroup->taxRate . "% MVA</td><td width='50' style='text-align: right;' >" . round($tax->sum,2) . "</td>";
-                    echo "</tr>";
+                if(isset($taxes)) {
+                    foreach($taxes as $tax) {
+                        $taxsum += round($tax->sum,2);
+                        echo "<tr>";
+                        echo "<td>" . $tax->taxGroup->taxRate . "% MVA</td><td width='50' style='text-align: right;' >" . round($tax->sum,2) . "</td>";
+                        echo "</tr>";
+                    }
                 }
                 ?>
             </table>

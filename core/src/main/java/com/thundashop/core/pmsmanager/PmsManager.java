@@ -374,7 +374,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBookingUnsecure(bookingId);
         NewOrderFilter filter = new NewOrderFilter();
         filter.prepayment = true;
-        filter.startInvoiceFrom = booking.getStartDate();
         filter.endInvoiceAt = booking.getEndDate();
         if(addBookingToCart(booking, filter)) {
             Order order = createOrderFromCart(booking);
@@ -919,8 +918,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 continue;
             }
             
-            Date startDate = room.getInvoiceStartDate(filter);
-            filter.startInvoiceFrom = startDate;
+            Date startDate = room.getInvoiceStartDate();
             Date endDate = room.getInvoiceEndDate(filter, booking);
 
             int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();

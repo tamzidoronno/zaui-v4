@@ -13,6 +13,12 @@
         </td>
     </tr>
     <tr>
+        <td width="50%" valign='top'>Magic size</td>
+        <td width="50%">
+            <input gsname="setting_magicsize" value='<?php echo $this->getConfigurationSetting("magicsize"); ?>'>
+        </td>
+    </tr>
+    <tr>
         <td width="50%" valign='top'>Scroll start</td>
         <td width="50%">
             <input gsname="setting_scrollstart" value='<?php echo $this->getConfigurationSetting("scrollstart"); ?>'>
@@ -21,7 +27,3 @@
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>
-
-<script>
-    $('[gsname="setting_scrollstart"]').val($(window).scrollTop());
-</script>

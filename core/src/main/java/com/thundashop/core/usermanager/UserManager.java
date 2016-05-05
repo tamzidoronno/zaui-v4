@@ -494,7 +494,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public User getLoggedOnUser() throws ErrorException {
-        Object id = sessionFactory.getObject(getSession().id, "user");
+        Object id = sessionFactory.getObjectPingLess(getSession().id, "user");
         UserStoreCollection collection = getUserStoreCollection(storeId);
         return collection.getUser((String) id);
     }
@@ -1390,6 +1390,37 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.isCompanyOwner = isCompanyOwner;
             saveObject(user);
         }
+    }
+
+    @Override
+    public void logLogout() {
+        if (getSession() != null && getSession().currentUser != null) {
+            String userId = sessionFactory.getObject(getSession().id, "user");
+            Date added = sessionFactory.getWhenAdded(getSession().id, "user");
+            if (userId != null && added != null) {
+                long diff = System.currentTimeMillis() - added.getTime();
+                if (diff < 120000) {
+                    
+                    User user = getUserById(userId);
+                    String content = "User logged out within two minutes, user: " + user.fullName + ". Seconds " + diff/1000 + " - Store: " + getStoreDefaultAddress();
+                    mailfactory.send("post@getshop.com", "post@getshop.com", "A bit short logout time", content);
+                }
+            }
+        }
+    }
+
+    @Override
+    public Integer getPingoutTime() {
+        if (getSession() == null)
+            return null;
+        
+        User user = getSession().currentUser;
+        
+        if (user == null) {
+            return null;
+        }
+        
+        return sessionFactory.getTimeout(user, getSession().id);
     }
 
 }

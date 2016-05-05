@@ -411,4 +411,9 @@ public interface IUserManager {
     
     @Editor
     public void forceCompanyOwner(String userId, boolean isCompanyOwner);
+    
+    public void logLogout();
+    
+    public Integer getPingoutTime();
+    
 }

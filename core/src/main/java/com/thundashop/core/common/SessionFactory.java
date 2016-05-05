@@ -4,7 +4,9 @@
  */
 package com.thundashop.core.common;
 
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,7 +22,7 @@ public class SessionFactory extends DataCommon {
     private ThundashopSession getSession(String sessionId) {
         ThundashopSession session = sessions.get(sessionId);
         if (session == null) {
-            session = new ThundashopSession();
+            session = new ThundashopSession(sessionId);
         }
         
         return session;
@@ -42,18 +44,18 @@ public class SessionFactory extends DataCommon {
         cleanUp();
     }
     
-    public <T> T getObject(String sessionId, String name) throws ErrorException {
-        checkSessionIsNotEmpty(sessionId);
-        Object object = null;
-       
+    public Date getWhenAdded(String sessionId, String name) {
         ThundashopSession session = getSession(sessionId);
+        
         if (session != null) {
-            object = session.getObject(name);
+            return session.getAdded(name);
         }
         
-        if (name != null && name.equals("user") && session != null && session.getObject("impersonatedUser") != null) {
-            object = session.getObject("impersonatedUser");
-        }
+        return null;
+    }
+    
+    public <T> T getObject(String sessionId, String name) throws ErrorException {
+        T object = getObjectPingLess(sessionId, name);
         
         ping(sessionId);
         return (T)object;
@@ -103,5 +105,31 @@ public class SessionFactory extends DataCommon {
         if (session != null) {
             session.updateLastActive();
         }
+    }
+
+    public <T> T getObjectPingLess(String sessionId, String name) throws ErrorException {
+        checkSessionIsNotEmpty(sessionId);
+        Object object = null;
+       
+        ThundashopSession session = getSession(sessionId);
+        if (session != null) {
+            object = session.getObject(name);
+        }
+        
+        if (name != null && name.equals("user") && session != null && session.getObject("impersonatedUser") != null) {
+            object = session.getObject("impersonatedUser");
+        }
+        
+        return (T) object;
+    }
+
+    public Integer getTimeout(User user, String sessionId) {
+        ThundashopSession session = getSession(sessionId);
+        
+        if (session != null) {
+            return session.getTimeout(user);
+        }
+        
+        return null;
     }
 }

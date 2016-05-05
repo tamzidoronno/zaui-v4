@@ -2,6 +2,7 @@
 /* @var $this \ns_df607cb0_efb4_44f8_bbac_7bf6fa4bc5b7\Carousel */
 
 $slideIds = array_filter(explode("|", $this->getConfigurationSetting("slideids")));
+$appId = $this->getAppInstanceId();
 ?>
 
 <div id="slider1" class="csslider infinity" style="<? echo $this->getConfigurationSetting("carouselheight") != "" ? "height: " . $this->getConfigurationSetting("carouselheight") . "px; " : ""?>">
@@ -17,11 +18,10 @@ $slideIds = array_filter(explode("|", $this->getConfigurationSetting("slideids")
         <?
             if(!empty($slideIds)) {
                 foreach ($slideIds as $slideId) {
-                    $id = $this->getAppInstanceId();
         ?>
                     <li style="background-image: url(/displayImage.php?id=<? echo $this->getApi()->getBannerManager()->getSlideById($slideId)->backgroundFileId ?>">
                         <? 
-                        $this->printCell($id . "_" . $slideId);
+                        $this->printCell($appId . "_" . $slideId);
                         ?>
                     </li>
         <?  
@@ -74,9 +74,10 @@ $slideIds = array_filter(explode("|", $this->getConfigurationSetting("slideids")
 if($this->getConfigurationSetting("autoslide") == "true") {
 ?>
 <script>
+// Auto clicker for slide
 var forwarder = function() {
     var direction = "<? echo $this->getConfigurationSetting("slidedirection"); ?>";
-    $(".arrows label").each(function() {
+    $(".Carousel[appid='<? echo $appId; ?>'] .arrows label").each(function() {
        if($(this).css(direction) === "0px") {
            $(this).click();
            return false;
@@ -88,11 +89,64 @@ var slideInterval = "<? echo $this->getConfigurationSetting("slidespeed"); ?>"
 var slideInterval = slideInterval != "" ? slideInterval : 3000;
 var forwarderInterval = setInterval(forwarder, slideInterval);
 
-$(".arrows label").on('click', function() {
+$(".Carousel[appid='<? echo $appId; ?>'] .arrows label").on('click', function() {
     clearInterval(forwarderInterval);
     forwarderInterval = setInterval(forwarder, slideInterval);
 });
+// Auto clicker for slide
 </script>
 <?
 }
 ?>
+
+<script>
+// CSS definitios for transition types
+var transitionType = "<? echo $this->getConfigurationSetting("transition"); ?>";
+var cssAnimation = document.createElement('style');
+cssAnimation.type = 'text/css';
+
+if(transitionType == "slide") {
+    var cssString = "" + 
+            ".Carousel[appid='<? echo $appId; ?>'] .csslider > ul > li {" +
+            "position: relative;" +
+            "}";
+    
+    for(var i = 1; i <= 10; i++) {
+        cssString += "" +
+            ".Carousel[appid='<? echo $appId; ?>'] .csslider > input:nth-of-type(" + i + "):checked ~ ul li:first-of-type {" +
+            "margin-left: -" + (i-1) * 100 + "%;" +
+            "}";
+    }
+} else if(transitionType == "fade") {
+    var cssString = "" + 
+            ".Carousel[appid='<? echo $appId; ?>'] .csslider > ul > li {" +
+            "position: absolute;" +
+            "opacity: 0;" +
+            "}";
+    
+    for(var i = 1; i <= 10; i++) {
+        cssString += "" +
+            ".Carousel[appid='<? echo $appId; ?>'] .csslider > input:nth-of-type(" + i + "):checked ~ ul li:nth-of-type(" + i + ") {" +
+            "opacity: 1;" +
+            "}";
+    }
+}
+
+var rules = document.createTextNode(cssString);
+cssAnimation.appendChild(rules);
+$("head")[0].appendChild(cssAnimation);
+// CSS definitios for transition types
+
+// Remember slide number
+if(typeof(Storage) !== "undefined") {
+    var activeSlide = localStorage.getItem("<? echo $appId; ?>_currentSlide");
+    $(".Carousel[appid='<? echo $appId; ?>'] #" + activeSlide).prop("checked", true);
+}
+
+
+$(".Carousel[appid='<? echo $appId; ?>'] input[type=radio][name=slides]").change(function() {
+    localStorage.setItem("<? echo $appId; ?>_currentSlide", $(this).attr("id"));
+});
+
+// Remember slide number
+</script>

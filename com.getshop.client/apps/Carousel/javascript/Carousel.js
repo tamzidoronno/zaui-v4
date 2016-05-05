@@ -29,16 +29,19 @@ app.Carousel = {
         
         if(status == "state_one") {
             $(this).parent().find(".colorchanging").css("background-color", "red");
-            $(this).parent().find(".textchanging").text("L");
+            $(this).parent().find(".directionchanging").text("L");
+            $(this).parent().find(".transitionchanging").text("S");
         } else if(status == "state_two") {
             $(this).parent().find(".colorchanging").css("background-color", "green");
-            $(this).parent().find(".textchanging").text("R");
+            $(this).parent().find(".directionchanging").text("R");
+            $(this).parent().find(".transitionchanging").text("F");
         }
     },
     
     saveSettings: function() {
         var carouselheight = $(".Carousel input[name='carouselheight']").val();
         var autoslide = $(".Carousel input[name='autoslide']:checked").val();
+        var transition = $(".Carousel input[name='transition']:checked").val();
         var slidedirection = $(".Carousel input[name='slidedirection']:checked").val();
         var slidespeed = $(".Carousel input[name='slidespeed']").val();
         var showbullets = $(".Carousel input[name='showbullets']:checked").val();
@@ -48,6 +51,7 @@ app.Carousel = {
         
         var data = {
             carouselheight: carouselheight,
+            transition: transition,
             autoslide: autoslide,
             slidedirection: slidedirection,
             slidespeed: slidespeed,

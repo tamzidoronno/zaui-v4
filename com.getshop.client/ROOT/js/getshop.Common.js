@@ -1215,103 +1215,53 @@ GetShopUtil = {
 
 
 thundashop.common.logout = function() {
-    document.location = '/logout.php?goBackToHome=true';
+    var event = thundashop.Ajax.createEvent(null, "logLogout", this, {});
+    thundashop.Ajax.postWithCallBack(event, function() {
+        document.location = '/logout.php?goBackToHome=true';
+    });
 };
 
 thundashop.common.sendPubSubMessage = function(data) {
     PubSub.publish("EVENT_POST_NAV_ACTION", data);
 }
 
-thundashop.common.triggerTimeoutCheck = function() {
-    if ($('.gsbody_inner').length === 0) {
-        return;
-    }
-    
-    var timeOutUser = $('.gsbody_inner').attr('userTimeout');
-    
-    if (!timeOutUser) {
-        timeOutUser = 0;
-    }
-    
-    var newDateObj = new Date();
-    var currentTime = newDateObj.getTime();
-    var timeOut = currentTime + parseInt(timeOutUser)*60*1000;
-    
-    $(document).ready(function() {
-        var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
-        
-        if (isLoggedIn) {
-            localStorage.setItem("gs_login_timeout", timeOut);
-        }
-    });
-};
-
+var timeCheckMs = 1000;
 thundashop.common.checkWithServerIfLoggedOut = function() {
     if ($('input[name="userid_in_body"]').length > 0) {
         $.ajax({
             type: "GET",
             url: "/scripts/isLoggedIn.php",
             success: function(response) {
-                if (response === "false") {
-                    var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
-                    if (isLoggedIn) {
-                        thundashop.common.logout();
-                    }
-                }
+                if (response === "notinitted")
+                    return;
                 
-                if (response === "true") {
-                    var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
-                    if (!isLoggedIn) {
+                var res = parseInt(response);
+                
+                var exists = $('input[name="userid_in_body"]').length > 0;
+                if (!exists)
+                    return;
+                
+                var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
+                
+                if (isNaN(res) && isLoggedIn) {
+                    thundashop.common.logout();
+                } else {
+                    if (res > 0 && !isLoggedIn) {
                         document.location = "/";
+                    }
+                    
+                    if (res < 0 && isLoggedIn) {
+                        thundashop.common.logout();
                     }
                 }
             }
         });        
     }
     
-    setTimeout(thundashop.common.checkWithServerIfLoggedOut, 5000);
+    setTimeout(thundashop.common.checkWithServerIfLoggedOut, timeCheckMs);
 }
 
 thundashop.common.checkWithServerIfLoggedOut();
-
-/**
- * a loop that checks weather it needs to logout or not.
- */
-var timeCheckMs = 1000;
-thundashop.common.checkTimeout = function() {
-    
-    var exists = $('input[name="userid_in_body"]').length > 0;
-    var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
-    
-    if (!localStorage.getItem("gs_login_timeout") && !isLoggedIn || !exists) {
-        setTimeout(thundashop.common.checkTimeout, timeCheckMs);
-        return;
-    }
-  
-    var newDateObj = new Date();
-    var currentTime = newDateObj.getTime();
-    var timeoutTime = parseInt(localStorage.getItem("gs_login_timeout"));
-    var timeLeft = timeoutTime - currentTime;
-    
-    if (!isLoggedIn) {
-        timeLeft = 0;
-        localStorage.removeItem("gs_login_timeout");
-    }
-    
-    if (timeLeft <= 0 && isLoggedIn) {
-        debugger;
-        thundashop.common.logout();
-    }
-    
-    if (timeLeft) {
-        var secondsLeft = Math.floor(timeLeft / 1000);
-        $('.gs_logout_counter').html(secondsLeft);
-    }
-    
-    setTimeout(thundashop.common.checkTimeout, timeCheckMs);
-}
-
-setTimeout(thundashop.common.checkTimeout, timeCheckMs);
 
 var resizeLeftBar = function() {
     if ($(".left_side_bar").length) {

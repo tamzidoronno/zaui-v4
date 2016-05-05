@@ -494,7 +494,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public User getLoggedOnUser() throws ErrorException {
-        Object id = sessionFactory.getObject(getSession().id, "user");
+        Object id = sessionFactory.getObjectPingLess(getSession().id, "user");
         UserStoreCollection collection = getUserStoreCollection(storeId);
         return collection.getUser((String) id);
     }
@@ -1407,6 +1407,20 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 }
             }
         }
+    }
+
+    @Override
+    public Integer getPingoutTime() {
+        if (getSession() == null)
+            return null;
+        
+        User user = getSession().currentUser;
+        
+        if (user == null) {
+            return null;
+        }
+        
+        return sessionFactory.getTimeout(user, getSession().id);
     }
 
 }

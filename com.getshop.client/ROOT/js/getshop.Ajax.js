@@ -138,7 +138,6 @@ thundashop.Ajax = {
                 if(file !== "Chat.php") {
                     PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
                 }
-                thundashop.common.triggerTimeoutCheck();
                 thundashop.common.sendPubSubMessage(data);
             },
             error: thundashop.handleAjaxError
@@ -195,7 +194,6 @@ thundashop.Ajax = {
                     PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
                 }
                 
-                thundashop.common.triggerTimeoutCheck();
                 thundashop.common.sendPubSubMessage(data);
             },
             xhr: function()
@@ -232,7 +230,6 @@ thundashop.Ajax = {
             success: function(response) {
                 result = response;
                 PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
-                thundashop.common.triggerTimeoutCheck();
                 thundashop.common.sendPubSubMessage(thundashop.base64.encodeForAjax(event));
             },
             error: thundashop.handleAjaxError
@@ -252,7 +249,6 @@ thundashop.Ajax = {
             dataType: "json",
             success: function(response) {
                 thundashop.Ajax.updateFromResponse(response);
-                thundashop.common.triggerTimeoutCheck();
                 thundashop.common.sendPubSubMessage(thundashop.base64.encodeForAjax(event));
                 if (response.errors && response.errors !== "")
                     result = false;
@@ -333,7 +329,6 @@ thundashop.Ajax = {
             data: data,
             success: function(response) {
                 thundashop.Ajax.updateFromResponse(response);
-                thundashop.common.triggerTimeoutCheck();
                 thundashop.common.sendPubSubMessage(info);
                 PubSub.publish('navigation_complete', variables);
                 if (typeof(callback) !== "undefined" && typeof(callback) !== "boolean" && typeof(callback) == "function") {

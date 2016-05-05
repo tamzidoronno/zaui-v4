@@ -246,6 +246,10 @@ public class StorePool {
     }
 
     private Object ExecuteMethod(JsonObject2 object, Class[] types, Object[] argumentValues) throws ErrorException {
+        if (object.interfaceName.equals("core.usermanager.UserManager") && object.method.equals("getPingoutTime")) {
+            return handleSpecialTimeoutCheck(object, types, argumentValues);
+        }
+        
         argumentValues = runTroughAntiSamy(object, argumentValues);
         
         Object res;
@@ -368,4 +372,14 @@ public class StorePool {
     public void stop(Store store) {
         storeHandlers.remove(store.id);
     }
+
+    private Object handleSpecialTimeoutCheck(JsonObject2 object, Class[] types, Object[] argumentValues) {
+        Store store = storePool.getStoreBySessionIdDontUpdateSession(object.sessionId);
+        if (store == null) {
+            return "notinitted";
+        }
+        
+        StoreHandler storeHandler = get(store.id);
+        return storeHandler.executeMethodSync(object, types, argumentValues);
+   }
 }

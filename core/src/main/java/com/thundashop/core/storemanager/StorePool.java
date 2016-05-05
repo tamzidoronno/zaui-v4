@@ -208,6 +208,21 @@ public class StorePool {
         return store;
     }
     
+    public synchronized Store getStoreBySessionIdDontUpdateSession(String sessionId) throws ErrorException {
+        String storeId = getSessionFactory().getObjectPingLess(sessionId, "storeId");
+        if (storeId == null) {
+            return null;
+        }
+
+        Store store = getStore(storeId);
+
+        if (store == null) {
+            throw new ErrorException(23);
+        }
+
+        return store;
+    }
+    
     public synchronized boolean isSmsActivate(String storeId) {
         Store store = getStore(storeId);
         

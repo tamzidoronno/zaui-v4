@@ -179,6 +179,9 @@ public class BannerManager extends ManagerBase implements IBannerManager {
     public void setImageForSlide(String slideId, String fileId) {
         Slide slide = slides.get(slideId);
         slide.backgroundFileId = fileId;
+        
+        saveObject(slide);
+        slides.put(slide.id, slide);
     }
     
     @Override

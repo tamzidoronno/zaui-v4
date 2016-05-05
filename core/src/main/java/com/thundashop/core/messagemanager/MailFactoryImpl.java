@@ -236,6 +236,14 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     public void run() {
         MimeMessage message = new MimeMessage(getMailSession());
         boolean delivered = false;
+        if(from == null || !from.contains("@")) {
+            from = "post@getshop.com";
+        }
+        if(to == null || !to.contains("@")) {
+            System.out.println("Unable to send email to : " + to + " since it does not contain an @");
+            return;
+        }
+        
         for(int i = 0; i < 24; i++) {
             try {
                 message.setSubject(subject, "UTF-8");

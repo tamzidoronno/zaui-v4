@@ -31,6 +31,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshoplock.GetShopLockManager;
@@ -102,8 +103,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     ProductManager productManager;
 
     @Autowired
-    GetShopLockManager getShopLockManager;
+    FrameworkConfig frameworkConfig;
 
+    @Autowired
+    GetShopLockManager getShopLockManager;
+    
     private String specifiedMessage = "";
     Date lastOrderProcessed;
     private List<PmsLog> logentries = new ArrayList();

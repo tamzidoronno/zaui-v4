@@ -244,6 +244,7 @@ public class PmsManagerProcessor {
         NewOrderFilter filter = new NewOrderFilter();
         filter.prepaymentDaysAhead = manager.getConfigurationSecure().prepaymentDaysAhead;
         filter.increaseUnits = manager.getConfigurationSecure().increaseUnits;
+        filter.autoGeneration = true;
         
         if (!manager.getConfigurationSecure().prepayment) {
             filter.prepayment = false;

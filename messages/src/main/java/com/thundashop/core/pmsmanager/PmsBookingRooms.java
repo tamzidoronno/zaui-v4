@@ -198,10 +198,15 @@ public class PmsBookingRooms implements Serializable {
                 cal.add(Calendar.DAY_OF_YEAR, filter.prepaymentDaysAhead*-1);
                 toInvoiceFrom = cal.getTime();
             }
+        }
+        
+        if(filter.autoGeneration) {
+            //Never autocreate orders that is in the future.
             if(toInvoiceFrom.after(new Date())) {
                 return false;
             }
         }
+        
         
         if(invoicedTo == null) {
             return true;

@@ -496,6 +496,18 @@ $days[7] = "Sunday";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->updatePriceWhenChangingDates) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='updatePriceWhenChangingDates' <? echo $checked; ?>>
+            </span>
+            Automatically change prices when chaning dates on the room.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->includeGlobalOrderCreationPanel) {
                     $checked = "CHECKED";
                 }

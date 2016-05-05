@@ -763,7 +763,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.end = end;
             room.date.exitCleaningDate = null;
             room.date.cleaningDate = null;
-            room.price = calculatePrice(room.bookingItemTypeId, start, end, true, "", booking.priceType);
+            if(configuration.updatePriceWhenChangingDates) {
+                room.price = calculatePrice(room.bookingItemTypeId, start, end, true, "", booking.priceType);
+            }
             saveBooking(booking);
 
             long diffOld = oldEnd.getTime() - oldStart.getTime();

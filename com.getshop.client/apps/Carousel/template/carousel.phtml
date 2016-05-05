@@ -94,7 +94,12 @@ $(".Carousel[appid='<? echo $appId; ?>'] .arrows label").on('click', function() 
     forwarderInterval = setInterval(forwarder, slideInterval);
 });
 // Auto clicker for slide
+</script>
+<?
+}
+?>
 
+<script>
 // CSS definitios for transition types
 var transitionType = "<? echo $this->getConfigurationSetting("transition"); ?>";
 var cssAnimation = document.createElement('style');
@@ -131,7 +136,17 @@ var rules = document.createTextNode(cssString);
 cssAnimation.appendChild(rules);
 $("head")[0].appendChild(cssAnimation);
 // CSS definitios for transition types
-</script>
-<?
+
+// Remember slide number
+if(typeof(Storage) !== "undefined") {
+    var activeSlide = localStorage.getItem("<? echo $appId; ?>_currentSlide");
+    $(".Carousel[appid='<? echo $appId; ?>'] #" + activeSlide).prop("checked", true);
 }
-?>
+
+
+$(".Carousel[appid='<? echo $appId; ?>'] input[type=radio][name=slides]").change(function() {
+    localStorage.setItem("<? echo $appId; ?>_currentSlide", $(this).attr("id"));
+});
+
+// Remember slide number
+</script>

@@ -763,8 +763,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.end = end;
             room.date.exitCleaningDate = null;
             room.date.cleaningDate = null;
+            room.price = calculatePrice(room.bookingItemTypeId, start, end, true, "", booking.priceType);
             saveBooking(booking);
 
+            long diffOld = oldEnd.getTime() - oldStart.getTime();
+            long diffNew = end.getTime() - start.getTime();
+            if(diffOld == diffNew && isSameDay(room.invoicedTo, oldEnd)) {
+                room.invoicedTo = end;
+            }
+            
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
             logEntry(logText, bookingId, null, roomId);
             doNotification("date_changed", booking, room);

@@ -132,6 +132,10 @@ class PayPal extends \PaymentApplication implements \Application {
         $this->includefile("paypalconfig");
     }
     
+    public function simplePayment() {
+        $this->preProcess();
+    }
+    
     public function isSandbox() {
         return $this->getConfigurationSetting("sandbox") == "true";
     }

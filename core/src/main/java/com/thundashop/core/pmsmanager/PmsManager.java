@@ -358,9 +358,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 try {
                     if (configuration.payAfterBookingCompleted) {
                         createPrepaymentOrder(booking.id);
-                    } else {
-                        processor();
                     }
+                    processor();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -376,6 +375,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public String createPrepaymentOrder(String bookingId) {
         PmsBooking booking = getBookingUnsecure(bookingId);
+        if(booking.avoidCreateInvoice && 
+                getSession() != null && 
+                getSession().currentUser != null && 
+                (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor())) {
+            return "";
+        }
         NewOrderFilter filter = new NewOrderFilter();
         filter.prepayment = true;
         filter.endInvoiceAt = booking.getEndDate();
@@ -908,7 +913,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 saveBooking(booking);
             }
+        
+            buildCreditsIfNessesary(booking);
         }
+        
         return "";
     }
 
@@ -3167,6 +3175,42 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             System.out.println("-------");
         }
         booking.sessionId = "";
+    }
+
+    private void buildCreditsIfNessesary(PmsBooking booking) {
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            for(CartItem item : order.cart.getItems()) {
+                Product product = item.getProduct();
+                if(product != null) {
+                    String pmsBookingRoomId = product.externalReferenceId;
+                    PmsBookingRooms room = booking.findRoom(pmsBookingRoomId);
+                    Date start = item.getStartingDate();
+                    Date end = item.getEndingDate();
+                    if(room == null) {
+                        System.out.println("This item needs to be credited");
+                    }
+                    if(room.date == null || room.date.start == null || room.date.end == null) {
+                        System.out.println("Room dates are null");
+                        continue;
+                    }
+                    
+                    if(start == null || end == null) {
+                        System.out.println("Cart items dates are null");
+                        continue;
+                    }
+                    
+                    if(!room.date.start.equals(item.getStartingDate())) {
+                        System.out.println("Start date has been changed");
+                        item.newStartDate = room.date.start;
+                    }
+                    if(!room.date.end.equals(item.getEndingDate())) {
+                        System.out.println("End date has been changed");
+                        item.newEndDate = room.date.end;
+                    }
+                }
+            }
+        }
     }
 
 }

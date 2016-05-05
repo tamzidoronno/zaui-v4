@@ -141,10 +141,21 @@ if($booking->orderIds) {
     if(!$booking->invoicedTo) {
         $booking->invoicedTo = $booking->rooms[0]->date->start;
     }
-    $startingFrom = date("d.m.Y", strtotime($booking->invoicedTo));
-    $endingAt = date("d.m.Y", strtotime("+1 month", strtotime($booking->invoicedTo)));
+    
+    $endDate = time();
+    foreach($booking->rooms as $room) {
+        if($endDate < strtotime($booking->rooms[0]->date->end)) {
+            $endDate = strtotime($booking->rooms[0]->date->end);
+        }
+    }
+    
+    $endingAt = date("d.m.Y", $endDate);
     echo "<label style='display:inline-block;'>Invoice to<br><input type='text' gsname='endingAt' value='$endingAt' style='font-size: 18px; width: 100px;padding: 4px;' /></label>";
     ?>
     
     <span class='pmsbutton' gstype="submitToInfoBox">Create new order</span>
 </div>
+
+<script>
+    $("[gsname='endingAt']").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

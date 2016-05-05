@@ -219,21 +219,22 @@ public class PmsBookingRooms implements Serializable {
     }
     
 
-    Date getInvoiceStartDate(NewOrderFilter filter) {
-        if(date.start.after(filter.startInvoiceFrom)) {
+    Date getInvoiceStartDate() {
+        
+        if(invoicedTo == null) {
             return date.start;
         }
         
-        if(invoicedTo != null) {
-            return invoicedTo;
+        if(date.start.after(invoicedTo)) {
+            return date.start;
         }
         
-        return filter.startInvoiceFrom;
+        return invoicedTo;
     }
 
     Date getInvoiceEndDate(NewOrderFilter filter, PmsBooking booking) {
         if(filter.increaseUnits > 0) {
-            filter.endInvoiceAt = addTimeUnits(filter.increaseUnits, booking, filter.startInvoiceFrom);
+            filter.endInvoiceAt = addTimeUnits(filter.increaseUnits, booking, getInvoiceStartDate());
         }
         
         if(date.end.before(filter.endInvoiceAt)) {

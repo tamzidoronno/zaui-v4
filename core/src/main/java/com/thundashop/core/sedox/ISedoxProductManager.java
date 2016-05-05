@@ -219,4 +219,7 @@ public interface ISedoxProductManager  {
     
     @Editor
     public void setPushoverIdForUser(String pushover, String userId);
+    
+    @Customer
+    public void refreshEvcCredit();
 }

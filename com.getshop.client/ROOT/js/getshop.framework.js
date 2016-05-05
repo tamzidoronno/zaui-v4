@@ -30,6 +30,7 @@ thundashop.framework = {
         
         $("html, body").animate({ scrollTop: scrollTop }, { "easing" : "swing", "duration" : timer, complete: function() {
                 isScrolling = false;
+                PubSub.publish("GSPAGEANIMATE_COMPLETED");
             }
         });
     },    

@@ -378,3 +378,8 @@ body {
     box-shadow: 0px 0px 8px rgba(31, 73, 125, 0.1);
     margin: 20px !important;
 }
+
+.gs_modalinner {
+    width: 800px;
+    margin: auto;
+}

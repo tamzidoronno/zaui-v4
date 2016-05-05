@@ -64,6 +64,10 @@ public class AllaBolagSearchEngine implements CompanySearchEngine {
 
     @Override
     public Company getCompany(String organisationNumber, boolean fetch) {
+        if (organisationNumber == null || organisationNumber.isEmpty()) {
+            return null;
+        }
+        
         if (!frameworkConfig.productionMode) {
             return getDemoCompany();
         }

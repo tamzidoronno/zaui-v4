@@ -533,6 +533,10 @@ class CartManager extends \SystemApplication implements \Application {
         echo $this->__w("Please wait while you are being transferred to dibs payment service.");
     }
 
+    public function requestAdminRights() {
+        $this->requestAdminRight("OrderManager", "getOrder", $this->__o("Need to fetch order to require payment."));
+    }
+    
     public function payOrderDirect() {
         $orderId = $_GET['payorder'];
         

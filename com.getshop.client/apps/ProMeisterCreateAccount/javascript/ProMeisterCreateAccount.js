@@ -58,7 +58,7 @@ app.ProMeisterCreateAccount = {
         data.cellPrefix = $('.ProMeisterCreateAccount input[name="cellprefix"]').val();
         
         if (!app.ProMeisterCreateAccount.validateEmail(data.invoicemail)) {
-            alert(__w("Please check your the invoice email address"));
+            alert(__w("Please check your invoice email address"));
             return;
         }
         

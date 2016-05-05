@@ -71,6 +71,10 @@ class ProMeisterCreateAccount extends \MarketingApplication implements \Applicat
         $user = $this->getApi()->getUserManager()->createUser($user);
         $this->getApi()->getUserManager()->assignCompanyToUser($company, $user->id);
         
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
+            return;
+        }
+        
         $loggedOnUser = $this->getApi()->getUserManager()->logOn($user->username, $_POST['data']['password']);
         if ($loggedOnUser) {
             \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($loggedOnUser);

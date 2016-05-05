@@ -179,7 +179,17 @@ public interface IEventBookingManager {
     
     @Editor
     public List<Event> getEventsByType(String eventTypeId);
+    
+    @Editor
+    public List<Event> getEventsByLocation(String locationId);
 
     @Editor
     public Event getEventByPageId(String eventId);
+    
+    @Administrator
+    public void deleteSubLocation(String subLocationId);
+    
+    public BookingItemType getBookingItemTypeByPageId(String pageId);
+    
+    public Double getPriceForEventType(String bookingItemTypeId);
 }

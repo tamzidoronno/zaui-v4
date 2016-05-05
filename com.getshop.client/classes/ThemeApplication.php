@@ -135,6 +135,10 @@ class ThemeApplication extends PredefinedPagesConfig {
         
         return null;
     }
+    
+    public function sideBarShouldBeInner() {
+        return false;
+    }
  
     public function isAllowingSideBar() {
         return false;

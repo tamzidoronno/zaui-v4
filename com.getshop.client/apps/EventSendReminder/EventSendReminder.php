@@ -24,6 +24,7 @@ class EventSendReminder extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCo
         }
         
         $core_eventbooking_ReminderTemplate->content = $_POST['data']['content'];
+        $core_eventbooking_ReminderTemplate->subject = $_POST['data']['subject'];
         $this->getApi()->getEventBookingManager()->saveReminderTemplate($this->getBookingEngineName(), $core_eventbooking_ReminderTemplate);
     }
     
@@ -32,6 +33,7 @@ class EventSendReminder extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCo
         $reminder->userIds = json_decode($_POST['data']['userids']);
         $reminder->content = $_POST['data']['content'];
         $reminder->type = $_POST['data']['type'];
+        $reminder->subject = $_POST['data']['subject'];
         $reminder->eventId = $this->getEvent()->id;
         
         $this->getApi()->getEventBookingManager()->sendReminder($this->getBookingEngineName(), $reminder);
@@ -39,6 +41,10 @@ class EventSendReminder extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCo
     
     public function updateIndicator() {
         $this->includefile("indicator");
+    }
+    
+    public function deleteTemplate() {
+        $this->getApi()->getEventBookingManager()->deleteReminderTemplate($this->getBookingEngineName(), $_POST['data']['templateId']);
     }
 }
 ?>

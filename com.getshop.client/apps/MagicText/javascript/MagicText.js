@@ -4,18 +4,13 @@ app.MagicText = {
     },
     
     doScrollText : function(direction, appid, config) {
+        console.log(config);
         var curScroll = $(window).scrollTop();
-        console.log(curScroll);
-        if(direction) {
-            if(config.scrollstart > curScroll) {
-                console.log('need to add');
-                $('.MagicText[appid="'+appid+'"] .line').removeClass('isvisible');
-            }
+        var curScroll = ($('.MagicText[appid="'+appid+'"] .line').offset().top - curScroll)  * -1;
+        if(config.scrollstart > curScroll) {
+            $('.MagicText[appid="'+appid+'"] .line').removeClass('isvisible');
         } else {
-            if(config.scrollstart < curScroll) {
-                console.log('need to add');
-                app.MagicText.addVisibility(appid, config.timer, 50);
-            }
+            app.MagicText.addVisibility(appid, config.timer, 100);
         }
     },
     
@@ -23,7 +18,6 @@ app.MagicText = {
         var counter = 1;
         for(var i = 1; i <= 10; i++) {
             setTimeout(function() {
-                console.log('adding: ' + counter + "(" + appid + ")");
                 $('.MagicText[appid="'+appid+'"]').find('.line_'+counter).addClass('transition');
                 $('.MagicText[appid="'+appid+'"]').find('.line_'+counter).addClass('isvisible');
                 counter++;

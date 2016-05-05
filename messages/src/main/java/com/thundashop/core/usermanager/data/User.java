@@ -207,6 +207,10 @@ public class User extends DataCommon implements Comparable<User> {
     
     @Override
     public int compareTo(User o) {
+        if (o.fullName != null && fullName != null) {
+            return o.fullName.compareTo(fullName);
+        }
+        
         if(o.rowCreatedDate == null || rowCreatedDate == null) {
             return 0;
         }

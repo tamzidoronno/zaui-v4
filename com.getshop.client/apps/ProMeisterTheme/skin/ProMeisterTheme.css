@@ -104,11 +104,13 @@ body {
 
 .left_side_bar {
     width: 300px;
-    background: rgb(249,250,252); /* Old browsers */
-    background: -moz-linear-gradient(left,  rgba(249,250,252,1) 0%, rgba(249,250,252,1) 91%, rgba(234,237,242,1) 100%);
-    background: -webkit-linear-gradient(left,  rgba(249,250,252,1) 0%,rgba(249,250,252,1) 91%,rgba(234,237,242,1) 100%);
-    background: linear-gradient(to right,  rgba(249,250,252,1) 0%,rgba(249,250,252,1) 91%,rgba(234,237,242,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9fafc', endColorstr='#eaedf2',GradientType=1 );
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eeeeee+0,e2e2e2+0,f9fafc+9,f9fafc+91,e2e2e2+100 */
+background: rgb(238,238,238); /* Old browsers */
+background: -moz-linear-gradient(left,  rgba(238,238,238,1) 0%, rgba(226,226,226,1) 0%, rgba(249,250,252,1) 9%, rgba(249,250,252,1) 91%, rgba(226,226,226,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(left,  rgba(238,238,238,1) 0%,rgba(226,226,226,1) 0%,rgba(249,250,252,1) 9%,rgba(249,250,252,1) 91%,rgba(226,226,226,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to right,  rgba(238,238,238,1) 0%,rgba(226,226,226,1) 0%,rgba(249,250,252,1) 9%,rgba(249,250,252,1) 91%,rgba(226,226,226,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#e2e2e2',GradientType=1 ); /* IE6-9 */
+
 }
 
 .gs_main_column {

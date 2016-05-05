@@ -1,17 +1,13 @@
 <?
 /* @var $this ns_138a1b9a_d8e3_4fec_8f3f_1cae11bca54f\UserEventList */
 
-$userId = isset($_SESSION['ProMeisterSpiderDiager_current_user_id_toshow']) ? $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] : \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
-$events = $this->getApi()->getEventBookingManager()->getEventsForUser($this->getBookingEngineName(), $userId);
-if (!$events) {
-    $events = [];
-}
-$events = array_reverse($events);
-$userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+$userId = $this->getUserId();
+$events = $this->getEventsToPrint();
+
 if (!count($events)) {
     echo $this->__w("No events available");
 }
-//print_r($events);
+
 foreach ($events as $event) {
     echo "<div class='downloadrow'>";
         echo "<div>".$event->bookingItemType->name."</div>";

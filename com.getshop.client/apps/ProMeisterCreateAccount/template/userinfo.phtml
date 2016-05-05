@@ -1,6 +1,8 @@
 <?
 /* @var $this ns_77bd71b1_a0e2_494e_a9e9_6dcee3829c5c\ProMeisterCreateAccount */
 $group = $this->getSelectedGroup();
+$selectedCompany = $this->getCompanyByReference();
+$disabled = $selectedCompany ? "disabled" : "";
 
 ?>
 <div class="registrationform">
@@ -17,7 +19,7 @@ $group = $this->getSelectedGroup();
             <br/><input class="gsniceinput1" type="txt" name="email"/>
             <br/>
             <br/><label>* <? echo $this->__f("Invoice email"); ?></label>
-            <br/><input class="gsniceinput1" type="txt"  mandatory="yes" name="invoicemail"/>
+            <br/><input class="gsniceinput1" type="txt" <? echo $disabled; ?> mandatory="yes" name="invoicemail" value="<? echo $selectedCompany ? $selectedCompany->invoiceEmail : "" ; ?>"/>
             <br/>
             <br/><label>* <? echo $this->__f("Cellphone"); ?></label>
             <br/>+ <input class="gsniceinput1 cellprefix" type="txt"  mandatory="yes" name="cellprefix" value="<? echo $this->getApi()->getStoreManager()->getMyStore()->configuration->defaultPrefix; ?>"/>

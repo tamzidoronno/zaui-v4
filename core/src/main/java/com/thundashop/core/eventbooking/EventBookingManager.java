@@ -178,6 +178,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         event.location = getLocationBySubLocationId(event.subLocationId);
         event.subLocation = getSubLocation(event.subLocationId);
         
+        if (event.bookingItem != null) {
+            event.bookingItemType = bookingEngine.getBookingItemType(event.bookingItem.bookingItemTypeId);
+        }
+        
+        event.location = getLocationBySubLocationId(event.subLocationId);
+        event.subLocation = getSubLocation(event.subLocationId);
+        
         event.setMainDates(); 
         if (event.bookingItem != null) {
             event.eventPage = "?page="+event.bookingItem.pageId+"&eventId="+event.id;
@@ -189,6 +196,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             event.canBook = false;
         } else {
             event.canBook = true;
+        }
+        
+        if (event.bookingItem.isFull || event.bookingItem.freeSpots < 1) {
+            event.canBookWaitingList = true;
         }
         
         event.price = getPrice(event);
@@ -299,7 +310,12 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public void deleteLocation(String locationId) {
-        // TODO - check if location is in use somewhere.
+        List<Event> eventsConnectedToLocation = getEventsByLocation(locationId);
+        
+        if (!eventsConnectedToLocation.isEmpty()) {
+            throw new ErrorException(1036);
+        }
+        
         Location location = locations.remove(locationId);
         if (location != null)
             deleteObject(location);
@@ -832,7 +848,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     private Double getPrice(Event event) {
         BookingItemTypeMetadata metaData = getBookingTypeMetaData(event);
-        
+        return getPriceForCurrentUser(metaData);
+    }
+
+    private Double getPriceForCurrentUser(BookingItemTypeMetadata metaData) {
         if (getSession() == null || getSession().currentUser == null || getSession().currentUser.groups == null) {
             return metaData.publicPrice;
         }
@@ -1295,7 +1314,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     private void sendMailReminder(User user, Event event, ReminderTemplate template, String emailAddress) throws ErrorException {
-        String subject = event.bookingItemType.name;
+        String subject = template.subject;
         String content = formatText(template.content, user, event);
         
         String emailToUser = user.emailAddress;
@@ -1532,5 +1551,60 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .forEach(location -> finalize(location));
         
         return activeLocations;
+    }
+
+    @Override
+    public Double getPriceForEventType(String bookingItemTypeId) {
+        BookingItemTypeMetadata metaData = getBookingTypeMetaData(bookingItemTypeId);
+        if (metaData == null) {
+            return -1D;
+        }
+        
+        return getPriceForCurrentUser(metaData);
+        
+    }
+
+    @Override
+    public BookingItemType getBookingItemTypeByPageId(String pageId) {
+        return bookingEngine.getBookingItemTypes().stream()
+                .filter(type -> type.pageId != null && type.pageId.equals(pageId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public void deleteSubLocation(String subLocationId) {
+        long count = events.values().stream()
+                .filter(event -> event.subLocationId != null && event.subLocationId.equals(subLocationId))
+                .count();
+        
+        if (count > 0) {
+            throw new ErrorException(1036);
+        }
+        
+        Location location = getLocationBySubLocationId(subLocationId);
+        location.deleteSubLocation(subLocationId);
+        saveObject(location);
+    }
+
+    @Override
+    public List<Event> getEventsByLocation(String locationId) {
+        Location loc = getLocation(locationId);
+        
+        if (loc == null) {
+            return new ArrayList();
+        }
+        
+        List<Event> eventsToReturn = new ArrayList();
+        for (SubLocation sub : loc.locations) {
+            eventsToReturn.addAll(events.values().stream()
+                    .filter(event -> event.subLocationId != null && event.subLocationId.equals(sub.id))
+                    .collect(Collectors.toList()));
+        }
+        
+        eventsToReturn.stream()
+                .forEach(o -> finalize(o));
+        
+        return eventsToReturn;
     }
 }

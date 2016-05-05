@@ -113,6 +113,9 @@ public class Hybelhotell implements AccountingInterface {
                 toAdd.put(76, user.address.city);
             }
             toAdd.put(10, user.emailAddress);
+            if(user.emailAddressToInvoice != null && user.emailAddressToInvoice.isEmpty()) {
+                toAdd.put(10, user.emailAddressToInvoice);
+            }
          }
          toAdd.put(33, "NOK");
          

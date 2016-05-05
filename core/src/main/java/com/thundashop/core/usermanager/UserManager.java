@@ -1392,4 +1392,21 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
 
+    @Override
+    public void logLogout() {
+        if (getSession() != null && getSession().currentUser != null) {
+            String userId = sessionFactory.getObject(getSession().id, "user");
+            Date added = sessionFactory.getWhenAdded(getSession().id, "user");
+            if (userId != null && added != null) {
+                long diff = System.currentTimeMillis() - added.getTime();
+                if (diff < 120000) {
+                    
+                    User user = getUserById(userId);
+                    String content = "User logged out within two minutes, user: " + user.fullName + ". Seconds " + diff/1000 + " - Store: " + getStoreDefaultAddress();
+                    mailfactory.send("post@getshop.com", "post@getshop.com", "A bit short logout time", content);
+                }
+            }
+        }
+    }
+
 }

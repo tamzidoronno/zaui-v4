@@ -1038,5 +1038,9 @@ class ApplicationManager extends FactoryBase {
     public function setSessionCompany() {
         $this->getApi()->getUserManager()->setSessionCompany($_POST['data']['company']);
     }
+    
+    public function logLogout() {
+        $this->getApi()->getUserManager()->logLogout();
+    }
 }
 ?>

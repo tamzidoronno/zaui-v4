@@ -42,11 +42,8 @@ public class PmsManagerProcessor {
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
         try { processIntervalCleaning(false); }catch(Exception e) { e.printStackTrace(); }
         try { processIntervalCleaning(true); }catch(Exception e) { e.printStackTrace(); }
-        
-        if(manager.storeManager.isProductMode()) {
-            try { manager.checkDoorStatusControl(); } catch (Exception e) { e.printStackTrace(); }
-            try { processArx(); }catch(Exception e) { e.printStackTrace(); }
-        }
+        try { processArx(); }catch(Exception e) { e.printStackTrace(); }
+
         try { createPeriodeInvoices(); }catch(Exception e) { e.printStackTrace(); }
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
@@ -103,7 +100,14 @@ public class PmsManagerProcessor {
     }
 
     private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
-        if (manager.getConfigurationSecure().locktype.isEmpty() || manager.getConfigurationSecure().locktype.equals("arx")) {
+        PmsConfiguration config = manager.getConfigurationSecure();
+        
+        
+        if(!manager.frameworkConfig.productionMode) {
+            return true;
+        }
+        
+        if (config.locktype.isEmpty() || config.locktype.equals("arx")) {
             return pushToArx(room, deleted);
         } else {
             return pushToGetShop(room, deleted);
@@ -243,7 +247,6 @@ public class PmsManagerProcessor {
         
         if (!manager.getConfigurationSecure().prepayment) {
             filter.prepayment = false;
-            filter.startInvoiceFrom = beginningOfMonth(-1);
             filter.endInvoiceAt = beginningOfMonth(0);
             manager.createOrder(null, filter);
 
@@ -252,7 +255,6 @@ public class PmsManagerProcessor {
             manager.createOrder(null, filter);
         } else {
             filter.prepayment = true;
-            filter.startInvoiceFrom = beginningOfMonth(0);
             filter.endInvoiceAt = beginningOfMonth(1);
             manager.createOrder(null, filter);
         }

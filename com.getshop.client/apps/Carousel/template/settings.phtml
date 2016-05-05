@@ -33,8 +33,28 @@ $slideIds = array_filter(explode("|", $this->getConfigurationSetting("slideids")
             <div class="slider_button colorchanging" style="left: <? echo $left ?>; background-color: <? echo $color ?>"></div>
         </div>
     </div>
+    <div class="transition">
+        Transition (Slide or Fade)
+        <div class="gss_slider frontSlider" style="width: 36px;">
+            <?
+            $transition = $this->getConfigurationSetting("transition");
+            ?>
+            <input type="radio" name="transition" <? echo $transition == "slide" ? "checked" : ""; ?> id="transition_state_one" value="slide"></input>
+            <input type="radio" name="transition" <? echo $transition == "fade" ? "checked" : ""; ?> id="transition_state_two" value="fade"></input>
+            <label for="transition_state_one"></label>
+            <label for="transition_state_two"></label>
+            <?
+            if($transition == "slide") {
+                $left = "-2px";
+            } else if($transition == "fade") {
+                $left = "16px";
+            }
+            ?>
+            <div class="slider_button transitionchanging" style="left: <? echo $left ?>;"><? echo $transition == "slide" ? "S" : "F" ?></div>
+        </div>
+    </div>
     <div class="slide_direction">
-        Slide Direction
+        Slide Direction (Left or Right)
         <div class="gss_slider frontSlider" style="width: 36px;">
             <?
             $slidedirection = $this->getConfigurationSetting("slidedirection");
@@ -50,7 +70,7 @@ $slideIds = array_filter(explode("|", $this->getConfigurationSetting("slideids")
                 $left = "16px";
             }
             ?>
-            <div class="slider_button textchanging" style="left: <? echo $left ?>;"><? echo $slidedirection == "left" ? "L" : "R" ?></div>
+            <div class="slider_button directionchanging" style="left: <? echo $left ?>;"><? echo $slidedirection == "left" ? "L" : "R" ?></div>
         </div>
     </div>
     <div class="slide_speed">

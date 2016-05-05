@@ -17,6 +17,7 @@ class Carousel extends \MarketingApplication implements \Application {
     public function saveCarouselSettings() {
         $this->setConfigurationSetting("carouselheight", $_POST['data']['carouselheight']);
         $this->setConfigurationSetting("autoslide", $_POST['data']['autoslide']);
+        $this->setConfigurationSetting("transition", $_POST['data']['transition']);
         $this->setConfigurationSetting("slidedirection", $_POST['data']['slidedirection']);
         $this->setConfigurationSetting("slidespeed", $_POST['data']['slidespeed']);
         $this->setConfigurationSetting("showbullets", $_POST['data']['showbullets']);
@@ -76,6 +77,7 @@ class Carousel extends \MarketingApplication implements \Application {
     
     public function applicationAdded() {
         $this->setConfigurationSetting("carouselheight", "500");
+        $this->setConfigurationSetting("transition", "slide");
         $this->setConfigurationSetting("autoslide", "true");
         $this->setConfigurationSetting("slidedirection", "right");
         $this->setConfigurationSetting("slidespeed", "3000");

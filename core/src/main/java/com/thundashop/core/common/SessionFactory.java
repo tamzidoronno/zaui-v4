@@ -5,6 +5,7 @@
 package com.thundashop.core.common;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,6 +41,16 @@ public class SessionFactory extends DataCommon {
         sessions.put(sessionId, session);
         
         cleanUp();
+    }
+    
+    public Date getWhenAdded(String sessionId, String name) {
+        ThundashopSession session = getSession(sessionId);
+        
+        if (session != null) {
+            return session.getAdded(name);
+        }
+        
+        return null;
     }
     
     public <T> T getObject(String sessionId, String name) throws ErrorException {

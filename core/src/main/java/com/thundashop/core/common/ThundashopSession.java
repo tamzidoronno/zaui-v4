@@ -15,6 +15,7 @@ import java.util.HashMap;
 public class ThundashopSession  implements Serializable {
     private HashMap<String, String> objects = new HashMap<String, String>();
     private Date lastActive;
+    private HashMap<String, Date> added = new HashMap();
     
     public ThundashopSession() {
         lastActive = new Date();
@@ -44,11 +45,16 @@ public class ThundashopSession  implements Serializable {
     }
     
     public void addObject(String name, String object) {
+        added.put(name, new Date());
         objects.put(name, object);
     }
 
     void removeObject(String name) {
         objects.remove(name);
+    }
+
+    public Date getAdded(String name) {
+        return added.get(name);
     }
     
 }

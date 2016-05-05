@@ -1215,7 +1215,10 @@ GetShopUtil = {
 
 
 thundashop.common.logout = function() {
-    document.location = '/logout.php?goBackToHome=true';
+    var event = thundashop.Ajax.createEvent(null, "logLogout", this, {});
+    thundashop.Ajax.postWithCallBack(event, function() {
+        document.location = '/logout.php?goBackToHome=true';
+    });
 };
 
 thundashop.common.sendPubSubMessage = function(data) {
@@ -1299,7 +1302,6 @@ thundashop.common.checkTimeout = function() {
     }
     
     if (timeLeft <= 0 && isLoggedIn) {
-        debugger;
         thundashop.common.logout();
     }
     

@@ -12,6 +12,7 @@ $slideIds = array_filter(explode("|", $this->getConfigurationSetting("slideids")
             <select name="heighttype">
                 <option value="px" <? echo $this->getConfigurationSetting("heighttype") == "px" ? "selected" : ""; ?>>px</option>
                 <option value="%" <? echo $this->getConfigurationSetting("heighttype") == "%" ? "selected" : ""; ?>>%</option>
+                <option value="ratio" <? echo $this->getConfigurationSetting("heighttype") == "ratio" ? "selected" : ""; ?>>ratio</option>
             </select>
         </div>      
     </div>

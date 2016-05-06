@@ -24,6 +24,8 @@ public class CartItem implements Serializable {
     private int count = 0;
     public Date startDate;
     public Date endDate;
+    public Date newStartDate;
+    public Date newEndDate;
 
     CartItem() {
     }
@@ -86,5 +88,19 @@ public class CartItem implements Serializable {
 
     public void doFinalize() {
         product.doFinalize();
+    }
+
+    public Date getStartingDate() {
+        if(newStartDate != null) {
+            return newStartDate;
+        }
+        return startDate;
+    }
+    
+    public Date getEndingDate() {
+        if(newEndDate != null) {
+            return newEndDate;
+        }
+        return endDate;
     }
 }

@@ -1225,7 +1225,7 @@ thundashop.common.sendPubSubMessage = function(data) {
     PubSub.publish("EVENT_POST_NAV_ACTION", data);
 }
 
-var timeCheckMs = 1000;
+var timeCheckMs = 10000;
 thundashop.common.checkWithServerIfLoggedOut = function() {
     if ($('input[name="userid_in_body"]').length > 0) {
         $.ajax({

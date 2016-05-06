@@ -358,9 +358,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 try {
                     if (configuration.payAfterBookingCompleted) {
                         createPrepaymentOrder(booking.id);
-                    } else {
-                        processor();
                     }
+                    processor();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -376,6 +375,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public String createPrepaymentOrder(String bookingId) {
         PmsBooking booking = getBookingUnsecure(bookingId);
+        if(booking.avoidCreateInvoice && 
+                getSession() != null && 
+                getSession().currentUser != null && 
+                (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor())) {
+            return "";
+        }
         NewOrderFilter filter = new NewOrderFilter();
         filter.prepayment = true;
         filter.endInvoiceAt = booking.getEndDate();
@@ -758,8 +763,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.end = end;
             room.date.exitCleaningDate = null;
             room.date.cleaningDate = null;
+            if(configuration.updatePriceWhenChangingDates) {
+                room.price = calculatePrice(room.bookingItemTypeId, start, end, true, "", booking.priceType);
+            }
             saveBooking(booking);
 
+            long diffOld = oldEnd.getTime() - oldStart.getTime();
+            long diffNew = end.getTime() - start.getTime();
+            if(diffOld == diffNew && isSameDay(room.invoicedTo, oldEnd)) {
+                room.invoicedTo = end;
+            }
+            
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
             logEntry(logText, bookingId, null, roomId);
             doNotification("date_changed", booking, room);
@@ -909,6 +923,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 saveBooking(booking);
             }
         }
+        
         return "";
     }
 
@@ -988,6 +1003,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private int getNumberOfDays(PmsBookingRooms room, Date startDate, Date endDate) {
+        if(startDate.after(endDate)) {
+            Date tmpStart = startDate;
+            startDate = endDate;
+            endDate = tmpStart;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(room.date.start);
         cal.set(Calendar.HOUR_OF_DAY, 11);

@@ -89,7 +89,9 @@ public class UserStoreCollection {
     }
 
     public void addUserDirect(User user) {
-        users.put(user.id, user);
+        if(user.id != null && !user.id.isEmpty()) {
+            users.put(user.id, user);
+        }
     }
 
     public User addUser(User user) throws ErrorException {

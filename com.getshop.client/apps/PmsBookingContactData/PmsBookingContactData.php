@@ -315,6 +315,9 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 $room->canBeAdded = "false";
             }
         }
+        if(isset($_POST['data']['submit']) && $_POST['data']['submit'] == "nopay" && $this->isEditorMode()) {
+            $selected->avoidCreateInvoice = true;
+        }
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $selected);
         $this->currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
     }

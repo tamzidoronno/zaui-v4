@@ -43,6 +43,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean prepayment = false;
     public boolean payAfterBookingCompleted = false;
     public boolean requirePayments = false;
+    public boolean updatePriceWhenChangingDates = false;
     public Integer prepaymentDaysAhead = -1;
     public Integer increaseUnits = -1;
     boolean substractOneDayOnOrder = false;

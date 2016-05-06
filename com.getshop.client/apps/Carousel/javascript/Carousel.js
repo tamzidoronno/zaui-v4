@@ -40,6 +40,7 @@ app.Carousel = {
     
     saveSettings: function() {
         var carouselheight = $(".Carousel input[name='carouselheight']").val();
+        var heighttype = $(".Carousel select[name='heighttype']").val();
         var autoslide = $(".Carousel input[name='autoslide']:checked").val();
         var transition = $(".Carousel input[name='transition']:checked").val();
         var slidedirection = $(".Carousel input[name='slidedirection']:checked").val();
@@ -51,6 +52,7 @@ app.Carousel = {
         
         var data = {
             carouselheight: carouselheight,
+            heighttype: heighttype,
             transition: transition,
             autoslide: autoslide,
             slidedirection: slidedirection,

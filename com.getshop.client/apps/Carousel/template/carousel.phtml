@@ -5,7 +5,7 @@ $slideIds = array_filter(explode("|", $this->getConfigurationSetting("slideids")
 $appId = $this->getAppInstanceId();
 ?>
 
-<div id="slider1" class="csslider infinity" style="<? echo $this->getConfigurationSetting("carouselheight") != "" ? "height: " . $this->getConfigurationSetting("carouselheight") . "px; " : ""?>">
+<div id="slider1" class="csslider infinity" style="<? echo $this->getConfigurationSetting("carouselheight") != "" ? "height: " . $this->getConfigurationSetting("carouselheight") . $this->getConfigurationSetting("heighttype") : ""?>">
   
     <?
         foreach ($slideIds as $slideId) {
@@ -150,3 +150,15 @@ $(".Carousel[appid='<? echo $appId; ?>'] input[type=radio][name=slides]").change
 
 // Remember slide number
 </script>
+
+<?
+if($this->getConfigurationSetting("heighttype") == "%") {
+?>
+<script>
+$(".Carousel[appid='<? echo $appId; ?>']").parents(".applicationarea").css("height", "100%");
+$(".Carousel[appid='<? echo $appId; ?>']").css("height", "100%");
+$(".Carousel[appid='<? echo $appId; ?>']").find(".applicationinner").css("height", "100%");
+</script>
+<?
+}
+?>

@@ -228,6 +228,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public User logOn(String username, String password) throws ErrorException {
         // Require double auth for gs admins
+        if (password == null || password.isEmpty())
+            throw new ErrorException(26);
+        
         if (this.isDoubleAuthenticationActivated() || gsAdmins.getGSAdmin(username) != null) {   
             throw new ErrorException(13);
         }

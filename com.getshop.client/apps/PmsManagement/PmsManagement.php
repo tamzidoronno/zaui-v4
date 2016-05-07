@@ -62,12 +62,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->onlyEnded = false;
         $filter->prepayment = $config->prepayment;
+        if($_POST['data']['preview'] == "true") {
+            $filter->avoidOrderCreation = true;
+        }
         if($_POST['data']['type'] == "ended") {
             $filter->onlyEnded = true;
         }
         
         $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($_POST['data']['enddate']));
         $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), null, $filter);
+    }
+    
+    public function includeOrderGenerationPreview() {
+        $this->includefile("ordergenerationpreview");
     }
     
     public function showBookingInformation() {
@@ -842,6 +849,26 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function isIncludeDeleted() {
         return $this->getSelectedFilter()->includeDeleted;
+    }
+
+    /**
+     * 
+     * @param type $roomid
+     * @return \core_pmsmanager_PmsBooking
+     */
+    public function findBookingFromRoom($roomid) {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
+        return $booking;
+    }
+
+    public function findUser($userId) {
+        if(isset($this->users[$userId])) {
+            return $this->users[$userId];
+        }
+        
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        $this->users[$userId] = $user;
+        return $user;
     }
 
 }

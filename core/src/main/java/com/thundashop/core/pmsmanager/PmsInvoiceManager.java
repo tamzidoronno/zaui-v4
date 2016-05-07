@@ -52,7 +52,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
     
     public String createOrder(String bookingId, NewOrderFilter filter) {
         this.avoidOrderCreation = filter.avoidOrderCreation;
-        if(filter.avoidOrderCreation) {
+        if(avoidOrderCreation) {
             cartManager.clear();
         }
         
@@ -87,6 +87,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
                     booking.avoidAutoDelete = true;
                 }
                 pmsManager.saveBooking(booking);
+            }
+        }
+        
+        if(avoidOrderCreation) {
+            for(CartItem item : cartManager.getCart().getItems()) {
+                item.doFinalize();
             }
         }
         
@@ -159,7 +165,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             item.getProduct().metaData = guestName;
             item.getProduct().externalReferenceId = room.pmsBookingRoomId;
             item.setCount(daysInPeriode);
-            room.invoicedTo = endDate;
+            if(!avoidOrderCreation) {
+                room.invoicedTo = endDate;
+            }
             foundInvoice = true;
             cartManager.saveCartItem(item);
         }

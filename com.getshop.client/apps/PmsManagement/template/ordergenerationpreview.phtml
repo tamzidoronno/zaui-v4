@@ -1,0 +1,68 @@
+<br><br>
+<?php
+/* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$cartmgr = $this->getApi()->getCartManager();
+$cart = $cartmgr->getCart();
+echo "<table cellspacing='0' cellpadding='0' width='100%'>";
+echo "<tr>";
+echo "<th>Booking</th>";
+echo "<th>Room</th>";
+echo "<th>Start date</th>";
+echo "<th>End date</th>";
+echo "<th>Room</th>";
+echo "<th>Price</th>";
+echo "<th>Count</th>";
+echo "<th>Total</th>";
+echo "</tr>";
+
+$totalEx = 0;
+$total = 0;
+$totalCount = 0;
+foreach($cart->items as $item) {
+    $booking = $this->findBookingFromRoom($item->product->externalReferenceId);
+    $user = $this->findUser($booking->userId);
+    
+    $room = "";
+    foreach($booking->rooms as $r) {
+        if($r->pmsBookingRoomId == $item->product->externalReferenceId) {
+            $room = $r;
+        }
+    }
+    $priceEx = $item->product->priceExTaxes;
+    $price = $item->product->price;
+    $totalEx += ($priceEx * $item->count);
+    $total = ($price * $item->count);
+    $totalCount += $item->count;
+    
+    echo "<tr>";
+    echo "<td class='moreinformationaboutbooking' bookingid='".$booking->id."' style='cursor:pointeR;'>" . $user->fullName . "<br>";
+    echo "<div style='color:#bbb;'>";
+    echo date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end));
+    if($room->invoicedTo) {
+        echo " invoiced until: " . date("d.m.Y H:i", strtotime($room->invoicedTo));
+    }
+    echo "</div>";
+    echo "</td>";
+    echo "<td>" . $item->product->additionalMetaData. "</td>";
+    echo "<td>" . date("d.m.Y H:i", strtotime($item->startDate)). "</td>";
+    echo "<td>" . date("d.m.Y H:i", strtotime($item->endDate)) . "</td>";
+    echo "<td>" . $item->product->name ."<br><div style='color:#bbb;'>" . $item->product->metaData . "</div></td>";
+    echo "<td>" . $priceEx . "<br><div style='color:#bbb;'>" . $price . "</div></td>";
+    echo "<td>" . $item->count . "</td>";
+    echo "<td>" . $priceEx * $item->count  . "<div style='color:#bbb;'>".$price * $item->count ."</div></td>";
+    echo "</td>";
+}
+echo "<tr>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td>".$totalCount."</td>";
+echo "<td>$totalEx<br><div style='color:#bbb;'>$total</div></td>";
+echo "</tr>";
+
+echo "</table>";
+
+?>

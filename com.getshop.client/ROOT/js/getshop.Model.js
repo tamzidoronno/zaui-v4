@@ -9,6 +9,7 @@ getshop.Models = {
         $(document).on('change', 'select[gs_model]', this.selectChanged);
         $(document).on('click', '[gs_model].gss_onoff', this.toggleOnOff);
         $(document).on('click', '.gss_slider label', this.moveSlider);
+        $(document).on('click', '.slider_button', this.toggleSlider);
     },
     toggleOnOff: function (silent) {
         var fontAwesomeIcon = $(this).find('i');
@@ -169,7 +170,18 @@ getshop.Models = {
         } else if (status == "state_three") {
             $(this).parent().find(".slider_button").css("left", "160px");
         }
-    }
+    },
+    
+    toggleSlider: function() {
+        var currentCheckedState = $(this).parent().find("input:checked");
+        var nextState = $(currentCheckedState).next("input");
+        
+        if(nextState.length == 0) {
+            nextState = $(this).parent().children("input").first("input");
+        }
+        
+        $(this).parent().children("label[for='" + nextState.attr("id") + "']").click();
+   }
 }
 
 getshop.Models.init();

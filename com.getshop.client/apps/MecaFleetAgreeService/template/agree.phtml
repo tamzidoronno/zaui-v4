@@ -1,0 +1,18 @@
+<?
+/* @var $this \ns_027f0fd0_2f7a_489b_abd9_5869eab5b474\MecaFleetAgreeService */
+
+$car = $this->getApi()->getMecaManager()->getCar($this->getModalVariable("carid"));
+
+$this->wrapContentManager("serviceTest_".$this->getModalVariable("type"), "Change me");
+?>
+
+<div>
+    Dato:
+    <br/><input class="gsniceinput1" id="timepicker"/>
+    <br/>
+    <br/><div class="shop_button sendquestion" carid="<? echo $car->id; ?>"  type="<? echo $this->getModalVariable("type"); ?>">Send forespørsel</div>
+</div>
+
+<script>
+    $('#timepicker').datetimepicker({ dateFormat: "dd.mm.yy"});
+</script>

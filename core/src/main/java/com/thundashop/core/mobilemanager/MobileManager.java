@@ -12,6 +12,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.mobilemanager.data.MobileApp;
 import com.thundashop.core.mobilemanager.data.Token;
 import com.thundashop.core.mobilemanager.data.TokenType;
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
     public void sendMessageToAll(String message) {
         for (Token token : tokens.values()) {
             if (token.type != null && token.type.equals(TokenType.IOS)) {
-                sendIosMessage(token, message);
+                sendIosMessage(token.tokenId, message);
             }
             if (token.type != null && token.type.equals(TokenType.ANDROID)) {
                 sendAndroidMessage(token, message);
@@ -69,7 +70,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
         for (Token token : tokens.values()) {
             if (token.testMode) {
                 if (token.type != null && token.type.equals(TokenType.IOS)) {
-                    sendIosMessage(token, message);
+                    sendIosMessage(token.tokenId, message);
                 }
             }
         }
@@ -89,9 +90,13 @@ public class MobileManager extends ManagerBase implements IMobileManager {
         return badges.get(tokenId);
     }
 
-    private void sendIosMessage(Token token, String message) {
-        increaseBadge(token.tokenId);
-        Thread thread = new Thread(new AppleNotificationThread(message, token.tokenId, getBadgeNumber(token.tokenId), "ProMeister", "auto1000", frameworkConfig));
+    private void sendIosMessage(String tokenId, String message) {
+        MobileApp mobileApp = new MobileApp();
+        mobileApp.id = "449d144c-c8be-4273-8917-b9b94f29a17f";
+        mobileApp.iosPassword = "MecaFleet2017#";
+        
+        increaseBadge(tokenId);
+        Thread thread = new Thread(new AppleNotificationThread(message, tokenId, getBadgeNumber(tokenId), frameworkConfig, mobileApp));
         thread.start();
     }
     
@@ -120,5 +125,9 @@ public class MobileManager extends ManagerBase implements IMobileManager {
     @Override
     public void clearBadged(String tokenId) {
         badges.put(tokenId, 0);
+    }
+
+    public void sendMessage(String token, String message) {
+        sendIosMessage(token, message);
     }
 }

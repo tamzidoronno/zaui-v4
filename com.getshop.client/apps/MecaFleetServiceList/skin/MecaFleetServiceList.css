@@ -4,6 +4,7 @@
     position: relative;
     padding-bottom: 10px;
 }
+.MecaFleetServiceList .servicerow.header,
 .MecaFleetServiceList .servicerow:hover {
     background-color : #E9E9E9;
 }
@@ -14,22 +15,38 @@
 
 .MecaFleetServiceList .servicerow div {
     display: inline-block;
+    vertical-align: top;
+
 }
 
-.MecaFleetServiceList .servicerow div:nth-child(1) { width: 150px; padding-left: 10px;}
-.MecaFleetServiceList .servicerow div:nth-child(2) { width: 250px; }
-.MecaFleetServiceList .servicerow div:nth-child(3) { width: 300px; }
-.MecaFleetServiceList .servicerow div:nth-child(4) { width: 200px; }
-.MecaFleetServiceList .servicerow div:nth-child(5) { 
-    position: absolute;
-    right: 5px;
-}
+.MecaFleetServiceList .servicerow div:nth-child(1) { width: 30px; padding-left: 10px; text-align: center;}
+.MecaFleetServiceList .servicerow div:nth-child(2) { width: 50px; padding-left: 10px;}
+.MecaFleetServiceList .servicerow div:nth-child(3) { width: 150px; padding-left: 10px;}
+.MecaFleetServiceList .servicerow div:nth-child(4) { width: 250px; }
+.MecaFleetServiceList .servicerow div:nth-child(5) { width: 250px; }
+.MecaFleetServiceList .servicerow div:nth-child(6) { width: 200px; }
+.MecaFleetServiceList .servicerow div:nth-child(7) { width: 200px; text-align: right;}
+
 
 .MecaFleetServiceList .servicerow.red {
     color: #FFF;
     background-color: #ff0000;
 }
 
+
+.MecaFleetServiceList .details {
+    display: block !important;
+    background-color: #EFEFEF;
+    padding: 10px;
+    margin-left: 200px;
+    margin-right: 200px;
+    text-align: center;
+}
 .MecaFleetServiceList .servicerow.yellow {
     background-color: #e0dd00;    
 }
+
+.MecaFleetServiceList .servicerow .disabled { color: grey; }
+.MecaFleetServiceList .servicerow .red { color: red; }
+.MecaFleetServiceList .servicerow .yellow { color: yellow; }
+.MecaFleetServiceList .servicerow .green { color: green; }

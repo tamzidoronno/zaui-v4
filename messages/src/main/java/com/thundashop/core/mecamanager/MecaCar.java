@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TreeSet;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -21,6 +22,8 @@ public class MecaCar extends DataCommon {
     public Date prevControll = null;
     public int kilometers = 0;
     public String cellPhone = "";
+    
+    public Date inivitationSent = null;
 
     public String pageId;
     
@@ -29,6 +32,13 @@ public class MecaCar extends DataCommon {
     
     public int monthsBetweenServices = 18;
     public int kilometersBetweenEachService = 10000;
+    
+    public Date nextServiceAgreed = null;
+    
+    public Boolean nextServiceAcceptedByCarOwner = null;
+    
+    @Transient
+    public boolean needAttentionToService = false;
     
     @Transient
     public Date nextService = null;
@@ -42,14 +52,21 @@ public class MecaCar extends DataCommon {
     @Transient
     public Integer monthsToNextService = 0;
     
+    @Transient
+    public boolean sendKilometers = false;
+    
+    @Transient
+    public boolean agreeDate = false;
     
     @Transient
     public Date nextControll = null;
+    
+    TreeSet<String> tokens = new TreeSet();
 
     /**
      * Caluclate the next EU Controll, service date etc.
      */
-    public void calculateNextValues() {
+    private void calculateNextValues() {
         if (lastServiceKilomters != null) {
             nextServiceKilometers = lastServiceKilomters + kilometersBetweenEachService;
             kilometersToNextService = nextServiceKilometers - kilometers;
@@ -69,8 +86,6 @@ public class MecaCar extends DataCommon {
             cal.add(Calendar.MONTH, monthsBetweenServices);
             nextService = cal.getTime();
         }
-        
-        
     }
 
     private Integer getMonthsBetweenService() {
@@ -88,5 +103,44 @@ public class MecaCar extends DataCommon {
         int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
         
         return diffMonth;
+    }
+
+    private void setIfNeedAttention() {
+        needAttentionToService = false;
+        
+        if (monthsToNextService < 2) {
+            needAttentionToService = true;
+        }
+        
+        if (kilometersToNextService < 3000) {
+            needAttentionToService = true;
+        }
+        
+        if (nextServiceAgreed != null) {
+            needAttentionToService = false;
+        }
+    }
+    
+    private void setAgreeDate() {
+        if (nextServiceAgreed != null && nextServiceAcceptedByCarOwner == null) {
+            agreeDate = true;
+        } else {
+            agreeDate = false;
+        }
+    }
+
+    void finalizeCar() {
+        calculateNextValues();
+        setIfNeedAttention();
+        setAgreeDate();
+    }
+
+    void resetService(Date date, int kilometers) {
+        this.kilometers = kilometers;
+        this.lastServiceKilomters = kilometers;
+        this.lastService = date;
+        this.agreeDate = false;
+        this.nextServiceAgreed = null;
+        this.nextServiceAcceptedByCarOwner = null;
     }
 }

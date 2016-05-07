@@ -11,9 +11,12 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.mobilemanager.MobileManager;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.storemanager.StoreManager;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,12 @@ public class MecaManager extends ManagerBase implements IMecaManager {
     @Autowired
     public MessageManager messageManager;
     
+    @Autowired
+    public MobileManager mobileManager;
+    
+    @Autowired
+    public StoreManager storeManager;
+
     private Map<String, MecaFleet> fleets = new HashMap();
     private Map<String, MecaCar> cars = new HashMap();
     
@@ -181,8 +190,7 @@ public class MecaManager extends ManagerBase implements IMecaManager {
             saveObject(car);
         }
         
-        car.calculateNextValues();
-        
+        car.finalizeCar();
     }
 
     @Override
@@ -203,6 +211,7 @@ public class MecaManager extends ManagerBase implements IMecaManager {
         
         checkAccess(fleet);
         
+        finalize(car);
         return car;
     }
 
@@ -226,6 +235,8 @@ public class MecaManager extends ManagerBase implements IMecaManager {
             
             return car1.nextControll.compareTo(car2.nextControll);
         });
+        
+        allCars.stream().forEach(o -> finalize(o));
         
         return allCars;
     }
@@ -252,14 +263,20 @@ public class MecaManager extends ManagerBase implements IMecaManager {
             
         });
         
+        allCars.stream().forEach(o -> finalize(o));
+        
         return allCars;
     }
 
     @Override
     public List<MecaCar> getCarsByCellphone(String cellPhone) {
-        return cars.values().stream()
+        List<MecaCar> retCars = cars.values().stream()
                 .filter(car -> car.cellPhone != null && car.cellPhone.equals(cellPhone))
                 .collect(Collectors.toList());
+        
+        retCars.stream().forEach(o -> finalize(o));
+        
+        return retCars;
     }
 
     @Override
@@ -329,4 +346,107 @@ public class MecaManager extends ManagerBase implements IMecaManager {
         saveObject(currentCar);
     }
 
+    @Override
+    public void registerDeviceToCar(String tokenId, String cellPhone) {
+        MecaCar currentCar = getCarByCellphone(cellPhone);
+        
+        if (currentCar != null) {
+            currentCar.tokens.add(tokenId);
+            saveObject(currentCar);    
+        }
+    }
+
+    @Override
+    public void notifyByPush(String phoneNumber, String message) {
+        MecaCar car = getCarByCellphone(phoneNumber);
+        if (car != null) {
+            for (String token : car.tokens) {
+                mobileManager.sendMessage(token, message);
+            }
+        }
+    }
+
+    private MecaCar getCarByCellphone(String phoneNumber) {
+        List<MecaCar> cars = getCarsByCellphone(phoneNumber);
+        
+        if (cars.size() > 0) {
+            finalize(cars.get(0));
+            return cars.get(0);
+        } 
+        
+        return null;
+    }
+
+    @Override
+    public void sendInvite(String mecaCarId) {
+        MecaCar car = cars.get(mecaCarId);
+        if (car != null) {
+            String title = storeManager.getMyStore().identifier;
+            String message = "Hei, du er nå meldt inn i MECA Fleet. Last ned appen på AppStore/Google play. Logg inn med verksted: " + title + " og telefonnret ditt som passord.";
+            messageManager.sendSms("nexmo", car.cellPhone, message, getStoreDefaultPrefix());
+            car.inivitationSent = new Date();
+            saveObject(car);
+        }
+    }
+
+    @Override
+    public MecaCar getCar(String id) {
+        MecaCar car = cars.get(id);
+        if (car != null) {
+            finalize(car);
+            return car;
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void requestNextService(String carId, Date date) {
+        MecaCar car = getCar(carId);
+        if (car != null) {
+            car.nextServiceAgreed = date;
+            car.nextServiceAcceptedByCarOwner = null;
+            saveObject(car);
+            
+            notifyByPush(car.cellPhone, "Din bil skal inn på service.");
+        }
+    }
+
+    @Override
+    public MecaCar answerServiceRequest(String carId, boolean answer) {
+        MecaCar car = getCar(carId);
+        if (car != null) {
+            car.nextServiceAcceptedByCarOwner = answer;
+            
+            String subject = "Statusoppdatering..";
+            String content = "Bil med registreringsnr " + car.licensePlate + " kunne ";
+            
+            if (car.agreeDate) {
+                content += " møte opp til foreslått dato og tid";
+                messageManager.sendMessageToStoreOwner(content, subject);
+            } else {
+                content += " <b>ikke</b> møte opp til foreslått dato og tid";
+                messageManager.sendMessageToStoreOwner(content, subject);
+            }
+            
+            for (String token : car.tokens) {
+                mobileManager.clearBadged(token);
+            }
+            
+            finalize(car);
+            saveObject(car);
+            return car;
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void resetServiceInterval(String carId, Date date, int kilometers) {
+        MecaCar car = getCar(carId);
+        if (car != null) {
+            car.resetService(date, kilometers);
+            saveObject(car);
+        }
+    }
 }

@@ -8,3 +8,12 @@ and open the template in the editor.
     Author     : ktonder
 */
 
+.towtruck {
+    background-image: url('images/towtruck.png');
+    height: 86px;
+    width: 145px;
+    display: inline-block !important;
+    background-repeat: no-repeat;
+    background-position-x: 15px;
+    /*margin: 0 auto;*/
+}

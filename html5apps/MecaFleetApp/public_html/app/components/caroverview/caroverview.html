@@ -1,8 +1,14 @@
-<div class='topinfobox'>
-    Vi har følgende opplysninger registrert på deg og din bil.    
+<div ng-if="car.agreeDate" class="topinfobox" >
+    <i style="font-size: 30px" class="fa fa-warning"></i>
+    <br/>Vi ønsker å ta bilen din inn på service, passer dette tidspunktet?
+    <br/> {{ car.nextServiceAgreed | dateformatterwithtime }} 
+    <br/>
+    <div class="acceptbutton yes" ng-click="answerYes()"><div class="inner">Ja</div></div><div class="acceptbutton no" ng-click="answerNo()"><div class="inner">Nei</div></div>
 </div>
 
-<br/>
+<div class='topinfobox'>
+    Status på ditt kjøretøy.
+</div>
 <br/>
 <br/>
     
@@ -35,3 +41,5 @@
     <b>Neste EU Kontroll:</b>
     <div>{{car.nextControll | dateformatter}} </div>
 </div>
+
+<div class='button' onclick="window.history.back()"> Tilbake </div>

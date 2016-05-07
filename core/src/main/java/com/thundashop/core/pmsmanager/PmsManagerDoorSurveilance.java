@@ -48,7 +48,7 @@ public class PmsManagerDoorSurveilance {
     }
     
     private List<PmsBooking> getAllConfirmedNotDeleted() {
-        List<PmsBooking> res = new ArrayList(manager.bookings.values());
+        List<PmsBooking> res = new ArrayList(manager.getBookingMap().values());
         List<PmsBooking> toRemove = new ArrayList();
         for (PmsBooking booking : res) {
             if (booking.rooms == null) {

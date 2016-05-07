@@ -273,7 +273,7 @@ public class PmsManagerProcessor {
     }
 
     private List<PmsBooking> getAllConfirmedNotDeleted() {
-        List<PmsBooking> res = new ArrayList(manager.bookings.values());
+        List<PmsBooking> res = new ArrayList(manager.getBookingMap().values());
         List<PmsBooking> toRemove = new ArrayList();
         for (PmsBooking booking : res) {
             if (booking.rooms == null) {
@@ -493,7 +493,7 @@ public class PmsManagerProcessor {
     private void checkForIncosistentBookings() {
         List<Booking> allBookings = manager.bookingEngine.getAllBookings();
         List<String> allBookingIds = new ArrayList();
-        for(PmsBooking booking : manager.bookings.values()) {
+        for(PmsBooking booking : manager.getBookingMap().values()) {
             if(booking.isDeleted) {
                 continue;
             }
@@ -515,7 +515,7 @@ public class PmsManagerProcessor {
     }
 
     private void confirmWhenPaid() {
-        for(PmsBooking booking : manager.bookings.values()) {
+        for(PmsBooking booking : manager.getBookingMap().values()) {
             if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }

@@ -26,7 +26,9 @@ controllers.HomeController = function($scope, $api, $rootScope) {
     
     $scope.getCar = function() {
         $api.api.MecaManager.getCarsByCellphone(localStorage.getItem("cellphone")).done(function(res) {
-            $scope.agreeDate = res[0].agreeDate || res[0].agreeDate === "true" || res[0].agreeDate === true;
+            $scope.agreeDate = res[0].agreeDate || res[0].agreeDate === "true" || res[0].agreeDate === true || res[0].agreeDateControl;
+            $scope.sendKilometer = res[0].dateRequestedKilomters != null;
+
             $scope.$apply();
         })
     };

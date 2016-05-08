@@ -3771,6 +3771,18 @@ GetShopApiWebSocket.MecaManager = function(communication) {
 }
 
 GetShopApiWebSocket.MecaManager.prototype = {
+    'answerControlRequest' : function(carId,answer, gs_silent) {
+        var data = {
+            args : {
+                carId : JSON.stringify(carId),
+                answer : JSON.stringify(answer),
+            },
+            method: 'answerControlRequest',
+            interfaceName: 'core.mecamanager.IMecaManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'answerServiceRequest' : function(carId,answer, gs_silent) {
         var data = {
             args : {
@@ -3936,6 +3948,18 @@ GetShopApiWebSocket.MecaManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'requestNextControl' : function(carId,date, gs_silent) {
+        var data = {
+            args : {
+                carId : JSON.stringify(carId),
+                date : JSON.stringify(date),
+            },
+            method: 'requestNextControl',
+            interfaceName: 'core.mecamanager.IMecaManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'requestNextService' : function(carId,date, gs_silent) {
         var data = {
             args : {
@@ -3943,6 +3967,19 @@ GetShopApiWebSocket.MecaManager.prototype = {
                 date : JSON.stringify(date),
             },
             method: 'requestNextService',
+            interfaceName: 'core.mecamanager.IMecaManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'resetServiceInterval' : function(carId,date,kilometers, gs_silent) {
+        var data = {
+            args : {
+                carId : JSON.stringify(carId),
+                date : JSON.stringify(date),
+                kilometers : JSON.stringify(kilometers),
+            },
+            method: 'resetServiceInterval',
             interfaceName: 'core.mecamanager.IMecaManager',
         };
         return this.communication.send(data, gs_silent);

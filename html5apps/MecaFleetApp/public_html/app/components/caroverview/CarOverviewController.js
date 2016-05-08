@@ -28,10 +28,26 @@ controllers.CarOverviewController = function($scope, $api) {
             $scope.$apply();
         });
     }
-    
+        
     $scope.answerYes = function() {
         $getshopApi = $api.api;
         $getshopApi.MecaManager.answerServiceRequest($scope.car.id, true).done(function(car) {
+            $scope.car = car;
+            $scope.$apply();
+        });
+    }
+    
+    $scope.answerNoEU = function() {
+        $getshopApi = $api.api;
+        $getshopApi.MecaManager.answerControlRequest($scope.car.id, false).done(function(car) {
+            $scope.car = car;
+            $scope.$apply();
+        });
+    }
+    
+    $scope.answerYesEU = function() {
+        $getshopApi = $api.api;
+        $getshopApi.MecaManager.answerControlRequest($scope.car.id, true).done(function(car) {
             $scope.car = car;
             $scope.$apply();
         });

@@ -5,8 +5,8 @@ angular.module('MecaFleetApp').factory('$api', [ '$state', '$rootScope', functio
         
         
         this.setConnectionDetails = function(identifier) {
-            this.api = new GetShopApiWebSocket('55377cf3-a5bc-459a-bd96-f00300db4df9.getshop.com.getshop.com', '31332', identifier);
-//            this.api = new GetShopApiWebSocket('no.3.0.mpal.getshop.com', '31330', identifier);
+//            this.api = new GetShopApiWebSocket('55377cf3-a5bc-459a-bd96-f00300db4df9.getshop.com.getshop.com', '31332', identifier);
+            this.api = new GetShopApiWebSocket('no.3.0.mpal.getshop.com', '31330', identifier);
             
             this.api.setConnectedEvent(function() {
                 $rootScope.$broadcast("connectionEstablished", "");

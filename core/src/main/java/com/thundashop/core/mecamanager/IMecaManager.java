@@ -71,6 +71,17 @@ public interface IMecaManager {
     public void requestNextService(String carId, Date date);
     
     public MecaCar answerServiceRequest(String carId, boolean answer);
+
+    public MecaCar answerControlRequest(String carId, boolean answer);
     
     public void resetServiceInterval(String carId, Date date, int kilometers);
+    
+    @Editor
+    public void requestNextControl(String carId, Date date);
+    
+    @Editor
+    public void markControlAsCompleted(String carId);
+    
+    @Editor
+    public void sendKilometerRequest(String carId);
 }

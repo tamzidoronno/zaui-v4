@@ -4,7 +4,9 @@ $carList = $this->getApi()->getMecaManager()->getCarsPKKList();
 
 
 ?>
-<div class='pkkrow'>
+<div class='pkkrow header'>
+    <div></div>
+    <div></div>
     <div> Regnr </div>
     <div> Dato for kontroll </div>
     <div> Flåte</div>
@@ -13,18 +15,57 @@ $carList = $this->getApi()->getMecaManager()->getCarsPKKList();
 <?
 foreach ($carList as $car) {
     $fleet = $this->getApi()->getMecaManager()->getFleetByCar($car);
+    $canAgree = isset($car->canAgreeControlDate) && $car->canAgreeControlDate;
+    
+    $agreementStatus = "disabled";
+    $agreementStatus = $canAgree ? "red" : $agreementStatus;
+    $agreementStatus = isset($car->nextControlAgreed) && $car->nextControlAgreed != null && !@$car->nextControlAcceptedByCarOwner ? "yellow" : $agreementStatus;
+    $agreementStatus = isset($car->nextControlAgreed) && $car->nextControlAgreed != null && @$car->nextControlAcceptedByCarOwner ? "green" : $agreementStatus;
+    
+    
     ?>
         <div class='pkkrow'>
-            <div><? echo $car->licensePlate; ?></div>
-            <div><? echo isset($car->nextControll) ? $car->nextControll : 'N/A'; ?></div>
-            <div><? echo isset($fleet->name) ? $fleet->name : "N/A"; ?> </div>
             <div>
-                <i gsclick='doPkkCheckUpdate' 
-                   class='gs_shop_small_icon fa fa-wrench' 
-                   title='Kontroll gjennomført' 
-                   gs_confirm='Er du sikker på at du har gjennomført kontrollen?'>
-                </i>
+                <i class="fa fa-bullseye <? echo $agreementStatus; ?>"></i>
             </div>
+            <div>
+                <a href='/?page=<? echo $car->pageId;?>'><i class='gs_shop_small_icon fa fa-edit'></i></a>
+            </div>
+            
+            <div><? echo $car->licensePlate; ?></div>
+            <div><? echo isset($car->nextControll) ? date('d/m-Y', strtotime($car->nextControll)) : 'N/A'; ?></div>
+            <div><? echo isset($fleet->name) ? $fleet->name : "N/A"; ?> </div>
+            
+            <?
+            if ($agreementStatus == "red") {
+            ?>
+                <div class="details">
+                    <span class="shop_button" gs_show_modal='agreeForService' carid='<? echo $car->id; ?>' type='control'>Foreslå dato</span>
+                </div>
+            <?
+            }
+            
+            if ($agreementStatus == "yellow") {
+            ?>
+                <div class="details">
+                    <?
+                    $text = isset($car->controlDateRejected) && $car->controlDateRejected ? "<span style='color: red'>Tidspunktet passet ikke for bileier, foreslå et annet tidspunkt</span>" : "Venter på bekreftelse fra bileier";
+                    ?>
+                    <? echo $text; ?>. Foreslått dato: <? echo date('d/m-Y H:i', strtotime($car->nextControlAgreed)); ?> 
+                    <br/><span style='margin-top: 5px;' class="shop_button" gs_show_modal='agreeForService' carid='<? echo $car->id; ?>' type='control'>Ender dato</span>
+                </div>
+            <?
+            }
+            
+            if ($agreementStatus == "green") {
+            ?>
+                <div class="details">
+                    Bileier har godkjent dato for EU Kontroll: <? echo date('d/m-Y H:i', strtotime($car->nextControlAgreed)); ?> 
+                    <br/><span style='margin-top: 5px;' class="shop_button" gsclick='controlCompleted' carid='<? echo $car->id; ?>' type='control'>Kontroll gjennomført</span>
+                </div>
+            <?
+            }
+            ?>
 
         </div>
     <?

@@ -15,8 +15,13 @@ class MecaFleetAgreeService extends \MarketingApplication implements \Applicatio
     }
     
     public function requestDate() {
-        $nextDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
-        $this->getApi()->getMecaManager()->requestNextService($_POST['data']['carid'], $nextDate);
+        if ($_POST['data']['type'] === "control") {
+            $nextDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+            $this->getApi()->getMecaManager()->requestNextControl($_POST['data']['carid'], $nextDate);
+        } else {
+            $nextDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+            $this->getApi()->getMecaManager()->requestNextService($_POST['data']['carid'], $nextDate);
+        }
     }
 }
 ?>

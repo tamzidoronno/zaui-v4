@@ -28,7 +28,6 @@ public class AppleNotificationThread implements Runnable {
         this.mobileApp = mobileApp;
     }
     
-    
     @Override
     public void run() {
         try {
@@ -40,6 +39,5 @@ public class AppleNotificationThread implements Runnable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-    
+    }   
 }

@@ -13,5 +13,9 @@ class MecaFleetPKKList extends \MarketingApplication implements \Application {
     public function render() {
         $this->includefile("pkklist");
     }
+    
+    public function controlCompleted() {
+        $this->getApi()->getMecaManager()->markControlAsCompleted($_POST['data']['carid']);
+    }
 }
 ?>

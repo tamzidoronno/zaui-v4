@@ -343,6 +343,10 @@ public class MecaManager extends ManagerBase implements IMecaManager {
         }
         
         currentCar.kilometers = kilometers;
+        currentCar.dateRequestedKilomters = null;
+        for (String token : currentCar.tokens) {
+            mobileManager.clearBadged(token);
+        }
         saveObject(currentCar);
     }
 
@@ -440,6 +444,35 @@ public class MecaManager extends ManagerBase implements IMecaManager {
         
         return null;
     }
+    
+    @Override
+    public MecaCar answerControlRequest(String carId, boolean answer) {
+        MecaCar car = getCar(carId);
+        if (car != null) {
+            car.nextControlAcceptedByCarOwner = answer;
+            
+            String subject = "Statusoppdatering..";
+            String content = "Bil med registreringsnr " + car.licensePlate + " kunne ";
+            
+            if (car.agreeDateControl) {
+                content += " møte opp til foreslått dato og tid for EU kontroll";
+                messageManager.sendMessageToStoreOwner(content, subject);
+            } else {
+                content += " <b>ikke</b> møte opp til foreslått dato og tid for EU kontroll";
+                messageManager.sendMessageToStoreOwner(content, subject);
+            }
+            
+            for (String token : car.tokens) {
+                mobileManager.clearBadged(token);
+            }
+            
+            finalize(car);
+            saveObject(car);
+            return car;
+        }
+        
+        return null;
+    }
 
     @Override
     public void resetServiceInterval(String carId, Date date, int kilometers) {
@@ -447,6 +480,37 @@ public class MecaManager extends ManagerBase implements IMecaManager {
         if (car != null) {
             car.resetService(date, kilometers);
             saveObject(car);
+        }
+    }
+
+    @Override
+    public void requestNextControl(String carId, Date date) {
+        MecaCar car = getCar(carId);
+        if (car != null) {
+            car.nextControlAgreed = date;
+            car.nextControlAcceptedByCarOwner = null;
+            saveObject(car);
+            
+            notifyByPush(car.cellPhone, "Din bil skal inn på EU Kontroll.");
+        }
+    }
+
+    @Override
+    public void markControlAsCompleted(String carId) {
+        MecaCar car = getCar(carId);
+        if (car != null) {
+            car.markControlAsCompleted();
+            saveObject(car);
+        }
+    }
+
+    @Override
+    public void sendKilometerRequest(String carId) {
+        MecaCar car = getCar(carId);
+        if (car != null) {
+            car.dateRequestedKilomters = new Date();
+            saveObject(car);
+            notifyByPush(car.cellPhone, "Vi trenger din kilometerstand");
         }
     }
 }

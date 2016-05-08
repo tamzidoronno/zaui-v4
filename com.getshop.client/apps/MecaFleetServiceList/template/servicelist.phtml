@@ -51,7 +51,8 @@ foreach ($cars as $car) {
             <?
             if ($agreementStatus === "yellow") {
                 echo '<div class="details">';
-                echo "Venter på bekreftelse fra bileier<br/> Foreslått dato: ".date('d/m-Y H:i', strtotime($car->nextServiceAgreed));
+                $text = isset($car->serviceDateRejected) && $car->serviceDateRejected ? "<span style='color: red'>Tidspunktet passet ikke for bileier, foreslå et annet tidspunkt</span>" : "Venter på bekreftelse fra bileier";
+                echo "<br/> $text. Foreslått dato: ".date('d/m-Y H:i', strtotime($car->nextServiceAgreed));
                 echo '</div>';
             }
             

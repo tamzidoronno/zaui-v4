@@ -59,9 +59,26 @@ public class MecaCar extends DataCommon {
     public boolean agreeDate = false;
     
     @Transient
+    public boolean agreeDateControl = false;
+    
+    @Transient
+    public boolean serviceDateRejected = false;
+    
+    @Transient
     public Date nextControll = null;
     
+    @Transient
+    public boolean canAgreeControlDate = false;
+    
     TreeSet<String> tokens = new TreeSet();
+    
+    public Date nextControlAgreed = null;
+    public Boolean nextControlAcceptedByCarOwner = null;
+    
+    @Transient
+    public boolean controlDateRejected;
+    
+    Date dateRequestedKilomters = null;
 
     /**
      * Caluclate the next EU Controll, service date etc.
@@ -127,12 +144,21 @@ public class MecaCar extends DataCommon {
         } else {
             agreeDate = false;
         }
+        
+        if (nextControlAgreed != null && nextControlAcceptedByCarOwner == null) {
+            agreeDateControl = true;
+        } else {
+            agreeDateControl = false;
+        }
     }
 
     void finalizeCar() {
         calculateNextValues();
         setIfNeedAttention();
         setAgreeDate();
+        setServiceAgreeMentRejected();
+        setCanAgreeEUControl();
+        setControlAgreeMentRejected();
     }
 
     void resetService(Date date, int kilometers) {
@@ -142,5 +168,43 @@ public class MecaCar extends DataCommon {
         this.agreeDate = false;
         this.nextServiceAgreed = null;
         this.nextServiceAcceptedByCarOwner = null;
+    }
+
+    private void setServiceAgreeMentRejected() {
+        if (nextServiceAcceptedByCarOwner != null && nextServiceAcceptedByCarOwner == false) {
+            serviceDateRejected = true;
+        } else {
+            serviceDateRejected = false;
+        }
+    }
+    
+    private void setControlAgreeMentRejected() {
+        if (nextControlAcceptedByCarOwner != null && nextControlAcceptedByCarOwner == false) {
+            controlDateRejected = true;
+        } else {
+            controlDateRejected = false;
+        }
+    }
+
+    private void setCanAgreeEUControl() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nextControll);
+        cal.add(Calendar.MONTH, -3);
+        Date afterThis = cal.getTime();
+        Date toDay = new Date();
+        
+        // three months before EU Control.
+        canAgreeControlDate = toDay.after(afterThis);
+    }
+
+    public void markControlAsCompleted() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(prevControll);
+        cal.add(Calendar.YEAR, 2);
+        
+        this.prevControll = cal.getTime();
+        this.agreeDateControl = false;
+        this.nextControlAgreed = null;
+        this.nextControlAcceptedByCarOwner = null;
     }
 }

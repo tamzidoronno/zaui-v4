@@ -75,6 +75,7 @@ $days[7] = "Sunday";
 <span class="changeview pmsbutton" data-panel='instructions'>Instructions</span>
 <span class="changeview pmsbutton" data-panel='defaultmessage'>Default msg</span>
 <span class="changeview pmsbutton" data-panel='other_config'>Other</span>
+<span class="changeview pmsbutton" data-panel='addons'>Addons</span>
 <div style='padding-top: 20px;'>
     Variables: {code},
     {roomName}, 
@@ -116,7 +117,7 @@ $days[7] = "Sunday";
     </div>
 
     <div class='sms_notifcations addons'>
-        Addons
+        <?php $this->includefile("addonsconfigpanel"); ?>
     </div>
     
     <div class='sms_notifcations notificationpanel'>
@@ -651,3 +652,10 @@ $days[7] = "Sunday";
     </div>
 </div>
 
+<script>
+    $('.notificationpanel').hide();
+    var tabselected = localStorage.getItem("pmsconfigtabselected");
+    if(tabselected) {
+        $('.'+tabselected).show();
+    }
+</script>

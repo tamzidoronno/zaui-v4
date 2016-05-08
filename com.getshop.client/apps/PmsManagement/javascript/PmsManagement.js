@@ -23,6 +23,16 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .changeInvoiceTo', app.PmsManagement.changeInvoiceTo);
         $(document).on('click','.PmsManagement .sendpaymentlink', app.PmsManagement.sendpaymentlink);
         $(document).on('change','.PmsManagement select[gsname="itemid"]', app.PmsManagement.loadTakenRoomList);
+        $(document).on('click','.PmsManagement .tab', app.PmsManagement.selectTab);
+    },
+    selectTab : function() {
+        var tab = $(this);
+        $('.tab.selected').removeClass('selected');
+        tab.addClass('selected');
+        $('.tabarea').hide();
+        var area = $(this).attr('area');
+        $('.tabarea.'+area).show();
+        localStorage.setItem('selectedbookinginfotab', area);
     },
     sendpaymentlink : function() {
         var event = thundashop.Ajax.createEvent('','sendPaymentLink', $(this), {

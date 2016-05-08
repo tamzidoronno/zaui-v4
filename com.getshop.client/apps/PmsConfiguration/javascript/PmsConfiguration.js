@@ -24,6 +24,7 @@ app.PmsConfiguration = {
         $('.notificationpanel').hide();
         var newpanel = $(this).attr('data-panel');
         $('.'+newpanel).show();
+        localStorage.setItem("pmsconfigtabselected", newpanel);
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});

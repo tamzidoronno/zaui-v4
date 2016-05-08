@@ -74,7 +74,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
                 cartManager.clear();
             }
             checkForChangesInOrders(booking);
-            if(!addBookingToCart(booking, filter).isEmpty()) {
+            addBookingToCart(booking, filter);
+            if(!cartManager.getCart().getItems().isEmpty()) {
                 if(avoidOrderCreation) {
                     continue;
                 }
@@ -580,19 +581,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         List<CartItem> result = new ArrayList();
         for(String productId : productTotal.keySet()) {
             double diffInPrice = newProductTotal.get(productId) - productTotal.get(productId);
-            long res = Math.round(diffInPrice);
+            int newcount = newProductTotalCount.get(productId).intValue();
+            long res = Math.round(diffInPrice / newcount);
             double diffInCount = newProductTotalCount.get(productId) - productTotalCount.get(productId);
             if(res != 0) {
                 PmsBooking boking = pmsManager.getBookingFromRoom(roomId);
                 PmsBookingRooms room = boking.getRoom(roomId);
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 User user = userManager.getUserById(boking.userId);
-                int newcount = newProductTotalCount.get(productId).intValue();
                 CartItem itemToAdd = null;
                 if(res < 0) {
                     newcount *= -1;
                 }
-                itemToAdd = createCartItem(room, room.date.start, room.invoicedTo, res / newcount, newcount);
+                itemToAdd = createCartItem(room, room.date.start, room.invoicedTo, res, newcount);
                 if(itemToAdd != null) {
                     result.add(itemToAdd);
                 }

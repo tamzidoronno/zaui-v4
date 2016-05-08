@@ -27,7 +27,8 @@ public class PmsBookingRooms implements Serializable {
     public Double price = 0.0;
     public double taxes = 8;
     public String bookingId;
-    
+    public List<PmsBookingAddonItem> addons = new ArrayList();
+     
     @Editor
     public String code = "";
     public Integer intervalCleaning = null;
@@ -120,6 +121,16 @@ public class PmsBookingRooms implements Serializable {
         return date.start.before(when);
     }
 
+    public void clearAddonType(int type) {
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        for(PmsBookingAddonItem item2 : addons) {
+            if(item2.addonType == type) {
+                toRemove.add(item2);
+            }
+        }
+        addons.removeAll(toRemove);
+    }
+    
     boolean isStartingToday() {
         if(date.start == null) {
             return false;
@@ -265,7 +276,6 @@ public class PmsBookingRooms implements Serializable {
             cal.add(Calendar.HOUR_OF_DAY, increaseUnits);
         }
         return cal.getTime();
-            
     }
 
     private boolean sameDay(Date date1, Date date2) {

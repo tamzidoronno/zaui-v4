@@ -24,6 +24,16 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .sendpaymentlink', app.PmsManagement.sendpaymentlink);
         $(document).on('change','.PmsManagement select[gsname="itemid"]', app.PmsManagement.loadTakenRoomList);
         $(document).on('click','.PmsManagement .tab', app.PmsManagement.selectTab);
+        $(document).on('click','.PmsManagement .addAddonsButton', app.PmsManagement.addAddon);
+    },
+    addAddon : function() {
+        var data = {
+            "type" : $('#addontypeselection').val(),
+            "bookingid" : $('#openedbookingid').val(),
+            "roomId" : $('#roomsForAddons').val()
+        };
+        var event = thundashop.Ajax.createEvent('','addAddon', $(this), data);
+        thundashop.common.showInformationBoxNew(event);
     },
     selectTab : function() {
         var tab = $(this);

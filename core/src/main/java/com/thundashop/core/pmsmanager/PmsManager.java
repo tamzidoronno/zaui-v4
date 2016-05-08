@@ -2756,4 +2756,75 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return bookings;
     }
 
+    @Override
+    public void addAddonsToBooking(Integer type, String bookingId, String roomId) {
+        PmsBooking booking = getBooking(bookingId);
+        PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
+        
+        List<String> roomIds = new ArrayList();
+        if(roomId == null || roomId.isEmpty()) {
+            for(PmsBookingRooms room : booking.rooms) {
+                roomIds.add(room.pmsBookingRoomId);
+            }
+        } else {
+            roomIds.add(roomId);
+        }
+        
+        for(String tmpRoomId : roomIds) {
+            PmsBookingRooms room = booking.getRoom(tmpRoomId);
+            room.clearAddonType(type);
+            if(addonConfig.isSingle) {
+                if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
+                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room.date.start);
+                    room.addons.add(toAdd);
+                } else if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
+                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room.date.end);
+                    room.addons.add(toAdd);
+                } else {
+                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room.date.start);
+                    room.addons.add(toAdd);
+                }
+            } else {
+                Date start = room.date.start;
+                while(true) {
+                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room.date.start);
+                    room.addons.add(toAdd);
+                    start = addTimeUnit(start, booking);
+                    if(start.after(room.date.end)) {
+                        break;
+                    }
+                }
+            }
+        }
+        saveBooking(booking);
+    }
+
+    private PmsBookingAddonItem createAddonToAdd(PmsBookingAddonItem addonConfig, Date date) {
+        Product product = productManager.getProduct(addonConfig.productId);
+        
+        PmsBookingAddonItem toReturn = new PmsBookingAddonItem();
+        toReturn.addonType = addonConfig.addonType;
+        toReturn.price = product.price;
+        toReturn.priceExTaxes = product.priceExTaxes;
+        toReturn.productId = product.id;
+        toReturn.date = date;
+        return toReturn;
+    }
+
+    private Date addTimeUnit(Date start, PmsBooking booking) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        
+        if(booking.priceType == PmsBooking.PriceType.daily) {
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+        } else if(booking.priceType == PmsBooking.PriceType.weekly) {
+            cal.add(Calendar.DAY_OF_YEAR, 7);
+        } else if(booking.priceType == PmsBooking.PriceType.hourly) {
+            cal.add(Calendar.HOUR, 1);
+        } else {
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        return cal.getTime();
+    }
+
 }

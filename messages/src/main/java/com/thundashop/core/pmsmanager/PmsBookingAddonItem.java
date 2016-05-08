@@ -1,8 +1,11 @@
 package com.thundashop.core.pmsmanager;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class PmsBookingAddonItem  implements Serializable {
+
+
     static class AddonTypes {
         public static Integer BREAKFAST = 1;
         public static Integer PARKING = 2;
@@ -11,11 +14,12 @@ public class PmsBookingAddonItem  implements Serializable {
         public static Integer EXTRABED = 5;
     }
     
+    public Date date;
     public double price;
-    public double taxes;
+    public double priceExTaxes;
     public String productId;
     public Integer addonType;
-    public String addonName;
+    public Integer count = 1;
     public boolean isActive = false;
     public boolean isSingle = false;
 }

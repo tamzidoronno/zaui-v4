@@ -226,7 +226,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                 </span>
             </td>
             <?php 
-            if($config->bookingTimeInterval == 2) { 
+            if($config->bookingTimeInterval == 2) {
                 $diff = ((strtotime($date->end) - strtotime($date->start)) / 86400);
                 echo "<td>".round($diff)."</td>";
             } 

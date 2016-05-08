@@ -140,6 +140,8 @@ public interface IPmsManager {
     @Administrator
     public void changeInvoiceDate(String roomId, Date newDate);
     
+    public void addAddonsToBooking(Integer type, String bookingId, String roomId);
+    
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);
     public PmsConfiguration getConfiguration();

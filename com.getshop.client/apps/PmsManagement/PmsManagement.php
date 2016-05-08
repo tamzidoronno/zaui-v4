@@ -57,6 +57,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function addAddon() {
+        $type = $_POST['data']['type'];
+        $bookingId = $_POST['data']['bookingid'];
+        $roomId = $_POST['data']['roomId'];
+        $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $type, $bookingId, $roomId);
+        $this->showBookingInformation();
+    }
+    
     public function globalInvoiceCreation() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         $filter = new \core_pmsmanager_NewOrderFilter();
@@ -869,6 +877,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user = $this->getApi()->getUserManager()->getUserById($userId);
         $this->users[$userId] = $user;
         return $user;
+    }
+
+    public function getItems() {
+        $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+        return $this->indexList($items);
     }
 
 }

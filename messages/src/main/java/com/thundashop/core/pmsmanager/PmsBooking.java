@@ -20,7 +20,6 @@ public class PmsBooking extends DataCommon {
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;
     
-    public List<PmsBookingAddonItem> addons = new ArrayList();
     public List<String> bookingEngineAddons = new ArrayList();
     public RegistrationRules registrationData = new RegistrationRules();
     public String language = "nb_NO";

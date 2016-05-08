@@ -132,7 +132,7 @@ public class Order extends DataCommon implements Comparable<Order> {
             item.doFinalize();
         }
     }
-    
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;
@@ -233,6 +233,26 @@ public class Order extends DataCommon implements Comparable<Order> {
         log.description = "CartItem price changed price from " + oldPrice + " to " + price;
     }
 
+    public Date getStartDateByItems() {
+        Date start = null;
+        for(CartItem item : cart.getItems()) {
+            if(start == null || start.before(item.getStartingDate())) {
+                start = item.getStartingDate();
+            }
+        }
+        return start;
+    }
+
+
+    public Date getEndDateByItems() {
+        Date end = null;
+        for(CartItem item : cart.getItems()) {
+            if(end == null || end.after(item.getEndingDate())) {
+                end = item.getEndingDate();
+            }
+        }
+        return end;
+    }
     
     public boolean matchOnString(String searchWord) {
         if (searchWord == null || searchWord.isEmpty()) 

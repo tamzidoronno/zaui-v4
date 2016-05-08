@@ -2755,9 +2755,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     HashMap<String, PmsBooking> getBookingMap() {
         return bookings;
     }
-
+    
     @Override
-    public void addAddonsToBooking(Integer type, String bookingId, String roomId) {
+    public void addAddonsToBooking(Integer type, String bookingId, String roomId, boolean remove) {
         PmsBooking booking = getBooking(bookingId);
         PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
         
@@ -2773,6 +2773,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(String tmpRoomId : roomIds) {
             PmsBookingRooms room = booking.getRoom(tmpRoomId);
             room.clearAddonType(type);
+            if(remove) {
+                continue;
+            }
             if(addonConfig.isSingle) {
                 if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
                     PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, room.date.start);

@@ -26,6 +26,17 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .tab', app.PmsManagement.selectTab);
         $(document).on('click','.PmsManagement .addAddonsButton', app.PmsManagement.addAddon);
         $(document).on('click','.PmsManagement .saveAddons', app.PmsManagement.saveAddons);
+        $(document).on('click','.PmsManagement .removeAddons', app.PmsManagement.removeAddons);
+    },
+    removeAddons : function() {
+         var data = {
+            "type" : $('#addontypeselection').val(),
+            "bookingid" : $('#openedbookingid').val(),
+            "roomId" : $('#roomsForAddons').val(),
+            "remove" : true
+        };
+        var event = thundashop.Ajax.createEvent('','addAddon', $(this), data);
+        thundashop.common.showInformationBoxNew(event);
     },
     saveAddons : function() {
         var toSave = {};
@@ -50,7 +61,8 @@ app.PmsManagement = {
         var data = {
             "type" : $('#addontypeselection').val(),
             "bookingid" : $('#openedbookingid').val(),
-            "roomId" : $('#roomsForAddons').val()
+            "roomId" : $('#roomsForAddons').val(),
+            "remove" : false
         };
         var event = thundashop.Ajax.createEvent('','addAddon', $(this), data);
         thundashop.common.showInformationBoxNew(event);

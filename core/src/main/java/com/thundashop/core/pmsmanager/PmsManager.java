@@ -2775,21 +2775,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.clearAddonType(type);
             if(addonConfig.isSingle) {
                 if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
-                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room.date.start);
+                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, room.date.start);
                     room.addons.add(toAdd);
                 } else if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
-                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room.date.end);
+                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, room.date.end);
                     room.addons.add(toAdd);
                 } else {
-                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room.date.start);
+                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, room.date.start);
                     room.addons.add(toAdd);
                 }
             } else {
                 Date start = room.date.start;
                 while(true) {
-                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room.date.start);
+                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, start);
                     room.addons.add(toAdd);
-                    start = addTimeUnit(start, booking);
+                    start = addTimeUnit(start, booking.priceType);
                     if(start.after(room.date.end)) {
                         break;
                     }
@@ -2799,7 +2799,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
-    private PmsBookingAddonItem createAddonToAdd(PmsBookingAddonItem addonConfig, Date date) {
+    private PmsBookingAddonItem createAddonToAdd(PmsBookingAddonItem addonConfig, PmsBookingRooms room, Date date) {
         Product product = productManager.getProduct(addonConfig.productId);
         
         PmsBookingAddonItem toReturn = new PmsBookingAddonItem();
@@ -2808,23 +2808,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.priceExTaxes = product.priceExTaxes;
         toReturn.productId = product.id;
         toReturn.date = date;
+        if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
+            toReturn.date = addTimeUnit(toReturn.date, PmsBooking.PriceType.daily);
+            toReturn.count = room.numberOfGuests;
+        }
         return toReturn;
     }
 
-    private Date addTimeUnit(Date start, PmsBooking booking) {
+    private Date addTimeUnit(Date start, Integer priceType) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         
-        if(booking.priceType == PmsBooking.PriceType.daily) {
+        if(priceType == PmsBooking.PriceType.daily) {
             cal.add(Calendar.DAY_OF_YEAR, 1);
-        } else if(booking.priceType == PmsBooking.PriceType.weekly) {
+        } else if(priceType == PmsBooking.PriceType.weekly) {
             cal.add(Calendar.DAY_OF_YEAR, 7);
-        } else if(booking.priceType == PmsBooking.PriceType.hourly) {
+        } else if(priceType == PmsBooking.PriceType.hourly) {
             cal.add(Calendar.HOUR, 1);
         } else {
             cal.add(Calendar.DAY_OF_YEAR, 1);
         }
         return cal.getTime();
+    }
+
+    @Override
+    public void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception {
+        PmsBooking booking = getBooking(bookingId);
+        for(PmsBookingAddonItem item : items) {
+            booking.updateItem(item);
+        }
+        saveBooking(booking);
     }
 
 }

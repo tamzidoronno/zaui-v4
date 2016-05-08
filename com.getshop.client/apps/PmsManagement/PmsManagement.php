@@ -883,6 +883,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
         return $this->indexList($items);
     }
+    
+    public function updateAddons() {
+        $addons = $_POST['data']['addons'];
+        $bookingid = $_POST['data']['bookingid'];
+        $toAdd = array();
+        foreach($addons as $id => $addon) {
+            $add = new \core_pmsmanager_PmsBookingAddonItem();
+            $add->addonId = $id;
+            $add->count = $addon['count'];
+            $add->price = $addon['price'];
+            $toAdd[] = $add;
+        }
+        $this->getApi()->getPmsManager()->updateAddons($this->getSelectedName(), $toAdd, $bookingid);
+    }
 
 }
 ?>

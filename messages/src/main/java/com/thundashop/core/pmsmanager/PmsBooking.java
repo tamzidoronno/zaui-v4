@@ -156,6 +156,12 @@ public class PmsBooking extends DataCommon {
         return null;
     }
 
+    void updateItem(PmsBookingAddonItem item) {
+        for(PmsBookingRooms room : rooms) {
+            room.updateItem(item);
+        }
+    }
+    
     void dump() {
         for(String key : registrationData.resultAdded.keySet()) {
             System.out.println(key + " : " + registrationData.resultAdded.get(key));

@@ -25,6 +25,26 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement select[gsname="itemid"]', app.PmsManagement.loadTakenRoomList);
         $(document).on('click','.PmsManagement .tab', app.PmsManagement.selectTab);
         $(document).on('click','.PmsManagement .addAddonsButton', app.PmsManagement.addAddon);
+        $(document).on('click','.PmsManagement .saveAddons', app.PmsManagement.saveAddons);
+    },
+    saveAddons : function() {
+        var toSave = {};
+        $('.addonrow').each(function() {
+            var addonid = $(this).attr('addonid');
+            if(!toSave[addonid]) {
+                toSave[addonid] = {};
+            }
+            toSave[addonid].count = $(this).find('.addoncount').val();
+            toSave[addonid].price = $(this).find('.addonprice').val();
+        });
+        var event = thundashop.Ajax.createEvent('','updateAddons',$(this), {
+            "addons" : toSave,
+            "bookingid" : $('#openedbookingid').val(),
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            thundashop.common.Alert("Success", "Addons has been updated");
+        });
     },
     addAddon : function() {
         var data = {

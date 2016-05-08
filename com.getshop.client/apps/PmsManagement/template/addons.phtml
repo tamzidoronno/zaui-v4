@@ -37,20 +37,36 @@ foreach($config->addonConfiguration as $addonConfig) {
 }
 echo "</select> ";
 echo "<span class='pmsbutton addAddonsButton'>Add addon</span>";
+echo "<span class='pmsbutton saveAddons' style='float:right;'>Save addons</span>";
 
-
+echo "<br><br>";
 foreach($booking->rooms as $room) {
     $roomName = $types[$room->bookingItemTypeId]->name;
     if($room->bookingItemId) {
         $roomName .= " (" . $bookingItems[$room->bookingItemId]->bookingItemName . ") " . $room->guests[0]->name;
     }
-    echo "<h2>$roomName</h2>";
+    echo "<h2>" . $roomName . " - " . date("d.m.Y H:i" , strtotime($room->date->start)) . " - " . date("d.m.Y H:i" , strtotime($room->date->end)) . "</h2>";
+    echo "<table cellspacing='0' cellpadding='0' width='100%'>";
+    echo "<tr>";
+    echo "<th>Type</th>";
+    echo "<th>Room</th>";
+    echo "<th>Count</th>";
+    echo "<th>Price</th>";
+    echo "<th>Date</th>";
+    echo "</tr>";
     if(sizeof($room->addons) == 0) {
         echo "No addons added to this room.";
     } else {
         foreach($room->addons as $addon) {
-            
+            echo "<tr addonid='".$addon->addonId."' roomid='".$room->pmsBookingRoomId."' class='addonrow'>";
+            echo "<td>" . $items[$addon->addonType] . "</td>";
+            echo "<td>" . $roomName . "</td>";
+            echo "<td width='10'><input type='text' value='" . $addon->count . "' style='width:70px;' class='addoncount'></td>";
+            echo "<td width='10'><input type='text' value='" .  $addon->price . "' style='width:70px;' class='addonprice'></td>";
+            echo "<td>" . date("d.m.Y, H:i", strtotime($addon->date)) . "</td>";
+            echo "</tr>";
         }
     }
+    echo "</table>";
 }
 ?>

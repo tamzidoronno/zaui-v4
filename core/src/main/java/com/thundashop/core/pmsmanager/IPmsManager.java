@@ -166,4 +166,7 @@ public interface IPmsManager {
     public void checkDoorStatusControl() throws Exception;
     public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
     
+    @Administrator
+    public void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception;
+    
 }

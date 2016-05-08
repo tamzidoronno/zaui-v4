@@ -350,4 +350,13 @@ public class PmsBookingRooms implements Serializable {
         cal.add(Calendar.HOUR_OF_DAY, maxAhead * -1);
         return date.start.after(cal.getTime());
     }
+
+    void updateItem(PmsBookingAddonItem item) {
+        for(PmsBookingAddonItem addedItem : addons) {
+            if(item.addonId.equals(addedItem.addonId)) {
+                addedItem.price = item.price;
+                addedItem.count = item.count;
+            }
+        }
+    }
 }

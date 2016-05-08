@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 public class PmsBookingAddonItem  implements Serializable {
 
@@ -14,6 +15,7 @@ public class PmsBookingAddonItem  implements Serializable {
         public static Integer EXTRABED = 5;
     }
     
+    public String addonId = UUID.randomUUID().toString();
     public Date date;
     public double price;
     public double priceExTaxes;

@@ -51,6 +51,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
     OrderManager orderManager;
     
     public String createOrder(String bookingId, NewOrderFilter filter) {
+        cartManager.clear();
         this.avoidOrderCreation = filter.avoidOrderCreation;
         
         List<PmsBooking> allbookings = new ArrayList();
@@ -67,13 +68,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             allbookings.add(booking);
         }
         
-        checkForChangesInOrders(allbookings);
-        
-        if(avoidOrderCreation) {
-            cartManager.clear();
-        }
         
         for(PmsBooking booking : allbookings) {
+            if(!avoidOrderCreation) {
+                cartManager.clear();
+            }
+            checkForChangesInOrders(booking);
             if(!addBookingToCart(booking, filter).isEmpty()) {
                 if(avoidOrderCreation) {
                     continue;
@@ -93,10 +93,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             }
         }
         
-        if(avoidOrderCreation) {
-            for(CartItem item : cartManager.getCart().getItems()) {
-                item.doFinalize();
-            }
+        for(CartItem item : cartManager.getCart().getItems()) {
+            item.doFinalize();
         }
         
         return "";
@@ -104,10 +102,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
     
     
     private List<CartItem> addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
-        if(!avoidOrderCreation) {
-            cartManager.clear();
-        }
-
         List<CartItem> items = new ArrayList();
         
         for (PmsBookingRooms room : booking.rooms) {
@@ -148,7 +142,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         return -2.0;
     }
 
-    private CartItem createCartItem(PmsBookingRooms room, Date startDate, Date endDate) {
+    private CartItem createCartItem(PmsBookingRooms room, Date startDate, Date endDate, double price, int count) {
         BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
         BookingItem bookingitem = null;
         if (room.bookingItemId != null) {
@@ -176,6 +170,22 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         if (bookingitem != null) {
             item.getProduct().additionalMetaData = bookingitem.bookingItemName;
         }
+        
+        String guestName = "";
+        if (room.guests.size() > 0) {
+            guestName = room.guests.get(0).name;
+        }
+        
+        item.getProduct().discountedPrice = price;
+        item.getProduct().price = price;
+        item.getProduct().metaData = guestName;
+        item.getProduct().externalReferenceId = room.pmsBookingRoomId;
+        item.setCount(count);
+        if(!avoidOrderCreation) {
+            room.invoicedTo = endDate;
+        }
+
+        
         return item;
     }
 
@@ -465,29 +475,35 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
 
     }
 
-    private void checkForChangesInOrders(List<PmsBooking> allbookings) {
+    private void checkForChangesInOrders(PmsBooking booking) {
+        List<CartItem> tmpCartItems = cartManager.getCart().clone().getItems();
+        boolean tmpAvoid = avoidOrderCreation;
         avoidOrderCreation = true;
+        cartManager.clear();
         HashMap<String, List<CartItem>> itemsForAllRooms = new HashMap();
-        for(PmsBooking booking : allbookings) {
-            for(PmsBookingRooms room : booking.rooms) {
-                if(room.invoicedTo == null) {
-                    continue;
-                }
-                String roomId = room.pmsBookingRoomId;
-                List<CartItem> newItems = createCartItemAndSetPrice(room.date.start, room.invoicedTo, booking, booking.getRoom(roomId));
-                List<CartItem> toAdd = new ArrayList();
-                if(itemsForAllRooms.containsKey(roomId)) {
-                    toAdd = itemsForAllRooms.get(roomId);
-                }
-                toAdd.addAll(newItems);
-                itemsForAllRooms.put(roomId, toAdd);
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.invoicedTo == null) {
+                continue;
             }
-            
-            for(String roomId : itemsForAllRooms.keySet()) {
-                List<CartItem> toCheckWith = itemsForAllRooms.get(roomId);
-                diffItems(toCheckWith, booking.orderIds, roomId);
+            String roomId = room.pmsBookingRoomId;
+            List<CartItem> newItems = createCartItemAndSetPrice(room.date.start, room.invoicedTo, booking, booking.getRoom(roomId));
+            List<CartItem> toAdd = new ArrayList();
+            if(itemsForAllRooms.containsKey(roomId)) {
+                toAdd = itemsForAllRooms.get(roomId);
             }
+            toAdd.addAll(newItems);
+            itemsForAllRooms.put(roomId, toAdd);
         }
+        List<CartItem> diffs = new ArrayList();
+        for(String roomId : itemsForAllRooms.keySet()) {
+            List<CartItem> toCheckWith = itemsForAllRooms.get(roomId);
+            diffs.addAll(diffItems(toCheckWith, booking.orderIds, roomId));
+        }
+
+        cartManager.clear();
+        cartManager.getCart().addCartItems(tmpCartItems);
+        cartManager.getCart().addCartItems(diffs);
+        avoidOrderCreation = tmpAvoid;
     }
 
     private List<CartItem> createCartItemAndSetPrice(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room) {
@@ -501,10 +517,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             }
         }
         Double price = room.price;
-        CartItem item = createCartItem(room, startDate, endDate);
-        if (item == null) {
-            return new ArrayList();
-        }
         
         boolean includeTaxes = true;
         if(pmsManager.getPriceObject().privatePeopleDoNotPayTaxes) {
@@ -523,18 +535,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             price *= tax;
         }
 
-        String guestName = "";
-        if (room.guests.size() > 0) {
-            guestName = room.guests.get(0).name;
-        }
 
-        item.getProduct().discountedPrice = price;
-        item.getProduct().price = price;
-        item.getProduct().metaData = guestName;
-        item.getProduct().externalReferenceId = room.pmsBookingRoomId;
-        item.setCount(daysInPeriode);
-        if(!avoidOrderCreation) {
-            room.invoicedTo = endDate;
+        CartItem item = createCartItem(room, startDate, endDate, price, daysInPeriode);
+        if(item == null) {
+            return new ArrayList();
         }
         cartManager.saveCartItem(item);
         if(price != 0) {
@@ -573,7 +577,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
                 addToMap(item, newProductTotal, false);
             }
         }
-        
+        List<CartItem> result = new ArrayList();
         for(String productId : productTotal.keySet()) {
             double diffInPrice = newProductTotal.get(productId) - productTotal.get(productId);
             long res = Math.round(diffInPrice);
@@ -583,11 +587,20 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
                 PmsBookingRooms room = boking.getRoom(roomId);
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 User user = userManager.getUserById(boking.userId);
+                int newcount = newProductTotalCount.get(productId).intValue();
+                CartItem itemToAdd = null;
+                if(res < 0) {
+                    newcount *= -1;
+                }
+                itemToAdd = createCartItem(room, room.date.start, room.invoicedTo, res / newcount, newcount);
+                if(itemToAdd != null) {
+                    result.add(itemToAdd);
+                }
                 System.out.println("There is a diff in the price: " + "(" + item.bookingItemName + ") " + " " + user.fullName + ", "  + res + " room: " + room.date.start + " - " + room.date.end + ", count: " + diffInCount);
             }
         }
         
-        return new ArrayList();
+        return result;
     }
 
     private void addToMap(CartItem item, HashMap<String, Double> map, boolean count) {

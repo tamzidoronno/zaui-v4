@@ -8,6 +8,7 @@ class ApplicationBase extends FactoryBase {
     private $depth;
     private $wrappedAppes;
     private $parentWrappedApp;
+    private $wrapAppRefernce;
     
     /** @var core_common_AppConfiguration */
     public $configuration;
@@ -533,8 +534,9 @@ class ApplicationBase extends FactoryBase {
         $appInstance->renderApplication();
     }
     
-    public function setParentWrappedApp($app) {
+    public function setParentWrappedApp($app, $reference) {
         $_SESSION["parent_wrapped_app".$this->getAppInstanceId()] = $app->getAppInstanceId();
+        $_SESSION["parent_wrapped_app_ref".$this->getAppInstanceId()] = $reference;
     }
     /**
      * 
@@ -564,8 +566,9 @@ class ApplicationBase extends FactoryBase {
         
         $app = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($instanceId);
         $appInstance = $this->getFactory()->getApplicationPool()->createAppInstance($app);
+        $appInstance->wrapAppRefernce = $referenceName;
         
-        $appInstance->setParentWrappedApp($this);
+        $appInstance->setParentWrappedApp($this, $referenceName);
                 
         $this->wrappedAppes->{$instanceId} = $appInstance;
         return $appInstance;
@@ -606,7 +609,12 @@ class ApplicationBase extends FactoryBase {
     public function notifyParent($method_name, $args) {
         $app = $this->getParentWrappedApplication();
         
+        if (isset($_SESSION["parent_wrapped_app_ref".$this->getAppInstanceId()])) {
+            $this->wrapAppRefernce = $_SESSION["parent_wrapped_app_ref".$this->getAppInstanceId()];
+        }
+        
         if ($app && method_exists($app, $method_name)) {
+            $args[] = $this;
             call_user_func_array(array($app, $method_name), $args);
         }
     }
@@ -623,6 +631,10 @@ class ApplicationBase extends FactoryBase {
     
     public function getAvailableProductTemplates() {
         return ["ecommerce_product_template_1"];
+    }
+    
+    public function getWrapAppReference() {
+        return $this->wrapAppRefernce;
     }
 }
 ?>

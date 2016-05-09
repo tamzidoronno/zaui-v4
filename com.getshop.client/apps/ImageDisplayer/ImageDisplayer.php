@@ -71,6 +71,8 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         if(!$this->getConfigurationSetting("zoom_able")) {
             $this->setConfigurationSetting("zoom_able", "false");
         }
+        
+        $this->notifyParent("cordinatesUpdated", []);
     }
 
     public function saveOriginalImage() {        
@@ -94,6 +96,8 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         if(!$this->getConfigurationSetting("zoom_able")) {
             $this->setConfigurationSetting("zoom_able", "false");
         }
+        
+        $this->notifyParent("oringialImageSaved", [$imgId]);
         echo $imgId;
     }
     
@@ -112,6 +116,7 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
     
     public function removeImage() {
         $this->getApi()->getPageManager()->removeApplication($this->getConfiguration()->id, $this->getPage()->id);
+        $this->notifyParent("imageRemoved", [$this->getConfiguration()->id]);
     }
     
     public function getPrefix() {

@@ -31,7 +31,17 @@ class EventCertificatesAdmin extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Ev
     
     public function showCertificate() {
     }
-    
+    public function oringialImageSaved($imageId, $app) {
+        $reference = $app->getWrapAppReference();
+        $data = explode("_", $reference);
+        $certificatId = $data[0];
+        $userId = $data[1];
+        
+        $certificate = $this->getApi()->getEventBookingManager()->getCertificate($this->getBookingEngineName(), $certificatId);
+        $certificate->signatures->{$userId} = $imageId;
+        $this->getApi()->getEventBookingManager()->saveCertificate($this->getBookingEngineName(), $certificate);
+        
+    }
     public function deleteCertificate() {
         $this->getApi()->getEventBookingManager()->deleteCertificate($this->getBookingEngineName(), $_POST['data']['id']);
     }

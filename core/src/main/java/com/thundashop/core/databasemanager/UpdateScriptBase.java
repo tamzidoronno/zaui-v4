@@ -135,4 +135,8 @@ public abstract class UpdateScriptBase implements ApplicationContextAware {
         userManger.addTempUserForcedLogon(getAdminUser());
     }
     
+    public boolean doNotRun() {
+        return false;
+    }
+    
 }

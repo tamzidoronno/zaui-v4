@@ -41,6 +41,34 @@ if (!$certificate) {
     ?>
 </div>
 
+<?
+if ($id) {
+?>
+    <div class='signatures'>
+        <br/><br/>
+        Signatures
+        <br/>
+        <?
+        $editors = $this->getApi()->getUserManager()->getUsersByType(50);
+        $admins = $this->getApi()->getUserManager()->getUsersByType(100);
+        $all = array_merge($editors, $admins);
+
+        foreach ($all as $user) {
+            if (!$user->fullName)
+                continue;
+
+            echo "<div class='signaturebox'>";
+            $this->wrapApp("831647b5-6a63-4c46-a3a3-1b4a7c36710a", $id."_".$user->id);
+            echo "<br/>$user->fullName";
+            echo "</div>";
+        }
+
+        ?>
+    </div>
+<?
+}
+?>
+
 <script>
     $('.EventCertificatesAdmin .saveCertificate').find('.daydate').datepicker({ dateFormat: "dd.mm.yy"});
 </script>

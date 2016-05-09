@@ -186,10 +186,10 @@ public class TranslationFile {
             if(key.isEmpty()) {
                 continue;
             }
-            TranslationKey tkey = GenerateTranslation.keyMap.get(key);
+            TranslationKey tkey = ParseTranslation.keyMap.get(key);
             if(tkey == null) {
                 System.out.println("No translation key for : " + key);
-                for(String test : GenerateTranslation.keyMap.keySet()) {
+                for(String test : ParseTranslation.keyMap.keySet()) {
                     System.out.println("\t" + test);
                 }
                 System.exit(0);

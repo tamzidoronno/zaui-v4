@@ -1501,11 +1501,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         List<String> certificateIds = metaData.certificateIds.get(group.id);
         
-        return certificates.values().stream()
-                .filter(o -> o.validFrom.before(event.mainStartDate) && o.validTo.before(event.mainStartDate))
+        Certificate cert = certificates.values().stream()
+                .filter(o -> o.validFrom != null && o.validTo != null)
+                .filter(o -> o.validFrom.before(event.mainStartDate) && o.validTo.after(event.mainStartDate))
                 .filter(o -> certificateIds.contains(o.id))
                 .findFirst()
                 .orElse(null);
+        
+        return cert;
     }
 
     @Override

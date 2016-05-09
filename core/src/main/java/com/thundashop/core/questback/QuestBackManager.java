@@ -22,6 +22,7 @@ import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.questback.data.QuestBackOption;
 import com.thundashop.core.questback.data.QuestBackQuestion;
+import com.thundashop.core.questback.data.QuestBackResult;
 import com.thundashop.core.questback.data.QuestTest;
 import com.thundashop.core.questback.data.QuestionTreeItem;
 import com.thundashop.core.questback.data.ResultRequirement;
@@ -34,7 +35,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -250,12 +250,10 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
 
     @Override
     public String getNextQuestionPage(String testId) {
-        if (getSession() == null || getSession().currentUser == null) {
-            throw new ErrorException(26);
-        }
-        
-        UserTestResult result = getResultTest(testId, getSession().currentUser.id);
         QuestTest test = tests.get(testId);
+        
+        User user = getUserByTest(test);
+        UserTestResult result = getResultTest(testId, user.id);
         
         if (test == null) {
             testDeleted();
@@ -268,6 +266,22 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         }
         
         return "done";
+    }
+
+    private User getUserByTest(QuestTest test) {
+        User user = null;
+        
+        if (test.type.equals("questback")) {
+            user = userManager.getVirtualSessionUser();
+        } else {
+            user = getSession().currentUser;
+        }
+        
+        if (user == null) {
+            throw new ErrorException(26);
+        }    
+        
+        return user;
     }
     
     private UserTestResult getResultTest(String testId, String userId) {
@@ -298,7 +312,8 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         }
         
         QuestTest test = tests.get(testId);
-        UserTestResult testResult = getResultTest(testId, getSession().currentUser.id);
+        User user = getUserByTest(test);
+        UserTestResult testResult = getResultTest(testId, user.id);
         QuestBackQuestion question = getQuestionBasedOnPageId(pageId);
         ApplicationInstance application = instancePool.getApplicationInstance(applicationId);
         
@@ -314,7 +329,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             allCorrect = checkAnswer(application, answers);
         }
         
-        testResult.answer(question.id, allCorrect, text);
+        testResult.answer(question.id, allCorrect, text, answers);
         saveObject(testResult);
 
         if (!allCorrect && test.forceCorrectAnswer) {
@@ -374,8 +389,9 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         if (test == null)
             testDeleted();
         
+        User user = getUserByTest(test);
         QuestBackQuestion question = getQuestionBasedOnPageId(pageId);
-        return getResultTest(test.id, getSession().currentUser.id).hasAnswered(question.id, test.forceCorrectAnswer);
+        return getResultTest(test.id, user.id).hasAnswered(question.id, test.forceCorrectAnswer);
     }
 
     private void testDeleted() {
@@ -421,7 +437,9 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
 
     @Override
     public int getProgress(String testId) {
-        return getProgressForUser(getSession().currentUser.id, testId);
+        QuestTest test = getTest(testId);
+        User user = getUserByTest(test);
+        return getProgressForUser(user.id, testId);
         
     }
     
@@ -432,7 +450,9 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             return 0;
         }
         
-        userManager.checkUserAccess(user);
+        if (!getTest(testId).type.equals("questback")) {
+            userManager.checkUserAccess(user);
+        }
         
         UserTestResult testResult = getResultTest(testId, user.id);
         if (testResult == null) {
@@ -565,7 +585,8 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         if (test == null)
             return new ArrayList();
         
-        UserTestResult testResult = getResultTest(testId, getSession().currentUser.id);
+        User user = getUserByTest(test);
+        UserTestResult testResult = getResultTest(testId, user.id);
         
         if (testResult == null) {
             return new ArrayList();
@@ -579,6 +600,23 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
                 .collect(Collectors.toList());
         
         return returnResult;
+    }
+
+    @Override
+    public QuestBackResult getResult(String testId) {
+        List<UserTestResult> testResults = results.stream()
+                .filter(result -> result.testId.equals(testId))
+                .collect(Collectors.toList());
+
+        QuestBackResult res = new QuestBackResult();
+        
+        for (UserTestResult testResult : testResults) {
+            for (UserQuestionAnswer ans : testResult.answers) {
+                res.addAnswers(ans.questionId, ans.answers);
+            }
+        }
+                
+        return res;
     }
 
 }

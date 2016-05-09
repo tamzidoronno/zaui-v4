@@ -47,6 +47,7 @@ app.QuestBackManagement = {
     saveTestSettings: function() {
         var data = {
             testid : $(this).attr('testid'),
+            testtype : $('.QuestBackManagement #testtype').val(),
             forceCorrectAnswer : $('.QuestBackManagement .force_correct_answers').is(':checked'),
             name : $('.QuestBackManagement .testsettings .test_name').val(),
             

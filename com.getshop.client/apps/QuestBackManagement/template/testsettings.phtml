@@ -11,6 +11,16 @@ if ($tree) {
 
 ?>
 <div class='testsettings'>
+    Test type: 
+    <select id='testtype'>
+        <? $checked = $test->type == "test" ? "selected='true'" : ""; ?>
+        <option <? echo $checked; ?> value='test'>Test</option>
+        
+        <? $checked = $test->type == "questback" ? "selected='true'" : ""; ?>
+        <option <? echo $checked; ?> value='questback'>QuestBack</option>
+    </select>
+    <br/>
+    <br/>
     <?
     echo "Test name:&nbsp;&nbsp;<input type='textfield' class='test_name' value='$test->name'/>";
     $chcekdForce = $test->forceCorrectAnswer ? "checked='checked'" : "";

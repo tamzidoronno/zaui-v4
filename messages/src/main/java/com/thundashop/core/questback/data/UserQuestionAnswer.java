@@ -6,6 +6,7 @@
 package com.thundashop.core.questback.data;
 
 import java.io.Serializable;
+import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -19,10 +20,12 @@ public class UserQuestionAnswer implements Serializable {
     public String questionId = "";
     public int tries = 0;
     public String text = "";
+    public List<String> answers;
     
     @Transient
     public QuestBackQuestion question;
     
     @Transient
     public QuestBackQuestion parent;
+    
 }

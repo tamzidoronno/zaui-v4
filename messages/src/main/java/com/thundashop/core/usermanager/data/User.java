@@ -30,6 +30,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     @Transient
     public Company companyObject;
+    
+    public boolean virtual = false;
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);

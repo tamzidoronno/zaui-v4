@@ -379,4 +379,21 @@ public class PmsBookingRooms implements Serializable {
             }
        });
     }
+
+    List<PmsBookingAddonItem> getAllAddons(String productId, Date startDate, Date endDate) {
+        List<PmsBookingAddonItem> result = new ArrayList();
+        for(PmsBookingAddonItem addon : addons) {
+            if(addon.productId.equals(productId)) {
+                if(addon.date.after(startDate) && addon.date.before(endDate)) {
+                    result.add(addon);
+                } else if(isSameDay(addon.date, startDate)) {
+                    result.add(addon);                    
+                } else if(isSameDay(addon.date, endDate)) {
+                    result.add(addon);                    
+                }
+            }
+        }
+        
+        return result;
+    }
 }

@@ -143,17 +143,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         return -2.0;
     }
 
-    private CartItem createCartItem(PmsBookingRooms room, Date startDate, Date endDate, double price, int count) {
-        BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+    private CartItem createCartItem(String productId, String name, PmsBookingRooms room, Date startDate, Date endDate, double price, int count) {
         BookingItem bookingitem = null;
         if (room.bookingItemId != null) {
             bookingitem = bookingEngine.getBookingItem(room.bookingItemId);
         }
-        if (type == null) {
-            return null;
-        }
 
-        String productId = type.productId;
         if (productId == null) {
             System.out.println("Product not set for this booking item type");
             return null;
@@ -167,7 +162,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         item.startDate = startDate;
         item.endDate = endDate;
         
-        item.getProduct().name = type.name;
+        if(name != null) {
+            item.getProduct().name = name;
+        }
         if (bookingitem != null) {
             item.getProduct().additionalMetaData = bookingitem.bookingItemName;
         }
@@ -536,15 +533,20 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             price *= tax;
         }
 
-
-        CartItem item = createCartItem(room, startDate, endDate, price, daysInPeriode);
-        if(item == null) {
-            return new ArrayList();
+        BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+        if(type != null) {
+        CartItem item = createCartItem(type.productId, type.name, room, startDate, endDate, price, daysInPeriode);
+            if(item != null) {
+                cartManager.saveCartItem(item);
+                if(price != 0) {
+                    items.add(item);
+                }
+            }
         }
-        cartManager.saveCartItem(item);
-        if(price != 0) {
-            items.add(item);
-        }
+        
+        List<CartItem> addonItems = createCartItemsFromAddon(room, startDate, endDate);
+        items.addAll(addonItems);
+        
         return items;
     }
 
@@ -587,14 +589,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             if(res != 0) {
                 PmsBooking boking = pmsManager.getBookingFromRoom(roomId);
                 PmsBookingRooms room = boking.getRoom(roomId);
-                BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
-                User user = userManager.getUserById(boking.userId);
+                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 CartItem itemToAdd = null;
                 if(res < 0) {
                     newcount *= -1;
                     res *= -1;
                 }
-                itemToAdd = createCartItem(room, room.date.start, room.invoicedTo, res, newcount);
+                
+                if(type == null) {
+                    continue;
+                }
+                
+                String name = type.name;
+                itemToAdd = createCartItem(type.productId, name, room, room.date.start, room.invoicedTo, res, newcount);
                 if(itemToAdd != null) {
                     result.add(itemToAdd);
                 }
@@ -637,6 +644,34 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             return false;
         }
         return true;
+    }
+
+    private List<CartItem> createCartItemsFromAddon(PmsBookingRooms room, Date startDate, Date endDate) {
+        HashMap<String, Integer> products = new HashMap();
+        for(PmsBookingAddonItem addon : room.addons) {
+            products.put(addon.productId, 0);
+        }
+        
+        Calendar start = Calendar.getInstance();
+        start.setTime(startDate);
+        List<CartItem> result = new ArrayList();
+        for(String productId : products.keySet()) {
+            List<PmsBookingAddonItem> items = room.getAllAddons(productId, startDate, endDate);
+            if(items.size() > 0) {
+                double price = 0;
+                int count = 0;
+                for(PmsBookingAddonItem check : items) {
+                    price += check.price * check.count;
+                    count += check.count;
+                }
+                if(count > 0) {
+                    result.add(createCartItem(productId, null, room, startDate, endDate, price / count, count));
+                } else {
+                    System.out.println("Count 0?");
+                }
+            }
+        }
+        return result;
     }
     
 }

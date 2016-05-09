@@ -400,6 +400,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(!$error) {
             $this->errors[] = "Could not update start date, due to room not available at the time being.";
         }
+        
+        $this->refreshSelectedBooking();
         $this->showBookingInformation();
     }
     
@@ -896,6 +898,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $toAdd[] = $add;
         }
         $this->getApi()->getPmsManager()->updateAddons($this->getSelectedName(), $toAdd, $bookingid);
+    }
+
+    public function refreshSelectedBooking() {
+        $bookingid = $_POST['data']['bookingid'];
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingid);
+        $this->selectedBooking = $booking;
     }
 
 }

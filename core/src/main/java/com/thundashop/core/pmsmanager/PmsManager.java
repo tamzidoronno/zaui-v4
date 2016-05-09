@@ -744,6 +744,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.end = end;
             room.date.exitCleaningDate = null;
             room.date.cleaningDate = null;
+            updateAddonsByDates(room);
             if(configuration.updatePriceWhenChangingDates) {
                 room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, start, end, true, "", booking.priceType);
             }
@@ -2812,7 +2813,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.productId = product.id;
         toReturn.date = date;
         if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
-            toReturn.date = addTimeUnit(toReturn.date, PmsBooking.PriceType.daily);
             toReturn.count = room.numberOfGuests;
         }
         return toReturn;
@@ -2841,6 +2841,41 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.updateItem(item);
         }
         saveBooking(booking);
+    }
+
+    private void updateAddonsByDates(PmsBookingRooms room) { 
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        HashMap<Integer, Integer> addTypes = new HashMap();
+        for(PmsBookingAddonItem addon : room.addons) {
+            if(addon.isSingle) {
+                continue;
+            }
+            if(addon.date.before(room.date.start) || addon.date.after(room.date.end) &&
+                    (!room.isSameDay(addon.date, room.date.start) && !room.isSameDay(addon.date, room.date.end))) {
+                toRemove.add(addon);
+            }
+            addTypes.put(addon.addonType, 1);
+        }
+        room.addons.removeAll(toRemove);
+        
+        java.util.Calendar startCal = java.util.Calendar.getInstance();
+        startCal.setTime(room.date.start);
+        while(true) {
+            Date time = startCal.getTime();
+            for(Integer key : addTypes.keySet()) {
+                PmsBookingAddonItem config = configuration.addonConfiguration.get(key);
+                if(room.hasAddon(key, startCal.getTime()) == null) {
+                    PmsBookingAddonItem addon = createAddonToAdd(config, room, time);
+                    room.addons.add(addon);
+                }
+            }
+            
+            startCal.add(java.util.Calendar.DAY_OF_YEAR, 1);
+            if(startCal.getTime().after(room.date.end)) {
+                break;
+            }
+        }
+        room.sortAddonList();
     }
 
 }

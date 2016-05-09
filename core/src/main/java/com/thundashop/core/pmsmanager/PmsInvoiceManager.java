@@ -592,12 +592,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
                 CartItem itemToAdd = null;
                 if(res < 0) {
                     newcount *= -1;
+                    res *= -1;
                 }
                 itemToAdd = createCartItem(room, room.date.start, room.invoicedTo, res, newcount);
                 if(itemToAdd != null) {
                     result.add(itemToAdd);
                 }
-                System.out.println("There is a diff in the price: " + "(" + item.bookingItemName + ") " + " " + user.fullName + ", "  + res + " room: " + room.date.start + " - " + room.date.end + ", count: " + diffInCount);
             }
         }
         

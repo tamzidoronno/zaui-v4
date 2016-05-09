@@ -11,7 +11,10 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date; 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
@@ -302,7 +305,7 @@ public class PmsBookingRooms implements Serializable {
         return false;
     }
     
-    private boolean isSameDay(Date date1, Date date2) {
+    public boolean isSameDay(Date date1, Date date2) {
         if(date1 == null || date2 == null) {
             return false;
         }
@@ -358,5 +361,22 @@ public class PmsBookingRooms implements Serializable {
                 addedItem.count = item.count;
             }
         }
+    }
+
+    PmsBookingAddonItem hasAddon(Integer key, Date date) {
+        for(PmsBookingAddonItem addon : addons) {
+            if(addon.addonType.equals(key) && isSameDay(date, addon.date)) {
+                return addon;
+            }
+        }
+        return null;
+    }
+
+    void sortAddonList() {
+        Collections.sort(addons, new Comparator<PmsBookingAddonItem>(){
+            public int compare(PmsBookingAddonItem o1, PmsBookingAddonItem o2){
+                return o1.date.compareTo(o2.date);
+            }
+       });
     }
 }

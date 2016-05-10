@@ -388,8 +388,6 @@ public class PmsBookingRooms implements Serializable {
                     result.add(addon);
                 } else if(isSameDay(addon.date, startDate)) {
                     result.add(addon);                    
-                } else if(isSameDay(addon.date, endDate)) {
-                    result.add(addon);                    
                 }
             }
         }

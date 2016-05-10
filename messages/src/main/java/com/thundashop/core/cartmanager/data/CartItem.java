@@ -27,7 +27,7 @@ public class CartItem implements Serializable {
     public Date newStartDate;
     public Date newEndDate;
 
-    CartItem() {
+    public CartItem() {
     }
     
     public boolean isSame(String productId, List<String> variations) {

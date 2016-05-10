@@ -10,8 +10,12 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .doneediting', app.PmsManagement.doneediting);
         $(document).on('click', '.PmsManagement .deletebooking', app.PmsManagement.deletebooking);
         $(document).on('click', '.PmsManagement .resetnotifications', app.PmsManagement.resetnotifications);
-        $(document).on('keyup','.PmsManagement .newroomstart', app.PmsManagement.updateRoomList);
-        $(document).on('keyup','.PmsManagement .newroomend', app.PmsManagement.updateRoomList);
+        $(document).on('keyup','.PmsManagement .newroomstartdate', app.PmsManagement.updateRoomList);
+        $(document).on('keyup','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
+        $(document).on('keyup','.PmsManagement .newroomstarttime', app.PmsManagement.updateRoomList);
+        $(document).on('keyup','.PmsManagement .newroomendtime', app.PmsManagement.updateRoomList);
+        $(document).on('change','.PmsManagement .newroomstartdate', app.PmsManagement.updateRoomList);
+        $(document).on('change','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
         $(document).on('click','.PmsManagement .showlog', app.PmsManagement.showlog);
         $(document).on('click','.PmsManagement .closeadduser', app.PmsManagement.closeadduser);
         $(document).on('change','.PmsManagement .changeuseronbooking', app.PmsManagement.changeuseronbooking);
@@ -208,10 +212,10 @@ app.PmsManagement = {
     },
     updateRoomList : function() {
         var data = {
-            "start" : $('.newroomstart').val(),
-            "end" : $('.newroomend').val()
+            "start" : $('.newroomstartdate').val() + " " + $('.newroomstarttime').val(),
+            "end" : $('.newroomenddate').val() + " " + $('.newroomendtime').val(),
+            "selectedtype" : $('.addroomselectiontype').val()
         };
-        console.log(data);
         var event = thundashop.Ajax.createEvent('','updateItemList', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function(result) {
             $('.addroomselectiontype').replaceWith(result);

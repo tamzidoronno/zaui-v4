@@ -2728,6 +2728,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(cal.get(Calendar.DAY_OF_MONTH) == 25 && cal.get(Calendar.MONTH) == 3) {
             return true;
         }
+        if(cal.get(Calendar.DAY_OF_MONTH) == 26 && cal.get(Calendar.MONTH) == 3) {
+            return true;
+        }
+        if(cal.get(Calendar.DAY_OF_MONTH) == 27 && cal.get(Calendar.MONTH) == 3) {
+            return true;
+        }
+        if(cal.get(Calendar.DAY_OF_MONTH) == 28 && cal.get(Calendar.MONTH) == 3) {
+            return true;
+        }
+        if(cal.get(Calendar.DAY_OF_MONTH) == 29 && cal.get(Calendar.MONTH) == 3) {
+            return true;
+        }
         return false;
     }
 

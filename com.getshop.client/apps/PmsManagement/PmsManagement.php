@@ -615,21 +615,26 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
         $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
-        $this->includeAddRoomOptions($items, $start, $end);
+        $default = $_POST['data']['selectedtype'];
+        $this->includeAddRoomOptions($items, $start, $end, $default);
     }
 
-    public function includeAddRoomOptions($items, $start, $end) {
+    public function includeAddRoomOptions($items, $start, $end, $defaultType) {
         $types = $this->getTypes();
         ?>
-            <select style='float:left; margin-right: 10px;' gsname='item' class='addroomselectiontype'>
+            <select style='margin-right: 10px;' gsname='item' class='addroomselectiontype'>
                 <?php 
                 foreach($types as $type) {
                     /* @var $item core_bookingengine_data_BookingItem */
                     $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $type->id, $start, $end);
+                    $selected = "";
+                    if($type->id == $defaultType) {
+                        $selected = "SELECTED";
+                    }
                     if($number > 0) {
-                        echo "<option value='".$type->id."'>". $type->name . "</option>";
+                        echo "<option value='".$type->id."' $selected>". $type->name . "</option>";
                     } else {
-                        echo "<option value='".$type->id."'>". $type->name . " (".$this->__w("Occupied").") </option>";
+                        echo "<option value='".$type->id."' $selected>". $type->name . " (".$this->__w("Occupied").") </option>";
                     }
                 }
                 ?>

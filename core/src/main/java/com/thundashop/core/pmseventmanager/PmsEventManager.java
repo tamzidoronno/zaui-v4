@@ -125,7 +125,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     private void setRooms(PmsBookingEventEntry entry, PmsBooking result) {
         entry.dateRanges.clear();
         entry.roomNames.clear();
-        for(PmsBookingRooms room : result.rooms) {
+        for(PmsBookingRooms room : result.getActiveRooms()) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             if(type != null && type.addon > 0) {
                 continue;

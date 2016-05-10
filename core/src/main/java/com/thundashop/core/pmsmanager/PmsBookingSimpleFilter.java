@@ -21,7 +21,7 @@ public class PmsBookingSimpleFilter {
         List<PmsRoomSimple> result = new ArrayList();
         List<PmsBooking> bookings = manager.getAllBookings(filter);
         for(PmsBooking booking : bookings) {
-            for(PmsBookingRooms room : booking.rooms) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
                 if(inFilter(room, filter, booking)) {
                     result.add(convertRoom(room, booking));
                 }

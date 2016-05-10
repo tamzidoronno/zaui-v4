@@ -118,13 +118,21 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
         if($room->intervalCleaning) {
             $roomCleaningInterval = $room->intervalCleaning;
         }
+        $deleted = "";
+        if($room->deleted) {
+            $deleted = "roomdeleted";
+        }
         ?>
-        <tr bookingid='<? echo $bookingId; ?>' roomid='<? echo $room->pmsBookingRoomId; ?>'>
+        <tr bookingid='<? echo $bookingId; ?>' roomid='<? echo $room->pmsBookingRoomId; ?>' class='<?php echo $deleted; ?>'>
             <td>
                 <span gstype='form' method="removeRoom">
                     <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                     <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                    <i class='fa fa-trash-o' gstype='submitToInfoBox'></i>
+                    <?php if(!$deleted) { ?>
+                        <i class='fa fa-trash-o' gstype='submitToInfoBox'></i>
+                    <?php } else { ?>
+                        Deleted
+                    <?php } ?>
                 </span>
                     <?php
                     if($config->autoExtend) {
@@ -149,7 +157,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                         <span class='roompostfix'>
                             <span class="viewmode">
                                 <?
-                                if (!$room->booking->bookingItemId) {
+                                if (!$room->booking || !$room->booking->bookingItemId) {
                                     echo "Not assigned yet";
                                 } else {
                                     $notifications = "notifications: " . join(",", $room->notificationsSent);

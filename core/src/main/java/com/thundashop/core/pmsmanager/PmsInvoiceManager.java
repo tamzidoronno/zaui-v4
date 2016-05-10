@@ -103,7 +103,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
     private List<CartItem> addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
         List<CartItem> items = new ArrayList();
         
-        for (PmsBookingRooms room : booking.rooms) {
+        for (PmsBookingRooms room : booking.getActiveRooms()) {
             if(!room.needInvoicing(filter)) {
                 continue;
             }
@@ -155,7 +155,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         if (numberOfDays == 0) {
             return null;
         }
-
+    
         CartItem item = createCartItemForCart(productId, count, room.pmsBookingRoomId);
         item.startDate = startDate;
         item.endDate = endDate;
@@ -227,7 +227,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
     }
 
     private boolean shouldBeProcessed(PmsBooking booking) {
-        if (booking.rooms == null) {
+        if (booking.getActiveRooms() == null) {
             return false;
         }
         if (booking.isDeleted) {
@@ -480,8 +480,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
 
     private void checkForChangesInOrders(PmsBooking booking) {
         runningDiffRoutine = true;
-        HashMap<String, List<CartItem>> itemsForAllRooms = new HashMap();
-        for(PmsBookingRooms room : booking.rooms) {
+        HashMap<String, List<CartItem>> itemsForAllRooms = getAllRoomsFromExistingOrder(booking.orderIds);
+        
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
             if(room.invoicedTo == null) {
                 continue;
             }
@@ -551,19 +552,31 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
 
     private List<CartItem> diffItems(List<CartItem> allNewItemsOnOrder, List<String> orderIds, String roomId) {
         HashMap<String, Double> oldProductTotal = new HashMap();
+        HashMap<String, Double> oldProductTotalCount = new HashMap();
         
         HashMap<String, Double> newProductTotal = new HashMap();
         HashMap<String, Double> newProductTotalCount = new HashMap();
+        
+        Date itemFirstStartDate = null;
+        Date itemFirstEndDate = null;
+        
         for(String orderId : orderIds) {
             Order order = orderManager.getOrder(orderId);
             if(beforeDiffPossible(order)) {
                 return new ArrayList();
             }
             for(CartItem item : getFlatCartItems(order)) {
+                if(itemFirstStartDate == null || (item.startDate != null && item.startDate.before(itemFirstStartDate))) {
+                    itemFirstStartDate = item.startDate;
+                }
+                if(itemFirstEndDate == null || (item.startDate != null && item.endDate.after(itemFirstEndDate))) {
+                    itemFirstEndDate = item.endDate;
+                }
                 if(item.getProduct() != null && 
                         item.getProduct().externalReferenceId != null &&
                         item.getProduct().externalReferenceId.equals(roomId)) {
                     addToMap(item, oldProductTotal, false);
+                    addToMap(item, oldProductTotalCount, true);
                 }
             }
         }
@@ -576,6 +589,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
                 addToMap(item, newProductTotal, false);
             }
         }
+        
+        for(String productId : oldProductTotal.keySet()) {
+            if(!newProductTotal.containsKey(productId)) {
+                newProductTotal.put(productId, 0.0);
+                newProductTotalCount.put(productId, oldProductTotalCount.get(productId) * -1);
+            }
+        }
+        
         System.out.println("----");
         for(String id : oldProductTotal.keySet()) {
             System.out.println("Old total: " + id + " : " + oldProductTotal.get(id));
@@ -598,25 +619,30 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             System.out.println("\t Diff in price: " + diffInPrice + ", new count: " + newcount + " : Diff: " + res);
             if(res != 0) {
                 PmsBooking boking = pmsManager.getBookingFromRoom(roomId);
-                PmsBookingRooms room = boking.getRoom(roomId);
+                if(boking == null) {
+                    continue;
+                }
+                PmsBookingRooms room = new PmsBookingRooms();
+                room = boking.getRoom(roomId);
+                
                 BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 CartItem itemToAdd = null;
                 if(res < 0) {
                     newcount *= -1;
                     res *= -1;
                 }
-                
+
                 String name = null;
                 if(type != null) {
                     name = type.name;
                 }
-                
+
                 PmsBookingAddonItem addonConfig = getAddonConfig(productId);
                 if(addonConfig != null) {
                     name = productManager.getProduct(productId).name;
                 }
-                
-                
+
+
                 itemToAdd = createCartItem(productId, name, room, room.date.start, room.invoicedTo, res, newcount);
                 if(itemToAdd != null) {
                     result.add(itemToAdd);
@@ -728,6 +754,24 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             }
         }
         return null;
+    }
+
+    private HashMap<String, List<CartItem>> getAllRoomsFromExistingOrder(List<String> orderIds) {
+        HashMap<String, List<CartItem>> res = new HashMap();
+        for(String orderId : orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            for(CartItem item : order.cart.getItems()) {
+                if(item.getProduct() != null) {
+                    if(item.getProduct().externalReferenceId != null) {
+                        String id = item.getProduct().externalReferenceId;
+                        if(!res.containsKey(id)) {
+                            res.put(id, new ArrayList());
+                        }
+                    }
+                }
+            }
+        }
+        return res;
     }
     
 }

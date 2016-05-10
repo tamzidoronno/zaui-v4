@@ -65,7 +65,7 @@ public class PmsManagerProcessor {
         for (PmsBooking booking : bookings) {
 
             boolean save = false;
-            for (PmsBookingRooms room : booking.rooms) {
+            for (PmsBookingRooms room : booking.getActiveRooms()) {
                 int start = hoursAheadCheck;
                 int end = maxAheadCheck;
                 if(started) {
@@ -118,7 +118,7 @@ public class PmsManagerProcessor {
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
             boolean save = false;
-            for (PmsBookingRooms room : booking.rooms) {
+            for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (!isBetween(room.date.end, (maxAhead * -1), (hoursAhead * -1))) {
                     continue;
                 }
@@ -169,7 +169,7 @@ public class PmsManagerProcessor {
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
             boolean save = false;
-            for (PmsBookingRooms room : booking.rooms) {
+            for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (!manager.isClean(room.bookingItemId) && manager.getConfigurationSecure().cleaningInterval > 0) {
                     continue;
                 }
@@ -210,7 +210,7 @@ public class PmsManagerProcessor {
         List<PmsBooking> bookings = getAllConfirmedNotDeleted();
         for (PmsBooking booking : bookings) {
             boolean save = false;
-            for (PmsBookingRooms room : booking.rooms) {
+            for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (!room.isStartingToday() && !room.isStarted()) {
                     continue;
                 }
@@ -276,7 +276,7 @@ public class PmsManagerProcessor {
         List<PmsBooking> res = new ArrayList(manager.getBookingMap().values());
         List<PmsBooking> toRemove = new ArrayList();
         for (PmsBooking booking : res) {
-            if (booking.rooms == null) {
+            if (booking.getActiveRooms() == null) {
                 toRemove.add(booking);
             }
             if (booking.isDeleted) {
@@ -386,7 +386,7 @@ public class PmsManagerProcessor {
             List<PmsBooking> bookings = getAllConfirmedNotDeleted();
             for (PmsBooking booking : bookings) {
                 boolean needSaving = false;
-                for (PmsBookingRooms room : booking.rooms) {
+                for (PmsBookingRooms room : booking.getActiveRooms()) {
                     if (room.isEnded() && !room.keyIsReturned) {
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(room.date.end);
@@ -447,7 +447,7 @@ public class PmsManagerProcessor {
             }
             for (PmsBooking booking : bookings) {
                 boolean needSaving = false;
-                for (PmsBookingRooms room : booking.rooms) {
+                for (PmsBookingRooms room : booking.getActiveRooms()) {
 
                     boolean needUpdate = false;
                     if (isCheckoutCleaning) {
@@ -497,8 +497,8 @@ public class PmsManagerProcessor {
             if(booking.isDeleted) {
                 continue;
             }
-            if(booking.rooms != null) {
-                for(PmsBookingRooms room : booking.rooms) {
+            if(booking.getActiveRooms() != null) {
+                for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(room.bookingId != null) {
                         allBookingIds.add(room.bookingId);
                     }

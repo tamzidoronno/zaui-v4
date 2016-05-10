@@ -51,7 +51,7 @@ public class PmsManagerDoorSurveilance {
         List<PmsBooking> res = new ArrayList(manager.getBookingMap().values());
         List<PmsBooking> toRemove = new ArrayList();
         for (PmsBooking booking : res) {
-            if (booking.rooms == null) {
+            if (booking.getActiveRooms() == null) {
                 toRemove.add(booking);
             }
             if (booking.isDeleted) {
@@ -75,7 +75,7 @@ public class PmsManagerDoorSurveilance {
         
         for(PmsBooking booking : getAllConfirmedNotDeleted()) {
             boolean needSaving = false;
-            for(PmsBookingRooms room : booking.rooms) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
                 if(room.isEnded() && !room.sentCloseSignal) {
                     room.sentCloseSignal = true;
                     manager.arxManager.pmsDoorAction(room.code, "close");

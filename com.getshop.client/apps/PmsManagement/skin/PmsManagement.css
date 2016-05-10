@@ -10,6 +10,7 @@
 .PmsManagement .Confirmed { color:green; }
 .PmsManagement .Unconfirmed { color:red; }
 .PmsManagement .Unpaid { color:red; }
+.PmsManagement .roomdeleted td { color: red; }
 .PmsManagement .tiparea {
     position: absolute;
     background-color: #fff;

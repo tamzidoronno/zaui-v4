@@ -114,7 +114,7 @@ public class ContentManager extends ManagerBase implements IContentManager {
         HashMap<String, String> returnMap = new HashMap();
         
         for (ContentData data : res) {
-            String pageId = pageManager.getPagesForApplication(data.appId).stream().findFirst().orElse(null);
+            String pageId = pageManager.getPagesForApplicationOnlyBody(data.appId).stream().findFirst().orElse(null);
             if (pageId != null) {
                 String content = getSubContent(data, searchWord);
                 returnMap.put(content, pageId);

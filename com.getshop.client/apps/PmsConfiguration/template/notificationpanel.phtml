@@ -497,6 +497,18 @@ $days[7] = "Sunday";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->autoGenerateChangeOrders) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoGenerateChangeOrders' <? echo $checked; ?>>
+            </span>
+            Autocreate generate orders when changes in booking.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->updatePriceWhenChangingDates) {
                     $checked = "CHECKED";
                 }

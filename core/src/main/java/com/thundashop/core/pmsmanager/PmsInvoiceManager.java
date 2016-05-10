@@ -600,26 +600,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             }
         }
         
-        System.out.println("----");
-        for(String id : oldProductTotal.keySet()) {
-            System.out.println("Old total: " + id + " : " + oldProductTotal.get(id));
-        }
-        for(String id : newProductTotal.keySet()) {
-            System.out.println("New total: " + id + " : " + newProductTotal.get(id));
-            System.out.println("New count: " + id + " : " + newProductTotalCount.get(id));
-        }
-        
         List<CartItem> result = new ArrayList();
         for(String productId : newProductTotal.keySet()) {
             double diffInPrice = newProductTotal.get(productId);
+            PmsBookingAddonItem addonConfig = getAddonConfig(productId);
             int newcount = newProductTotalCount.get(productId).intValue();
+            if(addonConfig != null) {
+                newcount -= oldProductTotalCount.get(productId);
+                if(newcount == 0) {
+                    newcount = 1;
+                }
+            }
             
             if(oldProductTotal.containsKey(productId)) {
                 diffInPrice = newProductTotal.get(productId) - oldProductTotal.get(productId);
             }
             
             long res = Math.round(diffInPrice / newcount);
-            System.out.println("\t Diff in price: " + diffInPrice + ", new count: " + newcount + " : Diff: " + res);
             if(res != 0) {
                 PmsBooking boking = pmsManager.getBookingFromRoomIgnoreDeleted(roomId);
                 if(boking == null) {
@@ -639,14 +636,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
                 if(type != null) {
                     name = type.name;
                 }
-
-                PmsBookingAddonItem addonConfig = getAddonConfig(productId);
+                Date start = room.date.start;
+                Date end = room.invoicedTo;
                 if(addonConfig != null) {
                     name = productManager.getProduct(productId).name;
                 }
 
-
-                itemToAdd = createCartItem(productId, name, room, room.date.start, room.invoicedTo, res, newcount);
+                itemToAdd = createCartItem(productId, name, room, start, end, res, newcount);
                 if(itemToAdd != null) {
                     result.add(itemToAdd);
                 }
@@ -733,7 +729,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
     }
 
     private CartItem createCartItemForCart(String productId, int count, String roomId) {
-        System.out.println(roomId);
         CartItem item = new CartItem();
         Product product = productManager.getProduct(productId);
         item.setProduct(product.clone());
@@ -776,5 +771,5 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         }
         return res;
     }
-    
+
 }

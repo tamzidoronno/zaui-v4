@@ -903,6 +903,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $toAdd[] = $add;
         }
         $this->getApi()->getPmsManager()->updateAddons($this->getSelectedName(), $toAdd, $bookingid);
+        $this->showBookingInformation();
     }
 
     public function refreshSelectedBooking() {

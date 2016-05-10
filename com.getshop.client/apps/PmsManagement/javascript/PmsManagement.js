@@ -56,10 +56,7 @@ app.PmsManagement = {
             "addons" : toSave,
             "bookingid" : $('#openedbookingid').val(),
         });
-        
-        thundashop.Ajax.postWithCallBack(event, function() {
-            thundashop.common.Alert("Success", "Addons has been updated");
-        });
+        thundashop.common.showInformationBoxNew(event);
     },
     addAddon : function() {
         var data = {

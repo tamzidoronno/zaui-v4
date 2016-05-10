@@ -109,6 +109,9 @@ app.PmsManagement = {
         });
     },
     changeInvoiceTo : function() {
+        if($(this).closest('tr').hasClass('roomdeleted')) {
+            return;
+        }
         var newDate = prompt("Specify a new date");
         if(!newDate) {
             return;
@@ -255,6 +258,9 @@ app.PmsManagement = {
     },
     toggleEditMode : function() {
         var row = $(this).closest('.roomattribute');
+        if($(this).closest('tr').hasClass('roomdeleted')) {
+            return;
+        }
         var view = row.find('.viewmode');
         var edit = row.find('.editmode');
         view.hide();

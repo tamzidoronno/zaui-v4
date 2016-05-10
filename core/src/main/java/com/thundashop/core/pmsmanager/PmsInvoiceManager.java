@@ -479,6 +479,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
     }
 
     private void checkForChangesInOrders(PmsBooking booking) {
+        if(!pmsManager.getConfigurationSecure().autoGenerateChangeOrders) {
+            return;
+        }
         runningDiffRoutine = true;
         HashMap<String, List<CartItem>> itemsForAllRooms = getAllRoomsFromExistingOrder(booking.orderIds);
         
@@ -618,7 +621,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             long res = Math.round(diffInPrice / newcount);
             System.out.println("\t Diff in price: " + diffInPrice + ", new count: " + newcount + " : Diff: " + res);
             if(res != 0) {
-                PmsBooking boking = pmsManager.getBookingFromRoom(roomId);
+                PmsBooking boking = pmsManager.getBookingFromRoomIgnoreDeleted(roomId);
                 if(boking == null) {
                     continue;
                 }

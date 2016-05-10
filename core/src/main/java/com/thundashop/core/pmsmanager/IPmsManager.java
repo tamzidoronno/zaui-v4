@@ -30,6 +30,9 @@ public interface IPmsManager {
     @Editor
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId);
     
+    @Editor
+    public PmsBooking getBookingFromRoomIgnoreDeleted(String roomId);
+    
     @Administrator
     public String setNewRoomType(String roomId, String bookingId, String newType);
     

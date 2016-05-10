@@ -2890,4 +2890,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.sortAddonList();
     }
 
+    @Override
+    public PmsBooking getBookingFromRoomIgnoreDeleted(String roomId) {
+        for (PmsBooking booking : bookings.values()) {
+            for (PmsBookingRooms room : booking.getActiveRoomsIncInactive()) {
+                if (room.pmsBookingRoomId.equals(roomId)) {
+                    return booking;
+                }
+            }
+        }
+        return null;
+    }
+
 }

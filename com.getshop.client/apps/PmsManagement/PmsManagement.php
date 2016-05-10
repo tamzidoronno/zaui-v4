@@ -872,7 +872,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
      * @return \core_pmsmanager_PmsBooking
      */
     public function findBookingFromRoom($roomid) {
-        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoomIgnoreDeleted($this->getSelectedName(), $roomid);
         return $booking;
     }
 

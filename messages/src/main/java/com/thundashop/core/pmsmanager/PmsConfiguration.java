@@ -41,6 +41,7 @@ public class PmsConfiguration extends DataCommon {
 
     /* Invoice creation options */
     public boolean autoCreateInvoices = false;
+    public boolean autoGenerateChangeOrders = false;
     public boolean runAutoPayWithCard = false;
     public Integer createOrderAtDayInMonth = 0;
     public boolean prepayment = false;

@@ -74,19 +74,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         
         for(PmsBooking booking : allbookings) {
             clearCart();
-            checkForChangesInOrders(booking);
             addBookingToCart(booking, filter);
             if(!itemsToReturn.isEmpty()) {
                 if(avoidOrderCreation) {
                     continue;
                 }
                 
-                Order order = createOrderFromCart(booking);
-                if (order == null) {
-                    return "Could not create order.";
+                Order order = getUnpaidOrder(booking);
+                if(order != null) {
+                    order.cart.addCartItems(itemsToReturn);
+                } else {
+                    order = createOrderFromCart(booking);
+                    if (order == null) {
+                        return "Could not create order.";
+                    }
+                    booking.orderIds.add(order.id);
+                    booking.payedFor = false;
                 }
-                booking.orderIds.add(order.id);
-                booking.payedFor = false;
                 if(getSession() != null && getSession().currentUser != null && 
                         (getSession().currentUser.isEditor() || getSession().currentUser.isAdministrator())) {
                     booking.avoidAutoDelete = true;
@@ -104,16 +108,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         List<CartItem> items = new ArrayList();
         
         for (PmsBookingRooms room : booking.getActiveRooms()) {
+            checkIfNeedCrediting(room);
             if(!room.needInvoicing(filter)) {
                 continue;
             }
             
             Date startDate = room.getInvoiceStartDate();
             Date endDate = room.getInvoiceEndDate(filter, booking);
-
-            List<CartItem> itemsToadd = createCartItemAndSetPrice(startDate,endDate, booking, room);
             
-
+            List<CartItem> itemsToadd = createCartItemsForRoom(startDate,endDate, booking, room);
+            
             if (pmsManager.getConfigurationSecure().substractOneDayOnOrder && !filter.onlyEnded) {
                 for(CartItem item : itemsToadd) {
                     Calendar cal = Calendar.getInstance();
@@ -151,7 +155,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             System.out.println("Product not set for this booking item type");
             return null;
         }
-        int numberOfDays = getNumberOfDays(room, startDate, endDate);
+        int numberOfDays = getNumberOfDays(startDate, endDate);
         if (numberOfDays == 0) {
             return null;
         }
@@ -180,14 +184,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         item.getProduct().metaData = guestName;
         if(!avoidOrderCreation) {
             room.invoicedTo = endDate;
+            room.invoicedFrom = room.date.start;
         }
-
         
         return item;
     }
 
     
-    private int getNumberOfDays(PmsBookingRooms room, Date startDate, Date endDate) {
+    private int getNumberOfDays(Date startDate, Date endDate) {
         if(startDate.after(endDate)) {
             Date tmpStart = startDate;
             startDate = endDate;
@@ -201,25 +205,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         
         Calendar endDateCal = Calendar.getInstance();
         endDateCal.setTime(endDate);
-        endDateCal.set(Calendar.HOUR_OF_DAY, 11);
+        endDateCal.set(Calendar.HOUR_OF_DAY, 12);
         endDate = endDateCal.getTime();
-        
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(room.date.start);
-        cal.set(Calendar.HOUR_OF_DAY, 11);
-        
-        Calendar endCal = Calendar.getInstance();
-        endCal.setTime(room.date.end);
-        endCal.set(Calendar.HOUR_OF_DAY, 12);
         
         int days = 0;
         while (true) {
-            if (cal.getTime().after(startDate) && (cal.getTime().before(endDate) || cal.getTime().equals(endDate))) {
-                days++;
-            }
+            days++;
 
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            if (cal.getTime().after(endCal.getTime())) {
+            startDateCal.add(Calendar.DAY_OF_YEAR, 1);
+            if (startDateCal.getTime().after(endDate)) {
                 break;
             }
         }
@@ -280,27 +274,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         return order;
     }
 
-
-    private Double getPriceInPeriode(PmsBooking booking, PmsBookingRooms room, Date startDate, Date endDate) {
-        Double price = null;
-        if (booking.priceType.equals(PmsBooking.PriceType.monthly)) {
-            price = room.price;
-        } else if (booking.priceType.equals(PmsBooking.PriceType.progressive)) {
-            int days = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(startDate)).getDays();
-            price = calculateProgressivePrice(room.bookingItemTypeId, startDate, endDate, days, true, booking.priceType);
-        } else if (booking.priceType.equals(PmsBooking.PriceType.daily)
-                || booking.priceType.equals(PmsBooking.PriceType.interval)
-                || booking.priceType.equals(PmsBooking.PriceType.progressive)) {
-            price = room.price;
-        } else if (booking.priceType.equals(PmsBooking.PriceType.weekly)) {
-            price = (room.price / 7);
-        }
-        
-        price = cartManager.calculatePriceForCoupon(booking.couponCode, price);
-        return price;
-    }
-
-    
     private Double calculateProgressivePrice(String typeId, Date start, Date end, int offset, boolean avgPrice, Integer priceType) {
         ArrayList<ProgressivePriceAttribute> priceRange = pmsManager.getPriceObject().progressivePrices.get(typeId);
         if (priceRange == null) {
@@ -478,37 +451,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
 
     }
 
-    private void checkForChangesInOrders(PmsBooking booking) {
-        if(!pmsManager.getConfigurationSecure().autoGenerateChangeOrders) {
-            return;
-        }
-        runningDiffRoutine = true;
-        HashMap<String, List<CartItem>> itemsForAllRooms = getAllRoomsFromExistingOrder(booking.orderIds);
-        
-        for(PmsBookingRooms room : booking.getActiveRooms()) {
-            if(room.invoicedTo == null) {
-                continue;
-            }
-            String roomId = room.pmsBookingRoomId;
-            List<CartItem> newItems = createCartItemAndSetPrice(room.date.start, room.invoicedTo, booking, booking.getRoom(roomId));
-            List<CartItem> toAdd = new ArrayList();
-            if(itemsForAllRooms.containsKey(roomId)) {
-                toAdd = itemsForAllRooms.get(roomId);
-            }
-            toAdd.addAll(newItems);
-            itemsForAllRooms.put(roomId, toAdd);
-        }
-        
-        List<CartItem> diffs = new ArrayList();
-        for(String roomId : itemsForAllRooms.keySet()) {
-            List<CartItem> toCheckWith = itemsForAllRooms.get(roomId);
-            diffs.addAll(diffItems(toCheckWith, booking.orderIds, roomId));
-        }
-        itemsToReturn.addAll(diffs);
-        runningDiffRoutine = false;
-    }
-
-    private List<CartItem> createCartItemAndSetPrice(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room) {
+    private List<CartItem> createCartItemsForRoom(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room) {
         List<CartItem> items = new ArrayList();
         int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
         if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
@@ -518,24 +461,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
                 daysInPeriode = 1;
             }
         }
-        Double price = room.price;
-        
-        boolean includeTaxes = true;
-        if(pmsManager.getPriceObject().privatePeopleDoNotPayTaxes) {
-            User user = userManager.getUserById(booking.userId);
-            if(user.company.isEmpty()) {
-                includeTaxes = false;
-            } else {
-                Company company = userManager.getCompany(user.company.get(0));
-                includeTaxes = company.vatRegisterd;
-            }
-        }
-
-        if (pmsManager.getPriceObject().pricesExTaxes && includeTaxes) {
-            double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
-            //Order price needs to be inc taxes.. 
-            price *= tax;
-        }
+        Double price = getOrderPriceForRoom(room, startDate, endDate);
 
         BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
         if(type != null) {
@@ -551,139 +477,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         items.addAll(addonItems);
         
         return items;
-    }
-
-    private List<CartItem> diffItems(List<CartItem> allNewItemsOnOrder, List<String> orderIds, String roomId) {
-        HashMap<String, Double> oldProductTotal = new HashMap();
-        HashMap<String, Double> oldProductTotalCount = new HashMap();
-        
-        HashMap<String, Double> newProductTotal = new HashMap();
-        HashMap<String, Double> newProductTotalCount = new HashMap();
-        
-        Date itemFirstStartDate = null;
-        Date itemFirstEndDate = null;
-        
-        for(String orderId : orderIds) {
-            Order order = orderManager.getOrder(orderId);
-            if(beforeDiffPossible(order)) {
-                return new ArrayList();
-            }
-            for(CartItem item : getFlatCartItems(order)) {
-                if(itemFirstStartDate == null || (item.startDate != null && item.startDate.before(itemFirstStartDate))) {
-                    itemFirstStartDate = item.startDate;
-                }
-                if(itemFirstEndDate == null || (item.startDate != null && item.endDate.after(itemFirstEndDate))) {
-                    itemFirstEndDate = item.endDate;
-                }
-                if(item.getProduct() != null && 
-                        item.getProduct().externalReferenceId != null &&
-                        item.getProduct().externalReferenceId.equals(roomId)) {
-                    addToMap(item, oldProductTotal, false);
-                    addToMap(item, oldProductTotalCount, true);
-                }
-            }
-        }
-        
-        for(CartItem item : allNewItemsOnOrder) {
-            if(item.getProduct() != null && 
-                    item.getProduct().externalReferenceId != null &&
-                    item.getProduct().externalReferenceId.equals(roomId)) {
-                addToMap(item, newProductTotalCount, true);
-                addToMap(item, newProductTotal, false);
-            }
-        }
-        
-        for(String productId : oldProductTotal.keySet()) {
-            if(!newProductTotal.containsKey(productId)) {
-                newProductTotal.put(productId, 0.0);
-                newProductTotalCount.put(productId, oldProductTotalCount.get(productId) * -1);
-            }
-        }
-        
-        List<CartItem> result = new ArrayList();
-        for(String productId : newProductTotal.keySet()) {
-            double diffInPrice = newProductTotal.get(productId);
-            PmsBookingAddonItem addonConfig = getAddonConfig(productId);
-            int newcount = newProductTotalCount.get(productId).intValue();
-            if(addonConfig != null) {
-                newcount -= oldProductTotalCount.get(productId);
-                if(newcount == 0) {
-                    newcount = 1;
-                }
-            }
-            
-            if(oldProductTotal.containsKey(productId)) {
-                diffInPrice = newProductTotal.get(productId) - oldProductTotal.get(productId);
-            }
-            
-            long res = Math.round(diffInPrice / newcount);
-            if(res != 0) {
-                PmsBooking boking = pmsManager.getBookingFromRoomIgnoreDeleted(roomId);
-                if(boking == null) {
-                    continue;
-                }
-                PmsBookingRooms room = new PmsBookingRooms();
-                room = boking.getRoom(roomId);
-                
-                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                CartItem itemToAdd = null;
-                if(res < 0) {
-                    newcount *= -1;
-                    res *= -1;
-                }
-
-                String name = null;
-                if(type != null) {
-                    name = type.name;
-                }
-                Date start = room.date.start;
-                Date end = room.invoicedTo;
-                if(addonConfig != null) {
-                    name = productManager.getProduct(productId).name;
-                }
-
-                itemToAdd = createCartItem(productId, name, room, start, end, res, newcount);
-                if(itemToAdd != null) {
-                    result.add(itemToAdd);
-                }
-            }
-        }
-        return result;
-    }
-
-    private void addToMap(CartItem item, HashMap<String, Double> map, boolean count) {
-        Product product = item.getProduct();
-        Double total = 0.0;
-        if(map.containsKey(product.id)) {
-            total = map.get(product.id);
-        }
-        
-        if(count) {
-            total += item.getCount();
-        } else {
-            total += (product.price * item.getCount());
-        }
-        
-        map.put(product.id, total);
-    }
-
-    private List<CartItem> getFlatCartItems(Order order) {
-        List<CartItem> items = new ArrayList();
-        items.addAll(order.cart.getItems());
-        for(String tmpid : order.creditOrderId) {
-            Order creditedorder = orderManager.getOrder(tmpid);
-            items.addAll(creditedorder.cart.getItems());
-        }
-        return items;
-    }
-
-    private boolean beforeDiffPossible(Order order) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(order.rowCreatedDate);
-        if(cal.get(Calendar.MONTH) >= 2 && cal.get(Calendar.YEAR) >= 2016) {
-            return false;
-        }
-        return true;
     }
 
     private List<CartItem> createCartItemsFromAddon(PmsBookingRooms room, Date startDate, Date endDate) {
@@ -770,6 +563,64 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
             }
         }
         return res;
+    }
+
+    private void creditRoomForPeriode(Date start, Date end, PmsBooking booking, PmsBookingRooms room) {
+        List<CartItem> items = createCartItemsForRoom(start, end, booking, room);
+        for(CartItem item : items) {
+            item.setCount(item.getCount() * -1);
+        }
+    }
+
+    private void checkIfNeedCrediting(PmsBookingRooms room) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
+        if(room.invoicedFrom != null && !room.isSameDay(room.invoicedFrom, room.date.start)) {
+            creditRoomForPeriode(room.invoicedFrom, room.date.start, booking, room);
+            if(!avoidOrderCreation) {
+                room.invoicedFrom = room.date.start;
+                saveObject(booking);
+            }
+        }
+        if(room.invoicedTo != null && room.invoicedTo.after(room.date.end) && !room.isSameDay(room.invoicedTo, room.date.end)) {
+            creditRoomForPeriode(room.date.end, room.invoicedTo, booking, room);
+            if(!avoidOrderCreation) {
+                room.invoicedTo = room.date.end;
+                saveObject(booking);
+            }
+        }
+    }
+
+    private Double getOrderPriceForRoom(PmsBookingRooms room, Date startDate, Date endDate) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
+        boolean includeTaxes = true;
+        Double price = room.price;
+        if(pmsManager.getPriceObject().privatePeopleDoNotPayTaxes) {
+            User user = userManager.getUserById(booking.userId);
+            if(user.company.isEmpty()) {
+                includeTaxes = false;
+            } else {
+                Company company = userManager.getCompany(user.company.get(0));
+                includeTaxes = company.vatRegisterd;
+            }
+        }
+
+        if (pmsManager.getPriceObject().pricesExTaxes && includeTaxes) {
+            double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
+            //Order price needs to be inc taxes.. 
+            price *= tax;
+        }
+        
+        return price;
+    }
+
+    private Order getUnpaidOrder(PmsBooking booking) {
+        for(String key : booking.orderIds) {
+            Order ord = orderManager.getOrder(key);
+            if(ord.status != Order.Status.PAYMENT_COMPLETED && !ord.transferredToAccountingSystem) {
+                return ord;
+            }
+        }
+        return null;
     }
 
 }

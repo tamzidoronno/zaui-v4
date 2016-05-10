@@ -741,9 +741,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.end = end;
             room.date.exitCleaningDate = null;
             room.date.cleaningDate = null;
-            if(room.invoicedTo != null && room.invoicedTo.after(end) && !room.isSameDay(room.invoicedTo, end)) {
-                room.invoicedTo = end;
-            }
             updateAddonsByDates(room);
             if(configuration.updatePriceWhenChangingDates) {
                 room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, start, end, true, "", booking.priceType);
@@ -2227,6 +2224,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             public int compare(PmsBookingRooms o1, PmsBookingRooms o2) {
                 if (o1.item == null || o2.item == null) {
                     System.out.println("This is null");
+                    return 0;
                 }
                 return o1.item.bookingItemName.compareTo(o2.item.bookingItemName);
             }

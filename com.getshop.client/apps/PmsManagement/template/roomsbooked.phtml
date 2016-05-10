@@ -311,6 +311,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                 <td class="changeInvoiceTo">
                     <? 
                     if($room->invoicedTo) {
+                        echo date("d.m.Y" , strtotime($room->invoicedFrom)) . "<br>"; 
                         echo date("d.m.Y" , strtotime($room->invoicedTo)); 
                     } else {
                         echo " - ";

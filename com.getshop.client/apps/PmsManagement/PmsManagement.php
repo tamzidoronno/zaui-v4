@@ -251,8 +251,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function addRoomToBooking() {
-        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $_POST['data']['starttime']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $_POST['data']['endtime']));
         $bookingId = $_POST['data']['bookingid'];
         $type = $_POST['data']['item'];
         

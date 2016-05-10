@@ -166,6 +166,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         }
         if (bookingitem != null) {
             item.getProduct().additionalMetaData = bookingitem.bookingItemName;
+        } else {
+            item.getProduct().additionalMetaData = "";
         }
         
         String guestName = "";
@@ -176,8 +178,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
         item.getProduct().discountedPrice = price;
         item.getProduct().price = price;
         item.getProduct().metaData = guestName;
-        item.getProduct().externalReferenceId = room.pmsBookingRoomId;
-        item.setCount(count);
         if(!avoidOrderCreation) {
             room.invoicedTo = endDate;
         }
@@ -706,7 +706,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed {
     private CartItem createCartItemForCart(String productId, int count, String roomId) {
         System.out.println(roomId);
         CartItem item = new CartItem();
-        item.setProduct(productManager.getProduct(productId));
+        Product product = productManager.getProduct(productId);
+        item.setProduct(product.clone());
         item.setCount(count);
         item.getProduct().externalReferenceId = roomId;
         

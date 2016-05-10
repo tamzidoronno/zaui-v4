@@ -1600,8 +1600,18 @@ class Page {
             $selectedPosition = $_SESSION['gscontainerposition'][$parent->cellId];
         }
         $found = false;
+        $firstId = "";
+        foreach($parent->cells as $tmpcell) {
+            if($tmpcell->hideOnDesktop && !$this->factory->isMobile()) {
+                continue;
+            }
+            if($tmpcell->hideOnMobile && $this->factory->isMobile()) {
+                continue;
+            }
+            $firstId = $tmpcell->cellId;
+            break;
+        }
         
-        $firstId = $parent->cells[0]->cellId;
         if(($this->factory->isMobileIgnoreDisabled() || $this->editCarouselForMobile())) {
             foreach($parent->cells as $tmpcell) {
                 if(($this->factory->isMobileIgnoreDisabled() || $this->editCarouselForMobile()) && !$tmpcell->hideOnMobile) {

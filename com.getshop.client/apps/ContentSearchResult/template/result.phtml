@@ -1,0 +1,31 @@
+<?
+/* @var $this \ns_da5ba9de_c58d_4f52_8c4b_cbf2fb00191b\ContentSearchResult */
+$searchWord = isset($_POST['data']['searchWord']) ? $_POST['data']['searchWord'] : "";
+$searchWord = isset($_GET['searchWord']) ? $_GET['searchWord'] : $searchWord;
+
+if (!$searchWord) {
+    echo "<div class'no_result'>";
+    echo $this->__f("Did not find anything, please try something else");
+    echo "</div>";
+    return;
+}
+
+$res = (array)$this->getApi()->getSearchManager()->search($searchWord);
+
+if (!count($res) || !$res) {
+    echo "<div class'no_result'>";
+    echo $this->__f("Did not find anything, please try something else");
+    echo "</div>";
+    return;
+}
+
+
+foreach ($res as $content => $pageId) {
+    echo "<a href='/?page=$pageId'>";
+    echo "<div class='resultrow'>";
+    echo "$content";
+    echo "<div class='readmore'>".$this->__w("Read more")."</div>";
+    echo "</div>";
+    echo "</a>";
+}
+?>

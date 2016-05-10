@@ -2,8 +2,13 @@
 .Menu a { font-size: 16px; font-weight: bold; color:#18bbb1; padding-right: 30px; display:inline-block; }
 .Menu .lastentry a { padding-right: 0px; }
 .Menu .entries .entries a { width: 200px; }
-body {    background-color: #FFF; padding-top: 10px; font-family: arial; font-size: 18px; }
-.gsarea[area="header"] .gs_page_width { height: 200px;  border-bottom: solid 2px #FFA500; margin-bottom: 20px; }
+body {    
+    background-color: #FFF; padding-top: 10px; font-size: 18px; 
+
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
+}
+.gsarea[area="header"] .gs_page_width { height: 220px;  border-bottom: solid 2px #FFA500; margin-bottom: 20px; }
 .gsarea[area="footer"] .gs_page_width { background-color:#000;
                                         padding-top: 20px;
                                         padding-bottom: 20px;
@@ -30,12 +35,21 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     font-weight: bold;
 }
 
+
+.gs_language_code { background-repeat: no-repeat; font-size: 0px; height: 37px; width: 37px; padding:0px !important; margin-right: 10px; }
+.gs_lang_code_nb_NO { background-image: url('https://skytec.getshop.com/displayImage.php?id=eeeff579-0b75-483a-9574-725a0c29fead'); background-size: 37px 37px; }
+.gs_lang_code_en_en { background-image: url('https://skytec.getshop.com/displayImage.php?id=a1626d35-83cc-49c7-9c35-60a0f9784b05'); background-size: 35px 35px; }
+
 .shop_button { border: solid 1px #DDD; padding: 10px; line-height: 20px; height: 20px; padding-left: 20px; padding-right: 20px;}
 
 .Menu .entries {
     background-color: #FFF;
+    padding-top: 10px;
 }
 
+.Menu .entries .entries {
+    padding-top: 0px;
+}
 .Menu .entries .entries .entry {
     padding: 5px;
     border-bottom: solid 1px rgba(0,0,0,0.1) !important;
@@ -77,3 +91,7 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 
 .News .content { color: #696969 !important; }
 .News .news_dates { font-size: 12px !important; }
+
+.Menu .entry.active a {
+    color: #333;
+}

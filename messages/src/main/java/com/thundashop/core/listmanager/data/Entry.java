@@ -34,6 +34,7 @@ public class Entry extends TranslationHandler implements Serializable {
     public String fontAwsomeIcon;
     public int counter = -1;
     public boolean hidden = false;
+    public boolean openInSeperatedTab = false;
     
     //Appended when fetching the list.
     public List<Entry> subentries;

@@ -1601,7 +1601,19 @@ class Page {
         }
         $found = false;
         
-        $firstId = $parent->cells[0]->cellId;
+        $firstId = "";
+        foreach($parent->cells as $tmpcell) {
+            if($tmpcell->hideOnDesktop && !$this->factory->isMobile()) {
+                continue;
+            }
+            if($tmpcell->hideOnMobile && $this->factory->isMobile()) {
+                continue;
+            }
+            $firstId = $tmpcell->cellId;
+            break;
+        }
+
+
         if(($this->factory->isMobileIgnoreDisabled() || $this->editCarouselForMobile())) {
             foreach($parent->cells as $tmpcell) {
                 if(($this->factory->isMobileIgnoreDisabled() || $this->editCarouselForMobile()) && !$tmpcell->hideOnMobile) {

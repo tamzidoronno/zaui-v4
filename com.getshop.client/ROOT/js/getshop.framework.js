@@ -1280,6 +1280,22 @@ thundashop.framework = {
             }
         });
         
+        var groupAccess = {};
+        var groupAccesPage = $('.gspage[target="groupaccess"]');
+        groupAccesPage.find("[gsname]").each(function() {
+            var name = $(this).attr('gsname');
+            if($(this).is(':checkbox')) {
+               if($(this).is(':checked')) {
+                   groupAccess[name] = true;
+               } else {
+                   groupAccess[name] = false;
+               }
+            } else {
+                 groupAccess[name] = $(this).val();
+            }
+        });
+        
+        
         var attr = $('.gsheightsetting').val();
         var type = $('.gsheightsettingprefix').val();
         var height = attr + type;
@@ -1292,8 +1308,9 @@ thundashop.framework = {
             "colsizes": colsizes,
             "height" : height,
             "settings" : settings,
+            "groupAccess" : groupAccess,
             "selectedThemeClass" : $('#gs_select_cell_theme_class').val(),
-            "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked'),    
+            "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked'),
         };
         
         var event = thundashop.Ajax.createEvent('', 'saveColChanges', $(this), data);
@@ -1419,6 +1436,21 @@ thundashop.framework = {
                }
             } else {
                 $(this).val(settings[name]);
+            }
+        });
+        
+        var groupAccess = JSON.parse(cell.attr('data-groupaccess'));
+        var groupAccessPage = $('.gspage[target="groupaccess"]');
+        groupAccessPage.find("[gsname]").each(function() {
+            var name = $(this).attr('gsname');
+            if($(this).is(':checkbox')) {
+               if(groupAccess[name]) {
+                   $(this).attr('checked','cheked');
+               } else {
+                   $(this).attr('checked',null);
+               }
+            } else {
+                $(this).val(groupAccess[name]);
             }
         });
         

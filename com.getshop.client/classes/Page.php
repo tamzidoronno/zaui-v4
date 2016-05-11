@@ -603,7 +603,7 @@ class Page {
         $permobject->{'link'} = $cell->link;
         $permobject->{'hideOnMobile'} = $cell->hideOnMobile;
         $permobject->{'hideOnDesktop'} = $cell->hideOnDesktop;
-        $permissions = "data-settings='".json_encode($cell->settings) . "'";
+        $permissions = "data-settings='".json_encode($cell->settings) . "' data-groupaccess='".  json_encode($cell->groupAccess->access)."'";
       
         $anchor = $cell->anchor;
         
@@ -744,6 +744,17 @@ class Page {
                 <span class='tabbtn' target='background'><? echo $this->factory->__w("Styling"); ?></span>
                 <span class='tabbtn' target='cellsettings'><? echo $this->factory->__w("Settings"); ?></span>
                 <span class='tabbtn' target='effects'><? echo $this->factory->__w("Effects"); ?></span>
+                <?
+                if (count($this->factory->getApi()->getUserManager()->getAllGroups())) {
+                ?>
+                    <span class='tabbtn' target='groupaccess'><? echo $this->factory->__w("Group Access"); ?></span>
+                <?
+                }
+                ?>
+                
+            </div>
+            <div class='gspage' target='groupaccess' style='padding: 10px;'>
+                <? include("layoutbuilder/groupaccess.php"); ?>
             </div>
             <div class='gspage' target='effects' style='padding: 10px;'>
                 <? include("layoutbuilder/effects.php"); ?>
@@ -1801,6 +1812,10 @@ class Page {
             return true;
         }
         
+        if ($this->restricedAccessDueToGroup($cell, $user)) {
+            return false;
+        }
+        
         if($user && !$cell->settings->displayWhenLoggedOn) {
             return false;
         }
@@ -1815,6 +1830,7 @@ class Page {
         if($user && $user->type >= $cell->settings->editorLevel) {
             return true;
         }
+        
         return false;
     }
 
@@ -2064,6 +2080,38 @@ class Page {
         $masterPage = $this->javapage->masterPageId;
         if ($this->factory->isEditorMode() && $masterPage) {
             echo "<div class='slavePageModificationIndicator'><i class='fa fa-warning'></i><a href='?page=$masterPage'> This page is a slave page, modification is made on master page </a></div>";
+        }
+    }
+
+    /**
+     * 
+     * @param core_pagemanager_data_PageCell $cell
+     * @param core_usermanager_data_User $user
+     */
+    private function restricedAccessDueToGroup($cell, $user) {
+        if ($cell->groupAccess == null || !count($cell->groupAccess->access)) {
+            return false;
+        }
+        
+        $allOff = true;
+        foreach ($cell->groupAccess->access as $groupId => $access) {
+            if ($access && ($user->group == $groupId || (is_array($user->groups) && in_array($groupId, $user->groups)))) {
+                return false;
+            }
+            
+            if ($access && $user->companyObject  && $user->companyObject->groupId == $groupId) {
+                return false;
+            }
+            
+            if ($access) {
+                $allOff = false;
+            }
+        }
+        
+        if ($allOff) {
+            return false;
+        } else {
+            return true;
         }
     }
 

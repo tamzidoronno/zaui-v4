@@ -2,11 +2,11 @@ package com.thundashop.core.pagemanager;
 
 import com.thundashop.core.common.*;
 import com.thundashop.core.pagemanager.data.CarouselConfig;
+import com.thundashop.core.pagemanager.data.CellGroupAccess;
 import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
 import com.thundashop.core.pagemanager.data.PageCellSettings;
-import com.thundashop.core.pagemanager.data.PageLayout;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,6 +54,16 @@ public interface IPageManager {
      */
     @Administrator
     public void savePageCellSettings(String pageId, String cellId, PageCellSettings settings);
+    
+    /**
+     * Set Group access to cell.
+     * 
+     * @param pageId
+     * @param cellId
+     * @param settings 
+     */
+    @Administrator
+    public void savePageCellGroupAccess(String pageId, String cellId, CellGroupAccess groupAccess);
     
     /**
      * Add application

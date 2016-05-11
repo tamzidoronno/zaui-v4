@@ -159,5 +159,13 @@ class ProMeisterCreateAccount extends \MarketingApplication implements \Applicat
         return $retgroups;
     }
 
+    public function getPhoneNumberText() {
+        if ($this->getApi()->getStoreManager()->getMyStore()->configuration->defaultPrefix == 46) {
+            return ", ".$this->__w("10 digits required");
+        }
+        
+        return "";
+    }
+
 }
 ?>

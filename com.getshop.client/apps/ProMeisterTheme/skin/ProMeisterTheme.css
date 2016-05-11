@@ -2,6 +2,7 @@ body {
     font-size: 16px;
     font-family: 'Open Sans', sans-serif;
     color: #222;
+    min-width: 1300px;
 }
 .gs_page_width {
     width: 1160px;

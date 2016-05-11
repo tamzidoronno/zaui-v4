@@ -16,10 +16,7 @@ class Page {
     function __construct($javapage, $factory) {
         $this->javapage = $javapage;
         $this->factory = $factory;
-        $themeApp = $factory->getApi()->getStoreApplicationPool()->getThemeApplication();
-        if ($themeApp) {
-            $this->themeApp = $this->factory->getApplicationPool()->createInstace($themeApp);
-        }
+        $this->themeApp = $factory->getThemeApplication();
     }
 
     function getId() {

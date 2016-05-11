@@ -59,6 +59,9 @@ class Factory extends FactoryBase {
     }
 
     public function isMobileIgnoreDisabled() {
+        if ($this->isMobileAndResponsiveDesignDisabled())
+            return false;
+        
         if(stristr($_SERVER['HTTP_HOST'], "gsmobile")) {
             return true;
         }
@@ -73,7 +76,20 @@ class Factory extends FactoryBase {
         return false;
     }
     
+    public function getThemeApplication() {
+        $themeApp = $this->getApi()->getStoreApplicationPool()->getThemeApplication();
+        if ($themeApp) {
+            $this->themeApp = $this->getApplicationPool()->createInstace($themeApp);
+        }
+        
+        return $this->themeApp;
+    }
+    
     public function isMobile() {
+        if ($this->isMobileAndResponsiveDesignDisabled()) {
+            return false;
+        }
+        
         if ($this->getStoreConfiguration()->disableMobileMode) {
             return false;
         }
@@ -1001,6 +1017,16 @@ class Factory extends FactoryBase {
         
         $settingsApp = $this->getSettings()->getConfigurationSetting("disableEditorBackendAccess");
         return $settingsApp === "true";
+    }
+
+    public function isMobileAndResponsiveDesignDisabled() {
+        $themeApp = $this->getThemeApplication();
+        
+        if ($themeApp && method_exists($themeApp, "isMobileAndResponsiveDesignDisabled") && $themeApp->isMobileAndResponsiveDesignDisabled()) {
+            return true;
+        }
+    
+        return false;
     }
 
 }

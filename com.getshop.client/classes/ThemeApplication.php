@@ -155,6 +155,10 @@ class ThemeApplication extends PredefinedPagesConfig {
     public function isBodyFooterEnabled() {
         return false;
     }
+    
+    public function isMobileAndResponsiveDesignDisabled() {
+        return false;
+    }
 }
 
 ?>

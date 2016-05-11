@@ -30,6 +30,8 @@ $subLocations = $location->locations;
             <br/><br/><label>Cellphone</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>cellphone" value="<? echo $loc->cellPhone;?>"></input>
             <br/><br/><label>Lat</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lat" value="<? echo $loc->lat;?>"></input>
             <br/><br/><label>Lon</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lon" value="<? echo $loc->lon;?>"></input>    
+            <br/><br/>
+            <textarea class='extradescription' placeholder='Extra description' gsname="<? echo $loc->id."_"; ?>extradescription"><? echo $loc->extraDescription; ?></textarea>
         </div>
         <?
         }

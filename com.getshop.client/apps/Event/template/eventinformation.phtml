@@ -28,6 +28,12 @@ $event = $this->getEvent();
     echo "<div>";
         echo $event->location->name." - ".$event->subLocation->name."<br/>";
         echo $event->subLocation->description;
+        
+        if ($event->subLocation->extraDescription) {
+            echo "<div class='locationExtraDescription'>";
+            echo nl2br($event->subLocation->extraDescription);
+            echo "</div>";
+        }
     echo "</div>";
     ?>
 </div>

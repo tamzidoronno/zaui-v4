@@ -56,6 +56,7 @@ class EditLocation extends \ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\EngineCommon
             $subLocation->lat = $_POST['data'][$id."_lat"];
             $subLocation->lon = $_POST['data'][$id."_lon"];
             $subLocation->cellPhone = $_POST['data'][$id."_cellphone"];
+            $subLocation->extraDescription = $_POST['data'][$id."_extradescription"];
         }
 
         $this->getApi()->getEventBookingManager()->saveLocation($this->getBookingEgineName(), $location);

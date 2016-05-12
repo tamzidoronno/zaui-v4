@@ -4,11 +4,13 @@
 $car = $this->getApi()->getMecaManager()->getCar($this->getModalVariable("carid"));
 
 $this->wrapContentManager("serviceTest_".$this->getModalVariable("type"), "Change me");
+
+$date = date("d.m.Y 08:00");
 ?>
 
 <div>
     Dato:
-    <br/><input class="gsniceinput1" id="timepicker"/>
+    <br/><input class="gsniceinput1" id="timepicker" value="<? echo $date; ?>"/>
     <br/>
     <br/><div class="shop_button sendquestion" carid="<? echo $car->id; ?>"  type="<? echo $this->getModalVariable("type"); ?>">Send forespørsel</div>
 </div>

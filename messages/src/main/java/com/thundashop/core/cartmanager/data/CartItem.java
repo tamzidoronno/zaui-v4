@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.cartmanager.data;
 
+import com.google.gson.Gson;
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -102,5 +103,13 @@ public class CartItem implements Serializable {
             return newEndDate;
         }
         return endDate;
+    }
+
+    public CartItem copy() {
+        Gson gson = new Gson();
+        String res = gson.toJson(this);
+        CartItem newItem = gson.fromJson(res, CartItem.class);
+        newItem.cartItemId = UUID.randomUUID().toString();
+        return newItem;
     }
 }

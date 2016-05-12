@@ -35,6 +35,8 @@ public class MecaCar extends DataCommon {
     
     public Date nextServiceAgreed = null;
     
+    public Date newSuggestedDate = null;
+    
     public Boolean nextServiceAcceptedByCarOwner = null;
     
     @Transient

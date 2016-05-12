@@ -51,7 +51,13 @@ foreach ($carList as $car) {
                     <?
                     $text = isset($car->controlDateRejected) && $car->controlDateRejected ? "<span style='color: red'>Tidspunktet passet ikke for bileier, foreslå et annet tidspunkt</span>" : "Venter på bekreftelse fra bileier";
                     ?>
-                    <? echo $text; ?>. Foreslått dato: <? echo date('d/m-Y H:i', strtotime($car->nextControlAgreed)); ?> 
+                    <? echo $text; ?>.<br/> Foreslått dato: <? echo date('d/m-Y H:i', strtotime($car->nextControlAgreed)); ?> 
+                    
+                    <?
+                    if (isset($car->newSuggestedDate) && $car->newSuggestedDate) {
+                        echo "<br/> Bileier ønsker dato: ".date('d/m-Y H:i', strtotime($car->newSuggestedDate));
+                    }
+                    ?>
                     <br/><span style='margin-top: 5px;' class="shop_button" gs_show_modal='agreeForService' carid='<? echo $car->id; ?>' type='control'>Ender dato</span>
                 </div>
             <?

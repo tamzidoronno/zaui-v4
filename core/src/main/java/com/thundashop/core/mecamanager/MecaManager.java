@@ -413,6 +413,8 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         if (car != null) {
             car.nextServiceAgreed = date;
             car.nextServiceAcceptedByCarOwner = null;
+            car.newSuggestedDate = null;
+
             saveObject(car);
             
             notifyByPush(car.cellPhone, "Din bil skal inn på service.");
@@ -453,6 +455,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         MecaCar car = getCar(carId);
         if (car != null) {
             car.nextControlAcceptedByCarOwner = answer;
+            car.newSuggestedDate = null;
             
             String subject = "Statusoppdatering..";
             String content = "Bil med registreringsnr " + car.licensePlate + " kunne ";
@@ -492,6 +495,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         if (car != null) {
             car.nextControlAgreed = date;
             car.nextControlAcceptedByCarOwner = null;
+            car.newSuggestedDate = null;
             saveObject(car);
             
             notifyByPush(car.cellPhone, "Din bil skal inn på EU Kontroll.");
@@ -533,7 +537,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         if (mecaFleetService != null) {
             for (MecaCar car : getCarsServiceList()) {
                 finalize(car);
-                if (car.needAttentionToService) {
+                if (car.needAttentionToService || car.serviceDateRejected) {
                     i++;
                 }
             }
@@ -549,5 +553,18 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         }
         
         return i;
+    }
+
+    @Override
+    public MecaCar suggestDate(String carId, Date date) {
+        MecaCar car = getCar(carId);
+        
+        if (car != null) {
+            car.newSuggestedDate = date;
+            saveObject(car);
+        }
+        
+        finalize(car);
+        return car;
     }
 }

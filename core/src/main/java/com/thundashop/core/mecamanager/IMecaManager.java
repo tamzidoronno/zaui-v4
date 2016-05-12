@@ -84,4 +84,6 @@ public interface IMecaManager {
     
     @Editor
     public void sendKilometerRequest(String carId);
+    
+    public MecaCar suggestDate(String carId, Date date);
 }

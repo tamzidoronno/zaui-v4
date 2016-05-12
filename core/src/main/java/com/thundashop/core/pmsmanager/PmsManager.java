@@ -164,11 +164,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (!type.visibleForBooking) {
                 continue;
             }
-            Room room = new Room();
-            room.type = type;
+            
+            Room roomToAdd = new Room();
+            roomToAdd.type = type;
+            
+            PmsBookingRooms room = new PmsBookingRooms();
+            room.bookingItemTypeId = type.id;
+            room.date = new PmsBookingDateRange();
+            room.date.start = start;
+            room.date.end = end;
+            
             String couponcode = getCouponCode("");
-            room.price = pmsInvoiceManager.calculatePrice(type.id, start, end, true, couponcode, PmsBooking.PriceType.daily);
-            result.add(room);
+            setPriceOnRoom(room, couponcode, true, PmsBooking.PriceType.daily);
+            
+            roomToAdd.price = room.price;
+            result.add(roomToAdd);
         }
 
         return result;
@@ -201,9 +211,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             room.count = totalDays;
             String couponCode = getCouponCode(booking.couponCode);
+            setPriceOnRoom(room, couponCode, true, booking.priceType);
             
-            room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, true, couponCode, booking.priceType);
-            room.taxes = pmsInvoiceManager.calculateTaxes(room.bookingItemTypeId);
             for (PmsGuests guest : room.guests) {
                 if (guest.prefix != null) {
                     guest.prefix = guest.prefix.replace("+", "");
@@ -742,7 +751,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.exitCleaningDate = null;
             room.date.cleaningDate = null;
             if(configuration.updatePriceWhenChangingDates) {
-                room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, start, end, true, "", booking.priceType);
+                setPriceOnRoom(room, "", true, booking.priceType);
             }
             saveBooking(booking);
             
@@ -1909,7 +1918,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.start = start;
         room.date.end = end;
         room.guests.add(new PmsGuests());
-        room.price = pmsInvoiceManager.calculatePrice(type, start, end, true, "", booking.priceType);
+        setPriceOnRoom(room,  "", true, booking.priceType);
 
         String res = addBookingToBookingEngine(booking, room);
         if(!res.isEmpty()) {
@@ -2856,6 +2865,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    private void setPriceOnRoom(PmsBookingRooms room, String couponCode, boolean avgPrice, Integer priceType) {
+        room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, couponCode, priceType);
+        room.priceMatrix = pmsInvoiceManager.buildPriceMatrix(room, couponCode, priceType);
+        room.taxes = pmsInvoiceManager.calculateTaxes(room.bookingItemTypeId);
     }
 
 }

@@ -28,6 +28,7 @@ public class PmsBookingRooms implements Serializable {
     public Integer numberOfGuests = 0;
     public double count = 1;
     public Double price = 0.0;
+    public HashMap<String, Double> priceMatrix = new HashMap();
     public double taxes = 8;
     public String bookingId;
     public List<PmsBookingAddonItem> addons = new ArrayList();

@@ -213,6 +213,10 @@
     bottom: 0px;
 }
 
+.Menu .entry {
+    position: relative;
+}
+
 .Menu .menuentries.horizontal .entries .entries { display:none; position:absolute; z-index: 2; }
 .Menu .menuentries.horizontal .entries .entries .entry { display:block; }
 .Menu .button-large.cancel {
@@ -413,6 +417,22 @@
 }
 .Menu select:active {
     border: 1px solid #000;
+}
+
+.Menu .gs_menu_bages {
+    position: absolute;
+    /*border: solid 2px red !important;*/ 
+    font-size: 12px;
+    top: 0px;
+    right: 0px;
+    border-radius: 100px;
+    line-height: 12px;
+    padding: 4px;
+    
+    background: rgba(255,0,0,0.9);    
+    color: #FFF;
+    
+    box-shadow: 0px 0px 5px rgba(255, 0 , 0, 0.5);
 }
 
 .Menu .dots .dot:hover .indicator { display:block; }

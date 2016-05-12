@@ -6,10 +6,13 @@
 package com.thundashop.core.mecamanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.listmanager.ListBadgetAware;
+import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.mobilemanager.MobileManager;
 import com.thundashop.core.pagemanager.PageManager;
@@ -30,7 +33,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @GetShopSession
-public class MecaManager extends ManagerBase implements IMecaManager {
+public class MecaManager extends ManagerBase implements IMecaManager, ListBadgetAware {
 
     @Autowired
     public PageManager pageManager;
@@ -512,5 +515,39 @@ public class MecaManager extends ManagerBase implements IMecaManager {
             saveObject(car);
             notifyByPush(car.cellPhone, "Vi trenger din kilometerstand");
         }
+    }
+
+    @Override
+    public int getBadges(Entry entry) {
+        List<ApplicationInstance> apps = pageManager.getApplicationsForPage(entry.pageId);
+        ApplicationInstance mecaFleetService = apps.stream().filter(app -> app.appSettingsId.equals("e4a506de-4702-4d82-8224-f30e5fdb1d2e"))
+                .findAny()
+                .orElse(null);
+
+        ApplicationInstance mecaControl = apps.stream().filter(app -> app.appSettingsId.equals("b48c3e14-676d-4c9e-acfc-60591c711c57"))
+                .findAny()
+                .orElse(null);
+        
+        int i = 0;
+        
+        if (mecaFleetService != null) {
+            for (MecaCar car : getCarsServiceList()) {
+                finalize(car);
+                if (car.needAttentionToService) {
+                    i++;
+                }
+            }
+        }
+        
+        if (mecaControl != null) {
+            for (MecaCar car : getCarsServiceList()) {
+                finalize(car);
+                if (car.canAgreeControlDate && car.nextControlAgreed == null) {
+                    i++;
+                }
+            }
+        }
+        
+        return i;
     }
 }

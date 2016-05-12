@@ -264,7 +264,8 @@ class Menu extends \SystemApplication implements \Application {
                 }
                 
                 $openInTab = $entry->openInSeperatedTab  ? "class='gs_ignorenavigate' target='_blank'" : "";
-                echo "<div class='entry $activate $disabledClass $lastEntry'><a $openInTab ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
+                $badge = $entry->badges ? "<div class='gs_menu_bages'>$entry->badges</div>" : "";
+                echo "<div class='entry $activate $disabledClass $lastEntry'><a $openInTab ajaxlink='$link' href='$linkName'><div>$fontAwesome $name $badge</div></a>";
                 if ($entry->subentries) {
                     $this->printEntries($entry->subentries, $level+1, $prefix);
                 }

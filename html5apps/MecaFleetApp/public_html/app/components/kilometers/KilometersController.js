@@ -23,9 +23,13 @@ controllers.KilometersController = function($scope, $api) {
     
     $scope.sent = function() {
         alert("Takk, vi har nå registrert den nye kilometerstanden");
+        $scope.kilometers = "";
     }
     
     $scope.sendKilomters = function() {
+        if (!$scope.kilometers) {
+            alert("Du må oppgi kilometerstanden før du trykker send inn");
+        }
         $api.getApi().MecaManager.sendKilometers(localStorage.getItem("cellphone"), $scope.kilometers).done($scope.sent);
     }
     

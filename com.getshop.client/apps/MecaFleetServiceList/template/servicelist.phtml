@@ -63,6 +63,9 @@ foreach ($cars as $car) {
                 echo '<div class="details">';
                 echo "Bileier har bekreftet servicedato: ".date('d/m-Y H:i', strtotime($car->nextServiceAgreed));
                 echo "<br/><span class='shop_button' gsclick='serviceCompleted' carid='$car->id'> Service gjennomført</span>";
+                ?>
+                <span style='margin-top: 5px;' class="shop_button" gsclick='noShow' carid='<? echo $car->id; ?>' type='control'>No show</span>
+                <?
                 echo '</div>';
             }
             ?>

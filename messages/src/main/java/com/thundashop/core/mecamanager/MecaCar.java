@@ -211,4 +211,18 @@ public class MecaCar extends DataCommon {
         this.nextControlAgreed = null;
         this.nextControlAcceptedByCarOwner = null;
     }
+
+    void noShowService() {
+        this.agreeDate = false;
+        this.nextServiceAgreed = null;
+        this.nextServiceAcceptedByCarOwner = null;    
+        this.newSuggestedDate = null;
+    }
+    
+    void noShowControl() {
+        this.agreeDateControl = false;
+        this.nextControlAgreed = null;
+        this.nextControlAcceptedByCarOwner = null;        
+        this.newSuggestedDate = null;
+    }
 }

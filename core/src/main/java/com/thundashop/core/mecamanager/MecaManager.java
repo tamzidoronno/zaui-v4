@@ -567,4 +567,24 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         finalize(car);
         return car;
     }
+
+    @Override
+    public void noShowPkk(String carId) {
+        MecaCar car = getCar(carId);
+        
+        if (car != null) {
+            car.noShowControl();
+            saveObject(car);
+        }
+    }
+
+    @Override
+    public void noShowService(String carId) {
+        MecaCar car = getCar(carId);
+        
+        if (car != null) {
+            car.noShowService();
+            saveObject(car);
+        }
+    }
 }

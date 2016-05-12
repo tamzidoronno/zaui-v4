@@ -8,6 +8,7 @@
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.KilometersController = function($scope, $api) {
+    $scope.kilometers = "";
     
     $scope.cars = function($cars) {
         if ($cars.length > 0) {
@@ -25,7 +26,7 @@ controllers.KilometersController = function($scope, $api) {
     }
     
     $scope.sendKilomters = function() {
-        $api.getApi().MecaManager.sendKilometers(localStorage.getItem("cellphone"), $scope.car.kilometers).done($scope.sent);
+        $api.getApi().MecaManager.sendKilometers(localStorage.getItem("cellphone"), $scope.kilometers).done($scope.sent);
     }
     
     $scope.loadCarData();

@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date; 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
@@ -28,7 +29,7 @@ public class PmsBookingRooms implements Serializable {
     public Integer numberOfGuests = 0;
     public double count = 1;
     public Double price = 0.0;
-    public HashMap<String, Double> priceMatrix = new HashMap();
+    public LinkedHashMap<String, Double> priceMatrix = new LinkedHashMap();
     public double taxes = 8;
     public String bookingId;
     public List<PmsBookingAddonItem> addons = new ArrayList();

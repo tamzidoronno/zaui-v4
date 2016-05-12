@@ -68,8 +68,9 @@ class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
     public function groupByCompany($users) {
         $retValues = [];
         foreach ($users as $user) {
-            $companyId = $user->companyObject ? $user->companyObject->id : "";
-            $retValues[$companyId][] = $user;
+            foreach ($user->company as $company) {
+                $retValues[$company][] = $user;
+            }
         }
         
         return $retValues;

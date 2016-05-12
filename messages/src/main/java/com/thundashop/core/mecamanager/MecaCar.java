@@ -129,8 +129,10 @@ public class MecaCar extends DataCommon {
             needAttentionToService = true;
         }
         
-        if (kilometersToNextService < 3000) {
+        if (kilometersToNextService != null && kilometersToNextService < 3000) {
             needAttentionToService = true;
+        } else {
+            needAttentionToService = false;
         }
         
         if (nextServiceAgreed != null) {

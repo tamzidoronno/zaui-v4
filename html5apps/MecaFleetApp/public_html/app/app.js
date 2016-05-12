@@ -41,3 +41,10 @@ angular.module('MecaFleetApp')
         $location.path( "/home" );
     }
  })
+ 
+ 
+ function pushNotificationReceived() {
+    var $body = angular.element(document.body);   // 1
+    var $rootScope = $body.scope().$root;         // 2
+    $rootScope.$broadcast("pushNotificationReceived", "");
+}

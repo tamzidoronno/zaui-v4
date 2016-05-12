@@ -68,4 +68,6 @@ controllers.CarOverviewController = function($scope, $api) {
     }
     
     $scope.fetchCar();
+    $scope.$on('pushNotificationReceived', $scope.fetchCar)
+    
 }

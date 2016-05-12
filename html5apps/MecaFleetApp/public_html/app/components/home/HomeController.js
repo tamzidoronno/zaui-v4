@@ -33,6 +33,8 @@ controllers.HomeController = function($scope, $api, $rootScope) {
         })
     };
     
+    $scope.$on('pushNotificationReceived', $scope.getCar)
+    
     $scope.sendRegistrationId();
     $scope.getCar();
 }

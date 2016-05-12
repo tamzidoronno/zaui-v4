@@ -1625,7 +1625,7 @@ class Page {
             if($cell->cellId == $selectedPosition) {
                 return $className;
             }
-        }        
+        }
         
         if(!$found) {
             if($firstId == $cell->cellId) {

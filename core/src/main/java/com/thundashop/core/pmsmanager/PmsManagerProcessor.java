@@ -42,11 +42,8 @@ public class PmsManagerProcessor {
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
         try { processIntervalCleaning(false); }catch(Exception e) { e.printStackTrace(); }
         try { processIntervalCleaning(true); }catch(Exception e) { e.printStackTrace(); }
-        
-        if(manager.storeManager.isProductMode()) {
-            try { manager.checkDoorStatusControl(); } catch (Exception e) { e.printStackTrace(); }
-            try { processArx(); }catch(Exception e) { e.printStackTrace(); }
-        }
+        try { processArx(); }catch(Exception e) { e.printStackTrace(); }
+
         try { createPeriodeInvoices(); }catch(Exception e) { e.printStackTrace(); }
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
@@ -104,6 +101,11 @@ public class PmsManagerProcessor {
 
     private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
         PmsConfiguration config = manager.getConfigurationSecure();
+        
+        
+        if(!manager.frameworkConfig.productionMode) {
+            return true;
+        }
         
         if (config.locktype.isEmpty() || config.locktype.equals("arx")) {
             return pushToArx(room, deleted);
@@ -302,11 +304,6 @@ public class PmsManagerProcessor {
     }
 
     private boolean pushToArx(PmsBookingRooms room, boolean deleted) {
-        
-        if(!manager.frameworkConfig.productionMode) {
-            return true;
-        }
-        
         Person person = new Person();
         if (!room.guests.isEmpty() && room.guests.get(0).name != null && room.guests.get(0).name.contains(" ")) {
             person.firstName = room.guests.get(0).name.split(" ")[0];

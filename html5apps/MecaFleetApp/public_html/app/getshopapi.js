@@ -3924,6 +3924,17 @@ GetShopApiWebSocket.MecaManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'markControlAsCompleted' : function(carId, gs_silent) {
+        var data = {
+            args : {
+                carId : JSON.stringify(carId),
+            },
+            method: 'markControlAsCompleted',
+            interfaceName: 'core.mecamanager.IMecaManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'notifyByPush' : function(phoneNumber,message, gs_silent) {
         var data = {
             args : {
@@ -4020,6 +4031,17 @@ GetShopApiWebSocket.MecaManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'sendKilometerRequest' : function(carId, gs_silent) {
+        var data = {
+            args : {
+                carId : JSON.stringify(carId),
+            },
+            method: 'sendKilometerRequest',
+            interfaceName: 'core.mecamanager.IMecaManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'sendKilometers' : function(cellPhone,kilometers, gs_silent) {
         var data = {
             args : {
@@ -4027,6 +4049,18 @@ GetShopApiWebSocket.MecaManager.prototype = {
                 kilometers : JSON.stringify(kilometers),
             },
             method: 'sendKilometers',
+            interfaceName: 'core.mecamanager.IMecaManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'suggestDate' : function(carId,date, gs_silent) {
+        var data = {
+            args : {
+                carId : JSON.stringify(carId),
+                date : JSON.stringify(date),
+            },
+            method: 'suggestDate',
             interfaceName: 'core.mecamanager.IMecaManager',
         };
         return this.communication.send(data, gs_silent);
@@ -5102,6 +5136,19 @@ GetShopApiWebSocket.PageManager.prototype = {
                 page : JSON.stringify(page),
             },
             method: 'savePage',
+            interfaceName: 'core.pagemanager.IPageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'savePageCellGroupAccess' : function(pageId,cellId,groupAccess, gs_silent) {
+        var data = {
+            args : {
+                pageId : JSON.stringify(pageId),
+                cellId : JSON.stringify(cellId),
+                groupAccess : JSON.stringify(groupAccess),
+            },
+            method: 'savePageCellGroupAccess',
             interfaceName: 'core.pagemanager.IPageManager',
         };
         return this.communication.send(data, gs_silent);
@@ -6818,6 +6865,17 @@ GetShopApiWebSocket.QuestBackManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getResult' : function(testId, gs_silent) {
+        var data = {
+            args : {
+                testId : JSON.stringify(testId),
+            },
+            method: 'getResult',
+            interfaceName: 'core.questback.IQuestBackManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getResultRequirement' : function(gs_silent) {
         var data = {
             args : {
@@ -7145,6 +7203,23 @@ GetShopApiWebSocket.SalesManager.prototype = {
             },
             method: 'saveEvent',
             interfaceName: 'core.sales.ISalesManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
+GetShopApiWebSocket.SearchManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.SearchManager.prototype = {
+    'search' : function(searchWord, gs_silent) {
+        var data = {
+            args : {
+                searchWord : JSON.stringify(searchWord),
+            },
+            method: 'search',
+            interfaceName: 'core.searchmanager.ISearchManager',
         };
         return this.communication.send(data, gs_silent);
     },
@@ -9329,6 +9404,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.QuestBackManager = new GetShopApiWebSocket.QuestBackManager(this);
     this.ReportingManager = new GetShopApiWebSocket.ReportingManager(this);
     this.SalesManager = new GetShopApiWebSocket.SalesManager(this);
+    this.SearchManager = new GetShopApiWebSocket.SearchManager(this);
     this.SedoxProductManager = new GetShopApiWebSocket.SedoxProductManager(this);
     this.StoreManager = new GetShopApiWebSocket.StoreManager(this);
     this.UserManager = new GetShopApiWebSocket.UserManager(this);

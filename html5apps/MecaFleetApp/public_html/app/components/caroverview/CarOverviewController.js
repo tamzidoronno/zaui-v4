@@ -53,5 +53,19 @@ controllers.CarOverviewController = function($scope, $api) {
         });
     }
     
+    $scope.suggestNewDate = function() {
+        var dateToSuggest = $('#newSuggestDate').val();
+        
+        if (!dateToSuggest) {
+            alert("Du må velge en dato");
+            return;
+        }
+        
+        $getshopApi.MecaManager.suggestDate($scope.car.id, dateToSuggest).done(function(car) {
+            $scope.car = car;
+            $scope.$apply();
+        });
+    }
+    
     $scope.fetchCar();
 }

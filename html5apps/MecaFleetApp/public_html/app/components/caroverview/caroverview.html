@@ -14,6 +14,14 @@
     <div class="acceptbutton yes" ng-click="answerYesEU()"><div class="inner">Ja</div></div><div class="acceptbutton no" ng-click="answerNoEU()"><div class="inner">Nei</div></div>
 </div>
 
+<div ng-if="(car.controlDateRejected || car.serviceDateRejected ) && !car.newSuggestedDate " class="topinfobox" >
+    <br/>Ok, når hadde det passet best for deg?
+    <br/>
+    <br/> <input type="date" id="newSuggestDate" ng-model="newSuggestedDate" />
+    <br/> 
+    <div class="acceptbutton send" ng-click="suggestNewDate()"><div class="inner">send</div></div>
+</div>
+
 <div class='topinfobox'>
     Status på ditt kjøretøy.
 </div>

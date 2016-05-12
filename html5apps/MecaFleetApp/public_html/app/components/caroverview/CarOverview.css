@@ -28,6 +28,7 @@
     margin-top: 20px;
 }
 
+.acceptbutton.send .inner,
 .acceptbutton.yes .inner {
     background: rgb(201,222,150); /* Old browsers */
     background: -moz-linear-gradient(top,  rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(57,130,53,1) 100%); /* FF3.6-15 */

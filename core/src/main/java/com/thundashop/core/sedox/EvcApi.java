@@ -78,8 +78,8 @@ public class EvcApi {
     
     public int getPersonalAccountBalance(String evcId) {
         String result = request("getcustomeraccount&customer=" + evcId);
-        
-        if (result != null && result.subSequence(0, 2).equals("ok")) 
+         
+       if (result != null && result.subSequence(0, 2).equals("ok")) 
             return Integer.valueOf(result.substring(3).trim());
         
         return 0;

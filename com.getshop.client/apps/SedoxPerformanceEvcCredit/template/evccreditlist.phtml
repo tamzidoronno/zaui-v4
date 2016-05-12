@@ -1,0 +1,26 @@
+<?
+/* @var $this ns_d93ea837_7de2_4a6b_84ba_b403d2f84a33\SedoxPerformanceEvcCredit */
+
+$user = $this->getApi()->getSedoxProductManager()->getSedoxUserAccount();
+
+?>
+<div class="title"> Your EVC History </div>
+<?
+foreach ($user->evcCreditOrders as $order) {
+    ?>
+    <div class="orderrow">
+        <div><? echo $order->dateCreated; ?></div>
+        <div><? echo $order->magentoOrderId; ?></div>
+        <div><? echo $order->amount; ?></div>
+    </div>
+    <?
+}
+?>
+
+<div class="balance">
+    Current balance: <? echo $this->getApi()->getSedoxProductManager()->getSedoxUserAccount()->evcCurrentBalance; ?>
+</div>
+
+<div>
+    <div class="sedox_blue_button refresh_evc_credit">Refresh</div>
+</div>

@@ -54,6 +54,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         HashMap<String, BookingOrderSummary> orderMap = createSummaryMap(ordersummaries);
         HashMap<String, BookingOrderSummary> roomMap = createSummaryMap(roomSummaries);
         
+        for(String key : orderMap.keySet()) {
+            if(!roomMap.containsKey(key)) {
+                BookingOrderSummary summary = new BookingOrderSummary();
+                summary.count = 0;
+                summary.price = 0.0;
+                summary.productId = key;
+                roomMap.put(key, summary);
+            }
+        }
+        
         List<BookingOrderSummary> list = new ArrayList();
         for(String productId : roomMap.keySet()) {
             BookingOrderSummary summaryResult = new BookingOrderSummary();
@@ -213,6 +223,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     order.cart.addCartItems(itemsToReturn);
                     orderManager.saveOrder(order);
                 } else {
+                    updateCart();
                     order = createOrderFromCart(booking);
                     if (order == null) {
                         return "Could not create order.";
@@ -270,6 +281,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     private List<CartItem> addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
         List<CartItem> items = new ArrayList();
+                
+        List<CartItem> changes = getChangesForBooking(booking.id);
+        items.addAll(changes);
+
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             checkIfNeedCrediting(room);
             if(!room.needInvoicing(filter)) {
@@ -296,9 +311,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 updateAddonsByDates(room);
             }
         }
-        
-        List<CartItem> changes = getChangesForBooking(booking.id);
-        items.addAll(changes);
 
         return items;
     }
@@ -368,22 +380,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             endDate = tmpStart;
         }
         
-        Calendar startDateCal = Calendar.getInstance();
-        startDateCal.setTime(startDate);
-        startDateCal.set(Calendar.HOUR_OF_DAY, 11);
-        startDate = startDateCal.getTime();
+        startDate = adjustDateForCount(startDate, PmsBooking.PriceType.daily, true);
+        endDate = adjustDateForCount(endDate, PmsBooking.PriceType.daily, true);
         
-        Calendar endDateCal = Calendar.getInstance();
-        endDateCal.setTime(endDate);
-        endDateCal.set(Calendar.HOUR_OF_DAY, 12);
-        endDate = endDateCal.getTime();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
         
         int days = 0;
         while (true) {
             days++;
 
-            startDateCal.add(Calendar.DAY_OF_YEAR, 1);
-            if (startDateCal.getTime().after(endDate)) {
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if (cal.getTime().after(endDate)) {
                 break;
             }
         }
@@ -654,7 +662,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
         if(type != null) {
-        CartItem item = createCartItem(type.productId, type.name, room, startDate, endDate, price, daysInPeriode);
+            CartItem item = createCartItem(type.productId, type.name, room, startDate, endDate, price, daysInPeriode);
             if(item != null) {
                 if(price != 0) {
                     items.add(item);
@@ -852,7 +860,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             List<CartItem> orderRoomItems = getAllOrderItemsForRoomOnBooking(room.pmsBookingRoomId, booking.id);
             List<CartItem> roomItems = createCartItemsForRoom(room.invoicedFrom, room.invoicedTo, booking, room);
-            roomItems.addAll(itemsToReturn);
             
             List<BookingOrderSummary> ordersummaries = summaries(orderRoomItems);
             List<BookingOrderSummary> roomSummary = summaries(roomItems);

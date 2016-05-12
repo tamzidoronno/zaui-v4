@@ -34,7 +34,7 @@ class Page {
         $this->printEffectTriggerLoaded();
         
         
-        if($this->javapage->pageScroll && !$this->factory->isMobile() && !$this->factory->isEditorMode()) {
+        if($this->javapage->pageScroll && !$this->factory->isMobileIgnoreDisabled() && !$this->factory->isEditorMode()) {
             echo "<script>thundashop.framework.activatePageScrolling();</script>";
         }
 
@@ -1861,7 +1861,7 @@ class Page {
      * @return type
      */
     public function printEffectTriggerLoaded() {
-        if (!$this->factory->isEffectsEnabled()) {
+        if (!$this->factory->isEffectsEnabled() || $this->factory->isMobileIgnoreDisabled()) {
             return;
         }
         

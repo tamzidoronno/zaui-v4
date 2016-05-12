@@ -1171,7 +1171,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 toRemove.add(room);
             }
         }
-        booking.getActiveRooms().removeAll(toRemove);
+        booking.removeRooms(toRemove);
         setBooking(booking);
     }
 

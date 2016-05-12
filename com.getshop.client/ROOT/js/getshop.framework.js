@@ -229,6 +229,9 @@ thundashop.framework = {
         thundashop.framework.loadHeight(cellid);
     },
     loadHeight : function(cellid) {
+        if(isMobile) {
+            return;
+        }
         var cell = $('.gsucell[cellid="'+cellid+'"]');
         var height = cell.attr('gsheight');
         var newHeight = 0;

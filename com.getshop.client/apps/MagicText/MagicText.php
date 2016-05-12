@@ -39,11 +39,25 @@ class MagicText extends \WebshopApplication implements \Application {
             if(typeof(magictextconfig) === "undefined") {
                 magictextconfig = {};
             }
+            var width = $(window).width();
+            var gsmagicsizeToSet = (width * 0.00052083333)  * <?php echo $this->getConfigurationSetting("magicsize"); ?>;
+
+            if(gsmagicsizeToSet < 14) {
+                gsmagicsizeToSet = 16;
+            }
             
-            var gsmagicsizeToSet = ($(window).width() * 0.00052083333)  * <?php echo $this->getConfigurationSetting("magicsize"); ?>;
-            console.log(gsmagicsizeToSet);
             $('.app[appid="<?php echo $this->getAppInstanceId(); ?>"]').find('.line').css('font-size', gsmagicsizeToSet);
 
+            <?php 
+            if($this->getFactory()->isMobileIgnoreDisabled()) {
+                ?>
+                    $('.app[appid="<?php echo $this->getAppInstanceId(); ?>"]').find('.line').css('opacity','1');
+                    </script>
+                <?php
+                return;
+            }
+            ?>
+                
             magictextconfig['<?php echo $this->getAppInstanceId(); ?>'] = <?php echo json_encode($config); ?>;
             $(document).bind('DOMMouseScroll', function(e){
                 if(e.originalEvent.detail > 0) {

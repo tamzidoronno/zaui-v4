@@ -219,11 +219,9 @@ public class PmsBookingRooms implements Serializable {
             }
         }
         
-        if(filter.autoGeneration) {
-            //Never autocreate orders that is in the future.
-            if(toInvoiceFrom.after(new Date())) {
-                return false;
-            }
+        //Never autocreate orders that is in the future.
+        if(toInvoiceFrom != null && toInvoiceFrom.after(new Date())) {
+            return false;
         }
         
         

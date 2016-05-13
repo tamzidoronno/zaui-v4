@@ -190,6 +190,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     }
 
+    private void autoGenerateOrders(PmsBookingRooms room, NewOrderFilter filter) {
+        if(room.needInvoicing(filter)) {
+            System.out.println("NEed to create order for rooom: " + room.invoicedTo + " - " + room.date.start + " - " + room.date.end);
+            BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+            if(item != null) {
+                System.out.println("Item: " + item.bookingItemName);
+            }
+            checkIfNeedAdditionalEndInvoicing(room, filter);
+        }
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -310,19 +321,25 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private void addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
         List<CartItem> items = new ArrayList();
                 
-        List<CartItem> changes = getChangesForBooking(booking.id);
-        items.addAll(changes);
+        if(pmsManager.getConfigurationSecure().autoGenerateChangeOrders) {
+            List<CartItem> changes = getChangesForBooking(booking.id);
+            items.addAll(changes);
+        }
 
         for (PmsBookingRooms room : booking.getActiveRooms()) {
-            checkIfNeedCrediting(room);
-            checkIfNeedAdditionalStartInvoicing(room);
-            checkIfNeedAdditionalEndInvoicing(room, filter);
-            if(itemsToReturn.isEmpty()) {
-                continue;
-            }
-            
-            if(!avoidOrderCreation) {
-                updateAddonsByDates(room);
+            if(filter.autoGeneration) {
+                autoGenerateOrders(room, filter);
+            } else {
+                checkIfNeedCrediting(room);
+                checkIfNeedAdditionalStartInvoicing(room);
+                checkIfNeedAdditionalEndInvoicing(room, filter);
+                if(itemsToReturn.isEmpty()) {
+                    continue;
+                }
+
+                if(!avoidOrderCreation) {
+                    updateAddonsByDates(room);
+                }
             }
         }
     }
@@ -387,6 +404,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(!avoidOrderCreation) {
             room.invoicedTo = endDate;
             room.invoicedFrom = room.date.start;
+            System.out.println("\t new end date: " + room.invoicedTo);
         }
         
         return item;
@@ -616,7 +634,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 price = priceRange.get(toUse);
             }
             result.put(toUse, price);
-            if(start.after(end)) {
+            if(end ==  null || cal.getTime().after(end)) {
                 break;
             }
         }

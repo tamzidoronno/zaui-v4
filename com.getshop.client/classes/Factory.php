@@ -77,6 +77,9 @@ class Factory extends FactoryBase {
     }
     
     public function getThemeApplication() {
+        if(isset($this->themeApp) && $this->themeApp) {
+            return $this->themeApp;
+        }
         $themeApp = $this->getApi()->getStoreApplicationPool()->getThemeApplication();
         if ($themeApp) {
             $this->themeApp = $this->getApplicationPool()->createInstace($themeApp);

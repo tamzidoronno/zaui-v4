@@ -344,6 +344,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             System.out.println("Trying to create cart item with infinite or NaN price");
             price = 0.0;
         }
+        if(price.intValue() == 0) {
+            System.out.println("Trying to create an item with zero price.");
+            return null;
+        }
         BookingItem bookingitem = null;
         if (room.bookingItemId != null) {
             bookingitem = bookingEngine.getBookingItem(room.bookingItemId);
@@ -817,35 +821,35 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
         boolean includeTaxes = true;
         
-        if(priceType == PmsBooking.PriceType.daily || priceType == PmsBooking.PriceType.progressive || priceType == PmsBooking.PriceType.interval) {
-            startDate = adjustDateForCount(startDate, priceType, true);
-            endDate = adjustDateForCount(endDate, priceType, false);
+        startDate = adjustDateForCount(startDate, priceType, true);
+        endDate = adjustDateForCount(endDate, priceType, false);
+        
+        Double price = room.price;
+        if(priceType == PmsBooking.PriceType.daily) {
+            Calendar calStart = Calendar.getInstance();
+            updatePriceMatrix(room, startDate, endDate, priceType);
+            calStart.setTime(startDate);
+            int count = 0;
+            while(true) {
+                count++;
+                String offset = getOffsetKey(calStart, priceType);
+                if(priceType == PmsBooking.PriceType.daily || priceType == PmsBooking.PriceType.progressive || priceType == PmsBooking.PriceType.interval) {
+                    calStart.add(Calendar.DAY_OF_YEAR,1);
+                }
+                if(!room.priceMatrix.containsKey(offset)) {
+                    System.out.println("Huston, we have a problem: " + offset);
+                } else {
+                    price += room.priceMatrix.get(offset);
+                }
+
+                if(calStart.getTime().after(endDate)) {
+                    break;
+                }
+            }
+            price /= count;
         }
         
-        Double price = 0.0;
-        Calendar calStart = Calendar.getInstance();
-        updatePriceMatrix(room, startDate, endDate, priceType);
-        calStart.setTime(startDate);
-        int count = 0;
-        while(true) {
-            count++;
-            String offset = getOffsetKey(calStart, priceType);
-            if(priceType == PmsBooking.PriceType.daily || priceType == PmsBooking.PriceType.progressive || priceType == PmsBooking.PriceType.interval) {
-                calStart.add(Calendar.DAY_OF_YEAR,1);
-            }
-            if(!room.priceMatrix.containsKey(offset)) {
-                System.out.println("Huston, we have a problem: " + offset);
-            } else {
-                price += room.priceMatrix.get(offset);
-            }
-            
-            if(calStart.getTime().after(endDate)) {
-                break;
-            }
-        }
-        
-        price /= count;
-        
+
         if(pmsManager.getPriceObject().privatePeopleDoNotPayTaxes) {
             User user = userManager.getUserById(booking.userId);
             if(user.company.isEmpty()) {
@@ -895,22 +899,24 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                if(count == 0) {
                    count = 1;
                }
-               CartItem item = createCartItem(diffResult.productId, 
-                       null, 
-                       room, 
-                       room.invoicedFrom, 
-                       room.invoicedTo, 
-                       diffResult.price / count, 
-                       count);
+               Double price = diffResult.price;
+                if(price.intValue() != 0) {
+                    CartItem item = createCartItem(diffResult.productId, 
+                            null, 
+                            room, 
+                            room.invoicedFrom, 
+                            room.invoicedTo, 
+                            price, 
+                            count);
+
+                    if(price < 0) {
+                        price *= -1;
+                    }
                
-               int price = diffResult.price.intValue();
-               if(price < 0) {
-                   price *= -1;
-               }
-               
-               if(diffResult.price != 0.0) {
-                   returnresult.add(item);
-               }
+                    if(item != null && diffResult.price != 0.0) {
+                        returnresult.add(item);
+                    }
+                }
             }
             
         }

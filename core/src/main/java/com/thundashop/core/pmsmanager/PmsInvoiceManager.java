@@ -131,10 +131,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 priceType == PmsBooking.PriceType.progressive) {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             offset = formatter.format(calStart.getTime());
-            calStart.add(Calendar.DAY_OF_YEAR, 1);
         } else if(priceType == PmsBooking.PriceType.monthly) {
             offset = calStart.get(Calendar.MONTH) + "-" + calStart.get(Calendar.YEAR);
-            calStart.add(Calendar.MONTH, 1);
         }
         return offset;
     }
@@ -160,6 +158,36 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return cal.getTime();
         
+    }
+
+    private void checkIfNeedAdditionalStartInvoicing(PmsBookingRooms room) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
+        if(room.invoicedFrom != null && 
+                !room.isSameDay(room.invoicedFrom, room.date.start) && 
+                room.date.start.before(room.invoicedFrom)) {
+            createCartItemsForRoom(room.date.start, room.invoicedFrom, booking, room);
+        }
+    }
+
+    private void checkIfNeedAdditionalEndInvoicing(PmsBookingRooms room, NewOrderFilter filter) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
+
+        Date startDate = room.getInvoiceStartDate();
+        Date endDate = room.getInvoiceEndDate(filter, booking);
+        if(room.invoicedTo != null && room.isSameDay(room.invoicedTo, endDate)) {
+            return;
+        }
+        List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room);
+        
+        if (pmsManager.getConfigurationSecure().substractOneDayOnOrder && !filter.onlyEnded) {
+            for(CartItem item : items) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(item.endDate);
+                cal.add(Calendar.DAY_OF_YEAR, -1);
+                item.endDate = cal.getTime();
+            }
+        }
+
     }
 
     class BookingOrderSummary {
@@ -279,7 +307,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     
-    private List<CartItem> addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
+    private void addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
         List<CartItem> items = new ArrayList();
                 
         List<CartItem> changes = getChangesForBooking(booking.id);
@@ -287,32 +315,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             checkIfNeedCrediting(room);
-            if(!room.needInvoicing(filter)) {
+            checkIfNeedAdditionalStartInvoicing(room);
+            checkIfNeedAdditionalEndInvoicing(room, filter);
+            if(itemsToReturn.isEmpty()) {
                 continue;
             }
-            
-            Date startDate = room.getInvoiceStartDate();
-            Date endDate = room.getInvoiceEndDate(filter, booking);
-            
-            List<CartItem> itemsToadd = createCartItemsForRoom(startDate,endDate, booking, room);
-            
-            if (pmsManager.getConfigurationSecure().substractOneDayOnOrder && !filter.onlyEnded) {
-                for(CartItem item : itemsToadd) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(item.endDate);
-                    cal.add(Calendar.DAY_OF_YEAR, -1);
-                    item.endDate = cal.getTime();
-                }
-            }
-
-            items.addAll(itemsToadd);
             
             if(!avoidOrderCreation) {
                 updateAddonsByDates(room);
             }
         }
-
-        return items;
     }
     
     public double calculateTaxes(String bookingItemTypeId) {
@@ -327,7 +339,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return -2.0;
     }
 
-    private CartItem createCartItem(String productId, String name, PmsBookingRooms room, Date startDate, Date endDate, double price, int count) {
+    private CartItem createCartItem(String productId, String name, PmsBookingRooms room, Date startDate, Date endDate, Double price, int count) {
+        if(price.isNaN() || price.isInfinite()) {
+            System.out.println("Trying to create cart item with infinite or NaN price");
+            price = 0.0;
+        }
         BookingItem bookingitem = null;
         if (room.bookingItemId != null) {
             bookingitem = bookingEngine.getBookingItem(room.bookingItemId);
@@ -534,6 +550,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             price /= count;
         }
         
+        if(price.isNaN() || price.isInfinite()) {
+            System.out.println("Nan price or infinite price... this is not good");
+            price = 0.0;
+        }
+        
         return price;
     }
 
@@ -556,6 +577,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Double price = 0.0;
         while (true) {
             String dateToUse = getOffsetKey(cal, PmsBooking.PriceType.daily);
+            cal.add(Calendar.DAY_OF_YEAR,1);
             if (priceRange.get(dateToUse) != null) {
                 price = priceRange.get(dateToUse);
             } else {
@@ -581,6 +603,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         while(true) {
             Double price = 0.0;
             String toUse = getOffsetKey(cal, PmsBooking.PriceType.monthly);
+            cal.add(Calendar.MONTH, 1);
             if(priceRange == null) {
                 price = 0.0;
             } else if(!priceRange.containsKey(toUse)) {
@@ -807,6 +830,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         while(true) {
             count++;
             String offset = getOffsetKey(calStart, priceType);
+            if(priceType == PmsBooking.PriceType.daily || priceType == PmsBooking.PriceType.progressive || priceType == PmsBooking.PriceType.interval) {
+                calStart.add(Calendar.DAY_OF_YEAR,1);
+            }
             if(!room.priceMatrix.containsKey(offset)) {
                 System.out.println("Huston, we have a problem: " + offset);
             } else {
@@ -865,13 +891,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             List<BookingOrderSummary> roomSummary = summaries(roomItems);
             List<BookingOrderSummary> diff = diffItems(ordersummaries, roomSummary);
             for(BookingOrderSummary diffResult : diff) {
+               int count = diffResult.count;
+               if(count == 0) {
+                   count = 1;
+               }
                CartItem item = createCartItem(diffResult.productId, 
                        null, 
                        room, 
                        room.invoicedFrom, 
                        room.invoicedTo, 
-                       diffResult.price / diffResult.count, 
-                       diffResult.count);
+                       diffResult.price / count, 
+                       count);
                
                int price = diffResult.price.intValue();
                if(price < 0) {

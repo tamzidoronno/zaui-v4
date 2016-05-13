@@ -346,6 +346,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         Integer result = 0;
         booking.isDeleted = false;
+        
+        createUserForBooking(booking);
+        if (configuration.payAfterBookingCompleted) {
+            createPrepaymentOrder(booking.id);
+        }
+
+        
         List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
         try {
             result = completeBooking(bookingsToAdd, booking);
@@ -362,9 +369,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
 
                 try {
-                    if (configuration.payAfterBookingCompleted) {
-                        createPrepaymentOrder(booking.id);
-                    }
                     processor();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -396,24 +400,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.sessionId = null;
         if (booking.registrationData.resultAdded.get("company_invoicenote") != null) {
             booking.invoiceNote = booking.registrationData.resultAdded.get("company_invoicenote");
-        }
-        if (booking.userId == null || booking.userId.isEmpty()) {
-            User newuser = createUser(booking);
-            booking.userId = newuser.id;
-            Company curcompany = createCompany(booking);
-            if (curcompany != null) {
-                curcompany = userManager.saveCompany(curcompany);
-                newuser.company.add(curcompany.id);
-                newuser.fullName = curcompany.name;
-                newuser.emailAddress = curcompany.email;
-                newuser.cellPhone = curcompany.phone;
-                newuser.prefix = curcompany.prefix;
-                newuser.address = curcompany.address;
-
-                userManager.saveUserSecure(newuser);
-            }
-        } else if (configuration.autoconfirmRegisteredUsers) {
-            booking.confirmed = true;
         }
 
         if (!configuration.needConfirmation) {
@@ -2442,12 +2428,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private List<Booking> buildRoomsToAddToEngineList(PmsBooking booking) {
         List<Booking> bookingsToAdd = new ArrayList();
-        List<PmsBookingRooms> removeRooms = new ArrayList();
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             Booking bookingToAdd = createBooking(room);
             if (!bookingEngine.canAdd(bookingToAdd)) {
                 room.canBeAdded = false;
-                removeRooms.add(room);
+                room.deleted = true;
                 BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 String name = "";
                 if (item != null) {
@@ -2461,7 +2446,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             bookingsToAdd.add(bookingToAdd);
         }
-        booking.removeRooms(removeRooms);
         return bookingsToAdd;
     }
 
@@ -2871,6 +2855,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, couponCode, priceType);
         room.priceMatrix = pmsInvoiceManager.buildPriceMatrix(room, couponCode, priceType);
         room.taxes = pmsInvoiceManager.calculateTaxes(room.bookingItemTypeId);
+    }
+
+    private void createUserForBooking(PmsBooking booking) {
+        if (booking.userId == null || booking.userId.isEmpty()) {
+            User newuser = createUser(booking);
+            booking.userId = newuser.id;
+            Company curcompany = createCompany(booking);
+            if (curcompany != null) {
+                curcompany = userManager.saveCompany(curcompany);
+                newuser.company.add(curcompany.id);
+                newuser.fullName = curcompany.name;
+                newuser.emailAddress = curcompany.email;
+                newuser.cellPhone = curcompany.phone;
+                newuser.prefix = curcompany.prefix;
+                newuser.address = curcompany.address;
+
+                userManager.saveUserSecure(newuser);
+            }
+        }
     }
 
 }

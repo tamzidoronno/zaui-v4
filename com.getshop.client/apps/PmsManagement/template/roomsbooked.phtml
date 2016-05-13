@@ -25,9 +25,6 @@ $toPrint = $sorted;
 
 $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-?>
-<h2>Rooms booked</h2>
-<?php
 $dates = $this->getApi()->getPmsManager()->getDefaultDateRange($this->getSelectedName());
 $start = $this->convertToJavaDate(strtotime($dates->start));
 $end = $this->convertToJavaDate(strtotime($dates->end));
@@ -36,6 +33,7 @@ $defaultType = $booking->rooms[0]->bookingItemTypeId;
 
 $cleaningInterval = $config->cleaningInterval;
 ?>
+<br>
 <span gstype="form" method='addRoomToBooking'>
     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
     <input type='text' class='newroomstartdate' style=' width: 80px;' value='<?php echo date("d.m.Y", strtotime($start)); ?>' gsname='start'>

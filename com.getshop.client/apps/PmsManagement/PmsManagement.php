@@ -658,8 +658,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<tr>";
         echo "<th width='110'>Date</th>";
         echo "<th width='110'>User</th>";
-        echo "<th></th>";
-        echo "<th width='110'>Logtext</th>";
+        echo "<th>Logtext</th>";
+        echo "<th width='110'></th>";
         echo "</tr>";
         
         foreach($entries as $entry) {

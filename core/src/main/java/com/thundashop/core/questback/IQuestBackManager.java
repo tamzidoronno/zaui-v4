@@ -10,9 +10,9 @@ import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.questback.data.QuestBackQuestion;
+import com.thundashop.core.questback.data.QuestBackResult;
 import com.thundashop.core.questback.data.QuestTest;
 import com.thundashop.core.questback.data.ResultRequirement;
-import com.thundashop.core.questback.data.UserQuestionAnswer;
 import com.thundashop.core.questback.data.UserTestResult;
 import java.util.List;
 
@@ -33,7 +33,6 @@ public interface IQuestBackManager {
     @Customer
     public String getPageId(String questionId);
     
-    @Customer
     public String getQuestionTitle(String pageId);
     
     @Administrator
@@ -48,7 +47,6 @@ public interface IQuestBackManager {
     @Administrator
     public void deleteTest(String testId);
     
-    @Customer
     public QuestTest getTest(String testId);
     
     
@@ -62,19 +60,15 @@ public interface IQuestBackManager {
     
     public List<QuestTest> getTestsForUser(String userId);
     
-    @Customer
     public String getNextQuestionPage(String testId);
     
-    @Customer
     public String answerQuestions(String testId, String applicationId, String pageId, List<String> answers);
     
-    @Customer
     public boolean hasAnswered(String pageId, String testId);
     
     @Administrator
     public void assignUserToTest(String testId, String userId);
     
-    @Customer
     public int getProgress(String testId);
     
     @Customer
@@ -113,6 +107,8 @@ public interface IQuestBackManager {
     @Editor
     public Integer getScoreForTest(String userId, String testId);
     
-    @Customer
     public List<QuestBackQuestion> getCategoriesForTest(String testId);
+    
+    @Editor
+    public QuestBackResult getResult(String testId);
 }

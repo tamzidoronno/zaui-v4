@@ -14,6 +14,7 @@ import java.util.List;
  * @author ktonder
  */
 public class QuestTest extends DataCommon {
+    public String type = "test";
     public boolean forceCorrectAnswer = false;
     public List<String> userIds = new ArrayList();
     public List<String> questions = new ArrayList();

@@ -228,6 +228,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public User logOn(String username, String password) throws ErrorException {
         // Require double auth for gs admins
+        if (password == null || password.isEmpty())
+            throw new ErrorException(26);
+        
         if (this.isDoubleAuthenticationActivated() || gsAdmins.getGSAdmin(username) != null) {   
             throw new ErrorException(13);
         }
@@ -1423,4 +1426,23 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return sessionFactory.getTimeout(user, getSession().id);
     }
 
+    public User getVirtualSessionUser() {
+        if (getSession() == null || getSession().id.isEmpty())
+            return null;
+        
+        User user = getUserById(getSession().id);
+        
+        if (user == null) {
+            user = new User();
+            user.id = getSession().id;
+            user.virtual = true;
+            user.username = UUID.randomUUID().toString();
+            user.password = UUID.randomUUID().toString();
+            user.type = 10;
+            
+            saveUserSecure(user);
+        }
+
+        return user;
+    }
 }

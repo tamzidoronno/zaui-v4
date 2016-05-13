@@ -250,22 +250,22 @@ public class PHPApiBuilder {
             phpClass += addReturnValue(commentToAdd, method);
             
             phpClass += "\n\tpublic function " + method.methodName + "(" + args + ") {\n";
-            phpClass += "\t     $data = array();\n";
-            phpClass += "\t     $data['args'] = array();\n";
+            phpClass += "\t     $gs_data_input2939299822982 = array();\n";
+            phpClass += "\t     $gs_data_input2939299822982['args'] = array();\n";
             for (String arg : method.arguments.keySet()) {
-                phpClass += "\t     $data['args'][\"" + arg + "\"] = json_encode($this->transport->object_unset_nulls($" + arg + "));\n";
+                phpClass += "\t     $gs_data_input2939299822982['args'][\"" + arg + "\"] = json_encode($this->transport->object_unset_nulls($" + arg + "));\n";
             }
             
             if (multiLevel) {
-                phpClass += "\t     $data['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));\n";
+                phpClass += "\t     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));\n";
             }
             
-            phpClass += "\t     $data[\"method\"] = \"" + method.method.getName() + "\";\n";
-            phpClass += "\t     $data[\"interfaceName\"] = \"" + method.manager.getCanonicalName().replace("com.thundashop.", "") + "\";\n";
+            phpClass += "\t     $gs_data_input2939299822982[\"method\"] = \"" + method.method.getName() + "\";\n";
+            phpClass += "\t     $gs_data_input2939299822982[\"interfaceName\"] = \"" + method.manager.getCanonicalName().replace("com.thundashop.", "") + "\";\n";
             if (returnvalue.startsWith("core_") || returnvalue.startsWith("app_")) {
-                phpClass += "\t     return $this->transport->cast(new " + returnvalue + "(), $this->transport->sendMessage($data));\n";
+                phpClass += "\t     return $this->transport->cast(new " + returnvalue + "(), $this->transport->sendMessage($gs_data_input2939299822982));\n";
             } else {
-                phpClass += "\t     return $this->transport->sendMessage($data);\n";
+                phpClass += "\t     return $this->transport->sendMessage($gs_data_input2939299822982);\n";
             }
 
 

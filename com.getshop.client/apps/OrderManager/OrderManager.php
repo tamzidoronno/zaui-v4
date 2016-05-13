@@ -175,7 +175,7 @@ class OrderManager extends GSTableCommon implements \Application {
     public function getCurrentOrder() {
         return $this->order;
     }
-
+    
 }
 
 ?>

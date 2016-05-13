@@ -20,4 +20,5 @@ public class Certificate extends DataCommon {
     public Date validFrom;
     public Date validTo;
     public String backgroundImage;
+    public Map<String, String> signatures = new HashMap();
 }

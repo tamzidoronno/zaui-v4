@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TreeSet;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -21,6 +22,8 @@ public class MecaCar extends DataCommon {
     public Date prevControll = null;
     public int kilometers = 0;
     public String cellPhone = "";
+    
+    public Date inivitationSent = null;
 
     public String pageId;
     
@@ -29,6 +32,15 @@ public class MecaCar extends DataCommon {
     
     public int monthsBetweenServices = 18;
     public int kilometersBetweenEachService = 10000;
+    
+    public Date nextServiceAgreed = null;
+    
+    public Date newSuggestedDate = null;
+    
+    public Boolean nextServiceAcceptedByCarOwner = null;
+    
+    @Transient
+    public boolean needAttentionToService = false;
     
     @Transient
     public Date nextService = null;
@@ -42,14 +54,38 @@ public class MecaCar extends DataCommon {
     @Transient
     public Integer monthsToNextService = 0;
     
+    @Transient
+    public boolean sendKilometers = false;
+    
+    @Transient
+    public boolean agreeDate = false;
+    
+    @Transient
+    public boolean agreeDateControl = false;
+    
+    @Transient
+    public boolean serviceDateRejected = false;
     
     @Transient
     public Date nextControll = null;
+    
+    @Transient
+    public boolean canAgreeControlDate = false;
+    
+    TreeSet<String> tokens = new TreeSet();
+    
+    public Date nextControlAgreed = null;
+    public Boolean nextControlAcceptedByCarOwner = null;
+    
+    @Transient
+    public boolean controlDateRejected;
+    
+    Date dateRequestedKilomters = null;
 
     /**
      * Caluclate the next EU Controll, service date etc.
      */
-    public void calculateNextValues() {
+    private void calculateNextValues() {
         if (lastServiceKilomters != null) {
             nextServiceKilometers = lastServiceKilomters + kilometersBetweenEachService;
             kilometersToNextService = nextServiceKilometers - kilometers;
@@ -69,8 +105,6 @@ public class MecaCar extends DataCommon {
             cal.add(Calendar.MONTH, monthsBetweenServices);
             nextService = cal.getTime();
         }
-        
-        
     }
 
     private Integer getMonthsBetweenService() {
@@ -88,5 +122,107 @@ public class MecaCar extends DataCommon {
         int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
         
         return diffMonth;
+    }
+
+    private void setIfNeedAttention() {
+        needAttentionToService = false;
+        
+        if (monthsToNextService < 2) {
+            needAttentionToService = true;
+        }
+        
+        if (kilometersToNextService != null && kilometersToNextService < 3000) {
+            needAttentionToService = true;
+        } else {
+            needAttentionToService = false;
+        }
+        
+        if (nextServiceAgreed != null) {
+            needAttentionToService = false;
+        }
+    }
+    
+    private void setAgreeDate() {
+        if (nextServiceAgreed != null && nextServiceAcceptedByCarOwner == null) {
+            agreeDate = true;
+        } else {
+            agreeDate = false;
+        }
+        
+        if (nextControlAgreed != null && nextControlAcceptedByCarOwner == null) {
+            agreeDateControl = true;
+        } else {
+            agreeDateControl = false;
+        }
+    }
+
+    void finalizeCar() {
+        calculateNextValues();
+        setIfNeedAttention();
+        setAgreeDate();
+        setServiceAgreeMentRejected();
+        setCanAgreeEUControl();
+        setControlAgreeMentRejected();
+    }
+
+    void resetService(Date date, int kilometers) {
+        this.kilometers = kilometers;
+        this.lastServiceKilomters = kilometers;
+        this.lastService = date;
+        this.agreeDate = false;
+        this.nextServiceAgreed = null;
+        this.nextServiceAcceptedByCarOwner = null;
+    }
+
+    private void setServiceAgreeMentRejected() {
+        if (nextServiceAcceptedByCarOwner != null && nextServiceAcceptedByCarOwner == false) {
+            serviceDateRejected = true;
+        } else {
+            serviceDateRejected = false;
+        }
+    }
+    
+    private void setControlAgreeMentRejected() {
+        if (nextControlAcceptedByCarOwner != null && nextControlAcceptedByCarOwner == false) {
+            controlDateRejected = true;
+        } else {
+            controlDateRejected = false;
+        }
+    }
+
+    private void setCanAgreeEUControl() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nextControll);
+        cal.add(Calendar.MONTH, -3);
+        Date afterThis = cal.getTime();
+        Date toDay = new Date();
+        
+        // three months before EU Control.
+        canAgreeControlDate = toDay.after(afterThis);
+    }
+
+    public void markControlAsCompleted() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(prevControll);
+        cal.add(Calendar.YEAR, 2);
+        
+        this.prevControll = cal.getTime();
+        this.agreeDateControl = false;
+        this.nextControlAgreed = null;
+        this.nextControlAcceptedByCarOwner = null;
+    }
+
+    void noShowService() {
+        this.agreeDate = false;
+        this.nextServiceAgreed = null;
+        this.nextServiceAcceptedByCarOwner = null;    
+        this.newSuggestedDate = null;
+    }
+    
+    void noShowControl() {
+        this.agreeDateControl = false;
+        this.nextControlAgreed = null;
+        this.nextControlAcceptedByCarOwner = null;        
+        this.newSuggestedDate = null;
     }
 }

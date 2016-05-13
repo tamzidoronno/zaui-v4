@@ -94,6 +94,7 @@ class Menu extends \SystemApplication implements \Application {
             $entryItem->scrollPageId = $item->scrollPageId;
             $entryItem->items = $this->createItems($item->subentries);
             $entryItem->disabledLangues = $item->disabledLangues;
+            $entryItem->openInSeperatedTab = $item->openInSeperatedTab;
             $entryItem->hidden = $item->hidden;
             $retItems[] = $entryItem;
         }
@@ -120,6 +121,7 @@ class Menu extends \SystemApplication implements \Application {
         @$entry->scrollPageId = $item['scrollPageId'];
         @$entry->scrollAnchor = $item['scrollAnchor'];
         @$entry->hidden = $item['hidden'] == "true";
+        @$entry->openInSeperatedTab = $item['openInSeperatedTab'] == "true";
         @$entry->pageScroll = $item['pageScroll'];
         
         if (isset($item['userLevel'])) {
@@ -260,7 +262,10 @@ class Menu extends \SystemApplication implements \Application {
                 if($i == sizeof($entries)) {
                     $lastEntry = "lastentry";
                 }
-               echo "<div class='entry $activate $disabledClass $lastEntry'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
+                
+                $openInTab = $entry->openInSeperatedTab  ? "class='gs_ignorenavigate' target='_blank'" : "";
+                $badge = $entry->badges ? "<div class='gs_menu_bages'>$entry->badges</div>" : "";
+                echo "<div class='entry $activate $disabledClass $lastEntry'><a $openInTab ajaxlink='$link' href='$linkName'><div>$fontAwesome $name $badge</div></a>";
                 if ($entry->subentries) {
                     $this->printEntries($entry->subentries, $level+1, $prefix);
                 }
@@ -311,6 +316,7 @@ class EntryItem {
     public $userLevel;
     public $items;
     public $disabledLangues;
+    public $openInSeperatedTab;
     public $hidden = false;
 }
 

@@ -1,0 +1,46 @@
+<?
+/* @var $this ns_99e7671e_1f11_4902_8459_faa3aaeeb885\MecaFleetCommunication */
+$mecaCar = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
+$inviteSentClass = $mecaCar->inivitationSent != null ? "inviteSent" : "";
+
+if (!$mecaCar) {
+    echo "Did not find the car";
+    return;
+}
+?>
+
+<div>
+    <div class="row">
+        <div class="number">1</div>
+        <div class="description">
+            Kontroll informasjonen under "Bilkonfigurasjon". <br/>
+            Når du er sikker på at denne er riktg trykker du på "Send invitasjon". 
+        </div>
+            
+        <div class="shop_button <? echo $inviteSentClass; ?>" gsclick="sendInvitation" carid="<? echo $mecaCar->id; ?>">
+            <? 
+            if ($inviteSentClass) { 
+                echo "Invitasjon sendt <br/> ".date("d/m-Y H:i", strtotime($mecaCar->inivitationSent))."";
+            } else { 
+                echo "Send invitasjon";
+            } ?>
+        
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="number">2</div>
+        <div class="description">
+            Har bileier tatt i bruk appen?<br/>
+            Dersom bileieren har begynt å bruke appen vil status til høyre være grønn.
+        </div>
+            
+        <?
+        if (count($mecaCar->tokens) > 0) {
+        ?>
+            <div class="appstatus confirmed"><i class="fa fa-check"></i></div>
+        <? } else { ?>
+            <div class="appstatus negative"><i class="fa fa-close"></i></div>
+        <? } ?>
+    </div>
+</div>

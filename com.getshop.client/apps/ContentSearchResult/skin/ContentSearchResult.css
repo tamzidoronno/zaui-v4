@@ -1,0 +1,25 @@
+.ContentSearchResult .resultrow {
+    border-bottom: solid 1px #DDD;
+    padding: 10px;
+    padding-bottom: 40px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.ContentSearchResult a:last-child .resultrow {
+    border-bottom: solid 0px;
+}
+
+.ContentSearchResult .no_result {
+    text-align: center;
+    padding: 30px;
+}
+
+.ContentSearchResult .readmore {
+    border: solid 1px #DDD;
+    padding: 5px;
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}

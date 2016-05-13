@@ -12,15 +12,62 @@ controllers.CarOverviewController = function($scope, $api) {
     
     $scope.carsFetched = function(cars) {
         $scope.car = cars[0];
-        console.log($scope.car);
         $scope.$apply();
     }
     
     $scope.fetchCar = function() {
         var cellPhone = localStorage.getItem("cellphone");
-        $getshopApi = $api.getApi();
+        $getshopApi = $api.api;
         $getshopApi.MecaManager.getCarsByCellphone(cellPhone).done($scope.carsFetched)
     }
     
+    $scope.answerNo = function() {
+        $getshopApi = $api.api;
+        $getshopApi.MecaManager.answerServiceRequest($scope.car.id, false).done(function(car) {
+            $scope.car = car;
+            $scope.$apply();
+        });
+    }
+        
+    $scope.answerYes = function() {
+        $getshopApi = $api.api;
+        $getshopApi.MecaManager.answerServiceRequest($scope.car.id, true).done(function(car) {
+            $scope.car = car;
+            $scope.$apply();
+        });
+    }
+    
+    $scope.answerNoEU = function() {
+        $getshopApi = $api.api;
+        $getshopApi.MecaManager.answerControlRequest($scope.car.id, false).done(function(car) {
+            $scope.car = car;
+            $scope.$apply();
+        });
+    }
+    
+    $scope.answerYesEU = function() {
+        $getshopApi = $api.api;
+        $getshopApi.MecaManager.answerControlRequest($scope.car.id, true).done(function(car) {
+            $scope.car = car;
+            $scope.$apply();
+        });
+    }
+    
+    $scope.suggestNewDate = function() {
+        var dateToSuggest = $('#newSuggestDate').val();
+        
+        if (!dateToSuggest) {
+            alert("Du må velge en dato");
+            return;
+        }
+        
+        $getshopApi.MecaManager.suggestDate($scope.car.id, dateToSuggest).done(function(car) {
+            $scope.car = car;
+            $scope.$apply();
+        });
+    }
+    
     $scope.fetchCar();
+    $scope.$on('pushNotificationReceived', $scope.fetchCar)
+    
 }

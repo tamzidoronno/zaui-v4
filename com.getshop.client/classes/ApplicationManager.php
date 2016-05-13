@@ -190,6 +190,12 @@ class ApplicationManager extends FactoryBase {
 
         $this->getApi()->getPageManager()->saveCell($pageid, $cell);
         
+        if(isset($_POST['data']['groupAccess'])) {
+            $cellGroupAccess = new core_pagemanager_data_CellGroupAccess();
+            $cellGroupAccess->access = $_POST['data']['groupAccess'];
+            $this->getApi()->getPageManager()->savePageCellGroupAccess($pageid, $cellid, $cellGroupAccess);
+        }
+        
         if(isset($_POST['data']['settings'])) {
             $settings = $_POST['data']['settings'];
             $this->getApi()->getPageManager()->savePageCellSettings($pageid, $cellid, $settings);

@@ -323,7 +323,7 @@ public class StorePool {
 
     private Store getStoreByIdentifier(String id) {
         for (Store store : stores.values()) {
-            if (store.identifier != null && store.identifier.equals(id)) {
+            if (store.identifier != null && store.identifier.toLowerCase().equals(id.toLowerCase())) {
                 return store;
             }
         }

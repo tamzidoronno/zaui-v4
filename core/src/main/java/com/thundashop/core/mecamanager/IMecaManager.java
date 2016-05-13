@@ -8,6 +8,7 @@ package com.thundashop.core.mecamanager;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +37,9 @@ public interface IMecaManager {
     public void deleteCar(String carId);
     
     @Editor
+    public MecaCar getCar(String id);
+    
+    @Editor
     public List<MecaCar> getCarsPKKList();
     
     @Customer
@@ -54,4 +58,39 @@ public interface IMecaManager {
     public void sendEmail(String cellPhone, String message);
     
     public void sendKilometers(String cellPhone, int kilometers);
+    
+    public void registerDeviceToCar(String deviceId, String cellPhone);
+    
+    @Editor
+    public void notifyByPush(String phoneNumber, String message);
+    
+    @Editor
+    public void sendInvite(String mecaCarId);
+    
+    @Editor
+    public void requestNextService(String carId, Date date);
+    
+    public MecaCar answerServiceRequest(String carId, boolean answer);
+
+    public MecaCar answerControlRequest(String carId, boolean answer);
+    
+    public void resetServiceInterval(String carId, Date date, int kilometers);
+    
+    @Editor
+    public void requestNextControl(String carId, Date date);
+    
+    @Editor
+    public void markControlAsCompleted(String carId);
+    
+    @Editor
+    public void sendKilometerRequest(String carId);
+    
+    public MecaCar suggestDate(String carId, Date date);
+    
+    @Editor
+    public void noShowPkk(String carId);
+    
+    @Editor
+    public void noShowService(String carId);
+    
 }

@@ -19,6 +19,7 @@ public class SubLocation implements Serializable {
     public Map<String, GroupLocationInformation> groupLocationInformation = new HashMap();
     public String name = "";
     public String description = "";
+    public String extraDescription = "";
     public String contactPerson = "";
     public String cellPhone = "";
     public String lat = "";

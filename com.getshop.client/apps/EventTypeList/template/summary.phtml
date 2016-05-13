@@ -8,7 +8,7 @@
     }
     
     foreach ($eventTypes as $type) {
-        $delete = $this->hasWriteAccess() ? "<i class='fa fa-trash' gsclick='deleteEventType' value='$type->id'></i>" : "";
+        $delete = $this->hasWriteAccess() ? "<i class='fa fa-trash' gsclick='deleteEventType' gs_confirm='Are you sure you want to delete this?' value='$type->id'></i>" : "";
         echo "<div class='eventtype'>";
         echo "<span>$type->name</span>";
         echo $delete ;

@@ -15,6 +15,7 @@ getshop.MenuEditor = {
         $(document).on('keyup', ".Menu .titleinformation #scrollAnchor", getshop.MenuEditor.scrollAnchorChanged);
         $(document).on('keyup', ".Menu .titleinformation #scrollPageId", getshop.MenuEditor.scrollPageIdChanged);
         $(document).on('click', ".Menu .titleinformation #hideElement", getshop.MenuEditor.hideElementChanged);
+        $(document).on('click', ".Menu .titleinformation #openInSeperatedTab", getshop.MenuEditor.openInSeperatedTab);
         $(document).on('click', ".Menu .titleinformation #pageScroll", getshop.MenuEditor.pageScrollElementChanged);
         $(document).on('mouseenter', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.showSubEntries);
         $(document).on('mouseleave', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.hideSubEntries);
@@ -28,6 +29,10 @@ getshop.MenuEditor = {
         $(document).on('mouseenter', ".Menu .dots .dot", getshop.MenuEditor.showIndicator);
         $(document).on('mouseleave', ".Menu .dots .dot", getshop.MenuEditor.hideIndicator);
     },
+    openInSeperatedTab: function() {
+        getshop.MenuEditor.activeItem.openInSeperatedTab = $(this).is(':checked');
+    },
+    
     hideIndicator : function() {
         $('.menuindicator').remove();
     },
@@ -369,6 +374,7 @@ getshop.MenuEditor = {
             $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.link);    
             $('.titleinformation #scrollPageId').val(getshop.MenuEditor.activeItem.scrollPageId);    
             $('.titleinformation #hideElement').val('checked',false);
+            $('.titleinformation #openInSeperatedTab').attr('checked', getshop.MenuEditor.activeItem.openInSeperatedTab);
             if(getshop.MenuEditor.activeItem.hidden) {
                 $('.titleinformation #hideElement').attr('checked','true');
             } else {

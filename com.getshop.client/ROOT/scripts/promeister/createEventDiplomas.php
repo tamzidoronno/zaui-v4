@@ -10,8 +10,10 @@ $event = $manager->getEvent("booking", $eventId);
 $users = $manager->getUsersForEvent("booking", $eventId);
 $eventHelder = $factory->getApi()->getUserManager()->getUserById($event->eventHelderUserId);
 $eventHelderName = "N/A";
+$eventHelderId = "";
 
 if ($eventHelder) {
+    $eventHelderId = $eventHelder->id;
     $eventHelderName = $eventHelder->fullName;
 }
 
@@ -72,6 +74,8 @@ if ($eventHelder) {
 <body >
     <?
     foreach ($users as $user) {
+        $certificate = $factory->getApi()->getEventBookingManager()->getCertificateForEvent("booking", $eventId, $user->id);
+        $signatureImageId = @$certificate->signatures->{$eventHelderId} ? $certificate->signatures->{$eventHelderId} : "";
     ?>
         <div class="page">
             <div class="row title1"> Kursintyg <? echo $event->bookingItemType->name; ?></div>    
@@ -82,7 +86,13 @@ if ($eventHelder) {
             <div class="row date"><? echo $event->location->name." ".$event->subLocation->name; ?> den <? echo date("d. M Y", strtotime($event->mainStartDate)); ?></div>
             
             <div class="row signature">
-                
+                <?
+                if ($signatureImageId) {
+                ?>
+                    <img width='300' src='/displayImage.php?id=<? echo $signatureImageId; ?>'/>
+                <?
+                }
+                ?>
             </div>
                 
             <div class="row eventHeloder">

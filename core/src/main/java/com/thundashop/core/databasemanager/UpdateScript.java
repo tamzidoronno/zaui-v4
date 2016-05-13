@@ -15,4 +15,6 @@ public interface UpdateScript {
     public void run();
     public String getId();
     Date getAddedDate();
+
+    public boolean doNotRun();
 }

@@ -19,7 +19,9 @@ if (count($tests) == 0) {
         $questions = count($test->questions);
         $delete = "<div class='delete_test_button'><i class='fa fa-trash'></i></div>";
         $modify = "<div class='modify_questionbase_button' title='add/remove questions in test'><i class='fa fa-edit'></i></div>";
-        echo "<tr testid='$test->id'><td style='width: 20px;'>$delete</td><td style='width: 20px;'>$modify</td><td style='padding-left: 10px;'>$testName</td><td>$questions</td></tr>";
+        $link = $test->type == "questback" ? " - <a href='/?page=do_questback&gs_testId=$test->id' class='gs_ignorenavigate' target='_blank'>Link to questback</a>" : "";
+        $resultbutton = $test->type == "questback" ? "<div style='cursor: pointer' gs_show_modal='showTestResult' testid='$test->id'>".$this->__f("See result")."</div>" : "";
+        echo "<tr testid='$test->id'><td style='width: 20px;'>$delete</td><td style='width: 20px;'>$modify</td><td style='padding-left: 10px;'>$testName $link</td><td>$questions</td><td>$resultbutton</td></tr>";
     }
     
     echo "</table>";

@@ -324,6 +324,10 @@ public class ManagerSubBase {
         return storePool.getStore(storeId).configuration.emailAdress;
     }
     
+    public String getStoreDefaultPrefix() {
+        return ""+storePool.getStore(storeId).configuration.defaultPrefix;
+    }
+    
     public String getStoreName() {
         return applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41").getSetting("title");
     }

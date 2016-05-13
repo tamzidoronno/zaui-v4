@@ -8,6 +8,7 @@
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.KilometersController = function($scope, $api) {
+    $scope.kilometers = "";
     
     $scope.cars = function($cars) {
         if ($cars.length > 0) {
@@ -22,10 +23,14 @@ controllers.KilometersController = function($scope, $api) {
     
     $scope.sent = function() {
         alert("Takk, vi har nå registrert den nye kilometerstanden");
+        $scope.kilometers = "";
     }
     
     $scope.sendKilomters = function() {
-        $api.getApi().MecaManager.sendKilometers(localStorage.getItem("cellphone"), $scope.car.kilometers).done($scope.sent);
+        if (!$scope.kilometers) {
+            alert("Du må oppgi kilometerstanden før du trykker send inn");
+        }
+        $api.getApi().MecaManager.sendKilometers(localStorage.getItem("cellphone"), $scope.kilometers).done($scope.sent);
     }
     
     $scope.loadCarData();

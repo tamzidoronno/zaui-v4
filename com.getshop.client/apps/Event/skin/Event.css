@@ -23,6 +23,8 @@
     border: solid 1px red;
     padding: 20px;
     margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     
 }
 
@@ -59,3 +61,9 @@
     text-align: center;
 }
 
+.Event .locationExtraDescription {
+   margin-top: 10px;
+   border: solid 1px #23c890;
+   padding: 10px;
+   background-color: #5fffc8;
+}

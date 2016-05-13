@@ -2699,6 +2699,7 @@ select.gsniceselect1:active {
     left: 16px;
     top: -2px;
     box-shadow: inset 0px 0px 5px rgb(58,153,215);
+    cursor: pointer;
 }
 
 .gsdndpanelstepup {

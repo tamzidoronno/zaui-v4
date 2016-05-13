@@ -7,6 +7,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.data.CarouselConfig;
+import com.thundashop.core.pagemanager.data.CellGroupAccess;
 import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
@@ -874,5 +875,15 @@ public class PageManager extends ManagerBase implements IPageManager {
             allCells.addAll(p.getCellsFlatList());
         }
         return allCells;
+    }
+
+    @Override
+    public void savePageCellGroupAccess(String pageId, String cellId, CellGroupAccess groupAccess) {
+        Page page = getPage(pageId);
+        PageCell cell = page.getCell(cellId);
+        cell.groupAccess = groupAccess;
+        
+        backupPage(page);
+        saveObject(page);
     }
 }

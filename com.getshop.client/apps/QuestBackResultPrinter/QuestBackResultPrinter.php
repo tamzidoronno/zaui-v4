@@ -11,8 +11,13 @@ class QuestBackResultPrinter extends \MarketingApplication implements \Applicati
     }
 
     public function render() {
+        $test = $this->getCurrentTest();
+        if ($test->type === "questback") {
+            $this->wrapContentManager("thankyou", "Thank you");
+        } else {
+            $this->includefile("resultOverView");
+        }
         
-        $this->includefile("resultOverView");
     }
     
     public function getCategories() {

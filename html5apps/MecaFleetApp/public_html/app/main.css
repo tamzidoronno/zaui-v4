@@ -19,7 +19,7 @@ body {
 }
 
 .gs_header {
-    height: 100px;
+    height: 130px;
     text-align: center;
     background-color: rgba(0, 59, 129, 0.5);
 }
@@ -79,4 +79,3 @@ a {
     margin-top: 10px;
     text-align: center;
 }
-

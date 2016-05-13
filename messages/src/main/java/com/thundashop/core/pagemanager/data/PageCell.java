@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class PageCell implements Serializable {
-
     void clear() {
         appId = "";
         cells = new ArrayList();
@@ -54,6 +53,7 @@ public class PageCell implements Serializable {
     public int outerWidthWithMargins = -1;
     public String height = "";
     public boolean keepOriginalLayoutOnMobile = false;
+    public CellGroupAccess groupAccess = new CellGroupAccess();
     
     //Permissions.
     public PageCellSettings settings = new PageCellSettings();

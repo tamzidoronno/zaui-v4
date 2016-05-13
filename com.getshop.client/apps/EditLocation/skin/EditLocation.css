@@ -26,3 +26,10 @@
     border: solid 1px #DDD;
     padding: 20px;
 }
+.EditLocation .extradescription {
+    width: 100%;
+    height: 200px;
+    border: solid 1px #DDD;
+    padding: 10px;
+    box-sizing: border-box;
+}

@@ -38,6 +38,11 @@ public class DatabaseUpdater {
         System.out.println(" ============ Checing db scripts ==============");
         for (UpdateScript script : scripts) {
             
+            if (script.doNotRun()) {
+                continue;
+            }
+            
+            
             String id = script.getClass().getSimpleName();
             DataScript dbScript = new DataScript();
             dbScript.id = id;

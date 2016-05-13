@@ -22,14 +22,16 @@ class MecaFleetCarCreate extends \MarketingApplication implements \Application {
             $mecaCar = new \core_mecamanager_MecaCar();
         }
         
-        
         $mecaCar->cellPhone = $_POST['data']['phone'];
         $mecaCar->kilometers = $_POST['data']['kmstand'];
         $mecaCar->licensePlate = $_POST['data']['regnr'];
-        $mecaCar->prevControll = $this->convertToJavaDate(strtotime($_POST['data']['eukontroll']));
-        
+        $mecaCar->prevControll = $this->convertToJavaDate(strtotime($_POST['data']['eukontroll'] . " - 2 year"));
         
         $this->getApi()->getMecaManager()->saveFleetCar($this->getPage()->getId(), $mecaCar);
+    }
+    
+    public function sendKilomterRequest() {
+        $this->getApi()->getMecaManager()->sendKilometerRequest($_POST['data']['carid']);
     }
 }
 ?>

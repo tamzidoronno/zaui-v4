@@ -130,7 +130,6 @@
   top: 50%;
   width: 96%;
   height: 26px;
-  z-index: 10;
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
   box-sizing: content-box;
@@ -146,6 +145,7 @@
   -o-transition: box-shadow 0.15s, margin 0.15s;
   -webkit-transition: box-shadow 0.15s, margin 0.15s;
   transition: box-shadow 0.15s, margin 0.15s;
+  z-index: 10;
 }
 .Carousel .csslider > .arrows label:hover {
   box-shadow: inset 3px -3px 0 2px #e9ebea;
@@ -227,6 +227,11 @@
     width: 40px;
     text-align: right;
     margin-right: 1px;
+}
+
+.Carousel .value_input select {
+    height: 21px;
+    background: white;
 }
 
 .Carousel .arrow_location_horizontal input {

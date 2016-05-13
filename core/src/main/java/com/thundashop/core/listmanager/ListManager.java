@@ -51,6 +51,9 @@ public class ListManager extends ManagerBase implements IListManager {
     @Autowired
     private PageManager pageManager;
     
+    @Autowired
+    private List<ListBadgetAware> badgeAwareManagers;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon entry : data.data) {
@@ -752,6 +755,12 @@ public class ListManager extends ManagerBase implements IListManager {
     private void finalizeMenu(Menu menu) {
         menu.entryList = getEntryListInternal(menu.entryListId);
         menu.entryList.name = menu.name;
+        
+        if (menu != null && menu.entryList != null && menu.entryList.entries != null) {
+            for (Entry entry : menu.entryList.entries) {
+                askForBadge(entry);
+            }    
+        }
     }
 
     private void addMenu(Menu menu) {
@@ -818,5 +827,24 @@ public class ListManager extends ManagerBase implements IListManager {
             res = new JsTreeList();
         }
         return res;
+    }
+
+    private void askForBadge(Entry entry) {
+        if (entry == null)
+            return;
+        
+        if (entry.subentries != null) {
+            for (Entry iEntry : entry.subentries) {
+                askForBadge(iEntry);
+            }
+        }
+        
+        int badges = 0;
+        
+        for (ListBadgetAware aware : badgeAwareManagers) {
+            badges += aware.getBadges(entry);
+        }
+        
+        entry.badges = badges;
     }
 }

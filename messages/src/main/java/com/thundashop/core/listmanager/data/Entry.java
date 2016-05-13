@@ -9,9 +9,7 @@ import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * @author boggi
@@ -34,6 +32,8 @@ public class Entry extends TranslationHandler implements Serializable {
     public String fontAwsomeIcon;
     public int counter = -1;
     public boolean hidden = false;
+    public boolean openInSeperatedTab = false;
+    public int badges = 0;
     
     //Appended when fetching the list.
     public List<Entry> subentries;

@@ -16,14 +16,6 @@ var watch = require('gulp-watch');
 
 var mainBowerFiles = require('main-bower-files');
 
-gulp.task('copyfonts', function() {
-  gulp.src([
-    'public_html/bower_components/components-font-awesome/fonts/**.*',
-    'public_html/bower_components/bootstrap/fonts/**/*.{ttf,woff,eof,svg}',
-  ])
-  .pipe(gulp.dest('build/fonts'));
-});
-
 var copyIndexHtml = function () {
   gulp.src('public_html/static/**/*')
       .pipe(gulp.dest('build'));

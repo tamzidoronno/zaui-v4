@@ -13,3 +13,14 @@
 .EventCertificatesAdmin .saveCertificate textarea {
     height: 80px;
 }
+
+.EventCertificatesAdmin .signaturebox {
+    width: 200px;
+    display: inline-block;
+    vertical-align: top;
+    border: solid 1px #DDD;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+}

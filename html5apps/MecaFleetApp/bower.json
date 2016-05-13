@@ -7,8 +7,8 @@
         "bootstrap": "3.3.6",
         "jquery": "2.1.4",
         "gulp": "3.9.1",
-        "components-font-awesome": "~4.5.0",
         "moment": "2.12.0",
+        "cordova": "3.4.0",
         
         "angular-animate": "~1.5.3",
         "angular-cookies": "~1.5.3",

@@ -52,7 +52,7 @@ thundashop.framework = {
            } else {
                scrollTop = $(window).outerHeight() * (page+1);
            }
-
+           
            thundashop.framework.scrollToPosition(scrollTop);
        }
 

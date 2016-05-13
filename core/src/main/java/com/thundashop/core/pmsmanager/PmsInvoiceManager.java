@@ -530,7 +530,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             price = cartManager.calculatePriceForCoupon(couponCode, price);
         }
         
-        if(avgPrice) {
+        if(avgPrice && count != 0) {
             price /= count;
         }
         
@@ -794,7 +794,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
         boolean includeTaxes = true;
         
-        if(priceType == PmsBooking.PriceType.daily) {
+        if(priceType == PmsBooking.PriceType.daily || priceType == PmsBooking.PriceType.progressive || priceType == PmsBooking.PriceType.interval) {
             startDate = adjustDateForCount(startDate, priceType, true);
             endDate = adjustDateForCount(endDate, priceType, false);
         }
@@ -853,7 +853,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public List<CartItem> getChangesForBooking(String bookingId) {
         runningDiffRoutine = true;
         List<CartItem> returnresult = new ArrayList();
-        PmsBooking booking = pmsManager.getBooking(bookingId);
+        PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             if(room.invoicedFrom == null || room.invoicedTo == null) {
                 continue;
@@ -904,7 +904,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private List<CartItem> getAllOrderItemsForRoomOnBooking(String pmsBookingRoomId, String id) {
         List<CartItem> items = new ArrayList();
-        PmsBooking booking = pmsManager.getBooking(id);
+        PmsBooking booking = pmsManager.getBookingUnsecure(id);
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrder(orderId);
             for(CartItem item : order.cart.getItems()) {

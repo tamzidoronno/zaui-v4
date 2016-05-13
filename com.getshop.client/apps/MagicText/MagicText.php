@@ -52,35 +52,33 @@ class MagicText extends \WebshopApplication implements \Application {
             if($this->getFactory()->isMobileIgnoreDisabled()) {
                 ?>
                     $('.app[appid="<?php echo $this->getAppInstanceId(); ?>"]').find('.line').css('opacity','1');
-                    </script>
                 <?php
-                return;
-            }
+            } else {
             ?>
-                
-            magictextconfig['<?php echo $this->getAppInstanceId(); ?>'] = <?php echo json_encode($config); ?>;
-            $(document).bind('DOMMouseScroll', function(e){
-                if(e.originalEvent.detail > 0) {
-                    app.MagicText.doScrollText(false, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
-                }else {
-                    app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
-                }
-           });
+                magictextconfig['<?php echo $this->getAppInstanceId(); ?>'] = <?php echo json_encode($config); ?>;
+                $(document).bind('DOMMouseScroll', function(e){
+                    if(e.originalEvent.detail > 0) {
+                        app.MagicText.doScrollText(false, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
+                    }else {
+                        app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
+                    }
+               });
 
-           $(document).bind('mousewheel', function(e){
-               if(e.originalEvent.wheelDelta < 0) {
-                    app.MagicText.doScrollText(false, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
-               }else {
-                    app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
-               }
-           });
-           $(function() {
-               app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
-           });
-           
-           PubSub.subscribe("GSPAGEANIMATE_COMPLETED", function() {
-               app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
-           });
+               $(document).bind('mousewheel', function(e){
+                   if(e.originalEvent.wheelDelta < 0) {
+                        app.MagicText.doScrollText(false, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
+                   }else {
+                        app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
+                   }
+               });
+               $(function() {
+                   app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
+               });
+
+               PubSub.subscribe("GSPAGEANIMATE_COMPLETED", function() {
+                   app.MagicText.doScrollText(true, '<?php echo $this->getAppInstanceId(); ?>', magictextconfig['<?php echo $this->getAppInstanceId(); ?>']);
+               });
+            <?php } ?>
         </script>
         <?php
     }

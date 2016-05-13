@@ -34,8 +34,9 @@ getshop.MenuEditor = {
     
     doScrollNavigate : function() {
         var page = $(this).attr('page');
-        var scrollTop = $(window).outerHeight() * (page-1);
+        var scrollTop = $('.gsucell[anchor="page_'+page+'"]').offset().top;
         thundashop.framework.scrollToPosition(scrollTop);
+        $('.closescrollmenu').click();
     },
     
     showIndicator : function() {

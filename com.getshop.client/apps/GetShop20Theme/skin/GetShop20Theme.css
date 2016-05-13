@@ -19,7 +19,7 @@
                 box-sizing: border-box;
 }
 .closescrollmenu { position:absolute; right: 10px; top: 10px; font-size: 20px; cursor:pointer; }
-.scrolltopmenu a { font-size: 20px;display:inline-block; padding-right: 50px; margin-top: 40px;}
+.scrolltopmenu span { font-size: 20px;display:inline-block; padding-right: 50px; margin-top: 40px; cursor:pointer; }
 
 
 body {

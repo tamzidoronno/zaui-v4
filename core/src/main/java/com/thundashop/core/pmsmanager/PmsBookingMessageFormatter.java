@@ -10,6 +10,9 @@ import java.util.Date;
 
 class PmsBookingMessageFormatter { 
     public String formatRoomData(String message, PmsBookingRooms room, BookingEngine bookingEngine) {
+        if(message == null) {
+            return "";
+        }
          String startMinute = new SimpleDateFormat("m").format(room.date.start).toString();
         if (startMinute.length() < 2) {
             startMinute = "0" + startMinute;
@@ -19,12 +22,24 @@ class PmsBookingMessageFormatter {
             endMinute = "0" + endMinute;
         }
         
-        message = message.replace("{code}", room.code);
-        message = message.replace("{checkin_date}", formatDate(room.date.start));
-        message = message.replace("{checkout_date}", formatDate(room.date.end));
-        message = message.replace("{checkin_time}", new SimpleDateFormat("H:").format(room.date.start) + startMinute);
-        message = message.replace("{checkout_time}", new SimpleDateFormat("H:").format(room.date.end) + endMinute);
-        message = message.replace("{roomType}", new SimpleDateFormat("H:").format(room.date.end) + endMinute);
+        if(room.code != null) {
+            message = message.replace("{code}", room.code);
+        }
+        if(room.date != null && room.date.start != null) {
+            message = message.replace("{checkin_date}", formatDate(room.date.start));
+        }
+        if(room.date != null && room.date.end != null) {
+            message = message.replace("{checkout_date}", formatDate(room.date.end));
+        }
+        if(room.date != null && room.date.start != null) {
+            message = message.replace("{checkin_time}", new SimpleDateFormat("H:").format(room.date.start) + startMinute);
+        }
+        if(room.date != null && room.date.end != null) {
+            message = message.replace("{checkout_time}", new SimpleDateFormat("H:").format(room.date.end) + endMinute);
+        }
+        if(room.date != null && room.date.end != null) {
+            message = message.replace("{roomType}", new SimpleDateFormat("H:").format(room.date.end) + endMinute);
+        }
         
         if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
              BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);

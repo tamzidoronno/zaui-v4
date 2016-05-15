@@ -2231,6 +2231,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.start = start;
         room.date.end = end;
         room.guests.add(new PmsGuests());
+        room.price = calculatePrice(type, start, end, true, "", booking.priceType);
 
         String res = addBookingToBookingEngine(booking, room);
         if(!res.isEmpty()) {

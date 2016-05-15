@@ -1083,6 +1083,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             message = configuration.emails.get(key);
             if (message != null) {
                 message = configuration.emailTemplate.replace("{content}", message);
+                message = message.trim();
                 message = message.replace("\n", "<br>\n");
             }
         }
@@ -1160,6 +1161,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             continue;
                         }
                         String title = configuration.emailTitles.get(key);
+                        if(title == null) {
+                            title = "";
+                        }
                         title = formatMessage(title, booking, room, guest);
                         messageManager.sendMail(guest.email, guest.name, title, message, getFromEmail(), getFromName());
                         repicientList.add(email);
@@ -1198,6 +1202,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, PmsGuests guest) {
+        if(message != null) {
+            message = message.trim();
+        }
         PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
 
         if (this.specifiedMessage != null && message != null) {

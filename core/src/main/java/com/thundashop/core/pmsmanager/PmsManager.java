@@ -1142,7 +1142,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     String email = userManager.getUserById(booking.userId).emailAddress;
                     String name = userManager.getUserById(booking.userId).fullName;
                     String title = configuration.emailTitles.get(key);
-                    title = formatMessage(message, booking, room, null);
+                    title = formatMessage(title, booking, room, null);
                     messageManager.sendMail(email, name, title, message, getFromEmail(), getFromName());
                     repicientList.add(email);
                 } else {
@@ -1160,7 +1160,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             continue;
                         }
                         String title = configuration.emailTitles.get(key);
-                        title = formatMessage(message, booking, room, guest);
+                        title = formatMessage(title, booking, room, guest);
                         messageManager.sendMail(guest.email, guest.name, title, message, getFromEmail(), getFromName());
                         repicientList.add(email);
                     } else {
@@ -2477,7 +2477,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                         String msg = "Key delivered for someone not checking out today, at room: " + roomName + ", booked by: " + usr.fullName;
                         String email = storeManager.getMyStore().configuration.emailAdress;
-                        messageManager.sendMail(email, email, msg, msg, email, email);
+                        messageManager.sendMail(email, email, "Key delivery failed.", msg, email, email);
                         System.out.println(msg);
                     }
                 }

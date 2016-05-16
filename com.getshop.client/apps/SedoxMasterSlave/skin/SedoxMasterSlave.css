@@ -27,6 +27,7 @@
 .SedoxMasterSlave .hierarchy_container .jstree {
     margin-left: 20px;
     margin-right: 20px;
+    font-size: 14px;
 }
 
 .SedoxMasterSlave .searchtitle {
@@ -239,4 +240,14 @@
 .SedoxMasterSlave .comment_data {
     height: 90px;
     margin-top: 10px;
+}
+
+.SedoxMasterSlave .jstree-closed > a {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.SedoxMasterSlave .jstree-open > a {
+    font-weight: bold;
+    font-size: 15px;
 }

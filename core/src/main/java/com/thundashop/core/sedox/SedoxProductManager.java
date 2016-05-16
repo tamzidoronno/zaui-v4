@@ -1320,6 +1320,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             saveUser(slave);
         }
     }
+    
+    @Override
+    public void removeSlaveFromMaster(String slaveId) {
+        SedoxUser slave = getSedoxUserAccountById(slaveId);
+        
+        slave.masterUserId = null;
+        saveUser(slave);
+    }
 
     @Override
     public List<SedoxUser> getSlaves(String masterUserId) {

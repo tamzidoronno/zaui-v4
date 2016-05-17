@@ -1441,21 +1441,23 @@ thundashop.framework = {
                 $(this).val(settings[name]);
             }
         });
-        
-        var groupAccess = JSON.parse(cell.attr('data-groupaccess'));
-        var groupAccessPage = $('.gspage[target="groupaccess"]');
-        groupAccessPage.find("[gsname]").each(function() {
-            var name = $(this).attr('gsname');
-            if($(this).is(':checkbox')) {
-               if(groupAccess[name]) {
-                   $(this).attr('checked','cheked');
-               } else {
-                   $(this).attr('checked',null);
-               }
-            } else {
-                $(this).val(groupAccess[name]);
-            }
-        });
+        var grpaccess = cell.attr('data-groupaccess');
+        if(grpaccess) {
+            var groupAccess = JSON.parse(grpaccess);
+            var groupAccessPage = $('.gspage[target="groupaccess"]');
+            groupAccessPage.find("[gsname]").each(function() {
+                var name = $(this).attr('gsname');
+                if($(this).is(':checkbox')) {
+                   if(groupAccess[name]) {
+                       $(this).attr('checked','cheked');
+                   } else {
+                       $(this).attr('checked',null);
+                   }
+                } else {
+                    $(this).val(groupAccess[name]);
+                }
+            });
+        }
         
         resizingpanel.attr('cellid', cellid);
         $('.gscellsettingspanel').fadeOut();

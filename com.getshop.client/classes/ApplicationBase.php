@@ -89,7 +89,10 @@ class ApplicationBase extends FactoryBase {
                     continue;
                 }
                 
-                if ($content2[0] == $managerName && $content2[1] == $function) {
+                if ($content2[0] == $managerName 
+                        && $content2[1] == $function 
+                        && $content2[2] == $this->getFactory()->getStore()->id 
+                        && $content2[3] == $this->applicationSettings->id) {
                     return $content2;
                 }
             }

@@ -32,14 +32,27 @@ foreach($listentry->subentries as $entry) {
 <script>
     var menuScrollCurPage = 0;
     $(window).scroll(function() {
-        var page = ($(window).scrollTop()-$(window).outerHeight()/2) / $(window).outerHeight();
-        page = parseInt(page+2);
+        var current = $(window).scrollTop()+100;
+        var page = 0;
+        for(var i = 10; i > 0; i--) {
+            var pageOffset = $('[anchor="page_'+i+'"]').offset();
+            if(pageOffset) {
+                var pageTop = pageOffset.top;
+                if(pageTop < current) {
+                    page = i;
+                    break;
+                }
+            }
+        }
+        
         if(page !== menuScrollCurPage) {
             menuScrollCurPage = page;
             $('.activescrollnav').removeClass('activescrollnav');
             $('.doscrollnav[page="'+page+'"]').addClass('activescrollnav');
         }
     });
+    var scrollMenuHeight = $('.scrolltopmenu').outerHeight(true);
+    $('.scrolltopmenu').css('top', (scrollMenuHeight*-1)+"px");
     $('.doscrollnav[page="1"]').addClass('activescrollnav');
     var scrtmnu = $('#scrolltopmenu');
     scrtmnu.detach();
@@ -55,7 +68,7 @@ foreach($listentry->subentries as $entry) {
 
     $('.closescrollmenu').click(function(){
         $('#scrolltopmenu').animate({
-            top: '-120'
+            top: '-'+$('.scrolltopmenu').outerHeight(true)
         }, {
             duration: 1000,
             "easing" : "easeOutBounce"

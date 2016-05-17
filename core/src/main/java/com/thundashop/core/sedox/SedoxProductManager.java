@@ -140,6 +140,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 .forEach(product -> retproducts.addAll(getProductsWithShareProductId(product.id)));
         result.products = new ArrayList();
         result.userProducts = retproducts;
+        result.userProducts.stream().forEach(o -> finalize(o));
         return result;
     }
     

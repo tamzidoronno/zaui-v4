@@ -249,3 +249,13 @@
 .SedoxMasterSlave .jstree-open > a {
     font-weight: bold;
 }
+
+.SedoxMasterSlave .slave_name:hover {
+    color: #8C9096;
+    cursor: pointer;
+}
+
+.SedoxMasterSlave .master_name:hover {
+    color: #8C9096;
+    cursor: pointer;
+}

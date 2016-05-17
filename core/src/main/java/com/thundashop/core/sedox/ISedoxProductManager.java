@@ -135,6 +135,9 @@ public interface ISedoxProductManager  {
     @Editor
     public void addCreditToSlave(String slaveId, double amount) throws ErrorException;
     
+    @Editor
+    public void addCommentToUser(String userId, String comment) throws ErrorException;
+    
     public List<SedoxUser> getSlaves(String masterUserId);
     
     @Editor

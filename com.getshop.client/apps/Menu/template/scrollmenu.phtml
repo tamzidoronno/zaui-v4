@@ -2,20 +2,23 @@
 /* @var $this \ns_a11ac190_4f9a_11e3_8f96_0800200c9a66\Menu */
 $list = $this->getMenuLists();
 ?>
+<?php
+$listentry = $this->getApi()->getListManager()->getEntryByPageId($this->getPage()->javapage->id);
+?>
+
 <i class="fa fa-bars menutogger"></i>
 <div class='scrolltopmenu' id='scrolltopmenu'>
     <?php
     
     $entries = $list[0]->entries;
-    foreach($entries as $entry) {
-        echo "<a href='?page=". $entry->pageId."'>" . $entry->name . "</a>";
+    $i = 1;
+    foreach($listentry->subentries as $entry) {
+        echo "<span class='doscrollnav' page='$i'>" . $entry->name . "</span>";
+        $i++;
     }
     ?>
     <i class='fa fa-close closescrollmenu'></i>
 </div>
-<?php
-$listentry = $this->getApi()->getListManager()->getEntryByPageId($this->getPage()->javapage->id);
-?>
 <span class='dots'>
 <?php
 $i =1;
@@ -29,14 +32,27 @@ foreach($listentry->subentries as $entry) {
 <script>
     var menuScrollCurPage = 0;
     $(window).scroll(function() {
-        var page = ($(window).scrollTop()-$(window).outerHeight()/2) / $(window).outerHeight();
-        page = parseInt(page+2);
+        var current = $(window).scrollTop()+100;
+        var page = 0;
+        for(var i = 10; i > 0; i--) {
+            var pageOffset = $('[anchor="page_'+i+'"]').offset();
+            if(pageOffset) {
+                var pageTop = pageOffset.top;
+                if(pageTop < current) {
+                    page = i;
+                    break;
+                }
+            }
+        }
+        
         if(page !== menuScrollCurPage) {
             menuScrollCurPage = page;
             $('.activescrollnav').removeClass('activescrollnav');
             $('.doscrollnav[page="'+page+'"]').addClass('activescrollnav');
         }
     });
+    var scrollMenuHeight = $('.scrolltopmenu').outerHeight(true);
+    $('.scrolltopmenu').css('top', (scrollMenuHeight*-1)+"px");
     $('.doscrollnav[page="1"]').addClass('activescrollnav');
     var scrtmnu = $('#scrolltopmenu');
     scrtmnu.detach();
@@ -52,7 +68,7 @@ foreach($listentry->subentries as $entry) {
 
     $('.closescrollmenu').click(function(){
         $('#scrolltopmenu').animate({
-            top: '-120'
+            top: '-'+$('.scrolltopmenu').outerHeight(true)
         }, {
             duration: 1000,
             "easing" : "easeOutBounce"

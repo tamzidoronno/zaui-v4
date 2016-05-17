@@ -81,6 +81,8 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             $notifications->cleaningDays->{$i} = $_POST['data']['cleaningDays_'.$i];
         }
         
+        $notifications->addonConfiguration = $this->buildAddonConfigs();
+        
         $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];
 
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $notifications);
@@ -97,6 +99,19 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     
     public function showSettings() {
         $this->includefile("settings");
+    }
+
+    public function buildAddonConfigs() {
+        $allAddons = array();
+        for($i = 1; $i <=  6; $i++) {
+            $addon = new \core_pmsmanager_PmsBookingAddonItem();
+            $addon->addonType = $i;
+            $addon->isActive = $_POST['data']['addon_active_'.$i];
+            $addon->isSingle = $_POST['data']['addon_single_'.$i];
+            $addon->productId = $_POST['data']['addon_productid_'.$i];
+            $allAddons[$i] = $addon;
+        }
+        return $allAddons;
     }
 }
 ?>

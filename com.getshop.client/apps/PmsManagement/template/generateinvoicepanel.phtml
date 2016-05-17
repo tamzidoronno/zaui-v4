@@ -2,20 +2,34 @@
 $d = new DateTime('first day of this month');
 $d = strtotime("-1 month", $d->getTimestamp());
 $d2 = time();
-if(isset($_POST['event']) && $_POST['event'] == "globalInvoiceCreation") {
+if(isset($_POST['data']['enddate'])) {
+    $d2 = strtotime($_POST['data']['enddate']);
+}
+if(isset($_POST['event']) && $_POST['event'] == "globalInvoiceCreation" && $_POST['data']['preview'] !== "true") {
     echo "<h1>Orders has been created...</h1>";
 }
 
 ?>
 <div gstype="form" method="globalInvoiceCreation">
     <h2>Global order creation, just specify the end date of the order creation</h2>
+    <input type="checkbox" CHECKED gsname="preview"> Create a preview<br>
     <select gsname="type">
         <option value="ended">Ended</option>
-        <option value="not_ended">Not ended</option>
+        <?php
+        $select = "";
+        if(isset($_POST['data']['type']) && $_POST['data']['type'] == "not_ended") { 
+            $select = "SELECTED";
+        }
+        ?>
+        <option value="not_ended" <?php echo $select; ?>>Not ended</option>
     </select>
     <input type="txt" gsname="enddate" value="<?php echo date("d.m.Y", $d2); ?>">
     <span class="pmsbutton" gstype="submit">Create orders</span>
 </div>
+
+<?php
+$this->includeOrderGenerationPreview();
+?>
 
 <script>
     $('input[gsname=startdate]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });

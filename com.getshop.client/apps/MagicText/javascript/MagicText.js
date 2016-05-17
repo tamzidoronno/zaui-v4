@@ -4,7 +4,6 @@ app.MagicText = {
     },
     
     doScrollText : function(direction, appid, config) {
-        console.log(config);
         var curScroll = $(window).scrollTop();
         var curScroll = ($('.MagicText[appid="'+appid+'"] .line').offset().top - curScroll)  * -1;
         if(config.scrollstart > curScroll) {

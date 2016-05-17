@@ -237,4 +237,8 @@ public class Cart extends DataCommon {
             cartItem.getProduct().price = price;
         }
     }
+
+    public void addCartItems(List<CartItem> items) {
+        this.items.addAll(items);
+    }
 }

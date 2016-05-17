@@ -411,6 +411,7 @@ public class StoreHandler {
        
         Gson gson = new GsonBuilder()
                 .serializeNulls()
+                .serializeSpecialFloatingPointValues()
                 .disableInnerClassSerialization()
                 .addSerializationExclusionStrategy(new SerializationExcludeStragety(user))
                 .create();

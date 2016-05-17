@@ -35,7 +35,7 @@ class PmsStatisticsBuilder {
                 if(!booking.confirmed) {
                     continue;
                 }
-                for(PmsBookingRooms room : booking.rooms) {
+                for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(room.isActiveOnDay(cal.getTime())) {
                         Double price = room.getDailyPrice(booking.priceType, cal);
                         if(!pricesExTax) {

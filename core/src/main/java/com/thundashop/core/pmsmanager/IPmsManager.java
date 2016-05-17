@@ -30,6 +30,9 @@ public interface IPmsManager {
     @Editor
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId);
     
+    @Editor
+    public PmsBooking getBookingFromRoomIgnoreDeleted(String roomId);
+    
     @Administrator
     public String setNewRoomType(String roomId, String bookingId, String newType);
     
@@ -140,6 +143,8 @@ public interface IPmsManager {
     @Administrator
     public void changeInvoiceDate(String roomId, Date newDate);
     
+    public void addAddonsToBooking(Integer type, String bookingId, String roomId, boolean remove);
+    
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);
     public PmsConfiguration getConfiguration();
@@ -163,5 +168,8 @@ public interface IPmsManager {
     public Integer getNumberOfAvailable(String itemType, Date start, Date end);
     public void checkDoorStatusControl() throws Exception;
     public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
+    
+    @Administrator
+    public void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception;
     
 }

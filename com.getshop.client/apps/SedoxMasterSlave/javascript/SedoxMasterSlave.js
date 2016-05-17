@@ -4,6 +4,8 @@ app.SedoxMasterSlave = {
         $(document).on('click', '.SedoxMasterSlave .save_information', app.SedoxMasterSlave.saveInformation);
         $(document).on('click', '.SedoxMasterSlave .delete_slave i', app.SedoxMasterSlave.removeSlaveFromMaster);
         $(document).on('click', '.SedoxMasterSlave .add_slave', app.SedoxMasterSlave.addSlaveToMaster);
+        $(document).on('click', '.SedoxMasterSlave .slave_name', app.SedoxMasterSlave.navigateToSlave);
+        $(document).on('click', '.SedoxMasterSlave .master_name', app.SedoxMasterSlave.navigateToMaster);
     },
     
     populateTree: function() {        
@@ -14,11 +16,11 @@ app.SedoxMasterSlave = {
                 resizeLeftBar(); 
             });
             
-            $('#jstree').jstree({ 'types' : { 'default' : { icon : 'fa fa-user icon-state-warning icon-lg' } },
+            $('#jstree').jstree({ 'types' : { 'default' : { icon : 'fa fa-user icon-state-warning icon-lg' }, 'master' : { icon : 'fa fa-users' } },
                                   'search' : {"show_only_matches" : true, "show_only_matches_children" : true},
                                   'plugins' : [ "sort", "search", "types", "wholerow" ]
                                 });
-            
+                                
             $('#jstree').jstree(true).settings.core.data = eval(res);
             $('#jstree').jstree(true).refresh();
 
@@ -60,8 +62,8 @@ app.SedoxMasterSlave = {
     
     saveInformation: function() {
         var data = {
-            slaveid: $(this).attr("master_id"),
-            income: $(".SedoxMasterSlave .income_input").val()
+            userid: $(this).attr("user_id"),
+            comment: $(".SedoxMasterSlave .comment_input").val()
         };
         
         var event = thundashop.Ajax.createEvent(null, "saveInformation", this, data);
@@ -101,6 +103,17 @@ app.SedoxMasterSlave = {
            element.parents(".SedoxMasterSlave .slave_information").remove();
            app.SedoxMasterSlave.populateTree();
         });
+    },
+    
+    navigateToSlave: function() {
+        if(!$(".jstree-node[id='" + $(this).attr("master_id") + "']").hasClass("jstree-open")) {
+          $(".jstree-node[id='" + $(this).attr("master_id") + "'] > div ~ i").click();  
+        }
+        $(".jstree-node[id='" + $(this).attr("slave_id") + "'] > div").click();
+    },
+    
+    navigateToMaster: function() {
+        $(".jstree-node[id='" + $(this).attr("master_id") + "'] > div").click();
     }
 };
 

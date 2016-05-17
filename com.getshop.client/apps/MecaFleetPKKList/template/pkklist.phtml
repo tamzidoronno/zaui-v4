@@ -68,7 +68,7 @@ foreach ($carList as $car) {
                 <div class="details">
                     Bileier har godkjent dato for EU Kontroll: <? echo date('d/m-Y H:i', strtotime($car->nextControlAgreed)); ?> 
                     <br/><span style='margin-top: 5px;' class="shop_button" gsclick='controlCompleted' carid='<? echo $car->id; ?>' type='control'>Kontroll gjennomført</span>
-                    <span style='margin-top: 5px;' class="shop_button" gsclick='noShow' carid='<? echo $car->id; ?>' type='control'>No show</span>
+                    <span style='margin-top: 5px;' class="shop_button" gsclick='noShow' carid='<? echo $car->id; ?>' type='control'>Ikke møtt</span>
                 </div>
             <?
             }

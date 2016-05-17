@@ -9,5 +9,6 @@ public class TreeNode implements Serializable {
     public String id;
     public String text;
     public String parent;
+    public String type;
     public List<TreeNode> children = new ArrayList();
 }

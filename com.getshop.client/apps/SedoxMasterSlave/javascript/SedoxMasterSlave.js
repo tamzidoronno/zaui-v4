@@ -14,7 +14,7 @@ app.SedoxMasterSlave = {
                 resizeLeftBar(); 
             });
             
-            $('#jstree').jstree({ 'types' : { 'default' : { icon : 'fa fa-user icon-state-warning icon-lg' } },
+            $('#jstree').jstree({ 'types' : { 'default' : { icon : 'fa fa-user icon-state-warning icon-lg' }, 'master' : { icon : 'fa fa-users' } },
                                   'search' : {"show_only_matches" : true, "show_only_matches_children" : true},
                                   'plugins' : [ "sort", "search", "types", "wholerow" ]
                                 });

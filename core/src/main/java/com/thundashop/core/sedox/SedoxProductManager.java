@@ -247,6 +247,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
         }
         
+        userTree
+                .stream()
+                .forEach(user -> userTree
+                                         .stream()
+                                         .filter(master -> user.parent.equals(master.id) && master.parent.equals("#"))
+                                         .forEach(toModify -> toModify.type = "master")
+                );
+        
         return userTree;
     }
     

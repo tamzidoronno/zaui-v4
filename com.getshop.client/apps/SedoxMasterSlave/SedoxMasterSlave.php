@@ -23,9 +23,25 @@ class SedoxMasterSlave extends \MarketingApplication implements \Application {
     }
     
     public function saveInformation() {
-        $this->getApi()->getSedoxProductManager()->togglePassiveSlaveMode($_POST['data']['slaveid'], filter_var($_POST['data']['passiveslave'], FILTER_VALIDATE_BOOLEAN));
         $this->getApi()->getSedoxProductManager()->addCreditToSlave($_POST['data']['slaveid'], filter_var($_POST['data']['income'], FILTER_VALIDATE_FLOAT));
+    }
+    
+    public function removeSlaveFromMaster() {
+        $this->getApi()->getSedoxProductManager()->removeSlaveFromMaster($_POST['data']['slaveid']);
+    }
+    
+    public function addSlaveToMaster() {
         $this->getApi()->getSedoxProductManager()->addSlaveToUser($_POST['data']['masterid'], $_POST['data']['slaveid']);
+        
+        $slaveUser = $this->getApi()->getUserManager()->getUserById($_POST['data']['slaveid']);
+        
+        echo "<div class='slave_information'>";
+        echo "<div class='slave_name float-left'>" . $slaveUser->fullName . "</div>";
+        echo "<div class='float-right'>";
+        echo " <div class='slave_options'>TestData</div>";
+        echo " <div class='delete_slave'><i class='fa fa-times' slave_id='" . $slaveUser->id . "'></i></div>";
+        echo "</div>";
+        echo "</div>";
     }
 }
 ?>

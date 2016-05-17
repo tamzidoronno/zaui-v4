@@ -222,4 +222,7 @@ public interface ISedoxProductManager  {
     
     @Customer
     public void refreshEvcCredit();
+    
+    @Editor
+    public void removeSlaveFromMaster(String slaveId);
 }

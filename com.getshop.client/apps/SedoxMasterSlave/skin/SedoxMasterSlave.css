@@ -27,6 +27,7 @@
 .SedoxMasterSlave .hierarchy_container .jstree {
     margin-left: 20px;
     margin-right: 20px;
+    font-size: 14px;
 }
 
 .SedoxMasterSlave .searchtitle {
@@ -40,21 +41,23 @@
 }
 
 .SedoxMasterSlave .informationtitle {
-    font-size: 24px;
-    font-weight: normal;
+    font-size: 20px;
+    font-weight: bold;
     margin-left: 15px;
+    margin-right: 15px;
     margin-top: 10px;
     padding-bottom: 10px;
     font-family: 'Roboto', sans-serif;
-    color: #626b7a;
+    color: #2D3C54;
+    text-transform: uppercase;
 }
 
 .SedoxMasterSlave .information_container {
-    top: 250px;
-    position: fixed;
+    top: 30px;
+    position: absolute;
     background-color: #f9fafc;
     border: solid 1px #e4ebf1;
-    width: 35%;
+    width: 45%;
     font-family: 'Lato', sans-serif;
     font-size: 20px;
     color: #626b7a;
@@ -64,7 +67,6 @@
     padding: 10px;
     border: solid 2px #EEE;
     border-radius: 8px;
-    margin-bottom: 20px;
     width: 200px;
 }
 
@@ -74,12 +76,16 @@
     border-radius: 8px;
     width: 200px;
     text-align: right;
+    height: 6px;
 }
 
 .SedoxMasterSlave .information_data {
-    margin-left: 25px;
-    margin-right: 25px;
+    margin-left: 15px;
+    margin-right: 15px;
     margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
 }
 
 .SedoxMasterSlave .aligned_data {
@@ -89,6 +95,15 @@
 .SedoxMasterSlave .save_information {
     width: 100px;
     margin-bottom: 15px;
+}
+
+.SedoxMasterSlave .add_slave {
+    width: 110px;
+    margin: 0;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+    float: right;
 }
 
 .ui-autocomplete {
@@ -143,6 +158,7 @@
 
 .SedoxMasterSlave .text_data {
     margin-right: 5px;
+    font-weight: normal;
 }
 
 .SedoxMasterSlave .data_description {
@@ -152,4 +168,84 @@
 
 .SedoxMasterSlave .income_data {
     margin-top: 15px;
+}
+
+.SedoxMasterSlave .dealersegment {
+    margin-top: 30px;
+    border-top: 1px solid #e4ebf1;
+    padding-top: 10px;
+}
+
+.SedoxMasterSlave .add_slave ~ .aligned_data {
+    float: left;
+}
+
+.SedoxMasterSlave .add_slave ~ .aligned_data > .gs_datalist_input {
+    height: 6px;
+}
+
+.SedoxMasterSlave .dealersegment ~ .information_data {
+    height: 30px;
+    margin-bottom: 15px;
+}
+
+.SedoxMasterSlave .float-left {
+    float: left;
+}
+
+.SedoxMasterSlave .float-right {
+    float: right;
+}
+
+.SedoxMasterSlave .slave_information {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+    height: 20px;
+    display: block;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.SedoxMasterSlave .slave_options {
+    border-left: 1px solid #626b7a;
+    border-right: 1px solid #626b7a;
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.SedoxMasterSlave .delete_slave {
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.SedoxMasterSlave .delete_slave i:hover {
+    color: #8C9096;
+    cursor: pointer;
+}
+
+.SedoxMasterSlave .comment_input {
+    padding: 10px;
+    border: solid 2px #EEE;
+    border-radius: 8px;
+    width: 200px;
+    resize: none;
+    height: 80px;
+}
+
+.SedoxMasterSlave .comment_data {
+    height: 90px;
+    margin-top: 10px;
+}
+
+.SedoxMasterSlave .jstree-closed > a {
+    font-weight: bold;
+}
+
+.SedoxMasterSlave .jstree-open > a {
+    font-weight: bold;
 }

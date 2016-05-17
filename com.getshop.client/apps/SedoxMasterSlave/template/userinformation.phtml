@@ -5,32 +5,41 @@
 $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
 $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($_POST['data']['userid']);
 $masterUser = $this->getApi()->getUserManager()->getUserById($sedoxUser->masterUserId);
+$slaves = $this->getApi()->getSedoxProductManager()->getSlaves($sedoxUser->id);
 ?>
 
 
 <div class="information_container">
     <div class="informationtitle">
-        User Information
+        <i class="fa fa-user"></i> User Information
     </div>
     <div class="information_data">
         Name:
-        <div class="aligned_data text_data"><? echo $user->fullName; ?></div>
+        <div class="aligned_data text_data"><? echo $user->fullName; ?> - ID <? echo $user->id; ?></div>
+    </div>
+    <div class="information_data">
+        Status:
+        <div class="aligned_data text_data">TempData</div>
+    </div>
+    <div class="information_data">
+        Master Account:
+        <div class="aligned_data text_data"><? echo $masterUser != null ? $masterUser->fullName : "-"; ?></div>
     </div>
     <div class="information_data">
         <div class="data_description">Income:</div>
         <div class="aligned_data"><input class="income_input" value="<? echo $sedoxUser->slaveIncome; ?>"/></div>
     </div>
-    <div class="information_data income_data">
-        Passive Slave:
-        <div class="aligned_data checkbox">
-            <input id="passiveslavebox" type="checkbox" <? echo $sedoxUser->isPassiveSlave == "true" ? "checked" : ""?>>
-            <label for="passiveslavebox"></label>
-        </div>
+    <div class="information_data comment_data">
+        <div class="data_description">Comment:</div>
+        <div class="aligned_data"><textarea class="comment_input"/></div>
+    </div>  
+    <div class="informationtitle dealersegment">
+        <i class="fa fa-users"></i> Dealer Network
     </div>
     <div class="information_data">
-        <div class="data_description">Master:</div>
+        <div class="sedox_blue_button add_slave" master_id="<? echo $user->id; ?>">Add Slave</div>
         <div class="aligned_data">
-            <input class="gs_datalist_input" datalist="users" multiple value="<? echo $masterUser != null ? $masterUser->fullName . " | " . $masterUser->emailAddress : "";?>"/>
+            <input class="gs_datalist_input" datalist="users" multiple/>
             <datalist id="users">
 
                 <?
@@ -45,6 +54,24 @@ $masterUser = $this->getApi()->getUserManager()->getUserById($sedoxUser->masterU
             </datalist>
         </div>
     </div>
-    <div class="sedox_blue_button save_information" slave_id="<? echo $sedoxUser->id; ?>">Save</div>
+    <?
+    if($slaves != null) {
+        foreach($slaves as $slave) {
+            if($slave->id != $sedoxUser->id) {
+                $slaveUser = $this->getApi()->getUserManager()->getUserById($slave->id);
+                ?>
+                <div class="slave_information">
+                    <div class="slave_name float-left"><? echo $slaveUser->fullName; ?></div>
+                    <div class="float-right">
+                        <div class="slave_options">TestData</div>
+                        <div class="delete_slave"><i class="fa fa-times" slave_id="<?echo $slave->id; ?>"></i></div>
+                    </div>
+                </div>
+                <?
+            }
+        }
+    }
+    ?>
+    <div class="sedox_blue_button save_information" master_id="<? echo $sedoxUser->id; ?>">Save</div>
 </div>
 

@@ -1382,7 +1382,6 @@ thundashop.framework = {
         return thundashop.framework.get_inherited_bg(jquery_object.parent());
     },
     showCellResizing: function () {
-        debugger;
         if (typeof (cssEditorForCell) !== "undefined") {
             cssEditorForCell.destroy();
             cssEditorForCell = null;

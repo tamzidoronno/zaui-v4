@@ -320,8 +320,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     private void addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
         List<CartItem> items = new ArrayList();
-                
-        if(pmsManager.getConfigurationSecure().autoGenerateChangeOrders) {
+        boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
+        if(generateChanges) {
             List<CartItem> changes = getChangesForBooking(booking.id);
             items.addAll(changes);
         }
@@ -330,8 +330,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(filter.autoGeneration) {
                 autoGenerateOrders(room, filter);
             } else {
-                checkIfNeedCrediting(room);
-                checkIfNeedAdditionalStartInvoicing(room);
+                if(filter.onlyEnded && !room.isEndedDaysAgo(1)) {
+                    continue;
+                }
+                if(generateChanges) {
+                    checkIfNeedCrediting(room);
+                    checkIfNeedAdditionalStartInvoicing(room);
+                }
                 checkIfNeedAdditionalEndInvoicing(room, filter);
                 if(itemsToReturn.isEmpty()) {
                     continue;
@@ -382,6 +387,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         CartItem item = createCartItemForCart(productId, count, room.pmsBookingRoomId);
         item.startDate = startDate;
         item.endDate = endDate;
+        
+        if(item.startDate.after(item.endDate)) {
+            Date tmpDate = item.startDate;
+            item.startDate = endDate;
+            item.endDate = tmpDate;
+        }
+
+        
         item.getProduct().price = price;
         
         if(name != null) {

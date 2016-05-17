@@ -403,7 +403,11 @@ public class PmsManagerProcessor {
                                 manager.warnAboutUnableToAutoExtend(item.bookingItemName,"Not able to extend");
                                 room.warnedAboutAutoExtend = room.date.end;
                                 needSaving = true;
-                            }
+                                
+                                text += " (" + start + " to " + end + ")";
+                                manager.logEntry(text, booking.id, room.bookingItemId);
+                                continue;
+                            } 
 
                             text += " (" + start + " to " + end + ")";
                             manager.logEntry(text, booking.id, room.bookingItemId);

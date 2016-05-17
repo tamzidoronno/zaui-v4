@@ -761,7 +761,7 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
         List<PmsBooking> bookings = pmsManager.getAllBookings(filter);
         boolean codeFound = false;
         for(PmsBooking booking : bookings) {
-            for(PmsBookingRooms room : booking.rooms) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
                 if(room.code.equals(code)) {
                     codeFound = true;
                     BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);

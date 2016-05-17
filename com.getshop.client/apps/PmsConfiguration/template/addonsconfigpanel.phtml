@@ -1,0 +1,51 @@
+<?php
+/* @var $this \ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+?>
+
+<h1>Addons configuration</h1>
+<?php
+$items = array();
+$items[1] = "BREAKFAST";
+$items[2] = "PARKING";
+$items[3] = "LATECHECKOUT";
+$items[4] = "EARLYCHECKIN";
+$items[5] = "EXTRABED";
+$items[6] = "CANCELATION FEE";
+$products = $this->getApi()->getProductManager()->getAllProducts();
+
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th>Active</th>";
+echo "<th>One time cost</th>";
+echo "<th align='left'>Product</th>";
+echo "<th align='left'>Name</th>";
+foreach($items as $key => $item) {
+    $curconfig = new core_pmsmanager_PmsBookingAddonItem();
+    if(isset($config->addonConfiguration->{$key})) {
+        $curconfig = $config->addonConfiguration->{$key};
+    }
+
+    $checkedActive = "";
+    $checkedSingle = "";
+    
+    if($curconfig->isActive) { $checkedActive = "CHECKED"; }
+    if($curconfig->isSingle) { $checkedSingle = "CHECKED"; }
+    
+    echo "<tr>";
+    echo "<td style='width: 80px;' align='center'><input type='checkbox' gsname='addon_active_$key' $checkedActive></td>";
+    echo "<td style='width: 80px;' align='center'><input type='checkbox' gsname='addon_single_$key' $checkedSingle></td>";
+    echo "<td style='width:10px;'>";
+    echo "<select gsname='addon_productid_$key'>";
+    echo "<option value=''></option>";
+    foreach($products as $product) {
+        $selected = "";
+        if($curconfig->productId == $product->id) { $selected = "SELECTED"; }
+        echo "<option value='" . $product->id . "' $selected>" . $product->name . "</option>";
+    }
+    echo "</select>";
+    echo "<td style='padding-left: 20px;'>" . $item . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>

@@ -75,6 +75,7 @@ $days[7] = "Sunday";
 <span class="changeview pmsbutton" data-panel='instructions'>Instructions</span>
 <span class="changeview pmsbutton" data-panel='defaultmessage'>Default msg</span>
 <span class="changeview pmsbutton" data-panel='other_config'>Other</span>
+<span class="changeview pmsbutton" data-panel='addons'>Addons</span>
 <div style='padding-top: 20px;'>
     Variables: {code},
     {roomName}, 
@@ -115,8 +116,8 @@ $days[7] = "Sunday";
         ?>
     </div>
 
-    <div class='sms_notifcations addons'>
-        Addons
+    <div class='addons notificationpanel'>
+        <?php $this->includefile("addonsconfigpanel"); ?>
     </div>
     
     <div class='sms_notifcations notificationpanel'>
@@ -496,6 +497,18 @@ $days[7] = "Sunday";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->autoGenerateChangeOrders) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoGenerateChangeOrders' <? echo $checked; ?>>
+            </span>
+            Autocreate generate orders when changes in booking.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->updatePriceWhenChangingDates) {
                     $checked = "CHECKED";
                 }
@@ -651,3 +664,10 @@ $days[7] = "Sunday";
     </div>
 </div>
 
+<script>
+    $('.notificationpanel').hide();
+    var tabselected = localStorage.getItem("pmsconfigtabselected");
+    if(tabselected) {
+        $('.'+tabselected).show();
+    }
+</script>

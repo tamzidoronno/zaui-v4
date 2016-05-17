@@ -10,8 +10,12 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .doneediting', app.PmsManagement.doneediting);
         $(document).on('click', '.PmsManagement .deletebooking', app.PmsManagement.deletebooking);
         $(document).on('click', '.PmsManagement .resetnotifications', app.PmsManagement.resetnotifications);
-        $(document).on('keyup','.PmsManagement .newroomstart', app.PmsManagement.updateRoomList);
-        $(document).on('keyup','.PmsManagement .newroomend', app.PmsManagement.updateRoomList);
+        $(document).on('keyup','.PmsManagement .newroomstartdate', app.PmsManagement.updateRoomList);
+        $(document).on('keyup','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
+        $(document).on('keyup','.PmsManagement .newroomstarttime', app.PmsManagement.updateRoomList);
+        $(document).on('keyup','.PmsManagement .newroomendtime', app.PmsManagement.updateRoomList);
+        $(document).on('change','.PmsManagement .newroomstartdate', app.PmsManagement.updateRoomList);
+        $(document).on('change','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
         $(document).on('click','.PmsManagement .showlog', app.PmsManagement.showlog);
         $(document).on('click','.PmsManagement .closeadduser', app.PmsManagement.closeadduser);
         $(document).on('change','.PmsManagement .changeuseronbooking', app.PmsManagement.changeuseronbooking);
@@ -23,6 +27,55 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .changeInvoiceTo', app.PmsManagement.changeInvoiceTo);
         $(document).on('click','.PmsManagement .sendpaymentlink', app.PmsManagement.sendpaymentlink);
         $(document).on('change','.PmsManagement select[gsname="itemid"]', app.PmsManagement.loadTakenRoomList);
+        $(document).on('click','.PmsManagement .tab', app.PmsManagement.selectTab);
+        $(document).on('click','.PmsManagement .addAddonsButton', app.PmsManagement.addAddon);
+        $(document).on('click','.PmsManagement .saveAddons', app.PmsManagement.saveAddons);
+        $(document).on('click','.PmsManagement .removeAddons', app.PmsManagement.removeAddons);
+    },
+    removeAddons : function() {
+         var data = {
+            "type" : $('#addontypeselection').val(),
+            "bookingid" : $('#openedbookingid').val(),
+            "roomId" : $('#roomsForAddons').val(),
+            "remove" : true
+        };
+        var event = thundashop.Ajax.createEvent('','addAddon', $(this), data);
+        thundashop.common.showInformationBoxNew(event);
+    },
+    saveAddons : function() {
+        var toSave = {};
+        $('.addonrow').each(function() {
+            var addonid = $(this).attr('addonid');
+            if(!toSave[addonid]) {
+                toSave[addonid] = {};
+            }
+            toSave[addonid].count = $(this).find('.addoncount').val();
+            toSave[addonid].price = $(this).find('.addonprice').val();
+        });
+        var event = thundashop.Ajax.createEvent('','updateAddons',$(this), {
+            "addons" : toSave,
+            "bookingid" : $('#openedbookingid').val(),
+        });
+        thundashop.common.showInformationBoxNew(event);
+    },
+    addAddon : function() {
+        var data = {
+            "type" : $('#addontypeselection').val(),
+            "bookingid" : $('#openedbookingid').val(),
+            "roomId" : $('#roomsForAddons').val(),
+            "remove" : false
+        };
+        var event = thundashop.Ajax.createEvent('','addAddon', $(this), data);
+        thundashop.common.showInformationBoxNew(event);
+    },
+    selectTab : function() {
+        var tab = $(this);
+        $('.tab.selected').removeClass('selected');
+        tab.addClass('selected');
+        $('.tabarea').hide();
+        var area = $(this).attr('area');
+        $('.tabarea.'+area).show();
+        localStorage.setItem('selectedbookinginfotab', area);
     },
     sendpaymentlink : function() {
         var event = thundashop.Ajax.createEvent('','sendPaymentLink', $(this), {
@@ -53,6 +106,9 @@ app.PmsManagement = {
         });
     },
     changeInvoiceTo : function() {
+        if($(this).closest('tr').hasClass('roomdeleted')) {
+            return;
+        }
         var newDate = prompt("Specify a new date");
         if(!newDate) {
             return;
@@ -156,10 +212,10 @@ app.PmsManagement = {
     },
     updateRoomList : function() {
         var data = {
-            "start" : $('.newroomstart').val(),
-            "end" : $('.newroomend').val()
+            "start" : $('.newroomstartdate').val() + " " + $('.newroomstarttime').val(),
+            "end" : $('.newroomenddate').val() + " " + $('.newroomendtime').val(),
+            "selectedtype" : $('.addroomselectiontype').val()
         };
-        console.log(data);
         var event = thundashop.Ajax.createEvent('','updateItemList', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function(result) {
             $('.addroomselectiontype').replaceWith(result);
@@ -199,6 +255,9 @@ app.PmsManagement = {
     },
     toggleEditMode : function() {
         var row = $(this).closest('.roomattribute');
+        if($(this).closest('tr').hasClass('roomdeleted')) {
+            return;
+        }
         var view = row.find('.viewmode');
         var edit = row.find('.editmode');
         view.hide();

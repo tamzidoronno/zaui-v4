@@ -25,20 +25,22 @@ $toPrint = $sorted;
 
 $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-?>
-<h2>Rooms booked</h2>
-<?php
 $dates = $this->getApi()->getPmsManager()->getDefaultDateRange($this->getSelectedName());
 $start = $this->convertToJavaDate(strtotime($dates->start));
 $end = $this->convertToJavaDate(strtotime($dates->end));
 
+$defaultType = $booking->rooms[0]->bookingItemTypeId;
+
 $cleaningInterval = $config->cleaningInterval;
 ?>
+<br>
 <span gstype="form" method='addRoomToBooking'>
     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-    <input type='text' class='newroomstart' style='float:left; margin-right: 10px;' value='<?php echo date("d.m.Y H:i", strtotime($start)); ?>' gsname='start'>
-    <input type='text' class='newroomend' style='float:left; margin-right: 10px;' value='<?php echo date("d.m.Y H:i", strtotime($end)); ?>' gsname='end'>
-    <? $this->includeAddRoomOptions($items, $start, $end); ?>
+    <input type='text' class='newroomstartdate' style=' width: 80px;' value='<?php echo date("d.m.Y", strtotime($start)); ?>' gsname='start'>
+    <input type='text' class='newroomstarttime' style='width: 40px;text-align: center;' value='<?php echo date("H:i", strtotime($start)); ?>' gsname='starttime'> - 
+    <input type='text' class='newroomenddate' style='width: 80px;' value='<?php echo date("d.m.Y", strtotime($end)); ?>' gsname='end'>
+    <input type='text' class='newroomendtime' style='margin-right: 10px; width: 40px;text-align: center;' value='<?php echo date("H:i", strtotime($end)); ?>' gsname='endtime'>
+    <? $this->includeAddRoomOptions($items, $start, $end, $defaultType); ?>
     <span class='pmsbutton' gstype='submitToInfoBox'>Add room</span>
     
     <?php
@@ -114,13 +116,21 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
         if($room->intervalCleaning) {
             $roomCleaningInterval = $room->intervalCleaning;
         }
+        $deleted = "";
+        if($room->deleted) {
+            $deleted = "roomdeleted";
+        }
         ?>
-        <tr bookingid='<? echo $bookingId; ?>' roomid='<? echo $room->pmsBookingRoomId; ?>'>
+        <tr bookingid='<? echo $bookingId; ?>' roomid='<? echo $room->pmsBookingRoomId; ?>' class='<?php echo $deleted; ?>'>
             <td>
                 <span gstype='form' method="removeRoom">
                     <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                     <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                    <i class='fa fa-trash-o' gstype='submitToInfoBox'></i>
+                    <?php if(!$deleted) { ?>
+                        <i class='fa fa-trash-o' gstype='submitToInfoBox'></i>
+                    <?php } else { ?>
+                        Deleted
+                    <?php } ?>
                 </span>
                     <?php
                     if($config->autoExtend) {
@@ -145,7 +155,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                         <span class='roompostfix'>
                             <span class="viewmode">
                                 <?
-                                if (!$room->booking->bookingItemId) {
+                                if (!$room->booking || !$room->booking->bookingItemId) {
                                     echo "Not assigned yet";
                                 } else {
                                     $notifications = "notifications: " . join(",", $room->notificationsSent);
@@ -226,7 +236,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                 </span>
             </td>
             <?php 
-            if($config->bookingTimeInterval == 2) { 
+            if($config->bookingTimeInterval == 2) {
                 $diff = ((strtotime($date->end) - strtotime($date->start)) / 86400);
                 echo "<td>".round($diff)."</td>";
             } 
@@ -299,6 +309,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                 <td class="changeInvoiceTo">
                     <? 
                     if($room->invoicedTo) {
+                        echo date("d.m.Y" , strtotime($room->invoicedFrom)) . "<br>"; 
                         echo date("d.m.Y" , strtotime($room->invoicedTo)); 
                     } else {
                         echo " - ";
@@ -330,7 +341,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
 
 <script>
     $('.calinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
-    $('.newroomstart').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
-    $('.newroomend').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.newroomstartdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.newroomenddate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
 </script>
     

@@ -62,13 +62,6 @@ if($configuration->supportMoreDates) {
     echo "</div>";
 }
 
-$printAddons = false;
-foreach($booking->addons as $addon) {
-    if($addon) {
-        $printAddons = true;
-    }
-}
-
 echo "<br>";
 foreach($booking->rooms as $room) {
     if(!isset($prices[$room->taxes])) {

@@ -16,7 +16,10 @@ class Page {
     function __construct($javapage, $factory) {
         $this->javapage = $javapage;
         $this->factory = $factory;
-        $this->themeApp = $factory->getThemeApplication();
+        $themeApp = $factory->getApi()->getStoreApplicationPool()->getThemeApplication();
+        if ($themeApp) {
+            $this->themeApp = $this->factory->getApplicationPool()->createInstace($themeApp);
+        }
     }
 
     function getId() {
@@ -31,7 +34,7 @@ class Page {
         $this->printEffectTriggerLoaded();
         
         
-        if($this->javapage->pageScroll && !$this->factory->isMobile() && !$this->factory->isEditorMode()) {
+        if($this->javapage->pageScroll && !$this->factory->isMobileIgnoreDisabled() && !$this->factory->isEditorMode()) {
             echo "<script>thundashop.framework.activatePageScrolling();</script>";
         }
 
@@ -603,7 +606,7 @@ class Page {
         $permobject->{'link'} = $cell->link;
         $permobject->{'hideOnMobile'} = $cell->hideOnMobile;
         $permobject->{'hideOnDesktop'} = $cell->hideOnDesktop;
-        $permissions = "data-settings='".json_encode($cell->settings) . "' data-groupaccess='".  json_encode($cell->groupAccess->access)."'";
+        $permissions = "data-settings='".json_encode($cell->settings) . "'";
       
         $anchor = $cell->anchor;
         
@@ -744,17 +747,6 @@ class Page {
                 <span class='tabbtn' target='background'><? echo $this->factory->__w("Styling"); ?></span>
                 <span class='tabbtn' target='cellsettings'><? echo $this->factory->__w("Settings"); ?></span>
                 <span class='tabbtn' target='effects'><? echo $this->factory->__w("Effects"); ?></span>
-                <?
-                if (count($this->factory->getApi()->getUserManager()->getAllGroups())) {
-                ?>
-                    <span class='tabbtn' target='groupaccess'><? echo $this->factory->__w("Group Access"); ?></span>
-                <?
-                }
-                ?>
-                
-            </div>
-            <div class='gspage' target='groupaccess' style='padding: 10px;'>
-                <? include("layoutbuilder/groupaccess.php"); ?>
             </div>
             <div class='gspage' target='effects' style='padding: 10px;'>
                 <? include("layoutbuilder/effects.php"); ?>
@@ -1608,7 +1600,6 @@ class Page {
             $selectedPosition = $_SESSION['gscontainerposition'][$parent->cellId];
         }
         $found = false;
-        
         $firstId = "";
         foreach($parent->cells as $tmpcell) {
             if($tmpcell->hideOnDesktop && !$this->factory->isMobile()) {
@@ -1620,8 +1611,7 @@ class Page {
             $firstId = $tmpcell->cellId;
             break;
         }
-
-
+        
         if(($this->factory->isMobileIgnoreDisabled() || $this->editCarouselForMobile())) {
             foreach($parent->cells as $tmpcell) {
                 if(($this->factory->isMobileIgnoreDisabled() || $this->editCarouselForMobile()) && !$tmpcell->hideOnMobile) {
@@ -1812,10 +1802,6 @@ class Page {
             return true;
         }
         
-        if ($this->restricedAccessDueToGroup($cell, $user)) {
-            return false;
-        }
-        
         if($user && !$cell->settings->displayWhenLoggedOn) {
             return false;
         }
@@ -1830,7 +1816,6 @@ class Page {
         if($user && $user->type >= $cell->settings->editorLevel) {
             return true;
         }
-        
         return false;
     }
 
@@ -1876,7 +1861,7 @@ class Page {
      * @return type
      */
     public function printEffectTriggerLoaded() {
-        if (!$this->factory->isEffectsEnabled()) {
+        if (!$this->factory->isEffectsEnabled() || $this->factory->isMobileIgnoreDisabled()) {
             return;
         }
         
@@ -2080,38 +2065,6 @@ class Page {
         $masterPage = $this->javapage->masterPageId;
         if ($this->factory->isEditorMode() && $masterPage) {
             echo "<div class='slavePageModificationIndicator'><i class='fa fa-warning'></i><a href='?page=$masterPage'> This page is a slave page, modification is made on master page </a></div>";
-        }
-    }
-
-    /**
-     * 
-     * @param core_pagemanager_data_PageCell $cell
-     * @param core_usermanager_data_User $user
-     */
-    private function restricedAccessDueToGroup($cell, $user) {
-        if ($cell->groupAccess == null || !count($cell->groupAccess->access)) {
-            return false;
-        }
-        
-        $allOff = true;
-        foreach ($cell->groupAccess->access as $groupId => $access) {
-            if ($access && ($user->group == $groupId || (is_array($user->groups) && in_array($groupId, $user->groups)))) {
-                return false;
-            }
-            
-            if ($access && $user->companyObject  && $user->companyObject->groupId == $groupId) {
-                return false;
-            }
-            
-            if ($access) {
-                $allOff = false;
-            }
-        }
-        
-        if ($allOff) {
-            return false;
-        } else {
-            return true;
         }
     }
 

@@ -101,7 +101,7 @@ class PmsBookingMessageFormatter {
 
     String formatBookingData(String message, PmsBooking booking, BookingEngine bookingEngine) {
         String bookingData = "";
-        for(PmsBookingRooms room : booking.rooms) {
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
             if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
                 bookingData += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " ";
             }

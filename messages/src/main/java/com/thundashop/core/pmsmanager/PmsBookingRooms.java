@@ -11,7 +11,11 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date; 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
@@ -25,14 +29,17 @@ public class PmsBookingRooms implements Serializable {
     public Integer numberOfGuests = 0;
     public double count = 1;
     public Double price = 0.0;
+    public LinkedHashMap<String, Double> priceMatrix = new LinkedHashMap();
     public double taxes = 8;
     public String bookingId;
-    
+    public List<PmsBookingAddonItem> addons = new ArrayList();
+     
     @Editor
     public String code = "";
     public Integer intervalCleaning = null;
     public boolean addedByRepeater = false;
     public Date invoicedTo = null;
+    public Date invoicedFrom = null;
     public boolean keyIsReturned = false;
     
     //Processor stuff.
@@ -45,6 +52,8 @@ public class PmsBookingRooms implements Serializable {
     Date forcedOpenDate;
     boolean forcedOpenNeedClosing = false;
     public Date warnedAboutAutoExtend = null;
+    public boolean credited;
+    boolean deleted = false;
     
     /**
      * Finalized entries
@@ -120,6 +129,16 @@ public class PmsBookingRooms implements Serializable {
         return date.start.before(when);
     }
 
+    public void clearAddonType(int type) {
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        for(PmsBookingAddonItem item2 : addons) {
+            if(item2.addonType == type) {
+                toRemove.add(item2);
+            }
+        }
+        addons.removeAll(toRemove);
+    }
+    
     boolean isStartingToday() {
         if(date.start == null) {
             return false;
@@ -200,11 +219,9 @@ public class PmsBookingRooms implements Serializable {
             }
         }
         
-        if(filter.autoGeneration) {
-            //Never autocreate orders that is in the future.
-            if(toInvoiceFrom.after(new Date())) {
-                return false;
-            }
+        //Never autocreate orders that is in the future.
+        if(toInvoiceFrom != null && toInvoiceFrom.after(new Date())) {
+            return false;
         }
         
         
@@ -265,7 +282,6 @@ public class PmsBookingRooms implements Serializable {
             cal.add(Calendar.HOUR_OF_DAY, increaseUnits);
         }
         return cal.getTime();
-            
     }
 
     private boolean sameDay(Date date1, Date date2) {
@@ -292,7 +308,7 @@ public class PmsBookingRooms implements Serializable {
         return false;
     }
     
-    private boolean isSameDay(Date date1, Date date2) {
+    public boolean isSameDay(Date date1, Date date2) {
         if(date1 == null || date2 == null) {
             return false;
         }
@@ -339,5 +355,46 @@ public class PmsBookingRooms implements Serializable {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR_OF_DAY, maxAhead * -1);
         return date.start.after(cal.getTime());
+    }
+
+    void updateItem(PmsBookingAddonItem item) {
+        for(PmsBookingAddonItem addedItem : addons) {
+            if(item.addonId.equals(addedItem.addonId)) {
+                addedItem.price = item.price;
+                addedItem.count = item.count;
+            }
+        }
+    }
+
+    PmsBookingAddonItem hasAddon(Integer key, Date date) {
+        for(PmsBookingAddonItem addon : addons) {
+            if(addon.addonType.equals(key) && isSameDay(date, addon.date)) {
+                return addon;
+            }
+        }
+        return null;
+    }
+
+    void sortAddonList() {
+        Collections.sort(addons, new Comparator<PmsBookingAddonItem>(){
+            public int compare(PmsBookingAddonItem o1, PmsBookingAddonItem o2){
+                return o1.date.compareTo(o2.date);
+            }
+       });
+    }
+
+    List<PmsBookingAddonItem> getAllAddons(String productId, Date startDate, Date endDate) {
+        List<PmsBookingAddonItem> result = new ArrayList();
+        for(PmsBookingAddonItem addon : addons) {
+            if(addon.productId.equals(productId)) {
+                if(addon.date.after(startDate) && addon.date.before(endDate)) {
+                    result.add(addon);
+                } else if(isSameDay(addon.date, startDate)) {
+                    result.add(addon);                    
+                }
+            }
+        }
+        
+        return result;
     }
 }

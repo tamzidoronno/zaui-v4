@@ -587,7 +587,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             guest.name = booking.name;
             guest.phone = booking.phone;
             room.guests.add(guest);
-            newbooking.rooms.add(room);
+            newbooking.addRoom(room);
         }
         
         pmsManager.setBooking(newbooking);

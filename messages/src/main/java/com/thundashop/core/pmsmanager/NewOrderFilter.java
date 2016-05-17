@@ -11,6 +11,7 @@ public class NewOrderFilter implements Serializable {
     boolean prepayment = false;
     boolean forceInvoicing = false;
     boolean autoGeneration = false;
+    boolean avoidOrderCreation = false;
     public Integer increaseUnits = -1;
     public Integer prepaymentDaysAhead = -1;
 }

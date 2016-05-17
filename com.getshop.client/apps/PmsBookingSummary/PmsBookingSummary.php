@@ -74,6 +74,7 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->removeFromCurrentBooking($this->getSelectedName(), $itemType);
     }
     
+    
     public function addRepeatingDates() {
         $data = $this->createRepeatingDateObject();
         $this->getApi()->getPmsManager()->addRepeatingData($this->getSelectedName(), $data);

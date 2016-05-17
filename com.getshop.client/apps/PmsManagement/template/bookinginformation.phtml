@@ -14,7 +14,7 @@ if(sizeof($this->errors) > 0) {
 }
 
 $bookingid = $_POST['data']['bookingid'];
-
+echo "<input type='hidden' id='openedbookingid' value='".$bookingid."'>";
 $pmsManager = $this->getApi()->getPmsManager();
 $config = $pmsManager->getConfiguration($this->getSelectedName());
 
@@ -54,14 +54,37 @@ if($booking->isDeleted) {
     <?php
 }
 
-echo "<div class='bookinginfo'>";
 $this->includefile("contactdata");
-$this->includeLegacyStuffForSemlagerhotell($booking);
-echo "<div style='clear:both;'></div>";
-$this->includefile("roomsbooked");
-$this->includefile("addons");
+
+echo "<div class='bookinginfo'>";
+echo "<span class='tabs'>";
+echo "<span class='tab' area='roomsbooked'>Rooms booked</span>";
 if($config->requirePayments) {
+    echo "<span class='tab' area='orderinfo'>Orders</span>";
+}
+$hasAddons = false;
+foreach($config->addonConfiguration as $addonConfig) {
+    if($addonConfig->isActive) {
+        $hasAddons = true;
+    }
+}
+if($hasAddons) {
+    echo "<span class='tab' area='addons'>Addons</span>";
+}
+echo "</span>";
+echo "<div style='clear:both;'></div>";
+echo "<div class='tabarea roomsbooked'>";
+    $this->includeLegacyStuffForSemlagerhotell($booking);
+    echo "<div style='clear:both;'></div>";
+    $this->includefile("roomsbooked");
+echo "</div>";
+echo "<div class='tabarea addons'>";
+    $this->includefile("addons");
+echo "</div>";
+if($config->requirePayments) {
+    echo "<div class='tabarea orderinfo'>";
     $this->includefile("orderinformation");
+    echo "</div>";
 }
 
 if(!$booking->confirmed) { ?>
@@ -83,3 +106,13 @@ if(!$booking->confirmed) { ?>
 <div style='clear:both;'></div>
 <div id="logarea"></div>
 </div>
+
+<script>
+    var area = localStorage.getItem('selectedbookinginfotab');
+    if(!area) {
+        area = "roomsbooked";
+    }
+    if(area) {
+        $('.tab[area="'+area+'"]').click();
+    }
+</script>

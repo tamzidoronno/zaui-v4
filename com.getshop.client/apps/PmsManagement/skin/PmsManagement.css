@@ -10,6 +10,7 @@
 .PmsManagement .Confirmed { color:green; }
 .PmsManagement .Unconfirmed { color:red; }
 .PmsManagement .Unpaid { color:red; }
+.PmsManagement .roomdeleted td { color: red; }
 .PmsManagement .tiparea {
     position: absolute;
     background-color: #fff;
@@ -129,3 +130,22 @@
 .PmsManagement .unavailableroomwarning { border: solid 1px; background-color:red; color: white; padding: 10px; display:inline-block; margin-bottom: 20px; }
 .PmsManagement .repatingroomlist { display:none; }
 .PmsManagement .showRepeatDates { color: blue; cursor:pointer; }
+.PmsManagement .tabs {
+    margin-top: 40px;
+    display:block;
+}
+
+.PmsManagement .tabs .tab.selected { background-color:#fff; }
+.PmsManagement .tabs .tab {
+    border: solid 1px #C1DAD7;
+    background-color: #ddd;
+    margin-right: 10px;
+    border-bottom: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 10px;
+    float:left;
+}
+.PmsManagement .tabarea { display:none; border-top: solid 1px #C1DAD7; }

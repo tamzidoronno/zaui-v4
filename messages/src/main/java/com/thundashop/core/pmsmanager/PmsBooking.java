@@ -14,13 +14,12 @@ import java.util.List;
 
 public class PmsBooking extends DataCommon {
  
-    public List<PmsBookingRooms> rooms = new ArrayList(); 
+    private List<PmsBookingRooms> rooms = new ArrayList(); 
     public HashMap<Long, PmsBookingComment> comments = new HashMap(); 
     public String sessionId;
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;
     
-    public List<PmsBookingAddonItem> addons = new ArrayList();
     public List<String> bookingEngineAddons = new ArrayList();
     public RegistrationRules registrationData = new RegistrationRules();
     public String language = "nb_NO";
@@ -157,10 +156,43 @@ public class PmsBooking extends DataCommon {
         return null;
     }
 
+    void updateItem(PmsBookingAddonItem item) {
+        for(PmsBookingRooms room : rooms) {
+            room.updateItem(item);
+        }
+    }
+    
     void dump() {
         for(String key : registrationData.resultAdded.keySet()) {
             System.out.println(key + " : " + registrationData.resultAdded.get(key));
         }
+    }
+
+    public List<PmsBookingRooms> getActiveRooms() {
+        List<PmsBookingRooms> result = new ArrayList();
+        for(PmsBookingRooms room : rooms) {
+            if(room.deleted) {
+                continue;
+            }
+            result.add(room);
+        }
+        return result;
+    }
+
+    public void addRoom(PmsBookingRooms room) {
+        rooms.add(room);
+    }
+
+    void addRooms(List<PmsBookingRooms> allToAdd) {
+        rooms.addAll(allToAdd);
+    }
+
+    void removeRooms(List<PmsBookingRooms> toRemove) {
+        rooms.removeAll(toRemove);
+    }
+
+    Iterable<PmsBookingRooms> getAllRoomsIncInactive() {
+        return rooms;
     }
 
     public static class PriceType {

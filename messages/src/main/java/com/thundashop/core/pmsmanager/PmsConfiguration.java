@@ -1,7 +1,9 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class PmsConfiguration extends DataCommon {
 
@@ -35,9 +37,11 @@ public class PmsConfiguration extends DataCommon {
     public boolean ignoreTimeIntervalsOnNotification = false;
     public boolean hasNoEndDate = false;
     public boolean autoDeleteUnpaidBookings = false;
+    public HashMap<Integer, PmsBookingAddonItem> addonConfiguration = new HashMap();
 
     /* Invoice creation options */
     public boolean autoCreateInvoices = false;
+    public boolean autoGenerateChangeOrders = false;
     public boolean runAutoPayWithCard = false;
     public Integer createOrderAtDayInMonth = 0;
     public boolean prepayment = false;

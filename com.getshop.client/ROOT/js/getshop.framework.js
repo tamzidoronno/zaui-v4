@@ -52,7 +52,7 @@ thundashop.framework = {
            } else {
                scrollTop = $(window).outerHeight() * (page+1);
            }
-
+           
            thundashop.framework.scrollToPosition(scrollTop);
        }
 
@@ -229,6 +229,9 @@ thundashop.framework = {
         thundashop.framework.loadHeight(cellid);
     },
     loadHeight : function(cellid) {
+        if(isMobile) {
+            return;
+        }
         var cell = $('.gsucell[cellid="'+cellid+'"]');
         var height = cell.attr('gsheight');
         var newHeight = 0;

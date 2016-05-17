@@ -1,6 +1,7 @@
 <?php
 /* @var $this \ns_d3951fc4_6929_4230_a275_f2a7314f97c1\PmsBookingContactData */
 $config = $this->getConfigurationToUse();
+$pmsconfig = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 
 echo "<div gstype='form' method='submitForm' class='bookingregistrationform'>";
 
@@ -117,7 +118,7 @@ if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
         echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?engine=".$this->getSelectedName()."');\">". $this->__w("Download the terms and conditions")."</a>";
         echo "</span>";
         echo "<span class='col-50' style='padding-right:0px;'><span class='complete_button' gstype='submit'>$completeText</span>";
-        if($this->isEditorMode()) {
+        if($this->isEditorMode() && $pmsconfig->requirePayments) {
             echo "<span style='margin-top: 5px;' class='complete_button' gstype='submit' gsvalue='nopay'>Continue without payment</span>";
         }
         echo "</div>";

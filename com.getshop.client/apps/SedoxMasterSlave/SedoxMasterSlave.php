@@ -36,7 +36,7 @@ class SedoxMasterSlave extends \MarketingApplication implements \Application {
         $slaveUser = $this->getApi()->getUserManager()->getUserById($_POST['data']['slaveid']);
         
         echo "<div class='slave_information'>";
-        echo "<div class='slave_name float-left'>" . $slaveUser->fullName . "</div>";
+        echo "<div class='slave_name float-left' master_id='" . $_POST['data']['masterid'] . "' slave_id='" . $slaveUser->id . "'>" . $slaveUser->fullName . "</div>";
         echo "<div class='float-right'>";
         echo " <div class='slave_options'>TestData</div>";
         echo " <div class='delete_slave'><i class='fa fa-times' slave_id='" . $slaveUser->id . "'></i></div>";

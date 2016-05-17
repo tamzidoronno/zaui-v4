@@ -4,6 +4,8 @@ app.SedoxMasterSlave = {
         $(document).on('click', '.SedoxMasterSlave .save_information', app.SedoxMasterSlave.saveInformation);
         $(document).on('click', '.SedoxMasterSlave .delete_slave i', app.SedoxMasterSlave.removeSlaveFromMaster);
         $(document).on('click', '.SedoxMasterSlave .add_slave', app.SedoxMasterSlave.addSlaveToMaster);
+        $(document).on('click', '.SedoxMasterSlave .slave_name', app.SedoxMasterSlave.navigateToSlave);
+        $(document).on('click', '.SedoxMasterSlave .master_name', app.SedoxMasterSlave.navigateToMaster);
     },
     
     populateTree: function() {        
@@ -18,7 +20,7 @@ app.SedoxMasterSlave = {
                                   'search' : {"show_only_matches" : true, "show_only_matches_children" : true},
                                   'plugins' : [ "sort", "search", "types", "wholerow" ]
                                 });
-            
+                                
             $('#jstree').jstree(true).settings.core.data = eval(res);
             $('#jstree').jstree(true).refresh();
 
@@ -101,6 +103,17 @@ app.SedoxMasterSlave = {
            element.parents(".SedoxMasterSlave .slave_information").remove();
            app.SedoxMasterSlave.populateTree();
         });
+    },
+    
+    navigateToSlave: function() {
+        if(!$(".jstree-node[id='" + $(this).attr("master_id") + "']").hasClass("jstree-open")) {
+          $(".jstree-node[id='" + $(this).attr("master_id") + "'] > div ~ i").click();  
+        }
+        $(".jstree-node[id='" + $(this).attr("slave_id") + "'] > div").click();
+    },
+    
+    navigateToMaster: function() {
+        $(".jstree-node[id='" + $(this).attr("master_id") + "'] > div").click();
     }
 };
 

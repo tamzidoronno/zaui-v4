@@ -40,6 +40,8 @@ foreach($listentry->subentries as $entry) {
             $('.doscrollnav[page="'+page+'"]').addClass('activescrollnav');
         }
     });
+    var scrollMenuHeight = $('.scrolltopmenu').outerHeight(true);
+    $('.scrolltopmenu').css('top', (scrollMenuHeight*-1)+"px");
     $('.doscrollnav[page="1"]').addClass('activescrollnav');
     var scrtmnu = $('#scrolltopmenu');
     scrtmnu.detach();
@@ -55,7 +57,7 @@ foreach($listentry->subentries as $entry) {
 
     $('.closescrollmenu').click(function(){
         $('#scrolltopmenu').animate({
-            top: '-120'
+            top: '-'+$('.scrolltopmenu').outerHeight(true)
         }, {
             duration: 1000,
             "easing" : "easeOutBounce"

@@ -247,6 +247,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
         }
         
+        userTree
+                .stream()
+                .forEach(user -> userTree
+                                         .stream()
+                                         .filter(master -> user.parent.equals(master.id) && master.parent.equals("#"))
+                                         .forEach(toModify -> toModify.type = "master")
+                );
+        
         return userTree;
     }
     
@@ -1319,6 +1327,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             slave.masterUserId = masterUserId;
             saveUser(slave);
         }
+    }
+    
+    @Override
+    public void removeSlaveFromMaster(String slaveId) {
+        SedoxUser slave = getSedoxUserAccountById(slaveId);
+        
+        slave.masterUserId = null;
+        saveUser(slave);
     }
 
     @Override

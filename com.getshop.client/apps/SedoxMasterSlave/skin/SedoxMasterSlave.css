@@ -74,7 +74,7 @@
     padding: 10px;
     border: solid 2px #EEE;
     border-radius: 8px;
-    width: 200px;
+    width: 60px;
     text-align: right;
     height: 6px;
 }
@@ -128,8 +128,8 @@
     height: 15px;
     cursor: pointer;
     position: absolute;
-    top: 3px;
-    left: 0;
+    top: 6px;
+    right: 15px;
     border-radius: 4px;
     box-shadow: 0px 0px 3px rgba(0,0,0,0.5);
     background-color: white;
@@ -211,8 +211,8 @@
 }
 
 .SedoxMasterSlave .slave_options {
-    border-left: 1px solid #626b7a;
-    border-right: 1px solid #626b7a;
+    border-left: 1px solid #D3D8E0;
+    border-right: 1px solid #D3D8E0;
     display: inline-block;
     padding-left: 15px;
     padding-right: 15px;

@@ -41,7 +41,7 @@ $slaves = $this->getApi()->getSedoxProductManager()->getSlaves($sedoxUser->id);
     </div>
     <div class="information_data comment_data">
         <div class="data_description">Comment:</div>
-        <div class="aligned_data"><textarea class="comment_input"/></div>
+        <div class="aligned_data"><textarea class="comment_input"><? echo $sedoxUser->comment; ?></textarea></div>
     </div>  
     <div class="informationtitle dealersegment">
         <i class="fa fa-users"></i> Dealer Network
@@ -82,6 +82,6 @@ $slaves = $this->getApi()->getSedoxProductManager()->getSlaves($sedoxUser->id);
         }
     }
     ?>
-    <div class="sedox_blue_button save_information" master_id="<? echo $sedoxUser->id; ?>">Save</div>
+    <div class="sedox_blue_button save_information" user_id="<? echo $sedoxUser->id; ?>">Save</div>
 </div>
 

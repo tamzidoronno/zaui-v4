@@ -23,7 +23,7 @@ class SedoxMasterSlave extends \MarketingApplication implements \Application {
     }
     
     public function saveInformation() {
-        $this->getApi()->getSedoxProductManager()->addCreditToSlave($_POST['data']['slaveid'], filter_var($_POST['data']['income'], FILTER_VALIDATE_FLOAT));
+        $this->getApi()->getSedoxProductManager()->addCommentToUser($_POST['data']['userid'], $_POST['data']['comment']);
     }
     
     public function removeSlaveFromMaster() {

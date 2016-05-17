@@ -30,6 +30,7 @@ public class SedoxUser extends DataCommon {
     public String pushoverId = "";
     public String fixedPrice = "";
     public int evcCurrentBalance = 0;
+    public String comment = "";
 
     public void addCreditOrderUpdate(SedoxCreditOrder sedoxCreditOrder, String description) {
         creditAccount.updateCredit(sedoxCreditOrder, description);

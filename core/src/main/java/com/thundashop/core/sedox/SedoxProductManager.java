@@ -1358,6 +1358,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             saveUser(user);
         }
     }
+    
+    @Override
+    public void addCommentToUser(String userId, String comment) throws ErrorException {
+        SedoxUser user = getSedoxUserAccountById(userId);
+        if (user != null) {
+            user.comment = comment;
+            saveUser(user);
+        }
+    }
 
     private void checkIfMasterOfSlave(String forSlaveId, String currentUserId) throws ErrorException {
         SedoxUser slave = getSedoxUserAccountById(forSlaveId);

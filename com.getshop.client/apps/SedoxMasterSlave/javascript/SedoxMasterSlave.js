@@ -62,8 +62,8 @@ app.SedoxMasterSlave = {
     
     saveInformation: function() {
         var data = {
-            slaveid: $(this).attr("master_id"),
-            income: $(".SedoxMasterSlave .income_input").val()
+            userid: $(this).attr("user_id"),
+            comment: $(".SedoxMasterSlave .comment_input").val()
         };
         
         var event = thundashop.Ajax.createEvent(null, "saveInformation", this, data);

@@ -92,7 +92,7 @@ class ApplicationBase extends FactoryBase {
                 if ($content2[0] == $managerName 
                         && $content2[1] == $function 
                         && $content2[2] == $this->getFactory()->getStore()->id 
-                        && $content2[3] == $this->applicationSettings->id) {
+                        && $content2[3] == $this->getConfiguration()->id) {
                     return $content2;
                 }
             }

@@ -1738,8 +1738,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             for (Integer fileId : files) {
                 if(fileId != null) {
                     SedoxBinaryFile binFile = sharedProduct.getFileById(fileId);
-                    if (binFile != null && binFile.getPrice(user) > mostExpensive) {
-                        mostExpensive = binFile.getPrice(user);
+                    if (binFile != null && binFile.getPrice(user, sedoxProduct.type) > mostExpensive) {
+                        mostExpensive = binFile.getPrice(user, sedoxProduct.type);
                     }
                 }
             }
@@ -2122,6 +2122,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return products.values().stream()
                 .filter(o -> o.sharedProductId.equals(id))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void setType(String productId, String type) {
+        SedoxSharedProduct sharedProduct = getSharedProductById(getProductById(productId).sharedProductId);
+        sharedProduct.type = type;
+        saveObject(sharedProduct);
     }
 
     

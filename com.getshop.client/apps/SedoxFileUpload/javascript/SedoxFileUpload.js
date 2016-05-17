@@ -50,6 +50,7 @@ app.SedoxFileUpload = {
             upload_automatic : $('input[name="sedox_upload_automatic"]').is(':checked'),
             upload_widthdraw : $('input[name="sedox_upload_withdraw"]').is(':checked'),
             upload_remaptype : $('#remaptype').val(),
+            upload_type : $('#type').val(),
             
             // New
             upload_dpf : $('input[name="sedox_checkbox_dpf"]').is(':checked'),

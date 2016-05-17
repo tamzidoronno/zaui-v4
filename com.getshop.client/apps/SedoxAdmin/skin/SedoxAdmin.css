@@ -441,3 +441,10 @@
 .SedoxAdmin .searchboxinformation .sedox_blue_button {
     display: inline-block;
 }
+
+.SedoxAdmin .types {
+    border: solid 1px #DDD;
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 10px;
+}

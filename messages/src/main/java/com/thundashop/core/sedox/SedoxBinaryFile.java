@@ -44,7 +44,7 @@ public class SedoxBinaryFile implements Serializable {
         checksumCorrected = !productAttributes[16].equals("csnone"); //% ECU.Checksumstatus % (checksum is corrected or not)
     }
 
-    public double getPrice(SedoxUser sedoxUser) {
+    public double getPrice(SedoxUser sedoxUser, String type) {
         
         if (sedoxUser.fixedPrice != null 
                 && !sedoxUser.fixedPrice.isEmpty() 
@@ -55,24 +55,8 @@ public class SedoxBinaryFile implements Serializable {
             return Double.parseDouble(sedoxUser.fixedPrice);
         }
         
-        if (fileType.toLowerCase().equals("tune")) {
-            return 60;
-        }
-        
         if (fileType.toLowerCase().equals("original")) {
             return 0;
-        }
-        
-        if (fileType.toLowerCase().equals("power")) {
-            return 60;
-        }
-        
-        if (fileType.toLowerCase().equals("eco")) {
-            return 50;
-        }
-        
-        if (fileType.toLowerCase().equals("various")) {
-            return 110;
         }
         
         if (fileType.toLowerCase().equals("cmdencrypted")) {
@@ -83,7 +67,43 @@ public class SedoxBinaryFile implements Serializable {
             return 0;
         }
         
+        if (type.equals("car") || type.equals("boat")) {
+            return 60 + getAddons(type);
+        }
+        
+        if (type.equals("tractor")) {
+            return 110 + getAddons(type);
+        }
+        
+        if (type.equals("truck")) {
+            return 160 + getAddons(type);
+        }
+        
         System.out.println("Warning, file price is not registered to this file");
         return 60;
+    }
+
+    private int getAddons(String type) {
+        int addon = 0;
+        
+        if (options.requested_dpf && type.equals("car"))
+            addon += 50;
+        
+        if (options.requested_adblue && type.equals("car"))
+            addon += 50;
+        
+        if (options.requested_dpf && type.equals("truck"))
+            addon += 100;
+        
+        if (options.requested_adblue && type.equals("truck"))
+            addon += 100;
+        
+        if (options.requested_dpf && type.equals("tractor"))
+            addon += 100;
+        
+        if (options.requested_adblue && type.equals("tractor"))
+            addon += 100;
+        
+        return addon;
     }
 }

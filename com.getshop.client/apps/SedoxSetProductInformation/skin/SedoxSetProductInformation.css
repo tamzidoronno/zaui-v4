@@ -67,6 +67,11 @@
     margin-right: 20px;
 }
 
+
+.SedoxSetProductInformation .checkbox.marked {
+    color: green;
+}
+
 .SedoxSetProductInformation .checkbox label:after {
     content: '';
     width: 7px;

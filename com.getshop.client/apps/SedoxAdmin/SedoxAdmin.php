@@ -219,5 +219,9 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         
         $this->setConfigurationSetting("signature", $_POST['signature']);
     }
+    
+    public function setType() {
+        $this->getApi()->getSedoxProductManager()->setType($_POST['data']['productid'], $_POST['data']['value']);
+    }
 }
 ?>

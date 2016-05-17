@@ -2056,8 +2056,9 @@ class Page {
     }
 
     public function printCurrentLoggedUserId() {
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
         ?>
-        <input name="userid_in_body" type="hidden"  value="<?php echo  \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id : ""; ?>"/>
+        <input name="userid_in_body" type="hidden"  usertype='<? echo $user ? $user->type : ""; ?>' value="<?php echo $user ? $user->id : ""; ?>"/>
         <?
     }
 

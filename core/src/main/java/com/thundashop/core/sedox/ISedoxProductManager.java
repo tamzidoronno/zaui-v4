@@ -22,6 +22,9 @@ public interface ISedoxProductManager  {
     public SedoxProductSearchPage search(SedoxSearch search);
     
     @Editor
+    public SedoxProductSearchPage searchUserFiles(SedoxSearch search);
+    
+    @Editor
     public void sync(String option) throws ErrorException;
     
     @Customer

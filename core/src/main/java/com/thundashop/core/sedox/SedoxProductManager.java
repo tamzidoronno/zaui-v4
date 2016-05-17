@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -131,10 +132,23 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
+    public SedoxProductSearchPage searchUserFiles(SedoxSearch search) {
+        User user = getSession() != null ? getSession().currentUser : null;
+        SedoxProductSearchPage result = sedoxSearchEngine.getSearchResult(new ArrayList(productsShared.values()), search, user);
+        List<SedoxProduct> retproducts = new ArrayList();
+        result.products.stream()
+                .forEach(product -> retproducts.addAll(getProductsWithShareProductId(product.id)));
+        result.products = new ArrayList();
+        result.userProducts = retproducts;
+        return result;
+    }
+    
+    @Override
     public synchronized SedoxProductSearchPage search(SedoxSearch search) {
         User user = getSession() != null ? getSession().currentUser : null;
         SedoxProductSearchPage result = sedoxSearchEngine.getSearchResult(new ArrayList(productsShared.values()), search, user);
-        result.products.parallelStream().forEach(o -> finalize(o));
+        result.products.stream().forEach(o -> finalize(o));
+        Collections.sort(result.products);
         return result;
     }
 
@@ -2102,5 +2116,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             saveObject(sedoxUser);
         }
     }
+
+    private List<SedoxProduct> getProductsWithShareProductId(String id) {
+        return products.values().stream()
+                .filter(o -> o.sharedProductId.equals(id))
+                .collect(Collectors.toList());
+    }
+
+    
 
 }

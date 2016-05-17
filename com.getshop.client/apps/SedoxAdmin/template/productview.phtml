@@ -28,7 +28,7 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
     <div class="innerview" productid='<? echo $product->id; ?>'>
         <div class='title boldFont'>
             <i class='fa fa-file'></i> <? echo $productName; ?>
-            <div class='product_comment'><b> Comment: </b><? echo !$product->comment ? "N/A" : $product->comment; ?></div>
+            <div class='product_comment'><b> Comment: </b><? echo !@$product->comment ? "N/A" : $product->comment; ?></div>
         </div>
         <div class='downloadinfo'>
             <div class='box_header boldFont'>

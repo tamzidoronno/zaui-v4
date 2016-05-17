@@ -42,7 +42,7 @@ app.SedoxAdmin = {
             checksum: checksum,
             productId : $(this).closest('.col_row_content').attr('productid'),
             fileId : $(this).attr('sedox_file_id')
-        })
+        });
     },
     
     fileTypeSelected: function() {

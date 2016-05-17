@@ -13,5 +13,6 @@ import java.util.List;
 public class SedoxProductSearchPage {
     public int pageNumber;
     public List<SedoxSharedProduct> products;
+    public List<SedoxProduct> userProducts;
     public int totalPages;
 }

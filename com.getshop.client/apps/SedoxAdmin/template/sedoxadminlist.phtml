@@ -1,8 +1,20 @@
 <?
 /* @var $this ns_1475891a_3154_49f9_a2b4_ed10bfdda1fc\SedoxAdmin */
 $daysBack = $this->getCurrentPage()-1;
-$inQueue = $this->getApi()->getSedoxProductManager()->getFileNotProcessedToDayCount($daysBack);
 $files = $this->getApi()->getSedoxProductManager()->getProductsByDaysBack($daysBack);
+
+if (isset($_GET['searchword']) || isset($_SESSION['SEDOX_EDITOR_SEARCHWORD'])) {
+    if (isset($_GET['searchword']))
+        $_SESSION['SEDOX_EDITOR_SEARCHWORD'] = $_GET['searchword'];
+    
+    $search = new core_sedox_SedoxSearch();
+    $search->page = $daysBack;
+    $search->searchCriteria = $_SESSION['SEDOX_EDITOR_SEARCHWORD'];
+    $searchResult = $this->getApi()->getSedoxProductManager()->searchUserFiles($search);
+    $files = $searchResult->userProducts;
+}
+
+$inQueue = $this->getApi()->getSedoxProductManager()->getFileNotProcessedToDayCount($daysBack);
 $totalCount = count($files);
 $finished = $totalCount - $inQueue;
 $developers = $this->getApi()->getSedoxProductManager()->getDevelopers();
@@ -45,6 +57,17 @@ foreach ($developers as $dev) {
         <div title="<? echo $title; ?>"><? echo $activeDevelopers; ?></div>
     </div>
 </div>
+
+<?
+if (isset($_SESSION['SEDOX_EDITOR_SEARCHWORD'])) {
+    ?>
+    <div class='searchboxinformation'>
+        You are currently searching for <? echo $_SESSION['SEDOX_EDITOR_SEARCHWORD']; ?>
+        <br/><br/><div class='sedox_blue_button' gsclick="cancelSearch"> Cancel search</div>
+    </div>
+    <?
+}
+?>
 
 <div class="SedoxDownloadHistory">
     <div class="header">

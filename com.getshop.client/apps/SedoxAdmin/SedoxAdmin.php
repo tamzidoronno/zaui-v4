@@ -150,7 +150,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
      */
     public function getRequestedString($product) {
         if (count($product->binaryFiles) < 1) {
-            return $product->remapType;
+            return "N/A";
         }
         
         $options = $product->binaryFiles[0]->options;
@@ -192,6 +192,10 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $this->getApi()->getSedoxProductManager()->toggleAllowWindowsApp($_POST['userid'], $_POST['canUseExternalProgram']);
         $this->getApi()->getSedoxProductManager()->setFixedPrice($_POST['userid'], $_POST['fixedrate']);
         
+    }
+    
+    public function cancelSearch() {
+        unset($_SESSION['SEDOX_EDITOR_SEARCHWORD']);
     }
     
     public function gsEmailSetup($model) {

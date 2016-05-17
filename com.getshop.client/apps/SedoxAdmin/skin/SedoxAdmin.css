@@ -429,3 +429,15 @@
 .new_mail textarea {
     margin-bottom: 5px;
 }
+
+.SedoxAdmin .searchboxinformation {
+    margin: 20px;
+    border: solid 2px red;
+    padding: 20px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.SedoxAdmin .searchboxinformation .sedox_blue_button {
+    display: inline-block;
+}

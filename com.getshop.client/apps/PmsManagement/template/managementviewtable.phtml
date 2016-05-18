@@ -209,7 +209,7 @@ foreach($bookings as $booking) {
         $row .= "</td>";
         if($hasPrices) {
             $row .= "<td>";
-            $row .= $room->price . " " .  "<br><span class='secondary_text'>".$prices[$booking->priceType]."</span>";
+            $row .= round($room->price) . " " .  "<br><span class='secondary_text'>".$prices[$booking->priceType]."</span>";
             $row .= "</td>";
         }
 

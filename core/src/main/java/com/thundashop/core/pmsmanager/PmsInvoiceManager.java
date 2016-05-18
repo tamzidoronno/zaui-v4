@@ -174,7 +174,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         Date startDate = room.getInvoiceStartDate();
         Date endDate = room.getInvoiceEndDate(filter, booking);
-        if(room.invoicedTo != null && room.isSameDay(room.invoicedTo, endDate)) {
+        if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || room.invoicedTo.after(endDate))) {
             return;
         }
         List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room);
@@ -939,7 +939,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             room, 
                             room.invoicedFrom, 
                             room.invoicedTo, 
-                            price, 
+                            price / count, 
                             count);
 
                     if(price < 0) {

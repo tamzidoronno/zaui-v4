@@ -299,7 +299,7 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                     <span class='roomattribute'>
                         <span class='roompostfix'>
                             <span class='viewmode'>
-                                <? echo $room->price; ?>
+                                <? echo round($room->price); ?>
                             </span>
                             <span class='editmode' method='changePrice' gstype='form'>
                                 <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>

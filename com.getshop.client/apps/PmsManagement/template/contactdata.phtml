@@ -200,7 +200,6 @@ if(!$user->fullName) {
                         } else {
                             $appSettings = $instances[$user->preferredPaymentType];
                             $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);
-                            echo $appSettings->appName;
                         }
                         ?>
                     </span>

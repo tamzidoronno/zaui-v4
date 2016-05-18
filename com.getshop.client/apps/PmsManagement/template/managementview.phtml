@@ -34,10 +34,7 @@ $searchtypes['stats'] = "Coverage";
         </select>
         <span gstype="submit" class="pmsbutton setFilter">Show</span>
         <span  style=' padding-left: 10px; top: 15px;display:inline-block;position:absolute;cursor:pointer;'>
-            <i class='fa fa-trash-o' gstype="clicksubmit" method='emptyfilter' gsname="id" gsvalue="somevalue"></i>
-            <?php if($this->hasBreakfastAddon()) { ?>
-            <i class='fa fa-cutlery' onclick='window.open("/scripts/simpleroomoverview.php?engine=<?php echo $this->getSelectedName(); ?>")'></i>
-            <?php } ?>
+            <i class='fa fa-trash-o' gstype="clicksubmit" method='emptyfilter' gsname="id" gsvalue="somevalue" title='Empty filter'></i>
         </span>
     </span>
    

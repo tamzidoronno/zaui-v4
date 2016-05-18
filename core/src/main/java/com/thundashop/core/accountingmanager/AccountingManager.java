@@ -252,9 +252,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 if(!config.statesToInclude.contains(order.status)) {
                     continue;
                 }
-                if(!order.transferredToAccountingSystem) {
+//                if(!order.transferredToAccountingSystem) {
                     orders.add(order);
-                }
+//                }
             }
             if(!orders.isEmpty()) {
                 List<String> result = iface.createOrderFile(orders);

@@ -174,7 +174,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         Date startDate = room.getInvoiceStartDate();
         Date endDate = room.getInvoiceEndDate(filter, booking);
-        if(room.invoicedTo != null && room.isSameDay(room.invoicedTo, endDate)) {
+        if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || room.invoicedTo.after(endDate))) {
             return;
         }
         List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room);
@@ -855,7 +855,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         startDate = adjustDateForCount(startDate, priceType, true);
         endDate = adjustDateForCount(endDate, priceType, false);
         
-        Double price = room.price;
+        Double price = 0.0;
         if(priceType == PmsBooking.PriceType.daily) {
             Calendar calStart = Calendar.getInstance();
             updatePriceMatrix(room, startDate, endDate, priceType);
@@ -878,6 +878,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
             }
             price /= count;
+        } else {
+            price = room.price;
         }
         
 
@@ -937,7 +939,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             room, 
                             room.invoicedFrom, 
                             room.invoicedTo, 
-                            price, 
+                            price / count, 
                             count);
 
                     if(price < 0) {

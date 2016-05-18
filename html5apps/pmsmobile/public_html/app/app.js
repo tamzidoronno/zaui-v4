@@ -49,6 +49,11 @@ angular.module('app', ['ui.router'])
       templateUrl: "pages/doorlog.html",
       controller: getshop.doorlogController
     })
+    .state('breakfast', {
+      url: "/breakfast",
+      templateUrl: "pages/breakfast.html",
+      controller: getshop.breakfastController
+    })
     .state('otherinstruction', {
       url: "/otherinstruction",
       templateUrl: "pages/otherinstruction.html",

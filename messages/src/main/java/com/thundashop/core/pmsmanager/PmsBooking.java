@@ -195,6 +195,14 @@ public class PmsBooking extends DataCommon {
         return rooms;
     }
 
+    void removeAllRooms() {
+        rooms.clear();
+    }
+
+    void removeRoom(PmsBookingRooms room) {
+        rooms.remove(room);
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

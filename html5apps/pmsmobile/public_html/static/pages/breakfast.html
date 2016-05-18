@@ -1,0 +1,31 @@
+<div class='additionalinfo row'>Breakfast list</div>
+<div class='row'>
+    <div class="input-group">
+      <input type="date" class="form-control" ng-model="selectedDay">
+      <span class="input-group-addon" id="basic-addon2"  ng-click="updateBreakfastList()">Update</span>
+    </div>
+</div>
+
+
+<div class='row ng-hide loading' ng-show="loading"><i class="fa fa-spinner fa-spin"></i></div>
+
+<div class='row ng-hide' ng-show="notfound">
+        <div class="col-xs-12">
+            Sorry, no entries where found for this date.
+        </div>
+</div>
+
+
+<div class='row ng-hide' ng-show="!loading">
+    <div  ng-repeat="breakfast in breakfastlist" class="col-xs-12">
+        {{breakfast.count}} - {{breakfast.name}}, room {{breakfast.room}}
+    </div>
+</div>
+<div class='row ng-hide' ng-show="!loading">
+    <div class="col-xs-12">
+        <b>Total number of breakfasts {{breakfastCount}}</b>
+    </div>
+</div>
+
+
+<div class='additionalinfobottom row'></div>

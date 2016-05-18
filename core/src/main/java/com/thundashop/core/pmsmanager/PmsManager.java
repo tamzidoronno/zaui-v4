@@ -24,6 +24,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.BookingEngineException;
@@ -35,6 +36,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
@@ -2874,6 +2876,73 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 userManager.saveUserSecure(newuser);
             }
         }
+    }
+
+    @Override
+    public void splitBooking(String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        if(booking.getActiveRooms().size() == 1) {
+            return;
+        }
+        PmsBooking copy = booking.copy();
+        PmsBookingRooms roomToSplit = null;
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.pmsBookingRoomId.equals(roomId)) {
+                roomToSplit = room;
+                break;
+            }
+        }
+        
+        if(roomToSplit == null) {
+            return;
+        }
+        
+        User user = userManager.getUserById(booking.userId);
+        
+        cartManager.clear();
+        List<CartItem> allItemsToMove = new ArrayList();
+        Order firstOrder = null;
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                continue;
+            }
+            firstOrder = order;
+            List<CartItem> itemsToRemove = new ArrayList();
+            for(CartItem item : order.cart.getItems()) {
+                String refId = item.getProduct().externalReferenceId;
+                if(refId != null && refId.equals(roomId)) {
+                    itemsToRemove.add(item);
+                }
+            }
+            for(CartItem toRemove : itemsToRemove) {
+                order.cart.removeItem(toRemove.getCartItemId());
+            }
+            allItemsToMove.addAll(itemsToRemove);
+            orderManager.saveOrder(order);
+        }
+        
+        copy.removeAllRooms();
+        copy.addRoom(roomToSplit);
+        copy.id = null;
+        copy.orderIds.clear();
+        copy.rowCreatedDate = new Date();
+        
+        if(!allItemsToMove.isEmpty()) {
+            cartManager.getCart().addCartItems(allItemsToMove);
+            Order order = orderManager.createOrder(user.address);
+            order.payment = firstOrder.payment;
+            orderManager.saveOrder(order);
+            copy.orderIds.add(order.id);
+        }
+        
+        booking.removeRoom(roomToSplit);
+        saveObject(copy);
+        bookings.put(copy.id, copy);
+        
+        saveBooking(booking);
+        saveBooking(copy);
+        
     }
 
 }

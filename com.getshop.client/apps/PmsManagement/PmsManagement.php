@@ -912,5 +912,34 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->selectedBooking = $booking;
     }
 
+    /**
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     * @param type $addonType
+     */
+    public function hasAddon($room, $addonType) {
+        foreach($room->addons as $addon) {
+            if($addon->addonType == $addonType) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public function splitToSingleBooking() {
+        $roomId = $_POST['data']['roomid'];
+        $this->getApi()->getPmsManager()->splitBooking($this->getSelectedName(), $roomId);
+        $this->showBookingInformation();
+    }
+
+    public function hasBreakfastAddon() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        foreach($config->addonConfiguration as $addon) {
+            if($addon->addonType == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 ?>

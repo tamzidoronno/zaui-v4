@@ -11,6 +11,7 @@ getshop.mainpageController = function($scope, $state) {
         $scope.hasOtherInstructions = false;
         $scope.hasFireInstructions = false;
         $scope.hasDoorControl = false;
+        $scope.hasBreakfast = false;
         var config = getshopclient.PmsManager.getConfiguration(getMultilevelName());
         config.done(function(res) {
             if(res.arxHostname) {
@@ -22,6 +23,14 @@ getshop.mainpageController = function($scope, $state) {
             if(res.fireinstructions) {
                 $scope.hasFireInstructions = true;
             }
+
+            for(var key in res.addonConfiguration) {
+                var addon = res.addonConfiguration[key];
+                if(addon.addonType === 1) {
+                    $scope.hasBreakfast = true;
+                }
+            }
+            
             $scope.$apply();
         });
     };

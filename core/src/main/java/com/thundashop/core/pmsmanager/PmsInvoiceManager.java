@@ -855,7 +855,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         startDate = adjustDateForCount(startDate, priceType, true);
         endDate = adjustDateForCount(endDate, priceType, false);
         
-        Double price = room.price;
+        Double price = 0.0;
         if(priceType == PmsBooking.PriceType.daily) {
             Calendar calStart = Calendar.getInstance();
             updatePriceMatrix(room, startDate, endDate, priceType);
@@ -878,6 +878,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
             }
             price /= count;
+        } else {
+            price = room.price;
         }
         
 

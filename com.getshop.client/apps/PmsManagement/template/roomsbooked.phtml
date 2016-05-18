@@ -143,6 +143,11 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                         <?php
                     }
                     ?>
+                <span gstype='form' method="splitToSingleBooking">
+                    <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                    <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                    <i class='fa fa-random' gstype='submitToInfoBox' title='Split into single booking' style='cursor:pointer;'></i>
+                </span>
             </td>
             <td>
                 <? echo $types[$room->bookingItemTypeId]->name; ?>

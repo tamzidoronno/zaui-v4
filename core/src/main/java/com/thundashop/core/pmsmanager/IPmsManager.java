@@ -37,6 +37,9 @@ public interface IPmsManager {
     public String setNewRoomType(String roomId, String bookingId, String newType);
     
     @Administrator
+    public void splitBooking(String roomId);
+    
+    @Administrator
     public String setBookingItem(String roomId, String bookingId, String itemId);
     
     @Administrator

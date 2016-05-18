@@ -50,6 +50,7 @@ class SedoxFileUpload extends \MarketingApplication implements \Application {
         $sedoxProduct->power = $_POST['data']['upload_power'];
         $sedoxProduct->year = $_POST['data']['upload_year'];
         $sedoxProduct->tool = $_POST['data']['upload_tool'];
+        $sedoxProduct->type = $_POST['data']['upload_type'];
         $sedoxProduct->gearType = $geartype;
         
         $options = new \core_sedox_SedoxBinaryFileOptions();

@@ -2,6 +2,14 @@
 /* @var $this \ns_6de59d68_05bb_4f25_b7ea_f98e468a5fde\SedoxSetProductInformation */
 
 $extras = $this->getModalVariable("extrarequests");
+$product = $this->getApi()->getSedoxProductManager()->getProductById($this->getModalVariable("productid"));
+$file = null;
+
+foreach ($product->binaryFiles as $iFile) {
+    if ($iFile->id == $this->getModalVariable("sedox_file_id")) {
+        $file = $iFile;
+    }
+}
 
 ?>
 
@@ -9,6 +17,10 @@ $extras = $this->getModalVariable("extrarequests");
     <div class="information_title">
         Extra Informations
     </div>
+    
+    <br/>
+    <br/><center> ( Text marked in green is requests from customer ) </center>
+    <br/>
     <div class="information_form_container">
         <div class="information_form">
                 <div class="information_text">
@@ -18,10 +30,16 @@ $extras = $this->getModalVariable("extrarequests");
                     <?
                     $extraTypes = array("DPF", "EGR", "Decat", "Vmax", "AdBlue", "DTC");
                     foreach($extraTypes as $type) {
+                        $checked = "";
+                        if ($file->options->{"requested_".  strtolower($type)}) {
+                            $checked = "checked";
+                        }
+                        
+                        $marked = strpos($extras, $type) !== false ? "marked" : "";
                     ?>
-                        <div class="checkbox">
-                            <input type="checkbox" id="<? echo strtolower($type) ?>" <? echo strpos($extras, $type) !== false ? "checked" : "" ?>><? echo $type ?></input>
-                            <label for="<? echo strtolower($type) ?>"></label>
+                        <div class="checkbox <? echo $marked; ?>">
+                            <input type="checkbox" id="<? echo strtolower($type) ?>" <? echo $checked; ?>><? echo $type ?></input>
+                            <label  for="<? echo strtolower($type) ?>"></label>
                         </div>
                     <?
                     }

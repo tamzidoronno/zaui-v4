@@ -50,7 +50,7 @@ if (!count($users) && $this->currentlyLoading != "favor") {
 
                     <div class="userrow">
                         <? 
-                        $fontAwseomIcon = $user->isCompanyOwner ? "fa-bolt" : "fa-star-o";
+                        $fontAwseomIcon = $user->isCompanyOwner ? "fa-bolt" : "";
                         ?>
                         <div class="starred"> <i class="fa <? echo $fontAwseomIcon; ?>" <? echo $color; ?> gsclick="addToFav" userid="<? echo $user->id; ?>"></i></div>
                         <div class="groupname"><? echo $groupName; ?></div>
@@ -59,7 +59,7 @@ if (!count($users) && $this->currentlyLoading != "favor") {
                         <?
                         if (!$inSearchView) {
                             ?>
-                            <span gsclick="toggleCompanyOwner" userid="<? echo $user->id; ?>"><i title="Toggle garage leader" class="fa fa-bolt gs_shop_small_icon"></i></span>  
+                            <span gsclick="toggleCompanyOwner" gs_confirm="<? echo $this->__w("Are you sure you want to toggle as garageleader?"); ?>" userid="<? echo $user->id; ?>"><i title="Toggle garage leader" class="fa fa-bolt gs_shop_small_icon"></i></span>  
                             <?
                         }
                         ?>

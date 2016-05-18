@@ -28,13 +28,20 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
     <div class="innerview" productid='<? echo $product->id; ?>'>
         <div class='title boldFont'>
             <i class='fa fa-file'></i> <? echo $productName; ?>
-            <div class='product_comment'><b> Comment: </b><? echo !$product->comment ? "N/A" : $product->comment; ?></div>
+            <div class='product_comment'><b> Comment: </b><? echo !@$product->comment ? "N/A" : $product->comment; ?></div>
         </div>
         <div class='downloadinfo'>
             <div class='box_header boldFont'>
                 Download Information
             </div>
             <div class='box_content'>
+                
+                <div class="types">
+                    <input gsclick='setType' productid='<? echo $product->id; ?>' type="radio" <? echo $product->type === "car" ? "checked" : "" ?> value="car" name="type_<? echo $product->id; ?>"/> Car 
+                    <input gsclick='setType' productid='<? echo $product->id; ?>' type="radio" <? echo $product->type === "tractor" ? "checked" : "" ?> value="tractor" name="type_<? echo $product->id; ?>"/> Tractor 
+                    <input gsclick='setType' productid='<? echo $product->id; ?>' type="radio"  <? echo $product->type === "truck" ? "checked" : "" ?> value="truck" name="type_<? echo $product->id; ?>"/> Truck
+                </div>
+                
                 <?
                 echo "<select class='fileselector'>";
                 foreach ($product->binaryFiles as $binFile) {

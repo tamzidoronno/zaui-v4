@@ -61,9 +61,22 @@ app.SedoxMasterSlave = {
     },
     
     saveInformation: function() {
+        var slaveDatas = [];
+        
+        $(".SedoxMasterSlave .slave_options").each(function() {
+            var slaveData = {
+                slaveid: $(this).attr("slave_id"),
+                income: $(this).find(".income_input").val(),
+                passiveslave: $(this).find(".passsive_slave_input").is(":checked")
+            }
+            
+            slaveDatas.push(slaveData);
+        });
+        
         var data = {
             userid: $(this).attr("user_id"),
-            comment: $(".SedoxMasterSlave .comment_input").val()
+            comment: $(".SedoxMasterSlave .comment_input").val(),
+            slavedatas: slaveDatas
         };
         
         var event = thundashop.Ajax.createEvent(null, "saveInformation", this, data);

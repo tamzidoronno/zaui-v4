@@ -852,15 +852,20 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     private Double getPriceForCurrentUser(BookingItemTypeMetadata metaData) {
-        if (getSession() == null || getSession().currentUser == null || getSession().currentUser.groups == null) {
-            return metaData.publicPrice;
+        Double price = metaData.publicPrice;
+        
+        if (getSession().currentUser == null)
+            return price;
+        
+        if (getSession().currentUser.groups != null && !getSession().currentUser.groups.isEmpty()) {
+            price = metaData.groupPrices.get(getSession().currentUser.groups.get(0));
+        }
+
+        if (getSession().currentUser.companyObject != null && getSession().currentUser.companyObject.groupId != null && !getSession().currentUser.companyObject.groupId.isEmpty()) {
+            price = metaData.groupPrices.get(getSession().currentUser.companyObject.groupId);
         }
         
-        if (getSession().currentUser.groups.isEmpty()) {
-            return metaData.publicPrice;
-        }
-        
-        return metaData.groupPrices.get(getSession().currentUser.groups.get(0));
+        return price;
     }
 
     @Override
@@ -1559,6 +1564,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     @Override
     public Double getPriceForEventType(String bookingItemTypeId) {
         BookingItemTypeMetadata metaData = getBookingTypeMetaData(bookingItemTypeId);
+        
         if (metaData == null) {
             return -1D;
         }

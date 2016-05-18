@@ -37,7 +37,8 @@ public class SedoxSharedProduct extends DataCommon implements Comparable<SedoxSh
     public String ecuSoftwareNumber;
     public String ecuSoftwareVersion;
     public boolean saleAble = true;
-    String printableName;
+    public String printableName;
+    public String type = "car";
     
     public void setParametersBasedOnFileString(String fileName) {
         String[] productAttributes = fileName.split(";");

@@ -12,7 +12,12 @@ app.SedoxSearchHeader = {
     },
     
     searchNow: function() {
-        thundashop.common.goToPage("searchresult&searchword="+$(this).val());
+        var type = $('[name="userid_in_body"]').attr('usertype');
+        if (type && ( type === "50" || type === "100")) {
+            thundashop.common.goToPage("4f35e47e-9905-4f60-82d2-ea63e25e3316&searchword="+$(this).val());
+        } else {
+            thundashop.common.goToPage("searchresult&searchword="+$(this).val());
+        }
     }
 };
 

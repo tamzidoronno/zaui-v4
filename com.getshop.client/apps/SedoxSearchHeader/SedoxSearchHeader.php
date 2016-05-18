@@ -15,6 +15,10 @@ class SedoxSearchHeader extends \WebshopApplication implements \Application {
     }
     
     public function getSearchString() {
+        if(isset($_SESSION['SEDOX_EDITOR_SEARCHWORD'])) {
+            return $_SESSION['SEDOX_EDITOR_SEARCHWORD'];
+        }
+        
         if(isset($_SESSION['sedox_search_value'])) {
             return $_SESSION['sedox_search_value'];
         }

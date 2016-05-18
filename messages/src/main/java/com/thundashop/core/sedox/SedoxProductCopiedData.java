@@ -84,6 +84,9 @@ public class SedoxProductCopiedData extends DataCommon {
     @Transient
     private boolean saleAble = true;
     
+    @Transient
+    public String type = "car";
+    
     public String printableName = "";
     
     void populate(SedoxSharedProduct sharedProduct) {
@@ -111,5 +114,6 @@ public class SedoxProductCopiedData extends DataCommon {
         this.ecuSoftwareVersion = sharedProduct.ecuSoftwareVersion;
         this.saleAble = sharedProduct.saleAble;
         this.printableName = sharedProduct.getName();
+        this.type = sharedProduct.type;
     }
 }

@@ -2881,6 +2881,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void splitBooking(String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
+        if(booking.getActiveRooms().size() == 1) {
+            return;
+        }
         PmsBooking copy = booking.copy();
         PmsBookingRooms roomToSplit = null;
         for(PmsBookingRooms room : booking.getActiveRooms()) {

@@ -158,6 +158,15 @@ foreach($bookings as $booking) {
         if(trim($comments)) {
             $row .= "<i class='fa fa-comment' title='$comments'></i> ";
         }
+        if($this->hasAddon($room, 1)) {
+            $row .= "<i class='fa fa-cutlery' title='Breakfast included'></i> ";
+        }
+        if($this->hasAddon($room, 2)) {
+            $row .= "<i class='fa fa-car' title='Parking spot'></i> ";
+        }
+        if($this->hasAddon($room, 5)) {
+            $row .= "<i class='fa fa-bed' title='Extra bed'></i> ";
+        }
         
         foreach($booking->rooms as $room2) {
             $addons = array();

@@ -339,6 +339,7 @@ body {
     float: right;
     display: inline-block;
 }
+.shop_button,
 .sedox_blue_button {
     background-color: #40c1e1;
     text-align: center;
@@ -348,12 +349,15 @@ body {
     padding-right: 50px;
     padding-left: 50px;
     cursor: pointer;
+    background: none;
 }
 
+.shop_button,
 .sedox_blue_button:hover {
     background-color: #24adcf;
 }
 
+.shop_button,
 .sedox_blue_button:active {
     background-color: #40c1e1;
 }
@@ -382,4 +386,9 @@ body {
 .gs_modalinner {
     width: 800px;
     margin: auto;
+}
+
+
+.shop_button {
+    border: solid 1px;
 }

@@ -32,8 +32,9 @@ if (!count($allProducts)) {
     return;
 }
 foreach ($allProducts as $product) {
+    $grouped = $product->isGroupedProduct ? "_grouped" : "";
     ?>
-    <div gss_fragment='editproduct' gss_view='gss_productwork_area' gss_value='<? echo $product->id ?>' class='gss_product'>
+    <div gss_fragment='editproduct<? echo $grouped; ?>' gss_view='gss_productwork_area' gss_value='<? echo $product->id ?>' class='gss_product'>
         <div class='gss_product_inner_desc'>
             <div class='gss_product_title'><? echo $product->name; ?></div>
             <div class='gss_product_price'><? echo $product->price; ?></div>

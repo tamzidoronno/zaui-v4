@@ -1,0 +1,37 @@
+<?
+/* @var $this \ns_f245b8ae_f3ba_454e_beb4_ecff5ec328d6\ProductLists */
+
+$product = $this->getCurrentProduct();
+$image = $this->getDefaultImage($product);
+?>
+<div class='groupedProductBoxed' mainProductId='<? echo $product->id; ?>'>
+    
+    <div class="product_image_wrapper">
+        <div class="product_image" style="background:url('/displayImage.php?id=<?php echo $image; ?>');"></div>
+    </div>
+    
+    <?
+    foreach ($product->subProducts as $subProduct) {
+        ?>
+        <div class='subProduct' productId='<? echo $subProduct->id; ?>'>
+            <? echo $subProduct->name; ?>
+            <div class='sub_product_price'> 
+            <?
+            if($this->getDisplayDecimals()) {
+                echo "( "; ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($subProduct->price, 2); echo " )";
+            } else {
+                echo "( "; ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($subProduct->price, 0); echo " )";
+            }
+            ?>
+            </div>
+            <div class='quantityselector'>
+                <i class='fa fa-minus'></i> <input type='text' class='gsniceinput1 quantity'/> <i class='fa fa-plus'></i>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+    
+    <div class='sumprice'><? echo $this->getPriceForGroupedProduct(false); ?></div>
+   <div class='shop_button'><? echo $this->__f("Buy now"); ?></div>
+</div>

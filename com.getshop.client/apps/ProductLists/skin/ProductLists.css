@@ -417,6 +417,80 @@
     box-sizing: border-box;
 }
 
+.ProductLists .groupedProductBoxed {
+    max-width: 500px;
+    padding: 20px;
+}
+.ProductLists .groupedProductBoxed .subProduct {
+    position: relative;
+    min-height: 50px;
+    padding-top: 5px;
+    font-size: 16px;
+}
+
+.ProductLists .groupedProductBoxed .subProduct i {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.ProductLists .groupedProductBoxed .subProduct .sub_product_price { 
+    font-size: 14px;
+}
+.ProductLists .groupedProductBoxed .sumprice { 
+    border: solid 1px #DDD;
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.ProductLists .groupedProductBoxed .shop_button {
+    width: 100%;
+    box-sizing: border-box;
+}
+.ProductLists .groupedProductBoxed .subProduct .quantity {
+    width: 30px;
+    text-align: center;
+}
+.ProductLists .groupedProductBoxed .product_image {
+    width: 100%;
+    
+    -webkit-background-size: cover !important;
+    -moz-background-size: cover !important;
+    -o-background-size: cover !important;
+    background-size: cover !important;
+}
+
+.ProductLists .groupedProductBoxed .product_image_wrapper {
+    width: 100%;
+    /* whatever width you want */
+    display: inline-block;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.ProductLists .groupedProductBoxed .product_image_wrapper:after {
+    padding-top: 56.25%;
+    display: block;
+    content: '';
+}
+
+.ProductLists .groupedProductBoxed .product_image {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.ProductLists .groupedProductBoxed .quantityselector {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
 
 .ProductLists .templatebox_2 .productbox { border: solid 1px; margin-bottom: 20px; height: 250px; }
 .ProductLists .templatebox_2 .productimage { width: 500px; height: 250px; background-size: cover; }

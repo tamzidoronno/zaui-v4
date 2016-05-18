@@ -2,9 +2,62 @@ app.ProductLists = {
     init: function() {
         $(document).on('click', '.ProductLists .setproductlist', app.ProductLists.setList);
         $(document).on('change', '#gss_filter_list_box_productlist', app.ProductLists.search);
+        $(document).on('change', '.ProductLists .groupedProductBoxed .quantity', app.ProductLists.updatePrice);
         $(document).on('click', '.gss_addToList', app.ProductLists.addToList);
         $(document).on('click', '.gss_removeFromList', app.ProductLists.removeProductFromList);
         $(document).on('click', '#useForShowingSearchResult', app.ProductLists.useForShowingSearchResult);
+        $(document).on('click', '.ProductLists .groupedProductBoxed .fa-plus', app.ProductLists.groupedProductAdd);
+        $(document).on('click', '.ProductLists .groupedProductBoxed .fa-minus', app.ProductLists.groupedProductRemove);
+    },
+    
+    groupedProductAdd: function() {
+        var productContainer = $(this).closest('.quantityselector');
+        var quantityField = productContainer.find('.quantity');
+        if (!quantityField.val() || isNaN(parseInt(quantityField.val()))) {
+            quantityField.val("0");
+        }
+            
+        var int = parseInt(quantityField.val());
+        int++;
+        
+        quantityField.val(int);
+        quantityField.trigger('change');
+    },
+    
+    groupedProductRemove: function() {
+        var productContainer = $(this).closest('.quantityselector');
+        var quantityField = productContainer.find('.quantity');
+        if (!quantityField.val() || isNaN(parseInt(quantityField.val()))) {
+            quantityField.val("2");
+        }
+            
+        var int = parseInt(quantityField.val());
+        int--;
+        
+        if (int < 0) 
+            int = 0;
+        
+        quantityField.val(int);
+        quantityField.trigger('change');
+    },
+    
+    updatePrice: function() {
+        var productContainer = $(this).closest('.groupedProductBoxed');
+        
+        var data = {
+            productid : productContainer.attr('mainProductId')
+        };
+        
+        productContainer.find('.subProduct').each(function() {
+            var subSubProductId = $(this).attr('productId');
+            var quantity = $(this).find('.quantity').val();
+            data[subSubProductId] = quantity;
+        });
+        
+        var event = thundashop.Ajax.createEvent(null, "getPriceForGroupedProduct", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            productContainer.find('.sumprice').html(result);
+        });
     },
     
     loadSettings : function(element, application) {

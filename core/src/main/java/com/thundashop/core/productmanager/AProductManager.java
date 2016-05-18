@@ -16,6 +16,7 @@ import com.thundashop.core.productmanager.data.ProductImage;
 import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.SearchResult;
 import com.thundashop.core.productmanager.data.TaxGroup;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,9 +46,6 @@ public abstract class AProductManager extends ManagerBase {
     public PageManager pageManager;
 
     @Autowired
-    private ContentManager contentManager;
-
-    @Autowired
     public ListManager listManager;
     
     @Autowired
@@ -72,20 +70,10 @@ public abstract class AProductManager extends ManagerBase {
             product.taxGroupObject = taxGroups.get(product.taxgroup);
         }
 
-        if (product.original_price == null) {
-            product.original_price = product.price;
-        }
-        if (product.campaing_start_date > 0 && product.campaing_end_date > 0) {
-            Date startDate = new Date(product.campaing_start_date * 1000);
-            Date endDate = new Date(product.campaing_end_date * 1000);
-            Date now = new Date(System.currentTimeMillis());
-            if (startDate.before(now) && endDate.after(now)) {
-                product.price = product.campaign_price;
-            } else {
-                product.price = product.original_price;
-            }
-
-        }
+        setOriginalPriceIfNull(product);
+        setGroupPrice(product);
+        addSubProductsToTransientVariable(product);
+        
         for (ProductImage image : product.images.values()) {
             if (!product.imagesAdded.contains(image.fileId)) {
                 product.imagesAdded.add(image.fileId);
@@ -100,12 +88,17 @@ public abstract class AProductManager extends ManagerBase {
             Page page = pageManager.getPage(product.pageId);
             if (page.isASlavePage() && !page.masterPageId.equals(product.selectedProductTemplate)) {
                 pageManager.changeTemplateForPage(product.pageId, product.selectedProductTemplate);
-                System.out.println("Updated");
             }
         }
         
 //        updateTranslation(product);
         return product;
+    }
+
+    private void setOriginalPriceIfNull(Product product) {
+        if (product.original_price == null) {
+            product.original_price = product.price;
+        }
     }
 
     private void ensureUniqueNameWhenDuplicate(Product product) {
@@ -306,5 +299,34 @@ public abstract class AProductManager extends ManagerBase {
     }
     
     public void setProductDynamicPrice(String productId, int count) {
+    }
+
+    private void setGroupPrice(Product product) {
+        if (getSession() == null || getSession().currentUser == null) {
+            return;
+        }
+        
+        User currentUser = getSession().currentUser;
+        if (currentUser.groups == null) {
+            return;
+        }
+        
+        for (String groupId : currentUser.groups) {
+            Double groupPrice = product.groupPrice.get(groupId);
+            if (groupPrice != null) {
+                product.price = groupPrice;
+            }
+        }
+        
+    }
+
+    private void addSubProductsToTransientVariable(Product product) {
+        product.subProducts.clear();
+        
+        for (String subProductId : product.subProductIds) {
+            Product iproduct = products.get(subProductId);
+            finalize(iproduct);
+            product.subProducts.add(iproduct);
+        }
     }
 }

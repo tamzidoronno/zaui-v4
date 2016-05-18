@@ -89,9 +89,9 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         echo $selected;
     }
     
-    public static function formatPrice($price, $numberOfDecimals = 2) {
+    public static function formatPrice($price, $numberOfDecimals = 2, $printZero = false) {
         $code = ECommerceSettings::fetchCurrencyCode();
-        if($price == 0) {
+        if($price == 0 && !$printZero) {
             return "&nbsp";
         }
         if ($code == "NOK") {

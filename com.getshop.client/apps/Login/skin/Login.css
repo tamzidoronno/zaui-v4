@@ -36,10 +36,10 @@
     display: none;
 }
 
-.Login .recover_section_outer.disabled { color:rgba(0,0,0,0.1); }
+.Login .recover_section_outer.disabled { display: none; }
 .Login .recover_section_outer.disabled input { color:rgba(0,0,0,0.1); }
 
-.Login .recover_section_outer { width: 320px; float:left; box-sizing: border-box; padding: 10px; }
+.Login .recover_section_outer {  float:left; box-sizing: border-box; padding: 10px; width: 100%; }
 .Login .recover_section { padding: 10px; }
 .Login .recover_section input { display:block; height: 30px;  width: 100%;  box-sizing: border-box; margin-bottom: 5px; }
 .Login .form .gs_button,
@@ -58,4 +58,12 @@
     width: 300px;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.Login .error_message_recover {
+    display: none;
+    border: solid 1px red;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 20px;
 }

@@ -46,9 +46,10 @@ if ($this->isLoggedIn()) {
 
             <div class="recover_section_outer" step='1'>
                 <div class="recover_section">
-                    <div class="heading">1. <?php echo $this->__w("Please enter your email address:"); ?></div>
+                    <div class="heading">1. <?php echo $this->__w("Please enter your email address or cellphone number:"); ?></div>
                     <br><br>
                     <input type="txt" class="recoverinput" id="recoverpasswordemail">
+                    <div class='error_message_recover'></div>
                     <input type="button" class="recoverinput" id="recoverinputbutton" value="<?php echo $this->__w("Send me a code"); ?>">
                 </div>
             </div>
@@ -59,7 +60,7 @@ if ($this->isLoggedIn()) {
                     <bR>
                     
                     <label>
-                        <?php echo $this->__w("Enter the code sent to your email."); ?>
+                        <?php echo $this->__w("Enter the code sent to your email/sms."); ?>
                         <input type="txt" class="recoverinput" id="recoverpasswordcode">
                     </label>
                     

@@ -437,6 +437,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             if (user.username.equalsIgnoreCase(email) || user.emailAddress.equalsIgnoreCase(email)) {
                 toReset = user;
             }
+            
+            if (user.cellPhone != null && user.cellPhone.equals(email)) {
+                toReset = user;
+            }
         }
 
         if (toReset == null) {
@@ -449,6 +453,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (mailfactory != null) {
             mailfactory.send("recover@getshop.com", email, title, text);
         }
+        
+        if (toReset != null && toReset.cellPhone != null && !toReset.cellPhone.isEmpty()) {
+            messageManager.sendSms("nexmo", toReset.cellPhone, text, toReset.prefix);
+        }
+        
         return 0;
     }
 

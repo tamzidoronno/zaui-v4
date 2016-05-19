@@ -50,10 +50,12 @@ Booking engine name;-;Bookingengine navn
 Booking size;-;Booking størrelse
 Bottom spacing;-;Nedre spacing
 BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Very simple to use and gets you started with visa payment immediatly;-;BrainTree er en internasjonal betalingsmetode som eies av PayPal. De tilbyr betaling med Visa, MasterCard, PayPal, osv. Veldig enkel å bruke og gir det mulighet til å ta imot betaling online med gang.
+Breakfast;-;Frokost
 Building your store;-;Lag din webbutikk
 Button;-;Knapp
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
 Cancel order;-;Kanselert ordre
+Cancelation possibility;-;Mulighet for avbestilling
 Canceled;-;Kanselert
 Carousel menu;-;Karusell meny
 Carousel settings;-;Instillinger for karusellen
@@ -144,6 +146,7 @@ Door id (used for closing doors);-;Dørid (brukt for å lukke døren)
 Download ebill;-;Last ned ebill
 Download the terms and conditions;-;Last ned bruksvilkårene
 Duraction (ms);-;Tid (ms)
+Early checkin;-;Tidlig innsjekk
 Ecommerce settings;-;Netthandel instillinger
 Edit input fields;-;Endre input felter
 Edit row;-;Editer raden
@@ -162,6 +165,7 @@ Enter a new password.;-;Skriv inn ditt nye passord
 Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
 Event label (google analythics);-;Event label (google analythics)
+Extra bed;-;Ekstra seng
 Fade;-;Fade
 Fade in when scrolling;-;Fade når du scroller
 Failed;-;Feilet
@@ -194,6 +198,12 @@ I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
 If you enable this, the parallex effect will be enabled. The background will scroll faster then the cell on top;-;Hvis du aktiverer dette vil du aktivere paralaxx effekter, bakgrunnen vil da scrolle raskere enn cellen over.
 Image;-;Bilde
+Include breakfast for {price} per night per room;-;Legg til frokost for {price}kr per natt / per rom.
+Include early checkin for {price};-;Legg inn tidlig innsjekk for {price}kr.
+Include extra bed for {price} per night per room;-;Legg til en ekstra seng for {price}kr per rom.
+Include late checkout for {price};-;Legg til sen utsjekk for {price}kr per rom.
+Include parking for {price} per night per room;-;Legg til parkering for {price}kr per natt per / per rom. 
+Include the possibility to cancel your stay for {price} per night per room;-;Legg til mulighet for avbestilling for {price}kr per natt per rom.
 Information;-;Informasjon
 Inner background;-;Indre bakgrunn
 Insert column;-;Sett inn kolonne
@@ -216,7 +226,9 @@ July;-;Juli
 June;-;Juni
 Keep aspect ratio;-;Behold aspect ratio
 Keep original layout in mobile view.;-;Behold original layout på mobilen
+Late checkout;-;Sen utsjekk
 Latest;-;Siste
+Latest news;-;Siste nytt
 Leave label open;-;La teksten stå åpen
 Left spacing;-;Venstre spacing
 Les mer;-;Les mer
@@ -302,6 +314,7 @@ Other operations;-;Andre operasjoner
 Our local time is:;-;Vår lokale tid er
 Out of stock.;-;Ikke på lager
 Outer background;-;Ytre bakgrunn
+Parking;-;Parkering
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
 Password does not match confirmed password.;-;Passordet stemmer ikke overens med bekreftet passord.
@@ -433,6 +446,7 @@ Start;-;Start
 Start date;-;Start dato
 Start opacity;-;Start opacity
 Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
+Starting;-;Starter
 Starting from;-;Starter fra
 Status;-;Status
 Style row;-;Styling på rad

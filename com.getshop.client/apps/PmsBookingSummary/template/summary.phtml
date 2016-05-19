@@ -30,6 +30,7 @@ foreach($booking->rooms as $room) {
     }
     $canUpdate = $this->getConfigurationSetting("canUpdateText") == "yes";
     printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText, $canUpdate);
+    printAddons($room, $configuration, $this);
 }
 
 if($configuration->supportMoreDates) {
@@ -46,7 +47,8 @@ if($configuration->supportMoreDates) {
                 continue;
             }
             printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText);
-        }
+            printAddons($room, $configuration, $this);
+       }
     }
     
     echo "<div class='repatingroomlist'>";
@@ -58,6 +60,7 @@ if($configuration->supportMoreDates) {
             continue;
         }
         printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText);
+        printAddons($room, $configuration, $this);
     }
     echo "</div>";
 }
@@ -68,6 +71,15 @@ foreach($booking->rooms as $room) {
         $prices[$room->taxes] = 0;
     }
     $prices[$room->taxes] += ($room->price*$room->count);
+    
+    foreach($room->addons as $addon) {
+        $product = $this->getProduct($addon->productId);
+        if(!isset($prices[$product->taxGroupObject->taxRate])) {
+            $prices[$product->taxGroupObject->taxRate] = 0;
+        }
+        $prices[$product->taxGroupObject->taxRate] += $product->price;
+    }
+    
 }
 
 $bottom = "<h3 class='bottomborder'> " . $this->__w("Total") . "</h3>";
@@ -188,7 +200,37 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     
     
     echo "</span>";
-    echo "</div>";    
+    echo "</div>";
+}
+
+function printAddons($room, $config, $object) {
+    /* @var $room core_pmsmanager_PmsBookingRooms */
+    /* @var $config core_pmsmanager_PmsConfiguration */
+    /* @var $object \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary */
+    $types = array();
+    foreach($room->addons as $addon) {
+        if(!isset($types[$addon->addonType])) {
+            $types[$addon->addonType] = 0;
+        }
+        $types[$addon->addonType]++;
+    }
+    
+    $names = array();
+    $names[1] = $object->__w("Breakfast");
+    $names[2] = $object->__w("Parking");
+    $names[3] = $object->__w("Late checkout");
+    $names[4] = $object->__w("Early checkin");
+    $names[5] = $object->__w("Extra bed");
+    $names[6] = $object->__w("Cancelation possibility");
+    
+    foreach($types as $type => $count) {
+        $addon = $config->addonConfiguration->{$type};
+        $product = $object->getProduct($addon->productId);
+        echo "<div class='itemrow'>";
+        echo "<span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span> <span class='itemname'>$count"." x ".$names[$type]."</span>";
+        echo "<span class='price'>" . $product->price * $count. " kr </span>";
+        echo "</div>";
+    }
 }
 
 ?>

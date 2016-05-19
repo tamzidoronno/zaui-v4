@@ -1,0 +1,30 @@
+<?php
+$addons = array();
+$addons[1] = $this->__w("Include breakfast for {price} per night per room");
+$addons[2] = $this->__w("Include parking for {price} per night per room");
+$addons[3] = $this->__w("Include late checkout for {price}");
+$addons[4] = $this->__w("Include early checkin for {price}");
+$addons[5] = $this->__w("Include extra bed for {price} per night per room");
+$addons[6] = $this->__w("Include the possibility to cancel your stay for {price} per night per room");
+
+/* @var $this ns_7ca01dc3_49e7_4bad_a0f9_4f1eae1199d6\PmsAddonSelection */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+foreach($config->addonConfiguration as $addon) {
+    /* @var $addon core_pmsmanager_PmsBookingAddonItem */
+    if($addon->isActive) {
+        $product = $this->getApi()->getProductManager()->getProduct($addon->productId);
+        $type = $addon->addonType;
+        $text = $addons[$addon->addonType];
+        $text = str_replace("{price}", $product->price, $text);
+        $checked = "";
+        if($this->hasAddonType($type)) {
+            $checked = "CHECKED";
+        }
+        echo "<div>";
+        echo "<label>";
+        echo "<input type='checkbox' addonType='".$addon->addonType."' class='toggleAddonTypeCheckbox' $checked> " . $text;
+        echo "</label>";
+        echo "</div>";
+    }
+}
+?>

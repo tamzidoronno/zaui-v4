@@ -57,23 +57,28 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public int taxgroup = -1;
     public boolean privateExcluded = false;
     
-    public long campaing_start_date = 0;
-    public long campaing_end_date = 0;
-    
     public String accountingSystemId;
     
     public HashMap<String, AttributeItem> addedAttributes = new HashMap();
     
+    public HashMap<String, Double> groupPrice = new HashMap();
+    
     public List<String> categories = new ArrayList();
+    
+    public List<String> subProductIds = new ArrayList();
+    
+    public TaxGroup taxGroupObject;
     
     @Transient
     public Page page;
     
-    public TaxGroup taxGroupObject;
-    
+    @Transient
+    public List<Product> subProducts = new ArrayList();
     
     @Transient
     public HashMap<String, String> attributesToSave = new HashMap();
+    
+    public boolean isGroupedProduct = false;
     
     /**
      * Should always be in gram.

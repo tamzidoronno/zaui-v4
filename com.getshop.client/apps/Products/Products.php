@@ -84,6 +84,11 @@ class Products extends \WebshopApplication implements \Application {
         $product->selectedProductTemplate = $_POST['producttemplate'];
         $product->categories = $_POST['categories'];
         
+        $groups = $this->getApi()->getUserManager()->getAllGroups();
+        foreach ($groups as $group) {
+            $product->groupPrice->{$group->id} = $_POST['price_'.$group->id];
+        }
+        
         $product->addedAttributes = array();
         foreach($_POST['attributes'] as $attrid => $object) {
             $obj = new \core_productmanager_data_AttributeItem();
@@ -122,11 +127,7 @@ class Products extends \WebshopApplication implements \Application {
     }
     
     public function createProduct() {
-        $product = $this->getApi()->getProductManager()->createProduct();
-        $product->name = $_POST['title'];
-        $price = str_replace(",", ".", $_POST['price']);
-        $product->price = $price;
-        $product->sku = $_POST['sku'];
+        $product = $this->getProductFromData();
         $createdProduct = $this->getApi()->getProductManager()->saveProduct($product);
         echo json_encode($createdProduct->id);
         die();
@@ -222,4 +223,40 @@ class Products extends \WebshopApplication implements \Application {
     public function changeProductPriceModel() {
         $this->getApi()->getProductManager()->setProductDynamicPrice($_POST['value'], $_POST['dynamicPrices']);
     }
+    
+    public function createGroupProduct() {
+        $product = $this->getProductFromData();
+        $product->isGroupedProduct = true;
+        $createdProduct = $this->getApi()->getProductManager()->saveProduct($product);
+        echo json_encode($createdProduct->id);
+        die();
+    }
+
+    public function getProductFromData() {
+        $product = $this->getApi()->getProductManager()->createProduct();
+        $product->name = $_POST['title'];
+        $price = str_replace(",", ".", $_POST['price']);
+        $product->price = $price;
+        $product->sku = $_POST['sku'];
+        return $product;
+    }
+    
+    public function saveGroupedProduct() {
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['productid']);
+        $product->name = $_POST['title'];
+        
+        $products = $this->getApi()->getProductManager()->getAllProducts();
+        $subProducts = [];
+        
+        foreach ($products as $iProduct) {
+            if ($_POST['subproduct_'.$iProduct->id] == "true") {
+                $subProducts[] = $iProduct->id;
+            }
+        }
+        
+        $product->subProductIds = $subProducts;
+        $this->getApi()->getProductManager()->saveProduct($product);
+        
+    }
+
 }

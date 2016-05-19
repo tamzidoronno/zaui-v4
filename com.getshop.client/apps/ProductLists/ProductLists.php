@@ -235,6 +235,9 @@ class ProductLists extends \ApplicationBase implements \Application {
     public function getProductTemplate() {
         $template = "defaultproductbox";
         $key = $this->getConfigurationSetting("productlisttemplate");
+        if ($this->getCurrentProduct()->isGroupedProduct) {
+            return "groupedproduct";
+        }
         if($key) {
             $template = "productemplate_" . $key;
         }
@@ -251,6 +254,36 @@ class ProductLists extends \ApplicationBase implements \Application {
             $mainImage = $product->imagesAdded[0];
         }
         return $mainImage;
+    }
+    
+    public function getPriceForGroupedProduct($render=true) {
+        if ($render) 
+            $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
+        else 
+            $product = $this->getCurrentProduct();
+        
+        $price = 0;
+        
+        foreach ($product->subProducts as $subProduct) {
+            if (@$_POST['data'][$subProduct->id]) {
+                $quantity = (int)$_POST['data'][$subProduct->id];
+                $price += $subProduct->price * $quantity;
+            }
+        }
+        
+        if($this->getDisplayDecimals()) {
+            $price = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($price, 2, true);
+        } else {
+            $price = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($price, 0, true);
+        }
+        
+        
+        if ($render) {
+            echo $price;
+            die();
+        } else {
+            return $price;
+        }
     }
 
 }

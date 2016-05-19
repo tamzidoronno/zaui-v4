@@ -27,6 +27,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1155,8 +1156,27 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .filter(filterUsersByStatus(filterOptions))
                 .collect(Collectors.toList());
         
+        Collections.sort(allUsers, compareByName());
         return pageIt(allUsers, filterOptions);
 
+    }
+
+    private Comparator<User> compareByName() {
+        return (User a, User b) -> {
+            if (a.fullName.isEmpty())
+                return 1;
+            
+            if (b.fullName.isEmpty())
+                return -1;
+            
+            if (Character.isDigit(a.fullName.charAt(0)))
+                return 1;
+                    
+            if (Character.isDigit(b.fullName.charAt(0))) 
+                return -1;
+            
+            return a.fullName.trim().toLowerCase().compareTo(b.fullName.trim().toLowerCase());
+        };
     }
 
     private Predicate<? super User> filterUsersByDate(FilterOptions filterOptions) {

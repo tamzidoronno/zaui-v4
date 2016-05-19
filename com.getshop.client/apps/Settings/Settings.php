@@ -102,7 +102,6 @@ class Settings extends \SystemApplication implements \Application {
     }
 
     public function saveStoreSettings() {
-        echo "Setting : " .  $_POST['uniqueusersonemail'];
         $storeSettings = $this->getFactory()->getStoreConfiguration();
         $storeSettings->emailAdress = $_POST['emailaddress'];
         $storeSettings->phoneNumber = $_POST['phoneNumber'];
@@ -116,6 +115,7 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("title", $_POST['title']);
         $this->setConfigurationSetting("disableEditorBackendAccess", $_POST['disableEditorBackendAccess']);
         $this->setConfigurationSetting("uniqueusersonemail", $_POST['uniqueusersonemail']);
+        $this->setConfigurationSetting("uniqueusersoncellphone", $_POST['uniqueusersoncellphone']);
         $this->setConfigurationSetting("doubleauthentication", $_POST['doubleauthentication']);
         $this->setConfigurationSetting("singlegrouptouser", $_POST['singlegrouptouser']);
         $this->getApi()->getStoreManager()->setPrimaryDomainName($_POST['url']);

@@ -51,13 +51,7 @@ class ProMeisterCreateAccount extends \MarketingApplication implements \Applicat
     }
     
     public function createAccount() {
-        $user = new \core_usermanager_data_User();
-        $user->fullName = $_POST['data']['fullname'];
-        $user->emailAddress = $_POST['data']['email'];
-        $user->cellPhone = $_POST['data']['cellphone'];
-        $user->password = $_POST['data']['password'];
-        $user->wantToBecomeCompanyOwner = isset($_POST['data']['isgarageleader']) && ($_POST['data']['isgarageleader'] == "1" || $_POST['data']['isgarageleader'] == 1);
-        $user->prefix = $_POST['data']['cellPrefix'];
+        $user = $this->makeUser();
         
         $company = $this->getCompany();
         $company->invoiceEmail = $_POST['data']['email'];
@@ -83,8 +77,14 @@ class ProMeisterCreateAccount extends \MarketingApplication implements \Applicat
                 $this->getApi()->getUserManager()->addMetaData($loggedOnUser->id, "need_access_to_other_companies", $_POST['data']['otherCompanies']);
             }
         }
-        
-        
+    }
+    
+    public function canCreateAccount() {
+        if (!$this->getApi()->getUserManager()->canCreateUser($this->makeUser())) {
+            echo "false";
+        } else {
+            echo "true";
+        }
     }
 
     public function getSelectedGroup() {
@@ -165,6 +165,18 @@ class ProMeisterCreateAccount extends \MarketingApplication implements \Applicat
         }
         
         return "";
+    }
+
+    public function makeUser() {
+        $user = new \core_usermanager_data_User();
+        $user->fullName = $_POST['data']['fullname'];
+        $user->emailAddress = $_POST['data']['email'];
+        $user->cellPhone = $_POST['data']['cellphone'];
+        $user->password = $_POST['data']['password'];
+        $user->wantToBecomeCompanyOwner = isset($_POST['data']['isgarageleader']) && ($_POST['data']['isgarageleader'] == "1" || $_POST['data']['isgarageleader'] == 1);
+        $user->prefix = $_POST['data']['cellPrefix'];
+        
+        return $user;
     }
 
 }

@@ -38,6 +38,15 @@ public interface IUserManager {
      */
     public User createUser(User user) throws ErrorException;
     
+    
+    /**
+     * Check if its possible to create the user
+     * 
+     * @return
+     * @throws ErrorException 
+     */
+    public Boolean canCreateUser(User user) throws ErrorException;
+    
     /**
      * Find all users with a given search criteria.
      * @param searchCriteria The criteria to search for

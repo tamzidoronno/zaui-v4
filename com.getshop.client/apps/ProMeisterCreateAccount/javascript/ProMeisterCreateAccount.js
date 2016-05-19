@@ -72,15 +72,26 @@ app.ProMeisterCreateAccount = {
             }
         }
         
+        var canCreateEvent = thundashop.Ajax.createEvent(null, "canCreateAccount", this, data);
+        var me = this;
         
-        var event = thundashop.Ajax.createEvent(null, "createAccount", this, data);
-        event['synchron'] = true;
-        thundashop.Ajax.postWithCallBack(event, app.ProMeisterCreateAccount.loginResult);
+        thundashop.Ajax.postWithCallBack(canCreateEvent, function(res) {
+            if (res === "false") {
+                alert(__w("Can not create account, it already exists."));
+            } else {
+                var event = thundashop.Ajax.createEvent(null, "createAccount", me, data);
+                event['synchron'] = true;
+                thundashop.Ajax.postWithCallBack(event, app.ProMeisterCreateAccount.loginResult);        
+            }
+        })
+        
+        
+        
     },
     
     loginResult: function(res) {
         thundashop.common.closeModal(function() {
-            document.location = document.location;
+//            document.location = document.location;
         });
         
     },

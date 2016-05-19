@@ -170,6 +170,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         } 
         
+        if (existsUsersWithSameCellphone(user)) {
+            throw new ErrorException(1037);
+        }
+        
         if (forceUniqueEmailAddress(user)) {
             User retUser = getUserByEmail(user.emailAddress);
             if (retUser == null) {
@@ -1444,5 +1448,42 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
 
         return user;
+    }
+
+    @Override
+    public Boolean canCreateUser(User user) throws ErrorException {
+        if (forceUniqueEmailAddress(user)) {
+            return false;
+        }
+        
+        if (existsUsersWithSameCellphone(user)) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    private boolean existsUsersWithSameCellphone(User user) {
+        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        
+        if (settingsApplication == null) {
+            return false;
+        }
+        
+        String forceUniqueCellphones = settingsApplication.getSetting("uniqueusersoncellphone");
+        if (!forceUniqueCellphones.equals("true")) {
+            return false;
+        }
+        
+        boolean exists = getUserStoreCollection(storeId).getAllUsers().stream()
+                .filter(matchOnEmailAndCellphone(user))
+                .count() > 0;
+        
+        return exists;
+    }
+
+    private Predicate<? super User> matchOnEmailAndCellphone(User user) {
+        return o -> (o.cellPhone != null && o.cellPhone.equals(user.cellPhone))
+                && (o.prefix != null && o.prefix.equals(user.prefix));
     }
 }

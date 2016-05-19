@@ -77,6 +77,10 @@ public class UserStoreCollection {
             user.companyObject = userManager.getCompany(user.company.get(0));
         }
         
+        if (userManager.shouldDisconnectedCompanyWhenUserSuspended() && user.suspended) {
+            user.company = new ArrayList();
+        }
+        
         setUserSessionCompany(user);
         
         return user;

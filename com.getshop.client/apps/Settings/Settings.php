@@ -119,6 +119,7 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("canloginwithcellphone", $_POST['canloginwithcellphone']);
         $this->setConfigurationSetting("doubleauthentication", $_POST['doubleauthentication']);
         $this->setConfigurationSetting("singlegrouptouser", $_POST['singlegrouptouser']);
+        $this->setConfigurationSetting("disconnectedCompanyWhenSuspended", $_POST['disconnectedCompanyWhenSuspended']);
         $this->getApi()->getStoreManager()->setPrimaryDomainName($_POST['url']);
         $this->setConfigurationSetting("currencycode", "NOK");
         $this->setConfigurationSetting("autonavigatetocart", $_POST['autonavigatetocart']);

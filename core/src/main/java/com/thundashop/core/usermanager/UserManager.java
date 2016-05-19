@@ -1530,4 +1530,20 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return true;
     }
+
+    boolean shouldDisconnectedCompanyWhenUserSuspended() {
+        
+        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        
+        if (settingsApplication == null) {
+            return false;
+        }
+        
+        String canloginwithcellphone = settingsApplication.getSetting("disconnectedCompanyWhenSuspended");
+        if (!canloginwithcellphone.equals("true")) {
+            return false;
+        }
+        
+        return true;
+    }
 }

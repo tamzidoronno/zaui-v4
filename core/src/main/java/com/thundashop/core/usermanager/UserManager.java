@@ -1495,4 +1495,19 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return o -> (o.cellPhone != null && o.cellPhone.equals(user.cellPhone))
                 && (o.prefix != null && o.prefix.equals(user.prefix));
     }
+
+    boolean isAllowedToLoginWithCellPhone() {
+        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        
+        if (settingsApplication == null) {
+            return false;
+        }
+        
+        String canloginwithcellphone = settingsApplication.getSetting("canloginwithcellphone");
+        if (!canloginwithcellphone.equals("true")) {
+            return false;
+        }
+        
+        return true;
+    }
 }

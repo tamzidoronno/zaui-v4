@@ -1,4 +1,5 @@
 <?
+/* @var $this \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login */
 
 namespace ns_df435931_9364_4b6a_b4b2_951c90cc0d70;
 
@@ -9,6 +10,8 @@ $logouttext = $this->__w("Logout");
 if ($this->isLoggedIn()) {
     $notloggedInClass = "";
 }
+
+$alsoLoginWithPhonenumber = $this->getExtraLoginText();
 ?>
 
 <div class="login_header_type_1">
@@ -32,7 +35,7 @@ if ($this->isLoggedIn()) {
         echo $this->__w("Please enter your username and password");
         ?>
         <div class="form">
-            <div class="username"><input class="tstextfield" name="username" type="textfield" placeholder='<?php echo $this->__w('Username / Email'); ?>'></input></div>
+            <div class="username"><input class="tstextfield" name="username" type="textfield" placeholder='<?php echo $this->__w('Username / Email'); echo $alsoLoginWithPhonenumber?>'></input></div>
             <div class="password"><input class="tstextfield" name="password" type="password" placeholder="<?php echo $this->__w('Password'); ?>"></input></div>
             <input type="hidden" name="loginbutton" value="true"/>
             <span class="loginbutton gs_button" type="submit"><? echo $this->__f("Login"); ?></span>

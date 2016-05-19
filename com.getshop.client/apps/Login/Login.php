@@ -16,6 +16,18 @@ class Login extends \SystemApplication implements \Application {
     public function postProcess() {
         
     }
+    
+    public function getExtraLoginText() {
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $canLogin = $instance->getConfigurationSetting("canloginwithcellphone");
+        
+        if ($canLogin === "true") {
+            return " / ".$this->__f("Cellphone");
+        }
+        
+        return "";
+    }
 
     public function logout() {
         //Send logout event to backend.

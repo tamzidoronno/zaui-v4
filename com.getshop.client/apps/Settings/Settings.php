@@ -116,6 +116,7 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("disableEditorBackendAccess", $_POST['disableEditorBackendAccess']);
         $this->setConfigurationSetting("uniqueusersonemail", $_POST['uniqueusersonemail']);
         $this->setConfigurationSetting("uniqueusersoncellphone", $_POST['uniqueusersoncellphone']);
+        $this->setConfigurationSetting("canloginwithcellphone", $_POST['canloginwithcellphone']);
         $this->setConfigurationSetting("doubleauthentication", $_POST['doubleauthentication']);
         $this->setConfigurationSetting("singlegrouptouser", $_POST['singlegrouptouser']);
         $this->getApi()->getStoreManager()->setPrimaryDomainName($_POST['url']);

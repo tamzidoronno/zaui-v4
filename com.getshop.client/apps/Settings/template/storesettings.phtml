@@ -157,6 +157,17 @@ $states['fi_FI'] = "Finish";
         </div>
     </div>
     
+    <div class="textfield gss_setting" id="canloginwithcellphone">
+        <span class="title"><?php echo $this->__f("Allow users to login with cellphone number as username"); ?></span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="canloginwithcellphone">
+            <? $faclass = $this->getConfigurationSetting("canloginwithcellphone") == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__(""); ?>
+        </div>
+    </div>
+    
     <div class="textfield gss_setting" id="autonavigatetocart">
         <span class="title"><?php echo $this->__f("Automatically navigate to cart after adding to it"); ?></span>
         <div class="gss_onoff" gs_model="storesettings" gs_model_attr="autonavigatetocart">

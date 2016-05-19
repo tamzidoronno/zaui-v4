@@ -159,6 +159,12 @@ public class UserStoreCollection {
             if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
                 return finalize(user);
             }
+            
+            if (userManager.isAllowedToLoginWithCellPhone()) {
+                if (user.cellPhone != null && !user.cellPhone.isEmpty() && user.cellPhone.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
+                    return finalize(user);
+                }
+            }
         }
         
         throw new ErrorException(13);

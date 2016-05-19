@@ -330,7 +330,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(filter.autoGeneration) {
                 autoGenerateOrders(room, filter);
             } else {
-                if(filter.onlyEnded && !room.isEndedDaysAgo(1)) {
+                if(filter.onlyEnded && !room.isEnded(filter.endInvoiceAt)) {
                     continue;
                 }
                 if(generateChanges) {

@@ -69,8 +69,8 @@
 .EventLister .col.col1 { width: 200px; }
 .EventLister .col.col2 { width: 300px; }
 .EventLister .col.col3 { width: 200px; }
-.EventLister .col.col4 { width: 75px; }
-.EventLister .col.col5 { width: 120px; text-align: right; }
+.EventLister .col.col4 { width: 65px; }
+.EventLister .col.col5 { width: 140px; text-align: right; }
 
 .EventLister .daysinformation {
     

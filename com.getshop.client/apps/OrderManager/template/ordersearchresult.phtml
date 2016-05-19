@@ -54,7 +54,7 @@ foreach ($orders as $order) {
         echo "<div class='gss_order_col gss_col_1'>$order->incrementOrderId</div>";
         echo "<div class='gss_order_col gss_col_2'>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)) . "</div>";
         echo "<div class='gss_order_col gss_col_3'>" . $name . "</div>";
-        echo "<div class='gss_order_col gss_col_4'>" . round($price,1) . "<br>$priceIncTax" . "</div>";
+        echo "<div class='gss_order_col gss_col_4'>" . round($price,1) . "<br><span style='color:gray'>$priceIncTax</span>" . "</div>";
         echo "<div class='gss_order_col gss_col_5'>".$states[$order->status]."</div>";
         echo "</div>";
         $total += $price;
@@ -69,7 +69,7 @@ echo "<div class='gss_overview_order_outer'>";
     echo "<div class='gss_order_col gss_col_1'>Sum</div>";
     echo "<div class='gss_order_col gss_col_2'></div>";
     echo "<div class='gss_order_col gss_col_3'></div>";
-    echo "<div class='gss_order_col gss_col_4'>".round($total,1). "<br>" . $totalTaxes ."</div>";
+    echo "<div class='gss_order_col gss_col_4'>".round($total,1). "<br><span style='color:gray'>" . $totalTaxes ."</span></div>";
     echo "<div class='gss_order_col gss_col_5'></div>";
     echo "</div>";
 echo "</div>";

@@ -61,7 +61,7 @@ if($user->companyObject) {
                     <tr>    
                     <!--<div class="product <? echo $addClass ; ?>">-->            
                         <td><? echo $item->count; ?> x <?php echo $product->name  . " " . $dates ?></td>
-                        <td width='50' style='text-align: right;' valign='top'><?php echo $product->priceExTaxes; ?></td>
+                        <td width='50' style='text-align: right;' valign='top'><?php echo round($product->priceExTaxes,1); ?></td>
                     </tr>
                     <?php
                 }

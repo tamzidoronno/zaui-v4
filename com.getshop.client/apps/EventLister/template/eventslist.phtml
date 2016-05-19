@@ -92,6 +92,8 @@ echo "<div class='eventlist'>";
                     <? } else { ?>
                         <i class="gs_shop_small_icon"><? echo $buttonText; ?></i>
                     <? } ?>
+                        
+                    <a href='/?page=<? echo $event->bookingItemType->pageId; ?>'><i class="gs_shop_small_icon  fa fa-info"></i></a>
                 </div>
             <?
             echo "</a>";

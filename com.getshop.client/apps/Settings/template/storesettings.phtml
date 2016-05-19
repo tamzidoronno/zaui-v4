@@ -124,7 +124,16 @@ $states['fi_FI'] = "Finish";
         </div>
     </div>
 
-    
+    <div class="textfield gss_setting" id="uniqueusersonemail">
+        <span class="title"><?php echo $this->__f("Force unique cellphone on users"); ?></span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="uniqueusersoncellphone">
+            <? $faclass = $this->getConfigurationSetting("uniqueusersoncellphone") == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("This will force the users to not have the same cellphone number."); ?>
+        </div>
+    </div>
     
     <div class="textfield gss_setting" id="uniqueusersonemail">
         <span class="title"><?php echo $this->__f("Force unique email addresses on users"); ?></span>
@@ -145,6 +154,28 @@ $states['fi_FI'] = "Finish";
         </div>
         <div class="description">
             <?php echo $this->__("This feature gives you an extra layer of security."); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting" id="canloginwithcellphone">
+        <span class="title"><?php echo $this->__f("Allow users to login with cellphone number as username"); ?></span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="canloginwithcellphone">
+            <? $faclass = $this->getConfigurationSetting("canloginwithcellphone") == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__(""); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting" id="disconnectedCompanyWhenSuspended">
+        <span class="title"><?php echo $this->__f("Disconnect company from user when suspended"); ?></span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="disconnectedCompanyWhenSuspended">
+            <? $faclass = $this->getConfigurationSetting("disconnectedCompanyWhenSuspended") == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("If a user gets suspended, remove company relations for that user"); ?>
         </div>
     </div>
     

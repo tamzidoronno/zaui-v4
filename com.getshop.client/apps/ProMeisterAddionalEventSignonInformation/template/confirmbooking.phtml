@@ -4,6 +4,20 @@ $user = $this->getApi()->getUserManager()->getLoggedOnUser();
 if ($this->getModalVariable("userid")) {
     $user = $this->getApi()->getUserManager()->getUserById($this->getModalVariable("userid"));
 }
+
+$event = $this->getApi()->getEventBookingManager()->getEvent($this->getBookingEngineName(), $this->getModalVariable("eventid"));
+$groupId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null 
+        && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->companyObject != null 
+        && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->companyObject->groupId 
+        ? \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->companyObject->groupId : "";
+$metaData = $this->getApi()->getEventBookingManager()->getBookingTypeMetaData($this->getBookingEngineName(), $event->bookingItemType->id);
+$extraWarning = @$metaData->groupWarningInformation->{$groupId};
+
+if ($extraWarning) {
+    echo "<div class='extrawarning'>";
+    echo nl2br($extraWarning);
+    echo "</div>";
+}
 ?>
 
 <div gstype='form' method="confirmBooking">

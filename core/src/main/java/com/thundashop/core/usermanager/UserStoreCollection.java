@@ -77,6 +77,10 @@ public class UserStoreCollection {
             user.companyObject = userManager.getCompany(user.company.get(0));
         }
         
+        if (userManager.shouldDisconnectedCompanyWhenUserSuspended() && user.suspended) {
+            user.company = new ArrayList();
+        }
+        
         setUserSessionCompany(user);
         
         return user;
@@ -158,6 +162,12 @@ public class UserStoreCollection {
         for (User user : users.values()) {
             if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
                 return finalize(user);
+            }
+            
+            if (userManager.isAllowedToLoginWithCellPhone()) {
+                if (user.cellPhone != null && !user.cellPhone.isEmpty() && user.cellPhone.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
+                    return finalize(user);
+                }
             }
         }
         

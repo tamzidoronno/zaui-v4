@@ -1,6 +1,8 @@
 app.Login = {
     
     sendResetCode : function() {
+        $('.error_message_recover').hide();
+        
         if($('.recover_section_outer[step="1"]').hasClass('disabled')) {
             return;
         }
@@ -13,9 +15,12 @@ app.Login = {
                 $('.recover_section_outer[step="1"]').addClass('disabled');
                 $('.recover_section_outer[step="2"]').removeClass('disabled');
             }
-            thundashop.Ajax.showErrorMessage("<div class='errorform '>" + result.msg + "</div>");
-
-
+            
+            if (result.msg) {
+                $('.error_message_recover').fadeIn();
+                $('.error_message_recover').html(result.msg);
+            }
+            
         });
     },
     resetPassword : function() {
@@ -70,6 +75,11 @@ app.Login = {
    },
    
     initEvents : function() {
+        if (typeof(appLoginAlreadyRegisteredEvents) !== "undefined" && appLoginAlreadyRegisteredEvents) {
+            return;
+        }
+        
+        appLoginAlreadyRegisteredEvents = true;
         $(document).on('click','.Login #recoverinputbutton',app.Login.sendResetCode);
         $(document).on('click','.Login #resetpasswordbutton',app.Login.resetPassword);
         $(document).on('click','.Login .loginform .tstextfield[name="password"]',app.Login.checkEnter);

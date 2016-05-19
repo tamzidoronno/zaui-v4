@@ -32,6 +32,7 @@ if (!$event->canBook && !$event->canBookWaitingList) {
 
 $user = $this->getApi()->getUserManager()->getUserById($this->getUser()->id);
 
+$modalName = "event_signon";
 $companyOwner = $user->isCompanyOwner;
 if (!$companyOwner) {
 ?>
@@ -43,7 +44,7 @@ if (!$companyOwner) {
         echo $user->fullName; 
         if (!$isSignedUp) {
         ?>
-            <div class='shop_button' gs_show_modal="event_signon" eventId="<? echo $event->id; ?>" userid="<? echo $user->id; ?>">
+            <div class='shop_button' gs_show_modal="<? echo $modalName; ?>" eventId="<? echo $event->id; ?>" userid="<? echo $user->id; ?>">
                 <? echo $isFull ? $this->__w("Signup waitinglist") : $this->__w("Singup"); ?>
             </div>
         <?
@@ -67,7 +68,7 @@ if (!$companyOwner) {
                 <? echo $user->fullName; 
                 if (!$isSignedUp) {
                 ?>
-                    <div class='shop_button' gs_show_modal="event_signon" eventId="<? echo $event->id; ?>" userid="<? echo $user->id; ?>">
+                    <div class='shop_button' gs_show_modal="<? echo $modalName; ?>" eventId="<? echo $event->id; ?>" userid="<? echo $user->id; ?>">
                         <? 
                         echo $isFull ? $this->__w("Signup waitinglist") : $this->__w("Singup"); 
                         ?>

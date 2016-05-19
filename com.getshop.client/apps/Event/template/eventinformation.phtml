@@ -38,6 +38,8 @@ $event = $this->getEvent();
     ?>
 </div>
 
+<br/>
+<a class='readmoretextlink' href='/?page=<? echo $event->bookingItemType->pageId; ?>'><div class='shop_button readmorebutton'><? echo $this->__w("More information about this event"); ?></div></a>
 <?
 $price = $event->price;
 if ($price > -1) {

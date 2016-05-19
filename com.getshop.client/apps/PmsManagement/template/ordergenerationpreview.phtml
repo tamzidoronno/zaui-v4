@@ -28,7 +28,7 @@ foreach($cart->items as $item) {
         }
     }
     $priceEx = round($item->product->priceExTaxes);
-    $price = round($item->product->price);
+    $price = round($item->product->price, 1);
     $totalEx += ($priceEx * $item->count);
     $total += ($price * $item->count);
     $totalCount += $item->count;

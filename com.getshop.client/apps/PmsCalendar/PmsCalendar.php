@@ -421,6 +421,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             }
             
             foreach($booking->rooms as $room) {
+                if($room->deleted) {
+                    continue;
+                }
                 $roomStart = strtotime($room->date->start);
                 $roomEnd = strtotime($room->date->end);
                 if($room->bookingItemTypeId != $typeId) {

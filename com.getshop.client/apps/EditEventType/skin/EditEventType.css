@@ -36,3 +36,8 @@
     border: solid 1px #DDD;
     padding: 20px;
 }
+.EditEventType .extrainformationarea {
+    width: 100%;
+    box-sizing: border-box;
+    height: 100px;
+}

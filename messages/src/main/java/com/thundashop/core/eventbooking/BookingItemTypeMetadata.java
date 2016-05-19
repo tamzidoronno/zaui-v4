@@ -29,6 +29,12 @@ public class BookingItemTypeMetadata extends DataCommon {
     
     /**
      * Key = groupId
+     * Value = description
+     */
+    public HashMap<String, String> groupWarningInformation = new HashMap();
+    
+    /**
+     * Key = groupId
      * Value = List of certificates for an eventType.
      */
     public HashMap<String, List<String>> certificateIds = new HashMap();

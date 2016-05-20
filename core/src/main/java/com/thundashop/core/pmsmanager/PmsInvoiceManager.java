@@ -713,7 +713,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             daysInPeriode = getNumberOfMonthsBetweenDates(startDate, endDate);
             if(daysInPeriode > 1000) {
                 //Infinate dates, noone wants to pay 100 years in advance.
-                daysInPeriode = 1;
+                daysInPeriode = pmsManager.getConfigurationSecure().whenInfinteDateFirstOrderTimeUnits;
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(startDate);
+                cal.add(Calendar.MONTH, daysInPeriode);
+                endDate = cal.getTime();
             }
         }
         Double price = getOrderPriceForRoom(room, startDate, endDate, booking.priceType);

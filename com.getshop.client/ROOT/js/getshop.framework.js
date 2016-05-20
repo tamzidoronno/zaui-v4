@@ -410,6 +410,10 @@ thundashop.framework = {
         var confirmed = confirm("Are you sure your want to delete this cell?");
         if(confirmed) {
             var cellid = $(this).closest('.gscell').attr('cellid');
+            
+            if (!cellid)
+                cellid = $(this).closest('[cellid]').attr('cellid');
+            
             var event = thundashop.Ajax.createEvent('','operateCell',$('body'), {
                 "cellid" : cellid,
                 "type" : "delete"

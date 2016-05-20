@@ -28,7 +28,10 @@ class NewsElements extends \MarketingApplication implements \Application {
         $entry = $this->getApi()->getNewsManager()->getNewsForPage($this->getPage()->javapage->id);
         $entry->subject = $_POST['data']['subject'];
         $entry->content = $_POST['data']['content'];
-        $this->getApi()->getNewsManager()->addNews($entry);
+        $entry->date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $entry->rowCreatedDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        
+        $this->getApi()->getNewsManager()->addNews($entry, $entry->newsListId);
     }
     
     public function fileUplaoded($fileId) {

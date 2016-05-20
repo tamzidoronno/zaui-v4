@@ -2986,4 +2986,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
+    @Override
+    public void sendMessage(String bookingId, String email, String title, String message) {
+        message = configuration.emailTemplate.replace("{content}", message);
+        messageManager.sendMail(email, "", title, message, getFromEmail(), getFromName());
+        message = "Message sent to : " + email + " Message: " + message + ", title: " + title;
+        logEntry(message, bookingId, null);
+   }
+
 }

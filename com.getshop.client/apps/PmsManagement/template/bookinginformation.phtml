@@ -62,6 +62,7 @@ echo "<span class='tab' area='roomsbooked'>Rooms booked</span>";
 if($config->requirePayments) {
     echo "<span class='tab' area='orderinfo'>Orders</span>";
 }
+echo "<span class='tab' area='messagearea'>Messaging</span>";
 $hasAddons = false;
 foreach($config->addonConfiguration as $addonConfig) {
     if($addonConfig->isActive) {
@@ -80,6 +81,9 @@ echo "<div class='tabarea roomsbooked'>";
 echo "</div>";
 echo "<div class='tabarea addons'>";
     $this->includefile("addons");
+echo "</div>";
+echo "<div class='tabarea messagearea'>";
+    $this->includefile("messagearea");
 echo "</div>";
 if($config->requirePayments) {
     echo "<div class='tabarea orderinfo'>";

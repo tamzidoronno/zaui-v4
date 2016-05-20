@@ -46,6 +46,16 @@ if(stristr($pageid,"news_template_")) {
                <input type="text" gsname="subject" value="<?php echo $entry->subject; ?>" style="width:100%; font-size: 16px; padding: 10px; box-sizing: border-box;">
            </td>
        </tr>
+       <tr>
+           <td width="50%">Date</td>
+           <td width="50%">
+               <?
+               $date = date('Y-m-d', strtotime($entry->date));
+               
+               ?>
+               <input type="date" gsname="date" value="<? echo $date; ?>" style="width:100%; font-size: 16px; padding: 10px; box-sizing: border-box;">
+           </td>
+       </tr>
    </table>
    <br>
    <textarea gsname="content" style="width:100%; font-size: 16px; padding: 10px; height: 150px; box-sizing: border-box;"><?php echo $entry->content; ?></textarea>

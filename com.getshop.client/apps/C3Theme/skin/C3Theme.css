@@ -1,14 +1,24 @@
 .gs_page_width { max-width: 1200px; margin: auto; }
-.Menu a { font-size: 16px; font-weight: bold; color:#18bbb1; padding-right: 30px; display:inline-block; }
+.Menu { padding-top: 10px; }
+.Menu a { font-size: 16px; font-weight: bold; color:#FFF; padding-right: 30px; display:inline-block; }
 .Menu .lastentry a { padding-right: 0px; }
 .Menu .entries .entries a { width: 200px; }
 body {    
-    background-color: #FFF; padding-top: 10px; font-size: 18px; 
+    background-color: #FFF; font-size: 18px; 
 
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
     font-weight: 300;
 }
-.gsarea[area="header"] .gs_page_width { height: 220px;  border-bottom: solid 2px #FFA500; margin-bottom: 20px; }
+.gsarea[area="header"] {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f4943f+0,f4803e+100 */
+   background: #f4943f; /* Old browsers */
+   background: -moz-linear-gradient(top,  #f4943f 0%, #f4803e 100%); /* FF3.6-15 */
+   background: -webkit-linear-gradient(top,  #f4943f 0%,#f4803e 100%); /* Chrome10-25,Safari5.1-6 */
+   background: linear-gradient(to bottom,  #f4943f 0%,#f4803e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4943f', endColorstr='#f4803e',GradientType=0 ); /* IE6-9 */
+}
+
+.gsarea[area="header"] .gs_page_width { height: 190px;  margin-bottom: 20px; padding-top: 20px; }
 .gsarea[area="footer"] .gs_page_width { background-color:#000;
                                         padding-top: 20px;
                                         padding-bottom: 20px;
@@ -36,15 +46,22 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 }
 
 
-.gs_language_code { background-repeat: no-repeat; font-size: 0px; height: 37px; width: 37px; padding:0px !important; margin-right: 10px; }
-.gs_lang_code_nb_NO { background-image: url('https://skytec.getshop.com/displayImage.php?id=eeeff579-0b75-483a-9574-725a0c29fead'); background-size: 37px 37px; }
-.gs_lang_code_en_en { background-image: url('https://skytec.getshop.com/displayImage.php?id=a1626d35-83cc-49c7-9c35-60a0f9784b05'); background-size: 35px 35px; }
+.gs_language_code { 
+    background-repeat: no-repeat; 
+    font-size: 0px; 
+    height: 35px; width: 35px; 
+    padding:0px !important; 
+    margin-left: 10px; 
+    background-repeat: no-repeat; 
+    background-position: top right;
+}
+.gs_lang_code_nb_NO { background-image: url('https://skytec.getshop.com/displayImage.php?id=eeeff579-0b75-483a-9574-725a0c29fead'); background-size: 33px 33px; }
+.gs_lang_code_en_en { background-image: url('https://skytec.getshop.com/displayImage.php?id=a1626d35-83cc-49c7-9c35-60a0f9784b05'); background-size: 33px 29px; background-position: 0px 2px;}
 
 .shop_button { border: solid 1px #DDD; padding: 10px; line-height: 20px; height: 20px; padding-left: 20px; padding-right: 20px;}
 
-.Menu .entries {
+.Menu .entries .entries {
     background-color: #FFF;
-    padding-top: 10px;
 }
 
 .Menu .entries .entries {
@@ -62,6 +79,7 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .Menu .entries .entries div:hover {
     color: #000;
 }
+
 .Menu .entries .entries div {
     color: #696969;
     font-size:12px;
@@ -69,6 +87,7 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 }
 
 .Menu .entries .entries {
+    background-color: #FFF !important;
     border: solid 1px #bbb;
     box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
 }
@@ -93,5 +112,21 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .News .news_dates { font-size: 12px !important; }
 
 .Menu .entry.active a {
-    color: #333;
+    color: #696969;
+}
+
+.ProductSearch .searchField i,
+.ProductSearch .searchField input {
+    border: solid 1px #ffa500;
+    height: 35px;
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+.ProductSearch .searchField i {
+    width: 35px;
+    border: solid 0px;
+}
+.ProductSearch {
+    text-align: right;
 }

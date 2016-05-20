@@ -1960,7 +1960,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void autoAssignItem(PmsBookingRooms room) {
-        List<BookingItem> items = bookingEngine.getAvailbleItems(room.bookingItemTypeId, room.date.start, room.date.end);
+        List<BookingItem> items = bookingEngine.getAvailbleItemsWithBookingConsidered(room.bookingItemTypeId, room.date.start, room.date.end, room.bookingId);
         Collections.sort(items, new Comparator<BookingItem>() {
             public int compare(BookingItem o1, BookingItem o2) {
                 return o1.order.compareTo(o2.order);

@@ -1200,4 +1200,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return false;
     }
 
+    public void forceDeleteOrder(Order order) {
+        deleteObject(order);
+        orders.remove(order.id);
+    }
+
 }

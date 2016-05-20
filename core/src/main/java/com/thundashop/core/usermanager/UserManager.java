@@ -27,6 +27,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -169,6 +170,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (getSession().currentUser != null && getSession().currentUser.type < user.type) {
             throw new ErrorException(26);
         } 
+        
+        if (existsUsersWithSameCellphone(user)) {
+            throw new ErrorException(1037);
+        }
         
         if (forceUniqueEmailAddress(user)) {
             User retUser = getUserByEmail(user.emailAddress);
@@ -433,6 +438,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             if (user.username.equalsIgnoreCase(email) || user.emailAddress.equalsIgnoreCase(email)) {
                 toReset = user;
             }
+            
+            if (user.cellPhone != null && user.cellPhone.equals(email)) {
+                toReset = user;
+            }
         }
 
         if (toReset == null) {
@@ -445,6 +454,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (mailfactory != null) {
             mailfactory.send("recover@getshop.com", email, title, text);
         }
+        
+        if (toReset != null && toReset.cellPhone != null && !toReset.cellPhone.isEmpty()) {
+            messageManager.sendSms("nexmo", toReset.cellPhone, text, toReset.prefix);
+        }
+        
         return 0;
     }
 
@@ -1142,8 +1156,27 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .filter(filterUsersByStatus(filterOptions))
                 .collect(Collectors.toList());
         
+        Collections.sort(allUsers, compareByName());
         return pageIt(allUsers, filterOptions);
 
+    }
+
+    private Comparator<User> compareByName() {
+        return (User a, User b) -> {
+            if (a.fullName.isEmpty())
+                return 1;
+            
+            if (b.fullName.isEmpty())
+                return -1;
+            
+            if (Character.isDigit(a.fullName.charAt(0)))
+                return 1;
+                    
+            if (Character.isDigit(b.fullName.charAt(0))) 
+                return -1;
+            
+            return a.fullName.trim().toLowerCase().compareTo(b.fullName.trim().toLowerCase());
+        };
     }
 
     private Predicate<? super User> filterUsersByDate(FilterOptions filterOptions) {
@@ -1444,5 +1477,73 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
 
         return user;
+    }
+
+    @Override
+    public Boolean canCreateUser(User user) throws ErrorException {
+        if (forceUniqueEmailAddress(user)) {
+            return false;
+        }
+        
+        if (existsUsersWithSameCellphone(user)) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    private boolean existsUsersWithSameCellphone(User user) {
+        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        
+        if (settingsApplication == null) {
+            return false;
+        }
+        
+        String forceUniqueCellphones = settingsApplication.getSetting("uniqueusersoncellphone");
+        if (!forceUniqueCellphones.equals("true")) {
+            return false;
+        }
+        
+        boolean exists = getUserStoreCollection(storeId).getAllUsers().stream()
+                .filter(matchOnEmailAndCellphone(user))
+                .count() > 0;
+        
+        return exists;
+    }
+
+    private Predicate<? super User> matchOnEmailAndCellphone(User user) {
+        return o -> (o.cellPhone != null && o.cellPhone.equals(user.cellPhone))
+                && (o.prefix != null && o.prefix.equals(user.prefix));
+    }
+
+    boolean isAllowedToLoginWithCellPhone() {
+        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        
+        if (settingsApplication == null) {
+            return false;
+        }
+        
+        String canloginwithcellphone = settingsApplication.getSetting("canloginwithcellphone");
+        if (!canloginwithcellphone.equals("true")) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    boolean shouldDisconnectedCompanyWhenUserSuspended() {
+        
+        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        
+        if (settingsApplication == null) {
+            return false;
+        }
+        
+        String canloginwithcellphone = settingsApplication.getSetting("disconnectedCompanyWhenSuspended");
+        if (!canloginwithcellphone.equals("true")) {
+            return false;
+        }
+        
+        return true;
     }
 }

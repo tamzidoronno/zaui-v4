@@ -22,6 +22,9 @@ public interface IPmsManager {
     @Administrator
     public void markRoomAsCleaned(String itemId);
     
+    @Administrator
+    public void deleteAllBookings(String code);
+    
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
     @Editor

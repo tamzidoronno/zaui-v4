@@ -3,6 +3,7 @@ namespace ns_46b52a59_de5d_4878_aef6_13b71af2fc75;
 
 class PmsBookingSummary extends \WebshopApplication implements \Application {
     var $curBooking;
+    var $products;
     
     public function getDescription() {
         return "Displays a view with a summary for the current booking that is processed";
@@ -239,5 +240,19 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $curBooking);
         $this->curBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
     }
+
+    /**
+     * @param type $productId
+     * @return core_productmanager_data_Product
+     */
+    public function getProduct($productId) {
+        if(isset($this->products[$productId])) {
+            return $this->products[$productId];
+        }
+        $product = $this->getApi()->getProductManager()->getProduct($productId);
+        $this->products[$productId] = $product;
+        return $product;
+    }
+
 }
 ?>

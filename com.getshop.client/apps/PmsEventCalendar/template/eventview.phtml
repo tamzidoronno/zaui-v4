@@ -57,10 +57,10 @@ if($fileid && !$event->imageId) {
 }
 
 if($event->imageId) {
-    echo "<img id='imgtodisplay' src='/displayImage.php?id=" . $event->imageId . "' style='max-width: 300px; max-height: 300px;'>";
+    echo "<img id='imgtodisplay' src='/displayImage.php?id=" . $event->imageId . "' style='width: 100%;'>";
 }
 
-echo $event->description;
+echo nl2br($event->description);
 echo "<div style='clear:both;'></div>";
 if(sizeof($event->lenker) > 0) {
     echo "<h2>Lenker</h2>";

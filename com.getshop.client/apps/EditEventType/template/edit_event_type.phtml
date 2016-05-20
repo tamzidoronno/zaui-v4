@@ -37,6 +37,11 @@ $metaData = $this->getApi()->getEventBookingManager()->getBookingTypeMetaData($t
         
             echo "<div class='inner'>";
                 $price = $metaData->groupPrices->{$group->id};
+                $warningText = "";
+                
+                if ($metaData->groupWarningInformation && isset($metaData->groupWarningInformation->{$group->id})) {
+                    $warningText = @$metaData->groupWarningInformation->{$group->id};
+                }
                 echo "<label> Price </label>";
                 echo "<input gsname='price_$group->id' class='gsniceinput1' value='$price'/> ( -1 = disabled / price not shown )";
 
@@ -55,6 +60,10 @@ $metaData = $this->getApi()->getEventBookingManager()->getBookingTypeMetaData($t
                 echo "<label> Visible? </label>";
                 $checked = $metaData->visibleForGroup->{$group->id} ? "checked='true'" : "";
                 echo "&nbsp;&nbsp;<input type='checkbox' $checked gsname='visible_$group->id'/> Yes";
+                
+                echo "<br/>";
+                echo "<br/> Information / Warning?";
+                echo "<br/><textarea gsname='extrainfo_$group->id' class='extrainformationarea'>$warningText</textarea>";
             echo "</div>";
         echo "</div>";
     }

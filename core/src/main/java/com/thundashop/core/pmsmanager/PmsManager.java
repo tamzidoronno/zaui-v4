@@ -2945,4 +2945,35 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
     }
 
+    @Override
+    public void deleteAllBookings(String code) {
+        if(!code.equals("23424242423423455ggbvvcx")) {
+            return;
+        }
+        
+        for(PmsBooking booking : bookings.values()) {
+            deleteObject(booking);
+        }
+        
+        for(Booking booking : bookingEngine.getAllBookings()) {
+            bookingEngine.deleteBooking(booking.id);
+        }
+        bookings.clear();
+        
+        //Delete all orders.
+        List<Order> allOrders = orderManager.getOrders(null, null, null);
+        for(Order order : allOrders) {
+            orderManager.forceDeleteOrder(order);
+        }
+        
+        //Delete all users
+        for(User user : userManager.getAllUsers()) {
+            if(user.emailAddress.toLowerCase().contains("getshop")) {
+                continue;
+            }
+            userManager.deleteUser(user.id);
+        }
+        
+    }
+
 }

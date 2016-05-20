@@ -19,6 +19,11 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->includefile("notificationpanel");
     }
     
+    public function deleteAllBookings() {
+        $code = $_POST['data']['code'];
+        $this->getApi()->getPmsManager()->deleteAllBookings($this->getSelectedName(), $code);
+    }
+    
     public function saveContent() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         if($_POST['data']['fromid'] == "fireinstructions") {

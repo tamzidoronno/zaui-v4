@@ -108,12 +108,12 @@ class OrderManager extends GSTableCommon implements \Application {
      * @return type
      */
     public function canChangeOrder($order) {
-//        if($order->transferredToAccountingSystem) {
-//            return false;
-//        }
-//        if($order->status == 7) {
-//            return false;
-//        }
+        if($order->transferredToAccountingSystem) {
+            return false;
+        }
+        if($order->status == 7) {
+            return false;
+        }
         
         return true;
     }
@@ -145,6 +145,7 @@ class OrderManager extends GSTableCommon implements \Application {
             $price *= -1;
         }
         $this->getApi()->getOrderManager()->updatePriceForOrderLine($_POST['cartItemId'], $_POST['value'], $price);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['value']);
     }
     
     public function changePaymentType() {

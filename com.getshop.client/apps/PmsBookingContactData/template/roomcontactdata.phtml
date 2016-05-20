@@ -119,13 +119,13 @@ if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
         echo "</span>";
         echo "<span class='col-50' style='padding-right:0px;'><span class='complete_button' gstype='submit'>$completeText</span>";
         if($this->isEditorMode() && $pmsconfig->requirePayments) {
-            echo "<span style='margin-top: 5px;' class='complete_button' gstype='submit' gsvalue='nopay'>Continue without payment</span>";
+            echo "<span style='margin-top: 5px;' class='complete_button' gstype='submit' gsvalue='nopay'>".$this->__w("Continue without payment")."</span>";
         }
         echo "</div>";
     } else {
         echo "<span class='complete_button' gstype='submit'>$completeText</span>";
         if($this->isEditorMode()) {
-            echo "<span style='margin-top: 5px;'  class='complete_button' gstype='submit' gsvalue='nopay'>Continue without payment</span>";
+            echo "<span style='margin-top: 5px;'  class='complete_button' gstype='submit' gsvalue='nopay'>".$this->__w("Continue without payment")."</span>";
         }
     }
     echo "</div>";

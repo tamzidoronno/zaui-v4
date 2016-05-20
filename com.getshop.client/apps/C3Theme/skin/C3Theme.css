@@ -1,14 +1,24 @@
 .gs_page_width { max-width: 1200px; margin: auto; }
-.Menu a { font-size: 16px; font-weight: bold; color:#18bbb1; padding-right: 30px; display:inline-block; }
+.Menu { padding-top: 10px; }
+.Menu a { font-size: 16px; font-weight: bold; color:#FFF; padding-right: 30px; display:inline-block; }
 .Menu .lastentry a { padding-right: 0px; }
 .Menu .entries .entries a { width: 200px; }
 body {    
-    background-color: #FFF; padding-top: 10px; font-size: 18px; 
+    background-color: #FFF; font-size: 18px; 
 
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
     font-weight: 300;
 }
-.gsarea[area="header"] .gs_page_width { height: 220px;  border-bottom: solid 2px #FFA500; margin-bottom: 20px; }
+.gsarea[area="header"] {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f4943f+0,f4803e+100 */
+   background: #f4943f; /* Old browsers */
+   background: -moz-linear-gradient(top,  #f4943f 0%, #f4803e 100%); /* FF3.6-15 */
+   background: -webkit-linear-gradient(top,  #f4943f 0%,#f4803e 100%); /* Chrome10-25,Safari5.1-6 */
+   background: linear-gradient(to bottom,  #f4943f 0%,#f4803e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4943f', endColorstr='#f4803e',GradientType=0 ); /* IE6-9 */
+}
+
+.gsarea[area="header"] .gs_page_width { height: 190px;  margin-bottom: 20px; padding-top: 20px; }
 .gsarea[area="footer"] .gs_page_width { background-color:#000;
                                         padding-top: 20px;
                                         padding-bottom: 20px;
@@ -50,9 +60,8 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 
 .shop_button { border: solid 1px #DDD; padding: 10px; line-height: 20px; height: 20px; padding-left: 20px; padding-right: 20px;}
 
-.Menu .entries {
+.Menu .entries .entries {
     background-color: #FFF;
-    padding-top: 10px;
 }
 
 .Menu .entries .entries {
@@ -70,6 +79,7 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .Menu .entries .entries div:hover {
     color: #000;
 }
+
 .Menu .entries .entries div {
     color: #696969;
     font-size:12px;
@@ -114,6 +124,7 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 
 .ProductSearch .searchField i {
     width: 35px;
+    border: solid 0px;
 }
 .ProductSearch {
     text-align: right;

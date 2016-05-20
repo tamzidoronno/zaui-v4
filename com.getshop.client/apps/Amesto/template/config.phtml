@@ -1,0 +1,31 @@
+<?
+/* @var $this \ns_66b4483d_3384_42bb_9058_2ac915c77d80\Amesto */
+?>
+
+<div class='gss_settings_header'>
+    <span class="fa-stack fa-lg" style="margin-right: 60px;">
+        <i class="fa fa-gears fa-stack-1x"></i>
+    </span>
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Amesto Settings"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Credentials for the API");
+            ?>	
+        </div>
+    </div>	
+</div>
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting"  id="name">
+        <span class="title"><?php echo $this->__f("Hostname"); ?></span>
+        <input type="textfield" gs_model='amestocreds' gs_model_attr='hostname' value="<? echo $this->getConfigurationSetting("hostname"); ?>" placeholder="">
+    </div>
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="syncAllStockQuantity"><i class='fa fa-refresh'></i><?php echo $this->__f("Sync All Product"); ?></div>
+    </div>
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveCredentials" gss_model="amestocreds"><i class='fa fa-save'></i><?php echo $this->__f("Save"); ?></div>
+    </div>
+</div>

@@ -87,6 +87,7 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 }
 
 .Menu .entries .entries {
+    background-color: #FFF !important;
     border: solid 1px #bbb;
     box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
 }

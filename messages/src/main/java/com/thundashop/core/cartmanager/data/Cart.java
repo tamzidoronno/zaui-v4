@@ -235,6 +235,7 @@ public class Cart extends DataCommon {
         CartItem cartItem = getCartItem(cartItemId);
         if (cartItem != null) {
             cartItem.getProduct().price = price;
+            cartItem.getProduct().doFinalize();
         }
     }
 

@@ -275,6 +275,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         validateBookings(bookings);
         checkIfCanAddBookings(bookings);
         checkIfAssigningPossible(bookings);
+        checkIfAvailableBookingItemsOnlyEmptyBookings(bookings);
     }
 
     private void validateBookings(List<Booking> bookings) {
@@ -712,7 +713,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     
     
     List<BookingItem> getAvailbleItems(String typeId, Date start, Date end) {
+        return getAvailbleItemsWithBookingConsidered(typeId, start, end, null);
+    }
+    
+    List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId) {
         BookingItemType type = types.get(typeId);
+        
         if (type == null) {
             throw new BookingEngineException("Can not get available items ");
         }
@@ -721,14 +727,20 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .filter(booking -> booking.bookingItemTypeId.equals(typeId))
                 .filter(booking -> booking.interCepts(start, end))
                 .collect(Collectors.toList());
-
+        
+        if (bookingId != null && !bookingId.isEmpty()) {
+            bookingsWithinDaterange.removeIf(o -> o.id.equals(bookingId));
+        }
+        
         List<BookingItem> bookingItems = getBookingItemsByType(typeId);
         
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, bookingsWithinDaterange, bookingItems, shouldThrowException());
 
-        return assigner.getAvailableItems().stream()
+        List<BookingItem> retList = assigner.getAvailableItems().stream()
                 .map(o -> items.get(o))
                 .collect(Collectors.toList());
+        
+        return retList;
     }
     
     List<Booking> getAllBookingsByBookingItem(String bookingItemId) {
@@ -845,6 +857,27 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             Page page = pageManager.createPageFromTemplatePage(getName()+"_bookingegine_type_template");
             o.pageId = page.id;
             saveObject(o);
+        }
+    }
+
+    private void checkIfAvailableBookingItemsOnlyEmptyBookings(List<Booking> bookings) {
+        for (Booking booking : bookings) {
+            if (booking.id != null && !booking.id.isEmpty()) {
+                List<BookingItem> availableItems = getAvailbleItemsWithBookingConsidered(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
+                if (availableItems.isEmpty()) {
+                    throw new BookingEngineException("Did not find an available item for booking: " + booking.getHumanReadableDates());
+                }
+                
+                if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+                    boolean canUseRoom = availableItems.stream().map(item -> item.id)
+                            .collect(Collectors.toList())
+                            .contains(booking.bookingItemId);
+                    
+                    if (!canUseRoom) {
+                        throw new BookingEngineException("This bookingitem can not be used as it is not available, there is other bookings that depends ont this.");
+                    }
+                }
+            }
         }
     }
 }

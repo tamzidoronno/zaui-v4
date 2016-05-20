@@ -281,6 +281,8 @@ public class BookingItemAssignerOptimal {
         List<OptimalBookingTimeLine> bookingLines = preCheck();
         dryRun = true;
         List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
+        assignLeftovers(bookingLines, availableBookingItems);
+        
         return availableBookingItems
                 .stream()
                 .filter(o -> o.notInUseAtAll())

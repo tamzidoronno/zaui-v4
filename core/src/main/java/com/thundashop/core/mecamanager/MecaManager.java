@@ -75,6 +75,8 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
                 }
             }
         }
+        
+        createSchedulers();
     }
 
     @Override
@@ -143,8 +145,6 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             fleet.cars.add(car.id);
             saveObject(fleet);
         }
-        
-        
     }
 
     @Override
@@ -346,10 +346,12 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         }
         
         currentCar.kilometers = kilometers;
-        currentCar.dateRequestedKilomters = null;
+        currentCar.requestKilomters.markReceivedKilomters();
+        
         for (String token : currentCar.tokens) {
             mobileManager.clearBadged(token);
         }
+        
         saveObject(currentCar);
     }
 
@@ -366,6 +368,10 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     @Override
     public void notifyByPush(String phoneNumber, String message) {
         MecaCar car = getCarByCellphone(phoneNumber);
+        notifyByPushToCar(car, message);
+    }
+
+    private void notifyByPushToCar(MecaCar car, String message) {
         if (car != null) {
             for (String token : car.tokens) {
                 mobileManager.sendMessage(token, message);
@@ -515,9 +521,9 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     public void sendKilometerRequest(String carId) {
         MecaCar car = getCar(carId);
         if (car != null) {
-            car.dateRequestedKilomters = new Date();
-            saveObject(car);
             notifyByPush(car.cellPhone, "Vi trenger din kilometerstand");
+            car.requestKilomters.markAsSentPushNotification();
+            saveObject(car);
         }
     }
 
@@ -537,7 +543,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         if (mecaFleetService != null) {
             for (MecaCar car : getCarsServiceList()) {
                 finalize(car);
-                if (car.needAttentionToService || car.serviceDateRejected) {
+                if (car.needAttentionToService()) {
                     i++;
                 }
             }
@@ -546,7 +552,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         if (mecaControl != null) {
             for (MecaCar car : getCarsServiceList()) {
                 finalize(car);
-                if (car.canAgreeControlDate && car.nextControlAgreed == null) {
+                if (car.needAttentionToControl()) {
                     i++;
                 }
             }
@@ -586,5 +592,70 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             car.noShowService();
             saveObject(car);
         }
+    }
+
+    @Override
+    public void runNotificationCheck() {
+        for (MecaCar car : cars.values()) {
+            finalize(car);
+            if (car.requestKilomters.canSendPushNotification()) {
+                sendKilometerRequest(car.id);
+            }
+            
+            if (car.requestKilomters.canSendSmsNotification()) {
+                messageManager.sendSms("sveve", car.cellPhone, "Hei, vi trenger din kilometerstand. Logg inn på MECA Fleet appen og oppgi kilometerstanden på din bil.", getStoreDefaultPrefix());
+                car.requestKilomters.markAsSentSmsNotification();
+            }
+        }
+    }
+    
+    @Override
+    public void sendNotificationToStoreOwner() {
+        cars.values().stream()
+                .forEach(car -> finalize(car));
+                
+        List<MecaCar> carsForControl = cars.values().stream()
+                .filter(car -> car.needAttentionToControl())
+                .collect(Collectors.toList());
+        
+        List<MecaCar> carsForService = cars.values().stream()
+                .filter(car -> car.needAttentionToService())
+                .collect(Collectors.toList());
+        
+        if (carsForService.isEmpty() && carsForControl.isEmpty())
+            return;
+        
+        String subject = "MECA Fleet trenger din oppmerksomhet";
+        String content = "Hei";
+        
+        if (!carsForControl.isEmpty()) {
+            content += "<br/> ";
+            content += "Følgende biler skal inn på EU Kontroll innen 3 måneder, logg inn på portalen for å foreslå dato for innkallelse";
+            
+            for (MecaCar car : carsForControl) {
+                content += "<br/>" + car.licensePlate + ", Senest kontrolldato: " + car.nextControll;
+            }
+        }
+        
+        if (!carsForService.isEmpty()) {
+            content += "<br/> ";
+            content += "Følgende biler skal inn på EU Kontroll innen 3 måneder";
+            
+            for (MecaCar car : carsForControl) {
+                content += "<br/>" + car.licensePlate + ", Senest service dato: " + car.nextService + ", km til neste service: " + car.nextServiceKilometers;
+            }
+        }
+        
+        content += "<br/>";
+        content += "<br/>";
+        content += "<br/>";
+        content += "<br/> Meldingen er sendt automatisk fra MECA Fleet System";
+        
+        messageManager.sendMessageToStoreOwner(content, subject);
+    }
+
+    private void createSchedulers() {
+        createScheduler("kilomtersrequest", "0 9 * * *", KilometersThread.class);
+        createScheduler("notifystoreowner", "0 9 * * 1", StoreOwnerNotification.class);
     }
 }

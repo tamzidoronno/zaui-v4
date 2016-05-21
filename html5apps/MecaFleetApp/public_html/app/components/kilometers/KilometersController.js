@@ -7,7 +7,7 @@
 
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
-controllers.KilometersController = function($scope, $api) {
+controllers.KilometersController = function($scope, $api, $location) {
     $scope.kilometers = "";
     
     $scope.cars = function($cars) {
@@ -24,6 +24,8 @@ controllers.KilometersController = function($scope, $api) {
     $scope.sent = function() {
         alert("Takk, vi har nå registrert den nye kilometerstanden");
         $scope.kilometers = "";
+        $location.path( "/home" );
+        $scope.$apply();
     }
     
     $scope.sendKilomters = function() {

@@ -410,6 +410,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function sendMessage() {
+        $email = $_POST['data']['email'];
+        $title = $_POST['data']['title'];
+        $message = $_POST['data']['message'];
+        $bookingId = $_POST['data']['bookingid'];
+        $this->getApi()->getPmsManager()->sendMessage($this->getSelectedName(), $bookingId, $email, $title, $message);
+        $this->showBookingInformation();
+    }
+    
     public function setNewEndDate() {
         $room = $this->getRoomFromPost();
         $error = $this->getManager()->changeDates($this->getSelectedName(),

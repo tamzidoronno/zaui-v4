@@ -345,6 +345,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
         }
+        
+        checkForMissingEndDate(booking);
 
         Integer result = 0;
         booking.isDeleted = false;
@@ -2975,5 +2977,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
     }
+
+    private void checkForMissingEndDate(PmsBooking booking) {
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.date.end == null) {
+                room.date.end = createInifinteDate();
+            }
+        }
+    }
+
+    @Override
+    public void sendMessage(String bookingId, String email, String title, String message) {
+        message = configuration.emailTemplate.replace("{content}", message);
+        messageManager.sendMail(email, "", title, message, getFromEmail(), getFromName());
+        message = "Message sent to : " + email + " Message: " + message + ", title: " + title;
+        logEntry(message, bookingId, null);
+   }
 
 }

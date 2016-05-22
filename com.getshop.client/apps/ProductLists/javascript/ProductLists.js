@@ -30,7 +30,7 @@ app.ProductLists = {
         
         var event = thundashop.Ajax.createEvent(null, "purchaseGroupedProduct", this, data);
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            alert(res);
+            thundashop.common.goToPage("cart&payorder=" + res);
         });
     },
     

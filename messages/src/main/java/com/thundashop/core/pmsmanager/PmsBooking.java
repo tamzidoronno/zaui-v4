@@ -15,6 +15,7 @@ import java.util.List;
 public class PmsBooking extends DataCommon {
  
     private List<PmsBookingRooms> rooms = new ArrayList(); 
+    public List<String> notificationsSent = new ArrayList();
     public HashMap<Long, PmsBookingComment> comments = new HashMap(); 
     public String sessionId;
     public Date sessionStartDate = null;

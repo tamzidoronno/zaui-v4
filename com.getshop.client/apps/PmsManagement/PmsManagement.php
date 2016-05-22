@@ -9,6 +9,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $checkedCanAdd = array();
     public $roomTable = "";
     
+    public function runProcessor() {
+        $this->getApi()->getPmsManager()->processor($this->getSelectedName());
+    }
+    
     public function loadTakenRoomList() {
         $bookingid = $_POST['data']['bookingid'];
         $roomid = $_POST['data']['roomid'];

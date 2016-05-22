@@ -192,7 +192,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private void autoGenerateOrders(PmsBookingRooms room, NewOrderFilter filter) {
         if(room.needInvoicing(filter)) {
-            System.out.println("NEed to create order for rooom: " + room.invoicedTo + " - " + room.date.start + " - " + room.date.end);
+//            System.out.println("NEed to create order for rooom: " + room.invoicedTo + " - " + room.date.start + " - " + room.date.end);
             BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
             if(item != null) {
                 System.out.println("Item: " + item.bookingItemName);
@@ -268,7 +268,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         return "Could not create order.";
                     }
                     booking.orderIds.add(order.id);
-                    booking.payedFor = false;
                 }
                 if(getSession() != null && getSession().currentUser != null && 
                         (getSession().currentUser.isEditor() || getSession().currentUser.isAdministrator())) {
@@ -367,7 +366,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             price = 0.0;
         }
         if(price.intValue() == 0) {
-            System.out.println("Trying to create an item with zero price.");
             return null;
         }
         BookingItem bookingitem = null;

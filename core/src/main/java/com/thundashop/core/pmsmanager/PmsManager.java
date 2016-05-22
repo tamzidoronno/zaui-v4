@@ -928,7 +928,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return "";
         }
         
-        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing") || key.startsWith("order_")) {
             message = message.replace("{orderid}", this.orderIdToSend);
         }
         
@@ -2993,5 +2993,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         message = "Message sent to : " + email + " Message: " + message + ", title: " + title;
         logEntry(message, bookingId, null);
    }
+
+    void setOrderIdToSend(String id) {
+        this.orderIdToSend = id;
+    }
 
 }

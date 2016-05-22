@@ -1117,6 +1117,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return false;
         }
 
+        //Order has started, its too late.
+        for(CartItem item : order.cart.getItems()) {
+            if(item.startDate != null && new Date().after(item.startDate)) {
+                return false;
+            }
+        }
+        
         User user = userManager.getUserById(order.userId);
         if(user == null) {
             return false;

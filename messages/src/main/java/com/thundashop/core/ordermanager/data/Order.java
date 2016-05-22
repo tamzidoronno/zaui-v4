@@ -24,12 +24,13 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     public Boolean triedTransferredToAccountingSystem = false;
     public Boolean transferredToAccountingSystem = false;
+    public Date transferredToCreditor = null;
     
     /**
      * This variable is wrong and should be removed. The one above is the corrent one.
      */
     private Boolean transferedToAccountingSystem = false;
-    
+        
     public String paymentTransactionId = "";
     public Shipping shipping;
     public Payment payment = new Payment();
@@ -133,6 +134,31 @@ public class Order extends DataCommon implements Comparable<Order> {
         for(CartItem item : cart.getItems()) {
             item.doFinalize();
         }
+    }
+
+    public boolean needToBeTranferredToCreditor() {
+        if(status == Order.Status.PAYMENT_COMPLETED) {
+            return false;
+        }
+        
+        for(CartItem item : cart.getItems()) {
+            if(item.periodeStart == null) {
+                continue;
+            }
+            if(item.getProduct().minPeriode <= 0) {
+                continue;
+            }
+            
+            long diff = item.getStartingDate().getTime() - item.periodeStart.getTime();
+            
+            diff /= 1000;
+            
+            if(diff < item.getProduct().minPeriode) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public static class Status  {

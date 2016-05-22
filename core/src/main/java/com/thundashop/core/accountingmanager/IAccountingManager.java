@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * For handling connection to xledger.<br>
+ * For handling connection to accounting systems.<br>
  */
 @GetShopApi
 public interface IAccountingManager {
@@ -14,6 +14,8 @@ public interface IAccountingManager {
     public List<String> createOrderFile() throws Exception;
     @Administrator
     public List<String> createUserFile(boolean newOnly) throws Exception;
+    @Administrator
+    public List<String> createCreditorFile(boolean newOnly) throws Exception;
     @Administrator
     public HashMap<String, String> getAllFiles();
     @Administrator
@@ -30,6 +32,9 @@ public interface IAccountingManager {
     
     @Administrator
     public void transferFilesToAccounting();
+    
+    @Administrator
+    public void transferFilesToCreditor();
     
     @Administrator
     public AccountingManagerConfig getAccountingManagerConfig();

@@ -22,6 +22,8 @@ header("Expires: 0");
 
 if(isset($_GET['id'])) {
     $res = $factory->getApi()->getAccountingManager()->getFile($_GET['id']);
+} else if($_GET['type'] == "transfercreditor") {
+    $res = $factory->getApi()->getAccountingManager()->transferFilesToCreditor();
 } else if($_GET['type'] == "creditor") {
     $res = $factory->getApi()->getAccountingManager()->createCreditorFile($_GET["onlynew"]);
 } else if($_GET['type'] == "combined") {

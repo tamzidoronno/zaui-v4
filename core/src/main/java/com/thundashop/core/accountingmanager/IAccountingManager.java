@@ -34,5 +34,8 @@ public interface IAccountingManager {
     public void transferFilesToAccounting();
     
     @Administrator
+    public void transferFilesToCreditor();
+    
+    @Administrator
     public AccountingManagerConfig getAccountingManagerConfig();
 }

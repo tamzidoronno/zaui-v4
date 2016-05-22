@@ -1,5 +1,5 @@
 /*
- * Transfer orders to xledger.
+ * Transfer orders to accounting and creditors.
  */
 package com.thundashop.core.accountingmanager;
 
@@ -37,6 +37,7 @@ import org.springframework.stereotype.Component;
 public class AccountingManager extends ManagerBase implements IAccountingManager {
 
     public HashMap<String, SavedOrderFile> files = new HashMap();
+    public HashMap<String, SavedOrderFile> creditorFiles = new HashMap();
     
     @Autowired
     OrderManager orderManager;
@@ -57,7 +58,12 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 this.config = (AccountingManagerConfig) obj;
             }
             if(obj instanceof SavedOrderFile) {
-                files.put(((SavedOrderFile) obj).id, (SavedOrderFile) obj);
+                SavedOrderFile file = (SavedOrderFile) obj;
+                if(file.type.equals("accounting")) {
+                    files.put(((SavedOrderFile) obj).id, file);
+                } else {
+                    creditorFiles.put(((SavedOrderFile) obj).id, file);
+                }
             }
         }
         
@@ -283,6 +289,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         }
         
         List<Order> allOrders = orderManager.getOrders(null, null, null);
+        List<String> result = new ArrayList();
         
         for(Order order : allOrders) {
             if(order.needToBeTranferredToCreditor()) {
@@ -290,7 +297,50 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
         }
         
-        return new ArrayList();
+        if(!result.isEmpty()) {
+            SavedOrderFile file = new SavedOrderFile();
+            file.type = "creditor";
+            file.result = result;
+            saveObject(file);
+        }
+        
+        return result;
+    }
+
+    @Override
+    public void transferFilesToCreditor() {
+        try {
+            createCreditorFile(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        List<SavedOrderFile> filesToTransfer = getCreditorFilesNotTransferredToAccounting();
+        for(SavedOrderFile saved : filesToTransfer) {
+            String path = saveFileToDisk(saved);
+            try {
+                boolean transferred = ftpManager.transferFile(config.creditor_username, 
+                        config.creditor_password, 
+                        config.creditor_hostname, 
+                        path, 
+                        config.creditor_path, 21);
+                if(transferred) {
+                    saved.transferred = true;
+                    saveObject(saved);
+                }
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }    
+    }
+
+    private List<SavedOrderFile> getCreditorFilesNotTransferredToAccounting() {
+        List<SavedOrderFile> res = new ArrayList();
+        for(SavedOrderFile file : creditorFiles.values()) {
+            if(!file.transferred) {
+                res.add(file);
+            }
+        }
+        return res;
     }
 
 }

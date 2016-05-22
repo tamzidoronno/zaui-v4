@@ -99,6 +99,7 @@ foreach($files as $fileId => $date) {
     <br>
     <div style='text-align:right; margin-bottom: 30px;'>
         <h2 style='float:left;'>Ftp transfer setup to creditor system</h2>
+        <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=transfercreditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Transfer to creditor"); ?></div>
         <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=creditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Download new creditor file"); ?></div>
     </div>
     <div class="textfield gss_setting" id="ftpuser">

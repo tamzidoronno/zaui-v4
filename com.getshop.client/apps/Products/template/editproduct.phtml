@@ -113,6 +113,14 @@ $groups = $this->getApi()->getUserManager()->getAllGroups();
                 </div>
             </div>
             
+            <div class="textfield gss_setting"  id="minPeriode">
+                <span class="title"><?php echo $this->__f("Binding periode"); ?></span>
+                <input type="textfield" gs_model='productmodel' gs_model_attr='minPeriode' value="<? echo $product->minPeriode; ?>" placeholder=''>
+                <div class="description">
+                    <?php echo $this->__("Minimum periode for in seconds (used for binding the customer)"); ?>
+                </div>
+            </div>
+            
             <div class="gss_setting" id="taxgroup">
                 <div class="text inline title"><?php echo $this->__f("Please select a tax group"); ?></div>
 

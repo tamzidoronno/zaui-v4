@@ -58,7 +58,7 @@ foreach($files as $fileId => $date) {
             </div>
         </div>
     <?php } ?>
-    <h2>Ftp transfer setup</h2>
+    <h2>Ftp transfer setup to accounting system</h2>
     <div class="textfield gss_setting" id="ftpuser">
         <span class="title">Username</span>
         <input type="textfield" gs_model="adminconfig" gs_model_attr="ftpuser" value="<?php echo $config->username; ?>">
@@ -92,6 +92,41 @@ foreach($files as $fileId => $date) {
         <input type="textfield" gs_model="adminconfig" gs_model_attr="extension" value="<?php echo $config->extension; ?>">
         <div class="description">
             Example: .edi
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div style='text-align:right; margin-bottom: 30px;'>
+        <h2 style='float:left;'>Ftp transfer setup to creditor system</h2>
+        <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=creditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Download new creditor file"); ?></div>
+    </div>
+    <div class="textfield gss_setting" id="ftpuser">
+        <span class="title">Username</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="creditor_ftpuser" value="<?php echo $config->creditor_username; ?>">
+        <div class="description">
+            Ftp username
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="ftppassword">
+        <span class="title">Password</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="creditor_ftppassword" value="<?php echo $config->creditor_password; ?>">
+        <div class="description">
+            Ftp password
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="hostname">
+        <span class="title">Hostname</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="creditor_ftphostname" value="<?php echo $config->creditor_hostname; ?>">
+        <div class="description">
+            Ftp hostname
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="ftppath">
+        <span class="title">Path</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="creditor_ftppath" value="<?php echo $config->creditor_path; ?>">
+        <div class="description">
+            Ftp path to put the file in
         </div>
     </div>
     

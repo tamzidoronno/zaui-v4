@@ -83,6 +83,7 @@ class Products extends \WebshopApplication implements \Application {
         $product->discountedPrice = $_POST['discountedPrice'];
         $product->selectedProductTemplate = $_POST['producttemplate'];
         $product->categories = $_POST['categories'];
+        $product->minPeriode = (int)$_POST['minPeriode'];
         
         $groups = $this->getApi()->getUserManager()->getAllGroups();
         foreach ($groups as $group) {

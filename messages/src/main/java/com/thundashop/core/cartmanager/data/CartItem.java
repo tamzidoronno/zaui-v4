@@ -27,6 +27,7 @@ public class CartItem implements Serializable {
     public Date endDate;
     public Date newStartDate;
     public Date newEndDate;
+    public Date periodeStart = null;
 
     public CartItem() {
     }

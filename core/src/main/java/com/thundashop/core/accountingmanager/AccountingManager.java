@@ -271,4 +271,26 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         return new ArrayList();    
     }
 
+    @Override
+    public List<String> createCreditorFile(boolean newOnly) throws Exception {
+        if(!config.vendor.equals("svea")) {
+            System.out.println("nothing but svea is supported yet...");
+            return new ArrayList();
+        }
+        
+        if(config.creditor_username == null || config.creditor_username.isEmpty()) {
+            return new ArrayList();
+        }
+        
+        List<Order> allOrders = orderManager.getOrders(null, null, null);
+        
+        for(Order order : allOrders) {
+            if(order.needToBeTranferredToCreditor()) {
+                System.out.println("This needs to be transferred");
+            }
+        }
+        
+        return new ArrayList();
+    }
+
 }

@@ -385,6 +385,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         CartItem item = createCartItemForCart(productId, count, room.pmsBookingRoomId);
         item.startDate = startDate;
         item.endDate = endDate;
+        item.periodeStart = room.date.start;
         
         if(item.startDate.after(item.endDate)) {
             Date tmpDate = item.startDate;

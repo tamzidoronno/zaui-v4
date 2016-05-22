@@ -4,7 +4,7 @@
 $product = $this->getCurrentProduct();
 $image = $this->getDefaultImage($product);
 ?>
-<div class='groupedProductBoxed' mainProductId='<? echo $product->id; ?>'>
+<div class='productbox_outer groupedProductBoxed' mainProductId='<? echo $product->id; ?>'>
     
     <div class="product_image_wrapper">
         <div class="product_image" style="background:url('/displayImage.php?id=<?php echo $image; ?>');"></div>

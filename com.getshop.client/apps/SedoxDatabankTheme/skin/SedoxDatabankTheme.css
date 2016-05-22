@@ -1,8 +1,8 @@
 
 body {
     font-family: 'Lato', sans-serif;
+    min-width: 1366px !important;
 }
-
 /* HEADER SETTINGS */
 .gsarea[area="header"] .gscell[cellid="04869e19-a87b-41de-82ed-59241eccc920"] {
     float: right !important;
@@ -36,6 +36,10 @@ body {
 
 .gsarea[area="header"] {
     background-color: #202020;
+}
+
+.gsucell[cellid="48da42ae-b2d2-4be1-8337-2b85a2bb2cc5"] {
+    width: 590px !important;
 }
 
 /* END HEADER SETTINGS */
@@ -390,5 +394,9 @@ body {
 
 .shop_button {
     border: solid 1px;
-    background: none;
+    background: #24adcf;
+}
+
+.ProductLists .grid_view .groupedProductBoxed {
+    min-width: 400px;
 }

@@ -7,7 +7,7 @@
     border: solid 1px #e4ebf1;
     margin: 1%;
     display: inline-block;
-    height: 100px;
+    height: 127px;
     width: calc(48% - 2px);
 }
 
@@ -31,23 +31,33 @@
     font-style: italic;
 }
 
+.SedoxBannerAndOpening span.description_text {
+    display: inline-block;
+    width: 127px;
+    text-align: center;
+}
+
+.SedoxBannerAndOpening .description {
+    text-align: center;
+}
 .SedoxBannerAndOpening .description_content {
     display: inline-block;
     margin-top: 20px;
 }
 
 .SedoxBannerAndOpening .description_content .fa {
-    font-size: 50px;
+    font-size: 40px;
     color: #B22222;
     vertical-align: bottom;
     margin-left: 15px;
     margin-right: 10px;
     margin-bottom: 2px;
+    display: block;
 }
 
 .SedoxBannerAndOpening .description_content .description_text {
     font-family: 'Roboto', sans-serif;
-    font-size: 24px;
+    font-size: 14px;
     color: #343434;
     font-weight: bold;
     text-transform: uppercase;
@@ -64,7 +74,7 @@
     border: solid 1px #e4ebf1;
     margin: 1%;
     display: inline-block;
-    height: 100px;
+    height: 127px;
     width: calc(48% - 2px);
 }
 

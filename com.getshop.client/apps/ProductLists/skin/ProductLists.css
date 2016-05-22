@@ -418,7 +418,6 @@
 }
 
 .ProductLists .groupedProductBoxed {
-    max-width: 500px;
     padding: 20px;
 }
 .ProductLists .groupedProductBoxed .subProduct {
@@ -472,7 +471,7 @@
 }
 
 .ProductLists .groupedProductBoxed .product_image_wrapper:after {
-    padding-top: 56.25%;
+    padding-top: 100%;
     display: block;
     content: '';
 }
@@ -485,12 +484,20 @@
     left: 0;
 }
 
+.ProductLists .groupedProductBoxed .subProduct {
+    text-align: left;
+    padding-left: 10px;
+}
+
 .ProductLists .groupedProductBoxed .quantityselector {
     position: absolute;
     right: 0px;
     top: 0px;
 }
 
+.ProductLists .grid_view .groupedProductBoxed .shop_button {
+    margin-left: 0px;
+}
 
 .ProductLists .templatebox_2 .productbox { border: solid 1px; margin-bottom: 20px; height: 250px; }
 .ProductLists .templatebox_2 .productimage { width: 500px; height: 250px; background-size: cover; }

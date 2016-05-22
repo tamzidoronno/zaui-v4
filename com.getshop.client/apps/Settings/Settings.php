@@ -105,7 +105,6 @@ class Settings extends \SystemApplication implements \Application {
         $storeSettings = $this->getFactory()->getStoreConfiguration();
         $storeSettings->emailAdress = $_POST['emailaddress'];
         $storeSettings->phoneNumber = $_POST['phoneNumber'];
-        $storeSettings->paymentMethod = $_POST['paymentMethod'];
         $storeSettings->disableMobileMode = $_POST['disableMobileMode'];
         $storeSettings->defaultPrefix = $_POST['defaultPrefix'];
         

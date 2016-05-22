@@ -478,8 +478,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         Order order = orderManager.createOrder(user.address);
 
-        order.payment = new Payment();
-        order.payment.paymentType = user.preferredPaymentType;
+        Payment preferred = orderManager.getPrefferedPaymentMethod(user.id);
+        order.payment = preferred;
         order.userId = booking.userId;
         order.invoiceNote = booking.invoiceNote;
 

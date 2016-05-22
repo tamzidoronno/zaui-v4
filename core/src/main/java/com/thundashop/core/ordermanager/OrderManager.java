@@ -15,6 +15,7 @@ import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.pagemanager.PageManager;
@@ -290,6 +291,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public Order createOrder(Address address) throws ErrorException {
         Order order = createOrderInternally(address);
+        setPreferredPayment(order);
         saveOrder(order);
         updateStockAndSendConfirmation(order);
         order.doFinalize();
@@ -1210,6 +1212,55 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void forceDeleteOrder(Order order) {
         deleteObject(order);
         orders.remove(order.id);
+    }
+
+    private void setPreferredPayment(Order order) {
+        User user = userManager.getLoggedOnUser();
+        
+        Payment payMent = null;
+        
+        if (user != null ) {
+            payMent =  getPrefferedPaymentMethod(user.id);
+        }
+        
+        if (payMent == null) {
+            payMent = getStorePreferredPayementMethod();
+        }
+        
+        if (payMent != null) {
+            order.payment = payMent;
+        }
+    }
+
+    public Payment getPrefferedPaymentMethod(String userId) {
+        User user = userManager.getUserById(userId);
+        
+        if (user == null)
+            return null;
+        
+        if (user.preferredPaymentType == null || user.preferredPaymentType.isEmpty()) {
+            return getStorePreferredPayementMethod();
+        }
+        
+        Payment payment = new Payment();
+        payment.paymentType = user.preferredPaymentType;
+        return payment;
+    }
+
+    private Payment getStorePreferredPayementMethod() {
+        Application ecommerceSettingsApplication = applicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+        String defaultPaymentApplicationId = ecommerceSettingsApplication.getSetting("defaultPaymentMethod");
+        
+        if(defaultPaymentApplicationId != null && !defaultPaymentApplicationId.isEmpty()) {
+            Application paymentApplication = applicationPool.getApplication(defaultPaymentApplicationId);
+            if (paymentApplication != null) { 
+                Payment payment = new Payment();
+                payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+                return payment;
+            }
+        }
+        
+        return null;
     }
 
 }

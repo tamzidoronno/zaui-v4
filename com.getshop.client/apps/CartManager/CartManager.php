@@ -550,6 +550,7 @@ class CartManager extends \SystemApplication implements \Application {
             echo "<br/><br/><br/><br/></center>";
         } else if ($order->payment && ($order->payment->paymentType != "ns_def1e922_972f_4557_a315_a751a9b9eff1\Netaxept" && 
             $order->payment->paymentType != "ns_542e6a1e_9927_495c_9b6d_bb52af4ea9be\BrainTree" && 
+            $order->payment->paymentType != "ns_c7736539_4523_4691_8453_a6aa1e784fc1\\PayPal" && 
             $order->payment->paymentType != "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
             echo "<center><br/><br/><br/>";
             echo "<h1>Dette er en bestilling som ikke kan betales med kort.</h1>";

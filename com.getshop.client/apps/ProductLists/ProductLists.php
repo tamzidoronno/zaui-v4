@@ -285,6 +285,28 @@ class ProductLists extends \ApplicationBase implements \Application {
             return $price;
         }
     }
+    
+    public function purchaseGroupedProduct() {
+        $this->getApi()->getCartManager()->clear();
+        foreach ($_POST['data']['products'] as $product) {
+            $qty = $product['qty'] ? $product['qty'] : 0;
+            $productId = $product['productId'];
+            $this->getApi()->getCartManager()->addProduct($productId, $qty, []);
+        }
+        
+        $loggedInUser = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        
+        if ($loggedInUser) {
+            $address = $loggedInUser->address;
+            $address->fullName = $loggedInUser->fullName;
+            $this->getApi()->getCartManager()->setAddress($address);
+            $order = $this->getApi()->getOrderManager()->createOrder($address);
+            $order->userId = $loggedInUser->id;
+            $this->getApi()->getOrderManager()->saveOrder($order);
+        }
+        
+        echo $order->id;
+    }
 
 }
 ?>

@@ -82,6 +82,7 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         $this->getStoreSettingsApp()->setConfigurationSetting("currencycode", $_POST['currency']);
         $this->getStoreSettingsApp()->setConfigurationSetting("defaultpaymentwhencartcustomeridisset", $_POST['defaultpaymentwhencartcustomeridisset']);
         $this->getStoreSettingsApp()->setConfigurationSetting("registrationRequired", $_POST['registrationRequired']);
+        $this->setConfigurationSetting("defaultPaymentMethod", $_POST['defaultPaymentMethod']);
     }
     
     public function isCurrency($currency) {
@@ -96,6 +97,10 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         }
         if ($code == "NOK") {
             return "Kr ".number_format((float)$price, $numberOfDecimals, '.', '').",-";
+        }
+        
+        if ($code == "EUR") {
+            return "€ ".number_format((float)$price, $numberOfDecimals, '.', '').",-";
         }
         
         echo "Price $".$price;

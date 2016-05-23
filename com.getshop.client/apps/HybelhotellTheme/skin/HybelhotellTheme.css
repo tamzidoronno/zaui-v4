@@ -1,4 +1,4 @@
-.gs_page_width { max-width: 1300px; margin: auto; background-color:#fff;}
+.gs_page_width { max-width: 1300px; margin: auto; background-color:#fff; font-size: 18px; }
 body { background-color:#525659; margin-top: 10px; margin-bottom: 10px; font-family: 'Open Sans';}
 .Menu .entry a { font-size: 20px; width:100px; display:inline-block; margin-top: 20px;color: #666666;padding-right: 20px; }
 .Menu { text-align: right; position: absolute; top:110px; right: 100px;font-family: 'Anton', sans-serif; }
@@ -30,3 +30,6 @@ body { background-color:#525659; margin-top: 10px; margin-bottom: 10px; font-fam
 .PmsBookingProductList .productentry.selected { border-color: #73bcd4; }
 .PmsBookingProductList .price { font-size: 14px !important; text-align: right; line-height: 23px; font-weight: normal !important; }
 .shop_button { border: solid 1px; padding: 4px; height : 25px; line-height: 25px; padding-right: 20px; padding-left: 20px; border-radius: 0px; }
+
+H1,H2 { font-family: 'Anton', sans-serif; color: #3f2d51; letter-spacing: 1px; }
+.shop_button { background: none; background-color:#7b6a58; color:#fff;font-family: 'Anton', sans-serif; border: solid 0px;  }

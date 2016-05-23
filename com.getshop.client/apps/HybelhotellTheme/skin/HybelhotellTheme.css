@@ -15,7 +15,7 @@ body { background-color:#525659; margin-top: 10px; margin-bottom: 10px; font-fam
     margin-top: 20px;
 }
 [cellid="13fa71d1-1593-4dde-b743-980ee84d12a6"] .gs_page_width {
-    box-shadow: 0px 2px 2px 2px rgba(0,0,0,0.2);
+    box-shadow: 0px 10px 4px 4px rgba(0,0,0,0.2);
     margin-bottom: 20px;
 }
 .Menu .entry .entries .entry a { text-align: left; background-color:rgba(0,0,0,0.8); width: 250px; font-size: 12px; color:#fff; padding: 10px; margin: 0px; border-bottom: solid 1px #fff; }

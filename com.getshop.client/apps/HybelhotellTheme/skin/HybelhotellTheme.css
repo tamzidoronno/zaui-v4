@@ -1,12 +1,24 @@
-.gs_page_width { max-width: 1100px; margin: auto; background-color:#fff; padding-left: 10px; padding-right: 10px; }
-body { background-color:#efefef; margin-top: 20px; margin-bottom: 20px;}
-.Menu .entry a { font-size: 20px; width:100px; display:inline-block; margin-top: 20px; }
-.Menu { float:right; }
+.gs_page_width { max-width: 1300px; margin: auto; background-color:#fff;}
+body { background-color:#525659; margin-top: 10px; margin-bottom: 10px; font-family: 'Open Sans';}
+.Menu .entry a { font-size: 20px; width:100px; display:inline-block; margin-top: 20px;color: #666666;padding-right: 20px; }
+.Menu { text-align: right; position: absolute; top:110px; right: 100px;font-family: 'Anton', sans-serif; }
 .gsarea[area="header"] .gs_page_width,
-.gsarea[area="footer"] .gs_page_width
-{ height: 140px; border-top: solid 1px #efefef;border-bottom: solid 1px #efefef; }
+.gsarea[area="footer"] .gs_page_width { height: 250px; }
+.gsarea[area="header"] img { margin-left: 100px; }
 
-.Menu .entry .entries .entry a { background-color:rgba(0,0,0,0.8); width: 250px; font-size: 12px; color:#fff; padding: 10px; margin: 0px; border-bottom: solid 1px #fff; }
+.gsarea[area="body"] .gs_page_width {
+    box-shadow: 0px 8px 8px rgba(0,0,0,2);
+     padding-left: 100px; padding-right: 100px; 
+}
+[cellid="ed61db83-909e-4408-8ec0-3f4926463426"] .gs_page_width {
+    box-shadow: 0px 0px 4px 4px rgba(0,0,0,0.2);
+    margin-top: 20px;
+}
+[cellid="13fa71d1-1593-4dde-b743-980ee84d12a6"] .gs_page_width {
+    box-shadow: 0px 2px 2px 2px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+}
+.Menu .entry .entries .entry a { text-align: left; background-color:rgba(0,0,0,0.8); width: 250px; font-size: 12px; color:#fff; padding: 10px; margin: 0px; border-bottom: solid 1px #fff; }
 .Menu .entry .entries .entry { height: inherit; }
 
 .PmsBooking .pmsfront .fa-calendar,

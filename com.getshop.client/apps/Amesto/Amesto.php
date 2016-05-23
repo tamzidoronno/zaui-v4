@@ -29,5 +29,13 @@ class Amesto extends \MarketingApplication implements \Application {
     public function syncAllStockQuantity() {
         $this->getApi()->getAmestoManager()->syncAllStockQuantity($this->getConfigurationSetting("hostname"));
     }
+    
+    public function syncAllOrders() {
+        $this->getApi()->getAmestoManager()->syncAllOrders($this->getConfigurationSetting("hostname"));
+    }
+    
+    public function syncAllCostumers() {
+        $this->getApi()->getAmestoManager()->syncAllCostumers($this->getConfigurationSetting("hostname"));
+    }
 }
 ?>

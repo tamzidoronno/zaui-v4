@@ -22,4 +22,9 @@ public interface IAmestoManager {
     @Editor
     public void syncAllStockQuantity(String hostname) throws ErrorException;
     
+    @Editor
+    public void syncAllOrders(String hostname) throws ErrorException;
+    
+    @Editor
+    public void syncAllCostumers(String hostname) throws ErrorException;
 }

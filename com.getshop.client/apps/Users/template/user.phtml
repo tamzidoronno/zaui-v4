@@ -68,6 +68,14 @@ if (!$user->address) {
             <?php echo $this->__("A autogenereted reference number that can be used to identify this user."); ?>
         </div>
     </div>
+    
+    <div class="textfield gss_setting"  id="accountingId">
+        <span class="title"><?php echo $this->__f("Accounting ID"); ?></span>
+        <input type="textfield" gs_model='usermodel' gs_model_attr='accountingId' value="<? echo $user->accountingId; ?>">
+        <div class="description">
+            <?php echo $this->__("ID for identifying the user on accounting systems."); ?>
+        </div>
+    </div>
 
     <div class="textfield gss_setting"  id="admin">
         <span class="title"><?php echo $this->__f("Administrator"); ?></span>
@@ -216,6 +224,13 @@ foreach ($apps as $app) {
         <input type="textfield" gs_model='usermodel' gs_model_attr='address_city' value="<? echo $user->address->city; ?>">
         <div class="description">
             <?php echo $this->__("Billing city address."); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="postplace">
+        <span class="title"><?php echo $this->__f("Country"); ?></span>
+        <input type="textfield" gs_model='usermodel' gs_model_attr='address_country' value="<? echo $user->address->countryname; ?>">
+        <div class="description">
+            <?php echo $this->__("Billing country address."); ?>
         </div>
     </div>
 

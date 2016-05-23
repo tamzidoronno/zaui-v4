@@ -46,7 +46,7 @@ class ApplicationBase extends FactoryBase {
         $pageId = $this->getPage()->javapage->id;
         $cell = $this->getApi()->getPageManager()->getLooseCell($pageId, $areaname);
         
-        $page->printCell($cell, 0, 0, 0, false, null, false);
+        $page->printCell($cell, 0, 1, 0, false, null, false);
     }
     
     public function getAutoSaved($name) {

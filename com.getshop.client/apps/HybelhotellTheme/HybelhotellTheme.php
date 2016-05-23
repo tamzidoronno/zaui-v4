@@ -9,6 +9,13 @@ class HybelhotellTheme extends \ThemeApplication implements \Application {
     public function getName() {
         return "HybelhotellTheme";
     }
+    
+    public function addScripts() {
+        $text = "";
+        $text .= "\n"."<link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>";
+        return $text;
+    }
+    
 
     public function render() {
         

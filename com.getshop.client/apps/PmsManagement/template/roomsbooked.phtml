@@ -95,9 +95,6 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
         <th>Type</th>
         <th>Room</th>
         <th>Time periode</th>
-        <?php if($config->bookingTimeInterval == 2) { ?>
-        <th>Nights</th>
-        <?php } ?>
         <th>Guest</th>
         <?php if(!$addons && $hasPrices) { ?>
             <th>Price</th>
@@ -214,14 +211,17 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                 <span class='roomattribute'>
                     <span class='roompostfix' style='width: 230px;'>
                         <span class="viewmode">
-                            <?php echo date("d.m.Y H:i", strtotime($date->start)); ?>
-                             - 
                             <?php 
-                                if(date("d.m.Y", strtotime($date->start)) == date("d.m.Y", strtotime($date->end))) {
-                                    echo date("H:i", strtotime($date->end));
-                                } else {
-                                    echo date("d.m.Y H:i", strtotime($date->end));
-                                }
+                            echo date("d.m.Y H:i", strtotime($date->start));
+                            if(date("d.m.Y", strtotime($date->start)) == date("d.m.Y", strtotime($date->end))) {
+                                echo date("H:i", strtotime($date->end));
+                            } else {
+                                echo "<br>" . date("d.m.Y H:i", strtotime($date->end));
+                            }
+                            if($config->bookingTimeInterval == 2) {
+                                $diff = ((strtotime($date->end) - strtotime($date->start)) / 86400);
+                                echo " <span title='Number of nights'>(" . round($diff) . ")</span>";
+                            } 
                             ?>
                         </span>
                         <span class='editmode' gstype='form' method="setNewStartDate">
@@ -240,12 +240,6 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                     </span>
                 </span>
             </td>
-            <?php 
-            if($config->bookingTimeInterval == 2) {
-                $diff = ((strtotime($date->end) - strtotime($date->start)) / 86400);
-                echo "<td>".round($diff)."</td>";
-            } 
-            ?>
             <? if(!$addons && $hasPrices) { ?>
                 <td>
                     <span class='roomattribute'>

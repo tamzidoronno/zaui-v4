@@ -37,8 +37,14 @@ $notifications['booking_notconfirmed_'.$langauge] = "Booking has been rejected";
 $notifications['room_ended_0_hours_'.$langauge] = "Booking has ended.";
 $notifications['room_ended_24_hours_'.$langauge] = "Booking ended 1 day ago";
 $notifications['room_ended_48_hours_'.$langauge] = "Booking ended two days ago";
-$notifications['booking_paymentmissing_'.$langauge] = "When payment is missing";
-$notifications['booking_sendpaymentlink_'.$langauge] = "Sending the payment link";
+if($notificationSettings->requirePayments) {
+    $notifications['booking_paymentmissing_'.$langauge] = "When payment is missing";
+    $notifications['booking_sendpaymentlink_'.$langauge] = "Sending the payment link";
+}
+if($notificationSettings->runAutoPayWithCard) {
+    $notifications['order_unabletopaywithsavecardwarning_'.$langauge] = "Warning sent 3 days before order expire (unable to pay with saved card)";
+    $notifications['order_unabletopaywithsavecard_'.$langauge] = "Message sent when the order has expired and payment has not been completed.";
+}
 if($hasArx) {
     $notifications['room_added_to_arx_'.$langauge] = "Room has been added to arx";
     $notifications['room_removed_from_arx_'.$langauge] = "Room has been removed from arx";
@@ -540,6 +546,12 @@ $days[7] = "Sunday";
                 <input type='number' style='width: 40px;' gsname='increaseUnits' value='<? echo $notificationSettings->increaseUnits; ?>'>
             </span>
             How many time units would you like to increase with (example: if the its a montly booking, 1 will increase the booking with one month).
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <input type='number' style='width: 40px;' gsname='whenInfinteDateFirstOrderTimeUnits' value='<? echo $notificationSettings->whenInfinteDateFirstOrderTimeUnits; ?>'>
+            </span>
+            When infinite date, how many time units would like to add to the first order, for example when months and 3, there will be 3 months on the first order.
         </div>
         <br><br>
         <h2>Lock settings</h2>

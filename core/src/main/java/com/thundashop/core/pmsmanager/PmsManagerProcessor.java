@@ -6,6 +6,8 @@ import com.thundashop.core.arx.Card;
 import com.thundashop.core.arx.Person;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public class PmsManagerProcessor {
 
     public void doProcessing() {
         try { runAutoPayWithCard(); }catch(Exception e) { e.printStackTrace(); }
-        try { confirmWhenPaid(); }catch(Exception e) { e.printStackTrace(); }
+        try { autoMarkBookingsAsPaid(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(-4, 0, false); }catch(Exception e) { e.printStackTrace(); }
@@ -61,9 +63,11 @@ public class PmsManagerProcessor {
             hoursAheadCheck = -12;
         }
         
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
         for (PmsBooking booking : bookings) {
-
+            if(booking.isEnded()) {
+                continue;
+            }
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 int start = hoursAheadCheck;
@@ -115,7 +119,7 @@ public class PmsManagerProcessor {
     }
 
     private void processEndings(int hoursAhead, int maxAhead) {
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -166,7 +170,7 @@ public class PmsManagerProcessor {
             return;
         }
         
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -207,7 +211,7 @@ public class PmsManagerProcessor {
     }
 
     private void processAutoAssigning() {
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -272,7 +276,7 @@ public class PmsManagerProcessor {
         return (sameDay && sameMonth && sameYear);
     }
 
-    private List<PmsBooking> getAllConfirmedNotDeleted() {
+    private List<PmsBooking> getAllConfirmedNotDeleted(boolean includeNotPaidFor) {
         List<PmsBooking> res = new ArrayList(manager.getBookingMap().values());
         List<PmsBooking> toRemove = new ArrayList();
         for (PmsBooking booking : res) {
@@ -288,7 +292,7 @@ public class PmsManagerProcessor {
             if (!booking.confirmed) {
                 toRemove.add(booking);
             }
-            if (!booking.payedFor) {
+            if (!booking.payedFor && !includeNotPaidFor) {
                 toRemove.add(booking);
             }
         }
@@ -383,7 +387,7 @@ public class PmsManagerProcessor {
 
     private void processAutoExtend() {
         if (manager.getConfigurationSecure().autoExtend) {
-            List<PmsBooking> bookings = getAllConfirmedNotDeleted();
+            List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
             for (PmsBooking booking : bookings) {
                 boolean needSaving = false;
                 for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -436,7 +440,7 @@ public class PmsManagerProcessor {
             return;
         }
 
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted();
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
 
         DateTime time = new DateTime();
         for (Integer i = 0; i < 10; i++) {
@@ -450,6 +454,10 @@ public class PmsManagerProcessor {
                 }
             }
             for (PmsBooking booking : bookings) {
+                if(booking.isEnded()) {
+                    continue;
+                }
+                
                 boolean needSaving = false;
                 for (PmsBookingRooms room : booking.getActiveRooms()) {
 
@@ -518,61 +526,54 @@ public class PmsManagerProcessor {
         }
     }
 
-    private void confirmWhenPaid() {
-        for(PmsBooking booking : manager.getBookingMap().values()) {
+    private void autoMarkBookingsAsPaid() {
+        for(PmsBooking booking : getAllConfirmedNotDeleted(true)) {
+            if(booking.id.equals("48d1d0f7-7380-4326-b1b7-d980fb9ba570")) {
+                System.out.println("Stop on this one");
+            }
             if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }
             
-            if(!manager.getConfigurationSecure().requirePayments) {
-                if(!booking.payedFor) {
-                    booking.payedFor = true;
-                }
+            if(booking.isEnded()) {
+                //Ended bookings are not relevant anymore.
                 continue;
             }
-            
-            
-            if((booking.orderIds == null || booking.orderIds.isEmpty()) && !booking.payedFor) {
-                booking.payedFor = true;
-                manager.logEntry("Automarking booking as paid for, since no orders has been added", booking.id, null);
-                manager.saveBooking(booking);
-                continue;
-            }
-            boolean hasordersnotpaidfor = false;
-            boolean needCapture = false;
-            for(String orderId : booking.orderIds) {
-                Order order = manager.orderManager.getOrderSecure(orderId);
-                if(order == null) {
-                    continue;
-                }
-                if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
-                    continue;
-                }
-                if(!order.captured) {
-                    needCapture = true;
-                }
-                
-                if(order.status != Order.Status.PAYMENT_COMPLETED) {
-                    hasordersnotpaidfor = true;
-                }
-            }
-            
+
             boolean needSaving = false;
-            if(booking.needCapture != needCapture) {
-                booking.needCapture = needCapture;
-                needSaving = true;
+            boolean payedfor = true;
+            if(manager.getConfiguration().requirePayments) {
+                boolean needCapture = false;
+                for(String orderId : booking.orderIds) {
+                    Order order = manager.orderManager.getOrderSecure(orderId);
+                    if(order == null) {
+                        continue;
+                    }
+                    if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+                        continue;
+                    }
+                    if(!order.captured && order.status == Order.Status.PAYMENT_COMPLETED) {
+                        needCapture = true;
+                    }
+                    if(order.status != Order.Status.PAYMENT_COMPLETED) {
+                        for(CartItem item : order.cart.getItems()) {
+                            if(item.startDate != null && item.startDate.after(new Date())) {
+                                //Only set payedfor=false when order is started.
+                                continue;
+                            }
+                            payedfor = false;
+                        }
+                    }
+                }
+
+                if(booking.needCapture != needCapture) {
+                    booking.needCapture = needCapture;
+                    needSaving = true;
+                }
             }
             
-            if(!hasordersnotpaidfor && !booking.payedFor) {
-                needSaving = true;
-                booking.payedFor = true;
-                manager.logEntry("Automarking booking as paid for", booking.id, null);
-            } else if(hasordersnotpaidfor && booking.payedFor) {
-                needSaving = true;
-                booking.payedFor = false;
-                manager.logEntry("This booking has orders not paid for yet.", booking.id, null);
-            }
-            if(needSaving) {
+            if(needSaving || booking.payedFor != payedfor) {
+                booking.payedFor = payedfor;
                 manager.saveBooking(booking);
             }
         }
@@ -583,6 +584,46 @@ public class PmsManagerProcessor {
             return;
         }
         manager.orderManager.checkForOrdersToAutoPay();
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 3);
+        Date threeDaysAhead = cal.getTime();
+        for(PmsBooking booking : bookings) {
+            if(booking.isEnded()) {
+                continue;
+            }
+            boolean needSaving = false;
+            for(String orderId : booking.orderIds) {
+                Order order = manager.orderManager.getOrderSecure(orderId);
+                if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                    continue;
+                }
+                manager.setOrderIdToSend(order.id);
+                for(CartItem item : order.cart.getItems()) {
+                    if(item.startDate == null) {
+                        continue;
+                    }
+                    if(threeDaysAhead.after(item.startDate)) {
+                        String key = order.id + "_order_unabletopaywithsavecardwarning";
+                        if(!booking.notificationsSent.contains(key)) {
+                            manager.doNotification("order_unabletopaywithsavecardwarning", booking.id);
+                            booking.notificationsSent.add(key);
+                            needSaving = true;
+                        }
+                    }
+                    if(new Date().after(item.startDate)) {
+                        String key = order.id + "_order_unabletopaywithsavecard";
+                        if(!booking.notificationsSent.contains(key)) {
+                            manager.doNotification("order_unabletopaywithsavecard", booking.id);
+                            booking.notificationsSent.add(key);
+                            needSaving = true;
+                        }
+                    }
+                }
+            }
+            if(needSaving) {
+                manager.saveBooking(booking);
+            }
+        }
     }
-
 }

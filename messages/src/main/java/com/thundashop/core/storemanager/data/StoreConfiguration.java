@@ -30,7 +30,6 @@ public class StoreConfiguration extends DataCommon {
     public String city;
     public String state;
     public String country;
-    public String paymentMethod = "";
     public int defaultPrefix = 47;
     
     @Translation

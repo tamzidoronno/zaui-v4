@@ -345,6 +345,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
         }
+        
+        checkForMissingEndDate(booking);
 
         Integer result = 0;
         booking.isDeleted = false;
@@ -926,7 +928,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return "";
         }
         
-        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing") || key.startsWith("order_")) {
             message = message.replace("{orderid}", this.orderIdToSend);
         }
         
@@ -2974,6 +2976,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             userManager.deleteUser(user.id);
         }
         
+    }
+
+    private void checkForMissingEndDate(PmsBooking booking) {
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.date.end == null) {
+                room.date.end = createInifinteDate();
+            }
+        }
+    }
+
+    @Override
+    public void sendMessage(String bookingId, String email, String title, String message) {
+        message = configuration.emailTemplate.replace("{content}", message);
+        messageManager.sendMail(email, "", title, message, getFromEmail(), getFromName());
+        message = "Message sent to : " + email + " Message: " + message + ", title: " + title;
+        logEntry(message, bookingId, null);
+   }
+
+    void setOrderIdToSend(String id) {
+        this.orderIdToSend = id;
     }
 
 }

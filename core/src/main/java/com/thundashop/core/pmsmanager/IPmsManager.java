@@ -40,6 +40,9 @@ public interface IPmsManager {
     public String setNewRoomType(String roomId, String bookingId, String newType);
     
     @Administrator
+    public void sendMessage(String bookingId, String email, String title, String message);
+    
+    @Administrator
     public void splitBooking(String roomId);
     
     @Administrator

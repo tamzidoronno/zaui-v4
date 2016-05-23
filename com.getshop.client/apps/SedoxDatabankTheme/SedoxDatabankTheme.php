@@ -30,5 +30,9 @@ class SedoxDatabankTheme extends \ThemeApplication implements \Application {
         return ["banner_redbox", "front_page_box", "front_page_box_red", "profile_box"];
     }
     
+    public function isMobileAndResponsiveDesignDisabled() {
+        return true;
+    }
+    
 }
 ?>

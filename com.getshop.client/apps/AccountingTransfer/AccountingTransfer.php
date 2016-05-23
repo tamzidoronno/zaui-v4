@@ -36,6 +36,12 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
         $config->password = $_POST['ftppassword'];
         $config->hostname = $_POST['ftphostname'];
         $config->path = $_POST['ftppath'];
+        
+        $config->creditor_username = $_POST['creditor_ftpuser'];
+        $config->creditor_password = $_POST['creditor_ftppassword'];
+        $config->creditor_hostname = $_POST['creditor_ftphostname'];
+        $config->creditor_path = $_POST['creditor_ftppath'];
+        
         $config->extension = $_POST['extension'];
         $this->getApi()->getAccountingManager()->setAccountingManagerConfig($config);
     }

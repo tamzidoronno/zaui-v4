@@ -42,6 +42,7 @@ public class PmsConfiguration extends DataCommon {
     /* Invoice creation options */
     public boolean autoCreateInvoices = false;
     public boolean usePriceMatrixOnOrder = false;
+    public Integer whenInfinteDateFirstOrderTimeUnits = 1;
     public boolean autoGenerateChangeOrders = false;
     public boolean runAutoPayWithCard = false;
     public Integer createOrderAtDayInMonth = 0;
@@ -53,6 +54,7 @@ public class PmsConfiguration extends DataCommon {
     public Integer increaseUnits = -1;
     boolean substractOneDayOnOrder = false;
     boolean includeGlobalOrderCreationPanel = false;
+    public boolean autoSendToCreditor = false;
     
 
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily

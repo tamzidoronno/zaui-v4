@@ -42,15 +42,15 @@ if($user->companyObject) {
                     $addClass = ($i % 2 == 0) ? "odd" : "even";
                     
                     $dates = "";
-                    if($item->startDate) {
+                    if(@$item->startDate) {
                         $dates .= date("d.m.Y", strtotime($item->startDate));
                     }
-                    if($item->endDate) {
+                    if(@$item->endDate) {
                         $dates .= " - " . date("d.m.Y", strtotime($item->endDate));
                     
                         
                     }
-                    $additionalMetaData = $item->product->additionalMetaData ? " (" .$item->product->additionalMetaData.")" : "";
+                    $additionalMetaData = @$item->product->additionalMetaData ? " (" .$item->product->additionalMetaData.")" : "";
 
                     
                     if($dates) {

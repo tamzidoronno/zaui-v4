@@ -37,6 +37,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     public Double overriddenPrice;
     
+    public long minPeriode = 0;
     public boolean progressivePriceModel = false;
     public boolean dynamicPriceInPercent = false;
     

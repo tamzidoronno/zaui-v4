@@ -39,6 +39,8 @@ public class MecaCar extends DataCommon {
     
     public Boolean nextServiceAcceptedByCarOwner = null;
     
+    public MecaCarRequestKilomters requestKilomters = new MecaCarRequestKilomters();
+    
     @Transient
     public boolean needAttentionToService = false;
     
@@ -79,8 +81,7 @@ public class MecaCar extends DataCommon {
     
     @Transient
     public boolean controlDateRejected;
-    
-    Date dateRequestedKilomters = null;
+   
 
     /**
      * Caluclate the next EU Controll, service date etc.
@@ -224,5 +225,13 @@ public class MecaCar extends DataCommon {
         this.nextControlAgreed = null;
         this.nextControlAcceptedByCarOwner = null;        
         this.newSuggestedDate = null;
+    }
+
+    boolean needAttentionToService() {
+        return needAttentionToService || serviceDateRejected;
+    }
+
+    boolean needAttentionToControl() {
+        return canAgreeControlDate && nextControlAgreed == null;
     }
 }

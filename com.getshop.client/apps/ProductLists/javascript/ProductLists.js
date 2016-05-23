@@ -8,6 +8,30 @@ app.ProductLists = {
         $(document).on('click', '#useForShowingSearchResult', app.ProductLists.useForShowingSearchResult);
         $(document).on('click', '.ProductLists .groupedProductBoxed .fa-plus', app.ProductLists.groupedProductAdd);
         $(document).on('click', '.ProductLists .groupedProductBoxed .fa-minus', app.ProductLists.groupedProductRemove);
+        $(document).on('click', '.ProductLists .groupedProductBoxed .buynow', app.ProductLists.buyNow);
+    },
+    
+    buyNow: function() {
+        var productContainer = $(this).closest('.productbox_outer');
+        var products = [];
+        
+        productContainer.find('.subProduct').each(function() {
+            var product =  {
+                productId : $(this).attr('productId'),
+                qty : $(this).find('.quantity').val()
+            };
+            
+            products.push(product);
+        });
+        
+        var data = {
+            products : products
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "purchaseGroupedProduct", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            thundashop.common.goToPage("cart&payorder=" + res);
+        });
     },
     
     groupedProductAdd: function() {

@@ -242,7 +242,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
     @Override
     public void sendMessageToStoreOwner(String message, String subject) {
-        String email = getStoreDefaultAddress();
+        String email = getStoreEmailAddress();
         mailFactory.send(email, email, subject, message);
     }
 }

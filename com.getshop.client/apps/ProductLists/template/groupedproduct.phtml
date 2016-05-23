@@ -4,7 +4,7 @@
 $product = $this->getCurrentProduct();
 $image = $this->getDefaultImage($product);
 ?>
-<div class='groupedProductBoxed' mainProductId='<? echo $product->id; ?>'>
+<div class='productbox_outer groupedProductBoxed' mainProductId='<? echo $product->id; ?>'>
     
     <div class="product_image_wrapper">
         <div class="product_image" style="background:url('/displayImage.php?id=<?php echo $image; ?>');"></div>
@@ -18,9 +18,9 @@ $image = $this->getDefaultImage($product);
             <div class='sub_product_price'> 
             <?
             if($this->getDisplayDecimals()) {
-                echo "( "; ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($subProduct->price, 2); echo " )";
+                echo "( ". ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($subProduct->price, 2); echo " )";
             } else {
-                echo "( "; ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($subProduct->price, 0); echo " )";
+                echo "( ". ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($subProduct->price, 0); echo " )";
             }
             ?>
             </div>
@@ -33,5 +33,5 @@ $image = $this->getDefaultImage($product);
     ?>
     
     <div class='sumprice'><? echo $this->getPriceForGroupedProduct(false); ?></div>
-   <div class='shop_button'><? echo $this->__f("Buy now"); ?></div>
+   <div class='shop_button buynow'><? echo $this->__f("Buy now"); ?></div>
 </div>

@@ -98,7 +98,7 @@ public class User extends DataCommon implements Comparable<User> {
     public String pinCode = null;
     public boolean isCompanyOwner = false;
     public boolean wantToBecomeCompanyOwner = false;
-    public String preferredPaymentType = "70ace3f0-3981-11e3-aa6e-0800200c9a66";
+    public String preferredPaymentType = "";
     public Integer invoiceDuePeriode = 14;
     public int sessionTimeOut = 23;
     public boolean canChangeLayout = false;
@@ -204,8 +204,6 @@ public class User extends DataCommon implements Comparable<User> {
        
        return toCompare;
     }
-
-
     
     @Override
     public int compareTo(User o) {

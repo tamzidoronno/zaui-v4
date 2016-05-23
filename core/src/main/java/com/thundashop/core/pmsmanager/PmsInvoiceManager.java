@@ -192,7 +192,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private void autoGenerateOrders(PmsBookingRooms room, NewOrderFilter filter) {
         if(room.needInvoicing(filter)) {
-            System.out.println("NEed to create order for rooom: " + room.invoicedTo + " - " + room.date.start + " - " + room.date.end);
+//            System.out.println("NEed to create order for rooom: " + room.invoicedTo + " - " + room.date.start + " - " + room.date.end);
             BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
             if(item != null) {
                 System.out.println("Item: " + item.bookingItemName);
@@ -268,7 +268,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         return "Could not create order.";
                     }
                     booking.orderIds.add(order.id);
-                    booking.payedFor = false;
                 }
                 if(getSession() != null && getSession().currentUser != null && 
                         (getSession().currentUser.isEditor() || getSession().currentUser.isAdministrator())) {
@@ -367,7 +366,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             price = 0.0;
         }
         if(price.intValue() == 0) {
-            System.out.println("Trying to create an item with zero price.");
             return null;
         }
         BookingItem bookingitem = null;
@@ -387,6 +385,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         CartItem item = createCartItemForCart(productId, count, room.pmsBookingRoomId);
         item.startDate = startDate;
         item.endDate = endDate;
+        item.periodeStart = room.date.start;
         
         if(item.startDate.after(item.endDate)) {
             Date tmpDate = item.startDate;
@@ -479,8 +478,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         Order order = orderManager.createOrder(user.address);
 
-        order.payment = new Payment();
-        order.payment.paymentType = user.preferredPaymentType;
+        Payment preferred = orderManager.getPrefferedPaymentMethod(user.id);
+        order.payment = preferred;
         order.userId = booking.userId;
         order.invoiceNote = booking.invoiceNote;
 
@@ -713,7 +712,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             daysInPeriode = getNumberOfMonthsBetweenDates(startDate, endDate);
             if(daysInPeriode > 1000) {
                 //Infinate dates, noone wants to pay 100 years in advance.
-                daysInPeriode = 1;
+                daysInPeriode = pmsManager.getConfigurationSecure().whenInfinteDateFirstOrderTimeUnits;
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(startDate);
+                cal.add(Calendar.MONTH, daysInPeriode);
+                endDate = cal.getTime();
             }
         }
         Double price = getOrderPriceForRoom(room, startDate, endDate, booking.priceType);

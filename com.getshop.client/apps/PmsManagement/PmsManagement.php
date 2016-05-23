@@ -9,6 +9,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $checkedCanAdd = array();
     public $roomTable = "";
     
+    public function runProcessor() {
+        $this->getApi()->getPmsManager()->processor($this->getSelectedName());
+    }
+    
     public function loadTakenRoomList() {
         $bookingid = $_POST['data']['bookingid'];
         $roomid = $_POST['data']['roomid'];
@@ -407,6 +411,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function markKeyReturned() {
         $this->getApi()->getPmsManager()->returnedKey($this->getSelectedName(), $_POST['data']['roomid']);
+        $this->showBookingInformation();
+    }
+    
+    public function sendMessage() {
+        $email = $_POST['data']['email'];
+        $title = $_POST['data']['title'];
+        $message = $_POST['data']['message'];
+        $bookingId = $_POST['data']['bookingid'];
+        $this->getApi()->getPmsManager()->sendMessage($this->getSelectedName(), $bookingId, $email, $title, $message);
         $this->showBookingInformation();
     }
     

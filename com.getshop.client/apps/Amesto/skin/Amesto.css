@@ -1,0 +1,8 @@
+.app[app='Amesto'] .gss_button_area {
+    display: inline-block;
+}
+
+.app[app='Amesto'] .save_button {
+    right: 10px;
+    position: absolute;
+}

@@ -5,7 +5,7 @@
  */
 package com.thundashop.core.webmanager;
 
-import com.thundashop.core.common.ErrorException;
+import com.google.gson.JsonObject;
 import com.thundashop.core.common.GetShopApi;
 
 /**
@@ -17,4 +17,10 @@ import com.thundashop.core.common.GetShopApi;
 public interface IWebManager {
     
     public String htmlGet(String url) throws Exception;
+    
+    public JsonObject htmlGetJson(String url) throws Exception;
+    
+    public String htmlPost(String url, String data, boolean jsonPost) throws Exception;
+    
+    public JsonObject htmlPostJson(String url, JsonObject data) throws Exception;
 }

@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -123,7 +124,7 @@ public class ProductManager extends AProductManager implements IProductManager {
 
 
     @Override
-    public Double getPrice(String productId, List<String> variations) throws ErrorException {
+    public Double getPrice(String productId, Map<String, String> variations) throws ErrorException {
         Product product = getProduct(productId);
         return product.getPrice(variations);
     }

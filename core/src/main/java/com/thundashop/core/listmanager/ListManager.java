@@ -13,6 +13,7 @@ import com.thundashop.core.listmanager.data.EntryList;
 import com.thundashop.core.listmanager.data.JsTreeList;
 import com.thundashop.core.listmanager.data.ListType;
 import com.thundashop.core.listmanager.data.Menu;
+import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.ArrayList;
@@ -858,5 +859,16 @@ public class ListManager extends ManagerBase implements IListManager {
         if (listToDelete != null) {
             deleteObject(listToDelete);
         }
+    }
+
+    @Override
+    public TreeNode getJSTreeNode(String nodeId) {
+        for (JsTreeList treeList : jsTreeLists.values()) {
+            TreeNode node = treeList.getNode(nodeId);
+            if (node != null)
+                return node;
+        }
+        
+        return null;
     }
 }

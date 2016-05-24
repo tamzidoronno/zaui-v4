@@ -13,6 +13,7 @@ import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Managing products in a webshop is important.<br>
@@ -135,7 +136,7 @@ public interface IProductManager {
     /**
      * Get price for a product with variations
      */
-    public Double getPrice(String productId, List<String> variations) throws ErrorException;
+    public Double getPrice(String productId, Map<String,String> variations) throws ErrorException;
     
     /**
      * Get page by name

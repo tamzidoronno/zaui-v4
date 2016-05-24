@@ -9,6 +9,7 @@ import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.listmanager.data.EntryList;
 import com.thundashop.core.listmanager.data.JsTreeList;
 import com.thundashop.core.listmanager.data.Menu;
+import com.thundashop.core.listmanager.data.TreeNode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -180,4 +181,6 @@ public interface IListManager {
     public JsTreeList getJsTree(String name);
     
     public List<Menu> getMenues(String applicationInstanceId);
+    
+    public TreeNode getJSTreeNode(String nodeId);
 }

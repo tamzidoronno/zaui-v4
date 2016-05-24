@@ -22,7 +22,7 @@ body { background-color:#525659; margin-top: 10px; margin-bottom: 10px; font-fam
 .Menu .entry .entries .entry { height: inherit; }
 
 .PmsBookingProductList .roomtypeselection { left: 165px !important; }
-
+.PmsBookingProductList .productentry { background-color:#fff; }
 .PmsBooking .pmsfront .fa-calendar,
 .PmsBookingProductList .continue_button,
 .PmsBookingCalendar .calendar .day.selected,

@@ -3,6 +3,8 @@
 $product = $this->getCurrentProduct();
 $linkName = \GetShopHelper::makeSeoUrl($product->uniqueName);
 $image = $this->getDefaultImage($product);
+$hasVariation = HelperCart::hasVariations($product);
+
 ?>
 
 <div class='productbox_outer templatebox_<?php echo $this->getConfigurationSetting("productlisttemplate"); ?>'>
@@ -32,8 +34,18 @@ $image = $this->getDefaultImage($product);
         echo $price;
         ?></div>
 
-    <div class="webshop_button_area">
-        <div class="shop_button addProductToCart" productId='<? echo $product->id; ?>'><? echo $this->__f("Add to cart"); ?></div>
-    </div>
+    <?
+    if ($hasVariation) {
+    ?>
+        <a ajaxlink='/?page=<? echo $product->pageId; ?>' href='<? echo $linkName;?>'>
+            <div class="webshop_button_area">
+                <div class="shop_button" productId='<? echo $product->id; ?>'><? echo $this->__f("Read more"); ?></div>
+            </div>
+        </a>
+    <? } else { ?>
+        <div class="webshop_button_area">
+            <div class="shop_button addProductToCart" productId='<? echo $product->id; ?>'><? echo $this->__f("Add to cart"); ?></div>
+        </div>
+    <? } ?>
     </div>
 </div>

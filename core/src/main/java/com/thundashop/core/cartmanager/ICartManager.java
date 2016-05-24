@@ -9,6 +9,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The cartmanager is a manager helping you keep track of your shopping cart.<br>
@@ -24,7 +25,7 @@ public interface ICartManager {
      * @return
      * @throws ErrorException 
      */
-    public Cart addProduct(String productId, int count, List<String> variations) throws ErrorException;
+    public Cart addProduct(String productId, int count, Map<String,String> variations) throws ErrorException;
     
     public CartItem addProductItem(String productId, int count) throws ErrorException;
     

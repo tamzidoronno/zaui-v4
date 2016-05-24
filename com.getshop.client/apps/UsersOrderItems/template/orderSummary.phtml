@@ -10,10 +10,10 @@ $taxes = $this->getApi()->getOrderManager()->getTaxes($order);
     </tr>
 <?php
 foreach($order->cart->items as $item) {
-    
+    $variationstext = HelperCart::getVartionsText($item);
     echo "<tr>";
     echo "<td>" . $item->count . "</td>";
-    echo "<td>" . $item->product->name . "</td>";
+    echo "<td>" . $item->product->name . $variationstext . "</td>";
     echo "<td>" . $item->product->price . "</td>";
     echo "</tr>";
 }

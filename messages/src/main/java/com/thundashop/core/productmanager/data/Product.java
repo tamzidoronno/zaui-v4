@@ -22,7 +22,6 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public Map<String, ProductImage> images = new HashMap<String, ProductImage>();    
     
     public List<String> imagesAdded = new LinkedList();
-    public List<ProductVariation> variations = new ArrayList();
     public List<String> descriptions = new ArrayList();
 
     public String selectedProductTemplate = "ecommerce_product_template_1";
@@ -168,30 +167,15 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public int compareTo(Product t) {
         return t.rowCreatedDate.compareTo(rowCreatedDate);
     }
-
-    public ProductVariation getVariation(String variationId) {
-        for (ProductVariation variation : variations) {
-            ProductVariation ivariation = variation.get(variationId);
-            if (ivariation != null) {
-                return ivariation;
-            }
-        }
-        return null;
-    }
     
-    public double getPrice(List<String> variations) {
+    public double getPrice(Map<String, String> variations) {
         double retprice = this.price;
-        if (variations != null) {
-            for (String variation : variations) {
-                ProductVariation productVariation = getVariation(variation);
-                if (productVariation != null) {
-                    retprice *= 100;
-                    retprice = Math.round(retprice);
-                    retprice /= 100;
-                }
-            }
+        
+        if (variations != null && !variations.isEmpty()) {
+            // TODO - Maybe add different prices for other variations.
         }
-    
+        
+        
         if (this.overriddenPrice != null) {
             return overriddenPrice;
         }

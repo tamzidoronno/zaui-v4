@@ -17,6 +17,7 @@ import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -72,7 +73,7 @@ public class CartManager extends ManagerBase implements ICartManager {
         return cart;
     }
 
-    private Product getProduct(String productId, List<String> variations) throws ErrorException {
+    private Product getProduct(String productId, Map<String, String> variations) throws ErrorException {
         ArrayList<String> productIds = new ArrayList<String>();
         productIds.add(productId);
         Product prod = productManager.getProduct(productId);
@@ -82,7 +83,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public Cart addProduct(String productId, int count, List<String> variations) throws ErrorException {
+    public Cart addProduct(String productId, int count, Map<String, String> variations) throws ErrorException {
         Product product = getProduct(productId, variations);
 
         if (product != null) {

@@ -18,9 +18,22 @@ app.Product = {
     hideProductAddedBox : function() {
         $('.gsaddedtocartbox').fadeOut();
     },
+    
+    getVariations: function(productid) {
+        var variations = {};
+        
+        $('.gs_variation_selector[productid="'+productid+'"]').each(function() {
+            variations[$(this).attr('optionid')] = $(this).find('.gs_variation_select').val();
+        });
+        
+        return variations;
+    },
+    
     addProductToCart: function () {
+        var productId = $(this).attr('productId');
         var data = {
-            productId: $(this).attr('productId')
+            productId: productId,
+            variations : app.Product.getVariations(productId)
         }
         
         var copies = $('.ProductCopies');

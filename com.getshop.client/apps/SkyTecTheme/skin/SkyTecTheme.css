@@ -300,7 +300,11 @@ h2 { font-weight: 700; }
 
 .gsrotating .ContentManager h1 { font-size: 72px !important; }
 .Login .login_content { text-align: center; }
+
+.ProductVariations .attrow,
 .AttributePrinter .attrrow { border-bottom: solid 1px #DDD; }
+
+.ProductVariations .attrprefix,
 .AttributePrinter .attrprefix { display:inline-block; width: 17.22%; text-transform: uppercase; font-weight: bold; }
 
 .ProductLists .templatebox_2 .addProductToCart { display:none;  }
@@ -310,7 +314,7 @@ h2 { font-weight: 700; }
 .ProductCategories .attrselect { display:block; }
 .ProductCategories .attrselect.selected { font-weight: bold; }
 .ProductCategories .attrselect:hover { color: #006699; }
-.ProductLists .templatebox_1 .productbox:hover .addProductToCart { background-color: #006699 !important; color: white !important; }
+.ProductLists .templatebox_1 .productbox:hover .shop_button { background-color: #006699 !important; color: white !important; }
 .ProductCategories .selected { color: #006699; }
 .Menu .entries .entries .entry:hover { background-color:#2091d8; }
 .Menu .entries .entries .entry:hover div { color:#fff !important; }

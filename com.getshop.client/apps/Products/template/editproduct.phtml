@@ -16,6 +16,7 @@ $groups = $this->getApi()->getUserManager()->getAllGroups();
     <div class='gss_tab' gss_tab='2'><? echo $this->__f("Lists"); ?></div>
     <div class='gss_tab' gss_tab='4'><? echo $this->__f("Attributes"); ?></div>
     <div class='gss_tab' gss_tab='5'><? echo $this->__f("Categories"); ?></div>
+    
     <?
         if (count($groups)) {
     ?>
@@ -23,6 +24,8 @@ $groups = $this->getApi()->getUserManager()->getAllGroups();
     <? 
         } 
     ?>
+            
+    <div class='gss_tab' gss_tab='7'><? echo $this->__f("Variations"); ?></div>
         
     <div class='gss_tab_content'>
         <input type="hidden" gs_model='productmodel' gs_model_attr='productid' value="<? echo $product->id; ?>">
@@ -180,7 +183,10 @@ $groups = $this->getApi()->getUserManager()->getAllGroups();
             <?  $this->includefile("categorylist"); ?>
         </div>
         
-
+        <div class='gss_tab_view' gss_tab='7'>
+            <?  $this->includefile("variationlist"); ?>
+        </div>
+        
         <div class='gss_tab_view' gss_tab='3'>
             
             <div>

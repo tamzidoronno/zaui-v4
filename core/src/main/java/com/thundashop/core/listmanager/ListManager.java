@@ -847,4 +847,16 @@ public class ListManager extends ManagerBase implements IListManager {
         
         entry.badges = badges;
     }
+
+    public void deleteList(String listId) {
+        EntryList listToDelete = allEntries.values()
+                .stream()
+                .filter(list -> list.id.equals(listId))
+                .findFirst()
+                .orElse(null);
+        
+        if (listToDelete != null) {
+            deleteObject(listToDelete);
+        }
+    }
 }

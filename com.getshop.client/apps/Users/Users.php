@@ -66,6 +66,7 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $user->address->address = $_POST['address_street'];
         $user->address->postCode = $_POST['address_postcode'];
         $user->address->city = $_POST['address_city'];
+        $user->address->countryname = $_POST['address_country'];
         $this->getApi()->getUserManager()->saveUser($user);
     }
     
@@ -78,6 +79,7 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $user->canChangeLayout = $_POST['canChangeLayout'];
         $user->showLoguotCounter = $_POST['showLogoutCounter'];
         $user->prefix = $_POST['prefix'];
+        $user->accountingId = $_POST['accountingId'];
         $user->type = 10;
         $user->isCompanyOwner = $_POST['isCompanyOwner'];
         $user->sessionTimeOut = $_POST['sessionTimeout'];

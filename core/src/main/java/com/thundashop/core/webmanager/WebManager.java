@@ -6,8 +6,11 @@
 package com.thundashop.core.webmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.thundashop.core.common.ManagerBase;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -26,7 +29,6 @@ public class WebManager extends ManagerBase implements IWebManager {
     
     @Override
     public String htmlGet(String url) throws Exception {
-        
         URL urlObj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
         
@@ -43,5 +45,45 @@ public class WebManager extends ManagerBase implements IWebManager {
         }
         
         return responseBuffer.toString();
+    }
+    
+    @Override
+    public JsonObject htmlGetJson(String url) throws Exception{
+        return new JsonParser().parse(htmlGet(url)).getAsJsonObject();
+    }
+    
+    @Override
+    public String htmlPost(String url, String data, boolean jsonPost) throws Exception {
+        URL urlObj = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
+        
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("User-Agent", USER_AGENT);
+        if(jsonPost) {
+            connection.setRequestProperty("Content-Type", "application/json");
+        }
+        
+        connection.setDoOutput(true);
+        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+        
+        outputStream.writeBytes(data);
+        outputStream.flush();
+        outputStream.close();
+        
+        BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));    
+        
+        String responseLine;
+        StringBuilder responseBuffer = new StringBuilder();
+        
+        while((responseLine = responseStream.readLine()) != null) {
+            responseBuffer.append(responseLine);
+        }
+        
+        return responseBuffer.toString();
+    }       
+    
+    @Override
+    public JsonObject htmlPostJson(String url, JsonObject jsonObject) throws Exception {
+        return new JsonParser().parse(htmlPost(url, jsonObject.toString(), true)).getAsJsonObject();
     }
 }

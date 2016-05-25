@@ -21,6 +21,10 @@ $config = $pmsManager->getConfiguration($this->getSelectedName());
 $lang = $this->getFactory()->getCurrentLanguage();
 $default =  $pmsManager->getDefaultMessage($this->getSelectedName(), $bookingid);
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$hasArx = false;
+if($config->arxHostname) {
+    $hasArx = true;
+}
 foreach ($types as $idx => $type) {
     $types[$type->id] = $type;
 }
@@ -72,6 +76,9 @@ foreach($config->addonConfiguration as $addonConfig) {
 if($hasAddons) {
     echo "<span class='tab' area='addons'>Addons</span>";
 }
+if($hasArx) {
+    echo "<span class='tab' area='cards'>Card / code</span>";
+}
 echo "</span>";
 echo "<div style='clear:both;'></div>";
 echo "<div class='tabarea roomsbooked'>";
@@ -87,6 +94,12 @@ echo "</div>";
 if($config->requirePayments) {
     echo "<div class='tabarea orderinfo'>";
     $this->includefile("orderinformation");
+    echo "</div>";
+}
+
+if($hasArx) {
+    echo "<div class='tabarea cards'>";
+    $this->includefile("carddata");
     echo "</div>";
 }
 

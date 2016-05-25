@@ -36,6 +36,7 @@ public class PmsBookingRooms implements Serializable {
      
     @Editor
     public String code = "";
+    public String cardformat = "";
     public Integer intervalCleaning = null;
     public boolean addedByRepeater = false;
     public Date invoicedTo = null;

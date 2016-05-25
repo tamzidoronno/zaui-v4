@@ -4,6 +4,7 @@ namespace ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a;
 class PmsManagement extends \WebshopApplication implements \Application {
     private $selectedBooking;
     private $types = null;
+    private $items = null;
     private $users = array();
     public $errors = array();
     private $checkedCanAdd = array();
@@ -903,8 +904,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function getItems() {
+        if($this->items) {
+            return $this->items;
+        }
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
-        return $this->indexList($items);
+        $this->items = $this->indexList($items);
+        return $this->items;
     }
     
     public function updateAddons() {
@@ -955,6 +960,27 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         return false;
+    }
+
+    /**
+     * @param type $id
+     * @return \core_bookingengine_data_BookingItemType
+     */
+    public function getTypeById($id) {
+        $types = $this->getTypes();
+        return $types[$id];
+    }
+
+    /**
+     * @param type $itemId
+     * @return \core_bookingengine_data_BookingItem
+     */
+    public function getItemById($itemId) {
+        $items = $this->getItems();
+        if(isset($items[$itemId])) {
+            return $items[$itemId];
+        }
+        return null;
     }
 
 }

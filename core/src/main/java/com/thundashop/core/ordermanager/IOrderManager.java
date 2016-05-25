@@ -9,6 +9,7 @@ import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Internal;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
@@ -235,6 +236,8 @@ public interface IOrderManager {
     @Administrator
     public void changeOrderType(String orderId, String paymentTypeId);
     
-    
     public Double getTotalForOrderById(String orderId);
+    
+    public Payment getStorePreferredPayementMethod();
+
 }

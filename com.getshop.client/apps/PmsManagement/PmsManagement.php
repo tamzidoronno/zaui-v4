@@ -581,6 +581,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $guest->email = $_POST['data']['email_'.$i];
             $guest->phone = $_POST['data']['phone_'.$i];
             $guest->prefix = $_POST['data']['prefix_'.$i];
+            $guest->prefix = str_replace("+", "", $guest->prefix);
             $guests[] = $guest;
         }
         

@@ -2483,6 +2483,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return;
         }
 
+        if(booking.sessionId != null && 
+                !booking.sessionId.isEmpty() &&
+                getSession() != null && 
+                getSession().id != null &&
+                booking.sessionId.equals(getSession().id)) {
+            return;
+        }
+        
         if(loggedonuser == null) {
             throw new ErrorException(26);
         }

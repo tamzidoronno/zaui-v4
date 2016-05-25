@@ -196,7 +196,9 @@ if(!$user->fullName) {
                 <span class="viewmode">
                         <?
                         if(!$user->preferredPaymentType || !isset($instances[$user->preferredPaymentType])) {
-                            echo "User does not have a preferred payment type.. configure it in the setting panel, under settings.";
+                            $payment = $this->getApi()->getOrderManager()->getStorePreferredPayementMethod();
+                            $appSettings = $instances[$payment->paymentType];
+                            $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);
                         } else {
                             $appSettings = $instances[$user->preferredPaymentType];
                             $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);

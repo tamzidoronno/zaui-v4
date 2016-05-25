@@ -68,11 +68,11 @@ if(($prices->defaultPriceType == 1 && !empty($arr)) || $prices->defaultPriceType
      $hasPrices = true;
 }
 
-printRooms($toPrint, $types, $items, $booking->id, false, $hasPrices, $hasArx,$config, $this);
+printRooms($toPrint, $types, $items, $booking, false, $hasPrices, $hasArx,$config, $this);
 
 if(sizeof($addons) > 0) {
     echo '<h2>Addons</h2>';
-    printRooms($addons, $types, $items, $booking->id, true, $hasPrices, $hasArx,$config, $this);
+    printRooms($addons, $types, $items, $booking, true, $hasPrices, $hasArx,$config, $this);
 }
 
 /**
@@ -87,7 +87,8 @@ if(sizeof($addons) > 0) {
  * @param core_pmsmanager_PmsConfiguration $config
  * @param \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement $object
  */
-function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $hasArx, $config, $object) {
+function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasArx, $config, $object) {
+    $bookingId = $booking->id;
     ?>
 <table width='100%' cellspacing='0' cellpadding='0' class='guestoverviewtable'>
     <tr>
@@ -147,7 +148,10 @@ function printRooms($rooms, $types, $items, $bookingId, $addons, $hasPrices, $ha
                 </span>
             </td>
             <td>
-                <? echo $types[$room->bookingItemTypeId]->name; ?>
+                <? 
+                $object->includeLegacyStuffForSemlagerhotell($booking, $room);
+
+                echo $types[$room->bookingItemTypeId]->name; ?>
                 <?php if($config->cleaningInterval) { ?>
                 <?php echo "<div title='Cleaning interval' class='change_cleaning_interval' roomid='".$room->pmsBookingRoomId."'>CI: <span class='intervalset'>" . $roomCleaningInterval . "</span></div>"; ?>
                 <?php } ?>

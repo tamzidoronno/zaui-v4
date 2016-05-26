@@ -1,7 +1,6 @@
 package com.thundashop.core.ordermanager;
 
 import com.getshop.scope.GetShopSession;
-import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
@@ -12,17 +11,17 @@ import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.dibs.DibsManager;
+import com.thundashop.core.listmanager.ListManager;
+import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
-import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
-import com.thundashop.core.productmanager.data.ProductDynamicPrice;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
@@ -31,7 +30,6 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -61,7 +59,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private CartManager cartManager;
     
     @Autowired
-    private PageManager pageManager;
+    private ListManager listManager;
     
     @Autowired
     private StoreApplicationInstancePool storeApplicationInstancePool;
@@ -244,12 +242,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             if (cartItem.getVariations().size() > 0) {
                 newOrder += " (";
-                for (String variation : cartItem.getVariations()) {
-                    if (variation.equals("")) {
-                        continue;
-                    }
-                    
-                    newOrder += product.getVariation(variation).title + ", ";
+                for (String variationKey : cartItem.getVariations().keySet()) {
+                    String variationValue = cartItem.getVariations().get(variationKey);
+                    TreeNode nodeKey = listManager.getJSTreeNode(variationKey);
+                    TreeNode nodeValue = listManager.getJSTreeNode(variationValue);
+                    newOrder += nodeKey + " " + nodeValue;
                 }
                 newOrder = newOrder.substring(0, newOrder.length() - 2) + ")";
             }
@@ -1247,7 +1244,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return payment;
     }
 
-    private Payment getStorePreferredPayementMethod() {
+    public Payment getStorePreferredPayementMethod() {
         Application ecommerceSettingsApplication = applicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
         String defaultPaymentApplicationId = ecommerceSettingsApplication.getSetting("defaultPaymentMethod");
         

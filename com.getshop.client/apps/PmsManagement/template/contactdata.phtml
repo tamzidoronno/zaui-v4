@@ -17,7 +17,12 @@ $config = $this->getConfigurationToUse();
 <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
         <th width="60%">Form filled out when registering</th>
-        <th width="40%">Internal comments</th>
+        <th width="40%">Internal comments
+            <span gstype="form" method="showBookingInformation">
+                <input type='hidden' gsname="bookingid" value="<?php echo $booking->id; ?>">
+                <i class='fa fa-refresh' gstype="submitToInfoBox" title='Refresh booking' style='cursor:pointer;'></i>
+            </span>
+        </th>
     </tr>
     <tr>
         <td valign="top">
@@ -196,7 +201,9 @@ if(!$user->fullName) {
                 <span class="viewmode">
                         <?
                         if(!$user->preferredPaymentType || !isset($instances[$user->preferredPaymentType])) {
-                            echo "User does not have a preferred payment type.. configure it in the setting panel, under settings.";
+                            $payment = $this->getApi()->getOrderManager()->getStorePreferredPayementMethod();
+                            $appSettings = $instances[$payment->paymentType];
+                            $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);
                         } else {
                             $appSettings = $instances[$user->preferredPaymentType];
                             $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);

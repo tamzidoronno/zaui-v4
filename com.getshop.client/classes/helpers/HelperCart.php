@@ -24,39 +24,40 @@ class HelperCart {
             return;
         }
         
-        $variationsprint = array();
-        foreach ($cartItem->variations as $variation) {
-            if ($variation == "") {
-                continue;
-            }
+        $factory = IocContainer::getFactorySingelton();
+        
+        $text = "";
+        
+        
+        $arr = (array)$cartItem->variations;
+        
+        if (!empty($arr)) {
+            $text .= " ( ";
+            $i = 0;
+            foreach ($cartItem->variations as $key => $value) {
+                $i++;
+                $keyNode = $factory->getApi()->getListManager()->getJSTreeNode($key);
+                $valueNode = $factory->getApi()->getListManager()->getJSTreeNode($value);
 
-            $object = HelperCart::getVariationObject($cartItem->product, $variation);
-            if ($object) {
-                $variationsprint[] = $object->title;
+                if ($keyNode && $valueNode) {
+                    $text .= $keyNode->text." ".$valueNode->text.", ";
+                }
             }
-        }
-        $translator = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
-        return  implode(", ", $variationsprint);
-    }
-    
-    private static function getText($variation, $id) {
-        $retobject = null;
-        foreach ($variation as $varobject) {
-            if ($varobject->id == $id) {
-                $retobject = $varobject;
-            }
-            if ($retobject == null && isset($varobject->children) && $varobject->children) {
-                $retobject =  HelperCart::getText($varobject->children, $id);
-            }
+            
+            
+            $text = substr($text, 0, -2);
+            $text .= ")";
         }
         
-        return $retobject;
+        return $text;
     }
-    
-    private static function getVariationObject($product, $variation) {
-        return HelperCart::getText($product->variations, $variation);
-    }
-    
-}
 
+    public static function hasVariations($product) {
+        $factory = IocContainer::getFactorySingelton();
+        $nodelist = $factory->getApi()->getListManager()->getJsTree("variationslist_product_".$product->id);
+        $values = $nodelist->nodes && count($nodelist->nodes) > 0;
+        return $values;
+    }
+
+}
 ?>

@@ -13,6 +13,11 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
     static $currencyCode = false;
     static $defaultPayment = false;
     
+    /**
+     * @var ECommerceSettings
+     */
+    static $staticEcommerceApp = false;
+    
     private $storeSettingsInstance;
     
     public function getDescription() {
@@ -49,6 +54,15 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         return ECommerceSettings::$currencyCode;
     }
     
+    public static function getNumberOfDecimals() {
+        ECommerceSettings::setApplicationInstance();
+        $decimals = ECommerceSettings::$staticEcommerceApp->getConfigurationSetting("numberOfDecimals");
+        if ($decimals == "")
+            return 2;
+        
+        return $decimals;
+    }
+    
     public static function fecthCurrencyCodeTranslated() {
         $code = ECommerceSettings::fetchCurrencyCode();
         if($code == "USD") {
@@ -83,6 +97,7 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         $this->getStoreSettingsApp()->setConfigurationSetting("defaultpaymentwhencartcustomeridisset", $_POST['defaultpaymentwhencartcustomeridisset']);
         $this->getStoreSettingsApp()->setConfigurationSetting("registrationRequired", $_POST['registrationRequired']);
         $this->setConfigurationSetting("defaultPaymentMethod", $_POST['defaultPaymentMethod']);
+        $this->setConfigurationSetting("numberOfDecimals", $_POST['numberOfDecimals']);
     }
     
     public function isCurrency($currency) {
@@ -92,6 +107,9 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
     
     public static function formatPrice($price, $numberOfDecimals = 2, $printZero = false) {
         $code = ECommerceSettings::fetchCurrencyCode();
+        
+        $numberOfDecimals = ECommerceSettings::getNumberOfDecimals();
+        
         if($price == 0 && !$printZero) {
             return "&nbsp";
         }
@@ -105,4 +123,13 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         
         echo "Price $".$price;
     }
+
+    public static function setApplicationInstance() {
+        if (!ECommerceSettings::$staticEcommerceApp) {
+            $factory = \IocContainer::getFactorySingelton();
+            $app = $factory->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+            ECommerceSettings::$staticEcommerceApp = $factory->getApplicationPool()->createInstace($app);
+        }
+    }
+
 }

@@ -15,9 +15,23 @@ app.Products = {
         $(document).on('click', '.gss_add_category', app.Products.addCategoryToProduct);
         $(document).on('click', '.removeattr', app.Products.removeAttr);
         $(document).on('click', '.removecat', app.Products.removeCat);
+        $(document).on('click', '.gss_copyProduct', app.Products.copyProduct);
         $(document).on('keyup', '.attrtext', app.Products.updateAttrText);
         $(document).on('click', '.setupDynamicPricing', app.Products.setupDynamicPricing);
         $(document).on('change', '#gss_filterproducts', app.Products.filterProducts);
+    },
+    copyProduct: function() {
+        var name = prompt(__f("New product name"));
+        
+        var data = {
+            gss_method : "copyProduct",
+            gss_fragment : 'editproduct',
+            gss_view : 'gss_productwork_area',
+            fromProductId : $(this).attr('productId'),
+            newName : name
+        }
+        
+        getshop.Settings.post(data)
     },
     updateAttrText : function() {
         var id = $(this).closest('.addedattrrow').attr('attrid');

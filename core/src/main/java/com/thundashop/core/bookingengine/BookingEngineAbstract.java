@@ -717,30 +717,30 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
     
     List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId) {
-        BookingItemType type = types.get(typeId);
-        
-        if (type == null) {
-            throw new BookingEngineException("Can not get available items ");
-        }
-
-        List<Booking> bookingsWithinDaterange = bookings.values().stream()
-                .filter(booking -> booking.bookingItemTypeId.equals(typeId))
-                .filter(booking -> booking.interCepts(start, end))
-                .collect(Collectors.toList());
-        
-        if (bookingId != null && !bookingId.isEmpty()) {
-            bookingsWithinDaterange.removeIf(o -> o.id.equals(bookingId));
-        }
-        
-        List<BookingItem> bookingItems = getBookingItemsByType(typeId);
-        
-        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, bookingsWithinDaterange, bookingItems, shouldThrowException());
+        BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(typeId, start, end, bookingId);
 
         List<BookingItem> retList = assigner.getAvailableItems().stream()
                 .map(o -> items.get(o))
                 .collect(Collectors.toList());
         
         return retList;
+    }
+
+    private BookingItemAssignerOptimal getAvailableItemsAssigner(String typeId, Date start, Date end, String bookingId) throws BookingEngineException {
+        BookingItemType type = types.get(typeId);
+        if (type == null) {
+            throw new BookingEngineException("Can not get available items ");
+        }
+        List<Booking> bookingsWithinDaterange = bookings.values().stream()
+                .filter(booking -> booking.bookingItemTypeId.equals(typeId))
+                .filter(booking -> booking.interCepts(start, end))
+                .collect(Collectors.toList());
+        if (bookingId != null && !bookingId.isEmpty()) {
+            bookingsWithinDaterange.removeIf(o -> o.id.equals(bookingId));
+        }
+        List<BookingItem> bookingItems = getBookingItemsByType(typeId);
+        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, bookingsWithinDaterange, bookingItems, shouldThrowException());
+        return assigner;
     }
     
     List<Booking> getAllBookingsByBookingItem(String bookingItemId) {
@@ -863,7 +863,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     private void checkIfAvailableBookingItemsOnlyEmptyBookings(List<Booking> bookings) {
         for (Booking booking : bookings) {
             if (booking.id != null && !booking.id.isEmpty()) {
-                List<BookingItem> availableItems = getAvailbleItemsWithBookingConsidered(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
+                BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
+                
+                List<BookingItem> availableItems = assigner.getAvailableItems().stream()
+                .map(o -> items.get(o))
+                .collect(Collectors.toList());
+                
                 if (availableItems.isEmpty()) {
                     throw new BookingEngineException("Did not find an available item for booking: " + booking.getHumanReadableDates());
                 }
@@ -874,7 +879,16 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                             .contains(booking.bookingItemId);
                     
                     if (!canUseRoom) {
-                        throw new BookingEngineException("This bookingitem can not be used as it is not available, there is other bookings that depends ont this.");
+                        List<Booking> bookingsUsingItem = assigner.getBookingThatUseItem(booking.bookingItemId);
+                        String extra = "";
+                        int i = 0;
+                        
+                        for (Booking ibooking : bookingsUsingItem) {
+                            i++;
+                            extra += "<br/> " + i + ". " + ibooking.getHumanReadableDates();
+                        }
+                        
+                        throw new BookingEngineException("This bookingitem can not be used as it is not available, there is other bookings that depends on this." + extra);
                     }
                 }
             }

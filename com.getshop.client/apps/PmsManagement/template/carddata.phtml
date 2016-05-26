@@ -1,0 +1,53 @@
+<?php
+/* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$booking = $this->getSelectedBooking();
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+echo "<br>";
+echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+echo "<tr>";
+echo "<th>Type</th>";
+echo "<th>Area (Alias)</th>";
+echo "<th>Time periode</th>";
+echo "<th>Card type</th>";
+echo "<th>Card number</th>";
+echo "<th>Update</th>";
+echo "</tr>";
+foreach($booking->rooms as $room) {
+    if($room->deleted) {
+        continue;
+    }
+    $item = $this->getItemById($room->bookingItemId);
+    echo "<tr roomid='".$room->pmsBookingRoomId."'>";
+    echo "<td>".$this->getTypeById($room->bookingItemTypeId)->name."</td>";
+    echo "<td>";
+    if($item) {
+        echo $item->bookingItemAlias;
+    }
+    echo "</td>";
+    echo "<td>";
+    $date = $room->date;
+    echo date("d.m.Y H:i", strtotime($date->start));
+    if(date("d.m.Y", strtotime($date->start)) == date("d.m.Y", strtotime($date->end))) {
+        echo date("H:i", strtotime($date->end));
+    } else {
+        echo "<br>" . date("d.m.Y H:i", strtotime($date->end));
+    }
+    echo "</td>";
+    echo "<td>";
+    echo "<select class='cardtype'>";
+    $splitted = explode(";", $config->arxCardFormatsAvailable);
+    foreach($splitted as $split) {
+        $selected = "";
+        if($room->cardformat == $split) {
+            $selected = "SELECTED";
+        }
+        echo "<option value='$split' $selected>$split</option>";
+    }
+    echo "</select>";
+    echo "</td>";
+    echo "<td><input type='txt' value='".$room->code."' class='code'></td>";
+    echo "<td><input type='button' value='Update' class='updatecardonroom'></td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>

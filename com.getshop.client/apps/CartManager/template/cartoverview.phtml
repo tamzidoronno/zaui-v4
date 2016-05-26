@@ -24,10 +24,6 @@ if (count($cartItems) == 0) {
         /* @var $product core_productmanager_data_Product */
         $product = $cartItem->product;
 
-        if (isset($cartItem->variations)) {
-            $variations = implode(":", $cartItem->variations);
-        }
-        
         ?>
         <div class="product" productid="<?php echo $product->id; ?>">
             <table class='product_row_table'>

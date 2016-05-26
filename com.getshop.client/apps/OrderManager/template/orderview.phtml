@@ -133,6 +133,7 @@ $cart = $order->cart;
         $editButton = $canChangeOrder ? "<i class='fa fa-edit gss_changeOrderLine'></i>" : "";
         $editCountButton = $canChangeOrder ? "<i class='fa fa-edit gss_changeOrderCount'></i>" : "";
         $metaText = $cartItem->product->metaData ? " ( " .$cartItem->product->metaData." )" : "";
+        $variationstext = HelperCart::getVartionsText($cartItem);
         
         $dates = "";
         if(!$canChangeOrder) {
@@ -144,7 +145,7 @@ $cart = $order->cart;
         if($cartItem->startDate) { $dates .= "<span class='lineStartDate' gstype='startDate'>" . date("d.m.Y H:i", strtotime($cartItem->startDate)) . "</span>"; }
             if($cartItem->endDate) { $dates .= " - <span class='lineEndDate' gstype='endDate'>" . date("d.m.Y H:i", strtotime($cartItem->endDate)) . "</span>"; }
         }
-        echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>$editCountButton ".$cartItem->count." x ".$cartItem->product->name." $metaText $additionalMetaData $dates<span class='gss_order_line_price'>(".round($cartItem->product->priceExTaxes,1). ") ".$cartItem->product->price." $editButton</span></div>";
+        echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>$editCountButton ".$cartItem->count." x ".$cartItem->product->name." $metaText $variationstext $additionalMetaData $dates<span class='gss_order_line_price'>(".round($cartItem->product->priceExTaxes,1). ") ".$cartItem->product->price." $editButton</span></div>";
 //        echo "</div>";
     }
     if($this->canChangeOrder($order)) {

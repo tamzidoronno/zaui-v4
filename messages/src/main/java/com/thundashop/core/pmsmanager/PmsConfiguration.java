@@ -69,6 +69,7 @@ public class PmsConfiguration extends DataCommon {
     public String arxUsername = "";
     public String arxPassword = "";
     public String arxCardFormat = "";
+    public String arxCardFormatsAvailable = "";
     public Integer codeSize = 4;
     public boolean keepDoorOpenWhenCodeIsPressed = false;
     public String closeAllDoorsAfterTime = "22:00";

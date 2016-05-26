@@ -7,9 +7,9 @@ package com.thundashop.core.cartmanager.data;
 import com.google.gson.Gson;
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public class CartItem implements Serializable {
     private String cartItemId = UUID.randomUUID().toString();
-    private List<String> variations = new ArrayList();
+    private Map<String, String> variations = new HashMap();
     
     private Product product;
     
@@ -32,7 +32,7 @@ public class CartItem implements Serializable {
     public CartItem() {
     }
     
-    public boolean isSame(String productId, List<String> variations) {
+    public boolean isSame(String productId, Map<String, String> variations) {
         if (!this.product.id.equals(productId)) {
             return false;
         }
@@ -41,8 +41,8 @@ public class CartItem implements Serializable {
             return false;
         }
         
-        for (String varId : this.variations) {
-            if (!variations.contains(varId)) {
+        for (String varId : this.variations.values()) {
+            if (!variations.values().contains(varId)) {
                 return false;
             }
         }
@@ -76,7 +76,7 @@ public class CartItem implements Serializable {
         this.product = product;
     }
 
-    public void setVariations(List<String> variations) {
+    public void setVariations(Map<String, String> variations) {
         this.variations = variations;
     }
 
@@ -84,9 +84,10 @@ public class CartItem implements Serializable {
         return product;
     }
 
-    public List<String> getVariations() {
+    public Map<String, String> getVariations() {
+        
         return variations;
-    } 
+    }
 
     public void doFinalize() {
         product.doFinalize();

@@ -31,7 +31,7 @@ public class Cart extends DataCommon {
     public Coupon coupon;
     public Double couponCost;
     
-    private CartItem getCartItem(String productId, List<String> variations) {
+    private CartItem getCartItem(String productId, Map<String, String> variations) {
         for (CartItem cartItem : items) {
             if (cartItem.isSame(productId, variations)) {
                 return cartItem;
@@ -58,7 +58,7 @@ public class Cart extends DataCommon {
         return null;
     }
     
-    public void addProduct(Product product, List<String> variations) {
+    public void addProduct(Product product, Map<String, String> variations) {
         CartItem cartItem = getCartItem(product.id, variations);
         
         if (cartItem == null) {

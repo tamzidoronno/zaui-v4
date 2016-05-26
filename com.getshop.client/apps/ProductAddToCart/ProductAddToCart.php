@@ -16,7 +16,7 @@ class ProductAddToCart extends \ns_e4e2508c_acf8_4064_9e94_93744881ff00\ProductC
 
     public function addProductToCart() {
         $productId = $_POST['data']['productId'];
-        $variants = array();
+        $variants = $_POST['data']['variations'];
         $count = 1;
         if(isset($_POST['data']['count'])) {
             $count = $_POST['data']['count'];

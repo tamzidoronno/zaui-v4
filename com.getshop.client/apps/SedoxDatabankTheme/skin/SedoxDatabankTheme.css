@@ -431,6 +431,8 @@ body {
     .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child + td + td {display: none;}
     .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
     .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
+    .SedoxBannerAndOpening .opening_container {display: block; width: auto;}
+    .SedoxBannerAndOpening .banner_container {display: block; width: auto;}
 }
 
 @media screen and (max-width: 640px) {

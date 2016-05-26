@@ -106,12 +106,11 @@ public class PmsManagerProcessor {
     private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
         PmsConfiguration config = manager.getConfigurationSecure();
         
-        
-        if(!manager.frameworkConfig.productionMode) {
-            return true;
-        }
-        
         if (config.locktype.isEmpty() || config.locktype.equals("arx")) {
+            if(!deleted) {
+                //Make sure everything is 100% updated.
+                pushToArx(room, true);
+            }
             return pushToArx(room, deleted);
         } else {
             return pushToGetShop(room, deleted);
@@ -327,6 +326,9 @@ public class PmsManagerProcessor {
 
         Card card = new Card();
         card.format = manager.getConfigurationSecure().arxCardFormat;
+        if(room.cardformat != null && !room.cardformat.isEmpty()) {
+            card.format = room.cardformat;
+        }
         card.cardid = room.code;
 
         person.cards.add(card);

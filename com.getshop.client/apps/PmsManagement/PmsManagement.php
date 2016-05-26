@@ -14,6 +14,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
     }
     
+    public function saveCardOnRoom() {
+        $roomid = $_POST['data']['roomid'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomid) {
+                $room->code = $_POST['data']['code'];
+                $room->cardformat = $_POST['data']['cardtype'];
+                $room->addedToArx = false;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+    }
+    
     public function loadTakenRoomList() {
         $bookingid = $_POST['data']['bookingid'];
         $roomid = $_POST['data']['roomid'];

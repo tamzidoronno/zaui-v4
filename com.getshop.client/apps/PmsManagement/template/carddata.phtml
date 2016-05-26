@@ -6,7 +6,7 @@ echo "<br>";
 echo "<table width='100%' cellspacing='0' cellpadding='0'>";
 echo "<tr>";
 echo "<th>Type</th>";
-echo "<th>Room</th>";
+echo "<th>Area (Alias)</th>";
 echo "<th>Time periode</th>";
 echo "<th>Card type</th>";
 echo "<th>Card number</th>";
@@ -17,11 +17,11 @@ foreach($booking->rooms as $room) {
         continue;
     }
     $item = $this->getItemById($room->bookingItemId);
-    echo "<tr>";
+    echo "<tr roomid='".$room->pmsBookingRoomId."'>";
     echo "<td>".$this->getTypeById($room->bookingItemTypeId)->name."</td>";
     echo "<td>";
     if($item) {
-        echo $item->bookingItemName;
+        echo $item->bookingItemAlias;
     }
     echo "</td>";
     echo "<td>";
@@ -34,15 +34,19 @@ foreach($booking->rooms as $room) {
     }
     echo "</td>";
     echo "<td>";
-    echo "<select>";
+    echo "<select class='cardtype'>";
     $splitted = explode(";", $config->arxCardFormatsAvailable);
     foreach($splitted as $split) {
-        echo "<option value='$split'>$split</option>";
+        $selected = "";
+        if($room->cardformat == $split) {
+            $selected = "SELECTED";
+        }
+        echo "<option value='$split' $selected>$split</option>";
     }
     echo "</select>";
     echo "</td>";
-    echo "<td><input type='txt' value='".$room->code."'></td>";
-    echo "<td><input type='button' value='Update'></td>";
+    echo "<td><input type='txt' value='".$room->code."' class='code'></td>";
+    echo "<td><input type='button' value='Update' class='updatecardonroom'></td>";
     echo "</tr>";
 }
 echo "</table>";

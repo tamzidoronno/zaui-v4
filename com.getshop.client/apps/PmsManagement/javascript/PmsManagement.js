@@ -31,7 +31,23 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .addAddonsButton', app.PmsManagement.addAddon);
         $(document).on('click','.PmsManagement .saveAddons', app.PmsManagement.saveAddons);
         $(document).on('click','.PmsManagement .removeAddons', app.PmsManagement.removeAddons);
+        $(document).on('click','.PmsManagement .updatecardonroom', app.PmsManagement.updatecardonroom);
     },
+    updatecardonroom : function() {
+        var row = $(this).closest('tr');
+        var data = {
+            "roomid" : row.attr('roomid'),
+            "cardtype": row.find('.cardtype').val(),
+            "code" : row.find('.code').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent('','saveCardOnRoom', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            thundashop.common.Alert("Success", "Card data has been updated.");
+        });
+        
+    },
+    
     removeAddons : function() {
          var data = {
             "type" : $('#addontypeselection').val(),

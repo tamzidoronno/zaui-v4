@@ -11,7 +11,13 @@ $userId = $_GET['userid'];
 
 $user = $factory->getApi()->getUserManager()->getUserById($userId);
 $booking = $factory->getApi()->getPmsManager()->getBooking($_GET['engine'], $_GET['bookingId']);
-$room = $booking->rooms[0];
+$room = null;
+foreach($booking->rooms as $tmproom) {
+    if($tmproom->pmsBookingRoomId == $_GET['roomid']) {
+        $room = $tmproom;
+    }
+}
+
 $types = $factory->getApi()->getBookingEngine()->getBookingItemTypes($_GET['engine']);
 $products = $factory->getApi()->getProductManager()->getAllProducts();
 
@@ -70,10 +76,6 @@ function replacevariables($content) {
     }
     return $content;
 }
-
-//echo "<pre>";
-//print_r($user);
-//echo "</pre>";
 
 $tmpFolder = uniqid();
 mkdir("/tmp/$tmpFolder");

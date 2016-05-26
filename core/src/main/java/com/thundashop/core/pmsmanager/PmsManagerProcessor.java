@@ -106,12 +106,11 @@ public class PmsManagerProcessor {
     private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
         PmsConfiguration config = manager.getConfigurationSecure();
         
-        
-        if(!manager.frameworkConfig.productionMode) {
-            return true;
-        }
-        
         if (config.locktype.isEmpty() || config.locktype.equals("arx")) {
+            if(!deleted) {
+                //Make sure everything is 100% updated.
+                pushToArx(room, true);
+            }
             return pushToArx(room, deleted);
         } else {
             return pushToGetShop(room, deleted);
@@ -327,6 +326,9 @@ public class PmsManagerProcessor {
 
         Card card = new Card();
         card.format = manager.getConfigurationSecure().arxCardFormat;
+        if(room.cardformat != null && !room.cardformat.isEmpty()) {
+            card.format = room.cardformat;
+        }
         card.cardid = room.code;
 
         person.cards.add(card);
@@ -528,9 +530,6 @@ public class PmsManagerProcessor {
 
     private void autoMarkBookingsAsPaid() {
         for(PmsBooking booking : getAllConfirmedNotDeleted(true)) {
-            if(booking.id.equals("48d1d0f7-7380-4326-b1b7-d980fb9ba570")) {
-                System.out.println("Stop on this one");
-            }
             if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }
@@ -542,6 +541,7 @@ public class PmsManagerProcessor {
 
             boolean needSaving = false;
             boolean payedfor = true;
+            boolean firstDate = true;
             if(manager.getConfiguration().requirePayments) {
                 boolean needCapture = false;
                 for(String orderId : booking.orderIds) {
@@ -557,10 +557,11 @@ public class PmsManagerProcessor {
                     }
                     if(order.status != Order.Status.PAYMENT_COMPLETED) {
                         for(CartItem item : order.cart.getItems()) {
-                            if(item.startDate != null && item.startDate.after(new Date())) {
+                            if(!firstDate && item.startDate != null && item.startDate.after(new Date())) {
                                 //Only set payedfor=false when order is started.
                                 continue;
                             }
+                            firstDate = false;
                             payedfor = false;
                         }
                     }

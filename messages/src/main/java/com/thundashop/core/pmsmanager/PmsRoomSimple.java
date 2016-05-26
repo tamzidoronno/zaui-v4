@@ -14,10 +14,12 @@ public class PmsRoomSimple implements Serializable {
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public long start;
     public long end;
+    public Integer numberOfGuests;
     public String code = "";
     public String room ="";
     public String progressState = "";
     public boolean paidFor = false;
     public boolean transferredToArx = false;
     public boolean roomCleaned = false;
+    public boolean hasArrived = false;
 }

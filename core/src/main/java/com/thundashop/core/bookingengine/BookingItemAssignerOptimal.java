@@ -11,6 +11,7 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ public class BookingItemAssignerOptimal {
     private List<BookingItem> items;
     private boolean dryRun = false;
     private boolean throwException = true;
+    private HashMap<Booking, BookingItem> assigned = new HashMap();
 
     public BookingItemAssignerOptimal(BookingItemType type, List<Booking> bookings, List<BookingItem> items, Boolean throwException) {
         this.type = type;
@@ -246,6 +248,7 @@ public class BookingItemAssignerOptimal {
     }
 
     private void assignBookingsToItem(Booking booking, BookingItem item) {
+        assigned.put(booking, item);
         if (dryRun) {
             return;
         }
@@ -342,6 +345,19 @@ public class BookingItemAssignerOptimal {
 
     private void removeBookingsThatHasNullDates() {
         bookings.removeIf(o -> o.startDate == null || o.endDate == null);
+    }
+
+    public List<Booking> getBookingThatUseItem(String bookingItemId) {
+        List<Booking> bookingsToReturn = new ArrayList();
+        
+        for (Booking booking : assigned.keySet()) {
+            BookingItem item = assigned.get(booking);
+            if (item.id.equals(bookingItemId)) {
+                bookingsToReturn.add(booking);
+            }
+        }
+        
+        return bookingsToReturn;
     }
 
 }

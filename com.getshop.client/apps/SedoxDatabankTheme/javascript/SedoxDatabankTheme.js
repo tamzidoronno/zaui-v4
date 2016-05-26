@@ -7,6 +7,8 @@ getshop.SedoxDatabankTheme = {
     init: function() {
         $(document).on('change', '.fileselector', getshop.SedoxDatabankTheme.fileSelected);
         $(document).on('click', '.action_purchase_product', getshop.SedoxDatabankTheme.purchaseFile);
+        $(document).on('swiperight', getshop.SedoxDatabankTheme.openLeftMenu);
+        $(document).on('swipeleft', getshop.SedoxDatabankTheme.closeLeftMenu);
     },
     
     purchaseFile: function() {
@@ -80,6 +82,14 @@ getshop.SedoxDatabankTheme = {
         getshop.SedoxDatabankTheme.dontUpdate = true;
         $('.fileselector').trigger("change");      
         getshop.SedoxDatabankTheme.dontUpdate = false;
+    },
+    
+    openLeftMenu: function() {
+        $(".left_side_bar").css("left", "0px");
+    },
+    
+    closeLeftMenu: function() {
+        $(".left_side_bar").css("left", "-300px");
     }
 }
 

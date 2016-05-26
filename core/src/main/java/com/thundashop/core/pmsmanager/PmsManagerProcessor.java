@@ -575,6 +575,10 @@ public class PmsManagerProcessor {
             
             if(needSaving || booking.payedFor != payedfor) {
                 booking.payedFor = payedfor;
+                if(payedfor == true && booking.orderIds.size() == 1) {
+                    manager.doNotification("booking_completed", booking.id);
+                }
+                
                 manager.saveBooking(booking);
             }
         }

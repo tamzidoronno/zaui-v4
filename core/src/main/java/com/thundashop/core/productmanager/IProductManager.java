@@ -228,4 +228,7 @@ public interface IProductManager {
     public void deleteCategory(String categoryId);
     public List<ProductCategory> getAllCategories();
     public ProductCategory getCategory(String categoryId);
+    
+    @Editor
+    public Product copyProduct(String fromProductId, String newName);
 }

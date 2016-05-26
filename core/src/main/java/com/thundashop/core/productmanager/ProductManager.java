@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -333,5 +334,27 @@ public class ProductManager extends AProductManager implements IProductManager {
         return result;
     }
 
-    
+    @Override
+    public Product copyProduct(String fromProductId, String newName) {
+        Product product = products.get(fromProductId);
+        Product newProduct = product.clone();
+        newProduct.id = UUID.randomUUID().toString();
+        newProduct.name = newName;
+        saveProduct(newProduct);
+        
+        List<ProductList> addToLists = productList.values().stream()
+                .filter(list -> list.productIds.contains(product.id))
+                .collect(Collectors.toList());
+                
+        
+        addToLists.forEach(o -> addProductToList(o.id, newProduct.id));
+        return newProduct;
+    }
+
+    private void addProductToList(String productListId, String productId) {
+        ProductList list = productList.get(productListId);
+        list.productIds.add(productId);
+        saveProductList(list);
+        
+    }
 }

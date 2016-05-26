@@ -259,5 +259,10 @@ class Products extends \WebshopApplication implements \Application {
         $this->getApi()->getProductManager()->saveProduct($product);
         
     }
+    
+    public function copyProduct() {
+        $product = $this->getApi()->getProductManager()->copyProduct($_POST['fromProductId'], $_POST['newName']);
+        $_POST['value'] = $product->id;
+    }
 
 }

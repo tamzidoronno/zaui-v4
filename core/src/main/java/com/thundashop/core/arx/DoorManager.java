@@ -101,7 +101,7 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
         }
         
         ArxConnection connection = new ArxConnection();
-        if(!storeManager.isProductMode() && !storeId.equals("cd94ea1c-01a1-49aa-8a24-836a87a67d3b")) {
+        if(!storeManager.isProductMode()) {
             System.out.println("Executing:" + address);
             return "";
         }

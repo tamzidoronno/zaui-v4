@@ -1265,4 +1265,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         messageManager.sendInvoiceForOrder(orderId, email);
     }
 
+    @Override
+    public void markAsInvoicePayment(String orderId) {
+        Order order = getOrderSecure(orderId);
+        order.payment.paymentType = "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment";
+        saveOrder(order);
+    }
+
 }

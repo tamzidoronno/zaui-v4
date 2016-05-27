@@ -4748,6 +4748,17 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'markAsInvoicePayment' : function(orderId, gs_silent) {
+        var data = {
+            args : {
+                orderId : JSON.stringify(orderId),
+            },
+            method: 'markAsInvoicePayment',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'payOrderByCard' : function(cardId,orderId, gs_silent) {
         var data = {
             args : {
@@ -6329,6 +6340,19 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 notifications : JSON.stringify(notifications),
             },
             method: 'saveConfiguration',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'sendCode' : function(multilevelname, phoneNumber,roomId, gs_silent) {
+        var data = {
+            args : {
+                phoneNumber : JSON.stringify(phoneNumber),
+                roomId : JSON.stringify(roomId),
+            },
+            method: 'sendCode',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };

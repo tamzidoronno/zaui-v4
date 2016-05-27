@@ -3006,4 +3006,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         this.orderIdToSend = id;
     }
 
+    @Override
+    public void sendCode(String phoneNumber, String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.pmsBookingRoomId.equals(roomId)) {
+                String from = "GetShop";
+                if(configuration.smsName != null && configuration.smsName.isEmpty()) {
+                    from = configuration.smsName;
+                }
+                messageManager.sendSms("sveve", phoneNumber, "Code: " + room.code, "", from);
+            }
+        }
+    }
+
 }

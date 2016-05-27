@@ -24,6 +24,26 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         });
     };
     
+    $scope.markOrderAsInvoice = function() {
+        var orderId = $scope.payOrder.id;
+        var marking = getshopclient.OrderManager.markAsInvoicePayment(orderId);
+        marking.done(function() {
+            getshopclient.OrderManager.saveOrder($scope.payOrder);
+            $scope.changeOrderStatus(7);
+        });
+    };
+    
+    $scope.changeOrderStatus = function(status) {
+        var orderId = $scope.payOrder.id;
+        var changing = getshopclient.OrderManager.changeOrderStatus(orderId, status);
+        changing.done(function() {
+            alert('Order has been updated');
+            $scope.payOrder.status = status;
+            $scope.payOrderProcess = false;
+            $scope.$apply();
+        });
+    };
+    
     $scope.doSendReciept = function(order) {
         $scope.payOrderProcess = false;
         if($scope.sendRecieptProcess) {
@@ -68,6 +88,23 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             alert('updated');
         });
     };
+    $scope.doResendCode = function() {
+        if($scope.resendcode) {
+            return;
+        }
+        $scope.numbertosendcodeto = "+" + $scope.room.guests[0].prefix + " " + $scope.room.guests[0].phone;
+        $scope.resendcode = true;
+    },
+    $scope.resendCode = function() {
+        var number = $scope.numbertosendcodeto;
+        var roomId = $scope.room.pmsBookingRoomId;
+        var sending = getshopclient.PmsManager.sendCode(getMultilevelName(), number, roomId);
+        sending.done(function() {
+            alert('Code has been sent');
+            $scope.resendcode = false;
+            $scope.$apply();
+        });
+    },
     
     $scope.changeRoomCount = function(count) {
         var guests = [];
@@ -108,7 +145,7 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             loadOrder[orderId].done(function(orderres) {
                 var total = getshopclient.OrderManager.getTotalAmount(orderres);
                 total.done(function(amount) {
-                    orderres.amountInc = amount;
+                    orderres.amountInc = Math.round(amount);
                 })
                 $scope.orders.push(orderres);
             });

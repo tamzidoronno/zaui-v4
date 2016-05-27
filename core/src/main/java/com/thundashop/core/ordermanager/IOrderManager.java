@@ -162,6 +162,9 @@ public interface IOrderManager {
     @Administrator
     public void changeOrderStatus(String id, int status) throws ErrorException;
     
+    @Administrator
+    public void markAsInvoicePayment(String orderId);
+    
     /**
      * Calculate the total amount to pay for the order.
      * 

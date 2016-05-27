@@ -1,5 +1,4 @@
-<!--TODO: Make send order to invoice button work, and mark order paid with card, and include wubook.
-TODO: Make send code button work -->
+<!--TODO: Include wubook. -->
 
 <div class='additionalinfo row'>Orders</div>
 <div ng-repeat="order in orders" class='orderrow row no-gutter'>
@@ -39,14 +38,14 @@ TODO: Make send code button work -->
         <div class='col-xs-12'>Note on invoice</div>
     </div>
     <div class='row'>
-        <div class='col-xs-12'><textarea style='width:100%; height: 100px;'>{{order.invoiceNote}}</textarea></div>
+        <div class='col-xs-12'><textarea style='width:100%; height: 100px;' ng-model="payOrder.invoiceNote"></textarea></div>
     </div>
     <div class='row'>
         <div class='col-xs-8'>
             Send order to invoice
         </div>
         <div class='col-xs-4' style='text-align:right;'>
-            <span class='btn btn-success'>Send order to invoice</span>
+            <span class='btn btn-success' ng-click="markOrderAsInvoice();">Send order to invoice</span>
         </div>
     </div>
     
@@ -60,7 +59,9 @@ TODO: Make send code button work -->
             * Enter {{payOrder.incrementOrderId}} as orderid.<br>
             * Enter {{payOrder.amountInc}} as amount.<br>
             * Enter the card information and click "Utfør betaling".<br>
-            * If payment is accepted, click <span style='color:blue;'>here</span> to mark order as paid.<br>
+            <span class='btn btn-success' ng-click="changeOrderStatus(7);">
+                * If payment is accepted, click here to mark order as paid.
+            </span>
         </div>
     </div>
 </div>
@@ -118,8 +119,20 @@ TODO: Make send code button work -->
 <div class='row'>
     <div class='col-xs-4 contactdata'>Code</div>
     <div class='col-xs-4 othercontactdata'>{{ room.code }}</div>
-    <div class='col-xs-4' ng-show='roomIsStarted()'>Resend code</div>
+    <div class='col-xs-4' ng-show='roomIsStarted()'><span class='btn btn-success' ng-click="doResendCode()">Resend code</span></div>
     <div class='col-xs-4' ng-show='!roomIsStarted()'>Unable to send code, see status</div>
+</div>
+<div class='row' ng-show="resendcode">
+    <div class='col-xs-6'>
+        <label> Phone number
+            <input type='text' ng-model="numbertosendcodeto" placeholder='Phone number'  class="form-control" >
+        </label>
+    </div>
+    <div class='col-xs-6'>
+        <label> Verify number and send code
+            <span class='btn btn-success' style='width:100%;' ng-click="resendCode()">Send code</span>
+        </label>
+    </div>
 </div>
 <div class='row'>
     <div class='col-xs-4 contactdata'>Status</div>

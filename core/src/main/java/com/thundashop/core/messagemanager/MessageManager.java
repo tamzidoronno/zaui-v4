@@ -130,7 +130,18 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         return collectedEmails.emails;
     }
 
-    public void sendInvoiceForOrder(String id) {
+    
+    public void sendInvoiceForOrder(String orderId) {
+        Order order = orderManager.getOrderSecure(orderId);
+        User user = userManager.getUserById(order.userId);
+        if(user == null) {
+            return;
+        }
+        String email = user.emailAddress;
+        sendInvoiceForOrder(orderId, email);
+    }
+    
+    public void sendInvoiceForOrder(String id, String email) {
         Order order = orderManager.getOrderSecure(id);
         User user = userManager.getUserById(order.userId);
         if(user == null) {
@@ -142,7 +153,6 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         String title = "Receipt for payment";
         String message = "Attached you will find your reciept for the payment for order id: " + order.incrementOrderId + ", amount: " + order.cart.getTotal(false);
         String name = user.fullName;
-        String email = user.emailAddress;
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
         sendMailWithAttachments(email, name, title, message, copyadress, copyadress, attachments);
     }
@@ -245,4 +255,5 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         String email = getStoreEmailAddress();
         mailFactory.send(email, email, subject, message);
     }
+
 }

@@ -1260,4 +1260,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return null;
     }
 
+    @Override
+    public void sendReciept(String orderId, String email) {
+        messageManager.sendInvoiceForOrder(orderId, email);
+    }
+
 }

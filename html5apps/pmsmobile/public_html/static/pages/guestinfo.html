@@ -1,6 +1,5 @@
 <!--TODO: Make send order to invoice button work, and mark order paid with card, and include wubook.
-TODO: Make send code button work
-TODO: Make send reciept button work-->
+TODO: Make send code button work -->
 
 <div class='additionalinfo row'>Orders</div>
 <div ng-repeat="order in orders" class='orderrow row no-gutter'>
@@ -17,15 +16,15 @@ TODO: Make send reciept button work-->
 </div>
     
 <div ng-show='sendRecieptProcess'>
-    <div class='additionalinfo row'>Send reciept</div>
+    <div class='additionalinfo row'>Send reciept for order {{recieptOrder.incrementOrderId}}</div>
     <div class='row'>
         <div class='col-xs-5'>Email</div>
-        <div class='col-xs-7'><input type="txt" ng-model="user.emailAddress" class="form-control" style='width:100%;'></div>
+        <div class='col-xs-7'><input type="txt" ng-model="recieptEmail" class="form-control" style='width:100%;'></div>
     </div>
     <div class='row'>
         <div class='col-xs-5'></div>
         <div class='col-xs-7'>
-            <span class='btn btn-success' style='width:100%;'>Send reciept</span>
+            <span class='btn btn-success' style='width:100%;' ng-click="completeSendReciept()">Send reciept</span>
         </div>
     </div>
 </div>

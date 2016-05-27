@@ -25,12 +25,14 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
     };
     
     $scope.doSendReciept = function(order) {
+        $scope.payOrderProcess = false;
         if($scope.sendRecieptProcess) {
             $scope.sendRecieptProcess = false;
             return;
         }
-        $scope.payOrderProcess = false;
+        $scope.recieptEmail = $scope.user.emailAddress;
         $scope.sendRecieptProcess = true;
+        $scope.recieptOrder = order;
     }
     
     $scope.roomIsStarted = function() {
@@ -39,7 +41,15 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         }
         
         return $scope.isStarted;
-    }
+    };
+    
+    $scope.completeSendReciept = function() {
+        var orderId = $scope.recieptOrder.id;
+        var email = $scope.recieptEmail;
+        getshopclient.OrderManager.sendReciept(orderId, email);
+        alert('Email has been sent');
+        $scope.sendRecieptProcess = false;
+    };
     
     $scope.changeStay = function() {
         var bookingid = $scope.booking.id;

@@ -236,6 +236,9 @@ public interface IOrderManager {
     @Administrator
     public void changeOrderType(String orderId, String paymentTypeId);
     
+    @Administrator
+    public void sendReciept(String orderId, String email);
+    
     public Double getTotalForOrderById(String orderId);
     
     public Payment getStorePreferredPayementMethod();

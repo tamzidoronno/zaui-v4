@@ -431,7 +431,13 @@ body {
     .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child + td + td {display: none;}
     .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
     .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
-    
+    .gs_site_main_buttons_view {display: none !important;}
+    .gseditrowbuttons {display: none !important;}
+    .gsbody_inner {margin: 0 !important; border-right: none !important;}
+    .gscellheadermin {display: none !important;}
+    .applicationinner .gs_icon {display: none !important;}
+    .gscellbox {border: none !important;}
+}
 
 @media screen and (max-width: 959px) {
     .gsucell[cellid="32746005-f0f4-4b32-ac60-003611eef91d"] {width: 48% !important; margin-left: 1%; margin-right: 1%; margin-bottom: 2%;}
@@ -452,7 +458,8 @@ body {
     .gsucell[cellid="b4c08085-4509-4ac2-a39f-1eba5ecb76cb"] {width: auto !important; float: none !important;}
     .ContentManager[appid="f21f7697-7900-48ce-b294-2e5612c3166a"] {text-align: center;}
     .ContentManager[appid="047b54a9-00bc-4a55-9c6f-8f7eea32ef4d"] {text-align: center;}
-}
+    .SedoxFileServiceStatus .applicationinner .status2 {font-size: 0px; height: 25px;}
+    .SedoxFileServiceStatus .applicationinner .status2 i {font-size: 17px; padding-top: 3px;}
 }
 
 @media screen and (max-width: 640px) {

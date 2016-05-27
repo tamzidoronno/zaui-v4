@@ -11,7 +11,7 @@ if (!count($events)) {
 foreach ($events as $event) {
     echo "<div class='downloadrow'>";
         echo "<div>".$event->bookingItemType->name."</div>";
-        echo "<div>Date: ".$event->mainStartDate."</div>";
+        echo "<div>".$this->__w("Date").": ".$event->mainStartDate."</div>";
         echo "<div class='downloadcertificates'>";
         if ($event->markedAsReady && $this->getApi()->getEventBookingManager()->canDownloadCertificate($this->getBookingEngineName(), $event->id)) {
             echo "<div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;";

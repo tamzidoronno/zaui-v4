@@ -9,12 +9,12 @@
     <?
     $searchResult = isset($_SESSION['EventEditorBooking_current_searchfor']) ? $_SESSION['EventEditorBooking_current_searchfor'] : "";
     ?>
-    Search for users &nbsp; <input class='gsniceinput1 searchforuserinput' value='<? echo $searchResult; ?>'/>
+    <? echo $this->__f("Search for users"); ?> &nbsp; <input class='gsniceinput1 searchforuserinput' value='<? echo $searchResult; ?>'/>
     <div class='searchresult'>
         <?
         $this->includefile("searchresult");
         ?>
     </div>
     
-    <div class="shop_button" gs_show_modal="create_user_modal">Create new user</div> 
+    <div class="shop_button" gs_show_modal="create_user_modal"><? echo $this->__f("Create new user"); ?></div> 
 </div>

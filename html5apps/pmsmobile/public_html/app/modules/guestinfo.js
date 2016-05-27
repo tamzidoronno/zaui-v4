@@ -59,7 +59,9 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         if($scope.booking && !$scope.booking.payedFor) {
             return false;
         }
-        
+        if(!$scope.room.addedToArx) {
+            return false;
+        }
         return $scope.isStarted;
     };
     
@@ -90,6 +92,7 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
     };
     $scope.doResendCode = function() {
         if($scope.resendcode) {
+            $scope.resendcode = false;
             return;
         }
         $scope.numbertosendcodeto = "+" + $scope.room.guests[0].prefix + " " + $scope.room.guests[0].phone;

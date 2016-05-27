@@ -431,8 +431,28 @@ body {
     .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child + td + td {display: none;}
     .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
     .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
+    
+
+@media screen and (max-width: 959px) {
+    .gsucell[cellid="32746005-f0f4-4b32-ac60-003611eef91d"] {width: 48% !important; margin-left: 1%; margin-right: 1%; margin-bottom: 2%;}
+    .gsucell[cellid="a46ce0cc-2ae2-4966-bc8f-29cbde7687e8"] {width: 48% !important; margin-left: 1%; margin-right: 1%; margin-bottom: 2%;}
+    .gsucell[cellid="8bbbfd02-674a-4514-aece-469f99150143"] {width: 48% !important; margin-left: 1%; margin-right: 1%;}
+    .gsucell[cellid="0c3ad5c1-609d-4b57-b35c-6d50a5abbec5"] {width: 48% !important; margin-left: 1%; margin-right: 1%;}
+    .front_page_box_inner {width: 220px !important;}
+    .front_page_box_red_inner {width: 220px !important;}
     .SedoxBannerAndOpening .opening_container {display: block; width: auto;}
     .SedoxBannerAndOpening .banner_container {display: block; width: auto;}
+    .ContentManager[appid="d7e68ff1-28cf-4966-8368-8e4b686c00ad"] {font-size: 18px;}
+    .ContentManager[appid="c5523b30-5891-456d-9b4b-427e65470d63"] {font-size: 18px;}
+    .ContentManager[appid="41384eeb-0a93-4638-97fe-4f840136a63f"] {font-size: 18px;}
+    .ContentManager[appid="2e4099f5-e9f4-49a5-b6da-5c802eba87f3"] {font-size: 18px;}
+    .gsucell[cellid="06fd6eb0-fd63-45e5-9b06-a4d584dffcae"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="bfd8e93f-f375-4178-a7ef-42835ea3a469"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="796b1352-f209-43aa-8a34-9e8869186339"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="b4c08085-4509-4ac2-a39f-1eba5ecb76cb"] {width: auto !important; float: none !important;}
+    .ContentManager[appid="f21f7697-7900-48ce-b294-2e5612c3166a"] {text-align: center;}
+    .ContentManager[appid="047b54a9-00bc-4a55-9c6f-8f7eea32ef4d"] {text-align: center;}
+}
 }
 
 @media screen and (max-width: 640px) {
@@ -442,4 +462,9 @@ body {
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] div {font-size: 0px;}
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] i {padding-top: 0px !important; font-size: 30px !important; line-height: 30px !important; margin-top: 20px;}
     .SedoxLogin .col_50 {display: block; width: auto;}
+    .ContentManager[appid="d7e68ff1-28cf-4966-8368-8e4b686c00ad"] {font-size: 12px;}
+    .ContentManager[appid="c5523b30-5891-456d-9b4b-427e65470d63"] {font-size: 12px;}
+    .ContentManager[appid="41384eeb-0a93-4638-97fe-4f840136a63f"] {font-size: 12px;}
+    .ContentManager[appid="2e4099f5-e9f4-49a5-b6da-5c802eba87f3"] {font-size: 12px;}
+    
 }

@@ -16,9 +16,9 @@ class MecaFleetSettings extends \MarketingApplication implements \Application {
     
     public function save() {
         $this->setConfigurationSetting("openinghours", $_POST['data']['openinghours']);
-        $this->setConfigurationSetting("contact.name", $_POST['data']['contact.name']);
-        $this->setConfigurationSetting("contact.email", $_POST['data']['contact.email']);
-        $this->setConfigurationSetting("contact.cell", $_POST['data']['contact.cell']);
+        $this->setConfigurationSetting("contact_name", $_POST['data']['contact_name']);
+        $this->setConfigurationSetting("contact_email", $_POST['data']['contact_email']);
+        $this->setConfigurationSetting("contact_cell", $_POST['data']['contact_cell']);
         $this->setConfigurationSetting("roadmap", $_POST['data']['roadmap']);
     }
 }

@@ -193,6 +193,7 @@ class ApplicationBase extends FactoryBase {
             }
             $key = str_replace("setting_", "", $key);
             $this->setConfigurationSetting($key, $val);
+            die("TEST: $key $val");
         }
     }
     

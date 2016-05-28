@@ -2,6 +2,7 @@ package com.thundashop.app.news;
 
 import com.thundashop.app.newsmanager.data.MailSubscription;
 import com.thundashop.app.newsmanager.data.NewsEntry;
+import com.thundashop.app.newsmanager.data.NewsUser;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -26,7 +27,7 @@ public interface INewsManager {
      * Add a new news entry.
      * @param news The news object to add.
      * @return The id for this news entry.
-     * @throws ErrorException 
+     * @throws ErrorExceNption 
      */
     @Administrator
     @Writing
@@ -76,4 +77,10 @@ public interface INewsManager {
     @Administrator
     @Writing
     public void publishNews(String id) throws ErrorException;
+    
+    public List<NewsUser> getNewsUsers(String newsListId);
+    
+    public void applyUserFilter(String newsListId, String userId);
+    
+    public boolean isFiltered(String newsListId, String userId);
 }

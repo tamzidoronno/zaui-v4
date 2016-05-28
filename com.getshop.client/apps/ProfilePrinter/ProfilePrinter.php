@@ -15,7 +15,16 @@ class ProfilePrinter extends \WebshopApplication implements \Application {
     }
     
     public function getUser() {
-        return $this->getApi()->getUserManager()->getLoggedOnUser();
+        if (isset($this->userId)) {
+            return $this->getApi()->getUserManager()->getUserById($this->userId);
+        }
+        
+        $userId = $this->getConfigurationSetting("selecteduser");
+        
+        if (!$userId)
+            return null;
+        
+        return $this->getApi()->getUserManager()->getUserById($userId);
     }
     
     /**
@@ -32,6 +41,10 @@ class ProfilePrinter extends \WebshopApplication implements \Application {
      */
     public function getSelectedUser() {
         return $this->selectedUser;
+    }
+
+    public function setUserId($userId) {
+        $this->userId = $userId;
     }
 
 }

@@ -7,6 +7,7 @@ package com.thundashop.app.news;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.app.newsmanager.data.MailSubscription;
 import com.thundashop.app.newsmanager.data.NewsEntry;
+import com.thundashop.app.newsmanager.data.NewsUser;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.mobilemanager.MobileManager;
@@ -14,6 +15,8 @@ import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.usermanager.UserManager;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -78,7 +81,7 @@ public class NewsManager extends ManagerBase implements INewsManager {
             }
         });
         data = finalizeList(data, newsListId);
-        return data;
+        return filterByUsers(data, newsListId);
     }
 
 //    @Override
@@ -92,6 +95,9 @@ public class NewsManager extends ManagerBase implements INewsManager {
         if(newsListId != null && !newsListId.isEmpty()) {
             entry.newsListId = newsListId;
         }
+        
+        entry.userId = getSession() != null && getSession().currentUser != null ? getSession().currentUser.id : "";
+        
         saveObject(entry);
         entries.put(entry.id, entry);
         return entry.id;
@@ -186,5 +192,61 @@ public class NewsManager extends ManagerBase implements INewsManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<NewsUser> getNewsUsers(String eventId) {
+        Set<String> distinctUserIDs = entries.values().stream()
+                .map(entry -> entry.userId)
+                .collect(Collectors.toSet());
+        
+        return distinctUserIDs.stream()
+                .filter(userId -> userId != null && !userId.isEmpty())
+                .map(userId -> getNewsUser(userId))
+                .collect(Collectors.toList()); 
+    }
+
+    private NewsUser getNewsUser(String userId) {
+        NewsUser user = new NewsUser();
+        user.userId = userId;
+        user.newsEntries = 1;
+        return user;
+    }
+    
+    public List<String> getFilters(String newsListId) {
+        List<String> sessionFilters = (List<String>) getSession().get("newsListIdFilters_"+newsListId);
+        
+        if (sessionFilters == null) {
+            sessionFilters = new ArrayList();
+        }
+        
+        return sessionFilters;
+    }
+
+    @Override
+    public void applyUserFilter(String newsListId, String userId) {
+        List<String> filters = getFilters(newsListId);
+        
+        if (filters.contains(userId))
+            filters.remove(userId);
+        else
+            filters.add(userId);
+        
+        getSession().put("newsListIdFilters_"+newsListId, filters);
+    }
+
+    private List<NewsEntry> filterByUsers(List<NewsEntry> data, String newsListId) {
+        List<String> filters = getFilters(newsListId);
+        if (filters.isEmpty())
+            return data;
+        
+        return data.stream()
+                .filter(o -> filters.contains(o.userId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isFiltered(String newsListId, String userId) {
+        return getFilters(newsListId).contains(userId);
     }
 }

@@ -1,0 +1,23 @@
+<?php
+/* @var $this ns_7332bf2f_8fd3_422a_aabc_d77db883e472\ProfilePrinter */
+$allUsers = $this->getApi()->getUserManager()->getAllUsers();
+?>
+
+<div gstype="form" method="saveAppInstanceSettings">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%">User</td>
+        <td width="50%">
+            <select gsname="setting_selecteduser">
+                <?
+                foreach ($allUsers as $user) {
+                    echo "<option value='$user->id'>$user->fullName</option>";
+                }
+                ?>
+            </select>
+
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save' class='logoutclick'>
+</div>

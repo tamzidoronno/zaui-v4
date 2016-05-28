@@ -1,6 +1,11 @@
 <?php
 /* @var $this ns_7332bf2f_8fd3_422a_aabc_d77db883e472\ProfilePrinter */
 $user = $this->getUser();
+
+if (!$user) {
+    echo $this->__f("No user selected, please select one from settings");
+    return;
+}
 ?>
 
 <div class="imagearea">

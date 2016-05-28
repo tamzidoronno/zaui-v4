@@ -123,6 +123,7 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("currencycode", "NOK");
         $this->setConfigurationSetting("autonavigatetocart", $_POST['autonavigatetocart']);
         $this->setConfigurationSetting("seo",  $_POST['seo']);
+        $this->setConfigurationSetting("cookiewarning",  $_POST['cookiewarning']);
         
         $this->getApi()->getStoreManager()->setStoreIdentifier($_POST['identifier']);
     }

@@ -157,3 +157,8 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     height: 200px;
     overflow: hidden;
 }
+
+.logoSameHeight img {
+    height: 100px !important;
+    width: auto !important;
+}

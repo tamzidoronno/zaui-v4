@@ -72,6 +72,17 @@ angular.module('MecaFleetApp')
         }
     });
     
+    $stateProvider.state('base.information', {
+        url: '/contact/information',
+        
+        views: {
+            main: {
+                templateUrl : 'components/contact/information.html',
+                controller : controllers.ContactController
+            }
+        }
+    });
+    
     $stateProvider.state('base.mail', {
         url: '/contact/mail',
         

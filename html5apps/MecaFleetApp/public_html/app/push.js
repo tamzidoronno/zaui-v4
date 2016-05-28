@@ -15,19 +15,20 @@ PushNotificationSettings = {
     registrationId : ""
 };
 
-
 var initPush = function() {
     
     var push = PushNotification.init({
         android: {
-            senderID: "12345679"
+            senderID: "MecaFleetApp"
         },
+        
         ios: {
             alert: "true",
             badge: "true",
             sound: "true",
             "clearBadge": "true"
         },
+        
         windows: {}
     });
 

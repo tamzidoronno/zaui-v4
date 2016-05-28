@@ -96,7 +96,9 @@ public class NewsManager extends ManagerBase implements INewsManager {
             entry.newsListId = newsListId;
         }
         
-        entry.userId = getSession() != null && getSession().currentUser != null ? getSession().currentUser.id : "";
+        if (entry.userId == null || entry.userId.isEmpty()) {
+            entry.userId = getSession() != null && getSession().currentUser != null ? getSession().currentUser.id : "";
+        }
         
         saveObject(entry);
         entries.put(entry.id, entry);
@@ -240,9 +242,14 @@ public class NewsManager extends ManagerBase implements INewsManager {
         if (filters.isEmpty())
             return data;
         
-        return data.stream()
+        List<NewsEntry> ret = data.stream()
                 .filter(o -> filters.contains(o.userId))
                 .collect(Collectors.toList());
+        
+        if (ret.isEmpty())
+            return data;
+        
+        return ret;
     }
 
     @Override

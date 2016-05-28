@@ -11,6 +11,7 @@ $types['latestnews'] = $this->__w("Latest news");
 $types['othernews'] = $this->__w("Other news");
 $types['footernews'] = $this->__w("Footer news");
 $pageid = $this->getPage()->javapage->id;
+$users = $this->getApi()->getUserManager()->getAllUsers();
 if(stristr($pageid,"news_template_")) {
     ?>
     <div gstype="form" method="saveAppInstanceSettings">
@@ -54,6 +55,24 @@ if(stristr($pageid,"news_template_")) {
                
                ?>
                <input type="date" gsname="date" value="<? echo $date; ?>" style="width:100%; font-size: 16px; padding: 10px; box-sizing: border-box;">
+           </td>
+       </tr>
+       <tr>
+           <td width="50%">Owner</td>
+           <td width="50%">
+               <?
+               $date = date('Y-m-d', strtotime($entry->date));
+               
+               ?>
+               <select gsname="newsowner" class="gsniceselect1">
+                   <?
+                   foreach ($users as $user) {
+                       $selected = $user->id == $entry->userId ? "selected='true'" : "";
+                       echo "<option $selected value='$user->id'>$user->fullName</option>";
+                   }
+                   ?>
+               </select>
+                   
            </td>
        </tr>
    </table>

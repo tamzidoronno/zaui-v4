@@ -142,6 +142,8 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .News .item .news_img_container {
     text-align: center;
 }
+
+.News .item .news_img_container,
 .News .item img {
     height: 200px;
     width: auto !important;
@@ -161,4 +163,13 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .logoSameHeight img {
     height: 100px !important;
     width: auto !important;
+}
+
+.News .newsboxtemplate_1 .news_container {
+    width: 300px;
+}
+
+.News {
+    background-color: #EFEFEF;
+    padding: 20px;
 }

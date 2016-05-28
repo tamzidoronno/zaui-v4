@@ -198,6 +198,9 @@ app.Products = {
 
     },
     uploadBoxClick: function () {
+        app.Products.gssUploadView = $(this).attr("gss_uploadcompleted_view") ? $(this).attr("gss_uploadcompleted_view") : "gss_product_thumbnails";
+        app.Products.gssUploadFragment = $(this).attr("gss_uploadcompleted_fragment") ? $(this).attr("gss_uploadcompleted_fragment") : "images";
+        
         app.Products.currentProductId = $(this).attr('productid');
         $('#getshop_select_files_link').remove();
         $('#your-files').remove();
@@ -239,8 +242,8 @@ app.Products = {
 
             var field = $('<div/>');
             field.attr('gss_value', data.productId);
-            field.attr('gss_view', "gss_product_thumbnails");
-            field.attr('gss_fragment', "images");
+            field.attr('gss_view', app.Products.gssUploadView);
+            field.attr('gss_fragment', app.Products.gssUploadFragment);
             getshop.Settings.post(data, "saveImage", field);
         };
 

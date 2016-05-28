@@ -489,7 +489,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             .orElse(null);
         
         User user = userManager.getUserById(userId);
-        if (booking != null) {
+        if (booking != null && user != null) {
             boolean removed = bookingEngine.deleteBooking(booking.id);
             if (removed) {
                 log("USER_REMOVED", event, user);
@@ -1615,5 +1615,32 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .forEach(o -> finalize(o));
         
         return eventsToReturn;
+    }
+
+    @Override
+    public void clearEventBookingManagerForAllData() {
+        
+        events.values().stream().forEach(o -> clearEventForBookings(o));
+        new ArrayList<DataCommon>(events.values()).stream().forEach(o -> deleteEvent(o.id));
+        new ArrayList<DataCommon>(locations.values()).stream().forEach(loc -> deleteLocation(loc.id));
+        new ArrayList<DataCommon>(reminderTemplates.values()).stream().forEach(rem -> deleteReminderTemplate(rem.id));
+        new ArrayList<DataCommon>(certificates.values()).stream().forEach(cert -> deleteCertificate(cert.id));
+        
+        bookingTypeMetaDatas.values().stream().forEach(meta -> deleteObject(meta));
+        locations.values().stream().forEach(meta -> deleteObject(meta));
+        externalCertificates.values().stream().forEach(meta -> deleteObject(meta));
+        waitingListBookings.values().stream().forEach(meta -> deleteObject(meta));
+        
+        bookingTypeMetaDatas.clear();
+        locations.values().clear();
+        externalCertificates.clear();
+        waitingListBookings.clear();
+        
+        new ArrayList<BookingItem>(bookingEngine.getBookingItems()).stream().forEach(item -> bookingEngine.deleteBookingItem(item.id));
+        new ArrayList<BookingItemType>(bookingEngine.getBookingItemTypes()).stream().forEach(type -> bookingEngine.deleteBookingItemType(type.id));
+    }
+
+    private void clearEventForBookings(Event o) {
+        bookingEngine.getAllBookingsByBookingItem(o.bookingItemId).stream().forEach(booking -> bookingEngine.deleteBooking(booking.id));
     }
 }

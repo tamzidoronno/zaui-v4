@@ -58,3 +58,22 @@
 .News .newsboxtemplate_2 .newscontent {  border-left: solid 1px;padding: 10px; display:inline-block; width: 60%; height: 100%; box-sizing: border-box; float:left;  padding-left: 30px; padding-top: 50px; }
 
 .News .newsboxtemplate_3 .readmore { text-align: right; }
+
+.News .startOnRightSide span {
+    /*text-align: center;*/
+}
+
+.News .dates {
+    position: relative;
+}
+
+.News .startOnRightSide .dates span:first-child {
+    width: 6% !important;
+}
+
+.News .dates span:last-child {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    text-align: right;
+}

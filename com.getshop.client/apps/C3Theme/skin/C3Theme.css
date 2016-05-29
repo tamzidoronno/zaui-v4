@@ -121,7 +121,6 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 
 .ProductSearch .searchField i,
 .ProductSearch .searchField input {
-    border: solid 1px #ffa500;
     height: 35px;
     box-sizing: border-box;
     vertical-align: top;
@@ -150,7 +149,7 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 }
 
 .News .news_entry_header {
-    height: 50px;
+    height: 55px;
     margin-bottom: 10px;
     overflow: hidden;
 }

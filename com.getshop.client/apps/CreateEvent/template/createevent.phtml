@@ -99,13 +99,13 @@ if ($eventToUse) {
     
     <?
     if ($eventToUse && !$eventToUse->markedAsReady) {
-        echo "<div class='shop_button' gsclick='markAsReady' eventid='$eventToUse->id' gs_confirm='Are you sure you want to mark this as ready ?'>Mark as ready</div>";
+        echo "<div class='shop_button' gsclick='markAsReady' eventid='$eventToUse->id' gs_confirm='Are you sure you want to mark this as ready ?'>".$this->__w("Mark as ready")."</div>";
     }
     ?>
     
     <?
     if ($eventToUse && !$eventToUse->isCanceled) {
-        echo "<div class='shop_button' gsclick='cancelEvent' eventid='$eventToUse->id' gs_confirm='Are you sure you want to cancel this as ready ?'>Cancel event</div>";
+        echo "<div class='shop_button' gsclick='cancelEvent' eventid='$eventToUse->id' gs_confirm='Are you sure you want to cancel this as ready ?'>".$this->__w("Cancel event")."</div>";
     }
     
     if ($eventToUse && $this->hasWriteAccess() && count($eventToUse->bookingItem->bookingIds) == 0) {

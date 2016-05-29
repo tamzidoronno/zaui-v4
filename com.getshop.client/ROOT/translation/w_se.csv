@@ -1,5 +1,5 @@
 ###### framework ######
-10 digits required;-;10 siffror
+10 digits required;-;10 tecken krävs
 Add new user;-;Lägg till ny användare
 Add this account to the event;-;Anmäl till kurstillfället
 Address;-;Adress
@@ -7,7 +7,9 @@ All fields are required.;-;Alla fält måste fyllas i
 Already signed up;-;Redan anmäld
 An email has been sent with a code to use in step 2.;-;Ett mail är skickat med en kod som du använder i steg 2
 Available spots;-;Platser kvar
+Book;-;Boka
 Button;-;Knapp
+Cancel event;-;Ställ in kurs
 Canceled;-;Inställd
 Change password;-;Ändra lösenord
 Click here if you need to add more contacts;-;Klicka här för att lägga till fler kontakter
@@ -27,6 +29,7 @@ Create account;-;Skapa konto
 Create account for this company;-;Skapa konto för detta företag
 Date;-;Datum
 Dates;-;Datum
+Day;-;Dag
 Day(s);-;Dag
 Days;-;Dagar
 Default contact person for company;-;Kontaktperson på företaget
@@ -38,6 +41,7 @@ Email is incorrect;-;Epostadressen är inte korrekt
 Email to this address;-;Epost till denna adress
 End;-;Slut
 Enter a new password.;-;Skriv in nytt lösenord
+Enter the code sent to your email/sms.;-;Ange koden som skickades till din epost/mobilnr
 Event name;-;Kursnamn
 Field is required;-;Detta fält måste fyllas i
 From;-;Från
@@ -51,9 +55,11 @@ Latest news;-;Senaste nytt
 Location;-;Plats
 Logout;-;Logga ut
 Lost your password?;-;Glömt ditt lösenord?
+Mark as ready;-;Klarmarkera
 Menu;-;Meny
 Message;-;Meddelande
 Message from a customer;-;Meddelande från kund
+More information about this event;-;Mer information om kursen
 My account;-;Mitt konto
 My name is;-;Mitt namn är
 My name is:;-;Mitt namn är
@@ -74,7 +80,9 @@ Password cannot be empty;-;Lösenord krävs
 Password does not match, please re enter password;-;Lösenordet stämmer ej, vänligen skriv in lösenordet på nytt
 Phone;-;Telefon
 Phone number for company;-;Företagsnummer
+Please check your invoice email address;-;Kontrollera epostadressen
 Please enter correct number of chars, min: {min}, max: {max};-;Uppge antal tillgängliga platser, min: {min}, max: {max}
+Please enter your email address or cellphone number:;-;Ange din email eller ditt mobilnr
 Please enter your username and password;-;Skriv in ditt användarnamn och lösenord
 Please following theese steps to recover your password.;-;Följ anvisningarna för att återställa ditt lösenord
 Please select group;-;Välj grupptillhörighet

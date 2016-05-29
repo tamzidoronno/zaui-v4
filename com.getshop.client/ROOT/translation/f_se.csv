@@ -25,10 +25,12 @@ Contact form;-;Kontaktformulär
 Create;-;Skapa
 Create a new test;-;Skapa nytt test
 Create company;-;Skapa företag
+Create new user;-;Skapa ny användare
 Create test;-;Skapa test
 Create user;-;Skapa användare
 Customers;-;Kunder
 Date of the event;-;Kursdatum
+Datefilter (blank = only new ones);-;Filter(lämna blankt för aktuella)
 Default;-;Förvalt
 Delay (ms);-;Fördröjning
 Event canceled emails / sms;-;Inställd kurs SMS/Email
@@ -51,12 +53,20 @@ Name of the event;-;Kursens namn
 Name of the test;-;Testets namn
 New company;-;Nytt företag
 No events;-;Inga kurser
+Please enter your companyname in the textfield above;-;Skriv in företagsnamnet I textfältet ovan
+Please search for users.;-;Sök efter användare
 Postcode;-;Postnummer
 Price: n/a;-;Pris ej tillgängligt
+Reports;-;Underlag
+Search for company;-;Sök efter företaget
+Search for users;-;Sök efter användare
 Send days before;-;Skicka, antal dagar för
 Send email;-;Skicka epost
 Send email when event is canceled?;-;Skicka epost vid inställd kurs?
+Send reminder;-;Skicka påminnelse
+Send reminders;-;Skicka påminnelser
 Send sms when event is canceled?;-;Skicka SMS vid inställd kurs?
+Send tests;-;Skicka tester
 Should send email when user is removed from waitinglist?;-;Skicka epost när användare tas bort från väntelista?
 Should send email when user is removed?;-;Skicka epost när användare tas bort?
 Should send email when user signs up for waitinglist?;-;Skicka epost när användare sätts på väntlista?
@@ -66,5 +76,7 @@ Should send sms when user is removed?;-;Skicka SMS när användare tas bort?
 Should send sms when user signs up waitinglist?;-;Skicka SMS när användare sätts på väntlista?
 Should send sms when user signs up?;-;Skicka SMS när användare anmäler sig?
 Should users be notified when a new test is available?;-;Ska användare få utskick när ett test finns tillgängligt?
+Step;-;Steg
+You currently dont have any tests, please contact admin to get access to one;-;Du har ännu inte gjort några tester, kontakta admin för att få tillgång;
 
 

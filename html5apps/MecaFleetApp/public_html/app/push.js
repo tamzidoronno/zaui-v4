@@ -19,7 +19,7 @@ var initPush = function() {
     
     var push = PushNotification.init({
         android: {
-            senderID: "MecaFleetApp"
+            senderID: "377883426248"
         },
         
         ios: {

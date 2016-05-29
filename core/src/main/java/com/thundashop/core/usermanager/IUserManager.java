@@ -424,5 +424,8 @@ public interface IUserManager {
     public void logLogout();
     
     public Integer getPingoutTime();
+
+    @Administrator
+    public void clearUserManagerForAllData();
     
 }

@@ -30,10 +30,11 @@ angular.module('MecaFleetApp').filter('dateformatterwithtime', function() {
     };
 });
 
-
-
 angular.module('MecaFleetApp')
  .run( function($rootScope, $location) {
+    $rootScope.$on("$locationChangeSuccess",function(event, next, current){
+        window.scroll(0,0);
+    });
     
     if ( localStorage.getItem("loggedInUserId") == null || localStorage.getItem("loggedInUserId") === "") {
         $location.path( "/login" );

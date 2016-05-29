@@ -1,7 +1,6 @@
 
 body {
     font-family: 'Lato', sans-serif;
-    min-width: 1366px !important;
 }
 /* HEADER SETTINGS */
 .gsarea[area="header"] .gscell[cellid="04869e19-a87b-41de-82ed-59241eccc920"] {
@@ -121,7 +120,6 @@ body {
 .gsarea[area="header"] .Menu .entry a{
     color: #FFF;
     font-size: 15px;
-    
 }
 
 .gsarea[area="header"] .Menu i {
@@ -399,4 +397,81 @@ body {
 
 .ProductLists .grid_view .groupedProductBoxed {
     min-width: 400px;
+}
+
+.Menu[appid='c5bfd51f-48db-41c9-8277-a9c74fc174d2'] .menuentries {
+    width: 100%;
+}
+
+.Menu[appid='c5bfd51f-48db-41c9-8277-a9c74fc174d2'] .menuentries .entry {
+    border-bottom: solid 1px #e4e8eb;
+}
+
+@media screen and (max-width: 1279px) {
+    .left_side_bar {left: -300px; position: absolute; z-index: 10; transition: left 0.3s; border-right: double 15px #d5d5d5;}
+    .gs_main_column {width: calc(100% - 15px); margin-left: 15px;}
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .horizontal {display: block !important;}
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .mobilenavigatemenu {display: none !important;}
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .horizontal {width: auto !important; background-color: transparent !important; display: inline-block !important; position: static !important; left: auto !important; top: auto !important; z-index: auto !important;}
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .menuentries .entry {width: auto !important; display: inline-block !important;}
+    .Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .menuentries {background-color: inherit;}
+    .Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .menuentries .entry {padding: 0px;}
+    .Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .menuentries .entry a {color: #000000 !important;}
+    .Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .menuentries .gs_menu_disabled a {color: #BBB !important;}
+    .Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .mobilenavigatemenu {display: none !important;}
+    .Menu[appid='c5bfd51f-48db-41c9-8277-a9c74fc174d2'] .horizontal {background-color: transparent !important; display: inline-block !important; position: static !important; left: auto !important; top: auto !important; z-index: auto !important;}
+    .Menu[appid='c5bfd51f-48db-41c9-8277-a9c74fc174d2'] .mobilenavigatemenu {display: none !important;}
+    .Menu[appid='c5bfd51f-48db-41c9-8277-a9c74fc174d2'] .menuentries {background-color: inherit;}
+    .Menu[appid='c5bfd51f-48db-41c9-8277-a9c74fc174d2'] .menuentries .entry {padding: 0px;}
+    .Menu[appid='c5bfd51f-48db-41c9-8277-a9c74fc174d2'] .menuentries .entry a {color: #000000 !important;}
+    .gsucell[cellid="48da42ae-b2d2-4be1-8337-2b85a2bb2cc5"] {width: auto !important;}
+    .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] table {width: 150px !important}
+    .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child {display: none;}
+    .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child + td {display: none;}
+    .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child + td + td {display: none;}
+    .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
+    .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
+    .gs_site_main_buttons_view {display: none !important;}
+    .gseditrowbuttons {display: none !important;}
+    .gsbody_inner {margin: 0 !important; border-right: none !important;}
+    .gscellheadermin {display: none !important;}
+    .applicationinner .gs_icon {display: none !important;}
+    .gscellbox {border: none !important;}
+}
+
+@media screen and (max-width: 959px) {
+    .gsucell[cellid="32746005-f0f4-4b32-ac60-003611eef91d"] {width: 48% !important; margin-left: 1%; margin-right: 1%; margin-bottom: 2%;}
+    .gsucell[cellid="a46ce0cc-2ae2-4966-bc8f-29cbde7687e8"] {width: 48% !important; margin-left: 1%; margin-right: 1%; margin-bottom: 2%;}
+    .gsucell[cellid="8bbbfd02-674a-4514-aece-469f99150143"] {width: 48% !important; margin-left: 1%; margin-right: 1%;}
+    .gsucell[cellid="0c3ad5c1-609d-4b57-b35c-6d50a5abbec5"] {width: 48% !important; margin-left: 1%; margin-right: 1%;}
+    .front_page_box_inner {width: 220px !important;}
+    .front_page_box_red_inner {width: 220px !important;}
+    .SedoxBannerAndOpening .opening_container {display: block; width: auto;}
+    .SedoxBannerAndOpening .banner_container {display: block; width: auto;}
+    .ContentManager[appid="d7e68ff1-28cf-4966-8368-8e4b686c00ad"] {font-size: 18px;}
+    .ContentManager[appid="c5523b30-5891-456d-9b4b-427e65470d63"] {font-size: 18px;}
+    .ContentManager[appid="41384eeb-0a93-4638-97fe-4f840136a63f"] {font-size: 18px;}
+    .ContentManager[appid="2e4099f5-e9f4-49a5-b6da-5c802eba87f3"] {font-size: 18px;}
+    .gsucell[cellid="06fd6eb0-fd63-45e5-9b06-a4d584dffcae"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="bfd8e93f-f375-4178-a7ef-42835ea3a469"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="796b1352-f209-43aa-8a34-9e8869186339"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="b4c08085-4509-4ac2-a39f-1eba5ecb76cb"] {width: auto !important; float: none !important;}
+    .ContentManager[appid="f21f7697-7900-48ce-b294-2e5612c3166a"] {text-align: center;}
+    .ContentManager[appid="047b54a9-00bc-4a55-9c6f-8f7eea32ef4d"] {text-align: center;}
+    .SedoxFileServiceStatus .applicationinner .status2 {font-size: 0px; height: 25px;}
+    .SedoxFileServiceStatus .applicationinner .status2 i {font-size: 17px; padding-top: 3px;}
+}
+
+@media screen and (max-width: 640px) {
+    .gsarea[area="header"] .gscell[cellid="af18e48e-1863-4b6a-a43b-bb0152e96967"] {display: none;}
+    .gsarea[area="header"] .gscell[cellid="0283146d-48ac-4814-ab4a-3b4602608558"] .imagecontainer {text-align: left; width: auto; margin-left: 20px;}
+    .gsarea[area="header"] .gscell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] {display: none;}
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] div {font-size: 0px;}
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] i {padding-top: 0px !important; font-size: 30px !important; line-height: 30px !important; margin-top: 20px;}
+    .SedoxLogin .col_50 {display: block; width: auto;}
+    .ContentManager[appid="d7e68ff1-28cf-4966-8368-8e4b686c00ad"] {font-size: 12px;}
+    .ContentManager[appid="c5523b30-5891-456d-9b4b-427e65470d63"] {font-size: 12px;}
+    .ContentManager[appid="41384eeb-0a93-4638-97fe-4f840136a63f"] {font-size: 12px;}
+    .ContentManager[appid="2e4099f5-e9f4-49a5-b6da-5c802eba87f3"] {font-size: 12px;}
+    
 }

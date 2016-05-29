@@ -10,12 +10,12 @@ body {
     font-weight: 300;
 }
 .gsarea[area="header"] {
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f4943f+0,f4803e+100 */
-   background: #f4943f; /* Old browsers */
-   background: -moz-linear-gradient(top,  #f4943f 0%, #f4803e 100%); /* FF3.6-15 */
-   background: -webkit-linear-gradient(top,  #f4943f 0%,#f4803e 100%); /* Chrome10-25,Safari5.1-6 */
-   background: linear-gradient(to bottom,  #f4943f 0%,#f4803e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4943f', endColorstr='#f4803e',GradientType=0 ); /* IE6-9 */
+   background: #39c6c1; /* Old browsers */
+    background: -moz-linear-gradient(top,  #39c6c1 0%, #28b4af 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #39c6c1 0%,#28b4af 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #39c6c1 0%,#28b4af 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#39c6c1', endColorstr='#28b4af',GradientType=0 ); /* IE6-9 */
+
 }
 
 .gsarea[area="header"] .gs_page_width { height: 190px;  margin-bottom: 20px; padding-top: 20px; }
@@ -47,7 +47,11 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 
 
 .gs_language_code { 
-    background-repeat: no-repeat; 
+    color: #FFF;
+    font-size: 15px;
+}
+
+/*    background-repeat: no-repeat; 
     font-size: 0px; 
     height: 35px; width: 35px; 
     padding:0px !important; 
@@ -56,7 +60,7 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     background-position: top right;
 }
 .gs_lang_code_nb_NO { background-image: url('https://skytec.getshop.com/displayImage.php?id=eeeff579-0b75-483a-9574-725a0c29fead'); background-size: 33px 33px; }
-.gs_lang_code_en_en { background-image: url('https://skytec.getshop.com/displayImage.php?id=a1626d35-83cc-49c7-9c35-60a0f9784b05'); background-size: 33px 29px; background-position: 0px 2px;}
+.gs_lang_code_en_en { background-image: url('https://skytec.getshop.com/displayImage.php?id=a1626d35-83cc-49c7-9c35-60a0f9784b05'); background-size: 33px 29px; background-position: 0px 2px;}*/
 
 .shop_button { border: solid 1px #DDD; padding: 10px; line-height: 20px; height: 20px; padding-left: 20px; padding-right: 20px;}
 
@@ -117,7 +121,6 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 
 .ProductSearch .searchField i,
 .ProductSearch .searchField input {
-    border: solid 1px #ffa500;
     height: 35px;
     box-sizing: border-box;
     vertical-align: top;
@@ -129,4 +132,43 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 }
 .ProductSearch {
     text-align: right;
+}
+
+.News .newsboxtemplate_1 .news_container {
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+.News .item .news_img_container {
+    text-align: center;
+}
+
+.News .item .news_img_container,
+.News .item img {
+    height: 200px;
+    width: auto !important;
+}
+
+.News .news_entry_header {
+    height: 55px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.News .content {
+    height: 200px;
+    overflow: hidden;
+}
+
+.logoSameHeight img {
+    height: 100px !important;
+    width: auto !important;
+}
+
+.News .newsboxtemplate_1 .news_container {
+    width: 300px;
+}
+
+.News {
+    background-color: #EFEFEF;
+    padding: 20px;
 }

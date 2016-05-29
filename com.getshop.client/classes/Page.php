@@ -2014,7 +2014,7 @@ class Page {
     }
 
     public function printBodyFooter($layout) {
-        if ($this->themeApp->isBodyFooterEnabled()) {
+        if ($this->themeApp && $this->themeApp->isBodyFooterEnabled()) {
             echo "<div class='gsarea gs_bodyfooter' area='bodyfooter'><div class='gs_bodyfooter_inner'>";
             $this->printArea($layout->areas->{'bodyfooter'});
             echo "</div></div>";

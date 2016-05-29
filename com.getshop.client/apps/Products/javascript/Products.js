@@ -15,9 +15,23 @@ app.Products = {
         $(document).on('click', '.gss_add_category', app.Products.addCategoryToProduct);
         $(document).on('click', '.removeattr', app.Products.removeAttr);
         $(document).on('click', '.removecat', app.Products.removeCat);
+        $(document).on('click', '.gss_copyProduct', app.Products.copyProduct);
         $(document).on('keyup', '.attrtext', app.Products.updateAttrText);
         $(document).on('click', '.setupDynamicPricing', app.Products.setupDynamicPricing);
         $(document).on('change', '#gss_filterproducts', app.Products.filterProducts);
+    },
+    copyProduct: function() {
+        var name = prompt(__f("New product name"));
+        
+        var data = {
+            gss_method : "copyProduct",
+            gss_fragment : 'editproduct',
+            gss_view : 'gss_productwork_area',
+            fromProductId : $(this).attr('productId'),
+            newName : name
+        }
+        
+        getshop.Settings.post(data)
     },
     updateAttrText : function() {
         var id = $(this).closest('.addedattrrow').attr('attrid');
@@ -184,6 +198,9 @@ app.Products = {
 
     },
     uploadBoxClick: function () {
+        app.Products.gssUploadView = $(this).attr("gss_uploadcompleted_view") ? $(this).attr("gss_uploadcompleted_view") : "gss_product_thumbnails";
+        app.Products.gssUploadFragment = $(this).attr("gss_uploadcompleted_fragment") ? $(this).attr("gss_uploadcompleted_fragment") : "images";
+        
         app.Products.currentProductId = $(this).attr('productid');
         $('#getshop_select_files_link').remove();
         $('#your-files').remove();
@@ -225,8 +242,8 @@ app.Products = {
 
             var field = $('<div/>');
             field.attr('gss_value', data.productId);
-            field.attr('gss_view', "gss_product_thumbnails");
-            field.attr('gss_fragment', "images");
+            field.attr('gss_view', app.Products.gssUploadView);
+            field.attr('gss_fragment', app.Products.gssUploadFragment);
             getshop.Settings.post(data, "saveImage", field);
         };
 

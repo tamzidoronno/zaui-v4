@@ -222,6 +222,7 @@ $groups = $this->getApi()->getUserManager()->getAllGroups();
 </div>
 
 <div class='gss_button_area'>
+    <div class='gss_button gss_copyProduct' productId="<? echo $product->id; ?>"><i class='fa fa-magic'></i><? echo $this->__f("Copy product"); ?></div>
     <div class='gss_button setupDynamicPricing' productId="<? echo $product->id; ?>"><i class='fa fa-magic'></i><? echo $this->__f("Dynamic pricing"); ?></div>
     <div class='gss_button' gss_confirmation="<? echo $this->__f("Are you sure you want to delete this product?"); ?>" gss_method="deleteProduct" gss_value="<? echo $product->id; ?>"><i class='fa fa-remove'></i><? echo $this->__f("Delete"); ?></div>
     <div class='gss_button' id="gss_gotoproduct" pageid="<? echo $product->pageId; ?>" productId="<? echo \GetShopHelper::makeSeoUrl($product->uniqueName); ?>"><i class='fa fa-delicious'></i><? echo $this->__f("View product"); ?></div>

@@ -60,7 +60,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
                 sendIosMessage(token.tokenId, message);
             }
             if (token.type != null && token.type.equals(TokenType.ANDROID)) {
-                sendAndroidMessage(token, message);
+                sendAndroidMessage(token.tokenId, message);
             }
         }
     }
@@ -100,7 +100,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
         thread.start();
     }
     
-    private void sendAndroidMessage(Token token, String message) {
+    private void sendAndroidMessage(String tokenId, String message) {
         if (!frameworkConfig.productionMode) {
             System.out.println("WARNING: Did not send push notification to android device, framework is set to DEVELOPMENT mode. Be careful!");
             return;
@@ -114,8 +114,12 @@ public class MobileManager extends ManagerBase implements IMobileManager {
                     .timeToLive(3)
                     .build();
             
-            Sender sender = new Sender("AIzaSyBk5eR0ZxtHUafrXAdv5pw-PtEj4GNnSvg");
-            sender.send(gcmmessage, token.tokenId, 1);
+//            ProMeister Academy
+//            Sender sender = new Sender("AIzaSyBk5eR0ZxtHUafrXAdv5pw-PtEj4GNnSvg");
+//            sender.send(gcmmessage, token.tokenId, 1);
+            
+            Sender sender = new Sender("AIzaSyDkfN5kMdU54C5DoXw-2rgcmoWeZRi0-8c");
+            sender.send(gcmmessage, tokenId, 1);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -129,5 +133,6 @@ public class MobileManager extends ManagerBase implements IMobileManager {
 
     public void sendMessage(String token, String message) {
         sendIosMessage(token, message);
+        sendAndroidMessage(token, message);
     }
 }

@@ -323,6 +323,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         
         <?
         $factory->renderBottom();
+        $factory->displayCookieWarning();
         ?>
     </body>
 </html>

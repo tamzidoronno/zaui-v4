@@ -1,0 +1,13 @@
+<?
+/* @var $this ns_7332bf2f_8fd3_422a_aabc_d77db883e472\ProfilePrinter */
+$user = $this->getSelectedUser();
+?>
+<div class="gss_overrideapp" gss_use_app_id="7332bf2f-8fd3-422a-aabc-d77db883e472">      
+    <?
+    if ($user->profilePicutreId) {
+        echo "<img style='width: 300px;' src='/displayImage.php?id=$user->profilePicutreId'/>";
+    }
+    
+    ?>
+    <br/><div gss_uploadcompleted_fragment="user" gss_uploadcompleted_view="gs_user_workarea" class="gss_button gss_product_saveuploadimage" productid="<? echo $user->id; ?>"><? echo $this->__f("Upload picture"); ?></div>
+</div>

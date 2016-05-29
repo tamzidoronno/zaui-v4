@@ -63,3 +63,8 @@ body {
     border-radius: 0px;
     color: #FFF;
 }
+
+.gsarea[area="header"] .Menu .entries .entries {
+    background-color: rgba(0,0,0,0.5);
+    padding-right: 30px;
+}

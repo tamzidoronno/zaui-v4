@@ -112,7 +112,7 @@ class News extends \MarketingApplication implements \Application {
      * @return type
      */
     public function filterNews($type, $offset, $news) {
-        if($offset == 0) {
+        if($offset == 0 || ($offset == 13 && $this->getStartOnRightSide())) {
             return $news;
         }
         $res = array();
@@ -131,6 +131,10 @@ class News extends \MarketingApplication implements \Application {
         }
         
         return $res;
+    }
+
+    public function getStartOnRightSide() {
+        return $this->getConfigurationSetting("latestOnTheRightSide") === "true";
     }
 
 }

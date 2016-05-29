@@ -255,7 +255,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         addUserToSession(user);
         
         loginHistory.markLogin(user, getSession().id);
-        saveObject(loginHistory);
+//        saveObject(loginHistory);
        
         return user;
     }

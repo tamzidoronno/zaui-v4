@@ -54,6 +54,13 @@ public class PmsAdditionalItemInformation extends DataCommon {
         cleaningDates.add(new Date());
     }
 
+    public void addCleaningDate(Date date) {
+        cleaningDates.add(date);
+        if(lastCleaned == null || lastCleaned.before(date)) {
+            lastCleaned = date;
+        }
+    }
+
     public Boolean isClean(boolean checkToday) {
         isClean = false;
         if(lastCleaned == null) {

@@ -3,6 +3,8 @@
 
 $filter = $this->getSelectedFilter();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$channels = $this->getChannelMatrix();
+
 
 $searchtypes = array();
 $searchtypes['registered'] = "Registered";
@@ -32,6 +34,21 @@ $searchtypes['stats'] = "Coverage";
             }
             ?>
         </select>
+        
+        <?php if(sizeof($channels) > 0) { ?>
+            <select class="pmsinput filterType" gsname='channel'>
+                <?php
+                echo "<option value=''>All channels</option>";
+                foreach($channels as $idx => $channel) {
+                    $selected = "";
+                    if($filter->channel == $idx) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='$idx' $selected>$channel</option>";
+                }
+                ?>
+            </select>
+        <? } ?>
         <span gstype="submit" class="pmsbutton setFilter">Show</span>
         <span  style=' padding-left: 10px; top: 15px;display:inline-block;position:absolute;cursor:pointer;'>
             <i class='fa fa-trash-o' gstype="clicksubmit" method='emptyfilter' gsname="id" gsvalue="somevalue" title='Empty filter'></i>

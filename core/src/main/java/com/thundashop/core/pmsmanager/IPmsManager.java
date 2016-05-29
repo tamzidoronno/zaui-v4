@@ -96,6 +96,12 @@ public interface IPmsManager {
     @Editor
     public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms();
     
+    @Administrator
+    public void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info);
+    
+    @Administrator
+    public HashMap<String, String> getChannelMatrix();
+    
     @Editor
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
     

@@ -38,7 +38,7 @@ body {
 }
 
 .gsucell[cellid="48da42ae-b2d2-4be1-8337-2b85a2bb2cc5"] {
-    width: 590px !important;
+    width: auto !important;
 }
 
 /* END HEADER SETTINGS */
@@ -407,6 +407,10 @@ body {
     border-bottom: solid 1px #e4e8eb;
 }
 
+.ProductLists .quantityselector > div {
+    display: inline-block;
+}
+
 @media screen and (max-width: 1279px) {
     .left_side_bar {left: -300px; position: absolute; z-index: 10; transition: left 0.3s; border-right: double 15px #d5d5d5;}
     .gs_main_column {width: calc(100% - 15px); margin-left: 15px;}
@@ -437,6 +441,9 @@ body {
     .gscellheadermin {display: none !important;}
     .applicationinner .gs_icon {display: none !important;}
     .gscellbox {border: none !important;}
+    
+    .gsucell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] {width: 235px !important;}
+    
 }
 
 @media screen and (max-width: 959px) {
@@ -458,20 +465,29 @@ body {
     .gsucell[cellid="b4c08085-4509-4ac2-a39f-1eba5ecb76cb"] {width: auto !important; float: none !important;}
     .ContentManager[appid="f21f7697-7900-48ce-b294-2e5612c3166a"] {text-align: center;}
     .ContentManager[appid="047b54a9-00bc-4a55-9c6f-8f7eea32ef4d"] {text-align: center;}
-    .SedoxFileServiceStatus .applicationinner .status2 {font-size: 0px; height: 25px;}
-    .SedoxFileServiceStatus .applicationinner .status2 i {font-size: 17px; padding-top: 3px;}
-}
-
-@media screen and (max-width: 640px) {
-    .gsarea[area="header"] .gscell[cellid="af18e48e-1863-4b6a-a43b-bb0152e96967"] {display: none;}
-    .gsarea[area="header"] .gscell[cellid="0283146d-48ac-4814-ab4a-3b4602608558"] .imagecontainer {text-align: left; width: auto; margin-left: 20px;}
-    .gsarea[area="header"] .gscell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] {display: none;}
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] div {font-size: 0px;}
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] i {padding-top: 0px !important; font-size: 30px !important; line-height: 30px !important; margin-top: 20px;}
+    .gsarea[area="header"] .gscell[cellid="af18e48e-1863-4b6a-a43b-bb0152e96967"] {width: 19% !important;}
+    .SedoxSearchHeader .sedox_file_search {width: 50% !important;}
+}
+
+@media screen and (max-width: 799px) {
+    .gsarea[area="header"] .gscell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] {display: none;}
+    .gsucell[cellid="43bce82f-cb91-46ef-995a-2c443c3f1cac"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="c32c04bd-f55e-43f5-89df-9465205a384e"] {width: auto !important; float: none !important;}
+    .ProductLists .productbox_outer {width: auto !important;}
+}
+
+@media screen and (max-width: 639px) {
+    .gsarea[area="header"] .gscell[cellid="af18e48e-1863-4b6a-a43b-bb0152e96967"] {display: none;}
+    .gsarea[area="header"] .gscell[cellid="0283146d-48ac-4814-ab4a-3b4602608558"] .imagecontainer {text-align: left; width: auto; margin-left: 20px;}
+    .SedoxFileServiceStatus .applicationinner .status2 {font-size: 0px; height: 25px;}
+    .SedoxFileServiceStatus .applicationinner .status2 i {font-size: 17px; padding-top: 3px;}
     .SedoxLogin .col_50 {display: block; width: auto;}
     .ContentManager[appid="d7e68ff1-28cf-4966-8368-8e4b686c00ad"] {font-size: 12px;}
     .ContentManager[appid="c5523b30-5891-456d-9b4b-427e65470d63"] {font-size: 12px;}
     .ContentManager[appid="41384eeb-0a93-4638-97fe-4f840136a63f"] {font-size: 12px;}
     .ContentManager[appid="2e4099f5-e9f4-49a5-b6da-5c802eba87f3"] {font-size: 12px;}
-    
+    .gsucell[cellid='925e929d-c061-43ce-b33e-3a8b35d5ad70'] {width: auto !important; float: none !important;}
+    .gsucell[cellid='832efc80-763f-483c-bc42-9127426f741a'] {width: auto !important; float: none !important;}
 }

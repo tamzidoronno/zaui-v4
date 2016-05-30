@@ -26,6 +26,14 @@
             <input gsname="setting_newslistid" value="<?php echo $this->getConfigurationSetting("newslistid"); ?>">
         </td>
     </tr>
+    <tr>
+        <td width="50%">Latest on the right side</td>
+        <td width="50%">
+            <? 
+            $checked = $this->getConfigurationSetting("latestOnTheRightSide") == "true" ? "checked='true'" : ""; ?>
+            <input <? echo $checked; ?>type="checkbox" gsname="setting_latestOnTheRightSide" value="<?php echo $this->getConfigurationSetting("latestOnTheRightSide"); ?>">
+        </td>
+    </tr>
     </table>
     <input gstype="submit" type="button" value='Save' class='logoutclick'>
 </div>

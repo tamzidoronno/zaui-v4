@@ -62,6 +62,8 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
             }
         }
 
+        getApplications().stream()
+                .forEach(o -> System.out.println(o.id));
     }
 
     @Override

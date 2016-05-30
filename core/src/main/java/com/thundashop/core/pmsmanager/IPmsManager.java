@@ -67,6 +67,9 @@ public interface IPmsManager {
     public void saveConfiguration(PmsConfiguration notifications);
     
     @Administrator
+    public void sendCode(String phoneNumber, String roomId);
+    
+    @Administrator
     public void setGuestOnRoom(List<PmsGuests> guests, String bookingId, String roomId);
     
     @Administrator
@@ -92,6 +95,12 @@ public interface IPmsManager {
     
     @Editor
     public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms();
+    
+    @Administrator
+    public void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info);
+    
+    @Administrator
+    public HashMap<String, String> getChannelMatrix();
     
     @Editor
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);

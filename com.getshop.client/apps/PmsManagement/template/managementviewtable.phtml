@@ -6,7 +6,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()));
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-
+$channels = $this->getChannelMatrix();
 $hasPrices = false;
 
 if($config->requirePayments) {
@@ -124,8 +124,11 @@ foreach($bookings as $booking) {
         }
         
         $row .= "<tr>";
-        $row .= "<td style='width:70px;'>";
+        $row .= "<td style='width:50px; text-align:center;'>";
         $row .= "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."'></i> ";
+        if($booking->channel) {
+            $row .= "<br>" . $channels->{$booking->channel};
+        }
         $row .= "</td>";
         $row .= "<td style='width: 100px;'>";
         $row .= date("d.m.Y H:i", strtotime($booking->rowCreatedDate));
@@ -185,7 +188,11 @@ foreach($bookings as $booking) {
         $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
         $row .= "<div style='padding-top: 5px;'>";
         if($user) {
-            $row .= "<span class='secondary_text'>By " . $user->fullName . "</span>";
+            $row .= "<span class='secondary_text'>By " . $user->fullName;
+            if(isset($types[$room->bookingItemTypeId])) {
+                $row .= ", " . $types[$room->bookingItemTypeId]->name;
+            }
+            $row .= "</span>";
         }
         $row .= "</div>";
 
@@ -201,8 +208,7 @@ foreach($bookings as $booking) {
         }
         if(isset($room->booking) && $room->booking && $room->booking->bookingItemId) {
             $row .= $items[$room->booking->bookingItemId]->bookingItemName;
-        }
-        if(isset($types[$room->bookingItemTypeId])) {
+        } else if(isset($types[$room->bookingItemTypeId])) {
             $row .= "<br><span class='secondary_text'>" . $types[$room->bookingItemTypeId]->name . "</span>";
         }
 

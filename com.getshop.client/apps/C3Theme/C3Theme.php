@@ -13,5 +13,13 @@ class C3Theme extends \ThemeApplication implements \Application {
     public function render() {
         
     }
+    
+    public function getThemeClasses() {
+        return ["logoSameHeight"];
+    }
+    
+    public function isMobileAndResponsiveDesignDisabled() {
+        return true;
+    }
 }
 ?>

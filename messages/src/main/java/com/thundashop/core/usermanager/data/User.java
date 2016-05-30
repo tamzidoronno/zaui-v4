@@ -103,6 +103,7 @@ public class User extends DataCommon implements Comparable<User> {
     public int sessionTimeOut = 23;
     public boolean canChangeLayout = false;
     public String couponId = "";
+    public String profilePicutreId = "";
     
     public List<String> company = new ArrayList();
     

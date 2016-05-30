@@ -3,7 +3,7 @@
 $allUsers = $this->getApi()->getUserManager()->getAllUsers();
 ?>
 <div>
-    <h2>Send tests</h2>
+    <h2><? echo $this->__f("Send tests"); ?></h2>
     What test do you want to send out?: &nbsp;&nbsp;
     <select id="testToSend">
     <?
@@ -18,9 +18,9 @@ $allUsers = $this->getApi()->getUserManager()->getAllUsers();
     <br/>
     <table width='100%'>
         <th></th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>CellPhone</th>
+        <th><? echo $this->__f("Name"); ?></th>
+        <th><? echo $this->__f("Email"); ?></th>
+        <th><? echo $this->__f("CellPhone"); ?></th>
         <?
         foreach ($allUsers as $user) {
             echo "<tr><td width='25'><input type='checkbox' class='user_to_send' value='$user->id'></td><td>$user->fullName</td><td>$user->emailAddress</td><td>$user->cellPhone</td></tr>";
@@ -29,5 +29,5 @@ $allUsers = $this->getApi()->getUserManager()->getAllUsers();
         
     </table>
     <br/>
-    <div class='gs_button assignTestsToUser'>Send</div>
+    <div class='gs_button assignTestsToUser'><? echo $this>__f("Send"); ?></div>
 </div>

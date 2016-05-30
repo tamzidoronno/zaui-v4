@@ -880,11 +880,10 @@ $(document).on('click', '#informationbox .settings .entry, #settingsarea .settin
     }
 });
 
-$('#cookiewarning_overlay .textbox .continue').on('click', function() {
+$(document).on('click', '#cookiewarning_overlay .textbox .continue', function() {
     $('#cookiewarning_overlay').remove();
     var event = thundashop.Ajax.createEvent('', 'CookieAccepted', $(this), '');
     thundashop.Ajax.postWithCallBack(event, function() {
-
     });
 });
 

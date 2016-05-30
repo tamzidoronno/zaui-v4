@@ -192,4 +192,7 @@ public interface IEventBookingManager {
     public BookingItemType getBookingItemTypeByPageId(String pageId);
     
     public Double getPriceForEventType(String bookingItemTypeId);
+    
+    @Administrator
+    public void clearEventBookingManagerForAllData();
 }

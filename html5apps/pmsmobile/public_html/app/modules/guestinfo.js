@@ -2,6 +2,7 @@ if(typeof(getshop) === "undefined") { var getshop = {}; }
 getshop.guestInfoController = function($scope, $state, $stateParams) {
     var bookingid = $stateParams.bookingid;
     var roomid = $stateParams.roomid;
+    $scope.doPayOrder = false;
     
     $scope.saveUser = function() {
         var saving = getshopclient.UserManager.saveUser($scope.user);
@@ -23,6 +24,55 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         });
     };
     
+    $scope.markOrderAsInvoice = function() {
+        var orderId = $scope.payOrder.id;
+        var marking = getshopclient.OrderManager.markAsInvoicePayment(orderId);
+        marking.done(function() {
+            getshopclient.OrderManager.saveOrder($scope.payOrder);
+            $scope.changeOrderStatus(7);
+        });
+    };
+    
+    $scope.changeOrderStatus = function(status) {
+        var orderId = $scope.payOrder.id;
+        var changing = getshopclient.OrderManager.changeOrderStatus(orderId, status);
+        changing.done(function() {
+            alert('Order has been updated');
+            $scope.payOrder.status = status;
+            $scope.payOrderProcess = false;
+            $scope.$apply();
+        });
+    };
+    
+    $scope.doSendReciept = function(order) {
+        $scope.payOrderProcess = false;
+        if($scope.sendRecieptProcess) {
+            $scope.sendRecieptProcess = false;
+            return;
+        }
+        $scope.recieptEmail = $scope.user.emailAddress;
+        $scope.sendRecieptProcess = true;
+        $scope.recieptOrder = order;
+    }
+    
+    $scope.roomIsStarted = function() {
+        if($scope.booking && !$scope.booking.payedFor) {
+            return false;
+        }
+        if(!$scope.room.addedToArx) {
+            return false;
+        }
+        return $scope.isStarted;
+    };
+    
+    $scope.completeSendReciept = function() {
+        var orderId = $scope.recieptOrder.id;
+        var email = $scope.recieptEmail;
+        getshopclient.OrderManager.sendReciept(orderId, email);
+        alert('Email has been sent');
+        $scope.sendRecieptProcess = false;
+    };
+    
     $scope.changeStay = function() {
         var bookingid = $scope.booking.id;
         var roomid = $scope.room.pmsBookingRoomId;
@@ -40,6 +90,24 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             alert('updated');
         });
     };
+    $scope.doResendCode = function() {
+        if($scope.resendcode) {
+            $scope.resendcode = false;
+            return;
+        }
+        $scope.numbertosendcodeto = "+" + $scope.room.guests[0].prefix + " " + $scope.room.guests[0].phone;
+        $scope.resendcode = true;
+    },
+    $scope.resendCode = function() {
+        var number = $scope.numbertosendcodeto;
+        var roomId = $scope.room.pmsBookingRoomId;
+        var sending = getshopclient.PmsManager.sendCode(getMultilevelName(), number, roomId);
+        sending.done(function() {
+            alert('Code has been sent');
+            $scope.resendcode = false;
+            $scope.$apply();
+        });
+    },
     
     $scope.changeRoomCount = function(count) {
         var guests = [];
@@ -60,19 +128,42 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         return d;
     }
     
+    $scope.doPayOrder = function(order) {
+        if($scope.payOrderProcess) {
+            $scope.payOrderProcess = false;
+            return;
+        }
+        $scope.sendRecieptProcess = false;
+        $scope.payOrder = order;
+        $scope.payOrderProcess = true;
+    }
+    
     var booking = getshopclient.PmsManager.getBooking(getMultilevelName(), bookingid);
     booking.done(function(res) {
+        $scope.orders = [];
+        for(var key in res.orderIds) {
+            var orderId = res.orderIds[key];
+            var loadOrder = {};
+            loadOrder[orderId] = getshopclient.OrderManager.getOrder(orderId);
+            loadOrder[orderId].done(function(orderres) {
+                var total = getshopclient.OrderManager.getTotalAmount(orderres);
+                total.done(function(amount) {
+                    orderres.amountInc = Math.round(amount);
+                })
+                $scope.orders.push(orderres);
+            });
+        }
+            
         for(var key in res.rooms) {
             var room = res.rooms[key];
             if(room.pmsBookingRoomId === roomid) {
-                console.log(room);
                 room.date.start = $scope.convertToDate(room.date.start);
                 room.date.end = $scope.convertToDate(room.date.end);
                 $scope.numberofguests = room.numberOfGuests;
                 $scope.guests = room.guests;
                 $scope.room = room;
+                $scope.isStarted = room.date.start.getTime() < new Date().getTime();
                 $scope.selectedroom = room.bookingItemId;
-                
                 var loadItems = getshopclient.BookingEngine.getAllAvailbleItems(getMultilevelName(), new Date(), room.date.end);
                 loadItems.done(function(items) {
                     var newres = {};
@@ -81,7 +172,6 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
                     }
                     var loadItems2 = getshopclient.BookingEngine.getBookingItems(getMultilevelName());
                     loadItems2.done(function(allitems) {
-                        console.log(allitems);
                         for(var key in allitems) {
                             if(!newres[allitems[key].id] && allitems[key].id != $scope.selectedroom) {
                                 allitems[key].bookingItemName += " (not available)";
@@ -91,7 +181,6 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
                         $scope.$apply();
                     });
                 });
-                
             }
         }
         $scope.booking = res;

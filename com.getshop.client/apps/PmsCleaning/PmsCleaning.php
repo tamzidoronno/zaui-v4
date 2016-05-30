@@ -229,8 +229,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "<td>";
         foreach($room->guests as $guest) {
             echo $guest->name . " - " . $guest->phone . " - " . $guest->email . "<br>";
+            break;
         }
-        echo $user->fullName;
+        echo "<span style='color:#bbb'>" . $user->fullName . "</span>";
         echo "</td>";
         echo "<td>";
         if($room->bookingItemId) {

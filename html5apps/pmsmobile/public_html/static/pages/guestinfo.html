@@ -1,3 +1,70 @@
+<!--TODO: Include wubook. -->
+
+<div class='additionalinfo row'>Orders</div>
+<div ng-repeat="order in orders" class='orderrow row no-gutter'>
+    <div class='col-xs-2'>{{order.incrementOrderId}}</div>
+    <div class='col-xs-2'>{{order.amountInc}}</div>
+    <div class='col-xs-4'>
+        <div ng-show='order.status === 7'>Payed for</div>
+        <div ng-show='order.status !== 7'>Not payed for</div>
+    </div>
+    <div class='col-xs-4' style='text-align:right;'>
+        <span class='btn btn-success' div ng-show='order.status === 7' ng-click="doSendReciept(order)">Send reciept</span>
+        <span class='btn btn-success' ng-show='order.status !== 7' ng-click="doPayOrder(order)">Make payment</span>
+    </div>
+</div>
+    
+<div ng-show='sendRecieptProcess'>
+    <div class='additionalinfo row'>Send reciept for order {{recieptOrder.incrementOrderId}}</div>
+    <div class='row'>
+        <div class='col-xs-5'>Email</div>
+        <div class='col-xs-7'><input type="txt" ng-model="recieptEmail" class="form-control" style='width:100%;'></div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-5'></div>
+        <div class='col-xs-7'>
+            <span class='btn btn-success' style='width:100%;' ng-click="completeSendReciept()">Send reciept</span>
+        </div>
+    </div>
+</div>
+<div ng-show='payOrderProcess'>
+    <div class='additionalinfo row'>Pay order {{payOrder.incrementOrderId}}</div>
+    <div class='row'>
+        <div class='col-xs-12'>
+            <b>1. Mark order for invoicing (PS: Make sure the bookers information is correct.)</b>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-12'>Note on invoice</div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-12'><textarea style='width:100%; height: 100px;' ng-model="payOrder.invoiceNote"></textarea></div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-8'>
+            Send order to invoice
+        </div>
+        <div class='col-xs-4' style='text-align:right;'>
+            <span class='btn btn-success' ng-click="markOrderAsInvoice();">Send order to invoice</span>
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col-xs-12'>
+            <b>2. Pay with credit card</b>
+        </div>
+        <div class='col-xs-12'>
+            * Log on to dibs <span style='color:blue;'>here</span><br>
+            * Navigate to "Virtuell Terminal"<br>
+            * Enter {{payOrder.incrementOrderId}} as orderid.<br>
+            * Enter {{payOrder.amountInc}} as amount.<br>
+            * Enter the card information and click "Utfør betaling".<br>
+            <span class='btn btn-success' ng-click="changeOrderStatus(7);">
+                * If payment is accepted, click here to mark order as paid.
+            </span>
+        </div>
+    </div>
+</div>
 
 <div class='additionalinfo row'>Bookers information</div>
 <div class='row fdsaf'>
@@ -51,7 +118,29 @@
 <div class='additionalinfo row'>Room information</div>
 <div class='row'>
     <div class='col-xs-4 contactdata'>Code</div>
-    <div class='col-xs-8 othercontactdata'>{{ room.code }}</div>
+    <div class='col-xs-4 othercontactdata'>{{ room.code }}</div>
+    <div class='col-xs-4 ng-hide' ng-show='roomIsStarted()'><span class='btn btn-success' ng-click="doResendCode()" style='width:100%;'>Resend code</span></div>
+    <div class='col-xs-4' ng-show='!roomIsStarted()'>Unable to send code, see status</div>
+</div>
+<div class='row' ng-show="resendcode">
+    <div class='col-xs-6'>
+        <label> Phone number
+            <input type='text' ng-model="numbertosendcodeto" placeholder='Phone number'  class="form-control" >
+        </label>
+    </div>
+    <div class='col-xs-6'>
+        <label> Verify number and send code
+            <span class='btn btn-success' style='width:100%;' ng-click="resendCode()">Send code</span>
+        </label>
+    </div>
+</div>
+<div class='row'>
+    <div class='col-xs-4 contactdata'>Status</div>
+    <div class='col-xs-8 othercontactdata'>
+        <div class="ng-hide" ng-show="!booking.payedFor"><b style='color:red'>Not payed for yet</b></div>
+        <div ng-show="!room.addedToArx && roomIsStarted()"><b>Waiting for cleaning / code not active yet</b></div>
+        <div ng-show="room.addedToArx && roomIsStarted()">Code is active on door</div>
+    </div>
 </div>
 <div class='row'>
     <div class='col-xs-4 contactdata'>Created when</div>

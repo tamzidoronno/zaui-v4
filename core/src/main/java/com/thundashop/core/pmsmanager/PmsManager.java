@@ -538,6 +538,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         finalized = filterTypes(finalized, filter.typeFilter);
         finalized = filterByUser(finalized,filter.userId);
+        finalized = filterByChannel(finalized,filter.channel);
 
         return finalized;
     }
@@ -3004,6 +3005,59 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     void setOrderIdToSend(String id) {
         this.orderIdToSend = id;
+    }
+
+    @Override
+    public void sendCode(String phoneNumber, String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.pmsBookingRoomId.equals(roomId)) {
+                String from = "GetShop";
+                if(configuration.smsName != null && configuration.smsName.isEmpty()) {
+                    from = configuration.smsName;
+                }
+                messageManager.sendSms("sveve", phoneNumber, "Code: " + room.code, "", from);
+            }
+        }
+    }
+
+    @Override
+    public void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info) {
+        saveObject(info);
+        addiotionalItemInfo.put(info.id, info);
+    }
+
+    @Override
+    public HashMap<String, String> getChannelMatrix() {
+        HashMap<String, String> res = new HashMap();
+        
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.channel != null && !booking.channel.trim().isEmpty()) {
+                res.put(booking.channel, booking.channel);
+            }
+        }
+        
+        for(String key : res.keySet()) {
+            if(configuration.channelTranslations.containsKey(key)) {
+                res.put(key, configuration.channelTranslations.get(key));
+            }
+        }
+        
+        return res;
+    }
+
+    private List<PmsBooking> filterByChannel(List<PmsBooking> finalized, String channel) {
+        if(channel == null || channel.trim().isEmpty()) {
+            return finalized;
+        }
+        
+        List<PmsBooking> res = new ArrayList();
+        for(PmsBooking booking : finalized) {
+            if(booking.channel != null && booking.channel.equals(channel)) {
+                res.add(booking);
+            }
+        }
+        return res;
     }
 
 }

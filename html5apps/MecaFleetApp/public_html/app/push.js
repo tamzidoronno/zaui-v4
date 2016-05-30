@@ -15,19 +15,20 @@ PushNotificationSettings = {
     registrationId : ""
 };
 
-
 var initPush = function() {
     
     var push = PushNotification.init({
         android: {
-            senderID: "12345679"
+            senderID: "377883426248"
         },
+        
         ios: {
             alert: "true",
             badge: "true",
             sound: "true",
             "clearBadge": "true"
         },
+        
         windows: {}
     });
 

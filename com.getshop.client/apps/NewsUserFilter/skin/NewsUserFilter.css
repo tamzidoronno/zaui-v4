@@ -1,0 +1,33 @@
+.NewsUserFilter .imagearea img{
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.NewsUserFilter {
+    border: dashed 2px #DDD;
+    text-align: center;
+    padding : 20px;
+}
+
+.NewsUserFilter .userprofile {
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.NewsUserFilter .userprofile .fa-check {
+    border: solid 1px #DDD;
+    border-radius: 100px;
+    padding: 5px;
+    position: absolute;
+    left: 5px;
+    color: #DDD;
+}
+
+.NewsUserFilter .userprofile.filter_active .fa-check {
+    color: #FFF;
+    background-color: #39c6c1;
+}
+
+.NewsUserFilter .userprofile {
+    margin-bottom: 10px;
+}

@@ -315,6 +315,16 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         return "";
         
     }
+   
+    public function saveImage() {
+        $content = strstr($_POST['fileBase64'], "base64,");
+        $content = str_replace("base64,", "", $content);
+        $content = base64_decode($content);
+        $imgId = \FileUpload::storeFile($content);
 
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['value']);
+        $user->profilePicutreId = $imgId;
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
 }
 ?>

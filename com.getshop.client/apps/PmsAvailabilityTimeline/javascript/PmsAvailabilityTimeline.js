@@ -51,7 +51,7 @@ app.PmsAvailabilityTimeline = {
                     icon: "fa-edit",
                     iconsize: "30",
                     title: __f("Show settings"),
-                    click: app.PmsBookingSummary.showSettings
+                    click: app.PmsAvailabilityTimeline.showSettings
                 }
             ]
         };

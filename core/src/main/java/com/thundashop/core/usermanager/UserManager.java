@@ -255,7 +255,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         addUserToSession(user);
         
         loginHistory.markLogin(user, getSession().id);
-        saveObject(loginHistory);
+//        saveObject(loginHistory);
        
         return user;
     }
@@ -1538,5 +1538,23 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         return true;
+    }
+
+    @Override
+    public void clearUserManagerForAllData() {
+        String loggedOnUserId = getSession().currentUser.id;
+        
+        UserStoreCollection userStoreCollection = getUserStoreCollection(storeId);
+        
+        new ArrayList<User>(userStoreCollection.getAllUsers()).stream()
+                .filter(user -> !user.id.equals(loggedOnUserId))
+                .forEach(user -> userStoreCollection.deleteUser(user.id));
+
+        new ArrayList<Company>(companies.values()).stream()
+                .forEach(company -> deleteCompany(company.id));
+        
+        
+        new ArrayList<Group>(userStoreCollection.getGroups())
+                .stream().forEach(group -> removeGroup(group.id));
     }
 }

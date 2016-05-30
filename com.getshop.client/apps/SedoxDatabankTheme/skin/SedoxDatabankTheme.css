@@ -411,6 +411,11 @@ body {
     display: inline-block;
 }
 
+@media screen and (max-width: 1399px) {
+    .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
+    .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
+}
+
 @media screen and (max-width: 1279px) {
     .left_side_bar {left: -300px; position: absolute; z-index: 10; transition: left 0.3s; border-right: double 15px #d5d5d5;}
     .gs_main_column {width: calc(100% - 15px); margin-left: 15px;}
@@ -433,8 +438,7 @@ body {
     .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child {display: none;}
     .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child + td {display: none;}
     .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child + td + td {display: none;}
-    .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
-    .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
+    
     .gs_site_main_buttons_view {display: none !important;}
     .gseditrowbuttons {display: none !important;}
     .gsbody_inner {margin: 0 !important; border-right: none !important;}
@@ -442,7 +446,9 @@ body {
     .applicationinner .gs_icon {display: none !important;}
     .gscellbox {border: none !important;}
     
-    .gsucell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] {width: 235px !important;}
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] div {font-size: 0px;}
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] i {padding-top: 0px !important; font-size: 30px !important; line-height: 30px !important; margin-top: 20px;}
+    
     
 }
 
@@ -465,10 +471,11 @@ body {
     .gsucell[cellid="b4c08085-4509-4ac2-a39f-1eba5ecb76cb"] {width: auto !important; float: none !important;}
     .ContentManager[appid="f21f7697-7900-48ce-b294-2e5612c3166a"] {text-align: center;}
     .ContentManager[appid="047b54a9-00bc-4a55-9c6f-8f7eea32ef4d"] {text-align: center;}
-    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] div {font-size: 0px;}
-    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] i {padding-top: 0px !important; font-size: 30px !important; line-height: 30px !important; margin-top: 20px;}
     .gsarea[area="header"] .gscell[cellid="af18e48e-1863-4b6a-a43b-bb0152e96967"] {width: 19% !important;}
     .SedoxSearchHeader .sedox_file_search {width: 50% !important;}
+    .gsarea[area="header"] .gscell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] {width: 225px !important;}
+    .gsarea[area="header"] .gscell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] .fullName {font-size: 18px;}
+    .SedoxProfileSmall .avatar {margin-left: 15px;}
 }
 
 @media screen and (max-width: 799px) {

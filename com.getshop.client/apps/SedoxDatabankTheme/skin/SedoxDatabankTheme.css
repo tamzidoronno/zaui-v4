@@ -411,7 +411,17 @@ body {
     display: inline-block;
 }
 
-.ProductLists .products.grid_view[listid="9e40d5b7-4bd9-463b-bb49-f567319edc7c"] {text-align: center;}
+.ProductLists .products.grid_view[listid="9e40d5b7-4bd9-463b-bb49-f567319edc7c"] {
+    text-align: center;
+}
+
+.Menu[appid='247d2e40-801d-4dd1-85a2-7bba21b810cf'] .menuentries .entry {
+    border-top: 1px solid rgb(228, 232, 235); padding: 0px;
+}
+
+.Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .menu_simple_menu {
+    display: none;
+}
 
 @media screen and (max-width: 1399px) {
     .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
@@ -487,6 +497,10 @@ body {
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] i {margin-top: 20px;}
     .SedoxFileUpload {padding: 20px; padding-top: 20px;}
     .SedoxFileUpload .squaredFour .textlabel {width: 80%;}
+    .Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .horizontal {position: static !important;}
+    .Menu[appid='247d2e40-801d-4dd1-85a2-7bba21b810cf'] .mobilenavigatemenu {display: none !important;}
+    .Menu[appid='247d2e40-801d-4dd1-85a2-7bba21b810cf'] .horizontal {background-color: transparent !important; display: inline-block !important; position: relative !important; left: auto !important; top: auto !important; z-index: auto !important;}
+    .Menu[appid='247d2e40-801d-4dd1-85a2-7bba21b810cf'] .menuentries .entry a {color: #000000 !important;}
 }
 
 @media screen and (max-width: 799px) {

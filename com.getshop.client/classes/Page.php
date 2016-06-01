@@ -498,7 +498,7 @@ class Page {
             return false;
         }
 
-        if ($cell->isHidden == true) {
+        if (@$cell->isHidden == true) {
             return false;
         }
 

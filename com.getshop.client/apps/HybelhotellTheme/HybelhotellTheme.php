@@ -21,8 +21,5 @@ class HybelhotellTheme extends \ThemeApplication implements \Application {
         
     }
     
-    public function isMobileAndResponsiveDesignDisabled() {
-        return true;
-    }
 }
 ?>

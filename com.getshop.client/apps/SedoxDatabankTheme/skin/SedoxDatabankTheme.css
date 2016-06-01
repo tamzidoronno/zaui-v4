@@ -423,6 +423,13 @@ body {
     display: none;
 }
 
+.gsucell[cellid="914c8252-3e8d-4f2a-af4e-5aa3c821c2da"] {display: none;}
+.gsucell[cellid="b7518839-f93f-4dc4-9fec-db6d14463009"] {display: none;}
+.gsucell[cellid="d259fec7-6beb-4b04-a969-165f05477805"] {display: none;}
+.gsucell[cellid="e5a2b892-13ce-48fb-81ea-495589568134"] {display: none;}
+.gsucell[cellid="e0c500ea-38bc-4b36-a2fa-e9bdfbfda01f"] {display: none;}
+.gsucell[cellid="2868afee-1765-483f-923a-b19bd962137d"] {display: none;}
+
 @media screen and (max-width: 1399px) {
     .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
     .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
@@ -508,18 +515,30 @@ body {
     .gsucell[cellid="43bce82f-cb91-46ef-995a-2c443c3f1cac"] {width: auto !important; float: none !important;}
     .gsucell[cellid="c32c04bd-f55e-43f5-89df-9465205a384e"] {width: auto !important; float: none !important;}
     .ProductLists .productbox_outer {width: auto !important;}
+    
     .gsucell[cellid="44805a78-44ba-495c-adbe-f80f4d03e5e9"] {min-width: 800px;}
     .gsucell[cellid="01479495-7a49-405e-b9e8-b8944cde23af"] {min-width: 800px;}
+    .gsucell[cellid="914c8252-3e8d-4f2a-af4e-5aa3c821c2da"] {display: block;}
+    
     .gsucell[cellid="a8eeb05f-bc23-428a-9626-a01cef1fa286"] {min-width: 800px;}
     .gsucell[cellid="f50883f0-fd06-44aa-b6c2-1a379d1d74df"] {min-width: 800px;}
+    .gsucell[cellid="b7518839-f93f-4dc4-9fec-db6d14463009"] {display: block;}
+    
     .gsucell[cellid="80908897-2452-4515-a13d-06651afd64ec"] {min-width: 800px;}
     .gsucell[cellid="9ff26863-5e24-4ddd-a6f3-fac8c1bf2ad6"] {min-width: 800px;}
+    .gsucell[cellid="d259fec7-6beb-4b04-a969-165f05477805"] {display: block;}
+    
     .gsucell[cellid="ecdd4d18-8300-40fc-b62c-24cba2b85b14"] {min-width: 800px;}
     .gsucell[cellid="fa790587-23e5-429f-887e-e404abd7fffd"] {min-width: 800px;}
+    .gsucell[cellid="e5a2b892-13ce-48fb-81ea-495589568134"] {display: block;}
+    
     .gsucell[cellid="76f7a084-8cb0-4fd5-b407-98e493213fdc"] {min-width: 800px;}
     .gsucell[cellid="2e9e5584-0845-48ca-9666-80eeefb02d53"] {min-width: 800px;}
+    .gsucell[cellid="e0c500ea-38bc-4b36-a2fa-e9bdfbfda01f"] {display: block;}
+    
     .gsucell[cellid="2b5fbe85-7449-41d9-ace1-857b7a6a9938"] {min-width: 800px;}
     .gsucell[cellid="b16eab2e-a38c-4d3e-be17-115c83f4cf62"] {min-width: 800px;}
+    .gsucell[cellid="2868afee-1765-483f-923a-b19bd962137d"] {display: block;}
 }
 
 @media screen and (max-width: 639px) {

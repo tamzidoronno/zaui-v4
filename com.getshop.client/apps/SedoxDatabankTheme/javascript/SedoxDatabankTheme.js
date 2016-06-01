@@ -93,7 +93,8 @@ getshop.SedoxDatabankTheme = {
         $(".left_side_bar").removeClass("openedmenu");
     },
     
-    toggleLeftMenu: function() {
+    toggleLeftMenu: function(event) {
+        event.preventDefault();
         $(".left_side_bar").toggleClass("openedmenu");
     }
 }

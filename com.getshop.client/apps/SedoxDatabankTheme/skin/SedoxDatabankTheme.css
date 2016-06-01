@@ -452,10 +452,10 @@ body {
 }
 
 @media screen and (max-width: 1279px) {
-    .left_side_bar {left: -300px; position: absolute; z-index: 10; transition: left 0.3s; border-right: double 15px #d5d5d5;}
+    .left_side_bar {left: -300px; position: absolute; z-index: 10; transition: left 0.3s;}
     .openedmenu {left: 0px !important; }
 
-    .gs_main_column {width: calc(100% - 15px); margin-left: 15px;}
+    .gs_main_column {width: 100%;}
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .horizontal {display: block !important;}
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .mobilenavigatemenu {display: none !important;}
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .horizontal {width: auto !important; background-color: transparent !important; display: inline-block !important; position: static !important; left: auto !important; top: auto !important; z-index: auto !important;}
@@ -488,6 +488,7 @@ body {
     .SedoxFileUpload .squaredFour .textlabel {width: 50% !important;}
     .SedoxFileUpload .uploadfilemodal .modal_inner {width: 400px; margin-left: -200px;}
     .SedoxProfileSmall .avatar {visibility: hidden;}
+    .evccredit_inner {width: 80%; max-width: 800px;}
 }
 
 @media screen and (max-width: 959px) {

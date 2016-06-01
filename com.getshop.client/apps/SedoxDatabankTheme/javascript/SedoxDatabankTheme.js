@@ -9,6 +9,7 @@ getshop.SedoxDatabankTheme = {
         $(document).on('click', '.action_purchase_product', getshop.SedoxDatabankTheme.purchaseFile);
         $(document).on('swiperight', getshop.SedoxDatabankTheme.openLeftMenu);
         $(document).on('swipeleft', getshop.SedoxDatabankTheme.closeLeftMenu);
+        $(document).on('tap', '.Menu[appid="7e608fc4-5375-4bd4-b42e-d8a096583ce6"] .entries .entry:first-child', getshop.SedoxDatabankTheme.toggleLeftMenu);
     },
     
     purchaseFile: function() {
@@ -85,11 +86,15 @@ getshop.SedoxDatabankTheme = {
     },
     
     openLeftMenu: function() {
-        $(".left_side_bar").css("left", "0px");
+        $(".left_side_bar").addClass("openedmenu");
     },
     
     closeLeftMenu: function() {
-        $(".left_side_bar").css("left", "-300px");
+        $(".left_side_bar").removeClass("openedmenu");
+    },
+    
+    toggleLeftMenu: function() {
+        $(".left_side_bar").toggleClass("openedmenu");
     }
 }
 

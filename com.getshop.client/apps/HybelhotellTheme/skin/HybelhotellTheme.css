@@ -33,6 +33,13 @@ body { background-color:#525659; margin-top: 10px; margin-bottom: 10px; font-fam
 .PmsBookingProductList .price { font-size: 14px !important; text-align: right; line-height: 23px; font-weight: normal !important; }
 .shop_button { border: solid 1px; padding: 4px; height : 25px; line-height: 25px; padding-right: 20px; padding-left: 20px; border-radius: 0px; }
 
+.gs_language_selection { position:absolute; top: -10px; right: 0px; border: 0px; }
+.gs_language_code { background-repeat: no-repeat; font-size: 0px; height: 37px; width: 37px; padding:0px !important; margin-right: 10px; }
+
+.gs_lang_code_nb_NO { background-image: url('https://hybelhotell.getshop.com/displayImage.php?id=eeeff579-0b75-483a-9574-725a0c29fead'); background-size: 37px 37px; }
+.gs_lang_code_en_en { background-image: url('https://hybelhotell.getshop.com/displayImage.php?id=a1626d35-83cc-49c7-9c35-60a0f9784b05'); background-size: 35px 35px; }
+
+
 H1,H2 { font-family: 'Anton', sans-serif; color: #3f2d51; letter-spacing: 1px; }
 .shop_button { background: none; background-color:#7b6a58; color:#fff;font-family: 'Anton', sans-serif; border: solid 0px;  }
 

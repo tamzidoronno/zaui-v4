@@ -45,6 +45,7 @@ app.SedoxMasterSlave = {
             var event = thundashop.Ajax.createEvent(null, "getUserFromTree", this, data);
 
             thundashop.Ajax.postWithCallBack(event, function(res) {
+                $(".SedoxMasterSlave .information_wrapper").css("display", "inline-block");
                 $(".SedoxMasterSlave .information_wrapper").html(res);
                 
                 $('.SedoxMasterSlave .gs_datalist_input').each(function() {

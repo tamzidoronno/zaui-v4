@@ -1226,9 +1226,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public List<User> getUsersByType(int type) {
-        return getAllUsers().stream()
-                .filter(user -> user != null && user.type == type)
-                .collect(Collectors.toList());
+        return getUserStoreCollection(storeId).getUsersByType(type);
     }
 
     @Override

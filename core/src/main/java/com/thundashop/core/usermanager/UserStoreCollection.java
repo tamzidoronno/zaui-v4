@@ -460,4 +460,10 @@ public class UserStoreCollection {
                 .collect(Collectors.toList());
     }
 
+    List<User> getUsersByType(int type) {
+        return users.values().stream()
+                .filter(user -> user != null && user.type == type)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -1,0 +1,43 @@
+<?
+    /* @var $this ns_b675ce83_d771_4332_ba09_a54ed8537282\PmsBookingMyBookingList */
+?>
+
+<div gstype="form" method="saveAppInstanceSettings">
+    <table width="80%" class="contactConfigTable" cellspacing='0' cellpadding='0'>
+        <tr>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <td width="50%">Name for booking engine to use</td>
+            <td width="50%"><input type="text" gsname="setting_selectedkey" style='width:100%;' value="<? echo $this->getSelectedName(); ?>"></td>
+        </tr>
+
+        <tr>
+            <td width="50%">Can not edit stay</td>
+            <td width="50%">
+                <?php
+                    $checked = "";
+                    if($this->getConfigurationSetting("can_not_change") == "true") {
+                        $checked = "CHECKED";
+                    }
+                ?>
+                <input type='checkbox' gsname='setting_can_not_change' <?php echo $checked; ?>>
+            </td>
+        </tr>
+
+        <tr>
+            <td width="50%">Can end stay</td>
+            <td width="50%">
+                <?php
+                    $checked = "";
+                    if($this->getConfigurationSetting("can_end_stay") == "true") {
+                        $checked = "CHECKED";
+                    }
+                ?>
+                <input type='checkbox' gsname='setting_can_end_stay' <?php echo $checked; ?>>
+            </td>
+        </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

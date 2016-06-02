@@ -124,7 +124,7 @@ public interface IEventBookingManager {
     @Administrator
     public Certificate getCertificate(String certificateId);
     
-    @Administrator
+    @Customer
     public BookingItemTypeMetadata getBookingTypeMetaData(String id);
     
     @Administrator
@@ -183,7 +183,7 @@ public interface IEventBookingManager {
     @Editor
     public List<Event> getEventsByLocation(String locationId);
 
-    @Editor
+    @Customer
     public Event getEventByPageId(String eventId);
     
     @Administrator

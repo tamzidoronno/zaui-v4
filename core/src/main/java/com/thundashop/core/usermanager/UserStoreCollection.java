@@ -454,4 +454,10 @@ public class UserStoreCollection {
         }
     }
 
+    public List<User> getUsersThatHasCompany(String companyId) {
+        return users.values().stream()
+                .filter(o -> o.company != null && o.company.contains(companyId))
+                .collect(Collectors.toList());
+    }
+
 }

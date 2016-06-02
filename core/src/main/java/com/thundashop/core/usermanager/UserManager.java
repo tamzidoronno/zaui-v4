@@ -1283,9 +1283,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private List<User> getUsersThatHasCompany(String companyId) {
-        return getAllUsers().stream()
-                .filter(o -> o.company != null && o.company.contains(companyId))
-                .collect(Collectors.toList());
+        return getUserStoreCollection(storeId).getUsersThatHasCompany(companyId);
     }
 
     /**

@@ -23,6 +23,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -250,14 +252,24 @@ public class ManagerSubBase {
         this.storeId = storeId;
     }
   
-    protected <V> V deepClone(V object) {
+    protected <T> T deepClone(T object) {
+        if (object instanceof DataCommon) {
+            try {
+                T ret = (T) ((DataCommon)object).clone();
+                return ret;
+            } catch (CloneNotSupportedException ex) {
+                java.util.logging.Logger.getLogger(ManagerSubBase.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
         try {
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
           ObjectOutputStream oos = new ObjectOutputStream(baos);
           oos.writeObject(object);
           ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
           ObjectInputStream ois = new ObjectInputStream(bais);
-          return (V) ois.readObject();
+          
+          return (T) ois.readObject();
         }
         catch (Exception e) {
           e.printStackTrace();

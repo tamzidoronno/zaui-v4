@@ -20,5 +20,6 @@ class HybelhotellTheme extends \ThemeApplication implements \Application {
     public function render() {
         
     }
+    
 }
 ?>

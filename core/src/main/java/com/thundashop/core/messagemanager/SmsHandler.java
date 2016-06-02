@@ -11,6 +11,6 @@ package com.thundashop.core.messagemanager;
  */
 public interface SmsHandler {
     public String getName();
-    public void sendMessage();
+     public void sendMessage();
     public String getMessageId();
 }

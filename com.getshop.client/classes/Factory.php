@@ -258,6 +258,7 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/chosen/chosen.jquery.min.js");
         $this->addJavascriptFile("js/chosen/chosen.proto.min.js");
         $this->addJavascriptFile("js/mb.YTPlayer.min.js");
+        $this->addJavascriptFile("js/jquery.mobile.custom.min.js");
         if($this->isEditorMode()) {
             $this->addJavascriptFile("js/getshop.dndlayout.js");
             $this->addJavascriptFile("js/getshop.jstree.js");

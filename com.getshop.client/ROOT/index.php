@@ -105,6 +105,10 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     <head>
         
         <?
+        if($factory->getApplicationPool()->getSelectedThemeApp()->appName == "SedoxDatabankTheme") {
+            echo '<meta name="viewport" content="width=480, initial-scale=0.666">';
+        }
+        
         if($factory->includeSeo()) {
             include_once("loadcss.phtml");
         }

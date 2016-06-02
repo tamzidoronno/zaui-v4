@@ -38,7 +38,7 @@ body {
 }
 
 .gsucell[cellid="48da42ae-b2d2-4be1-8337-2b85a2bb2cc5"] {
-    width: 590px !important;
+    width: auto !important;
 }
 
 /* END HEADER SETTINGS */
@@ -407,13 +407,60 @@ body {
     border-bottom: solid 1px #e4e8eb;
 }
 
+.Menu[appid="7e608fc4-5375-4bd4-b42e-d8a096583ce6"] .entries .entry:first-child {
+    display: none !important;
+    background-color: rgb(213, 213, 213);
+    position: absolute;
+    left: -300px;
+}
+
+.Menu[appid="7e608fc4-5375-4bd4-b42e-d8a096583ce6"] .entries .entry + .entry {
+    border-left: none;
+}
+
+.Menu[appid="7e608fc4-5375-4bd4-b42e-d8a096583ce6"] .entries .entry:first-child i {
+    color: rgb(195, 15, 16);
+}
+
+.ProductLists .quantityselector > div {
+    display: inline-block;
+}
+
+.ProductLists .products.grid_view[listid="9e40d5b7-4bd9-463b-bb49-f567319edc7c"] {
+    text-align: center;
+}
+
+.Menu[appid='247d2e40-801d-4dd1-85a2-7bba21b810cf'] .menuentries .entry {
+    border-top: 1px solid rgb(228, 232, 235); padding: 0px;
+}
+
+.Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .menu_simple_menu {
+    display: none;
+}
+
+
+.gsucell[cellid="914c8252-3e8d-4f2a-af4e-5aa3c821c2da"] {display: none;}
+.gsucell[cellid="b7518839-f93f-4dc4-9fec-db6d14463009"] {display: none;}
+.gsucell[cellid="d259fec7-6beb-4b04-a969-165f05477805"] {display: none;}
+.gsucell[cellid="e5a2b892-13ce-48fb-81ea-495589568134"] {display: none;}
+.gsucell[cellid="e0c500ea-38bc-4b36-a2fa-e9bdfbfda01f"] {display: none;}
+.gsucell[cellid="2868afee-1765-483f-923a-b19bd962137d"] {display: none;}
+
+@media screen and (max-width: 1399px) {
+    .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
+    .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
+}
+
 @media screen and (max-width: 1279px) {
-    .left_side_bar {left: -300px; position: absolute; z-index: 10; transition: left 0.3s; border-right: double 15px #d5d5d5;}
-    .gs_main_column {width: calc(100% - 15px); margin-left: 15px;}
+    .left_side_bar {left: -300px; position: absolute; z-index: 10; transition: left 0.3s;}
+    .openedmenu {left: 0px !important; }
+
+    .gs_main_column {width: 100%;}
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .horizontal {display: block !important;}
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .mobilenavigatemenu {display: none !important;}
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .horizontal {width: auto !important; background-color: transparent !important; display: inline-block !important; position: static !important; left: auto !important; top: auto !important; z-index: auto !important;}
     .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .menuentries .entry {width: auto !important; display: inline-block !important;}
+    .Menu[appid="7e608fc4-5375-4bd4-b42e-d8a096583ce6"] .entries .entry:first-child {display: inline-block !important;}
     .Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .menuentries {background-color: inherit;}
     .Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .menuentries .entry {padding: 0px;}
     .Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .menuentries .entry a {color: #000000 !important;}
@@ -429,14 +476,19 @@ body {
     .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child {display: none;}
     .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child + td {display: none;}
     .ContentManager[appid='e18aee6a-1c1c-4082-ab92-625f74c97edf'] tbody td:first-child + td + td {display: none;}
-    .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
-    .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
     .gs_site_main_buttons_view {display: none !important;}
     .gseditrowbuttons {display: none !important;}
     .gsbody_inner {margin: 0 !important; border-right: none !important;}
     .gscellheadermin {display: none !important;}
     .applicationinner .gs_icon {display: none !important;}
     .gscellbox {border: none !important;}
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] div {font-size: 0px;}
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] i {padding-top: 0px !important; font-size: 30px !important; line-height: 30px !important; margin-top: 30px;}
+    .SedoxFileUpload .squaredFour.inline {width: 30%;}
+    .SedoxFileUpload .squaredFour .textlabel {width: 50% !important;}
+    .SedoxFileUpload .uploadfilemodal .modal_inner {width: 400px; margin-left: -200px;}
+    .SedoxProfileSmall .avatar {visibility: hidden;}
+    .evccredit_inner {width: 80%; max-width: 800px;}
 }
 
 @media screen and (max-width: 959px) {
@@ -458,20 +510,71 @@ body {
     .gsucell[cellid="b4c08085-4509-4ac2-a39f-1eba5ecb76cb"] {width: auto !important; float: none !important;}
     .ContentManager[appid="f21f7697-7900-48ce-b294-2e5612c3166a"] {text-align: center;}
     .ContentManager[appid="047b54a9-00bc-4a55-9c6f-8f7eea32ef4d"] {text-align: center;}
-    .SedoxFileServiceStatus .applicationinner .status2 {font-size: 0px; height: 25px;}
-    .SedoxFileServiceStatus .applicationinner .status2 i {font-size: 17px; padding-top: 3px;}
+    .gsarea[area="header"] .gscell[cellid="af18e48e-1863-4b6a-a43b-bb0152e96967"] {width: 19% !important;}
+    .SedoxSearchHeader .sedox_file_search {width: 50% !important;}
+    .gsarea[area="header"] .gscell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] {width: 225px !important;}
+    .gsarea[area="header"] .gscell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] .fullName {font-size: 18px;}
+    .Menu[appid="7e608fc4-5375-4bd4-b42e-d8a096583ce6"] .entries .entry:first-child {left: -225px;}
+    .SedoxProfileSmall .avatar {margin-left: 15px;}
+    .gsucell[cellid="77949518-5634-4b80-b788-090f3c99a6cc"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="5fde3a23-bfc9-411b-baec-0f91ff650407"] {width: auto !important; float: none !important;}
+    .SedoxMasterSlave .half_width {width: 100%; top: 435px;}
+    .SedoxMasterSlave .information_wrapper {margin: 4%; top: 0px; width: 92%; position: static;}
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 800px) {
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] i {margin-top: 20px;}
+    .SedoxFileUpload {padding: 20px; padding-top: 20px;}
+    .SedoxFileUpload .squaredFour .textlabel {width: 80%;}
+    .Menu[appid='b1fe397b-8ded-4ac2-ba69-c98f0b098674'] .horizontal {position: static !important;}
+    .Menu[appid='247d2e40-801d-4dd1-85a2-7bba21b810cf'] .mobilenavigatemenu {display: none !important;}
+    .Menu[appid='247d2e40-801d-4dd1-85a2-7bba21b810cf'] .horizontal {background-color: transparent !important; display: inline-block !important; position: relative !important; left: auto !important; top: auto !important; z-index: auto !important;}
+    .Menu[appid='247d2e40-801d-4dd1-85a2-7bba21b810cf'] .menuentries .entry a {color: #000000 !important;}
+}
+
+@media screen and (max-width: 799px) {
+    .gsarea[area="header"] .gscell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] {display: none;}
+    .Menu[appid="7e608fc4-5375-4bd4-b42e-d8a096583ce6"] .entries .entry:first-child {position: static;}
+    .gsucell[cellid="43bce82f-cb91-46ef-995a-2c443c3f1cac"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="c32c04bd-f55e-43f5-89df-9465205a384e"] {width: auto !important; float: none !important;}
+    .ProductLists .productbox_outer {width: auto !important;}
+    
+    .gsucell[cellid="44805a78-44ba-495c-adbe-f80f4d03e5e9"] {min-width: 800px;}
+    .gsucell[cellid="01479495-7a49-405e-b9e8-b8944cde23af"] {min-width: 800px;}
+    .gsucell[cellid="914c8252-3e8d-4f2a-af4e-5aa3c821c2da"] {display: block;}
+    
+    .gsucell[cellid="a8eeb05f-bc23-428a-9626-a01cef1fa286"] {min-width: 800px;}
+    .gsucell[cellid="f50883f0-fd06-44aa-b6c2-1a379d1d74df"] {min-width: 800px;}
+    .gsucell[cellid="b7518839-f93f-4dc4-9fec-db6d14463009"] {display: block;}
+    
+    .gsucell[cellid="80908897-2452-4515-a13d-06651afd64ec"] {min-width: 800px;}
+    .gsucell[cellid="9ff26863-5e24-4ddd-a6f3-fac8c1bf2ad6"] {min-width: 800px;}
+    .gsucell[cellid="d259fec7-6beb-4b04-a969-165f05477805"] {display: block;}
+    
+    .gsucell[cellid="ecdd4d18-8300-40fc-b62c-24cba2b85b14"] {min-width: 800px;}
+    .gsucell[cellid="fa790587-23e5-429f-887e-e404abd7fffd"] {min-width: 800px;}
+    .gsucell[cellid="e5a2b892-13ce-48fb-81ea-495589568134"] {display: block;}
+    
+    .gsucell[cellid="76f7a084-8cb0-4fd5-b407-98e493213fdc"] {min-width: 800px;}
+    .gsucell[cellid="2e9e5584-0845-48ca-9666-80eeefb02d53"] {min-width: 800px;}
+    .gsucell[cellid="e0c500ea-38bc-4b36-a2fa-e9bdfbfda01f"] {display: block;}
+    
+    .gsucell[cellid="2b5fbe85-7449-41d9-ace1-857b7a6a9938"] {min-width: 800px;}
+    .gsucell[cellid="b16eab2e-a38c-4d3e-be17-115c83f4cf62"] {min-width: 800px;}
+    .gsucell[cellid="2868afee-1765-483f-923a-b19bd962137d"] {display: block;}
+}
+
+@media screen and (max-width: 639px) {
+    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] .entry {padding-left: 18px !important; padding-right: 18px !important;}
     .gsarea[area="header"] .gscell[cellid="af18e48e-1863-4b6a-a43b-bb0152e96967"] {display: none;}
     .gsarea[area="header"] .gscell[cellid="0283146d-48ac-4814-ab4a-3b4602608558"] .imagecontainer {text-align: left; width: auto; margin-left: 20px;}
-    .gsarea[area="header"] .gscell[cellid="d832c66f-6c1a-435e-a125-bc411c80add7"] {display: none;}
-    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] div {font-size: 0px;}
-    .Menu[appid='7e608fc4-5375-4bd4-b42e-d8a096583ce6'] i {padding-top: 0px !important; font-size: 30px !important; line-height: 30px !important; margin-top: 20px;}
+    .SedoxFileServiceStatus .applicationinner .status2 {font-size: 0px; height: 25px;}
+    .SedoxFileServiceStatus .applicationinner .status2 i {font-size: 17px; padding-top: 3px;}
     .SedoxLogin .col_50 {display: block; width: auto;}
     .ContentManager[appid="d7e68ff1-28cf-4966-8368-8e4b686c00ad"] {font-size: 12px;}
     .ContentManager[appid="c5523b30-5891-456d-9b4b-427e65470d63"] {font-size: 12px;}
     .ContentManager[appid="41384eeb-0a93-4638-97fe-4f840136a63f"] {font-size: 12px;}
     .ContentManager[appid="2e4099f5-e9f4-49a5-b6da-5c802eba87f3"] {font-size: 12px;}
-    
+    .gsucell[cellid='925e929d-c061-43ce-b33e-3a8b35d5ad70'] {width: auto !important; float: none !important;}
+    .gsucell[cellid='832efc80-763f-483c-bc42-9127426f741a'] {width: auto !important; float: none !important;}
 }

@@ -5,6 +5,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $selectedBooking;
     private $types = null;
     private $items = null;
+    private $channels = null;
     private $users = array();
     public $errors = array();
     private $checkedCanAdd = array();
@@ -484,6 +485,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->filterType = $_POST['data']['filterType'];
         $filter->state = 0;
         $filter->searchWord = $_POST['data']['searchWord'];
+        $filter->channel = $_POST['data']['channel'];
         
         $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
     }
@@ -994,6 +996,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return $items[$itemId];
         }
         return null;
+    }
+
+    public function getChannelMatrix() {
+        $channels = $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedName());
+        if($this->channels) {
+            return $this->channels;
+        }
+        $this->channels = $channels;
+        return $channels;
     }
 
 }

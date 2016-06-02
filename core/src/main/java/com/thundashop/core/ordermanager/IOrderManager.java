@@ -162,6 +162,9 @@ public interface IOrderManager {
     @Administrator
     public void changeOrderStatus(String id, int status) throws ErrorException;
     
+    @Administrator
+    public void markAsInvoicePayment(String orderId);
+    
     /**
      * Calculate the total amount to pay for the order.
      * 
@@ -235,6 +238,9 @@ public interface IOrderManager {
     
     @Administrator
     public void changeOrderType(String orderId, String paymentTypeId);
+    
+    @Administrator
+    public void sendReciept(String orderId, String email);
     
     public Double getTotalForOrderById(String orderId);
     

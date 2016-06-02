@@ -48,6 +48,14 @@
 	padding: 6px 6px 6px 12px;
 	color: #000;
 }
+
+.PmsManagement table tr:nth-child(even) td {
+    background-color: #fff;
+}
+.PmsManagement table tr:nth-child(odd) td {
+    background-color: #efefef;
+}
+
 .PmsManagement td:nth-child(1) {
     border-left: 1px solid #C1DAD7;
 }

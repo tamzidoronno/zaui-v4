@@ -86,6 +86,15 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             $notifications->cleaningDays->{$i} = $_POST['data']['cleaningDays_'.$i];
         }
         
+        $translationMatrix = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "channel_translation_")) {
+                $channel = str_replace("channel_translation_", "", $key);
+                $translationMatrix[$channel] = $val;
+            }
+        }
+        $notifications->channelTranslations = $translationMatrix;
+        
         $notifications->addonConfiguration = $this->buildAddonConfigs();
         
         $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];

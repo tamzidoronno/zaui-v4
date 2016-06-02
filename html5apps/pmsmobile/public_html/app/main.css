@@ -6,11 +6,16 @@ body { background-color:#3a99d7; }
 .box:hover { background-color: #494949; cursor:pointer; }
 .innerview .additionalinfo { text-align: center;  border-top-left-radius: 5px; border-top-right-radius: 5px; font-size: 16px; margin-top: 20px; padding: 5px; color:#fff; background-color:#2f749f; }
 .innerview .additionalinfobottom { background-color: #2f749f; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; padding: 5px; }
-.roomrow { border-bottom: solid 1px; color:#fff !important; cursor:pointer;  }
+.roomrow { border-bottom: solid 1px; color:#fff !important; cursor:pointer; padding:0px; }
 .roomrow.notnotstarted { background-color:#efefef; color:#000 !important; }
 .roomrow.started { background-color:green; color:#fff !important; }
 .roomrow.ended { background-color:#ffe39f; color:#000 !important; }
 .roomrow.waitingforlock { border: solid 1px; background-color:blue;  }
+.roomrow.notpaid { border: solid 1px; background-color:red; color:#fff !important;  }
+.roomrow.notpaid a,
+.roomrow.started a,
+.roomrow.waitingforlock a
+{ color:#fff !important; } 
 .roomrow .guestinfo { height: 70px;position: relative; }
 .roomrow .dateinfo { color:#aaa; position:absolute; bottom: 5px; left: 10px; }
 .roomrow .roominfoblock { border-right: solid 1px; padding: 10px; min-height: 70px;}
@@ -22,3 +27,5 @@ a, a:hover { color:#000; }
 .doorlogrow .dooractionbutton { display:inline-block; margin-right: 5px; border: solid 1px; border-radius: 5px; text-align: center; width: 60px; height: 60px; padding: 7px; font-size: 8px; background-color:#2f749f; color:#fff; float:right;}
 .doorlogrow .dooractionbutton:hover { background-color: #494949; cursor:pointer; }
 .disconnectedPage { position: fixed; z-index: 10; width: 100%; height: 100%; background-color:rgba(0,0,0,0.5); color: #fff; font-size: 30px; text-align: center; padding: 30px; display:none; }
+.guestinfocol,.firecheck { border-left: solid 1px; height: 70px;}
+.firecheck {  line-height: 70px;  }

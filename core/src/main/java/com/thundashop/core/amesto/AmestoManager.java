@@ -130,8 +130,11 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
                user.address.address != null &&
                user.address.city != null &&
                user.address.postCode != null &&
-               user.address.countryname != null &&
                user.emailAddress != null) {
+                
+                if(user.address.countryname == null) {
+                    user.address.countryname = "Norge";
+                }
                 
                 jsonObject.addProperty("name", user.fullName);
                 jsonObject.addProperty("Address1", user.address.address + ", " +  user.address.city + ", " + user.address.postCode + ", " + user.address.countryname);

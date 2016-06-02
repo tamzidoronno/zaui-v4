@@ -449,6 +449,13 @@ body {
 @media screen and (max-width: 1399px) {
     .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
     .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
+    
+    
+    .gsucell[cellid='9884e060-8ef1-468a-b972-72848b768ad2'] {width: auto !important; float: none !important;}
+    .gsucell[cellid='ddf72900-e108-4bae-a742-055abe22384e'] {width: auto !important; float: none !important;}
+    
+    .SedoxPushover {text-align: center;}
+    .SedoxPushover .savepushoverid {display: block; margin: auto; margin-top: 15px;}
 }
 
 @media screen and (max-width: 1279px) {

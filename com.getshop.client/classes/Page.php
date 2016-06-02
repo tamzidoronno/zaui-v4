@@ -558,7 +558,7 @@ class Page {
         }
 
         $pagewidthclass = "";
-        if (($depth == 0 && $cell->mode != "ROTATING") || ($depth == 1 && $parent->mode == "ROTATING")) {
+        if (($depth == 0 && $cell->mode != "ROTATING") || ($depth == 1 && isset($parent) && $parent->mode == "ROTATING")) {
             $pagewidthclass = "gs_page_width";
         }
 

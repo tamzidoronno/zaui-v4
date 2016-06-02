@@ -5,7 +5,17 @@ app.PmsBookingMyBookingList = {
         $(document).on('change', '.PmsBookingMyBookingList #chooseuser', app.PmsBookingMyBookingList.switchUser);
         $(document).on('change', '.PmsBookingMyBookingList .changeGuestCount', app.PmsBookingMyBookingList.changeGuestCount);
         $(document).on('click', '.PmsBookingMyBookingList .showorderbutton', app.PmsBookingMyBookingList.showOrder);
+        $(document).on('click', '.PmsBookingMyBookingList .runEndStay', app.PmsBookingMyBookingList.runEndStay);
     },
+    runEndStay : function() {
+        var doEnd = confirm('Are you sure?');
+        if(doEnd) {
+            thundashop.Ajax.simplePost($(this), "endStay", {
+                "roomid" : $(this).closest('tr').attr('roomid')
+            });
+        }
+    },
+    
     showOrder : function() {
         thundashop.common.hideInformationBox();
         app.OrderManager.gssinterface.showOrder($(this).attr('orderid'));

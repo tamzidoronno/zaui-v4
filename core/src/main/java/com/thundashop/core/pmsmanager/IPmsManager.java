@@ -42,6 +42,8 @@ public interface IPmsManager {
     @Administrator
     public void sendMessage(String bookingId, String email, String title, String message);
     
+    public void endRoom(String roomId);
+    
     @Administrator
     public void splitBooking(String roomId);
     

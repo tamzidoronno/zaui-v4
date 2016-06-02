@@ -14,6 +14,9 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
         $this->includefile("editroomform");
     }
 
+    public function endStay() {
+       $this->getApi()->getPmsManager()->endRoom($this->getSelectedName(), $_POST['data']['roomid']);
+    }
     
     public function getTmpUser() {
         if(isset($_SESSION['mybookinglist_tmp_user'])) {
@@ -86,6 +89,10 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
         return $this->indexList($items);
     }
 
+    public function saveSettings() {
+        $this->setConfigurationSetting("selectedkey", $_POST['data']['booking_engine_name']);
+    }
+    
     /**
      * @return \core_bookingengine_data_BookingItemType[]
      */

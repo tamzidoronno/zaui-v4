@@ -17,11 +17,15 @@ $prices[6] = "secondly";
 $prices[7] = "daily";
 $prices[8] = "daily";
 
-echo "<b>".$this->__w("Rooms booked")."</b>";
+echo "<b>";
+echo $this->wrapContentManager("headingtext", "Room booked");
+echo "</b>";
 
 echo "<table cellspacing='0' cellpadding='0' width='100%'>";
 echo "<tr>";
-echo "<th width='10'></th>";
+if($this->getConfigurationSetting("can_not_change") != "true") {
+    echo "<th width='10'></th>";
+}
 echo "<th width='10'>".$this->__w("Room")."</th>";
 echo "<th width='200'>".$this->__w("Time periode")."</th>";
 if($rules->includeGuestData) {
@@ -34,6 +38,9 @@ if($config->requirePayments) {
     echo "<th width='100'>".$this->__w("Price")."</th>";
     echo "<th width='100'>".$this->__w("Invoiced to")."</th>";
 }
+if($this->getConfigurationSetting("can_end_stay") == "true") {
+    echo "<th width='10' class='endstay'>End</th>";
+}
 echo "</tr>";
 
 if(!$bookings) {
@@ -43,12 +50,14 @@ if(!$bookings) {
 foreach($bookings as $booking) {
     foreach($booking->rooms as $room) {
         echo "<tr bookingid='".$booking->id."' roomid='".$room->pmsBookingRoomId ."'>";
-        echo "<td width='30'>";
-        echo "<i class='fa fa-trash-o deleteroom'></i> ";
-        if($this->isEditorMode() || $this->isAdminMode() || $config->autoconfirmRegisteredUsers) {
-            echo "<i class='fa fa-edit editroom'></i>";
+        if($this->getConfigurationSetting("can_not_change") != "true") {
+            echo "<td width='30'>";
+            echo "<i class='fa fa-trash-o deleteroom'></i> ";
+            if($this->isEditorMode() || $this->isAdminMode() || $config->autoconfirmRegisteredUsers) {
+                echo "<i class='fa fa-edit editroom'></i>";
+            }
+            echo "</td>";
         }
-        echo "</td>";
         echo "<td>";
         if(isset($items[$room->bookingItemId])) {
             echo $items[$room->bookingItemId]->bookingItemName;
@@ -81,6 +90,32 @@ foreach($bookings as $booking) {
                 echo "<td>".$this->__w("Not invoiced yet")."</td>";
             }
         }
+        
+        if($this->getConfigurationSetting("can_end_stay") == "true") {
+            if(strtotime($room->date->end) > (time() + (1000*60*24*90))) {
+                $canEnd= true;
+                $type = $types[$room->bookingItemTypeId];
+                $product = $this->getApi()->getProductManager()->getProduct($type->productId);
+                
+                
+                if($product->minPeriode > 0) {
+                    $total = time() - strtotime($room->date->start);
+                    if($total < $product->minPeriode) {
+                        $canEnd = false;
+                    }
+                }
+
+                if($canEnd) {
+                    echo "<td width='10' class='runEndStay'>End</td>";
+                } else {
+                    echo "<td width='10'>Not expired yet</td>";
+                }
+
+            } else {
+                echo "<td width='10'>Ended</td>";
+            }
+        }
+        
         echo "</tr>";
     }
 }

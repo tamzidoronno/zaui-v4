@@ -1,10 +1,21 @@
 <?php
+
+    function cleanUpSession() {
+        foreach ($_SESSION as $key => $value) {
+            if (strpos($key, 'scope') === false) {
+                unset($_SESSION[$key]);
+            }
+        }
+    }
+
     include '../loader.php';
     $factory = IocContainer::getFactorySingelton();
     
     if (isset($_GET['action']) && $_GET['action'] == "cancel") {
+        cleanUpSession();
         $factory->getApi()->getUserManager()->cancelImpersonating();
     } else {
+        cleanUpSession();
         $factory->getApi()->getUserManager()->impersonateUser($_GET['userId']);
     }
     

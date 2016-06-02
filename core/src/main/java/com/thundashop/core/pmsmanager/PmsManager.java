@@ -492,7 +492,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
             }
-        } else if (filter.filterType == null || filter.filterType.equals("registered")) {
+        } else if (filter.filterType == null || filter.filterType.isEmpty() || filter.filterType.equals("registered")) {
             for (PmsBooking booking : bookings.values()) {
                 if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
                     result.add(booking);
@@ -525,6 +525,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         } else if (filter.filterType.equals("deleted")) {
             for (PmsBooking booking : bookings.values()) {
                 if (booking.isDeleted) {
+                    result.add(booking);
+                }
+            }
+        } else {
+            for (PmsBooking booking : bookings.values()) {
+                if (!booking.isDeleted) {
                     result.add(booking);
                 }
             }
@@ -3058,6 +3064,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return res;
+    }
+
+    @Override
+    public void endRoom(String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        checkSecurity(booking);
+        
+        Date end = new Date();
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            for(CartItem item : order.cart.getItems()) {
+                if(item.getProduct().externalReferenceId.equals(roomId)) {
+                    if(item.getEndingDate().after(end)) {
+                        end = item.getEndingDate();
+                    }
+                }
+            }
+        }
+        
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.pmsBookingRoomId.equals(roomId)) {
+                room.date.end = end;
+                bookingEngine.changeDatesOnBooking(room.bookingId, room.date.start, room.date.end);
+            }
+        }
+        
+        saveBooking(booking);
     }
 
 }

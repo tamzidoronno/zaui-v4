@@ -26,17 +26,36 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         }
     }
     
-    private function downlaodEvents() {
-        if (isset($this->events))
-            return $this->events;
+    private function downlaodEvents($userId) {       
+        $evnts = $this->getApi()->getEventBookingManager()->getEventsForUser($this->getBookingEngineName(), $userId);
         
-        $this->events = $this->getApi()->getEventBookingManager()->getEventsForUser($this->getBookingEngineName(), $this->getUserId());
-        return $this->events;
+        $events = [];
+        foreach ($evnts as $event) {
+            $event->currentUserId = $userId;
+            $events[] = $event;
+        }
+        
+        return $events;
     }
     
     public function getEventsToPrint() {
         $userId = $this->getUserId();
-        $eventsFromMemory = $this->downlaodEvents();
+        $users = [];
+        
+        if ($userId == "company") {
+            $retUsers = $this->getApi()->getUserManager()->getUsersByCompanyId($this->getApi()->getUserManager()->getLoggedOnUser()->companyObject->id);
+            foreach ($retUsers as $user) {
+                $users[] = $user->id;
+            }
+        } else {
+            $users[] = $userId;
+        }
+        
+        $eventsFromMemory = [];
+        foreach ($users as $userId) {
+            $eventsFromMemory = array_merge($eventsFromMemory, $this->downlaodEvents($userId));
+        }
+        
         if (!$eventsFromMemory) {
             return [];
         }
@@ -52,8 +71,6 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
                 $events[] = $event;
             }
         }
-        
-        $userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
         
         return $events;
     }

@@ -906,7 +906,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public List<ExternalCertificate> getExternalCertificates(String userId, String eventId) {
         User user = userManager.getUserById(userId);
         if (user == null) {
-            throw new ErrorException(26);
+            return null;
         }
         
         userManager.checkUserAccess(user);

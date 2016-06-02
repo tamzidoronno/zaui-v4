@@ -175,9 +175,8 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     padding: 20px;
 }
 
-.gsbody_inner[pageid="d3fcdff0-1c44-4daa-81f0-2e0bef762cf2"] .News .newsboxtemplate_1 .news_container,
-.gsbody_inner[pageid="b0e1350d-743f-44fa-a1b1-8dc78cb6007f"] .News .newsboxtemplate_1 .news_container {
-    
+.gsbody_inner[pageid="8a9e7b98-8b93-4c99-8618-549ef3d46601"] .News .newsboxtemplate_1 .news_container {
+    width: 280px;
 }
 
 .gsbody_inner[pageid="b0e1350d-743f-44fa-a1b1-8dc78cb6007f"] .news_img_container {

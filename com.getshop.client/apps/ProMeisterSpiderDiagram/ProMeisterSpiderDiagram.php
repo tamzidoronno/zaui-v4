@@ -13,19 +13,23 @@ class ProMeisterSpiderDiagram extends \MarketingApplication implements \Applicat
     }
 
     public function preProcess() {
-        
-        
         if (!isset($_SESSION['ProMeisterSpiderDiager_current_user_id'])) {
             $_SESSION['{ProMeisterSpiderDiagram.FullName}'] = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->fullName;
         } else {
-            $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] = $_SESSION['ProMeisterSpiderDiager_current_user_id'];
-            $user = $this->getApi()->getUserManager()->getUserById($_SESSION['ProMeisterSpiderDiager_current_user_id']);
             
-            if (!$user) {
-                $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
-                $_SESSION['{ProMeisterSpiderDiagram.FullName}'] = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->fullName;
+            if ($this->isCompanySelected()) {
+                $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] = "company";
+                $_SESSION['{ProMeisterSpiderDiagram.FullName}'] = $this->getApi()->getUserManager()->getLoggedOnUser()->companyObject->name;
             } else {
-                $_SESSION['{ProMeisterSpiderDiagram.FullName}'] = $user->fullName;
+                $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] = $_SESSION['ProMeisterSpiderDiager_current_user_id'];
+                $user = $this->getApi()->getUserManager()->getUserById($_SESSION['ProMeisterSpiderDiager_current_user_id']);
+
+                if (!$user) {
+                    $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+                    $_SESSION['{ProMeisterSpiderDiagram.FullName}'] = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->fullName;
+                } else {
+                    $_SESSION['{ProMeisterSpiderDiagram.FullName}'] = $user->fullName;
+                }
             }
         }
     }

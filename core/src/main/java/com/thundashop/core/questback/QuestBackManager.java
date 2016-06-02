@@ -571,6 +571,9 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
 
     @Override
     public Integer getScoreForTest(String userId, String testId) {
+        User user = userManager.getUserById(userId);
+        userManager.checkUserAccess(user);
+        
         UserTestResult testResult = getTestResult(testId);
         if (testResult != null) {
             return testResult.getAverageResult();

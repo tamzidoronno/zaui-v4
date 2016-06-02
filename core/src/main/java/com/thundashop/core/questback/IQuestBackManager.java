@@ -104,7 +104,6 @@ public interface IQuestBackManager {
      * @param testId
      * @return 
      */
-    @Editor
     public Integer getScoreForTest(String userId, String testId);
     
     public List<QuestBackQuestion> getCategoriesForTest(String testId);

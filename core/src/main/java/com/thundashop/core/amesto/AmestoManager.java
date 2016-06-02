@@ -77,7 +77,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
         for(Order order : orders) {
             JsonObject jsonObject = new JsonObject();
             
-            if(order.userId == null || userManager.getUserById(order.userId).accountingId == null || userManager.getUserById(order.userId).accountingId.isEmpty()) {
+            if(order.transferredToAccountingSystem || order.userId == null || userManager.getUserById(order.userId).accountingId == null || userManager.getUserById(order.userId).accountingId.isEmpty()) {
                 continue;
             }
             

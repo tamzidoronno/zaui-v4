@@ -336,7 +336,11 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             thread.start();     
             
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if(ex instanceof java.lang.ClassNotFoundException) {
+                System.out.println("Class not found: " + ex.getMessage());
+            } else {
+                ex.printStackTrace();
+            }
         }
     }
     

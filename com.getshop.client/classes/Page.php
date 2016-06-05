@@ -1812,6 +1812,10 @@ class Page {
             return true;
         }
         
+        if ($this->restricedAccessDueToGroup($cell, $user)) {
+            return false;
+        }
+
         if($user && !$cell->settings->displayWhenLoggedOn) {
             return false;
         }
@@ -2079,5 +2083,36 @@ class Page {
         }
     }
 
+    /**
+     * 
+     * @param core_pagemanager_data_PageCell $cell
+     * @param core_usermanager_data_User $user
+     */
+    private function restricedAccessDueToGroup($cell, $user) {
+        if ($cell->groupAccess == null || !count($cell->groupAccess->access)) {
+            return false;
+        }
+ 
+        $allOff = true;
+        foreach ($cell->groupAccess->access as $groupId => $access) {
+            if ($access && ($user->group == $groupId || (is_array($user->groups) && in_array($groupId, $user->groups)))) {
+                return false;
+            }
+            
+            if ($access && $user->companyObject  && $user->companyObject->groupId == $groupId) {
+                return false;
+            }
+            
+            if ($access) {
+                $allOff = false;
+            }
+        }
+        
+        if ($allOff) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
 

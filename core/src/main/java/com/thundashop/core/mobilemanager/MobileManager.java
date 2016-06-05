@@ -6,6 +6,7 @@ package com.thundashop.core.mobilemanager;
 
 import com.getshop.scope.GetShopSession;
 import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -101,6 +102,9 @@ public class MobileManager extends ManagerBase implements IMobileManager {
     }
     
     private void sendAndroidMessage(String tokenId, String message) {
+        if (tokenId.length() < 100)
+            return;
+        
         if (!frameworkConfig.productionMode) {
             System.out.println("WARNING: Did not send push notification to android device, framework is set to DEVELOPMENT mode. Be careful!");
             return;
@@ -109,7 +113,6 @@ public class MobileManager extends ManagerBase implements IMobileManager {
         try {
             Message gcmmessage = new Message.Builder()
                     .addData("message", message)
-                    .collapseKey("demo")
                     .delayWhileIdle(true)
                     .timeToLive(3)
                     .build();

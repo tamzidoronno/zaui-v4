@@ -6,6 +6,8 @@
 package com.thundashop.core.mecamanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -47,6 +49,9 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     @Autowired
     public StoreManager storeManager;
 
+    @Autowired
+    public StoreApplicationPool storeApplicationPool;
+    
     private Map<String, MecaFleet> fleets = new HashMap();
     private Map<String, MecaCar> cars = new HashMap();
     
@@ -258,9 +263,26 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         List<MecaCar> allCars = new ArrayList(cars.values());
         
         Collections.sort(allCars, (MecaCar car1, MecaCar car2) -> {
-            if (car1 == null || car2 == null || car1.nextService == null || car2.nextService == null) {
-                return 0;
+            if (car1.needAttentionToService) {
+                return -1;
             }
+
+            if (car2.needAttentionToService) {
+                return 1;
+            }
+    
+            if (car1.nextServiceAgreed != null && car1.nextServiceAcceptedByCarOwner != null && !car1.nextServiceAcceptedByCarOwner) {
+                return -1;
+            }            
+            
+            if (car2.nextServiceAgreed != null && car2.nextServiceAcceptedByCarOwner != null && !car2.nextServiceAcceptedByCarOwner) {
+                return 1;
+            }            
+            
+            
+            if (car1 == null || car2 == null || car1.nextService == null || car2.nextService == null) 
+                return 0;
+            
             
             return car1.nextService.compareTo(car2.nextService);
             
@@ -284,22 +306,17 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
 
     @Override
     public void callMe(String cellPhone) {
-        String content = "Hei";
-        content += "<br/>";
-        content += "<br/> Jeg ønsker å bli oppringt på telefonnr: " + cellPhone;
-        content += "<br/>";
-        content += "<br/> Melding fra Meca Fleet APP";
+        String subject = getMailContent("callMeSubject");
+        String callMeBody = getMailContent("callMeBody");
         
-        String subject = "Ønsker å bli oppringt";
+        subject = subject.replace("{MecaFleet.CellPhone}", cellPhone);
+        callMeBody = callMeBody.replace("{MecaFleet.CellPhone}", cellPhone);
         
-        String storeName = getStoreName();
-        String storeEmail = getStoreEmailAddress();
-        
-        messageManager.sendMail(storeEmail, storeName, subject, content, storeEmail, storeName);
+        messageManager.sendMessageToStoreOwner(callMeBody, subject);
     }
 
     public String nl2br(String text) {
-        return text.replace("\n\n", "<p>").replace("\n", "<br>");
+        return text.replace("\n", "<br>");
     }
     
     @Override
@@ -311,27 +328,16 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             currentCar = cars.get(0);
         }
         
-        String content = "Fra: Kontaktskjema i MECA Fleet APP.";
-        content += "<br/>";
-        content += "<br/> =================================================";
-        content += "<br/>" + nl2br(message);
-        content += "<br/>" + nl2br(message);
-        content += "<br/> =================================================";
+        String messageFromUser = nl2br(message);
         
-        if (currentCar != null) {
-            content += "<br/>";
-            content += "<br/> Regnr: " + currentCar.licensePlate;
-            content += "<br/> Telefonr: " + currentCar.cellPhone;
-            content += "<br/>";
-            content += "<br/> Melding fra MECA Fleet APP system";
-        }
+        String content = getMailContent("contactFormBody");
+        content = replaceContactVariables(currentCar, content, cellPhone, messageFromUser);
         
-        String subject = "Melding fra MECA Fleet APP";
         
-        String storeName = getStoreName();
-        String storeEmail = getStoreEmailAddress();
+        String subject = getMailContent("contactFormSubject");
+        subject = replaceContactVariables(currentCar, subject, cellPhone, messageFromUser);
         
-        messageManager.sendMail(storeEmail, storeName, subject, content, storeEmail, storeName);
+        messageManager.sendMessageToStoreOwner(content, subject);
     }
 
     @Override
@@ -395,7 +401,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         MecaCar car = cars.get(mecaCarId);
         if (car != null) {
             String title = storeManager.getMyStore().identifier;
-            String message = "Hei, du er nå meldt inn i MECA Fleet. Last ned appen på AppStore/Google play. Logg inn med verksted: " + title + " og telefonnret ditt som passord.";
+            String message = getMailContent("signupSms").replace("{MecaFleet.StoreTitle}", title);
             messageManager.sendSms("nexmo", car.cellPhone, message, getStoreDefaultPrefix());
             car.inivitationSent = new Date();
             saveObject(car);
@@ -423,7 +429,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
 
             saveObject(car);
             
-            notifyByPush(car.cellPhone, "Din bil skal inn på service.");
+            notifyByPush(car.cellPhone, getMailContent("pushRequestService"));
         }
     }
 
@@ -434,9 +440,9 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             car.nextServiceAcceptedByCarOwner = answer;
             
             String subject = "Statusoppdatering..";
-            String content = "Bil med registreringsnr " + car.licensePlate + " kunne ";
+            String content = "Bil med registreringsnr " + car.licensePlate + " kunne";
             
-            if (car.agreeDate) {
+            if (car.nextServiceAcceptedByCarOwner) {
                 content += " møte opp til foreslått dato og tid";
                 messageManager.sendMessageToStoreOwner(content, subject);
             } else {
@@ -466,7 +472,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             String subject = "Statusoppdatering..";
             String content = "Bil med registreringsnr " + car.licensePlate + " kunne ";
             
-            if (car.agreeDateControl) {
+            if (car.nextControlAcceptedByCarOwner) {
                 content += " møte opp til foreslått dato og tid for EU kontroll";
                 messageManager.sendMessageToStoreOwner(content, subject);
             } else {
@@ -504,7 +510,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             car.newSuggestedDate = null;
             saveObject(car);
             
-            notifyByPush(car.cellPhone, "Din bil skal inn på EU Kontroll.");
+            notifyByPush(car.cellPhone, getMailContent("pushRequestControl"));
         }
     }
 
@@ -521,7 +527,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     public void sendKilometerRequest(String carId) {
         MecaCar car = getCar(carId);
         if (car != null) {
-            notifyByPush(car.cellPhone, "Vi trenger din kilometerstand");
+            notifyByPush(car.cellPhone, getMailContent("pushRequestKilometers"));
             car.requestKilomters.markAsSentPushNotification();
             saveObject(car);
         }
@@ -603,7 +609,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             }
             
             if (car.requestKilomters.canSendSmsNotification()) {
-                messageManager.sendSms("sveve", car.cellPhone, "Hei, vi trenger din kilometerstand. Logg inn på MECA Fleet appen og oppgi kilometerstanden på din bil.", getStoreDefaultPrefix());
+                messageManager.sendSms("sveve", car.cellPhone, getMailContent("smsRequestKilomters"), getStoreDefaultPrefix());
                 car.requestKilomters.markAsSentSmsNotification();
             }
         }
@@ -657,5 +663,26 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     private void createSchedulers() {
         createScheduler("kilomtersrequest", "0 9 * * *", KilometersThread.class);
         createScheduler("notifystoreowner", "0 9 * * 1", StoreOwnerNotification.class);
+    }
+
+    private String getMailContent(String settingsKey) {
+        Application setting = storeApplicationPool.getApplication("6a7c8d8e-abd4-43b3-ad88-c568f245d4da");
+        if (setting == null)
+            return "";
+        
+        String value = setting.getSetting(settingsKey);
+        
+        return nl2br(value);
+    }
+
+    private String replaceContactVariables(MecaCar currentCar, String content, String cellPhone, String message) {
+        if (currentCar != null) {
+            content = content.replace("{MecaFleet.LicensePlate}", currentCar.licensePlate);
+        }
+        
+        content = content.replace("{MecaFleet.CellPhone}", cellPhone);
+        content = content.replace("{MecaFleet.ContactMessage}", message);
+        
+        return content;
     }
 }

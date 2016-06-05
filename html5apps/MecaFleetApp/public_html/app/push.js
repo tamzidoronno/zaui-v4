@@ -19,7 +19,7 @@ var initPush = function() {
     
     var push = PushNotification.init({
         android: {
-            senderID: "377883426248"
+            senderID: "109031011731"
         },
         
         ios: {
@@ -34,9 +34,6 @@ var initPush = function() {
 
     push.on('registration', function(data) {
         PushNotificationSettings.registrationId = data.registrationId;
-    });
-
-    push.on('notification', function(data) {
         pushNotificationReceived();
     });
 

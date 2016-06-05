@@ -33,7 +33,7 @@ class MecaFleetSettings extends \MarketingApplication implements \Application {
         $this->setConfigurationSetting("callMeBody", $_POST['callMeBody']);
         $this->setConfigurationSetting("contactFormBody", $_POST['contactFormBody']);
         $this->setConfigurationSetting("contactFormSubject", $_POST['contactFormSubject']);
-        $this->setConfigurationSetting("signupSms", $_POST['singupSms']);
+        $this->setConfigurationSetting("signupSms", $_POST['signupSms']);
         $this->setConfigurationSetting("smsRequestKilomters", $_POST['smsRequestKilomters']);
         $this->setConfigurationSetting("pushRequestKilometers", $_POST['pushRequestKilometers']);
         $this->setConfigurationSetting("pushRequestService", $_POST['pushRequestService']);

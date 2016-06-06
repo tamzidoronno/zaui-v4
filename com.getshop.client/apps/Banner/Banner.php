@@ -21,6 +21,15 @@ class Banner extends \WebshopApplication implements \Application {
         }
     }
     
+    public function toggleCompressMainImage() {
+        $toggled = $this->getConfigurationSetting("toggleCompressMainImage");
+        if(!$toggled) {
+            $this->setConfigurationSetting("toggleCompressMainImage", "on");
+        } else {
+            $this->setConfigurationSetting("toggleCompressMainImage", "");
+        }
+    }
+    
     public function getName() {
         return $this->__w("Gallery");
     }

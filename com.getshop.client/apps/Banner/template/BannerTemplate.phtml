@@ -35,9 +35,14 @@
                 $imageId = $banner->imageId;
                 $crop = json_decode($banner->crop_cordinates);
                 list($width, $height) = getimagesize("../uploadedfiles/" . $imageId);
+                
+                $dispwidth = "";
+                if($this->getConfigurationSetting("toggleCompressMainImage") == "on") {
+                    $dispwidth = "&width=300";
+                }
                 $img = "displayImage.php?id=$imageId";
                 echo "<div class='banner gsgallery gallerymainimgdiv' height='$height' width='$width' img='$img' index='0'>";
-                echo "<img  width='100%' src='$img' class='gallerymainimg'/>";
+                echo "<img  width='100%' src='$img".$dispwidth."' class='gallerymainimg'/>";
                 echo "</div>";
                 break;
             }

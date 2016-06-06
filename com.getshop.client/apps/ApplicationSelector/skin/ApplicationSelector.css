@@ -81,7 +81,7 @@ and open the template in the editor.
     display: inline-block;
     vertical-align: top;
     margin: 10px;
-    max-height: 80px;
+    max-height: 100px;
 }
 
 .innerappview .gss_activate_button {

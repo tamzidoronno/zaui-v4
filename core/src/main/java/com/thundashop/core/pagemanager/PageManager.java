@@ -145,7 +145,6 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     private Page finalizePage(Page page) {
         page.finalizePage(commonPageData);
-        addProductDetailsIfNeeded(page);
         
         Entry entry = listManager.findEntryByPageId(page.id);
         if(entry == null) {

@@ -3101,4 +3101,46 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
+    @Override
+    public List<CleaningStatistics> getCleaningStatistics(Date start, Date end) {
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        List<CleaningStatistics> toReturn = new ArrayList<CleaningStatistics>();
+        Calendar cal = Calendar.getInstance();
+        for(BookingItemType type : types) {
+            HashMap<Integer, Double> result = new HashMap();
+            for(BookingItem item : items) {
+                if(item.bookingItemTypeId != null && !item.bookingItemTypeId.equals(type.id)) {
+                    continue;
+                }
+                
+                PmsAdditionalItemInformation additional = getAdditionalInfo(item.id);
+                List<Date> cleaningDates = additional.getAllCleaningDates();
+                for(Date date : cleaningDates) {
+                    if(date.before(start)) {
+                        continue;
+                    }
+                    if(date.after(end)) {
+                        continue;
+                    }
+                    cal.setTime(date);
+                    int weekday = cal.get(Calendar.DAY_OF_WEEK);
+                    Double tmpCount = 0.0;
+                    if(result.containsKey(weekday)) {
+                        tmpCount = result.get(weekday);
+                    }
+                    tmpCount++;
+                    result.put(weekday, tmpCount);
+                }
+            }
+            
+            CleaningStatistics stats = new CleaningStatistics();
+            stats.cleanings = result;
+            stats.typeId = type.id;
+            toReturn.add(stats);
+        }
+        
+        return toReturn;
+    }
+
 }

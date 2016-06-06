@@ -90,4 +90,8 @@ public class PmsAdditionalItemInformation extends DataCommon {
         return false;
     }
 
+    List<Date> getAllCleaningDates() {
+        return cleaningDates;
+    }
+
 }

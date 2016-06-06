@@ -1,0 +1,47 @@
+<?php
+/* @var $this \ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+echo "<table>";
+echo "<tr>";
+echo "<th>Type</th>";
+echo "<th>Mon</th>";
+echo "<th>Thu</th>";
+echo "<th>Wed</th>";
+echo "<th>Tue</th>";
+echo "<th>Fri</th>";
+echo "<th>Sat</th>";
+echo "<th>Sun</th>";
+echo "<th>Itemcount</th>";
+echo "</tr>";
+foreach($types as $type) {
+    echo "<tr>";
+    echo "<td>" . $type->name . "</td>";
+    for($i =1;$i<=7;$i++) {
+        $price = $config->cleaningPriceConfig->{$type->id}->cleanings->{$i};
+        echo "<td><input type='txt' style='width: 80px;' gsname='cleaningcost_".$type->id."_".$i."' value='$price'></td>";
+    }
+    $count = $config->cleaningPriceConfig->{$type->id}->itemCount;
+    
+    echo "<td><input type='txt' style='width: 50px;' gsname='cleaningcost_".$type->id."_count' value='$count'></td>";
+    echo "</tr>";
+}
+echo "<tr>";
+echo "<td>Dynetrekk</td>";
+echo "<td><input type='txt' style='width: 80px;' gsname='extra_cleaningcost_dyne' value='".$config->extraCleaningCost->{'dyne'}."'></td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td>Putetrekk</td>";
+echo "<td><input type='txt' style='width: 80px;' gsname='extra_cleaningcost_pute' value='".$config->extraCleaningCost->{'pute'}."'></td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td>Lite håndkle</td>";
+echo "<td><input type='txt' style='width: 80px;' gsname='extra_cleaningcost_handkle_lite' value='".$config->extraCleaningCost->{'handkle_lite'}."'></td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td>Stort håndkle</td>";
+echo "<td><input type='txt' style='width: 80px;' gsname='extra_cleaningcost_handkle_stort' value='".$config->extraCleaningCost->{'handkle_stort'}."'></td>";
+echo "</tr>";
+    
+echo "</table>";
+?>

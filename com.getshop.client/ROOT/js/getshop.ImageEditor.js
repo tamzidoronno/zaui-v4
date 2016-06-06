@@ -368,9 +368,6 @@ getshop.ImageEditor.prototype = {
         this.addMenuEntry("", 'fa-align-left', $.proxy(this.adjustLeft, this), 'small');        
         this.addMenuEntry("", 'fa-align-center', $.proxy(this.adjustCenter, this), 'small');        
         this.addMenuEntry("", 'fa-align-right', $.proxy(this.adjustRight, this), 'small last');        
-        this.addMenuEntry("Add text", 'fa-bold', function() {
-            me.addTextField({});
-        });
         this.addMenuEntry("Save", 'fa-save', $.proxy(this.saveImage, this));
     },
     

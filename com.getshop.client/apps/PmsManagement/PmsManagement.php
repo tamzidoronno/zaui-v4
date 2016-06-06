@@ -1007,5 +1007,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $channels;
     }
 
+    public function getTotalSlept($saleStats) {
+        $total = 0;
+        foreach($saleStats->entries as $entry) {
+            $total = $entry->{'totalPrice'};
+        }
+        return $total;
+    }
+
 }
 ?>

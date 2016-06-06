@@ -6,7 +6,7 @@
 
 .Banner .nobannersadded .banner_info_text {
     font-size: 16px;
-    color: #FFF;
+    color: #000;
     position: absolute;
     box-shadow: 0px 0px 5px #333;
     background-color: rgba(0,0,0,0.7);
@@ -37,13 +37,13 @@
 }
 
 .Banner .informationboxbannersettings .banner_settings td {
-    color: #FFF;
+    color: #000;
     font-size: 14px;
 }
 
 .Banner .informationboxbannersettings .banner_image_editor .image_editor_got_no_image {
     font-size: 14px;
-    color: #FFF;
+    color: #000;
     text-align: center;
     padding-top: 20px;
 }
@@ -59,7 +59,7 @@
 .Banner .informationboxbannersettings .banner_settings_preview {
     margin-top: 70px;
     font-size: 14px;
-    color: #FFF;
+    color: #000;
     min-height: 120px;
     width: 248px;
     text-align: center;

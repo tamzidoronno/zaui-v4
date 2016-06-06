@@ -38,6 +38,8 @@ public class PmsConfiguration extends DataCommon {
     public boolean hasNoEndDate = false;
     public boolean autoDeleteUnpaidBookings = false;
     public HashMap<Integer, PmsBookingAddonItem> addonConfiguration = new HashMap();
+    public HashMap<String, CleaningStatistics> cleaningPriceConfig = new HashMap();
+    public HashMap<String, Double> extraCleaningCost = new HashMap();
 
     /* Invoice creation options */
     public boolean autoCreateInvoices = false;

@@ -1,0 +1,193 @@
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$filter = $this->getSelectedFilter();
+$filter->channel = "";
+$stats = $this->getApi()->getPmsManager()->getCleaningStatistics($this->getSelectedName(), $filter->startDate, $filter->endDate);
+$types = $this->getTypes();
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+
+$saleStats = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedName(), $filter);
+$slept = $this->getTotalSlept($saleStats);
+
+$totals = array();
+foreach($config->channelTranslations as $channel => $name) {
+    $filter->channel = $channel;
+    $saleStats = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedName(), $filter);
+    $totals[$name] = $this->getTotalSlept($saleStats);
+}
+
+$cleaningprices = array();
+
+?>
+<h1>Cleaning count</h1>
+<table cellspacing='0' cellpadding='0'>
+    <tr>
+        <th>Type</th>
+        <th>Ma</th>
+        <th>Ti</th>
+        <th>On</th>
+        <th>To</th>
+        <th>Fe</th>
+        <th>Lø</th>
+        <th>Sø</th>
+        <th>Total</th>
+    </tr>
+    <?php
+    $total = array();
+    $total["total"] = 0;
+    foreach($stats as $cleaningstat) {
+        echo "<tr>";
+    echo "<td>" . $types[$cleaningstat->typeId]->name . "</td>";
+        
+        $totalfortype = 0;
+        for($i = 1; $i <= 7; $i++) {
+            $count = 0;
+            if(isset($cleaningstat->cleanings->{$i})) {
+                $count = $cleaningstat->cleanings->{$i};
+            }
+            echo "<td>" . $count . "</td>";
+            if(!isset($total[$i])) {
+                $total[$i]=0;
+            }
+            $total[$i] += $count;
+            $totalfortype += $count;
+        }
+        $total["total"] += $totalfortype;
+        echo "<td>" . $totalfortype . "</td>";
+        echo "</tr>";
+        
+    }
+    echo "<tr>";
+    echo "<td></td>";
+    for($i = 1; $i <= 7; $i++) {
+        echo "<td>" . $total[$i] . "</td>";
+    }
+    echo "<td>" . $total["total"] . "</td>";
+    echo "</tr>";
+    ?>
+</table>
+<br><br>
+<h1>Cleaning cost</h1>
+<table cellspacing='0' cellpadding='0'>
+    <tr>
+        <th>Type</th>
+        <th>Ma</th>
+        <th>Ti</th>
+        <th>On</th>
+        <th>To</th>
+        <th>Fe</th>
+        <th>Lø</th>
+        <th>Sø</th>
+        <th>Total</th>
+    </tr>
+    <?php
+    $total = array();
+    $total['total'] = 0;
+    $total['items'] = 0;
+    $itemsCount = 0;
+    foreach($stats as $cleaningstat) {
+        echo "<tr>";
+    echo "<td>" . $types[$cleaningstat->typeId]->name . "</td>";
+        $totalfortype = 0;
+        for($i = 1; $i <= 7; $i++) {
+            $count = 0;
+            $price = 0;
+            
+            if(isset($cleaningstat->cleanings->{$i})) {
+                $count = $cleaningstat->cleanings->{$i};
+            }
+            $tmpItemCount = 1;
+            if(isset($config->cleaningPriceConfig->{$cleaningstat->typeId}->cleanings->{$i})) {
+                $tmpItemCount = $config->cleaningPriceConfig->{$cleaningstat->typeId}->itemCount;
+                $price = $config->cleaningPriceConfig->{$cleaningstat->typeId}->cleanings->{$i} * $count;
+            }
+            
+            $itemsCount += ($count * $tmpItemCount);
+            echo "<td>" . $price . "</td>";
+            if(!isset($total[$i])) {
+                $total[$i]=0;
+            }
+            $totalfortype += $price;
+            $total[$i] += $price;
+        }
+        $total['total'] += $totalfortype;
+        echo "<td>" . $totalfortype . "</td>";
+        
+        echo "</tr>";
+        
+    }
+    echo "<tr>";
+    echo "<td></td>";
+    for($i = 1; $i <= 7; $i++) {
+        echo "<td>" . $total[$i] . "</td>";
+    }
+    echo "</td>";
+    echo "<td>" . $total["total"] . "</td>";
+    $totalCleaningCost = $total['total'];
+    ?>
+</table>
+
+<br><br>
+<table cellspacing='0' cellpadding='0'>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+<?php
+$total = 0;
+    foreach($config->extraCleaningCost as $key => $val) {
+        echo "<tr>";
+        echo "<td>" . $key . "</td>";
+        echo "<td>" . $val . "</td>";
+        echo "<td>" . $val * $itemsCount . "</td>";
+        $total += $val * $itemsCount;
+        echo "</tr>";
+    }
+    echo "<tr>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td>$total</td>";
+    echo "</tr>";
+?>
+</table>
+<br>
+<br>
+<br>
+<table cellspacing='0' cellpadding='0'>
+    <tr>
+        <th></td>
+        <th></td>
+    </tr>
+
+    <tr>
+        <td>Budget</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Slept for in total</td>
+        <td><?php echo $slept; ?></td>
+    </tr>
+    <?php
+    foreach($totals as $name => $val) {
+        ?>
+        <tr>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $name; ?></td>
+            <td><?php echo $val; ?></td>
+        </tr>
+        <?php
+    }
+    ?>
+    <tr>
+        <td>Cleaning cost</td>
+        <td><?php echo $totalCleaningCost; ?></td>
+    </tr>
+    <tr>
+        <td>Compensation to booking.com and expedia</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Number of breakfasts</td>
+        <td></td>
+    </tr>
+</table>

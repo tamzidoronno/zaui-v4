@@ -25,6 +25,9 @@ public interface IPmsManager {
     @Administrator
     public void deleteAllBookings(String code);
     
+    @Administrator
+    public List<CleaningStatistics> getCleaningStatistics(Date start, Date end);
+    
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
     @Editor

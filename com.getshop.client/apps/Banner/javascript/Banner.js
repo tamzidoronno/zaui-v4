@@ -120,7 +120,7 @@ app.Banner = {
         
         app.Banner.currentApp = invokingApp;
         var event = thundashop.Ajax.createEvent('','showAddBanner',invokingApp, {});
-        thundashop.common.showInformationBox(event, __f("Image carousel"));
+        thundashop.common.showInformationBoxNew(event, __f("Image carousel"));
     },
 
     imageClicked: function() {
@@ -297,7 +297,9 @@ app.Banner = {
             return false;
         }
     },
-    
+    toggleThumbs : function() {
+        thundashop.Ajax.simplePost($(this), 'toggleThumbs', {});
+    },
     addNewBanner: function() {
         var empty = $("<div class='imageholder'><div class='innerholder'><i style='margin-top: 24px; font-size: 80px; color: #333;' class='fa pictureicon fa-picture-o'></i></div></div>");
         var previewHolder = $(this).closest('.informationbox').find('.banner_settings_preview .banner_settings_images');
@@ -327,6 +329,13 @@ app.Banner = {
                     iconsize : "30",
                     title: __f("Settings"),
                     click: app.Banner.loadEdit
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-thumbs-up",
+                    iconsize : "30",
+                    title: __f("Toggle thumbnails"),
+                    click: app.Banner.toggleThumbs
                 },
                 {
                     icontype: "awesome",

@@ -21,5 +21,24 @@ class MecaFleetSettings extends \MarketingApplication implements \Application {
         $this->setConfigurationSetting("contact_cell", $_POST['data']['contact_cell']);
         $this->setConfigurationSetting("roadmap", $_POST['data']['roadmap']);
     }
+    
+        
+    public function gsEmailSetup($model) {
+        if (!$model) {
+            $this->includefile("emailsettings");
+            return;
+        } 
+        
+        $this->setConfigurationSetting("callMeSubject", $_POST['callMeSubject']);
+        $this->setConfigurationSetting("callMeBody", $_POST['callMeBody']);
+        $this->setConfigurationSetting("contactFormBody", $_POST['contactFormBody']);
+        $this->setConfigurationSetting("contactFormSubject", $_POST['contactFormSubject']);
+        $this->setConfigurationSetting("signupSms", $_POST['signupSms']);
+        $this->setConfigurationSetting("smsRequestKilomters", $_POST['smsRequestKilomters']);
+        $this->setConfigurationSetting("pushRequestKilometers", $_POST['pushRequestKilometers']);
+        $this->setConfigurationSetting("pushRequestService", $_POST['pushRequestService']);
+        $this->setConfigurationSetting("pushRequestControl", $_POST['pushRequestControl']);
+    }
+
 }
 ?>

@@ -20,6 +20,8 @@ public class MecaCarRequestKilomters implements Serializable {
     
     private Date lastReceivedKilomters = new Date(0);
     
+    private boolean requestActive = false;
+    
     public void reset() {
         requestedLastTime = null;
         requestedLastTimeSms = null;
@@ -44,6 +46,7 @@ public class MecaCarRequestKilomters implements Serializable {
     }
 
     public void markReceivedKilomters() {
+        requestActive = false;
         requestedLastTime = new Date();
         lastReceivedKilomters = new Date();
     }
@@ -89,6 +92,7 @@ public class MecaCarRequestKilomters implements Serializable {
     }
 
     public void markAsSentSmsNotification() {
+        requestActive = true;
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.MINUTE, 1);
@@ -96,6 +100,7 @@ public class MecaCarRequestKilomters implements Serializable {
     }
     
     public void markAsSentPushNotification() {
+        requestActive = true;
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.MINUTE, 1);

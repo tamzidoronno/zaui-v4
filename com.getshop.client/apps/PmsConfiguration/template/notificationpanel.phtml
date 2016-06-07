@@ -217,6 +217,19 @@ $days[7] = "Sunday";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->forceRequiredFieldsForEditors) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='forceRequiredFieldsForEditors' <? echo $checked; ?>>
+            </span>
+            Force required fields, when an editor / admin registers, does it need to fill in required fields?
+        </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->needConfirmation) {
                     $checked = "CHECKED";
                 }

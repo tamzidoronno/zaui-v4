@@ -220,7 +220,8 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     }
 
     public function validatePostedForm() {
-        if($this->isEditorMode()) {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        if($this->isEditorMode() && !$config->forceRequiredFieldsForEditors) {
             return;
         }
         

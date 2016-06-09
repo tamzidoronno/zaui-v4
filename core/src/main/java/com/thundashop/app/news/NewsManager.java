@@ -199,7 +199,14 @@ public class NewsManager extends ManagerBase implements INewsManager {
 
     @Override
     public List<NewsUser> getNewsUsers(String eventId) {
-        Set<String> distinctUserIDs = entries.values().stream()
+        List<NewsEntry> tmpEntries = new ArrayList();
+        for(NewsEntry entr : entries.values()) {
+            if(entr.newsListId.equals(eventId)) {
+                tmpEntries.add(entr);
+            }
+        }
+                
+        Set<String> distinctUserIDs = tmpEntries.stream()
                 .map(entry -> entry.userId)
                 .collect(Collectors.toSet());
         

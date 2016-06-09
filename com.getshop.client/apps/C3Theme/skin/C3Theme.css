@@ -3,6 +3,7 @@
 .Menu a { font-size: 16px; font-weight: bold; color:#FFF; padding-right: 30px; display:inline-block; }
 .Menu .lastentry a { padding-right: 0px; }
 .Menu .entries .entries a { width: 200px; }
+.News .item .news_img_container { margin-bottom: 10px; }
 body {    
     background-color: #FFF; font-size: 18px; 
     color: #696969;

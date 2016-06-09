@@ -177,7 +177,8 @@ public class NewsManager extends ManagerBase implements INewsManager {
 
     private void finalize(NewsEntry entry) {
         if(entry.pageId == null || entry.pageId.isEmpty()) {
-            Page templatePage = pageManager.createPageFromTemplatePage("news_template_1");
+            String template = "news_template_" + entry.pageLayout;
+            Page templatePage = pageManager.createPageFromTemplatePage(template);
             entry.pageId = templatePage.id;
             if(entry.userId != null && !entry.userId.isEmpty()) {
                 entry.usersName = userManager.getUserById(entry.userId).fullName;

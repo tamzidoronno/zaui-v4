@@ -21,6 +21,7 @@ public class NewsEntry extends DataCommon {
     public String userId = "";
     public String pageId = "";
     public String newsListId = "";
+    public String pageLayout = "1";
     
     @Transient
     public String usersName = "";

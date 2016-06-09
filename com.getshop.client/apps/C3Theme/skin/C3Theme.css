@@ -5,6 +5,7 @@
 .Menu .entries .entries a { width: 200px; }
 .News .item .news_img_container { margin-bottom: 10px; }
 .NewsElements .newstype_shorttext { font-weight: bold; }
+.NewsElements .bysub { font-size: 12px; }
 body {    
     background-color: #FFF; font-size: 18px; 
     color: #696969;

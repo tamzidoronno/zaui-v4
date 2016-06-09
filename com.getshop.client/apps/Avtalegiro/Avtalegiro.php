@@ -36,6 +36,11 @@ class Avtalegiro extends \PaymentApplication implements \Application {
         }
         
         $incCustomerId = $user->customerId;
+        
+        if($user->accountingId) {
+            $incCustomerId = $user->accountingId;
+        }
+        
         for($i = 0; $i <= 7-strlen($incCustomerId); $i++) {
             $incCustomerId = "0" . $incCustomerId;
         }

@@ -20,7 +20,7 @@ public interface IWebManager {
     
     public JsonObject htmlGetJson(String url) throws Exception;
     
-    public String htmlPost(String url, String data, boolean jsonPost) throws Exception;
+    public String htmlPost(String url, String data, boolean jsonPost, String encoding) throws Exception;
     
-    public JsonObject htmlPostJson(String url, JsonObject data) throws Exception;
+    public JsonObject htmlPostJson(String url, JsonObject data, String encoding) throws Exception;
 }

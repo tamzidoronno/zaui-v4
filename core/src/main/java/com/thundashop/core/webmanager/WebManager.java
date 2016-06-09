@@ -53,20 +53,24 @@ public class WebManager extends ManagerBase implements IWebManager {
     }
     
     @Override
-    public String htmlPost(String url, String data, boolean jsonPost) throws Exception {
+    public String htmlPost(String url, String data, boolean jsonPost, String encoding) throws Exception {
+        if(encoding == null || encoding.isEmpty()) {
+            encoding = "UTF-8";
+        }
+        
         URL urlObj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
         
         connection.setRequestMethod("POST");
         connection.setRequestProperty("User-Agent", USER_AGENT);
+        
         if(jsonPost) {
             connection.setRequestProperty("Content-Type", "application/json");
         }
         
         connection.setDoOutput(true);
         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-        
-        outputStream.writeBytes(data);
+        outputStream.writeBytes(new String(data.getBytes(), encoding));
         outputStream.flush();
         outputStream.close();
         
@@ -83,7 +87,7 @@ public class WebManager extends ManagerBase implements IWebManager {
     }       
     
     @Override
-    public JsonObject htmlPostJson(String url, JsonObject jsonObject) throws Exception {
-        return new JsonParser().parse(htmlPost(url, jsonObject.toString(), true)).getAsJsonObject();
+    public JsonObject htmlPostJson(String url, JsonObject jsonObject, String encoding) throws Exception {
+        return new JsonParser().parse(htmlPost(url, jsonObject.toString(), true, encoding)).getAsJsonObject();
     }
 }

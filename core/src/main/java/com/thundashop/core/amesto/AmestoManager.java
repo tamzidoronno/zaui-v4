@@ -103,7 +103,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
             jsonObject.add("Lines", orderProducts);
             
             try {
-                JsonObject jsonResponse = webManager.htmlPostJson("http://" + hostname + "/api/SalesOrders", jsonObject);
+                JsonObject jsonResponse = webManager.htmlPostJson("http://" + hostname + "/api/SalesOrders", jsonObject, "iso-8859-1");
                 
                 if(jsonResponse != null && !jsonResponse.toString().isEmpty()) {
                     order.transferredToAccountingSystem = true;
@@ -130,18 +130,28 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
                user.address.address != null &&
                user.address.city != null &&
                user.address.postCode != null &&
-               user.emailAddress != null) {
+               user.emailAddress != null &&
+               user.cellPhone != null) {
                 
-                if(user.address.countryname == null) {
-                    user.address.countryname = "Norge";
+                if(user.address.countrycode == null) {
+                    user.address.countrycode = "578";
                 }
                 
-                jsonObject.addProperty("name", user.fullName);
-                jsonObject.addProperty("Address1", user.address.address + ", " +  user.address.city + ", " + user.address.postCode + ", " + user.address.countryname);
+                if(user.address.address2 == null) {
+                    user.address.address2 = "";
+                }
+                
+                jsonObject.addProperty("Name", user.fullName);
+                jsonObject.addProperty("Address1", user.address.address);
                 jsonObject.addProperty("EmailAddress", user.emailAddress);
+                jsonObject.addProperty("Address2", user.address.address2);
+                jsonObject.addProperty("PostCode", user.address.postCode);
+                jsonObject.addProperty("PostOffice", user.address.city);
+                jsonObject.addProperty("CountryNo", user.address.countrycode);
+                jsonObject.addProperty("Phone", user.cellPhone);
                 
                 try {
-                    JsonObject jsonResponse = webManager.htmlPostJson("http://" + hostname + "/api/Customers", jsonObject);
+                    JsonObject jsonResponse = webManager.htmlPostJson("http://" + hostname + "/api/Customers", jsonObject, "iso-8859-1");
                     
                     if(jsonResponse != null && !jsonResponse.toString().isEmpty()) {
                         user.accountingId = jsonResponse.get("CustomerNo").toString();

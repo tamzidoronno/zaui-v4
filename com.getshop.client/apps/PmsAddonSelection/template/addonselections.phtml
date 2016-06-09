@@ -9,9 +9,11 @@ $addons[6] = $this->__w("Include the possibility to cancel your stay for {price}
 
 /* @var $this ns_7ca01dc3_49e7_4bad_a0f9_4f1eae1199d6\PmsAddonSelection */
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$found = false;
 foreach($config->addonConfiguration as $addon) {
     /* @var $addon core_pmsmanager_PmsBookingAddonItem */
     if($addon->isActive) {
+        $found = true;
         $product = $this->getApi()->getProductManager()->getProduct($addon->productId);
         $type = $addon->addonType;
         $text = $addons[$addon->addonType];
@@ -26,5 +28,8 @@ foreach($config->addonConfiguration as $addon) {
         echo "</label>";
         echo "</div>";
     }
+}
+if(!$found) {
+    echo "No addons set yet...";
 }
 ?>

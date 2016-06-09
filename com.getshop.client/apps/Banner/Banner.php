@@ -12,6 +12,24 @@ class Banner extends \WebshopApplication implements \Application {
         return $this->__("This application enables you to upload images and display them as a gallery with thumbnails.");
     }
     
+    public function toggleThumbs() {
+        $toggled = $this->getConfigurationSetting("toggleThumbs");
+        if(!$toggled) {
+            $this->setConfigurationSetting("toggleThumbs", "on");
+        } else {
+            $this->setConfigurationSetting("toggleThumbs", "");
+        }
+    }
+    
+    public function toggleCompressMainImage() {
+        $toggled = $this->getConfigurationSetting("toggleCompressMainImage");
+        if(!$toggled) {
+            $this->setConfigurationSetting("toggleCompressMainImage", "on");
+        } else {
+            $this->setConfigurationSetting("toggleCompressMainImage", "");
+        }
+    }
+    
     public function getName() {
         return $this->__w("Gallery");
     }

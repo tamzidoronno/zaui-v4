@@ -92,8 +92,8 @@ public class Hybelhotell implements AccountingInterface {
          HashMap<Integer, String> toAdd = new HashMap();
          toAdd.put(4, user.customerId + "");
          if(!user.company.isEmpty()) {
-            Company company = userManager.getCompany(user.company.get(0));
-            toAdd.put(6, company.vatNumber);
+            Company company = userManager.getCompany(user.company.get(0)); 
+           toAdd.put(6, company.vatNumber);
             toAdd.put(7, company.name);
             if(company.address != null) {
                 toAdd.put(74, company.address.address);
@@ -123,6 +123,9 @@ public class Hybelhotell implements AccountingInterface {
          for(int i = 0; i < 90; i++) {
              if(toAdd.containsKey(i)) {
                     String text = toAdd.get(i);
+                    if(text == null) {
+                        text = "";
+                    }
                     text = text.replaceAll(";", "");
                     text = text.replaceAll("\n", "");
                     result += text + ";";

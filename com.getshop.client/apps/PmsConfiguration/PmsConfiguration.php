@@ -96,9 +96,10 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $notifications->channelTranslations = $translationMatrix;
         
         $notifications->addonConfiguration = $this->buildAddonConfigs();
+        $notifications->cleaningPriceConfig = $this->buildCleaningPriceConfig();
+        $notifications->extraCleaningCost = $this->buildExtraCleaningCost();
         
         $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];
-
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $notifications);
     }
     
@@ -127,5 +128,37 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         }
         return $allAddons;
     }
+
+    public function buildCleaningPriceConfig() {
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        $res = array();
+        foreach($types as $type) {
+            $stats = new \core_pmsmanager_CleaningStatistics();
+            for($i = 1; $i <= 7; $i++) {
+                $stats->cleanings[$i] = $_POST['data']['cleaningcost_' . $type->id . "_" . $i];
+                if(!$stats->cleanings[$i]) {
+                    $stats->cleanings[$i] = 0;
+                }
+            }
+            $stats->itemCount = $_POST['data']['cleaningcost_' . $type->id . "_count"];
+            $res[$type->id] = $stats;
+        }
+        return $res;
+    }
+
+    public function buildExtraCleaningCost() {
+        $res = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "extra_cleaningcost_")) {
+                $k = str_replace("extra_cleaningcost_", "", $key);
+                $res[$k] = $val;
+                if(!$res[$k]) {
+                    $res[$k] = 0;
+                }
+            }
+        }
+        return $res;
+    }
+
 }
 ?>

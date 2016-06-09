@@ -5,13 +5,14 @@
  */
 package com.thundashop.core.ordermanager.data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author ktonder
  */
-public class CardTransaction {
+public class CardTransaction implements Serializable {
     public Date date;
     public double amount = 0;
     public String currency = "";

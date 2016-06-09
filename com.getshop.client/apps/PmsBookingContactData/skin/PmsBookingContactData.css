@@ -2,6 +2,8 @@
 .PmsBookingContactData label textarea,
 .PmsBookingContactData label select,
 .PmsBookingContactData label .titletext,
+.PmsBookingContactData div.label input,
+.PmsBookingContactData div.label select,
 .PmsBookingContactData label input[type="password"] {
     width: 100%; margin-top: 5px; box-sizing: border-box; display:inline-block;  border: solid 1px #dcdcdc; background-color:#fff; 
     padding: 5px;

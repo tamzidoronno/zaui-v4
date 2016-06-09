@@ -258,6 +258,9 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         if(isset($_POST['data']['choosetyperadio']) && $_POST['data']['choosetyperadio'] == "registration_company" && stristr($key, "user_")) {
             return;
         }
+        if(isset($_POST['data']['choosetyperadio']) && $_POST['data']['choosetyperadio'] == "registered_user") {
+            return;
+        }
         
         if(isset($_POST['data'][$requirements->name])) {
             $res = $_POST['data'][$requirements->name];
@@ -347,6 +350,10 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     }
 
     public function validateGuestData() {
+        if($this->isAdminMode()) {
+            return;
+        }
+        
         $booking = $this->getCurrentBooking();
         $i = 1;
         foreach($booking->rooms as $room) {

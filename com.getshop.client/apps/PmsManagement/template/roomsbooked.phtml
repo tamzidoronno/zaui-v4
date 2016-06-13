@@ -203,9 +203,15 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                         echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")$taken" . "</option>";
                                     }
                                     ?>
-                                </select>
-                                <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                                <div class="tiparea"></div>
+                                </select><br>
+                                <span class='pmsbutton tiny' gstype='submitToInfoBox' gsvalue='notsplit'>Change</span>
+                                <span class='pmsbutton tiny' gstype='submitToInfoBox' gsvalue='split'>Split change</span>
+                                <div class="tiparea">
+                                </div>
+                                <div>
+                                    * Change moves the entire stay to the new room<br>
+                                    * Split change only move the stay from today.<br>
+                                </div>
                             </span>
                         </span>
                     </span>

@@ -552,7 +552,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $error = $this->getManager()->setBookingItem($this->getSelectedName(),
                 $_POST['data']['roomid'], 
                 $_POST['data']['bookingid'], 
-                $_POST['data']['itemid']);
+                $_POST['data']['itemid'],
+                $_POST['data']['clicksubmit'] == "split");
         if($error) {
             $this->errors[] = $error;
         }

@@ -16,5 +16,6 @@ public class Banner implements Serializable {
     public String link;
     public int rotation;
     public String crop_cordinates;
+    public boolean isDefault = false;
     public List<BannerText> imagetext = new ArrayList();
 }

@@ -17,10 +17,12 @@ public class NewsEntry extends DataCommon {
     public String content = "";
     public String subject = "";
     public String image = "";
+    public String imageText = "";
     public boolean isPublished = false;
     public String userId = "";
     public String pageId = "";
     public String newsListId = "";
+    public String pageLayout = "1";
     
     @Transient
     public String usersName = "";

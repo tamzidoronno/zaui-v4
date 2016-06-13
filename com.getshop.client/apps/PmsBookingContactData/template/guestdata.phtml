@@ -47,7 +47,7 @@ foreach($booking->rooms as $room) {
         echo "</span>";
         ?>
     </label>
-    <label class='col-25'>* <?php echo $this->__w("Phone"); ?><br>
+    <div class='col-25 label'>* <?php echo $this->__w("Phone"); ?><br>
         <select gsname='visitor_prefix_<? echo $j;?>' style='width:40%;float:left;text-align: center;'  value='+<?php echo $guest->prefix; ?>'>
             <?php foreach($this->getCodes() as $code) {
                 $selected = "";
@@ -68,7 +68,7 @@ foreach($booking->rooms as $room) {
         }
         echo "</span>";
         ?>
-    </label>
+    </div>
     <label class='col-25'>* <?php echo $this->__w("Email"); ?>
         <input type='text' gsname='visitor_email_<? echo $j;?>'  value='<?php echo $guest->email; ?>'>
         <?php

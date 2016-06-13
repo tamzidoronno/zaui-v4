@@ -69,6 +69,13 @@ class News extends \MarketingApplication implements \Application {
         $news->content = $_POST['data']['text'];
         $news->content = nl2br($news->content);
         $news->image = $image->getImageId();
+        
+        $pageLayoutTemplate = $this->getConfigurationSetting("layout_template");
+        if(!$pageLayoutTemplate) {
+            $pageLayoutTemplate = "1";
+        }
+        $news->pageLayout = $pageLayoutTemplate;
+        
         $newsId = $this->getApi()->getNewsManager()->addNews($news, $this->getNewsListId());
         $this->clearAutoSavedText();
         $image->deleteImage();

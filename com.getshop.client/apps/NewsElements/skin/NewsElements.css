@@ -1,7 +1,10 @@
 #imgtodisplay { width: 100%; padding: 10px; box-sizing: border-box; background-size: cover; }
+.NewsElements .newstype_image img { padding: 0px !important; }
+.NewsElements .imagesubtext { font-size: 12px; }
 #imgtodisplay img { width: 100%; }
 .latestnewsline {  white-space: nowrap;
                    display:block;
                    width: 100%;
   overflow: hidden;
   text-overflow: ellipsis; }
+.NewsElements #file_upload_selector {margin-top: 10px; }

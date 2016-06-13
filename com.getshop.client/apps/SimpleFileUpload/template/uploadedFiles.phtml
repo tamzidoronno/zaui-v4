@@ -4,6 +4,9 @@ $entries = $this->getAllFiles();
 if(!$entries) {
     $entries = array();
 }
+if(sizeof($entries) == 0) {
+    echo $this->__w("No files added.");
+}
 echo "<table width='100%'>";
 foreach($entries as $entry) {
     if($this->imagePrinted == $entry->id) {

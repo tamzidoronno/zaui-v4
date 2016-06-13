@@ -1,6 +1,7 @@
 package com.thundashop.app.content;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
@@ -18,7 +19,7 @@ public interface IContentManager {
      * @param content The content to update. This could be html / text.
      * @throws ErrorException
      */
-    @Administrator
+    @Editor
     @Writing
     public void saveContent(String id, String content) throws ErrorException;
     
@@ -27,7 +28,7 @@ public interface IContentManager {
      * @param id The id to remove the content for.
      * @throws ErrorException
      */
-    @Administrator
+    @Editor
     @Writing
     public void deleteContent(String id) throws ErrorException;
     
@@ -39,7 +40,7 @@ public interface IContentManager {
      * @return The id for the new content.
      * @throws ErrorException
      */
-    @Administrator
+    @Editor
     @Writing
     public String createContent(String content) throws ErrorException;
     

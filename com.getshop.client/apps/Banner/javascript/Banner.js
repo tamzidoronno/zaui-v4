@@ -8,8 +8,14 @@ app.Banner = {
         $(document).on('click', '.Banner .addnewbanner', app.Banner.addNewBanner);
         $(document).on('click', '.Banner .saveset', app.Banner.saveSet);
         $(document).on('click', '.Banner .banner_settings_images .imageholder', app.Banner.imageClicked);
+        $(document).on('click', '.Banner .banner_settings_images .fa-check-circle', app.Banner.setDefault);
         $(document).on('change', '.Banner #height', $.proxy(app.Banner.heightChanged, app.Banner));
         $(document).on('mouseenter', '.Banner .gallerythumbnailswap', app.Banner.swapImage);
+    },
+    
+    setDefault : function() {
+        $('.Banner .isDefault').removeClass('isDefault');
+        $(this).addClass('isDefault');
     },
     
     swapImage : function() {
@@ -88,7 +94,11 @@ app.Banner = {
                 data.images.push($(this).attr('imageId'));
             }
         });
-        
+        var defaultImg = "";
+        if($('.Banner .isDefault').length > 0) {
+            defaultImg = $('.Banner .isDefault').closest('.imageholder').attr('imageid');
+            data.defaultImg = defaultImg;
+        }
         app.Banner.settingValidBanners = true;
         data.interval = app.Banner.getInterval();
         data.height = app.Banner.getHeight();

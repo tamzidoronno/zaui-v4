@@ -94,14 +94,17 @@ foreach($files as $fileId => $date) {
             Example: .edi
         </div>
     </div>
-    <br>
-    <br>
-    <br>
-    <div style='text-align:right; margin-bottom: 30px;'>
-        <h2 style='float:left;'>Ftp transfer setup to creditor system</h2>
-        <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=transfercreditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Transfer to creditor"); ?></div>
-        <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=creditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Download new creditor file"); ?></div>
+    
+    <div class='gss_button_area'>
+        <?php if($config->username) { ?>
+            <div class="gss_button" gss_method="transferNewFiles" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Transfer new files to ftp"); ?></div>
+        <?php } ?>
+        <div class="gss_button" gss_method="saveAccountingConfig" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
     </div>
+    
+    <br>
+    <br>
+    <br>
     <div class="textfield gss_setting" id="ftpuser">
         <span class="title">Username</span>
         <input type="textfield" gs_model="adminconfig" gs_model_attr="creditor_ftpuser" value="<?php echo $config->creditor_username; ?>">
@@ -130,11 +133,10 @@ foreach($files as $fileId => $date) {
             Ftp path to put the file in
         </div>
     </div>
-    
-    <div class='gss_button_area'>
-        <?php if($config->username) { ?>
-            <div class="gss_button" gss_method="transferNewFiles" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Transfer new files to ftp"); ?></div>
-        <?php } ?>
-        <div class="gss_button" gss_method="saveAccountingConfig" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    <div style='text-align:right; margin-bottom: 30px;'>
+        <h2 style='float:left;'>Ftp transfer setup to creditor system</h2>
+        <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=transfercreditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Transfer to creditor"); ?></div>
+        <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=creditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Download new creditor file"); ?></div>
     </div>
+
 </div>

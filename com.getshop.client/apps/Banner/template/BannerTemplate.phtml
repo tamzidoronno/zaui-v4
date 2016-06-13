@@ -31,21 +31,25 @@
         <div class="bannerslider" id="<? echo $id; ?>" interval="<? echo $interval; ?>">
             <div class="bannermainimg">
             <?
+            $imageId = "";
             foreach ($this->getBanners() as $banner) {
-                $imageId = $banner->imageId;
-                $crop = json_decode($banner->crop_cordinates);
-                list($width, $height) = getimagesize("../uploadedfiles/" . $imageId);
-                
+                if(!$imageId || $banner->isDefault) {
+                    $imageId = $banner->imageId;
+                    $crop = json_decode($banner->crop_cordinates);
+                    if($banner->isDefault) {
+                        break;
+                    }
+                }
+            }
                 $dispwidth = "";
                 if($this->getConfigurationSetting("toggleCompressMainImage") == "on") {
                     $dispwidth = "&width=300";
                 }
-                $img = "displayImage.php?id=$imageId";
-                echo "<div class='banner gsgallery gallerymainimgdiv' height='$height' width='$width' img='$img' index='0'>";
-                echo "<img  width='100%' src='$img".$dispwidth."' class='gallerymainimg'/>";
-                echo "</div>";
-                break;
-            }
+            list($width, $height) = getimagesize("../uploadedfiles/" . $imageId);
+            $img = "displayImage.php?id=$imageId";
+            echo "<div class='banner gsgallery gallerymainimgdiv' height='$height' width='$width' img='$img' index='0'>";
+            echo "<img  width='100%' src='$img".$dispwidth."' class='gallerymainimg'/>";
+            echo "</div>";
             ?>
             </div>
         </div>

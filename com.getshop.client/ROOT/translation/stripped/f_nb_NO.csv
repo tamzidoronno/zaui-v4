@@ -1,6 +1,7 @@
 ###### framework ######
 A autogenereted reference number that can be used to identify this user.;-;
 A booking application, used with the Calendar Application;-;
+A unique identifier for the product's variations.;-;
 A user can only be assigned to one usergroup;-;
 Account suspended;-;
 Accounting ID;-;
@@ -308,6 +309,7 @@ Requires group reference;-;
 SEO;-;
 SMS Car notification;-;
 SMS signup;-;
+Save SKUs;-;
 Save card;-;
 Save file location;-;
 Saved cards;-;

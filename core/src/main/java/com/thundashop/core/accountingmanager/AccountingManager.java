@@ -4,6 +4,7 @@
 package com.thundashop.core.accountingmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.getshop.svea.CustomerData;
 import com.thundashop.core.bookingengine.CheckSendQuestBackScheduler;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ForStore;
@@ -26,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -290,10 +294,12 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         
         List<Order> allOrders = orderManager.getOrders(null, null, null);
         List<String> result = new ArrayList();
-        
         for(Order order : allOrders) {
             if(order.needToBeTranferredToCreditor()) {
-                System.out.println("This needs to be transferred");
+                if(!config.vendor.equals("svea")) {
+                    String res = createSveaCreditorFile(order);
+                    result.add(res);
+                }
             }
         }
         
@@ -343,4 +349,29 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         return res;
     }
 
+    private String createSveaCreditorFile(Order order) {
+        User user = userManager.getUserById(order.userId);
+        CustomerData customer = new CustomerData();
+        CustomerData.Creditor creditor = new CustomerData.Creditor();
+        creditor.setName(user.fullName);
+        creditor.setCustomerIdentification(user.customerId + "");
+        customer.setCreditor(creditor);
+        String res = "";
+        try {
+            File file = SveaXML.createXmlFile();
+            JAXBContext jaxbContext = JAXBContext.newInstance(CustomerData.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            // output pretty printed
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            jaxbMarshaller.marshal(customer, file);
+            jaxbMarshaller.marshal(customer, System.out);
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
+        return res;
+    }
 }

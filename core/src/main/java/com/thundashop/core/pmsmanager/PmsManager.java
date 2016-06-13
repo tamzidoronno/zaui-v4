@@ -850,6 +850,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String createOrder(String bookingId, NewOrderFilter filter) {
+        if(configuration.autoCreateInvoices && !filter.autoGeneration) {
+            filter.maxAutoCreateDate = filter.endInvoiceAt;
+            filter.autoGeneration = true;
+            filter.increaseUnits = configuration.increaseUnits;
+            filter.prepayment = configuration.prepayment;
+        }
+        
         return pmsInvoiceManager.createOrder(bookingId, filter);
     }
 

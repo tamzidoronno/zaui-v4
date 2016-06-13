@@ -188,6 +188,14 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     width: 280px;
 }
 
+.gsbody_inner[pageid="8a9e7b98-8b93-4c99-8618-549ef3d46601"] .News .newsboxtemplate_1 {
+    font-size: 12px;
+}
+
 .gsbody_inner[pageid="b0e1350d-743f-44fa-a1b1-8dc78cb6007f"] .news_img_container {
     display: none;
+}
+
+.ProfilePrinter .imagearea img {
+    width: auto !important;
 }

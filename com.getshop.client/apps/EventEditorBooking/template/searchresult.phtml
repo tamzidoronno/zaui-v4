@@ -19,7 +19,7 @@ if (isset($_SESSION['EventEditorBooking_current_searchfor']) && $_SESSION['Event
 <div class='usersearchresults'>
     <?
     if ($companies == null) {
-        echo $this->__f("Please search for users.");
+        echo "<div class='serachinfotext'>".$this->__f("Please search for users.")."</div>";
     } else if (!count($companies)) {
         echo $this->__f("Did not find any users by the criteria");
     } else {

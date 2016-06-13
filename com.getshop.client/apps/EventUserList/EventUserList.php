@@ -123,7 +123,9 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $group = $this->getApi()->getUserManager()->getGroup($_POST['data']['groupid']);
         $groupName = $group == null ? "All" : $group->groupName;
         
+        
         $usersFiltered = $this->filterUsers($users, $group);
+        
         $usersWaitingListFiltered = $this->filterUsers($usersWaitingList, $group);
         
         $excel = [];
@@ -211,7 +213,7 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         
         $retUsers = [];
         
-        if (!count($users) || is_array($users)) {
+        if (!count($users) || !is_array($users)) {
             return $users;
         }
         
